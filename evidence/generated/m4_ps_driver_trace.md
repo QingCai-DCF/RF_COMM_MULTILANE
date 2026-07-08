@@ -1,0 +1,67 @@
+# M4 PS Driver MMIO Trace
+
+M4_PS_DRIVER_TRACE_REPORT=1
+M4_TRACE_RESET_BEFORE_PROFILE=1
+M4_TRACE_PROFILE_READBACKS_MATCH=1
+M4_TRACE_COMMIT_BEFORE_ENABLE=1
+M4_TRACE_STARTUP_WAIT_BEFORE_CLEAR=1
+M4_TRACE_TRANSACTION_START_POLL_STOP=1
+M4_TRACE_FINAL_COUNTER_READS=1
+M4_TRACE_SHUTDOWN_REASON_WRITTEN=1
+M4_PS_DRIVER_TRACE=PASS
+
+| Step | Operation | Register | Value |
+|---:|---|---|---:|
+| 0 | write | `CONTROL` | `0x00000001` |
+| 1 | write | `PROFILE_LANE_MASK` | `0x00000001` |
+| 2 | read | `PROFILE_LANE_MASK` | `0x00000001` |
+| 3 | write | `PROFILE_RX_LANE_MASK` | `0x00000001` |
+| 4 | read | `PROFILE_RX_LANE_MASK` | `0x00000001` |
+| 5 | write | `PROFILE_ACK_LANE_MASK` | `0x00000001` |
+| 6 | read | `PROFILE_ACK_LANE_MASK` | `0x00000001` |
+| 7 | write | `PROFILE_SESSION` | `0x00002201` |
+| 8 | read | `PROFILE_SESSION` | `0x00002201` |
+| 9 | write | `PROFILE_PAYLOAD_LEN` | `0x00000100` |
+| 10 | read | `PROFILE_PAYLOAD_LEN` | `0x00000100` |
+| 11 | write | `PROFILE_FRAGMENT_BYTES` | `0x000000FF` |
+| 12 | read | `PROFILE_FRAGMENT_BYTES` | `0x000000FF` |
+| 13 | write | `TIMING_CNT_CHIP_MAX` | `0x00000007` |
+| 14 | read | `TIMING_CNT_CHIP_MAX` | `0x00000007` |
+| 15 | write | `TIMING_CNT_PREAMBLE` | `0x00000010` |
+| 16 | read | `TIMING_CNT_PREAMBLE` | `0x00000010` |
+| 17 | write | `TIMING_DETECT_WINDOW` | `0x00000700` |
+| 18 | read | `TIMING_DETECT_WINDOW` | `0x00000700` |
+| 19 | write | `TIMING_GUARD_CYCLES` | `0x00001000` |
+| 20 | read | `TIMING_GUARD_CYCLES` | `0x00001000` |
+| 21 | write | `TIMING_RETRY_TIMEOUT` | `0x00000400` |
+| 22 | read | `TIMING_RETRY_TIMEOUT` | `0x00000400` |
+| 23 | write | `SAFETY_STARTUP_US` | `0x000001F4` |
+| 24 | read | `SAFETY_STARTUP_US` | `0x000001F4` |
+| 25 | write | `SAFETY_DUTY_WINDOW` | `0x000003E8` |
+| 26 | read | `SAFETY_DUTY_WINDOW` | `0x000003E8` |
+| 27 | write | `SAFETY_DUTY_MAX` | `0x000000C8` |
+| 28 | read | `SAFETY_DUTY_MAX` | `0x000000C8` |
+| 29 | write | `SAFETY_STUCK_HIGH_LIMIT` | `0x00000014` |
+| 30 | read | `SAFETY_STUCK_HIGH_LIMIT` | `0x00000014` |
+| 31 | write | `CONTROL` | `0x00000020` |
+| 32 | read | `PROFILE_ID` | `0x47312201` |
+| 33 | write | `CONTROL` | `0x00000002` |
+| 34 | read | `STATUS` | `0x00000001` |
+| 35 | write | `CONTROL` | `0x00000012` |
+| 36 | write | `CONTROL` | `0x00000006` |
+| 37 | read | `STATUS` | `0x00000003` |
+| 38 | read | `STATUS` | `0x0000000D` |
+| 39 | write | `CONTROL` | `0x0000000A` |
+| 40 | read | `STATUS` | `0x00000001` |
+| 41 | read | `STATUS_RETRY_COUNT` | `0x00000000` |
+| 42 | read | `STATUS_ERROR_COUNTS` | `0x00000000` |
+| 43 | read | `COUNTER_TX_PULSE` | `0x00000010` |
+| 44 | read | `COUNTER_RX_RAW_PULSE` | `0x00000010` |
+| 45 | read | `COUNTER_FRAME_GOOD` | `0x00000001` |
+| 46 | read | `COUNTER_FRAME_BAD` | `0x00000000` |
+| 47 | read | `COUNTER_ACK_SENT` | `0x00000001` |
+| 48 | read | `COUNTER_ACK_SEEN` | `0x00000001` |
+| 49 | write | `CONTROL` | `0x00000008` |
+| 50 | write | `SAFETY_SHUTDOWN_REASON` | `0x54464455` |
+
+This offline trace checks the required PS driver MMIO sequence without requiring a C compiler or hardware target.

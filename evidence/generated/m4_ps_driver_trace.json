@@ -1,0 +1,320 @@
+{
+  "status": "PASS",
+  "checks": {
+    "M4_TRACE_RESET_BEFORE_PROFILE": true,
+    "M4_TRACE_PROFILE_READBACKS_MATCH": true,
+    "M4_TRACE_COMMIT_BEFORE_ENABLE": true,
+    "M4_TRACE_STARTUP_WAIT_BEFORE_CLEAR": true,
+    "M4_TRACE_TRANSACTION_START_POLL_STOP": true,
+    "M4_TRACE_FINAL_COUNTER_READS": true,
+    "M4_TRACE_SHUTDOWN_REASON_WRITTEN": true
+  },
+  "trace": [
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_LANE_MASK",
+      "offset": 4,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_LANE_MASK",
+      "offset": 4,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_RX_LANE_MASK",
+      "offset": 8,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_RX_LANE_MASK",
+      "offset": 8,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_ACK_LANE_MASK",
+      "offset": 12,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_ACK_LANE_MASK",
+      "offset": 12,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_SESSION",
+      "offset": 16,
+      "value": 8705
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_SESSION",
+      "offset": 16,
+      "value": 8705
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_PAYLOAD_LEN",
+      "offset": 20,
+      "value": 256
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_PAYLOAD_LEN",
+      "offset": 20,
+      "value": 256
+    },
+    {
+      "op": "write",
+      "reg": "PROFILE_FRAGMENT_BYTES",
+      "offset": 24,
+      "value": 255
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_FRAGMENT_BYTES",
+      "offset": 24,
+      "value": 255
+    },
+    {
+      "op": "write",
+      "reg": "TIMING_CNT_CHIP_MAX",
+      "offset": 32,
+      "value": 7
+    },
+    {
+      "op": "read",
+      "reg": "TIMING_CNT_CHIP_MAX",
+      "offset": 32,
+      "value": 7
+    },
+    {
+      "op": "write",
+      "reg": "TIMING_CNT_PREAMBLE",
+      "offset": 36,
+      "value": 16
+    },
+    {
+      "op": "read",
+      "reg": "TIMING_CNT_PREAMBLE",
+      "offset": 36,
+      "value": 16
+    },
+    {
+      "op": "write",
+      "reg": "TIMING_DETECT_WINDOW",
+      "offset": 40,
+      "value": 1792
+    },
+    {
+      "op": "read",
+      "reg": "TIMING_DETECT_WINDOW",
+      "offset": 40,
+      "value": 1792
+    },
+    {
+      "op": "write",
+      "reg": "TIMING_GUARD_CYCLES",
+      "offset": 44,
+      "value": 4096
+    },
+    {
+      "op": "read",
+      "reg": "TIMING_GUARD_CYCLES",
+      "offset": 44,
+      "value": 4096
+    },
+    {
+      "op": "write",
+      "reg": "TIMING_RETRY_TIMEOUT",
+      "offset": 48,
+      "value": 1024
+    },
+    {
+      "op": "read",
+      "reg": "TIMING_RETRY_TIMEOUT",
+      "offset": 48,
+      "value": 1024
+    },
+    {
+      "op": "write",
+      "reg": "SAFETY_STARTUP_US",
+      "offset": 64,
+      "value": 500
+    },
+    {
+      "op": "read",
+      "reg": "SAFETY_STARTUP_US",
+      "offset": 64,
+      "value": 500
+    },
+    {
+      "op": "write",
+      "reg": "SAFETY_DUTY_WINDOW",
+      "offset": 68,
+      "value": 1000
+    },
+    {
+      "op": "read",
+      "reg": "SAFETY_DUTY_WINDOW",
+      "offset": 68,
+      "value": 1000
+    },
+    {
+      "op": "write",
+      "reg": "SAFETY_DUTY_MAX",
+      "offset": 72,
+      "value": 200
+    },
+    {
+      "op": "read",
+      "reg": "SAFETY_DUTY_MAX",
+      "offset": 72,
+      "value": 200
+    },
+    {
+      "op": "write",
+      "reg": "SAFETY_STUCK_HIGH_LIMIT",
+      "offset": 76,
+      "value": 20
+    },
+    {
+      "op": "read",
+      "reg": "SAFETY_STUCK_HIGH_LIMIT",
+      "offset": 76,
+      "value": 20
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 32
+    },
+    {
+      "op": "read",
+      "reg": "PROFILE_ID",
+      "offset": 240,
+      "value": 1194402305
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 2
+    },
+    {
+      "op": "read",
+      "reg": "STATUS",
+      "offset": 96,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 18
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 6
+    },
+    {
+      "op": "read",
+      "reg": "STATUS",
+      "offset": 96,
+      "value": 3
+    },
+    {
+      "op": "read",
+      "reg": "STATUS",
+      "offset": 96,
+      "value": 13
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 10
+    },
+    {
+      "op": "read",
+      "reg": "STATUS",
+      "offset": 96,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "STATUS_RETRY_COUNT",
+      "offset": 100,
+      "value": 0
+    },
+    {
+      "op": "read",
+      "reg": "STATUS_ERROR_COUNTS",
+      "offset": 104,
+      "value": 0
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_TX_PULSE",
+      "offset": 128,
+      "value": 16
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_RX_RAW_PULSE",
+      "offset": 132,
+      "value": 16
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_FRAME_GOOD",
+      "offset": 136,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_FRAME_BAD",
+      "offset": 140,
+      "value": 0
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_ACK_SENT",
+      "offset": 144,
+      "value": 1
+    },
+    {
+      "op": "read",
+      "reg": "COUNTER_ACK_SEEN",
+      "offset": 148,
+      "value": 1
+    },
+    {
+      "op": "write",
+      "reg": "CONTROL",
+      "offset": 0,
+      "value": 8
+    },
+    {
+      "op": "write",
+      "reg": "SAFETY_SHUTDOWN_REASON",
+      "offset": 80,
+      "value": 1413891157
+    }
+  ]
+}

@@ -45,6 +45,9 @@ def main() -> int:
     driver = (ROOT / "software/ps_driver/ir_driver.c").read_text(encoding="utf-8", errors="ignore")
     driver_h = (ROOT / "software/ps_driver/ir_driver.h").read_text(encoding="utf-8", errors="ignore")
     tb = (ROOT / "sim/tb/tb_ir_axi_regs_new.sv").read_text(encoding="utf-8", errors="ignore")
+    trace_script = (ROOT / "scripts/generate_m4_ps_driver_trace.py").read_text(encoding="utf-8", errors="ignore")
+    trace_report_path = ROOT / "evidence/generated/m4_ps_driver_trace.md"
+    trace_report = trace_report_path.read_text(encoding="utf-8", errors="ignore") if trace_report_path.exists() else ""
 
     for name, off in offsets.items():
         macro = f"IR_REG_{name}"
@@ -67,6 +70,13 @@ def main() -> int:
     require("ir_mmio_t" in driver_h and "ir_profile_config_t" in driver_h, "M4_PS_DRIVER_MMIO_PROFILE_TYPES_PRESENT", errors)
     require("ir_driver_counters_t" in driver_h and "ir_driver_run_transaction" in driver_h, "M4_PS_DRIVER_OFFLINE_RUN_API_PRESENT", errors)
     require("TB_IR_AXI_REGS_NEW_PASS=1" in tb, "M4_AXI_REGS_TB_PASS_MARKER_PRESENT", errors)
+    require("MmioTrace" in trace_script and "M4_TRACE_COMMIT_BEFORE_ENABLE" in trace_script, "M4_PS_DRIVER_TRACE_SCRIPT_PRESENT", errors)
+    require(
+        "M4_PS_DRIVER_TRACE_REPORT=1" in trace_report
+        and "M4_PS_DRIVER_TRACE=PASS" in trace_report,
+        "M4_PS_DRIVER_TRACE_REPORT_PRESENT",
+        errors,
+    )
 
     profile_values = {
         "PROFILE_LANE_MASK": 0x1,
@@ -92,6 +102,11 @@ def main() -> int:
     model.write(offsets["CONTROL"], 1 << 5)
     require(model.profile_committed and model.commit_count == 1, "M4_REFERENCE_COMMIT_PASS", errors)
     require(model.read(offsets["PROFILE_ID"]) == 0x47312201, "M4_REFERENCE_PROFILE_ID_PASS", errors)
+    require("M4_TRACE_RESET_BEFORE_PROFILE=1" in trace_report, "M4_TRACE_REFERENCE_RESET_BEFORE_PROFILE", errors)
+    require("M4_TRACE_PROFILE_READBACKS_MATCH=1" in trace_report, "M4_TRACE_REFERENCE_PROFILE_READBACKS", errors)
+    require("M4_TRACE_STARTUP_WAIT_BEFORE_CLEAR=1" in trace_report, "M4_TRACE_REFERENCE_STARTUP_CLEAR_ORDER", errors)
+    require("M4_TRACE_FINAL_COUNTER_READS=1" in trace_report, "M4_TRACE_REFERENCE_FINAL_COUNTERS", errors)
+    require("M4_TRACE_SHUTDOWN_REASON_WRITTEN=1" in trace_report, "M4_TRACE_REFERENCE_SHUTDOWN", errors)
 
     print(f"M4_STATIC={'PASS' if not errors else 'FAIL'}")
     return 1 if errors else 0
