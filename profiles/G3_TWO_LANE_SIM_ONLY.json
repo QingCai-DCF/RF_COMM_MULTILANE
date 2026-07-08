@@ -1,0 +1,19 @@
+{
+  "name": "G3_TWO_LANE_SIM_ONLY",
+  "lane_count": 2,
+  "payload_lane_mask": "0x3",
+  "ack_lane_mask": "0x1",
+  "rx_lane_mask": "0x3",
+  "expected_peer_lane_mask": "0x3",
+  "session_id": "0x2201",
+  "payload_bytes": 256,
+  "fragment_bytes": 255,
+  "retry_count": 12,
+  "guard_cycles": 4096,
+  "status": "SIMULATION_ONLY",
+  "allowed_gate": "offline_only",
+  "disallowed_gate": "hardware_without_authorization",
+  "hardware_acceptance": "PENDING_HW",
+  "no_hardware_actions_executed": true,
+  "simulation_only": true
+}

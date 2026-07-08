@@ -24,6 +24,9 @@
 - This workspace is the new rebuild project. Do not modify the legacy source project at `C:\Users\user\Documents\RF_COMM`.
 - Default mode is `NO_HARDWARE=1`. Do not program FPGA hardware, start PS ELF files, drive TFDU pins, use XSCT hardware targets, open Vivado Hardware Manager, capture ILA, or write UART commands unless the user explicitly authorizes hardware execution.
 - Any authorized hardware run must use a safe wrapper and must program TFDU shutdown afterwards. Treat the run as incomplete unless logs show `SHUTDOWN_EXIT=0` or `TFDU_SHUTDOWN_PROGRAMMED`.
+- Offline gates must keep `HARDWARE_ACCEPTANCE: PENDING_HW`; no offline or simulation result may promote hardware status to PASS.
+- Missing tools must be reported as `SKIP_WITH_REASON` or FAIL with evidence. Do not report a missing-tool path as PASS.
+- TFDU6102 safety contract checks are mandatory for P1 offline hardening. Keep `docs/TFDU6102_SAFETY_SUMMARY.md` and `docs/tfdu6102_safety_contract.md` aligned with RTL gates.
 - Legacy `RF_COMM` evidence proves only the scope it actually covers. Do not promote degraded lane0 evidence into 2-lane, 8-lane, Ethernet, rotation, or soak-test PASS claims.
 - Imported legacy RTL, XDC, Vivado projects, tools, and software under `legacy/` or `rtl/legacy_reference/` are read-only reference inputs, not canonical build inputs.
 - Old active top XDC and IP-local XDC conflict. New builds must use the canonical generated XDC at `constraints/active/PORT1.generated.xdc`, generated from `board_profiles/ax7010_tfdu_j10_j11_pinmap.csv`.

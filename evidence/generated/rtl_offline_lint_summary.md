@@ -1,0 +1,6 @@
+# RTL Offline Lint Summary
+
+RESULT: PASS
+REASON: required active RTL modules found
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW

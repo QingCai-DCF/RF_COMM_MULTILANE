@@ -1,21 +1,24 @@
 # RF_COMM_MULTILANE
 
-No-hardware bootstrap of a TFDU6102 RF_COMM rebuild workspace.
+No-hardware rebuild workspace for the TFDU6102 RF_COMM project.
 
 Imported legacy source: `C:\Users\user\Documents\RF_COMM`
 
-Canonical entry points:
+Canonical inputs:
 - Pinmap: `board_profiles/ax7010_tfdu_j10_j11_pinmap.csv`
 - XDC: `constraints/active/PORT1.generated.xdc`
 - Active profile: `board_profiles/ACTIVE_PROFILE.json`
+- P1 active profile mirror: `constraints/ACTIVE_PROFILE.json`
+- P1 active pinmap mirror: `constraints/pinmap_active.csv`
 - Register map: `config/register_map/ir_axi_regs.yaml`
-- Offline gates: `python scripts/run_offline_gates.py`
-- Hardware prep wrappers: `scripts/hw/`
+- Bootstrap gates: `python scripts/run_offline_gates.py`
+- P1 offline hardening gates: `python tools/run_offline_gate.py --allow-skips --json-summary`
 
-Hardware is not run by default. Hardware-related items remain `PENDING_HW`
-until the user explicitly authorizes a safe wrapper run and shutdown evidence is
-captured.
+Hardware is not run by default. Hardware-related items remain
+`HARDWARE_ACCEPTANCE: PENDING_HW` until the user explicitly authorizes a safe
+wrapper run and shutdown evidence is captured.
 
-Current offline gate status is `PASS_WITH_PENDING_TOOL`: static and Python
-checks pass, while SystemVerilog simulation and Vivado execution are recorded as
-`PENDING_TOOL` on this workstation.
+Offline PASS does not mean TFDU6102 hardware, lane0, lane1, two-lane, Ethernet,
+rotation, soak, or product-final acceptance has passed. Evidence lives under
+`evidence/generated/`; future hardware placeholders live under
+`evidence/hardware/`.

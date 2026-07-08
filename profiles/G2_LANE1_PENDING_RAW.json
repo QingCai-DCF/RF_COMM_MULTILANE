@@ -1,0 +1,19 @@
+{
+  "name": "G2_LANE1_PENDING_RAW",
+  "lane_count": 2,
+  "payload_lane_mask": "0x2",
+  "ack_lane_mask": "0x1",
+  "rx_lane_mask": "0x2",
+  "expected_peer_lane_mask": "0x2",
+  "session_id": "0x2201",
+  "payload_bytes": 256,
+  "fragment_bytes": 255,
+  "retry_count": 12,
+  "guard_cycles": 4096,
+  "status": "PENDING_HW_RAW_REQUIRED",
+  "allowed_gate": "P1_OFFLINE_HARDENING",
+  "disallowed_gate": "hardware_without_authorization",
+  "hardware_acceptance": "PENDING_HW",
+  "no_hardware_actions_executed": true,
+  "simulation_only": false
+}

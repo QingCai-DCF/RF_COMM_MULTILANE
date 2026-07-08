@@ -1,0 +1,74 @@
+# Git Cleanliness Report
+
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+M AGENTS.md
+ M README.md
+ M evidence/generated/offline_gate_summary.json
+ M evidence/generated/offline_gate_summary.md
+ M evidence/generated/vivado/nonhardware_build_summary.json
+ M evidence/generated/vivado/nonhardware_build_summary.md
+ M evidence/generated/vivado/post_route_drc.rpt
+ M evidence/generated/vivado/post_route_timing_summary.rpt
+ M evidence/generated/vivado/post_route_utilization.rpt
+ M evidence/generated/vivado/post_synth_drc.rpt
+?? BUILD_AND_TEST_GUIDE.md
+?? HARDWARE_SAFETY.md
+?? IPs/
+?? PROJECT_STATUS.md
+?? SOURCE_STATE.md
+?? constraints/ACTIVE_PROFILE.json
+?? constraints/pinmap_active.csv
+?? docs/CONSTRAINT_POLICY.md
+?? docs/HARDWARE_ACCEPTANCE_CHECKLIST.md
+?? docs/HARDWARE_AUTHORIZATION_TEMPLATE.md
+?? docs/NEXT_HARDWARE_ACCEPTANCE_PLAN.md
+?? docs/OFFLINE_GATE_POLICY.md
+?? docs/P2_SIMULATION_BASELINE_PLAN.md
+?? docs/P4_PRE_HW_ACCEPTANCE_PACKAGE.md
+?? docs/PROFILES.md
+?? docs/REFACTOR_TARGET_STRUCTURE.md
+?? docs/RTL_STRUCTURE_POLICY.md
+?? docs/SOFTWARE_OFFLINE_POLICY.md
+?? docs/SOURCE_MIGRATION_MAP.md
+?? docs/TEST_PEER_B0.md
+?? docs/TFDU6102_SAFETY_SUMMARY.md
+?? docs/tfdu6102_safety_contract.md
+?? evidence/README.md
+?? evidence/authorization/
+?? evidence/generated/active_profile_check.md
+?? evidence/generated/agents_policy_check.md
+?? evidence/generated/constraint_uniqueness_summary.md
+?? evidence/generated/copied_constraints_manifest.md
+?? evidence/generated/evidence_consistency_summary.md
+?? evidence/generated/git_cleanliness_report.md
+?? evidence/generated/host_offline_stub_summary.md
+?? evidence/generated/ip_packaging_dry_check.md
+?? evidence/generated/no_hardware_action_static_scan.md
+?? evidence/generated/p1_bootstrap_evidence_review.md
+?? evidence/generated/p1_bootstrap_legacy_gate_run.md
+?? evidence/generated/p1_directory_check.md
+?? evidence/generated/p1_git_precheck.txt
+?? evidence/generated/p1_offline_hardening_summary.json
+?? evidence/generated/p1_offline_hardening_summary.md
+?? evidence/generated/profile_check_summary.md
+?? evidence/generated/project_status_check.md
+?? evidence/generated/project_status_update_summary.md
+?? evidence/generated/ps_driver_sequence_summary.md
+?? evidence/generated/required_docs_manifest.md
+?? evidence/generated/rtl_offline_lint_summary.md
+?? evidence/generated/rtl_source_manifest.json
+?? evidence/generated/rtl_source_manifest.md
+?? evidence/generated/software_no_real_io_summary.md
+?? evidence/generated/software_source_manifest.md
+?? evidence/generated/tfdu6102_offline_contract_summary.md
+?? evidence/generated/tools_manifest.md
+?? evidence/generated/vivado_offline_project_summary.md
+?? evidence/generated/vivado_script_audit.md
+?? evidence/generated/wrapper_xdc_consistency_summary.md
+?? evidence/generated/xdc_inventory.md
+?? evidence/hardware/
+?? profiles/
+?? scripts/vivado/
+?? tools/

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RF_COMM_MULTILANE offline gate result",
+  "type": "object",
+  "required": ["name", "result", "reason", "details"],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "result": {
+      "enum": ["PASS", "FAIL", "SKIP_WITH_REASON"]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "details": {
+      "type": "object"
+    },
+    "summary_path": {
+      "type": ["string", "null"]
+    }
+  },
+  "additionalProperties": true
+}
