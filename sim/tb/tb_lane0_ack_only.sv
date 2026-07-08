@@ -91,7 +91,7 @@ module tb_lane0_ack_only;
     .debug_status(debug_status)
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -147,35 +147,35 @@ module tb_lane0_ack_only;
     tick(2);
 
     pulse_start();
-    expect(busy, "transaction enters wait-ack state");
-    expect(active_sequence == 16'd0, "first sequence is zero");
-    expect(tx_attempt_count == 32'd1, "first start emits one TX attempt");
+    check_expect(busy, "transaction enters wait-ack state");
+    check_expect(active_sequence == 16'd0, "first sequence is zero");
+    check_expect(tx_attempt_count == 32'd1, "first start emits one TX attempt");
     send_ack(16'h2201, 16'd0, 8'h01, 1'b1);
-    expect(!busy, "valid ACK completes transaction");
-    expect(tx_done_pulse || ack_seen_count == 32'd1, "ACK seen increments count");
-    expect(next_sequence == 16'd1, "next sequence advances after ACK");
+    check_expect(!busy, "valid ACK completes transaction");
+    check_expect(tx_done_pulse || ack_seen_count == 32'd1, "ACK seen increments count");
+    check_expect(next_sequence == 16'd1, "next sequence advances after ACK");
 
     send_ack(16'h2201, 16'd0, 8'h01, 1'b1);
-    expect(ack_duplicate_count == 32'd1, "duplicate ACK is observable after completion");
-    expect(ack_late_count == 32'd1, "late ACK is observable while idle");
+    check_expect(ack_duplicate_count == 32'd1, "duplicate ACK is observable after completion");
+    check_expect(ack_late_count == 32'd1, "late ACK is observable while idle");
 
     pulse_start();
-    expect(active_sequence == 16'd1, "second sequence uses advanced value");
+    check_expect(active_sequence == 16'd1, "second sequence uses advanced value");
     send_ack(16'h2202, 16'd1, 8'h01, 1'b1);
-    expect(ack_session_bad_count == 32'd1, "session mismatch ACK counted");
+    check_expect(ack_session_bad_count == 32'd1, "session mismatch ACK counted");
     send_ack(16'h2201, 16'h00FF, 8'h01, 1'b1);
-    expect(ack_expired_count == 32'd1, "expired/out-of-order ACK counted");
+    check_expect(ack_expired_count == 32'd1, "expired/out-of-order ACK counted");
     send_ack(16'h2201, 16'd1, 8'h02, 1'b1);
-    expect(ack_lane_mask_bad_count == 32'd1, "ACK lane mask mismatch counted");
+    check_expect(ack_lane_mask_bad_count == 32'd1, "ACK lane mask mismatch counted");
     send_ack(16'h2201, 16'd1, 8'h01, 1'b1);
-    expect(ack_seen_count == 32'd2, "valid second ACK counted");
+    check_expect(ack_seen_count == 32'd2, "valid second ACK counted");
 
     pulse_start();
     tick(20);
-    expect(retry_exhausted_sticky, "missing ACK exhausts retries");
-    expect(tx_fail_pulse || retry_exhausted_count == 32'd1, "retry exhaustion is counted");
-    expect(ack_timeout_count >= 32'd3, "ACK lost causes timeout/retry accounting");
-    expect(tx_attempt_count >= 32'd5, "ACK lost causes retry TX attempts");
+    check_expect(retry_exhausted_sticky, "missing ACK exhausts retries");
+    check_expect(tx_fail_pulse || retry_exhausted_count == 32'd1, "retry exhaustion is counted");
+    check_expect(ack_timeout_count >= 32'd3, "ACK lost causes timeout/retry accounting");
+    check_expect(tx_attempt_count >= 32'd5, "ACK lost causes retry TX attempts");
 
     $display("TB_LANE0_ACK_ONLY_PASS=1");
     $finish;

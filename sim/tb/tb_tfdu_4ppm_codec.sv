@@ -64,7 +64,7 @@ module tb_tfdu_4ppm_codec;
     end
   endfunction
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -89,7 +89,7 @@ module tb_tfdu_4ppm_codec;
         tick(1);
       end
       tick(1);
-      expect(pulses == 1, "4PPM TX emits one pulse per symbol");
+      check_expect(pulses == 1, "4PPM TX emits one pulse per symbol");
     end
   endtask
 
@@ -108,8 +108,8 @@ module tb_tfdu_4ppm_codec;
         tick(1);
         timeout++;
       end
-      expect(tx_preamble_done, "4PPM TX preamble completes");
-      expect(pulses == 4, "4PPM TX preamble emits CNT_PREAMBLE one-hot symbols");
+      check_expect(tx_preamble_done, "4PPM TX preamble completes");
+      check_expect(pulses == 4, "4PPM TX preamble emits CNT_PREAMBLE one-hot symbols");
       tick(1);
     end
   endtask
@@ -129,10 +129,10 @@ module tb_tfdu_4ppm_codec;
         tick(1);
       end
       tick(1);
-      expect(rx_symbol_valid, "4PPM RX reports a valid symbol");
-      expect(!rx_symbol_error, "4PPM RX reports no error for one-hot symbol");
-      expect(rx_symbol == sym, "4PPM RX symbol matches encoded input");
-      expect(rx_symbol_chips == chips, "4PPM RX captured expected chip pattern");
+      check_expect(rx_symbol_valid, "4PPM RX reports a valid symbol");
+      check_expect(!rx_symbol_error, "4PPM RX reports no error for one-hot symbol");
+      check_expect(rx_symbol == sym, "4PPM RX symbol matches encoded input");
+      check_expect(rx_symbol_chips == chips, "4PPM RX captured expected chip pattern");
     end
   endtask
 
@@ -159,8 +159,8 @@ module tb_tfdu_4ppm_codec;
         tick(1);
         timeout++;
       end
-      expect(rx_preamble_valid, "4PPM RX detects CNT_PREAMBLE repeated preamble symbols");
-      expect(rx_preamble_count == 16'd4, "4PPM RX preamble count saturates at CNT_PREAMBLE");
+      check_expect(rx_preamble_valid, "4PPM RX detects CNT_PREAMBLE repeated preamble symbols");
+      check_expect(rx_preamble_count == 16'd4, "4PPM RX preamble count saturates at CNT_PREAMBLE");
       tick(1);
     end
   endtask
@@ -210,7 +210,7 @@ module tb_tfdu_4ppm_codec;
       tick(1);
       if (rx_symbol_error) saw_error = 1;
     end
-    expect(saw_error != 0, "invalid multi-pulse symbol is rejected");
+    check_expect(saw_error != 0, "invalid multi-pulse symbol is rejected");
 
     $display("M2_4PPM_PREAMBLE_PATH_PASS=1");
     $display("TB_TFDU_4PPM_CODEC_PASS=1");

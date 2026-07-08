@@ -227,7 +227,7 @@ def main() -> int:
         lines.append(f"| `{module_name}` | {len(by_module[module_name])} | {len(selected_modules[module_name])} |")
     lines += [
         "",
-        "This static gate checks named-port instance compatibility while SystemVerilog tools are unavailable. It does not replace simulator or Vivado elaboration.",
+        "This static gate checks named-port instance compatibility. It does not replace simulator or Vivado elaboration; tool discovery and simulator execution are recorded by `scripts/run_offline_gates.py`.",
         "",
     ]
     (OUTDIR / "sv_port_contracts.md").write_text("\n".join(lines), encoding="utf-8")

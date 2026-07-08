@@ -55,7 +55,7 @@ module tb_ir_multilane_scheduler;
     .debug_status()
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -92,38 +92,38 @@ module tb_ir_multilane_scheduler;
     rst_n = 1'b1;
     tick(2);
 
-    expect(lane_enable_readback == 8'h01, "default only enables lane0");
-    expect(reliable_lane_readback == 8'h01, "default reliable mask is lane0");
-    expect(blocked_lane_mask[1], "AB_L1 known-bad mask blocks lane1");
-    expect(selected_tx_lane == 3'd0, "default selected lane is lane0");
+    check_expect(lane_enable_readback == 8'h01, "default only enables lane0");
+    check_expect(reliable_lane_readback == 8'h01, "default reliable mask is lane0");
+    check_expect(blocked_lane_mask[1], "AB_L1 known-bad mask blocks lane1");
+    check_expect(selected_tx_lane == 3'd0, "default selected lane is lane0");
 
     commit(8'h03, 8'h03);
-    expect(requested_lane_enable_readback == 8'h03, "requested enable readback preserves profile");
-    expect(lane_enable_readback == 8'h01, "lane1 is removed from effective enable mask");
-    expect(lane1_reliable_blocked, "lane1 reliable enable request is blocked");
+    check_expect(requested_lane_enable_readback == 8'h03, "requested enable readback preserves profile");
+    check_expect(lane_enable_readback == 8'h01, "lane1 is removed from effective enable mask");
+    check_expect(lane1_reliable_blocked, "lane1 reliable enable request is blocked");
 
     commit(8'h02, 8'h02);
-    expect(fallback_to_lane0_active, "lane1-only profile falls back to lane0");
-    expect(lane_enable_readback == 8'h01, "fallback readback reports lane0");
+    check_expect(fallback_to_lane0_active, "lane1-only profile falls back to lane0");
+    check_expect(lane_enable_readback == 8'h01, "fallback readback reports lane0");
 
     commit(8'h05, 8'h05);
-    expect(lane_enable_readback == 8'h05, "lane0 and lane2 are allowed");
-    expect(selected_tx_lane == 3'd0, "lowest healthy reliable lane is selected");
+    check_expect(lane_enable_readback == 8'h05, "lane0 and lane2 are allowed");
+    check_expect(selected_tx_lane == 3'd0, "lowest healthy reliable lane is selected");
     lane_fault_pulse <= 8'h01;
     tick(1);
-    expect(fault_isolated_pulse, "lane fault isolation pulse is observable");
+    check_expect(fault_isolated_pulse, "lane fault isolation pulse is observable");
     lane_fault_pulse <= 8'h00;
     tick(1);
-    expect(sticky_bad_lane_mask[0], "lane0 fault becomes sticky");
-    expect(lane_enable_readback == 8'h04, "lane2 remains after lane0 isolation");
-    expect(selected_tx_lane == 3'd2, "scheduler falls forward to lane2");
+    check_expect(sticky_bad_lane_mask[0], "lane0 fault becomes sticky");
+    check_expect(lane_enable_readback == 8'h04, "lane2 remains after lane0 isolation");
+    check_expect(selected_tx_lane == 3'd2, "scheduler falls forward to lane2");
 
     clear_sticky <= 1'b1;
     tick(1);
     clear_sticky <= 1'b0;
     tick(1);
-    expect(sticky_bad_lane_mask == 8'h00, "clear_sticky clears bad lane mask");
-    expect(lane_enable_readback == 8'h05, "clear restores committed healthy lanes");
+    check_expect(sticky_bad_lane_mask == 8'h00, "clear_sticky clears bad lane mask");
+    check_expect(lane_enable_readback == 8'h05, "clear restores committed healthy lanes");
 
     $display("TB_IR_MULTILANE_SCHEDULER_PASS=1");
     $finish;

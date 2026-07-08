@@ -19,4 +19,4 @@ SV_PORT_CONTRACT_STATIC=PASS
 | `ir_axi_regs_new` | 1 | 50 |
 | `ir_top_new` | 0 | 8 |
 
-This static gate checks named-port instance compatibility while SystemVerilog tools are unavailable. It does not replace simulator or Vivado elaboration.
+This static gate checks named-port instance compatibility. It does not replace simulator or Vivado elaboration; tool discovery and simulator execution are recorded by `scripts/run_offline_gates.py`.

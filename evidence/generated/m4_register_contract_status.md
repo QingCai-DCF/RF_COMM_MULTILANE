@@ -14,7 +14,7 @@ M4_PS_DRIVER_TRANSACTION_POLL=PASS
 M4_PS_DRIVER_FINAL_COUNTER_READBACK=PASS
 M4_PS_DRIVER_MMIO_TRACE=PASS
 M4_AXI_REGS_TB_CREATED=1
-M4_AXI_REGS_SIM=PENDING_TOOL
+M4_AXI_REGS_SIM=PASS
 M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
 M4_PS_DRIVER_C_COMPILE_GATE_CREATED=1
 NO_HARDWARE_ACTIONS_EXECUTED=1
@@ -28,5 +28,8 @@ verification plus commit. The MMIO trace report at
 reset/profile/readback/commit/enable/startup/start/poll/stop/counter/shutdown
 sequence without needing a C compiler. `scripts/run_offline_gates.py` also tries
 to compile and run the PS driver offline stub when `gcc` or `clang` is
-available. SystemVerilog and C compilation remain unclaimed when no supported
-simulator or C compiler is available on PATH.
+available. Current PATH discovery records `IVERILOG_ON_PATH=0`,
+`VERILATOR_ON_PATH=0`, and `VIVADO_PATH_ON_PATH=0`, while the
+D:\Xilinx\Vivado\2023.1\bin Xilinx simulator bat toolchain is available and
+passes the AXI register SystemVerilog gate. PS driver C compilation remains
+`PENDING_TOOL` because no `gcc` or `clang` compiler is on PATH.

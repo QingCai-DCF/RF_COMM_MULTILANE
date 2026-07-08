@@ -101,7 +101,7 @@ module tb_tfdu_lane_phy_smoke;
     .duty_high_count()
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -124,50 +124,50 @@ module tb_tfdu_lane_phy_smoke;
     duty_rxd = 1'b1;
     tick(2);
 
-    expect(SD == 1'b1, "reset drives shutdown");
-    expect(Txd == 1'b0, "reset drives Txd idle low");
-    expect(Mode == 1'b1, "static high-speed Mode=1");
+    check_expect(SD == 1'b1, "reset drives shutdown");
+    check_expect(Txd == 1'b0, "reset drives Txd idle low");
+    check_expect(Mode == 1'b1, "static high-speed Mode=1");
 
     rst_n = 1'b1;
     enable_phy = 1'b1;
     tick(4);
-    expect(phy_ready == 1'b0, "phy_ready stays low before startup delay");
+    check_expect(phy_ready == 1'b0, "phy_ready stays low before startup delay");
     tick(3);
-    expect(phy_ready == 1'b1, "phy_ready after startup delay");
-    expect(SD == 1'b0, "SD released after enable");
+    check_expect(phy_ready == 1'b1, "phy_ready after startup delay");
+    check_expect(SD == 1'b0, "SD released after enable");
 
     tx_pulse_req = 1'b1;
     tick(1);
     tx_pulse_req = 1'b0;
     tick(2);
-    expect(tx_pulse_count == 32'd1, "tx_pulse_count increments on pulse start");
+    check_expect(tx_pulse_count == 32'd1, "tx_pulse_count increments on pulse start");
 
     rxd = 1'b0;
     tick(3);
     rxd = 1'b1;
     tick(4);
-    expect(rx_raw_count == 32'd1, "low-active RX pulse increments raw counter");
-    expect(rx_pulse_width_min != 32'd0, "RX pulse min width recorded");
-    expect(rx_pulse_width_max >= rx_pulse_width_min, "RX pulse max width recorded");
-    expect(rx_last_timestamp != 32'd0, "RX timestamp recorded");
+    check_expect(rx_raw_count == 32'd1, "low-active RX pulse increments raw counter");
+    check_expect(rx_pulse_width_min != 32'd0, "RX pulse min width recorded");
+    check_expect(rx_pulse_width_max >= rx_pulse_width_min, "RX pulse max width recorded");
+    check_expect(rx_last_timestamp != 32'd0, "RX timestamp recorded");
 
     tx_pulse_req = 1'b1;
     tick(6);
     tx_pulse_req = 1'b0;
     tick(2);
-    expect(fault_stuck_high == 1'b1, "long-high fault trips");
-    expect(SD == 1'b1, "long-high fault forces shutdown");
+    check_expect(fault_stuck_high == 1'b1, "long-high fault trips");
+    check_expect(SD == 1'b1, "long-high fault forces shutdown");
 
     duty_rst_n = 1'b1;
     duty_enable_phy = 1'b1;
     tick(5);
-    expect(duty_phy_ready == 1'b1, "duty DUT ready");
+    check_expect(duty_phy_ready == 1'b1, "duty DUT ready");
     duty_tx_pulse_req = 1'b1;
     tick(5);
     duty_tx_pulse_req = 1'b0;
     tick(2);
-    expect(duty_fault_duty_limit == 1'b1, "duty-limit fault trips");
-    expect(duty_SD == 1'b1, "duty-limit fault forces shutdown");
+    check_expect(duty_fault_duty_limit == 1'b1, "duty-limit fault trips");
+    check_expect(duty_SD == 1'b1, "duty-limit fault forces shutdown");
 
     $display("TB_TFDU_LANE_PHY_SMOKE_PASS=1");
     $finish;

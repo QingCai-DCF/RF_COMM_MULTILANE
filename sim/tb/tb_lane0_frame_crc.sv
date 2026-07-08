@@ -55,7 +55,7 @@ module tb_lane0_frame_crc;
     .debug_status(debug_status)
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -147,7 +147,7 @@ module tb_lane0_frame_crc;
 
   task automatic run_validate;
     begin
-      expect(validate_ready, "frame validator ready");
+      check_expect(validate_ready, "frame validator ready");
       validate <= 1'b1;
       tick(1);
       validate <= 1'b0;
@@ -170,26 +170,26 @@ module tb_lane0_frame_crc;
 
     make_frame(16'h2201, 8'h01, 8'd8);
     run_validate();
-    expect(frame_good_count == 32'd1, "valid frame increments good count");
-    expect(frame_bad_count == 32'd0, "valid frame has no bad count");
+    check_expect(frame_good_count == 32'd1, "valid frame increments good count");
+    check_expect(frame_bad_count == 32'd0, "valid frame has no bad count");
 
     make_frame(16'h2201, 8'h01, 8'd8);
     set_byte(HDR_BYTES + 8 + 0, get_byte(HDR_BYTES + 8 + 0) ^ 8'h01);
     run_validate();
-    expect(crc_bad_count == 32'd1, "CRC bad increments crc counter");
+    check_expect(crc_bad_count == 32'd1, "CRC bad increments crc counter");
 
     make_frame(16'h2202, 8'h01, 8'd8);
     run_validate();
-    expect(session_bad_count == 32'd1, "session mismatch increments session counter");
+    check_expect(session_bad_count == 32'd1, "session mismatch increments session counter");
 
     make_frame(16'h2201, 8'h02, 8'd8);
     run_validate();
-    expect(lane_mask_bad_count == 32'd1, "lane mask mismatch increments lane counter");
+    check_expect(lane_mask_bad_count == 32'd1, "lane mask mismatch increments lane counter");
 
     make_frame(16'h2201, 8'h01, 8'd8);
     frame_len = frame_len - 1'b1;
     run_validate();
-    expect(payload_len_bad_count == 32'd1, "payload length mismatch increments length counter");
+    check_expect(payload_len_bad_count == 32'd1, "payload length mismatch increments length counter");
 
     $display("TB_LANE0_FRAME_CRC_PASS=1");
     $finish;

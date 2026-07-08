@@ -3,6 +3,14 @@ import json, shutil, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+XILINX_VIVADO_BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
+VITIS_CROSS_GCC_CANDIDATES = [
+    Path(r"D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe"),
+    Path(r"D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-linux-gnueabi\bin\arm-linux-gnueabihf-gcc.exe"),
+    Path(r"D:\Xilinx\Vitis\2023.1\gnu\aarch64\nt\aarch64-none\bin\aarch64-none-elf-gcc.exe"),
+    Path(r"D:\Xilinx\Vitis\2023.1\gnu\aarch64\nt\aarch64-linux\bin\aarch64-linux-gnu-gcc.exe"),
+    Path(r"D:\Xilinx\Vitis\2023.1\gnu\armr5\nt\gcc-arm-none-eabi\bin\armr5-none-eabi-gcc.exe"),
+]
 
 def run(name, cmd, status=None):
     p = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
@@ -19,6 +27,83 @@ def run_iverilog_test(sim_dir, name, files, marker):
         sim_result["stderr"] += f"\nMissing {marker} marker.\n"
     return [compile_result, sim_result]
 
+def resolve_tool(names, fallback: Path | None = None):
+    for name in names:
+        found = shutil.which(name)
+        if found:
+            return found
+    if fallback and fallback.exists():
+        return str(fallback)
+    return None
+
+def xilinx_sim_toolchain():
+    tools = {
+        "xvlog": resolve_tool(["xvlog", "xvlog.bat"], XILINX_VIVADO_BIN / "xvlog.bat"),
+        "xelab": resolve_tool(["xelab", "xelab.bat"], XILINX_VIVADO_BIN / "xelab.bat"),
+        "xsim": resolve_tool(["xsim", "xsim.bat"], XILINX_VIVADO_BIN / "xsim.bat"),
+    }
+    return tools if all(tools.values()) else None
+
+def vitis_cross_gcc():
+    for candidate in VITIS_CROSS_GCC_CANDIDATES:
+        if candidate.exists():
+            return str(candidate)
+    return None
+
+def tool_discovery_lines():
+    vivado_on_path = resolve_tool(["vivado", "vivado.bat"])
+    xvlog_on_path = resolve_tool(["xvlog", "xvlog.bat"])
+    xelab_on_path = resolve_tool(["xelab", "xelab.bat"])
+    xsim_on_path = resolve_tool(["xsim", "xsim.bat"])
+    lines = [
+        f"IVERILOG_ON_PATH={1 if shutil.which('iverilog') else 0}",
+        f"VERILATOR_ON_PATH={1 if shutil.which('verilator') else 0}",
+        f"VIVADO_PATH_ON_PATH={1 if vivado_on_path else 0}",
+        f"XVLOG_PATH_ON_PATH={1 if xvlog_on_path else 0}",
+        f"XELAB_PATH_ON_PATH={1 if xelab_on_path else 0}",
+        f"XSIM_PATH_ON_PATH={1 if xsim_on_path else 0}",
+        f"XILINX_VIVADO_2023_1_BIN={XILINX_VIVADO_BIN}",
+        f"XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE={1 if xilinx_sim_toolchain() else 0}",
+    ]
+    return "\n".join(lines) + "\n"
+
+def run_xsim_test(sim_dir, name, files, marker, top):
+    tools = xilinx_sim_toolchain()
+    assert tools is not None
+    work_dir = sim_dir / name
+    if work_dir.resolve().is_relative_to(sim_dir.resolve()) and work_dir.exists():
+        shutil.rmtree(work_dir)
+    work_dir.mkdir(parents=True, exist_ok=True)
+    snapshot = f"{top}_snapshot"
+    stdout_parts = [tool_discovery_lines()]
+    stderr_parts = []
+    commands = [
+        [tools["xvlog"], "-sv", "-i", str(ROOT / "rtl"), "-i", str(ROOT / "sim/models"), *[str(ROOT / f) for f in files]],
+        [tools["xelab"], top, "-debug", "typical", "-s", snapshot],
+        [tools["xsim"], snapshot, "-runall"],
+    ]
+    cmd_text = " && ".join(" ".join(cmd) for cmd in commands)
+    for cmd in commands:
+        proc = subprocess.run(cmd, cwd=work_dir, text=True, capture_output=True)
+        stdout_parts.append(proc.stdout)
+        stderr_parts.append(proc.stderr)
+        if proc.returncode != 0:
+            return {
+                "name": name,
+                "cmd": cmd_text,
+                "returncode": proc.returncode,
+                "stdout": "".join(stdout_parts),
+                "stderr": "".join(stderr_parts),
+                "status": None,
+            }
+    stdout = "".join(stdout_parts)
+    stderr = "".join(stderr_parts)
+    returncode = 0
+    if marker not in stdout:
+        returncode = 1
+        stderr += f"\nMissing {marker} marker.\n"
+    return {"name": name, "cmd": cmd_text, "returncode": returncode, "stdout": stdout, "stderr": stderr, "status": None}
+
 def run_sv_gates(outdir):
     sim_dir = outdir / "sim"
     sim_dir.mkdir(parents=True, exist_ok=True)
@@ -31,6 +116,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_tfdu_lane_phy_smoke.sv",
             ],
             "TB_TFDU_LANE_PHY_SMOKE_PASS=1",
+            "tb_tfdu_lane_phy_smoke",
         ),
         (
             "m2_4ppm_codec_sim",
@@ -40,6 +126,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_tfdu_4ppm_codec.sv",
             ],
             "TB_TFDU_4PPM_CODEC_PASS=1",
+            "tb_tfdu_4ppm_codec",
         ),
         (
             "m2_frame_l1_sim",
@@ -48,6 +135,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_lane0_frame_crc.sv",
             ],
             "TB_LANE0_FRAME_CRC_PASS=1",
+            "tb_lane0_frame_crc",
         ),
         (
             "m2_4ppm_model_integration_sim",
@@ -57,6 +145,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_tfdu_4ppm_model_integration.sv",
             ],
             "TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1",
+            "tb_tfdu_4ppm_model_integration",
         ),
         (
             "m3_lane0_ack_only_sim",
@@ -65,6 +154,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_lane0_ack_only.sv",
             ],
             "TB_LANE0_ACK_ONLY_PASS=1",
+            "tb_lane0_ack_only",
         ),
         (
             "m4_axi_regs_sim",
@@ -73,6 +163,7 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_ir_axi_regs_new.sv",
             ],
             "TB_IR_AXI_REGS_NEW_PASS=1",
+            "tb_ir_axi_regs_new",
         ),
         (
             "scheduler_sim",
@@ -81,16 +172,17 @@ def run_sv_gates(outdir):
                 "sim/tb/tb_ir_multilane_scheduler.sv",
             ],
             "TB_IR_MULTILANE_SCHEDULER_PASS=1",
+            "tb_ir_multilane_scheduler",
         ),
     ]
     if shutil.which("iverilog") and shutil.which("vvp"):
         results = []
-        for name, files, marker in tests:
+        for name, files, marker, _top in tests:
             results.extend(run_iverilog_test(sim_dir, name, files, marker))
         return results
     if shutil.which("verilator"):
         files = []
-        for _, test_files, _ in tests:
+        for _, test_files, _, _top in tests:
             files.extend(test_files)
         return [
             run(
@@ -98,16 +190,18 @@ def run_sv_gates(outdir):
                 ["verilator", "--lint-only", "--timing", "-Wall", *sorted(set(files))],
             )
         ]
+    if xilinx_sim_toolchain():
+        return [run_xsim_test(sim_dir, name, files, marker, top) for name, files, marker, top in tests]
     return [
         {
             "name": name,
-            "cmd": "iverilog|verilator",
+            "cmd": "iverilog|verilator|xvlog/xelab/xsim",
             "returncode": 0,
-            "stdout": f"SIM_TOOL_MISSING=1\n{name.upper()}_STATUS=PENDING_TOOL\n",
+            "stdout": tool_discovery_lines() + f"SIM_TOOL_MISSING=1\n{name.upper()}_STATUS=PENDING_TOOL\n",
             "stderr": "",
             "status": "PENDING_TOOL",
         }
-        for name, _, _ in tests
+        for name, _, _, _top in tests
     ]
 
 def run_ps_driver_c_compile(outdir):
@@ -122,11 +216,31 @@ def run_ps_driver_c_compile(outdir):
     common_args = ["-std=c11", "-Wall", "-Wextra", "-Isoftware/ps_driver", "-Iconfig/register_map/generated", *sources, "-o", str(exe)]
     compiler = shutil.which("gcc") or shutil.which("clang")
     if not compiler:
+        cross_compiler = vitis_cross_gcc()
+        if cross_compiler:
+            cross_args = ["-std=c11", "-Wall", "-Wextra", "-Isoftware/ps_driver", "-Iconfig/register_map/generated", "-fsyntax-only", *sources]
+            compile_result = run("ps_driver_c_compile", [cross_compiler, *cross_args])
+            return {
+                "name": "ps_driver_c_compile",
+                "cmd": compile_result["cmd"],
+                "returncode": compile_result["returncode"],
+                "stdout": (
+                    compile_result["stdout"]
+                    + "C_COMPILER_HOST_MISSING=1\n"
+                    + "VITIS_CROSS_GCC_AVAILABLE=1\n"
+                    + f"VITIS_CROSS_GCC={cross_compiler}\n"
+                    + "M4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY\n"
+                    + "M4_PS_DRIVER_C_OFFLINE_STUB_RUN=SKIPPED_CROSS_TARGET\n"
+                    + ("M4_PS_DRIVER_C_COMPILE=PASS\n" if compile_result["returncode"] == 0 else "")
+                ),
+                "stderr": compile_result["stderr"],
+                "status": None,
+            }
         return {
             "name": "ps_driver_c_compile",
             "cmd": "gcc|clang",
             "returncode": 0,
-            "stdout": "C_COMPILER_MISSING=1\nM4_PS_DRIVER_C_COMPILE=PENDING_TOOL\n",
+            "stdout": "C_COMPILER_MISSING=1\nVITIS_CROSS_GCC_AVAILABLE=0\nM4_PS_DRIVER_C_COMPILE=PENDING_TOOL\n",
             "stderr": "",
             "status": "PENDING_TOOL",
         }
@@ -152,7 +266,9 @@ def write_summary(outdir, results):
     lines = [f"# Offline Gate Summary", "", f"BOOTSTRAP_STATUS: {status}", "NO_HARDWARE_ACTIONS_EXECUTED: true", ""]
     for r in results:
         mark = r.get("status") or ("PASS" if r["returncode"] == 0 else "FAIL")
-        lines += [f"## {r['name']}: {mark}", "", "```text", r["stdout"].strip(), r["stderr"].strip(), "```", ""]
+        stdout = "\n".join(line.rstrip() for line in r["stdout"].strip().splitlines())
+        stderr = "\n".join(line.rstrip() for line in r["stderr"].strip().splitlines())
+        lines += [f"## {r['name']}: {mark}", "", "```text", stdout, stderr, "```", ""]
     (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8")
     return status
 

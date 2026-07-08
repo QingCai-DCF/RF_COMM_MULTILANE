@@ -11,11 +11,13 @@ SCHED_ENABLE_READBACK_PRESENT=1
 SCHED_STICKY_BAD_LANE_PRESENT=1
 SCHED_FAULT_FALLBACK_PRESENT=1
 SCHED_SELECTED_LANE_PRESENT=1
-SCHED_SIM=PENDING_TOOL
+SCHED_SIM=PASS
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 `rtl/ir_multilane_scheduler.sv` now implements profile-mask latching,
 lane-enable readback, known-bad AB_L1 blocking, sticky bad-lane isolation, and
 fallback to the next healthy reliable lane. The dedicated simulation testbench
-is included in the offline gate list; the current workstation still reports it
-as `PENDING_TOOL` when no SystemVerilog simulator is available.
+is included in the offline gate list. Current PATH discovery records
+`IVERILOG_ON_PATH=0`, `VERILATOR_ON_PATH=0`, and `VIVADO_PATH_ON_PATH=0`, while
+the D:\Xilinx\Vivado\2023.1\bin Xilinx simulator bat toolchain is available and
+passes the scheduler SystemVerilog gate.

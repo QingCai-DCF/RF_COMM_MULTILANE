@@ -85,7 +85,7 @@ module tb_ir_axi_regs_new;
     .debug_status()
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -116,11 +116,11 @@ module tb_ir_axi_regs_new;
       wr_data <= data;
       wr_en <= 1'b1;
       tick(1);
-      if (data[0]) expect(core_reset_pulse, "reset pulse generated");
-      if (data[2]) expect(start_pulse, "start pulse generated");
-      if (data[3]) expect(stop_pulse, "stop pulse generated");
-      if (data[4]) expect(clear_sticky_pulse, "clear sticky pulse generated");
-      if (data[5]) expect(commit_pulse, "commit pulse generated");
+      if (data[0]) check_expect(core_reset_pulse, "reset pulse generated");
+      if (data[2]) check_expect(start_pulse, "start pulse generated");
+      if (data[3]) check_expect(stop_pulse, "stop pulse generated");
+      if (data[4]) check_expect(clear_sticky_pulse, "clear sticky pulse generated");
+      if (data[5]) check_expect(commit_pulse, "commit pulse generated");
       wr_en <= 1'b0;
       tick(1);
     end
@@ -133,7 +133,7 @@ module tb_ir_axi_regs_new;
       tick(1);
       rd_en <= 1'b0;
       data = rd_data;
-      expect(rd_valid, "read valid asserted");
+      check_expect(rd_valid, "read valid asserted");
       tick(1);
     end
   endtask
@@ -151,9 +151,9 @@ module tb_ir_axi_regs_new;
     rst_n = 1'b1;
     tick(2);
 
-    expect(cfg_payload_lane_mask == 8'h01, "default payload mask lane0");
-    expect(cfg_ack_lane_mask == 8'h01, "default ack mask lane0");
-    expect(cfg_session == 16'h2201, "default G1 session");
+    check_expect(cfg_payload_lane_mask == 8'h01, "default payload mask lane0");
+    check_expect(cfg_ack_lane_mask == 8'h01, "default ack mask lane0");
+    check_expect(cfg_session == 16'h2201, "default G1 session");
 
     write_reg(REG_PROFILE_LANE_MASK, 32'h0000_0001);
     write_reg(REG_PROFILE_RX_LANE_MASK, 32'h0000_0001);
@@ -161,17 +161,17 @@ module tb_ir_axi_regs_new;
     write_reg(REG_PROFILE_SESSION, 32'h0000_2201);
     write_reg(REG_TIMING_DETECT_WINDOW, 32'h0000_0700);
     write_control(32'h0000_0020);
-    expect(profile_committed, "commit write is observable");
-    expect(commit_count == 32'd1, "commit count increments");
+    check_expect(profile_committed, "commit write is observable");
+    check_expect(commit_count == 32'd1, "commit count increments");
     write_control(32'h0000_0002);
-    expect(enable_phy, "enable PHY bit latches");
+    check_expect(enable_phy, "enable PHY bit latches");
     write_control(32'h0000_0006);
     write_control(32'h0000_0008);
 
     read_reg(REG_PROFILE_SESSION, value);
-    expect(value == 32'h0000_2201, "session readback matches write");
+    check_expect(value == 32'h0000_2201, "session readback matches write");
     read_reg(REG_PROFILE_ID, value);
-    expect(value == 32'h4731_2201, "profile id exposed");
+    check_expect(value == 32'h4731_2201, "profile id exposed");
 
     $display("TB_IR_AXI_REGS_NEW_PASS=1");
     $finish;

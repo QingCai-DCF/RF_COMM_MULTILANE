@@ -32,7 +32,8 @@ def main() -> int:
     require("write_bitstream" not in tcl, "M5_NO_BITSTREAM_GENERATION", errors)
     require(not any(token in tcl.lower() for token in FORBIDDEN), "M5_TCL_HAS_NO_HARDWARE_CALLS", errors)
     require(not any(token in runner.lower() for token in FORBIDDEN), "M5_RUNNER_HAS_NO_HARDWARE_CALLS", errors)
-    require("PENDING_TOOL" in runner and "VIVADO_TOOL_MISSING=1" in runner, "M5_RUNNER_RECORDS_TOOL_MISSING", errors)
+    require("resolve_vivado_executable" in runner and "VIVADO_PATH_ON_PATH" in runner, "M5_RUNNER_RECORDS_VIVADO_DISCOVERY", errors)
+    require("XILINX_VIVADO_2023_1_BAT_AVAILABLE" in runner, "M5_RUNNER_RECORDS_VIVADO_BAT_FALLBACK", errors)
     require("evidence/generated/vivado" in runner and "nonhardware_build_summary" in runner, "M5_RUNNER_WRITES_EVIDENCE", errors)
     require("ir_top_new" in tcl and "set_property top ir_top_new" in tcl, "M5_CANONICAL_TOP_SELECTED", errors)
 

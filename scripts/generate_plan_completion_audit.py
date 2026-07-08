@@ -64,6 +64,15 @@ def result_status(result: dict | None) -> str:
     return "PASS" if result.get("returncode") == 0 else "FAIL"
 
 
+def find_stdout_marker(offline: dict, marker: str) -> str | None:
+    prefix = f"{marker}="
+    for item in offline.get("results", []):
+        for line in item.get("stdout", "").splitlines():
+            if line.startswith(prefix):
+                return line
+    return None
+
+
 def main() -> int:
     offline = json.loads(read_text("evidence/generated/offline_gate_summary.json"))
     by_name = {item.get("name"): item for item in offline.get("results", [])}
@@ -110,14 +119,36 @@ def main() -> int:
         "|---|---|---|",
     ]
     for scope, gate_names, status_label in MILESTONES:
-        gate_status = ", ".join(f"{name}:{result_status(by_name.get(name))}" for name in gate_names)
-        if any(result_status(by_name.get(name)) == "FAIL" for name in gate_names):
+        statuses = [result_status(by_name.get(name)) for name in gate_names]
+        gate_status = ", ".join(f"{name}:{status}" for name, status in zip(gate_names, statuses, strict=True))
+        if any(status == "FAIL" for status in statuses):
             status_out = "FAIL"
-        elif any(result_status(by_name.get(name)) == "MISSING" for name in gate_names):
+        elif any(status == "MISSING" for status in statuses):
             status_out = "MISSING_EVIDENCE"
+        elif all(status == "PASS" for status in statuses):
+            status_out = status_label.replace("PENDING_TOOL", "PASS")
         else:
             status_out = status_label
         lines.append(f"| {scope} | {gate_status} | {status_out} |")
+
+    lines += [
+        "",
+        "## Tool Discovery",
+        "",
+    ]
+    for marker in [
+        "VIVADO_PATH_ON_PATH",
+        "XILINX_VIVADO_2023_1_BIN",
+        "XILINX_VIVADO_2023_1_BAT_AVAILABLE",
+        "XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE",
+        "IVERILOG_ON_PATH",
+        "VERILATOR_ON_PATH",
+    ]:
+        lines.append(find_stdout_marker(offline, marker) or f"{marker}=NOT_RECORDED")
+    lines += [
+        "",
+        "Current evidence distinguishes PATH discovery from direct bat-path discovery: Vivado is not required to be on PATH when the D:\\Xilinx\\Vivado\\2023.1\\bin tools are present.",
+    ]
 
     lines += [
         "",
@@ -140,8 +171,9 @@ def main() -> int:
         "",
         "## Remaining External Evidence",
         "",
-        "SystemVerilog simulation remains `PENDING_TOOL` when no supported simulator is available on PATH.",
-        "The Vivado non-hardware build remains `PENDING_TOOL` when Vivado is not available on PATH.",
+        "SystemVerilog simulation gates prefer PATH `iverilog`/`verilator`, then the D:\\Xilinx\\Vivado\\2023.1\\bin `xvlog.bat`/`xelab.bat`/`xsim.bat` toolchain.",
+        "The Vivado non-hardware build runner uses PATH Vivado when present, otherwise the D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat fallback.",
+        "`iverilog` and `verilator` remain absent when their discovery markers are `0`; this is distinct from Xilinx simulator availability.",
         "PS driver C compilation remains `PENDING_TOOL` when no C compiler is available on PATH.",
         "Hardware acceptance remains `PENDING_HW` by project rule and was not executed.",
         "",

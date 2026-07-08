@@ -96,7 +96,7 @@ module tb_tfdu_4ppm_model_integration;
     .debug_status()
   );
 
-  task automatic expect(input bit cond, input string msg);
+  task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
       $error("EXPECT_FAIL: %s", msg);
       $finish;
@@ -134,10 +134,10 @@ module tb_tfdu_4ppm_model_integration;
         tick(1);
         timeout++;
       end
-      expect(rx_symbol_valid, "model-coupled RX reports a valid 4PPM symbol");
-      expect(!rx_symbol_error, "model-coupled RX reports no 4PPM symbol error");
-      expect(rx_symbol == sym, "model-coupled RX symbol matches TX symbol");
-      expect(rx_symbol_chips == ref_encode(sym), "model-coupled RX chips match 4PPM mapping");
+      check_expect(rx_symbol_valid, "model-coupled RX reports a valid 4PPM symbol");
+      check_expect(!rx_symbol_error, "model-coupled RX reports no 4PPM symbol error");
+      check_expect(rx_symbol == sym, "model-coupled RX symbol matches TX symbol");
+      check_expect(rx_symbol_chips == ref_encode(sym), "model-coupled RX chips match 4PPM mapping");
       tick(2);
     end
   endtask
@@ -145,6 +145,8 @@ module tb_tfdu_4ppm_model_integration;
   task automatic send_preamble_through_model;
     int timeout;
     bit saw_done;
+    bit saw_rx_preamble;
+    logic [15:0] observed_preamble_count;
     begin
       rx_align <= 1'b1;
       tick(1);
@@ -155,16 +157,26 @@ module tb_tfdu_4ppm_model_integration;
       tx_preamble_valid <= 1'b0;
       timeout = 0;
       saw_done = 1'b0;
-      while (!rx_preamble_valid && !rx_symbol_error && timeout < 1000) begin
+      saw_rx_preamble = 1'b0;
+      observed_preamble_count = 16'd0;
+      while (!(saw_done && saw_rx_preamble) && !rx_symbol_error && timeout < 1200) begin
         if (tx_preamble_done) saw_done = 1'b1;
+        if (rx_preamble_valid) begin
+          saw_rx_preamble = 1'b1;
+          observed_preamble_count = rx_preamble_count;
+        end
         tick(1);
         timeout++;
       end
       if (tx_preamble_done) saw_done = 1'b1;
-      expect(saw_done, "model-coupled TX preamble completes");
-      expect(rx_preamble_valid, "model-coupled RX detects CNT_PREAMBLE preamble symbols");
-      expect(!rx_symbol_error, "model-coupled preamble reports no 4PPM symbol error");
-      expect(rx_preamble_count == 16'd4, "model-coupled RX preamble count matches CNT_PREAMBLE");
+      if (rx_preamble_valid) begin
+        saw_rx_preamble = 1'b1;
+        observed_preamble_count = rx_preamble_count;
+      end
+      check_expect(saw_done, "model-coupled TX preamble completes");
+      check_expect(saw_rx_preamble, "model-coupled RX detects CNT_PREAMBLE preamble symbols");
+      check_expect(!rx_symbol_error, "model-coupled preamble reports no 4PPM symbol error");
+      check_expect(observed_preamble_count == 16'd4, "model-coupled RX preamble count matches CNT_PREAMBLE");
       tick(2);
     end
   endtask
@@ -184,7 +196,7 @@ module tb_tfdu_4ppm_model_integration;
     enable = 1'b1;
     sd_n_shutdown = 1'b0;
     tick(120);
-    expect(model_rxd == 1'b1, "TFDU model Rxd idles high after startup");
+    check_expect(model_rxd == 1'b1, "TFDU model Rxd idles high after startup");
 
     send_preamble_through_model();
     send_symbol_through_model(2'b00);

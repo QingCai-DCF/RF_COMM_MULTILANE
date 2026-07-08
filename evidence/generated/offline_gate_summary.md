@@ -357,7 +357,8 @@ M5_REPORTS_SCRIPTED=1
 M5_NO_BITSTREAM_GENERATION=1
 M5_TCL_HAS_NO_HARDWARE_CALLS=1
 M5_RUNNER_HAS_NO_HARDWARE_CALLS=1
-M5_RUNNER_RECORDS_TOOL_MISSING=1
+M5_RUNNER_RECORDS_VIVADO_DISCOVERY=1
+M5_RUNNER_RECORDS_VIVADO_BAT_FALLBACK=1
 M5_RUNNER_WRITES_EVIDENCE=1
 M5_CANONICAL_TOP_SELECTED=1
 M5_TOP_HAS_PORT_ir_mode_out_0[0]=1
@@ -457,68 +458,360 @@ M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
 
 ```
 
-## m5_vivado_nonhardware_build: PENDING_TOOL
+## m5_vivado_nonhardware_build: PASS
 
 ```text
-M5_VIVADO_NONHARDWARE_BUILD=PENDING_TOOL
-VIVADO_TOOL_MISSING=1
+M5_VIVADO_NONHARDWARE_BUILD=PASS
+VIVADO_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BAT_AVAILABLE=1
+VIVADO_EXECUTABLE=D:\Xilinx\Vivado\2023.1\bin\vivado.bat
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 ```
 
-## lane_phy_sim: PENDING_TOOL
+## lane_phy_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-LANE_PHY_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_lane_phy_smoke -debug typical -s tb_tfdu_lane_phy_smoke_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.tfdu_lane_phy(CLK_HZ=1000000,TFD...
+Compiling module work.tfdu_lane_phy(CLK_HZ=1000000,TFD...
+Compiling module work.tb_tfdu_lane_phy_smoke
+Built simulation snapshot tb_tfdu_lane_phy_smoke_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl
+# xsim {tb_tfdu_lane_phy_smoke_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_TFDU_LANE_PHY_SMOKE_PASS=1
+$finish called at time : 385 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 173
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:39 2026...
 
 ```
 
-## m2_4ppm_codec_sim: PENDING_TOOL
+## m2_4ppm_codec_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-M2_4PPM_CODEC_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_4ppm_codec -debug typical -s tb_tfdu_4ppm_codec_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=1,CNT...
+Compiling module work.tb_tfdu_4ppm_codec
+Built simulation snapshot tb_tfdu_4ppm_codec_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_tfdu_4ppm_codec_snapshot/xsim_script.tcl
+# xsim {tb_tfdu_4ppm_codec_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+M2_4PPM_PREAMBLE_PATH_PASS=1
+TB_TFDU_4PPM_CODEC_PASS=1
+$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:43 2026...
 
 ```
 
-## m2_frame_l1_sim: PENDING_TOOL
+## m2_frame_l1_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-M2_FRAME_L1_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_frame_l1.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_frame_l1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_lane0_frame_crc -debug typical -s tb_lane0_frame_crc_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_frame_l1(MAX_FRAME_BYTES=64)
+Compiling module work.tb_lane0_frame_crc
+Built simulation snapshot tb_lane0_frame_crc_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl
+# xsim {tb_lane0_frame_crc_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_LANE0_FRAME_CRC_PASS=1
+$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" Line 195
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:48 2026...
 
 ```
 
-## m2_4ppm_model_integration_sim: PENDING_TOOL
+## m2_4ppm_model_integration_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-M2_4PPM_MODEL_INTEGRATION_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_4ppm_model_integration -debug typical -s tb_tfdu_4ppm_model_integration_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,CN...
+Compiling module work.tfdu6102_behavior_model(STARTUP_...
+Compiling module work.tb_tfdu_4ppm_model_integration
+Built simulation snapshot tb_tfdu_4ppm_model_integration_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_tfdu_4ppm_model_integration_snapshot/xsim_script.tcl
+# xsim {tb_tfdu_4ppm_model_integration_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
+TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
+$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 209
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:52 2026...
 
 ```
 
-## m3_lane0_ack_only_sim: PENDING_TOOL
+## m3_lane0_ack_only_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-M3_LANE0_ACK_ONLY_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_arq_l2.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_arq_l2
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_lane0_ack_only
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_lane0_ack_only -debug typical -s tb_lane0_ack_only_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_arq_l2(DEFAULT_RETRY_TIMEOUT_...
+Compiling module work.tb_lane0_ack_only
+Built simulation snapshot tb_lane0_ack_only_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl
+# xsim {tb_lane0_ack_only_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_LANE0_ACK_ONLY_PASS=1
+$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" Line 181
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:56 2026...
 
 ```
 
-## m4_axi_regs_sim: PENDING_TOOL
+## m4_axi_regs_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-M4_AXI_REGS_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_axi_regs_new
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_axi_regs_new -debug typical -s tb_ir_axi_regs_new_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_axi_regs_new
+Compiling module work.tb_ir_axi_regs_new
+Built simulation snapshot tb_ir_axi_regs_new_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl
+# xsim {tb_ir_axi_regs_new_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_IR_AXI_REGS_NEW_PASS=1
+$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" Line 177
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:59:01 2026...
 
 ```
 
-## scheduler_sim: PENDING_TOOL
+## scheduler_sim: PASS
 
 ```text
-SIM_TOOL_MISSING=1
-SCHEDULER_SIM_STATUS=PENDING_TOOL
+IVERILOG_ON_PATH=0
+VERILATOR_ON_PATH=0
+VIVADO_PATH_ON_PATH=0
+XVLOG_PATH_ON_PATH=0
+XELAB_PATH_ON_PATH=0
+XSIM_PATH_ON_PATH=0
+XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
+XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_multilane_scheduler
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_multilane_scheduler -debug typical -s tb_ir_multilane_scheduler_snapshot
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_multilane_scheduler_default
+Compiling module work.tb_ir_multilane_scheduler
+Built simulation snapshot tb_ir_multilane_scheduler_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl
+# xsim {tb_ir_multilane_scheduler_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_IR_MULTILANE_SCHEDULER_PASS=1
+$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:59:05 2026...
 
 ```
 
@@ -604,6 +897,11 @@ PLAN_AUDIT_NO_ROTATION_CLAIM_RECORDED=1
 PLAN_AUDIT_NO_SOAK_CLAIM_RECORDED=1
 PLAN_AUDIT_NO_EIGHT_LANE_CLAIM_RECORDED=1
 PLAN_AUDIT_NO_AB_L1_FIXED_CLAIM_RECORDED=1
+PLAN_AUDIT_VIVADO_PATH_ABSENCE_RECORDED=1
+PLAN_AUDIT_VIVADO_BAT_PATH_RECORDED=1
+PLAN_AUDIT_XILINX_SIM_BAT_AVAILABLE_RECORDED=1
+PLAN_AUDIT_IVERILOG_ABSENCE_RECORDED=1
+PLAN_AUDIT_VERILATOR_ABSENCE_RECORDED=1
 PLAN_COMPLETION_STATIC=PASS
 
 ```
