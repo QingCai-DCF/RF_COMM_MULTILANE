@@ -86,6 +86,9 @@ def main() -> int:
     codec_tb = (ROOT / "sim/tb/tb_tfdu_4ppm_codec.sv").read_text(encoding="utf-8", errors="ignore")
     frame_tb = (ROOT / "sim/tb/tb_lane0_frame_crc.sv").read_text(encoding="utf-8", errors="ignore")
     model_tb = (ROOT / "sim/tb/tb_tfdu_4ppm_model_integration.sv").read_text(encoding="utf-8", errors="ignore")
+    sweep_script = (ROOT / "scripts/generate_m2_detect_window_sweep.py").read_text(encoding="utf-8", errors="ignore")
+    sweep_report_path = ROOT / "evidence/generated/m2_detect_window_sweep.md"
+    sweep_report = sweep_report_path.read_text(encoding="utf-8", errors="ignore") if sweep_report_path.exists() else ""
 
     require("encode_4ppm" in codec and "decode_4ppm" in codec, "M2_4PPM_ENCODE_DECODE_PRESENT", errors)
     require("CNT_CHIP_MAX" in codec and "CNT_PREAMBLE" in codec and "DETECT_START_CYCLES" in codec, "M2_4PPM_PROFILE_PARAMS_PRESENT", errors)
@@ -108,6 +111,13 @@ def main() -> int:
     require("TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1" in model_tb, "M2_4PPM_MODEL_INTEGRATION_TB_PASS_MARKER_PRESENT", errors)
     require("M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1" in model_tb, "M2_4PPM_MODEL_PREAMBLE_TB_MARKER_PRESENT", errors)
     require("TB_LANE0_FRAME_CRC_PASS=1" in frame_tb, "M2_FRAME_TB_PASS_MARKER_PRESENT", errors)
+    require("pulse_detected" in sweep_script and "NEGATIVE_NARROW_WINDOW_3_4" in sweep_script, "M2_DETECT_WINDOW_SWEEP_SCRIPT_PRESENT", errors)
+    require(
+        "M2_DETECT_WINDOW_SWEEP_REPORT=1" in sweep_report
+        and "M2_DETECT_WINDOW_SWEEP=PASS" in sweep_report,
+        "M2_DETECT_WINDOW_SWEEP_REPORT_PRESENT",
+        errors,
+    )
 
     enc = {0: 0b1000, 1: 0b0100, 2: 0b0010, 3: 0b0001}
     dec = {v: k for k, v in enc.items()}

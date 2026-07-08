@@ -8,6 +8,7 @@ M2_4PPM_CODEC_TB_CREATED=1
 M2_4PPM_PREAMBLE_TB_CREATED=1
 M2_4PPM_TFDU_MODEL_INTEGRATION_TB_CREATED=1
 M2_4PPM_TFDU_MODEL_PREAMBLE_TB_CREATED=1
+M2_DETECT_WINDOW_SWEEP_REPORT_CREATED=1
 M2_FRAME_L1_TB_CREATED=1
 M2_STATIC_REFERENCE_CHECKS=PASS
 M2_4PPM_CODEC_SIM=PENDING_TOOL
@@ -21,5 +22,8 @@ mask mismatch, and payload length mismatch. It also verifies that the 4PPM
 model-integration testbench instantiates `tfdu6102_behavior_model`, decodes
 low-active `Rxd` through the abstract pulse-stream RX interface, and exercises
 the `CNT_PREAMBLE` transmit and receive path instead of only checking that the
-parameter name exists. SystemVerilog simulation remains unclaimed until
-`iverilog`, `verilator`, or a Vivado batch simulator is available on PATH.
+parameter name exists. The M2 detect-window sweep report is generated at
+`evidence/generated/m2_detect_window_sweep.md` and includes a negative case so
+the gate proves it can detect missed pulse offsets. SystemVerilog simulation
+remains unclaimed until `iverilog`, `verilator`, or a Vivado batch simulator is
+available on PATH.
