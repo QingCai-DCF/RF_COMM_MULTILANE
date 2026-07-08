@@ -14,6 +14,9 @@ module ir_4ppm_codec #(
   input  logic       tx_symbol_valid,
   output logic       tx_symbol_ready,
   output logic       tx_symbol_done,
+  input  logic       tx_preamble_valid,
+  output logic       tx_preamble_ready,
+  output logic       tx_preamble_done,
   output logic       tx_pulse,
 
   input  logic       rx_align,
@@ -21,10 +24,15 @@ module ir_4ppm_codec #(
   output logic [1:0] rx_symbol,
   output logic       rx_symbol_valid,
   output logic       rx_symbol_error,
+  output logic       rx_preamble_valid,
+  output logic [15:0] rx_preamble_count,
   output logic [3:0] rx_symbol_chips,
   output logic [31:0] debug_status
 );
   localparam int TICK_W = (CNT_CHIP_MAX <= 1) ? 1 : $clog2(CNT_CHIP_MAX + 1);
+  localparam int PREAMBLE_SYMBOLS = (CNT_PREAMBLE < 1) ? 1 : CNT_PREAMBLE;
+  localparam logic [15:0] PREAMBLE_SYMBOLS_16 = PREAMBLE_SYMBOLS;
+  localparam logic [15:0] PREAMBLE_LAST_16 = PREAMBLE_SYMBOLS - 1;
   localparam int CHIP_CYCLES = CNT_CHIP_MAX + 1;
   localparam int TX_PULSE_CYCLES_CLAMPED =
       (TX_PULSE_CYCLES < 1) ? 1 :
@@ -35,6 +43,8 @@ module ir_4ppm_codec #(
       ((DETECT_END_CYCLES > CNT_CHIP_MAX) ? CNT_CHIP_MAX : DETECT_END_CYCLES);
 
   logic tx_busy;
+  logic tx_preamble_active;
+  logic [15:0] tx_preamble_count;
   logic [3:0] tx_chips;
   logic [TICK_W-1:0] tx_tick;
   logic [1:0] tx_chip_idx;
@@ -43,6 +53,8 @@ module ir_4ppm_codec #(
   logic [1:0] rx_chip_idx;
   logic [3:0] rx_capture;
   logic chip_seen;
+  logic [3:0] rx_complete_chips;
+  logic [2:0] rx_complete_decode;
 
   function automatic logic [3:0] encode_4ppm(input logic [1:0] d);
     begin
@@ -68,38 +80,62 @@ module ir_4ppm_codec #(
   endfunction
 
   assign tx_symbol_ready = enable && !tx_busy;
+  assign tx_preamble_ready = enable && !tx_busy;
   assign tx_pulse = tx_busy && tx_chips[3 - tx_chip_idx] && (tx_tick < TX_PULSE_CYCLES_CLAMPED[TICK_W-1:0]);
-  assign debug_status = {
-    tx_busy,
-    tx_pulse,
-    tx_symbol_ready,
-    tx_symbol_done,
-    rx_symbol_valid,
-    rx_symbol_error,
-    tx_chip_idx,
-    rx_chip_idx,
-    tx_tick,
-    rx_tick,
-    tx_chips,
-    rx_capture
-  };
+  assign rx_complete_chips = {rx_capture[3:1], chip_seen};
+  assign rx_complete_decode = decode_4ppm(rx_complete_chips);
+
+  always_comb begin
+    debug_status = '0;
+    debug_status[0] = tx_busy;
+    debug_status[1] = tx_pulse;
+    debug_status[2] = tx_symbol_ready;
+    debug_status[3] = tx_symbol_done;
+    debug_status[4] = tx_preamble_active;
+    debug_status[5] = tx_preamble_done;
+    debug_status[6] = tx_preamble_ready;
+    debug_status[7] = rx_symbol_valid;
+    debug_status[8] = rx_symbol_error;
+    debug_status[9] = rx_preamble_valid;
+    debug_status[11:10] = tx_chip_idx;
+    debug_status[13:12] = rx_chip_idx;
+    debug_status[17:14] = tx_chips;
+    debug_status[21:18] = rx_capture;
+    debug_status[25:22] = tx_preamble_count[3:0];
+    debug_status[29:26] = rx_preamble_count[3:0];
+  end
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       tx_busy <= 1'b0;
+      tx_preamble_active <= 1'b0;
+      tx_preamble_count <= '0;
       tx_chips <= 4'b0000;
       tx_tick <= '0;
       tx_chip_idx <= 2'd0;
       tx_symbol_done <= 1'b0;
+      tx_preamble_done <= 1'b0;
     end else begin
       tx_symbol_done <= 1'b0;
+      tx_preamble_done <= 1'b0;
       if (!enable) begin
         tx_busy <= 1'b0;
+        tx_preamble_active <= 1'b0;
+        tx_preamble_count <= '0;
         tx_chips <= 4'b0000;
+        tx_tick <= '0;
+        tx_chip_idx <= 2'd0;
+      end else if (!tx_busy && tx_preamble_valid) begin
+        tx_busy <= 1'b1;
+        tx_preamble_active <= 1'b1;
+        tx_preamble_count <= '0;
+        tx_chips <= encode_4ppm(2'b00);
         tx_tick <= '0;
         tx_chip_idx <= 2'd0;
       end else if (!tx_busy && tx_symbol_valid) begin
         tx_busy <= 1'b1;
+        tx_preamble_active <= 1'b0;
+        tx_preamble_count <= '0;
         tx_chips <= encode_4ppm(tx_symbol);
         tx_tick <= '0;
         tx_chip_idx <= 2'd0;
@@ -108,8 +144,19 @@ module ir_4ppm_codec #(
           tx_tick <= '0;
           if (tx_chip_idx == 2'd3) begin
             tx_chip_idx <= 2'd0;
-            tx_busy <= 1'b0;
-            tx_symbol_done <= 1'b1;
+            if (tx_preamble_active && (tx_preamble_count != PREAMBLE_LAST_16)) begin
+              tx_preamble_count <= tx_preamble_count + 1'b1;
+              tx_chips <= encode_4ppm(2'b00);
+            end else begin
+              tx_busy <= 1'b0;
+              tx_preamble_active <= 1'b0;
+              tx_preamble_count <= '0;
+              if (tx_preamble_active) begin
+                tx_preamble_done <= 1'b1;
+              end else begin
+                tx_symbol_done <= 1'b1;
+              end
+            end
           end else begin
             tx_chip_idx <= tx_chip_idx + 1'b1;
           end
@@ -129,15 +176,19 @@ module ir_4ppm_codec #(
       rx_symbol <= 2'b00;
       rx_symbol_valid <= 1'b0;
       rx_symbol_error <= 1'b0;
+      rx_preamble_valid <= 1'b0;
+      rx_preamble_count <= 16'd0;
       rx_symbol_chips <= 4'b0000;
     end else begin
       rx_symbol_valid <= 1'b0;
       rx_symbol_error <= 1'b0;
+      rx_preamble_valid <= 1'b0;
       if (!enable || rx_align) begin
         rx_tick <= '0;
         rx_chip_idx <= 2'd0;
         rx_capture <= 4'b0000;
         chip_seen <= 1'b0;
+        rx_preamble_count <= 16'd0;
         rx_symbol_chips <= 4'b0000;
       end else begin
         if ((rx_tick >= DETECT_START_INT[TICK_W-1:0]) &&
@@ -152,12 +203,23 @@ module ir_4ppm_codec #(
           rx_tick <= '0;
           if (rx_chip_idx == 2'd3) begin
             rx_chip_idx <= 2'd0;
-            rx_symbol_chips <= {rx_capture[3:1], chip_seen};
-            if (decode_4ppm({rx_capture[3:1], chip_seen})[2]) begin
-              rx_symbol <= decode_4ppm({rx_capture[3:1], chip_seen})[1:0];
+            rx_symbol_chips <= rx_complete_chips;
+            if (rx_complete_decode[2]) begin
+              rx_symbol <= rx_complete_decode[1:0];
               rx_symbol_valid <= 1'b1;
+              if (rx_complete_decode[1:0] == 2'b00) begin
+                if (rx_preamble_count < PREAMBLE_SYMBOLS_16) begin
+                  rx_preamble_count <= rx_preamble_count + 16'd1;
+                end
+                if (rx_preamble_count == PREAMBLE_LAST_16) begin
+                  rx_preamble_valid <= 1'b1;
+                end
+              end else begin
+                rx_preamble_count <= 16'd0;
+              end
             end else begin
               rx_symbol_error <= 1'b1;
+              rx_preamble_count <= 16'd0;
             end
             rx_capture <= 4'b0000;
           end else begin

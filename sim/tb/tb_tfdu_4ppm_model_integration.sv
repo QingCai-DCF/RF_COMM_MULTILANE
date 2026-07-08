@@ -9,6 +9,9 @@ module tb_tfdu_4ppm_model_integration;
   logic tx_symbol_valid;
   logic tx_symbol_ready;
   logic tx_symbol_done;
+  logic tx_preamble_valid;
+  logic tx_preamble_ready;
+  logic tx_preamble_done;
   logic tx_pulse;
 
   logic sd_n_shutdown;
@@ -18,6 +21,8 @@ module tb_tfdu_4ppm_model_integration;
   logic [1:0] rx_symbol;
   logic rx_symbol_valid;
   logic rx_symbol_error;
+  logic rx_preamble_valid;
+  logic [15:0] rx_preamble_count;
   logic [3:0] rx_symbol_chips;
 
   ir_4ppm_codec #(
@@ -34,12 +39,17 @@ module tb_tfdu_4ppm_model_integration;
     .tx_symbol_valid(tx_symbol_valid),
     .tx_symbol_ready(tx_symbol_ready),
     .tx_symbol_done(tx_symbol_done),
+    .tx_preamble_valid(tx_preamble_valid),
+    .tx_preamble_ready(tx_preamble_ready),
+    .tx_preamble_done(tx_preamble_done),
     .tx_pulse(tx_pulse),
     .rx_align(1'b0),
     .rx_pulse_active(1'b0),
     .rx_symbol(),
     .rx_symbol_valid(),
     .rx_symbol_error(),
+    .rx_preamble_valid(),
+    .rx_preamble_count(),
     .rx_symbol_chips(),
     .debug_status()
   );
@@ -71,12 +81,17 @@ module tb_tfdu_4ppm_model_integration;
     .tx_symbol_valid(1'b0),
     .tx_symbol_ready(),
     .tx_symbol_done(),
+    .tx_preamble_valid(1'b0),
+    .tx_preamble_ready(),
+    .tx_preamble_done(),
     .tx_pulse(),
     .rx_align(rx_align),
     .rx_pulse_active(~model_rxd),
     .rx_symbol(rx_symbol),
     .rx_symbol_valid(rx_symbol_valid),
     .rx_symbol_error(rx_symbol_error),
+    .rx_preamble_valid(rx_preamble_valid),
+    .rx_preamble_count(rx_preamble_count),
     .rx_symbol_chips(rx_symbol_chips),
     .debug_status()
   );
@@ -127,11 +142,39 @@ module tb_tfdu_4ppm_model_integration;
     end
   endtask
 
+  task automatic send_preamble_through_model;
+    int timeout;
+    bit saw_done;
+    begin
+      rx_align <= 1'b1;
+      tick(1);
+      rx_align <= 1'b0;
+      wait (tx_preamble_ready);
+      tx_preamble_valid <= 1'b1;
+      tick(1);
+      tx_preamble_valid <= 1'b0;
+      timeout = 0;
+      saw_done = 1'b0;
+      while (!rx_preamble_valid && !rx_symbol_error && timeout < 1000) begin
+        if (tx_preamble_done) saw_done = 1'b1;
+        tick(1);
+        timeout++;
+      end
+      if (tx_preamble_done) saw_done = 1'b1;
+      expect(saw_done, "model-coupled TX preamble completes");
+      expect(rx_preamble_valid, "model-coupled RX detects CNT_PREAMBLE preamble symbols");
+      expect(!rx_symbol_error, "model-coupled preamble reports no 4PPM symbol error");
+      expect(rx_preamble_count == 16'd4, "model-coupled RX preamble count matches CNT_PREAMBLE");
+      tick(2);
+    end
+  endtask
+
   initial begin
     rst_n = 1'b0;
     enable = 1'b0;
     tx_symbol = 2'b00;
     tx_symbol_valid = 1'b0;
+    tx_preamble_valid = 1'b0;
     sd_n_shutdown = 1'b1;
     mode_high_speed = 1'b1;
     rx_align = 1'b0;
@@ -143,11 +186,13 @@ module tb_tfdu_4ppm_model_integration;
     tick(120);
     expect(model_rxd == 1'b1, "TFDU model Rxd idles high after startup");
 
+    send_preamble_through_model();
     send_symbol_through_model(2'b00);
     send_symbol_through_model(2'b01);
     send_symbol_through_model(2'b10);
     send_symbol_through_model(2'b11);
 
+    $display("M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1");
     $display("TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1");
     $finish;
   end

@@ -89,13 +89,24 @@ def main() -> int:
 
     require("encode_4ppm" in codec and "decode_4ppm" in codec, "M2_4PPM_ENCODE_DECODE_PRESENT", errors)
     require("CNT_CHIP_MAX" in codec and "CNT_PREAMBLE" in codec and "DETECT_START_CYCLES" in codec, "M2_4PPM_PROFILE_PARAMS_PRESENT", errors)
+    require(
+        codec.count("CNT_PREAMBLE") > 1
+        and "PREAMBLE_SYMBOLS" in codec
+        and "tx_preamble_valid" in codec
+        and "rx_preamble_valid" in codec
+        and "rx_preamble_count" in codec,
+        "M2_4PPM_PREAMBLE_BEHAVIOR_PRESENT",
+        errors,
+    )
     require("tx_pulse" in codec and "rx_pulse_active" in codec, "M2_4PPM_ABSTRACT_PULSE_INTERFACE", errors)
     require("session_bad_count" in frame and "lane_mask_bad_count" in frame, "M2_FRAME_SESSION_MASK_COUNTERS_PRESENT", errors)
     require("crc_bad_count" in frame and "payload_len_bad_count" in frame, "M2_FRAME_CRC_LENGTH_COUNTERS_PRESENT", errors)
     require("ack" not in frame.lower() and "retry" not in frame.lower(), "M2_FRAME_L1_HAS_NO_ACK_RETRY", errors)
     require("TB_TFDU_4PPM_CODEC_PASS=1" in codec_tb, "M2_4PPM_TB_PASS_MARKER_PRESENT", errors)
+    require("M2_4PPM_PREAMBLE_PATH_PASS=1" in codec_tb, "M2_4PPM_PREAMBLE_TB_MARKER_PRESENT", errors)
     require("tfdu6102_behavior_model" in model_tb and "rx_pulse_active(~model_rxd)" in model_tb, "M2_4PPM_TFDU_MODEL_INSTANTIATED", errors)
     require("TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1" in model_tb, "M2_4PPM_MODEL_INTEGRATION_TB_PASS_MARKER_PRESENT", errors)
+    require("M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1" in model_tb, "M2_4PPM_MODEL_PREAMBLE_TB_MARKER_PRESENT", errors)
     require("TB_LANE0_FRAME_CRC_PASS=1" in frame_tb, "M2_FRAME_TB_PASS_MARKER_PRESENT", errors)
 
     enc = {0: 0b1000, 1: 0b0100, 2: 0b0010, 3: 0b0001}
