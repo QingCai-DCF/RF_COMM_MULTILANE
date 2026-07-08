@@ -143,11 +143,23 @@ def run_ps_driver_c_compile(outdir):
         "status": None,
     }
 
+def write_summary(outdir, results):
+    hard_fail = [r for r in results if r["returncode"] != 0]
+    pending = [r for r in results if r.get("status") == "PENDING_TOOL"]
+    status = "FAIL" if hard_fail else ("PASS_WITH_PENDING_TOOL" if pending else "PASS")
+    summary = {"status": status, "no_hardware": True, "results": results}
+    (outdir / "offline_gate_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    lines = [f"# Offline Gate Summary", "", f"BOOTSTRAP_STATUS: {status}", "NO_HARDWARE_ACTIONS_EXECUTED: true", ""]
+    for r in results:
+        mark = r.get("status") or ("PASS" if r["returncode"] == 0 else "FAIL")
+        lines += [f"## {r['name']}: {mark}", "", "```text", r["stdout"].strip(), r["stderr"].strip(), "```", ""]
+    (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8")
+    return status
+
 def main():
     results = []
     py = sys.executable
     results.append(run("project_integrity", [py, "scripts/check_project_integrity.py"]))
-    results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
     results.append(run("xdc_conflicts", [py, "scripts/check_xdc_conflicts.py"]))
     results.append(run("tfdu_safety_static", [py, "scripts/check_tfdu_safety_static.py"]))
     results.append(run("m1_tfdu_model_reference", [py, "scripts/generate_m1_tfdu_model_reference.py"]))
@@ -173,16 +185,14 @@ def main():
         m5_result["status"] = "PENDING_TOOL"
     results.append(m5_result)
     results.extend(run_sv_gates(outdir))
+
+    write_summary(outdir, results)
+    results.append(run("generate_plan_completion_audit", [py, "scripts/generate_plan_completion_audit.py"]))
+    write_summary(outdir, results)
+    results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
+    status = write_summary(outdir, results)
+
     hard_fail = [r for r in results if r["returncode"] != 0]
-    pending = [r for r in results if r.get("status") == "PENDING_TOOL"]
-    status = "FAIL" if hard_fail else ("PASS_WITH_PENDING_TOOL" if pending else "PASS")
-    summary = {"status": status, "no_hardware": True, "results": results}
-    (outdir / "offline_gate_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    lines = [f"# Offline Gate Summary", "", f"BOOTSTRAP_STATUS: {status}", "NO_HARDWARE_ACTIONS_EXECUTED: true", ""]
-    for r in results:
-        mark = r.get("status") or ("PASS" if r["returncode"] == 0 else "FAIL")
-        lines += [f"## {r['name']}: {mark}", "", "```text", r["stdout"].strip(), r["stderr"].strip(), "```", ""]
-    (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8")
     print(f"OFFLINE_GATES_RAN=1 status={status}")
     print(f"GENERATED_SUMMARY={outdir / 'offline_gate_summary.md'}")
     return 1 if hard_fail else 0
