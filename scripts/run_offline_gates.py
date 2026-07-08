@@ -57,6 +57,14 @@ def run_sv_gates(outdir):
             ],
             "TB_LANE0_ACK_ONLY_PASS=1",
         ),
+        (
+            "m4_axi_regs_sim",
+            [
+                "rtl/ir_axi_regs_new.sv",
+                "sim/tb/tb_ir_axi_regs_new.sv",
+            ],
+            "TB_IR_AXI_REGS_NEW_PASS=1",
+        ),
     ]
     if shutil.which("iverilog") and shutil.which("vvp"):
         results = []
@@ -96,6 +104,7 @@ def main():
     results.append(run("host_client_unit_tests", [py, "software/host_client/test_protocol_contract.py"]))
     results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))
     results.append(run("m3_static_reference_checks", [py, "scripts/check_m3_static.py"]))
+    results.append(run("m4_static_reference_checks", [py, "scripts/check_m4_static.py"]))
     outdir = ROOT / "evidence/generated"
     outdir.mkdir(parents=True, exist_ok=True)
     results.extend(run_sv_gates(outdir))
