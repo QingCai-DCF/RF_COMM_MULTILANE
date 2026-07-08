@@ -35,6 +35,14 @@
       "status": null
     },
     {
+      "name": "m1_tfdu_model_reference",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_m1_tfdu_model_reference.py",
+      "returncode": 0,
+      "stdout": "M1_TFDU_MODEL_REFERENCE_REPORT=1\nM1_MODEL_STARTUP_500US_PASS=1\nM1_MODEL_RX_LOW_ACTIVE_PASS=1\nM1_MODEL_125NS_RX_RANGE_PASS=1\nM1_MODEL_250NS_RX_RANGE_PASS=1\nM1_MODEL_JITTER_PATTERN_PASS=1\nM1_MODEL_PULSE_LOSS_PATTERN_PASS=1\nM1_MODEL_NEAR_END_ECHO_PASS=1\nM1_MODEL_LONG_HIGH_DISABLE_PASS=1\nM1_TFDU_MODEL_REFERENCE=PASS\n",
+      "stderr": "",
+      "status": null
+    },
+    {
       "name": "register_map_generation",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_register_headers.py",
       "returncode": 0,

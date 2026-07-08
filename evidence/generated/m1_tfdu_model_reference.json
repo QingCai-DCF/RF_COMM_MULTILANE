@@ -1,0 +1,37 @@
+{
+  "marker": "M1_TFDU_MODEL_REFERENCE_REPORT",
+  "status": "PASS",
+  "parameters": {
+    "STARTUP_US": 500,
+    "JITTER_NS": 20,
+    "PULSE_LOSS_PERMILLE": 0,
+    "LONG_HIGH_LIMIT_US": 80,
+    "NEAR_END_ECHO": 0,
+    "RX_125_MIN_NS": 100,
+    "RX_125_MAX_NS": 140,
+    "RX_250_MIN_NS": 225,
+    "RX_250_MAX_NS": 275,
+    "ECHO_DELAY_NS": 400,
+    "ECHO_WIDTH_NS": 80
+  },
+  "reference": {
+    "rx_width_for_125ns_txd": 120,
+    "rx_width_for_250ns_txd": 250,
+    "jitter_sequence_counts_1_to_4": [
+      20,
+      0,
+      20,
+      0
+    ],
+    "loss_250_permille_counts_1_to_8": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+    ]
+  }
+}

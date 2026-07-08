@@ -150,6 +150,7 @@ def main():
     results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
     results.append(run("xdc_conflicts", [py, "scripts/check_xdc_conflicts.py"]))
     results.append(run("tfdu_safety_static", [py, "scripts/check_tfdu_safety_static.py"]))
+    results.append(run("m1_tfdu_model_reference", [py, "scripts/generate_m1_tfdu_model_reference.py"]))
     results.append(run("register_map_generation", [py, "scripts/generate_register_headers.py"]))
     results.append(run("no_hardware_calls", [py, "scripts/check_no_hardware_calls.py"]))
     results.append(run("host_client_unit_tests", [py, "software/host_client/test_protocol_contract.py"]))
