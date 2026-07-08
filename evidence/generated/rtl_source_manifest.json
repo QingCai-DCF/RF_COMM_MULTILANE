@@ -501,6 +501,19 @@
     "top_candidate": false
   },
   {
+    "path": "rtl/tfdu/tfdu_lane_phy.sv",
+    "sha256": "4919dd03c759812a38540abb9744652386650c4720cb4d06eea719bd939b08fe",
+    "language": "systemverilog",
+    "class": "active",
+    "modules": [
+      "tfdu_lane_phy_p2"
+    ],
+    "parameters": [
+      "integer"
+    ],
+    "top_candidate": false
+  },
+  {
     "path": "rtl/tfdu_lane_phy.sv",
     "sha256": "706145b216e3b1f09da066d7adb74c37b32f228383d01a5fecebc5ec99e7d2a0",
     "language": "systemverilog",
@@ -534,25 +547,41 @@
   },
   {
     "path": "sim/models/tfdu6102_behavior_model.sv",
-    "sha256": "5a9e8706a9501cd45069beea2288fd6771c669adcdc2867b1fd34f534b589d79",
+    "sha256": "efb89e07afa7c4e2c43d128862d8f5bf47a1b18194756c03c9081259d2d44c42",
     "language": "systemverilog",
     "class": "active",
     "modules": [
       "tfdu6102_behavior_model"
     ],
     "parameters": [
+      "CLK_HZ",
+      "DROP_EVERY_N_PULSE",
       "ECHO_DELAY_NS",
       "ECHO_WIDTH_NS",
+      "JITTER_CYCLES",
       "JITTER_NS",
       "LONG_HIGH_LIMIT_US",
+      "MODE_STATIC_HIGH",
       "NEAR_END_ECHO",
       "PULSE_LOSS_PERMILLE",
       "RX_125_MAX_NS",
       "RX_125_MIN_NS",
       "RX_250_MAX_NS",
       "RX_250_MIN_NS",
-      "STARTUP_US"
+      "STARTUP_US",
+      "TXD_PROTECT_US"
     ],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_ir_4ppm_pulse_smoke.sv",
+    "sha256": "3280a26adcf43a47199c54aa127138814b4cb91e27e7e01ef57c6afda2c968ec",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_ir_4ppm_pulse_smoke"
+    ],
+    "parameters": [],
     "top_candidate": false
   },
   {
@@ -600,6 +629,28 @@
     "top_candidate": false
   },
   {
+    "path": "sim/tb/tb_tfdu6102_behavior_model_smoke.sv",
+    "sha256": "d4ad43d0a9376390f93bb5277f1592587d8450459064cfef434e80603726e51a",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu6102_behavior_model_smoke"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu6102_pair_link_smoke.sv",
+    "sha256": "aa2482bacabc13f9d2d04dd13c508ae7dc2952345f7d6e2382741438ebd983d3",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu6102_pair_link_smoke"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
     "path": "sim/tb/tb_tfdu_4ppm_codec.sv",
     "sha256": "21b67237616f18209447d9d6c486f76e485ec056aea73224004c182020648ada",
     "language": "systemverilog",
@@ -612,11 +663,44 @@
   },
   {
     "path": "sim/tb/tb_tfdu_4ppm_model_integration.sv",
-    "sha256": "0ea2f9664260b86f36500526bf30153baf1d3ce1558728bd15af22ccdab10122",
+    "sha256": "69f8b8006edb9e2413feb97ca8d9cf79694501cb3e1692580ef009cb5bc3daa9",
     "language": "systemverilog",
     "class": "testbench",
     "modules": [
       "tb_tfdu_4ppm_model_integration"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_pulse_width.sv",
+    "sha256": "284958f03ddb95f21ae292427603d079979ce42dbe2f92f3cb9886bfffcca8bc",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_pulse_width"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_reset_shutdown.sv",
+    "sha256": "04afe46a0a3479f574acbdffe0e7d52d4106252f849857788ab6641fbe3bef2c",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_reset_shutdown"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_rx_active_low.sv",
+    "sha256": "008d92ef35799dac3d304f24dc6ac4cebb1509080efa5805ed73677acbf0b779",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_rx_active_low"
     ],
     "parameters": [],
     "top_candidate": false
@@ -628,6 +712,86 @@
     "class": "testbench",
     "modules": [
       "tb_tfdu_lane_phy_smoke"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_startup_gate.sv",
+    "sha256": "4ec77010d234a6ee858ef58135cd6cd32960e5ecff56bad9874b0c472fa0d340",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_startup_gate"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_txd_default_low.sv",
+    "sha256": "b2ec93d06d4bc45964e357e781abaca15bf50c0f59c7b48a02dcf4ee42ad97d8",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_txd_default_low"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_lane_phy_txd_stuck_high_guard.sv",
+    "sha256": "697becf9b5dfe2a645eb1b3efc85f246c2484e5e07c512dfb239792af7c1c469",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_lane_phy_txd_stuck_high_guard"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_multilane_generate_smoke.sv",
+    "sha256": "62122763bb9f5aa3ccf174b5a907ecaf78907026e12626a3c9f282d660e49153",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tfdu_multilane_fixture",
+      "tb_tfdu_multilane_generate_smoke"
+    ],
+    "parameters": [
+      "integer"
+    ],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_negative_mode_low_fir_drop.sv",
+    "sha256": "1cdac0feb27034ab5cb0e9be4c8d81f8d16fc26fee91ba379bb20db2fef9faf8",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_negative_mode_low_fir_drop"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_negative_no_startup_tx.sv",
+    "sha256": "500340930a89dc239bf08a5e3fcf7c7de808009d6365b8ae172f158e2679759e",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_negative_no_startup_tx"
+    ],
+    "parameters": [],
+    "top_candidate": false
+  },
+  {
+    "path": "sim/tb/tb_tfdu_negative_stuck_high.sv",
+    "sha256": "392124308180447c03faea817a890784b2b40a1b841cd34c3beaa0dd9266e77e",
+    "language": "systemverilog",
+    "class": "testbench",
+    "modules": [
+      "tb_tfdu_negative_stuck_high"
     ],
     "parameters": [],
     "top_candidate": false

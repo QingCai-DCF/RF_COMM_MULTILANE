@@ -30,7 +30,11 @@
       "Txd",
       "SD",
       "Mode",
-      "Rxd"
+      "optical_i",
+      "optical_o",
+      "Rxd",
+      "startup_done",
+      "protect_fault"
     ],
     "ir_4ppm_codec": [
       "clk",
@@ -210,6 +214,56 @@
     ]
   },
   "instances": [
+    {
+      "file": "sim/tb/tb_ir_4ppm_pulse_smoke.sv",
+      "module": "tfdu6102_behavior_model",
+      "instance": "model",
+      "named_ports": [
+        "Txd",
+        "SD",
+        "Mode",
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
+    {
+      "file": "sim/tb/tb_ir_4ppm_pulse_smoke.sv",
+      "module": "ir_4ppm_codec",
+      "instance": "codec",
+      "named_ports": [
+        "clk",
+        "rst_n",
+        "enable",
+        "tx_symbol",
+        "tx_symbol_valid",
+        "tx_symbol_ready",
+        "tx_symbol_done",
+        "tx_preamble_valid",
+        "tx_preamble_ready",
+        "tx_preamble_done",
+        "tx_pulse",
+        "rx_align",
+        "rx_pulse_active",
+        "rx_symbol",
+        "rx_symbol_valid",
+        "rx_symbol_error",
+        "rx_preamble_valid",
+        "rx_preamble_count",
+        "rx_symbol_chips",
+        "debug_status"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
     {
       "file": "sim/tb/tb_ir_axi_regs_new.sv",
       "module": "ir_axi_regs_new",
@@ -391,6 +445,63 @@
       "duplicate_ports": []
     },
     {
+      "file": "sim/tb/tb_tfdu6102_behavior_model_smoke.sv",
+      "module": "tfdu6102_behavior_model",
+      "instance": "dut",
+      "named_ports": [
+        "Txd",
+        "SD",
+        "Mode",
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
+    {
+      "file": "sim/tb/tb_tfdu6102_pair_link_smoke.sv",
+      "module": "tfdu6102_behavior_model",
+      "instance": "a_to_b",
+      "named_ports": [
+        "Txd",
+        "SD",
+        "Mode",
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
+    {
+      "file": "sim/tb/tb_tfdu6102_pair_link_smoke.sv",
+      "module": "tfdu6102_behavior_model",
+      "instance": "b_to_a",
+      "named_ports": [
+        "Txd",
+        "SD",
+        "Mode",
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
+    {
       "file": "sim/tb/tb_tfdu_4ppm_codec.sv",
       "module": "ir_4ppm_codec",
       "instance": "dut",
@@ -429,7 +540,11 @@
         "Txd",
         "SD",
         "Mode",
-        "Rxd"
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
       ],
       "uses_named_ports": true,
       "unknown_ports": [],
@@ -560,6 +675,25 @@
         "tx_high_width_current",
         "duty_window_count",
         "duty_high_count"
+      ],
+      "uses_named_ports": true,
+      "unknown_ports": [],
+      "missing_ports": [],
+      "duplicate_ports": []
+    },
+    {
+      "file": "sim/tb/tb_tfdu_negative_mode_low_fir_drop.sv",
+      "module": "tfdu6102_behavior_model",
+      "instance": "dut",
+      "named_ports": [
+        "Txd",
+        "SD",
+        "Mode",
+        "optical_i",
+        "optical_o",
+        "Rxd",
+        "startup_done",
+        "protect_fault"
       ],
       "uses_named_ports": true,
       "unknown_ports": [],

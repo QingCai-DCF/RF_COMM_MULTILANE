@@ -3,7 +3,10 @@ param(
   [switch]$Strict,
   [switch]$AllowSkips,
   [string]$OutputDir = "evidence/generated",
-  [switch]$JsonSummary
+  [switch]$JsonSummary,
+  [switch]$IncludeSimulation,
+  [switch]$SimulationRequired,
+  [switch]$AllowSimulationSkip
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,4 +25,7 @@ $argsList = @("tools/run_offline_gate.py", "--output-dir", $OutputDir)
 if ($Strict) { $argsList += "--strict" }
 if ($AllowSkips) { $argsList += "--allow-skips" }
 if ($JsonSummary) { $argsList += "--json-summary" }
+if ($IncludeSimulation) { $argsList += "--include-simulation" }
+if ($SimulationRequired) { $argsList += "--simulation-required" }
+if ($AllowSimulationSkip) { $argsList += "--allow-simulation-skip" }
 python @argsList

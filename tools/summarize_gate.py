@@ -13,6 +13,10 @@ def main():
         return 1
     data = json.loads(path.read_text(encoding="utf-8"))
     print(f"RESULT: {data.get('status', 'UNKNOWN')}")
+    if "P1_OFFLINE_HARDENING" in data:
+        print(f"P1_OFFLINE_HARDENING: {data.get('P1_OFFLINE_HARDENING')}")
+    if "P2_SIMULATION_BASELINE" in data:
+        print(f"P2_SIMULATION_BASELINE: {data.get('P2_SIMULATION_BASELINE')}")
     print("NO_HARDWARE_ACTIONS_EXECUTED: true")
     print("HARDWARE_ACCEPTANCE: PENDING_HW")
     for result in data.get("results", []):

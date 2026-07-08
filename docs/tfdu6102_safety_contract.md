@@ -15,3 +15,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - [x] Mode strategy is single-choice static high-speed mode.
 - [x] Static mode and dynamic mode programming are not mixed.
 - [x] All future hardware tests must program shutdown on exit.
+- [x] P2 simulation keeps HARDWARE_ACCEPTANCE at PENDING_HW.
+- [x] P2 model treats Rxd idle as high and valid receive pulses as low.
+- [x] P2 model drops FIR pulses while Mode=Low.
+- [x] P2 model records stuck-high protection instead of allowing unbounded Txd high.

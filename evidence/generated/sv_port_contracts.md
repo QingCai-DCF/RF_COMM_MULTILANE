@@ -11,8 +11,8 @@ SV_PORT_CONTRACT_STATIC=PASS
 | Module | Instance count | Declared ports |
 |---|---:|---:|
 | `tfdu_lane_phy` | 2 | 23 |
-| `tfdu6102_behavior_model` | 1 | 4 |
-| `ir_4ppm_codec` | 3 | 20 |
+| `tfdu6102_behavior_model` | 6 | 8 |
+| `ir_4ppm_codec` | 4 | 20 |
 | `ir_frame_l1` | 1 | 22 |
 | `ir_arq_l2` | 1 | 41 |
 | `ir_multilane_scheduler` | 1 | 23 |

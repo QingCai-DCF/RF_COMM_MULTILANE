@@ -64,7 +64,11 @@ module tb_tfdu_4ppm_model_integration;
     .Txd(tx_pulse),
     .SD(sd_n_shutdown),
     .Mode(mode_high_speed),
-    .Rxd(model_rxd)
+    .optical_i(tx_pulse),
+    .optical_o(),
+    .Rxd(model_rxd),
+    .startup_done(),
+    .protect_fault()
   );
 
   ir_4ppm_codec #(

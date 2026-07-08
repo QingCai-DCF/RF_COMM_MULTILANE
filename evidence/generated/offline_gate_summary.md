@@ -166,3 +166,20 @@ SUMMARY: evidence/generated/evidence_consistency_summary.md
 
 REASON: git status recorded
 SUMMARY: evidence/generated/git_cleanliness_report.md
+
+## P2 Simulation Gate
+
+P2_SIMULATION_BASELINE: PASS
+COMBINED_OFFLINE_STATUS: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+SUMMARY: evidence/generated/simulation_gate_summary.md
+RESULTS: evidence/simulation/sim_results.json
+
+### P2 Failures
+
+- none
+
+### P2 Skips
+
+- none

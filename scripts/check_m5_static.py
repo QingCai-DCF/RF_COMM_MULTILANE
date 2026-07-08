@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+# dry-run static checker only; forbidden tokens below are scanned as data.
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN = (
     "open_" + "hw",

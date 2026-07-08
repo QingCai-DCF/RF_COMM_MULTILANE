@@ -52,6 +52,20 @@ before hardware acceptance.
 
 Rxd inversion is centralized in the TFDU lane PHY wrapper.
 
+## P2 Simulation Model
+
+P2 uses a digital offline TFDU6102 behavior model. It checks shutdown, static
+Mode=High, 500 us startup policy, active-high Txd, active-low Rxd, pulse-width
+mapping, and stuck-high protection. It does not validate optical power, supply
+integrity, layout, distance, angle, rotation, or real board behavior.
+
+## Supply And Layout Notes For Later Hardware
+
+IRED current is expected to be at the hundreds of mA scale. VCC2 can droop under
+fast current rise. C1/C3 4.7 uF and C2 0.1 uF ceramic decoupling should be close
+to TFDU6102 power pins. Long, inductive, or resistive supply paths can reduce
+sensitivity and distance.
+
 ## Hardware Test Authorization
 
 This document does not authorize hardware execution.

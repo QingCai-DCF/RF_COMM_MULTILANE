@@ -1,0 +1,89 @@
+# P2 Repo Intake
+
+generated_at_utc: 2026-07-08T13:41:28+00:00
+current_commit: e48b1fe550c82835679d4c950ba23e0053801ad7
+command: git status; git rev-parse HEAD; git branch --show-current
+RESULT: PASS
+REASON: baseline commit is reachable from HEAD
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+- HEAD: `e48b1fe550c82835679d4c950ba23e0053801ad7`
+- branch: `main`
+- dirty_status: dirty
+- baseline_commit: `e48b1fe550c82835679d4c950ba23e0053801ad7`
+- baseline_is_ancestor_or_head: true
+
+```text
+M PROJECT_STATUS.md
+ M README.md
+ M docs/TFDU6102_SAFETY_SUMMARY.md
+ M docs/tfdu6102_safety_contract.md
+ M evidence/generated/git_cleanliness_report.md
+ M evidence/generated/no_hardware_action_static_scan.md
+ M evidence/generated/offline_gate_summary.json
+ M evidence/generated/p1_git_precheck.txt
+ M evidence/generated/p1_offline_hardening_summary.json
+ M evidence/generated/project_status_update_summary.md
+ M evidence/generated/required_docs_manifest.md
+ M evidence/generated/rtl_source_manifest.json
+ M evidence/generated/rtl_source_manifest.md
+ M evidence/generated/sv_port_contracts.json
+ M evidence/generated/sv_port_contracts.md
+ M evidence/generated/tools_manifest.md
+ M evidence/generated/vivado/nonhardware_build_summary.json
+ M evidence/generated/vivado/nonhardware_build_summary.md
+ M evidence/generated/vivado/post_route_drc.rpt
+ M evidence/generated/vivado/post_route_timing_summary.rpt
+ M evidence/generated/vivado/post_route_utilization.rpt
+ M evidence/generated/vivado/post_synth_drc.rpt
+ M evidence/generated/vivado_script_audit.md
+ M evidence/generated/xdc_inventory.md
+ M scripts/check_m5_static.py
+ M sim/models/tfdu6102_behavior_model.sv
+ M sim/tb/tb_tfdu_4ppm_model_integration.sv
+ M tools/p1_lib.py
+ M tools/run_offline_gate.ps1
+ M tools/run_offline_gate.py
+ M tools/summarize_gate.py
+?? docs/P2_SIMULATION_BASELINE.md
+?? docs/PROJECT_STATUS.md
+?? docs/SIMULATION_GATE.md
+?? docs/TFDU_LANE_PHY_SPEC.md
+?? evidence/generated/ir_4ppm_pulse_smoke_summary.md
+?? evidence/generated/p1_evidence_review_for_p2.md
+?? evidence/generated/p2_repo_intake.md
+?? evidence/generated/p2_simulation_baseline_summary.md
+?? evidence/generated/simulation_gate_summary.md
+?? evidence/generated/simulator_detection_summary.md
+?? evidence/generated/tfdu6102_behavior_model_summary.md
+?? evidence/generated/tfdu6102_reference_model_summary.md
+?? evidence/generated/tfdu_lane_phy_sim_summary.md
+?? evidence/simulation/
+?? rtl/tfdu/
+?? sim/README.md
+?? sim/expected/
+?? sim/models/README.md
+?? sim/models/tfdu6102_behavior_model.md
+?? sim/models/tfdu6102_behavior_model.v
+?? sim/models/tfdu6102_reference.py
+?? sim/scripts/
+?? sim/tb/README.md
+?? sim/tb/tb_ir_4ppm_pulse_smoke.sv
+?? sim/tb/tb_tfdu6102_behavior_model_smoke.sv
+?? sim/tb/tb_tfdu6102_pair_link_smoke.sv
+?? sim/tb/tb_tfdu_lane_phy_pulse_width.sv
+?? sim/tb/tb_tfdu_lane_phy_reset_shutdown.sv
+?? sim/tb/tb_tfdu_lane_phy_rx_active_low.sv
+?? sim/tb/tb_tfdu_lane_phy_startup_gate.sv
+?? sim/tb/tb_tfdu_lane_phy_txd_default_low.sv
+?? sim/tb/tb_tfdu_lane_phy_txd_stuck_high_guard.sv
+?? sim/tb/tb_tfdu_multilane_generate_smoke.sv
+?? sim/tb/tb_tfdu_negative_mode_low_fir_drop.sv
+?? sim/tb/tb_tfdu_negative_no_startup_tx.sv
+?? sim/tb/tb_tfdu_negative_stuck_high.sv
+?? sim/tests/
+?? tools/run_simulation_gate.ps1
+?? tools/run_simulation_gate.py
+?? tools/sim/
+```

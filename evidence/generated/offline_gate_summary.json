@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "generated_at_utc": "2026-07-08T12:51:17+00:00",
+  "generated_at_utc": "2026-07-08T13:41:28+00:00",
   "no_hardware_actions_executed": true,
   "hardware_acceptance": "PENDING_HW",
   "results": [
@@ -11,9 +11,9 @@
       "details": {
         "repo": "C:/Users/user/Documents/RF_COMM_MULTILANE",
         "branch": "main",
-        "head": "17b17ae52ba139f5496a2c5bdb8fb857afedec1c",
-        "status": "M AGENTS.md\n M README.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n?? BUILD_AND_TEST_GUIDE.md\n?? HARDWARE_SAFETY.md\n?? IPs/\n?? PROJECT_STATUS.md\n?? SOURCE_STATE.md\n?? constraints/ACTIVE_PROFILE.json\n?? constraints/pinmap_active.csv\n?? docs/CONSTRAINT_POLICY.md\n?? docs/HARDWARE_ACCEPTANCE_CHECKLIST.md\n?? docs/HARDWARE_AUTHORIZATION_TEMPLATE.md\n?? docs/NEXT_HARDWARE_ACCEPTANCE_PLAN.md\n?? docs/OFFLINE_GATE_POLICY.md\n?? docs/P2_SIMULATION_BASELINE_PLAN.md\n?? docs/P4_PRE_HW_ACCEPTANCE_PACKAGE.md\n?? docs/PROFILES.md\n?? docs/REFACTOR_TARGET_STRUCTURE.md\n?? docs/RTL_STRUCTURE_POLICY.md\n?? docs/SOFTWARE_OFFLINE_POLICY.md\n?? docs/SOURCE_MIGRATION_MAP.md\n?? docs/TEST_PEER_B0.md\n?? docs/TFDU6102_SAFETY_SUMMARY.md\n?? docs/tfdu6102_safety_contract.md\n?? evidence/README.md\n?? evidence/authorization/\n?? evidence/generated/active_profile_check.md\n?? evidence/generated/agents_policy_check.md\n?? evidence/generated/constraint_uniqueness_summary.md\n?? evidence/generated/copied_constraints_manifest.md\n?? evidence/generated/evidence_consistency_summary.md\n?? evidence/generated/git_cleanliness_report.md\n?? evidence/generated/host_offline_stub_summary.md\n?? evidence/generated/ip_packaging_dry_check.md\n?? evidence/generated/no_hardware_action_static_scan.md\n?? evidence/generated/p1_bootstrap_evidence_review.md\n?? evidence/generated/p1_bootstrap_legacy_gate_run.md\n?? evidence/generated/p1_directory_check.md\n?? evidence/generated/p1_git_precheck.txt\n?? evidence/generated/p1_offline_hardening_summary.json\n?? evidence/generated/p1_offline_hardening_summary.md\n?? evidence/generated/profile_check_summary.md\n?? evidence/generated/project_status_check.md\n?? evidence/generated/project_status_update_summary.md\n?? evidence/generated/ps_driver_sequence_summary.md\n?? evidence/generated/required_docs_manifest.md\n?? evidence/generated/rtl_offline_lint_summary.md\n?? evidence/generated/rtl_source_manifest.json\n?? evidence/generated/rtl_source_manifest.md\n?? evidence/generated/software_no_real_io_summary.md\n?? evidence/generated/software_source_manifest.md\n?? evidence/generated/tfdu6102_offline_contract_summary.md\n?? evidence/generated/tools_manifest.md\n?? evidence/generated/vivado_offline_project_summary.md\n?? evidence/generated/vivado_script_audit.md\n?? evidence/generated/wrapper_xdc_consistency_summary.md\n?? evidence/generated/xdc_inventory.md\n?? evidence/hardware/\n?? profiles/\n?? scripts/vivado/\n?? tools/",
-        "last": "17b17ae test: refresh offline gate evidence"
+        "head": "e48b1fe550c82835679d4c950ba23e0053801ad7",
+        "status": "M PROJECT_STATUS.md\n M README.md\n M docs/TFDU6102_SAFETY_SUMMARY.md\n M docs/tfdu6102_safety_contract.md\n M evidence/generated/git_cleanliness_report.md\n M evidence/generated/no_hardware_action_static_scan.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/p1_bootstrap_evidence_review.md\n M evidence/generated/p1_git_precheck.txt\n M evidence/generated/p1_offline_hardening_summary.json\n M evidence/generated/project_status_update_summary.md\n M evidence/generated/required_docs_manifest.md\n M evidence/generated/rtl_source_manifest.json\n M evidence/generated/rtl_source_manifest.md\n M evidence/generated/sv_port_contracts.json\n M evidence/generated/sv_port_contracts.md\n M evidence/generated/tools_manifest.md\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n M evidence/generated/vivado_script_audit.md\n M evidence/generated/xdc_inventory.md\n M scripts/check_m5_static.py\n M sim/models/tfdu6102_behavior_model.sv\n M sim/tb/tb_tfdu_4ppm_model_integration.sv\n M tools/p1_lib.py\n M tools/run_offline_gate.ps1\n M tools/run_offline_gate.py\n M tools/summarize_gate.py\n?? docs/P2_SIMULATION_BASELINE.md\n?? docs/PROJECT_STATUS.md\n?? docs/SIMULATION_GATE.md\n?? docs/TFDU_LANE_PHY_SPEC.md\n?? evidence/generated/ir_4ppm_pulse_smoke_summary.md\n?? evidence/generated/p1_evidence_review_for_p2.md\n?? evidence/generated/p2_repo_intake.md\n?? evidence/generated/p2_simulation_baseline_summary.md\n?? evidence/generated/simulation_gate_summary.md\n?? evidence/generated/simulator_detection_summary.md\n?? evidence/generated/tfdu6102_behavior_model_summary.md\n?? evidence/generated/tfdu6102_reference_model_summary.md\n?? evidence/generated/tfdu_lane_phy_sim_summary.md\n?? evidence/simulation/\n?? rtl/tfdu/\n?? sim/README.md\n?? sim/expected/\n?? sim/models/README.md\n?? sim/models/tfdu6102_behavior_model.md\n?? sim/models/tfdu6102_behavior_model.v\n?? sim/models/tfdu6102_reference.py\n?? sim/scripts/\n?? sim/tb/README.md\n?? sim/tb/tb_ir_4ppm_pulse_smoke.sv\n?? sim/tb/tb_tfdu6102_behavior_model_smoke.sv\n?? sim/tb/tb_tfdu6102_pair_link_smoke.sv\n?? sim/tb/tb_tfdu_lane_phy_pulse_width.sv\n?? sim/tb/tb_tfdu_lane_phy_reset_shutdown.sv\n?? sim/tb/tb_tfdu_lane_phy_rx_active_low.sv\n?? sim/tb/tb_tfdu_lane_phy_startup_gate.sv\n?? sim/tb/tb_tfdu_lane_phy_txd_default_low.sv\n?? sim/tb/tb_tfdu_lane_phy_txd_stuck_high_guard.sv\n?? sim/tb/tb_tfdu_multilane_generate_smoke.sv\n?? sim/tb/tb_tfdu_negative_mode_low_fir_drop.sv\n?? sim/tb/tb_tfdu_negative_no_startup_tx.sv\n?? sim/tb/tb_tfdu_negative_stuck_high.sv\n?? sim/tests/\n?? tools/run_simulation_gate.ps1\n?? tools/run_simulation_gate.py\n?? tools/sim/",
+        "last": "e48b1fe test: add P1 offline hardening task gates"
       },
       "summary_path": "evidence/generated/p1_git_precheck.txt"
     },
@@ -102,7 +102,7 @@
       "reason": "hardware action static scan completed",
       "details": {
         "findings": [],
-        "informational_count": 3
+        "informational_count": 8
       },
       "summary_path": "evidence/generated/no_hardware_action_static_scan.md"
     },
@@ -140,7 +140,7 @@
       "reason": "RTL manifest generated",
       "details": {
         "missing": [],
-        "count": 35
+        "count": 49
       },
       "summary_path": "evidence/generated/rtl_source_manifest.md"
     },
@@ -238,7 +238,7 @@
             "reason": "RTL manifest generated",
             "details": {
               "missing": [],
-              "count": 35
+              "count": 49
             },
             "summary_path": "evidence/generated/rtl_source_manifest.md"
           },
@@ -279,9 +279,18 @@
       "reason": "git status recorded",
       "details": {
         "dirty": true,
-        "status": "M AGENTS.md\n M README.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n?? BUILD_AND_TEST_GUIDE.md\n?? HARDWARE_SAFETY.md\n?? IPs/\n?? PROJECT_STATUS.md\n?? SOURCE_STATE.md\n?? constraints/ACTIVE_PROFILE.json\n?? constraints/pinmap_active.csv\n?? docs/CONSTRAINT_POLICY.md\n?? docs/HARDWARE_ACCEPTANCE_CHECKLIST.md\n?? docs/HARDWARE_AUTHORIZATION_TEMPLATE.md\n?? docs/NEXT_HARDWARE_ACCEPTANCE_PLAN.md\n?? docs/OFFLINE_GATE_POLICY.md\n?? docs/P2_SIMULATION_BASELINE_PLAN.md\n?? docs/P4_PRE_HW_ACCEPTANCE_PACKAGE.md\n?? docs/PROFILES.md\n?? docs/REFACTOR_TARGET_STRUCTURE.md\n?? docs/RTL_STRUCTURE_POLICY.md\n?? docs/SOFTWARE_OFFLINE_POLICY.md\n?? docs/SOURCE_MIGRATION_MAP.md\n?? docs/TEST_PEER_B0.md\n?? docs/TFDU6102_SAFETY_SUMMARY.md\n?? docs/tfdu6102_safety_contract.md\n?? evidence/README.md\n?? evidence/authorization/\n?? evidence/generated/active_profile_check.md\n?? evidence/generated/agents_policy_check.md\n?? evidence/generated/constraint_uniqueness_summary.md\n?? evidence/generated/copied_constraints_manifest.md\n?? evidence/generated/evidence_consistency_summary.md\n?? evidence/generated/git_cleanliness_report.md\n?? evidence/generated/host_offline_stub_summary.md\n?? evidence/generated/ip_packaging_dry_check.md\n?? evidence/generated/no_hardware_action_static_scan.md\n?? evidence/generated/p1_bootstrap_evidence_review.md\n?? evidence/generated/p1_bootstrap_legacy_gate_run.md\n?? evidence/generated/p1_directory_check.md\n?? evidence/generated/p1_git_precheck.txt\n?? evidence/generated/p1_offline_hardening_summary.json\n?? evidence/generated/p1_offline_hardening_summary.md\n?? evidence/generated/profile_check_summary.md\n?? evidence/generated/project_status_check.md\n?? evidence/generated/project_status_update_summary.md\n?? evidence/generated/ps_driver_sequence_summary.md\n?? evidence/generated/required_docs_manifest.md\n?? evidence/generated/rtl_offline_lint_summary.md\n?? evidence/generated/rtl_source_manifest.json\n?? evidence/generated/rtl_source_manifest.md\n?? evidence/generated/software_no_real_io_summary.md\n?? evidence/generated/software_source_manifest.md\n?? evidence/generated/tfdu6102_offline_contract_summary.md\n?? evidence/generated/tools_manifest.md\n?? evidence/generated/vivado_offline_project_summary.md\n?? evidence/generated/vivado_script_audit.md\n?? evidence/generated/wrapper_xdc_consistency_summary.md\n?? evidence/generated/xdc_inventory.md\n?? evidence/hardware/\n?? profiles/\n?? scripts/vivado/\n?? tools/"
+        "status": "M PROJECT_STATUS.md\n M README.md\n M docs/TFDU6102_SAFETY_SUMMARY.md\n M docs/tfdu6102_safety_contract.md\n M evidence/generated/git_cleanliness_report.md\n M evidence/generated/no_hardware_action_static_scan.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/p1_git_precheck.txt\n M evidence/generated/p1_offline_hardening_summary.json\n M evidence/generated/project_status_update_summary.md\n M evidence/generated/required_docs_manifest.md\n M evidence/generated/rtl_source_manifest.json\n M evidence/generated/rtl_source_manifest.md\n M evidence/generated/sv_port_contracts.json\n M evidence/generated/sv_port_contracts.md\n M evidence/generated/tools_manifest.md\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n M evidence/generated/vivado_script_audit.md\n M evidence/generated/xdc_inventory.md\n M scripts/check_m5_static.py\n M sim/models/tfdu6102_behavior_model.sv\n M sim/tb/tb_tfdu_4ppm_model_integration.sv\n M tools/p1_lib.py\n M tools/run_offline_gate.ps1\n M tools/run_offline_gate.py\n M tools/summarize_gate.py\n?? docs/P2_SIMULATION_BASELINE.md\n?? docs/PROJECT_STATUS.md\n?? docs/SIMULATION_GATE.md\n?? docs/TFDU_LANE_PHY_SPEC.md\n?? evidence/generated/ir_4ppm_pulse_smoke_summary.md\n?? evidence/generated/p1_evidence_review_for_p2.md\n?? evidence/generated/p2_repo_intake.md\n?? evidence/generated/p2_simulation_baseline_summary.md\n?? evidence/generated/simulation_gate_summary.md\n?? evidence/generated/simulator_detection_summary.md\n?? evidence/generated/tfdu6102_behavior_model_summary.md\n?? evidence/generated/tfdu6102_reference_model_summary.md\n?? evidence/generated/tfdu_lane_phy_sim_summary.md\n?? evidence/simulation/\n?? rtl/tfdu/\n?? sim/README.md\n?? sim/expected/\n?? sim/models/README.md\n?? sim/models/tfdu6102_behavior_model.md\n?? sim/models/tfdu6102_behavior_model.v\n?? sim/models/tfdu6102_reference.py\n?? sim/scripts/\n?? sim/tb/README.md\n?? sim/tb/tb_ir_4ppm_pulse_smoke.sv\n?? sim/tb/tb_tfdu6102_behavior_model_smoke.sv\n?? sim/tb/tb_tfdu6102_pair_link_smoke.sv\n?? sim/tb/tb_tfdu_lane_phy_pulse_width.sv\n?? sim/tb/tb_tfdu_lane_phy_reset_shutdown.sv\n?? sim/tb/tb_tfdu_lane_phy_rx_active_low.sv\n?? sim/tb/tb_tfdu_lane_phy_startup_gate.sv\n?? sim/tb/tb_tfdu_lane_phy_txd_default_low.sv\n?? sim/tb/tb_tfdu_lane_phy_txd_stuck_high_guard.sv\n?? sim/tb/tb_tfdu_multilane_generate_smoke.sv\n?? sim/tb/tb_tfdu_negative_mode_low_fir_drop.sv\n?? sim/tb/tb_tfdu_negative_no_startup_tx.sv\n?? sim/tb/tb_tfdu_negative_stuck_high.sv\n?? sim/tests/\n?? tools/run_simulation_gate.ps1\n?? tools/run_simulation_gate.py\n?? tools/sim/"
       },
       "summary_path": "evidence/generated/git_cleanliness_report.md"
     }
-  ]
+  ],
+  "P1_OFFLINE_HARDENING": "PASS",
+  "P2_SIMULATION_BASELINE": "PASS",
+  "simulation_gate": {
+    "P2_SIMULATION_BASELINE": "PASS",
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "failed": [],
+    "skipped": []
+  }
 }

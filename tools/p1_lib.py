@@ -78,6 +78,10 @@ P1_TOOLS = [
     "tools/check_profiles.py",
     "tools/parse_xdc_pinmap.py",
     "tools/gate_result_schema.json",
+    "tools/run_simulation_gate.py",
+    "tools/run_simulation_gate.ps1",
+    "tools/sim/detect_simulator.py",
+    "tools/sim/detect_simulator.ps1",
 ]
 
 PINMAP_SOURCE = ROOT / "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv"
@@ -1217,6 +1221,12 @@ def no_hardware_scan():
         "open_hw_target",
         "program_hw_devices",
         "refresh_hw_device",
+        "hw_server",
+        "jtag",
+        "hardware manager",
+        "serial port real device",
+        "/dev/tty",
+        "program bitstream",
         "xsdb",
         "fpga -f",
         "targets -set",
@@ -1230,7 +1240,7 @@ def no_hardware_scan():
         "mwr": re.compile(r"^\s*mwr\b", re.IGNORECASE),
         "mrd": re.compile(r"^\s*mrd\b", re.IGNORECASE),
     }
-    scan_roots = ["scripts", "tools", "docs", "software", "constraints", "rtl"]
+    scan_roots = ["scripts", "tools", "docs", "software", "constraints", "rtl", "sim", "evidence/generated"]
     skip_parts = {"legacy", "legacy_reference", "legacy_safe_tools", "__pycache__"}
     allowed_script_markers = ["AllowHardware", "--allow-hardware", "RF_COMM_ALLOW_HW", "require-user-hw-authorization", "dry-run"]
     findings = []
@@ -1257,6 +1267,9 @@ def no_hardware_scan():
             if not hits:
                 continue
             hits = sorted(set(hits))
+            if p.startswith("evidence/generated/"):
+                informational.append((p, hits, "generated evidence mention"))
+                continue
             if path.suffix.lower() in {".md", ".txt"}:
                 informational.append((p, hits, "documentation mention"))
                 continue

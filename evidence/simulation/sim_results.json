@@ -1,0 +1,209 @@
+{
+  "generated_at_utc": "2026-07-08T13:42:22+00:00",
+  "P2_SIMULATION_BASELINE": "PASS",
+  "exit_status": "PASS",
+  "P1_RECHECK": "PASS",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "detection": {
+    "generated_at_utc": "2026-07-08T13:41:29+00:00",
+    "entries": [
+      {
+        "name": "iverilog_vvp",
+        "kind": "icarus",
+        "result": "SKIP_WITH_REASON",
+        "reason": "missing executables: iverilog, vvp",
+        "paths": {
+          "iverilog": null,
+          "vvp": null
+        },
+        "version": ""
+      },
+      {
+        "name": "verilator",
+        "kind": "verilator",
+        "result": "SKIP_WITH_REASON",
+        "reason": "missing executables: verilator",
+        "paths": {
+          "verilator": null
+        },
+        "version": ""
+      },
+      {
+        "name": "xsim",
+        "kind": "xsim",
+        "result": "PASS",
+        "reason": "detected",
+        "paths": {
+          "xvlog": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat",
+          "xelab": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat",
+          "xsim": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat"
+        },
+        "version": "Vivado Simulator v2023.1",
+        "version_returncode": 0
+      },
+      {
+        "name": "vivado_batch_compile",
+        "kind": "vivado_batch",
+        "result": "SKIP_WITH_REASON",
+        "reason": "version command failed",
+        "paths": {
+          "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat"
+        },
+        "version": "",
+        "version_returncode": 1
+      }
+    ],
+    "selected": {
+      "name": "xsim",
+      "kind": "xsim",
+      "result": "PASS",
+      "reason": "detected",
+      "paths": {
+        "xvlog": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat",
+        "xelab": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat",
+        "xsim": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat"
+      },
+      "version": "Vivado Simulator v2023.1",
+      "version_returncode": 0
+    },
+    "python_reference_fallback": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "results": [
+    {
+      "name": "P2_REPO_INTAKE",
+      "result": "PASS",
+      "reason": "repo intake recorded",
+      "summary": "evidence/generated/p2_repo_intake.md"
+    },
+    {
+      "name": "P1_EVIDENCE_REVIEW",
+      "result": "PASS",
+      "reason": "P1 evidence reviewed",
+      "summary": "evidence/generated/p1_evidence_review_for_p2.md"
+    },
+    {
+      "name": "PYTHON_REFERENCE_MODEL",
+      "result": "PASS",
+      "reason": "reference tests completed",
+      "summary": "evidence/generated/tfdu6102_reference_model_summary.md"
+    },
+    {
+      "name": "NO_HARDWARE_SCAN",
+      "result": "PASS",
+      "reason": "no-hardware static scan completed",
+      "summary": "evidence/generated/no_hardware_action_static_scan.md"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_reset_shutdown",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_reset_shutdown.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_startup_gate",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_startup_gate.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_txd_default_low",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_txd_default_low.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_txd_stuck_high_guard",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_txd_stuck_high_guard.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_rx_active_low",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_rx_active_low.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_lane_phy_pulse_width",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_lane_phy_pulse_width.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu6102_behavior_model_smoke",
+      "group": "TFDU6102_BEHAVIOR_MODEL",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu6102_behavior_model_smoke.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu6102_pair_link_smoke",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu6102_pair_link_smoke.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_multilane_generate_smoke",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_multilane_generate_smoke.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_negative_no_startup_tx",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_negative_no_startup_tx.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_negative_mode_low_fir_drop",
+      "group": "TFDU6102_BEHAVIOR_MODEL",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_negative_mode_low_fir_drop.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_tfdu_negative_stuck_high",
+      "group": "TFDU_LANE_PHY_TESTS",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_tfdu_negative_stuck_high.xsim.log",
+      "simulator": "xsim"
+    },
+    {
+      "name": "tb_ir_4ppm_pulse_smoke",
+      "group": "4PPM_PULSE_SMOKE",
+      "result": "PASS",
+      "reason": "HDL test passed",
+      "run_log": "evidence/simulation/logs/tb_ir_4ppm_pulse_smoke.xsim.log",
+      "simulator": "xsim"
+    }
+  ],
+  "commands": [
+    "python tools/sim/detect_simulator.py",
+    "python sim/scripts/run_reference_tests.py --json",
+    "python tools/check_no_hardware_actions.py"
+  ]
+}
