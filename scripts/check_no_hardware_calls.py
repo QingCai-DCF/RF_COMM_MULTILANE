@@ -17,6 +17,8 @@ def main():
     for path in (ROOT / "scripts").rglob("*"):
         if not path.is_file() or path.name in SKIP_FILES:
             continue
+        if "__pycache__" in path.parts or path.suffix == ".pyc":
+            continue
         if any(part in ALLOW_DIRS for part in path.parts):
             continue
         text = path.read_text(encoding="utf-8", errors="ignore").lower()

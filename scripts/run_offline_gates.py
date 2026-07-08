@@ -105,6 +105,11 @@ def main():
     results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))
     results.append(run("m3_static_reference_checks", [py, "scripts/check_m3_static.py"]))
     results.append(run("m4_static_reference_checks", [py, "scripts/check_m4_static.py"]))
+    results.append(run("m5_static_nonhardware_build_checks", [py, "scripts/check_m5_static.py"]))
+    m5_result = run("m5_vivado_nonhardware_build", [py, "scripts/run_vivado_nonhardware_build.py"])
+    if "PENDING_TOOL" in m5_result["stdout"]:
+        m5_result["status"] = "PENDING_TOOL"
+    results.append(m5_result)
     outdir = ROOT / "evidence/generated"
     outdir.mkdir(parents=True, exist_ok=True)
     results.extend(run_sv_gates(outdir))

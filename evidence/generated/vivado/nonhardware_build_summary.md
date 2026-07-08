@@ -1,0 +1,6 @@
+# Vivado Non-Hardware Build Summary
+
+M5_VIVADO_NONHARDWARE_BUILD=PENDING_TOOL
+NO_HARDWARE_ACTIONS_EXECUTED=1
+VIVADO_BATCH_TCL=scripts/vivado_nonhardware_build.tcl
+VIVADO_REPORT_DIR=evidence/generated/vivado
