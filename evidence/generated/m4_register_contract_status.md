@@ -15,11 +15,14 @@ M4_PS_DRIVER_FINAL_COUNTER_READBACK=PASS
 M4_AXI_REGS_TB_CREATED=1
 M4_AXI_REGS_SIM=PENDING_TOOL
 M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
+M4_PS_DRIVER_C_COMPILE_GATE_CREATED=1
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 `scripts/check_m4_static.py` verifies that every register in
 `config/register_map/ir_axi_regs.yaml` appears in the generated C/Python/Markdown
 outputs and in `rtl/ir_axi_regs_new.sv`. It also runs a Python reference
 write/readback/commit/profile-id model and checks the PS driver uses readback
-verification plus commit. SystemVerilog and C compilation remain unclaimed
-because no supported SV simulator or C compiler is available on PATH.
+verification plus commit. `scripts/run_offline_gates.py` also tries to compile
+and run the PS driver offline stub when `gcc` or `clang` is available. SystemVerilog
+and C compilation remain unclaimed when no supported simulator or C compiler is
+available on PATH.

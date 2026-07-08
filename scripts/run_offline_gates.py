@@ -101,6 +101,39 @@ def run_sv_gates(outdir):
         for name, _, _ in tests
     ]
 
+def run_ps_driver_c_compile(outdir):
+    build_dir = outdir / "c"
+    build_dir.mkdir(parents=True, exist_ok=True)
+    exe = build_dir / ("ps_driver_offline_stub.exe" if sys.platform.startswith("win") else "ps_driver_offline_stub")
+    sources = [
+        "software/ps_driver/main_offline_stub.c",
+        "software/ps_driver/ir_driver.c",
+        "software/ps_driver/ir_profile.c",
+    ]
+    common_args = ["-std=c11", "-Wall", "-Wextra", "-Isoftware/ps_driver", "-Iconfig/register_map/generated", *sources, "-o", str(exe)]
+    compiler = shutil.which("gcc") or shutil.which("clang")
+    if not compiler:
+        return {
+            "name": "ps_driver_c_compile",
+            "cmd": "gcc|clang",
+            "returncode": 0,
+            "stdout": "C_COMPILER_MISSING=1\nM4_PS_DRIVER_C_COMPILE=PENDING_TOOL\n",
+            "stderr": "",
+            "status": "PENDING_TOOL",
+        }
+    compile_result = run("ps_driver_c_compile", [compiler, *common_args])
+    if compile_result["returncode"] != 0:
+        return compile_result
+    run_result = run("ps_driver_c_offline_stub", [str(exe)])
+    return {
+        "name": "ps_driver_c_compile",
+        "cmd": compile_result["cmd"] + " && " + run_result["cmd"],
+        "returncode": run_result["returncode"],
+        "stdout": compile_result["stdout"] + run_result["stdout"] + "M4_PS_DRIVER_C_COMPILE=PASS\n",
+        "stderr": compile_result["stderr"] + run_result["stderr"],
+        "status": None,
+    }
+
 def main():
     results = []
     py = sys.executable
@@ -117,12 +150,13 @@ def main():
     results.append(run("scheduler_static_checks", [py, "scripts/check_scheduler_static.py"]))
     results.append(run("m5_static_nonhardware_build_checks", [py, "scripts/check_m5_static.py"]))
     results.append(run("m6_static_hardware_prep_checks", [py, "scripts/check_m6_static.py"]))
+    outdir = ROOT / "evidence/generated"
+    outdir.mkdir(parents=True, exist_ok=True)
+    results.append(run_ps_driver_c_compile(outdir))
     m5_result = run("m5_vivado_nonhardware_build", [py, "scripts/run_vivado_nonhardware_build.py"])
     if "PENDING_TOOL" in m5_result["stdout"]:
         m5_result["status"] = "PENDING_TOOL"
     results.append(m5_result)
-    outdir = ROOT / "evidence/generated"
-    outdir.mkdir(parents=True, exist_ok=True)
     results.extend(run_sv_gates(outdir))
     hard_fail = [r for r in results if r["returncode"] != 0]
     pending = [r for r in results if r.get("status") == "PENDING_TOOL"]

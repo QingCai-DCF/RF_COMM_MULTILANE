@@ -371,6 +371,14 @@ M6_STATIC=PASS
 
 ```
 
+## ps_driver_c_compile: PENDING_TOOL
+
+```text
+C_COMPILER_MISSING=1
+M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
+
+```
+
 ## m5_vivado_nonhardware_build: PENDING_TOOL
 
 ```text

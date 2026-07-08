@@ -107,6 +107,14 @@
       "status": null
     },
     {
+      "name": "ps_driver_c_compile",
+      "cmd": "gcc|clang",
+      "returncode": 0,
+      "stdout": "C_COMPILER_MISSING=1\nM4_PS_DRIVER_C_COMPILE=PENDING_TOOL\n",
+      "stderr": "",
+      "status": "PENDING_TOOL"
+    },
+    {
       "name": "m5_vivado_nonhardware_build",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_vivado_nonhardware_build.py",
       "returncode": 0,
