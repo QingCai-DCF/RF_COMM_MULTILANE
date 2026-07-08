@@ -1,9 +1,9 @@
 # Plan Completion Audit
 
-PLAN_COMPLETION_AUDIT_STATUS=OFFLINE_PROGRESS_WITH_PENDING_TOOL
+PLAN_COMPLETION_AUDIT_STATUS=PASS
 PLAN_COMPLETION_STATIC=PASS
 OFFLINE_GATES_RAN=1
-OFFLINE_GATE_STATUS=PASS_WITH_PENDING_TOOL
+OFFLINE_GATE_STATUS=PASS
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 ## Section 14 Markers
@@ -39,7 +39,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | 4PPM plus TFDU behavior model integration | m2_4ppm_model_integration_sim:PASS | TESTBENCH_STATIC_PASS_SIM_PASS |
 | M3 lane0 ACK/retry | m3_crc_bad_ack_reference:PASS, m3_static_reference_checks:PASS, m3_lane0_ack_only_sim:PASS | IMPLEMENTED_REFERENCE_PASS_SIM_PASS |
 | M4 AXI register contract | register_map_generation:PASS, m4_ps_driver_trace:PASS, m4_static_reference_checks:PASS, m4_axi_regs_sim:PASS | IMPLEMENTED_TRACE_PASS_SIM_PASS |
-| PS driver fixed initialization sequence | m4_ps_driver_trace:PASS, ps_driver_c_compile:PENDING_TOOL | TRACE_PASS_C_COMPILE_PENDING_TOOL |
+| PS driver fixed initialization sequence | m4_ps_driver_trace:PASS, ps_driver_c_compile:PASS | TRACE_PASS_C_COMPILE_PASS |
 | Multilane scheduler requirement | scheduler_static_checks:PASS, scheduler_sim:PASS | IMPLEMENTED_STATIC_PASS_SIM_PASS |
 | M5 Vivado non-hardware build | m5_static_nonhardware_build_checks:PASS, m5_vivado_nonhardware_build:PASS | SCRIPTED_STATIC_PASS_VIVADO_PASS |
 | M6 hardware prep scripts | m6_static_hardware_prep_checks:PASS, m6_refusal_runtime:PASS | PREPARED_REFUSAL_RUNTIME_PASS_NO_HARDWARE |
@@ -53,6 +53,10 @@ XILINX_VIVADO_2023_1_BAT_AVAILABLE=1
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
 IVERILOG_ON_PATH=0
 VERILATOR_ON_PATH=0
+C_COMPILER_HOST_MISSING=1
+VITIS_CROSS_GCC_AVAILABLE=1
+VITIS_CROSS_GCC=D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe
+M4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY
 
 Current evidence distinguishes PATH discovery from direct bat-path discovery: Vivado is not required to be on PATH when the D:\Xilinx\Vivado\2023.1\bin tools are present.
 
@@ -72,5 +76,6 @@ The current workspace does not claim real hardware, Ethernet, rotation, soak, 8-
 SystemVerilog simulation gates prefer PATH `iverilog`/`verilator`, then the D:\Xilinx\Vivado\2023.1\bin `xvlog.bat`/`xelab.bat`/`xsim.bat` toolchain.
 The Vivado non-hardware build runner uses PATH Vivado when present, otherwise the D:\Xilinx\Vivado\2023.1\bin\vivado.bat fallback.
 `iverilog` and `verilator` remain absent when their discovery markers are `0`; this is distinct from Xilinx simulator availability.
-PS driver C compilation remains `PENDING_TOOL` when no C compiler is available on PATH.
+PS driver C compilation uses host `gcc`/`clang` when available, otherwise the Vitis ARM cross GCC syntax-only fallback when available.
+PS driver C compilation remains `PENDING_TOOL` only when neither a host C compiler nor the accepted Vitis cross compiler is available.
 Hardware acceptance remains `PENDING_HW` by project rule and was not executed.

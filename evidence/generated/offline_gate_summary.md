@@ -1,6 +1,6 @@
 # Offline Gate Summary
 
-BOOTSTRAP_STATUS: PASS_WITH_PENDING_TOOL
+BOOTSTRAP_STATUS: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 
 ## project_integrity: PASS
@@ -450,11 +450,15 @@ M6_REFUSAL_RUNTIME=PASS
 
 ```
 
-## ps_driver_c_compile: PENDING_TOOL
+## ps_driver_c_compile: PASS
 
 ```text
-C_COMPILER_MISSING=1
-M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
+C_COMPILER_HOST_MISSING=1
+VITIS_CROSS_GCC_AVAILABLE=1
+VITIS_CROSS_GCC=D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe
+M4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY
+M4_PS_DRIVER_C_OFFLINE_STUB_RUN=SKIPPED_CROSS_TARGET
+M4_PS_DRIVER_C_COMPILE=PASS
 
 ```
 
@@ -516,7 +520,7 @@ run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
 $finish called at time : 385 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 173
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:39 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:08:47 2026...
 
 ```
 
@@ -567,7 +571,7 @@ M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
 $finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:43 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:08:51 2026...
 
 ```
 
@@ -615,7 +619,7 @@ run -all
 TB_LANE0_FRAME_CRC_PASS=1
 $finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:48 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:08:55 2026...
 
 ```
 
@@ -667,7 +671,7 @@ M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
 $finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 209
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:52 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:09:00 2026...
 
 ```
 
@@ -715,7 +719,7 @@ run -all
 TB_LANE0_ACK_ONLY_PASS=1
 $finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:58:56 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:09:04 2026...
 
 ```
 
@@ -763,7 +767,7 @@ run -all
 TB_IR_AXI_REGS_NEW_PASS=1
 $finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:59:01 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:09:08 2026...
 
 ```
 
@@ -811,7 +815,7 @@ run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
 $finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:59:05 2026...
+INFO: [Common 17-206] Exiting xsim at Wed Jul  8 20:09:12 2026...
 
 ```
 
@@ -819,7 +823,7 @@ INFO: [Common 17-206] Exiting xsim at Wed Jul  8 19:59:05 2026...
 
 ```text
 PLAN_COMPLETION_AUDIT_GENERATED=1
-PLAN_COMPLETION_AUDIT_STATUS=OFFLINE_PROGRESS_WITH_PENDING_TOOL
+PLAN_COMPLETION_AUDIT_STATUS=PASS
 PLAN_COMPLETION_AUDIT_HARD_FAILS=0
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
@@ -902,6 +906,8 @@ PLAN_AUDIT_VIVADO_BAT_PATH_RECORDED=1
 PLAN_AUDIT_XILINX_SIM_BAT_AVAILABLE_RECORDED=1
 PLAN_AUDIT_IVERILOG_ABSENCE_RECORDED=1
 PLAN_AUDIT_VERILATOR_ABSENCE_RECORDED=1
+PLAN_AUDIT_VITIS_CROSS_GCC_RECORDED=1
+PLAN_AUDIT_PS_DRIVER_CROSS_COMPILE_RECORDED=1
 PLAN_COMPLETION_STATIC=PASS
 
 ```

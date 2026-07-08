@@ -143,6 +143,10 @@ def main() -> int:
         "XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE",
         "IVERILOG_ON_PATH",
         "VERILATOR_ON_PATH",
+        "C_COMPILER_HOST_MISSING",
+        "VITIS_CROSS_GCC_AVAILABLE",
+        "VITIS_CROSS_GCC",
+        "M4_PS_DRIVER_C_COMPILE_MODE",
     ]:
         lines.append(find_stdout_marker(offline, marker) or f"{marker}=NOT_RECORDED")
     lines += [
@@ -174,7 +178,8 @@ def main() -> int:
         "SystemVerilog simulation gates prefer PATH `iverilog`/`verilator`, then the D:\\Xilinx\\Vivado\\2023.1\\bin `xvlog.bat`/`xelab.bat`/`xsim.bat` toolchain.",
         "The Vivado non-hardware build runner uses PATH Vivado when present, otherwise the D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat fallback.",
         "`iverilog` and `verilator` remain absent when their discovery markers are `0`; this is distinct from Xilinx simulator availability.",
-        "PS driver C compilation remains `PENDING_TOOL` when no C compiler is available on PATH.",
+        "PS driver C compilation uses host `gcc`/`clang` when available, otherwise the Vitis ARM cross GCC syntax-only fallback when available.",
+        "PS driver C compilation remains `PENDING_TOOL` only when neither a host C compiler nor the accepted Vitis cross compiler is available.",
         "Hardware acceptance remains `PENDING_HW` by project rule and was not executed.",
         "",
     ]

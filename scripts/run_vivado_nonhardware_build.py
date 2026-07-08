@@ -15,6 +15,26 @@ SUMMARY_MD = OUT_DIR / "nonhardware_build_summary.md"
 XILINX_VIVADO_BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 
 
+def trim_trailing_space(path: Path) -> None:
+    if not path.exists() or not path.is_file():
+        return
+    lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    while lines and not lines[-1].strip():
+        lines.pop()
+    path.write_text("\n".join(line.rstrip() for line in lines) + "\n", encoding="utf-8")
+
+
+def sanitize_generated_reports() -> None:
+    for pattern in ("*.rpt", "*.txt"):
+        for path in OUT_DIR.glob(pattern):
+            trim_trailing_space(path)
+
+
+def clean_log_tail(stdout: str, stderr: str) -> str:
+    tail = (stdout + "\n" + stderr)[-4000:].strip()
+    return "\n".join(line.rstrip() for line in tail.splitlines())
+
+
 def resolve_vivado_executable() -> tuple[str | None, dict[str, str | bool]]:
     vivado_on_path = shutil.which("vivado") or shutil.which("vivado.bat")
     fallback = XILINX_VIVADO_BIN / "vivado.bat"
@@ -69,7 +89,7 @@ def write_summary(
     if returncode is not None:
         lines.append(f"VIVADO_EXIT_CODE={returncode}")
     if stdout or stderr:
-        lines += ["", "## Log Tail", "", "```text", (stdout + "\n" + stderr)[-4000:].strip(), "```"]
+        lines += ["", "## Log Tail", "", "```text", clean_log_tail(stdout, stderr), "```"]
     SUMMARY_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -87,6 +107,7 @@ def main() -> int:
     cmd = [vivado, "-mode", "batch", "-source", "scripts/vivado_nonhardware_build.tcl", "-tclargs", str(ROOT)]
     proc = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
     status = "PASS" if proc.returncode == 0 else "FAIL"
+    sanitize_generated_reports()
     write_summary(status, vivado, proc.returncode, proc.stdout, proc.stderr, discovery=discovery)
     print(f"M5_VIVADO_NONHARDWARE_BUILD={status}")
     print(f"VIVADO_PATH_ON_PATH={1 if discovery.get('vivado_on_path') else 0}")

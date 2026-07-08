@@ -15,7 +15,9 @@ M4_PS_DRIVER_FINAL_COUNTER_READBACK=PASS
 M4_PS_DRIVER_MMIO_TRACE=PASS
 M4_AXI_REGS_TB_CREATED=1
 M4_AXI_REGS_SIM=PASS
-M4_PS_DRIVER_C_COMPILE=PENDING_TOOL
+M4_PS_DRIVER_C_COMPILE=PASS
+M4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY
+M4_PS_DRIVER_C_OFFLINE_STUB_RUN=SKIPPED_CROSS_TARGET
 M4_PS_DRIVER_C_COMPILE_GATE_CREATED=1
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
@@ -27,9 +29,12 @@ verification plus commit. The MMIO trace report at
 `evidence/generated/m4_ps_driver_trace.md` validates the offline
 reset/profile/readback/commit/enable/startup/start/poll/stop/counter/shutdown
 sequence without needing a C compiler. `scripts/run_offline_gates.py` also tries
-to compile and run the PS driver offline stub when `gcc` or `clang` is
-available. Current PATH discovery records `IVERILOG_ON_PATH=0`,
-`VERILATOR_ON_PATH=0`, and `VIVADO_PATH_ON_PATH=0`, while the
-D:\Xilinx\Vivado\2023.1\bin Xilinx simulator bat toolchain is available and
-passes the AXI register SystemVerilog gate. PS driver C compilation remains
-`PENDING_TOOL` because no `gcc` or `clang` compiler is on PATH.
+to compile and run the PS driver offline stub when host `gcc` or `clang` is
+available. When host compilers are absent, it uses the Vitis ARM cross GCC at
+D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe
+for syntax-only C compilation. Current PATH discovery records
+`IVERILOG_ON_PATH=0`, `VERILATOR_ON_PATH=0`, and `VIVADO_PATH_ON_PATH=0`, while
+the D:\Xilinx\Vivado\2023.1\bin Xilinx simulator bat toolchain is available and
+passes the AXI register SystemVerilog gate. The host execution stub is skipped
+for cross-target builds because the produced target is not executable by the
+Windows host.

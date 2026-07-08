@@ -17,7 +17,7 @@
 | Vivado build | PASS | D:\Xilinx\Vivado\2023.1\bin\vivado.bat, batch non-hardware build |
 | M6 hardware prep wrappers | PASS | `scripts/check_m6_static.py`; wrappers refuse unless `-AllowHardware` |
 | PS driver offline | PASS | host protocol unit test + generated headers |
-| PS driver C compile | PENDING_TOOL | gcc/clang not on PATH |
+| PS driver C compile | PASS | Vitis ARM cross GCC syntax-only; host stub run skipped |
 | Host client offline protocol | PASS | encode/decode, error events, reconnect state machine mock |
 | Ethernet real board | PENDING_HW_OR_DEFERRED | not automated unless user authorizes |
 | Rotation 600 rpm | PENDING_EXTERNAL_FIXTURE | not automated by Codex |

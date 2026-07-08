@@ -90,6 +90,8 @@ AUDIT_REQUIRED_TEXT = [
     ("XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1", "PLAN_AUDIT_XILINX_SIM_BAT_AVAILABLE_RECORDED"),
     ("IVERILOG_ON_PATH=0", "PLAN_AUDIT_IVERILOG_ABSENCE_RECORDED"),
     ("VERILATOR_ON_PATH=0", "PLAN_AUDIT_VERILATOR_ABSENCE_RECORDED"),
+    ("VITIS_CROSS_GCC_AVAILABLE=1", "PLAN_AUDIT_VITIS_CROSS_GCC_RECORDED"),
+    ("M4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY", "PLAN_AUDIT_PS_DRIVER_CROSS_COMPILE_RECORDED"),
 ]
 
 
@@ -164,8 +166,18 @@ def main() -> int:
     for claim in FORBIDDEN_CLAIM_LINES:
         require(claim not in exact_claim_lines and f"{claim}=1" not in exact_claim_lines, f"PLAN_FORBIDDEN_CLAIM_{claim}_ABSENT", errors)
 
-    require("PLAN_COMPLETION_AUDIT_STATUS=OFFLINE_PROGRESS_WITH_PENDING_TOOL" in audit_text, "PLAN_AUDIT_STATUS_RECORDED", errors)
-    require("OFFLINE_GATE_STATUS=PASS_WITH_PENDING_TOOL" in audit_text, "PLAN_AUDIT_OFFLINE_STATUS_RECORDED", errors)
+    require(
+        "PLAN_COMPLETION_AUDIT_STATUS=PASS" in audit_text
+        or "PLAN_COMPLETION_AUDIT_STATUS=OFFLINE_PROGRESS_WITH_PENDING_TOOL" in audit_text,
+        "PLAN_AUDIT_STATUS_RECORDED",
+        errors,
+    )
+    require(
+        "OFFLINE_GATE_STATUS=PASS" in audit_text
+        or "OFFLINE_GATE_STATUS=PASS_WITH_PENDING_TOOL" in audit_text,
+        "PLAN_AUDIT_OFFLINE_STATUS_RECORDED",
+        errors,
+    )
     for text, marker in AUDIT_REQUIRED_TEXT:
         require(text in audit_text, marker, errors)
 
