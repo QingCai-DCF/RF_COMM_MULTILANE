@@ -1,0 +1,51 @@
+[
+  {
+    "step": "0_connect_and_prepare",
+    "when": "Before any real N03 acceptance run",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\tools\\apply_n03_static_direct_network_admin.ps1",
+    "expected_evidence": "reports/n03_static_direct_network_preflight_current.summary.txt",
+    "pass_boundary": "PC_ETHERNET_LINK_UP=1 and PC_EXPECTED_STATIC_IP_PRESENT=1 only; no board TCP pass yet"
+  },
+  {
+    "step": "1_current_state_gate",
+    "when": "After Ethernet is plugged in and static IP is configured",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\tools\\run_n03_current_state_gate.ps1 -TimeoutSeconds 3",
+    "expected_evidence": "reports/n03_current_state_gate_current.summary.txt",
+    "pass_boundary": "N03_CURRENT_STATE_GATE_STATUS remains authoritative; do not claim final pass from preflight alone"
+  },
+  {
+    "step": "2_real_static_direct_acceptance",
+    "when": "Only after 192.168.10.2:5001 is reachable",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\tools\\run_n03_network_first_acceptance_safe.ps1 -TargetHost 192.168.10.2 -Port 5001 -ComPort COM3 -ReconnectCycles 20 -MatrixRepeat 100 -SustainedSeconds 60 -LongSeconds 300",
+    "expected_evidence": "reports/n03_network_first_acceptance_<stamp>.*/ and reports/n03_network_first_acceptance_safe_<stamp>.*",
+    "pass_boundary": "Real N03-1..N03-5/N03-9 claims require non-dry-run safe wrapper markers and clean logs"
+  },
+  {
+    "step": "2a_candidate_target_acceptance",
+    "when": "Only if UART BOARD_IP_SEEN or local TCP discovery identifies a board IP different from 192.168.10.2",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\tools\\run_n03_network_first_acceptance_safe.ps1 -TargetHost <candidate-ip-from-uart-or-local-tcp> -Port 5001 -ComPort COM3 -UseLatestTargetHint -SkipStaticDirectPreflight -ReconnectCycles 20 -MatrixRepeat 100 -SustainedSeconds 60 -LongSeconds 300",
+    "expected_evidence": "reports/external_preconditions_current.json plus safe-wrapper logs for the candidate target",
+    "pass_boundary": "Candidate IP evidence is only a routing hint until the safe wrapper records real TCP HELLO, payload, reconnect, and clean error counters"
+  },
+  {
+    "step": "3_dhcp_fallback_capture",
+    "when": "After board boots with DHCP client and no PC DHCP server",
+    "command": "capture UART DHCP_START/DHCP_TIMEOUT/STATIC_FALLBACK_IP=192.168.10.2/TCP_READY, then rerun the safe wrapper",
+    "expected_evidence": "reports/ps_uart_boot_probe_<stamp>.summary.txt plus N03 safe wrapper logs",
+    "pass_boundary": "DHCP timeout/static fallback pass also requires real TCP HELLO and memory echo after fallback"
+  },
+  {
+    "step": "4_optional_pc_hosted_dhcp",
+    "when": "Only if N03-7 is required and PC DHCP service is intentionally configured",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\tools\\check_n03_pc_hosted_dhcp_preflight.ps1",
+    "expected_evidence": "reports/n03_pc_hosted_dhcp_preflight_current.summary.txt",
+    "pass_boundary": "Preflight is not a lease pass; next_action=configure_windows_ics_or_standalone_dhcp_server; lease pass requires DISCOVER/OFFER/REQUEST/ACK and TCP HELLO/STATUS"
+  },
+  {
+    "step": "5_rebuild_package",
+    "when": "After any new real safe-wrapper evidence is captured",
+    "command": "python .\\tools\\build_n03_network_first_package.py",
+    "expected_evidence": "evidence/n03_network_first/N03_10_network_first_acceptance_package.md",
+    "pass_boundary": "Package may claim final N03 only after required real-board gates pass; never claim IR/2-lane/rotation/final target here"
+  }
+]

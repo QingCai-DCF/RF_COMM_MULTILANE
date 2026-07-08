@@ -1,0 +1,10 @@
+generated=2026-07-01T12:58:35
+status=DEFERRED_NO_PC_DHCP_SERVER_PREFLIGHTED
+pc_dhcp_preflight_status=DEFERRED_NO_PC_DHCP_SERVER
+pc_dhcp_next_action=configure_windows_ics_or_standalone_dhcp_server
+pc_dhcp_ics_query_requires_admin=1
+pc_dhcp_standalone_ip_command=New-NetIPAddress -InterfaceAlias "以太网" -IPAddress 192.168.20.1 -PrefixLength 24 -SkipAsSource $false
+pc_dhcp_ics_gui_command=control.exe ncpa.cpl
+pc_dhcp_preflight_summary=reports/n03_pc_hosted_dhcp_preflight_current.summary.txt
+pc_dhcp_preflight_report=reports/n03_pc_hosted_dhcp_preflight_current.md
+pc_dhcp_preflight_json=reports/n03_pc_hosted_dhcp_preflight_current.json

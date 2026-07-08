@@ -1,0 +1,139 @@
+{
+  "registers": [
+    {
+      "name": "CONTROL",
+      "offset": "0x0000",
+      "description": "reset, enable_phy, start, stop, clear_sticky, commit"
+    },
+    {
+      "name": "PROFILE_LANE_MASK",
+      "offset": "0x0004",
+      "description": "payload lane mask"
+    },
+    {
+      "name": "PROFILE_RX_LANE_MASK",
+      "offset": "0x0008",
+      "description": "receive lane mask"
+    },
+    {
+      "name": "PROFILE_ACK_LANE_MASK",
+      "offset": "0x000C",
+      "description": "ACK lane mask"
+    },
+    {
+      "name": "PROFILE_SESSION",
+      "offset": "0x0010",
+      "description": "session id"
+    },
+    {
+      "name": "PROFILE_PAYLOAD_LEN",
+      "offset": "0x0014",
+      "description": "payload length"
+    },
+    {
+      "name": "PROFILE_FRAGMENT_BYTES",
+      "offset": "0x0018",
+      "description": "fragment byte limit"
+    },
+    {
+      "name": "TIMING_CNT_CHIP_MAX",
+      "offset": "0x0020",
+      "description": "4PPM chip cycles minus one"
+    },
+    {
+      "name": "TIMING_CNT_PREAMBLE",
+      "offset": "0x0024",
+      "description": "preamble symbols"
+    },
+    {
+      "name": "TIMING_DETECT_WINDOW",
+      "offset": "0x0028",
+      "description": "detect start/end packed"
+    },
+    {
+      "name": "TIMING_GUARD_CYCLES",
+      "offset": "0x002C",
+      "description": "guard cycles"
+    },
+    {
+      "name": "TIMING_RETRY_TIMEOUT",
+      "offset": "0x0030",
+      "description": "retry timeout"
+    },
+    {
+      "name": "SAFETY_STARTUP_US",
+      "offset": "0x0040",
+      "description": "TFDU startup delay"
+    },
+    {
+      "name": "SAFETY_DUTY_WINDOW",
+      "offset": "0x0044",
+      "description": "rolling duty window"
+    },
+    {
+      "name": "SAFETY_DUTY_MAX",
+      "offset": "0x0048",
+      "description": "max duty permille"
+    },
+    {
+      "name": "SAFETY_STUCK_HIGH_LIMIT",
+      "offset": "0x004C",
+      "description": "TX stuck-high limit"
+    },
+    {
+      "name": "SAFETY_SHUTDOWN_REASON",
+      "offset": "0x0050",
+      "description": "shutdown reason"
+    },
+    {
+      "name": "STATUS",
+      "offset": "0x0060",
+      "description": "phy_ready, busy, done, fail bits"
+    },
+    {
+      "name": "STATUS_RETRY_COUNT",
+      "offset": "0x0064",
+      "description": "retry count"
+    },
+    {
+      "name": "STATUS_ERROR_COUNTS",
+      "offset": "0x0068",
+      "description": "crc/session/mask bad counters packed"
+    },
+    {
+      "name": "COUNTER_TX_PULSE",
+      "offset": "0x0080",
+      "description": "TX pulse count"
+    },
+    {
+      "name": "COUNTER_RX_RAW_PULSE",
+      "offset": "0x0084",
+      "description": "RX raw pulse count"
+    },
+    {
+      "name": "COUNTER_FRAME_GOOD",
+      "offset": "0x0088",
+      "description": "good frame count"
+    },
+    {
+      "name": "COUNTER_FRAME_BAD",
+      "offset": "0x008C",
+      "description": "bad frame count"
+    },
+    {
+      "name": "COUNTER_ACK_SENT",
+      "offset": "0x0090",
+      "description": "ACK sent count"
+    },
+    {
+      "name": "COUNTER_ACK_SEEN",
+      "offset": "0x0094",
+      "description": "ACK seen count"
+    },
+    {
+      "name": "PROFILE_ID",
+      "offset": "0x00F0",
+      "description": "profile id/hash low word"
+    }
+  ]
+}

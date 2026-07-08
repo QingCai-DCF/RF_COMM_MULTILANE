@@ -1,0 +1,12 @@
+{
+  "name": "PENDING_2LANE_PROFILE",
+  "enabled": false,
+  "blocked_by": "AB_L1 raw pulse failure in imported RF_COMM evidence",
+  "required_before_enable": [
+    "AB_L1 raw-pulse matrix pass",
+    "BA_L1 raw-pulse matrix pass",
+    "lane1 frame CRC pass",
+    "lane1 ACK-only pass",
+    "session/mask readback match"
+  ]
+}

@@ -1,0 +1,5 @@
+﻿direction,expected,trigger,tx_pulses,rx_pulses,tx_edges,rx_edges,first_delay_samples,near_rx_pulses,verdict,analyzer_verdict,reason,evidence_csv,evidence_csv_sha256
+AB_L0,A_TO_B_LANE0,a_tx_lane0,479,465,958,930,9,479,PASS,PASS_EXPECTED_RAW,A_TO_B_LANE0 has TX and corresponding RX pulse activity,evidence/lane_matrix/rxonly_AB_L0.csv,C3609D339E2E472633F8503DF63B5E41EADA9668B74C5EB8B0BA203E7076ED43
+BA_L0,B_TO_A_LANE0,b_tx_lane0,228,226,456,452,10,228,PASS,PASS_EXPECTED_RAW,B_TO_A_LANE0 has TX and corresponding RX pulse activity,evidence/lane_matrix/rxonly_BA_L0.csv,BD6085DA32BCA3B8DA625B602B5B17939FF4DB35D32928289D6920C682D82EA5
+AB_L1,A_TO_B_LANE1,a_tx_lane1,479,0,958,0,,479,NO_RX_RAW_PULSE,FAIL_EXPECTED_RAW,A_TO_B_LANE1 verdict=FAIL_NO_RX_ACTIVITY near_rx_echo=a_rx1:pulses=479:delay=1,evidence/lane_matrix/rxonly_AB_L1.csv,7E0918BF8FF0A3041A35EAE7A3D0C5E315BBE3AC77BA4B8D438A0574FFAA1330
+BA_L1,B_TO_A_LANE1,b_tx_lane1,479,460,958,919,9,479,PASS,PASS_EXPECTED_RAW,B_TO_A_LANE1 has TX and corresponding RX pulse activity,evidence/lane_matrix/rxonly_BA_L1.csv,2F51DC8E42E751CBC8788D19D2DE05AE410C70AB4B339E791B9D6C5D8B4E8626

@@ -1,0 +1,762 @@
+/*
+ * 嵌入式红外通信控制器 (Top Level) - FIXED & ROBUST
+ * 适配器件: Vishay TFDU6102 (FIR 4Mbps Mode)
+ * 时钟要求: clk_phy = 64MHz (1 period = 15.625ns)
+ * FIR 4-PPM 规格: 
+ *   - Data Rate: 4 Mbps
+ *   - Symbol Rate: 2 Msps (2 bits per symbol)
+ *   - Symbol Duration: 500ns
+ *   - Chip Duration: 125ns (8 clocks @ 64MHz)
+ */
+
+module ir_comm_top #(
+    parameter C_S_AXI_DATA_WIDTH = 32,
+    parameter C_S_AXI_ADDR_WIDTH = 4
+)(
+    // Clock and Reset
+    input  wire                             clk_phy,       // 必须为 64MHz
+    input  wire                             rst_n,         // 异步复位
+
+    // AXI4-Lite Interface (Register Control)
+    input  wire                             s_axi_aclk,
+    input  wire                             s_axi_aresetn,
+    input  wire [C_S_AXI_ADDR_WIDTH-1:0]    s_axi_awaddr,
+    input  wire [2:0]                       s_axi_awprot,
+    input  wire                             s_axi_awvalid,
+    output wire                             s_axi_awready,
+    input  wire [C_S_AXI_DATA_WIDTH-1:0]    s_axi_wdata,
+    input  wire [(C_S_AXI_DATA_WIDTH/8)-1:0] s_axi_wstrb,
+    input  wire                             s_axi_wvalid,
+    output wire                             s_axi_wready,
+    output wire [1:0]                       s_axi_bresp,
+    output wire                             s_axi_bvalid,
+    input  wire                             s_axi_bready,
+    input  wire [C_S_AXI_ADDR_WIDTH-1:0]    s_axi_araddr,
+    input  wire [2:0]                       s_axi_arprot,
+    input  wire                             s_axi_arvalid,
+    output wire                             s_axi_arready,
+    output wire [C_S_AXI_DATA_WIDTH-1:0]    s_axi_rdata,
+    output wire [1:0]                       s_axi_rresp,
+    output wire                             s_axi_rvalid,
+    input  wire                             s_axi_rready,
+
+    // AXI-Stream TX (Input from DMA/CPU)
+    input  wire [7:0]                       s_axis_tx_tdata,
+    input  wire                             s_axis_tx_tvalid,
+    output wire                             s_axis_tx_tready,
+    input  wire                             s_axis_tx_tlast,
+
+    // AXI-Stream RX (Output to DMA/CPU)
+    output wire [7:0]                       m_axis_rx_tdata,
+    output wire                             m_axis_rx_tvalid,
+    input  wire                             m_axis_rx_tready,
+    output wire                             m_axis_rx_tlast,
+
+    // Physical Interface (TFDU6102)
+    output wire                             ir_tx_out,
+    input  wire                             ir_rx_in,       // Active Low
+    output wire                             ir_sd,          // Shutdown (Active High internal -> IP logic handles)
+    output wire                             ir_mode_out     // Mode Select
+);
+
+    //==========================================================================
+    // Internal Signals
+    //==========================================================================
+    wire cfg_enable;
+    wire cfg_enable_sync;
+    wire tx_busy;
+    wire rx_active;
+    wire crc_error_phy;
+    wire overrun_error_phy;
+
+    // 半双工保护: TX工作时屏蔽RX输入
+    wire ir_rx_masked;
+    assign ir_rx_masked = tx_busy ? 1'b1 : ir_rx_in; // ir_rx_in active low (idle high)
+
+    // TFDU6102 Controls
+    assign ir_sd = ~cfg_enable_sync;  // Chip enable (high) -> SD (low)
+    assign ir_mode_out = 1'b1;        // High for FIR 4Mbps mode
+
+    //==========================================================================
+    // 1. AXI Registers & CDC
+    //==========================================================================
+    ir_axi_regs #(
+        .C_S_AXI_DATA_WIDTH(C_S_AXI_DATA_WIDTH),
+        .C_S_AXI_ADDR_WIDTH(C_S_AXI_ADDR_WIDTH)
+    ) u_regs (
+        .s_axi_aclk(s_axi_aclk), .s_axi_aresetn(s_axi_aresetn),
+        .s_axi_awaddr(s_axi_awaddr), .s_axi_awvalid(s_axi_awvalid), .s_axi_awready(s_axi_awready),
+        .s_axi_wdata(s_axi_wdata), .s_axi_wstrb(s_axi_wstrb), .s_axi_wvalid(s_axi_wvalid), .s_axi_wready(s_axi_wready),
+        .s_axi_bresp(s_axi_bresp), .s_axi_bvalid(s_axi_bvalid), .s_axi_bready(s_axi_bready),
+        .s_axi_araddr(s_axi_araddr), .s_axi_arvalid(s_axi_arvalid), .s_axi_arready(s_axi_arready),
+        .s_axi_rdata(s_axi_rdata), .s_axi_rresp(s_axi_rresp), .s_axi_rvalid(s_axi_rvalid), .s_axi_rready(s_axi_rready),
+        
+        .cfg_enable(cfg_enable),
+        .tx_busy(tx_busy),
+        .rx_active(rx_active),
+        .crc_error(crc_error_phy),
+        .overrun_error(overrun_error_phy)
+    );
+
+    // 同步 Enable 信号
+    cdc_sync u_sync_en (
+        .clk_dst(clk_phy), .rst_n(rst_n), 
+        .data_in(cfg_enable), .data_out(cfg_enable_sync)
+    );
+
+    //==========================================================================
+    // 2. Data Path FIFOs
+    //==========================================================================
+    wire [7:0]  tx_phy_tdata;
+    wire        tx_phy_tvalid, tx_phy_tready, tx_phy_tlast;
+
+    wire [7:0]  rx_phy_tdata;
+    wire        rx_phy_tvalid, rx_phy_tready, rx_phy_tlast;
+
+    // TX FIFO: System -> PHY
+    axis_data_fifo_tx u_tx_fifo (
+        .s_axis_aclk(s_axi_aclk),   .s_axis_aresetn(s_axi_aresetn),
+        .s_axis_tdata(s_axis_tx_tdata), .s_axis_tvalid(s_axis_tx_tvalid), 
+        .s_axis_tready(s_axis_tx_tready), .s_axis_tlast(s_axis_tx_tlast),
+        
+        .m_axis_aclk(clk_phy),      .m_axis_aresetn(rst_n),
+        .m_axis_tdata(tx_phy_tdata), .m_axis_tvalid(tx_phy_tvalid), 
+        .m_axis_tready(tx_phy_tready), .m_axis_tlast(tx_phy_tlast)
+    );
+
+    // RX FIFO: PHY -> System
+    axis_data_fifo_rx u_rx_fifo (
+        .s_axis_aclk(clk_phy),      .s_axis_aresetn(rst_n),
+        .s_axis_tdata(rx_phy_tdata), .s_axis_tvalid(rx_phy_tvalid), 
+        .s_axis_tready(rx_phy_tready), .s_axis_tlast(rx_phy_tlast),
+        
+        .m_axis_aclk(s_axi_aclk),   .m_axis_aresetn(s_axi_aresetn),
+        .m_axis_tdata(m_axis_rx_tdata), .m_axis_tvalid(m_axis_rx_tvalid), 
+        .m_axis_tready(m_axis_rx_tready), .m_axis_tlast(m_axis_rx_tlast)
+    );
+
+    //==========================================================================
+    // 3. PHY Cores
+    //==========================================================================
+    ir_tx_4ppm u_tx_core (
+        .clk(clk_phy), .rst_n(rst_n), .enable(cfg_enable_sync),
+        .s_axis_tdata(tx_phy_tdata), .s_axis_tvalid(tx_phy_tvalid), 
+        .s_axis_tready(tx_phy_tready), .s_axis_tlast(tx_phy_tlast),
+        .tx_busy(tx_busy), 
+        .ir_tx_out(ir_tx_out)
+    );
+
+    ir_rx_4ppm u_rx_core (
+        .clk(clk_phy), .rst_n(rst_n), .enable(cfg_enable_sync),
+        .ir_rx_in(ir_rx_masked), 
+        .m_axis_tdata(rx_phy_tdata), .m_axis_tvalid(rx_phy_tvalid), 
+        .m_axis_tready(rx_phy_tready), .m_axis_tlast(rx_phy_tlast),
+        .rx_active(rx_active), 
+        .crc_error(crc_error_phy),
+        .overrun_error(overrun_error_phy)
+    );
+
+endmodule
+
+
+//==============================================================================
+// Module: RX Core (4-PPM Fixed with Robust Sync & Handshake)
+//==============================================================================
+module ir_rx_4ppm (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         enable,
+    input  wire         ir_rx_in,       // Active Low
+    
+    // AXI-Stream Master
+    output reg [7:0]    m_axis_tdata,
+    output reg          m_axis_tvalid,
+    input  wire         m_axis_tready,
+    output reg          m_axis_tlast,
+    
+    // Status
+    output reg          rx_active,
+    output reg          crc_error,
+    output reg          overrun_error
+);
+
+    // 64MHz Clock: Chip = 125ns = 8 cycles. Symbol = 32 cycles.
+    localparam CNT_CHIP_MAX   = 3'd7; 
+    localparam CHIP_SAMPLE_PT = 3'd4; // Sample at middle
+    localparam CNT_SYM_MAX    = 2'd3; // 0..3 chips
+
+    localparam SILENCE_TIMEOUT = 128; // ~16us silence -> End of packet
+
+    // State Machine
+    localparam S_IDLE       = 0;
+    localparam S_SYNC       = 1; // Wait for preamble alignment
+    localparam S_DATA       = 2;
+    localparam S_CRC_WAIT   = 3; // Wait for CRC module
+    localparam S_CHECK      = 4;
+
+    reg [2:0] state;
+    
+    // Input Sync & Edge Detect
+    reg r_in, r_in_d, r_in_inv;
+    wire rx_pulse_active;
+    wire rx_rise_edge;
+
+    always @(posedge clk) begin
+        r_in     <= ir_rx_in;
+        r_in_d   <= r_in;
+        r_in_inv <= ~r_in; // Active High internal
+    end
+    assign rx_pulse_active = r_in_inv; 
+    assign rx_rise_edge    = r_in_inv & (~(~r_in_d)); // Rising internal (falling external)
+
+    // Timing Counters
+    reg [2:0] ticks;      // 0..7
+    reg [1:0] chip_idx;   // 0..3
+    
+    // Data Capture
+    reg [3:0] sym_capture;
+    reg       sym_has_pulse;
+    
+    // Byte Assembly
+    reg [7:0] shift_reg;
+    reg [1:0] pair_cnt;   // 0..3 pairs per byte
+    
+    // CRC
+    reg crc_init, crc_calc;
+    wire [31:0] crc_res;
+    localparam CRC32_RESIDUE = 32'hDEBB20E3;
+
+    crc32_gen u_crc (
+        .clk(clk), .rst_n(rst_n), 
+        .init(crc_init), .calc(crc_calc), 
+        .data_in(m_axis_tdata), // Snoop output data
+        .crc_out(crc_res)
+    );
+
+    // Silence Detection
+    reg [7:0] silence_cnt;
+
+    // 4-PPM Decode Function
+    function [2:0] decode_ppm(input [3:0] s);
+        case(s)
+            4'b1000: decode_ppm = 3'b100; // Val 0, Valid 1
+            4'b0100: decode_ppm = 3'b101; // Val 1, Valid 1
+            4'b0010: decode_ppm = 3'b110; // Val 2, Valid 1
+            4'b0001: decode_ppm = 3'b111; // Val 3, Valid 1
+            default: decode_ppm = 3'b000; // Error
+        endcase
+    endfunction
+
+    wire [2:0] dec_res = decode_ppm(sym_capture);
+    wire sym_valid     = dec_res[2];
+    wire [1:0] sym_val = dec_res[1:0];
+
+    // Main FSM
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state <= S_IDLE;
+            ticks <= 0; chip_idx <= 0;
+            m_axis_tvalid <= 0; m_axis_tlast <= 0; m_axis_tdata <= 0;
+            rx_active <= 0; crc_error <= 0; overrun_error <= 0;
+            crc_init <= 0; crc_calc <= 0;
+            silence_cnt <= 0; pair_cnt <= 0;
+            sym_capture <= 0; sym_has_pulse <= 0;
+        end else if (!enable) begin
+            state <= S_IDLE; rx_active <= 0;
+        end else begin
+            // CRC Control Strobe Auto-clear
+            crc_init <= 0;
+            crc_calc <= 0;
+
+            // Handle AXI Handshake (Clear Valid if Accepted)
+            if (m_axis_tvalid && m_axis_tready) begin
+                m_axis_tvalid <= 0;
+                m_axis_tlast  <= 0;
+            end
+
+            // Timing Logic
+            if (state != S_IDLE) begin
+                if (rx_rise_edge) begin
+                    // Re-align on edges to compensate drift
+                    // Only re-align if we are "close" to a boundry or logic implies sync
+                    if (ticks > CNT_CHIP_MAX - 2 || ticks < 2) ticks <= 0; 
+                end else begin
+                    ticks <= ticks + 1;
+                end
+            end
+
+            case (state)
+                S_IDLE: begin
+                    rx_active <= 0;
+                    overrun_error <= 0;
+                    if (rx_rise_edge) begin
+                        state <= S_SYNC;
+                        ticks <= 0;
+                        chip_idx <= 0;
+                        sym_capture <= 0;
+                        crc_init <= 1; // Prepare CRC
+                        rx_active <= 1;
+                    end
+                end
+
+                // S_SYNC: 简单的同步状态，这里简化为等待第一个完整符号
+                // 实际应用中可能检测 Preambles (16x pulses)
+                S_SYNC: begin
+                    if (ticks == CHIP_SAMPLE_PT) begin
+                        if (rx_pulse_active) sym_capture[3-chip_idx] <= 1;
+                    end
+                    
+                    if (ticks == CNT_CHIP_MAX) begin
+                        ticks <= 0;
+                        chip_idx <= chip_idx + 1;
+                        if (chip_idx == CNT_SYM_MAX) begin
+                            // End of first symbol
+                            // If it's valid PPM, go data. If 0000/1111, keep syncing or error.
+                            // Assuming valid start involves valid codes.
+                            chip_idx <= 0;
+                            pair_cnt <= 0;
+                            shift_reg <= 0;
+                            sym_capture <= 0;
+                            state <= S_DATA; 
+                        end
+                    end
+                end
+
+                S_DATA: begin
+                    // 1. Sampling
+                    if (ticks == CHIP_SAMPLE_PT) begin
+                        if (rx_pulse_active) sym_capture[3-chip_idx] <= 1;
+                    end
+
+                    // 2. Symbol Boundary
+                    if (ticks == CNT_CHIP_MAX) begin
+                        ticks <= 0;
+                        chip_idx <= chip_idx + 1;
+
+                        if (chip_idx == CNT_SYM_MAX) begin
+                            // End of Symbol
+                            chip_idx <= 0;
+                            
+                            if (!sym_valid) begin
+                                // Invalid symbol -> Silence/Gap check
+                                silence_cnt <= silence_cnt + 1;
+                            end else begin
+                                silence_cnt <= 0;
+                                // Shift in logic: LSB first pairs usually in IrDA, check endianness.
+                                // Assumption: Little Endian Bits, Big Endian Chips? 
+                                // Standard: LSB first. Chip sequence represents mapped bits.
+                                case(pair_cnt)
+                                    0: shift_reg[1:0] <= sym_val;
+                                    1: shift_reg[3:2] <= sym_val;
+                                    2: shift_reg[5:4] <= sym_val;
+                                    3: shift_reg[7:6] <= sym_val;
+                                endcase
+
+                                if (pair_cnt == 3) begin
+                                    // Byte Buffer Full: Push to AXI
+                                    // CRITICAL: Check Backpressure
+                                    if (m_axis_tvalid && !m_axis_tready) begin
+                                        overrun_error <= 1; // FIFO Full, Dropping Data!
+                                    end else begin
+                                        m_axis_tdata <= {sym_val, shift_reg[5:0]}; // Current assembled byte
+                                        m_axis_tvalid <= 1;
+                                        crc_calc <= 1; // Trigger CRC for this byte
+                                    end
+                                    pair_cnt <= 0;
+                                end else begin
+                                    pair_cnt <= pair_cnt + 1;
+                                end
+                            end
+                            sym_capture <= 0; // Reset for next
+                        end
+                    end
+
+                    // 3. Timeout Check
+                    if (silence_cnt >= SILENCE_TIMEOUT) begin
+                        state <= S_CRC_WAIT; // End of Packet
+                        // Do not flush partial bytes, IrDA is byte-aligned
+                    end
+                end
+
+                S_CRC_WAIT: begin
+                    // Wait 1 cycle for CRC module to finish calculation of the last byte
+                    // Before checking the result
+                    state <= S_CHECK;
+                end
+
+                S_CHECK: begin
+                    // Check if residual is correct
+                    // Note: The last 4 bytes received were actually the CRC, 
+                    // processed into the engine. Result should be magic number.
+                    if (crc_res != CRC32_RESIDUE) begin
+                        crc_error <= 1;
+                    end
+                    // Signal Last
+                    if (!m_axis_tvalid || m_axis_tready) begin
+                        // Send an empty TLAST packet to indicate frame end?
+                        // Or just tag the last valid data?
+                        // Simplified: Tag Frame End on bus (AXI Stream usually marks last data byte)
+                        // Here we just deassert Active.
+                        m_axis_tlast <= 0; // If previously set
+                        state <= S_IDLE;
+                        rx_active <= 0;
+                    end
+                end
+            endcase
+        end
+    end
+
+endmodule
+
+
+//==============================================================================
+// Module: TX Core (4-PPM Fixed with Prefetch & Glitch-Free Output)
+//==============================================================================
+module ir_tx_4ppm (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         enable,
+    
+    // AXI Stream Slave
+    input  wire [7:0]   s_axis_tdata,
+    input  wire         s_axis_tvalid,
+    output reg          s_axis_tready,
+    input  wire         s_axis_tlast,
+    
+    output reg          tx_busy,
+    output reg          ir_tx_out
+);
+
+    // Timing Constants (64MHz)
+    localparam CNT_CHIP_MAX = 3'd7; 
+    localparam CNT_PREAMBLE = 16;  // Preamble count (min 16 for FIR)
+
+    // State Machine
+    localparam S_IDLE     = 0;
+    localparam S_PREAMBLE = 1;
+    localparam S_DATA     = 2;
+    localparam S_CRC      = 3;
+    localparam S_STOP     = 4;
+
+    reg [2:0] state;
+    
+    // Timing Counters
+    reg [2:0] tick_cnt;    // 0..7
+    reg [1:0] chip_idx;    // 0..3 (Chip index within symbol)
+    
+    // Data Management
+    reg [7:0] cur_byte;    // Currently serializing
+    reg [2:0] bit_ptr;     // 0,2,4,6
+    reg       last_byte_flag;
+    
+    // Pre-calculated Chips Buffer (Look-ahead)
+    reg [3:0] next_symbol_chips; // The 4 chips to send in the NEXT symbol
+    reg [3:0] curr_symbol_chips; // The 4 chips being sent NOW
+    
+    // CRC
+    reg crc_init, crc_calc;
+    wire [31:0] crc_res;
+    reg [31:0] crc_inv_shifter;
+    
+    crc32_gen u_crc (.clk(clk), .rst_n(rst_n), .init(crc_init), .calc(crc_calc), .data_in(cur_byte), .crc_out(crc_res));
+
+    // Encoding Function
+    function [3:0] encode_4ppm(input [1:0] d);
+        case(d) 
+            0: encode_4ppm=4'b1000; 1: encode_4ppm=4'b0100; // Chip 0, Chip 1...
+            2: encode_4ppm=4'b0010; 3: encode_4ppm=4'b0001; 
+        endcase
+    endfunction
+
+    // Logic Variables
+    wire symbol_done = (chip_idx == 3 && tick_cnt == CNT_CHIP_MAX);
+    reg [5:0] pre_cnt;
+
+    // Buffer Control - Prefetch Mechanism
+    // We act like a skid buffer. 
+    // We accept data into `next_byte` when `holding_valid` is low.
+    reg [7:0] holding_byte;
+    reg       holding_last;
+    reg       holding_valid;
+
+    // AXI Ready Logic
+    // Ready if we don't have holding data
+    always @(*) s_axis_tready = !holding_valid && (state != S_IDLE || enable);
+
+    // Holding Register Logic (Prefetch)
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin
+            holding_valid <= 0; holding_byte <= 0; holding_last <= 0;
+        end else if(enable) begin
+            if (s_axis_tvalid && s_axis_tready) begin
+                holding_byte <= s_axis_tdata;
+                holding_last <= s_axis_tlast;
+                holding_valid <= 1;
+            end else if (holding_valid && symbol_done && state == S_DATA && bit_ptr == 6) begin
+                // Consumed by state machine
+                holding_valid <= 0; 
+            end
+        end
+    end
+
+    // Main TX FSM
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state <= S_IDLE;
+            tick_cnt <= 0; chip_idx <= 0;
+            ir_tx_out <= 0; tx_busy <= 0;
+            bit_ptr <= 0; pre_cnt <= 0;
+            crc_init <= 0; crc_calc <= 0;
+            curr_symbol_chips <= 0; next_symbol_chips <= 0;
+            cur_byte <= 0; last_byte_flag <= 0;
+        end else if (!enable) begin
+            state <= S_IDLE; ir_tx_out <= 0; tx_busy <= 0;
+        end else begin
+            
+            // Output Generation (Glitch Free)
+            if (state == S_IDLE) begin
+                ir_tx_out <= 0;
+            end else begin
+                // Output based on current chip map
+                // Pulse width = Full Chip (NRZ equivalent) or smaller?
+                // TFDU6102 standard FIR pulses are nominal chip width.
+                ir_tx_out <= curr_symbol_chips[3-chip_idx];
+                
+                // Advance Counters
+                if (tick_cnt == CNT_CHIP_MAX) begin
+                    tick_cnt <= 0;
+                    if (chip_idx == 3) begin
+                        chip_idx <= 0;
+                        // Load Next Symbol Mapping seamlessly
+                        curr_symbol_chips <= next_symbol_chips; 
+                    end else begin
+                        chip_idx <= chip_idx + 1;
+                    end
+                end else begin
+                    tick_cnt <= tick_cnt + 1;
+                end
+            end
+
+            // CRC Control
+            crc_init <= 0; crc_calc <= 0;
+
+            case (state)
+                S_IDLE: begin
+                    if (holding_valid) begin
+                        state <= S_PREAMBLE;
+                        tx_busy <= 1;
+                        pre_cnt <= 0;
+                        crc_init <= 1;
+                        // Setup Preamble Pattern (Usually repeated pulses or specific)
+                        // FIR Preamble: often just PAs. Let's use x1000 repeated.
+                        curr_symbol_chips <= 4'b1000; 
+                        next_symbol_chips <= 4'b1000;
+                        tick_cnt <= 0;
+                        chip_idx <= 0;
+                    end
+                end
+
+                S_PREAMBLE: begin
+                    // Prepare next_symbol_chips for the transition
+                    next_symbol_chips <= 4'b1000; // Default Preamble
+
+                    if (symbol_done) begin
+                        pre_cnt <= pre_cnt + 1;
+                        if (pre_cnt == CNT_PREAMBLE-1) begin
+                            state <= S_DATA;
+                            // Load first data byte from Holding
+                            cur_byte <= holding_byte;
+                            last_byte_flag <= holding_last;
+                            bit_ptr <= 0;
+                            // Calc CRC for first byte
+                            crc_calc <= 1;
+                            // Prepare first symbol of data
+                            next_symbol_chips <= encode_4ppm(holding_byte[1:0]);
+                        end
+                    end
+                end
+
+                S_DATA: begin
+                    // "Look Ahead" Logic to update next_symbol_chips
+                    if (tick_cnt == CNT_CHIP_MAX && chip_idx == 3) begin
+                        // Just finished a symbol, moved to next one. 
+                        // Update Pointer for the *following* one.
+                        if (bit_ptr == 6) begin
+                            // Finished a Byte.
+                            if (last_byte_flag) begin
+                                state <= S_CRC;
+                                bit_ptr <= 0;
+                                crc_inv_shifter <= ~crc_res; // Invert for Transmission
+                                // Next chips will be CRC[1:0]
+                                next_symbol_chips <= encode_4ppm((~crc_res) & 3);
+                            end else if (holding_valid) begin
+                                // Continue to next byte (Gapless)
+                                cur_byte <= holding_byte;
+                                last_byte_flag <= holding_last;
+                                bit_ptr <= 0;
+                                crc_calc <= 1;
+                                next_symbol_chips <= encode_4ppm(holding_byte[1:0]);
+                            end else begin
+                                // Underrun! No data available.
+                                // Must abort or insert Stuffing. Simplicity: Abort/Stop.
+                                state <= S_STOP; // Or Error
+                                next_symbol_chips <= 0;
+                            end
+                        end else begin
+                            // Mid-byte
+                            bit_ptr <= bit_ptr + 2;
+                            case(bit_ptr + 2) // Next bits
+                                2: next_symbol_chips <= encode_4ppm(cur_byte[3:2]);
+                                4: next_symbol_chips <= encode_4ppm(cur_byte[5:4]);
+                                6: next_symbol_chips <= encode_4ppm(cur_byte[7:6]);
+                            endcase
+                        end
+                    end
+                end
+
+                S_CRC: begin
+                    if (symbol_done) begin
+                        if (bit_ptr == 30) begin
+                            state <= S_STOP;
+                            next_symbol_chips <= 0; // Interaction Pulse? Or Silence.
+                        end else begin
+                            bit_ptr <= bit_ptr + 2;
+                            // Send next slice of CRC
+                            next_symbol_chips <= encode_4ppm((crc_inv_shifter >> (bit_ptr + 2)) & 3);
+                        end
+                    end
+                end
+
+                S_STOP: begin
+                    if (symbol_done) begin
+                        tx_busy <= 0;
+                        state <= S_IDLE;
+                    end
+                end
+            endcase
+        end
+    end
+endmodule
+
+//==============================================================================
+// Helpers (CRC & CDC) - Unchanged but checked
+//==============================================================================
+module crc32_gen (
+    input clk, rst_n, init, calc,
+    input [7:0] data_in,
+    output [31:0] crc_out
+);
+    reg [31:0] crc_reg;
+    // Standard IEEE 802.3 CRC32 Polynomial
+    function [31:0] next_crc(input [7:0] d, input [31:0] c);
+        reg [31:0] x;
+        integer i;
+        begin
+            x = c ^ {24'h0, d}; // XOR input with lower byte
+            for(i=0; i<8; i=i+1)
+                x = x[0] ? (x >> 1) ^ 32'hEDB88320 : (x >> 1);
+            next_crc = x;
+        end
+    endfunction
+
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) crc_reg <= 32'hFFFFFFFF;
+        else if(init) crc_reg <= 32'hFFFFFFFF;
+        else if(calc) crc_reg <= next_crc(data_in, crc_reg);
+    
+    assign crc_out = crc_reg;
+endmodule
+
+module cdc_sync (
+    input clk_dst, rst_n, data_in, 
+    output reg data_out
+);
+    (* ASYNC_REG = "TRUE" *) reg s1, s2;
+    always @(posedge clk_dst or negedge rst_n) 
+        if(!rst_n) {s1, s2, data_out} <= 0;
+        else {data_out, s2, s1} <= {s2, s1, data_in};
+endmodule
+
+//==============================================================================
+// Register File - Updated
+//==============================================================================
+module ir_axi_regs #(parameter C_S_AXI_DATA_WIDTH = 32, parameter C_S_AXI_ADDR_WIDTH = 4)(
+    input wire s_axi_aclk, s_axi_aresetn,
+    input wire [C_S_AXI_ADDR_WIDTH-1:0] s_axi_awaddr, input wire s_axi_awvalid, output reg s_axi_awready,
+    input wire [C_S_AXI_DATA_WIDTH-1:0] s_axi_wdata, input wire [3:0] s_axi_wstrb, input wire s_axi_wvalid, output reg s_axi_wready,
+    output reg [1:0] s_axi_bresp, output reg s_axi_bvalid, input wire s_axi_bready,
+    input wire [C_S_AXI_ADDR_WIDTH-1:0] s_axi_araddr, input wire s_axi_arvalid, output reg s_axi_arready,
+    output reg [C_S_AXI_DATA_WIDTH-1:0] s_axi_rdata, output reg [1:0] s_axi_rresp, output reg s_axi_rvalid, input wire s_axi_rready,
+    
+    output wire cfg_enable,
+    input wire tx_busy,
+    input wire rx_active,
+    input wire crc_error,
+    input wire overrun_error
+);
+    reg [31:0] reg_control;
+    reg [31:0] reg_status; // Sticky bits
+    
+    wire tx_b_sync, rx_a_sync, crc_e_sync, ovr_e_sync;
+
+    // CDC for Status Signals
+    cdc_sync u_cdc_st0 (.clk_dst(s_axi_aclk), .rst_n(s_axi_aresetn), .data_in(tx_busy), .data_out(tx_b_sync));
+    cdc_sync u_cdc_st1 (.clk_dst(s_axi_aclk), .rst_n(s_axi_aresetn), .data_in(rx_active), .data_out(rx_a_sync));
+    cdc_sync u_cdc_st2 (.clk_dst(s_axi_aclk), .rst_n(s_axi_aresetn), .data_in(crc_error), .data_out(crc_e_sync));
+    cdc_sync u_cdc_st3 (.clk_dst(s_axi_aclk), .rst_n(s_axi_aresetn), .data_in(overrun_error), .data_out(ovr_e_sync));
+
+    assign cfg_enable = reg_control[0];
+
+    // Status Update Logic (Write 1 to Clear for errors)
+    always @(posedge s_axi_aclk or negedge s_axi_aresetn) begin
+        if(!s_axi_aresetn) reg_status <= 0;
+        else begin
+            // Sticky Error Bits
+            if(crc_e_sync) reg_status[2] <= 1;
+            if(ovr_e_sync) reg_status[3] <= 1;
+            
+            // Live Status
+            reg_status[0] <= tx_b_sync;
+            reg_status[1] <= rx_a_sync;
+            
+            // Clear on Write (W1C) logic handled in AXI write
+        end
+    end
+
+    // AXI Logic (Simplified Standard Slave)
+    always @(posedge s_axi_aclk or negedge s_axi_aresetn) begin
+        if(!s_axi_aresetn) begin
+            s_axi_awready<=0; s_axi_wready<=0; s_axi_bvalid<=0; 
+            s_axi_arready<=0; s_axi_rvalid<=0; reg_control<=0;
+        end else begin
+            // Write
+            if(s_axi_awvalid && s_axi_wvalid && !s_axi_awready && !s_axi_wready) begin
+                s_axi_awready <= 1; s_axi_wready <= 1;
+                if(s_axi_awaddr[3:2] == 0) begin // Offset 0x0
+                    if(s_axi_wstrb[0]) reg_control[7:0] <= s_axi_wdata[7:0];
+                end else if(s_axi_awaddr[3:2] == 1) begin // Offset 0x4 (Status)
+                    // Write 1 to Clear
+                    if(s_axi_wdata[2]) reg_status[2] <= 0;
+                    if(s_axi_wdata[3]) reg_status[3] <= 0;
+                end
+            end else begin
+                s_axi_awready <= 0; s_axi_wready <= 0;
+            end
+
+            if(s_axi_wready && s_axi_wvalid && !s_axi_bvalid) s_axi_bvalid <= 1;
+            if(s_axi_bready && s_axi_bvalid) s_axi_bvalid <= 0;
+
+            // Read
+            if(s_axi_arvalid && !s_axi_arready) begin
+                s_axi_arready <= 1; s_axi_rvalid <= 1;
+                case(s_axi_araddr[3:2])
+                    0: s_axi_rdata <= reg_control;
+                    1: s_axi_rdata <= reg_status;
+                    default: s_axi_rdata <= 0;
+                endcase
+            end else if(s_axi_rready && s_axi_rvalid) begin
+                s_axi_rvalid <= 0; s_axi_arready <= 0;
+            end
+        end
+    end
+endmodule

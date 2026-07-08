@@ -1,0 +1,117 @@
+{
+  "schema": "xilinx.com:schema:json_instance:1.0",
+  "ip_inst": {
+    "xci_name": "design_shiboqi_ir_loopback_b0_7",
+    "cell_name": "ir_loopback_b0",
+    "component_reference": "xilinx.com:module_ref:ir_stream_bidir_vec_bd:1.0",
+    "ip_revision": "1",
+    "gen_directory": "../../../../../../TFDU_VFIR_Client.gen/sources_1/bd/design_shiboqi/ip/design_shiboqi_ir_loopback_b0_7",
+    "parameters": {
+      "component_parameters": {
+        "LANE_COUNT": [ { "value": "2", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_SESSION_ID": [ { "value": "0x2201", "value_src": "user", "resolve_type": "user", "format": "bitString", "usage": "all" } ],
+        "B_CNT_CHIP_MAX": [ { "value": "7", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_CNT_PREAMBLE": [ { "value": "64", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RX_DATA_PHASE_DELAY_CYCLES": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RX_DETECT_START_CYCLES": [ { "value": "3", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RX_DETECT_END_CYCLES": [ { "value": "7", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RX_PREAMBLE_REALIGN_EDGE": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_GUARD_CYCLES": [ { "value": "4096", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_BACKOFF_SLOT_CYCLES": [ { "value": "1024", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_START_IDLE_CYCLES": [ { "value": "100000", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RECOVERY_RESET_CYCLES": [ { "value": "2048", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_PARALLEL_2LANE_MODE": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_DEBUG_SELECT_RX_STATUS": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_ACK_LANE_MASK": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_TX_LANE_MASK": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_RX_LANE_MASK": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B_EXPECTED_A_LANE_MASK": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "RAW_PACKET_BYTES": [ { "value": "252", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "FRAGMENT_BYTES": [ { "value": "252", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "APP_PAYLOAD_BYTES": [ { "value": "244", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B2A_ENABLE": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B2A_FREE_RUN": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "B2A_ECHO_ENABLE": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "FORCE_SD_SHUTDOWN": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "TX_GAP_CYCLES": [ { "value": "150000", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "Component_Name": [ { "value": "design_shiboqi_ir_loopback_b0_7", "resolve_type": "user", "usage": "all" } ]
+      },
+      "model_parameters": {
+        "LANE_COUNT": [ { "value": "2", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_SESSION_ID": [ { "value": "0x2201", "resolve_type": "generated", "format": "bitString", "usage": "all" } ],
+        "B_CNT_CHIP_MAX": [ { "value": "7", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_CNT_PREAMBLE": [ { "value": "64", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RX_DATA_PHASE_DELAY_CYCLES": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RX_DETECT_START_CYCLES": [ { "value": "3", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RX_DETECT_END_CYCLES": [ { "value": "7", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RX_PREAMBLE_REALIGN_EDGE": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_GUARD_CYCLES": [ { "value": "4096", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_BACKOFF_SLOT_CYCLES": [ { "value": "1024", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_START_IDLE_CYCLES": [ { "value": "100000", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RECOVERY_RESET_CYCLES": [ { "value": "2048", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_PARALLEL_2LANE_MODE": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_DEBUG_SELECT_RX_STATUS": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_ACK_LANE_MASK": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_TX_LANE_MASK": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_RX_LANE_MASK": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B_EXPECTED_A_LANE_MASK": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "RAW_PACKET_BYTES": [ { "value": "252", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "FRAGMENT_BYTES": [ { "value": "252", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "APP_PAYLOAD_BYTES": [ { "value": "244", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B2A_ENABLE": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B2A_FREE_RUN": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "B2A_ECHO_ENABLE": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "FORCE_SD_SHUTDOWN": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "TX_GAP_CYCLES": [ { "value": "150000", "resolve_type": "generated", "format": "long", "usage": "all" } ]
+      },
+      "project_parameters": {
+        "ARCHITECTURE": [ { "value": "zynq" } ],
+        "BASE_BOARD_PART": [ { "value": "" } ],
+        "BOARD_CONNECTIONS": [ { "value": "" } ],
+        "DEVICE": [ { "value": "xc7z010" } ],
+        "PACKAGE": [ { "value": "clg400" } ],
+        "PREFHDL": [ { "value": "VERILOG" } ],
+        "SILICON_REVISION": [ { "value": "" } ],
+        "SIMULATOR_LANGUAGE": [ { "value": "MIXED" } ],
+        "SPEEDGRADE": [ { "value": "-1" } ],
+        "STATIC_POWER": [ { "value": "" } ],
+        "TEMPERATURE_GRADE": [ { "value": "" } ]
+      },
+      "runtime_parameters": {
+        "IPCONTEXT": [ { "value": "IP_Integrator" } ],
+        "IPREVISION": [ { "value": "1" } ],
+        "MANAGED": [ { "value": "TRUE" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../TFDU_VFIR_Client.gen/sources_1/bd/design_shiboqi/ip/design_shiboqi_ir_loopback_b0_7" } ],
+        "SELECTEDSIMMODEL": [ { "value": "" } ],
+        "SHAREDDIR": [ { "value": "../../ipshared" } ],
+        "SWVERSION": [ { "value": "2023.1" } ],
+        "SYNTHESISFLOW": [ { "value": "OOC_HIERARCHICAL" } ]
+      }
+    },
+    "boundary": {
+      "ports": {
+        "clk_phy": [ { "direction": "in" } ],
+        "rst_n": [ { "direction": "in" } ],
+        "ir_tx_out": [ { "direction": "out", "size_left": "1", "size_right": "0" } ],
+        "ir_rx_in": [ { "direction": "in", "size_left": "1", "size_right": "0" } ],
+        "ir_sd": [ { "direction": "out", "size_left": "1", "size_right": "0" } ],
+        "ir_mode_out": [ { "direction": "out", "size_left": "1", "size_right": "0" } ],
+        "debug_status": [ { "direction": "out", "size_left": "31", "size_right": "0" } ]
+      },
+      "interfaces": {
+        "rst_n": {
+          "vlnv": "xilinx.com:signal:reset:1.0",
+          "abstraction_type": "xilinx.com:signal:reset_rtl:1.0",
+          "mode": "slave",
+          "parameters": {
+            "POLARITY": [ { "value": "ACTIVE_LOW", "value_src": "constant", "value_permission": "bd_and_user", "usage": "all" } ],
+            "INSERT_VIP": [ { "value": "0", "resolve_type": "user", "format": "long", "usage": "simulation.rtl", "is_ips_inferred": true, "is_static_object": false } ]
+          },
+          "port_maps": {
+            "RST": [ { "physical_name": "rst_n" } ]
+          }
+        }
+      }
+    }
+  }
+}

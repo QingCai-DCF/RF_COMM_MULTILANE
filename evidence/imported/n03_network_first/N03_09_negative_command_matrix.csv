@@ -1,0 +1,9 @@
+case,expected,current_status
+START ir_tx,ERR_DEFERRED_IR_PHYSICAL_UNAVAILABLE,PASS_OFFLINE
+CONFIG mode ir_physical,ERR_DEFERRED_IR_PHYSICAL_UNAVAILABLE,PASS_OFFLINE
+CONFIG payload_bytes 0,ERR_BAD_ARG,PASS_OFFLINE
+CONFIG payload_bytes too_large,ERR_BAD_ARG,PASS_OFFLINE
+UNKNOWN_CMD,ERR_UNKNOWN_CMD,PASS_OFFLINE
+malformed frame header,ERROR/bad_magic or disconnect-safe behavior,PASS_OFFLINE_SOURCE_BOUNDARY
+wrong length,ERROR/payload_too_large or parser-safe behavior,PASS_OFFLINE_SOURCE_BOUNDARY
+wrong checksum,N/A for TCP RFCM frame; IR CRC negative is deferred outside N03 network-first scope,DEFERRED_IR_FRAME_CRC_NOT_TCP_RFCM

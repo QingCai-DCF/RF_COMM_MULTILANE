@@ -1,0 +1,13 @@
+{
+  "project": "RF_COMM_REBUILD",
+  "source_project": "RF_COMM",
+  "hardware_target": "Zynq-7010 / AX7010 class board",
+  "tfdu_part": "TFDU6102",
+  "vivado_version_reference": "2023.1",
+  "default_no_hardware": true,
+  "canonical_xdc": "constraints/active/PORT1.generated.xdc",
+  "canonical_pinmap": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+  "baseline_profile": "config/profiles/G1_LANE0_BASELINE.json",
+  "known_bad_raw_direction": "AB_L1",
+  "lane1_reliable_enabled": false
+}

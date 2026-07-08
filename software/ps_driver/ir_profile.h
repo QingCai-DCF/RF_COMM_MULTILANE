@@ -1,0 +1,3 @@
+#pragma once
+#define IR_PROFILE_SESSION 0x2201u
+#define IR_PROFILE_LANE_MASK 0x00000001u
