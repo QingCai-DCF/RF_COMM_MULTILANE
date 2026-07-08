@@ -51,10 +51,34 @@
       "status": null
     },
     {
+      "name": "m2_static_reference_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m2_static.py",
+      "returncode": 0,
+      "stdout": "M2_4PPM_ENCODE_DECODE_PRESENT=1\nM2_4PPM_PROFILE_PARAMS_PRESENT=1\nM2_4PPM_ABSTRACT_PULSE_INTERFACE=1\nM2_FRAME_SESSION_MASK_COUNTERS_PRESENT=1\nM2_FRAME_CRC_LENGTH_COUNTERS_PRESENT=1\nM2_4PPM_TB_PASS_MARKER_PRESENT=1\nM2_FRAME_TB_PASS_MARKER_PRESENT=1\nM2_4PPM_REFERENCE_ROUNDTRIP_PASS=1\nM2_FRAME_REFERENCE_GOOD_PASS=1\nM2_FRAME_REFERENCE_CRC_BAD_DETECTED=1\nM2_FRAME_REFERENCE_SESSION_BAD_DETECTED=1\nM2_FRAME_REFERENCE_MASK_BAD_DETECTED=1\nM2_FRAME_REFERENCE_LENGTH_BAD_DETECTED=1\nM2_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
+    },
+    {
       "name": "lane_phy_sim",
       "cmd": "iverilog|verilator",
       "returncode": 0,
       "stdout": "SIM_TOOL_MISSING=1\nLANE_PHY_SIM_STATUS=PENDING_TOOL\n",
+      "stderr": "",
+      "status": "PENDING_TOOL"
+    },
+    {
+      "name": "m2_4ppm_codec_sim",
+      "cmd": "iverilog|verilator",
+      "returncode": 0,
+      "stdout": "SIM_TOOL_MISSING=1\nM2_4PPM_CODEC_SIM_STATUS=PENDING_TOOL\n",
+      "stderr": "",
+      "status": "PENDING_TOOL"
+    },
+    {
+      "name": "m2_frame_l1_sim",
+      "cmd": "iverilog|verilator",
+      "returncode": 0,
+      "stdout": "SIM_TOOL_MISSING=1\nM2_FRAME_L1_SIM_STATUS=PENDING_TOOL\n",
       "stderr": "",
       "status": "PENDING_TOOL"
     }

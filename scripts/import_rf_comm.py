@@ -540,6 +540,9 @@ def write_register_map() -> None:
 
 
 def write_scripts() -> None:
+    existing_gate = PROJECT_ROOT / "scripts/run_offline_gates.py"
+    if existing_gate.exists() and "m2_static_reference_checks" in existing_gate.read_text(encoding="utf-8", errors="ignore"):
+        return
     write_text(
         PROJECT_ROOT / "scripts/generate_pinmap_from_xdc.py",
         r'''#!/usr/bin/env python3

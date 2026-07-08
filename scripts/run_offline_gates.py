@@ -8,40 +8,73 @@ def run(name, cmd, status=None):
     p = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
     return {"name": name, "cmd": " ".join(cmd), "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr, "status": status}
 
+def run_iverilog_test(sim_dir, name, files, marker):
+    exe = sim_dir / f"{name}.vvp"
+    compile_result = run(f"{name}_compile", ["iverilog", "-g2012", "-o", str(exe), *files])
+    if compile_result["returncode"] != 0:
+        return [compile_result]
+    sim_result = run(name, ["vvp", str(exe)])
+    if marker not in sim_result["stdout"]:
+        sim_result["returncode"] = sim_result["returncode"] or 1
+        sim_result["stderr"] += f"\nMissing {marker} marker.\n"
+    return [compile_result, sim_result]
+
 def run_sv_gates(outdir):
     sim_dir = outdir / "sim"
     sim_dir.mkdir(parents=True, exist_ok=True)
-    files = [
-        "rtl/tfdu_lane_phy.sv",
-        "sim/models/tfdu6102_behavior_model.sv",
-        "sim/tb/tb_tfdu_lane_phy_smoke.sv",
+    tests = [
+        (
+            "lane_phy_sim",
+            [
+                "rtl/tfdu_lane_phy.sv",
+                "sim/models/tfdu6102_behavior_model.sv",
+                "sim/tb/tb_tfdu_lane_phy_smoke.sv",
+            ],
+            "TB_TFDU_LANE_PHY_SMOKE_PASS=1",
+        ),
+        (
+            "m2_4ppm_codec_sim",
+            [
+                "rtl/ir_4ppm_codec.sv",
+                "sim/models/tfdu6102_behavior_model.sv",
+                "sim/tb/tb_tfdu_4ppm_codec.sv",
+            ],
+            "TB_TFDU_4PPM_CODEC_PASS=1",
+        ),
+        (
+            "m2_frame_l1_sim",
+            [
+                "rtl/ir_frame_l1.sv",
+                "sim/tb/tb_lane0_frame_crc.sv",
+            ],
+            "TB_LANE0_FRAME_CRC_PASS=1",
+        ),
     ]
     if shutil.which("iverilog") and shutil.which("vvp"):
-        exe = sim_dir / "tb_tfdu_lane_phy_smoke.vvp"
-        compile_result = run("lane_phy_sim_compile", ["iverilog", "-g2012", "-o", str(exe), *files])
-        if compile_result["returncode"] != 0:
-            return [compile_result]
-        sim_result = run("lane_phy_sim", ["vvp", str(exe)])
-        if "TB_TFDU_LANE_PHY_SMOKE_PASS=1" not in sim_result["stdout"]:
-            sim_result["returncode"] = sim_result["returncode"] or 1
-            sim_result["stderr"] += "\nMissing TB_TFDU_LANE_PHY_SMOKE_PASS=1 marker.\n"
-        return [compile_result, sim_result]
+        results = []
+        for name, files, marker in tests:
+            results.extend(run_iverilog_test(sim_dir, name, files, marker))
+        return results
     if shutil.which("verilator"):
+        files = []
+        for _, test_files, _ in tests:
+            files.extend(test_files)
         return [
             run(
-                "lane_phy_sv_lint",
-                ["verilator", "--lint-only", "--timing", "-Wall", *files],
+                "sv_lint",
+                ["verilator", "--lint-only", "--timing", "-Wall", *sorted(set(files))],
             )
         ]
     return [
         {
-            "name": "lane_phy_sim",
+            "name": name,
             "cmd": "iverilog|verilator",
             "returncode": 0,
-            "stdout": "SIM_TOOL_MISSING=1\nLANE_PHY_SIM_STATUS=PENDING_TOOL\n",
+            "stdout": f"SIM_TOOL_MISSING=1\n{name.upper()}_STATUS=PENDING_TOOL\n",
             "stderr": "",
             "status": "PENDING_TOOL",
         }
+        for name, _, _ in tests
     ]
 
 def main():
@@ -53,6 +86,7 @@ def main():
     results.append(run("register_map_generation", [py, "scripts/generate_register_headers.py"]))
     results.append(run("no_hardware_calls", [py, "scripts/check_no_hardware_calls.py"]))
     results.append(run("host_client_unit_tests", [py, "software/host_client/test_protocol_contract.py"]))
+    results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))
     outdir = ROOT / "evidence/generated"
     outdir.mkdir(parents=True, exist_ok=True)
     results.extend(run_sv_gates(outdir))
