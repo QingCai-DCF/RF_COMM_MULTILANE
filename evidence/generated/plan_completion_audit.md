@@ -33,6 +33,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | Scope | Evidence | Status |
 |---|---|---|
 | M1 TFDU lane PHY | `evidence/generated/m1_lane_phy_status.md`; offline gate entry `lane_phy_sim` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
+| TFDU6102 behavior model | `evidence/generated/m1_lane_phy_status.md`; `scripts/check_tfdu_safety_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M2 4PPM codec and frame L1 | `evidence/generated/m2_codec_frame_status.md`; `scripts/check_m2_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M3 lane0 ACK/retry | `evidence/generated/m3_arq_ack_status.md`; `scripts/check_m3_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M4 AXI register contract | `evidence/generated/m4_register_contract_status.md`; `scripts/check_m4_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
