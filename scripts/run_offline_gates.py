@@ -153,6 +153,7 @@ def main():
     results.append(run("m1_tfdu_model_reference", [py, "scripts/generate_m1_tfdu_model_reference.py"]))
     results.append(run("register_map_generation", [py, "scripts/generate_register_headers.py"]))
     results.append(run("no_hardware_calls", [py, "scripts/check_no_hardware_calls.py"]))
+    results.append(run("sv_port_contracts", [py, "scripts/check_sv_port_contracts.py"]))
     results.append(run("host_client_unit_tests", [py, "software/host_client/test_protocol_contract.py"]))
     results.append(run("m2_detect_window_sweep", [py, "scripts/generate_m2_detect_window_sweep.py"]))
     results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))

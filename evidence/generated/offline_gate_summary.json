@@ -59,6 +59,14 @@
       "status": null
     },
     {
+      "name": "sv_port_contracts",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_sv_port_contracts.py",
+      "returncode": 0,
+      "stdout": "SV_PORT_CONTRACT_MODULES_PARSED=1\nSV_PORT_CONTRACT_ALL_INSTANCES_NAMED=1\nSV_PORT_CONTRACT_NO_UNKNOWN_PORTS=1\nSV_PORT_CONTRACT_NO_MISSING_PORTS=1\nSV_PORT_CONTRACT_NO_DUPLICATE_PORTS=1\nSV_PORT_CONTRACT_TB_COVERAGE=1\nSV_PORT_CONTRACT_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
+    },
+    {
       "name": "host_client_unit_tests",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe software/host_client/test_protocol_contract.py",
       "returncode": 0,
