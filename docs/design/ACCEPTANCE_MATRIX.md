@@ -15,6 +15,7 @@
 | Vivado build | PENDING_TOOL | no hardware by default |
 | M6 hardware prep wrappers | PASS | `scripts/check_m6_static.py`; wrappers refuse unless `-AllowHardware` |
 | PS driver offline | PASS | host protocol unit test + generated headers |
+| Host client offline protocol | PASS | encode/decode, error events, reconnect state machine mock |
 | Ethernet real board | PENDING_HW_OR_DEFERRED | not automated unless user authorizes |
 | Rotation 600 rpm | PENDING_EXTERNAL_FIXTURE | not automated by Codex |
 | 2-hour soak | PENDING_HW | not automated by default |

@@ -38,6 +38,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | Multilane scheduler requirement | `evidence/generated/scheduler_status.md`; `scripts/check_scheduler_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M5 Vivado non-hardware build | `evidence/generated/m5_vivado_nonhardware_status.md`; `scripts/check_m5_static.py` | SCRIPTED_STATIC_PASS_VIVADO_PENDING_TOOL |
 | M6 hardware prep scripts | `evidence/generated/m6_hardware_prep_status.md`; `scripts/check_m6_static.py` | PREPARED_STATIC_PASS_NO_HARDWARE |
+| Host client offline protocol | `evidence/generated/host_client_status.md`; `software/host_client/test_protocol_contract.py` | OFFLINE_PASS_REAL_ETHERNET_PENDING_HW |
 
 ## Explicit Non-Claims
 
