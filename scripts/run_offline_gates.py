@@ -155,6 +155,7 @@ def main():
     results.append(run("host_client_unit_tests", [py, "software/host_client/test_protocol_contract.py"]))
     results.append(run("m2_detect_window_sweep", [py, "scripts/generate_m2_detect_window_sweep.py"]))
     results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))
+    results.append(run("m3_crc_bad_ack_reference", [py, "scripts/generate_m3_crc_bad_ack_reference.py"]))
     results.append(run("m3_static_reference_checks", [py, "scripts/check_m3_static.py"]))
     results.append(run("m4_static_reference_checks", [py, "scripts/check_m4_static.py"]))
     results.append(run("scheduler_static_checks", [py, "scripts/check_scheduler_static.py"]))

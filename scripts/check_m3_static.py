@@ -94,6 +94,9 @@ def main() -> int:
     errors: list[str] = []
     rtl = (ROOT / "rtl/ir_arq_l2.sv").read_text(encoding="utf-8", errors="ignore")
     tb = (ROOT / "sim/tb/tb_lane0_ack_only.sv").read_text(encoding="utf-8", errors="ignore")
+    crc_ref_script = (ROOT / "scripts/generate_m3_crc_bad_ack_reference.py").read_text(encoding="utf-8", errors="ignore")
+    crc_ref_path = ROOT / "evidence/generated/m3_crc_bad_ack_reference.md"
+    crc_ref = crc_ref_path.read_text(encoding="utf-8", errors="ignore") if crc_ref_path.exists() else ""
 
     require("payload_lane_mask" in rtl and "ack_lane_mask" in rtl, "M3_PAYLOAD_ACK_MASKS_SEPARATE", errors)
     require("retry_exhausted_sticky" in rtl and "retry_exhausted_count" in rtl, "M3_RETRY_EXHAUSTED_STICKY_PRESENT", errors)
@@ -103,6 +106,17 @@ def main() -> int:
     require("ack_late_count" in rtl, "M3_ACK_LATE_OBSERVABLE", errors)
     require("retry_timeout_cycles" in rtl and "max_retry" in rtl, "M3_TIMEOUT_RETRY_PROFILED", errors)
     require("TB_LANE0_ACK_ONLY_PASS=1" in tb, "M3_ACK_ONLY_TB_PASS_MARKER_PRESENT", errors)
+    require(
+        "crc_bad_detected" in crc_ref_script and "ack_suppressed" in crc_ref_script,
+        "M3_CRC_BAD_ACK_REFERENCE_SCRIPT_PRESENT",
+        errors,
+    )
+    require(
+        "M3_CRC_BAD_ACK_SUPPRESSION_REPORT=1" in crc_ref
+        and "M3_CRC_BAD_ACK_REFERENCE=PASS" in crc_ref,
+        "M3_CRC_BAD_ACK_REFERENCE_REPORT_PRESENT",
+        errors,
+    )
 
     model = ArqModel()
     model.start()
@@ -125,6 +139,9 @@ def main() -> int:
         model.tick()
     require(model.retry_exhausted_sticky and model.retry_exhausted_count == 1, "M3_REFERENCE_RETRY_EXHAUSTED_PASS", errors)
     require(model.ack_timeout_count >= 3 and model.tx_attempt_count >= 5, "M3_REFERENCE_RETRY_ACCOUNTING_PASS", errors)
+    require("M3_CRC_BAD_FRAME_DETECTED=1" in crc_ref, "M3_REFERENCE_CRC_BAD_FRAME_DETECTED", errors)
+    require("M3_CRC_BAD_ACK_SUPPRESSED=1" in crc_ref, "M3_REFERENCE_CRC_BAD_ACK_SUPPRESSED", errors)
+    require("M3_CRC_BAD_RETRY_EXHAUSTED=1" in crc_ref, "M3_REFERENCE_CRC_BAD_RETRY_EXHAUSTED", errors)
 
     print(f"M3_STATIC={'PASS' if not errors else 'FAIL'}")
     return 1 if errors else 0

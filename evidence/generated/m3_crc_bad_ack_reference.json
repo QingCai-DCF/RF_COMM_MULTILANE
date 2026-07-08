@@ -1,0 +1,20 @@
+{
+  "marker": "M3_CRC_BAD_ACK_SUPPRESSION_REPORT",
+  "status": "PASS",
+  "frame_validation": {
+    "header_ok": true,
+    "session_ok": true,
+    "lane_mask_ok": true,
+    "payload_len_ok": true,
+    "crc_ok": false
+  },
+  "crc_bad_detected": true,
+  "ack_should_be_sent": false,
+  "arq": {
+    "tx_attempt_count": 3,
+    "ack_seen_count": 0,
+    "ack_timeout_count": 3,
+    "retry_exhausted_count": 1,
+    "retry_exhausted_sticky": true
+  }
+}
