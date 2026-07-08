@@ -92,6 +92,7 @@ def main() -> int:
     require("tx_pulse" in codec and "rx_pulse_active" in codec, "M2_4PPM_ABSTRACT_PULSE_INTERFACE", errors)
     require("session_bad_count" in frame and "lane_mask_bad_count" in frame, "M2_FRAME_SESSION_MASK_COUNTERS_PRESENT", errors)
     require("crc_bad_count" in frame and "payload_len_bad_count" in frame, "M2_FRAME_CRC_LENGTH_COUNTERS_PRESENT", errors)
+    require("ack" not in frame.lower() and "retry" not in frame.lower(), "M2_FRAME_L1_HAS_NO_ACK_RETRY", errors)
     require("TB_TFDU_4PPM_CODEC_PASS=1" in codec_tb, "M2_4PPM_TB_PASS_MARKER_PRESENT", errors)
     require("tfdu6102_behavior_model" in model_tb and "rx_pulse_active(~model_rxd)" in model_tb, "M2_4PPM_TFDU_MODEL_INSTANTIATED", errors)
     require("TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1" in model_tb, "M2_4PPM_MODEL_INTEGRATION_TB_PASS_MARKER_PRESENT", errors)
