@@ -183,3 +183,19 @@ RESULTS: evidence/simulation/sim_results.json
 ### P2 Skips
 
 - none
+
+## P3 Pre-Hardware Acceptance Package
+
+P3_PRE_HW_ACCEPTANCE_PACKAGE: PASS
+COMBINED_OFFLINE_STATUS: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+SUMMARY: evidence/generated/p3_pre_hw_acceptance_package_summary.md
+
+### P3 Failures
+
+- none
+
+### P3 Skips
+
+- none

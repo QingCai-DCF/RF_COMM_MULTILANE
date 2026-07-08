@@ -17,6 +17,8 @@ def main():
         print(f"P1_OFFLINE_HARDENING: {data.get('P1_OFFLINE_HARDENING')}")
     if "P2_SIMULATION_BASELINE" in data:
         print(f"P2_SIMULATION_BASELINE: {data.get('P2_SIMULATION_BASELINE')}")
+    if "P3_PRE_HW_ACCEPTANCE_PACKAGE" in data:
+        print(f"P3_PRE_HW_ACCEPTANCE_PACKAGE: {data.get('P3_PRE_HW_ACCEPTANCE_PACKAGE')}")
     print("NO_HARDWARE_ACTIONS_EXECUTED: true")
     print("HARDWARE_ACCEPTANCE: PENDING_HW")
     for result in data.get("results", []):

@@ -1,0 +1,118 @@
+# P3 Repository Intake
+
+repo path: `C:\Users\user\Documents\RF_COMM_MULTILANE`
+HEAD: `c3abf1171228f52f400e6e4a3233472e1dad90bf`
+branch: `main`
+dirty/clean state: dirty
+P2 expected commit: `c3abf1171228f52f400e6e4a3233472e1dad90bf`
+P2 commit matches current HEAD: true
+P0 status found: PASS
+P1 status found: PASS
+P2 status found: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+## Existing Summary Files
+
+| Path | Present | Parsed markers |
+| --- | --- | --- |
+| `evidence/generated/offline_gate_summary.md` | True | `{"BOOTSTRAP_STATUS": "PASS", "COMBINED_OFFLINE_STATUS": "PASS", "HARDWARE_ACCEPTANCE": "PENDING_HW", "P1_OFFLINE_HARDENING": "PASS", "P2_SIMULATION_BASELINE": "PASS", "REASON": "IP"}` |
+| `evidence/generated/p1_offline_hardening_summary.md` | True | `{"BOOTSTRAP_STATUS": "PASS", "HARDWARE_ACCEPTANCE": "PENDING_HW", "P1_OFFLINE_HARDENING": "PASS", "REASON": "IP"}` |
+| `evidence/generated/p2_simulation_baseline_summary.md` | True | `{"4PPM_PULSE_SMOKE": "PASS", "HARDWARE_ACCEPTANCE": "PENDING_HW", "HDL_SIMULATION": "PASS", "NEXT_RECOMMENDED_STAGE": "P3_PRE_HW_ACCEPTANCE_PACKAGE", "NO_HARDWARE_SCAN": "PASS", "P1_RECHECK": "PASS", "P2_SIMULATION_BASELINE": "PASS", "PYTHON_REFERENCE_MODEL": "PASS", "REASON": "P2", "RESULT": "PASS", "SIMULATOR_DETECTION": "PASS", "TFDU6102_BEHAVIOR_MODEL": "PASS", "TFDU_LANE_PHY_TESTS": "PASS"}` |
+| `evidence/generated/simulation_gate_summary.md` | True | `{"HARDWARE_ACCEPTANCE": "PENDING_HW", "HDL_RESULTS": "PASS", "NO_HARDWARE_SCAN": "PASS", "P1_RECHECK": "PASS", "P2_SIMULATION_BASELINE": "PASS", "PYTHON_REFERENCE_MODEL": "PASS", "RESULT": "PASS"}` |
+| `evidence/generated/no_hardware_action_static_scan.md` | True | `{"HARDWARE_ACCEPTANCE": "PENDING_HW", "RESULT": "PASS"}` |
+
+## Git Status
+
+```text
+M AGENTS.md
+ M PROJECT_STATUS.md
+ M docs/HARDWARE_ACCEPTANCE_CHECKLIST.md
+ M docs/PROJECT_STATUS.md
+ M evidence/authorization/README.md
+ M evidence/generated/git_cleanliness_report.md
+ M evidence/generated/ir_4ppm_pulse_smoke_summary.md
+ M evidence/generated/no_hardware_action_static_scan.md
+ M evidence/generated/offline_gate_summary.json
+ M evidence/generated/p1_evidence_review_for_p2.md
+ M evidence/generated/p1_git_precheck.txt
+ M evidence/generated/p1_offline_hardening_summary.json
+ M evidence/generated/p2_repo_intake.md
+ M evidence/generated/p2_simulation_baseline_summary.md
+ M evidence/generated/project_status_update_summary.md
+ M evidence/generated/required_docs_manifest.md
+ M evidence/generated/simulation_gate_summary.md
+ M evidence/generated/simulator_detection_summary.md
+ M evidence/generated/tfdu6102_behavior_model_summary.md
+ M evidence/generated/tfdu6102_reference_model_summary.md
+ M evidence/generated/tfdu_lane_phy_sim_summary.md
+ M evidence/generated/tools_manifest.md
+ M evidence/generated/vivado/nonhardware_build_summary.json
+ M evidence/generated/vivado/nonhardware_build_summary.md
+ M evidence/generated/vivado/post_route_drc.rpt
+ M evidence/generated/vivado/post_route_timing_summary.rpt
+ M evidence/generated/vivado/post_route_utilization.rpt
+ M evidence/generated/vivado/post_synth_drc.rpt
+ M evidence/generated/xdc_inventory.md
+ M evidence/hardware/PENDING_HW.md
+ M evidence/hardware/raw_lane_matrix/README.md
+ M evidence/hardware/scope_captures/README.md
+ M evidence/hardware/shutdown_logs/README.md
+ M evidence/hardware/vcc_measurements/README.md
+ M evidence/simulation/sim_results.json
+ M scripts/hw/program_tfdu_shutdown_safe.ps1
+ M scripts/hw/run_g1_lane0_replay_safe.ps1
+ M scripts/hw/run_lane0_raw_matrix_safe.ps1
+ M tools/p1_lib.py
+ M tools/run_offline_gate.ps1
+ M tools/run_offline_gate.py
+ M tools/summarize_gate.py
+?? docs/ACTIVE_CONSTRAINT_FREEZE.md
+?? docs/BITSTREAM_CANDIDATE_POLICY.md
+?? docs/HARDWARE_ACCEPTANCE_RUNBOOK.md
+?? docs/HARDWARE_AUTHORIZATION_MODEL.md
+?? docs/HOST_RUNTIME_PRE_HW_CONTRACT.md
+?? docs/P3_PRE_HW_ACCEPTANCE_PACKAGE.md
+?? docs/P4_HARDWARE_ACCEPTANCE_PLAN.md
+?? docs/PS_RUNTIME_PRE_HW_CONTRACT.md
+?? docs/RAW_LANE_MATRIX_RUNBOOK.md
+?? docs/RAW_PHY_SMOKE_RUNBOOK.md
+?? docs/TFDU6102_ELECTRICAL_CHECKLIST.md
+?? docs/TFDU6102_SCOPE_PROBE_PLAN.md
+?? docs/TFDU6102_SHUTDOWN_REQUIREMENTS.md
+?? docs/TFDU6102_STOP_CONDITIONS.md
+?? evidence/authorization/hardware_acceptance_authorized.md.template
+?? evidence/generated/p3_authorization_gate_summary.md
+?? evidence/generated/p3_bitstream_build_audit_summary.md
+?? evidence/generated/p3_constraint_freeze_summary.md
+?? evidence/generated/p3_evidence_schema_summary.md
+?? evidence/generated/p3_hardware_script_dry_run_summary.md
+?? evidence/generated/p3_no_hardware_static_scan.md
+?? evidence/generated/p3_pre_hw_acceptance_package_summary.md
+?? evidence/generated/p3_recheck_p1_p2_summary.md
+?? evidence/generated/p3_repo_intake.md
+?? evidence/generated/p3_runbook_summary.md
+?? evidence/hardware/README.md
+?? evidence/hardware/evidence_schema.json
+?? evidence/hardware/failures/
+?? evidence/hardware/ila_captures/
+?? evidence/hardware/logic_analyzer/
+?? evidence/hardware/photos/
+?? evidence/hardware/raw_lane_matrix/raw_lane_matrix_evidence.template.json
+?? evidence/hardware/raw_phy_smoke/
+?? evidence/hardware/scope_captures/scope_captures_evidence.template.json
+?? evidence/hardware/shutdown_logs/shutdown_logs_evidence.template.json
+?? evidence/hardware/vcc_measurements/vcc_measurements_evidence.template.json
+?? tools/check_hardware_authorization.py
+?? tools/check_hardware_scripts_default_dry_run.py
+?? tools/generate_constraint_freeze.py
+?? tools/generate_hardware_evidence_templates.py
+?? tools/hw_collect_evidence.py
+?? tools/hw_preflight.py
+?? tools/hw_raw_lane_matrix.py
+?? tools/hw_raw_phy_smoke.py
+?? tools/hw_shutdown.py
+?? tools/p3_pre_hw_lib.py
+?? tools/run_pre_hw_acceptance_package_gate.ps1
+?? tools/run_pre_hw_acceptance_package_gate.py
+```

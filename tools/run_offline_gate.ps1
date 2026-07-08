@@ -5,6 +5,7 @@ param(
   [string]$OutputDir = "evidence/generated",
   [switch]$JsonSummary,
   [switch]$IncludeSimulation,
+  [switch]$IncludePreHwPackage,
   [switch]$SimulationRequired,
   [switch]$AllowSimulationSkip
 )
@@ -26,6 +27,7 @@ if ($Strict) { $argsList += "--strict" }
 if ($AllowSkips) { $argsList += "--allow-skips" }
 if ($JsonSummary) { $argsList += "--json-summary" }
 if ($IncludeSimulation) { $argsList += "--include-simulation" }
+if ($IncludePreHwPackage) { $argsList += "--include-pre-hw-package" }
 if ($SimulationRequired) { $argsList += "--simulation-required" }
 if ($AllowSimulationSkip) { $argsList += "--allow-simulation-skip" }
 python @argsList

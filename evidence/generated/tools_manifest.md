@@ -7,8 +7,8 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 
 | Tool | Status | SHA256 |
 | --- | --- | --- |
-| `tools/run_offline_gate.ps1` | present | `7157dcfce8a7c446f27b7d8bd5aacb843b279725ca972022d41f2ad923ede2c2` |
-| `tools/run_offline_gate.py` | present | `da6d322090b6d4ce8720393748e22fe878514705020523a59643a06e158fe468` |
+| `tools/run_offline_gate.ps1` | present | `04ce81f7fe47b6336ef528f06d2266a802819115b2487f23763ca1d1b5ea5fee` |
+| `tools/run_offline_gate.py` | present | `b3551d9faea7ed40c1277c3b178c42ac2658060d8e8dd188a523a440ee225aa6` |
 | `tools/check_no_hardware_actions.ps1` | present | `bcec1b11e685ee38f1024ad0237ddd11d3cf20b2b966c902b37908d4eb82ffbf` |
 | `tools/check_no_hardware_actions.py` | present | `09bd387aa37e2c281a17f6fb4cd1c08fe6d3df583e015000744b88d795c11f9e` |
 | `tools/check_constraints.py` | present | `a0b32dd1e757fbf25229d3fe98c40f89597025c285d555b0f17db8760d5f5690` |
@@ -17,7 +17,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 | `tools/check_host_offline_stub.py` | present | `ac5b34b1c1ac167b5821329852e12015fee9c260b11fce6ebbd981870d834378` |
 | `tools/check_rtl_sources.py` | present | `2cd23f0bdc11dc9c8ceea01abc92482f5cc7027ef4a1fdfbde6e2d5740adc972` |
 | `tools/generate_manifests.py` | present | `873b76dee20f45b1d4e55917b27a382cbb3a26b05ae2cb6de15febf23733c364` |
-| `tools/summarize_gate.py` | present | `f64a1aa24159ad7ee21acb99c870f57f678fa27b726aba04d8969232465c380d` |
+| `tools/summarize_gate.py` | present | `49c6413534bbf21528d21ee0e57d0011c3d658ea20bcfcf214e782848830ee37` |
 | `tools/check_active_profile.py` | present | `45979c2d9b1d86d97505b83d79514bbf4e5809f7556709521d31c8db593f2636` |
 | `tools/check_evidence_consistency.py` | present | `26ab929917de4708cfa98d89cc969375f555e456ced12125156ad9e81989f32e` |
 | `tools/check_profiles.py` | present | `3ac8c582c1aedddfe4094c41261e4263eb96270b9d6a84f98fff0087946cd0e8` |

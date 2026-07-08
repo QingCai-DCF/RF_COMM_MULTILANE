@@ -1,6 +1,6 @@
 # Simulator Detection Summary
 
-generated_at_utc: 2026-07-08T13:41:29+00:00
+generated_at_utc: 2026-07-08T14:22:34+00:00
 command: python tools/sim/detect_simulator.py
 RESULT: PASS
 REASON: HDL simulator selected

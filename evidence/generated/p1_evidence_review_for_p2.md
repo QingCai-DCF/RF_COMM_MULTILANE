@@ -1,7 +1,7 @@
 # P1 Evidence Review For P2
 
-generated_at_utc: 2026-07-08T13:41:28+00:00
-current_commit: e48b1fe550c82835679d4c950ba23e0053801ad7
+generated_at_utc: 2026-07-08T14:22:32+00:00
+current_commit: c3abf1171228f52f400e6e4a3233472e1dad90bf
 command: python tools/run_simulation_gate.py
 RESULT: PASS
 REASON: P1 evidence files are present and retain no-hardware markers

@@ -1,0 +1,28 @@
+# Hardware Acceptance Authorization Template
+
+This template does not authorize hardware execution.
+
+To authorize a later P4 run, create `evidence/authorization/hardware_acceptance_authorized.md`
+from this template and fill every field.
+
+- operator:
+- date_time_local:
+- board_id:
+- fixture_id:
+- bitstream_path:
+- bitstream_sha256:
+- ps_app_path:
+- ps_app_sha256:
+- active_xdc_path:
+- active_xdc_sha256:
+- pinmap_path:
+- pinmap_sha256:
+- test_profile:
+- max_runtime_sec:
+- shutdown_on_exit: true
+- statement: I authorize P4 hardware acceptance for RF_COMM_MULTILANE and accept TFDU6102 emission risk for this bounded run.
+
+P3 status remains:
+
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW

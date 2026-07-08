@@ -1,6 +1,14 @@
 [CmdletBinding()]
 param(
     [switch]$AllowHardware,
+    [switch]$ExecuteHardware,
+    [int]$MaxRuntimeSec = 0,
+    [switch]$ShutdownOnExit,
+    [string]$BoardId = "",
+    [string]$Bitstream = "",
+    [string]$TestProfile = "",
+    [string]$ActivePinmapHash = "",
+    [string]$ActiveXdcHash = "",
     [string]$ProfilePath = "config/profiles/G1_LANE0_BASELINE.json",
     [string]$EvidenceDir = "",
     [string]$VivadoPath = "D:\Xilinx\Vivado\2023.1\bin\vivado.bat",
@@ -120,6 +128,7 @@ function Invoke-LoggedProcess {
 $profileFullPath = Resolve-RepoPath $ProfilePath
 $shutdownTclFullPath = Resolve-RepoPath $ShutdownTcl
 $shutdownBitPath = Resolve-RepoPath "shutdown_bitstream/tfdu_shutdown_j10_j11.bit"
+$hardwareRequested = $AllowHardware.IsPresent -or $ExecuteHardware.IsPresent
 Write-HashManifest -Paths @(
     $ProfilePath,
     $ShutdownTcl,
@@ -139,12 +148,34 @@ Write-SummaryLine "SHUTDOWN_TCL_SHA256=$(Get-FileSha256OrMissing -Path $shutdown
 Write-SummaryLine "SHUTDOWN_BITSTREAM=$shutdownBitPath"
 Write-SummaryLine "SHUTDOWN_BITSTREAM_SHA256=$(Get-FileSha256OrMissing -Path $shutdownBitPath)"
 
-if (-not $AllowHardware.IsPresent) {
+if (-not $hardwareRequested) {
     Write-SummaryLine "REFUSED_NO_ALLOW_HARDWARE=1"
     Write-SummaryLine "NO_HARDWARE_ACTIONS_EXECUTED=1"
     Write-SummaryLine "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=REFUSED_NO_ALLOW_HARDWARE"
     Write-SummaryLine "PROGRAM_TFDU_SHUTDOWN_SAFE_END $(Get-Date -Format o)"
     exit 0
+}
+
+$authLog = Join-Path $EvidenceDir "hardware_authorization.json"
+$authArgs = @("tools/check_hardware_authorization.py", "--execute-hardware", "--json-summary")
+if ($MaxRuntimeSec -gt 0) { $authArgs += @("--max-runtime-sec", [string]$MaxRuntimeSec) }
+if ($ShutdownOnExit.IsPresent) { $authArgs += "--shutdown-on-exit" }
+if ($Bitstream) { $authArgs += @("--bitstream", $Bitstream) }
+if ($BoardId) { $authArgs += @("--board-id", $BoardId) }
+if ($TestProfile) { $authArgs += @("--test-profile", $TestProfile) }
+if ($ActivePinmapHash) { $authArgs += @("--active-pinmap-hash", $ActivePinmapHash) }
+if ($ActiveXdcHash) { $authArgs += @("--active-xdc-hash", $ActiveXdcHash) }
+$authOutput = & python @authArgs 2>&1
+$authExit = $LASTEXITCODE
+$authOutput | Set-Content -LiteralPath $authLog -Encoding ascii
+Write-SummaryLine "HARDWARE_AUTHORIZATION_LOG=$authLog"
+Write-SummaryLine "HARDWARE_AUTHORIZATION_EXIT=$authExit"
+if ($authExit -ne 0) {
+    Write-SummaryLine "AUTHORIZATION_MISSING=1"
+    Write-SummaryLine "NO_HARDWARE_ACTIONS_EXECUTED=1"
+    Write-SummaryLine "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=AUTHORIZATION_MISSING"
+    Write-SummaryLine "PROGRAM_TFDU_SHUTDOWN_SAFE_END $(Get-Date -Format o)"
+    exit 2
 }
 
 if (-not (Test-Path -LiteralPath $VivadoPath -PathType Leaf)) {

@@ -2,25 +2,26 @@
 
 Project: RF_COMM_MULTILANE
 Current branch: main
-Current HEAD: e48b1fe550c82835679d4c950ba23e0053801ad7
+Current HEAD: c3abf1171228f52f400e6e4a3233472e1dad90bf
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
 P2_SIMULATION_BASELINE: PASS
+P3_PRE_HW_ACCEPTANCE_PACKAGE: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
-git dirty status: dirty
+## Unverified Hardware Scope
 
-## Allowed P2 Claims
+The following remain unverified until a later explicitly authorized P4 run:
 
-- simulation baseline exists
-- TFDU6102 offline model checks pass when the gate reports PASS for that item
-- TFDU lane PHY simulation checks pass when HDL tests run and pass
-- offline gates continue to block hardware actions
+- real TFDU6102 hardware
+- lane0 hardware
+- lane1 hardware
+- 2-lane hardware
+- 8-lane hardware
+- Ethernet end-to-end hardware
+- rotation
+- long-run soak
 
-## Non-Claims
-
-- P2 does not prove TFDU6102 physical hardware.
-- P2 does not prove lane0, lane1, multi-lane, Ethernet, rotation, soak, or product readiness.
-- Offline or simulation results must not promote HARDWARE_ACCEPTANCE beyond PENDING_HW.
+Offline and simulation gates cannot promote hardware status beyond PENDING_HW.

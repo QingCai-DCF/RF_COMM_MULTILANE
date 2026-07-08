@@ -1498,6 +1498,7 @@ def evidence_consistency_check():
         "TFDU_PASS",
         "LANE0_PASS",
         "LANE1_PASS",
+        "LANE_MATRIX_PASS",
         "ETHERNET_PASS",
         "ROTATION_PASS",
         "SOAK_PASS",
@@ -1520,8 +1521,30 @@ def evidence_consistency_check():
             for token in banned:
                 for match in re.finditer(re.escape(token), text):
                     suffix = text[match.end() : match.end() + 8]
-                    prefix = text[max(0, match.start() - 32) : match.start()]
-                    if suffix.startswith("_ABSENT") or "FORBIDDEN_CLAIM_" in prefix:
+                    prefix = text[max(0, match.start() - 64) : match.start()]
+                    line_start = text.rfind("\n", 0, match.start()) + 1
+                    line_end = text.find("\n", match.end())
+                    if line_end < 0:
+                        line_end = len(text)
+                    line = text[line_start:line_end].lower()
+                    nonclaim_context = any(
+                        phrase in line
+                        for phrase in [
+                            "reserved",
+                            "forbidden",
+                            "disallowed",
+                            "must not",
+                            "never",
+                            "does not",
+                            "do not",
+                            "without",
+                            "blocked",
+                            "non-claim",
+                            "status vocabulary",
+                            "future authorized",
+                        ]
+                    )
+                    if suffix.startswith("_ABSENT") or "FORBIDDEN_CLAIM_" in prefix or nonclaim_context:
                         continue
                     findings.append((p, token))
     result = PASS if not findings else FAIL

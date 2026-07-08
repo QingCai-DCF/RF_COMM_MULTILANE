@@ -38,3 +38,12 @@
 - Active profile: `board_profiles/ACTIVE_PROFILE.json`
 - Register map source of truth: `config/register_map/ir_axi_regs.yaml`
 - Offline gate entrypoint: `python scripts/run_offline_gates.py`
+
+
+## P3/P4 Pre-Hardware Boundary
+- Hardware is locked by default and P3 is documentation/dry-run only.
+- Offline gates and generated summaries must keep `HARDWARE_ACCEPTANCE: PENDING_HW`.
+- Hardware-capable scripts must default to dry-run or fail authorization before any hardware connection.
+- Future hardware requires `RF_COMM_HW_AUTH`, an authorization file, explicit board/bitstream/profile/hash inputs, max runtime, and shutdown-on-exit.
+- TFDU6102 startup wait, stuck-high guard, Txd default-low, SD shutdown, and shutdown-on-exit constraints remain mandatory.
+- Do not claim hardware, lane, Ethernet, rotation, soak, or product-final pass without real authorized P4 evidence.

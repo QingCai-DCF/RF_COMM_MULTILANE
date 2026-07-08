@@ -1,6 +1,14 @@
 [CmdletBinding()]
 param(
     [switch]$AllowHardware,
+    [switch]$ExecuteHardware,
+    [int]$MaxRuntimeSec = 0,
+    [switch]$ShutdownOnExit,
+    [string]$BoardId = "",
+    [string]$Bitstream = "",
+    [string]$TestProfile = "",
+    [string]$ActivePinmapHash = "",
+    [string]$ActiveXdcHash = "",
     [string]$ProfilePath = "config/profiles/G1_LANE0_BASELINE.json",
     [string]$EvidenceDir = "",
     [string]$InnerScript = "legacy/RF_COMM/tools/run_g1_lane0_hw_smoke_safe.ps1",
@@ -131,6 +139,7 @@ function Invoke-LoggedProcess {
 $profileFullPath = Resolve-RepoPath $ProfilePath
 $innerFullPath = Resolve-RepoPath $InnerScript
 $shutdownScript = Resolve-RepoPath "scripts/hw/program_tfdu_shutdown_safe.ps1"
+$hardwareRequested = $AllowHardware.IsPresent -or $ExecuteHardware.IsPresent
 Write-HashManifest -Paths @(
     $ProfilePath,
     $InnerScript,
@@ -150,12 +159,34 @@ Write-SummaryLine "INNER_SCRIPT_SHA256=$(Get-FileSha256OrMissing -Path $innerFul
 Write-SummaryLine "SHUTDOWN_SCRIPT=$shutdownScript"
 Write-SummaryLine "SHUTDOWN_SCRIPT_SHA256=$(Get-FileSha256OrMissing -Path $shutdownScript)"
 
-if (-not $AllowHardware.IsPresent) {
+if (-not $hardwareRequested) {
     Write-SummaryLine "REFUSED_NO_ALLOW_HARDWARE=1"
     Write-SummaryLine "NO_HARDWARE_ACTIONS_EXECUTED=1"
     Write-SummaryLine "RUN_G1_LANE0_REPLAY_SAFE_STATUS=REFUSED_NO_ALLOW_HARDWARE"
     Write-SummaryLine "RUN_G1_LANE0_REPLAY_SAFE_END $(Get-Date -Format o)"
     exit 0
+}
+
+$authLog = Join-Path $EvidenceDir "hardware_authorization.json"
+$authArgs = @("tools/check_hardware_authorization.py", "--execute-hardware", "--json-summary")
+if ($MaxRuntimeSec -gt 0) { $authArgs += @("--max-runtime-sec", [string]$MaxRuntimeSec) }
+if ($ShutdownOnExit.IsPresent) { $authArgs += "--shutdown-on-exit" }
+if ($Bitstream) { $authArgs += @("--bitstream", $Bitstream) }
+if ($BoardId) { $authArgs += @("--board-id", $BoardId) }
+if ($TestProfile) { $authArgs += @("--test-profile", $TestProfile) }
+if ($ActivePinmapHash) { $authArgs += @("--active-pinmap-hash", $ActivePinmapHash) }
+if ($ActiveXdcHash) { $authArgs += @("--active-xdc-hash", $ActiveXdcHash) }
+$authOutput = & python @authArgs 2>&1
+$authExit = $LASTEXITCODE
+$authOutput | Set-Content -LiteralPath $authLog -Encoding ascii
+Write-SummaryLine "HARDWARE_AUTHORIZATION_LOG=$authLog"
+Write-SummaryLine "HARDWARE_AUTHORIZATION_EXIT=$authExit"
+if ($authExit -ne 0) {
+    Write-SummaryLine "AUTHORIZATION_MISSING=1"
+    Write-SummaryLine "NO_HARDWARE_ACTIONS_EXECUTED=1"
+    Write-SummaryLine "RUN_G1_LANE0_REPLAY_SAFE_STATUS=AUTHORIZATION_MISSING"
+    Write-SummaryLine "RUN_G1_LANE0_REPLAY_SAFE_END $(Get-Date -Format o)"
+    exit 2
 }
 
 foreach ($requiredPath in @($innerFullPath, $shutdownScript, $VivadoPath, $XsctPath)) {
