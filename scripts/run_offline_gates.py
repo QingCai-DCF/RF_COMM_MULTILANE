@@ -50,6 +50,15 @@ def run_sv_gates(outdir):
             "TB_LANE0_FRAME_CRC_PASS=1",
         ),
         (
+            "m2_4ppm_model_integration_sim",
+            [
+                "rtl/ir_4ppm_codec.sv",
+                "sim/models/tfdu6102_behavior_model.sv",
+                "sim/tb/tb_tfdu_4ppm_model_integration.sv",
+            ],
+            "TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1",
+        ),
+        (
             "m3_lane0_ack_only_sim",
             [
                 "rtl/ir_arq_l2.sv",

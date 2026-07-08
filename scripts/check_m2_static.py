@@ -85,6 +85,7 @@ def main() -> int:
     frame = (ROOT / "rtl/ir_frame_l1.sv").read_text(encoding="utf-8", errors="ignore")
     codec_tb = (ROOT / "sim/tb/tb_tfdu_4ppm_codec.sv").read_text(encoding="utf-8", errors="ignore")
     frame_tb = (ROOT / "sim/tb/tb_lane0_frame_crc.sv").read_text(encoding="utf-8", errors="ignore")
+    model_tb = (ROOT / "sim/tb/tb_tfdu_4ppm_model_integration.sv").read_text(encoding="utf-8", errors="ignore")
 
     require("encode_4ppm" in codec and "decode_4ppm" in codec, "M2_4PPM_ENCODE_DECODE_PRESENT", errors)
     require("CNT_CHIP_MAX" in codec and "CNT_PREAMBLE" in codec and "DETECT_START_CYCLES" in codec, "M2_4PPM_PROFILE_PARAMS_PRESENT", errors)
@@ -92,6 +93,8 @@ def main() -> int:
     require("session_bad_count" in frame and "lane_mask_bad_count" in frame, "M2_FRAME_SESSION_MASK_COUNTERS_PRESENT", errors)
     require("crc_bad_count" in frame and "payload_len_bad_count" in frame, "M2_FRAME_CRC_LENGTH_COUNTERS_PRESENT", errors)
     require("TB_TFDU_4PPM_CODEC_PASS=1" in codec_tb, "M2_4PPM_TB_PASS_MARKER_PRESENT", errors)
+    require("tfdu6102_behavior_model" in model_tb and "rx_pulse_active(~model_rxd)" in model_tb, "M2_4PPM_TFDU_MODEL_INSTANTIATED", errors)
+    require("TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1" in model_tb, "M2_4PPM_MODEL_INTEGRATION_TB_PASS_MARKER_PRESENT", errors)
     require("TB_LANE0_FRAME_CRC_PASS=1" in frame_tb, "M2_FRAME_TB_PASS_MARKER_PRESENT", errors)
 
     enc = {0: 0b1000, 1: 0b0100, 2: 0b0010, 3: 0b0001}
