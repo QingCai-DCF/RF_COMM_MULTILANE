@@ -75,6 +75,14 @@
       "status": null
     },
     {
+      "name": "scheduler_static_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_scheduler_static.py",
+      "returncode": 0,
+      "stdout": "SCHED_DEFAULT_LANE0_ENABLED=1\nSCHED_LANE1_DEFAULT_DISABLED_MARKER=1\nSCHED_KNOWN_BAD_AB_L1_MARKER=1\nSCHED_AB_L1_BLOCK_PRESENT=1\nSCHED_ENABLE_READBACK_PRESENT=1\nSCHED_STICKY_BAD_LANE_PRESENT=1\nSCHED_FALLBACK_PRESENT=1\nSCHED_SELECTED_LANE_PRESENT=1\nSCHED_TB_PASS_MARKER_PRESENT=1\nSCHED_TB_LANE1_BLOCK_CASE=1\nSCHED_TB_FAULT_FALLBACK_CASE=1\nSCHED_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
+    },
+    {
       "name": "m5_static_nonhardware_build_checks",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m5_static.py",
       "returncode": 0,
@@ -135,6 +143,14 @@
       "cmd": "iverilog|verilator",
       "returncode": 0,
       "stdout": "SIM_TOOL_MISSING=1\nM4_AXI_REGS_SIM_STATUS=PENDING_TOOL\n",
+      "stderr": "",
+      "status": "PENDING_TOOL"
+    },
+    {
+      "name": "scheduler_sim",
+      "cmd": "iverilog|verilator",
+      "returncode": 0,
+      "stdout": "SIM_TOOL_MISSING=1\nSCHEDULER_SIM_STATUS=PENDING_TOOL\n",
       "stderr": "",
       "status": "PENDING_TOOL"
     }

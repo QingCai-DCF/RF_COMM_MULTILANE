@@ -65,6 +65,14 @@ def run_sv_gates(outdir):
             ],
             "TB_IR_AXI_REGS_NEW_PASS=1",
         ),
+        (
+            "scheduler_sim",
+            [
+                "rtl/ir_multilane_scheduler.sv",
+                "sim/tb/tb_ir_multilane_scheduler.sv",
+            ],
+            "TB_IR_MULTILANE_SCHEDULER_PASS=1",
+        ),
     ]
     if shutil.which("iverilog") and shutil.which("vvp"):
         results = []
@@ -105,6 +113,7 @@ def main():
     results.append(run("m2_static_reference_checks", [py, "scripts/check_m2_static.py"]))
     results.append(run("m3_static_reference_checks", [py, "scripts/check_m3_static.py"]))
     results.append(run("m4_static_reference_checks", [py, "scripts/check_m4_static.py"]))
+    results.append(run("scheduler_static_checks", [py, "scripts/check_scheduler_static.py"]))
     results.append(run("m5_static_nonhardware_build_checks", [py, "scripts/check_m5_static.py"]))
     results.append(run("m6_static_hardware_prep_checks", [py, "scripts/check_m6_static.py"]))
     m5_result = run("m5_vivado_nonhardware_build", [py, "scripts/run_vivado_nonhardware_build.py"])
