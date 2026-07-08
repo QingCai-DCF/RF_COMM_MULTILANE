@@ -1,5 +1,5 @@
 {
-  "status": "PASS",
+  "status": "PASS_WITH_PENDING_TOOL",
   "no_hardware": true,
   "results": [
     {
@@ -7,49 +7,56 @@
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_project_integrity.py",
       "returncode": 0,
       "stdout": "CURRENT_DIR_IS_NOT_LEGACY_RF_COMM=1\nPROJECT_CONSTRAINTS_CN_EXISTS=1\nPROJECT_CONSTRAINTS_HASH_MATCH=1\nAGENTS_MD_CREATED=1\nIMPORT_MANIFEST_EXISTS=1\nLEGACY_EVIDENCE_IMPORTED=1\nACTIVE_PROFILE_EXISTS=1\nCANONICAL_XDC_EXISTS=1\nPINMAP_EXISTS=1\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
       "name": "xdc_conflicts",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_xdc_conflicts.py",
       "returncode": 0,
       "stdout": "XDC_GENERATED_FROM_PINMAP=1\nXDC_GENERATED_MATCHES_ACTIVE_REFERENCE=1\nXDC_LEGACY_CONFLICT_RECORDED=1\nNO_LEGACY_PORT1_XDC_IN_BUILD=1\n- `ir_mode_out_0[0]` active={'PACKAGE_PIN': 'T12', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'V17', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_rx_in_0[0]` active={'PACKAGE_PIN': 'B19', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'U13', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_sd_0[0]` active={'PACKAGE_PIN': 'T11', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T14', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_tx_out_0[0]` active={'PACKAGE_PIN': 'C20', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'V12', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_mode_b0[0]` active={'PACKAGE_PIN': 'V17', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T12', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_rx_b0[0]` active={'PACKAGE_PIN': 'U13', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'B19', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_rx_b0[1]` active={'PACKAGE_PIN': 'G15', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'D19', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_sd_b0[0]` active={'PACKAGE_PIN': 'T14', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T11', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_tx_b0[0]` active={'PACKAGE_PIN': 'V12', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'C20', 'IOSTANDARD': 'LVCMOS33'}\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
       "name": "tfdu_safety_static",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_tfdu_safety_static.py",
       "returncode": 0,
       "stdout": "TXD_DEFAULT_LOW=1\nSD_DEFAULT_SHUTDOWN_HIGH=1\nMODE_STATIC_HIGH_ONLY=1\nSTARTUP_TIMER_500US=1\nTX_STUCK_HIGH_PROTECTION=1\nDUTY_LIMIT_PROTECTION=1\nRX_LOW_ACTIVE_CONVERSION=1\nTFDU_SAFETY_STATIC=PASS\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
       "name": "register_map_generation",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_register_headers.py",
       "returncode": 0,
       "stdout": "REGISTER_MAP_SINGLE_SOURCE_CREATED=1\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
       "name": "no_hardware_calls",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
       "returncode": 0,
       "stdout": "NO_HARDWARE_ACTIONS_EXECUTED=1\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
       "name": "host_client_unit_tests",
       "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe software/host_client/test_protocol_contract.py",
       "returncode": 0,
       "stdout": "HOST_CLIENT_PROTOCOL_TESTS=PASS\n",
-      "stderr": ""
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "systemverilog_syntax",
-      "cmd": "verilator|iverilog",
+      "name": "lane_phy_sim",
+      "cmd": "iverilog|verilator",
       "returncode": 0,
-      "stdout": "SIM_TOOL_MISSING=1\nSIM_STATUS=PENDING_TOOL\n",
-      "stderr": ""
+      "stdout": "SIM_TOOL_MISSING=1\nLANE_PHY_SIM_STATUS=PENDING_TOOL\n",
+      "stderr": "",
+      "status": "PENDING_TOOL"
     }
   ]
 }
