@@ -55,39 +55,39 @@ Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
 
 Phase 7 Route finalize | Checksum: 1713a4056
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 
 Phase 8 Verifying routed nets
 
  Verification completed successfully
 Phase 8 Verifying routed nets | Checksum: 1713a4056
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 
 Phase 9 Depositing Routes
 Phase 9 Depositing Routes | Checksum: 1713a4056
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 INFO: [Route 35-16] Router Completed Successfully
 
 Phase 10 Post-Route Event Processing
 Phase 10 Post-Route Event Processing | Checksum: 1a82bed7b
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 
 Routing Is Done.
 INFO: [Common 17-83] Releasing license: Implementation
 8 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 route_design completed successfully
-route_design: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 2896.738 ; gain = 0.000
+route_design: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2903.930 ; gain = 0.000
 # write_checkpoint -force "$out_dir/post_route.dcp"
 INFO: [Timing 38-480] Writing timing data to binary archive.
 Writing XDEF routing.
 Writing XDEF routing logical nets.
 Writing XDEF routing special nets.
-Write XDEF Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 2896.738 ; gain = 0.000
+Write XDEF Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.025 . Memory (MB): peak = 2903.930 ; gain = 0.000
 INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/post_route.dcp' has been generated.
 # report_drc -file "$out_dir/post_route_drc.rpt"
 Command: report_drc -file C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/post_route_drc.rpt
@@ -103,5 +103,5 @@ INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum o
 # puts $log_file "VIVADO_NONHARDWARE_BUILD_DONE=1"
 # puts $log_file "VIVADO_REPORT_DIR=$out_dir"
 # close $log_file
-INFO: [Common 17-206] Exiting Vivado at Wed Jul  8 20:08:42 2026...
+INFO: [Common 17-206] Exiting Vivado at Wed Jul  8 20:13:57 2026...
 ```
