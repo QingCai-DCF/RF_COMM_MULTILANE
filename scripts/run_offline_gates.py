@@ -105,6 +105,7 @@ def main():
     results = []
     py = sys.executable
     results.append(run("project_integrity", [py, "scripts/check_project_integrity.py"]))
+    results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
     results.append(run("xdc_conflicts", [py, "scripts/check_xdc_conflicts.py"]))
     results.append(run("tfdu_safety_static", [py, "scripts/check_tfdu_safety_static.py"]))
     results.append(run("register_map_generation", [py, "scripts/generate_register_headers.py"]))
