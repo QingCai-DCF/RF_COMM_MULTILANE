@@ -33,6 +33,7 @@ def main() -> int:
     raw_text = scripts["RUN_LANE0_RAW_MATRIX"].read_text(encoding="utf-8", errors="ignore")
     g1_text = scripts["RUN_G1_LANE0_REPLAY"].read_text(encoding="utf-8", errors="ignore")
     shutdown_text = scripts["PROGRAM_TFDU_SHUTDOWN"].read_text(encoding="utf-8", errors="ignore")
+    refusal_runtime = (ROOT / "scripts/check_m6_refusal_runtime.py").read_text(encoding="utf-8", errors="ignore")
 
     require("program_tfdu_shutdown_safe.ps1" in raw_text and "finally" in raw_text, "M6_RAW_MATRIX_FORCES_SHUTDOWN_AFTER_RUN", errors)
     require("program_tfdu_shutdown_safe.ps1" in g1_text and "finally" in g1_text, "M6_G1_REPLAY_FORCES_SHUTDOWN_AFTER_RUN", errors)
@@ -40,6 +41,9 @@ def main() -> int:
     require("legacy/RF_COMM/tools/run_2lane_matrix_safe.ps1" in raw_text, "M6_RAW_MATRIX_USES_SAFE_REFERENCE_WRAPPER", errors)
     require("legacy/RF_COMM/tools/run_g1_lane0_hw_smoke_safe.ps1" in g1_text, "M6_G1_REPLAY_USES_SAFE_REFERENCE_WRAPPER", errors)
     require("config/profiles/G1_LANE0_BASELINE.json" in raw_text and "config/profiles/G1_LANE0_BASELINE.json" in g1_text, "M6_WRAPPERS_DEFAULT_G1_PROFILE", errors)
+    require("M6_REFUSAL_RUNTIME_REPORT=1" in refusal_runtime, "M6_REFUSAL_RUNTIME_GATE_EXISTS", errors)
+    require("REFUSED_NO_ALLOW_HARDWARE=1" in refusal_runtime and "NO_HARDWARE_ACTIONS_EXECUTED=1" in refusal_runtime, "M6_REFUSAL_RUNTIME_MARKERS_CHECKED", errors)
+    require("manifest_allow_false" in refusal_runtime and "manifest_no_hardware" in refusal_runtime, "M6_REFUSAL_RUNTIME_MANIFEST_CHECKED", errors)
 
     print(f"M6_STATIC={'PASS' if not errors else 'FAIL'}")
     return 1 if errors else 0

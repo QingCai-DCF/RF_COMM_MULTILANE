@@ -164,6 +164,7 @@ def main():
     results.append(run("scheduler_static_checks", [py, "scripts/check_scheduler_static.py"]))
     results.append(run("m5_static_nonhardware_build_checks", [py, "scripts/check_m5_static.py"]))
     results.append(run("m6_static_hardware_prep_checks", [py, "scripts/check_m6_static.py"]))
+    results.append(run("m6_refusal_runtime", [py, "scripts/check_m6_refusal_runtime.py"]))
     outdir = ROOT / "evidence/generated"
     outdir.mkdir(parents=True, exist_ok=True)
     results.append(run_ps_driver_c_compile(outdir))

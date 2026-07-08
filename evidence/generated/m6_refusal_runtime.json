@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "shell": "powershell.EXE",
+  "results": [
+    {
+      "name": "RUN_LANE0_RAW_MATRIX",
+      "returncode": 0,
+      "summary_path": "evidence/generated/hw_preflight/refusal_gate/run_lane0_raw_matrix/run_lane0_raw_matrix_safe.summary.txt",
+      "manifest_path": "evidence/generated/hw_preflight/refusal_gate/run_lane0_raw_matrix/hash_manifest.json",
+      "checks": {
+        "exit_zero": true,
+        "refused_marker": true,
+        "no_hardware_marker": true,
+        "status_marker": true,
+        "manifest_exists": true,
+        "manifest_no_hardware": true,
+        "manifest_allow_false": true
+      }
+    },
+    {
+      "name": "RUN_G1_LANE0_REPLAY",
+      "returncode": 0,
+      "summary_path": "evidence/generated/hw_preflight/refusal_gate/run_g1_lane0_replay/run_g1_lane0_replay_safe.summary.txt",
+      "manifest_path": "evidence/generated/hw_preflight/refusal_gate/run_g1_lane0_replay/hash_manifest.json",
+      "checks": {
+        "exit_zero": true,
+        "refused_marker": true,
+        "no_hardware_marker": true,
+        "status_marker": true,
+        "manifest_exists": true,
+        "manifest_no_hardware": true,
+        "manifest_allow_false": true
+      }
+    },
+    {
+      "name": "PROGRAM_TFDU_SHUTDOWN",
+      "returncode": 0,
+      "summary_path": "evidence/generated/hw_preflight/refusal_gate/program_tfdu_shutdown/program_tfdu_shutdown_safe.summary.txt",
+      "manifest_path": "evidence/generated/hw_preflight/refusal_gate/program_tfdu_shutdown/hash_manifest.json",
+      "checks": {
+        "exit_zero": true,
+        "refused_marker": true,
+        "no_hardware_marker": true,
+        "status_marker": true,
+        "manifest_exists": true,
+        "manifest_no_hardware": true,
+        "manifest_allow_false": true
+      }
+    }
+  ]
+}
