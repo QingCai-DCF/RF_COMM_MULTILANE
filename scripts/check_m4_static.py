@@ -60,7 +60,12 @@ def main() -> int:
     require("PROFILE_ID_VALUE" in rtl and "REG_PROFILE_ID" in rtl, "M4_PROFILE_ID_EXPOSED", errors)
     require("ir_write_readback" in driver and "IR_CONTROL_COMMIT" in driver, "M4_PS_DRIVER_READBACK_COMMIT_PRESENT", errors)
     require("IR_REG_PROFILE_LANE_MASK" in driver and "IR_REG_PROFILE_ACK_LANE_MASK" in driver, "M4_PS_DRIVER_CRITICAL_REGS_PRESENT", errors)
+    require("ir_driver_initialize" in driver and "ir_driver_wait_startup" in driver, "M4_PS_DRIVER_STARTUP_WAIT_PRESENT", errors)
+    require("IR_CONTROL_ENABLE_PHY | IR_CONTROL_CLEAR_STICKY" in driver, "M4_PS_DRIVER_CLEAR_STICKY_AFTER_STARTUP", errors)
+    require("ir_driver_poll_done" in driver and "ir_driver_read_final_counters" in driver, "M4_PS_DRIVER_POLL_AND_COUNTERS_PRESENT", errors)
+    require("IR_REG_COUNTER_FRAME_GOOD" in driver and "IR_REG_STATUS_ERROR_COUNTS" in driver, "M4_PS_DRIVER_FINAL_COUNTER_READS_PRESENT", errors)
     require("ir_mmio_t" in driver_h and "ir_profile_config_t" in driver_h, "M4_PS_DRIVER_MMIO_PROFILE_TYPES_PRESENT", errors)
+    require("ir_driver_counters_t" in driver_h and "ir_driver_run_transaction" in driver_h, "M4_PS_DRIVER_OFFLINE_RUN_API_PRESENT", errors)
     require("TB_IR_AXI_REGS_NEW_PASS=1" in tb, "M4_AXI_REGS_TB_PASS_MARKER_PRESENT", errors)
 
     profile_values = {

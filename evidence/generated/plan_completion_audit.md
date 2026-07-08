@@ -35,6 +35,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | M2 4PPM codec and frame L1 | `evidence/generated/m2_codec_frame_status.md`; `scripts/check_m2_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M3 lane0 ACK/retry | `evidence/generated/m3_arq_ack_status.md`; `scripts/check_m3_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M4 AXI register contract | `evidence/generated/m4_register_contract_status.md`; `scripts/check_m4_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
+| PS driver fixed initialization sequence | `evidence/generated/m4_register_contract_status.md`; `software/ps_driver/main_offline_stub.c` | OFFLINE_STATIC_PASS_C_COMPILE_PENDING_TOOL |
 | Multilane scheduler requirement | `evidence/generated/scheduler_status.md`; `scripts/check_scheduler_static.py` | IMPLEMENTED_STATIC_PASS_SIM_PENDING_TOOL |
 | M5 Vivado non-hardware build | `evidence/generated/m5_vivado_nonhardware_status.md`; `scripts/check_m5_static.py` | SCRIPTED_STATIC_PASS_VIVADO_PENDING_TOOL |
 | M6 hardware prep scripts | `evidence/generated/m6_hardware_prep_status.md`; `scripts/check_m6_static.py` | PREPARED_STATIC_PASS_NO_HARDWARE |

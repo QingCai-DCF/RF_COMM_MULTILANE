@@ -28,7 +28,24 @@ typedef struct {
   uint32_t stuck_high_limit_us;
 } ir_profile_config_t;
 
+typedef struct {
+  uint32_t status;
+  uint32_t retry_count;
+  uint32_t error_counts;
+  uint32_t tx_pulse;
+  uint32_t rx_raw_pulse;
+  uint32_t frame_good;
+  uint32_t frame_bad;
+  uint32_t ack_sent;
+  uint32_t ack_seen;
+} ir_driver_counters_t;
+
+int ir_driver_initialize(const ir_mmio_t *io, const ir_profile_config_t *profile, uint32_t startup_max_polls);
 int ir_driver_apply_profile(const ir_mmio_t *io, const ir_profile_config_t *profile);
+int ir_driver_wait_startup(const ir_mmio_t *io, uint32_t max_polls);
 int ir_driver_start_transaction(const ir_mmio_t *io);
+int ir_driver_poll_done(const ir_mmio_t *io, uint32_t max_polls);
+int ir_driver_read_final_counters(const ir_mmio_t *io, ir_driver_counters_t *counters);
+int ir_driver_run_transaction(const ir_mmio_t *io, uint32_t max_polls, ir_driver_counters_t *final_counters);
 int ir_driver_stop(const ir_mmio_t *io);
 int ir_driver_shutdown(const ir_mmio_t *io);
