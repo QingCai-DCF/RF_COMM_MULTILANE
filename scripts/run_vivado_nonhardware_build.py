@@ -15,7 +15,7 @@ OUT_DIR = ROOT / "evidence/generated/vivado"
 SUMMARY_JSON = OUT_DIR / "nonhardware_build_summary.json"
 SUMMARY_MD = OUT_DIR / "nonhardware_build_summary.md"
 XILINX_VIVADO_BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
-STAGES = ["safe_idle", "tfdu_control_idle", "raw_pulse", "raw_lane_matrix", "protocol_lane0", "protocol_lane0_ack", "protocol_lane1", "protocol_lane1_ack", "protocol_two_lane_minimal", "protocol_lane0_soak", "protocol_two_lane_soak"]
+STAGES = ["safe_idle", "tfdu_control_idle", "raw_pulse", "raw_lane_matrix", "protocol_lane0", "protocol_lane0_ack", "protocol_lane1", "protocol_lane1_ack", "protocol_two_lane_minimal", "protocol_lane0_soak", "protocol_two_lane_soak", "p6_local_transport"]
 
 
 def trim_trailing_space(path: Path) -> None:

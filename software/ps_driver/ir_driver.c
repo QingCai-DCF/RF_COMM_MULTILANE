@@ -18,9 +18,65 @@ enum {
   IR_STATUS_TX_FAIL = 1u << 4,
 };
 
+enum {
+  IR_P6_CTRL_RESET = 1u << 0,
+  IR_P6_CTRL_CLEAR_STICKY = 1u << 1,
+  IR_P6_CTRL_COMMIT = 1u << 2,
+  IR_P6_CTRL_START = 1u << 3,
+  IR_P6_CTRL_STOP = 1u << 4,
+  IR_P6_CTRL_SHUTDOWN = 1u << 5,
+};
+
+enum {
+  IR_P6_STATUS_READY = 1u << 1,
+  IR_P6_STATUS_COMMITTED = 1u << 2,
+  IR_P6_STATUS_BUSY = 1u << 3,
+  IR_P6_STATUS_DONE = 1u << 4,
+  IR_P6_STATUS_FAIL = 1u << 5,
+  IR_P6_STATUS_CONFIG_REJECTED = 1u << 6,
+  IR_P6_STATUS_TIMEOUT = 1u << 7,
+};
+
+enum {
+  IR_P6_MAX_PAYLOAD_BYTES = 247u,
+  IR_P6_MAX_PAYLOAD_WORDS = 64u,
+};
+
 static int ir_write_readback(const ir_mmio_t *io, uint32_t offset, uint32_t value) {
   io->write32(io->ctx, offset, value);
   return (io->read32(io->ctx, offset) == value) ? 0 : -1;
+}
+
+static uint32_t ir_pack_payload_word(const uint8_t *payload, uint32_t payload_len, uint32_t word_index) {
+  uint32_t value = 0u;
+  uint32_t base = word_index * 4u;
+  for (uint32_t lane = 0u; lane < 4u; lane++) {
+    uint32_t byte_index = base + lane;
+    if (byte_index < payload_len) {
+      value |= ((uint32_t)payload[byte_index]) << (8u * lane);
+    }
+  }
+  return value;
+}
+
+static void ir_unpack_payload_word(uint32_t word, uint8_t *payload, uint32_t payload_len, uint32_t word_index) {
+  uint32_t base = word_index * 4u;
+  for (uint32_t lane = 0u; lane < 4u; lane++) {
+    uint32_t byte_index = base + lane;
+    if (byte_index < payload_len) {
+      payload[byte_index] = (uint8_t)((word >> (8u * lane)) & 0xFFu);
+    }
+  }
+}
+
+static int ir_p6_validate_config(const ir_p6_payload_config_t *config) {
+  if (!config) return -1;
+  if (config->session != 0x2201u) return -2;
+  if (!(config->lane_mask == 0x1u || config->lane_mask == 0x2u || config->lane_mask == 0x3u)) return -3;
+  if (config->ack_lane_mask != config->lane_mask) return -4;
+  if (config->payload_len == 0u || config->payload_len > IR_P6_MAX_PAYLOAD_BYTES) return -5;
+  if (config->timeout_cycles == 0u) return -6;
+  return 0;
 }
 
 static int ir_driver_write_profile_registers(const ir_mmio_t *io, const ir_profile_config_t *profile) {
@@ -134,5 +190,106 @@ int ir_driver_shutdown(const ir_mmio_t *io) {
   if (!io || !io->write32) return -1;
   io->write32(io->ctx, IR_REG_CONTROL, IR_CONTROL_STOP);
   io->write32(io->ctx, IR_REG_SAFETY_SHUTDOWN_REASON, 0x54464455u);
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_SHUTDOWN);
+  io->write32(io->ctx, IR_REG_P6_SHUTDOWN_REASON, 0x54464455u);
   return 0;
+}
+
+int ir_driver_p6_write_payload(const ir_mmio_t *io, const uint8_t *payload, uint32_t payload_len) {
+  if (!io || !io->read32 || !io->write32 || !payload) return -1;
+  if (payload_len == 0u || payload_len > IR_P6_MAX_PAYLOAD_BYTES) return -2;
+  uint32_t word_count = (payload_len + 3u) / 4u;
+  for (uint32_t word_index = 0u; word_index < word_count; word_index++) {
+    uint32_t word = ir_pack_payload_word(payload, payload_len, word_index);
+    if (ir_write_readback(io, IR_REG_P6_PAYLOAD_WORD_INDEX, word_index)) return -3;
+    if (ir_write_readback(io, IR_REG_P6_PAYLOAD_WORD_DATA, word)) return -4;
+  }
+  return 0;
+}
+
+int ir_driver_p6_read_rx_payload(const ir_mmio_t *io, uint8_t *payload, uint32_t payload_capacity, uint32_t *payload_len) {
+  if (!io || !io->read32 || !io->write32 || !payload || !payload_len) return -1;
+  uint32_t observed_len = io->read32(io->ctx, IR_REG_P6_RX_PAYLOAD_LEN) & 0xFFFFu;
+  if (observed_len > payload_capacity || observed_len > IR_P6_MAX_PAYLOAD_BYTES) return -2;
+  uint32_t word_count = (observed_len + 3u) / 4u;
+  for (uint32_t word_index = 0u; word_index < word_count; word_index++) {
+    if (ir_write_readback(io, IR_REG_P6_RX_WORD_INDEX, word_index)) return -3;
+    ir_unpack_payload_word(io->read32(io->ctx, IR_REG_P6_RX_WORD_DATA), payload, observed_len, word_index);
+  }
+  *payload_len = observed_len;
+  return 0;
+}
+
+int ir_driver_p6_commit_payload(const ir_mmio_t *io, const ir_p6_payload_config_t *config) {
+  if (!io || !io->read32 || !io->write32) return -1;
+  int validation = ir_p6_validate_config(config);
+  if (validation) return validation;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_CLEAR_STICKY);
+  if (ir_write_readback(io, IR_REG_P6_SESSION, config->session)) return -10;
+  if (ir_write_readback(io, IR_REG_P6_LANE_MASK, config->lane_mask)) return -11;
+  if (ir_write_readback(io, IR_REG_P6_ACK_LANE_MASK, config->ack_lane_mask)) return -12;
+  if (ir_write_readback(io, IR_REG_P6_PAYLOAD_LEN, config->payload_len)) return -13;
+  if (ir_write_readback(io, IR_REG_P6_PAYLOAD_PATTERN_ID, config->pattern_id)) return -14;
+  if (ir_write_readback(io, IR_REG_P6_PAYLOAD_SEED, config->seed)) return -15;
+  if (ir_write_readback(io, IR_REG_P6_TIMEOUT_CYCLES, config->timeout_cycles)) return -16;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_COMMIT);
+  uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
+  if ((status & IR_P6_STATUS_COMMITTED) == 0u) return -17;
+  if ((status & (IR_P6_STATUS_FAIL | IR_P6_STATUS_CONFIG_REJECTED | IR_P6_STATUS_TIMEOUT)) != 0u) return -18;
+  return 0;
+}
+
+int ir_driver_p6_read_result(const ir_mmio_t *io, ir_p6_payload_result_t *result) {
+  if (!io || !io->read32 || !result) return -1;
+  result->status = io->read32(io->ctx, IR_REG_P6_STATUS);
+  result->mailbox_status = io->read32(io->ctx, IR_REG_P6_MAILBOX_STATUS);
+  result->payload_crc32 = io->read32(io->ctx, IR_REG_P6_PAYLOAD_CRC32);
+  result->rx_payload_crc32 = io->read32(io->ctx, IR_REG_P6_RX_PAYLOAD_CRC32);
+  result->rx_payload_len = io->read32(io->ctx, IR_REG_P6_RX_PAYLOAD_LEN);
+  result->tx_count = io->read32(io->ctx, IR_REG_P6_TX_COUNT);
+  result->rx_good_count_l0 = io->read32(io->ctx, IR_REG_P6_RX_GOOD_COUNT_L0);
+  result->rx_good_count_l1 = io->read32(io->ctx, IR_REG_P6_RX_GOOD_COUNT_L1);
+  result->crc_bad = io->read32(io->ctx, IR_REG_P6_CRC_BAD);
+  result->payload_mismatch = io->read32(io->ctx, IR_REG_P6_PAYLOAD_MISMATCH);
+  result->retry_count = io->read32(io->ctx, IR_REG_P6_RETRY_COUNT);
+  result->retry_exhausted = io->read32(io->ctx, IR_REG_P6_RETRY_EXHAUSTED);
+  result->tx_fail = io->read32(io->ctx, IR_REG_P6_TX_FAIL);
+  result->error_code = io->read32(io->ctx, IR_REG_P6_ERROR_CODE);
+  result->sticky_error = io->read32(io->ctx, IR_REG_P6_STICKY_ERROR);
+  result->rx_digest = io->read32(io->ctx, IR_REG_P6_RX_DIGEST);
+  return 0;
+}
+
+int ir_driver_p6_start_and_poll(const ir_mmio_t *io, uint32_t max_polls, ir_p6_payload_result_t *result) {
+  if (!io || !io->read32 || !io->write32) return -1;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_START);
+  for (uint32_t poll = 0u; poll < max_polls; poll++) {
+    uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
+    if ((status & (IR_P6_STATUS_FAIL | IR_P6_STATUS_CONFIG_REJECTED | IR_P6_STATUS_TIMEOUT)) != 0u) {
+      if (result) (void)ir_driver_p6_read_result(io, result);
+      return -2;
+    }
+    if ((status & IR_P6_STATUS_DONE) != 0u && (status & IR_P6_STATUS_BUSY) == 0u) {
+      if (result) (void)ir_driver_p6_read_result(io, result);
+      return 0;
+    }
+  }
+  if (result) (void)ir_driver_p6_read_result(io, result);
+  return -3;
+}
+
+int ir_driver_p6_run_mailbox_payload(
+    const ir_mmio_t *io,
+    const ir_p6_payload_config_t *config,
+    const uint8_t *payload,
+    uint32_t max_polls,
+    ir_p6_payload_result_t *result) {
+  if (!io || !config || !payload) return -1;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_RESET);
+  if (ir_driver_p6_write_payload(io, payload, config->payload_len)) return -2;
+  if (ir_driver_p6_commit_payload(io, config)) return -3;
+  int run_result = ir_driver_p6_start_and_poll(io, max_polls, result);
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_STOP);
+  if (ir_driver_shutdown(io)) return -4;
+  return run_result;
 }

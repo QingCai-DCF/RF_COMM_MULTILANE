@@ -1,0 +1,29 @@
+{
+  "stage": "two_lane_dynamic_payload",
+  "reason": "BLOCKED_BY_RUNTIME_ENVIRONMENT:P6 local transport candidate bitstream can be built, but no verified hardware JTAG/AXI or PS backend can start and read two-lane dynamic payload results",
+  "payload": {
+    "P6_TWO_LANE_DYNAMIC_PAYLOAD": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
+    "reason": "P6 local transport candidate bitstream can be built, but no verified hardware JTAG/AXI or PS backend can start and read two-lane dynamic payload results",
+    "script_hardware_actions_executed": false,
+    "source_evidence_contains_hardware_actions": false,
+    "stage_programmed_fpga": false,
+    "stage_drove_tfdu_txd": false,
+    "stage_enabled_tfdu_receiver": false,
+    "shutdown_on_exit_observed": false,
+    "product_final_acceptance": "pending",
+    "evidence_dir": "evidence/hardware/p6/protocol/two_lane_dynamic_payload",
+    "summary": "evidence/generated/p6_two_lane_dynamic_payload_summary.md"
+  },
+  "active_hashes": {
+    "constraint_file": "cff1a17ee77bbaf90080cf4f97e5920e961aefae3b6752f080e35fcf4d4b1f11",
+    "active_profile": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1",
+    "pinmap": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "active_xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "register_map": "e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda",
+    "tfdu_safety_contract": "ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae",
+    "tfdu_safety_summary": "0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f",
+    "shutdown_bitstream": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+  },
+  "root_cause_classification": "BLOCKED_BY_RUNTIME_ENVIRONMENT:P6 local transport candidate bitstream can be built, but no verified hardware JTAG/AXI or PS backend can start and read two-lane dynamic payload results",
+  "next_suggested_fix": "Implement or repair P6 local transport artifact/backend, then rerun the failing stage with shutdown-on-exit."
+}

@@ -1,6 +1,6 @@
 {
   "P6_JTAG_AXI_PAYLOAD_RAM_SMOKE": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "P6 local transport bitstream with payload RAM/FIFO/mailbox AXI access is not present",
+  "reason": "P6 payload RAM/register-window RTL exists, but the current rebuilt hardware top still lacks a verified live PS7/JTAG-to-AXI ingress for host writes",
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false,
   "stage_programmed_fpga": false,

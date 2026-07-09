@@ -1,6 +1,6 @@
 {
   "P6_PS_DRIVER_RUNTIME": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "P6 PS runtime ELF/JTAG mailbox backend is not present; syntax-only PS evidence is not accepted",
+  "reason": "P6 PS runtime mailbox source exists, but no XSA/PS7 hardware platform for this rebuilt top is available to build and run a real ELF; syntax-only evidence is not accepted",
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false,
   "stage_programmed_fpga": false,

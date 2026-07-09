@@ -1,8 +1,8 @@
 # P6 Profiles Summary
 
-generated_at_utc: 2026-07-09T16:43:58+00:00
+generated_at_utc: 2026-07-09T17:40:44+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `5b863a2377f4dbb6dd70bcf8064f138739cf0d00`
+HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: PASS
 reason: P6 profiles generated for stationary 2-lane no-Ethernet scope
@@ -43,7 +43,7 @@ source_evidence_contains_hardware_actions: false
 - active_profile: `7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1`
 - pinmap: `4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a`
 - active_xdc: `cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990`
-- register_map: `4006851bdfaedea14d10cea9e7b4c2a39310bc7e7228bed911cf642521cb03a9`
+- register_map: `e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda`
 - tfdu_safety_contract: `ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae`
 - tfdu_safety_summary: `0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f`
 - shutdown_bitstream: `bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810`

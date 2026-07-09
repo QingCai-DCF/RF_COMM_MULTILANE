@@ -3,7 +3,7 @@ set stage "safe_idle"
 if {[llength $argv] > 1} {
   set stage [lindex $argv 1]
 }
-if {$stage ni {"safe_idle" "tfdu_control_idle" "raw_pulse" "raw_lane_matrix" "protocol_lane0" "protocol_lane0_ack" "protocol_lane1" "protocol_lane1_ack" "protocol_two_lane_minimal" "protocol_lane0_soak" "protocol_two_lane_soak"}} {
+if {$stage ni {"safe_idle" "tfdu_control_idle" "raw_pulse" "raw_lane_matrix" "protocol_lane0" "protocol_lane0_ack" "protocol_lane1" "protocol_lane1_ack" "protocol_two_lane_minimal" "protocol_lane0_soak" "protocol_two_lane_soak" "p6_local_transport"}} {
   error "Unsupported P4_AUTO Vivado build stage: $stage"
 }
 set out_dir [file normalize "$root_dir/evidence/generated/vivado"]
@@ -46,6 +46,8 @@ if {$stage eq "tfdu_control_idle"} {
   set_property verilog_define {P4_AUTO_LANE0_300S_SOAK} [current_fileset]
 } elseif {$stage eq "protocol_two_lane_soak"} {
   set_property verilog_define {P4_AUTO_TWO_LANE_300S_SOAK} [current_fileset]
+} elseif {$stage eq "p6_local_transport"} {
+  set_property verilog_define {P6_LOCAL_TRANSPORT} [current_fileset]
 }
 read_xdc "$root_dir/constraints/active/PORT1.generated.xdc"
 update_compile_order -fileset sources_1

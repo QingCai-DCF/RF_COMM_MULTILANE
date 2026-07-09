@@ -1,11 +1,11 @@
 # P6 Local Transport No-Ethernet Summary
 
-generated_at_utc: 2026-07-09T16:51:25+00:00
+generated_at_utc: 2026-07-09T17:45:41+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `5b863a2377f4dbb6dd70bcf8064f138739cf0d00`
+HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: FAIL
-reason: P6 dynamic local transport backend is missing; completed safe gates and evidence boundary
+reason: P6 implementation/simulation advanced, but live local transport and PS runtime hardware evidence remain blocked
 script_hardware_actions_executed: true
 source_evidence_contains_hardware_actions: true
 stage_programmed_fpga: see stage section
@@ -20,7 +20,7 @@ available_lanes: 2
 max_lane_mask: 0x3
 
 P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET: FAIL
-COMMIT: 5b863a2377f4dbb6dd70bcf8064f138739cf0d00
+COMMIT: 7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2
 USER_CONFIRMED_SUPPLY_OK: true
 NETWORK_CABLE_CONNECTED: false
 HARDWARE_MOVEMENT_ALLOWED: false
@@ -38,12 +38,14 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - P6_P5_INTAKE
 - P6_EVIDENCE_SEMANTICS
 - P6_PROFILES
+- P6_LOCAL_TRANSPORT_IMPLEMENTATION
 - P6_DYNAMIC_PAYLOAD_SIM
 - P6_BITSTREAM_PROVENANCE
 - P6_NO_ETHERNET
 - P6_NO_MOTION
 - P6_2LANE_SCOPE
 - P6_HOST_FILE_PAYLOADS
+- P6_HOST_FILE_TRANSPORT_LOCAL_BACKEND
 - P6_HARDWARE_EXECUTION
 - P6_SAFE_IDLE_RECHECK
 - P6_TFDU_CONTROL_IDLE_RECHECK
@@ -62,12 +64,13 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 
 ## BLOCKED
 
+- P6_PS_RUNTIME_ENVIRONMENT
+- P6_HOST_FILE_TRANSPORT_JTAG
 - P6_JTAG_AXI_PAYLOAD_RAM_SMOKE
 - P6_LANE0_DYNAMIC_PAYLOAD
 - P6_LANE1_DYNAMIC_PAYLOAD
 - P6_TWO_LANE_DYNAMIC_PAYLOAD
 - P6_PS_DRIVER_RUNTIME
-- P6_HOST_FILE_TRANSPORT_JTAG
 - P6_LANE_FALLBACK_REGRESSION
 - P6_TWO_LANE_2H_STATIONARY_SOAK
 
@@ -81,10 +84,12 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `evidence/generated/p6_hardware_authorization_summary.md`
 - `evidence/generated/p6_hardware_execution_summary.md`
 - `evidence/generated/p6_host_file_transport_jtag_summary.md`
+- `evidence/generated/p6_host_file_transport_local_backend_summary.md`
 - `evidence/generated/p6_jtag_axi_payload_ram_smoke_summary.md`
 - `evidence/generated/p6_lane0_dynamic_payload_summary.md`
 - `evidence/generated/p6_lane1_dynamic_payload_summary.md`
 - `evidence/generated/p6_lane_fallback_regression_summary.md`
+- `evidence/generated/p6_local_transport_implementation_summary.md`
 - `evidence/generated/p6_local_transport_no_ethernet_summary.md`
 - `evidence/generated/p6_no_ethernet_summary.md`
 - `evidence/generated/p6_no_motion_summary.md`
@@ -93,9 +98,10 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `evidence/generated/p6_project_status_update_summary.md`
 - `evidence/generated/p6_protocol_metrics_summary.md`
 - `evidence/generated/p6_ps_driver_runtime_summary.md`
+- `evidence/generated/p6_ps_runtime_environment_summary.md`
 - `evidence/generated/p6_safe_idle_recheck_summary.md`
 - `evidence/generated/p6_tfdu_control_idle_recheck_summary.md`
 - `evidence/generated/p6_two_lane_2h_stationary_soak_summary.md`
 - `evidence/generated/p6_two_lane_dynamic_payload_summary.md`
 
-NEXT_RECOMMENDED_STAGE: P6_FIX_DYNAMIC_PAYLOAD_DATAPATH
+NEXT_RECOMMENDED_STAGE: P6_INTEGRATE_REBUILT_TOP_LIVE_JTAG_AXI_OR_PS7_MAILBOX_RUNTIME

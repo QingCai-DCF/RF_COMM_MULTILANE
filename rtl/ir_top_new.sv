@@ -53,6 +53,26 @@ module ir_top_new (
   logic [3:0] p4_auto_startup_done;
   logic p4_auto_extra_status_words_valid;
   logic [8*32-1:0] p4_auto_extra_status_words_flat;
+`ifdef P6_LOCAL_TRANSPORT
+  logic [31:0] p6_local_commit_count;
+  logic [31:0] p6_local_debug_status;
+  logic [7:0] p6_local_payload_lane_mask;
+  logic [7:0] p6_local_rx_lane_mask;
+  logic [7:0] p6_local_ack_lane_mask;
+  logic [15:0] p6_local_session;
+  logic [15:0] p6_local_payload_len;
+  logic [15:0] p6_local_fragment_bytes;
+  logic [15:0] p6_local_cnt_chip_max;
+  logic [15:0] p6_local_cnt_preamble;
+  logic [7:0] p6_local_detect_start;
+  logic [7:0] p6_local_detect_end;
+  logic [31:0] p6_local_guard_cycles;
+  logic [31:0] p6_local_retry_timeout;
+  logic [15:0] p6_local_startup_us;
+  logic [31:0] p6_local_duty_window;
+  logic [15:0] p6_local_duty_max_permille;
+  logic [15:0] p6_local_stuck_high_limit_us;
+`endif
 `ifdef P4_AUTO_TFDU_CONTROL_IDLE
   localparam logic [31:0] P4_AUTO_STARTUP_WAIT_CYCLES = 32'd32000;
   logic [31:0] p4_auto_startup_wait_counter;
@@ -493,6 +513,64 @@ module ir_top_new (
     .USRDONEO(1'b1),
     .USRDONETS(1'b1)
   );
+
+`ifdef P6_LOCAL_TRANSPORT
+  (* keep_hierarchy = "yes", dont_touch = "yes" *)
+  ir_axi_regs_new #(
+    .PROFILE_ID_VALUE(32'h5036_2201)
+  ) u_p6_local_transport_regs (
+    .clk(p4_auto_cfgmclk),
+    .rst_n(p4_auto_eos),
+    .wr_en(1'b0),
+    .wr_addr(12'd0),
+    .wr_data(32'd0),
+    .rd_en(1'b0),
+    .rd_addr(12'd0),
+    .rd_data(),
+    .rd_valid(),
+    .core_reset_pulse(),
+    .enable_phy(),
+    .start_pulse(),
+    .stop_pulse(),
+    .clear_sticky_pulse(),
+    .commit_pulse(),
+    .profile_committed(),
+    .cfg_payload_lane_mask(p6_local_payload_lane_mask),
+    .cfg_rx_lane_mask(p6_local_rx_lane_mask),
+    .cfg_ack_lane_mask(p6_local_ack_lane_mask),
+    .cfg_session(p6_local_session),
+    .cfg_payload_len(p6_local_payload_len),
+    .cfg_fragment_bytes(p6_local_fragment_bytes),
+    .cfg_cnt_chip_max(p6_local_cnt_chip_max),
+    .cfg_cnt_preamble(p6_local_cnt_preamble),
+    .cfg_detect_start(p6_local_detect_start),
+    .cfg_detect_end(p6_local_detect_end),
+    .cfg_guard_cycles(p6_local_guard_cycles),
+    .cfg_retry_timeout(p6_local_retry_timeout),
+    .cfg_startup_us(p6_local_startup_us),
+    .cfg_duty_window(p6_local_duty_window),
+    .cfg_duty_max_permille(p6_local_duty_max_permille),
+    .cfg_stuck_high_limit_us(p6_local_stuck_high_limit_us),
+    .status_phy_ready(1'b1),
+    .status_busy(1'b0),
+    .status_tx_done(1'b0),
+    .status_rx_done(1'b0),
+    .status_tx_fail(1'b0),
+    .status_retry_count(8'd0),
+    .status_crc_bad_count(8'd0),
+    .status_session_bad_count(8'd0),
+    .status_mask_bad_count(8'd0),
+    .safety_shutdown_reason(32'd0),
+    .counter_tx_pulse(32'd0),
+    .counter_rx_raw_pulse(32'd0),
+    .counter_frame_good(32'd0),
+    .counter_frame_bad(32'd0),
+    .counter_ack_sent(32'd0),
+    .counter_ack_seen(32'd0),
+    .commit_count(p6_local_commit_count),
+    .debug_status(p6_local_debug_status)
+  );
+`endif
 
 `ifdef P4_AUTO_LANE_PROTOCOL_SMOKE
   assign p4_auto_proto_rx_pulse_active = ~p4_auto_probe_rxd_pin[P4_AUTO_PROTO_DATA_RX_INDEX];
@@ -1456,6 +1534,28 @@ module ir_top_new (
     p4_auto_extra_status_words_flat[6*32 +: 32] = p4_auto_proto_frame_debug_status;
     p4_auto_extra_status_words_flat[7*32 +: 32] = P4_AUTO_PROTO_FRAME_STAGE_MAGIC;
 `endif
+`elsif P6_LOCAL_TRANSPORT
+    ir_tx_out_0 = 2'b00;
+    loop_tx_b0 = 2'b00;
+    p4_auto_extra_status_words_valid = 1'b1;
+    p4_auto_extra_status_words_flat[0*32 +: 32] = 32'h5036_4c54; // "P6LT"
+    p4_auto_extra_status_words_flat[1*32 +: 32] = {
+      p6_local_payload_len,
+      p6_local_session
+    };
+    p4_auto_extra_status_words_flat[2*32 +: 32] = {
+      16'h0,
+      p6_local_ack_lane_mask,
+      p6_local_payload_lane_mask
+    };
+    p4_auto_extra_status_words_flat[3*32 +: 32] = p6_local_debug_status;
+    p4_auto_extra_status_words_flat[4*32 +: 32] = p6_local_commit_count;
+    p4_auto_extra_status_words_flat[5*32 +: 32] = {
+      p6_local_startup_us,
+      p6_local_stuck_high_limit_us
+    };
+    p4_auto_extra_status_words_flat[6*32 +: 32] = p6_local_retry_timeout;
+    p4_auto_extra_status_words_flat[7*32 +: 32] = 32'h4a41_5849; // "JAXI"
 `else
     ir_tx_out_0 = 2'b00;
     loop_tx_b0 = 2'b00;

@@ -2,7 +2,7 @@
 
 Project: RF_COMM_MULTILANE
 Current branch: main
-Current HEAD: 5b863a2377f4dbb6dd70bcf8064f138739cf0d00
+Current HEAD: 7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -29,4 +29,4 @@ P6 is not rotation acceptance.
 P6 is not 8-lane acceptance.
 P6 is not product-final acceptance.
 
-Current P6 result is FAIL because the P6 dynamic payload local transport, PS runtime mailbox, host-file JTAG transport, fallback regression, and 2-hour dynamic soak backends are not yet present as P6 artifacts. Existing P5 fixed-payload evidence remains P5 evidence only.
+Current P6 result is FAIL because the P6 dynamic payload register-window datapath, local memory backend, HDL regression, and PS mailbox source are present, but real live JTAG/AXI ingress, rebuilt-top PS7/XSA runtime, dynamic lane hardware transfer, fallback regression, and 2-hour dynamic soak evidence are not yet PASS. Existing P5 fixed-payload evidence remains P5 evidence only.

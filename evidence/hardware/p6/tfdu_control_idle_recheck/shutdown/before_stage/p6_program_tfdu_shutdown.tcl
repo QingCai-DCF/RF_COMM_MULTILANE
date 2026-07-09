@@ -16,6 +16,7 @@ if {$rc != 0} {
   close $fh
   exit 31
 }
+say "TFDU_SHUTDOWN_PROGRAMMED {C:/Users/user/Documents/RF_COMM_MULTILANE/shutdown_bitstream/tfdu_shutdown_j10_j11.bit}"
 say "P6_TFDU_SHUTDOWN_WRAPPER=PASS"
 close $fh
 exit 0

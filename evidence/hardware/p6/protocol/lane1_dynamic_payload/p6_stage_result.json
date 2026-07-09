@@ -1,6 +1,6 @@
 {
   "P6_LANE1_DYNAMIC_PAYLOAD": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "P6 dynamic payload datapath is not implemented in the programmed artifact",
+  "reason": "P6 dynamic payload datapath is implemented for register-level simulation, but lane1 hardware transport cannot be driven without live JTAG/AXI or PS runtime integration",
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false,
   "stage_programmed_fpga": false,

@@ -1,6 +1,6 @@
 {
   "P6_TWO_LANE_2H_STATIONARY_SOAK": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "P6 dynamic two-lane soak bitstream/backend is not present; do not downgrade to short-soak PASS",
+  "reason": "P6 two-lane 2h dynamic soak requires live local transport runtime; no short or offline result is promoted to PASS",
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false,
   "stage_programmed_fpga": false,

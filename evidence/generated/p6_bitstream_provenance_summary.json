@@ -1,5 +1,5 @@
 {
-  "P6_BITSTREAM_PROVENANCE": "PASS_WITH_NOTES",
+  "P6_BITSTREAM_PROVENANCE": "PASS",
   "artifacts": [
     {
       "artifact_key": "p6_safe_idle",
@@ -34,32 +34,32 @@
     {
       "artifact_key": "p6_local_transport",
       "stage": "P6_LOCAL_TRANSPORT_DYNAMIC_PAYLOAD",
-      "status": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-      "reason": "MISSING_P6_DYNAMIC_PAYLOAD_JTAG_AXI_ARTIFACT",
-      "source_bitstream": "",
-      "source_bitstream_sha256": "MISSING",
-      "immutable_bitstream": "",
-      "source_ltx": "",
-      "source_ltx_sha256": "MISSING",
-      "immutable_ltx": "",
+      "status": "PASS",
+      "reason": "immutable artifact copied",
+      "source_bitstream": "evidence/generated/vivado/ir_top_new_p6_local_transport.bit",
+      "source_bitstream_sha256": "0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_local_transport_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit",
+      "source_ltx": "evidence/generated/vivado/p4_auto_p6_local_transport_debug.ltx",
+      "source_ltx_sha256": "9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_local_transport_9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57.ltx",
       "profile": "profiles/p6/p6_two_lane_dynamic_payload_256.json",
       "profile_sha256": "b64c68dc127a5c026f0eb978ed96ed7eb58ba56a5863c0818e613b45f282f069",
-      "applicability": "MISSING_P6_DYNAMIC_PAYLOAD_JTAG_AXI_ARTIFACT"
+      "applicability": "P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_NO_LIVE_AXI_INGRESS"
     },
     {
       "artifact_key": "p6_two_lane_soak",
       "stage": "P6_TWO_LANE_2H_STATIONARY_SOAK",
-      "status": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-      "reason": "MISSING_P6_DYNAMIC_TWO_LANE_SOAK_ARTIFACT",
-      "source_bitstream": "",
-      "source_bitstream_sha256": "MISSING",
-      "immutable_bitstream": "",
-      "source_ltx": "",
-      "source_ltx_sha256": "MISSING",
-      "immutable_ltx": "",
+      "status": "PASS",
+      "reason": "immutable artifact copied",
+      "source_bitstream": "evidence/generated/vivado/ir_top_new_p6_local_transport.bit",
+      "source_bitstream_sha256": "0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit",
+      "source_ltx": "evidence/generated/vivado/p4_auto_p6_local_transport_debug.ltx",
+      "source_ltx_sha256": "9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57.ltx",
       "profile": "profiles/p6/p6_two_lane_2h_stationary_soak.json",
       "profile_sha256": "52b44fe736130161bf88c9281d6b77492dbbecc0263244a7ded487f32568e64b",
-      "applicability": "MISSING_P6_DYNAMIC_TWO_LANE_SOAK_ARTIFACT"
+      "applicability": "P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_2H_SOAK_NOT_EXECUTED"
     }
   ],
   "active_hashes": {
@@ -67,13 +67,13 @@
     "active_profile": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1",
     "pinmap": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
     "active_xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
-    "register_map": "4006851bdfaedea14d10cea9e7b4c2a39310bc7e7228bed911cf642521cb03a9",
+    "register_map": "e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda",
     "tfdu_safety_contract": "ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae",
     "tfdu_safety_summary": "0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f",
     "shutdown_bitstream": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
   },
   "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
-  "missing_or_blocked_count": 2,
+  "missing_or_blocked_count": 0,
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false
 }
