@@ -1,0 +1,38 @@
+# P6 P5 Intake Summary
+
+generated_at_utc: 2026-07-09T16:43:57+00:00
+repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
+HEAD: `5b863a2377f4dbb6dd70bcf8064f138739cf0d00`
+stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
+result: PASS_WITH_NOTES
+reason: P5 in-repository evidence imported; no external zip was provided
+script_hardware_actions_executed: false
+source_evidence_contains_hardware_actions: true
+stage_programmed_fpga: false
+stage_drove_tfdu_txd: false
+stage_enabled_tfdu_receiver: false
+shutdown_on_exit_observed: false
+product_final_acceptance: pending
+user_confirmed_supply_ok: true
+network_cable_connected: false
+hardware_movement_allowed: false
+available_lanes: 2
+max_lane_mask: 0x3
+
+P6_P5_INTAKE: PASS_WITH_NOTES
+source_zip: NOT_PROVIDED_USED_IN_REPO_P5_EVIDENCE
+source_evidence_contains_hardware_actions: true
+
+## Checks
+
+- safe_idle_recheck: PASS
+- tfdu_control_idle_recheck: PASS
+- raw_lane_matrix_fresh: PASS
+- lane0_frame_crc_100: PASS
+- lane1_frame_crc_100: PASS
+- lane0_ack_retry_100: PASS
+- lane1_ack_retry_100: PASS
+- two_lane_minimal_100: PASS
+- two_lane_30min_soak: PASS
+- payload_sweep: PASS_WITH_UNSUPPORTED_CASES_DOCUMENTED
+- retry_fault_injection_hw_optional: SKIP_NO_HW_FAULT_INJECTION_HOOK

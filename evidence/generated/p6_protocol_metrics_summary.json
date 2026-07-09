@@ -1,0 +1,46 @@
+{
+  "P6_PROTOCOL_METRICS": "PASS",
+  "rows": [
+    {
+      "stage": "P6_SAFE_IDLE_RECHECK",
+      "stage_status": "PASS",
+      "frames_requested": 0,
+      "frames_sent": 0,
+      "frames_rx_good": 0,
+      "ack_seen": 0,
+      "crc_bad": 0,
+      "payload_mismatch": 0,
+      "retry_count": 0,
+      "retry_exhausted": 0,
+      "tx_fail": 0,
+      "runtime_sec": 0,
+      "payload_bytes_total": 0,
+      "effective_payload_bps": 0,
+      "goodput_bps": 0,
+      "latency_counter_status": "not_available_for_idle_stage",
+      "max_txd_high_cycles": 0,
+      "duty_violation_count": 0
+    },
+    {
+      "stage": "P6_TFDU_CONTROL_IDLE_RECHECK",
+      "stage_status": "PASS",
+      "frames_requested": 0,
+      "frames_sent": 0,
+      "frames_rx_good": 0,
+      "ack_seen": 0,
+      "crc_bad": 0,
+      "payload_mismatch": 0,
+      "retry_count": 0,
+      "retry_exhausted": 0,
+      "tx_fail": 0,
+      "runtime_sec": 0,
+      "payload_bytes_total": 0,
+      "effective_payload_bps": 0,
+      "goodput_bps": 0,
+      "latency_counter_status": "not_available_for_idle_stage",
+      "max_txd_high_cycles": 0,
+      "duty_violation_count": 0
+    }
+  ],
+  "csv": "evidence/generated/p6_protocol_metrics.csv"
+}

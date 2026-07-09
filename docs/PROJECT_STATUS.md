@@ -2,7 +2,7 @@
 
 Project: RF_COMM_MULTILANE
 Current branch: main
-Current HEAD: 4768ef76c1d9bc6042d4058f52eef5fc0da5ca01
+Current HEAD: 5b863a2377f4dbb6dd70bcf8064f138739cf0d00
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -10,16 +10,23 @@ P2_SIMULATION_BASELINE: PASS
 P3_PRE_HW_ACCEPTANCE_PACKAGE: PASS
 P4_AUTO_HARDWARE_ACCEPTANCE: PASS_WITH_PROXY_ILA_EVIDENCE
 P5_2LANE_PROTOCOL_STABILIZATION: PASS_WITH_NOTES
+P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET: FAIL
+HARDWARE_ACCEPTANCE_STATIONARY_2LANE_LOCAL: PENDING
 ETHERNET_ACCEPTANCE: DEFERRED_NO_NETWORK_CABLE
 ROTATION_ACCEPTANCE: DEFERRED_NO_HARDWARE_MOVEMENT
 EIGHT_LANE_ACCEPTANCE: DEFERRED_ONLY_2_LANES_AVAILABLE
+PRODUCT_FINAL_ACCEPTANCE: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 
 USER_CONFIRMED_SUPPLY_OK: true
 NETWORK_CABLE_CONNECTED: false
 HARDWARE_MOVEMENT_ALLOWED: false
 AVAILABLE_LANES: 2
+MAX_LANE_MASK: 0x3
 
-P5 evidence is stationary, 2-lane, JTAG/ILA/proxy based when hardware is explicitly authorized.
-It is not Ethernet, rotation, 8-lane, or product-final acceptance.
+P6 is stationary, two-lane, local/JTAG/AXI/PS-driver scoped evidence.
+P6 is not Ethernet acceptance.
+P6 is not rotation acceptance.
+P6 is not 8-lane acceptance.
+P6 is not product-final acceptance.
 
-Current P5 runner default is dry-run. Fresh P5 hardware stages remain pending until an explicitly authorized P5 run provides P5 evidence and shutdown-on-exit logs.
+Current P6 result is FAIL because the P6 dynamic payload local transport, PS runtime mailbox, host-file JTAG transport, fallback regression, and 2-hour dynamic soak backends are not yet present as P6 artifacts. Existing P5 fixed-payload evidence remains P5 evidence only.

@@ -1,0 +1,49 @@
+{
+  "stage_name": "P6_LANE_FALLBACK_REGRESSION",
+  "lane_count": 2,
+  "max_lane_mask": "0x3",
+  "network_required": false,
+  "motion_required": false,
+  "user_confirmed_supply_ok": true,
+  "session": "0x2201",
+  "startup_wait_us": 500,
+  "shutdown_on_exit": true,
+  "max_runtime_sec": 900,
+  "payload_source": "host_jtag_axi",
+  "payload_length": [
+    16,
+    31,
+    64
+  ],
+  "payload_pattern": [
+    "counter",
+    "prbs7"
+  ],
+  "expected_crc_policy": "crc32_payload_digest_and_frame_crc_clean",
+  "expected_ack_policy": "positive_masks_pass_negative_masks_bounded_reject",
+  "expected_lane_mask": "0x3",
+  "expected_ack_lane_mask": "0x3",
+  "stop_conditions": [
+    "TXD_STUCK_HIGH_VIOLATION > 0",
+    "DUTY_WINDOW_VIOLATION > 0",
+    "TXD continuous high >= 80 us equivalent cycles",
+    "startup_wait_us < 500",
+    "SD/Mode/Txd readback inconsistent with stage expectation",
+    "CRC_BAD > 0 in positive cases",
+    "PAYLOAD_MISMATCH > 0 in positive cases",
+    "TX_RETRY_EXHAUSTED > 0 in positive cases",
+    "TX_FAIL > 0 in positive cases",
+    "lane mask > 0x3 attempted",
+    "Ethernet runtime attempted",
+    "motion/rotation script attempted",
+    "shutdown_on_exit failed",
+    "abort file appears",
+    "max_runtime exceeded",
+    "Vivado/XSDB programming error"
+  ],
+  "ethernet_enabled": false,
+  "rotation_enabled": false,
+  "manual_intervention_required": false,
+  "evidence_dir": "evidence/hardware/p6/lane_fallback_regression",
+  "product_final_acceptance": "pending"
+}
