@@ -1,0 +1,41 @@
+set log_file {C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p4/p4_safe_idle_programming_log.txt}
+set fh [open $log_file "w"]
+proc say {line} {
+  global fh
+  puts $line
+  puts $fh $line
+  flush $fh
+}
+say "P4_SAFE_IDLE_PROGRAMMING_BEGIN [clock format [clock seconds] -format %Y-%m-%dT%H:%M:%S%z]"
+set bit_file {C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/ir_top_new_safe_idle.bit}
+if {![file exists $bit_file]} {
+  say "SAFE_IDLE_BITSTREAM_MISSING=$bit_file"
+  close $fh
+  exit 20
+}
+source {C:/Users/user/Documents/RF_COMM_MULTILANE/legacy/RF_COMM/tools/hw_connect_utils.tcl}
+set rc [catch {
+  set dev [rf_hw_open_zynq_device {localhost:3121} 1000000]
+  refresh_hw_device -update_hw_probes false $dev
+  foreach prop {NAME PART IDCODE IS_PROGRAMMED} {
+    if {[catch {set value [get_property $prop $dev]} prop_err]} {
+      say "SAFE_IDLE_DEVICE_PROP $prop ERROR=$prop_err"
+    } else {
+      say "SAFE_IDLE_DEVICE_PROP $prop=$value"
+    }
+  }
+  set_property PROGRAM.FILE $bit_file $dev
+  program_hw_devices $dev
+  say "SAFE_IDLE_BITSTREAM_PROGRAMMED=$bit_file"
+  say "READBACK_LIMITED=1"
+  say "READBACK_LIMITED_REASON=no direct TFDU pin readback or ILA proxy was available in this runner"
+} err opts]
+if {$rc != 0} {
+  say "P4_SAFE_IDLE_PROGRAMMING=FAIL"
+  say "P4_SAFE_IDLE_PROGRAMMING_ERROR=$err"
+  close $fh
+  exit 21
+}
+say "P4_SAFE_IDLE_PROGRAMMING=PASS"
+close $fh
+exit 0

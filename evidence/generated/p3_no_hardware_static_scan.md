@@ -1,27 +1,35 @@
 # P3 No Hardware Static Scan
 
-generated_at_utc: 2026-07-08T14:23:30+00:00
+generated_at_utc: 2026-07-09T10:17:34+00:00
 repo: C:\Users\user\Documents\RF_COMM_MULTILANE
-HEAD: c3abf1171228f52f400e6e4a3233472e1dad90bf
+HEAD: 4768ef76c1d9bc6042d4058f52eef5fc0da5ca01
 RESULT: PASS
 REASON: no unguarded hardware actions found
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
 P3_NO_HARDWARE_STATIC_SCAN: PASS
-- scanned files: 687
-- risky files classified: 116
+- scanned files: 948
+- risky files classified: 186
 
 | Path | Hits | Classification | Reason |
 | --- | --- | --- | --- |
 | `plan.md` | connect_hw_server, hw_server, open_hw, program_hw_devices, stop | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `PROJECT_STATUS.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `.hardware_authorization/P4_AUTO_APPROVED.txt` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `docs/BITSTREAM_CANDIDATE_POLICY.md` | connect_hw_server, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `docs/HARDWARE_ACCEPTANCE_RUNBOOK.md` | stop | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `docs/PROJECT_STATUS.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `scripts/check_m5_static.py` | hw_server | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
 | `scripts/check_no_hardware_calls.py` | connect_hw_server, hw_server, open_hw, program_hw_devices | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
 | `scripts/import_rf_comm.py` | connect_hw_server, hw_server, open_hw, program_hw_devices | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
 | `tools/p1_lib.py` | JTAG, connect_hw_server, fpga -f, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device, serial.Serial, socket.connect, xsdb | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
 | `tools/p3_pre_hw_lib.py` | /dev/mem, JTAG, connect_hw_server, current_hw_device, devmem, download_bitstream, fpga -f, hw_server, lwip live target, open_hw, open_hw_target, program_bitstream, program_hw_devices, refresh_hw_device, serial.Serial, socket.connect, xilinx hardware server, xsdb | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `tools/p4_auto_authorization.py` | JTAG, xsdb | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `tools/p4_auto_lib.py` | xsdb | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `tools/p4_hw_execution.py` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `tools/run_p4_auto_hardware_acceptance.py` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `tools/run_p4_hardware_acceptance.py` | JTAG | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
 | `software/legacy_host_client/run_acceptance.ps1` | stop | SKIP_WITH_REASON | legacy/reference hardware material, not a P3 execution entrypoint |
 | `software/legacy_host_uart_operator/README.md` | COM[0-9], JTAG, stop | SKIP_WITH_REASON | legacy/reference hardware material, not a P3 execution entrypoint |
 | `software/legacy_host_uart_operator/rf_comm_uart_operator.py` | COM[0-9], serial.Serial | SKIP_WITH_REASON | legacy/reference hardware material, not a P3 execution entrypoint |
@@ -129,4 +137,66 @@ P3_NO_HARDWARE_STATIC_SCAN: PASS
 | `evidence/imported/baseline_current_failure.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `evidence/imported/config_diff_known_good_vs_current.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `evidence/imported/n03_network_first/N03_real_board_handoff.md` | COM[0-9] | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4/p4_environment_capture.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4/p4_environment_capture.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4/p4_safe_idle_programming.tcl.txt` | program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/p4_auto_tool_versions.txt` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/authorization/P4_AUTO_USER_AUTHORIZATION.md` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_ack_retry_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_frame_crc_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_ack_retry_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_frame_crc_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/protocol_smoke/p4_auto_two_lane_minimal_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/raw_lane_matrix/p4_auto_raw_lane_matrix_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/raw_pulse_smoke/p4_auto_raw_pulse_smoke_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/safe_idle_direct_proxy/p4_auto_safe_idle_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/soak/p4_auto_lane0_300s_soak_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/soak/p4_auto_two_lane_300s_soak_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/hardware/p4_auto/tfdu_control_idle/p4_auto_tfdu_control_idle_programming.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/nonhardware_build_summary.md` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_tfdu_control_idle/rf_comm_nonhardware_tfdu_control_idle.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | COM[0-9], JTAG, mwr, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_tfdu_control_idle/rf_comm_nonhardware_tfdu_control_idle.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_tfdu_control_idle/rf_comm_nonhardware_tfdu_control_idle.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_tfdu_control_idle_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_safe_idle/rf_comm_nonhardware_safe_idle.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_safe_idle/rf_comm_nonhardware_safe_idle.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_safe_idle/rf_comm_nonhardware_safe_idle.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_safe_idle_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_pulse/rf_comm_nonhardware_raw_pulse.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_pulse/rf_comm_nonhardware_raw_pulse.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_pulse/rf_comm_nonhardware_raw_pulse.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_raw_pulse_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_lane_matrix/rf_comm_nonhardware_raw_lane_matrix.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_lane_matrix/rf_comm_nonhardware_raw_lane_matrix.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_raw_lane_matrix/rf_comm_nonhardware_raw_lane_matrix.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_raw_lane_matrix_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_soak/rf_comm_nonhardware_protocol_two_lane_soak.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_soak/rf_comm_nonhardware_protocol_two_lane_soak.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_soak/rf_comm_nonhardware_protocol_two_lane_soak.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_two_lane_soak_ila_sim_netlist.v` | JTAG, mrd, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_minimal/rf_comm_nonhardware_protocol_two_lane_minimal.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_minimal/rf_comm_nonhardware_protocol_two_lane_minimal.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_two_lane_minimal/rf_comm_nonhardware_protocol_two_lane_minimal.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_two_lane_minimal_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1_ack/rf_comm_nonhardware_protocol_lane1_ack.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1_ack/rf_comm_nonhardware_protocol_lane1_ack.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1_ack/rf_comm_nonhardware_protocol_lane1_ack.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_lane1_ack_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1/rf_comm_nonhardware_protocol_lane1.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1/rf_comm_nonhardware_protocol_lane1.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane1/rf_comm_nonhardware_protocol_lane1.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_lane1_ila_sim_netlist.v` | JTAG, dow, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_soak/rf_comm_nonhardware_protocol_lane0_soak.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_soak/rf_comm_nonhardware_protocol_lane0_soak.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_soak/rf_comm_nonhardware_protocol_lane0_soak.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_lane0_soak_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_ack/rf_comm_nonhardware_protocol_lane0_ack.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_ack/rf_comm_nonhardware_protocol_lane0_ack.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0_ack/rf_comm_nonhardware_protocol_lane0_ack.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_lane0_ack_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0/rf_comm_nonhardware_protocol_lane0.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0/rf_comm_nonhardware_protocol_lane0.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project_protocol_lane0/rf_comm_nonhardware_protocol_lane0.cache/ip/2023.1/4/6/466575e241d26bca/p4_auto_protocol_lane0_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project/rf_comm_nonhardware.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project/rf_comm_nonhardware.cache/ip/2023.1/a/a/aa79e133a2fcc388/dbg_hub_stub.v` | xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `evidence/generated/vivado/project/rf_comm_nonhardware.cache/ip/2023.1/5/2/52ec30c1831c373e/p4_auto_safe_idle_ila_sim_netlist.v` | JTAG, xsdb | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
 | `docs/legacy/AGENTS.RF_COMM.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/PROJECT_STATUS.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/docs/PROJECT_STATUS.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/tools/p4_hw_execution.py` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target, program_hw_devices, refresh_hw_device | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/tools/run_p4_hardware_acceptance.py` | JTAG | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/scripts/hw/program_tfdu_shutdown_safe.ps1` | stop | SAFE_DRY_RUN_GUARDED | script contains dry-run or authorization guard markers |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/scripts/legacy_safe_tools/program_tfdu_shutdown.tcl` | program_hw_devices, refresh_hw_device | SKIP_WITH_REASON | legacy/reference hardware material, not a P3 execution entrypoint |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/evidence/hardware/p4/p4_environment_capture.md` | JTAG | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/evidence/hardware/p4/p4_environment_capture.tcl.txt` | JTAG, connect_hw_server, current_hw_device, hw_server, open_hw, open_hw_target | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |
+| `dist/rf_comm_multilane_p4_results_20260709_000557/evidence/hardware/p4/p4_safe_idle_programming.tcl.txt` | program_hw_devices, refresh_hw_device | SAFE_DOCUMENTATION_ONLY | documentation or generated evidence mention |

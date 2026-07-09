@@ -1,0 +1,115 @@
+{
+  "RAW_LANE_MATRIX": "PASS",
+  "RAW_LANE_MATRIX_PROGRAM": "PASS",
+  "BITSTREAM_SHA_MATCH": "PASS",
+  "PROGRAM_RETURN_CODE": 0,
+  "PROGRAM_LOG": "evidence/hardware/p4_auto/raw_lane_matrix/program_log.txt",
+  "PROGRAM_TCL": "evidence/hardware/p4_auto/raw_lane_matrix/p4_auto_raw_lane_matrix_programming.tcl.txt",
+  "RAW_LANE_MATRIX_BITSTREAM": "evidence/hardware/p4_auto/bitstreams/raw_lane_matrix/raw_lane_matrix_4768ef7_fe3329196b597fc4.bit",
+  "RAW_LANE_MATRIX_BITSTREAM_SHA256": "fe3329196b597fc4e5816cc1146cbe71ef488aee2c92c6095865020e6cd9eb21",
+  "RAW_LANE_MATRIX_MANIFEST_SHA256": "fe3329196b597fc4e5816cc1146cbe71ef488aee2c92c6095865020e6cd9eb21",
+  "AUTHORIZED_BITSTREAM": "evidence/hardware/p4_auto/bitstreams/raw_lane_matrix/raw_lane_matrix_4768ef7_fe3329196b597fc4.bit",
+  "AUTHORIZED_BITSTREAM_IN_MANIFEST": true,
+  "AUTHORIZED_BITSTREAM_SHA_MATCH": true,
+  "DEBUG_PROBES_LTX": "evidence/generated/vivado/p4_auto_raw_lane_matrix_debug.ltx",
+  "DEBUG_PROBES_LTX_SHA256": "a55e0b2e49ed5c1541dbdc2ca0876359f274c7d0d3420746a532cdc1017a16ae",
+  "ILA_CAPTURE_DIR": "evidence/hardware/p4_auto/ila/raw_lane_matrix",
+  "ILA_CAPTURE": "PASS",
+  "ILA_RAW_LANE_MATRIX_PARSE": "PASS",
+  "DEBUG_READBACK_AVAILABLE": "PASS",
+  "SHUTDOWN_ON_EXIT": "PASS",
+  "HARDWARE_ACTIONS_EXECUTED": true,
+  "NO_HARDWARE_ACTIONS_EXECUTED": false,
+  "direction_results": [
+    {
+      "direction": "AB_L0",
+      "lane": 0,
+      "source_endpoint": "A",
+      "destination_endpoint": "B",
+      "tx_requested_count": 64,
+      "tx_observed_count": 64,
+      "rx_active_low_pulse_count": 64,
+      "rx_falling_edge_count": 64,
+      "txd_high_max_cycles": 8,
+      "txd_high_total_cycles": 512,
+      "status": "PASS",
+      "checks": {
+        "tx_requested_count": true,
+        "rx_counter_available": true,
+        "txd_high_max_safe": true,
+        "txd_high_total_expected": true
+      }
+    },
+    {
+      "direction": "BA_L0",
+      "lane": 0,
+      "source_endpoint": "B",
+      "destination_endpoint": "A",
+      "tx_requested_count": 64,
+      "tx_observed_count": 64,
+      "rx_active_low_pulse_count": 64,
+      "rx_falling_edge_count": 64,
+      "txd_high_max_cycles": 8,
+      "txd_high_total_cycles": 512,
+      "status": "PASS",
+      "checks": {
+        "tx_requested_count": true,
+        "rx_counter_available": true,
+        "txd_high_max_safe": true,
+        "txd_high_total_expected": true
+      }
+    },
+    {
+      "direction": "AB_L1",
+      "lane": 1,
+      "source_endpoint": "A",
+      "destination_endpoint": "B",
+      "tx_requested_count": 64,
+      "tx_observed_count": 64,
+      "rx_active_low_pulse_count": 64,
+      "rx_falling_edge_count": 64,
+      "txd_high_max_cycles": 8,
+      "txd_high_total_cycles": 512,
+      "status": "PASS",
+      "checks": {
+        "tx_requested_count": true,
+        "rx_counter_available": true,
+        "txd_high_max_safe": true,
+        "txd_high_total_expected": true
+      }
+    },
+    {
+      "direction": "BA_L1",
+      "lane": 1,
+      "source_endpoint": "B",
+      "destination_endpoint": "A",
+      "tx_requested_count": 64,
+      "tx_observed_count": 64,
+      "rx_active_low_pulse_count": 64,
+      "rx_falling_edge_count": 64,
+      "txd_high_max_cycles": 8,
+      "txd_high_total_cycles": 512,
+      "status": "PASS",
+      "checks": {
+        "tx_requested_count": true,
+        "rx_counter_available": true,
+        "txd_high_max_safe": true,
+        "txd_high_total_expected": true
+      }
+    }
+  ],
+  "TXD_STUCK_HIGH_VIOLATION": 0,
+  "DUTY_WINDOW_VIOLATION": 0,
+  "program_run": {
+    "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat -mode batch -source C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\raw_lane_matrix\\p4_auto_raw_lane_matrix_programming.tcl.txt",
+    "returncode": 0,
+    "stdout_tail": "os]\"\n#   say \"P4_AUTO_HW_PROBE_COUNT=[llength $probes]\"\n#   set capture_pass 0\n#   set capture_idx 0\n#   foreach ila $ilas {\n#     set wdb_file [file join $ila_dir \"raw_lane_matrix_${capture_idx}.wdb\"]\n#     set csv_file [file join $ila_dir \"raw_lane_matrix_${capture_idx}.csv\"]\n#     set ila_rc [catch {\n#       current_hw_ila $ila\n#       catch {set_property CONTROL.TRIGGER_POSITION 0 $ila}\n#       if {[catch {run_hw_ila -trigger_now $ila} trigger_err]} {\n#         say \"P4_AUTO_ILA_TRIGGER_NOW_WARN_${capture_idx}=$trigger_err\"\n#         run_hw_ila $ila\n#       }\n#       wait_on_hw_ila $ila\n#       set data [upload_hw_ila_data $ila]\n#       write_hw_ila_data -force $wdb_file $data\n#       if {[catch {write_hw_ila_data -force -csv_file $csv_file $data} csv_err]} {\n#         say \"P4_AUTO_ILA_CSV_EXPORT_WARN_${capture_idx}=$csv_err\"\n#       }\n#     } ila_err]\n#     if {$ila_rc == 0} {\n#       say \"P4_AUTO_ILA_CAPTURE_${capture_idx}=PASS\"\n#       say \"P4_AUTO_ILA_CAPTURE_${capture_idx}_WDB=$wdb_file\"\n#       if {[file exists $csv_file]} {\n#         say \"P4_AUTO_ILA_CAPTURE_${capture_idx}_CSV=$csv_file\"\n#       }\n#       set capture_pass 1\n#     } else {\n#       say \"P4_AUTO_ILA_CAPTURE_${capture_idx}=FAIL\"\n#       say \"P4_AUTO_ILA_CAPTURE_${capture_idx}_ERROR=$ila_err\"\n#     }\n#     incr capture_idx\n#   }\n#   if {$capture_pass} {\n#     say \"P4_AUTO_ILA_CAPTURE=PASS\"\n#   } elseif {[llength $ilas] == 0} {\n#     say \"P4_AUTO_ILA_CAPTURE=SKIP_NO_ILA\"\n#   } else {\n#     say \"P4_AUTO_ILA_CAPTURE=FAIL\"\n#   }\n#   say \"P4_AUTO_RAW_LANE_MATRIX_PROGRAM=PASS\"\n#   catch {close_hw_target}\n#   catch {disconnect_hw_server}\n#   catch {close_hw_manager}\n# } err opts]\n# if {$rc != 0} {\n#   say \"P4_AUTO_RAW_LANE_MATRIX_PROGRAM=FAIL\"\n#   say \"P4_AUTO_RAW_LANE_MATRIX_PROGRAM_ERROR=$err\"\n#   catch {close_hw_target}\n#   catch {disconnect_hw_server}\n#   catch {close_hw_manager}\n#   close $fh\n#   exit 21\n# }\n# close $fh\n# exit 0\nINFO: [Common 17-206] Exiting Vivado at Thu Jul  9 14:18:25 2026...\n",
+    "stderr_tail": ""
+  },
+  "shutdown_run": {
+    "cmd": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hw/program_tfdu_shutdown_safe.ps1 -AllowHardware -ExecuteHardware -ShutdownOnExit -MaxRuntimeSec 60 -BoardId AX7010 -Bitstream shutdown_bitstream/tfdu_shutdown_j10_j11.bit -BitstreamSha256 bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810 -TestProfile P4_AUTO_RAW_LANE_MATRIX_SHUTDOWN -ActivePinmapHash 4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a -ActiveXdcHash cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990 -AuthorizationFile .hardware_authorization\\P4_AUTO_APPROVED.txt -ProfilePath profiles\\p4_auto_raw_lane_matrix.json -ProfileSha256 782327ca6703a0a30559d1debc98228d6ee3bdb13edb94f141bb9a00fa052d09 -EvidenceDir evidence/hardware/p4_auto/shutdown/after_raw_lane_matrix -VivadoPath D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+    "returncode": 0,
+    "stdout_tail": "PROFILE_PATH=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p4_auto_raw_lane_matrix.json\nPROFILE_SHA256=782327CA6703A0A30559D1DEBC98228D6EE3BDB13EDB94F141BB9A00FA052D09\nHASH_MANIFEST_JSON=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\shutdown\\after_raw_lane_matrix\\hash_manifest.json\nHASH_MANIFEST_CSV=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\shutdown\\after_raw_lane_matrix\\hash_manifest.csv\nSHUTDOWN_TCL=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\legacy_safe_tools\\program_tfdu_shutdown.tcl\nSHUTDOWN_TCL_SHA256=AA279E41E7CF6E8E27DEA4E979DD9C10A08E543F03C2A64BF256326A495ABBBA\nSHUTDOWN_BITSTREAM=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit\nSHUTDOWN_BITSTREAM_SHA256=BAC60B58912F0ACD771DC830A6761535EC8F6A92BEFB1AE4CB7D928745AF5810\nHARDWARE_AUTHORIZATION_LOG=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\shutdown\\after_raw_lane_matrix\\hardware_authorization.json\nHARDWARE_AUTHORIZATION_EXIT=0\nALLOW_HARDWARE=1\nNO_HARDWARE_ACTIONS_EXECUTED=0\nSHUTDOWN_START=2026-07-09T14:18:45.2515329+08:00\nSHUTDOWN_STDOUT_LOG=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\shutdown\\after_raw_lane_matrix\\program_tfdu_shutdown_safe.stdout.log\nSHUTDOWN_STDERR_LOG=C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p4_auto\\shutdown\\after_raw_lane_matrix\\program_tfdu_shutdown_safe.stderr.log\nSHUTDOWN_RAW_EXIT=125\nTFDU_SHUTDOWN_PROGRAMMED_SEEN=1\nSHUTDOWN_EXIT=0\nPROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS\nPROGRAM_TFDU_SHUTDOWN_SAFE_END 2026-07-09T14:19:13.8405807+08:00\n",
+    "stderr_tail": ""
+  }
+}

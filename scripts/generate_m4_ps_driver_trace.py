@@ -106,7 +106,7 @@ def main() -> int:
         "SAFETY_STARTUP_US": 500,
         "SAFETY_DUTY_WINDOW": 1000,
         "SAFETY_DUTY_MAX": 200,
-        "SAFETY_STUCK_HIGH_LIMIT": 20,
+        "SAFETY_STUCK_HIGH_LIMIT": 10,
     }
 
     mmio = MmioTrace(offsets)

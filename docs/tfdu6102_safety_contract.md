@@ -10,6 +10,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - [x] Startup incomplete means TX FSM must not emit pulses.
 - [x] Startup incomplete means RX FSM must not count valid frames.
 - [x] Continuous `Txd=1` time is bounded below the 80 us device limit.
+- [x] P4 smoke profiles use `Txd_stuck_high_trip_us <= 10 us`.
 - [x] TX duty window is bounded or a blocker is recorded.
 - [x] RX inversion appears only in the PHY wrapper.
 - [x] Mode strategy is single-choice static high-speed mode.

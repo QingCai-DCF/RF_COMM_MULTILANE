@@ -8,7 +8,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 | P2_REPO_INTAKE |  | PASS | repo intake recorded |
 | P1_EVIDENCE_REVIEW |  | PASS | P1 evidence reviewed |
 | PYTHON_REFERENCE_MODEL |  | PASS | reference tests completed |
-| NO_HARDWARE_SCAN |  | PASS | no-hardware static scan completed |
+| NO_HARDWARE_SCAN |  | FAIL | no-hardware static scan completed |
 | tb_tfdu_lane_phy_reset_shutdown | TFDU_LANE_PHY_TESTS | PASS | HDL test passed |
 | tb_tfdu_lane_phy_startup_gate | TFDU_LANE_PHY_TESTS | PASS | HDL test passed |
 | tb_tfdu_lane_phy_txd_default_low | TFDU_LANE_PHY_TESTS | PASS | HDL test passed |

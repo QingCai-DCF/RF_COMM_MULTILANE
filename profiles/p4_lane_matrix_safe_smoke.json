@@ -1,0 +1,37 @@
+{
+  "mode_strategy": "static_mode_high",
+  "startup_wait_us": 500,
+  "txd_stuck_high_trip_us": 10,
+  "absolute_datasheet_guard_us": 80,
+  "pulse_width_ns": 125,
+  "pulse_period_us": 1000,
+  "max_burst_pulses": 100,
+  "max_runtime_sec": 300,
+  "shutdown_on_exit": true,
+  "ethernet_enabled": false,
+  "rotation_enabled": false,
+  "no_autonomous_tx": true,
+  "safe_idle_txd": 0,
+  "safe_idle_sd": 1,
+  "safe_idle_mode": 1,
+  "hardware_acceptance": "PENDING_HW_UNTIL_AUTHORIZED_RUN",
+  "profile_name": "p4_lane_matrix_safe_smoke",
+  "lane_count": 2,
+  "enabled_lanes": [
+    0
+  ],
+  "planned_lanes": [
+    0,
+    1
+  ],
+  "ack_enabled": false,
+  "raw_pulse_enabled": true,
+  "protocol_frame_crc_enabled": false,
+  "protocol_ack_retry_enabled": false,
+  "payload_lane_mask": "0x00000001",
+  "ack_lane_mask": "0x00000000",
+  "rx_lane_mask": "0x00000001",
+  "lane1_policy": "blocked_pending_fresh_raw_pulse_frame_crc_ack_and_mask_readback",
+  "known_bad_direction": "AB_L1",
+  "purpose": "Raw matrix staging. Lane1 is planned but not enabled as reliable evidence."
+}

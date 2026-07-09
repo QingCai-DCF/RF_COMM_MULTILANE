@@ -1,0 +1,7 @@
+case,status,expected_negative,sent_frames,delivered_frames,retry_count,ack_drop_count,data_drop_count,crc_bad,retry_exhausted,fail_safe,max_retry,txd_stuck_high_violation,duty_window_violation
+drop_every_10th_ack,PASS,False,20,20,2,2,0,0,0,False,3,0,0
+drop_first_ack_only,PASS,False,20,20,1,1,0,0,0,False,3,0,0
+drop_first_data_only,PASS,False,20,20,1,0,1,0,0,False,3,0,0
+force_crc_error_simulation_only,PASS,False,20,20,1,0,0,1,0,False,3,0,0
+force_lane0_disable_via_register,PASS,True,20,0,60,0,0,0,20,True,3,0,0
+force_lane1_disable_via_register,PASS,True,20,0,60,0,0,0,20,True,3,0,0

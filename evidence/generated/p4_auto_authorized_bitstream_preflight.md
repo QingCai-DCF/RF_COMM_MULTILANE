@@ -1,0 +1,24 @@
+# P4 Auto Authorized Bitstream Preflight
+
+generated_at_utc: 2026-07-09T10:03:08+00:00
+repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
+HEAD: `4768ef76c1d9bc6042d4058f52eef5fc0da5ca01`
+stage: P4_AUTO_HARDWARE_ACCEPTANCE_NO_MANUAL
+result: PASS
+reason: authorized bitstream matches current immutable manifest
+hardware_actions_executed: false
+user_confirmed_supply_ok: true
+manual_intervention_required: false
+shutdown_on_exit: required
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+P4_AUTO_AUTHORIZED_BITSTREAM_PREFLIGHT: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+AUTHORIZED_BITSTREAM: `evidence/hardware/p4_auto/bitstreams/protocol_two_lane_soak/protocol_two_lane_soak_4768ef7_6bcb3ca2762eadd5.bit`
+AUTHORIZED_BITSTREAM_EXISTS: true
+AUTHORIZED_BITSTREAM_SHA256: `6bcb3ca2762eadd50c3b278159c42dc43bb3d9c3394f8055a3631df22a787e93`
+AUTHORIZED_BITSTREAM_SHA256_EXPECTED: `6bcb3ca2762eadd50c3b278159c42dc43bb3d9c3394f8055a3631df22a787e93`
+AUTHORIZED_BITSTREAM_IN_MANIFEST: true
+AUTHORIZED_BITSTREAM_MANIFEST_SHA256: `6bcb3ca2762eadd50c3b278159c42dc43bb3d9c3394f8055a3631df22a787e93`

@@ -28,7 +28,7 @@ def _load_json_stdout(stdout):
     return {}
 
 
-def _write_combined_offline_summary(output_dir, p1_status, p2_payload, final_status, p3_payload=None):
+def _write_combined_offline_summary(output_dir, p1_status, p2_payload, final_status, p3_payload=None, p4_auto_payload=None):
     output_dir = Path(output_dir)
     md_path = output_dir / "offline_gate_summary.md"
     json_path = output_dir / "offline_gate_summary.json"
@@ -80,6 +80,24 @@ def _write_combined_offline_summary(output_dir, p1_status, p2_payload, final_sta
                 "",
             ]
         )
+    if p4_auto_payload:
+        append.extend(
+            [
+                "## P4 Auto Hardware Acceptance Dry Run",
+                "",
+                f"P4_AUTO_HARDWARE_ACCEPTANCE: {p4_auto_payload.get('P4_AUTO_HARDWARE_ACCEPTANCE', 'UNKNOWN')}",
+                f"COMBINED_OFFLINE_STATUS: {final_status}",
+                "NO_HARDWARE_ACTIONS_EXECUTED: true",
+                "HARDWARE_ACCEPTANCE: PENDING_HW",
+                "SUMMARY: evidence/generated/p4_auto_hardware_acceptance_summary.md",
+                "",
+                "### P4 Auto Boundary",
+                "",
+                "- Offline integration records P4_AUTO readiness evidence only.",
+                "- Offline gates do not promote hardware acceptance to PASS.",
+                "",
+            ]
+        )
     if md_path.exists():
         current = md_path.read_text(encoding="utf-8", errors="ignore")
         current = current.split("\n## P2 Simulation Gate", 1)[0].rstrip()
@@ -95,6 +113,9 @@ def _write_combined_offline_summary(output_dir, p1_status, p2_payload, final_sta
     if p3_payload:
         data["P3_PRE_HW_ACCEPTANCE_PACKAGE"] = p3_payload.get("P3_PRE_HW_ACCEPTANCE_PACKAGE")
         data["pre_hw_acceptance_package_gate"] = p3_payload
+    if p4_auto_payload:
+        data["P4_AUTO_HARDWARE_ACCEPTANCE"] = p4_auto_payload.get("P4_AUTO_HARDWARE_ACCEPTANCE")
+        data["p4_auto_hardware_acceptance_gate"] = p4_auto_payload
     json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
@@ -109,6 +130,7 @@ def main():
     parser.add_argument("--simulation-required", action="store_true", help="Fail if the simulation gate does not complete.")
     parser.add_argument("--allow-simulation-skip", action="store_true", help="Allow explicitly recorded HDL simulation skips.")
     parser.add_argument("--include-pre-hw-package", action="store_true", help="Run the P3 pre-hardware acceptance package gate after P1/P2.")
+    parser.add_argument("--include-p4-auto", action="store_true", help="Run the P4_AUTO dry-run evidence gate after P1/P2/P3.")
     args = parser.parse_args()
 
     status, results = run_all(
@@ -121,6 +143,7 @@ def main():
     skipped = [r for r in results if r["result"] == "SKIP_WITH_REASON"]
     simulation_payload = None
     p3_payload = None
+    p4_auto_payload = None
     final_status = status
 
     if args.include_simulation:
@@ -208,11 +231,58 @@ def main():
                 final_status = PASS
         _write_combined_offline_summary(Path(args.output_dir), status, simulation_payload or {}, final_status, p3_payload=p3_payload)
 
+    if args.include_p4_auto:
+        if final_status not in {PASS, PASS_WITH_SKIPS}:
+            p4_auto_payload = {
+                "P4_AUTO_HARDWARE_ACCEPTANCE": "BLOCKED_BY_AUTOMATION_GAP",
+                "reason": f"offline prereq status is {final_status}",
+                "NO_HARDWARE_ACTIONS_EXECUTED": True,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+            }
+        else:
+            existing_p4_path = Path(args.output_dir) / "p4_auto_hardware_acceptance_summary.json"
+            p4_auto_payload = {}
+            if existing_p4_path.exists():
+                try:
+                    p4_auto_payload = json.loads(existing_p4_path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError:
+                    p4_auto_payload = {}
+            if not p4_auto_payload.get("HARDWARE_ACTIONS_EXECUTED"):
+                p4_cmd = [
+                    sys.executable,
+                    "tools/run_p4_auto_hardware_acceptance.py",
+                    "--dry-run",
+                    "--json-summary",
+                    "--user-confirmed-supply-ok",
+                    "--no-manual-intervention",
+                    "--allow-skips",
+                    "--skip-recheck",
+                ]
+                proc = subprocess.run(p4_cmd, cwd=Path(__file__).resolve().parents[1], text=True, capture_output=True, timeout=300)
+                p4_auto_payload = _load_json_stdout(proc.stdout)
+                if not p4_auto_payload:
+                    p4_auto_payload = {
+                        "P4_AUTO_HARDWARE_ACCEPTANCE": "FAIL_WITH_EVIDENCE",
+                        "reason": "P4_AUTO JSON summary missing",
+                        "stdout": proc.stdout[-4000:],
+                        "stderr": proc.stderr[-4000:],
+                        "NO_HARDWARE_ACTIONS_EXECUTED": True,
+                        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                    }
+                if proc.returncode != 0:
+                    final_status = FAIL
+                    failed.append("p4_auto_hardware_acceptance_gate")
+            if p4_auto_payload.get("P4_AUTO_HARDWARE_ACCEPTANCE") == "FAIL_WITH_EVIDENCE":
+                final_status = FAIL
+                failed.append("p4_auto_hardware_acceptance_gate")
+        _write_combined_offline_summary(Path(args.output_dir), status, simulation_payload or {}, final_status, p3_payload=p3_payload, p4_auto_payload=p4_auto_payload)
+
     if args.json_summary:
         payload = {
             "P1_OFFLINE_HARDENING": status,
             "P2_SIMULATION_BASELINE": simulation_payload.get("P2_SIMULATION_BASELINE") if simulation_payload else "NOT_RUN",
             "P3_PRE_HW_ACCEPTANCE_PACKAGE": p3_payload.get("P3_PRE_HW_ACCEPTANCE_PACKAGE") if p3_payload else "NOT_RUN",
+            "P4_AUTO_HARDWARE_ACCEPTANCE": p4_auto_payload.get("P4_AUTO_HARDWARE_ACCEPTANCE") if p4_auto_payload else "NOT_RUN",
             "COMBINED_OFFLINE_STATUS": final_status,
             "NO_HARDWARE_ACTIONS_EXECUTED": True,
             "HARDWARE_ACCEPTANCE": "PENDING_HW",
@@ -226,7 +296,9 @@ def main():
             print(f"P2_SIMULATION_BASELINE: {simulation_payload.get('P2_SIMULATION_BASELINE')}")
         if p3_payload:
             print(f"P3_PRE_HW_ACCEPTANCE_PACKAGE: {p3_payload.get('P3_PRE_HW_ACCEPTANCE_PACKAGE')}")
-        if simulation_payload or p3_payload:
+        if p4_auto_payload:
+            print(f"P4_AUTO_HARDWARE_ACCEPTANCE: {p4_auto_payload.get('P4_AUTO_HARDWARE_ACCEPTANCE')}")
+        if simulation_payload or p3_payload or p4_auto_payload:
             print(f"COMBINED_OFFLINE_STATUS: {final_status}")
         print("NO_HARDWARE_ACTIONS_EXECUTED: true")
         print("HARDWARE_ACCEPTANCE: PENDING_HW")

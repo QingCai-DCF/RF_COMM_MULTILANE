@@ -126,7 +126,7 @@ module ir_axi_regs_new #(
       cfg_startup_us <= 16'd500;
       cfg_duty_window <= 32'd1000;
       cfg_duty_max_permille <= 16'd200;
-      cfg_stuck_high_limit_us <= 16'd20;
+      cfg_stuck_high_limit_us <= 16'd10;
       shutdown_reason_shadow <= 32'd0;
       commit_count <= 32'd0;
     end else begin

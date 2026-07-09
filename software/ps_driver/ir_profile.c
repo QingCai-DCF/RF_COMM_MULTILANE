@@ -15,5 +15,5 @@ const ir_profile_config_t IR_PROFILE_G1_LANE0_BASELINE = {
   .startup_us = 500u,
   .duty_window = 1000u,
   .duty_max_permille = 200u,
-  .stuck_high_limit_us = 20u,
+  .stuck_high_limit_us = 10u,
 };

@@ -30,8 +30,9 @@ Receiver startup wait must cover at least 500 us after shutdown exit or power-on
 
 ## TX Stuck-High Protection
 
-Txd continuous high must not approach or exceed 80 us. RTL must expose a
-stuck-high guard or a blocking TODO before hardware promotion.
+Txd continuous high must not approach or exceed 80 us. P4 smoke profiles use a
+10 us trip limit. RTL must expose a stuck-high guard or a blocking TODO before
+hardware promotion.
 
 ## Duty-Cycle / Pulse Width Guard
 

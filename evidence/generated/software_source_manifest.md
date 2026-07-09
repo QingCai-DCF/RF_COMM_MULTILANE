@@ -39,7 +39,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 | `software/legacy_ps_ps_loopback/src/main.c` | needs-hardware | `e1a2b40df48470a98e561069d5ab7db7f4b87103fcc45e16647a9998f764edf6` |
 | `software/ps_driver/ir_driver.c` | offline-safe | `83957e28cfab1de92bc2e2f61cb2bbe23d49486221c800433adb5cbd08269394` |
 | `software/ps_driver/ir_driver.h` | offline-safe | `c31a5e36a16365bb73703e8fcb3c41e8408d25a9492f3321ba558e37752dc1a6` |
-| `software/ps_driver/ir_profile.c` | offline-safe | `bba6da12848e1550d37e3bc155cd0cbbb6253fd82a955728eb6fcf0bcb2f0645` |
+| `software/ps_driver/ir_profile.c` | offline-safe | `dedfab500375d2b3c2a9f2919414e728abd6e53c939953974d508c88c59aa7c2` |
 | `software/ps_driver/ir_profile.h` | offline-safe | `a63679379e5a093546220b61fbcb901b376a93cfbc7566584779aab551dc0e96` |
 | `software/ps_driver/ir_regs.h` | offline-safe | `c963cb1486eeb7c26f4c41d6b799b6de16129c1088cec861ad1e00adbc2d8e83` |
 | `software/ps_driver/main_offline_stub.c` | offline-safe | `bdb157fd796cca485495a066d1cfa62356b95a22802b4749fbce751ccfc8861f` |

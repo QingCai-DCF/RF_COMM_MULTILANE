@@ -2,7 +2,7 @@
 module tfdu_lane_phy #(
   parameter int CLK_HZ = 64_000_000,
   parameter int TFDU_STARTUP_US = 500,
-  parameter int TX_STUCK_HIGH_LIMIT_US = 20,
+  parameter int TX_STUCK_HIGH_LIMIT_US = 10,
   parameter int DUTY_WINDOW_US = 1000,
   parameter int DUTY_MAX_PERMILLE = 200
 ) (

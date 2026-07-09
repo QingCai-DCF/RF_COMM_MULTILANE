@@ -1,0 +1,355 @@
+{
+  "P4_EVIDENCE_RECONCILIATION": "PASS_WITH_NOTES",
+  "P4_FINAL_JSON": "evidence/generated/p4_auto_hardware_acceptance_summary.json",
+  "P4_RESULT_PACKAGE": "p4_auto_acceptance_results_20260709_181930.zip",
+  "rows": [
+    {
+      "item": "P4_AUTO_HARDWARE_ACCEPTANCE",
+      "marker": "P4_AUTO_HARDWARE_ACCEPTANCE",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_hardware_acceptance_summary.md",
+          "status": "PASS",
+          "source": "evidence/generated/p4_auto_hardware_acceptance_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_hardware_acceptance_summary.json",
+          "status": "PASS",
+          "source": "evidence/generated/p4_auto_hardware_acceptance_summary.json"
+        }
+      ],
+      "normalized_status": "PASS_WITH_DIRECT_SUMMARY"
+    },
+    {
+      "item": "SAFE_IDLE_DIRECT_PROXY",
+      "marker": "SAFE_IDLE_DIRECT_PROXY",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/safe_idle_direct_proxy/readback.json",
+          "status": "PASS_OFFLINE_ILA_INSTRUMENTED",
+          "source": "evidence/hardware/p4_auto/safe_idle_direct_proxy/readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/safe_idle_direct_proxy/p4_auto_safe_idle_program_result.json",
+          "status": "UNKNOWN",
+          "source": "evidence/hardware/p4_auto/safe_idle_direct_proxy/p4_auto_safe_idle_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/safe_idle_direct_proxy/p4_auto_safe_idle_direct_proxy_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/hardware/p4_auto/safe_idle_direct_proxy/p4_auto_safe_idle_direct_proxy_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "TFDU_CONTROL_IDLE",
+      "marker": "TFDU_CONTROL_IDLE",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_tfdu_control_idle_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_tfdu_control_idle_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/tfdu_control_idle/p4_auto_tfdu_control_idle_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/tfdu_control_idle/p4_auto_tfdu_control_idle_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/tfdu_control_idle/p4_auto_tfdu_control_idle_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/hardware/p4_auto/tfdu_control_idle/p4_auto_tfdu_control_idle_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "RAW_PULSE_SMOKE_L0",
+      "marker": "RAW_PULSE_SMOKE_L0",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_raw_pulse_smoke_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_raw_pulse_smoke_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/raw_pulse_smoke/raw_pulse_smoke.json",
+          "status": "UNKNOWN",
+          "source": "evidence/hardware/p4_auto/raw_pulse_smoke/raw_pulse_smoke.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/raw_pulse_smoke/p4_auto_raw_pulse_smoke_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/raw_pulse_smoke/p4_auto_raw_pulse_smoke_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/ila/raw_pulse_smoke/raw_pulse_parse_result.json",
+          "status": "UNKNOWN",
+          "source": "evidence/hardware/p4_auto/ila/raw_pulse_smoke/raw_pulse_parse_result.json"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "RAW_LANE_MATRIX",
+      "marker": "RAW_LANE_MATRIX",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_raw_lane_matrix_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_raw_lane_matrix_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/raw_lane_matrix/p4_auto_raw_lane_matrix_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/raw_lane_matrix/p4_auto_raw_lane_matrix_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/ila/raw_lane_matrix/raw_lane_matrix_parse_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/ila/raw_lane_matrix/raw_lane_matrix_parse_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/raw_lane_matrix/ila_or_axi_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/raw_lane_matrix/ila_or_axi_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "LANE0_FRAME_CRC",
+      "marker": "LANE0_FRAME_CRC",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_lane0_frame_crc_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_lane0_frame_crc_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane0_frame_crc_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane0_frame_crc_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_frame_crc_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_frame_crc_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane0_frame_crc_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane0_frame_crc_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "LANE0_ACK_RETRY",
+      "marker": "LANE0_ACK_RETRY",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_lane0_ack_retry_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_lane0_ack_retry_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane0_ack_retry_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane0_ack_retry_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_ack_retry_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane0_ack_retry_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane0_ack_retry_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane0_ack_retry_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "LANE1_FRAME_CRC",
+      "marker": "LANE1_FRAME_CRC",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_lane1_frame_crc_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_lane1_frame_crc_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane1_frame_crc_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane1_frame_crc_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_frame_crc_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_frame_crc_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane1_frame_crc_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane1_frame_crc_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "LANE1_ACK_RETRY",
+      "marker": "LANE1_ACK_RETRY",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_lane1_ack_retry_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_lane1_ack_retry_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane1_ack_retry_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane1_ack_retry_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_ack_retry_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_lane1_ack_retry_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/lane1_ack_retry_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/lane1_ack_retry_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "TWO_LANE_MINIMAL",
+      "marker": "TWO_LANE_MINIMAL",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_two_lane_minimal_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_two_lane_minimal_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/two_lane_minimal_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/two_lane_minimal_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_two_lane_minimal_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/p4_auto_two_lane_minimal_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/protocol_smoke/two_lane_minimal_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/protocol_smoke/two_lane_minimal_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "LANE0_300S_SOAK",
+      "marker": "LANE0_300S_SOAK",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_lane0_300s_soak_summary.md",
+          "status": "BLOCKED_BY_AUTOMATION_GAP",
+          "source": "evidence/generated/p4_auto_lane0_300s_soak_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/soak/lane0_300s_soak_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/lane0_300s_soak_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/soak/p4_auto_lane0_300s_soak_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/p4_auto_lane0_300s_soak_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/soak/lane0_300s_soak_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/lane0_300s_soak_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_HARDWARE_SUBDIR_EVIDENCE_AND_STALE_GENERATED_SUMMARY"
+    },
+    {
+      "item": "TWO_LANE_300S_SOAK",
+      "marker": "TWO_LANE_300S_SOAK",
+      "final_json_status": "PASS",
+      "generated_statuses": [
+        {
+          "path": "evidence/generated/p4_auto_two_lane_300s_soak_summary.md",
+          "status": "PASS",
+          "source": "evidence/generated/p4_auto_two_lane_300s_soak_summary.md"
+        }
+      ],
+      "hardware_statuses": [
+        {
+          "path": "evidence/hardware/p4_auto/soak/two_lane_300s_soak_readback.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/two_lane_300s_soak_readback.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/soak/p4_auto_two_lane_300s_soak_program_result.json",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/p4_auto_two_lane_300s_soak_program_result.json"
+        },
+        {
+          "path": "evidence/hardware/p4_auto/soak/two_lane_300s_soak_summary.md",
+          "status": "PASS",
+          "source": "evidence/hardware/p4_auto/soak/two_lane_300s_soak_summary.md"
+        }
+      ],
+      "normalized_status": "PASS_WITH_DIRECT_SUMMARY"
+    }
+  ],
+  "note": "P4 had stale/generated summary inconsistencies; P5 uses normalized evidence and fresh P5 reruns.",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

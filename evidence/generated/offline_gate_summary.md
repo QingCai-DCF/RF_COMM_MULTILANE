@@ -37,7 +37,6 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - vivado_project_generation_dry_check
 - ip_packaging_dry_check
 - software_no_real_io_check
-- bootstrap_legacy_offline_gates
 - manifest_generation
 - evidence_consistency_check
 - git_cleanliness_report
@@ -147,11 +146,6 @@ SUMMARY: evidence/generated/ip_packaging_dry_check.md
 REASON: software real IO scan complete
 SUMMARY: evidence/generated/software_no_real_io_summary.md
 
-### bootstrap_legacy_offline_gates: PASS
-
-REASON: existing offline gates completed
-SUMMARY: evidence/generated/p1_bootstrap_legacy_gate_run.md
-
 ### manifest_generation: PASS
 
 REASON: manifests generated
@@ -199,3 +193,16 @@ SUMMARY: evidence/generated/p3_pre_hw_acceptance_package_summary.md
 ### P3 Skips
 
 - none
+
+## P4 Auto Hardware Acceptance Dry Run
+
+P4_AUTO_HARDWARE_ACCEPTANCE: PASS
+COMBINED_OFFLINE_STATUS: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+SUMMARY: evidence/generated/p4_auto_hardware_acceptance_summary.md
+
+### P4 Auto Boundary
+
+- Offline integration records P4_AUTO readiness evidence only.
+- Offline gates do not promote hardware acceptance to PASS.

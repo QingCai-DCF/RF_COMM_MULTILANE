@@ -1,0 +1,365 @@
+{
+  "P5_HARDWARE_STAGE_PLAN": "PASS_WITH_NOTES",
+  "rows": [
+    {
+      "order": 1,
+      "plan_item": "P5.8",
+      "stage": "safe_idle_recheck",
+      "marker": "SAFE_IDLE_RECHECK",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_safe_idle_recheck.json",
+      "profile_sha256": "a87424b9e52b088f20b756c5dd32ef7aaf6fc81cbc7399351e56bff56f34b657",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_safe_idle.bit",
+          "sha256": "6925b69eb0d43aa788cb3d2fe8a8ce543de93da0200183d737214b899c5d394b"
+        }
+      ],
+      "max_runtime_sec": 120,
+      "summary": "evidence/generated/p5_safe_idle_recheck_summary.md",
+      "evidence_dir": "evidence/hardware/p5/safe_idle_recheck",
+      "required_pass_markers": [
+        "SAFE_IDLE_RECHECK: PASS",
+        "TXD_STUCK_HIGH_VIOLATION: 0",
+        "DUTY_WINDOW_VIOLATION: 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 2,
+      "plan_item": "P5.8",
+      "stage": "tfdu_control_idle_recheck",
+      "marker": "TFDU_CONTROL_IDLE_RECHECK",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_tfdu_control_idle_recheck.json",
+      "profile_sha256": "56e8afc772759bb769315b99700d653bfa9d5525dd81a56f0acf7451e799a983",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit",
+          "sha256": "08f3bc790fb8da67c642c69f695e9bcd66b27a40030be971d2d7d9bb4cbbc442"
+        }
+      ],
+      "max_runtime_sec": 120,
+      "summary": "evidence/generated/p5_tfdu_control_idle_recheck_summary.md",
+      "evidence_dir": "evidence/hardware/p5/tfdu_control_idle_recheck",
+      "required_pass_markers": [
+        "TFDU_CONTROL_IDLE_RECHECK: PASS",
+        "MODE_PROXY_READBACK: high_speed",
+        "TXD_STUCK_HIGH_VIOLATION: 0",
+        "DUTY_WINDOW_VIOLATION: 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 3,
+      "plan_item": "P5.9",
+      "stage": "raw_lane_matrix_fresh",
+      "marker": "RAW_LANE_MATRIX_FRESH",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_raw_lane_matrix_fresh.json",
+      "profile_sha256": "af75a6b4b9822fea18a9164577abac970f52908f14178d83a4c59494f59f0620",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit",
+          "sha256": "84946ac4e0b160e45665a2a14c8d5c2e1c861d454c6f8805d3ee65e9228eb54a"
+        }
+      ],
+      "max_runtime_sec": 300,
+      "summary": "evidence/generated/p5_raw_lane_matrix_summary.md",
+      "evidence_dir": "evidence/hardware/p5/raw_lane_matrix",
+      "required_pass_markers": [
+        "AB_L0: PASS",
+        "BA_L0: PASS",
+        "AB_L1: PASS",
+        "BA_L1: PASS",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 4,
+      "plan_item": "P5.10",
+      "stage": "lane0_frame_crc_100",
+      "marker": "LANE0_FRAME_CRC_100",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_lane0_frame_crc_100.json",
+      "profile_sha256": "c23877ac72d1e7902a5eccd42d1810577b8be1114f1089003a1673d7190afc65",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane0.bit",
+          "sha256": "7d92c8b86b74c75bd349f04545a22681cd3269b4c4ade40ec1aa7c6db8e84dfe"
+        }
+      ],
+      "max_runtime_sec": 180,
+      "summary": "evidence/generated/p5_lane0_frame_crc_100_summary.md",
+      "evidence_dir": "evidence/hardware/p5/protocol/lane0_frame_crc_100",
+      "required_pass_markers": [
+        "SENT_FRAMES >= 100",
+        "RX_GOOD == SENT_FRAMES",
+        "CRC_BAD == 0",
+        "PAYLOAD_MISMATCH == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 5,
+      "plan_item": "P5.10",
+      "stage": "lane1_frame_crc_100",
+      "marker": "LANE1_FRAME_CRC_100",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_lane1_frame_crc_100.json",
+      "profile_sha256": "6ffd1a20431caca3405dcc81a59143b8d07f97dabcabdfaa71e975a4aae530b9",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane1.bit",
+          "sha256": "de7fae7325b107fe11c7f5e9e79c0ae83410984a7594eb7292c9c5652480af7d"
+        }
+      ],
+      "max_runtime_sec": 180,
+      "summary": "evidence/generated/p5_lane1_frame_crc_100_summary.md",
+      "evidence_dir": "evidence/hardware/p5/protocol/lane1_frame_crc_100",
+      "required_pass_markers": [
+        "SENT_FRAMES >= 100",
+        "RX_GOOD == SENT_FRAMES",
+        "CRC_BAD == 0",
+        "PAYLOAD_MISMATCH == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 6,
+      "plan_item": "P5.11",
+      "stage": "lane0_ack_retry_100",
+      "marker": "LANE0_ACK_RETRY_100",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_lane0_ack_retry_100.json",
+      "profile_sha256": "1a70862178dfcbf41aec53676c4ebe1f4f5e23b095a9eda84be5510b9ec54c74",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit",
+          "sha256": "e0e07d7f1d646ad8dd87b32efbeb24442daa6b74cd1f267a6ea8bb727d30c258"
+        }
+      ],
+      "max_runtime_sec": 240,
+      "summary": "evidence/generated/p5_lane0_ack_retry_100_summary.md",
+      "evidence_dir": "evidence/hardware/p5/protocol/lane0_ack_retry_100",
+      "required_pass_markers": [
+        "A_SENT_FRAMES >= 100",
+        "B_RX_GOOD == A_SENT_FRAMES",
+        "A_ACK_SEEN == A_SENT_FRAMES",
+        "TX_RETRY_EXHAUSTED == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 7,
+      "plan_item": "P5.11",
+      "stage": "lane1_ack_retry_100",
+      "marker": "LANE1_ACK_RETRY_100",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_lane1_ack_retry_100.json",
+      "profile_sha256": "d1c19f9fda5da22c04e4335a40f9ee9ee84d7059026673e99995f2f123295284",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit",
+          "sha256": "b072db80e4c88b36e9f2d326d6d5c2027357763a1cd47ffafaaa147572996f9f"
+        }
+      ],
+      "max_runtime_sec": 240,
+      "summary": "evidence/generated/p5_lane1_ack_retry_100_summary.md",
+      "evidence_dir": "evidence/hardware/p5/protocol/lane1_ack_retry_100",
+      "required_pass_markers": [
+        "A_SENT_FRAMES >= 100",
+        "B_RX_GOOD == A_SENT_FRAMES",
+        "A_ACK_SEEN == A_SENT_FRAMES",
+        "TX_RETRY_EXHAUSTED == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 8,
+      "plan_item": "P5.12",
+      "stage": "two_lane_minimal_100",
+      "marker": "TWO_LANE_MINIMAL_100",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_two_lane_minimal_100.json",
+      "profile_sha256": "7b2d8b7b41e7eb54e07645cd078efcd5be734c4f0dddce2188b5ffd9ccfcbac9",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit",
+          "sha256": "bed545a125e77116788eb9fd665f69dc3f02775b09eb8e9400f4fd06c492d608"
+        }
+      ],
+      "max_runtime_sec": 300,
+      "summary": "evidence/generated/p5_two_lane_minimal_100_summary.md",
+      "evidence_dir": "evidence/hardware/p5/protocol/two_lane_minimal_100",
+      "required_pass_markers": [
+        "LANE0_RX_GOOD >= 100",
+        "LANE1_RX_GOOD >= 100",
+        "TX_RETRY_EXHAUSTED == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 9,
+      "plan_item": "P5.13",
+      "stage": "payload_sweep",
+      "marker": "PAYLOAD_SWEEP",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_two_lane_payload_sweep.json",
+      "profile_sha256": "44adfcd416884497bc4ad7bdd92903e3723f954b487688987e2dfb855015dfcb",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit",
+          "sha256": "e0e07d7f1d646ad8dd87b32efbeb24442daa6b74cd1f267a6ea8bb727d30c258"
+        },
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit",
+          "sha256": "b072db80e4c88b36e9f2d326d6d5c2027357763a1cd47ffafaaa147572996f9f"
+        },
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit",
+          "sha256": "bed545a125e77116788eb9fd665f69dc3f02775b09eb8e9400f4fd06c492d608"
+        }
+      ],
+      "max_runtime_sec": 1200,
+      "summary": "evidence/generated/p5_payload_sweep_summary.md",
+      "evidence_dir": "evidence/hardware/p5/payload_sweep",
+      "required_pass_markers": [
+        "PAYLOAD_SWEEP: PASS or PASS_WITH_UNSUPPORTED_CASES_DOCUMENTED",
+        "CRC_BAD == 0",
+        "PAYLOAD_MISMATCH == 0",
+        "TX_RETRY_EXHAUSTED == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 10,
+      "plan_item": "P5.14",
+      "stage": "mask_regression",
+      "marker": "MASK_REGRESSION",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_two_lane_mask_regression.json",
+      "profile_sha256": "1a7c18d8584a066d2bad4a31782f7d1c22ffca127b2f344b1268f4cfee8c375b",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit",
+          "sha256": "bed545a125e77116788eb9fd665f69dc3f02775b09eb8e9400f4fd06c492d608"
+        }
+      ],
+      "max_runtime_sec": 300,
+      "summary": "evidence/generated/p5_mask_regression_summary.md",
+      "evidence_dir": "evidence/hardware/p5/mask_regression",
+      "required_pass_markers": [
+        "positive cases PASS",
+        "negative cases REJECTED_AS_EXPECTED or FAIL_SAFE_AS_EXPECTED",
+        "no infinite retry",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 11,
+      "plan_item": "P5.15",
+      "stage": "retry_fault_injection_hw_optional",
+      "marker": "RETRY_FAULT_INJECTION_HW_OPTIONAL",
+      "status": "SKIP_NO_HW_FAULT_INJECTION_HOOK",
+      "profile": "profiles/p5/p5_retry_fault_injection_hw_optional.json",
+      "profile_sha256": "545e0747dda3cff80c76bbc44a39c991eeb67c428d7ae16017b59d56cb75ceb8",
+      "bitstreams": [],
+      "max_runtime_sec": 300,
+      "summary": "evidence/generated/p5_retry_fault_injection_summary.md",
+      "evidence_dir": "evidence/hardware/p5/retry_fault_injection_optional",
+      "required_pass_markers": [
+        "RETRY_FAULT_INJECTION_HW_OPTIONAL: PASS or SKIP_NO_HW_FAULT_INJECTION_HOOK",
+        "SHUTDOWN_ON_EXIT: PASS when hardware hook is used"
+      ],
+      "stop_on_fail": false,
+      "missing_artifacts": []
+    },
+    {
+      "order": 12,
+      "plan_item": "P5.16",
+      "stage": "two_lane_30min_soak",
+      "marker": "TWO_LANE_30MIN_SOAK",
+      "status": "READY_FOR_AUTHORIZATION",
+      "profile": "profiles/p5/p5_two_lane_30min_soak.json",
+      "profile_sha256": "7b5d43e392ed0532592823041a46d6741f83c261221b541e2bf0a5c203a07f51",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit",
+          "sha256": "32de20cf3c054f0e7ba909085e4f81c97f3bc74bac545b747583b8a0d33f2372"
+        }
+      ],
+      "max_runtime_sec": 1860,
+      "summary": "evidence/generated/p5_two_lane_30min_soak_summary.md",
+      "evidence_dir": "evidence/hardware/p5/soak/two_lane_30min",
+      "required_pass_markers": [
+        "TWO_LANE_30MIN_SOAK: PASS",
+        "runtime_sec >= 1800 or documented bounded runtime",
+        "TX_RETRY_EXHAUSTED == 0",
+        "CRC_BAD == 0",
+        "PAYLOAD_MISMATCH == 0",
+        "SHUTDOWN_ON_EXIT: PASS"
+      ],
+      "stop_on_fail": true,
+      "missing_artifacts": []
+    },
+    {
+      "order": 13,
+      "plan_item": "P5.16 optional",
+      "stage": "two_lane_2h_soak_optional",
+      "marker": "TWO_LANE_2H_SOAK_OPTIONAL",
+      "status": "NOT_RUN_OPTIONAL",
+      "profile": "profiles/p5/p5_two_lane_2h_soak_optional.json",
+      "profile_sha256": "e606e0fbfdc85f992eaa29e877df155572032b28144e1ef8e2243e54d5023a87",
+      "bitstreams": [
+        {
+          "path": "evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit",
+          "sha256": "32de20cf3c054f0e7ba909085e4f81c97f3bc74bac545b747583b8a0d33f2372"
+        }
+      ],
+      "max_runtime_sec": 7260,
+      "summary": "evidence/generated/p5_two_lane_2h_soak_optional_summary.md",
+      "evidence_dir": "evidence/hardware/p5/soak/two_lane_2h_optional",
+      "required_pass_markers": [
+        "TWO_LANE_2H_SOAK_OPTIONAL: PASS or NOT_RUN_OPTIONAL",
+        "run only after TWO_LANE_30MIN_SOAK: PASS"
+      ],
+      "stop_on_fail": false,
+      "missing_artifacts": []
+    }
+  ],
+  "required_missing_count": 0,
+  "optional_note_count": 2,
+  "active_hashes": {
+    "constraint_file": "cff1a17ee77bbaf90080cf4f97e5920e961aefae3b6752f080e35fcf4d4b1f11",
+    "active_profile": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1",
+    "pinmap": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "active_xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "register_map": "4006851bdfaedea14d10cea9e7b4c2a39310bc7e7228bed911cf642521cb03a9",
+    "tfdu_safety_contract": "ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae",
+    "tfdu_safety_summary": "0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f",
+    "shutdown_bitstream": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+  },
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

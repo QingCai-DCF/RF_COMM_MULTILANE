@@ -5,12 +5,13 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 
 | Path | Class | Modules | SHA256 |
 | --- | --- | --- | --- |
+| `rtl/debug/tfdu_debug_probe.sv` | active | `tfdu_debug_probe` | `fa4ac863ce801b1e25257cbfaf5cdf6cc6a51199435d5d7f9944051251eee842` |
 | `rtl/ir_4ppm_codec.sv` | active | `ir_4ppm_codec` | `afd1289872a6186eed3f0ec8a605e56f11a7fcd18dda9343a3fcd615962ed64e` |
 | `rtl/ir_arq_l2.sv` | active | `ir_arq_l2` | `521e45ec65cfcb7dcd5ccda79e7c772f9eddedf70e670822ab62421a58925362` |
-| `rtl/ir_axi_regs_new.sv` | active | `ir_axi_regs_new` | `072e6af8504600718d782a6c83cbd2b6005f2471d93acf7891427ca23c80bfdd` |
+| `rtl/ir_axi_regs_new.sv` | active | `ir_axi_regs_new` | `5eb6bfb40d94ec871cb84efa5722e9f54f717da469b5228561c62929d84a64cd` |
 | `rtl/ir_frame_l1.sv` | active | `ir_frame_l1` | `9036a235528a33a3f743f21bf4679fd876368d914345f55ffe91fcef075eddee` |
 | `rtl/ir_multilane_scheduler.sv` | active | `ir_multilane_scheduler` | `b6258509bfc63a46e562dfba75e693453954de4bad242a888db0979104497f0f` |
-| `rtl/ir_top_new.sv` | active | `ir_top_new` | `3b55db68038cc0cdb78bf4eefb747a1add8922b458937ddba58803aab0bcdac4` |
+| `rtl/ir_top_new.sv` | active | `ir_top_new` | `43f6950f98d0a67adf05dadbc1fb5ef8018e9a40020c5134f921f7f835d10aac` |
 | `rtl/legacy_reference/cdc_sync.sv` | reference | `cdc_sync` | `dcefc32052d455625cbf4309ea9e328afaf0f5fee117a21f81d1393ee1c3c7a1` |
 | `rtl/legacy_reference/crc32_gen.sv` | reference | `crc32_gen` | `c2f685b273615480aedaa4e13de552e1d220385cdb8f10aa96c90dbd76acb7da` |
 | `rtl/legacy_reference/ir_array_rx_mgr.sv` | reference | `ir_array_rx_mgr` | `52d687aebf4fb1cac1e147f1548fb84a6fd5461ea85d0dac52593aa712f20e00` |
@@ -31,8 +32,8 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 | `rtl/legacy_reference/ir_tx_4ppm_frame.sv` | reference | `ir_tx_4ppm_frame` | `02c16a7b645d7e563d6eae96a217ebeef428a19ee194d44590bc443c236839c6` |
 | `rtl/legacy_reference/ir_txonly_ack_axi.sv` | reference | `ir_txonly_ack_axi` | `5edb1dd92c8513a03d2879b88c296ac96067a87b1385f5611c234eb17f1a0413` |
 | `rtl/tfdu/tfdu_lane_phy.sv` | active | `tfdu_lane_phy_p2` | `4919dd03c759812a38540abb9744652386650c4720cb4d06eea719bd939b08fe` |
-| `rtl/tfdu_lane_phy.sv` | active | `tfdu_lane_phy` | `706145b216e3b1f09da066d7adb74c37b32f228383d01a5fecebc5ec99e7d2a0` |
-| `rtl/tfdu_lane_phy_pkg.sv` | active | `` | `ad455021c4cdcc03d81a34e516352a1b18afe832b95c1e1438d9a2ae81688673` |
+| `rtl/tfdu_lane_phy.sv` | active | `tfdu_lane_phy` | `2f515a22fedc5abdf3f58bbdaa6df8baee8a2f919747a3622ece0a63009e920a` |
+| `rtl/tfdu_lane_phy_pkg.sv` | active | `` | `b1217097b9483d580f118e735a92b1f59460f839724120e5d4144d65764c0719` |
 | `sim/models/tfdu6102_behavior_model.sv` | active | `tfdu6102_behavior_model` | `efb89e07afa7c4e2c43d128862d8f5bf47a1b18194756c03c9081259d2d44c42` |
 | `sim/tb/tb_ir_4ppm_pulse_smoke.sv` | testbench | `tb_ir_4ppm_pulse_smoke` | `3280a26adcf43a47199c54aa127138814b4cb91e27e7e01ef57c6afda2c968ec` |
 | `sim/tb/tb_ir_axi_regs_new.sv` | testbench | `tb_ir_axi_regs_new` | `ee24c9523eb6e70407e6cb0f1b11e61327e15005e43ca44e8ebbe0eb6a3b9a6a` |

@@ -1,100 +1,271 @@
 P1_GIT_PRECHECK=1
 repo=C:/Users/user/Documents/RF_COMM_MULTILANE
 branch=main
-head=c3abf1171228f52f400e6e4a3233472e1dad90bf
-last=c3abf11 test: add P2 simulation baseline
+head=4768ef76c1d9bc6042d4058f52eef5fc0da5ca01
+last=4768ef7 docs: prepare P3 pre-hardware acceptance package
 dirty_status=dirty
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
-M AGENTS.md
- M PROJECT_STATUS.md
- M docs/HARDWARE_ACCEPTANCE_CHECKLIST.md
+M PROJECT_STATUS.md
+ M README.md
  M docs/PROJECT_STATUS.md
- M evidence/authorization/README.md
+ M docs/TFDU6102_SAFETY_SUMMARY.md
+ M docs/tfdu6102_safety_contract.md
  M evidence/generated/git_cleanliness_report.md
  M evidence/generated/ir_4ppm_pulse_smoke_summary.md
+ M evidence/generated/m4_ps_driver_trace.json
+ M evidence/generated/m4_ps_driver_trace.md
  M evidence/generated/no_hardware_action_static_scan.md
  M evidence/generated/offline_gate_summary.json
  M evidence/generated/offline_gate_summary.md
  M evidence/generated/p1_evidence_review_for_p2.md
  M evidence/generated/p1_git_precheck.txt
  M evidence/generated/p1_offline_hardening_summary.json
+ M evidence/generated/p1_offline_hardening_summary.md
  M evidence/generated/p2_repo_intake.md
  M evidence/generated/p2_simulation_baseline_summary.md
+ M evidence/generated/p3_authorization_gate_summary.md
+ M evidence/generated/p3_bitstream_build_audit_summary.md
+ M evidence/generated/p3_constraint_freeze_summary.md
+ M evidence/generated/p3_evidence_schema_summary.md
+ M evidence/generated/p3_hardware_script_dry_run_summary.md
+ M evidence/generated/p3_no_hardware_static_scan.md
+ M evidence/generated/p3_pre_hw_acceptance_package_summary.md
+ M evidence/generated/p3_recheck_p1_p2_summary.md
+ M evidence/generated/p3_repo_intake.md
+ M evidence/generated/p3_runbook_summary.md
+ M evidence/generated/profile_check_summary.md
  M evidence/generated/project_status_update_summary.md
  M evidence/generated/required_docs_manifest.md
+ M evidence/generated/rtl_source_manifest.json
+ M evidence/generated/rtl_source_manifest.md
  M evidence/generated/simulation_gate_summary.md
  M evidence/generated/simulator_detection_summary.md
+ M evidence/generated/software_source_manifest.md
  M evidence/generated/tfdu6102_behavior_model_summary.md
  M evidence/generated/tfdu6102_reference_model_summary.md
  M evidence/generated/tfdu_lane_phy_sim_summary.md
  M evidence/generated/tools_manifest.md
+ M evidence/generated/vivado/nonhardware_build_markers.txt
  M evidence/generated/vivado/nonhardware_build_summary.json
  M evidence/generated/vivado/nonhardware_build_summary.md
  M evidence/generated/vivado/post_route_drc.rpt
  M evidence/generated/vivado/post_route_timing_summary.rpt
  M evidence/generated/vivado/post_route_utilization.rpt
  M evidence/generated/vivado/post_synth_drc.rpt
+ M evidence/generated/vivado_script_audit.md
+ M evidence/generated/wrapper_xdc_consistency_summary.md
  M evidence/generated/xdc_inventory.md
- M evidence/hardware/PENDING_HW.md
- M evidence/hardware/raw_lane_matrix/README.md
- M evidence/hardware/scope_captures/README.md
- M evidence/hardware/shutdown_logs/README.md
- M evidence/hardware/vcc_measurements/README.md
  M evidence/simulation/sim_results.json
+ M rtl/ir_axi_regs_new.sv
+ M rtl/ir_top_new.sv
+ M rtl/tfdu_lane_phy.sv
+ M rtl/tfdu_lane_phy_pkg.sv
+ M scripts/check_m4_static.py
+ M scripts/check_m5_static.py
+ M scripts/generate_m4_ps_driver_trace.py
  M scripts/hw/program_tfdu_shutdown_safe.ps1
  M scripts/hw/run_g1_lane0_replay_safe.ps1
  M scripts/hw/run_lane0_raw_matrix_safe.ps1
+ M scripts/legacy_safe_tools/build_tfdu_shutdown.tcl
+ M scripts/legacy_safe_tools/program_tfdu_shutdown.tcl
+ M scripts/legacy_safe_tools/tfdu_shutdown_j10_j11.xdc
+ M scripts/legacy_safe_tools/tfdu_shutdown_top.v
+ M scripts/run_vivado_nonhardware_build.py
+ M scripts/vivado_nonhardware_build.tcl
+ M software/ps_driver/ir_profile.c
  M tools/p1_lib.py
- M tools/run_offline_gate.ps1
+ M tools/p3_pre_hw_lib.py
  M tools/run_offline_gate.py
+ M tools/run_simulation_gate.py
  M tools/summarize_gate.py
-?? docs/ACTIVE_CONSTRAINT_FREEZE.md
-?? docs/BITSTREAM_CANDIDATE_POLICY.md
-?? docs/HARDWARE_ACCEPTANCE_RUNBOOK.md
-?? docs/HARDWARE_AUTHORIZATION_MODEL.md
-?? docs/HOST_RUNTIME_PRE_HW_CONTRACT.md
-?? docs/P3_PRE_HW_ACCEPTANCE_PACKAGE.md
-?? docs/P4_HARDWARE_ACCEPTANCE_PLAN.md
-?? docs/PS_RUNTIME_PRE_HW_CONTRACT.md
-?? docs/RAW_LANE_MATRIX_RUNBOOK.md
-?? docs/RAW_PHY_SMOKE_RUNBOOK.md
-?? docs/TFDU6102_ELECTRICAL_CHECKLIST.md
-?? docs/TFDU6102_SCOPE_PROBE_PLAN.md
-?? docs/TFDU6102_SHUTDOWN_REQUIREMENTS.md
-?? docs/TFDU6102_STOP_CONDITIONS.md
-?? evidence/authorization/hardware_acceptance_authorized.md.template
-?? evidence/generated/p3_authorization_gate_summary.md
-?? evidence/generated/p3_bitstream_build_audit_summary.md
-?? evidence/generated/p3_constraint_freeze_summary.md
-?? evidence/generated/p3_evidence_schema_summary.md
-?? evidence/generated/p3_hardware_script_dry_run_summary.md
-?? evidence/generated/p3_no_hardware_static_scan.md
-?? evidence/generated/p3_pre_hw_acceptance_package_summary.md
-?? evidence/generated/p3_recheck_p1_p2_summary.md
-?? evidence/generated/p3_repo_intake.md
-?? evidence/generated/p3_runbook_summary.md
-?? evidence/hardware/README.md
-?? evidence/hardware/evidence_schema.json
-?? evidence/hardware/failures/
-?? evidence/hardware/ila_captures/
-?? evidence/hardware/logic_analyzer/
-?? evidence/hardware/photos/
-?? evidence/hardware/raw_lane_matrix/raw_lane_matrix_evidence.template.json
-?? evidence/hardware/raw_phy_smoke/
-?? evidence/hardware/scope_captures/scope_captures_evidence.template.json
-?? evidence/hardware/shutdown_logs/shutdown_logs_evidence.template.json
-?? evidence/hardware/vcc_measurements/vcc_measurements_evidence.template.json
-?? tools/check_hardware_authorization.py
-?? tools/check_hardware_scripts_default_dry_run.py
-?? tools/generate_constraint_freeze.py
-?? tools/generate_hardware_evidence_templates.py
-?? tools/hw_collect_evidence.py
-?? tools/hw_preflight.py
-?? tools/hw_raw_lane_matrix.py
-?? tools/hw_raw_phy_smoke.py
-?? tools/hw_shutdown.py
-?? tools/p3_pre_hw_lib.py
-?? tools/run_pre_hw_acceptance_package_gate.ps1
-?? tools/run_pre_hw_acceptance_package_gate.py
+?? .hardware_authorization/
+?? dist/
+?? evidence/generated/p4_authorization_gate_summary.md
+?? evidence/generated/p4_auto_authorization_summary.md
+?? evidence/generated/p4_auto_authorized_bitstream_preflight.md
+?? evidence/generated/p4_auto_authorized_run_package.md
+?? evidence/generated/p4_auto_bitstream_provenance_summary.md
+?? evidence/generated/p4_auto_hardware_acceptance_summary.json
+?? evidence/generated/p4_auto_hardware_acceptance_summary.md
+?? evidence/generated/p4_auto_lane0_300s_soak_summary.md
+?? evidence/generated/p4_auto_lane0_ack_retry_summary.md
+?? evidence/generated/p4_auto_lane0_frame_crc_summary.md
+?? evidence/generated/p4_auto_lane1_ack_retry_summary.md
+?? evidence/generated/p4_auto_lane1_frame_crc_summary.md
+?? evidence/generated/p4_auto_previous_p4_intake.md
+?? evidence/generated/p4_auto_profiles_summary.md
+?? evidence/generated/p4_auto_raw_lane_matrix_summary.md
+?? evidence/generated/p4_auto_raw_pulse_smoke_summary.md
+?? evidence/generated/p4_auto_recheck_p1_p2_p3_summary.md
+?? evidence/generated/p4_auto_repo_intake.md
+?? evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md
+?? evidence/generated/p4_auto_shutdown_summary.md
+?? evidence/generated/p4_auto_tfdu_control_idle_authorized_run_package.md
+?? evidence/generated/p4_auto_tfdu_control_idle_summary.md
+?? evidence/generated/p4_auto_two_lane_300s_soak_summary.md
+?? evidence/generated/p4_auto_two_lane_minimal_summary.md
+?? evidence/generated/p4_hardware_acceptance_gate_summary.md
+?? evidence/generated/p4_hardware_acceptance_summary.json
+?? evidence/generated/p4_hardware_acceptance_summary.md
+?? evidence/generated/p4_no_hardware_or_authorized_hardware_scan.md
+?? evidence/generated/p4_recheck_p1_p2_p3_summary.md
+?? evidence/generated/p4_repo_intake.md
+?? evidence/generated/p4_safe_idle_profile_audit.md
+?? evidence/generated/p5_2lane_protocol_stabilization_summary.json
+?? evidence/generated/p5_2lane_protocol_stabilization_summary.md
+?? evidence/generated/p5_2lane_scope_summary.md
+?? evidence/generated/p5_current_head.txt
+?? evidence/generated/p5_evidence_consistency_summary.md
+?? evidence/generated/p5_git_status_before.txt
+?? evidence/generated/p5_lane0_ack_retry_100_summary.md
+?? evidence/generated/p5_lane0_frame_crc_100_summary.md
+?? evidence/generated/p5_lane1_ack_retry_100_summary.md
+?? evidence/generated/p5_lane1_frame_crc_100_summary.md
+?? evidence/generated/p5_mask_regression_summary.md
+?? evidence/generated/p5_no_ethernet_hardware_tests_summary.md
+?? evidence/generated/p5_no_motion_tests_summary.md
+?? evidence/generated/p5_p4_evidence_reconciliation.json
+?? evidence/generated/p5_p4_evidence_reconciliation.md
+?? evidence/generated/p5_payload_sweep_summary.md
+?? evidence/generated/p5_profiles_summary.md
+?? evidence/generated/p5_project_status_update_summary.md
+?? evidence/generated/p5_protocol_metrics.csv
+?? evidence/generated/p5_protocol_metrics_summary.json
+?? evidence/generated/p5_protocol_metrics_summary.md
+?? evidence/generated/p5_raw_lane_matrix_summary.md
+?? evidence/generated/p5_repo_intake.md
+?? evidence/generated/p5_retry_fault_injection_summary.md
+?? evidence/generated/p5_safe_idle_recheck_summary.md
+?? evidence/generated/p5_tfdu_control_idle_recheck_summary.md
+?? evidence/generated/p5_two_lane_2h_soak_optional_summary.md
+?? evidence/generated/p5_two_lane_30min_soak_summary.md
+?? evidence/generated/p5_two_lane_minimal_100_summary.md
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_ack.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_soak.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1_ack.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_minimal.txt
+?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_soak.txt
+?? evidence/generated/vivado/nonhardware_build_markers_raw_lane_matrix.txt
+?? evidence/generated/vivado/nonhardware_build_markers_raw_pulse.txt
+?? evidence/generated/vivado/nonhardware_build_markers_safe_idle.txt
+?? evidence/generated/vivado/nonhardware_build_markers_tfdu_control_idle.txt
+?? evidence/generated/vivado/p4_auto_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_lane0_ack_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_lane0_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_lane0_soak_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_lane1_ack_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_lane1_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_two_lane_minimal_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_protocol_two_lane_soak_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_raw_lane_matrix_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_raw_pulse_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_safe_idle_debug_instrumentation.txt
+?? evidence/generated/vivado/p4_auto_tfdu_control_idle_debug_instrumentation.txt
+?? evidence/generated/vivado/post_route_drc_protocol_lane0.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_lane0_ack.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_lane0_soak.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_lane1.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_lane1_ack.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_two_lane_minimal.rpt
+?? evidence/generated/vivado/post_route_drc_protocol_two_lane_soak.rpt
+?? evidence/generated/vivado/post_route_drc_raw_lane_matrix.rpt
+?? evidence/generated/vivado/post_route_drc_raw_pulse.rpt
+?? evidence/generated/vivado/post_route_drc_safe_idle.rpt
+?? evidence/generated/vivado/post_route_drc_tfdu_control_idle.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_ack.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_soak.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1_ack.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_minimal.rpt
+?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_soak.rpt
+?? evidence/generated/vivado/post_route_timing_summary_raw_lane_matrix.rpt
+?? evidence/generated/vivado/post_route_timing_summary_raw_pulse.rpt
+?? evidence/generated/vivado/post_route_timing_summary_safe_idle.rpt
+?? evidence/generated/vivado/post_route_timing_summary_tfdu_control_idle.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_lane0.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_lane0_ack.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_lane0_soak.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_lane1.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_lane1_ack.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_minimal.rpt
+?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_soak.rpt
+?? evidence/generated/vivado/post_route_utilization_raw_lane_matrix.rpt
+?? evidence/generated/vivado/post_route_utilization_raw_pulse.rpt
+?? evidence/generated/vivado/post_route_utilization_safe_idle.rpt
+?? evidence/generated/vivado/post_route_utilization_tfdu_control_idle.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_lane0.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_lane0_ack.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_lane0_soak.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_lane1.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_lane1_ack.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_minimal.rpt
+?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_soak.rpt
+?? evidence/generated/vivado/post_synth_drc_raw_lane_matrix.rpt
+?? evidence/generated/vivado/post_synth_drc_raw_pulse.rpt
+?? evidence/generated/vivado/post_synth_drc_safe_idle.rpt
+?? evidence/generated/vivado/post_synth_drc_tfdu_control_idle.rpt
+?? evidence/generated/vivado/project_protocol_lane0/
+?? evidence/generated/vivado/project_protocol_lane0_ack/
+?? evidence/generated/vivado/project_protocol_lane0_soak/
+?? evidence/generated/vivado/project_protocol_lane1/
+?? evidence/generated/vivado/project_protocol_lane1_ack/
+?? evidence/generated/vivado/project_protocol_two_lane_minimal/
+?? evidence/generated/vivado/project_protocol_two_lane_soak/
+?? evidence/generated/vivado/project_raw_lane_matrix/
+?? evidence/generated/vivado/project_raw_pulse/
+?? evidence/generated/vivado/project_safe_idle/
+?? evidence/generated/vivado/project_tfdu_control_idle/
+?? evidence/hardware/p4/
+?? evidence/hardware/p4_auto/
+?? evidence/hardware/p5/
+?? evidence/simulation/p5/
+?? profiles/p4_auto_lane0_300s_soak.json
+?? profiles/p4_auto_lane0_ack_retry.json
+?? profiles/p4_auto_lane0_frame_crc.json
+?? profiles/p4_auto_lane1_ack_retry.json
+?? profiles/p4_auto_lane1_frame_crc.json
+?? profiles/p4_auto_raw_lane_matrix.json
+?? profiles/p4_auto_raw_pulse_l0.json
+?? profiles/p4_auto_safe_idle_proxy.json
+?? profiles/p4_auto_tfdu_control_idle.json
+?? profiles/p4_auto_two_lane_300s_soak.json
+?? profiles/p4_auto_two_lane_minimal.json
+?? profiles/p4_lane0_safe_smoke.json
+?? profiles/p4_lane_matrix_safe_smoke.json
+?? profiles/p4_safe_idle.json
+?? profiles/p5/
+?? rtl/debug/
+?? tools/analyze_p5_protocol_metrics.py
+?? tools/check_2lane_scope.py
+?? tools/check_no_ethernet_hardware_tests.py
+?? tools/check_no_motion_tests.py
+?? tools/check_p5_evidence_consistency.py
+?? tools/p4_auto_authorization.py
+?? tools/p4_auto_bitstream_provenance.py
+?? tools/p4_auto_debug_readback.py
+?? tools/p4_auto_lib.py
+?? tools/p4_auto_parse_ila.py
+?? tools/p4_auto_profiles.py
+?? tools/p4_counter_capture.py
+?? tools/p4_hw_authorization.py
+?? tools/p4_hw_evidence.py
+?? tools/p4_hw_execution.py
+?? tools/p4_hw_profiles.py
+?? tools/p4_lane_matrix.py
+?? tools/p4_safe_idle_audit.py
+?? tools/p4_shutdown.py
+?? tools/p5_lib.py
+?? tools/reconcile_p4_auto_evidence.py
+?? tools/run_p4_auto_hardware_acceptance.ps1
+?? tools/run_p4_auto_hardware_acceptance.py
+?? tools/run_p4_hardware_acceptance.ps1
+?? tools/run_p4_hardware_acceptance.py
+?? tools/run_p5_2lane_protocol_stabilization.ps1
+?? tools/run_p5_2lane_protocol_stabilization.py
+?? tools/run_p5_gate.ps1
+?? tools/run_p5_gate.py

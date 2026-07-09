@@ -1,0 +1,21 @@
+{
+  "P5_PROTOCOL_METRICS": "PASS_WITH_NOTES",
+  "reason": "P5 protocol metrics extracted from P5 hardware evidence",
+  "totals": {
+    "frames_sent": 2300,
+    "frames_rx_good": 4000,
+    "ack_seen": 4000,
+    "crc_bad": 0,
+    "payload_mismatch": 0,
+    "retry_count": 0,
+    "retry_exhausted": 0,
+    "tx_fail": 0,
+    "txd_high_total_cycles": 193664,
+    "txd_high_consecutive_max_cycles": 48,
+    "duty_violation_count": 0
+  },
+  "row_count": 9,
+  "csv": "evidence/generated/p5_protocol_metrics.csv",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

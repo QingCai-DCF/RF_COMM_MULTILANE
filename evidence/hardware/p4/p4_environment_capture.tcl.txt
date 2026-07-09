@@ -1,0 +1,59 @@
+set out_file {C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p4/p4_jtag_targets.txt}
+set fh [open $out_file "w"]
+proc log_line {line} {
+  global fh
+  puts $line
+  puts $fh $line
+  flush $fh
+}
+log_line "P4_ENVIRONMENT_CAPTURE_BEGIN [clock format [clock seconds] -format %Y-%m-%dT%H:%M:%S%z]"
+set rc [catch {
+  open_hw_manager
+  connect_hw_server -url {localhost:3121}
+  set targets [get_hw_targets -quiet *]
+  log_line "HW_TARGET_COUNT=[llength $targets]"
+  if {[llength $targets] == 0} {
+    error "No JTAG hw_target found."
+  }
+  foreach target $targets {
+    log_line "HW_TARGET=$target"
+    if {[catch {current_hw_target $target} target_err]} {
+      log_line "CURRENT_HW_TARGET_ERROR=$target_err"
+      continue
+    }
+    if {[catch {set_property PARAM.FREQUENCY 1000000 $target} freq_err]} {
+      log_line "HW_JTAG_FREQUENCY_WARN=$freq_err"
+    } else {
+      log_line "HW_JTAG_FREQUENCY_HZ=1000000"
+    }
+    if {[catch {open_hw_target $target} open_err]} {
+      log_line "OPEN_HW_TARGET_ERROR=$open_err"
+      continue
+    }
+    set devices [get_hw_devices -quiet *]
+    log_line "HW_DEVICE_COUNT=[llength $devices]"
+    foreach dev $devices {
+      current_hw_device $dev
+      log_line "HW_DEVICE=$dev"
+      foreach prop {NAME PART IDCODE IS_PROGRAMMED PROGRAM.FILE} {
+        if {[catch {set value [get_property $prop $dev]} prop_err]} {
+          log_line "HW_DEVICE_PROP $dev $prop ERROR=$prop_err"
+        } else {
+          log_line "HW_DEVICE_PROP $dev $prop=$value"
+        }
+      }
+    }
+    catch {close_hw_target $target}
+  }
+  catch {disconnect_hw_server}
+  catch {close_hw_manager}
+} err opts]
+if {$rc != 0} {
+  log_line "P4_ENVIRONMENT_CAPTURE=FAIL"
+  log_line "P4_ENVIRONMENT_CAPTURE_ERROR=$err"
+  close $fh
+  exit 11
+}
+log_line "P4_ENVIRONMENT_CAPTURE=PASS"
+close $fh
+exit 0

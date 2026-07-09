@@ -1,0 +1,31 @@
+{
+  "P5_FAILURE_PACKAGE": "GENERATED",
+  "failure_stage": "RAW_LANE_MATRIX_FRESH",
+  "failure_class": "RAW_LANE_MATRIX_DIRECTION_FAILURE",
+  "failing_directions": [
+    {
+      "direction": "BA_L1",
+      "lane": 1,
+      "source_endpoint": "B",
+      "destination_endpoint": "A",
+      "tx_requested_count": 64,
+      "tx_observed_count": 44,
+      "rx_active_low_pulse_count": 44,
+      "rx_falling_edge_count": 44,
+      "txd_high_max_cycles": 8,
+      "txd_high_total_cycles": 352,
+      "status": "FAIL_WITH_EVIDENCE",
+      "checks": {
+        "tx_requested_count": false,
+        "rx_counter_available": true,
+        "txd_high_max_safe": true,
+        "txd_high_total_expected": false
+      }
+    }
+  ],
+  "source_summary": "evidence/generated/p5_raw_lane_matrix_summary.md",
+  "source_json": "evidence/hardware/p5/raw_lane_matrix/p5_stage_result.json",
+  "shutdown_on_exit": "PASS",
+  "stop_condition": "hardware_stage_failure:RAW_LANE_MATRIX_FRESH",
+  "boundary": "P5 hardware progression stopped before protocol expansion; no Ethernet, rotation, lane_mask > 0x3, 8-lane, or product-final claim."
+}

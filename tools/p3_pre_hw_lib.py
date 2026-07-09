@@ -649,6 +649,8 @@ def lane_table_rows():
 def generate_docs(p3_status="IN_PROGRESS"):
     head = git_value("rev-parse", "HEAD")
     branch = git_value("branch", "--show-current")
+    existing_status = read_text(ROOT / "PROJECT_STATUS.md") if (ROOT / "PROJECT_STATUS.md").exists() else ""
+    preserve_p4_status = "P4_HARDWARE_ACCEPTANCE:" in existing_status and "HARDWARE_ACTIONS_EXECUTED: true" in existing_status
     status_doc = f"""# Project Status
 
 Project: RF_COMM_MULTILANE
@@ -677,8 +679,9 @@ The following remain unverified until a later explicitly authorized P4 run:
 
 Offline and simulation gates cannot promote hardware status beyond PENDING_HW.
 """
-    write_text(ROOT / "docs/PROJECT_STATUS.md", status_doc)
-    write_text(ROOT / "PROJECT_STATUS.md", status_doc)
+    if not preserve_p4_status:
+        write_text(ROOT / "docs/PROJECT_STATUS.md", status_doc)
+        write_text(ROOT / "PROJECT_STATUS.md", status_doc)
     write_text(
         ROOT / "docs/P3_PRE_HW_ACCEPTANCE_PACKAGE.md",
         f"""# P3 Pre-Hardware Acceptance Package

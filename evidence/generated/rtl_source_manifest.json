@@ -1,5 +1,22 @@
 [
   {
+    "path": "rtl/debug/tfdu_debug_probe.sv",
+    "sha256": "fa4ac863ce801b1e25257cbfaf5cdf6cc6a51199435d5d7f9944051251eee842",
+    "language": "systemverilog",
+    "class": "active",
+    "modules": [
+      "tfdu_debug_probe"
+    ],
+    "parameters": [
+      "CLK_HZ",
+      "LANE_COUNT",
+      "STARTUP_US",
+      "STATUS_WORDS",
+      "TXD_STUCK_HIGH_MAX_NS"
+    ],
+    "top_candidate": false
+  },
+  {
     "path": "rtl/ir_4ppm_codec.sv",
     "sha256": "afd1289872a6186eed3f0ec8a605e56f11a7fcd18dda9343a3fcd615962ed64e",
     "language": "systemverilog",
@@ -32,7 +49,7 @@
   },
   {
     "path": "rtl/ir_axi_regs_new.sv",
-    "sha256": "072e6af8504600718d782a6c83cbd2b6005f2471d93acf7891427ca23c80bfdd",
+    "sha256": "5eb6bfb40d94ec871cb84efa5722e9f54f717da469b5228561c62929d84a64cd",
     "language": "systemverilog",
     "class": "active",
     "modules": [
@@ -72,7 +89,7 @@
   },
   {
     "path": "rtl/ir_top_new.sv",
-    "sha256": "3b55db68038cc0cdb78bf4eefb747a1add8922b458937ddba58803aab0bcdac4",
+    "sha256": "43f6950f98d0a67adf05dadbc1fb5ef8018e9a40020c5134f921f7f835d10aac",
     "language": "systemverilog",
     "class": "active",
     "modules": [
@@ -515,7 +532,7 @@
   },
   {
     "path": "rtl/tfdu_lane_phy.sv",
-    "sha256": "706145b216e3b1f09da066d7adb74c37b32f228383d01a5fecebc5ec99e7d2a0",
+    "sha256": "2f515a22fedc5abdf3f58bbdaa6df8baee8a2f919747a3622ece0a63009e920a",
     "language": "systemverilog",
     "class": "active",
     "modules": [
@@ -532,7 +549,7 @@
   },
   {
     "path": "rtl/tfdu_lane_phy_pkg.sv",
-    "sha256": "ad455021c4cdcc03d81a34e516352a1b18afe832b95c1e1438d9a2ae81688673",
+    "sha256": "b1217097b9483d580f118e735a92b1f59460f839724120e5d4144d65764c0719",
     "language": "systemverilog",
     "class": "active",
     "modules": [],

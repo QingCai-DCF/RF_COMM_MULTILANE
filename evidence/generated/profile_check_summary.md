@@ -14,3 +14,17 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 | `profiles/G3_TWO_LANE_SIM_ONLY.json` | G3_TWO_LANE_SIM_ONLY | SIMULATION_ONLY |
 | `profiles/G4_ETHERNET_OFFLINE_STUB.json` | G4_ETHERNET_OFFLINE_STUB | OFFLINE_STUB_ONLY |
 | `profiles/G5_HARDWARE_PENDING.json` | G5_HARDWARE_PENDING | PENDING_HW |
+| `profiles/p4_auto_lane0_300s_soak.json` | None | None |
+| `profiles/p4_auto_lane0_ack_retry.json` | None | None |
+| `profiles/p4_auto_lane0_frame_crc.json` | None | None |
+| `profiles/p4_auto_lane1_ack_retry.json` | None | None |
+| `profiles/p4_auto_lane1_frame_crc.json` | None | None |
+| `profiles/p4_auto_raw_lane_matrix.json` | None | None |
+| `profiles/p4_auto_raw_pulse_l0.json` | None | None |
+| `profiles/p4_auto_safe_idle_proxy.json` | None | None |
+| `profiles/p4_auto_tfdu_control_idle.json` | None | None |
+| `profiles/p4_auto_two_lane_300s_soak.json` | None | None |
+| `profiles/p4_auto_two_lane_minimal.json` | None | None |
+| `profiles/p4_lane0_safe_smoke.json` | None | None |
+| `profiles/p4_lane_matrix_safe_smoke.json` | None | None |
+| `profiles/p4_safe_idle.json` | None | None |

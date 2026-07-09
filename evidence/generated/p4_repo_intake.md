@@ -1,0 +1,108 @@
+# P4 Repo Intake
+
+generated_at_utc: 2026-07-08T15:48:08+00:00
+repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
+HEAD: `4768ef76c1d9bc6042d4058f52eef5fc0da5ca01`
+RESULT: PASS
+REASON: repository state and prior gate markers recorded without hardware access
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+branch: `main`
+dirty_state: `dirty`
+P1_RECHECK: PASS
+P2_RECHECK: PASS
+P3_RECHECK: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+HARDWARE_ACCEPTANCE: PENDING_HW
+
+## Git Status
+
+```text
+M PROJECT_STATUS.md
+ M docs/PROJECT_STATUS.md
+ M docs/TFDU6102_SAFETY_SUMMARY.md
+ M docs/tfdu6102_safety_contract.md
+ M evidence/generated/git_cleanliness_report.md
+ M evidence/generated/ir_4ppm_pulse_smoke_summary.md
+ M evidence/generated/m4_ps_driver_trace.json
+ M evidence/generated/m4_ps_driver_trace.md
+ M evidence/generated/no_hardware_action_static_scan.md
+ M evidence/generated/offline_gate_summary.json
+ M evidence/generated/p1_evidence_review_for_p2.md
+ M evidence/generated/p1_git_precheck.txt
+ M evidence/generated/p1_offline_hardening_summary.json
+ M evidence/generated/p2_repo_intake.md
+ M evidence/generated/p2_simulation_baseline_summary.md
+ M evidence/generated/p3_authorization_gate_summary.md
+ M evidence/generated/p3_bitstream_build_audit_summary.md
+ M evidence/generated/p3_constraint_freeze_summary.md
+ M evidence/generated/p3_evidence_schema_summary.md
+ M evidence/generated/p3_hardware_script_dry_run_summary.md
+ M evidence/generated/p3_no_hardware_static_scan.md
+ M evidence/generated/p3_pre_hw_acceptance_package_summary.md
+ M evidence/generated/p3_recheck_p1_p2_summary.md
+ M evidence/generated/p3_repo_intake.md
+ M evidence/generated/p3_runbook_summary.md
+ M evidence/generated/profile_check_summary.md
+ M evidence/generated/project_status_update_summary.md
+ M evidence/generated/required_docs_manifest.md
+ M evidence/generated/rtl_source_manifest.json
+ M evidence/generated/rtl_source_manifest.md
+ M evidence/generated/simulation_gate_summary.md
+ M evidence/generated/simulator_detection_summary.md
+ M evidence/generated/software_source_manifest.md
+ M evidence/generated/tfdu6102_behavior_model_summary.md
+ M evidence/generated/tfdu6102_reference_model_summary.md
+ M evidence/generated/tfdu_lane_phy_sim_summary.md
+ M evidence/generated/vivado/nonhardware_build_markers.txt
+ M evidence/generated/vivado/nonhardware_build_summary.json
+ M evidence/generated/vivado/nonhardware_build_summary.md
+ M evidence/generated/vivado/post_route_drc.rpt
+ M evidence/generated/vivado/post_route_timing_summary.rpt
+ M evidence/generated/vivado/post_route_utilization.rpt
+ M evidence/generated/vivado/post_synth_drc.rpt
+ M evidence/generated/vivado_script_audit.md
+ M evidence/generated/xdc_inventory.md
+ M evidence/simulation/sim_results.json
+ M rtl/ir_axi_regs_new.sv
+ M rtl/tfdu_lane_phy.sv
+ M rtl/tfdu_lane_phy_pkg.sv
+ M scripts/check_m4_static.py
+ M scripts/check_m5_static.py
+ M scripts/generate_m4_ps_driver_trace.py
+ M scripts/hw/program_tfdu_shutdown_safe.ps1
+ M scripts/hw/run_g1_lane0_replay_safe.ps1
+ M scripts/hw/run_lane0_raw_matrix_safe.ps1
+ M scripts/legacy_safe_tools/build_tfdu_shutdown.tcl
+ M scripts/legacy_safe_tools/program_tfdu_shutdown.tcl
+ M scripts/legacy_safe_tools/tfdu_shutdown_j10_j11.xdc
+ M scripts/legacy_safe_tools/tfdu_shutdown_top.v
+ M scripts/run_vivado_nonhardware_build.py
+ M scripts/vivado_nonhardware_build.tcl
+ M software/ps_driver/ir_profile.c
+ M tools/p1_lib.py
+?? .hardware_authorization/
+?? evidence/generated/p4_authorization_gate_summary.md
+?? evidence/generated/p4_hardware_acceptance_gate_summary.md
+?? evidence/generated/p4_hardware_acceptance_summary.json
+?? evidence/generated/p4_hardware_acceptance_summary.md
+?? evidence/generated/p4_no_hardware_or_authorized_hardware_scan.md
+?? evidence/generated/p4_recheck_p1_p2_p3_summary.md
+?? evidence/generated/p4_repo_intake.md
+?? evidence/generated/p4_safe_idle_profile_audit.md
+?? evidence/hardware/p4/
+?? profiles/p4_lane0_safe_smoke.json
+?? profiles/p4_lane_matrix_safe_smoke.json
+?? profiles/p4_safe_idle.json
+?? tools/p4_counter_capture.py
+?? tools/p4_hw_authorization.py
+?? tools/p4_hw_evidence.py
+?? tools/p4_hw_execution.py
+?? tools/p4_hw_profiles.py
+?? tools/p4_lane_matrix.py
+?? tools/p4_safe_idle_audit.py
+?? tools/p4_shutdown.py
+?? tools/run_p4_hardware_acceptance.ps1
+?? tools/run_p4_hardware_acceptance.py
+```

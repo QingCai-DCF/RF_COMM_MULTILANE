@@ -1,0 +1,298 @@
+{
+  "P5_REPO_INTAKE": "PASS_WITH_NOTES",
+  "current_head": "4768ef76c1d9bc6042d4058f52eef5fc0da5ca01",
+  "branch": "main",
+  "dirty": true,
+  "dirty_non_evidence_paths_count": 66,
+  "summary": "evidence/generated/p5_evidence_consistency_summary.md",
+  "P4_EVIDENCE_RECONCILIATION": "PASS_WITH_NOTES",
+  "P1_RECHECK": "PASS",
+  "P2_RECHECK": "PASS",
+  "P3_RECHECK": "PASS",
+  "P1_P2_P3_RECHECK": "PASS",
+  "commands": [
+    {
+      "cmd": "reuse existing evidence/generated/offline_gate_summary.json after prior P5.2 recheck command run",
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    }
+  ],
+  "P5_PROFILE_VALIDATION": "PASS",
+  "profiles": [
+    "profiles/p5/p5_safe_idle_recheck.json",
+    "profiles/p5/p5_tfdu_control_idle_recheck.json",
+    "profiles/p5/p5_raw_lane_matrix_fresh.json",
+    "profiles/p5/p5_lane0_frame_crc_100.json",
+    "profiles/p5/p5_lane1_frame_crc_100.json",
+    "profiles/p5/p5_lane0_ack_retry_100.json",
+    "profiles/p5/p5_lane1_ack_retry_100.json",
+    "profiles/p5/p5_two_lane_minimal_100.json",
+    "profiles/p5/p5_lane0_payload_sweep.json",
+    "profiles/p5/p5_lane1_payload_sweep.json",
+    "profiles/p5/p5_two_lane_payload_sweep.json",
+    "profiles/p5/p5_two_lane_mask_regression.json",
+    "profiles/p5/p5_retry_fault_injection_sim.json",
+    "profiles/p5/p5_retry_fault_injection_hw_optional.json",
+    "profiles/p5/p5_two_lane_30min_soak.json",
+    "profiles/p5/p5_two_lane_2h_soak_optional.json"
+  ],
+  "failures": [],
+  "NO_ETHERNET_GATE": "PASS",
+  "ETHERNET_ACCEPTANCE": "DEFERRED_NO_NETWORK_CABLE",
+  "NO_HARDWARE_ACTIONS_EXECUTED": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_MOTION_GATE": "PASS",
+  "ROTATION_ACCEPTANCE": "DEFERRED_NO_HARDWARE_MOVEMENT",
+  "TWO_LANE_SCOPE_GATE": "PASS",
+  "AVAILABLE_LANES": 2,
+  "EIGHT_LANE_ACCEPTANCE": "DEFERRED_ONLY_2_LANES_AVAILABLE",
+  "P5_HARDWARE_STAGE_PLAN": "PASS_WITH_NOTES",
+  "P5_HARDWARE_STAGE_PLAN_SUMMARY": "evidence/generated/p5_hardware_stage_plan_summary.md",
+  "P5_HARDWARE_AUTHORIZATION": "AUTHORIZED",
+  "P5_HARDWARE_AUTHORIZATION_SUMMARY": "evidence/generated/p5_hardware_authorization_summary.md",
+  "AUTHORIZED": true,
+  "P5_AUTHORIZED_RUN_PACKAGE": "READY_AUTHORIZED",
+  "P5_AUTHORIZED_RUN_PACKAGE_SUMMARY": "evidence/generated/p5_authorized_run_package_summary.md",
+  "P5_AUTHORIZED_RUN_PACKAGE_JSON": "evidence/hardware/p5/authorization/p5_authorized_run_package.json",
+  "PROJECTED_AUTHORIZATION_WITH_PACKAGE_ARGS": "AUTHORIZED",
+  "P5_HARDWARE_AUTHORIZATION_MISSING_CONTROLS": [],
+  "P5_HARDWARE_EXECUTION": "PASS_WITH_NOTES",
+  "HARDWARE_ACTIONS_EXECUTED": true,
+  "P5_HARDWARE_EXECUTION_LOG": "evidence/hardware/p5/p5_hardware_execution_summary.json",
+  "SAFE_IDLE_RECHECK": "PASS",
+  "TFDU_CONTROL_IDLE_RECHECK": "PASS",
+  "RAW_LANE_MATRIX_FRESH": "PASS",
+  "LANE0_FRAME_CRC_100": "PASS",
+  "LANE1_FRAME_CRC_100": "PASS",
+  "LANE0_ACK_RETRY_100": "PASS",
+  "LANE1_ACK_RETRY_100": "PASS",
+  "TWO_LANE_MINIMAL_100": "PASS",
+  "PAYLOAD_SWEEP": "PASS_WITH_UNSUPPORTED_CASES_DOCUMENTED",
+  "MASK_REGRESSION": "PASS",
+  "TWO_LANE_30MIN_SOAK": "PASS",
+  "STOP_CONDITIONS_TRIGGERED": "none",
+  "SHUTDOWN_ON_EXIT": "PASS",
+  "executed_stages": [
+    "safe_idle_recheck",
+    "tfdu_control_idle_recheck",
+    "raw_lane_matrix_fresh",
+    "lane0_frame_crc_100",
+    "lane1_frame_crc_100",
+    "lane0_ack_retry_100",
+    "lane1_ack_retry_100",
+    "two_lane_minimal_100",
+    "payload_sweep",
+    "mask_regression",
+    "two_lane_30min_soak"
+  ],
+  "shutdown_failures": [],
+  "pending": [],
+  "notes": [],
+  "RETRY_FAULT_INJECTION_SIM": "PASS",
+  "RETRY_FAULT_INJECTION_HW_OPTIONAL": "SKIP_NO_HW_FAULT_INJECTION_HOOK",
+  "TWO_LANE_2H_SOAK_OPTIONAL": "NOT_RUN_OPTIONAL",
+  "P5_PROTOCOL_METRICS": "PASS_WITH_NOTES",
+  "reason": "P5 protocol metrics extracted from P5 hardware evidence",
+  "totals": {
+    "frames_sent": 2300,
+    "frames_rx_good": 4000,
+    "ack_seen": 4000,
+    "crc_bad": 0,
+    "payload_mismatch": 0,
+    "retry_count": 0,
+    "retry_exhausted": 0,
+    "tx_fail": 0,
+    "txd_high_total_cycles": 193664,
+    "txd_high_consecutive_max_cycles": 48,
+    "duty_violation_count": 0
+  },
+  "row_count": 9,
+  "csv": "evidence/generated/p5_protocol_metrics.csv",
+  "EVIDENCE_CONSISTENCY": "PASS",
+  "P5_PLAN_REQUIREMENTS_AUDIT": "PASS",
+  "rows": [
+    {
+      "item": "P5.0 repo intake",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_repo_intake.md, evidence/generated/p5_current_head.txt, evidence/generated/p5_git_status_before.txt",
+      "notes": "P5_REPO_INTAKE=PASS_WITH_NOTES"
+    },
+    {
+      "item": "P5.1 P4 evidence reconciliation",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_p4_evidence_reconciliation.json",
+      "notes": "P4_EVIDENCE_RECONCILIATION=PASS_WITH_NOTES"
+    },
+    {
+      "item": "P5.2 P1/P2/P3/P4 recheck",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_recheck_p1_p2_p3_p4_summary.md",
+      "notes": "P1_P2_P3_RECHECK=PASS"
+    },
+    {
+      "item": "P5.3 no Ethernet gate",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_no_ethernet_hardware_tests_summary.md",
+      "notes": "NO_ETHERNET_GATE=PASS"
+    },
+    {
+      "item": "P5.4 no motion gate",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_no_motion_tests_summary.md",
+      "notes": "NO_MOTION_GATE=PASS"
+    },
+    {
+      "item": "P5.5 two-lane scope gate",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_2lane_scope_summary.md",
+      "notes": "TWO_LANE_SCOPE_GATE=PASS"
+    },
+    {
+      "item": "P5.6 P5 profiles",
+      "status": "PASS",
+      "evidence": "profiles/p5/*.json, evidence/generated/p5_profiles_summary.md",
+      "notes": "all expected profiles exist and validate"
+    },
+    {
+      "item": "P5.7 unified P5 runner",
+      "status": "PASS",
+      "evidence": "tools/run_p5_2lane_protocol_stabilization.py, tools/run_p5_2lane_protocol_stabilization.ps1, tools/p5_hardware_authorization.py, .hardware_authorization/P5_2LANE_APPROVED.txt.template, evidence/generated/p5_hardware_authorization_summary.md, evidence/generated/p5_hardware_stage_plan_summary.md, evidence/generated/p5_authorized_run_package_summary.md",
+      "notes": "required CLI flags present"
+    },
+    {
+      "item": "P5.8 safe-idle recheck",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_safe_idle_recheck_summary.md",
+      "notes": "SAFE_IDLE_RECHECK=PASS"
+    },
+    {
+      "item": "P5.8 TFDU-control idle recheck",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_tfdu_control_idle_recheck_summary.md",
+      "notes": "TFDU_CONTROL_IDLE_RECHECK=PASS"
+    },
+    {
+      "item": "P5.9 fresh raw lane matrix",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_raw_lane_matrix_summary.md",
+      "notes": "RAW_LANE_MATRIX_FRESH=PASS"
+    },
+    {
+      "item": "P5.10 lane0 frame/CRC 100",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_lane0_frame_crc_100_summary.md",
+      "notes": "LANE0_FRAME_CRC_100=PASS"
+    },
+    {
+      "item": "P5.10 lane1 frame/CRC 100",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_lane1_frame_crc_100_summary.md",
+      "notes": "LANE1_FRAME_CRC_100=PASS"
+    },
+    {
+      "item": "P5.11 lane0 ACK/retry 100",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_lane0_ack_retry_100_summary.md",
+      "notes": "LANE0_ACK_RETRY_100=PASS"
+    },
+    {
+      "item": "P5.11 lane1 ACK/retry 100",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_lane1_ack_retry_100_summary.md",
+      "notes": "LANE1_ACK_RETRY_100=PASS"
+    },
+    {
+      "item": "P5.12 two-lane minimal 100",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_two_lane_minimal_100_summary.md",
+      "notes": "TWO_LANE_MINIMAL_100=PASS"
+    },
+    {
+      "item": "P5.13 payload sweep",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_payload_sweep_summary.md",
+      "notes": "PAYLOAD_SWEEP=PASS_WITH_UNSUPPORTED_CASES_DOCUMENTED"
+    },
+    {
+      "item": "P5.14 mask regression",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_mask_regression_summary.md",
+      "notes": "MASK_REGRESSION=PASS"
+    },
+    {
+      "item": "P5.16 two-lane 30min soak",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_two_lane_30min_soak_summary.md",
+      "notes": "TWO_LANE_30MIN_SOAK=PASS"
+    },
+    {
+      "item": "P5.15 retry/fault injection",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_retry_fault_injection_summary.md",
+      "notes": "RETRY_FAULT_INJECTION_SIM=PASS"
+    },
+    {
+      "item": "P5.17 protocol metrics",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_protocol_metrics_summary.json",
+      "notes": "P5_PROTOCOL_METRICS=PASS_WITH_NOTES"
+    },
+    {
+      "item": "P5.18 evidence consistency",
+      "status": "PASS",
+      "evidence": "evidence/generated/p5_evidence_consistency_summary.md",
+      "notes": "EVIDENCE_CONSISTENCY=PASS"
+    },
+    {
+      "item": "P5.19 project status docs",
+      "status": "PASS",
+      "evidence": "PROJECT_STATUS.md, docs/PROJECT_STATUS.md, README.md",
+      "notes": "required status markers present"
+    },
+    {
+      "item": "P5.20 total gate",
+      "status": "PASS",
+      "evidence": "tools/run_p5_gate.py, tools/run_p5_gate.ps1, evidence/generated/p5_2lane_protocol_stabilization_summary.md, evidence/generated/p5_2lane_protocol_stabilization_summary.json",
+      "notes": "P5_2LANE_PROTOCOL_STABILIZATION=PASS_WITH_NOTES"
+    }
+  ],
+  "pending_hw_count": 0,
+  "incomplete_count": 0,
+  "P5_2LANE_PROTOCOL_STABILIZATION": "PASS_WITH_NOTES",
+  "COMMIT": "4768ef76c1d9bc6042d4058f52eef5fc0da5ca01",
+  "USER_CONFIRMED_SUPPLY_OK": true,
+  "NETWORK_CABLE_CONNECTED": false,
+  "HARDWARE_MOVEMENT_ALLOWED": false,
+  "NEXT_RECOMMENDED_STAGE": "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET",
+  "GENERATED_SUMMARIES": [
+    "evidence/generated/p5_2lane_protocol_stabilization_summary.md",
+    "evidence/generated/p5_2lane_scope_summary.md",
+    "evidence/generated/p5_authorized_run_package_summary.md",
+    "evidence/generated/p5_evidence_consistency_summary.md",
+    "evidence/generated/p5_failure_package_summary.md",
+    "evidence/generated/p5_hardware_authorization_summary.md",
+    "evidence/generated/p5_hardware_execution_summary.md",
+    "evidence/generated/p5_hardware_stage_plan_summary.md",
+    "evidence/generated/p5_lane0_ack_retry_100_summary.md",
+    "evidence/generated/p5_lane0_frame_crc_100_summary.md",
+    "evidence/generated/p5_lane1_ack_retry_100_summary.md",
+    "evidence/generated/p5_lane1_frame_crc_100_summary.md",
+    "evidence/generated/p5_mask_regression_summary.md",
+    "evidence/generated/p5_no_ethernet_hardware_tests_summary.md",
+    "evidence/generated/p5_no_motion_tests_summary.md",
+    "evidence/generated/p5_payload_sweep_summary.md",
+    "evidence/generated/p5_plan_requirements_audit_summary.md",
+    "evidence/generated/p5_profiles_summary.md",
+    "evidence/generated/p5_project_status_update_summary.md",
+    "evidence/generated/p5_protocol_metrics_summary.md",
+    "evidence/generated/p5_raw_lane_matrix_summary.md",
+    "evidence/generated/p5_recheck_p1_p2_p3_p4_summary.md",
+    "evidence/generated/p5_retry_fault_injection_summary.md",
+    "evidence/generated/p5_safe_idle_recheck_summary.md",
+    "evidence/generated/p5_tfdu_control_idle_recheck_summary.md",
+    "evidence/generated/p5_two_lane_2h_soak_optional_summary.md",
+    "evidence/generated/p5_two_lane_30min_soak_summary.md",
+    "evidence/generated/p5_two_lane_minimal_100_summary.md"
+  ]
+}

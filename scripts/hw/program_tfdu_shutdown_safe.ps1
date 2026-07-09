@@ -6,10 +6,13 @@ param(
     [switch]$ShutdownOnExit,
     [string]$BoardId = "",
     [string]$Bitstream = "",
+    [string]$BitstreamSha256 = "",
     [string]$TestProfile = "",
     [string]$ActivePinmapHash = "",
     [string]$ActiveXdcHash = "",
+    [string]$AuthorizationFile = ".hardware_authorization\P4_APPROVED.txt",
     [string]$ProfilePath = "config/profiles/G1_LANE0_BASELINE.json",
+    [string]$ProfileSha256 = "",
     [string]$EvidenceDir = "",
     [string]$VivadoPath = "D:\Xilinx\Vivado\2023.1\bin\vivado.bat",
     [string]$ShutdownTcl = "scripts/legacy_safe_tools/program_tfdu_shutdown.tcl",
@@ -157,12 +160,23 @@ if (-not $hardwareRequested) {
 }
 
 $authLog = Join-Path $EvidenceDir "hardware_authorization.json"
-$authArgs = @("tools/check_hardware_authorization.py", "--execute-hardware", "--json-summary")
+$authArgs = @(
+    "tools/p4_hw_authorization.py",
+    "--execute-hardware",
+    "--require-user-hw-authorization",
+    "--json-summary",
+    "--no-write-artifacts",
+    "--authorization-file",
+    $AuthorizationFile,
+    "--profile",
+    $ProfilePath
+)
 if ($MaxRuntimeSec -gt 0) { $authArgs += @("--max-runtime-sec", [string]$MaxRuntimeSec) }
 if ($ShutdownOnExit.IsPresent) { $authArgs += "--shutdown-on-exit" }
 if ($Bitstream) { $authArgs += @("--bitstream", $Bitstream) }
+if ($BitstreamSha256) { $authArgs += @("--bitstream-sha256", $BitstreamSha256) }
 if ($BoardId) { $authArgs += @("--board-id", $BoardId) }
-if ($TestProfile) { $authArgs += @("--test-profile", $TestProfile) }
+if ($ProfileSha256) { $authArgs += @("--profile-sha256", $ProfileSha256) }
 if ($ActivePinmapHash) { $authArgs += @("--active-pinmap-hash", $ActivePinmapHash) }
 if ($ActiveXdcHash) { $authArgs += @("--active-xdc-hash", $ActiveXdcHash) }
 $authOutput = & python @authArgs 2>&1

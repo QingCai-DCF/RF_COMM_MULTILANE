@@ -19,19 +19,19 @@ module tfdu_shutdown_top (
   output wire j11_b_tx,
   input  wire j11_b_rx
 );
-  assign j10_a_mode = 1'b0;
+  assign j10_a_mode = 1'b1;
   assign j10_a_sd   = 1'b1;
   assign j10_a_tx   = 1'b0;
 
-  assign j10_b_mode = 1'b0;
+  assign j10_b_mode = 1'b1;
   assign j10_b_sd   = 1'b1;
   assign j10_b_tx   = 1'b0;
 
-  assign j11_a_mode = 1'b0;
+  assign j11_a_mode = 1'b1;
   assign j11_a_sd   = 1'b1;
   assign j11_a_tx   = 1'b0;
 
-  assign j11_b_mode = 1'b0;
+  assign j11_b_mode = 1'b1;
   assign j11_b_sd   = 1'b1;
   assign j11_b_tx   = 1'b0;
 

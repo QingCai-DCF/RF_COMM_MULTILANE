@@ -31,7 +31,7 @@ set_property PACKAGE_PIN M17 [get_ports j11_b_sd]
 set_property IOSTANDARD LVCMOS33 [get_ports j11_b_sd]
 set_property PACKAGE_PIN E18 [get_ports j11_b_tx]
 set_property IOSTANDARD LVCMOS33 [get_ports j11_b_tx]
-set_property PACKAGE_PIN D19 [get_ports j11_b_rx]
+set_property PACKAGE_PIN G15 [get_ports j11_b_rx]
 set_property IOSTANDARD LVCMOS33 [get_ports j11_b_rx]
 
 set_property DRIVE 4 [get_ports {j10_a_mode j10_a_sd j10_a_tx j10_b_mode j10_b_sd j10_b_tx j11_a_mode j11_a_sd j11_a_tx j11_b_mode j11_b_sd j11_b_tx}]

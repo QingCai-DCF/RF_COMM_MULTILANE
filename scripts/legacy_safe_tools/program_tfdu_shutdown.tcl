@@ -1,5 +1,6 @@
-set repo_root [file normalize [file join [file dirname [info script]] ".."]]
-source [file join $repo_root tools hw_connect_utils.tcl]
+set script_dir [file normalize [file dirname [info script]]]
+set repo_root [file normalize [file join $script_dir ".." ".."]]
+source [file join $repo_root legacy RF_COMM tools hw_connect_utils.tcl]
 set bit_file [file join $repo_root "shutdown_bitstream" "tfdu_shutdown_j10_j11.bit"]
 set jtag_frequency_hz 1000000
 if {![file exists $bit_file]} {

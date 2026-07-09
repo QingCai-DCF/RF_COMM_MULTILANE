@@ -1,0 +1,24 @@
+{
+  "stage": "LANE1_ACK_RETRY",
+  "lane_mask": "0x2",
+  "rx_lane_mask": "0x2",
+  "ack_lane_mask": "0x2",
+  "session": "0x2201",
+  "max_runtime_sec": 120,
+  "shutdown_on_exit": true,
+  "startup_wait_us": 500,
+  "txd_stuck_high_max_us": 10,
+  "absolute_txd_stuck_high_datasheet_us": 80,
+  "low_duty_mode": true,
+  "manual_intervention_required": false,
+  "user_confirmed_supply_ok": true,
+  "forbid_external_scope_claim": true,
+  "ethernet_enabled": false,
+  "rotation_enabled": false,
+  "hardware_acceptance": "PENDING_HW_UNTIL_AUTHORIZED_P4_AUTO_RUN",
+  "evidence_dir": "evidence/hardware/p4_auto/protocol_smoke",
+  "b_expected_a_lane_mask": "0x2",
+  "requires": [
+    "LANE1_FRAME_CRC_PASS"
+  ]
+}

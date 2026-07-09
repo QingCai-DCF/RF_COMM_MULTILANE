@@ -404,6 +404,10 @@ def write_project_status(p2_status, p1_status):
     head = git_value("rev-parse", "HEAD")
     branch = git_value("branch", "--show-current")
     status = git_value("status", "--short")
+    existing_path = ROOT / "PROJECT_STATUS.md"
+    existing = existing_path.read_text(encoding="utf-8", errors="ignore") if existing_path.exists() else ""
+    if "P4_HARDWARE_ACCEPTANCE:" in existing and "HARDWARE_ACTIONS_EXECUTED: true" in existing:
+        return
     content = f"""# Project Status
 
 Project: RF_COMM_MULTILANE

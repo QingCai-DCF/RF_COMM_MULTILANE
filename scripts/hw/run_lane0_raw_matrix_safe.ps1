@@ -6,10 +6,13 @@ param(
     [switch]$ShutdownOnExit,
     [string]$BoardId = "",
     [string]$Bitstream = "",
+    [string]$BitstreamSha256 = "",
     [string]$TestProfile = "",
     [string]$ActivePinmapHash = "",
     [string]$ActiveXdcHash = "",
+    [string]$AuthorizationFile = ".hardware_authorization\P4_APPROVED.txt",
     [string]$ProfilePath = "config/profiles/G1_LANE0_BASELINE.json",
+    [string]$ProfileSha256 = "",
     [string]$EvidenceDir = "",
     [string]$InnerScript = "legacy/RF_COMM/tools/run_2lane_matrix_safe.ps1",
     [string[]]$TriggerModes = @("a_tx_lane0", "b_tx_lane0"),
@@ -171,12 +174,23 @@ if (-not $hardwareRequested) {
 }
 
 $authLog = Join-Path $EvidenceDir "hardware_authorization.json"
-$authArgs = @("tools/check_hardware_authorization.py", "--execute-hardware", "--json-summary")
+$authArgs = @(
+    "tools/p4_hw_authorization.py",
+    "--execute-hardware",
+    "--require-user-hw-authorization",
+    "--json-summary",
+    "--no-write-artifacts",
+    "--authorization-file",
+    $AuthorizationFile,
+    "--profile",
+    $ProfilePath
+)
 if ($MaxRuntimeSec -gt 0) { $authArgs += @("--max-runtime-sec", [string]$MaxRuntimeSec) }
 if ($ShutdownOnExit.IsPresent) { $authArgs += "--shutdown-on-exit" }
 if ($Bitstream) { $authArgs += @("--bitstream", $Bitstream) }
+if ($BitstreamSha256) { $authArgs += @("--bitstream-sha256", $BitstreamSha256) }
 if ($BoardId) { $authArgs += @("--board-id", $BoardId) }
-if ($TestProfile) { $authArgs += @("--test-profile", $TestProfile) }
+if ($ProfileSha256) { $authArgs += @("--profile-sha256", $ProfileSha256) }
 if ($ActivePinmapHash) { $authArgs += @("--active-pinmap-hash", $ActivePinmapHash) }
 if ($ActiveXdcHash) { $authArgs += @("--active-xdc-hash", $ActiveXdcHash) }
 $authOutput = & python @authArgs 2>&1
@@ -260,8 +274,28 @@ try {
                 "-File",
                 $shutdownScript,
                 "-AllowHardware",
+                "-ExecuteHardware",
+                "-MaxRuntimeSec",
+                [string]$MaxRuntimeSec,
+                "-ShutdownOnExit",
+                "-BoardId",
+                $BoardId,
+                "-Bitstream",
+                $Bitstream,
+                "-BitstreamSha256",
+                $BitstreamSha256,
+                "-TestProfile",
+                $TestProfile,
+                "-ActivePinmapHash",
+                $ActivePinmapHash,
+                "-ActiveXdcHash",
+                $ActiveXdcHash,
+                "-AuthorizationFile",
+                $AuthorizationFile,
                 "-ProfilePath",
                 $profileFullPath,
+                "-ProfileSha256",
+                $ProfileSha256,
                 "-EvidenceDir",
                 (Join-Path $EvidenceDir "forced_shutdown"),
                 "-VivadoPath",

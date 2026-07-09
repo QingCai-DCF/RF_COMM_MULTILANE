@@ -37,7 +37,6 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - vivado_project_generation_dry_check
 - ip_packaging_dry_check
 - software_no_real_io_check
-- bootstrap_legacy_offline_gates
 - manifest_generation
 - evidence_consistency_check
 - git_cleanliness_report
@@ -146,11 +145,6 @@ SUMMARY: evidence/generated/ip_packaging_dry_check.md
 
 REASON: software real IO scan complete
 SUMMARY: evidence/generated/software_no_real_io_summary.md
-
-### bootstrap_legacy_offline_gates: PASS
-
-REASON: existing offline gates completed
-SUMMARY: evidence/generated/p1_bootstrap_legacy_gate_run.md
 
 ### manifest_generation: PASS
 

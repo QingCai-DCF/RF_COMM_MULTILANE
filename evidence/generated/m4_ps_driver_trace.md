@@ -41,8 +41,8 @@ M4_PS_DRIVER_TRACE=PASS
 | 26 | read | `SAFETY_DUTY_WINDOW` | `0x000003E8` |
 | 27 | write | `SAFETY_DUTY_MAX` | `0x000000C8` |
 | 28 | read | `SAFETY_DUTY_MAX` | `0x000000C8` |
-| 29 | write | `SAFETY_STUCK_HIGH_LIMIT` | `0x00000014` |
-| 30 | read | `SAFETY_STUCK_HIGH_LIMIT` | `0x00000014` |
+| 29 | write | `SAFETY_STUCK_HIGH_LIMIT` | `0x0000000A` |
+| 30 | read | `SAFETY_STUCK_HIGH_LIMIT` | `0x0000000A` |
 | 31 | write | `CONTROL` | `0x00000020` |
 | 32 | read | `PROFILE_ID` | `0x47312201` |
 | 33 | write | `CONTROL` | `0x00000002` |
