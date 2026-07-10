@@ -1,8 +1,8 @@
 # P6 Dynamic Payload Simulation Summary
 
-generated_at_utc: 2026-07-09T17:40:48+00:00
+generated_at_utc: 2026-07-10T09:15:54+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: PASS
 reason: dynamic payload reference simulation completed
@@ -20,11 +20,12 @@ available_lanes: 2
 max_lane_mask: 0x3
 
 P6_DYNAMIC_PAYLOAD_SIM: PASS
+HARDWARE_ACCEPTANCE: PENDING_HW
 positive_case_count: 480
 negative_case_count: 3
 P6_DYNAMIC_PAYLOAD_HDL_SIM: PASS
 csv: `evidence/simulation/p6/dynamic_payload/p6_dynamic_payload_sim.csv`
-hdl_run_log: `evidence/simulation/p6/dynamic_payload/logs/tb_p6_local_transport_regs.xsim.log`
+hdl_run_log: `evidence/simulation/p6/dynamic_payload_engine/logs/tb_p6_dynamic_transport_engine.xsim.log`
 lane_mask > 0x3 rejected before hardware TX: true
 
 ## Boundary

@@ -1,16 +1,17 @@
 {
   "P6_DYNAMIC_PAYLOAD_SIM": "PASS",
+  "hardware_acceptance": "PENDING_HW",
   "positive_case_count": 480,
   "negative_case_count": 3,
   "csv": "evidence/simulation/p6/dynamic_payload/p6_dynamic_payload_sim.csv",
   "hdl": {
     "P6_DYNAMIC_PAYLOAD_HDL_SIM": "PASS",
-    "reason": "P6 RTL register-window dynamic payload regression passed",
+    "reason": "physical DATA/ACK engine and register/mailbox integration simulations passed",
     "positive_case_count": 480,
     "negative_case_count": 3,
-    "compile_log": "evidence/simulation/p6/dynamic_payload/logs/tb_p6_local_transport_regs.xvlog.log",
-    "elab_log": "evidence/simulation/p6/dynamic_payload/logs/tb_p6_local_transport_regs.xelab.log",
-    "run_log": "evidence/simulation/p6/dynamic_payload/logs/tb_p6_local_transport_regs.xsim.log"
+    "run_log": "evidence/simulation/p6/dynamic_payload_engine/logs/tb_p6_dynamic_transport_engine.xsim.log",
+    "register_run_log": "evidence/simulation/p6/dynamic_payload_engine/logs/tb_p6_local_transport_regs_integration.xsim.log",
+    "summary": "evidence/simulation/p6/dynamic_payload_engine/p6_dynamic_transport_sim_summary.json"
   },
   "failures": [],
   "script_hardware_actions_executed": false,

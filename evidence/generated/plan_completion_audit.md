@@ -69,7 +69,7 @@ PLAN_FORBIDDEN_CLAIM_TWO_HOUR_SOAK_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_EIGHT_LANE_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_AB_L1_FIXED_ABSENT=1
 
-The current workspace does not claim real hardware, Ethernet, rotation, soak, 8-lane, or AB_L1 repair acceptance.
+This offline-gate evidence does not itself claim hardware, Ethernet, rotation, soak, 8-lane, or AB_L1 repair acceptance; separately sourced authorized hardware evidence may be reported with explicit provenance.
 
 ## Remaining External Evidence
 

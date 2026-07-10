@@ -1,13 +1,13 @@
 # P6 Lane Fallback Regression
 
-generated_at_utc: 2026-07-09T17:45:41+00:00
+generated_at_utc: 2026-07-10T09:15:55+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
-result: BLOCKED_BY_RUNTIME_ENVIRONMENT
-reason: P6 bounded negative cases pass register-level simulation, but hardware fallback regression cannot run without live register write/read ingress
+result: PASS
+reason: real stationary two-lane hardware evidence and shutdown boundaries verified
 script_hardware_actions_executed: false
-source_evidence_contains_hardware_actions: false
+source_evidence_contains_hardware_actions: true
 stage_programmed_fpga: false
 stage_drove_tfdu_txd: false
 stage_enabled_tfdu_receiver: false
@@ -19,17 +19,12 @@ hardware_movement_allowed: false
 available_lanes: 2
 max_lane_mask: 0x3
 
-P6_LANE_FALLBACK_REGRESSION: BLOCKED_BY_RUNTIME_ENVIRONMENT
-reason: P6 bounded negative cases pass register-level simulation, but hardware fallback regression cannot run without live register write/read ingress
-script_hardware_actions_executed: false
-source_evidence_contains_hardware_actions: false
-stage_programmed_fpga: false
-stage_drove_tfdu_txd: false
-stage_enabled_tfdu_receiver: false
-shutdown_on_exit_observed: false
-product_final_acceptance: pending
-
-## Boundary
-
-- No Ethernet, DHCP, static-IP board link, motion, rotation, 4-lane/8-lane, or lane mask above 0x3 was used.
-- This item is not product-final acceptance.
+P6_LANE_FALLBACK_REGRESSION: PASS
+source: `evidence/hardware/p6/lane_fallback_regression/p6_jtag_axi_matrix_summary.json`
+source_value: PASS
+hardware_actions_executed: true
+shutdown_before: true
+shutdown_after: true
+bitstream_sha256: `0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d`
+ethernet_used: false
+motion_used: false

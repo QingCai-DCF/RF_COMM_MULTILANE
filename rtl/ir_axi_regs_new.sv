@@ -104,7 +104,7 @@ module ir_axi_regs_new #(
   localparam logic [11:0] REG_P6_RETRY_COUNT         = 12'h140;
   localparam logic [11:0] REG_P6_RETRY_EXHAUSTED     = 12'h144;
   localparam logic [11:0] REG_P6_TX_FAIL             = 12'h148;
-  localparam logic [11:0] REG_P6_TXD_HIGH_MAX        = 12'h14C;
+  localparam logic [11:0] REG_P6_TXD_HIGH_CONSECUTIVE_MAX = 12'h14C;
   localparam logic [11:0] REG_P6_DUTY_VIOLATION      = 12'h150;
   localparam logic [11:0] REG_P6_SHUTDOWN_REASON     = 12'h154;
   localparam logic [11:0] REG_P6_MAILBOX_STATUS      = 12'h158;
@@ -117,6 +117,8 @@ module ir_axi_regs_new #(
   localparam logic [11:0] REG_P6_RX_WORD_INDEX       = 12'h174;
   localparam logic [11:0] REG_P6_RX_WORD_DATA        = 12'h178;
   localparam logic [11:0] REG_P6_CAPS                = 12'h17C;
+  localparam logic [11:0] REG_P6_PAYLOAD_WINDOW_BASE = 12'h200;
+  localparam logic [11:0] REG_P6_RX_WINDOW_BASE      = 12'h300;
 
   localparam int P6_PAYLOAD_WORDS = 64;
   localparam int P6_MAX_PAYLOAD_BYTES = 247;
@@ -138,8 +140,8 @@ module ir_axi_regs_new #(
   localparam logic [31:0] P6_MAILBOX_FAIL = 32'h5036_464c; // "P6FL"
 
   logic [31:0] shutdown_reason_shadow;
-  logic [31:0] p6_payload_ram [P6_PAYLOAD_WORDS];
-  logic [31:0] p6_rx_ram [P6_PAYLOAD_WORDS];
+  logic [31:0] p6_payload_ram [0:P6_PAYLOAD_WORDS-1];
+  logic [31:0] p6_rx_ram [0:P6_PAYLOAD_WORDS-1];
   logic [5:0]  p6_payload_word_index;
   logic [5:0]  p6_rx_word_index;
   logic [15:0] p6_session;
@@ -584,7 +586,7 @@ module ir_axi_regs_new #(
           REG_P6_RETRY_COUNT: rd_data <= p6_retry_count;
           REG_P6_RETRY_EXHAUSTED: rd_data <= p6_retry_exhausted;
           REG_P6_TX_FAIL: rd_data <= p6_tx_fail;
-          REG_P6_TXD_HIGH_MAX: rd_data <= p6_txd_high_consecutive_max;
+          REG_P6_TXD_HIGH_CONSECUTIVE_MAX: rd_data <= p6_txd_high_consecutive_max;
           REG_P6_DUTY_VIOLATION: rd_data <= p6_duty_violation;
           REG_P6_SHUTDOWN_REASON: rd_data <= p6_shutdown_reason;
           REG_P6_MAILBOX_STATUS: rd_data <= p6_mailbox_status;

@@ -1,0 +1,35 @@
+{
+  "P6_RECOVERED_FAILURE_PACKAGE": "RECOVERED_SUPERSEDED_BY_PASS",
+  "stage": "lane0_dynamic_payload_initial_bringup",
+  "observed_at_utc": "2026-07-10T04:10:24+00:00",
+  "root_cause_classification": "ACK_TURNAROUND_GUARD_MISSING",
+  "bitstream_sha256": "b801c6338600468c5d0475090339d15cd76a1b6f9056dc560575bfdb15505a5b",
+  "ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+  "profile": "profiles/p6/p6_lane0_dynamic_payload_256.json",
+  "active_xdc_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+  "active_pinmap_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+  "last_counters": {
+    "status": "0x000000b7",
+    "error_code": "0x00000102",
+    "retry_count": 3,
+    "retry_exhausted": 1,
+    "tx_fail": 1,
+    "frame_good": 4,
+    "frame_bad": 0,
+    "ack_sent": 4,
+    "ack_seen": 0,
+    "raw_tx_pulses": 1008,
+    "raw_rx_pulses": 1976,
+    "txd_high_max_cycles": 8,
+    "duty_violation": 0
+  },
+  "shutdown_attempt_result": {
+    "before_stage_shutdown_exit": 0,
+    "after_stage_shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "fix": "Added a 4096-cycle A-to-B/B-to-A optical turnaround guard before ACK transmission and rebuilt the immutable candidate.",
+  "superseding_evidence": "evidence/hardware/p6/protocol/lane0_dynamic_payload/p6_jtag_axi_matrix_summary.json",
+  "raw_log_retention_note": "The first bring-up runner reused the stage log path; the original raw log was overwritten by the later passing matrix. The failure counters and shutdown markers were captured before the fix, and this package records that limitation explicitly.",
+  "next_suggested_fix": "none; superseding 160-case lane0 physical matrix is PASS"
+}

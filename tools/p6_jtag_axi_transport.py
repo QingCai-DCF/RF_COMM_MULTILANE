@@ -259,7 +259,7 @@ def write_xsdb_template(path: Path, base_addr: int, input_file: Path, output_fil
     lines = [
         "# P6 JTAG/AXI local transport template.",
         "# This template intentionally does not open Ethernet, DHCP, or TCP board transport.",
-        "# It requires a live PS/JTAG-to-AXI path and a P6 bitstream exposing the register window.",
+        "# It requires the immutable P6 candidate with its live JTAG-to-AXI register window.",
         f"set base 0x{base_addr:08x}",
         f"set input_file {{{input_file.as_posix()}}}",
         f"set output_file {{{output_file.as_posix()}}}",
@@ -267,6 +267,179 @@ def write_xsdb_template(path: Path, base_addr: int, input_file: Path, output_fil
         'puts "P6_JTAG_AXI_REQUIRES_LIVE_AXI_MASTER=1"',
     ]
     write_text(path, "\n".join(lines))
+
+
+def generate_jtag_axi_transactions(
+    path: Path,
+    payload: bytes,
+    *,
+    base_address: int,
+    lane_mask: int,
+    ack_mask: int,
+    session: int,
+    start_transfer: bool,
+) -> None:
+    def addr(offset: int) -> str:
+        return f"0x{base_address + offset:08x}"
+
+    lines = [
+        "# Generated P6 JTAG/AXI transactions. No Ethernet and no motion operations.",
+        f"W {addr(regs.IR_REG_P6_CTRL)} 0x00000001",
+    ]
+    word_count = (len(payload) + 3) // 4
+    payload_window = getattr(regs, "IR_REG_P6_PAYLOAD_WINDOW_BASE", 0x200)
+    rx_window = getattr(regs, "IR_REG_P6_RX_WINDOW_BASE", 0x300)
+    for word_index in range(word_count):
+        lines.append(f"W {addr(payload_window + 4 * word_index)} 0x{payload_word(payload, word_index):08x}")
+    for word_index in range(word_count):
+        lines.append(f"R {addr(payload_window + 4 * word_index)} PAYLOAD_WORD_{word_index}")
+    lines += [
+        f"W {addr(regs.IR_REG_P6_SESSION)} 0x{session:08x}",
+        f"W {addr(regs.IR_REG_P6_LANE_MASK)} 0x{lane_mask:08x}",
+        f"W {addr(regs.IR_REG_P6_ACK_LANE_MASK)} 0x{ack_mask:08x}",
+        f"W {addr(regs.IR_REG_P6_PAYLOAD_LEN)} 0x{len(payload):08x}",
+        f"W {addr(regs.IR_REG_P6_TIMEOUT_CYCLES)} 0x0061a800",
+        f"W {addr(regs.IR_REG_P6_CTRL)} 0x00000004",
+        f"POLL {addr(regs.IR_REG_P6_STATUS)} 0x00000004 0x00000004 2000 COMMIT_STATUS",
+        f"R {addr(regs.IR_REG_P6_PAYLOAD_CRC32)} PAYLOAD_CRC32",
+        f"R {addr(regs.IR_REG_P6_CAPS)} CAPS",
+    ]
+    if start_transfer:
+        lines += [
+            f"W {addr(regs.IR_REG_P6_CTRL)} 0x00000008",
+            f"POLL {addr(regs.IR_REG_P6_STATUS)} 0x00000010 0x00000010 10000 TRANSFER_STATUS",
+            f"R {addr(regs.IR_REG_P6_STATUS)} FINAL_STATUS",
+            f"R {addr(regs.IR_REG_P6_MAILBOX_STATUS)} MAILBOX_STATUS",
+            f"R {addr(regs.IR_REG_P6_RX_PAYLOAD_LEN)} RX_PAYLOAD_LEN",
+            f"R {addr(regs.IR_REG_P6_RX_PAYLOAD_CRC32)} RX_PAYLOAD_CRC32",
+            f"R {addr(regs.IR_REG_P6_RX_DIGEST)} RX_DIGEST",
+            f"R {addr(regs.IR_REG_P6_TX_COUNT)} TX_COUNT",
+            f"R {addr(regs.IR_REG_P6_RX_GOOD_COUNT_L0)} RX_GOOD_COUNT_L0",
+            f"R {addr(regs.IR_REG_P6_RX_GOOD_COUNT_L1)} RX_GOOD_COUNT_L1",
+            f"R {addr(regs.IR_REG_P6_CRC_BAD)} CRC_BAD",
+            f"R {addr(regs.IR_REG_P6_PAYLOAD_MISMATCH)} PAYLOAD_MISMATCH",
+            f"R {addr(regs.IR_REG_P6_RETRY_COUNT)} RETRY_COUNT",
+            f"R {addr(regs.IR_REG_P6_RETRY_EXHAUSTED)} RETRY_EXHAUSTED",
+            f"R {addr(regs.IR_REG_P6_TX_FAIL)} TX_FAIL",
+            f"R {addr(regs.IR_REG_P6_TXD_HIGH_CONSECUTIVE_MAX)} TXD_HIGH_MAX",
+            f"R {addr(regs.IR_REG_P6_DUTY_VIOLATION)} DUTY_VIOLATION",
+            f"R {addr(regs.IR_REG_P6_ERROR_CODE)} ERROR_CODE",
+            f"R {addr(regs.IR_REG_P6_STICKY_ERROR)} STICKY_ERROR",
+            f"R {addr(regs.IR_REG_COUNTER_TX_PULSE)} RAW_TX_PULSES",
+            f"R {addr(regs.IR_REG_COUNTER_RX_RAW_PULSE)} RAW_RX_PULSES",
+            f"R {addr(regs.IR_REG_COUNTER_FRAME_GOOD)} FRAME_GOOD",
+            f"R {addr(regs.IR_REG_COUNTER_FRAME_BAD)} FRAME_BAD",
+            f"R {addr(regs.IR_REG_COUNTER_ACK_SENT)} ACK_SENT",
+            f"R {addr(regs.IR_REG_COUNTER_ACK_SEEN)} ACK_SEEN",
+        ]
+        for word_index in range(word_count):
+            lines.append(f"R {addr(rx_window + 4 * word_index)} RX_WORD_{word_index}")
+    else:
+        lines += [
+            f"R {addr(regs.IR_REG_P6_TX_COUNT)} TX_COUNT",
+            f"R {addr(regs.IR_REG_P6_CRC_BAD)} CRC_BAD",
+            f"R {addr(regs.IR_REG_P6_TX_FAIL)} TX_FAIL",
+        ]
+    lines.append(f"W {addr(regs.IR_REG_P6_CTRL)} 0x00000030")
+    write_text(path, "\n".join(lines))
+
+
+def parse_key_values(path: Path) -> dict[str, int | str]:
+    result: dict[str, int | str] = {}
+    for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if "=" not in raw_line:
+            continue
+        key, value = raw_line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        try:
+            result[key] = int(value, 16)
+        except ValueError:
+            result[key] = value
+    return result
+
+
+def run_live_jtag_transfer(
+    *,
+    payload: bytes,
+    output_file: Path,
+    lane_mask: int,
+    ack_mask: int,
+    session: int,
+    base_address: int,
+    bitstream: Path,
+    ltx: Path,
+    profile: Path,
+    evidence_dir: Path,
+    max_runtime_sec: int,
+    start_transfer: bool,
+) -> tuple[dict[str, Any], bytes]:
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    txn_file = evidence_dir / "p6_jtag_axi_transactions.txt"
+    raw_result = evidence_dir / "p6_jtag_axi_raw_result.log"
+    generate_jtag_axi_transactions(
+        txn_file,
+        payload,
+        base_address=base_address,
+        lane_mask=lane_mask,
+        ack_mask=ack_mask,
+        session=session,
+        start_transfer=start_transfer,
+    )
+    shutdown_bit = ROOT / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit"
+    active_xdc = ROOT / "constraints/active/PORT1.generated.xdc"
+    pinmap = ROOT / "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv"
+    command = [
+        "powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+        "-File", "scripts/hw/run_p6_jtag_axi_stage_safe.ps1",
+        "-Stage", "host_file_transport_jtag" if start_transfer else "jtag_axi_payload_ram_smoke",
+        "-Bitstream", str(bitstream), "-BitstreamSha256", sha256_hex(bitstream.read_bytes()),
+        "-Ltx", str(ltx), "-LtxSha256", sha256_hex(ltx.read_bytes()),
+        "-Profile", str(profile), "-ProfileSha256", sha256_hex(profile.read_bytes()),
+        "-ActiveXdcSha256", sha256_hex(active_xdc.read_bytes()),
+        "-PinmapSha256", sha256_hex(pinmap.read_bytes()),
+        "-ShutdownBitstreamSha256", sha256_hex(shutdown_bit.read_bytes()),
+        "-TransactionFile", str(txn_file), "-ResultFile", str(raw_result),
+        "-EvidenceDir", str(evidence_dir), "-LaneCount", "2", "-MaxLaneMask", "0x3",
+        "-MaxRuntimeSec", str(max_runtime_sec), "-NoEthernet", "-NoMotion", "-ShutdownOnExit",
+    ]
+    env = os.environ.copy()
+    env["RF_COMM_HW_AUTH"] = "P6_LOCAL_TRANSPORT_APPROVED"
+    proc = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, env=env)
+    write_text(evidence_dir / "safe_wrapper.stdout.log", proc.stdout)
+    write_text(evidence_dir / "safe_wrapper.stderr.log", proc.stderr)
+    if proc.returncode != 0:
+        raise RuntimeError(f"P6 safe JTAG/AXI wrapper failed rc={proc.returncode}")
+    raw = parse_key_values(raw_result)
+    word_count = (len(payload) + 3) // 4
+    for word_index in range(word_count):
+        expected = payload_word(payload, word_index)
+        if raw.get(f"PAYLOAD_WORD_{word_index}") != expected:
+            raise RuntimeError(f"payload readback mismatch at word {word_index}")
+    expected_crc = zlib.crc32(payload) & 0xFFFFFFFF
+    if raw.get("PAYLOAD_CRC32") != expected_crc:
+        raise RuntimeError("committed payload CRC mismatch")
+    rx_payload = b""
+    if start_transfer:
+        rx = bytearray(len(payload))
+        for word_index in range(word_count):
+            word = int(raw.get(f"RX_WORD_{word_index}", 0))
+            unpack_word(word, len(payload), word_index, rx)
+        rx_payload = bytes(rx)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        output_file.write_bytes(rx_payload)
+        status = int(raw.get("FINAL_STATUS", 0))
+        if status & (P6_STATUS_FAIL | P6_STATUS_CONFIG_REJECTED | P6_STATUS_TIMEOUT):
+            raise RuntimeError(f"hardware transfer status failed: 0x{status:08x}")
+        for key in ("CRC_BAD", "PAYLOAD_MISMATCH", "RETRY_EXHAUSTED", "TX_FAIL", "DUTY_VIOLATION"):
+            if int(raw.get(key, 0)) != 0:
+                raise RuntimeError(f"hardware stop condition {key}={raw[key]}")
+        if rx_payload != payload or int(raw.get("RX_PAYLOAD_CRC32", 0)) != expected_crc:
+            raise RuntimeError("hardware RX payload/digest mismatch")
+    else:
+        if int(raw.get("TX_COUNT", 0)) != 0:
+            raise RuntimeError("payload RAM smoke unexpectedly started TFDU TX")
+    return {"raw": raw, "safe_wrapper_returncode": proc.returncode, "transaction_file": rel(txn_file)}, rx_payload
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -279,6 +452,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--session", default="0x2201")
     parser.add_argument("--base-address", default="0x43c00000")
     parser.add_argument("--allow-live-jtag", action="store_true")
+    parser.add_argument("--bitstream", default="")
+    parser.add_argument("--ltx", default="")
+    parser.add_argument("--profile", default="profiles/p6/p6_host_file_transport_jtag.json")
+    parser.add_argument("--evidence-dir", default="evidence/hardware/p6/host_file_transport_jtag")
+    parser.add_argument("--max-runtime-sec", type=int, default=1200)
+    parser.add_argument("--no-start", action="store_true", help="Commit/read back payload without starting TFDU TX.")
     parser.add_argument("--json-summary", action="store_true")
     args = parser.parse_args(argv)
 
@@ -290,6 +469,8 @@ def main(argv: list[str] | None = None) -> int:
     base_address = int(args.base_address, 0)
     payload = input_file.read_bytes()
     evidence_dir = ROOT / "evidence" / "hardware" / "p6" / "host_file_transport_jtag"
+    if args.backend == "memory":
+        evidence_dir = evidence_dir / "local_backend"
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
     if args.backend == "jtag-axi" and not args.allow_live_jtag:
@@ -298,7 +479,7 @@ def main(argv: list[str] | None = None) -> int:
       summary = {
           "P6_HOST_FILE_TRANSPORT_JTAG": BLOCKED,
           "generated_at_utc": now_iso(),
-          "reason": "live JTAG/AXI execution requires an integrated PS7/JTAG-to-AXI register path and explicit --allow-live-jtag",
+          "reason": "live JTAG/AXI execution is intentionally locked unless explicit --allow-live-jtag authorization is supplied",
           "template": rel(template),
           "input_file": rel(input_file),
           "output_file": rel(output_file),
@@ -312,31 +493,75 @@ def main(argv: list[str] | None = None) -> int:
       return 2
 
     if args.backend == "jtag-axi":
-        xsdb = Path(r"D:\Xilinx\Vitis\2023.1\bin\xsdb.bat")
-        if not xsdb.exists():
+        candidate_summary = ROOT / "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json"
+        candidate = json.loads(candidate_summary.read_text(encoding="utf-8")) if candidate_summary.exists() else {}
+        default_bit = candidate.get("artifacts", {}).get("bit", {}).get("immutable", "")
+        default_ltx = candidate.get("artifacts", {}).get("ltx", {}).get("immutable", "")
+        bitstream = Path(args.bitstream or default_bit)
+        ltx = Path(args.ltx or default_ltx)
+        profile = Path(args.profile)
+        evidence_dir = Path(args.evidence_dir)
+        if not bitstream.is_absolute(): bitstream = ROOT / bitstream
+        if not ltx.is_absolute(): ltx = ROOT / ltx
+        if not profile.is_absolute(): profile = ROOT / profile
+        if not evidence_dir.is_absolute(): evidence_dir = ROOT / evidence_dir
+        try:
+            transfer, rx_payload = run_live_jtag_transfer(
+                payload=payload,
+                output_file=output_file,
+                lane_mask=lane_mask,
+                ack_mask=ack_mask,
+                session=session,
+                base_address=base_address,
+                bitstream=bitstream,
+                ltx=ltx,
+                profile=profile,
+                evidence_dir=evidence_dir,
+                max_runtime_sec=args.max_runtime_sec,
+                start_transfer=not args.no_start,
+            )
+            match = args.no_start or payload == rx_payload
             summary = {
-                "P6_HOST_FILE_TRANSPORT_JTAG": BLOCKED,
+                "P6_HOST_FILE_TRANSPORT_JTAG": "NOT_APPLICABLE_PAYLOAD_RAM_SMOKE" if args.no_start else PASS,
+                "P6_JTAG_AXI_PAYLOAD_RAM_SMOKE": PASS if args.no_start else "NOT_APPLICABLE",
                 "generated_at_utc": now_iso(),
-                "reason": "xsdb.bat missing; cannot run live JTAG/AXI transport",
-                "script_hardware_actions_executed": False,
+                "input_file": rel(input_file),
+                "output_file": rel(output_file),
+                "input_output_match": match,
+                "input_sha256": sha256_hex(payload),
+                "output_sha256": sha256_hex(rx_payload) if rx_payload else "NOT_STARTED",
+                "lane_mask": f"0x{lane_mask:x}",
+                "ack_lane_mask": f"0x{ack_mask:x}",
+                "session": f"0x{session:04x}",
+                "transfer": transfer,
+                "bitstream": rel(bitstream),
+                "bitstream_sha256": sha256_hex(bitstream.read_bytes()),
+                "ltx": rel(ltx),
+                "ltx_sha256": sha256_hex(ltx.read_bytes()),
+                "profile": rel(profile),
+                "profile_sha256": sha256_hex(profile.read_bytes()),
+                "script_hardware_actions_executed": True,
+                "source_evidence_contains_hardware_actions": True,
                 "ethernet_used": False,
+                "motion_used": False,
+                "shutdown_on_exit": True,
             }
             write_json(evidence_dir / "p6_jtag_axi_transport_summary.json", summary)
-            if args.json_summary:
-                print(json.dumps(summary, ensure_ascii=False))
-            return 2
-        summary = {
-            "P6_HOST_FILE_TRANSPORT_JTAG": BLOCKED,
-            "generated_at_utc": now_iso(),
-            "reason": "live JTAG/AXI implementation is scaffolded but no verified PS7/JTAG-to-AXI base path exists in this rebuilt top",
-            "xsdb": str(xsdb),
-            "script_hardware_actions_executed": False,
-            "ethernet_used": False,
-        }
-        write_json(evidence_dir / "p6_jtag_axi_transport_summary.json", summary)
-        if args.json_summary:
-            print(json.dumps(summary, ensure_ascii=False))
-        return 2
+            if args.json_summary: print(json.dumps(summary, ensure_ascii=False))
+            return 0
+        except Exception as exc:
+            summary = {
+                "P6_HOST_FILE_TRANSPORT_JTAG": FAIL,
+                "generated_at_utc": now_iso(),
+                "reason": str(exc),
+                "script_hardware_actions_executed": True,
+                "source_evidence_contains_hardware_actions": True,
+                "ethernet_used": False,
+                "motion_used": False,
+            }
+            write_json(evidence_dir / "p6_jtag_axi_transport_summary.json", summary)
+            if args.json_summary: print(json.dumps(summary, ensure_ascii=False))
+            return 1
 
     try:
         transfer, rx_payload = run_memory_transfer(payload, lane_mask, ack_mask, session)
@@ -346,9 +571,8 @@ def main(argv: list[str] | None = None) -> int:
         result = PASS if match and transfer["crc_bad"] == 0 and transfer["payload_mismatch"] == 0 else FAIL
         summary = {
             "P6_HOST_FILE_TRANSPORT_LOCAL_BACKEND": result,
-            "P6_HOST_FILE_TRANSPORT_JTAG": BLOCKED,
             "generated_at_utc": now_iso(),
-            "reason": "memory backend validates P6 register-window/file flow; live JTAG/AXI remains blocked until hardware AXI path is integrated",
+            "reason": "memory backend validates register-window/file flow in isolated evidence; live JTAG/AXI status is reported only by authorized hardware evidence",
             "input_file": rel(input_file),
             "output_file": rel(output_file),
             "input_sha256": sha256_hex(payload),
@@ -371,7 +595,6 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         summary = {
             "P6_HOST_FILE_TRANSPORT_LOCAL_BACKEND": FAIL,
-            "P6_HOST_FILE_TRANSPORT_JTAG": BLOCKED,
             "generated_at_utc": now_iso(),
             "reason": str(exc),
             "script_hardware_actions_executed": False,

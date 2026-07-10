@@ -1,8 +1,8 @@
 # P6 Local Transport Implementation Summary
 
-generated_at_utc: 2026-07-09T17:40:44+00:00
+generated_at_utc: 2026-07-10T09:15:16+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: PASS
 reason: P6 implementation files are present
@@ -25,11 +25,19 @@ PS runtime mailbox source and host no-Ethernet local transport wrapper are prese
 
 ## Files
 
-- `rtl/ir_axi_regs_new.sv` sha256=`757d0660ab463ed8da690087142cc5f00b6691d12f67afb28e0d152bcde27dd7`
-- `sim/tb/tb_p6_local_transport_regs.sv` sha256=`2fb758f58abaeeecd88b1d6d1ab0ed43b70c30527453c87550a8b2362484de68`
-- `software/ps_driver/ir_driver.c` sha256=`6e4ed94087bf755da043f63327ed71e48704d196900a2b5e0c6af608677ad170`
+- `rtl/p6_local_transport_regs.sv` sha256=`3c8f3988a3177f411dc17e4e30c055cc36b7e1aa0923ebe901bd3466b63b5a8a`
+- `rtl/p6_dynamic_transport_engine.sv` sha256=`482a2ebbac572a41f1ab47455066fd2032599761f65586998303f453fd951a52`
+- `rtl/p6_axi_lite_bridge.sv` sha256=`2569233aa9cc985acfd0b7369680d94e11c2cd82d95ea14f0f77b56a5145f432`
+- `rtl/p6_axi_peripheral.sv` sha256=`6a13127945c3985d270500ba2b9042b42365cfd3693f6c8e6a768d5c6cb334c0`
+- `rtl/p6_jtag_top.sv` sha256=`48eb7fc46d4db76aaf574177ae33742b97c88d91d8653ba5d0ff56d99d4dbc1f`
+- `sim/tb/tb_p6_dynamic_transport_engine.sv` sha256=`2d5fbc3639841def1abc05fe77463f26394615a2d3a9b9c4f49c9091959d99ea`
+- `sim/tb/tb_p6_local_transport_regs_integration.sv` sha256=`dbe46c099cc295584e086693bd9f7aae713273a24acad03582e5225660160067`
+- `software/ps_driver/ir_driver.c` sha256=`b2f5a32bc49527696401c7e2f3af3fc5240ad97e6e19bf278307c6820ad5c330`
 - `software/ps_driver/ir_driver.h` sha256=`ad851923e4eb4c09d78307a230a7ba3ca9b63266a388777b7f3758d9dee63453`
-- `software/ps_driver/p6_runtime_mailbox.c` sha256=`89db0842d774c5fa408f6953f1b72edab8a13b3299d55f3b9c8ee9e3c430e183`
-- `tools/p6_jtag_axi_transport.py` sha256=`bd8a2640863ba8441a0e4e4ee7390966188f908f774127e958723127a4341b49`
-- `config/register_map/ir_axi_regs.yaml` sha256=`e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda`
-- `config/register_map/generated/ir_regs.h` sha256=`b3c6e65475ace56b280fe0c15b1a0c4c37fb510246cb842d0546bbfea9241aab`
+- `software/ps_driver/p6_runtime_mailbox.c` sha256=`b2fd8e1eb8f32658e75e4956ed51976dd6b89a82e8f730d5825f3692ad5c6749`
+- `tools/p6_jtag_axi_transport.py` sha256=`a8aa3bb8778d3090a79ca99b4cab1421543e095704825f3a571c264be086260e`
+- `tools/run_p6_jtag_axi_matrix.py` sha256=`e5b7bef3083692dc5fbd7ef198924887d6ee0f07eee44d554e2f21d296c17783`
+- `tools/run_p6_two_lane_soak.py` sha256=`253fb4648fdd38f50db25114043a1cf2ad1230c637363d897fc7babfee970380`
+- `tools/run_p6_ps_runtime_safe.py` sha256=`97c1dee4b6a2c84d0a6d1926325906ccac9ddbc1b66479adeebd2ada470aba2c`
+- `config/register_map/ir_axi_regs.yaml` sha256=`d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d`
+- `config/register_map/generated/ir_regs.h` sha256=`30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745`

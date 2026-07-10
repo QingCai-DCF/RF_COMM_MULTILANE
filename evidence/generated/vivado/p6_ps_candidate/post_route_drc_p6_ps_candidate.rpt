@@ -1,0 +1,65 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Fri Jul 10 12:55:37 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_drc -file C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/p6_ps_candidate/post_route_drc_p6_ps_candidate.rpt
+| Design       : p6_ps_system_wrapper
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Fully Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: impl_1
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 3
++-------------+----------+---------------------------------+------------+
+| Rule        | Severity | Description                     | Violations |
++-------------+----------+---------------------------------+------------+
+| PLBUFGOPT-1 | Warning  | Non-Optimal connections to BUFG | 2          |
+| RTSTAT-10   | Warning  | No routable loads               | 1          |
++-------------+----------+---------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+PLBUFGOPT-1#1 Warning
+Non-Optimal connections to BUFG
+A non-muxed BUFG p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG is driven by another global buffer p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica. Remove non-muxed BUFG if it is not desired
+Related violations: <none>
+
+PLBUFGOPT-1#2 Warning
+Non-Optimal connections to BUFG
+A non-muxed BUFG p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica is driven by another global buffer p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_1. Remove non-muxed BUFG if it is not desired
+Related violations: <none>
+
+RTSTAT-10#1 Warning
+No routable loads
+20 net(s) have no routable loads. The problem bus(es) and/or net(s) are p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[10],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[11],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[12],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[13],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[14],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[22],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[24],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[25],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[26],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[4],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[5],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[6],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[7],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[8],
+p6_ps_system_i/p6_peripheral_0/inst/impl/regs_debug_status[9]
+ (the first 15 of 20 listed nets/buses).
+Related violations: <none>

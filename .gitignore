@@ -1,6 +1,7 @@
 # Generated and heavy tool outputs
 .cache/
 dist/
+build/
 *.jou
 *.log
 *.str
@@ -18,6 +19,7 @@ evidence/generated/sim/
 evidence/generated/vivado/project/
 evidence/generated/vivado/project_*/
 evidence/generated/vivado/.Xil/
+evidence/generated/vivado/p6_ip_inspect/project/
 .hardware_authorization/*.txt
 !.hardware_authorization/*.txt.template
 __pycache__/

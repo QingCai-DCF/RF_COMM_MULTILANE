@@ -1,8 +1,8 @@
 # P6 Host File Transport Local Backend Summary
 
-generated_at_utc: 2026-07-09T17:40:49+00:00
+generated_at_utc: 2026-07-10T09:15:55+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: PASS
 reason: host file memory backend executed without Ethernet or hardware actions
@@ -20,8 +20,8 @@ available_lanes: 2
 max_lane_mask: 0x3
 
 P6_HOST_FILE_TRANSPORT_LOCAL_BACKEND: PASS
-P6_HOST_FILE_TRANSPORT_JTAG: BLOCKED_BY_RUNTIME_ENVIRONMENT
-reason: local memory backend validates file payload flow; live JTAG/AXI remains blocked without rebuilt top AXI ingress
+P6_HOST_FILE_TRANSPORT_JTAG: SEE_SEPARATE_AUTHORIZED_HARDWARE_EVIDENCE
+reason: local memory backend output is isolated and cannot overwrite live JTAG/AXI evidence
 
 ## Transfers
 

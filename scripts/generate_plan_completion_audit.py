@@ -171,7 +171,7 @@ def main() -> int:
         lines.append(f"PLAN_FORBIDDEN_CLAIM_{claim}_ABSENT={1 if absent else 0}")
     lines += [
         "",
-        "The current workspace does not claim real hardware, Ethernet, rotation, soak, 8-lane, or AB_L1 repair acceptance.",
+        "This offline-gate evidence does not itself claim hardware, Ethernet, rotation, soak, 8-lane, or AB_L1 repair acceptance; separately sourced authorized hardware evidence may be reported with explicit provenance.",
         "",
         "## Remaining External Evidence",
         "",

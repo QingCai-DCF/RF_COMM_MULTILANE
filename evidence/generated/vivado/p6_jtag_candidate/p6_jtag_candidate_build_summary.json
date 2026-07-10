@@ -1,0 +1,43 @@
+{
+  "P6_JTAG_CANDIDATE_BUILD": "PASS",
+  "generated_at_utc": "2026-07-10T04:19:15+00:00",
+  "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+  "returncode": 0,
+  "timing_met": true,
+  "drc_clean": true,
+  "artifacts": {
+    "bit": {
+      "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+      "sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit"
+    },
+    "ltx": {
+      "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+      "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx"
+    }
+  },
+  "inputs": {
+    "active_xdc": {
+      "path": "constraints/active/PORT1.generated.xdc",
+      "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+    },
+    "pinmap": {
+      "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+    },
+    "active_profile": {
+      "path": "board_profiles/ACTIVE_PROFILE.json",
+      "sha256": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1"
+    },
+    "register_map": {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    }
+  },
+  "live_jtag_axi_ingress": true,
+  "dynamic_payload_physical_engine": true,
+  "ethernet_used": false,
+  "motion_used": false,
+  "max_lane_mask": "0x3"
+}

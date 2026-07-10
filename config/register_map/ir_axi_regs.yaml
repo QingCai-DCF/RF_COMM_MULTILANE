@@ -294,6 +294,16 @@
       "name": "P6_CAPS",
       "offset": "0x017C",
       "description": "P6 local transport capabilities and maximum payload"
+    },
+    {
+      "name": "P6_PAYLOAD_WINDOW_BASE",
+      "offset": "0x0200",
+      "description": "P6 direct TX payload window base; 64 little-endian words through 0x02FC"
+    },
+    {
+      "name": "P6_RX_WINDOW_BASE",
+      "offset": "0x0300",
+      "description": "P6 direct RX payload window base; 64 little-endian words through 0x03FC"
     }
   ]
 }

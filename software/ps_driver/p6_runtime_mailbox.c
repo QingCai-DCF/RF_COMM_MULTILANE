@@ -6,7 +6,7 @@
 #endif
 
 #ifndef P6_RESULT_MAILBOX_BASEADDR
-#define P6_RESULT_MAILBOX_BASEADDR 0x00100000u
+#define P6_RESULT_MAILBOX_BASEADDR 0x00020000u
 #endif
 
 enum {
@@ -59,7 +59,9 @@ static void p6_write_result_mailbox(int status, const ir_p6_payload_result_t *re
 
 int main(void) {
   static uint8_t payload[P6_RUNTIME_PAYLOAD_BYTES];
-  ir_p6_payload_result_t result;
+  static uint8_t rx_payload[P6_RUNTIME_PAYLOAD_BYTES];
+  uint32_t rx_payload_len = 0u;
+  ir_p6_payload_result_t result = {0};
   p6_mmio_context_t ctx = {
     .base = (volatile uint32_t *)IR_PL_BASEADDR,
   };
@@ -80,6 +82,19 @@ int main(void) {
 
   p6_fill_payload(payload, P6_RUNTIME_PAYLOAD_BYTES);
   int status = ir_driver_p6_run_mailbox_payload(&io, &config, payload, P6_RUNTIME_MAX_POLLS, &result);
+  if (status == 0) {
+    if (ir_driver_p6_read_rx_payload(&io, rx_payload, sizeof(rx_payload), &rx_payload_len) != 0 ||
+        rx_payload_len != P6_RUNTIME_PAYLOAD_BYTES) {
+      status = -20;
+    } else {
+      for (uint32_t idx = 0u; idx < P6_RUNTIME_PAYLOAD_BYTES; idx++) {
+        if (rx_payload[idx] != payload[idx]) {
+          status = -21;
+          break;
+        }
+      }
+    }
+  }
   (void)ir_driver_shutdown(&io);
   p6_write_result_mailbox(status, &result);
   return status == 0 ? 0 : 1;

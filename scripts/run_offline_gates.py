@@ -261,9 +261,21 @@ def write_summary(outdir, results):
     hard_fail = [r for r in results if r["returncode"] != 0]
     pending = [r for r in results if r.get("status") == "PENDING_TOOL"]
     status = "FAIL" if hard_fail else ("PASS_WITH_PENDING_TOOL" if pending else "PASS")
-    summary = {"status": status, "no_hardware": True, "results": results}
+    summary = {
+        "status": status,
+        "no_hardware": True,
+        "hardware_acceptance": "PENDING_HW",
+        "results": results,
+    }
     (outdir / "offline_gate_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    lines = [f"# Offline Gate Summary", "", f"BOOTSTRAP_STATUS: {status}", "NO_HARDWARE_ACTIONS_EXECUTED: true", ""]
+    lines = [
+        f"# Offline Gate Summary",
+        "",
+        f"BOOTSTRAP_STATUS: {status}",
+        "NO_HARDWARE_ACTIONS_EXECUTED: true",
+        "HARDWARE_ACCEPTANCE: PENDING_HW",
+        "",
+    ]
     for r in results:
         mark = r.get("status") or ("PASS" if r["returncode"] == 0 else "FAIL")
         stdout = "\n".join(line.rstrip() for line in r["stdout"].strip().splitlines())

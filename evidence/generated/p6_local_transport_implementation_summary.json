@@ -2,21 +2,51 @@
   "P6_LOCAL_TRANSPORT_IMPLEMENTATION": "PASS",
   "files": [
     {
-      "path": "rtl/ir_axi_regs_new.sv",
+      "path": "rtl/p6_local_transport_regs.sv",
       "present": true,
-      "sha256": "757d0660ab463ed8da690087142cc5f00b6691d12f67afb28e0d152bcde27dd7",
+      "sha256": "3c8f3988a3177f411dc17e4e30c055cc36b7e1aa0923ebe901bd3466b63b5a8a",
       "missing_markers": []
     },
     {
-      "path": "sim/tb/tb_p6_local_transport_regs.sv",
+      "path": "rtl/p6_dynamic_transport_engine.sv",
       "present": true,
-      "sha256": "2fb758f58abaeeecd88b1d6d1ab0ed43b70c30527453c87550a8b2362484de68",
+      "sha256": "482a2ebbac572a41f1ab47455066fd2032599761f65586998303f453fd951a52",
+      "missing_markers": []
+    },
+    {
+      "path": "rtl/p6_axi_lite_bridge.sv",
+      "present": true,
+      "sha256": "2569233aa9cc985acfd0b7369680d94e11c2cd82d95ea14f0f77b56a5145f432",
+      "missing_markers": []
+    },
+    {
+      "path": "rtl/p6_axi_peripheral.sv",
+      "present": true,
+      "sha256": "6a13127945c3985d270500ba2b9042b42365cfd3693f6c8e6a768d5c6cb334c0",
+      "missing_markers": []
+    },
+    {
+      "path": "rtl/p6_jtag_top.sv",
+      "present": true,
+      "sha256": "48eb7fc46d4db76aaf574177ae33742b97c88d91d8653ba5d0ff56d99d4dbc1f",
+      "missing_markers": []
+    },
+    {
+      "path": "sim/tb/tb_p6_dynamic_transport_engine.sv",
+      "present": true,
+      "sha256": "2d5fbc3639841def1abc05fe77463f26394615a2d3a9b9c4f49c9091959d99ea",
+      "missing_markers": []
+    },
+    {
+      "path": "sim/tb/tb_p6_local_transport_regs_integration.sv",
+      "present": true,
+      "sha256": "dbe46c099cc295584e086693bd9f7aae713273a24acad03582e5225660160067",
       "missing_markers": []
     },
     {
       "path": "software/ps_driver/ir_driver.c",
       "present": true,
-      "sha256": "6e4ed94087bf755da043f63327ed71e48704d196900a2b5e0c6af608677ad170",
+      "sha256": "b2f5a32bc49527696401c7e2f3af3fc5240ad97e6e19bf278307c6820ad5c330",
       "missing_markers": []
     },
     {
@@ -28,25 +58,43 @@
     {
       "path": "software/ps_driver/p6_runtime_mailbox.c",
       "present": true,
-      "sha256": "89db0842d774c5fa408f6953f1b72edab8a13b3299d55f3b9c8ee9e3c430e183",
+      "sha256": "b2fd8e1eb8f32658e75e4956ed51976dd6b89a82e8f730d5825f3692ad5c6749",
       "missing_markers": []
     },
     {
       "path": "tools/p6_jtag_axi_transport.py",
       "present": true,
-      "sha256": "bd8a2640863ba8441a0e4e4ee7390966188f908f774127e958723127a4341b49",
+      "sha256": "a8aa3bb8778d3090a79ca99b4cab1421543e095704825f3a571c264be086260e",
+      "missing_markers": []
+    },
+    {
+      "path": "tools/run_p6_jtag_axi_matrix.py",
+      "present": true,
+      "sha256": "e5b7bef3083692dc5fbd7ef198924887d6ee0f07eee44d554e2f21d296c17783",
+      "missing_markers": []
+    },
+    {
+      "path": "tools/run_p6_two_lane_soak.py",
+      "present": true,
+      "sha256": "253fb4648fdd38f50db25114043a1cf2ad1230c637363d897fc7babfee970380",
+      "missing_markers": []
+    },
+    {
+      "path": "tools/run_p6_ps_runtime_safe.py",
+      "present": true,
+      "sha256": "97c1dee4b6a2c84d0a6d1926325906ccac9ddbc1b66479adeebd2ada470aba2c",
       "missing_markers": []
     },
     {
       "path": "config/register_map/ir_axi_regs.yaml",
       "present": true,
-      "sha256": "e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
       "missing_markers": []
     },
     {
       "path": "config/register_map/generated/ir_regs.h",
       "present": true,
-      "sha256": "b3c6e65475ace56b280fe0c15b1a0c4c37fb510246cb842d0546bbfea9241aab",
+      "sha256": "30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745",
       "missing_markers": []
     }
   ],

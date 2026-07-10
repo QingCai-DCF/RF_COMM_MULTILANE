@@ -1,8 +1,8 @@
 # P6 Bitstream Provenance Summary
 
-generated_at_utc: 2026-07-09T17:40:49+00:00
+generated_at_utc: 2026-07-10T09:15:55+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: PASS
 reason: P6 immutable bitstreams copied
@@ -27,10 +27,11 @@ vivado: `D:\Xilinx\Vivado\2023.1\bin\vivado.bat`
 
 | Artifact | Status | Immutable Bitstream | SHA256 | Applicability |
 | --- | --- | --- | --- | --- |
-| p6_safe_idle | PASS | `evidence/hardware/p6/bitstreams/p6_safe_idle_6925b69eb0d43aa788cb3d2fe8a8ce543de93da0200183d737214b899c5d394b.bit` | `6925b69eb0d43aa788cb3d2fe8a8ce543de93da0200183d737214b899c5d394b` | P6_SAFE_IDLE_DIAGNOSTIC |
-| p6_tfdu_idle | PASS | `evidence/hardware/p6/bitstreams/p6_tfdu_idle_08f3bc790fb8da67c642c69f695e9bcd66b27a40030be971d2d7d9bb4cbbc442.bit` | `08f3bc790fb8da67c642c69f695e9bcd66b27a40030be971d2d7d9bb4cbbc442` | P6_TFDU_RECEIVE_ACTIVE_IDLE_DIAGNOSTIC |
-| p6_local_transport | PASS | `evidence/hardware/p6/bitstreams/p6_local_transport_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit` | `0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5` | P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_NO_LIVE_AXI_INGRESS |
-| p6_two_lane_soak | PASS | `evidence/hardware/p6/bitstreams/p6_two_lane_soak_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit` | `0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5` | P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_2H_SOAK_NOT_EXECUTED |
+| p6_safe_idle | PASS | `evidence/hardware/p6/bitstreams/p6_safe_idle_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit` | `0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d` | P6_IMMUTABLE_JTAG_AXI_DYNAMIC_TRANSPORT_CANDIDATE_RESET_SAFE |
+| p6_tfdu_idle | PASS | `evidence/hardware/p6/bitstreams/p6_tfdu_idle_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit` | `0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d` | P6_IMMUTABLE_JTAG_AXI_DYNAMIC_TRANSPORT_CANDIDATE_ACTIVE_IDLE |
+| p6_local_transport | PASS | `evidence/hardware/p6/bitstreams/p6_local_transport_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit` | `0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d` | P6_LIVE_JTAG_AXI_DYNAMIC_PAYLOAD_PHYSICAL_TRANSPORT |
+| p6_two_lane_soak | PASS | `evidence/hardware/p6/bitstreams/p6_two_lane_soak_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit` | `0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d` | P6_STATIONARY_TWO_LANE_2H_DYNAMIC_PAYLOAD_SOAK |
+| p6_ps_runtime | PASS | `evidence/hardware/p6/bitstreams/p6_ps_runtime_4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5.bit` | `4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5` | P6_PS7_AXI_MAILBOX_RUNTIME_CANDIDATE |
 
 ## Active Input Hashes
 
@@ -38,7 +39,17 @@ vivado: `D:\Xilinx\Vivado\2023.1\bin\vivado.bat`
 - active_profile: `7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1`
 - pinmap: `4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a`
 - active_xdc: `cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990`
-- register_map: `e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda`
+- register_map: `d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d`
 - tfdu_safety_contract: `ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae`
 - tfdu_safety_summary: `0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f`
 - shutdown_bitstream: `bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810`
+
+## Candidate Build Gates
+
+- JTAG/AXI candidate: PASS
+- JTAG/AXI timing met: true
+- JTAG/AXI DRC clean: true
+- PS candidate: PASS
+- PS timing met: true
+- PS DRC clean: true
+- PS runtime ELF build: PASS

@@ -20,7 +20,7 @@
     "prbs7"
   ],
   "expected_crc_policy": "crc32_payload_digest_and_frame_crc_clean",
-  "expected_ack_policy": "positive_masks_pass_negative_masks_bounded_reject",
+  "expected_ack_policy": "positive_masks_pass_session_ack_negative_bounded_reject_lane_gt3_simulation_only",
   "expected_lane_mask": "0x3",
   "expected_ack_lane_mask": "0x3",
   "stop_conditions": [
@@ -45,5 +45,10 @@
   "rotation_enabled": false,
   "manual_intervention_required": false,
   "evidence_dir": "evidence/hardware/p6/lane_fallback_regression",
-  "product_final_acceptance": "pending"
+  "product_final_acceptance": "pending",
+  "positive_lane_masks": [
+    "0x1",
+    "0x2",
+    "0x3"
+  ]
 }

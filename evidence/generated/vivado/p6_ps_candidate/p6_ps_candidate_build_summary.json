@@ -1,0 +1,40 @@
+{
+  "P6_PS_CANDIDATE_BUILD": "PASS",
+  "generated_at_utc": "2026-07-10T04:55:49+00:00",
+  "returncode": 0,
+  "timing_met": true,
+  "drc_clean": true,
+  "artifacts": {
+    "bit": {
+      "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit",
+      "sha256": "4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5.bit"
+    },
+    "xsa": {
+      "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.xsa",
+      "sha256": "51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa"
+    }
+  },
+  "inputs": {
+    "active_xdc": {
+      "path": "constraints/active/PORT1.generated.xdc",
+      "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+    },
+    "pinmap": {
+      "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+    },
+    "active_profile": {
+      "path": "board_profiles/ACTIVE_PROFILE.json",
+      "sha256": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1"
+    },
+    "register_map": {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    }
+  },
+  "axi_base": "0x43c00000",
+  "ethernet_used": false,
+  "motion_used": false
+}

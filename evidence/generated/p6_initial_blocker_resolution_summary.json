@@ -1,0 +1,25 @@
+{
+  "P6_INITIAL_BLOCKER_RESOLUTION": "PASS",
+  "initial_blockers": [
+    "dynamic payload physical datapath absent from canonical top",
+    "no live JTAG/AXI payload ingress",
+    "no rebuilt PS7/XSA/ELF runtime mailbox path",
+    "no real lane0/lane1/two-lane dynamic payload evidence",
+    "no host file round-trip, fallback, or 2-hour stationary soak evidence"
+  ],
+  "resolution_evidence": [
+    "evidence/hardware/p6/safe_idle_recheck/p6_stage_result.json",
+    "evidence/hardware/p6/tfdu_control_idle_recheck/p6_stage_result.json",
+    "evidence/hardware/p6/jtag_axi_payload_ram_smoke/p6_jtag_axi_transport_summary.json",
+    "evidence/hardware/p6/protocol/lane0_dynamic_payload/p6_jtag_axi_matrix_summary.json",
+    "evidence/hardware/p6/protocol/lane1_dynamic_payload/p6_jtag_axi_matrix_summary.json",
+    "evidence/hardware/p6/protocol/two_lane_dynamic_payload/p6_jtag_axi_matrix_summary.json",
+    "evidence/hardware/p6/ps_driver_runtime/p6_ps_runtime_summary.json",
+    "evidence/hardware/p6/host_file_transport_jtag/p6_jtag_axi_transport_summary.json",
+    "evidence/hardware/p6/lane_fallback_regression/p6_jtag_axi_matrix_summary.json",
+    "evidence/hardware/p6/soak/two_lane_2h_stationary/p6_two_lane_soak_summary.json"
+  ],
+  "historical_failure_packages_are_pre_fix_audit_inputs": true,
+  "current_failures": [],
+  "current_blocked": []
+}

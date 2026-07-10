@@ -1,8 +1,7 @@
 {
   "P6_HOST_FILE_PAYLOADS": "PASS",
   "P6_HOST_FILE_TRANSPORT_LOCAL_BACKEND": "PASS",
-  "P6_HOST_FILE_TRANSPORT_JTAG": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "local memory backend validates file payload flow; live JTAG/AXI remains blocked without rebuilt top AXI ingress",
+  "reason": "local memory backend recheck is isolated from authoritative live JTAG/AXI hardware evidence",
   "payload_files": [
     {
       "file": "evidence/hardware/p6/host_file_transport_jtag/input_payloads/small_text.bin",
@@ -40,7 +39,7 @@
       "input_output_match": true,
       "input_sha256": "58cd9f8d461fd5e6d2f83e4d790b99da243bb8b452e961454cbbb029122f4cfc",
       "output_sha256": "58cd9f8d461fd5e6d2f83e4d790b99da243bb8b452e961454cbbb029122f4cfc",
-      "reason": "memory backend validates P6 register-window/file flow; live JTAG/AXI remains blocked until hardware AXI path is integrated"
+      "reason": "memory backend validates register-window/file flow in isolated evidence; live JTAG/AXI status is reported only by authorized hardware evidence"
     },
     {
       "input_file": "evidence/hardware/p6/host_file_transport_jtag/input_payloads/counter_247.bin",
@@ -52,7 +51,7 @@
       "input_output_match": true,
       "input_sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
       "output_sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
-      "reason": "memory backend validates P6 register-window/file flow; live JTAG/AXI remains blocked until hardware AXI path is integrated"
+      "reason": "memory backend validates register-window/file flow in isolated evidence; live JTAG/AXI status is reported only by authorized hardware evidence"
     },
     {
       "input_file": "evidence/hardware/p6/host_file_transport_jtag/input_payloads/prbs_247.bin",
@@ -64,7 +63,7 @@
       "input_output_match": true,
       "input_sha256": "d47b2c62212dfc93a730df2426175cd0b34aed9fc12080bd4eba5f7c72cd70c2",
       "output_sha256": "d47b2c62212dfc93a730df2426175cd0b34aed9fc12080bd4eba5f7c72cd70c2",
-      "reason": "memory backend validates P6 register-window/file flow; live JTAG/AXI remains blocked until hardware AXI path is integrated"
+      "reason": "memory backend validates register-window/file flow in isolated evidence; live JTAG/AXI status is reported only by authorized hardware evidence"
     },
     {
       "input_file": "evidence/hardware/p6/host_file_transport_jtag/input_payloads/random_seeded_247.bin",
@@ -76,7 +75,7 @@
       "input_output_match": true,
       "input_sha256": "fe79fcf375a8ea07b7e90ac6411522a073a3873b6bf721f0aa59d019e47bc4c6",
       "output_sha256": "fe79fcf375a8ea07b7e90ac6411522a073a3873b6bf721f0aa59d019e47bc4c6",
-      "reason": "memory backend validates P6 register-window/file flow; live JTAG/AXI remains blocked until hardware AXI path is integrated"
+      "reason": "memory backend validates register-window/file flow in isolated evidence; live JTAG/AXI status is reported only by authorized hardware evidence"
     }
   ],
   "script_hardware_actions_executed": false,

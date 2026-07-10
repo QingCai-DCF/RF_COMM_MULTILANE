@@ -1,0 +1,49 @@
+{
+  "P6_FAILURE_PACKAGE": "RECOVERED_TEST_HARNESS_ASSERTION",
+  "stage": "host_file_transport_jtag",
+  "generated_at_utc": "2026-07-10T07:31:01+00:00",
+  "profile": "profiles/p6/p6_host_file_transport_jtag.json",
+  "profile_sha256": "7a9085b250dd595f37527c0438a982de2ae93f5dc55aef5e2fc4485bf07d9bcc",
+  "bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+  "ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+  "active_xdc_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+  "active_pinmap_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+  "root_cause_classification": "TEST_HARNESS_RX_TAIL_PADDING_ASSERTION",
+  "failure": "30-byte RX payload valid bytes matched, but the runner asserted all 32 bits of the final word; unused RX RAM bytes legitimately retained data from the prior 247-byte case",
+  "failed_assertion": {
+    "key": "FILE3_SMALL_TEXT_RXW7",
+    "observed": "0x5C6F0A64",
+    "incorrect_full_word_expected": "0x00000A64",
+    "correct_valid_byte_mask": "0x0000FFFF",
+    "masked_observed": "0x00000A64"
+  },
+  "valid_payload_bytes_match": true,
+  "last_counters": {
+    "tx_count": 1,
+    "rx_good_l0": 1,
+    "rx_good_l1": 1,
+    "crc_bad": 0,
+    "payload_mismatch": 0,
+    "retry_exhausted": 0,
+    "tx_fail": 0,
+    "duty_violation": 0,
+    "error_code": 0,
+    "sticky_error": 0,
+    "txd_high_max": 8,
+    "frame_good": 1,
+    "frame_bad": 0,
+    "ack_sent": 1,
+    "ack_seen": 1
+  },
+  "shutdown_attempt_result": {
+    "before_stage_shutdown_exit": 0,
+    "after_stage_shutdown_exit": 0,
+    "shutdown_exit": 0,
+    "before_stage_tfdu_shutdown_programmed": true,
+    "after_stage_tfdu_shutdown_programmed": true
+  },
+  "failed_log_preservation": "the authoritative path was overwritten by the required fresh PASS rerun; the decisive failed assertion and shutdown markers are embedded in this recovered package",
+  "superseding_pass_evidence": "evidence/hardware/p6/host_file_transport_jtag/p6_jtag_axi_transport_summary.json",
+  "fix": "Mask the final RX word assertion to payload-valid bytes; retain full CRC, digest, length, counters, and output-file comparisons",
+  "next_suggested_fix": "rerun the four-file host JTAG/AXI matrix with the valid-byte tail mask and require a fresh shutdown-bounded PASS"
+}

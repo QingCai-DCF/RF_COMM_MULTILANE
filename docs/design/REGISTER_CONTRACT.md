@@ -61,3 +61,5 @@
 | `P6_RX_WORD_INDEX` | `0x0174` | P6 RX payload RAM word index |
 | `P6_RX_WORD_DATA` | `0x0178` | P6 RX payload RAM indexed word data |
 | `P6_CAPS` | `0x017C` | P6 local transport capabilities and maximum payload |
+| `P6_PAYLOAD_WINDOW_BASE` | `0x0200` | P6 direct TX payload window base; 64 little-endian words through 0x02FC |
+| `P6_RX_WINDOW_BASE` | `0x0300` | P6 direct RX payload window base; 64 little-endian words through 0x03FC |

@@ -1,8 +1,8 @@
 # P6 Failure Package
 
-generated_at_utc: 2026-07-09T17:45:41+00:00
+generated_at_utc: 2026-07-10T02:24:28+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: FAIL
 reason: BLOCKED_BY_RUNTIME_ENVIRONMENT:P6 bounded negative cases pass register-level simulation, but hardware fallback regression cannot run without live register write/read ingress

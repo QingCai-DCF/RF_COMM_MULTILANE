@@ -1,3 +1,8 @@
 stage,stage_status,frames_requested,frames_sent,frames_rx_good,ack_seen,crc_bad,payload_mismatch,retry_count,retry_exhausted,tx_fail,runtime_sec,payload_bytes_total,effective_payload_bps,goodput_bps,latency_counter_status,max_txd_high_cycles,duty_violation_count
 P6_SAFE_IDLE_RECHECK,PASS,0,0,0,0,0,0,0,0,0,0,0,0,0,not_available_for_idle_stage,0,0
 P6_TFDU_CONTROL_IDLE_RECHECK,PASS,0,0,0,0,0,0,0,0,0,0,0,0,0,not_available_for_idle_stage,0,0
+P6_LANE0_DYNAMIC_PAYLOAD,PASS,160,160,160,160,0,0,0,0,0,0,0,0,0,not_exposed_by_stage_matrix,8,0
+P6_LANE1_DYNAMIC_PAYLOAD,PASS,160,160,160,160,0,0,0,0,0,0,0,0,0,not_exposed_by_stage_matrix,8,0
+P6_TWO_LANE_DYNAMIC_PAYLOAD,PASS,160,160,160,160,0,0,0,0,0,0,0,0,0,not_exposed_by_stage_matrix,8,0
+P6_LANE_FALLBACK_REGRESSION,PASS,18,18,18,18,0,0,0,0,0,0,0,0,0,not_exposed_by_stage_matrix,8,0
+P6_TWO_LANE_2H_STATIONARY_SOAK,PASS,7200,312024,312024,312024,0,0,0,0,0,7200.019,0,0,0,not_exposed_by_soak_runner,8,0

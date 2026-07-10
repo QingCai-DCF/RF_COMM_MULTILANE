@@ -1,8 +1,8 @@
 # P6 Failure Package
 
-generated_at_utc: 2026-07-09T17:45:41+00:00
+generated_at_utc: 2026-07-10T02:24:27+00:00
 repo: `C:\Users\user\Documents\RF_COMM_MULTILANE`
-HEAD: `7a5f0ca068f983d85a6b85c95fa0d4fa3eee4ff2`
+HEAD: `5b90d41a6750aad8023071433996fee3f068efe2`
 stage: P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET
 result: FAIL
 reason: BLOCKED_BY_RUNTIME_ENVIRONMENT:P6 local transport candidate bitstream can be built, but no verified hardware JTAG/AXI or PS backend can start and read two-lane dynamic payload results

@@ -1,0 +1,31 @@
+{
+  "P6_FAILURE_PACKAGE": "RECOVERED_XSDB_TARGET_ALIAS",
+  "stage": "ps_driver_runtime",
+  "generated_at_utc": "2026-07-10T07:37:21+00:00",
+  "profile": "profiles/p6/p6_ps_driver_runtime_mailbox.json",
+  "profile_sha256": "0a0185b3bfdc182d5659747e7c6c0d1f82d6c79ddb3f708044ffdab6c06e4edc",
+  "bitstream_sha256": "4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5",
+  "xsa_sha256": "51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e",
+  "elf_sha256": "789d8132038408015bdb65c147b3826203a09345c851c570bf47dbd27f54fcba",
+  "active_xdc_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+  "active_pinmap_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+  "root_cause_classification": "RECOVERABLE_XSDB_DAP_ALIAS_ABSENT",
+  "failure": "XSDB enumerated APU, Cortex-A9, and xc7z010 targets after the shutdown bitstream but did not expose a target named DAP; the script failed before programming the P6 candidate",
+  "failed_target_list": [
+    "APU",
+    "ARM Cortex-A9 MPCore #0 (Suspended)",
+    "ARM Cortex-A9 MPCore #1 (Running)",
+    "xc7z010"
+  ],
+  "hardware_transport_started": false,
+  "last_counters": "NOT_AVAILABLE_STAGE_DID_NOT_START",
+  "shutdown_attempt_result": {
+    "before_stage_tfdu_shutdown_programmed": true,
+    "after_stage_tfdu_shutdown_programmed": true,
+    "shutdown_exit": 0
+  },
+  "failed_log_preservation": "the authoritative stage log paths were overwritten by the required fresh PASS rerun; the target list and shutdown outcome are embedded in this recovered package",
+  "superseding_pass_evidence": "evidence/hardware/p6/ps_driver_runtime/p6_ps_runtime_summary.json",
+  "fix": "fall back to the enumerated APU target for the bounded system reset when the optional DAP alias is absent",
+  "next_suggested_fix": "rerun the real PS ELF/mailbox stage and require mailbox PASS plus shutdown-before/after evidence"
+}

@@ -233,10 +233,12 @@ int ir_driver_p6_commit_payload(const ir_mmio_t *io, const ir_p6_payload_config_
   if (ir_write_readback(io, IR_REG_P6_PAYLOAD_SEED, config->seed)) return -15;
   if (ir_write_readback(io, IR_REG_P6_TIMEOUT_CYCLES, config->timeout_cycles)) return -16;
   io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_COMMIT);
-  uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
-  if ((status & IR_P6_STATUS_COMMITTED) == 0u) return -17;
-  if ((status & (IR_P6_STATUS_FAIL | IR_P6_STATUS_CONFIG_REJECTED | IR_P6_STATUS_TIMEOUT)) != 0u) return -18;
-  return 0;
+  for (uint32_t poll = 0u; poll < 4096u; poll++) {
+    uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
+    if ((status & (IR_P6_STATUS_FAIL | IR_P6_STATUS_CONFIG_REJECTED | IR_P6_STATUS_TIMEOUT)) != 0u) return -18;
+    if ((status & IR_P6_STATUS_COMMITTED) != 0u) return 0;
+  }
+  return -17;
 }
 
 int ir_driver_p6_read_result(const ir_mmio_t *io, ir_p6_payload_result_t *result) {

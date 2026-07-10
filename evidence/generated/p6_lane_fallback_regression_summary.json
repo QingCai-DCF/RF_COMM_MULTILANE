@@ -1,0 +1,22 @@
+{
+  "P6_LANE_FALLBACK_REGRESSION": "PASS",
+  "reason": "real stationary two-lane hardware evidence and shutdown boundaries verified",
+  "source": "evidence/hardware/p6/lane_fallback_regression/p6_jtag_axi_matrix_summary.json",
+  "source_marker": "P6_JTAG_AXI_HARDWARE_MATRIX",
+  "source_value": "PASS",
+  "hardware_actions_executed": true,
+  "shutdown_before": true,
+  "shutdown_after": true,
+  "profile_hash_valid": true,
+  "bitstream_hash_valid": true,
+  "candidate_hash_valid": true,
+  "scope_valid": true,
+  "lane_mask_valid": true,
+  "verification_failures": [],
+  "bitstream": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit",
+  "bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+  "profile": "profiles/p6/p6_lane_fallback_regression.json",
+  "profile_sha256": "68e64976ba06e9b1cf3c8727cd887751af4cb68947f441158c145bc50abefeca",
+  "ethernet_used": false,
+  "motion_used": false
+}

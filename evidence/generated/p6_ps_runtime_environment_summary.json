@@ -1,15 +1,29 @@
 {
-  "P6_PS_RUNTIME_ENVIRONMENT": "BLOCKED_BY_RUNTIME_ENVIRONMENT",
-  "reason": "no rebuilt-top XSA/PS7 hardware platform found outside legacy/imported evidence",
+  "P6_PS_RUNTIME_ENVIRONMENT": "PASS",
+  "reason": "toolchain and rebuilt-top XSA candidates are present",
   "xsct": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat",
   "xsct_exists": true,
   "xsdb": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
   "xsdb_exists": true,
   "runtime_source": "software/ps_driver/p6_runtime_mailbox.c",
-  "runtime_source_sha256": "89db0842d774c5fa408f6953f1b72edab8a13b3299d55f3b9c8ee9e3c430e183",
-  "rebuilt_xsa_candidates": [],
+  "runtime_source_sha256": "b2fd8e1eb8f32658e75e4956ed51976dd6b89a82e8f730d5825f3692ad5c6749",
+  "rebuilt_xsa_candidates": [
+    "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_1e062fd3230e72ebedbb24a9de66be7f537cb35b3827a1a0ebdf08468ef4d648.xsa",
+    "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.xsa",
+    "build/p6_ps_vitis_workspace/p6_platform/hw/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    "build/p6_ps_vitis_workspace/p6_platform/export/p6_platform/hw/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    ".Xil/XSCT-33000-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    ".Xil/XSCT-33000-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e_2.xsa",
+    ".Xil/XSCT-35012-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    ".Xil/XSCT-35012-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e_2.xsa",
+    ".Xil/XSCT-37332-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    ".Xil/XSCT-37332-DESKTOP-PU0AECA/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e_2.xsa"
+  ],
   "legacy_or_imported_xsa_candidates": [],
   "syntax_only_accepted_as_pass": false,
+  "runtime_build_summary": "evidence/generated/vitis/p6_ps_runtime/p6_ps_runtime_build_summary.json",
+  "runtime_hardware_summary": "evidence/hardware/p6/ps_driver_runtime/p6_ps_runtime_summary.json",
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false
 }

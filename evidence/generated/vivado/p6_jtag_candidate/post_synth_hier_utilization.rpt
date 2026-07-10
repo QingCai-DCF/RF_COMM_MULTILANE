@@ -1,0 +1,73 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Fri Jul 10 11:35:47 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -hierarchical_depth 6 -file C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/p6_jtag_candidate/post_synth_hier_utilization.rpt
+| Design       : p6_jtag_top
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------+---------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+
+|              Instance             |                          Module                         | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs  | RAMB36 | RAMB18 | DSP Blocks |
++-----------------------------------+---------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+
+| p6_jtag_top                       |                                                   (top) |      15021 |      14843 |     176 |    2 | 12602 |      2 |      1 |          0 |
+|   (p6_jtag_top)                   |                                                   (top) |          0 |          0 |       0 |    0 |     0 |      0 |      0 |          0 |
+|   dbg_hub                         |                                              dbg_hub_CV |          0 |          0 |       0 |    0 |     0 |      0 |      0 |          0 |
+|   p6_local_transport_ila          |                               p6_local_transport_ila_CV |          0 |          0 |       0 |    0 |     0 |      0 |      0 |          0 |
+|   u_jtag_axi                      |                                      p6_jtag_axi_master |        648 |        470 |     176 |    2 |  1763 |      2 |      1 |          0 |
+|     (u_jtag_axi)                  |                                      p6_jtag_axi_master |          0 |          0 |       0 |    0 |     0 |      0 |      0 |          0 |
+|     inst                          |                               jtag_axi_v1_2_17_jtag_axi |        648 |        470 |     176 |    2 |  1763 |      2 |      1 |          0 |
+|       (inst)                      |                               jtag_axi_v1_2_17_jtag_axi |          0 |          0 |       0 |    0 |     0 |      0 |      0 |          0 |
+|       axi_bridge_u                |                             jtag_axi_v1_2_17_axi_bridge |         35 |         35 |       0 |    0 |   216 |      0 |      0 |          0 |
+|         read_axi_lite_u           |                           jtag_axi_v1_2_17_read_axilite |         12 |         12 |       0 |    0 |   106 |      0 |      0 |          0 |
+|         write_axi_lite_u          |                          jtag_axi_v1_2_17_write_axilite |         23 |         23 |       0 |    0 |   110 |      0 |      0 |          0 |
+|       jtag_axi_engine_u           |                        jtag_axi_v1_2_17_jtag_axi_engine |        613 |        435 |     176 |    2 |  1547 |      2 |      1 |          0 |
+|         (jtag_axi_engine_u)       |                        jtag_axi_v1_2_17_jtag_axi_engine |         28 |         28 |       0 |    0 |   308 |      0 |      0 |          0 |
+|         U_XSDB_SLAVE              |                                      xsdbs_v1_0_2_xsdbs |         76 |         76 |       0 |    0 |   161 |      0 |      0 |          0 |
+|         cmd_decode_rd_channel     |                             jtag_axi_v1_2_17_cmd_decode |          4 |          4 |       0 |    0 |     5 |      0 |      0 |          0 |
+|         cmd_decode_wr_channel     |                           jtag_axi_v1_2_17_cmd_decode_6 |          6 |          6 |       0 |    0 |     5 |      0 |      0 |          0 |
+|         rd_cmd_fifo_i             |                  fifo_generator_v13_2_8__parameterized1 |         34 |         34 |       0 |    0 |   128 |      1 |      0 |          0 |
+|           inst_fifo_gen           |            fifo_generator_v13_2_8_synth__parameterized1 |         34 |         34 |       0 |    0 |   128 |      1 |      0 |          0 |
+|             gconvfifo.rf          |                      fifo_generator_top__parameterized1 |         34 |         34 |       0 |    0 |   128 |      1 |      0 |          0 |
+|         rx_fifo_i                 |                  fifo_generator_v13_2_8__parameterized0 |         62 |         61 |       0 |    1 |   151 |      0 |      1 |          0 |
+|           inst_fifo_gen           |            fifo_generator_v13_2_8_synth__parameterized0 |         62 |         61 |       0 |    1 |   151 |      0 |      1 |          0 |
+|             gconvfifo.rf          |                      fifo_generator_top__parameterized0 |         62 |         61 |       0 |    1 |   151 |      0 |      1 |          0 |
+|         tx_fifo_i                 |                                  fifo_generator_v13_2_8 |        271 |         95 |     176 |    0 |   180 |      0 |      0 |          0 |
+|           inst_fifo_gen           |                            fifo_generator_v13_2_8_synth |        271 |         95 |     176 |    0 |   180 |      0 |      0 |          0 |
+|             gconvfifo.rf          |                                      fifo_generator_top |        271 |         95 |     176 |    0 |   180 |      0 |      0 |          0 |
+|         u_xsdb_fifo_interface     |                    jtag_axi_v1_2_17_xsdb_fifo_interface |         93 |         93 |       0 |    0 |   474 |      0 |      0 |          0 |
+|           (u_xsdb_fifo_interface) |                    jtag_axi_v1_2_17_xsdb_fifo_interface |         45 |         45 |       0 |    0 |    51 |      0 |      0 |          0 |
+|           rxfifo2xsdb_i           |                            jtag_axi_v1_2_17_rxfifo2xsdb |         28 |         28 |       0 |    0 |    86 |      0 |      0 |          0 |
+|           xsdb2read_cmdfifo       |            jtag_axi_v1_2_17_xsdb2txfifo__parameterized0 |          7 |          7 |       0 |    0 |   134 |      0 |      0 |          0 |
+|           xsdb2txfifo_i           |                            jtag_axi_v1_2_17_xsdb2txfifo |          6 |          6 |       0 |    0 |    69 |      0 |      0 |          0 |
+|           xsdb2write_cmdfifo      |          jtag_axi_v1_2_17_xsdb2txfifo__parameterized0_7 |          7 |          7 |       0 |    0 |   134 |      0 |      0 |          0 |
+|         wr_cmd_fifo_i             |       fifo_generator_v13_2_8__parameterized1__xdcDup__1 |         39 |         38 |       0 |    1 |   135 |      1 |      0 |          0 |
+|           inst_fifo_gen           | fifo_generator_v13_2_8_synth__parameterized1__xdcDup__1 |         39 |         38 |       0 |    1 |   135 |      1 |      0 |          0 |
+|             gconvfifo.rf          |           fifo_generator_top__parameterized1__xdcDup__1 |         39 |         38 |       0 |    1 |   135 |      1 |      0 |          0 |
+|   u_p6_peripheral                 |                                       p6_axi_peripheral |      14373 |      14373 |       0 |    0 | 10839 |      0 |      0 |          0 |
+|     (u_p6_peripheral)             |                                       p6_axi_peripheral |         71 |         71 |       0 |    0 |     0 |      0 |      0 |          0 |
+|     u_axi_bridge                  |                                      p6_axi_lite_bridge |         13 |         13 |       0 |    0 |   144 |      0 |      0 |          0 |
+|     u_engine                      |                             p6_dynamic_transport_engine |      11245 |      11245 |       0 |    0 |  6069 |      0 |      0 |          0 |
+|       (u_engine)                  |                             p6_dynamic_transport_engine |        357 |        357 |       0 |    0 |  5319 |      0 |      0 |          0 |
+|       g_phy[0].u_a_ack_rx         |                                           ir_4ppm_codec |        120 |        120 |       0 |    0 |    20 |      0 |      0 |          0 |
+|       g_phy[0].u_a_phy            |                                           tfdu_lane_phy |       1000 |       1000 |       0 |    0 |   167 |      0 |      0 |          0 |
+|       g_phy[0].u_b_data_rx        |                                         ir_4ppm_codec_0 |       2374 |       2374 |       0 |    0 |    21 |      0 |      0 |          0 |
+|       g_phy[0].u_b_phy            |                                         tfdu_lane_phy_1 |        265 |        265 |       0 |    0 |   167 |      0 |      0 |          0 |
+|       g_phy[1].u_a_ack_rx         |                                         ir_4ppm_codec_2 |        118 |        118 |       0 |    0 |    20 |      0 |      0 |          0 |
+|       g_phy[1].u_a_phy            |                                         tfdu_lane_phy_3 |        331 |        331 |       0 |    0 |   167 |      0 |      0 |          0 |
+|       g_phy[1].u_b_data_rx        |                                         ir_4ppm_codec_4 |       6207 |       6207 |       0 |    0 |    21 |      0 |      0 |          0 |
+|       g_phy[1].u_b_phy            |                                         tfdu_lane_phy_5 |        473 |        473 |       0 |    0 |   167 |      0 |      0 |          0 |
+|     u_regs                        |                                 p6_local_transport_regs |       3044 |       3044 |       0 |    0 |  4626 |      0 |      0 |          0 |
++-----------------------------------+---------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+

@@ -1,0 +1,140 @@
+{
+  "P6_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_PASS",
+  "hardware_actions_executed": false,
+  "no_ethernet": true,
+  "no_motion": true,
+  "lane_count": 2,
+  "max_lane_mask": "0x3",
+  "stages": [
+    {
+      "stage": "idle_rechecks",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_jtag_axi_idle_stages.py"
+      ]
+    },
+    {
+      "stage": "jtag_axi_payload_ram_smoke",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/p6_jtag_axi_transport.py",
+        "--backend",
+        "jtag-axi",
+        "--allow-live-jtag",
+        "--no-start",
+        "--input-file",
+        "evidence/hardware/p6/host_file_transport_jtag/input_payloads/counter_247.bin",
+        "--output-file",
+        "evidence/hardware/p6/jtag_axi_payload_ram_smoke/smoke_output.bin",
+        "--lane-mask",
+        "0x3",
+        "--ack-lane-mask",
+        "0x3",
+        "--profile",
+        "profiles/p6/p6_jtag_axi_payload_ram_smoke.json",
+        "--evidence-dir",
+        "evidence/hardware/p6/jtag_axi_payload_ram_smoke",
+        "--max-runtime-sec",
+        "300"
+      ]
+    },
+    {
+      "stage": "lane0_dynamic_payload",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_jtag_axi_matrix.py",
+        "--lane-mask",
+        "0x1",
+        "--profile",
+        "profiles/p6/p6_lane0_dynamic_payload_256.json",
+        "--evidence-dir",
+        "evidence/hardware/p6/protocol/lane0_dynamic_payload",
+        "--stage-name",
+        "lane0_dynamic_payload",
+        "--max-runtime-sec",
+        "900"
+      ]
+    },
+    {
+      "stage": "lane1_dynamic_payload",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_jtag_axi_matrix.py",
+        "--lane-mask",
+        "0x2",
+        "--profile",
+        "profiles/p6/p6_lane1_dynamic_payload_256.json",
+        "--evidence-dir",
+        "evidence/hardware/p6/protocol/lane1_dynamic_payload",
+        "--stage-name",
+        "lane1_dynamic_payload",
+        "--max-runtime-sec",
+        "900"
+      ]
+    },
+    {
+      "stage": "two_lane_dynamic_payload",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_jtag_axi_matrix.py",
+        "--lane-mask",
+        "0x3",
+        "--profile",
+        "profiles/p6/p6_two_lane_dynamic_payload_256.json",
+        "--evidence-dir",
+        "evidence/hardware/p6/protocol/two_lane_dynamic_payload",
+        "--stage-name",
+        "two_lane_dynamic_payload",
+        "--max-runtime-sec",
+        "1200"
+      ]
+    },
+    {
+      "stage": "ps_driver_runtime",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_ps_runtime_safe.py"
+      ]
+    },
+    {
+      "stage": "host_file_transport_jtag",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_host_file_transport_matrix.py"
+      ]
+    },
+    {
+      "stage": "lane_fallback_regression",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_jtag_axi_matrix.py",
+        "--lane-mask",
+        "0x3",
+        "--profile",
+        "profiles/p6/p6_lane_fallback_regression.json",
+        "--evidence-dir",
+        "evidence/hardware/p6/lane_fallback_regression",
+        "--stage-name",
+        "lane_fallback_regression",
+        "--include-negative",
+        "--max-runtime-sec",
+        "900"
+      ]
+    },
+    {
+      "stage": "two_lane_2h_stationary_soak",
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/run_p6_two_lane_soak.py",
+        "--runtime-sec",
+        "7200",
+        "--sample-interval-sec",
+        "60",
+        "--min-frames-per-lane",
+        "7200",
+        "--max-runtime-sec",
+        "7560"
+      ]
+    }
+  ]
+}

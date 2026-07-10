@@ -1,382 +1,239 @@
 {
   "status": "PASS",
-  "generated_at_utc": "2026-07-09T10:16:20+00:00",
-  "no_hardware_actions_executed": true,
+  "no_hardware": true,
   "hardware_acceptance": "PENDING_HW",
   "results": [
     {
-      "name": "git_precheck",
-      "result": "PASS",
-      "reason": "repository root recorded",
-      "details": {
-        "repo": "C:/Users/user/Documents/RF_COMM_MULTILANE",
-        "branch": "main",
-        "head": "4768ef76c1d9bc6042d4058f52eef5fc0da5ca01",
-        "status": "M PROJECT_STATUS.md\n M docs/PROJECT_STATUS.md\n M docs/TFDU6102_SAFETY_SUMMARY.md\n M docs/tfdu6102_safety_contract.md\n M evidence/generated/git_cleanliness_report.md\n M evidence/generated/ir_4ppm_pulse_smoke_summary.md\n M evidence/generated/m4_ps_driver_trace.json\n M evidence/generated/m4_ps_driver_trace.md\n M evidence/generated/no_hardware_action_static_scan.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/p1_evidence_review_for_p2.md\n M evidence/generated/p1_git_precheck.txt\n M evidence/generated/p1_offline_hardening_summary.json\n M evidence/generated/p1_offline_hardening_summary.md\n M evidence/generated/p2_repo_intake.md\n M evidence/generated/p2_simulation_baseline_summary.md\n M evidence/generated/p3_authorization_gate_summary.md\n M evidence/generated/p3_bitstream_build_audit_summary.md\n M evidence/generated/p3_constraint_freeze_summary.md\n M evidence/generated/p3_evidence_schema_summary.md\n M evidence/generated/p3_hardware_script_dry_run_summary.md\n M evidence/generated/p3_no_hardware_static_scan.md\n M evidence/generated/p3_pre_hw_acceptance_package_summary.md\n M evidence/generated/p3_recheck_p1_p2_summary.md\n M evidence/generated/p3_repo_intake.md\n M evidence/generated/p3_runbook_summary.md\n M evidence/generated/profile_check_summary.md\n M evidence/generated/project_status_update_summary.md\n M evidence/generated/required_docs_manifest.md\n M evidence/generated/rtl_source_manifest.json\n M evidence/generated/rtl_source_manifest.md\n M evidence/generated/simulation_gate_summary.md\n M evidence/generated/simulator_detection_summary.md\n M evidence/generated/software_source_manifest.md\n M evidence/generated/tfdu6102_behavior_model_summary.md\n M evidence/generated/tfdu6102_reference_model_summary.md\n M evidence/generated/tfdu_lane_phy_sim_summary.md\n M evidence/generated/tools_manifest.md\n M evidence/generated/vivado/nonhardware_build_markers.txt\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n M evidence/generated/vivado_script_audit.md\n M evidence/generated/wrapper_xdc_consistency_summary.md\n M evidence/generated/xdc_inventory.md\n M evidence/simulation/sim_results.json\n M rtl/ir_axi_regs_new.sv\n M rtl/ir_top_new.sv\n M rtl/tfdu_lane_phy.sv\n M rtl/tfdu_lane_phy_pkg.sv\n M scripts/check_m4_static.py\n M scripts/check_m5_static.py\n M scripts/generate_m4_ps_driver_trace.py\n M scripts/hw/program_tfdu_shutdown_safe.ps1\n M scripts/hw/run_g1_lane0_replay_safe.ps1\n M scripts/hw/run_lane0_raw_matrix_safe.ps1\n M scripts/legacy_safe_tools/build_tfdu_shutdown.tcl\n M scripts/legacy_safe_tools/program_tfdu_shutdown.tcl\n M scripts/legacy_safe_tools/tfdu_shutdown_j10_j11.xdc\n M scripts/legacy_safe_tools/tfdu_shutdown_top.v\n M scripts/run_vivado_nonhardware_build.py\n M scripts/vivado_nonhardware_build.tcl\n M software/ps_driver/ir_profile.c\n M tools/p1_lib.py\n M tools/p3_pre_hw_lib.py\n M tools/run_offline_gate.py\n M tools/run_simulation_gate.py\n M tools/summarize_gate.py\n?? .hardware_authorization/\n?? dist/\n?? evidence/generated/p4_authorization_gate_summary.md\n?? evidence/generated/p4_auto_authorization_summary.md\n?? evidence/generated/p4_auto_authorized_bitstream_preflight.md\n?? evidence/generated/p4_auto_authorized_run_package.md\n?? evidence/generated/p4_auto_bitstream_provenance_summary.md\n?? evidence/generated/p4_auto_hardware_acceptance_summary.json\n?? evidence/generated/p4_auto_hardware_acceptance_summary.md\n?? evidence/generated/p4_auto_lane0_300s_soak_summary.md\n?? evidence/generated/p4_auto_lane0_ack_retry_summary.md\n?? evidence/generated/p4_auto_lane0_frame_crc_summary.md\n?? evidence/generated/p4_auto_lane1_ack_retry_summary.md\n?? evidence/generated/p4_auto_lane1_frame_crc_summary.md\n?? evidence/generated/p4_auto_previous_p4_intake.md\n?? evidence/generated/p4_auto_profiles_summary.md\n?? evidence/generated/p4_auto_raw_lane_matrix_summary.md\n?? evidence/generated/p4_auto_raw_pulse_smoke_summary.md\n?? evidence/generated/p4_auto_recheck_p1_p2_p3_summary.md\n?? evidence/generated/p4_auto_repo_intake.md\n?? evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md\n?? evidence/generated/p4_auto_shutdown_summary.md\n?? evidence/generated/p4_auto_tfdu_control_idle_authorized_run_package.md\n?? evidence/generated/p4_auto_tfdu_control_idle_summary.md\n?? evidence/generated/p4_auto_two_lane_300s_soak_summary.md\n?? evidence/generated/p4_auto_two_lane_minimal_summary.md\n?? evidence/generated/p4_hardware_acceptance_gate_summary.md\n?? evidence/generated/p4_hardware_acceptance_summary.json\n?? evidence/generated/p4_hardware_acceptance_summary.md\n?? evidence/generated/p4_no_hardware_or_authorized_hardware_scan.md\n?? evidence/generated/p4_recheck_p1_p2_p3_summary.md\n?? evidence/generated/p4_repo_intake.md\n?? evidence/generated/p4_safe_idle_profile_audit.md\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_ack.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_soak.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1_ack.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_minimal.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_soak.txt\n?? evidence/generated/vivado/nonhardware_build_markers_raw_lane_matrix.txt\n?? evidence/generated/vivado/nonhardware_build_markers_raw_pulse.txt\n?? evidence/generated/vivado/nonhardware_build_markers_safe_idle.txt\n?? evidence/generated/vivado/nonhardware_build_markers_tfdu_control_idle.txt\n?? evidence/generated/vivado/p4_auto_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_ack_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_soak_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane1_ack_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane1_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_two_lane_minimal_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_two_lane_soak_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_raw_lane_matrix_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_raw_pulse_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_safe_idle_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_tfdu_control_idle_debug_instrumentation.txt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_drc_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_drc_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_drc_safe_idle.rpt\n?? evidence/generated/vivado/post_route_drc_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_timing_summary_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_timing_summary_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_timing_summary_safe_idle.rpt\n?? evidence/generated/vivado/post_route_timing_summary_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_utilization_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_utilization_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_utilization_safe_idle.rpt\n?? evidence/generated/vivado/post_route_utilization_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane1.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_synth_drc_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_synth_drc_raw_pulse.rpt\n?? evidence/generated/vivado/post_synth_drc_safe_idle.rpt\n?? evidence/generated/vivado/post_synth_drc_tfdu_control_idle.rpt\n?? evidence/generated/vivado/project_protocol_lane0/\n?? evidence/generated/vivado/project_protocol_lane0_ack/\n?? evidence/generated/vivado/project_protocol_lane0_soak/\n?? evidence/generated/vivado/project_protocol_lane1/\n?? evidence/generated/vivado/project_protocol_lane1_ack/\n?? evidence/generated/vivado/project_protocol_two_lane_minimal/\n?? evidence/generated/vivado/project_protocol_two_lane_soak/\n?? evidence/generated/vivado/project_raw_lane_matrix/\n?? evidence/generated/vivado/project_raw_pulse/\n?? evidence/generated/vivado/project_safe_idle/\n?? evidence/generated/vivado/project_tfdu_control_idle/\n?? evidence/hardware/p4/\n?? evidence/hardware/p4_auto/\n?? profiles/p4_auto_lane0_300s_soak.json\n?? profiles/p4_auto_lane0_ack_retry.json\n?? profiles/p4_auto_lane0_frame_crc.json\n?? profiles/p4_auto_lane1_ack_retry.json\n?? profiles/p4_auto_lane1_frame_crc.json\n?? profiles/p4_auto_raw_lane_matrix.json\n?? profiles/p4_auto_raw_pulse_l0.json\n?? profiles/p4_auto_safe_idle_proxy.json\n?? profiles/p4_auto_tfdu_control_idle.json\n?? profiles/p4_auto_two_lane_300s_soak.json\n?? profiles/p4_auto_two_lane_minimal.json\n?? profiles/p4_lane0_safe_smoke.json\n?? profiles/p4_lane_matrix_safe_smoke.json\n?? profiles/p4_safe_idle.json\n?? rtl/debug/\n?? tools/p4_auto_authorization.py\n?? tools/p4_auto_bitstream_provenance.py\n?? tools/p4_auto_debug_readback.py\n?? tools/p4_auto_lib.py\n?? tools/p4_auto_parse_ila.py\n?? tools/p4_auto_profiles.py\n?? tools/p4_counter_capture.py\n?? tools/p4_hw_authorization.py\n?? tools/p4_hw_evidence.py\n?? tools/p4_hw_execution.py\n?? tools/p4_hw_profiles.py\n?? tools/p4_lane_matrix.py\n?? tools/p4_safe_idle_audit.py\n?? tools/p4_shutdown.py\n?? tools/run_p4_auto_hardware_acceptance.ps1\n?? tools/run_p4_auto_hardware_acceptance.py\n?? tools/run_p4_hardware_acceptance.ps1\n?? tools/run_p4_hardware_acceptance.py",
-        "last": "4768ef7 docs: prepare P3 pre-hardware acceptance package"
-      },
-      "summary_path": "evidence/generated/p1_git_precheck.txt"
+      "name": "project_integrity",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_project_integrity.py",
+      "returncode": 0,
+      "stdout": "CURRENT_DIR_IS_NOT_LEGACY_RF_COMM=1\nPROJECT_CONSTRAINTS_CN_EXISTS=1\nPROJECT_CONSTRAINTS_HASH_MATCH=1\nAGENTS_MD_CREATED=1\nIMPORT_MANIFEST_EXISTS=1\nLEGACY_EVIDENCE_IMPORTED=1\nACTIVE_PROFILE_EXISTS=1\nCANONICAL_XDC_EXISTS=1\nPINMAP_EXISTS=1\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "directory_integrity_check",
-      "result": "PASS",
-      "reason": "required directories exist",
-      "details": {
-        "created": [],
-        "existing": [
-          "docs",
-          "tools",
-          "scripts",
-          "constraints",
-          "rtl",
-          "IPs",
-          "IPs/ip_ir_array",
-          "IPs/ir_array",
-          "software",
-          "tests",
-          "sim",
-          "profiles",
-          "evidence",
-          "evidence/generated",
-          "evidence/hardware",
-          "evidence/authorization",
-          "evidence/offline",
-          "evidence/simulation",
-          "evidence/constraints",
-          "evidence/software",
-          "evidence/rtl"
-        ]
-      },
-      "summary_path": "evidence/generated/p1_directory_check.md"
+      "name": "xdc_conflicts",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_xdc_conflicts.py",
+      "returncode": 0,
+      "stdout": "XDC_GENERATED_FROM_PINMAP=1\nXDC_GENERATED_MATCHES_ACTIVE_REFERENCE=1\nXDC_LEGACY_CONFLICT_RECORDED=1\nNO_LEGACY_PORT1_XDC_IN_BUILD=1\n- `ir_mode_out_0[0]` active={'PACKAGE_PIN': 'T12', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'V17', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_rx_in_0[0]` active={'PACKAGE_PIN': 'B19', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'U13', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_sd_0[0]` active={'PACKAGE_PIN': 'T11', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T14', 'IOSTANDARD': 'LVCMOS33'}\n- `ir_tx_out_0[0]` active={'PACKAGE_PIN': 'C20', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'V12', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_mode_b0[0]` active={'PACKAGE_PIN': 'V17', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T12', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_rx_b0[0]` active={'PACKAGE_PIN': 'U13', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'B19', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_rx_b0[1]` active={'PACKAGE_PIN': 'G15', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'D19', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_sd_b0[0]` active={'PACKAGE_PIN': 'T14', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'T11', 'IOSTANDARD': 'LVCMOS33'}\n- `loop_tx_b0[0]` active={'PACKAGE_PIN': 'V12', 'IOSTANDARD': 'LVCMOS33'} legacy={'PACKAGE_PIN': 'C20', 'IOSTANDARD': 'LVCMOS33'}\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "bootstrap_manifest_check",
-      "result": "PASS",
-      "reason": "bootstrap evidence reviewed",
-      "details": {
-        "gate_count": 0,
-        "failed": [],
-        "skipped": []
-      },
-      "summary_path": "evidence/generated/p1_bootstrap_evidence_review.md"
+      "name": "tfdu_safety_static",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_tfdu_safety_static.py",
+      "returncode": 0,
+      "stdout": "TXD_DEFAULT_LOW=1\nSD_DEFAULT_SHUTDOWN_HIGH=1\nMODE_STATIC_HIGH_ONLY=1\nSTARTUP_TIMER_500US=1\nTX_STUCK_HIGH_PROTECTION=1\nDUTY_LIMIT_PROTECTION=1\nRX_LOW_ACTIVE_CONVERSION=1\nMODEL_TXD_ACTIVE_HIGH=1\nMODEL_RXD_LOW_ACTIVE=1\nMODEL_SD_HIGH_SHUTDOWN=1\nMODEL_STARTUP_500US=1\nMODEL_125NS_RX_RANGE=1\nMODEL_250NS_RX_RANGE=1\nMODEL_JITTER_CONFIGURABLE=1\nMODEL_PULSE_LOSS_CONFIGURABLE=1\nMODEL_NEAR_END_ECHO_OPTIONAL=1\nMODEL_LONG_HIGH_PROTECTION=1\nTFDU_SAFETY_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "agents_policy_check",
-      "result": "PASS",
-      "reason": "AGENTS.md policy markers checked",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/agents_policy_check.md"
+      "name": "m1_tfdu_model_reference",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_m1_tfdu_model_reference.py",
+      "returncode": 0,
+      "stdout": "M1_TFDU_MODEL_REFERENCE_REPORT=1\nM1_MODEL_STARTUP_500US_PASS=1\nM1_MODEL_RX_LOW_ACTIVE_PASS=1\nM1_MODEL_125NS_RX_RANGE_PASS=1\nM1_MODEL_250NS_RX_RANGE_PASS=1\nM1_MODEL_JITTER_PATTERN_PASS=1\nM1_MODEL_PULSE_LOSS_PATTERN_PASS=1\nM1_MODEL_NEAR_END_ECHO_PASS=1\nM1_MODEL_LONG_HIGH_DISABLE_PASS=1\nM1_TFDU_MODEL_REFERENCE=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "required_docs_check",
-      "result": "PASS",
-      "reason": "required docs present",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/required_docs_manifest.md"
+      "name": "register_map_generation",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_register_headers.py",
+      "returncode": 0,
+      "stdout": "REGISTER_MAP_SINGLE_SOURCE_CREATED=1\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "project_status_check",
-      "result": "PASS",
-      "reason": "PROJECT_STATUS.md checked",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/project_status_check.md"
+      "name": "no_hardware_calls",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "returncode": 0,
+      "stdout": "NO_HARDWARE_ACTIONS_EXECUTED=1\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "tools_manifest_check",
-      "result": "PASS",
-      "reason": "tools manifest generated",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/tools_manifest.md"
+      "name": "sv_port_contracts",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_sv_port_contracts.py",
+      "returncode": 0,
+      "stdout": "SV_PORT_CONTRACT_MODULES_PARSED=1\nSV_PORT_CONTRACT_ALL_INSTANCES_NAMED=1\nSV_PORT_CONTRACT_NO_UNKNOWN_PORTS=1\nSV_PORT_CONTRACT_NO_MISSING_PORTS=1\nSV_PORT_CONTRACT_NO_DUPLICATE_PORTS=1\nSV_PORT_CONTRACT_TB_COVERAGE=1\nSV_PORT_CONTRACT_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "no_hardware_action_static_scan",
-      "result": "PASS",
-      "reason": "hardware action static scan completed",
-      "details": {
-        "findings": [],
-        "informational_count": 156
-      },
-      "summary_path": "evidence/generated/no_hardware_action_static_scan.md"
+      "name": "host_client_unit_tests",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe software/host_client/test_protocol_contract.py",
+      "returncode": 0,
+      "stdout": "HOST_CLIENT_PROTOCOL_TESTS=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "tfdu6102_safety_contract_check",
-      "result": "PASS",
-      "reason": "TFDU6102 contract checked",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/tfdu6102_offline_contract_summary.md"
+      "name": "m2_detect_window_sweep",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_m2_detect_window_sweep.py",
+      "returncode": 0,
+      "stdout": "M2_DETECT_WINDOW_SWEEP_REPORT=1\nM2_DETECT_WINDOW_SWEEP_POSITIVE_CASES_PASS=1\nM2_DETECT_WINDOW_SWEEP_NEGATIVE_CASES_DETECTED=1\nM2_DETECT_WINDOW_SWEEP=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "constraint_uniqueness_check",
-      "result": "PASS",
-      "reason": "constraint checks completed",
-      "details": {
-        "unknown": [],
-        "active_count": 1
-      },
-      "summary_path": "evidence/generated/constraint_uniqueness_summary.md"
+      "name": "m2_static_reference_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m2_static.py",
+      "returncode": 0,
+      "stdout": "M2_4PPM_ENCODE_DECODE_PRESENT=1\nM2_4PPM_PROFILE_PARAMS_PRESENT=1\nM2_4PPM_PREAMBLE_BEHAVIOR_PRESENT=1\nM2_4PPM_ABSTRACT_PULSE_INTERFACE=1\nM2_FRAME_SESSION_MASK_COUNTERS_PRESENT=1\nM2_FRAME_CRC_LENGTH_COUNTERS_PRESENT=1\nM2_FRAME_L1_HAS_NO_ACK_RETRY=1\nM2_4PPM_TB_PASS_MARKER_PRESENT=1\nM2_4PPM_PREAMBLE_TB_MARKER_PRESENT=1\nM2_4PPM_TFDU_MODEL_INSTANTIATED=1\nM2_4PPM_MODEL_INTEGRATION_TB_PASS_MARKER_PRESENT=1\nM2_4PPM_MODEL_PREAMBLE_TB_MARKER_PRESENT=1\nM2_FRAME_TB_PASS_MARKER_PRESENT=1\nM2_DETECT_WINDOW_SWEEP_SCRIPT_PRESENT=1\nM2_DETECT_WINDOW_SWEEP_REPORT_PRESENT=1\nM2_4PPM_REFERENCE_ROUNDTRIP_PASS=1\nM2_FRAME_REFERENCE_GOOD_PASS=1\nM2_FRAME_REFERENCE_CRC_BAD_DETECTED=1\nM2_FRAME_REFERENCE_SESSION_BAD_DETECTED=1\nM2_FRAME_REFERENCE_MASK_BAD_DETECTED=1\nM2_FRAME_REFERENCE_LENGTH_BAD_DETECTED=1\nM2_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "active_profile_check",
-      "result": "PASS",
-      "reason": "active profile checked",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/active_profile_check.md"
+      "name": "m3_crc_bad_ack_reference",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_m3_crc_bad_ack_reference.py",
+      "returncode": 0,
+      "stdout": "M3_CRC_BAD_ACK_SUPPRESSION_REPORT=1\nM3_CRC_BAD_FRAME_DETECTED=1\nM3_CRC_BAD_ACK_SUPPRESSED=1\nM3_CRC_BAD_RETRY_EXHAUSTED=1\nM3_CRC_BAD_ACK_REFERENCE=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "rtl_source_manifest_check",
-      "result": "PASS",
-      "reason": "RTL manifest generated",
-      "details": {
-        "missing": [],
-        "count": 50
-      },
-      "summary_path": "evidence/generated/rtl_source_manifest.md"
+      "name": "m3_static_reference_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m3_static.py",
+      "returncode": 0,
+      "stdout": "M3_PAYLOAD_ACK_MASKS_SEPARATE=1\nM3_RETRY_EXHAUSTED_STICKY_PRESENT=1\nM3_ACK_SESSION_BAD_OBSERVABLE=1\nM3_ACK_DUPLICATE_OBSERVABLE=1\nM3_ACK_EXPIRED_OBSERVABLE=1\nM3_ACK_LATE_OBSERVABLE=1\nM3_TIMEOUT_RETRY_PROFILED=1\nM3_ACK_ONLY_TB_PASS_MARKER_PRESENT=1\nM3_CRC_BAD_ACK_REFERENCE_SCRIPT_PRESENT=1\nM3_CRC_BAD_ACK_REFERENCE_REPORT_PRESENT=1\nM3_REFERENCE_START_TX_PASS=1\nM3_REFERENCE_ACK_SEEN_PASS=1\nM3_REFERENCE_DUPLICATE_LATE_ACK_PASS=1\nM3_REFERENCE_SESSION_BAD_PASS=1\nM3_REFERENCE_EXPIRED_ACK_PASS=1\nM3_REFERENCE_ACK_MASK_BAD_PASS=1\nM3_REFERENCE_SECOND_ACK_PASS=1\nM3_REFERENCE_RETRY_EXHAUSTED_PASS=1\nM3_REFERENCE_RETRY_ACCOUNTING_PASS=1\nM3_REFERENCE_CRC_BAD_FRAME_DETECTED=1\nM3_REFERENCE_CRC_BAD_ACK_SUPPRESSED=1\nM3_REFERENCE_CRC_BAD_RETRY_EXHAUSTED=1\nM3_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "software_source_manifest_check",
-      "result": "PASS",
-      "reason": "software manifest generated",
-      "details": {
-        "count": 38
-      },
-      "summary_path": "evidence/generated/software_source_manifest.md"
+      "name": "m4_ps_driver_trace",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_m4_ps_driver_trace.py",
+      "returncode": 0,
+      "stdout": "M4_PS_DRIVER_TRACE_REPORT=1\nM4_TRACE_RESET_BEFORE_PROFILE=1\nM4_TRACE_PROFILE_READBACKS_MATCH=1\nM4_TRACE_COMMIT_BEFORE_ENABLE=1\nM4_TRACE_STARTUP_WAIT_BEFORE_CLEAR=1\nM4_TRACE_TRANSACTION_START_POLL_STOP=1\nM4_TRACE_FINAL_COUNTER_READS=1\nM4_TRACE_SHUTDOWN_REASON_WRITTEN=1\nM4_PS_DRIVER_TRACE=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "ps_driver_sequence_static_check",
-      "result": "PASS",
-      "reason": "PS driver sequence checked",
-      "details": {
-        "missing": []
-      },
-      "summary_path": "evidence/generated/ps_driver_sequence_summary.md"
+      "name": "m4_static_reference_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m4_static.py",
+      "returncode": 0,
+      "stdout": "M4_GENERATED_OFFSET_CONTROL=1\nM4_DOC_OFFSET_CONTROL=1\nM4_RTL_OFFSET_CONTROL=1\nM4_GENERATED_OFFSET_PROFILE_LANE_MASK=1\nM4_DOC_OFFSET_PROFILE_LANE_MASK=1\nM4_RTL_OFFSET_PROFILE_LANE_MASK=1\nM4_GENERATED_OFFSET_PROFILE_RX_LANE_MASK=1\nM4_DOC_OFFSET_PROFILE_RX_LANE_MASK=1\nM4_RTL_OFFSET_PROFILE_RX_LANE_MASK=1\nM4_GENERATED_OFFSET_PROFILE_ACK_LANE_MASK=1\nM4_DOC_OFFSET_PROFILE_ACK_LANE_MASK=1\nM4_RTL_OFFSET_PROFILE_ACK_LANE_MASK=1\nM4_GENERATED_OFFSET_PROFILE_SESSION=1\nM4_DOC_OFFSET_PROFILE_SESSION=1\nM4_RTL_OFFSET_PROFILE_SESSION=1\nM4_GENERATED_OFFSET_PROFILE_PAYLOAD_LEN=1\nM4_DOC_OFFSET_PROFILE_PAYLOAD_LEN=1\nM4_RTL_OFFSET_PROFILE_PAYLOAD_LEN=1\nM4_GENERATED_OFFSET_PROFILE_FRAGMENT_BYTES=1\nM4_DOC_OFFSET_PROFILE_FRAGMENT_BYTES=1\nM4_RTL_OFFSET_PROFILE_FRAGMENT_BYTES=1\nM4_GENERATED_OFFSET_TIMING_CNT_CHIP_MAX=1\nM4_DOC_OFFSET_TIMING_CNT_CHIP_MAX=1\nM4_RTL_OFFSET_TIMING_CNT_CHIP_MAX=1\nM4_GENERATED_OFFSET_TIMING_CNT_PREAMBLE=1\nM4_DOC_OFFSET_TIMING_CNT_PREAMBLE=1\nM4_RTL_OFFSET_TIMING_CNT_PREAMBLE=1\nM4_GENERATED_OFFSET_TIMING_DETECT_WINDOW=1\nM4_DOC_OFFSET_TIMING_DETECT_WINDOW=1\nM4_RTL_OFFSET_TIMING_DETECT_WINDOW=1\nM4_GENERATED_OFFSET_TIMING_GUARD_CYCLES=1\nM4_DOC_OFFSET_TIMING_GUARD_CYCLES=1\nM4_RTL_OFFSET_TIMING_GUARD_CYCLES=1\nM4_GENERATED_OFFSET_TIMING_RETRY_TIMEOUT=1\nM4_DOC_OFFSET_TIMING_RETRY_TIMEOUT=1\nM4_RTL_OFFSET_TIMING_RETRY_TIMEOUT=1\nM4_GENERATED_OFFSET_SAFETY_STARTUP_US=1\nM4_DOC_OFFSET_SAFETY_STARTUP_US=1\nM4_RTL_OFFSET_SAFETY_STARTUP_US=1\nM4_GENERATED_OFFSET_SAFETY_DUTY_WINDOW=1\nM4_DOC_OFFSET_SAFETY_DUTY_WINDOW=1\nM4_RTL_OFFSET_SAFETY_DUTY_WINDOW=1\nM4_GENERATED_OFFSET_SAFETY_DUTY_MAX=1\nM4_DOC_OFFSET_SAFETY_DUTY_MAX=1\nM4_RTL_OFFSET_SAFETY_DUTY_MAX=1\nM4_GENERATED_OFFSET_SAFETY_STUCK_HIGH_LIMIT=1\nM4_DOC_OFFSET_SAFETY_STUCK_HIGH_LIMIT=1\nM4_RTL_OFFSET_SAFETY_STUCK_HIGH_LIMIT=1\nM4_GENERATED_OFFSET_SAFETY_SHUTDOWN_REASON=1\nM4_DOC_OFFSET_SAFETY_SHUTDOWN_REASON=1\nM4_RTL_OFFSET_SAFETY_SHUTDOWN_REASON=1\nM4_GENERATED_OFFSET_STATUS=1\nM4_DOC_OFFSET_STATUS=1\nM4_RTL_OFFSET_STATUS=1\nM4_GENERATED_OFFSET_STATUS_RETRY_COUNT=1\nM4_DOC_OFFSET_STATUS_RETRY_COUNT=1\nM4_RTL_OFFSET_STATUS_RETRY_COUNT=1\nM4_GENERATED_OFFSET_STATUS_ERROR_COUNTS=1\nM4_DOC_OFFSET_STATUS_ERROR_COUNTS=1\nM4_RTL_OFFSET_STATUS_ERROR_COUNTS=1\nM4_GENERATED_OFFSET_COUNTER_TX_PULSE=1\nM4_DOC_OFFSET_COUNTER_TX_PULSE=1\nM4_RTL_OFFSET_COUNTER_TX_PULSE=1\nM4_GENERATED_OFFSET_COUNTER_RX_RAW_PULSE=1\nM4_DOC_OFFSET_COUNTER_RX_RAW_PULSE=1\nM4_RTL_OFFSET_COUNTER_RX_RAW_PULSE=1\nM4_GENERATED_OFFSET_COUNTER_FRAME_GOOD=1\nM4_DOC_OFFSET_COUNTER_FRAME_GOOD=1\nM4_RTL_OFFSET_COUNTER_FRAME_GOOD=1\nM4_GENERATED_OFFSET_COUNTER_FRAME_BAD=1\nM4_DOC_OFFSET_COUNTER_FRAME_BAD=1\nM4_RTL_OFFSET_COUNTER_FRAME_BAD=1\nM4_GENERATED_OFFSET_COUNTER_ACK_SENT=1\nM4_DOC_OFFSET_COUNTER_ACK_SENT=1\nM4_RTL_OFFSET_COUNTER_ACK_SENT=1\nM4_GENERATED_OFFSET_COUNTER_ACK_SEEN=1\nM4_DOC_OFFSET_COUNTER_ACK_SEEN=1\nM4_RTL_OFFSET_COUNTER_ACK_SEEN=1\nM4_GENERATED_OFFSET_PROFILE_ID=1\nM4_DOC_OFFSET_PROFILE_ID=1\nM4_RTL_OFFSET_PROFILE_ID=1\nM4_GENERATED_OFFSET_P6_CTRL=1\nM4_DOC_OFFSET_P6_CTRL=1\nM4_RTL_OFFSET_P6_CTRL=1\nM4_GENERATED_OFFSET_P6_STATUS=1\nM4_DOC_OFFSET_P6_STATUS=1\nM4_RTL_OFFSET_P6_STATUS=1\nM4_GENERATED_OFFSET_P6_SESSION=1\nM4_DOC_OFFSET_P6_SESSION=1\nM4_RTL_OFFSET_P6_SESSION=1\nM4_GENERATED_OFFSET_P6_LANE_MASK=1\nM4_DOC_OFFSET_P6_LANE_MASK=1\nM4_RTL_OFFSET_P6_LANE_MASK=1\nM4_GENERATED_OFFSET_P6_ACK_LANE_MASK=1\nM4_DOC_OFFSET_P6_ACK_LANE_MASK=1\nM4_RTL_OFFSET_P6_ACK_LANE_MASK=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_LEN=1\nM4_DOC_OFFSET_P6_PAYLOAD_LEN=1\nM4_RTL_OFFSET_P6_PAYLOAD_LEN=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_PATTERN_ID=1\nM4_DOC_OFFSET_P6_PAYLOAD_PATTERN_ID=1\nM4_RTL_OFFSET_P6_PAYLOAD_PATTERN_ID=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_SEED=1\nM4_DOC_OFFSET_P6_PAYLOAD_SEED=1\nM4_RTL_OFFSET_P6_PAYLOAD_SEED=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_CRC32=1\nM4_DOC_OFFSET_P6_PAYLOAD_CRC32=1\nM4_RTL_OFFSET_P6_PAYLOAD_CRC32=1\nM4_GENERATED_OFFSET_P6_RX_PAYLOAD_CRC32=1\nM4_DOC_OFFSET_P6_RX_PAYLOAD_CRC32=1\nM4_RTL_OFFSET_P6_RX_PAYLOAD_CRC32=1\nM4_GENERATED_OFFSET_P6_RX_PAYLOAD_LEN=1\nM4_DOC_OFFSET_P6_RX_PAYLOAD_LEN=1\nM4_RTL_OFFSET_P6_RX_PAYLOAD_LEN=1\nM4_GENERATED_OFFSET_P6_TX_COUNT=1\nM4_DOC_OFFSET_P6_TX_COUNT=1\nM4_RTL_OFFSET_P6_TX_COUNT=1\nM4_GENERATED_OFFSET_P6_RX_GOOD_COUNT_L0=1\nM4_DOC_OFFSET_P6_RX_GOOD_COUNT_L0=1\nM4_RTL_OFFSET_P6_RX_GOOD_COUNT_L0=1\nM4_GENERATED_OFFSET_P6_RX_GOOD_COUNT_L1=1\nM4_DOC_OFFSET_P6_RX_GOOD_COUNT_L1=1\nM4_RTL_OFFSET_P6_RX_GOOD_COUNT_L1=1\nM4_GENERATED_OFFSET_P6_CRC_BAD=1\nM4_DOC_OFFSET_P6_CRC_BAD=1\nM4_RTL_OFFSET_P6_CRC_BAD=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_MISMATCH=1\nM4_DOC_OFFSET_P6_PAYLOAD_MISMATCH=1\nM4_RTL_OFFSET_P6_PAYLOAD_MISMATCH=1\nM4_GENERATED_OFFSET_P6_RETRY_COUNT=1\nM4_DOC_OFFSET_P6_RETRY_COUNT=1\nM4_RTL_OFFSET_P6_RETRY_COUNT=1\nM4_GENERATED_OFFSET_P6_RETRY_EXHAUSTED=1\nM4_DOC_OFFSET_P6_RETRY_EXHAUSTED=1\nM4_RTL_OFFSET_P6_RETRY_EXHAUSTED=1\nM4_GENERATED_OFFSET_P6_TX_FAIL=1\nM4_DOC_OFFSET_P6_TX_FAIL=1\nM4_RTL_OFFSET_P6_TX_FAIL=1\nM4_GENERATED_OFFSET_P6_TXD_HIGH_CONSECUTIVE_MAX=1\nM4_DOC_OFFSET_P6_TXD_HIGH_CONSECUTIVE_MAX=1\nM4_RTL_OFFSET_P6_TXD_HIGH_CONSECUTIVE_MAX=1\nM4_GENERATED_OFFSET_P6_DUTY_VIOLATION=1\nM4_DOC_OFFSET_P6_DUTY_VIOLATION=1\nM4_RTL_OFFSET_P6_DUTY_VIOLATION=1\nM4_GENERATED_OFFSET_P6_SHUTDOWN_REASON=1\nM4_DOC_OFFSET_P6_SHUTDOWN_REASON=1\nM4_RTL_OFFSET_P6_SHUTDOWN_REASON=1\nM4_GENERATED_OFFSET_P6_MAILBOX_STATUS=1\nM4_DOC_OFFSET_P6_MAILBOX_STATUS=1\nM4_RTL_OFFSET_P6_MAILBOX_STATUS=1\nM4_GENERATED_OFFSET_P6_TIMEOUT_CYCLES=1\nM4_DOC_OFFSET_P6_TIMEOUT_CYCLES=1\nM4_RTL_OFFSET_P6_TIMEOUT_CYCLES=1\nM4_GENERATED_OFFSET_P6_ERROR_CODE=1\nM4_DOC_OFFSET_P6_ERROR_CODE=1\nM4_RTL_OFFSET_P6_ERROR_CODE=1\nM4_GENERATED_OFFSET_P6_STICKY_ERROR=1\nM4_DOC_OFFSET_P6_STICKY_ERROR=1\nM4_RTL_OFFSET_P6_STICKY_ERROR=1\nM4_GENERATED_OFFSET_P6_RX_DIGEST=1\nM4_DOC_OFFSET_P6_RX_DIGEST=1\nM4_RTL_OFFSET_P6_RX_DIGEST=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_WORD_INDEX=1\nM4_DOC_OFFSET_P6_PAYLOAD_WORD_INDEX=1\nM4_RTL_OFFSET_P6_PAYLOAD_WORD_INDEX=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_WORD_DATA=1\nM4_DOC_OFFSET_P6_PAYLOAD_WORD_DATA=1\nM4_RTL_OFFSET_P6_PAYLOAD_WORD_DATA=1\nM4_GENERATED_OFFSET_P6_RX_WORD_INDEX=1\nM4_DOC_OFFSET_P6_RX_WORD_INDEX=1\nM4_RTL_OFFSET_P6_RX_WORD_INDEX=1\nM4_GENERATED_OFFSET_P6_RX_WORD_DATA=1\nM4_DOC_OFFSET_P6_RX_WORD_DATA=1\nM4_RTL_OFFSET_P6_RX_WORD_DATA=1\nM4_GENERATED_OFFSET_P6_CAPS=1\nM4_DOC_OFFSET_P6_CAPS=1\nM4_RTL_OFFSET_P6_CAPS=1\nM4_GENERATED_OFFSET_P6_PAYLOAD_WINDOW_BASE=1\nM4_DOC_OFFSET_P6_PAYLOAD_WINDOW_BASE=1\nM4_RTL_OFFSET_P6_PAYLOAD_WINDOW_BASE=1\nM4_GENERATED_OFFSET_P6_RX_WINDOW_BASE=1\nM4_DOC_OFFSET_P6_RX_WINDOW_BASE=1\nM4_RTL_OFFSET_P6_RX_WINDOW_BASE=1\nM4_REGISTER_BUS_PRESENT=1\nM4_COMMIT_READBACK_PRESENT=1\nM4_PROFILE_OUTPUTS_PRESENT=1\nM4_STATUS_COUNTER_INPUTS_PRESENT=1\nM4_PROFILE_ID_EXPOSED=1\nM4_PS_DRIVER_READBACK_COMMIT_PRESENT=1\nM4_PS_DRIVER_CRITICAL_REGS_PRESENT=1\nM4_PS_DRIVER_STARTUP_WAIT_PRESENT=1\nM4_PS_DRIVER_CLEAR_STICKY_AFTER_STARTUP=1\nM4_PS_DRIVER_POLL_AND_COUNTERS_PRESENT=1\nM4_PS_DRIVER_FINAL_COUNTER_READS_PRESENT=1\nM4_PS_DRIVER_MMIO_PROFILE_TYPES_PRESENT=1\nM4_PS_DRIVER_OFFLINE_RUN_API_PRESENT=1\nM4_AXI_REGS_TB_PASS_MARKER_PRESENT=1\nM4_PS_DRIVER_TRACE_SCRIPT_PRESENT=1\nM4_PS_DRIVER_TRACE_REPORT_PRESENT=1\nM4_REFERENCE_READBACK_PROFILE_LANE_MASK=1\nM4_REFERENCE_READBACK_PROFILE_RX_LANE_MASK=1\nM4_REFERENCE_READBACK_PROFILE_ACK_LANE_MASK=1\nM4_REFERENCE_READBACK_PROFILE_SESSION=1\nM4_REFERENCE_READBACK_PROFILE_PAYLOAD_LEN=1\nM4_REFERENCE_READBACK_PROFILE_FRAGMENT_BYTES=1\nM4_REFERENCE_READBACK_TIMING_CNT_CHIP_MAX=1\nM4_REFERENCE_READBACK_TIMING_CNT_PREAMBLE=1\nM4_REFERENCE_READBACK_TIMING_DETECT_WINDOW=1\nM4_REFERENCE_READBACK_TIMING_GUARD_CYCLES=1\nM4_REFERENCE_READBACK_TIMING_RETRY_TIMEOUT=1\nM4_REFERENCE_READBACK_SAFETY_STARTUP_US=1\nM4_REFERENCE_READBACK_SAFETY_DUTY_WINDOW=1\nM4_REFERENCE_READBACK_SAFETY_DUTY_MAX=1\nM4_REFERENCE_READBACK_SAFETY_STUCK_HIGH_LIMIT=1\nM4_REFERENCE_COMMIT_PASS=1\nM4_REFERENCE_PROFILE_ID_PASS=1\nM4_TRACE_REFERENCE_RESET_BEFORE_PROFILE=1\nM4_TRACE_REFERENCE_PROFILE_READBACKS=1\nM4_TRACE_REFERENCE_STARTUP_CLEAR_ORDER=1\nM4_TRACE_REFERENCE_FINAL_COUNTERS=1\nM4_TRACE_REFERENCE_SHUTDOWN=1\nM4_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "host_offline_stub_run_check",
-      "result": "PASS",
-      "reason": "host offline stub checked",
-      "details": {
-        "returncode": 0
-      },
-      "summary_path": "evidence/generated/host_offline_stub_summary.md"
+      "name": "scheduler_static_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_scheduler_static.py",
+      "returncode": 0,
+      "stdout": "SCHED_DEFAULT_LANE0_ENABLED=1\nSCHED_LANE1_DEFAULT_DISABLED_MARKER=1\nSCHED_KNOWN_BAD_AB_L1_MARKER=1\nSCHED_AB_L1_BLOCK_PRESENT=1\nSCHED_ENABLE_READBACK_PRESENT=1\nSCHED_STICKY_BAD_LANE_PRESENT=1\nSCHED_FALLBACK_PRESENT=1\nSCHED_SELECTED_LANE_PRESENT=1\nSCHED_TB_PASS_MARKER_PRESENT=1\nSCHED_TB_LANE1_BLOCK_CASE=1\nSCHED_TB_FAULT_FALLBACK_CASE=1\nSCHED_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "profile_check",
-      "result": "PASS",
-      "reason": "profiles checked",
-      "details": {
-        "failures": []
-      },
-      "summary_path": "evidence/generated/profile_check_summary.md"
+      "name": "m5_static_nonhardware_build_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m5_static.py",
+      "returncode": 0,
+      "stdout": "M5_VIVADO_PROJECT_AND_XDC_SCRIPTED=1\nM5_SYNTH_IMPL_ROUTE_SCRIPTED=1\nM5_REPORTS_SCRIPTED=1\nM5_SAFE_IDLE_BITSTREAM_GENERATION_NO_HW=1\nM5_RUNNER_RECORDS_SAFE_IDLE_BITSTREAM=1\nM5_TCL_HAS_NO_HARDWARE_CALLS=1\nM5_RUNNER_HAS_NO_HARDWARE_CALLS=1\nM5_RUNNER_RECORDS_VIVADO_DISCOVERY=1\nM5_RUNNER_RECORDS_VIVADO_BAT_FALLBACK=1\nM5_RUNNER_WRITES_EVIDENCE=1\nM5_CANONICAL_TOP_SELECTED=1\nM5_TOP_HAS_PORT_ir_mode_out_0[0]=1\nM5_TOP_HAS_PORT_ir_mode_out_0[1]=1\nM5_TOP_HAS_PORT_ir_rx_in_0[0]=1\nM5_TOP_HAS_PORT_ir_rx_in_0[1]=1\nM5_TOP_HAS_PORT_ir_sd_0[0]=1\nM5_TOP_HAS_PORT_ir_sd_0[1]=1\nM5_TOP_HAS_PORT_ir_tx_out_0[0]=1\nM5_TOP_HAS_PORT_ir_tx_out_0[1]=1\nM5_TOP_HAS_PORT_loop_mode_b0[0]=1\nM5_TOP_HAS_PORT_loop_mode_b0[1]=1\nM5_TOP_HAS_PORT_loop_rx_b0[0]=1\nM5_TOP_HAS_PORT_loop_rx_b0[1]=1\nM5_TOP_HAS_PORT_loop_sd_b0[0]=1\nM5_TOP_HAS_PORT_loop_sd_b0[1]=1\nM5_TOP_HAS_PORT_loop_tx_b0[0]=1\nM5_TOP_HAS_PORT_loop_tx_b0[1]=1\nM5_TOP_DEFAULTS_TFDU_SHUTDOWN=1\nM5_TOP_DEFAULTS_TX_IDLE_LOW=1\nM5_TOP_DEFAULTS_MODE_HIGH=1\nM5_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "vivado_project_generation_dry_check",
-      "result": "PASS",
-      "reason": "Vivado scripts audited",
-      "details": {
-        "findings": []
-      },
-      "summary_path": "evidence/generated/vivado_script_audit.md"
+      "name": "m6_static_hardware_prep_checks",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m6_static.py",
+      "returncode": 0,
+      "stdout": "M6_RUN_LANE0_RAW_MATRIX_SCRIPT_EXISTS=1\nM6_RUN_LANE0_RAW_MATRIX_REQUIRES_ALLOW_HARDWARE_PARAM=1\nM6_RUN_LANE0_RAW_MATRIX_DEFAULT_REFUSAL_MARKER=1\nM6_RUN_LANE0_RAW_MATRIX_REFUSAL_NO_HW_MARKER=1\nM6_RUN_LANE0_RAW_MATRIX_PRINTS_PROFILE_HASH=1\nM6_RUN_LANE0_RAW_MATRIX_WRITES_HASH_MANIFEST=1\nM6_RUN_LANE0_RAW_MATRIX_CHECKS_SHUTDOWN_MARKERS=1\nM6_RUN_G1_LANE0_REPLAY_SCRIPT_EXISTS=1\nM6_RUN_G1_LANE0_REPLAY_REQUIRES_ALLOW_HARDWARE_PARAM=1\nM6_RUN_G1_LANE0_REPLAY_DEFAULT_REFUSAL_MARKER=1\nM6_RUN_G1_LANE0_REPLAY_REFUSAL_NO_HW_MARKER=1\nM6_RUN_G1_LANE0_REPLAY_PRINTS_PROFILE_HASH=1\nM6_RUN_G1_LANE0_REPLAY_WRITES_HASH_MANIFEST=1\nM6_RUN_G1_LANE0_REPLAY_CHECKS_SHUTDOWN_MARKERS=1\nM6_PROGRAM_TFDU_SHUTDOWN_SCRIPT_EXISTS=1\nM6_PROGRAM_TFDU_SHUTDOWN_REQUIRES_ALLOW_HARDWARE_PARAM=1\nM6_PROGRAM_TFDU_SHUTDOWN_DEFAULT_REFUSAL_MARKER=1\nM6_PROGRAM_TFDU_SHUTDOWN_REFUSAL_NO_HW_MARKER=1\nM6_PROGRAM_TFDU_SHUTDOWN_PRINTS_PROFILE_HASH=1\nM6_PROGRAM_TFDU_SHUTDOWN_WRITES_HASH_MANIFEST=1\nM6_PROGRAM_TFDU_SHUTDOWN_CHECKS_SHUTDOWN_MARKERS=1\nM6_RAW_MATRIX_FORCES_SHUTDOWN_AFTER_RUN=1\nM6_G1_REPLAY_FORCES_SHUTDOWN_AFTER_RUN=1\nM6_SHUTDOWN_WRAPPER_CALLS_SHUTDOWN_TCL=1\nM6_RAW_MATRIX_USES_SAFE_REFERENCE_WRAPPER=1\nM6_G1_REPLAY_USES_SAFE_REFERENCE_WRAPPER=1\nM6_WRAPPERS_DEFAULT_G1_PROFILE=1\nM6_REFUSAL_RUNTIME_GATE_EXISTS=1\nM6_REFUSAL_RUNTIME_MARKERS_CHECKED=1\nM6_REFUSAL_RUNTIME_MANIFEST_CHECKED=1\nM6_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "ip_packaging_dry_check",
-      "result": "PASS",
-      "reason": "IP packaging dry check completed",
-      "details": {
-        "component": true,
-        "xgui": true
-      },
-      "summary_path": "evidence/generated/ip_packaging_dry_check.md"
+      "name": "m6_refusal_runtime",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_m6_refusal_runtime.py",
+      "returncode": 0,
+      "stdout": "M6_REFUSAL_RUNTIME_REPORT=1\nM6_RUN_LANE0_RAW_MATRIX_EXIT_ZERO=1\nM6_RUN_LANE0_RAW_MATRIX_REFUSED_MARKER=1\nM6_RUN_LANE0_RAW_MATRIX_NO_HARDWARE_MARKER=1\nM6_RUN_LANE0_RAW_MATRIX_STATUS_MARKER=1\nM6_RUN_LANE0_RAW_MATRIX_MANIFEST_EXISTS=1\nM6_RUN_LANE0_RAW_MATRIX_MANIFEST_NO_HARDWARE=1\nM6_RUN_LANE0_RAW_MATRIX_MANIFEST_ALLOW_FALSE=1\nM6_RUN_G1_LANE0_REPLAY_EXIT_ZERO=1\nM6_RUN_G1_LANE0_REPLAY_REFUSED_MARKER=1\nM6_RUN_G1_LANE0_REPLAY_NO_HARDWARE_MARKER=1\nM6_RUN_G1_LANE0_REPLAY_STATUS_MARKER=1\nM6_RUN_G1_LANE0_REPLAY_MANIFEST_EXISTS=1\nM6_RUN_G1_LANE0_REPLAY_MANIFEST_NO_HARDWARE=1\nM6_RUN_G1_LANE0_REPLAY_MANIFEST_ALLOW_FALSE=1\nM6_PROGRAM_TFDU_SHUTDOWN_EXIT_ZERO=1\nM6_PROGRAM_TFDU_SHUTDOWN_REFUSED_MARKER=1\nM6_PROGRAM_TFDU_SHUTDOWN_NO_HARDWARE_MARKER=1\nM6_PROGRAM_TFDU_SHUTDOWN_STATUS_MARKER=1\nM6_PROGRAM_TFDU_SHUTDOWN_MANIFEST_EXISTS=1\nM6_PROGRAM_TFDU_SHUTDOWN_MANIFEST_NO_HARDWARE=1\nM6_PROGRAM_TFDU_SHUTDOWN_MANIFEST_ALLOW_FALSE=1\nM6_REFUSAL_RUNTIME=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "software_no_real_io_check",
-      "result": "PASS",
-      "reason": "software real IO scan complete",
-      "details": {
-        "findings": []
-      },
-      "summary_path": "evidence/generated/software_no_real_io_summary.md"
+      "name": "ps_driver_c_compile",
+      "cmd": "D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe -std=c11 -Wall -Wextra -Isoftware/ps_driver -Iconfig/register_map/generated -fsyntax-only software/ps_driver/main_offline_stub.c software/ps_driver/ir_driver.c software/ps_driver/ir_profile.c",
+      "returncode": 0,
+      "stdout": "C_COMPILER_HOST_MISSING=1\nVITIS_CROSS_GCC_AVAILABLE=1\nVITIS_CROSS_GCC=D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe\nM4_PS_DRIVER_C_COMPILE_MODE=CROSS_SYNTAX_ONLY\nM4_PS_DRIVER_C_OFFLINE_STUB_RUN=SKIPPED_CROSS_TARGET\nM4_PS_DRIVER_C_COMPILE=PASS\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "manifest_generation",
-      "result": "PASS",
-      "reason": "manifests generated",
-      "details": {
-        "results": [
-          {
-            "name": "required_docs_check",
-            "result": "PASS",
-            "reason": "required docs present",
-            "details": {
-              "missing": []
-            },
-            "summary_path": "evidence/generated/required_docs_manifest.md"
-          },
-          {
-            "name": "rtl_source_manifest_check",
-            "result": "PASS",
-            "reason": "RTL manifest generated",
-            "details": {
-              "missing": [],
-              "count": 50
-            },
-            "summary_path": "evidence/generated/rtl_source_manifest.md"
-          },
-          {
-            "name": "software_source_manifest_check",
-            "result": "PASS",
-            "reason": "software manifest generated",
-            "details": {
-              "count": 38
-            },
-            "summary_path": "evidence/generated/software_source_manifest.md"
-          },
-          {
-            "name": "tools_manifest_check",
-            "result": "PASS",
-            "reason": "tools manifest generated",
-            "details": {
-              "missing": []
-            },
-            "summary_path": "evidence/generated/tools_manifest.md"
-          }
-        ]
-      },
-      "summary_path": "evidence/generated/required_docs_manifest.md"
+      "name": "m5_vivado_nonhardware_build",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_vivado_nonhardware_build.py",
+      "returncode": 0,
+      "stdout": "M5_VIVADO_NONHARDWARE_BUILD=PASS\nVIVADO_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BAT_AVAILABLE=1\nVIVADO_EXECUTABLE=D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat\nNO_HARDWARE_ACTIONS_EXECUTED=1\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "evidence_consistency_check",
-      "result": "PASS",
-      "reason": "evidence consistency checked",
-      "details": {
-        "findings": []
-      },
-      "summary_path": "evidence/generated/evidence_consistency_summary.md"
+      "name": "lane_phy_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\tfdu_lane_phy.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models\\tfdu6102_behavior_model.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_tfdu_lane_phy_smoke.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_tfdu_lane_phy_smoke -debug typical -s tb_tfdu_lane_phy_smoke_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_tfdu_lane_phy_smoke_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/tfdu_lane_phy.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tfdu_lane_phy\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_lane_phy_smoke -debug typical -s tb_tfdu_lane_phy_smoke_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.tfdu_lane_phy(CLK_HZ=1000000,TFD...\nCompiling module work.tfdu_lane_phy(CLK_HZ=1000000,TFD...\nCompiling module work.tb_tfdu_lane_phy_smoke\nBuilt simulation snapshot tb_tfdu_lane_phy_smoke_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl\n# xsim {tb_tfdu_lane_phy_smoke_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nTB_TFDU_LANE_PHY_SMOKE_PASS=1\n$finish called at time : 385 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv\" Line 173\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:32 2026...\n",
+      "stderr": "",
+      "status": null
     },
     {
-      "name": "git_cleanliness_report",
-      "result": "PASS",
-      "reason": "git status recorded",
-      "details": {
-        "dirty": true,
-        "status": "M PROJECT_STATUS.md\n M docs/PROJECT_STATUS.md\n M docs/TFDU6102_SAFETY_SUMMARY.md\n M docs/tfdu6102_safety_contract.md\n M evidence/generated/git_cleanliness_report.md\n M evidence/generated/ir_4ppm_pulse_smoke_summary.md\n M evidence/generated/m4_ps_driver_trace.json\n M evidence/generated/m4_ps_driver_trace.md\n M evidence/generated/no_hardware_action_static_scan.md\n M evidence/generated/offline_gate_summary.json\n M evidence/generated/offline_gate_summary.md\n M evidence/generated/p1_evidence_review_for_p2.md\n M evidence/generated/p1_git_precheck.txt\n M evidence/generated/p1_offline_hardening_summary.json\n M evidence/generated/p1_offline_hardening_summary.md\n M evidence/generated/p2_repo_intake.md\n M evidence/generated/p2_simulation_baseline_summary.md\n M evidence/generated/p3_authorization_gate_summary.md\n M evidence/generated/p3_bitstream_build_audit_summary.md\n M evidence/generated/p3_constraint_freeze_summary.md\n M evidence/generated/p3_evidence_schema_summary.md\n M evidence/generated/p3_hardware_script_dry_run_summary.md\n M evidence/generated/p3_no_hardware_static_scan.md\n M evidence/generated/p3_pre_hw_acceptance_package_summary.md\n M evidence/generated/p3_recheck_p1_p2_summary.md\n M evidence/generated/p3_repo_intake.md\n M evidence/generated/p3_runbook_summary.md\n M evidence/generated/profile_check_summary.md\n M evidence/generated/project_status_update_summary.md\n M evidence/generated/required_docs_manifest.md\n M evidence/generated/rtl_source_manifest.json\n M evidence/generated/rtl_source_manifest.md\n M evidence/generated/simulation_gate_summary.md\n M evidence/generated/simulator_detection_summary.md\n M evidence/generated/software_source_manifest.md\n M evidence/generated/tfdu6102_behavior_model_summary.md\n M evidence/generated/tfdu6102_reference_model_summary.md\n M evidence/generated/tfdu_lane_phy_sim_summary.md\n M evidence/generated/tools_manifest.md\n M evidence/generated/vivado/nonhardware_build_markers.txt\n M evidence/generated/vivado/nonhardware_build_summary.json\n M evidence/generated/vivado/nonhardware_build_summary.md\n M evidence/generated/vivado/post_route_drc.rpt\n M evidence/generated/vivado/post_route_timing_summary.rpt\n M evidence/generated/vivado/post_route_utilization.rpt\n M evidence/generated/vivado/post_synth_drc.rpt\n M evidence/generated/vivado_script_audit.md\n M evidence/generated/wrapper_xdc_consistency_summary.md\n M evidence/generated/xdc_inventory.md\n M evidence/simulation/sim_results.json\n M rtl/ir_axi_regs_new.sv\n M rtl/ir_top_new.sv\n M rtl/tfdu_lane_phy.sv\n M rtl/tfdu_lane_phy_pkg.sv\n M scripts/check_m4_static.py\n M scripts/check_m5_static.py\n M scripts/generate_m4_ps_driver_trace.py\n M scripts/hw/program_tfdu_shutdown_safe.ps1\n M scripts/hw/run_g1_lane0_replay_safe.ps1\n M scripts/hw/run_lane0_raw_matrix_safe.ps1\n M scripts/legacy_safe_tools/build_tfdu_shutdown.tcl\n M scripts/legacy_safe_tools/program_tfdu_shutdown.tcl\n M scripts/legacy_safe_tools/tfdu_shutdown_j10_j11.xdc\n M scripts/legacy_safe_tools/tfdu_shutdown_top.v\n M scripts/run_vivado_nonhardware_build.py\n M scripts/vivado_nonhardware_build.tcl\n M software/ps_driver/ir_profile.c\n M tools/p1_lib.py\n M tools/p3_pre_hw_lib.py\n M tools/run_offline_gate.py\n M tools/run_simulation_gate.py\n M tools/summarize_gate.py\n?? .hardware_authorization/\n?? dist/\n?? evidence/generated/p4_authorization_gate_summary.md\n?? evidence/generated/p4_auto_authorization_summary.md\n?? evidence/generated/p4_auto_authorized_bitstream_preflight.md\n?? evidence/generated/p4_auto_authorized_run_package.md\n?? evidence/generated/p4_auto_bitstream_provenance_summary.md\n?? evidence/generated/p4_auto_hardware_acceptance_summary.json\n?? evidence/generated/p4_auto_hardware_acceptance_summary.md\n?? evidence/generated/p4_auto_lane0_300s_soak_summary.md\n?? evidence/generated/p4_auto_lane0_ack_retry_summary.md\n?? evidence/generated/p4_auto_lane0_frame_crc_summary.md\n?? evidence/generated/p4_auto_lane1_ack_retry_summary.md\n?? evidence/generated/p4_auto_lane1_frame_crc_summary.md\n?? evidence/generated/p4_auto_previous_p4_intake.md\n?? evidence/generated/p4_auto_profiles_summary.md\n?? evidence/generated/p4_auto_raw_lane_matrix_summary.md\n?? evidence/generated/p4_auto_raw_pulse_smoke_summary.md\n?? evidence/generated/p4_auto_recheck_p1_p2_p3_summary.md\n?? evidence/generated/p4_auto_repo_intake.md\n?? evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md\n?? evidence/generated/p4_auto_shutdown_summary.md\n?? evidence/generated/p4_auto_tfdu_control_idle_authorized_run_package.md\n?? evidence/generated/p4_auto_tfdu_control_idle_summary.md\n?? evidence/generated/p4_auto_two_lane_300s_soak_summary.md\n?? evidence/generated/p4_auto_two_lane_minimal_summary.md\n?? evidence/generated/p4_hardware_acceptance_gate_summary.md\n?? evidence/generated/p4_hardware_acceptance_summary.json\n?? evidence/generated/p4_hardware_acceptance_summary.md\n?? evidence/generated/p4_no_hardware_or_authorized_hardware_scan.md\n?? evidence/generated/p4_recheck_p1_p2_p3_summary.md\n?? evidence/generated/p4_repo_intake.md\n?? evidence/generated/p4_safe_idle_profile_audit.md\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_ack.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_soak.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_lane1_ack.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_minimal.txt\n?? evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_soak.txt\n?? evidence/generated/vivado/nonhardware_build_markers_raw_lane_matrix.txt\n?? evidence/generated/vivado/nonhardware_build_markers_raw_pulse.txt\n?? evidence/generated/vivado/nonhardware_build_markers_safe_idle.txt\n?? evidence/generated/vivado/nonhardware_build_markers_tfdu_control_idle.txt\n?? evidence/generated/vivado/p4_auto_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_ack_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane0_soak_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane1_ack_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_lane1_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_two_lane_minimal_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_protocol_two_lane_soak_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_raw_lane_matrix_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_raw_pulse_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_safe_idle_debug_instrumentation.txt\n?? evidence/generated/vivado/p4_auto_tfdu_control_idle_debug_instrumentation.txt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_drc_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_drc_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_drc_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_drc_safe_idle.rpt\n?? evidence/generated/vivado/post_route_drc_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_timing_summary_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_timing_summary_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_timing_summary_safe_idle.rpt\n?? evidence/generated/vivado/post_route_timing_summary_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane1.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_route_utilization_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_route_utilization_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_route_utilization_raw_pulse.rpt\n?? evidence/generated/vivado/post_route_utilization_safe_idle.rpt\n?? evidence/generated/vivado/post_route_utilization_tfdu_control_idle.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0_ack.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane0_soak.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane1.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_lane1_ack.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_minimal.rpt\n?? evidence/generated/vivado/post_synth_drc_protocol_two_lane_soak.rpt\n?? evidence/generated/vivado/post_synth_drc_raw_lane_matrix.rpt\n?? evidence/generated/vivado/post_synth_drc_raw_pulse.rpt\n?? evidence/generated/vivado/post_synth_drc_safe_idle.rpt\n?? evidence/generated/vivado/post_synth_drc_tfdu_control_idle.rpt\n?? evidence/generated/vivado/project_protocol_lane0/\n?? evidence/generated/vivado/project_protocol_lane0_ack/\n?? evidence/generated/vivado/project_protocol_lane0_soak/\n?? evidence/generated/vivado/project_protocol_lane1/\n?? evidence/generated/vivado/project_protocol_lane1_ack/\n?? evidence/generated/vivado/project_protocol_two_lane_minimal/\n?? evidence/generated/vivado/project_protocol_two_lane_soak/\n?? evidence/generated/vivado/project_raw_lane_matrix/\n?? evidence/generated/vivado/project_raw_pulse/\n?? evidence/generated/vivado/project_safe_idle/\n?? evidence/generated/vivado/project_tfdu_control_idle/\n?? evidence/hardware/p4/\n?? evidence/hardware/p4_auto/\n?? profiles/p4_auto_lane0_300s_soak.json\n?? profiles/p4_auto_lane0_ack_retry.json\n?? profiles/p4_auto_lane0_frame_crc.json\n?? profiles/p4_auto_lane1_ack_retry.json\n?? profiles/p4_auto_lane1_frame_crc.json\n?? profiles/p4_auto_raw_lane_matrix.json\n?? profiles/p4_auto_raw_pulse_l0.json\n?? profiles/p4_auto_safe_idle_proxy.json\n?? profiles/p4_auto_tfdu_control_idle.json\n?? profiles/p4_auto_two_lane_300s_soak.json\n?? profiles/p4_auto_two_lane_minimal.json\n?? profiles/p4_lane0_safe_smoke.json\n?? profiles/p4_lane_matrix_safe_smoke.json\n?? profiles/p4_safe_idle.json\n?? rtl/debug/\n?? tools/p4_auto_authorization.py\n?? tools/p4_auto_bitstream_provenance.py\n?? tools/p4_auto_debug_readback.py\n?? tools/p4_auto_lib.py\n?? tools/p4_auto_parse_ila.py\n?? tools/p4_auto_profiles.py\n?? tools/p4_counter_capture.py\n?? tools/p4_hw_authorization.py\n?? tools/p4_hw_evidence.py\n?? tools/p4_hw_execution.py\n?? tools/p4_hw_profiles.py\n?? tools/p4_lane_matrix.py\n?? tools/p4_safe_idle_audit.py\n?? tools/p4_shutdown.py\n?? tools/run_p4_auto_hardware_acceptance.ps1\n?? tools/run_p4_auto_hardware_acceptance.py\n?? tools/run_p4_hardware_acceptance.ps1\n?? tools/run_p4_hardware_acceptance.py"
-      },
-      "summary_path": "evidence/generated/git_cleanliness_report.md"
+      "name": "m2_4ppm_codec_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_4ppm_codec.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models\\tfdu6102_behavior_model.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_tfdu_4ppm_codec.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_tfdu_4ppm_codec -debug typical -s tb_tfdu_4ppm_codec_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_tfdu_4ppm_codec_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_4ppm_codec\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_4ppm_codec -debug typical -s tb_tfdu_4ppm_codec_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_4ppm_codec(CNT_CHIP_MAX=1,CNT...\nCompiling module work.tb_tfdu_4ppm_codec\nBuilt simulation snapshot tb_tfdu_4ppm_codec_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_tfdu_4ppm_codec_snapshot/xsim_script.tcl\n# xsim {tb_tfdu_4ppm_codec_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nM2_4PPM_PREAMBLE_PATH_PASS=1\nTB_TFDU_4PPM_CODEC_PASS=1\n$finish called at time : 1685 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv\" Line 217\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:36 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "m2_frame_l1_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_frame_l1.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_lane0_frame_crc.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_lane0_frame_crc -debug typical -s tb_lane0_frame_crc_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_lane0_frame_crc_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_frame_l1.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_frame_l1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_lane0_frame_crc -debug typical -s tb_lane0_frame_crc_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_frame_l1(MAX_FRAME_BYTES=64)\nCompiling module work.tb_lane0_frame_crc\nBuilt simulation snapshot tb_lane0_frame_crc_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl\n# xsim {tb_lane0_frame_crc_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nTB_LANE0_FRAME_CRC_PASS=1\n$finish called at time : 145 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv\" Line 195\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:41 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "m2_4ppm_model_integration_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_4ppm_codec.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models\\tfdu6102_behavior_model.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_tfdu_4ppm_model_integration.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_tfdu_4ppm_model_integration -debug typical -s tb_tfdu_4ppm_model_integration_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_tfdu_4ppm_model_integration_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_4ppm_codec\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_4ppm_model_integration -debug typical -s tb_tfdu_4ppm_model_integration_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,CN...\nCompiling module work.tfdu6102_behavior_model(STARTUP_...\nCompiling module work.tb_tfdu_4ppm_model_integration\nBuilt simulation snapshot tb_tfdu_4ppm_model_integration_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_tfdu_4ppm_model_integration_snapshot/xsim_script.tcl\n# xsim {tb_tfdu_4ppm_model_integration_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nM2_4PPM_MODEL_PREAMBLE_PATH_PASS=1\nTB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1\n$finish called at time : 11705 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv\" Line 213\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:46 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "m3_lane0_ack_only_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_arq_l2.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_lane0_ack_only.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_lane0_ack_only -debug typical -s tb_lane0_ack_only_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_lane0_ack_only_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_arq_l2.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_arq_l2\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_lane0_ack_only\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_lane0_ack_only -debug typical -s tb_lane0_ack_only_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_arq_l2(DEFAULT_RETRY_TIMEOUT_...\nCompiling module work.tb_lane0_ack_only\nBuilt simulation snapshot tb_lane0_ack_only_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl\n# xsim {tb_lane0_ack_only_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nTB_LANE0_ACK_ONLY_PASS=1\n$finish called at time : 425 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv\" Line 181\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:50 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "m4_axi_regs_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_axi_regs_new.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_ir_axi_regs_new.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_axi_regs_new -debug typical -s tb_ir_axi_regs_new_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_axi_regs_new_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_axi_regs_new.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_axi_regs_new\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_axi_regs_new -debug typical -s tb_ir_axi_regs_new_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_axi_regs_new_default\nCompiling module work.tb_ir_axi_regs_new\nBuilt simulation snapshot tb_ir_axi_regs_new_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl\n# xsim {tb_ir_axi_regs_new_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nTB_IR_AXI_REGS_NEW_PASS=1\n$finish called at time : 266 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv\" Line 177\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:55 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "scheduler_sim",
+      "cmd": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\models C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\rtl\\ir_multilane_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\sim\\tb\\tb_ir_multilane_scheduler.sv && D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_multilane_scheduler -debug typical -s tb_ir_multilane_scheduler_snapshot && D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_multilane_scheduler_snapshot -runall",
+      "returncode": 0,
+      "stdout": "IVERILOG_ON_PATH=0\nVERILATOR_ON_PATH=0\nVIVADO_PATH_ON_PATH=0\nXVLOG_PATH_ON_PATH=0\nXELAB_PATH_ON_PATH=0\nXSIM_PATH_ON_PATH=0\nXILINX_VIVADO_2023_1_BIN=D:\\Xilinx\\Vivado\\2023.1\\bin\nXILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/rtl/ir_multilane_scheduler.sv\" into library work\nINFO: [VRFC 10-311] analyzing module ir_multilane_scheduler\nINFO: [VRFC 10-2263] Analyzing SystemVerilog file \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv\" into library work\nINFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler\nVivado Simulator v2023.1\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\nRunning: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_multilane_scheduler -debug typical -s tb_ir_multilane_scheduler_snapshot \nMulti-threading is on. Using 26 slave threads.\nStarting static elaboration\nPass Through NonSizing Optimizer\nCompleted static elaboration\nStarting simulation data flow analysis\nCompleted simulation data flow analysis\nTime Resolution for simulation is 1ps\nCompiling module work.ir_multilane_scheduler_default\nCompiling module work.tb_ir_multilane_scheduler\nBuilt simulation snapshot tb_ir_multilane_scheduler_snapshot\n\n****** xsim v2023.1 (64-bit)\n  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023\n  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023\n  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023\n    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.\n    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n\nsource xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl\n# xsim {tb_ir_multilane_scheduler_snapshot} -autoloadwcfg -runall\nTime resolution is 1 ps\nrun -all\nTB_IR_MULTILANE_SCHEDULER_PASS=1\n$finish called at time : 146 ns : File \"C:/Users/user/Documents/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv\" Line 129\nexit\nINFO: [Common 17-206] Exiting xsim at Fri Jul 10 17:11:59 2026...\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "generate_plan_completion_audit",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_plan_completion_audit.py",
+      "returncode": 0,
+      "stdout": "PLAN_COMPLETION_AUDIT_GENERATED=1\nPLAN_COMPLETION_AUDIT_STATUS=PASS\nPLAN_COMPLETION_AUDIT_HARD_FAILS=0\nNO_HARDWARE_ACTIONS_EXECUTED=1\n",
+      "stderr": "",
+      "status": null
+    },
+    {
+      "name": "plan_completion_static",
+      "cmd": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_plan_completion_static.py",
+      "returncode": 0,
+      "stdout": "PLAN_MARKER_PROJECT_BOOTSTRAP_DONE=1\nPLAN_MARKER_RF_COMM_SOURCE_IMPORTED=1\nPLAN_MARKER_PROJECT_CONSTRAINTS_COPIED=1\nPLAN_MARKER_AGENTS_MD_CREATED=1\nPLAN_MARKER_TFDU_DATASHEET_COPIED_OR_PENDING_RECORDED=1\nPLAN_MARKER_LEGACY_EVIDENCE_IMPORTED=1\nPLAN_MARKER_ACTIVE_XDC_ARCHIVED=1\nPLAN_MARKER_LEGACY_XDC_CONFLICT_ARCHIVED=1\nPLAN_MARKER_PINMAP_GENERATED=1\nPLAN_MARKER_CANONICAL_XDC_GENERATED=1\nPLAN_MARKER_G1_PROFILE_CREATED=1\nPLAN_MARKER_LANE1_DEFAULT_DISABLED=1\nPLAN_MARKER_TFDU_SAFETY_DOC_CREATED=1\nPLAN_MARKER_NEW_RTL_SKELETON_CREATED=1\nPLAN_MARKER_REGISTER_MAP_SINGLE_SOURCE_CREATED=1\nPLAN_MARKER_NO_HARDWARE_ACTIONS_EXECUTED=1\nPLAN_OFFLINE_GATES_RAN_WITHOUT_HARD_FAIL=1\nPLAN_OFFLINE_SUMMARY_NO_HARDWARE_TRUE=1\nPLAN_OFFLINE_RESULTS_NO_HARD_FAIL=1\nPLAN_NO_HARDWARE_SCAN_PASS=1\nPLAN_GATE_PROJECT_INTEGRITY_PASS=1\nPLAN_GATE_XDC_CONFLICTS_PASS=1\nPLAN_GATE_TFDU_SAFETY_STATIC_PASS=1\nPLAN_GATE_M1_TFDU_MODEL_REFERENCE_PASS=1\nPLAN_GATE_REGISTER_MAP_GENERATION_PASS=1\nPLAN_GATE_NO_HARDWARE_CALLS_PASS=1\nPLAN_GATE_SV_PORT_CONTRACTS_PASS=1\nPLAN_GATE_HOST_CLIENT_UNIT_TESTS_PASS=1\nPLAN_GATE_M2_DETECT_WINDOW_SWEEP_PASS=1\nPLAN_GATE_M2_STATIC_REFERENCE_CHECKS_PASS=1\nPLAN_GATE_M3_CRC_BAD_ACK_REFERENCE_PASS=1\nPLAN_GATE_M3_STATIC_REFERENCE_CHECKS_PASS=1\nPLAN_GATE_M4_PS_DRIVER_TRACE_PASS=1\nPLAN_GATE_M4_STATIC_REFERENCE_CHECKS_PASS=1\nPLAN_GATE_SCHEDULER_STATIC_CHECKS_PASS=1\nPLAN_GATE_M5_STATIC_NONHARDWARE_BUILD_CHECKS_PASS=1\nPLAN_GATE_M6_STATIC_HARDWARE_PREP_CHECKS_PASS=1\nPLAN_GATE_M6_REFUSAL_RUNTIME_PASS=1\nPLAN_GATE_GENERATE_PLAN_COMPLETION_AUDIT_PASS=1\nPLAN_GATE_PS_DRIVER_C_COMPILE_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M5_VIVADO_NONHARDWARE_BUILD_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_LANE_PHY_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M2_4PPM_CODEC_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M2_FRAME_L1_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M2_4PPM_MODEL_INTEGRATION_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M3_LANE0_ACK_ONLY_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_M4_AXI_REGS_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_GATE_SCHEDULER_SIM_PASS_OR_PENDING_TOOL=1\nPLAN_NONCLAIM_ETHERNET_REAL_BOARD=1\nPLAN_NONCLAIM_ROTATION_600_RPM=1\nPLAN_NONCLAIM_2_HOUR_SOAK=1\nPLAN_NONCLAIM_8_LANE=1\nPLAN_FORBIDDEN_CLAIM_REAL_HARDWARE_PASS_ABSENT=1\nPLAN_FORBIDDEN_CLAIM_ETHERNET_PASS_ABSENT=1\nPLAN_FORBIDDEN_CLAIM_ROTATION_PASS_ABSENT=1\nPLAN_FORBIDDEN_CLAIM_TWO_HOUR_SOAK_PASS_ABSENT=1\nPLAN_FORBIDDEN_CLAIM_EIGHT_LANE_PASS_ABSENT=1\nPLAN_FORBIDDEN_CLAIM_AB_L1_FIXED_ABSENT=1\nPLAN_AUDIT_STATUS_RECORDED=1\nPLAN_AUDIT_OFFLINE_STATUS_RECORDED=1\nPLAN_AUDIT_SV_PORT_CONTRACT_RECORDED=1\nPLAN_AUDIT_M4_PS_DRIVER_TRACE_RECORDED=1\nPLAN_AUDIT_M6_REFUSAL_RUNTIME_RECORDED=1\nPLAN_AUDIT_NO_REAL_HARDWARE_CLAIM_RECORDED=1\nPLAN_AUDIT_NO_ETHERNET_CLAIM_RECORDED=1\nPLAN_AUDIT_NO_ROTATION_CLAIM_RECORDED=1\nPLAN_AUDIT_NO_SOAK_CLAIM_RECORDED=1\nPLAN_AUDIT_NO_EIGHT_LANE_CLAIM_RECORDED=1\nPLAN_AUDIT_NO_AB_L1_FIXED_CLAIM_RECORDED=1\nPLAN_AUDIT_VIVADO_PATH_ABSENCE_RECORDED=1\nPLAN_AUDIT_VIVADO_BAT_PATH_RECORDED=1\nPLAN_AUDIT_XILINX_SIM_BAT_AVAILABLE_RECORDED=1\nPLAN_AUDIT_IVERILOG_ABSENCE_RECORDED=1\nPLAN_AUDIT_VERILATOR_ABSENCE_RECORDED=1\nPLAN_AUDIT_VITIS_CROSS_GCC_RECORDED=1\nPLAN_AUDIT_PS_DRIVER_CROSS_COMPILE_RECORDED=1\nPLAN_COMPLETION_STATIC=PASS\n",
+      "stderr": "",
+      "status": null
     }
-  ],
-  "P1_OFFLINE_HARDENING": "PASS",
-  "P2_SIMULATION_BASELINE": "PASS",
-  "simulation_gate": {
-    "P2_SIMULATION_BASELINE": "PASS",
-    "NO_HARDWARE_ACTIONS_EXECUTED": true,
-    "HARDWARE_ACCEPTANCE": "PENDING_HW",
-    "failed": [],
-    "skipped": []
-  },
-  "P3_PRE_HW_ACCEPTANCE_PACKAGE": "PASS",
-  "pre_hw_acceptance_package_gate": {
-    "P3_PRE_HW_ACCEPTANCE_PACKAGE": "PASS",
-    "P0_RECHECK": "PASS",
-    "P1_RECHECK": "PASS",
-    "P2_RECHECK": "PASS",
-    "NO_HARDWARE_ACTIONS_EXECUTED": true,
-    "HARDWARE_ACCEPTANCE": "PENDING_HW",
-    "generated_summaries": [
-      "evidence/generated/p3_repo_intake.md",
-      "evidence/generated/p3_pre_hw_acceptance_package_summary.md",
-      "evidence/generated/p3_no_hardware_static_scan.md",
-      "evidence/generated/p3_authorization_gate_summary.md",
-      "evidence/generated/p3_hardware_script_dry_run_summary.md",
-      "evidence/generated/p3_constraint_freeze_summary.md",
-      "evidence/generated/p3_bitstream_build_audit_summary.md",
-      "evidence/generated/p3_evidence_schema_summary.md",
-      "evidence/generated/p3_runbook_summary.md",
-      "evidence/generated/p3_recheck_p1_p2_summary.md"
-    ],
-    "pass": [
-      "P3_REPO_INTAKE",
-      "AUTHORIZATION_GATE",
-      "EVIDENCE_SCHEMA",
-      "RUNBOOKS",
-      "CONSTRAINT_FREEZE",
-      "BITSTREAM_BUILD_AUDIT",
-      "AGENTS_P3_BOUNDARY",
-      "HARDWARE_SCRIPT_DRY_RUNS",
-      "NO_HARDWARE_STATIC_SCAN",
-      "TFDU6102_CONTRACT",
-      "P3_EVIDENCE_CONSISTENCY"
-    ],
-    "fail": [],
-    "skip": [],
-    "NEXT_RECOMMENDED_STAGE": "P4_HARDWARE_ACCEPTANCE_ONLY_AFTER_USER_AUTHORIZATION"
-  },
-  "P4_AUTO_HARDWARE_ACCEPTANCE": "PASS",
-  "p4_auto_hardware_acceptance_gate": {
-    "P4_AUTO_HARDWARE_ACCEPTANCE": "PASS",
-    "COMMIT": "4768ef76c1d9bc6042d4058f52eef5fc0da5ca01",
-    "USER_CONFIRMED_SUPPLY_OK": true,
-    "MANUAL_INTERVENTION_REQUIRED": false,
-    "HARDWARE_ACTIONS_EXECUTED": true,
-    "HARDWARE_ACCEPTANCE": "PASS",
-    "P1_RECHECK": "PASS",
-    "P2_RECHECK": "PASS",
-    "P3_RECHECK": "PASS",
-    "P4_AUTO_PROFILES": "PASS",
-    "P4_AUTO_BITSTREAM_PROVENANCE": "PASS",
-    "P4_AUTO_BLOCKER": "none",
-    "AUTHORIZED_RUN_PACKAGE": "evidence/generated/p4_auto_authorized_run_package.md",
-    "SAFE_IDLE_DIRECT_PROXY": "PASS",
-    "SAFE_IDLE_PROGRAM": "PASS",
-    "BITSTREAM_SHA_MATCH": "PASS",
-    "DEBUG_READBACK_AVAILABLE": "PASS",
-    "TFDU_CONTROL_IDLE": "PASS",
-    "RAW_PULSE_SMOKE_L0": "PASS",
-    "RAW_LANE_MATRIX": "PASS",
-    "LANE0_FRAME_CRC": "PASS",
-    "LANE0_ACK_RETRY": "PASS",
-    "LANE1_FRAME_CRC": "PASS",
-    "LANE1_ACK_RETRY": "PASS",
-    "TWO_LANE_MINIMAL": "PASS",
-    "LANE0_300S_SOAK": "PASS",
-    "TWO_LANE_300S_SOAK": "PASS",
-    "SHUTDOWN_ON_EXIT": "PASS",
-    "STOP_CONDITIONS_TRIGGERED": "none",
-    "IMMUTABLE_SAFE_IDLE_BITSTREAM": "evidence/hardware/p4_auto/bitstreams/safe_idle/safe_idle_4768ef7_7158965bd4cb7fd8.bit",
-    "GENERATED_SUMMARIES": [
-      "evidence/generated/p4_auto_repo_intake.md",
-      "evidence/generated/p4_auto_recheck_p1_p2_p3_summary.md",
-      "evidence/generated/p4_auto_previous_p4_intake.md",
-      "evidence/generated/p4_auto_authorization_summary.md",
-      "evidence/generated/p4_auto_authorized_run_package.md",
-      "evidence/generated/p4_auto_authorized_bitstream_preflight.md",
-      "evidence/generated/p4_auto_profiles_summary.md",
-      "evidence/generated/p4_auto_bitstream_provenance_summary.md",
-      "evidence/generated/p4_auto_safe_idle_direct_proxy_summary.md",
-      "evidence/generated/p4_auto_tfdu_control_idle_summary.md",
-      "evidence/generated/p4_auto_raw_pulse_smoke_summary.md",
-      "evidence/generated/p4_auto_raw_lane_matrix_summary.md",
-      "evidence/generated/p4_auto_lane0_frame_crc_summary.md",
-      "evidence/generated/p4_auto_lane0_ack_retry_summary.md",
-      "evidence/generated/p4_auto_lane1_frame_crc_summary.md",
-      "evidence/generated/p4_auto_lane1_ack_retry_summary.md",
-      "evidence/generated/p4_auto_two_lane_minimal_summary.md",
-      "evidence/generated/p4_auto_lane0_300s_soak_summary.md",
-      "evidence/generated/p4_auto_two_lane_300s_soak_summary.md",
-      "evidence/generated/p4_auto_shutdown_summary.md",
-      "evidence/generated/p4_auto_hardware_acceptance_summary.md",
-      "evidence/generated/p4_auto_hardware_acceptance_summary.json"
-    ],
-    "NEXT_RECOMMENDED_STAGE": "P5_PROTOCOL_STABILIZATION"
-  }
+  ]
 }

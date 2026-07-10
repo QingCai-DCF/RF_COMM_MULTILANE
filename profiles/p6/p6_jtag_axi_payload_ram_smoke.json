@@ -10,8 +10,13 @@
   "shutdown_on_exit": true,
   "max_runtime_sec": 300,
   "payload_source": "host_jtag_axi",
-  "payload_length": 16,
-  "payload_pattern": "counter",
+  "payload_length": [
+    16,
+    247
+  ],
+  "payload_pattern": [
+    "counter"
+  ],
   "expected_crc_policy": "crc32_payload_digest_and_frame_crc_clean",
   "expected_ack_policy": "ack_mask_matches_lane_mask",
   "expected_lane_mask": "0x3",

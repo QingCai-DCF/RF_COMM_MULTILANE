@@ -6,60 +6,75 @@
       "stage": "P6_SAFE_IDLE_RECHECK",
       "status": "PASS",
       "reason": "immutable artifact copied",
-      "source_bitstream": "evidence/generated/vivado/ir_top_new_safe_idle.bit",
-      "source_bitstream_sha256": "6925b69eb0d43aa788cb3d2fe8a8ce543de93da0200183d737214b899c5d394b",
-      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_safe_idle_6925b69eb0d43aa788cb3d2fe8a8ce543de93da0200183d737214b899c5d394b.bit",
-      "source_ltx": "evidence/generated/vivado/p4_auto_safe_idle_debug.ltx",
-      "source_ltx_sha256": "1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26f2d626fce561",
-      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_safe_idle_1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26f2d626fce561.ltx",
+      "source_bitstream": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+      "source_bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_safe_idle_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit",
+      "source_ltx": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+      "source_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_safe_idle_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
       "profile": "profiles/p6/p6_safe_idle_recheck.json",
       "profile_sha256": "a174d1de3da3e7787219407be46bb65ce7caaabd755a38b329d18615c6bd7776",
-      "applicability": "P6_SAFE_IDLE_DIAGNOSTIC"
+      "applicability": "P6_IMMUTABLE_JTAG_AXI_DYNAMIC_TRANSPORT_CANDIDATE_RESET_SAFE"
     },
     {
       "artifact_key": "p6_tfdu_idle",
       "stage": "P6_TFDU_CONTROL_IDLE_RECHECK",
       "status": "PASS",
       "reason": "immutable artifact copied",
-      "source_bitstream": "evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit",
-      "source_bitstream_sha256": "08f3bc790fb8da67c642c69f695e9bcd66b27a40030be971d2d7d9bb4cbbc442",
-      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_tfdu_idle_08f3bc790fb8da67c642c69f695e9bcd66b27a40030be971d2d7d9bb4cbbc442.bit",
-      "source_ltx": "evidence/generated/vivado/p4_auto_tfdu_control_idle_debug.ltx",
-      "source_ltx_sha256": "aeca9440d645b5144d5df67f2bf074125a08807d937a1215f1a4bd16ac395723",
-      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_tfdu_idle_aeca9440d645b5144d5df67f2bf074125a08807d937a1215f1a4bd16ac395723.ltx",
+      "source_bitstream": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+      "source_bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_tfdu_idle_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit",
+      "source_ltx": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+      "source_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_tfdu_idle_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
       "profile": "profiles/p6/p6_tfdu_control_idle_recheck.json",
-      "profile_sha256": "56b92b7d3a858a14f740599410b3fa2f23676b2d7075cf920f34929053334791",
-      "applicability": "P6_TFDU_RECEIVE_ACTIVE_IDLE_DIAGNOSTIC"
+      "profile_sha256": "275dcc27e0b9ea1c91140facadc1b8e02c7f6c63e52b003a97edfb9397a33042",
+      "applicability": "P6_IMMUTABLE_JTAG_AXI_DYNAMIC_TRANSPORT_CANDIDATE_ACTIVE_IDLE"
     },
     {
       "artifact_key": "p6_local_transport",
       "stage": "P6_LOCAL_TRANSPORT_DYNAMIC_PAYLOAD",
       "status": "PASS",
       "reason": "immutable artifact copied",
-      "source_bitstream": "evidence/generated/vivado/ir_top_new_p6_local_transport.bit",
-      "source_bitstream_sha256": "0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5",
-      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_local_transport_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit",
-      "source_ltx": "evidence/generated/vivado/p4_auto_p6_local_transport_debug.ltx",
-      "source_ltx_sha256": "9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57",
-      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_local_transport_9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57.ltx",
+      "source_bitstream": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+      "source_bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_local_transport_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit",
+      "source_ltx": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+      "source_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_local_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
       "profile": "profiles/p6/p6_two_lane_dynamic_payload_256.json",
       "profile_sha256": "b64c68dc127a5c026f0eb978ed96ed7eb58ba56a5863c0818e613b45f282f069",
-      "applicability": "P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_NO_LIVE_AXI_INGRESS"
+      "applicability": "P6_LIVE_JTAG_AXI_DYNAMIC_PAYLOAD_PHYSICAL_TRANSPORT"
     },
     {
       "artifact_key": "p6_two_lane_soak",
       "stage": "P6_TWO_LANE_2H_STATIONARY_SOAK",
       "status": "PASS",
       "reason": "immutable artifact copied",
-      "source_bitstream": "evidence/generated/vivado/ir_top_new_p6_local_transport.bit",
-      "source_bitstream_sha256": "0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5",
-      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5.bit",
-      "source_ltx": "evidence/generated/vivado/p4_auto_p6_local_transport_debug.ltx",
-      "source_ltx_sha256": "9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57",
-      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_9b36ae90d25335a95648bc4ef7a368b229e8e96ab92a50ba1b705ad1a2f26f57.ltx",
+      "source_bitstream": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+      "source_bitstream_sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit",
+      "source_ltx": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+      "source_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "immutable_ltx": "evidence/hardware/p6/bitstreams/p6_two_lane_soak_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
       "profile": "profiles/p6/p6_two_lane_2h_stationary_soak.json",
       "profile_sha256": "52b44fe736130161bf88c9281d6b77492dbbecc0263244a7ded487f32568e64b",
-      "applicability": "P6_LOCAL_TRANSPORT_REGISTER_WINDOW_CANDIDATE_2H_SOAK_NOT_EXECUTED"
+      "applicability": "P6_STATIONARY_TWO_LANE_2H_DYNAMIC_PAYLOAD_SOAK"
+    },
+    {
+      "artifact_key": "p6_ps_runtime",
+      "stage": "P6_PS_DRIVER_RUNTIME",
+      "status": "PASS",
+      "reason": "immutable artifact copied",
+      "source_bitstream": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit",
+      "source_bitstream_sha256": "4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5",
+      "immutable_bitstream": "evidence/hardware/p6/bitstreams/p6_ps_runtime_4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5.bit",
+      "source_ltx": null,
+      "source_ltx_sha256": "MISSING",
+      "immutable_ltx": "",
+      "profile": "profiles/p6/p6_ps_driver_runtime_mailbox.json",
+      "profile_sha256": "0a0185b3bfdc182d5659747e7c6c0d1f82d6c79ddb3f708044ffdab6c06e4edc",
+      "applicability": "P6_PS7_AXI_MAILBOX_RUNTIME_CANDIDATE"
     }
   ],
   "active_hashes": {
@@ -67,13 +82,115 @@
     "active_profile": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1",
     "pinmap": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
     "active_xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
-    "register_map": "e7ba25cf23e1e90804b95b9f6540bcbf683247fdf94a5b701e533910f6f66fda",
+    "register_map": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
     "tfdu_safety_contract": "ff8f94e0aaba1d4bad239de59fea46a7a044f779e95bc04f00269d9fce5f03ae",
     "tfdu_safety_summary": "0bc9af6cfeeb9dae03a9cafe7a645bcbfee8522454a18d3cbd6f816bd8861a0f",
     "shutdown_bitstream": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
   },
+  "offline_gate_status": "PASS",
+  "offline_gate_no_hardware": true,
   "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
   "missing_or_blocked_count": 0,
+  "candidate_gate_failures": [],
+  "jtag_axi_candidate": {
+    "P6_JTAG_CANDIDATE_BUILD": "PASS",
+    "generated_at_utc": "2026-07-10T04:19:15+00:00",
+    "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+    "returncode": 0,
+    "timing_met": true,
+    "drc_clean": true,
+    "artifacts": {
+      "bit": {
+        "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
+        "sha256": "0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d",
+        "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_0648321a71f0052e23b02096be314de7b36f8ef8a8c566ff4db385e6222ef46d.bit"
+      },
+      "ltx": {
+        "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
+        "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+        "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx"
+      }
+    },
+    "inputs": {
+      "active_xdc": {
+        "path": "constraints/active/PORT1.generated.xdc",
+        "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+      },
+      "pinmap": {
+        "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+        "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+      },
+      "active_profile": {
+        "path": "board_profiles/ACTIVE_PROFILE.json",
+        "sha256": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1"
+      },
+      "register_map": {
+        "path": "config/register_map/ir_axi_regs.yaml",
+        "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+      }
+    },
+    "live_jtag_axi_ingress": true,
+    "dynamic_payload_physical_engine": true,
+    "ethernet_used": false,
+    "motion_used": false,
+    "max_lane_mask": "0x3"
+  },
+  "ps_candidate": {
+    "P6_PS_CANDIDATE_BUILD": "PASS",
+    "generated_at_utc": "2026-07-10T04:55:49+00:00",
+    "returncode": 0,
+    "timing_met": true,
+    "drc_clean": true,
+    "artifacts": {
+      "bit": {
+        "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit",
+        "sha256": "4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5",
+        "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_4bdb0aaeb75c6dcf9837a06cda6b7f445063dd65bf07756162b5ea8fbf537cd5.bit"
+      },
+      "xsa": {
+        "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.xsa",
+        "sha256": "51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e",
+        "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa"
+      }
+    },
+    "inputs": {
+      "active_xdc": {
+        "path": "constraints/active/PORT1.generated.xdc",
+        "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+      },
+      "pinmap": {
+        "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+        "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+      },
+      "active_profile": {
+        "path": "board_profiles/ACTIVE_PROFILE.json",
+        "sha256": "7c932dfed5d29298cdfad2164aed2fcfca554aadbe4aed86eed7715864f9f2b1"
+      },
+      "register_map": {
+        "path": "config/register_map/ir_axi_regs.yaml",
+        "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+      }
+    },
+    "axi_base": "0x43c00000",
+    "ethernet_used": false,
+    "motion_used": false
+  },
+  "ps_runtime_build": {
+    "P6_PS_RUNTIME_BUILD": "PASS",
+    "generated_at_utc": "2026-07-10T05:09:03+00:00",
+    "returncode": 0,
+    "xsa": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e.xsa",
+    "xsa_sha256": "51867845bb3991dad859e77cf63561a806d9f5b49c9edcab73a1e99b859b970e",
+    "mailbox_base": "0x00020000",
+    "artifacts": {
+      "elf": {
+        "source": "build/p6_ps_vitis_workspace/p6_runtime/Debug/p6_runtime.elf",
+        "sha256": "789d8132038408015bdb65c147b3826203a09345c851c570bf47dbd27f54fcba",
+        "immutable": "evidence/hardware/p6/elf/p6_runtime_mailbox_789d8132038408015bdb65c147b3826203a09345c851c570bf47dbd27f54fcba.elf"
+      }
+    },
+    "syntax_only": false
+  },
   "script_hardware_actions_executed": false,
   "source_evidence_contains_hardware_actions": false
 }

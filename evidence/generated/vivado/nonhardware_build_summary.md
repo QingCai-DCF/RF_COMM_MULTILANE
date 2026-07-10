@@ -1,6 +1,6 @@
 # Vivado Non-Hardware Build Summary
 
-M5_VIVADO_NONHARDWARE_BUILD=FAIL
+M5_VIVADO_NONHARDWARE_BUILD=PASS
 NO_HARDWARE_ACTIONS_EXECUTED=1
 VIVADO_BATCH_TCL=scripts/vivado_nonhardware_build.tcl
 VIVADO_REPORT_DIR=evidence/generated/vivado
@@ -8,10 +8,10 @@ VIVADO_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_VIVADO_2023_1_BAT_AVAILABLE=1
 VIVADO_EXECUTABLE=D:\Xilinx\Vivado\2023.1\bin\vivado.bat
-VIVADO_EXIT_CODE=4294967295
+VIVADO_EXIT_CODE=0
 BITSTREAM_GENERATED_NO_HW=1
 BITSTREAM_PATH=evidence/generated/vivado/ir_top_new_safe_idle.bit
-BITSTREAM_SHA256=dafb203e199f49b4da5fb8f8b096051896136871cdd257bfd43d715394a2f16d
+BITSTREAM_SHA256=b6fb09cc9ea3a166dece8cbd93f834e6e06383470a68ef0af63ad78c3cc7a233
 P4_AUTO_DEBUG_INSTRUMENTATION_LOG=evidence/generated/vivado/p4_auto_debug_instrumentation.txt
 P4_AUTO_DEBUG_CLOCK_NET_COUNT=1
 P4_AUTO_DEBUG_STATUS_NET_COUNT=768
@@ -25,18 +25,18 @@ P4_AUTO_DEBUG_PROBES_SHA256=1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26
 
 | Stage | Bitstream | SHA256 | ILA Core | Probe Width |
 | --- | --- | --- | --- | --- |
-| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `dafb203e199f49b4da5fb8f8b096051896136871cdd257bfd43d715394a2f16d` | p4_auto_safe_idle_ila | 768 |
-| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `bdaa288a8b3d647bb0ea50408589bd9f7261d34bf8bbc8821200004d844479d6` | p4_auto_tfdu_control_idle_ila | 768 |
-| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `aefef053458b875179fdc803c88c31e485fd5d92261e59e15036acfa4a6e0d09` | p4_auto_raw_pulse_ila | 768 |
-| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `ce09c11c93a33f88160c94642ba40b0dfe99f343635f1b7b13f7fb5158bdd3ae` | p4_auto_raw_lane_matrix_ila | 768 |
-| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `4d6d42b9b0993cbadc3c9270c0d2e30de368dc9a8b9c8538283c555f25fbbdf3` | p4_auto_protocol_lane0_ila | 768 |
-| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `d002c3c9fce05e0a9b1df3e5984a714c97b60a43e086c02e3159d78fec8d8620` | p4_auto_protocol_lane0_ack_ila | 768 |
-| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `74b6f4d41bb90e9ae4e937aa55245d0dc2a442a43a777ccf36d491f14019cd71` | p4_auto_protocol_lane1_ila | 768 |
-| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `5b6c8174499245cc56914b8c44c6b42330110e197e13a7f4534ef1313993a4ee` | p4_auto_protocol_lane1_ack_ila | 768 |
-| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `5af431efe617323cd6851a8493db4d50191c0f799693d66b6e4c4c950033b723` | p4_auto_protocol_two_lane_minimal_ila | 768 |
-| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `4e159f20a37c277f32a4cfe0ec0c2f42155d92012d2c9b9a99071f8428eb9e89` | p4_auto_protocol_lane0_soak_ila | 768 |
-| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `32de20cf3c054f0e7ba909085e4f81c97f3bc74bac545b747583b8a0d33f2372` | p4_auto_protocol_two_lane_soak_ila | 768 |
-| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `0117d41a2fc56e1d5d4c002e8d5e4ba573ad040ae1e7bdf6275869d21fbbbfc5` | p4_auto_p6_local_transport_ila | 768 |
+| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `b6fb09cc9ea3a166dece8cbd93f834e6e06383470a68ef0af63ad78c3cc7a233` | p4_auto_safe_idle_ila | 768 |
+| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `373e8cd521342e60af2a8089136ec24220ce7312aa18f8c7dfc5ecd971a1908a` | p4_auto_tfdu_control_idle_ila | 768 |
+| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `86cc71a2ad5f429e91ed22a7a65665f66a577da52a1d37bf9e052777e140f760` | p4_auto_raw_pulse_ila | 768 |
+| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `89421016853d0d78c906feb6d35082965a1124768a6cd00d9f6b1047bc7b730a` | p4_auto_raw_lane_matrix_ila | 768 |
+| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `ce150cb0f7086384df786b27c787ad674b4432b4db4ecd6f8a9dd935b61c3bd0` | p4_auto_protocol_lane0_ila | 768 |
+| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `1ad8105af7984a5073da0355ba11c91b2ac8e3107b776d179332b3bd0d1ee6e5` | p4_auto_protocol_lane0_ack_ila | 768 |
+| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `f700d77fa5c88473731aed9e9ad42ef260b14ae6cae8c279fb72d0f1f4b5bbfe` | p4_auto_protocol_lane1_ila | 768 |
+| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `ea9b4662735a54256d61fff62578e66f6cf301b0ef12091243edd651d7bd305b` | p4_auto_protocol_lane1_ack_ila | 768 |
+| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `254f01eb73ca37630925ffb520af6d98904c571e7a85251d35d8e0447cd65aa8` | p4_auto_protocol_two_lane_minimal_ila | 768 |
+| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `6e3dcabff2795d806b6c853542fbfd46f15ac51c4c872960e1fa1c6cb2084db4` | p4_auto_protocol_lane0_soak_ila | 768 |
+| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `27905b4244024c3cbd2091943e6bcdd9656054121fb803f46e2f69355090215c` | p4_auto_protocol_two_lane_soak_ila | 768 |
+| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `d3f01144638b79e8efb2b547c291f0ad617c1b9ce5f960e9ccfd2eeaccacb825` | p4_auto_p6_local_transport_ila | 768 |
 
 ## Stage Commands
 
@@ -49,79 +49,48 @@ P4_AUTO_DEBUG_PROBES_SHA256=1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26
 - `protocol_lane1` rc=0
 - `protocol_lane1_ack` rc=0
 - `protocol_two_lane_minimal` rc=0
-- `protocol_lane0_soak` rc=4294967295
+- `protocol_lane0_soak` rc=0
+- `protocol_two_lane_soak` rc=0
+- `p6_local_transport` rc=0
 
 ## Log Tail
 
 ```text
-8 Bit    Registers := 2
-	                7 Bit    Registers := 2
-	                6 Bit    Registers := 1
-	                5 Bit    Registers := 4
-	                4 Bit    Registers := 15
-	                2 Bit    Registers := 8
-	                1 Bit    Registers := 47
-+---Muxes :
-	   2 Input  512 Bit        Muxes := 4
-	   8 Input  512 Bit        Muxes := 2
-	   2 Input  256 Bit        Muxes := 1
-	   2 Input   56 Bit        Muxes := 3
-	   2 Input   32 Bit        Muxes := 615
-	   8 Input   32 Bit        Muxes := 2
-	   2 Input   16 Bit        Muxes := 171
-	   4 Input   16 Bit        Muxes := 2
-	   8 Input   16 Bit        Muxes := 3
-	   2 Input   14 Bit        Muxes := 1
-	   2 Input    9 Bit        Muxes := 2
-	   8 Input    9 Bit        Muxes := 2
-	   2 Input    8 Bit        Muxes := 18
-	  13 Input    8 Bit        Muxes := 1
-	  24 Input    8 Bit        Muxes := 1
-	   8 Input    8 Bit        Muxes := 2
-	   2 Input    7 Bit        Muxes := 4
-	   8 Input    7 Bit        Muxes := 2
-	   2 Input    6 Bit        Muxes := 2
-	   8 Input    6 Bit        Muxes := 1
-	   2 Input    5 Bit        Muxes := 18
-	   7 Input    4 Bit        Muxes := 2
-	   2 Input    4 Bit        Muxes := 14
-	   8 Input    4 Bit        Muxes := 1
-	   5 Input    3 Bit        Muxes := 2
-	   2 Input    3 Bit        Muxes := 4
-	   8 Input    3 Bit        Muxes := 1
-	   2 Input    2 Bit        Muxes := 19
-	   8 Input    2 Bit        Muxes := 1
-	   2 Input    1 Bit        Muxes := 221
-	   4 Input    1 Bit        Muxes := 2
-	   3 Input    1 Bit        Muxes := 2
-	   8 Input    1 Bit        Muxes := 22
-	  16 Input    1 Bit        Muxes := 1
----------------------------------------------------------------------------------
-Finished RTL Component Statistics
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Part Resource Summary
----------------------------------------------------------------------------------
-Part Resources:
-DSPs: 80 (col length:40)
-BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
----------------------------------------------------------------------------------
-Finished Part Resource Summary
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Cross Boundary and Area Optimization
----------------------------------------------------------------------------------
-WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
-WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[1] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[0] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[1] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[0] driven by constant 0
-WARNING: [Synth 8-3917] design ir_top_new has port ir_tx_out_0[1] driven by constant 0
-WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[1] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[0] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[1] driven by constant 1
-WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[0] driven by constant 0
-WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[1] driven by constant 0
+SCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_CTL/ctl_reg_en_2[1], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_capture[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_drck[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_runtest[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gras.rsts/ram_empty_i... and (the first 15 of 26 listed).
+WARNING: [DRC ZPS7-1] PS7 block required: The PS7 cell must be used in this Zynq design in order to enable correct default configuration.
+INFO: [Vivado 12-3199] DRC finished with 0 Errors, 5 Warnings
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 2 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/ir_top_new_p6_local_transport.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT device. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-83] Releasing license: Implementation
+9 Infos, 5 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 3736.418 ; gain = 213.156
+# set log_file [open "$out_dir/nonhardware_build_markers_${stage}.txt" "a"]
+# puts $log_file "VIVADO_NONHARDWARE_BUILD_DONE=1"
+# puts $log_file "VIVADO_REPORT_DIR=$out_dir"
+# puts $log_file "P4_AUTO_BUILD_STAGE=$stage"
+# puts $log_file "P4_AUTO_STAGE_BITSTREAM=$bitstream_file"
+# puts $log_file "P4_AUTO_DEBUG_INSTRUMENTATION_LOG=$dbg_log_file"
+# if {[file exists $debug_ltx_file]} {
+#   puts $log_file "P4_AUTO_DEBUG_PROBES=$debug_ltx_file"
+# }
+# if {$stage eq "safe_idle"} {
+#   puts $log_file "VIVADO_SAFE_IDLE_BITSTREAM=$bitstream_file"
+# }
+# close $log_file
+# if {$stage eq "safe_idle"} {
+#   file copy -force "$out_dir/nonhardware_build_markers_${stage}.txt" "$out_dir/nonhardware_build_markers.txt"
+# }
+INFO: [Common 17-206] Exiting Vivado at Fri Jul 10 17:11:25 2026...
 
 ===== safe_idle stderr =====
 
@@ -142,4 +111,8 @@ WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[1] driven by const
 ===== protocol_two_lane_minimal stderr =====
 
 ===== protocol_lane0_soak stderr =====
+
+===== protocol_two_lane_soak stderr =====
+
+===== p6_local_transport stderr =====
 ```
