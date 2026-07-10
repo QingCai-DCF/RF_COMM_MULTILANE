@@ -1225,19 +1225,20 @@ def generate_manifests():
 
 
 def no_hardware_scan():
+    # Match executable hardware actions, not transport/tool nouns such as
+    # "JTAG", "XSDB", or "hw_server" that also occur in offline manifests,
+    # parsers, and build-only code.  Tcl/XSDB data-plane commands are covered
+    # explicitly below; Vivado Hardware Manager operations remain listed here.
     dangerous = [
         "open_hw",
         "connect_hw_server",
         "open_hw_target",
         "program_hw_devices",
         "refresh_hw_device",
-        "hw_server",
-        "jtag",
         "hardware manager",
         "serial port real device",
         "/dev/tty",
         "program bitstream",
-        "xsdb",
         "fpga -f",
         "targets -set",
         "serial.serial",

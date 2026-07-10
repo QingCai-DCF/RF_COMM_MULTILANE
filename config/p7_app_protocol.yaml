@@ -1,0 +1,27 @@
+name: RF_COMM_APPLICATION_PROTOCOL
+version: 1
+byte_order: little_endian
+magic_ascii: RFAP
+header_bytes: 32
+p6_max_payload_bytes: 247
+max_chunk_bytes: 215
+max_object_bytes: 8388608
+descriptor_queue_depth: 8
+out_of_order_window: 0
+flags:
+  first: 0x01
+  last: 0x02
+  retransmit: 0x04
+  control: 0x08
+lane_policies:
+  lane0_only: 1
+  lane1_only: 2
+  stripe_round_robin: 3
+  replicate_0x3: 4
+constraints:
+  allowed_lane_masks: [0x1, 0x2, 0x3]
+  network_allowed: false
+  motion_allowed: false
+  available_lanes: 2
+  startup_wait_us_min: 500
+  continuous_txd_high_us_hard_limit: 80

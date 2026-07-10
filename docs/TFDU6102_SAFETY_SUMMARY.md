@@ -34,6 +34,12 @@ Txd continuous high must not approach or exceed 80 us. P4 smoke profiles use a
 10 us trip limit. RTL must expose a stuck-high guard or a blocking TODO before
 hardware promotion.
 
+The exported multi-lane `txd_high_max` safety counter is the registered
+reduction maximum across every A/B endpoint and both available lanes in the
+same clock. Procedural assignment ordering must not replace a larger
+observation with a smaller one; directed simulation checks this reduction
+before a rebuilt artifact is authorized.
+
 ## Duty-Cycle / Pulse Width Guard
 
 TX duty window protection is required; missing implementation must be a blocker,

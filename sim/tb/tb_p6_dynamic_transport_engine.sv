@@ -232,6 +232,8 @@ module tb_p6_dynamic_transport_engine;
       check_expect(retry_exhausted_count == 0, "retry exhausted remains zero");
       check_expect(tx_fail_count == 0, "TX fail remains zero");
       check_expect(duty_violation_count == 0, "duty violation remains zero");
+      check_expect(txd_high_max > 0 && txd_high_max <= 8,
+                   "true TFDU high-width maximum remains within the known-safe pulse width");
       for (int idx = 0; idx < length; idx++) begin
         check_expect(observed_rx_payload[8*idx +: 8] == pattern_byte(pattern_id, idx), "RX payload byte matches");
       end
@@ -261,6 +263,14 @@ module tb_p6_dynamic_transport_engine;
     tick(5);
     rst_n = 1'b1;
     tick(5);
+
+    // All four safety monitors can update in the same clock.  Directly test
+    // the synthesizable reduction used by the single registered assignment;
+    // the transfer matrix below also checks the registered live value.
+    check_expect(dut.p6_max_txd_high4(32'd9, 32'd1, 32'd2, 32'd3) == 32'd9,
+                 "same-cycle TFDU monitor maximum is reduced without overwrite");
+    check_expect(dut.p6_max_txd_high4(32'd1, 32'd9, 32'd3, 32'd2) == 32'd9,
+                 "TFDU maximum reduction is input-order independent");
 
     for (int length_idx = 0; length_idx < 16; length_idx++) begin
       for (int pattern_id = 0; pattern_id < 10; pattern_id++) begin

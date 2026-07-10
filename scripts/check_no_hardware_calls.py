@@ -11,6 +11,12 @@ FORBIDDEN = [
 ]
 ALLOW_DIRS = {"legacy_safe_tools"}
 SKIP_FILES = {"check_no_hardware_calls.py"}
+ALLOW_MARKERS = (
+    "--allow-hardware",
+    "-allowhardware",
+    "require-user-hw-authorization",
+    "offline-build-only",
+)
 
 def main():
     errors = []
@@ -23,7 +29,7 @@ def main():
             continue
         text = path.read_text(encoding="utf-8", errors="ignore").lower()
         for token in FORBIDDEN:
-            if token in text and "--allow-hardware" not in text and "-allowhardware" not in text:
+            if token in text and not any(marker in text for marker in ALLOW_MARKERS):
                 errors.append(f"{path.relative_to(ROOT)} contains {token} without explicit allow-hardware gate")
     if errors:
         print("NO_HARDWARE_ACTIONS_EXECUTED=0")

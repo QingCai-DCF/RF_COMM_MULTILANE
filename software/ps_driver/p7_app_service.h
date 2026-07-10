@@ -1,0 +1,226 @@
+#ifndef P7_APP_SERVICE_H
+#define P7_APP_SERVICE_H
+
+#include <stddef.h>
+#include <stdint.h>
+
+#include "ir_driver.h"
+#include "rf_app_protocol.h"
+#include "rf_transport_backend.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define P7_MAILBOX_BASEADDR UINT32_C(0x00020000)
+#define P7_MAILBOX_CONTROL_BYTES UINT32_C(0x00000100)
+#define P7_DESCRIPTOR_BYTES UINT32_C(0x00000100)
+#define P7_DESCRIPTOR_QUEUE_DEPTH UINT32_C(8)
+#define P7_DESCRIPTOR_BASEADDR                                           \
+  (P7_MAILBOX_BASEADDR + P7_MAILBOX_CONTROL_BYTES)
+#define P7_MAILBOX_RESERVED_END UINT32_C(0x00030000)
+
+#define P7_DDR_BASEADDR UINT32_C(0x00100000)
+#define P7_DDR_END_EXCLUSIVE UINT32_C(0x20000000)
+#define P7_DDR_ALIGNMENT UINT32_C(64)
+#define P7_MAX_OBJECT_BYTES RF_APP_MAX_OBJECT_BYTES
+#define P7_MAX_P6_RETRY_ACCEPTANCE UINT32_C(8)
+#define P7_P6_MAX_POLLS UINT32_C(2000000)
+#define P7_MAX_RUNTIME_SECONDS UINT32_C(1800)
+
+#define P7_MAILBOX_MAGIC UINT32_C(0x424d3750) /* P7MB, little endian */
+#define P7_DESCRIPTOR_MAGIC UINT32_C(0x53443750) /* P7DS */
+#define P7_TRACE_MAGIC UINT32_C(0x52543750) /* P7TR */
+#define P7_RUNTIME_VERSION UINT32_C(1)
+
+enum p7_service_state {
+  P7_SERVICE_BOOTING = 0,
+  P7_SERVICE_READY = 1,
+  P7_SERVICE_RUNNING = 2,
+  P7_SERVICE_STOPPED = 3,
+  P7_SERVICE_SHUTDOWN = 4,
+  P7_SERVICE_FATAL = 5
+};
+
+enum p7_control_command {
+  P7_CONTROL_NONE = 0,
+  P7_CONTROL_RUN = 1,
+  P7_CONTROL_STOP = 2,
+  P7_CONTROL_ABORT = 3,
+  P7_CONTROL_CLEAR = 4,
+  P7_CONTROL_SHUTDOWN = 5
+};
+
+enum p7_runtime_flags {
+  P7_RUNTIME_AUTO_DEADLINE = 1u << 0,
+  P7_RUNTIME_DEADLINE_REACHED = 1u << 1
+};
+
+enum p7_descriptor_command {
+  P7_DESCRIPTOR_COMMAND_NONE = 0,
+  P7_DESCRIPTOR_COMMAND_TRANSFER = 1
+};
+
+enum p7_descriptor_status {
+  P7_DESCRIPTOR_FREE = 0,
+  P7_DESCRIPTOR_READY = 1,
+  P7_DESCRIPTOR_RUNNING = 2,
+  P7_DESCRIPTOR_COMPLETE = 3,
+  P7_DESCRIPTOR_FAILED = 4,
+  P7_DESCRIPTOR_ABORTED = 5,
+  P7_DESCRIPTOR_REJECTED = 6
+};
+
+enum p7_error_code {
+  P7_ERROR_NONE = 0,
+  P7_ERROR_DESCRIPTOR = 1,
+  P7_ERROR_ADDRESS = 2,
+  P7_ERROR_RANGE_OVERFLOW = 3,
+  P7_ERROR_OVERLAP = 4,
+  P7_ERROR_OBJECT_TOO_LARGE = 5,
+  P7_ERROR_FRAGMENT_GEOMETRY = 6,
+  P7_ERROR_LANE_POLICY = 7,
+  P7_ERROR_ALL_LANES_UNAVAILABLE = 8,
+  P7_ERROR_P6_SUBMIT = 9,
+  P7_ERROR_P6_RESULT = 10,
+  P7_ERROR_P6_RX = 11,
+  P7_ERROR_FRAGMENT_MISMATCH = 12,
+  P7_ERROR_OBJECT_CRC = 13,
+  P7_ERROR_OBJECT_SHA256 = 14,
+  P7_ERROR_ABORTED = 15,
+  P7_ERROR_STALE_SESSION = 16,
+  P7_ERROR_TRACE_RANGE = 17,
+  P7_ERROR_QUEUE = 18,
+  P7_ERROR_OBJECT_ID_COLLISION = 19,
+  P7_ERROR_RUNTIME_LIMIT = 20
+};
+
+/* Exactly 256 bytes. Descriptor status is the publication/commit word and is
+ * always written last when the service publishes a terminal result. SHA256
+ * arrays contain the standard digest as eight big-endian 32-bit words. */
+typedef struct __attribute__((aligned(64))) p7_object_descriptor {
+  uint32_t magic;
+  uint32_t version;
+  uint32_t command;
+  volatile uint32_t status;
+  uint32_t session_epoch;
+  uint32_t object_id;
+  uint32_t input_address;
+  uint32_t output_address;
+  uint32_t object_length;
+  uint32_t expected_crc32;
+  uint32_t lane_policy;
+  uint32_t max_retries;
+  uint32_t unavailable_lane_mask;
+  uint32_t unavailable_after_fragment;
+  uint32_t abort_after_fragment;
+  uint32_t trace_address;
+  uint32_t trace_capacity;
+  uint32_t error_code;
+  uint32_t bytes_completed;
+  uint32_t fragments_total;
+  uint32_t fragments_completed;
+  uint32_t output_crc32;
+  uint32_t fragment_attempts;
+  uint32_t fallback_count;
+  uint32_t expected_sha256[8];
+  uint32_t input_sha256[8];
+  uint32_t output_sha256[8];
+  uint32_t p6_retry_count;
+  uint32_t p6_retry_exhausted;
+  uint32_t p6_tx_fail;
+  uint32_t p6_crc_bad;
+  uint32_t p6_payload_mismatch;
+  uint32_t max_txd_high_cycles;
+  uint32_t duty_violation_count;
+  uint32_t lane0_fragments;
+  uint32_t lane1_fragments;
+  uint32_t replicated_fragments;
+  uint32_t start_ticks_low;
+  uint32_t start_ticks_high;
+  uint32_t end_ticks_low;
+  uint32_t end_ticks_high;
+  uint32_t restart_count;
+  uint32_t completion_sequence;
+} p7_object_descriptor_t;
+
+/* Exactly 256 bytes at P7_MAILBOX_BASEADDR. */
+typedef struct __attribute__((aligned(64))) p7_mailbox_control {
+  uint32_t magic;
+  uint32_t version;
+  volatile uint32_t service_state;
+  volatile uint32_t control_command;
+  uint32_t queue_depth;
+  uint32_t queue_occupancy;
+  uint32_t queue_high_watermark;
+  uint32_t backpressure_events;
+  uint32_t objects_requested;
+  uint32_t objects_completed;
+  uint32_t objects_failed;
+  uint32_t fragments_completed;
+  uint32_t bytes_completed_low;
+  uint32_t bytes_completed_high;
+  uint32_t current_session_epoch;
+  uint32_t current_object_id;
+  uint32_t current_fragment_index;
+  uint32_t last_error_code;
+  uint32_t shutdown_result;
+  uint32_t heartbeat;
+  uint32_t stop_count;
+  uint32_t abort_count;
+  uint32_t restart_count;
+  uint32_t completion_sequence;
+  uint32_t consumer_hint;
+  uint32_t max_runtime_seconds;
+  uint32_t runtime_flags;
+  uint32_t runtime_start_ticks_low;
+  uint32_t runtime_start_ticks_high;
+  uint32_t runtime_elapsed_ticks_low;
+  uint32_t runtime_elapsed_ticks_high;
+  uint32_t calibration_window_seconds;
+  uint32_t sample_interval_seconds;
+  uint32_t last_sample_sequence;
+  /* Even values delimit an immutable elapsed-tick snapshot.  The writer
+   * publishes odd -> low/high -> even so non-atomic JTAG readers cannot
+   * accept a torn 64-bit value at a low-word rollover. */
+  volatile uint32_t runtime_elapsed_sequence;
+  volatile uint32_t runtime_elapsed_request;
+  volatile uint32_t runtime_elapsed_ack;
+  /* Zero disables the stationary-only admission cutoff.  When nonzero, PS
+   * rejects (without transmitting) any READY descriptor it observes inside
+   * admission_guard_seconds of this runtime-relative cutoff. */
+  uint32_t scheduling_cutoff_seconds;
+  uint32_t admission_guard_seconds;
+  uint32_t reserved[25];
+} p7_mailbox_control_t;
+
+/* Exactly 64 bytes; the optional DDR trace buffer must have one entry per
+ * fragment so every final fragment attempt remains machine-readable. */
+typedef struct __attribute__((aligned(64))) p7_fragment_trace {
+  uint32_t magic;
+  uint32_t session_epoch;
+  uint32_t object_id;
+  uint32_t fragment_index_count;
+  uint32_t lane_mask;
+  uint32_t attempt_count;
+  uint32_t result;
+  uint32_t error_code;
+  uint32_t start_ticks_low;
+  uint32_t start_ticks_high;
+  uint32_t end_ticks_low;
+  uint32_t end_ticks_high;
+  uint32_t p6_retry_count;
+  uint32_t p6_retry_exhausted;
+  uint32_t p6_tx_fail;
+  uint32_t p6_error_code;
+} p7_fragment_trace_t;
+
+int p7_app_service_run(const ir_mmio_t *io,
+                       volatile p7_mailbox_control_t *mailbox,
+                       volatile p7_object_descriptor_t *descriptors);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -11,6 +11,12 @@ enum {
 };
 
 enum {
+  IR_TFDU_SHUTDOWN_REASON = 0x54464455u,
+  IR_P6_MAILBOX_IDLE = 0x50364944u,
+  IR_SHUTDOWN_READBACK_POLLS = 4096u,
+};
+
+enum {
   IR_STATUS_PHY_READY = 1u << 0,
   IR_STATUS_BUSY = 1u << 1,
   IR_STATUS_TX_DONE = 1u << 2,
@@ -187,12 +193,30 @@ int ir_driver_stop(const ir_mmio_t *io) {
 }
 
 int ir_driver_shutdown(const ir_mmio_t *io) {
-  if (!io || !io->write32) return -1;
+  if (!io || !io->read32 || !io->write32) return -1;
   io->write32(io->ctx, IR_REG_CONTROL, IR_CONTROL_STOP);
-  io->write32(io->ctx, IR_REG_SAFETY_SHUTDOWN_REASON, 0x54464455u);
+  io->write32(io->ctx, IR_REG_SAFETY_SHUTDOWN_REASON,
+              IR_TFDU_SHUTDOWN_REASON);
   io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_SHUTDOWN);
-  io->write32(io->ctx, IR_REG_P6_SHUTDOWN_REASON, 0x54464455u);
-  return 0;
+  io->write32(io->ctx, IR_REG_P6_SHUTDOWN_REASON,
+              IR_TFDU_SHUTDOWN_REASON);
+  for (uint32_t poll = 0u; poll < IR_SHUTDOWN_READBACK_POLLS; ++poll) {
+    uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
+    uint32_t legacy_status = io->read32(io->ctx, IR_REG_STATUS);
+    uint32_t control = io->read32(io->ctx, IR_REG_CONTROL);
+    uint32_t reason = io->read32(io->ctx, IR_REG_P6_SHUTDOWN_REASON);
+    uint32_t safety_reason =
+        io->read32(io->ctx, IR_REG_SAFETY_SHUTDOWN_REASON);
+    uint32_t mailbox = io->read32(io->ctx, IR_REG_P6_MAILBOX_STATUS);
+    if ((status & (IR_P6_STATUS_BUSY | 1u)) == 0u &&
+        (legacy_status & IR_STATUS_BUSY) == 0u && (control & 1u) == 0u &&
+        reason == IR_TFDU_SHUTDOWN_REASON &&
+        safety_reason == IR_TFDU_SHUTDOWN_REASON &&
+        mailbox == IR_P6_MAILBOX_IDLE) {
+      return 0;
+    }
+  }
+  return -2;
 }
 
 int ir_driver_p6_write_payload(const ir_mmio_t *io, const uint8_t *payload, uint32_t payload_len) {
@@ -256,15 +280,30 @@ int ir_driver_p6_read_result(const ir_mmio_t *io, ir_p6_payload_result_t *result
   result->retry_count = io->read32(io->ctx, IR_REG_P6_RETRY_COUNT);
   result->retry_exhausted = io->read32(io->ctx, IR_REG_P6_RETRY_EXHAUSTED);
   result->tx_fail = io->read32(io->ctx, IR_REG_P6_TX_FAIL);
+  result->txd_high_consecutive_max = io->read32(io->ctx, IR_REG_P6_TXD_HIGH_CONSECUTIVE_MAX);
+  result->duty_violation = io->read32(io->ctx, IR_REG_P6_DUTY_VIOLATION);
+  result->shutdown_reason = io->read32(io->ctx, IR_REG_P6_SHUTDOWN_REASON);
   result->error_code = io->read32(io->ctx, IR_REG_P6_ERROR_CODE);
   result->sticky_error = io->read32(io->ctx, IR_REG_P6_STICKY_ERROR);
   result->rx_digest = io->read32(io->ctx, IR_REG_P6_RX_DIGEST);
   return 0;
 }
 
-int ir_driver_p6_start_and_poll(const ir_mmio_t *io, uint32_t max_polls, ir_p6_payload_result_t *result) {
+int ir_driver_p6_start(const ir_mmio_t *io) {
   if (!io || !io->read32 || !io->write32) return -1;
   io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_START);
+  return 0;
+}
+
+int ir_driver_p6_get_status(const ir_mmio_t *io, uint32_t *status) {
+  if (!io || !io->read32 || !status) return -1;
+  *status = io->read32(io->ctx, IR_REG_P6_STATUS);
+  return 0;
+}
+
+int ir_driver_p6_start_and_poll(const ir_mmio_t *io, uint32_t max_polls, ir_p6_payload_result_t *result) {
+  if (!io || !io->read32 || !io->write32) return -1;
+  if (ir_driver_p6_start(io)) return -1;
   for (uint32_t poll = 0u; poll < max_polls; poll++) {
     uint32_t status = io->read32(io->ctx, IR_REG_P6_STATUS);
     if ((status & (IR_P6_STATUS_FAIL | IR_P6_STATUS_CONFIG_REJECTED | IR_P6_STATUS_TIMEOUT)) != 0u) {
@@ -280,6 +319,33 @@ int ir_driver_p6_start_and_poll(const ir_mmio_t *io, uint32_t max_polls, ir_p6_p
   return -3;
 }
 
+int ir_driver_p6_reset(const ir_mmio_t *io) {
+  if (!io || !io->write32) return -1;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_RESET);
+  return 0;
+}
+
+int ir_driver_p6_stop(const ir_mmio_t *io) {
+  if (!io || !io->write32) return -1;
+  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_STOP);
+  return 0;
+}
+
+int ir_driver_p6_run_payload_no_shutdown(
+    const ir_mmio_t *io,
+    const ir_p6_payload_config_t *config,
+    const uint8_t *payload,
+    uint32_t max_polls,
+    ir_p6_payload_result_t *result) {
+  if (!io || !config || !payload) return -1;
+  if (ir_driver_p6_reset(io)) return -2;
+  if (ir_driver_p6_write_payload(io, payload, config->payload_len)) return -3;
+  if (ir_driver_p6_commit_payload(io, config)) return -4;
+  int run_result = ir_driver_p6_start_and_poll(io, max_polls, result);
+  if (ir_driver_p6_stop(io)) return -5;
+  return run_result;
+}
+
 int ir_driver_p6_run_mailbox_payload(
     const ir_mmio_t *io,
     const ir_p6_payload_config_t *config,
@@ -287,11 +353,7 @@ int ir_driver_p6_run_mailbox_payload(
     uint32_t max_polls,
     ir_p6_payload_result_t *result) {
   if (!io || !config || !payload) return -1;
-  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_RESET);
-  if (ir_driver_p6_write_payload(io, payload, config->payload_len)) return -2;
-  if (ir_driver_p6_commit_payload(io, config)) return -3;
-  int run_result = ir_driver_p6_start_and_poll(io, max_polls, result);
-  io->write32(io->ctx, IR_REG_P6_CTRL, IR_P6_CTRL_STOP);
+  int run_result = ir_driver_p6_run_payload_no_shutdown(io, config, payload, max_polls, result);
   if (ir_driver_shutdown(io)) return -4;
   return run_result;
 }

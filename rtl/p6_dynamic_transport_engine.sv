@@ -132,6 +132,23 @@ module p6_dynamic_transport_engine #(
   logic [31:0] b_rx_raw [0:1];
   logic [31:0] a_txd_high [0:1];
   logic [31:0] b_txd_high [0:1];
+  logic [31:0] txd_high_cycle_max;
+
+  function automatic logic [31:0] p6_max_txd_high4(
+    input logic [31:0] value0,
+    input logic [31:0] value1,
+    input logic [31:0] value2,
+    input logic [31:0] value3
+  );
+    logic [31:0] result;
+    begin
+      result = value0;
+      if (value1 > result) result = value1;
+      if (value2 > result) result = value2;
+      if (value3 > result) result = value3;
+      p6_max_txd_high4 = result;
+    end
+  endfunction
   logic [1:0] a_tx_req;
   logic [1:0] b_tx_req;
   logic [1:0] phy_enable_mask;
@@ -665,6 +682,12 @@ module p6_dynamic_transport_engine #(
   end
 
   // Transfer state machine, retries, bounded timeouts, and safety stop.
+  always_comb begin
+    txd_high_cycle_max = p6_max_txd_high4(
+      a_txd_high[0], a_txd_high[1], b_txd_high[0], b_txd_high[1]
+    );
+  end
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       state <= S_IDLE;
@@ -703,10 +726,8 @@ module p6_dynamic_transport_engine #(
       fail_pulse <= 1'b0;
       timeout_pulse <= 1'b0;
 
-      for (int lane = 0; lane < 2; lane++) begin
-        if (a_txd_high[lane] > txd_high_max) txd_high_max <= a_txd_high[lane];
-        if (b_txd_high[lane] > txd_high_max) txd_high_max <= b_txd_high[lane];
-      end
+      if (txd_high_cycle_max > txd_high_max)
+        txd_high_max <= txd_high_cycle_max;
 
       if (reset_pulse) begin
         state <= S_IDLE;

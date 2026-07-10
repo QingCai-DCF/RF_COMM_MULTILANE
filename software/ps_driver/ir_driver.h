@@ -64,6 +64,9 @@ typedef struct {
   uint32_t retry_count;
   uint32_t retry_exhausted;
   uint32_t tx_fail;
+  uint32_t txd_high_consecutive_max;
+  uint32_t duty_violation;
+  uint32_t shutdown_reason;
   uint32_t error_code;
   uint32_t sticky_error;
   uint32_t rx_digest;
@@ -81,8 +84,18 @@ int ir_driver_shutdown(const ir_mmio_t *io);
 int ir_driver_p6_write_payload(const ir_mmio_t *io, const uint8_t *payload, uint32_t payload_len);
 int ir_driver_p6_read_rx_payload(const ir_mmio_t *io, uint8_t *payload, uint32_t payload_capacity, uint32_t *payload_len);
 int ir_driver_p6_commit_payload(const ir_mmio_t *io, const ir_p6_payload_config_t *config);
+int ir_driver_p6_start(const ir_mmio_t *io);
+int ir_driver_p6_get_status(const ir_mmio_t *io, uint32_t *status);
 int ir_driver_p6_start_and_poll(const ir_mmio_t *io, uint32_t max_polls, ir_p6_payload_result_t *result);
 int ir_driver_p6_read_result(const ir_mmio_t *io, ir_p6_payload_result_t *result);
+int ir_driver_p6_reset(const ir_mmio_t *io);
+int ir_driver_p6_stop(const ir_mmio_t *io);
+int ir_driver_p6_run_payload_no_shutdown(
+    const ir_mmio_t *io,
+    const ir_p6_payload_config_t *config,
+    const uint8_t *payload,
+    uint32_t max_polls,
+    ir_p6_payload_result_t *result);
 int ir_driver_p6_run_mailbox_payload(
     const ir_mmio_t *io,
     const ir_p6_payload_config_t *config,

@@ -1,0 +1,304 @@
+from __future__ import annotations
+
+import argparse
+import contextlib
+import io
+import json
+import os
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest import mock
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+import p7_hardware_safety as safety  # noqa: E402
+import run_p7_authorized_hardware_sequence as subject  # noqa: E402
+
+
+def write_bytes(path: Path, value: bytes) -> dict[str, object]:
+    path.write_bytes(value)
+    return subject._file_record(path)
+
+
+class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
+    def test_canonical_matrix_is_exact_and_stationary_is_once_last(self) -> None:
+        stages = subject.expected_stage_contracts()
+        self.assertEqual(66, len(stages))
+        self.assertEqual([], subject.validate_stage_matrix(stages))
+        groups = [stage["group"] for stage in stages]
+        self.assertEqual(1, groups.count("safe_idle"))
+        self.assertEqual(3, groups.count("p6_frame_regression"))
+        self.assertEqual(48, groups.count("fragment_boundary"))
+        self.assertEqual(9, groups.count("large_object_jtag"))
+        self.assertLess(groups.index("ps_abort"), groups.index("ps_queue"))
+        self.assertEqual("ps_stationary", groups[-1])
+        self.assertEqual(1, groups.count("ps_stationary"))
+        p6_masks = [
+            stage["case"]["lane_mask"]
+            for stage in stages
+            if stage["group"] == "p6_frame_regression"
+        ]
+        self.assertEqual([1, 2, 3], p6_masks)
+        self.assertTrue(
+            all(
+                stage["case"]["minimum_fragments"] >= 10
+                for stage in stages
+                if stage["group"] == "p6_frame_regression"
+            )
+        )
+
+    def test_matrix_rejects_missing_boundary_and_duplicate_stationary(self) -> None:
+        stages = subject.expected_stage_contracts()
+        del stages[10]
+        stages.append({"group": "ps_stationary", "risk_index": 80, "case": {}})
+        errors = subject.validate_stage_matrix(stages)
+        self.assertTrue(any("contract mismatch" in item for item in errors))
+        self.assertTrue(any("exactly one stationary" in item for item in errors))
+
+    def test_exact_command_parser_rejects_shell_and_unknown_arguments(self) -> None:
+        unsafe = ["powershell", "-Command", "anything"]
+        _wrapper, _options, errors = subject._parse_exact_wrapper_command(unsafe)
+        self.assertTrue(any("exact Python" in item or "approved" in item for item in errors))
+        command = [
+            sys.executable,
+            str(subject.JTAG_WRAPPER),
+            "--execute-hardware",
+            "--unknown-shell-hook",
+            "value",
+        ]
+        _wrapper, _options, errors = subject._parse_exact_wrapper_command(command)
+        self.assertTrue(any("unknown or positional" in item for item in errors))
+
+    def test_sequence_dry_run_launches_no_stage_process(self) -> None:
+        plan = {
+            "errors": [],
+            "path": str(ROOT / "fake-sequence-plan.json"),
+            "sha256": "a" * 64,
+            "source_commit": "b" * 40,
+            "stage_count": 66,
+            "stages": [],
+            "offline_checkpoint": {"path": "checkpoint.json", "sha256": "c" * 64},
+        }
+        output = io.StringIO()
+        with mock.patch.object(subject, "validate_sequence_plan", return_value=plan):
+            with mock.patch.object(subject, "_run_stage_process") as run_mock:
+                with contextlib.redirect_stdout(output):
+                    returncode = subject.main(
+                        [
+                            "--sequence-plan",
+                            "fake-sequence-plan.json",
+                            "--sequence-plan-sha256",
+                            "a" * 64,
+                            "--json-summary",
+                        ]
+                    )
+        self.assertEqual(0, returncode)
+        run_mock.assert_not_called()
+        self.assertIn('"P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED"', output.getvalue())
+        self.assertIn('"hardware_actions_executed": false', output.getvalue())
+
+    def test_resume_skips_only_hash_verified_pass_records(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stdout = write_bytes(root / "stdout.log", b"ok\n")
+            stderr = write_bytes(root / "stderr.log", b"")
+            summary = write_bytes(root / "summary.json", b"{}\n")
+            stage = {
+                "id": "safe_idle",
+                "group": "safe_idle",
+                "risk_index": 10,
+                "case": {},
+                "command": [sys.executable, str(subject.JTAG_WRAPPER)],
+                "wrapper": str(subject.JTAG_WRAPPER),
+                "options": {"--source-commit": "b" * 40},
+                "summary_path": str(root / "summary.json"),
+            }
+            plan = {
+                "path": str(root / "plan.json"),
+                "sha256": "a" * 64,
+                "source_commit": "b" * 40,
+                "offline_checkpoint": {"path": str(root / "checkpoint.json"), "sha256": "c" * 64},
+                "stages": [stage],
+            }
+            attempt = {
+                "stage_index": 0,
+                "stage_id": "safe_idle",
+                "group": "safe_idle",
+                "command": stage["command"],
+                "started_at_utc": "2026-07-10T00:00:00+00:00",
+                "ended_at_utc": "2026-07-10T00:00:01+00:00",
+                "state": "TERMINAL",
+                "result": "PASS",
+                "process": {
+                    "returncode": 0,
+                    "process_tree_reaped": True,
+                    "containment_closed": True,
+                    "descendant_count_after": 0,
+                    "stdout_file": stdout,
+                    "stderr_file": stderr,
+                },
+                "summary_file": summary,
+            }
+            ledger = {
+                "schema": subject.LEDGER_SCHEMA,
+                "source_commit": plan["source_commit"],
+                "sequence_plan": {"path": plan["path"], "sha256": plan["sha256"]},
+                "offline_checkpoint": {
+                    "path": plan["offline_checkpoint"]["path"],
+                    "sha256": plan["offline_checkpoint"]["sha256"],
+                    "result": "PASS",
+                },
+                "attempt_count": 1,
+                "completed_stage_count": 1,
+                "next_stage_index": 1,
+                "attempts": [attempt],
+            }
+            with mock.patch.object(subject, "validate_wrapper_summary", return_value=({}, [], {})):
+                prefix, errors = subject.validate_resume_ledger(ledger, plan)
+                self.assertEqual((1, []), (prefix, errors))
+                attempt["result"] = "FAIL"
+                prefix, errors = subject.validate_resume_ledger(ledger, plan)
+        self.assertEqual(0, prefix)
+        self.assertTrue(any("only verified PASS" in item for item in errors))
+
+    def test_unresolved_stationary_launch_intent_permanently_blocks_resume(self) -> None:
+        stage = {
+            "id": "stationary_final",
+            "group": "ps_stationary",
+            "risk_index": 80,
+            "case": {},
+            "command": [sys.executable, str(subject.PS_WRAPPER)],
+            "wrapper": str(subject.PS_WRAPPER),
+            "options": {"--source-commit": "b" * 40},
+            "summary_path": "missing-summary.json",
+        }
+        plan = {
+            "path": "plan.json",
+            "sha256": "a" * 64,
+            "source_commit": "b" * 40,
+            "offline_checkpoint": {"path": "checkpoint.json", "sha256": "c" * 64},
+            "stages": [stage],
+        }
+        intent = {
+            "attempt": 1,
+            "stage_index": 0,
+            "stage_id": "stationary_final",
+            "group": "ps_stationary",
+            "risk_index": 80,
+            "case": {},
+            "command": stage["command"],
+            "state": "LAUNCH_INTENT",
+            "result": "IN_PROGRESS",
+            "launch_intent_at_utc": "2026-07-10T00:00:00+00:00",
+            "started_at_utc": None,
+            "ended_at_utc": None,
+            "process": {},
+            "summary_file": {"path": "missing-summary.json", "missing": True},
+        }
+        ledger = {
+            "schema": subject.LEDGER_SCHEMA,
+            "source_commit": plan["source_commit"],
+            "sequence_plan": {"path": plan["path"], "sha256": plan["sha256"]},
+            "offline_checkpoint": {
+                "path": plan["offline_checkpoint"]["path"],
+                "sha256": plan["offline_checkpoint"]["sha256"],
+                "result": "PASS",
+            },
+            "attempt_count": 1,
+            "completed_stage_count": 0,
+            "next_stage_index": 0,
+            "attempts": [intent],
+        }
+        prefix, errors = subject.validate_resume_ledger(ledger, plan)
+        self.assertEqual(0, prefix)
+        joined = "\n".join(errors)
+        self.assertIn("unresolved launch intent", joined)
+        self.assertIn("stationary attempt exists without a verified final sequence PASS", joined)
+
+    def test_executor_stops_after_first_failed_wrapper_without_second_launch(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            hardware_root = Path(temp)
+            stages = []
+            for index in range(2):
+                evidence = hardware_root / f"stage{index}"
+                stages.append(
+                    {
+                        "id": f"stage_{index}",
+                        "group": "safe_idle" if index == 0 else "p6_frame_regression",
+                        "risk_index": 10 + index * 10,
+                        "case": {},
+                        "command": [sys.executable, str(subject.JTAG_WRAPPER)],
+                        "wrapper": str(subject.JTAG_WRAPPER),
+                        "options": {"--abort-file": str(hardware_root / "ABORT_NOW.txt")},
+                        "evidence_dir": str(evidence),
+                        "summary_path": str(evidence / "p7_jtag_axi_stage_summary.json"),
+                        "wrapper_timeout_sec": 60,
+                    }
+                )
+            plan = {
+                "path": str(hardware_root / "plan.json"),
+                "sha256": "a" * 64,
+                "source_commit": "b" * 40,
+                "stage_count": 2,
+                "stages": stages,
+                "offline_checkpoint": {
+                    "path": str(hardware_root / "checkpoint.json"),
+                    "sha256": "c" * 64,
+                },
+                "errors": [],
+            }
+            args = argparse.Namespace(
+                source_commit="b" * 40,
+                max_runtime_sec=1800,
+                shutdown_on_exit=True,
+                no_ethernet=True,
+                no_motion=True,
+                lane_count=2,
+                max_lane_mask="0x3",
+                execution_ledger=str(hardware_root / "ledger.json"),
+                resume=False,
+            )
+            failed_process = {
+                "returncode": 1,
+                "process_tree_reaped": True,
+                "containment_closed": True,
+                "descendant_count_after": 0,
+                "started_at_utc": "2026-07-10T00:00:00+00:00",
+                "ended_at_utc": "2026-07-10T00:00:01+00:00",
+            }
+            observed_intent: dict[str, object] = {}
+
+            def fail_after_observing_intent(**_kwargs: object) -> dict[str, object]:
+                snapshot = json.loads((hardware_root / "ledger.json").read_text(encoding="utf-8"))
+                observed_intent.update(snapshot["attempts"][-1])
+                return failed_process
+
+            with mock.patch.object(subject, "HARDWARE_ROOT", hardware_root):
+                with mock.patch.dict(os.environ, {safety.AUTH_ENV: safety.AUTH_ENV_VALUE}, clear=False):
+                    with mock.patch.object(
+                        subject, "_run_stage_process", side_effect=fail_after_observing_intent
+                    ) as run_mock:
+                        with mock.patch.object(
+                            subject,
+                            "validate_wrapper_summary",
+                            return_value=(None, ["synthetic offline failure"], {"present": False}),
+                        ):
+                            returncode, manifest = subject._execute_sequence(args, plan)
+            self.assertEqual(1, returncode)
+            self.assertEqual("FAIL", manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"])
+            self.assertEqual(1, run_mock.call_count)
+            self.assertEqual("LAUNCH_INTENT", observed_intent["state"])
+            self.assertEqual("IN_PROGRESS", observed_intent["result"])
+            ledger = json.loads((hardware_root / "ledger.json").read_text(encoding="utf-8"))
+            self.assertEqual(1, ledger["attempt_count"])
+            self.assertEqual(0, ledger["next_stage_index"])
+
+
+if __name__ == "__main__":
+    unittest.main()
