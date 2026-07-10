@@ -189,7 +189,13 @@ class P7HardwareSafetyTests(unittest.TestCase):
                 "P7_HW_PREFLIGHT_READ_ONLY=1",
                 "P7_HW_PREFLIGHT_BOARD_ID=board",
                 "P7_HW_PREFLIGHT_TARGET=target",
-                "P7_HW_PREFLIGHT_PART=part",
+                f"P7_HW_PREFLIGHT_PART={sequence.CANONICAL_FULL_PART}",
+                f"P7_HW_PREFLIGHT_DEVICE={sequence.CANONICAL_LIVE_DEVICE}",
+                f"P7_HW_PREFLIGHT_IDCODE={sequence.CANONICAL_LIVE_IDCODE_BINARY}",
+                f"P7_HW_PREFLIGHT_CANONICAL_PART={sequence.CANONICAL_FULL_PART}",
+                f"P7_HW_PREFLIGHT_LIVE_PART={sequence.CANONICAL_LIVE_PART}",
+                f"P7_HW_PREFLIGHT_LIVE_DEVICE={sequence.CANONICAL_LIVE_DEVICE}",
+                f"P7_HW_PREFLIGHT_LIVE_IDCODE={sequence.CANONICAL_LIVE_IDCODE_BINARY}",
                 "P7_HW_PREFLIGHT_RESULT=PASS",
             ]
         )
@@ -198,11 +204,54 @@ class P7HardwareSafetyTests(unittest.TestCase):
             stdout="P7_HW_PREFLIGHT_RESULT=PASS\n",
             result_text=result,
             expected_board_id="board",
-            expected_part="part",
+            expected_part=sequence.CANONICAL_FULL_PART,
             expected_target="target",
         )
         self.assertFalse(passed)
         self.assertTrue(any("nonzero exit code" in item for item in failures))
+
+    def test_preflight_requires_exact_canonical_live_identity(self) -> None:
+        valid_lines = [
+            "P7_HW_PREFLIGHT_AUTHORIZED=1",
+            "P7_HW_PREFLIGHT_READ_ONLY=1",
+            "P7_HW_PREFLIGHT_BOARD_ID=board",
+            "P7_HW_PREFLIGHT_TARGET=target",
+            f"P7_HW_PREFLIGHT_PART={sequence.CANONICAL_FULL_PART}",
+            f"P7_HW_PREFLIGHT_DEVICE={sequence.CANONICAL_LIVE_DEVICE}",
+            f"P7_HW_PREFLIGHT_IDCODE={sequence.CANONICAL_LIVE_IDCODE_BINARY}",
+            f"P7_HW_PREFLIGHT_CANONICAL_PART={sequence.CANONICAL_FULL_PART}",
+            f"P7_HW_PREFLIGHT_LIVE_PART={sequence.CANONICAL_LIVE_PART}",
+            f"P7_HW_PREFLIGHT_LIVE_DEVICE={sequence.CANONICAL_LIVE_DEVICE}",
+            f"P7_HW_PREFLIGHT_LIVE_IDCODE=0x{sequence.CANONICAL_LIVE_IDCODE_HEX}",
+            "P7_HW_PREFLIGHT_RESULT=PASS",
+        ]
+        passed, failures = sequence.evaluate_preflight(
+            returncode=0,
+            stdout="P7_HW_PREFLIGHT_RESULT=PASS\n",
+            result_text="\n".join(valid_lines),
+            expected_board_id="board",
+            expected_part=sequence.CANONICAL_FULL_PART,
+            expected_target="target",
+        )
+        self.assertTrue(passed, failures)
+        for replacement in (
+            f"P7_HW_PREFLIGHT_LIVE_PART={sequence.CANONICAL_LIVE_PART}x",
+            "P7_HW_PREFLIGHT_LIVE_DEVICE=xc7z020_1",
+            "P7_HW_PREFLIGHT_LIVE_IDCODE=0x03722093",
+        ):
+            mutated = list(valid_lines)
+            key = replacement.split("=", 1)[0]
+            mutated = [replacement if line.startswith(key + "=") else line for line in mutated]
+            rejected, identity_failures = sequence.evaluate_preflight(
+                returncode=0,
+                stdout="P7_HW_PREFLIGHT_RESULT=PASS\n",
+                result_text="\n".join(mutated),
+                expected_board_id="board",
+                expected_part=sequence.CANONICAL_FULL_PART,
+                expected_target="target",
+            )
+            self.assertFalse(rejected)
+            self.assertTrue(identity_failures)
 
     def test_default_sequence_is_dry_run_and_launches_nothing(self) -> None:
         output = io.StringIO()
@@ -227,6 +276,11 @@ class P7HardwareSafetyTests(unittest.TestCase):
             self.assertNotIn(forbidden, lower)
         self.assertLess(tcl.index("RF_COMM_HW_AUTH"), tcl.index("connect_hw_server"))
         self.assertIn("P7_HW_PREFLIGHT_READ_ONLY=1", tcl)
+        self.assertIn('set p7_canonical_part "xc7z010clg400-1"', tcl)
+        self.assertIn('set p7_live_part "xc7z010"', tcl)
+        self.assertIn('set p7_live_device "xc7z010_1"', tcl)
+        self.assertIn('set p7_live_idcode "13722093"', tcl)
+        self.assertNotIn("string match -nocase *xc7z010*", tcl)
 
     def test_p7_code_does_not_self_set_hardware_authorization(self) -> None:
         combined = "\n".join(

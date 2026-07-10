@@ -1,0 +1,2456 @@
+{
+  "P7_AUTHORIZED_SEQUENCE_GENERATOR": "PASS",
+  "allowed_post_gate_generated_dirty": [
+    "?? evidence/generated/p7_2lane_scope_summary.md",
+    "?? evidence/generated/p7_application_protocol_summary.md",
+    "?? evidence/generated/p7_artifact_provenance_summary.json",
+    "?? evidence/generated/p7_artifact_provenance_summary.md",
+    "?? evidence/generated/p7_backend_conformance_summary.md",
+    "?? evidence/generated/p7_fault_recovery_summary.md",
+    "?? evidence/generated/p7_file_integrity_summary.md",
+    "?? evidence/generated/p7_fragmentation_reassembly_summary.md",
+    "?? evidence/generated/p7_lane1_promotion_summary.json",
+    "?? evidence/generated/p7_lane1_promotion_summary.md",
+    "?? evidence/generated/p7_lane_scheduler_summary.md",
+    "?? evidence/generated/p7_no_ethernet_summary.md",
+    "?? evidence/generated/p7_no_motion_summary.md",
+    "?? evidence/generated/p7_offline_gate_summary.json",
+    "?? evidence/generated/p7_offline_gate_summary.md",
+    "?? evidence/generated/p7_offline_test_run.json",
+    "?? evidence/generated/p7_protocol_vector_summary.json",
+    "?? evidence/generated/p7_protocol_vector_summary.md",
+    "?? evidence/generated/p7_ps_core_hardware_readiness.json",
+    "?? evidence/generated/p7_ps_core_hardware_readiness.md",
+    "?? evidence/generated/p7_ps_runtime_summary.md",
+    "?? evidence/generated/p7_queue_backpressure_summary.md",
+    "?? evidence/generated/p7_repo_intake.md",
+    "?? evidence/generated/p7_repo_intake_summary.json",
+    "?? evidence/generated/p7_repo_intake_summary.md",
+    "?? evidence/generated/p7_segmentation_reassembly_summary.md"
+  ],
+  "authorization_count": 66,
+  "authorization_environment_modified": false,
+  "authorization_records": [
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_001_p7_safe_idle.txt",
+      "sha256": "4533e59567d66e085ff1e4e5437f705ef8fb5536db0c7885365fbfff56747479",
+      "stage": "p7_safe_idle"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_002_p7_p6_frame_regression_m1.txt",
+      "sha256": "5d6bc42dd15c59201c8cce00cbffc4f51204a7aeb68f08462ac1e7f7b04fa185",
+      "stage": "p7_p6_frame_regression_m1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_003_p7_p6_frame_regression_m2.txt",
+      "sha256": "60b4aeeb3a583baeac94ec021ce451c8d1a1154c226276382eee46fefd7183fb",
+      "stage": "p7_p6_frame_regression_m2"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_004_p7_p6_frame_regression_m3.txt",
+      "sha256": "b253ca7d2066c5bdf24d463a514a7109484f988d5299b724266cdaf03cb54524",
+      "stage": "p7_p6_frame_regression_m3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_005_p7_fragment_boundary_0_l0.txt",
+      "sha256": "10087517567d1576bde9488ee6db6306a8cf116291fe537eebeaefa3edde9ee1",
+      "stage": "p7_fragment_boundary_0_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_006_p7_fragment_boundary_0_l1.txt",
+      "sha256": "ca02ab4280c88a714c3fd60fad5b47df0d9705e547b4a6a99c78fc204c615c74",
+      "stage": "p7_fragment_boundary_0_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_007_p7_fragment_boundary_0_rr.txt",
+      "sha256": "5b12acd34f20b9c462135c69697a8d6705e5ee94712372ac0e7572db3a6d1ca4",
+      "stage": "p7_fragment_boundary_0_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_008_p7_fragment_boundary_0_rep3.txt",
+      "sha256": "6378e81bf9deddc9e21a5a00d707c47385040b82ceb55bc77041bc606f4b6f10",
+      "stage": "p7_fragment_boundary_0_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_009_p7_fragment_boundary_1_l0.txt",
+      "sha256": "691daa0cda11862016ad603620c5763f7ecd0076f87e0d464a8cd31065f9caef",
+      "stage": "p7_fragment_boundary_1_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_010_p7_fragment_boundary_1_l1.txt",
+      "sha256": "5806667c355b26ffa0da037c8df407950b27a457e35d3f61e962afe2a09a10ea",
+      "stage": "p7_fragment_boundary_1_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_011_p7_fragment_boundary_1_rr.txt",
+      "sha256": "8a88b8a3f17c2239f1783d6346dbbb9ce3f94fcb961468a749e5782e73bfc908",
+      "stage": "p7_fragment_boundary_1_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_012_p7_fragment_boundary_1_rep3.txt",
+      "sha256": "bb5e420e3be82586973c994307a83d40a8386a0a545e2836bc194a31511d054d",
+      "stage": "p7_fragment_boundary_1_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_013_p7_fragment_boundary_30_l0.txt",
+      "sha256": "00e9ce275bdd8f4eee372137dfb6738b7c939829a57c900b028d5fc23e2bb025",
+      "stage": "p7_fragment_boundary_30_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_014_p7_fragment_boundary_30_l1.txt",
+      "sha256": "1fbfd64c6a00fbcc69a3e7e13ab804e0a56417129df4431b2c46f62726f9f85c",
+      "stage": "p7_fragment_boundary_30_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_015_p7_fragment_boundary_30_rr.txt",
+      "sha256": "ebd43e992994fe8bc530c319f8123062ae16d715d7a2d78836ffb732a5f4f17a",
+      "stage": "p7_fragment_boundary_30_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_016_p7_fragment_boundary_30_rep3.txt",
+      "sha256": "293f00b4dd707fcef0e9bdab846bdfce9ddad4b68f6fd12b603e8714c5160d3e",
+      "stage": "p7_fragment_boundary_30_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_017_p7_fragment_boundary_214_l0.txt",
+      "sha256": "5622d778568420b26b786ffbe4f6433887c0f104d996799e78baaf2a9768a533",
+      "stage": "p7_fragment_boundary_214_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_018_p7_fragment_boundary_214_l1.txt",
+      "sha256": "6a0f19e7f3a46316671bd71dad6c8019421da334beac89d8d77c8f035f2bf9d2",
+      "stage": "p7_fragment_boundary_214_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_019_p7_fragment_boundary_214_rr.txt",
+      "sha256": "811d79744db4ccc77e3f7b2e56fe86caa9692da3f89a74537909ed8c0288c04d",
+      "stage": "p7_fragment_boundary_214_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_020_p7_fragment_boundary_214_rep3.txt",
+      "sha256": "d1200d9084c1a16388b11944347b2d2660fe9570de5f07cf694901d18fcd8cff",
+      "stage": "p7_fragment_boundary_214_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_021_p7_fragment_boundary_215_l0.txt",
+      "sha256": "c142cfe5bcdc7164fd8ee9169569f13c7ca5fcaac19f3ed37e0ada7d20f7ef03",
+      "stage": "p7_fragment_boundary_215_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_022_p7_fragment_boundary_215_l1.txt",
+      "sha256": "de139a278272fbe8a9b8b6a3113b15496d15ac8d6e5976d0335de843f605fcf7",
+      "stage": "p7_fragment_boundary_215_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_023_p7_fragment_boundary_215_rr.txt",
+      "sha256": "18dc8980daa7c64a0eedcb18b73833ee2dd551a2cff34b9ece7c50e98a2f14e8",
+      "stage": "p7_fragment_boundary_215_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_024_p7_fragment_boundary_215_rep3.txt",
+      "sha256": "5dcff294c1cc60ee509446df1331b73f67dad6ca4ae2903136c00ed5b1cc0439",
+      "stage": "p7_fragment_boundary_215_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_025_p7_fragment_boundary_216_l0.txt",
+      "sha256": "4d202b8c9c1af80053d8f00ce5d8910399f0de494b6b880b77a841420cf91831",
+      "stage": "p7_fragment_boundary_216_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_026_p7_fragment_boundary_216_l1.txt",
+      "sha256": "b85d142a2a69c88306780a041f2ffa16aa015ffd05cb4adfa679f65fb61222b5",
+      "stage": "p7_fragment_boundary_216_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_027_p7_fragment_boundary_216_rr.txt",
+      "sha256": "dc08e6813ac13dc34dc58ed90bba6753d5565cab7c741f06360798be79ea8e43",
+      "stage": "p7_fragment_boundary_216_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_028_p7_fragment_boundary_216_rep3.txt",
+      "sha256": "4c1848edf434cd146b888d21847978c8a2b896ac2e2c6ab77db92adb99c05324",
+      "stage": "p7_fragment_boundary_216_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_029_p7_fragment_boundary_247_l0.txt",
+      "sha256": "94696b866816478ef13ce392456ae90ada1ad8039b7faf21c49bb7f972a55078",
+      "stage": "p7_fragment_boundary_247_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_030_p7_fragment_boundary_247_l1.txt",
+      "sha256": "9403751d9045e31738397b71cd99a596b0dbbdd57de3e90c113764bf65a86460",
+      "stage": "p7_fragment_boundary_247_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_031_p7_fragment_boundary_247_rr.txt",
+      "sha256": "f89a9ee461ef3176f14e6e3a8fc684693649dd6937aa644c8707fa7543335f81",
+      "stage": "p7_fragment_boundary_247_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_032_p7_fragment_boundary_247_rep3.txt",
+      "sha256": "0ffe85d3532ce6d1fc54de0482cb1e1df55f0e8cbff6e47c0211cd0edeea937f",
+      "stage": "p7_fragment_boundary_247_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_033_p7_fragment_boundary_248_l0.txt",
+      "sha256": "5fcd79262f9f138008778b527696d44e6d5892fcf98812bf47740e59ec508f34",
+      "stage": "p7_fragment_boundary_248_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_034_p7_fragment_boundary_248_l1.txt",
+      "sha256": "6e3945e110a7bad24c63c28b44af1432f8617904d3a6bd1ad29fabd28b02ab85",
+      "stage": "p7_fragment_boundary_248_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_035_p7_fragment_boundary_248_rr.txt",
+      "sha256": "40fc301a1f8f35a64e7de3fcd7d99fa98b4bd1e5ea613d07cfcd9afe93a92ff7",
+      "stage": "p7_fragment_boundary_248_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_036_p7_fragment_boundary_248_rep3.txt",
+      "sha256": "6853bede8362ad41b0d1beebe3f09d20055f19b7f4f6e7765edf139e61989c90",
+      "stage": "p7_fragment_boundary_248_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_037_p7_fragment_boundary_430_l0.txt",
+      "sha256": "2d69f7380730ad406da4fccc8e2e81cbee0cd88bc3f49a06fe157f1b0371fd9d",
+      "stage": "p7_fragment_boundary_430_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_038_p7_fragment_boundary_430_l1.txt",
+      "sha256": "a9d2d71c233cdb4cc20c440b98dde3df2e34c0c0219b20f0cb4bdd9c8430a485",
+      "stage": "p7_fragment_boundary_430_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_039_p7_fragment_boundary_430_rr.txt",
+      "sha256": "2754a1e701a6974c1a2f24d1838555d09acefb341f6123d635c6181ed52094d0",
+      "stage": "p7_fragment_boundary_430_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_040_p7_fragment_boundary_430_rep3.txt",
+      "sha256": "02b2c41510af34eb7d874d5795bcb0d9c373b3c6dc43094dcc67db8cde44c52a",
+      "stage": "p7_fragment_boundary_430_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_041_p7_fragment_boundary_431_l0.txt",
+      "sha256": "cdfd589e1b32403ea47577f756d05edc9567733064e265dd5c45b2d7da210ea5",
+      "stage": "p7_fragment_boundary_431_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_042_p7_fragment_boundary_431_l1.txt",
+      "sha256": "271782b0efcc5619b9143f45eeaa32730a3454c5b974583884c6b90085312ad3",
+      "stage": "p7_fragment_boundary_431_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_043_p7_fragment_boundary_431_rr.txt",
+      "sha256": "a666500fc567be4e58d852eb9955f42172fa29156c5388bba061ddbce1244479",
+      "stage": "p7_fragment_boundary_431_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_044_p7_fragment_boundary_431_rep3.txt",
+      "sha256": "d1e9d49c91dd93d12c1d7bd9f4c9169340d6364d83a49687ba892b7bafe584d7",
+      "stage": "p7_fragment_boundary_431_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_045_p7_fragment_boundary_432_l0.txt",
+      "sha256": "0a32c46085b1450c9885b46ed3c3b48ee7e9797d1bbf3012be4b7f4bc2fec186",
+      "stage": "p7_fragment_boundary_432_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_046_p7_fragment_boundary_432_l1.txt",
+      "sha256": "e10e299046766d215518f8bce2c2cad676882ee09b1069f22ed9041fa63915e1",
+      "stage": "p7_fragment_boundary_432_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_047_p7_fragment_boundary_432_rr.txt",
+      "sha256": "ead8b72c2584fae8b3e8002b988e23e1cf94aceb4a735f2af99ba5401f5768f7",
+      "stage": "p7_fragment_boundary_432_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_048_p7_fragment_boundary_432_rep3.txt",
+      "sha256": "a36ebd2bdf453ae2833630adcc05c50487d8979848cc5a6e227ec226b0f885fd",
+      "stage": "p7_fragment_boundary_432_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_049_p7_fragment_boundary_1024_l0.txt",
+      "sha256": "d73dbec376c17fb4352089cb580cb10626872f22d13011f291f0c8d63547694e",
+      "stage": "p7_fragment_boundary_1024_l0"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_050_p7_fragment_boundary_1024_l1.txt",
+      "sha256": "05f09ceb2e8c21f8cb7163774a26275335e4c1aec2a4257ae7c2072d75350e77",
+      "stage": "p7_fragment_boundary_1024_l1"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_051_p7_fragment_boundary_1024_rr.txt",
+      "sha256": "6158dc683d9749f92ad61477e41d38869cf79ca0cc61040f4fd0cfc7b98895fc",
+      "stage": "p7_fragment_boundary_1024_rr"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_052_p7_fragment_boundary_1024_rep3.txt",
+      "sha256": "36641a5e7b8cad34b0d82a7081db85d73f0b59a7fb1e15b3b5c5487ef578a998",
+      "stage": "p7_fragment_boundary_1024_rep3"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_053_p7_large_jtag_4k_rr_random.txt",
+      "sha256": "2faabe77c23dc133b14fee39065c3208c1fcae86263ab4cdea2a44c170721c0c",
+      "stage": "p7_large_jtag_4k_rr_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_054_p7_large_jtag_64k_rr_counter.txt",
+      "sha256": "b3375ca629a79620996cd6395cc7a9f78e2568314b67c5ae72279b1fc6263149",
+      "stage": "p7_large_jtag_64k_rr_counter"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_055_p7_large_jtag_64k_rr_prbs15.txt",
+      "sha256": "384792cd57b0d03e60a5a666d3c67f6866d048cde25257ae06e9a5b473ba36f6",
+      "stage": "p7_large_jtag_64k_rr_prbs15"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_056_p7_large_jtag_64k_rr_random.txt",
+      "sha256": "6f13f3b1ddcfe874f67cc6558cc621b2309e3f3a74848284fa48f1e4612fd6f5",
+      "stage": "p7_large_jtag_64k_rr_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_057_p7_large_jtag_64k_rr_all_bytes.txt",
+      "sha256": "7f8a0087089264f55931a4116155422fe94b2d90e3e4a4614cb567b5e8e01785",
+      "stage": "p7_large_jtag_64k_rr_all_bytes"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_058_p7_large_jtag_1m_l0_random.txt",
+      "sha256": "7eed2dfa861b2d6a0a2853b3919c854f72e238c42a2a0c7729842d5f9b9c1b44",
+      "stage": "p7_large_jtag_1m_l0_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_059_p7_large_jtag_1m_l1_random.txt",
+      "sha256": "49e8aeb3d0092135e9e89725c04c9ca0e3f606ad33bb7e626ac9640d3ef5dded",
+      "stage": "p7_large_jtag_1m_l1_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_060_p7_large_jtag_1m_rr_random.txt",
+      "sha256": "0a43ef9585f65d3df66b96dfda4f141bd29ca7d44d5973325daec703525a4908",
+      "stage": "p7_large_jtag_1m_rr_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_061_p7_large_jtag_1m_rep3_random.txt",
+      "sha256": "615c74498637457188dd3cb8cda9731219c60321aadc644264fe80f8172187e7",
+      "stage": "p7_large_jtag_1m_rep3_random"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_062_p7_ps_functional.txt",
+      "sha256": "c949efc77063904acb0933327c42ce0528abe2757aee5be21400653c611ad609",
+      "stage": "p7_ps_functional"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_063_p7_ps_fault_fallback.txt",
+      "sha256": "4f6750da217c6f4172ef00bda116c42ba0ec8c0cf499e778f8050970892f6c52",
+      "stage": "p7_ps_fault_fallback"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_064_p7_ps_abort_restart.txt",
+      "sha256": "0361933b32d050fa7ae0bdc3a34eb23aefceb233de4be40648c80712e3fbb96e",
+      "stage": "p7_ps_abort_restart"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_065_p7_ps_queue.txt",
+      "sha256": "b086e4b07a9e636cdf713ccaa9857f3ad21f76ed65f66be9c9ed7e1c1f3c5ba1",
+      "stage": "p7_ps_queue"
+    },
+    {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_066_p7_ps_stationary.txt",
+      "sha256": "ee043c6e8100bddf48883f2f29d51f20797d70f7b3718e6e75afc08bf693392d",
+      "stage": "p7_ps_stationary"
+    }
+  ],
+  "child_wrapper_dry_validation_count": 66,
+  "child_wrapper_dry_validations": [
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 300,
+        "configured_global_timeout_ceiling_sec": 255,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 166
+      },
+      "kind": "jtag",
+      "operation_count": 13,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 300,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.01625,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_safe_idle"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 201
+      },
+      "kind": "jtag",
+      "operation_count": 4269,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 35.33625,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 36,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_p6_frame_regression_m1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 201
+      },
+      "kind": "jtag",
+      "operation_count": 4269,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 35.33625,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 36,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_p6_frame_regression_m2"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 201
+      },
+      "kind": "jtag",
+      "operation_count": 4269,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 35.33625,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 36,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_p6_frame_regression_m3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 80,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.1,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_0_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 80,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.1,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_0_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 80,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.1,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_0_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 80,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.1,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_0_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 83,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.10375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 83,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.10375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 83,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.10375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 83,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.10375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 104,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.13,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_30_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 104,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.13,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_30_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 104,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.13,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_30_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 104,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.13,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_30_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_214_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_214_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_214_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_214_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_215_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_215_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_215_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 242,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.3025,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_215_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 303,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.37875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_216_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 303,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.37875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_216_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 303,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.37875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_216_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 303,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.37875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_216_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 324,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.405,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_247_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 324,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.405,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_247_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 324,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.405,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_247_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 324,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.405,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_247_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 327,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.40875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_248_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 327,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.40875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_248_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 327,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.40875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_248_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 327,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.40875,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_248_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 462,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.5775,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_430_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 462,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.5775,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_430_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 462,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.5775,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_430_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 462,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.5775,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_430_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_431_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_431_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_431_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_431_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_432_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_432_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_432_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 196
+      },
+      "kind": "jtag",
+      "operation_count": 523,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 30.65375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 31,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_432_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 197
+      },
+      "kind": "jtag",
+      "operation_count": 1083,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 31.35375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 32,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1024_l0"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 197
+      },
+      "kind": "jtag",
+      "operation_count": 1083,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 31.35375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 32,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1024_l1"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 197
+      },
+      "kind": "jtag",
+      "operation_count": 1083,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 31.35375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 32,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1024_rr"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 197
+      },
+      "kind": "jtag",
+      "operation_count": 1083,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 31.35375,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 32,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_fragment_boundary_1024_rep3"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 201
+      },
+      "kind": "jtag",
+      "operation_count": 4269,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 35.33625,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 36,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_4k_rr_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 279
+      },
+      "kind": "jtag",
+      "operation_count": 67092,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 113.865,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 114,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_64k_rr_counter"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 279
+      },
+      "kind": "jtag",
+      "operation_count": 67092,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 113.865,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 114,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_64k_rr_prbs15"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 279
+      },
+      "kind": "jtag",
+      "operation_count": 67092,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 113.865,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 114,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_64k_rr_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 900,
+        "configured_global_timeout_ceiling_sec": 865,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 279
+      },
+      "kind": "jtag",
+      "operation_count": 67092,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 900,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 113.865,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 114,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_64k_rr_all_bytes"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 1800,
+        "configured_global_timeout_ceiling_sec": 1785,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 1657
+      },
+      "kind": "jtag",
+      "operation_count": 1073038,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 1800,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 1371.2975,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 1372,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_1m_l0_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 1800,
+        "configured_global_timeout_ceiling_sec": 1785,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 1657
+      },
+      "kind": "jtag",
+      "operation_count": 1073038,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 1800,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 1371.2975,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 1372,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_1m_l1_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 1800,
+        "configured_global_timeout_ceiling_sec": 1785,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 1657
+      },
+      "kind": "jtag",
+      "operation_count": 1073038,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 1800,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 1371.2975,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 1372,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_1m_rr_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "errors": [],
+      "fragment_count": null,
+      "global_runtime_budget": {
+        "authorized_global_runtime_sec": 1800,
+        "configured_global_timeout_ceiling_sec": 1785,
+        "feasible": true,
+        "global_guard_seconds": 45,
+        "minimum_estimated_global_runtime_sec": 1657
+      },
+      "kind": "jtag",
+      "operation_count": 1073038,
+      "runtime_feasibility": {
+        "authorized_runtime_sec": 1800,
+        "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+        "estimated_axi_operation_us_at_1mhz": 1250,
+        "estimated_stage_fixed_overhead_seconds": 30.0,
+        "estimated_stage_runtime_seconds": 1371.2975,
+        "feasible_within_authorized_runtime": true,
+        "jtag_frequency_hz": 1000000,
+        "minimum_stage_runtime_sec": 1372,
+        "reference_jtag_frequency_hz": 1000000
+      },
+      "stage": "p7_large_jtag_1m_rep3_random"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "core_readiness": "PASS",
+      "errors": [],
+      "kind": "ps",
+      "mode": "functional",
+      "stage": "p7_ps_functional"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "core_readiness": "PASS",
+      "errors": [],
+      "kind": "ps",
+      "mode": "fault-fallback",
+      "stage": "p7_ps_fault_fallback"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "core_readiness": "PASS",
+      "errors": [],
+      "kind": "ps",
+      "mode": "abort-restart",
+      "stage": "p7_ps_abort_restart"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "core_readiness": "PASS",
+      "errors": [],
+      "kind": "ps",
+      "mode": "queue",
+      "stage": "p7_ps_queue"
+    },
+    {
+      "common_safety_validation": "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+      "core_readiness": "PASS",
+      "errors": [],
+      "kind": "ps",
+      "mode": "stationary",
+      "stage": "p7_ps_stationary"
+    }
+  ],
+  "counts": {
+    "fragment_boundary": 48,
+    "large_object_jtag": 9,
+    "p6_frame_regression": 3,
+    "ps_modes": 5,
+    "safe_idle": 1,
+    "stationary": 1
+  },
+  "evidence_root_planned_not_created": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app",
+  "frozen_goal_plan": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd"
+  },
+  "generated_at_utc": "2026-07-10T16:35:28.060118+00:00",
+  "generated_input_count": 61,
+  "generated_inputs": [
+    {
+      "bytes": 247,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\p7_ps_seed_247.bin",
+      "pattern": "deterministic_random",
+      "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+      "stage": "ps_all_modes"
+    },
+    {
+      "bytes": 4096,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\002_p7_p6_frame_regression_m1.bin",
+      "pattern": "counter",
+      "sha256": "d63320acd81e8ea9e08c7932552f04ca8bd45a673c40003ff4f7b6143d91081d",
+      "stage": "p7_p6_frame_regression_m1"
+    },
+    {
+      "bytes": 4096,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\003_p7_p6_frame_regression_m2.bin",
+      "pattern": "counter",
+      "sha256": "a7abce3a5f3164feb667e984f8e38f6e6fc3a7f87e54cc0b2008aa15962a1e7d",
+      "stage": "p7_p6_frame_regression_m2"
+    },
+    {
+      "bytes": 4096,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\004_p7_p6_frame_regression_m3.bin",
+      "pattern": "counter",
+      "sha256": "43812ad6447f6d7cbd02439ca869aff553eda792fa799ab066242fdccebefa30",
+      "stage": "p7_p6_frame_regression_m3"
+    },
+    {
+      "bytes": 0,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\005_p7_fragment_boundary_0_l0.bin",
+      "pattern": "counter",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "p7_fragment_boundary_0_l0"
+    },
+    {
+      "bytes": 0,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\006_p7_fragment_boundary_0_l1.bin",
+      "pattern": "counter",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "p7_fragment_boundary_0_l1"
+    },
+    {
+      "bytes": 0,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\007_p7_fragment_boundary_0_rr.bin",
+      "pattern": "counter",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "p7_fragment_boundary_0_rr"
+    },
+    {
+      "bytes": 0,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\008_p7_fragment_boundary_0_rep3.bin",
+      "pattern": "counter",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "p7_fragment_boundary_0_rep3"
+    },
+    {
+      "bytes": 1,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\009_p7_fragment_boundary_1_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stage": "p7_fragment_boundary_1_l0"
+    },
+    {
+      "bytes": 1,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\010_p7_fragment_boundary_1_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stage": "p7_fragment_boundary_1_l1"
+    },
+    {
+      "bytes": 1,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\011_p7_fragment_boundary_1_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stage": "p7_fragment_boundary_1_rr"
+    },
+    {
+      "bytes": 1,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\012_p7_fragment_boundary_1_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stage": "p7_fragment_boundary_1_rep3"
+    },
+    {
+      "bytes": 30,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\013_p7_fragment_boundary_30_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f",
+      "stage": "p7_fragment_boundary_30_l0"
+    },
+    {
+      "bytes": 30,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\014_p7_fragment_boundary_30_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f",
+      "stage": "p7_fragment_boundary_30_l1"
+    },
+    {
+      "bytes": 30,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\015_p7_fragment_boundary_30_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f",
+      "stage": "p7_fragment_boundary_30_rr"
+    },
+    {
+      "bytes": 30,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\016_p7_fragment_boundary_30_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f",
+      "stage": "p7_fragment_boundary_30_rep3"
+    },
+    {
+      "bytes": 214,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\017_p7_fragment_boundary_214_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "dedff2184de121c60ec94c4cb94a0450cac47257c56afa8f2e11c5f64d3dd661",
+      "stage": "p7_fragment_boundary_214_l0"
+    },
+    {
+      "bytes": 214,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\018_p7_fragment_boundary_214_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "dedff2184de121c60ec94c4cb94a0450cac47257c56afa8f2e11c5f64d3dd661",
+      "stage": "p7_fragment_boundary_214_l1"
+    },
+    {
+      "bytes": 214,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\019_p7_fragment_boundary_214_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "dedff2184de121c60ec94c4cb94a0450cac47257c56afa8f2e11c5f64d3dd661",
+      "stage": "p7_fragment_boundary_214_rr"
+    },
+    {
+      "bytes": 214,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\020_p7_fragment_boundary_214_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "dedff2184de121c60ec94c4cb94a0450cac47257c56afa8f2e11c5f64d3dd661",
+      "stage": "p7_fragment_boundary_214_rep3"
+    },
+    {
+      "bytes": 215,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\021_p7_fragment_boundary_215_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "1d64137df721078b35bdc1a3595a73cebcbe49865fb308c78791540d1d349cd7",
+      "stage": "p7_fragment_boundary_215_l0"
+    },
+    {
+      "bytes": 215,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\022_p7_fragment_boundary_215_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "1d64137df721078b35bdc1a3595a73cebcbe49865fb308c78791540d1d349cd7",
+      "stage": "p7_fragment_boundary_215_l1"
+    },
+    {
+      "bytes": 215,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\023_p7_fragment_boundary_215_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "1d64137df721078b35bdc1a3595a73cebcbe49865fb308c78791540d1d349cd7",
+      "stage": "p7_fragment_boundary_215_rr"
+    },
+    {
+      "bytes": 215,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\024_p7_fragment_boundary_215_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "1d64137df721078b35bdc1a3595a73cebcbe49865fb308c78791540d1d349cd7",
+      "stage": "p7_fragment_boundary_215_rep3"
+    },
+    {
+      "bytes": 216,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\025_p7_fragment_boundary_216_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "9d42d74bac443eafbd9878145b745387eb1397174332564bc8fa6db414ab381f",
+      "stage": "p7_fragment_boundary_216_l0"
+    },
+    {
+      "bytes": 216,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\026_p7_fragment_boundary_216_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "9d42d74bac443eafbd9878145b745387eb1397174332564bc8fa6db414ab381f",
+      "stage": "p7_fragment_boundary_216_l1"
+    },
+    {
+      "bytes": 216,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\027_p7_fragment_boundary_216_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "9d42d74bac443eafbd9878145b745387eb1397174332564bc8fa6db414ab381f",
+      "stage": "p7_fragment_boundary_216_rr"
+    },
+    {
+      "bytes": 216,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\028_p7_fragment_boundary_216_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "9d42d74bac443eafbd9878145b745387eb1397174332564bc8fa6db414ab381f",
+      "stage": "p7_fragment_boundary_216_rep3"
+    },
+    {
+      "bytes": 247,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\029_p7_fragment_boundary_247_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+      "stage": "p7_fragment_boundary_247_l0"
+    },
+    {
+      "bytes": 247,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\030_p7_fragment_boundary_247_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+      "stage": "p7_fragment_boundary_247_l1"
+    },
+    {
+      "bytes": 247,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\031_p7_fragment_boundary_247_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+      "stage": "p7_fragment_boundary_247_rr"
+    },
+    {
+      "bytes": 247,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\032_p7_fragment_boundary_247_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+      "stage": "p7_fragment_boundary_247_rep3"
+    },
+    {
+      "bytes": 248,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\033_p7_fragment_boundary_248_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "c6fefe1bfbe6f5364bf0e40447ffca27fde55f1cd815e1fa3bafb46a41c91749",
+      "stage": "p7_fragment_boundary_248_l0"
+    },
+    {
+      "bytes": 248,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\034_p7_fragment_boundary_248_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "c6fefe1bfbe6f5364bf0e40447ffca27fde55f1cd815e1fa3bafb46a41c91749",
+      "stage": "p7_fragment_boundary_248_l1"
+    },
+    {
+      "bytes": 248,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\035_p7_fragment_boundary_248_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "c6fefe1bfbe6f5364bf0e40447ffca27fde55f1cd815e1fa3bafb46a41c91749",
+      "stage": "p7_fragment_boundary_248_rr"
+    },
+    {
+      "bytes": 248,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\036_p7_fragment_boundary_248_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "c6fefe1bfbe6f5364bf0e40447ffca27fde55f1cd815e1fa3bafb46a41c91749",
+      "stage": "p7_fragment_boundary_248_rep3"
+    },
+    {
+      "bytes": 430,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\037_p7_fragment_boundary_430_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6f6709a1cffa2a92cf65fbfed6d70d5da83560bafff9ca7deb11c77c4b26efc9",
+      "stage": "p7_fragment_boundary_430_l0"
+    },
+    {
+      "bytes": 430,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\038_p7_fragment_boundary_430_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6f6709a1cffa2a92cf65fbfed6d70d5da83560bafff9ca7deb11c77c4b26efc9",
+      "stage": "p7_fragment_boundary_430_l1"
+    },
+    {
+      "bytes": 430,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\039_p7_fragment_boundary_430_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6f6709a1cffa2a92cf65fbfed6d70d5da83560bafff9ca7deb11c77c4b26efc9",
+      "stage": "p7_fragment_boundary_430_rr"
+    },
+    {
+      "bytes": 430,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\040_p7_fragment_boundary_430_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "6f6709a1cffa2a92cf65fbfed6d70d5da83560bafff9ca7deb11c77c4b26efc9",
+      "stage": "p7_fragment_boundary_430_rep3"
+    },
+    {
+      "bytes": 431,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\041_p7_fragment_boundary_431_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "a0ee5330d4af687ead5084fe0522d191402cbb0071399cddf60665cc431e1593",
+      "stage": "p7_fragment_boundary_431_l0"
+    },
+    {
+      "bytes": 431,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\042_p7_fragment_boundary_431_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "a0ee5330d4af687ead5084fe0522d191402cbb0071399cddf60665cc431e1593",
+      "stage": "p7_fragment_boundary_431_l1"
+    },
+    {
+      "bytes": 431,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\043_p7_fragment_boundary_431_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "a0ee5330d4af687ead5084fe0522d191402cbb0071399cddf60665cc431e1593",
+      "stage": "p7_fragment_boundary_431_rr"
+    },
+    {
+      "bytes": 431,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\044_p7_fragment_boundary_431_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "a0ee5330d4af687ead5084fe0522d191402cbb0071399cddf60665cc431e1593",
+      "stage": "p7_fragment_boundary_431_rep3"
+    },
+    {
+      "bytes": 432,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\045_p7_fragment_boundary_432_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "ce7b1c71b87a0ab700b2547140d15258be75b927600d784ecc071f119f790a69",
+      "stage": "p7_fragment_boundary_432_l0"
+    },
+    {
+      "bytes": 432,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\046_p7_fragment_boundary_432_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "ce7b1c71b87a0ab700b2547140d15258be75b927600d784ecc071f119f790a69",
+      "stage": "p7_fragment_boundary_432_l1"
+    },
+    {
+      "bytes": 432,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\047_p7_fragment_boundary_432_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "ce7b1c71b87a0ab700b2547140d15258be75b927600d784ecc071f119f790a69",
+      "stage": "p7_fragment_boundary_432_rr"
+    },
+    {
+      "bytes": 432,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\048_p7_fragment_boundary_432_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "ce7b1c71b87a0ab700b2547140d15258be75b927600d784ecc071f119f790a69",
+      "stage": "p7_fragment_boundary_432_rep3"
+    },
+    {
+      "bytes": 1024,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\049_p7_fragment_boundary_1024_l0.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "stage": "p7_fragment_boundary_1024_l0"
+    },
+    {
+      "bytes": 1024,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\050_p7_fragment_boundary_1024_l1.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "stage": "p7_fragment_boundary_1024_l1"
+    },
+    {
+      "bytes": 1024,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\051_p7_fragment_boundary_1024_rr.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "stage": "p7_fragment_boundary_1024_rr"
+    },
+    {
+      "bytes": 1024,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\052_p7_fragment_boundary_1024_rep3.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "stage": "p7_fragment_boundary_1024_rep3"
+    },
+    {
+      "bytes": 4096,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\053_p7_large_jtag_4k_rr_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "ca572f618177e1db6b69dfa8bdeb63b86862d348b63ddbdc11c7042c04c9058c",
+      "stage": "p7_large_jtag_4k_rr_random"
+    },
+    {
+      "bytes": 65536,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\054_p7_large_jtag_64k_rr_counter.bin",
+      "pattern": "counter",
+      "sha256": "48a92fb824afd752607d64c55e2467fbdcc8fda65deb25c2ed5b327d6dc88f11",
+      "stage": "p7_large_jtag_64k_rr_counter"
+    },
+    {
+      "bytes": 65536,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\055_p7_large_jtag_64k_rr_prbs15.bin",
+      "pattern": "prbs15",
+      "sha256": "ca45ccdf9f0c2be72656e6414cd71ae407b860df22830092d92fb0dbf1a0f1eb",
+      "stage": "p7_large_jtag_64k_rr_prbs15"
+    },
+    {
+      "bytes": 65536,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\056_p7_large_jtag_64k_rr_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "ca1a191acfd778bc9609a3d9c88d7ff52b710af06ce7cbf8ff98999680deead7",
+      "stage": "p7_large_jtag_64k_rr_random"
+    },
+    {
+      "bytes": 65536,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\057_p7_large_jtag_64k_rr_all_bytes.bin",
+      "pattern": "binary_all_byte_values_repeated",
+      "sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+      "stage": "p7_large_jtag_64k_rr_all_bytes"
+    },
+    {
+      "bytes": 1048576,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\058_p7_large_jtag_1m_l0_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "de7e28fb7ae8b57b4280dc13d61316442d564631d71caa52b28284929b0a8549",
+      "stage": "p7_large_jtag_1m_l0_random"
+    },
+    {
+      "bytes": 1048576,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\059_p7_large_jtag_1m_l1_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "92981a26065607345aece3ce7a4bf428997814425a847a5f374d564a955ef822",
+      "stage": "p7_large_jtag_1m_l1_random"
+    },
+    {
+      "bytes": 1048576,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\060_p7_large_jtag_1m_rr_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "847ff69ec3010814fe5af6530d426b620fae9988a6ea18fed1260b8f74ef4774",
+      "stage": "p7_large_jtag_1m_rr_random"
+    },
+    {
+      "bytes": 1048576,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app\\inputs\\061_p7_large_jtag_1m_rep3_random.bin",
+      "pattern": "deterministic_random",
+      "sha256": "70a2712e321d4cdafa35830e852c0f0187d629050093fa246a7244bf7d799034",
+      "stage": "p7_large_jtag_1m_rep3_random"
+    }
+  ],
+  "hardware_actions_executed": false,
+  "motion_used": false,
+  "network_used": false,
+  "offline_checkpoint": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+    "sha256": "a57225b5f10d967cc905ea6076d82e7bec60443b2f8dea3e1decfbb5d1434094"
+  },
+  "safe_wrapper_processes_launched": false,
+  "schema": "rf-comm-p7-authorized-sequence-generator-v1",
+  "sequence_plan": {
+    "executor_dry_validation": "PASS",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_sequence_plan.txt",
+    "sha256": "3cb9c60bff36fe7e6937047f5617e0797a0072282993e171efd4356d05e399af",
+    "stage_count": 66
+  },
+  "source_commit": "53dca543b4e5e05bcb7c635c214ea47c1d2c6abb",
+  "vivado_invoked": false,
+  "xsdb_invoked": false
+}

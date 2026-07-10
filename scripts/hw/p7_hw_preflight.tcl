@@ -28,6 +28,29 @@ proc p7_require_auth_value {text key expected} {
   }
 }
 
+proc p7_normal_idcode {value} {
+  set clean [string tolower [string map {_ ""} [string trim $value]]]
+  if {[regexp {^[01]{32}$} $clean]} {
+    set numeric 0
+    foreach bit [split $clean ""] {
+      set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+    }
+    return [format %08X $numeric]
+  }
+  if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+    return [string toupper $hexadecimal]
+  }
+  if {[regexp {^[0-9a-f]{8}$} $clean]} {
+    return [string toupper $clean]
+  }
+  return ""
+}
+
+set p7_canonical_part "xc7z010clg400-1"
+set p7_live_part "xc7z010"
+set p7_live_device "xc7z010_1"
+set p7_live_idcode "13722093"
+
 set result_file ""
 set selected_target ""
 set manager_open 0
@@ -52,6 +75,9 @@ set rc [catch {
   }
   if {$expected_board_id eq "" || $expected_part eq "" || $expected_target eq ""} {
     error "P7 preflight board, part, and target must be explicit"
+  }
+  if {![string equal -nocase $expected_part $p7_canonical_part]} {
+    error "P7 preflight supports only canonical part $p7_canonical_part"
   }
   if {![file exists $authorization_file] || ![file isfile $authorization_file]} {
     error "P7 authorization file missing: $authorization_file"
@@ -115,13 +141,19 @@ set rc [catch {
   set device_matches {}
   foreach candidate [get_hw_devices -quiet *] {
     set candidate_part ""
+    set candidate_name ""
+    set candidate_idcode ""
     catch {set candidate_part [get_property PART $candidate]}
-    if {[string equal -nocase $candidate_part $expected_part]} {
+    catch {set candidate_name [get_property NAME $candidate]}
+    catch {set candidate_idcode [get_property IDCODE $candidate]}
+    if {[string equal -nocase $candidate_part $p7_live_part] &&
+        [string equal -nocase $candidate_name $p7_live_device] &&
+        [p7_normal_idcode $candidate_idcode] eq $p7_live_idcode} {
       lappend device_matches $candidate
     }
   }
   if {[llength $device_matches] != 1} {
-    error "P7 expected exactly one authorized part match; found [llength $device_matches]"
+    error "P7 expected exactly one canonical live part/device/IDCODE match; found [llength $device_matches]"
   }
   set selected_device [lindex $device_matches 0]
   current_hw_device $selected_device
@@ -137,8 +169,12 @@ set rc [catch {
       "P7_HW_PREFLIGHT_BOARD_ID=$expected_board_id" \
       "P7_HW_PREFLIGHT_TARGET=$selected_target" \
       "P7_HW_PREFLIGHT_DEVICE=$selected_name" \
-      "P7_HW_PREFLIGHT_PART=$selected_part" \
+      "P7_HW_PREFLIGHT_PART=$expected_part" \
       "P7_HW_PREFLIGHT_IDCODE=$selected_idcode" \
+      "P7_HW_PREFLIGHT_CANONICAL_PART=$expected_part" \
+      "P7_HW_PREFLIGHT_LIVE_PART=$selected_part" \
+      "P7_HW_PREFLIGHT_LIVE_DEVICE=$selected_name" \
+      "P7_HW_PREFLIGHT_LIVE_IDCODE=$selected_idcode" \
       "P7_HW_PREFLIGHT_RESULT=PASS"] {
     puts $output $line
     puts $line

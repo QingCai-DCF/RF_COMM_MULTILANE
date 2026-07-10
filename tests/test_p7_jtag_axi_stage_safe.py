@@ -232,14 +232,66 @@ class P7JtagAxiStageTests(unittest.TestCase):
                 "--max-runtime-sec", "1800",
                 "--jtag-frequency-hz", "1000000",
                 "--stage-timeout-sec", "1450",
-                "--preflight-timeout-sec", "60",
-                "--shutdown-timeout-sec", "120",
+                "--preflight-timeout-sec", "120",
+                "--shutdown-timeout-sec", "60",
             ]
         )
         self.assertEqual(
             [], stage.transaction_runtime_errors(feasible_args, feasible_transaction)
         )
-        self.assertTrue(feasible_transaction["global_runtime_budget"]["feasible"])
+        budget = feasible_transaction["global_runtime_budget"]
+        self.assertTrue(budget["feasible"])
+        self.assertEqual(44, budget["containment_allowance_seconds"])
+        self.assertEqual(45, budget["other_guard_seconds"])
+        self.assertEqual(1779, budget["configured_global_timeout_ceiling_sec"])
+        self.assertEqual(21, budget["configured_unallocated_margin_seconds"])
+        self.assertEqual(1372, feasible_transaction["runtime_feasibility"]["minimum_stage_runtime_sec"])
+        overflow_transaction = {"operation_count": operation_count}
+        overflow_args = stage.build_parser().parse_args(
+            [
+                "--max-runtime-sec", "1800",
+                "--jtag-frequency-hz", "1000000",
+                "--stage-timeout-sec", "1500",
+                "--preflight-timeout-sec", "120",
+                "--shutdown-timeout-sec", "60",
+            ]
+        )
+        overflow_errors = stage.transaction_runtime_errors(overflow_args, overflow_transaction)
+        self.assertTrue(any("configured process timeout ceiling" in item for item in overflow_errors))
+        self.assertEqual(
+            1829,
+            overflow_transaction["global_runtime_budget"]["configured_global_timeout_ceiling_sec"],
+        )
+        self.assertEqual([0, 11, 22, 33, 44], [stage.containment_allowance(i) for i in range(5)])
+        with mock.patch.object(stage.time, "monotonic", return_value=0.0):
+            self.assertEqual(
+                120,
+                stage.deadline_timeout(
+                    120,
+                    1800.0,
+                    reserve_sec=2 * 60 + 1450 + stage.containment_allowance(3) + 45,
+                ),
+            )
+            self.assertEqual(
+                60,
+                stage.deadline_timeout(
+                    60,
+                    1800.0,
+                    reserve_sec=1450 + 60 + stage.containment_allowance(2) + 45,
+                ),
+            )
+            self.assertEqual(
+                1450,
+                stage.deadline_timeout(
+                    1450,
+                    1800.0,
+                    reserve_sec=60 + stage.containment_allowance(1) + 45,
+                ),
+            )
+            self.assertEqual(
+                60,
+                stage.deadline_timeout(60, 1800.0, reserve_sec=45),
+            )
 
 
     def test_transaction_format_rejects_command_injection_and_unlisted_write(self) -> None:
@@ -279,7 +331,13 @@ class P7JtagAxiStageTests(unittest.TestCase):
                 "P7_CANDIDATE_PROGRAMMED=1",
                 "P7_JTAG_AXI_TRANSACTIONS=PASS",
                 "P7_HW_TARGET=target",
-                "P7_HW_PART=part",
+                f"P7_HW_PART={stage.CANONICAL_FULL_PART}",
+                f"P7_HW_DEVICE={stage.CANONICAL_LIVE_DEVICE}",
+                f"P7_HW_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
+                f"P7_HW_CANONICAL_PART={stage.CANONICAL_FULL_PART}",
+                f"P7_HW_LIVE_PART={stage.CANONICAL_LIVE_PART}",
+                f"P7_HW_LIVE_DEVICE={stage.CANONICAL_LIVE_DEVICE}",
+                f"P7_HW_LIVE_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
             ]
         )
         passed, failures = stage.evaluate_stage(
@@ -287,10 +345,46 @@ class P7JtagAxiStageTests(unittest.TestCase):
             "P7_JTAG_STAGE_RESULT=PASS\n",
             result,
             expected_target="target",
-            expected_part="part",
+            expected_part=stage.CANONICAL_FULL_PART,
         )
         self.assertFalse(passed)
         self.assertTrue(any("nonzero exit code" in item for item in failures))
+
+    def test_stage_requires_exact_canonical_live_identity(self) -> None:
+        lines = [
+            "P7_JTAG_STAGE_RESULT=PASS",
+            "P7_CANDIDATE_PROGRAMMED=1",
+            "P7_JTAG_AXI_TRANSACTIONS=PASS",
+            "P7_HW_TARGET=target",
+            f"P7_HW_PART={stage.CANONICAL_FULL_PART}",
+            f"P7_HW_DEVICE={stage.CANONICAL_LIVE_DEVICE}",
+            f"P7_HW_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
+            f"P7_HW_CANONICAL_PART={stage.CANONICAL_FULL_PART}",
+            f"P7_HW_LIVE_PART={stage.CANONICAL_LIVE_PART}",
+            f"P7_HW_LIVE_DEVICE={stage.CANONICAL_LIVE_DEVICE}",
+            f"P7_HW_LIVE_IDCODE=0x{stage.CANONICAL_LIVE_IDCODE_HEX}",
+        ]
+        passed, failures = stage.evaluate_stage(
+            0,
+            "P7_JTAG_STAGE_RESULT=PASS\n",
+            "\n".join(lines),
+            expected_target="target",
+            expected_part=stage.CANONICAL_FULL_PART,
+        )
+        self.assertTrue(passed, failures)
+        mutated = [
+            "P7_HW_LIVE_DEVICE=xc7z020_1" if line.startswith("P7_HW_LIVE_DEVICE=") else line
+            for line in lines
+        ]
+        passed, failures = stage.evaluate_stage(
+            0,
+            "P7_JTAG_STAGE_RESULT=PASS\n",
+            "\n".join(mutated),
+            expected_target="target",
+            expected_part=stage.CANONICAL_FULL_PART,
+        )
+        self.assertFalse(passed)
+        self.assertTrue(any("identity marker mismatch" in item for item in failures))
 
     def test_shutdown_requires_both_zero_exit_and_marker(self) -> None:
         passed, failures = stage.evaluate_shutdown(
@@ -384,6 +478,369 @@ class P7JtagAxiStageTests(unittest.TestCase):
             time.sleep(0.2)
         self.assertEqual(125, result.returncode)
         self.assertFalse(result.process_tree_reaped)
+        self.assertTrue(result.process_tree_terminated)
+        self.assertFalse(result.expected_tool_daemon_grace_used)
+        self.assertIsInstance(result.process_exit_race_rechecked, bool)
+        self.assertIsInstance(result.process_identity_query_retried, bool)
+        self.assertIsInstance(result.containment_query_error, str)
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object daemon classification test")
+    def test_exact_vivado_cs_server_may_exit_naturally_during_bounded_grace(self) -> None:
+        class FakeProcess:
+            pid = 5151
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self, path: str) -> None:
+                self.path = path
+                self.waits: list[float] = []
+                self.closed = False
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                return len(self.waits) >= 2
+
+            def active_process_identities(self):
+                return [{"pid": 6161, "parent_pid": 5151, "image_path": self.path}]
+
+            def terminate(self):
+                raise AssertionError("naturally exiting exact daemon must not be terminated")
+
+            def close(self):
+                self.closed = True
+
+        process = FakeProcess()
+        expected = str(
+            Path(r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe")
+        )
+        job = FakeJob(expected)
+        stage._WINDOWS_JOBS[process] = job
+        stage._CONTAINMENT_DETAILS[process] = {
+            "expected_tool_daemon_paths": [expected],
+            "expected_tool_daemon_grace_used": False,
+            "descendant_paths_seen": [],
+            "containment_cleanup_terminated": False,
+        }
+        try:
+            self.assertTrue(stage.verify_process_tree_reaped(process))
+            record = stage.containment_record(process)
+        finally:
+            stage._WINDOWS_JOBS.pop(process, None)
+            stage._CONTAINMENT_RESULTS.pop(process, None)
+            stage._CONTAINMENT_DETAILS.pop(process, None)
+        self.assertEqual([1.0, stage.EXPECTED_TOOL_DAEMON_GRACE_SECONDS], job.waits)
+        self.assertTrue(job.closed)
+        self.assertTrue(record["expected_tool_daemon_grace_used"])
+        self.assertEqual(
+            stage.EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+            record["expected_tool_daemon_grace_seconds"],
+        )
+        self.assertEqual([expected], record["descendant_paths_seen"])
+        self.assertEqual("SINGLE_EXACT_CS_SERVER", record["expected_tool_daemon_classification"])
+        self.assertEqual(6161, record["descendant_processes_seen"][0]["pid"])
+        self.assertFalse(record["containment_cleanup_terminated"])
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object daemon topology test")
+    def test_exact_direct_parent_child_cs_servers_may_exit_during_grace(self) -> None:
+        class FakeProcess:
+            pid = 1111
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self, path: str) -> None:
+                self.path = path
+                self.waits: list[float] = []
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                return len(self.waits) >= 2
+
+            def active_process_identities(self):
+                return [
+                    {"pid": 2222, "parent_pid": 1111, "image_path": self.path},
+                    {"pid": 3333, "parent_pid": 2222, "image_path": self.path},
+                ]
+
+            @staticmethod
+            def terminate():
+                raise AssertionError("exact direct parent-child topology must not be terminated")
+
+            @staticmethod
+            def close():
+                pass
+
+        expected = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"
+        process = FakeProcess()
+        job = FakeJob(expected)
+        stage._WINDOWS_JOBS[process] = job
+        stage._CONTAINMENT_DETAILS[process] = {
+            "expected_tool_daemon_paths": [expected],
+            "expected_tool_daemon_grace_used": False,
+            "containment_cleanup_terminated": False,
+        }
+        try:
+            self.assertTrue(stage.verify_process_tree_reaped(process))
+            record = stage.containment_record(process)
+        finally:
+            stage._WINDOWS_JOBS.pop(process, None)
+            stage._CONTAINMENT_RESULTS.pop(process, None)
+            stage._CONTAINMENT_DETAILS.pop(process, None)
+        self.assertEqual(
+            "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
+            record["expected_tool_daemon_classification"],
+        )
+        self.assertEqual([2222, 3333], [item["pid"] for item in record["descendant_processes_seen"]])
+        self.assertTrue(record["expected_tool_daemon_grace_used"])
+        self.assertFalse(record["containment_cleanup_terminated"])
+        self.assertEqual(
+            "UNAPPROVED",
+            stage.classify_expected_tool_daemons(
+                [{"pid": True, "parent_pid": 1, "image_path": expected}],
+                [expected],
+            ),
+        )
+        self.assertEqual(
+            "UNAPPROVED",
+            stage.classify_expected_tool_daemons(
+                [{"pid": 7, "parent_pid": 7, "image_path": expected}],
+                [expected],
+            ),
+        )
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object daemon classification test")
+    def test_wrong_path_and_daemon_grace_timeout_remain_fail_closed(self) -> None:
+        class FakeProcess:
+            pid = 7171
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self, identities: list[dict[str, object]], *, grace_exits: bool) -> None:
+                self.identities = identities
+                self.grace_exits = grace_exits
+                self.waits: list[float] = []
+                self.terminated = False
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                if len(self.waits) == 1:
+                    return False
+                if len(self.waits) == 2:
+                    return self.grace_exits
+                return True
+
+            def active_process_identities(self):
+                return self.identities
+
+            def terminate(self):
+                self.terminated = True
+                return True
+
+            def close(self):
+                pass
+
+        expected = str(
+            Path(r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe")
+        )
+        for identities, grace_exits, expected_grace in (
+            ([{"pid": 8181, "parent_pid": 7171, "image_path": r"C:\attacker\cs_server.exe"}], True, False),
+            ([
+                {"pid": 8181, "parent_pid": 7171, "image_path": expected},
+                {"pid": 8182, "parent_pid": 7171, "image_path": expected},
+            ], True, False),
+            ([
+                {"pid": 8181, "parent_pid": 7171, "image_path": expected},
+                {"pid": 8182, "parent_pid": 8181, "image_path": expected},
+                {"pid": 8183, "parent_pid": 8182, "image_path": expected},
+            ], True, False),
+            ([{"pid": 8181, "parent_pid": 7171, "image_path": expected}], False, True),
+        ):
+            process = FakeProcess()
+            job = FakeJob(identities, grace_exits=grace_exits)
+            stage._WINDOWS_JOBS[process] = job
+            stage._CONTAINMENT_DETAILS[process] = {
+                "expected_tool_daemon_paths": [expected],
+                "expected_tool_daemon_grace_used": False,
+                "descendant_paths_seen": [],
+                "containment_cleanup_terminated": False,
+            }
+            try:
+                self.assertFalse(stage.verify_process_tree_reaped(process))
+                record = stage.containment_record(process)
+            finally:
+                stage._WINDOWS_JOBS.pop(process, None)
+                stage._CONTAINMENT_RESULTS.pop(process, None)
+                stage._CONTAINMENT_DETAILS.pop(process, None)
+            self.assertTrue(job.terminated)
+            self.assertTrue(record["containment_cleanup_terminated"])
+            self.assertEqual(expected_grace, record["expected_tool_daemon_grace_used"])
+            if expected_grace:
+                self.assertEqual(3, len(job.waits))
+            else:
+                self.assertEqual(2, len(job.waits))
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object daemon classification test")
+    def test_job_process_identity_query_error_is_terminated_and_rejected(self) -> None:
+        class FakeProcess:
+            pid = 9191
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self) -> None:
+                self.terminated = False
+
+            @staticmethod
+            def wait_empty(timeout_sec: float) -> bool:
+                return timeout_sec == 10.0
+
+            @staticmethod
+            def active_process_identities():
+                raise OSError("identity unavailable")
+
+            def terminate(self):
+                self.terminated = True
+                return True
+
+            @staticmethod
+            def close():
+                pass
+
+        process = FakeProcess()
+        job = FakeJob()
+        stage._WINDOWS_JOBS[process] = job
+        stage._CONTAINMENT_DETAILS[process] = {
+            "expected_tool_daemon_paths": [r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"],
+            "expected_tool_daemon_grace_used": False,
+            "descendant_paths_seen": [],
+            "containment_cleanup_terminated": False,
+        }
+        try:
+            self.assertFalse(stage.verify_process_tree_reaped(process))
+            record = stage.containment_record(process)
+        finally:
+            stage._WINDOWS_JOBS.pop(process, None)
+            stage._CONTAINMENT_RESULTS.pop(process, None)
+            stage._CONTAINMENT_DETAILS.pop(process, None)
+        self.assertTrue(job.terminated)
+        self.assertTrue(record["containment_cleanup_terminated"])
+        self.assertIn("identity unavailable", record["containment_query_error"])
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object race resolution test")
+    def test_job_identity_exit_race_passes_only_after_empty_recheck(self) -> None:
+        class FakeProcess:
+            pid = 9292
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self, query_raises: bool) -> None:
+                self.query_raises = query_raises
+                self.waits: list[float] = []
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                return timeout_sec == stage.PROCESS_EXIT_RACE_RECHECK_SECONDS
+
+            def active_process_identities(self):
+                if self.query_raises:
+                    raise OSError("PID exited during image lookup")
+                return []
+
+            @staticmethod
+            def terminate():
+                raise AssertionError("an empty rechecked job must not be terminated")
+
+            @staticmethod
+            def close():
+                pass
+
+        for query_raises in (False, True):
+            process = FakeProcess()
+            job = FakeJob(query_raises)
+            stage._WINDOWS_JOBS[process] = job
+            stage._CONTAINMENT_DETAILS[process] = {
+                "expected_tool_daemon_paths": [],
+                "expected_tool_daemon_grace_used": False,
+                "descendant_paths_seen": [],
+                "containment_cleanup_terminated": False,
+            }
+            try:
+                self.assertTrue(stage.verify_process_tree_reaped(process))
+                record = stage.containment_record(process)
+            finally:
+                stage._WINDOWS_JOBS.pop(process, None)
+                stage._CONTAINMENT_RESULTS.pop(process, None)
+                stage._CONTAINMENT_DETAILS.pop(process, None)
+            self.assertTrue(record["process_exit_race_rechecked"])
+            self.assertEqual(0, record["descendant_count_after"])
+            self.assertFalse(record["containment_cleanup_terminated"])
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows Job Object topology race test")
+    def test_parent_exit_query_race_retries_to_exact_singleton_then_grace(self) -> None:
+        class FakeProcess:
+            pid = 9393
+
+            @staticmethod
+            def poll():
+                return 0
+
+        class FakeJob:
+            def __init__(self, path: str) -> None:
+                self.path = path
+                self.queries = 0
+                self.waits: list[float] = []
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                return timeout_sec == stage.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+
+            def active_process_identities(self):
+                self.queries += 1
+                if self.queries == 1:
+                    raise OSError("parent exited during Toolhelp snapshot")
+                return [{"pid": 9494, "parent_pid": 9393, "image_path": self.path}]
+
+            @staticmethod
+            def terminate():
+                raise AssertionError("retried exact singleton must not be terminated")
+
+            @staticmethod
+            def close():
+                pass
+
+        expected = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"
+        process = FakeProcess()
+        job = FakeJob(expected)
+        stage._WINDOWS_JOBS[process] = job
+        stage._CONTAINMENT_DETAILS[process] = {
+            "expected_tool_daemon_paths": [expected],
+            "expected_tool_daemon_grace_used": False,
+            "containment_cleanup_terminated": False,
+        }
+        try:
+            self.assertTrue(stage.verify_process_tree_reaped(process))
+            record = stage.containment_record(process)
+        finally:
+            stage._WINDOWS_JOBS.pop(process, None)
+            stage._CONTAINMENT_RESULTS.pop(process, None)
+            stage._CONTAINMENT_DETAILS.pop(process, None)
+        self.assertEqual(2, job.queries)
+        self.assertTrue(record["process_identity_query_retried"])
+        self.assertEqual("SINGLE_EXACT_CS_SERVER", record["expected_tool_daemon_classification"])
+        self.assertTrue(record["expected_tool_daemon_grace_used"])
 
     def test_post_launch_exception_reaps_before_return(self) -> None:
         class FakeProcess:
@@ -442,6 +899,13 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertNotIn('split [read $txn_handle]', tcl)
         self.assertIn("1100000", tcl)
         self.assertIn("134217728", tcl)
+        self.assertIn('set p7_canonical_part "xc7z010clg400-1"', tcl)
+        self.assertIn('set p7_live_part "xc7z010"', tcl)
+        self.assertIn('set p7_live_device "xc7z010_1"', tcl)
+        self.assertIn('set p7_live_idcode "13722093"', tcl)
+        self.assertIn("P7_HW_CANONICAL_PART=", tcl)
+        self.assertIn("P7_HW_LIVE_PART=", tcl)
+        self.assertNotIn("string match -nocase *xc7z010*", tcl)
 
     def test_wrapper_never_sets_external_hardware_authorization(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")

@@ -12,4 +12,6 @@
 # embedded spacing is provenance data and must not be rewritten to satisfy a
 # source whitespace policy.
 evidence/generated/vitis/p7_ps_runtime/* -text -whitespace
+evidence/generated/p7_* -text -whitespace
 evidence/hardware/p7/artifacts/* -text -whitespace
+evidence/hardware/p7/** -text -whitespace

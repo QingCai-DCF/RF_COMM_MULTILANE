@@ -53,6 +53,24 @@ proc p7_parse_hex32 {text label} {
   return $value
 }
 
+proc p7_normal_idcode {value} {
+  set clean [string tolower [string map {_ ""} [string trim $value]]]
+  if {[regexp {^[01]{32}$} $clean]} {
+    set numeric 0
+    foreach bit [split $clean ""] {
+      set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+    }
+    return [format %08X $numeric]
+  }
+  if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+    return [string toupper $hexadecimal]
+  }
+  if {[regexp {^[0-9a-f]{8}$} $clean]} {
+    return [string toupper $clean]
+  }
+  return ""
+}
+
 proc p7_require_result_key {key} {
   if {![regexp {^[A-Z][A-Z0-9_]{0,63}$} $key]} {
     error "invalid result key: $key"
@@ -120,12 +138,16 @@ proc p7_axi_read {hw_axi address txn_index_var} {
   return [string toupper [string range $padded end-7 end]]
 }
 
-proc p7_emit_identity {out target device part idcode} {
+proc p7_emit_identity {out target device canonical_part live_part idcode} {
   foreach line [list \
       "P7_HW_TARGET=$target" \
       "P7_HW_DEVICE=$device" \
-      "P7_HW_PART=$part" \
-      "P7_HW_IDCODE=$idcode"] {
+      "P7_HW_PART=$canonical_part" \
+      "P7_HW_IDCODE=$idcode" \
+      "P7_HW_CANONICAL_PART=$canonical_part" \
+      "P7_HW_LIVE_PART=$live_part" \
+      "P7_HW_LIVE_DEVICE=$device" \
+      "P7_HW_LIVE_IDCODE=$idcode"] {
     puts $out $line
     puts $line
   }
@@ -153,6 +175,10 @@ set candidate_programming_attempted 0
 set emergency_shutdown_programmed 0
 set mode "UNKNOWN"
 set shutdown_bit ""
+set p7_canonical_part "xc7z010clg400-1"
+set p7_live_part "xc7z010"
+set p7_live_device "xc7z010_1"
+set p7_live_idcode "13722093"
 
 set rc [catch {
   if {[llength $argv] != 17} {
@@ -183,6 +209,9 @@ set rc [catch {
   }
   if {$expected_board_id eq "" || $expected_part eq "" || $expected_target eq ""} {
     error "P7 board, part, and target must be explicit"
+  }
+  if {![string equal -nocase $expected_part $p7_canonical_part]} {
+    error "P7 JTAG executor supports only canonical part $p7_canonical_part"
   }
   set local_server_ok 0
   if {[regexp -nocase {^(tcp:)?(localhost|127[.]0[.]0[.]1):([0-9]+)$} \
@@ -311,11 +340,19 @@ set rc [catch {
   set device_matches {}
   foreach candidate [get_hw_devices -quiet *] {
     set candidate_part ""
+    set candidate_name ""
+    set candidate_idcode ""
     catch {set candidate_part [get_property PART $candidate]}
-    if {[string equal -nocase $candidate_part $expected_part]} { lappend device_matches $candidate }
+    catch {set candidate_name [get_property NAME $candidate]}
+    catch {set candidate_idcode [get_property IDCODE $candidate]}
+    if {[string equal -nocase $candidate_part $p7_live_part] &&
+        [string equal -nocase $candidate_name $p7_live_device] &&
+        [p7_normal_idcode $candidate_idcode] eq $p7_live_idcode} {
+      lappend device_matches $candidate
+    }
   }
   if {[llength $device_matches] != 1} {
-    error "P7 expected exactly one authorized part match; found [llength $device_matches]"
+    error "P7 expected exactly one canonical live part/device/IDCODE match; found [llength $device_matches]"
   }
   set selected_device [lindex $device_matches 0]
   current_hw_device $selected_device
@@ -324,7 +361,7 @@ set rc [catch {
   set selected_idcode UNKNOWN
   catch {set selected_idcode [get_property IDCODE $selected_device]}
   set result_handle [open $result_file w]
-  p7_emit_identity $result_handle $selected_target $selected_name $selected_part $selected_idcode
+  p7_emit_identity $result_handle $selected_target $selected_name $expected_part $selected_part $selected_idcode
 
   if {$mode eq "SHUTDOWN"} {
     catch {set_property PROBES.FILE {} $selected_device}

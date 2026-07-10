@@ -172,19 +172,19 @@ def build_stage_specs() -> list[StageSpec]:
         if group == "safe_idle":
             stage_id = "p7_safe_idle"
             kind, mode, pattern = "jtag", "safe-idle", "none"
-            runtime, preflight, stage_timeout, shutdown = 300, 30, 120, 30
+            runtime, preflight, stage_timeout, shutdown = 300, 30, 90, 30
         elif group == "p6_frame_regression":
             mask = int(case["lane_mask"])
             stage_id = f"p7_p6_frame_regression_m{mask}"
             kind, mode, pattern = "jtag", "rfap", "counter"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 700, 30
+            runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
         elif group == "fragment_boundary":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
             stage_id = f"p7_fragment_boundary_{length}_{policy_slug(policy)}"
             kind, mode = "jtag", "rfap"
             pattern = "counter" if length == 0 else "binary_all_byte_values_repeated"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 700, 30
+            runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
         elif group == "large_object_jtag":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
@@ -197,9 +197,9 @@ def build_stage_specs() -> list[StageSpec]:
             # needs the separately authorized 1800 s global ceiling at 1 MHz.
             # It is not a timed stationary service run.
             if length == 1_048_576:
-                runtime, preflight, stage_timeout, shutdown = 1800, 120, 1500, 60
+                runtime, preflight, stage_timeout, shutdown = 1800, 120, 1450, 60
             else:
-                runtime, preflight, stage_timeout, shutdown = 900, 60, 700, 30
+                runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
         else:
             mode = {
                 "ps_functional": "functional",
@@ -212,12 +212,25 @@ def build_stage_specs() -> list[StageSpec]:
             kind, pattern = "ps", "deterministic_seed"
             runtime = 1800 if group == "ps_stationary" else 900
             preflight, stage_timeout, shutdown = 60, None, 30
-        wrapper_timeout = runtime + preflight + 2 * shutdown + 120
-        if kind == "ps" and group != "ps_stationary":
-            # Candidate timeout itself is max_runtime + the child's 120 s XSDB
-            # grace.  Retain another 60 s for Python/containment reap beyond
-            # preflight and both shutdown barriers.
-            wrapper_timeout = max(wrapper_timeout, 1200)
+        if kind == "jtag":
+            # The child JTAG wrapper's --max-runtime-sec is a global ceiling
+            # that already includes every phase, all four containment
+            # allowances, and the independent other-overhead guard.
+            wrapper_timeout = runtime + jtag_backend.JTAG_OUTER_WRAPPER_GRACE_SECONDS
+        else:
+            # PS --max-runtime-sec is the service/candidate window, not the
+            # whole wrapper.  Preserve the exact 1800 s stationary active
+            # window while independently bounding setup, evidence reap,
+            # shutdown phases, containment, and outer orchestration.
+            minimum_outer = int(
+                ps_safe_wrapper.ps_wrapper_wall_budget(
+                    mode=mode,
+                    max_runtime_sec=runtime,
+                    preflight_timeout_sec=preflight,
+                    shutdown_timeout_sec=shutdown,
+                )["minimum_outer_wrapper_timeout_seconds"]
+            )
+            wrapper_timeout = ((minimum_outer + 29) // 30) * 30
         specs.append(
             StageSpec(
                 index=index,
@@ -260,6 +273,44 @@ def validate_stage_specs(specs: list[StageSpec]) -> None:
             "case": spec.case,
         } != contract:
             raise ValueError(f"stage specification contract mismatch: {spec.stage_id}")
+        if spec.kind == "jtag":
+            if spec.stage_timeout_sec is None:
+                raise ValueError(f"JTAG stage timeout is missing: {spec.stage_id}")
+            if spec.mode == "safe-idle":
+                operation_count = 13
+            else:
+                object_size = (
+                    4096
+                    if spec.group == "p6_frame_regression"
+                    else int(spec.case["object_size"])
+                )
+                operation_count = jtag_backend.transaction_shape(object_size)["operation_count"]
+            feasibility = jtag_backend.runtime_feasibility(
+                operation_count,
+                jtag_frequency_hz=CANONICAL_JTAG_FREQUENCY_HZ,
+                authorized_runtime_sec=spec.max_runtime_sec,
+                preflight_timeout_sec=spec.preflight_timeout_sec,
+                shutdown_timeout_sec=spec.shutdown_timeout_sec,
+                configured_stage_timeout_sec=spec.stage_timeout_sec,
+            )
+            if not feasibility["global_runtime_budget"]["feasible"]:
+                raise ValueError(f"JTAG stage global runtime budget is infeasible: {spec.stage_id}")
+            minimum_outer = (
+                spec.max_runtime_sec + jtag_backend.JTAG_OUTER_WRAPPER_GRACE_SECONDS
+            )
+        else:
+            wall_budget = ps_safe_wrapper.ps_wrapper_wall_budget(
+                mode=spec.mode,
+                max_runtime_sec=spec.max_runtime_sec,
+                preflight_timeout_sec=spec.preflight_timeout_sec,
+                shutdown_timeout_sec=spec.shutdown_timeout_sec,
+            )
+            minimum_outer = int(wall_budget["minimum_outer_wrapper_timeout_seconds"])
+        if spec.wrapper_timeout_sec < minimum_outer:
+            raise ValueError(
+                f"outer wrapper timeout is below the independent wall bound: {spec.stage_id} "
+                f"configured={spec.wrapper_timeout_sec} required={minimum_outer}"
+            )
 
 
 def patterned_data(pattern: str, size: int, salt: int) -> bytes:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import struct
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -31,6 +32,7 @@ def digest(path: Path) -> str:
 class SyntheticEvidence:
     def __init__(self, root: Path) -> None:
         self.root = root
+        self.commit = COMMIT
         self.hardware = root / "evidence" / "hardware" / "p7"
         self.output = root / "evidence" / "generated"
         self.hardware.mkdir(parents=True)
@@ -127,7 +129,7 @@ class SyntheticEvidence:
         authorization_fields = {
             "AUTHORIZED_STAGE": "P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET",
             "USER_HARDWARE_AUTHORIZATION_FOR_P7": "GRANTED",
-            "SOURCE_COMMIT": COMMIT,
+            "SOURCE_COMMIT": self.commit,
             "SHUTDOWN_ON_EXIT": "required",
             "NO_ETHERNET": "true",
             "NO_MOTION": "true",
@@ -169,8 +171,8 @@ class SyntheticEvidence:
             "authorization_environment_present": True,
             "authorization": self._record(auth),
             "authorization_fields": authorization_fields,
-            "source_commit_requested": COMMIT,
-            "source_commit_current": COMMIT,
+            "source_commit_requested": self.commit,
+            "source_commit_current": self.commit,
             "dirty_files": [],
             "max_runtime_sec": runtime,
             "lane_count": 2,
@@ -240,6 +242,12 @@ class SyntheticEvidence:
             "P7_HW_PREFLIGHT_READ_ONLY": "1",
             "P7_HW_PREFLIGHT_BOARD_ID": BOARD,
             "P7_HW_PREFLIGHT_PART": PART,
+            "P7_HW_PREFLIGHT_DEVICE": subject.CANONICAL_LIVE_DEVICE,
+            "P7_HW_PREFLIGHT_IDCODE": "00010011011100100010000010010011",
+            "P7_HW_PREFLIGHT_CANONICAL_PART": PART,
+            "P7_HW_PREFLIGHT_LIVE_PART": subject.CANONICAL_LIVE_PART,
+            "P7_HW_PREFLIGHT_LIVE_DEVICE": subject.CANONICAL_LIVE_DEVICE,
+            "P7_HW_PREFLIGHT_LIVE_IDCODE": "00010011011100100010000010010011",
             "P7_HW_PREFLIGHT_TARGET": TARGET,
         }
 
@@ -272,6 +280,431 @@ class SyntheticEvidence:
             "stale_lock_auto_recovery": False,
         }
 
+    def make_historical_read_only_preflight_epoch(self, source_commit: str) -> Path:
+        self.sequence += 1
+        epoch = self.hardware / "authorized_sequence" / "historical_epoch"
+        run = epoch / "001_p7_safe_idle"
+        run.mkdir(parents=True)
+        preflight_stdout = run / "p7_preflight.stdout.log"
+        preflight_stderr = run / "p7_preflight.stderr.log"
+        preflight_result = run / "p7_preflight_result.txt"
+        preflight_stdout.write_text(
+            "INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121\n"
+            "INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081\n"
+            "P7_HW_PREFLIGHT_RESULT=FAIL\n"
+            "P7_HW_PREFLIGHT_ERROR=P7 expected exactly one authorized part match; found 0\n",
+            encoding="utf-8",
+        )
+        preflight_stderr.write_bytes(b"")
+        preflight_result.write_text(
+            "P7_HW_PREFLIGHT_AUTHORIZED=0\n"
+            "P7_HW_PREFLIGHT_READ_ONLY=1\n"
+            "P7_HW_PREFLIGHT_RESULT=FAIL\n"
+            "P7_HW_PREFLIGHT_ERROR=P7 expected exactly one authorized part match; found 0\n",
+            encoding="utf-8",
+        )
+        transaction = self.root / "old_inputs" / "001_p7_safe_idle.transactions.txt"
+        transaction.parent.mkdir(parents=True)
+        transaction.write_text("P7_JTAG_AXI_TRANSACTIONS_V1\nEND\n", encoding="ascii")
+        transaction_sha = digest(transaction)
+        safety = self._safety(
+            self.functional_profile,
+            300,
+            stage_name="p7_safe_idle",
+            semantic_mode="safe-idle",
+        )
+        safety["source_commit_requested"] = source_commit
+        safety["source_commit_current"] = source_commit
+        safety["preflight_tcl_sha256"] = hashlib.sha256(
+            subprocess.run(
+                ["git", "show", f"{source_commit}:scripts/hw/p7_hw_preflight.tcl"],
+                cwd=self.root,
+                capture_output=True,
+                check=True,
+            ).stdout
+        ).hexdigest()
+        auth_fields = safety["authorization_fields"]
+        assert isinstance(auth_fields, dict)
+        auth_fields["SOURCE_COMMIT"] = source_commit
+        auth_fields["P7_JTAG_TRANSACTION_PATH"] = str(transaction)
+        auth_fields["P7_JTAG_TRANSACTION_SHA256"] = transaction_sha
+        auth_path = Path(str(safety["authorization"]["path"]))
+        auth_path.write_text(
+            "P7_STATIONARY_APP_LAYER_APPROVED\n"
+            + "\n".join(f"{key}={value}" for key, value in auth_fields.items())
+            + "\n",
+            encoding="utf-8",
+        )
+        safety["authorization"] = self._record(auth_path)
+        events = [
+            {"timestamp_utc": "2026-07-10T00:10:00+00:00", "event": "authorized_execution_begin", "stage": "p7_safe_idle"},
+            {"timestamp_utc": "2026-07-10T00:11:00+00:00", "event": "preflight_finished", "returncode": 125, "passed": False},
+            {"timestamp_utc": "2026-07-10T00:11:01+00:00", "event": "authorized_execution_end", "status": "FAIL_PREFLIGHT"},
+        ]
+        (run / "p7_jtag_axi_stage_events.jsonl").write_text(
+            "".join(json.dumps(item) + "\n" for item in events),
+            encoding="utf-8",
+        )
+        summary: dict[str, object] = {
+            subject.JTAG_MARKER: "FAIL_PREFLIGHT",
+            "generated_at_utc": "2026-07-10T00:10:00+00:00",
+            "stage_name": "p7_safe_idle",
+            "semantic_mode": "safe-idle",
+            "requested_execute_hardware": True,
+            "hardware_actions_executed": True,
+            "programmed_fpga": False,
+            "programmed_candidate": False,
+            "programmed_shutdown_before": False,
+            "programmed_shutdown_after": False,
+            "started_ps_elf": False,
+            "drove_tfdu_txd": False,
+            "enabled_tfdu_receiver": False,
+            "uart_access": False,
+            "ethernet_used": False,
+            "motion_used": False,
+            "safety_validation": safety,
+            "transaction_validation": {
+                "path": str(transaction),
+                "expected_sha256": transaction_sha,
+                "actual_sha256": transaction_sha,
+                "valid": True,
+                "metadata": {"EVIDENCE_KIND": "safe_idle"},
+            },
+            "hardware_execution_lock": self._hardware_lock(run, kind="jtag", stage_name="p7_safe_idle"),
+            "preflight_process": self._process(
+                "preflight",
+                preflight_stdout,
+                preflight_stderr,
+                returncode=125,
+                passed=False,
+                result_file=str(preflight_result),
+                process_tree_reaped=False,
+                argv=["synthetic-vivado", "read-only-preflight"],
+                started_at_utc="2026-07-10T00:10:01+00:00",
+                ended_at_utc="2026-07-10T00:10:59+00:00",
+            ),
+            "target_identity": {
+                "P7_HW_PREFLIGHT_AUTHORIZED": "0",
+                "P7_HW_PREFLIGHT_READ_ONLY": "1",
+                "P7_HW_PREFLIGHT_RESULT": "FAIL",
+                "P7_HW_PREFLIGHT_ERROR": "P7 expected exactly one authorized part match; found 0",
+            },
+            "reason": "read-only target preflight failed part identity",
+        }
+        summary_path = run / "p7_jtag_axi_stage_summary.json"
+        summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+        canonical_files = {
+            "profile": self.root / "config/profiles/G1_LANE0_BASELINE.json",
+            "shutdown_tcl": self.root / "scripts/legacy_safe_tools/program_tfdu_shutdown.tcl",
+            "shutdown_bit": self.root / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit",
+            "pinmap": self.root / "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+            "xdc": self.root / "constraints/active/PORT1.generated.xdc",
+        }
+        for name, path in canonical_files.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(f"synthetic historical recovery {name}\n".encode())
+
+        p4_auth = self.root / ".hardware_authorization/P4_APPROVED.txt"
+        p4_auth.write_text(
+            "I AUTHORIZE RF_COMM_MULTILANE P4 HARDWARE ACCEPTANCE ON CONNECTED HARDWARE.\n"
+            "I UNDERSTAND THIS MAY DRIVE TFDU6102 TXD AFTER SAFE-IDLE CHECKS PASS.\n"
+            "MAX_RUNTIME_SEC=300\nAUTHORIZED_BY=synthetic\nDATE=2026-07-10\n",
+            encoding="utf-8",
+        )
+        p4_fields = {"MAX_RUNTIME_SEC": "300", "AUTHORIZED_BY": "synthetic", "DATE": "2026-07-10"}
+
+        recovery_names = [
+            "recovery_shutdown_after_failed_preflight_20260710T0012",
+            "recovery_shutdown_after_failed_preflight_20260710T0013",
+        ]
+
+        def make_recovery(name: str, *, effective: bool) -> None:
+            directory = epoch / name
+            directory.mkdir(parents=True)
+            authorization = {
+                "AUTHORIZED": effective,
+                "P4_AUTHORIZATION": "AUTHORIZED" if effective else "BLOCKED_NOT_AUTHORIZED",
+                "AUTHORIZATION_FILE": ".hardware_authorization/P4_APPROVED.txt",
+                "AUTHORIZATION_FILE_EXISTS": True,
+                "AUTHORIZATION_FILE_SHA256": digest(p4_auth),
+                "AUTHORIZATION_FIELDS": p4_fields,
+                "RF_COMM_HW_AUTH_PRESENT": effective,
+                "BOARD_ID": BOARD,
+                "PROFILE": "config/profiles/G1_LANE0_BASELINE.json",
+                "PROFILE_SHA256": digest(canonical_files["profile"]),
+                "PROFILE_SHA256_EXPECTED": digest(canonical_files["profile"]),
+                "BITSTREAM": "shutdown_bitstream/tfdu_shutdown_j10_j11.bit",
+                "BITSTREAM_SHA256": digest(canonical_files["shutdown_bit"]),
+                "BITSTREAM_SHA256_EXPECTED": digest(canonical_files["shutdown_bit"]),
+                "ACTIVE_PINMAP_HASH": digest(canonical_files["pinmap"]),
+                "ACTIVE_PINMAP_HASH_EXPECTED": digest(canonical_files["pinmap"]),
+                "ACTIVE_XDC_HASH": digest(canonical_files["xdc"]),
+                "ACTIVE_XDC_HASH_EXPECTED": digest(canonical_files["xdc"]),
+                "ABORT_FILE": ".hardware_authorization/ABORT_NOW.txt",
+                "ABORT_FILE_PRESENT": False,
+                "missing": [] if effective else ["RF_COMM_HW_AUTH=I_ACCEPT_TFDU6102_RISK_AND_AUTHORIZE_HW"],
+            }
+            (directory / "hardware_authorization.json").write_text(json.dumps(authorization) + "\n", encoding="utf-8")
+            manifest_files = [
+                {
+                    "path": str(path),
+                    "exists": True,
+                    "sha256": digest(path),
+                }
+                for path in canonical_files.values()
+            ]
+            (directory / "hash_manifest.json").write_text(json.dumps({"files": manifest_files}, indent=2) + "\n", encoding="utf-8")
+            (directory / "hash_manifest.csv").write_text("path,exists,sha256\n", encoding="utf-8")
+            if effective:
+                (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
+                    "HW_TARGET localhost:3121/xilinx_tcf/Digilent/210512180081\n"
+                    "HW_JTAG_FREQUENCY_HZ 1000000\n"
+                    "HW_DEVICE xc7z010_1\n"
+                    f"TFDU_SHUTDOWN_PROGRAMMED {canonical_files['shutdown_bit'].as_posix()}\n",
+                    encoding="utf-8",
+                )
+                (directory / "program_tfdu_shutdown_safe.stderr.log").write_bytes(b"")
+            start = "2026-07-10T00:13:00+00:00" if effective else "2026-07-10T00:12:00+00:00"
+            end = "2026-07-10T00:14:00+00:00" if effective else "2026-07-10T00:12:01+00:00"
+            lines = [
+                f"PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN {start}",
+                f"PROFILE_PATH={canonical_files['profile']}",
+                f"PROFILE_SHA256={digest(canonical_files['profile'])}",
+                f"HASH_MANIFEST_JSON={directory / 'hash_manifest.json'}",
+                f"HASH_MANIFEST_CSV={directory / 'hash_manifest.csv'}",
+                f"SHUTDOWN_TCL={canonical_files['shutdown_tcl']}",
+                f"SHUTDOWN_TCL_SHA256={digest(canonical_files['shutdown_tcl'])}",
+                f"SHUTDOWN_BITSTREAM={canonical_files['shutdown_bit']}",
+                f"SHUTDOWN_BITSTREAM_SHA256={digest(canonical_files['shutdown_bit'])}",
+                f"HARDWARE_AUTHORIZATION_LOG={directory / 'hardware_authorization.json'}",
+            ]
+            if effective:
+                lines.extend(
+                    [
+                        "HARDWARE_AUTHORIZATION_EXIT=0",
+                        "ALLOW_HARDWARE=1",
+                        "NO_HARDWARE_ACTIONS_EXECUTED=0",
+                        f"SHUTDOWN_STDOUT_LOG={directory / 'program_tfdu_shutdown_safe.stdout.log'}",
+                        f"SHUTDOWN_STDERR_LOG={directory / 'program_tfdu_shutdown_safe.stderr.log'}",
+                        "SHUTDOWN_RAW_EXIT=125",
+                        "TFDU_SHUTDOWN_PROGRAMMED_SEEN=1",
+                        "SHUTDOWN_EXIT=0",
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS",
+                    ]
+                )
+            else:
+                lines.extend(
+                    [
+                        "HARDWARE_AUTHORIZATION_EXIT=2",
+                        "AUTHORIZATION_MISSING=1",
+                        "NO_HARDWARE_ACTIONS_EXECUTED=1",
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=AUTHORIZATION_MISSING",
+                    ]
+                )
+            lines.append(f"PROGRAM_TFDU_SHUTDOWN_SAFE_END {end}")
+            (directory / "program_tfdu_shutdown_safe.summary.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+        make_recovery(recovery_names[0], effective=False)
+        make_recovery(recovery_names[1], effective=True)
+
+        tree_listing = subprocess.run(
+            ["git", "ls-tree", "-r", "--full-tree", source_commit],
+            cwd=self.root,
+            text=True,
+            capture_output=True,
+            check=True,
+        ).stdout
+        checkpoint_hashes: dict[str, str] = {}
+        for relative in subject.HISTORICAL_GIT_CRITICAL_SOURCES:
+            blob = subprocess.run(
+                ["git", "show", f"{source_commit}:{relative}"],
+                cwd=self.root,
+                capture_output=True,
+                check=True,
+            ).stdout
+            checkpoint_hashes[relative] = hashlib.sha256(blob).hexdigest()
+        old_offline = self.root / "old_inputs/p7_offline_gate_summary.json"
+        old_offline.write_text(
+            json.dumps(
+                {
+                    "P7_OFFLINE_GATE": "PASS",
+                    "source_commit": source_commit,
+                    "hardware_actions_executed": False,
+                    "NO_HARDWARE_ACTIONS_EXECUTED": True,
+                    "source_tree_listing_sha256": hashlib.sha256(tree_listing.encode("utf-8")).hexdigest(),
+                    "checkpoint_input_hashes": checkpoint_hashes,
+                    "checkpoint_input_count": len(checkpoint_hashes),
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        command = [
+            "synthetic-sequence",
+            "--source-commit", source_commit,
+            "--authorization-file", str(auth_path),
+            "--authorization-sha256", digest(auth_path),
+            "--transaction-file", str(transaction),
+            "--transaction-sha256", transaction_sha,
+            "--evidence-dir", str(run),
+        ]
+        old_plan = self.root / "old_inputs/p7_sequence_plan.txt"
+        old_stages = [
+            {
+                "id": "p7_safe_idle",
+                "group": "safe_idle",
+                "risk_index": 10,
+                "case": {},
+                "command": command,
+                "summary_path": str(summary_path),
+            }
+        ] + [
+            {
+                "id": f"stage_{index}",
+                "group": "synthetic",
+                "risk_index": 20 + index,
+                "case": {},
+                "command": ["synthetic", str(index)],
+                "summary_path": str(self.hardware / f"unused_{index}.json"),
+            }
+            for index in range(1, 66)
+        ]
+        old_plan.write_text(
+            json.dumps(
+                {
+                    "schema": "rf-comm-p7-hardware-sequence-plan-v1",
+                    "source_commit": source_commit,
+                    "offline_checkpoint": {"path": str(old_offline), "sha256": digest(old_offline)},
+                    "stages": old_stages,
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        generation = self.root / "build/p7_authorized_sequence/historical_epoch/p7_authorized_sequence_generation_manifest.json"
+        generation.parent.mkdir(parents=True, exist_ok=True)
+        generation.write_text(
+            json.dumps(
+                {
+                    "schema": "rf-comm-p7-authorized-sequence-generator-v1",
+                    "source_commit": source_commit,
+                    "offline_checkpoint": {"path": str(old_offline), "sha256": digest(old_offline)},
+                    "sequence_plan": {"path": str(old_plan), "sha256": digest(old_plan), "stage_count": 66},
+                    "authorization_records": [
+                        {"stage": "p7_safe_idle", "path": str(auth_path), "sha256": digest(auth_path)}
+                    ],
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        frozen_dir = epoch / "historical_preflight_inputs"
+        frozen_dir.mkdir()
+        originals = {
+            "offline_checkpoint": old_offline,
+            "sequence_plan": old_plan,
+            "stage_authorization": auth_path,
+            "stage_transactions": transaction,
+            "generation_manifest": generation,
+            "recovery_p4_authorization": p4_auth,
+        }
+        frozen_items = []
+        for role, original in originals.items():
+            frozen = frozen_dir / f"{role}{original.suffix}"
+            frozen.write_bytes(original.read_bytes())
+            frozen_items.append(
+                {
+                    "role": role,
+                    "original_path": str(original.relative_to(self.root)),
+                    "frozen_path": str(frozen.relative_to(self.root)),
+                    "bytes": frozen.stat().st_size,
+                    "sha256": digest(frozen),
+                }
+            )
+        (frozen_dir / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "schema": "rf-comm-p7-historical-preflight-inputs-v1",
+                    "run_id": "historical_epoch",
+                    "source_commit": source_commit,
+                    "stage_index": 0,
+                    "stage_id": "p7_safe_idle",
+                    "result": "FAIL_PREFLIGHT",
+                    "mutation_attempted": False,
+                    "coverage_claimed": False,
+                    "recovery_directories": recovery_names,
+                    "files": frozen_items,
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        outer_logs = epoch / ".sequence_execution_ledger_wrapper_logs"
+        outer_logs.mkdir()
+        outer_stdout = outer_logs / "001_p7_safe_idle.stdout.log"
+        outer_stderr = outer_logs / "001_p7_safe_idle.stderr.log"
+        outer_stdout.write_text("synthetic outer failure\n", encoding="utf-8")
+        outer_stderr.write_bytes(b"")
+        outer = {
+            "schema": "rf-comm-p7-sequence-execution-ledger-v1",
+            "created_at_utc": "2026-07-10T00:09:00+00:00",
+            "updated_at_utc": "2026-07-10T00:11:02+00:00",
+            "status": "FAIL",
+            "hardware_actions_executed": True,
+            "network_used": False,
+            "motion_used": False,
+            "source_commit": source_commit,
+            "sequence_plan": {"path": str(old_plan), "sha256": digest(old_plan), "stage_count": 66},
+            "offline_checkpoint": {"path": str(old_offline), "sha256": digest(old_offline), "result": "PASS", "source_commit": source_commit},
+            "attempt_count": 1,
+            "completed_stage_count": 0,
+            "next_stage_index": 0,
+            "failed_stage_index": 0,
+            "attempts": [
+                {
+                    "attempt": 1,
+                    "stage_index": 0,
+                    "stage_id": "p7_safe_idle",
+                    "group": "safe_idle",
+                    "risk_index": 10,
+                    "case": {},
+                    "command": command,
+                    "state": "TERMINAL",
+                    "result": "FAIL",
+                    "started_at_utc": "2026-07-10T00:09:59+00:00",
+                    "ended_at_utc": "2026-07-10T00:11:02+00:00",
+                    "process": {
+                        "returncode": 1,
+                        "argv": command,
+                        "started_at_utc": "2026-07-10T00:09:59+00:00",
+                        "ended_at_utc": "2026-07-10T00:11:02+00:00",
+                        "timed_out": False,
+                        "abort_seen": False,
+                        "interrupted": False,
+                        "process_tree_terminated": False,
+                        "process_tree_reaped": True,
+                        "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+                        "containment_assigned": True,
+                        "containment_closed": True,
+                        "descendant_count_after": 0,
+                        "launch_error": "",
+                        "stdout_file": {"path": str(outer_stdout), "sha256": digest(outer_stdout), "bytes": outer_stdout.stat().st_size},
+                        "stderr_file": {"path": str(outer_stderr), "sha256": digest(outer_stderr), "bytes": outer_stderr.stat().st_size},
+                    },
+                    "summary_file": {"path": str(summary_path), "sha256": digest(summary_path), "bytes": summary_path.stat().st_size},
+                    "shutdown_after": {"present": False},
+                    "failures": ["read-only preflight failed"],
+                }
+            ],
+        }
+        (epoch / "sequence_execution_ledger.json").write_text(json.dumps(outer, indent=2) + "\n", encoding="utf-8")
+        return summary_path
+
     def make_jtag(
         self,
         stage_name: str,
@@ -298,6 +731,12 @@ class SyntheticEvidence:
             "P7_CANDIDATE_PROGRAMMED=1",
             f"P7_HW_TARGET={TARGET}",
             f"P7_HW_PART={PART}",
+            f"P7_HW_DEVICE={subject.CANONICAL_LIVE_DEVICE}",
+            "P7_HW_IDCODE=00010011011100100010000010010011",
+            f"P7_HW_CANONICAL_PART={PART}",
+            f"P7_HW_LIVE_PART={subject.CANONICAL_LIVE_PART}",
+            f"P7_HW_LIVE_DEVICE={subject.CANONICAL_LIVE_DEVICE}",
+            "P7_HW_LIVE_IDCODE=00010011011100100010000010010011",
             *safe_idle_lines,
             *semantic,
         ]
@@ -579,6 +1018,13 @@ class SyntheticEvidence:
             "P7_PS_ELF_DOWNLOADED=1",
             f"P7_HW_TARGET={TARGET}",
             f"P7_HW_PART={PART}",
+            f"P7_HW_CANONICAL_PART={PART}",
+            f"P7_HW_LIVE_PART={subject.CANONICAL_LIVE_PART}",
+            f"P7_HW_LIVE_DEVICE={subject.CANONICAL_LIVE_DEVICE}",
+            "P7_HW_LIVE_IDCODE=00010011011100100010000010010011",
+            f"P7_XSDB_LIVE_DEVICE={subject.CANONICAL_LIVE_PART}",
+            "P7_XSDB_LIVE_IDCODE=0x13722093",
+            "P7_XSDB_PREFLIGHT_IDCODE=00010011011100100010000010010011",
             *(extra_raw or []),
         ]
         files = self._run_files(run, "p7_ps_application_raw_result.log", raw_lines)
@@ -1304,7 +1750,7 @@ class SyntheticEvidence:
         offline = self.root / "evidence" / "generated" / "p7_offline_gate_summary.json"
         offline.parent.mkdir(parents=True, exist_ok=True)
         offline_source_hashes: dict[str, str] = {}
-        for relative in subject.OFFLINE_CRITICAL_SOURCES:
+        for relative in set(subject.OFFLINE_CRITICAL_SOURCES) | set(subject.HISTORICAL_GIT_CRITICAL_SOURCES):
             source = self.root / relative
             if not source.is_file():
                 source.parent.mkdir(parents=True, exist_ok=True)
@@ -1322,9 +1768,21 @@ class SyntheticEvidence:
                         "P7_CLEAN_SOURCE_CHECKPOINT": True,
                         "P7_CHECKPOINT_INPUT_HASHES": True,
                     },
-                    "source_commit": COMMIT,
+                    "source_commit": self.commit,
                     "dirty_worktree": False,
-                    "source_tree_listing_sha256": "c" * 64,
+                    "source_tree_listing_sha256": (
+                        hashlib.sha256(
+                            subprocess.run(
+                                ["git", "ls-tree", "-r", "--full-tree", self.commit],
+                                cwd=self.root,
+                                text=True,
+                                capture_output=True,
+                                check=True,
+                            ).stdout.encode("utf-8")
+                        ).hexdigest()
+                        if (self.root / ".git").exists()
+                        else "c" * 64
+                    ),
                     "checkpoint_input_hashes": offline_source_hashes,
                     "checkpoint_input_count": len(offline_source_hashes),
                 }
@@ -1339,11 +1797,48 @@ class SyntheticEvidence:
             ledger_path=self.hardware / "p7_run_sequence_ledger.json",
             offline_checkpoint_summary=offline,
             offline_checkpoint_sha256=digest(offline),
-            offline_checkpoint_commit=COMMIT,
+            offline_checkpoint_commit=self.commit,
         )
 
 
 class SummarizeP7HardwareTests(unittest.TestCase):
+    @staticmethod
+    def _git(root: Path, *args: str) -> str:
+        return subprocess.run(
+            ["git", *args],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=True,
+        ).stdout.strip()
+
+    def _make_historical_fixture(self, root: Path) -> tuple[SyntheticEvidence, str, str]:
+        fixture = SyntheticEvidence(root)
+        self._git(root, "init")
+        self._git(root, "config", "user.email", "synthetic@example.invalid")
+        self._git(root, "config", "user.name", "Synthetic P7 Test")
+        for relative in set(subject.OFFLINE_CRITICAL_SOURCES) | set(subject.HISTORICAL_GIT_CRITICAL_SOURCES):
+            source = root / relative
+            if not source.is_file():
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text(f"synthetic pre-commit source: {relative}\n", encoding="utf-8")
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-m", "old source checkpoint")
+        old_commit = self._git(root, "rev-parse", "HEAD")
+        fixture.make_historical_read_only_preflight_epoch(old_commit)
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-m", "active source checkpoint")
+        active_commit = self._git(root, "rev-parse", "HEAD")
+        fixture.commit = active_commit
+        fixture.full_pass()
+        return fixture, old_commit, active_commit
+
+    @staticmethod
+    def _validate_ledger(fixture: SyntheticEvidence) -> tuple[str, list[str], dict[str, object]]:
+        evidence = subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output)
+        subject.discover(evidence)
+        return subject.validate_sequence_ledger(evidence)
+
     def test_duplicate_markers_and_orphan_hardware_footprints_fail_closed(self) -> None:
         parsed, duplicates = subject.parse_marker_text("P7_RESULT=PASS\nP7_RESULT=FAIL\n")
         self.assertEqual(parsed["P7_RESULT"], "PASS")
@@ -1361,6 +1856,183 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(returncode, 1)
             self.assertEqual(payload["stages"]["consistency"]["result"], "FAIL")
             self.assertIn("no parseable final safe-wrapper summary", "\n".join(payload["stages"]["consistency"]["errors"]))
+
+    def test_process_record_recomputes_daemon_topology_and_rejects_tampering(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            stdout = root / "stdout.log"
+            stderr = root / "stderr.log"
+            stdout.write_text("ok\n", encoding="utf-8")
+            stderr.write_text("", encoding="utf-8")
+            daemon = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"
+            record = {
+                "returncode": 0,
+                "timed_out": False,
+                "abort_seen": False,
+                "interrupted": False,
+                "process_tree_terminated": False,
+                "process_tree_reaped": True,
+                "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+                "containment_assigned": True,
+                "containment_closed": True,
+                "descendant_count_after": 0,
+                "containment_cleanup_terminated": False,
+                "expected_tool_daemon_grace_used": True,
+                "expected_tool_daemon_grace_seconds": 10.0,
+                "expected_tool_daemon_paths": [daemon],
+                "descendant_paths_seen": [daemon],
+                "descendant_processes_seen": [
+                    {"pid": 2002, "parent_pid": 1001, "image_path": daemon}
+                ],
+                "expected_tool_daemon_classification": "SINGLE_EXACT_CS_SERVER",
+                "launch_error": "",
+                "argv": [r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat", "-mode", "batch"],
+                "stdout_path": str(stdout),
+                "stderr_path": str(stderr),
+            }
+            self.assertEqual(
+                [],
+                subject.process_record_errors(
+                    record, "process", document=root / "summary.json", repo_root=root
+                ),
+            )
+            terminated = {**record, "process_tree_terminated": True}
+            self.assertTrue(
+                any(
+                    "process_tree_terminated=true" in error
+                    for error in subject.process_record_errors(
+                        terminated, "process", document=root / "summary.json", repo_root=root
+                    )
+                )
+            )
+            duplicate = {
+                **record,
+                "expected_tool_daemon_paths": [daemon, daemon],
+                "descendant_paths_seen": [daemon, daemon],
+                "descendant_processes_seen": [
+                    {"pid": 2002, "parent_pid": 1001, "image_path": daemon},
+                    {"pid": 2003, "parent_pid": 2002, "image_path": daemon},
+                ],
+            }
+            self.assertTrue(
+                any(
+                    "process/path records are malformed" in error
+                    for error in subject.process_record_errors(
+                        duplicate, "process", document=root / "summary.json", repo_root=root
+                    )
+                )
+            )
+            pair = {
+                **record,
+                "descendant_paths_seen": [daemon, daemon],
+                "descendant_processes_seen": [
+                    {"pid": 3003, "parent_pid": 1001, "image_path": daemon},
+                    {"pid": 4004, "parent_pid": 3003, "image_path": daemon},
+                ],
+                "expected_tool_daemon_classification": "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
+            }
+            self.assertEqual(
+                [],
+                subject.process_record_errors(
+                    pair, "process", document=root / "summary.json", repo_root=root
+                ),
+            )
+            sibling_tamper = {
+                **pair,
+                "descendant_processes_seen": [
+                    {"pid": 3003, "parent_pid": 1001, "image_path": daemon},
+                    {"pid": 4004, "parent_pid": 1001, "image_path": daemon},
+                ],
+            }
+            self.assertTrue(
+                any(
+                    "topology classification is not independently reproducible" in error
+                    for error in subject.process_record_errors(
+                        sibling_tamper,
+                        "process",
+                        document=root / "summary.json",
+                        repo_root=root,
+                    )
+                )
+            )
+            attacker = r"C:\attacker\cs_server.exe"
+            argv_path_tamper = {
+                **record,
+                "expected_tool_daemon_paths": [attacker],
+                "descendant_paths_seen": [attacker],
+                "descendant_processes_seen": [
+                    {"pid": 2002, "parent_pid": 1001, "image_path": attacker}
+                ],
+            }
+            self.assertTrue(
+                any(
+                    "not derived from argv[0]" in error
+                    for error in subject.process_record_errors(
+                        argv_path_tamper,
+                        "process",
+                        document=root / "summary.json",
+                        repo_root=root,
+                    )
+                )
+            )
+            posix_tamper = {**record, "containment_kind": "POSIX_PROCESS_GROUP"}
+            self.assertTrue(
+                any(
+                    "only valid for Windows Job" in error
+                    for error in subject.process_record_errors(
+                        posix_tamper,
+                        "process",
+                        document=root / "summary.json",
+                        repo_root=root,
+                    )
+                )
+            )
+            self_parent = {
+                **record,
+                "descendant_processes_seen": [
+                    {"pid": 2002, "parent_pid": 2002, "image_path": daemon}
+                ],
+            }
+            self.assertTrue(
+                any(
+                    "identities are not exact/unique" in error
+                    for error in subject.process_record_errors(
+                        self_parent,
+                        "process",
+                        document=root / "summary.json",
+                        repo_root=root,
+                    )
+                )
+            )
+            boolean_pid = {
+                **record,
+                "descendant_processes_seen": [
+                    {"pid": True, "parent_pid": 1001, "image_path": daemon}
+                ],
+            }
+            self.assertTrue(
+                any(
+                    "identities are not exact/unique" in error
+                    for error in subject.process_record_errors(
+                        boolean_pid,
+                        "process",
+                        document=root / "summary.json",
+                        repo_root=root,
+                    )
+                )
+            )
+            misleading_without_grace = {
+                **record,
+                "expected_tool_daemon_grace_used": False,
+            }
+            misleading_errors = subject.process_record_errors(
+                misleading_without_grace,
+                "process",
+                document=root / "summary.json",
+                repo_root=root,
+            )
+            self.assertTrue(any("without using daemon grace" in error for error in misleading_errors))
+            self.assertTrue(any("nonzero daemon grace seconds" in error for error in misleading_errors))
 
     def test_missing_hardware_stays_pending_and_writes_aliases(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -1475,6 +2147,174 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 trace,
             )
             self.assertTrue(any("fragment count mismatch" in item or "magic mismatch" in item for item in trace_errors))
+
+    def test_old_commit_read_only_preflight_is_a_hash_bound_zero_coverage_epoch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture, old_commit, active_commit = self._make_historical_fixture(Path(temporary))
+            ledger = json.loads((fixture.hardware / "p7_run_sequence_ledger.json").read_text(encoding="utf-8"))
+            historical = ledger["runs"][0]
+            self.assertEqual(historical["source_commit"], old_commit)
+            self.assertEqual(historical["checkpoint_relation"], subject.CHECKPOINT_RELATION_OLD_DIAGNOSTIC)
+            self.assertTrue(historical["diagnostic_only"])
+            self.assertFalse(historical["mutation_attempted"])
+            self.assertFalse(historical["eligible_for_checkpoint_coverage"])
+            self.assertEqual(historical["risk_index"], 5)
+            self.assertEqual(historical["result"], "FAIL")
+            self.assertEqual(historical["attempted_coverage_keys"], [])
+            self.assertEqual(historical["coverage_keys"], [])
+            self.assertEqual(historical["historical_epoch"]["source_commit"], old_commit)
+            self.assertFalse(historical["historical_epoch"]["inner_preflight_process_tree_reaped"])
+            self.assertTrue(historical["historical_epoch"]["outer_process_containment"]["process_tree_reaped"])
+            self.assertEqual(historical["historical_epoch"]["effective_shutdown_recovery"]["shutdown_exit"], 0)
+            self.assertEqual(len(historical["historical_epoch"]["frozen_preflight_inputs"]["files"]), 6)
+            self.assertEqual(ledger["offline_checkpoint"]["source_commit"], active_commit)
+            status, errors, metrics = self._validate_ledger(fixture)
+            self.assertEqual(status, "PASS", "\n".join(errors))
+            self.assertEqual(metrics["run_count"], ledger["run_count"])
+            payload, returncode = subject.summarize(fixture.root, fixture.hardware, fixture.output)
+            self.assertEqual(returncode, 0, json.dumps(payload["stages"]["consistency"], indent=2))
+            self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
+            self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
+
+    def test_historical_epoch_tamper_and_nonancestor_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture, old_commit, active_commit = self._make_historical_fixture(Path(temporary))
+            epoch = fixture.hardware / "authorized_sequence/historical_epoch"
+
+            def assert_tamper_fails(path: Path, mutate, expected: str) -> None:
+                original = path.read_bytes()
+                try:
+                    mutate(path)
+                    status, errors, _metrics = self._validate_ledger(fixture)
+                    self.assertEqual(status, "FAIL")
+                    self.assertIn(expected, "\n".join(errors))
+                finally:
+                    path.write_bytes(original)
+
+            frozen_manifest = epoch / "historical_preflight_inputs/manifest.json"
+
+            def tamper_role(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["files"][0]["role"] = "invented_role"
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_manifest, tamper_role, "historical preflight input role")
+
+            def tamper_run_id(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["run_id"] = "different_epoch"
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_manifest, tamper_run_id, "run_id does not match epoch root")
+
+            def tamper_original_path(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["files"][0]["original_path"] = "unrelated/offline.json"
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_manifest, tamper_original_path, "original_path does not bind recorded offline_checkpoint path")
+
+            frozen_checkpoint = epoch / "historical_preflight_inputs/offline_checkpoint.json"
+
+            def tamper_old_blob_hash(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["checkpoint_input_hashes"][subject.HISTORICAL_GIT_CRITICAL_SOURCES[0]] = "0" * 64
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_checkpoint, tamper_old_blob_hash, "historical old checkpoint Git blob hash mismatch")
+
+            frozen_plan = epoch / "historical_preflight_inputs/sequence_plan.txt"
+
+            def tamper_plan_command(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["stages"][0]["command"][0] = "different-executor"
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_plan, tamper_plan_command, "historical frozen sequence plan command does not bind outer attempt")
+
+            frozen_generation = epoch / "historical_preflight_inputs/generation_manifest.json"
+
+            def tamper_generation_binding(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["sequence_plan"]["sha256"] = "f" * 64
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_generation, tamper_generation_binding, "historical frozen generation manifest sequence-plan SHA mismatch")
+
+            outer = epoch / "sequence_execution_ledger.json"
+
+            def tamper_outer_containment(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["attempts"][0]["process"]["process_tree_reaped"] = False
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(outer, tamper_outer_containment, "historical outer sequence process was not reaped")
+
+            effective = epoch / "recovery_shutdown_after_failed_preflight_20260710T0013"
+            recovery_auth = effective / "hardware_authorization.json"
+
+            def tamper_recovery_auth(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["BOARD_ID"] = "wrong-board"
+                path.write_text(json.dumps(value) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(recovery_auth, tamper_recovery_auth, "historical recovery authorization board mismatch")
+
+            recovery_stdout = effective / "program_tfdu_shutdown_safe.stdout.log"
+
+            def tamper_target(path: Path) -> None:
+                path.write_text(path.read_text(encoding="utf-8").replace(TARGET, "wrong-target"), encoding="utf-8")
+
+            assert_tamper_fails(recovery_stdout, tamper_target, "historical effective recovery stdout target identity")
+
+            recovery_summary = effective / "program_tfdu_shutdown_safe.summary.txt"
+
+            def tamper_marker(path: Path) -> None:
+                path.write_text(path.read_text(encoding="utf-8").replace("SHUTDOWN_EXIT=0", "SHUTDOWN_EXIT=9"), encoding="utf-8")
+
+            assert_tamper_fails(recovery_summary, tamper_marker, "historical effective recovery lacks SHUTDOWN_EXIT=0")
+
+            def tamper_chronology(path: Path) -> None:
+                path.write_text(
+                    path.read_text(encoding="utf-8").replace(
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_END 2026-07-10T00:14:00+00:00",
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_END 2026-07-10T02:14:00+00:00",
+                    ),
+                    encoding="utf-8",
+                )
+
+            assert_tamper_fails(recovery_summary, tamper_chronology, "superseded diagnostic/recovery epoch did not finish before")
+
+            tree = self._git(fixture.root, "rev-parse", f"{old_commit}^{{tree}}")
+            orphan = subprocess.run(
+                ["git", "commit-tree", tree],
+                cwd=fixture.root,
+                input="unrelated source\n",
+                text=True,
+                capture_output=True,
+                check=True,
+            ).stdout.strip()
+            ancestry_errors = subject._git_source_ancestry_errors(
+                subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output),
+                old_commit=orphan,
+                active_commit=active_commit,
+            )
+            self.assertIn("not an ancestor", "\n".join(ancestry_errors))
+
+    def test_failed_stationary_launch_intent_must_still_be_final(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = SyntheticEvidence(Path(temporary))
+            fixture.full_pass()
+            ledger_path = fixture.hardware / "p7_run_sequence_ledger.json"
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            duplicate = dict(ledger["runs"][0])
+            duplicate["sequence"] = len(ledger["runs"]) + 1
+            ledger["runs"].append(duplicate)
+            ledger["run_count"] = len(ledger["runs"])
+            ledger_path.write_text(json.dumps(ledger, indent=2) + "\n", encoding="utf-8")
+            status, errors, _metrics = self._validate_ledger(fixture)
+            self.assertEqual(status, "FAIL")
+            self.assertIn("stationary launch intent is not the final executed hardware stage", "\n".join(errors))
 
 
 if __name__ == "__main__":

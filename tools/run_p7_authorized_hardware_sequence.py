@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -27,6 +28,8 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+import p7_jtag_backend as jtag_backend
 
 from p7_hardware_safety import (
     AUTH_ENV,
@@ -70,6 +73,23 @@ LARGE_CASES = (
 # The sequence validator must never accept an id that a child later rejects.
 STAGE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,63}$")
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+PS_STATIONARY_SETUP_WATCHDOG_SECONDS = 300
+PS_STATIONARY_ACTIVE_TOLERANCE_SECONDS = 1.5
+PS_POST_SAFE_REAP_GRACE_SECONDS = 120
+PS_NONSTATIONARY_XSDB_GRACE_SECONDS = 120
+PS_OUTER_ORCHESTRATION_GUARD_SECONDS = 120
+PS_VIVADO_PROCESS_COUNT = 3
+PS_XSDB_PROCESS_COUNT = 1
+
+# Vivado reports the package/speed-grade-qualified build part and the live
+# silicon identity through different properties.  Keep the mapping explicit:
+# accepting a prefix such as ``xc7z010*`` would also accept the wrong package,
+# speed grade, device name, or JTAG identity.
+CANONICAL_FULL_PART = "xc7z010clg400-1"
+CANONICAL_LIVE_PART = "xc7z010"
+CANONICAL_LIVE_DEVICE = "xc7z010_1"
+CANONICAL_LIVE_IDCODE_BINARY = "00010011011100100010000010010011"
+CANONICAL_LIVE_IDCODE_HEX = "13722093"
 
 COMMON_BOOLEAN_OPTIONS = {
     "--execute-hardware",
@@ -489,6 +509,35 @@ def _int_option(
     return value
 
 
+def minimum_ps_outer_wrapper_timeout(
+    *, mode: str, max_runtime: int, preflight: int, shutdown: int
+) -> int:
+    vivado_per_process = (
+        jtag_backend.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+        + jtag_backend.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+    )
+    containment = (
+        PS_VIVADO_PROCESS_COUNT * vivado_per_process
+        + PS_XSDB_PROCESS_COUNT * jtag_backend.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+    )
+    if mode == "stationary":
+        candidate = (
+            PS_STATIONARY_SETUP_WATCHDOG_SECONDS
+            + max_runtime
+            + PS_STATIONARY_ACTIVE_TOLERANCE_SECONDS
+            + PS_POST_SAFE_REAP_GRACE_SECONDS
+        )
+    else:
+        candidate = max_runtime + PS_NONSTATIONARY_XSDB_GRACE_SECONDS
+    return math.ceil(
+        preflight
+        + 2 * shutdown
+        + candidate
+        + containment
+        + PS_OUTER_ORCHESTRATION_GUARD_SECONDS
+    )
+
+
 def _validate_hash_pairs(
     options: Mapping[str, str | bool], errors: list[str]
 ) -> dict[str, Path]:
@@ -703,9 +752,29 @@ def _validate_stage_command(
                 if key not in options:
                     errors.append(f"RFAP stage is missing {key}")
             errors.extend(_validate_backend_manifest(stage, options, paths))
-        for key in ("--transaction-file", "--transaction-sha256", "--jtag-frequency-hz"):
+        for key in (
+            "--transaction-file",
+            "--transaction-sha256",
+            "--jtag-frequency-hz",
+            "--stage-timeout-sec",
+        ):
             if key not in options:
                 errors.append(f"JTAG stage is missing {key}")
+        try:
+            configured_global = (
+                int(str(options.get("--preflight-timeout-sec", 0)))
+                + 2 * int(str(options.get("--shutdown-timeout-sec", 0)))
+                + int(str(options.get("--stage-timeout-sec", 0)))
+                + jtag_backend.JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS
+                + jtag_backend.JTAG_WRAPPER_OTHER_GUARD_SECONDS
+            )
+        except ValueError:
+            configured_global = max_runtime + 1 if max_runtime is not None else 1
+        if max_runtime is not None and configured_global > max_runtime:
+            errors.append(
+                "JTAG configured phase timeouts plus explicit containment/other guards "
+                f"exceed global runtime: configured={configured_global} authorized={max_runtime}"
+            )
     else:
         if options.get("--mode") != expected_mode:
             errors.append(f"{group} requires --mode {expected_mode}")
@@ -756,7 +825,19 @@ def _validate_stage_command(
     elif max_runtime is not None:
         preflight = int(str(options.get("--preflight-timeout-sec", 0)))
         shutdown = int(str(options.get("--shutdown-timeout-sec", 0)))
-        minimum_timeout = max_runtime + preflight + 2 * shutdown + 60
+        if jtag_group:
+            # JTAG max_runtime is the child's global ceiling; phases and the
+            # explicit 4-child containment/other guards are already inside it.
+            minimum_timeout = (
+                max_runtime + jtag_backend.JTAG_OUTER_WRAPPER_GRACE_SECONDS
+            )
+        else:
+            minimum_timeout = minimum_ps_outer_wrapper_timeout(
+                mode=str(expected_mode),
+                max_runtime=max_runtime,
+                preflight=preflight,
+                shutdown=shutdown,
+            )
         if timeout < minimum_timeout:
             errors.append(
                 f"wrapper_timeout_sec is too short for bounded stage plus safety barriers: minimum={minimum_timeout}"
@@ -1205,7 +1286,9 @@ def _outer_sequence_errors(args: argparse.Namespace, plan: Mapping[str, Any]) ->
     if args.source_commit.lower() != plan["source_commit"]:
         errors.append("outer --source-commit must match the frozen plan/checkpoint commit")
     if args.max_runtime_sec != 1800:
-        errors.append("outer --max-runtime-sec must be exactly 1800 for the full sequence ceiling")
+        errors.append(
+            "outer --max-runtime-sec must be exactly 1800 as the per-stage/continuous-test ceiling"
+        )
     if not args.shutdown_on_exit:
         errors.append("outer --shutdown-on-exit is required")
     if not args.no_ethernet:
@@ -1466,6 +1549,61 @@ def parse_markers(text: str) -> dict[str, str]:
     return markers
 
 
+def normalize_p7_idcode(value: str) -> str:
+    """Return one exact eight-digit IDCODE representation or ``""``.
+
+    Vivado's ``get_property IDCODE`` returns a 32-bit binary string on the
+    canonical board while XSDB commonly reports the same value as hexadecimal.
+    No masks, short values, or variable-width numeric forms are accepted.
+    """
+
+    clean = value.strip().replace("_", "")
+    if re.fullmatch(r"[01]{32}", clean):
+        return f"{int(clean, 2):08X}"
+    match = re.fullmatch(r"(?:0[xX])?([0-9A-Fa-f]{8})", clean)
+    return match.group(1).upper() if match else ""
+
+
+def canonical_live_identity_failures(
+    markers: Mapping[str, str],
+    *,
+    expected_part: str,
+    prefix: str,
+    label: str,
+) -> list[str]:
+    """Validate the one authorized full-part to live-silicon mapping."""
+
+    failures: list[str] = []
+    if expected_part.casefold() != CANONICAL_FULL_PART.casefold():
+        failures.append(
+            f"{label} canonical part is unsupported: expected={CANONICAL_FULL_PART} "
+            f"observed={expected_part or 'MISSING'}"
+        )
+        return failures
+    expected_text = {
+        f"{prefix}_CANONICAL_PART": CANONICAL_FULL_PART,
+        f"{prefix}_LIVE_PART": CANONICAL_LIVE_PART,
+        f"{prefix}_LIVE_DEVICE": CANONICAL_LIVE_DEVICE,
+    }
+    for key, value in expected_text.items():
+        observed = markers.get(key, "")
+        if observed.casefold() != value.casefold():
+            failures.append(
+                f"{label} identity marker mismatch: {key} expected={value} "
+                f"observed={observed or 'MISSING'}"
+            )
+    idcode_key = f"{prefix}_LIVE_IDCODE"
+    observed_idcode = markers.get(idcode_key, "")
+    normalized = normalize_p7_idcode(observed_idcode)
+    if normalized != CANONICAL_LIVE_IDCODE_HEX:
+        failures.append(
+            f"{label} identity marker mismatch: {idcode_key} "
+            f"expected={CANONICAL_LIVE_IDCODE_BINARY} "
+            f"observed={observed_idcode or 'MISSING'}"
+        )
+    return failures
+
+
 def evaluate_preflight(
     *,
     returncode: int,
@@ -1487,8 +1625,11 @@ def evaluate_preflight(
         "P7_HW_PREFLIGHT_AUTHORIZED": "1",
         "P7_HW_PREFLIGHT_READ_ONLY": "1",
         "P7_HW_PREFLIGHT_BOARD_ID": expected_board_id,
+        # Retained compatibility alias; the unambiguous canonical/live fields
+        # below are authoritative and are validated independently.
         "P7_HW_PREFLIGHT_PART": expected_part,
         "P7_HW_PREFLIGHT_TARGET": expected_target,
+        "P7_HW_PREFLIGHT_DEVICE": CANONICAL_LIVE_DEVICE,
     }
     for key, value in expected.items():
         if result_markers.get(key) != value:
@@ -1497,6 +1638,17 @@ def evaluate_preflight(
             )
     if stdout_markers.get("P7_HW_PREFLIGHT_RESULT") != "PASS":
         failures.append("preflight PASS marker missing from process stdout")
+    failures.extend(
+        canonical_live_identity_failures(
+            result_markers,
+            expected_part=expected_part,
+            prefix="P7_HW_PREFLIGHT",
+            label="preflight",
+        )
+    )
+    legacy_idcode = normalize_p7_idcode(result_markers.get("P7_HW_PREFLIGHT_IDCODE", ""))
+    if legacy_idcode != CANONICAL_LIVE_IDCODE_HEX:
+        failures.append("preflight compatibility IDCODE marker is missing or not the exact authorized IDCODE")
     return not failures, failures
 
 

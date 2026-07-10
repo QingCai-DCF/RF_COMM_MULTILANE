@@ -68,8 +68,15 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     validate_completed,
 )
 from run_p7_authorized_hardware_sequence import (  # noqa: E402
+    CANONICAL_FULL_PART,
+    CANONICAL_LIVE_DEVICE,
+    CANONICAL_LIVE_IDCODE_BINARY,
+    CANONICAL_LIVE_IDCODE_HEX,
+    CANONICAL_LIVE_PART,
     build_preflight_command,
+    canonical_live_identity_failures,
     evaluate_preflight,
+    normalize_p7_idcode,
     parse_markers,
 )
 import run_p7_jtag_axi_stage_safe as process_support  # noqa: E402
@@ -98,6 +105,9 @@ XSDB_PROCESS_GRACE_SEC = 120
 STATIONARY_ACTIVE_WATCHDOG_TOLERANCE_SEC = 1.5
 STATIONARY_SETUP_WATCHDOG_SEC = 300
 POST_SAFE_REAP_GRACE_SEC = 120
+PS_VIVADO_PROCESS_COUNT = 3
+PS_XSDB_PROCESS_COUNT = 1
+PS_OUTER_ORCHESTRATION_GUARD_SEC = 120
 FRAGMENT_CHUNK_BYTES = 215
 MAX_OBJECT_BYTES = 8 * 1024 * 1024
 SLOT_STRIDE = 0x02000000
@@ -108,6 +118,64 @@ SLOT_BASE = 0x00100000
 
 MODE_NAMES = ("functional", "fault-fallback", "queue", "abort-restart", "stationary")
 P7_DESCRIPTOR_FAILED = 4
+
+
+def ps_wrapper_wall_budget(
+    *,
+    mode: str,
+    max_runtime_sec: int,
+    preflight_timeout_sec: int,
+    shutdown_timeout_sec: int,
+) -> dict[str, int | float | str]:
+    """Bound wrapper wall time without extending the stationary active window."""
+
+    if mode not in MODE_NAMES:
+        raise ValueError(f"unsupported PS mode for wall budget: {mode}")
+    if min(max_runtime_sec, preflight_timeout_sec, shutdown_timeout_sec) < 1:
+        raise ValueError("PS wall-budget phase limits must be positive")
+    vivado_per_process = (
+        process_support.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+        + process_support.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+    )
+    vivado_containment = PS_VIVADO_PROCESS_COUNT * vivado_per_process
+    xsdb_containment = (
+        PS_XSDB_PROCESS_COUNT * process_support.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+    )
+    if mode == "stationary":
+        candidate_bound = (
+            STATIONARY_SETUP_WATCHDOG_SEC
+            + MAX_SERVICE_RUNTIME_SEC
+            + STATIONARY_ACTIVE_WATCHDOG_TOLERANCE_SEC
+            + POST_SAFE_REAP_GRACE_SEC
+        )
+        active_window = MAX_SERVICE_RUNTIME_SEC
+        candidate_model = "setup_plus_exact_active_plus_tolerance_plus_post_safe_reap"
+    else:
+        candidate_bound = max_runtime_sec + XSDB_PROCESS_GRACE_SEC
+        active_window = max_runtime_sec
+        candidate_model = "bounded_xsdb_process_timeout"
+    total = math.ceil(
+        preflight_timeout_sec
+        + 2 * shutdown_timeout_sec
+        + candidate_bound
+        + vivado_containment
+        + xsdb_containment
+        + PS_OUTER_ORCHESTRATION_GUARD_SEC
+    )
+    return {
+        "model": candidate_model,
+        "service_active_window_seconds": active_window,
+        "stationary_active_window_is_not_extended": mode == "stationary",
+        "candidate_process_bound_seconds": candidate_bound,
+        "preflight_timeout_seconds": preflight_timeout_sec,
+        "shutdown_timeout_seconds_each": shutdown_timeout_sec,
+        "vivado_process_count": PS_VIVADO_PROCESS_COUNT,
+        "vivado_containment_allowance_seconds": vivado_containment,
+        "xsdb_process_count": PS_XSDB_PROCESS_COUNT,
+        "xsdb_containment_allowance_seconds": xsdb_containment,
+        "outer_orchestration_guard_seconds": PS_OUTER_ORCHESTRATION_GUARD_SEC,
+        "minimum_outer_wrapper_timeout_seconds": total,
+    }
 P7_DESCRIPTOR_ABORTED = 5
 P7_TRACE_MAGIC = 0x52543750
 EXPECTED_PROFILE_STAGE = {
@@ -1803,6 +1871,7 @@ def _run_stationary_watchdog_process(
     else:
         returncode = int(raw_returncode)
     containment = process_support.containment_record(process)
+    tree_terminated = tree_terminated or bool(containment.get("containment_cleanup_terminated", False))
     result = process_support.ProcessResult(
         name=name,
         returncode=returncode,
@@ -1821,6 +1890,30 @@ def _run_stationary_watchdog_process(
         containment_assigned=bool(containment["containment_assigned"]),
         containment_closed=bool(containment["containment_closed"]),
         descendant_count_after=int(containment["descendant_count_after"]),
+        expected_tool_daemon_grace_used=bool(
+            containment.get("expected_tool_daemon_grace_used", False)
+        ),
+        expected_tool_daemon_grace_seconds=float(
+            containment.get("expected_tool_daemon_grace_seconds", 0.0)
+        ),
+        expected_tool_daemon_paths=list(containment.get("expected_tool_daemon_paths", [])),
+        descendant_paths_seen=list(containment.get("descendant_paths_seen", [])),
+        descendant_processes_seen=list(
+            containment.get("descendant_processes_seen", [])
+        ),
+        expected_tool_daemon_classification=str(
+            containment.get("expected_tool_daemon_classification", "NONE")
+        ),
+        containment_cleanup_terminated=bool(
+            containment.get("containment_cleanup_terminated", False)
+        ),
+        process_exit_race_rechecked=bool(
+            containment.get("process_exit_race_rechecked", False)
+        ),
+        process_identity_query_retried=bool(
+            containment.get("process_identity_query_retried", False)
+        ),
+        containment_query_error=str(containment.get("containment_query_error", "")),
         launch_error=launch_error,
     )
     result.watchdog_reason = watchdog_reason
@@ -1972,17 +2065,29 @@ def evaluate_ps_process(
             failures.append(f"PS stage marker mismatch: {key} expected={value} observed={markers.get(key, 'MISSING')}")
     if board_id and markers.get("P7_XSDB_LIVE_BOARD_ID") != board_id:
         failures.append("PS stage live board/cable serial marker mismatch")
+    failures.extend(
+        canonical_live_identity_failures(
+            markers,
+            expected_part=part,
+            prefix="P7_HW",
+            label="PS stage Vivado preflight",
+        )
+    )
     live_idcode = markers.get("P7_XSDB_LIVE_IDCODE", "")
     preflight_idcode = markers.get("P7_XSDB_PREFLIGHT_IDCODE", "")
-    if not re.fullmatch(r"(?:0x)?[0-9A-Fa-f]+", preflight_idcode) or not re.fullmatch(
-        r"(?:0x)?[0-9A-Fa-f]+", live_idcode
-    ):
-        failures.append("PS stage live/preflight IDCODE marker is missing or malformed")
-    elif int(live_idcode, 16) != int(preflight_idcode, 16):
+    normalized_live_idcode = normalize_p7_idcode(live_idcode)
+    normalized_preflight_idcode = normalize_p7_idcode(preflight_idcode)
+    if normalized_live_idcode != CANONICAL_LIVE_IDCODE_HEX:
+        failures.append("PS stage XSDB live IDCODE is not the exact authorized IDCODE")
+    if normalized_preflight_idcode != CANONICAL_LIVE_IDCODE_HEX:
+        failures.append("PS stage fresh preflight IDCODE is not the exact authorized IDCODE")
+    if normalized_live_idcode != normalized_preflight_idcode:
         failures.append("PS stage live IDCODE does not equal the fresh preflight IDCODE")
     live_device = markers.get("P7_XSDB_LIVE_DEVICE", "")
-    if not live_device or not part.casefold().startswith(live_device.casefold()):
-        failures.append("PS stage live device root is inconsistent with the authorized exact part")
+    if live_device.casefold() != CANONICAL_LIVE_PART.casefold():
+        failures.append("PS stage XSDB live device is not the exact canonical live device root")
+    if markers.get("P7_HW_LIVE_DEVICE", "").casefold() != CANONICAL_LIVE_DEVICE.casefold():
+        failures.append("PS stage Vivado live device marker is not the exact authorized live device")
     if parse_markers(stdout).get("P7_PS_STAGE_RESULT") != "PASS":
         failures.append("P7_PS_STAGE_RESULT=PASS missing from stdout")
     return not failures, failures
@@ -3642,6 +3747,12 @@ def _base_summary(
         "motion_used": False,
         "HARDWARE_ACCEPTANCE": "PENDING_HW",
         "service_runtime_limit_sec": args.max_runtime_sec,
+        "wrapper_wall_budget": ps_wrapper_wall_budget(
+            mode=args.mode,
+            max_runtime_sec=args.max_runtime_sec,
+            preflight_timeout_sec=args.preflight_timeout_sec,
+            shutdown_timeout_sec=args.shutdown_timeout_sec,
+        ),
         "safety_validation": safety,
         "stage_validation_errors": stage_errors,
         "core_hardware_readiness": core_readiness,

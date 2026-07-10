@@ -61,18 +61,40 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
             self.assertEqual(1800, spec.max_runtime_sec)
             self.assertEqual(120, spec.preflight_timeout_sec)
             self.assertEqual(60, spec.shutdown_timeout_sec)
-            self.assertEqual(1500, spec.stage_timeout_sec)
+            self.assertEqual(1450, spec.stage_timeout_sec)
+            feasibility = subject.jtag_backend.runtime_feasibility(
+                subject.jtag_backend.transaction_shape(1_048_576)["operation_count"],
+                jtag_frequency_hz=subject.CANONICAL_JTAG_FREQUENCY_HZ,
+                authorized_runtime_sec=spec.max_runtime_sec,
+                preflight_timeout_sec=spec.preflight_timeout_sec,
+                shutdown_timeout_sec=spec.shutdown_timeout_sec,
+                configured_stage_timeout_sec=spec.stage_timeout_sec,
+            )
+            budget = feasibility["global_runtime_budget"]
+            self.assertTrue(budget["feasible"])
+            self.assertEqual(44, budget["containment_allowance_seconds"])
+            self.assertEqual(45, budget["other_guard_seconds"])
+            self.assertEqual(1779, budget["configured_global_timeout_ceiling_sec"])
+            self.assertEqual(21, budget["configured_unallocated_margin_seconds"])
+            self.assertEqual(1372, feasibility["minimum_stage_runtime_sec"])
+            self.assertEqual(1920, spec.wrapper_timeout_sec)
         stationary = specs[-1]
         self.assertEqual(1800, stationary.max_runtime_sec)
         self.assertEqual("stationary", stationary.mode)
         self.assertTrue(
             all(
-                spec.wrapper_timeout_sec >= 1200
+                spec.wrapper_timeout_sec >= 1320
                 for spec in specs
                 if spec.kind == "ps" and spec.group != "ps_stationary"
             )
         )
-        self.assertGreaterEqual(stationary.wrapper_timeout_sec, 2040)
+        self.assertEqual(2520, stationary.wrapper_timeout_sec)
+        safe_idle = specs[0]
+        self.assertEqual(90, safe_idle.stage_timeout_sec)
+        self.assertEqual(269, 30 + 2 * 30 + 90 + 44 + 45)
+        ordinary_jtag = next(spec for spec in specs if spec.group == "fragment_boundary")
+        self.assertEqual(650, ordinary_jtag.stage_timeout_sec)
+        self.assertEqual(859, 60 + 2 * 30 + 650 + 44 + 45)
         self.assertEqual(66, len({spec.stage_id for spec in specs}))
         self.assertTrue(all(len(spec.stage_id) <= 64 for spec in specs))
         subject.validate_stage_specs(specs)
@@ -448,7 +470,7 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
                     self.assertEqual("1800", option(command, "--max-runtime-sec"))
                     self.assertEqual("120", option(command, "--preflight-timeout-sec"))
                     self.assertEqual("60", option(command, "--shutdown-timeout-sec"))
-                    self.assertEqual("1500", option(command, "--stage-timeout-sec"))
+                    self.assertEqual("1450", option(command, "--stage-timeout-sec"))
                 safe_command = plan["stages"][0]["command"]
                 safe_transaction = Path(option(safe_command, "--transaction-file"))
                 safe_text = safe_transaction.read_text(encoding="utf-8")

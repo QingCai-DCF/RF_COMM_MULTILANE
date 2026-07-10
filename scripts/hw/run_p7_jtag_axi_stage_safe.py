@@ -47,6 +47,11 @@ from p7_hardware_safety import (  # noqa: E402
     validate_request,
 )
 from p7_jtag_backend import (  # noqa: E402
+    CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
+    EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+    JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+    JTAG_WRAPPER_OTHER_GUARD_SECONDS,
+    JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
     MAX_TRANSACTION_BYTES as BACKEND_MAX_TRANSACTION_BYTES,
     MAX_TRANSACTION_LINE_BYTES,
     MAX_TRANSACTION_OPERATIONS,
@@ -57,8 +62,15 @@ from p7_jtag_backend import (  # noqa: E402
     validate_manifest_bundle,
 )
 from run_p7_authorized_hardware_sequence import (  # noqa: E402
+    CANONICAL_FULL_PART,
+    CANONICAL_LIVE_DEVICE,
+    CANONICAL_LIVE_IDCODE_BINARY,
+    CANONICAL_LIVE_IDCODE_HEX,
+    CANONICAL_LIVE_PART,
     build_preflight_command,
+    canonical_live_identity_failures,
     evaluate_preflight,
+    normalize_p7_idcode,
     parse_markers,
 )
 
@@ -78,10 +90,10 @@ MAX_OPERATIONS = MAX_TRANSACTION_OPERATIONS
 MAX_POLL_COUNT = 10000
 MAX_POLL_DELAY_MS = 100
 MAX_METADATA_ENTRIES = 64
-# Covers the wrapper's 20 s bounded taskkill plus 10 s process reap path,
-# Python/Tcl teardown, and final manifest emission without borrowing from the
-# independently reserved shutdown-after window.
-GLOBAL_RUNTIME_GUARD_SECONDS = 45
+# Compatibility alias retained for evidence fields/tests.  The budget now
+# separates the four-child containment allowance from other Python/hash/Tcl
+# teardown instead of silently asking one 45-second bucket to cover both.
+GLOBAL_RUNTIME_GUARD_SECONDS = JTAG_WRAPPER_OTHER_GUARD_SECONDS
 
 HEX32_RE = re.compile(r"^0x[0-9a-fA-F]{8}$")
 KEY_RE = re.compile(r"^[A-Z][A-Z0-9_]{0,63}$")
@@ -125,6 +137,16 @@ class ProcessResult:
     containment_assigned: bool = False
     containment_closed: bool = False
     descendant_count_after: int = -1
+    expected_tool_daemon_grace_used: bool = False
+    expected_tool_daemon_grace_seconds: float = 0.0
+    expected_tool_daemon_paths: list[str] = field(default_factory=list)
+    descendant_paths_seen: list[str] = field(default_factory=list)
+    descendant_processes_seen: list[dict[str, Any]] = field(default_factory=list)
+    expected_tool_daemon_classification: str = "NONE"
+    containment_cleanup_terminated: bool = False
+    process_exit_race_rechecked: bool = False
+    process_identity_query_retried: bool = False
+    containment_query_error: str = ""
     launch_error: str = ""
 
 
@@ -705,35 +727,19 @@ def transaction_runtime_errors(
             operation_count,
             jtag_frequency_hz=args.jtag_frequency_hz,
             authorized_runtime_sec=authorized_runtime,
+            preflight_timeout_sec=args.preflight_timeout_sec,
+            shutdown_timeout_sec=args.shutdown_timeout_sec,
+            configured_stage_timeout_sec=args.stage_timeout_sec,
         )
     except ValueError as exc:
         errors.append(str(exc))
         return errors
     transaction["runtime_feasibility"] = feasibility
     minimum_stage = int(feasibility["minimum_stage_runtime_sec"])
-    estimated_global = (
-        args.preflight_timeout_sec
-        + 2 * args.shutdown_timeout_sec
-        + minimum_stage
-        + GLOBAL_RUNTIME_GUARD_SECONDS
-    )
-    configured_global_ceiling = (
-        args.preflight_timeout_sec
-        + 2 * args.shutdown_timeout_sec
-        + args.stage_timeout_sec
-        + GLOBAL_RUNTIME_GUARD_SECONDS
-    )
-    transaction["global_runtime_budget"] = {
-        "minimum_estimated_global_runtime_sec": estimated_global,
-        "configured_global_timeout_ceiling_sec": configured_global_ceiling,
-        "authorized_global_runtime_sec": authorized_runtime,
-        "global_guard_seconds": GLOBAL_RUNTIME_GUARD_SECONDS,
-        "feasible": (
-            minimum_stage <= args.stage_timeout_sec
-            and estimated_global <= authorized_runtime
-            and configured_global_ceiling <= authorized_runtime
-        ),
-    }
+    global_budget = dict(feasibility["global_runtime_budget"])
+    transaction["global_runtime_budget"] = global_budget
+    estimated_global = int(global_budget["minimum_estimated_global_runtime_sec"])
+    configured_global_ceiling = int(global_budget["configured_global_timeout_ceiling_sec"])
     if minimum_stage > args.stage_timeout_sec:
         errors.append(
             "transaction runtime estimate cannot fit --stage-timeout-sec: "
@@ -741,7 +747,7 @@ def transaction_runtime_errors(
         )
     if estimated_global > authorized_runtime:
         errors.append(
-            "transaction runtime estimate plus preflight/shutdown reserves exceeds authorization: "
+            "transaction runtime estimate plus phase/containment/other reserves exceeds authorization: "
             f"required={estimated_global} authorized={authorized_runtime}"
         )
     if configured_global_ceiling > authorized_runtime:
@@ -819,11 +825,82 @@ _CONTAINMENT_RESULTS: dict[subprocess.Popen[Any], bool] = {}
 _CONTAINMENT_DETAILS: dict[subprocess.Popen[Any], dict[str, Any]] = {}
 _POSIX_PROCESS_GROUPS: dict[subprocess.Popen[Any], int] = {}
 
+# Vivado may launch its own ChipScope server and keep it alive briefly after
+# the batch process exits.  Only this exact executable under the invoked
+# Vivado installation may receive a short natural-exit grace.  Any other
+# descendant, a same-named executable elsewhere, or a grace timeout remains a
+# containment failure and is terminated before returning.
+PROCESS_EXIT_RACE_RECHECK_SECONDS = 0.25
+
+
+def _normalized_windows_image_path(value: str | Path) -> str:
+    return str(Path(value).resolve(strict=False)).replace("/", "\\").casefold()
+
+
+def _expected_tool_daemon_paths(command: list[str]) -> list[str]:
+    if not command:
+        return []
+    executable = Path(command[0]).resolve(strict=False)
+    if executable.stem.casefold() != "vivado":
+        return []
+    expected = executable.parent / "unwrapped" / "win64.o" / "cs_server.exe"
+    return [str(expected.resolve(strict=False))]
+
+
+def classify_expected_tool_daemons(
+    identities: list[dict[str, Any]], approved_paths: list[str]
+) -> str:
+    """Accept only the canonical singleton or exact direct parent-child pair."""
+
+    if len(approved_paths) != 1 or not isinstance(approved_paths[0], str):
+        return "UNAPPROVED"
+    approved = _normalized_windows_image_path(approved_paths[0])
+    normalized: list[tuple[int, int, str]] = []
+    for item in identities:
+        try:
+            raw_process_id = item["pid"]
+            raw_parent_id = item["parent_pid"]
+            image_path = str(item["image_path"])
+        except (KeyError, TypeError, ValueError):
+            return "UNAPPROVED"
+        if (
+            not isinstance(raw_process_id, int)
+            or isinstance(raw_process_id, bool)
+            or not isinstance(raw_parent_id, int)
+            or isinstance(raw_parent_id, bool)
+        ):
+            return "UNAPPROVED"
+        process_id = raw_process_id
+        parent_id = raw_parent_id
+        if process_id <= 0 or parent_id < 0 or process_id == parent_id:
+            return "UNAPPROVED"
+        normalized.append((process_id, parent_id, _normalized_windows_image_path(image_path)))
+    process_ids = [item[0] for item in normalized]
+    if len(set(process_ids)) != len(process_ids):
+        return "UNAPPROVED"
+    if any(item[2] != approved for item in normalized):
+        return "UNAPPROVED"
+    if len(normalized) == 1:
+        return "SINGLE_EXACT_CS_SERVER"
+    if len(normalized) != 2:
+        return "UNAPPROVED"
+    first, second = normalized
+    direct_edges = int(first[1] == second[0]) + int(second[1] == first[0])
+    return (
+        "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"
+        if direct_edges == 1
+        else "UNAPPROVED"
+    )
+
 
 if os.name == "nt":
     JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
     JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION_CLASS = 1
+    JOB_OBJECT_BASIC_PROCESS_ID_LIST_CLASS = 3
     JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS = 9
+    PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+    TH32CS_SNAPPROCESS = 0x00000002
+    JOB_PROCESS_ID_CAPACITY = 256
 
     class _JobObjectBasicLimitInformation(ctypes.Structure):
         _fields_ = [
@@ -870,6 +947,27 @@ if os.name == "nt":
             ("TotalTerminatedProcesses", wintypes.DWORD),
         ]
 
+    class _JobObjectBasicProcessIdList(ctypes.Structure):
+        _fields_ = [
+            ("NumberOfAssignedProcesses", wintypes.DWORD),
+            ("NumberOfProcessIdsInList", wintypes.DWORD),
+            ("ProcessIdList", ctypes.c_size_t * JOB_PROCESS_ID_CAPACITY),
+        ]
+
+    class _ProcessEntry32W(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ProcessID", wintypes.DWORD),
+            ("th32DefaultHeapID", ctypes.c_size_t),
+            ("th32ModuleID", wintypes.DWORD),
+            ("cntThreads", wintypes.DWORD),
+            ("th32ParentProcessID", wintypes.DWORD),
+            ("pcPriClassBase", wintypes.LONG),
+            ("dwFlags", wintypes.DWORD),
+            ("szExeFile", wintypes.WCHAR * 260),
+        ]
+
     _KERNEL32 = ctypes.WinDLL("kernel32", use_last_error=True)
     _KERNEL32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
     _KERNEL32.CreateJobObjectW.restype = wintypes.HANDLE
@@ -892,6 +990,21 @@ if os.name == "nt":
     _KERNEL32.QueryInformationJobObject.restype = wintypes.BOOL
     _KERNEL32.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
     _KERNEL32.TerminateJobObject.restype = wintypes.BOOL
+    _KERNEL32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    _KERNEL32.OpenProcess.restype = wintypes.HANDLE
+    _KERNEL32.QueryFullProcessImageNameW.argtypes = [
+        wintypes.HANDLE,
+        wintypes.DWORD,
+        wintypes.LPWSTR,
+        ctypes.POINTER(wintypes.DWORD),
+    ]
+    _KERNEL32.QueryFullProcessImageNameW.restype = wintypes.BOOL
+    _KERNEL32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    _KERNEL32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    _KERNEL32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(_ProcessEntry32W)]
+    _KERNEL32.Process32FirstW.restype = wintypes.BOOL
+    _KERNEL32.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(_ProcessEntry32W)]
+    _KERNEL32.Process32NextW.restype = wintypes.BOOL
     _KERNEL32.CloseHandle.argtypes = [wintypes.HANDLE]
     _KERNEL32.CloseHandle.restype = wintypes.BOOL
 
@@ -933,6 +1046,96 @@ if os.name == "nt":
                 raise OSError(ctypes.get_last_error(), "QueryInformationJobObject failed")
             return int(accounting.ActiveProcesses)
 
+        def active_process_ids(self) -> list[int]:
+            process_ids = _JobObjectBasicProcessIdList()
+            if not _KERNEL32.QueryInformationJobObject(
+                self.handle,
+                JOB_OBJECT_BASIC_PROCESS_ID_LIST_CLASS,
+                ctypes.byref(process_ids),
+                ctypes.sizeof(process_ids),
+                None,
+            ):
+                raise OSError(ctypes.get_last_error(), "QueryInformationJobObject process list failed")
+            assigned = int(process_ids.NumberOfAssignedProcesses)
+            count = int(process_ids.NumberOfProcessIdsInList)
+            if assigned != count or count > JOB_PROCESS_ID_CAPACITY:
+                raise OSError("Job Object process list exceeded the fixed fail-closed capacity")
+            return [int(process_ids.ProcessIdList[index]) for index in range(count)]
+
+        @staticmethod
+        def process_image_path(process_id: int) -> str:
+            handle = _KERNEL32.OpenProcess(
+                PROCESS_QUERY_LIMITED_INFORMATION, False, wintypes.DWORD(process_id)
+            )
+            if not handle:
+                raise OSError(ctypes.get_last_error(), f"OpenProcess failed for contained PID {process_id}")
+            try:
+                capacity = wintypes.DWORD(32768)
+                buffer = ctypes.create_unicode_buffer(capacity.value)
+                if not _KERNEL32.QueryFullProcessImageNameW(
+                    handle, 0, buffer, ctypes.byref(capacity)
+                ):
+                    raise OSError(
+                        ctypes.get_last_error(),
+                        f"QueryFullProcessImageNameW failed for contained PID {process_id}",
+                    )
+                return buffer.value
+            finally:
+                _KERNEL32.CloseHandle(handle)
+
+        def active_process_images(self) -> list[tuple[int, str]]:
+            return [(process_id, self.process_image_path(process_id)) for process_id in self.active_process_ids()]
+
+        @staticmethod
+        def process_parent_ids(process_ids: list[int]) -> dict[int, int]:
+            requested = set(process_ids)
+            if len(requested) != len(process_ids):
+                raise OSError("Job Object returned duplicate active process IDs")
+            snapshot = _KERNEL32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+            invalid_handle = ctypes.c_void_p(-1).value
+            snapshot_value = (
+                snapshot
+                if isinstance(snapshot, int)
+                else ctypes.cast(snapshot, ctypes.c_void_p).value
+            )
+            if not snapshot_value or snapshot_value == invalid_handle:
+                raise OSError(ctypes.get_last_error(), "CreateToolhelp32Snapshot failed")
+            parents: dict[int, int] = {}
+            try:
+                entry = _ProcessEntry32W()
+                entry.dwSize = ctypes.sizeof(entry)
+                if not _KERNEL32.Process32FirstW(snapshot, ctypes.byref(entry)):
+                    raise OSError(ctypes.get_last_error(), "Process32FirstW failed")
+                while True:
+                    process_id = int(entry.th32ProcessID)
+                    if process_id in requested:
+                        parents[process_id] = int(entry.th32ParentProcessID)
+                    entry.dwSize = ctypes.sizeof(entry)
+                    if not _KERNEL32.Process32NextW(snapshot, ctypes.byref(entry)):
+                        error = ctypes.get_last_error()
+                        # ERROR_NO_MORE_FILES is the successful enumeration terminator.
+                        if error != 18:
+                            raise OSError(error, "Process32NextW failed")
+                        break
+            finally:
+                _KERNEL32.CloseHandle(snapshot)
+            if set(parents) != requested:
+                missing = sorted(requested - set(parents))
+                raise OSError(f"parent PID lookup missed active contained processes: {missing}")
+            return parents
+
+        def active_process_identities(self) -> list[dict[str, Any]]:
+            process_ids = self.active_process_ids()
+            parents = self.process_parent_ids(process_ids)
+            return [
+                {
+                    "pid": process_id,
+                    "parent_pid": parents[process_id],
+                    "image_path": self.process_image_path(process_id),
+                }
+                for process_id in process_ids
+            ]
+
         def terminate(self) -> bool:
             return bool(_KERNEL32.TerminateJobObject(self.handle, 125))
 
@@ -969,6 +1172,16 @@ def launch_contained_process(
             "containment_assigned": True,
             "containment_closed": False,
             "descendant_count_after": -1,
+            "expected_tool_daemon_grace_used": False,
+            "expected_tool_daemon_grace_seconds": 0.0,
+            "expected_tool_daemon_paths": [],
+            "descendant_paths_seen": [],
+            "descendant_processes_seen": [],
+            "expected_tool_daemon_classification": "NONE",
+            "containment_cleanup_terminated": False,
+            "process_exit_race_rechecked": False,
+            "process_identity_query_retried": False,
+            "containment_query_error": "",
         }
         return process
     if not CONTAINED_LAUNCHER.is_file():
@@ -993,6 +1206,16 @@ def launch_contained_process(
             "containment_assigned": True,
             "containment_closed": False,
             "descendant_count_after": -1,
+            "expected_tool_daemon_grace_used": False,
+            "expected_tool_daemon_grace_seconds": 0.0,
+            "expected_tool_daemon_paths": _expected_tool_daemon_paths(command),
+            "descendant_paths_seen": [],
+            "descendant_processes_seen": [],
+            "expected_tool_daemon_classification": "NONE",
+            "containment_cleanup_terminated": False,
+            "process_exit_race_rechecked": False,
+            "process_identity_query_retried": False,
+            "containment_query_error": "",
         }
         assert process.stdin is not None
         process.stdin.write("P7_GO\n")
@@ -1037,26 +1260,89 @@ def verify_process_tree_reaped(process: subprocess.Popen[Any]) -> bool:
         if job is None:
             _CONTAINMENT_RESULTS[process] = False
             return False
+        details = _CONTAINMENT_DETAILS.setdefault(process, {})
         physically_empty = False
+        empty = False
         try:
-            empty = job.wait_empty(1.0)
+            empty = job.wait_empty(CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS)
             physically_empty = empty
             if not empty:
-                # An unexpected descendant survived the launcher.  Kill it
-                # before returning, but record the containment proof as FAIL.
-                job.terminate()
-                physically_empty = job.wait_empty(10.0)
-                empty = False
-        except OSError:
-            empty = False
+                identities: list[dict[str, Any]] | None = None
+                first_query_error: OSError | None = None
+                try:
+                    identities = job.active_process_identities()
+                except OSError as exc:
+                    first_query_error = exc
+                if identities is None or not identities:
+                    # A parent can exit between Job PID enumeration, Toolhelp
+                    # parent lookup, and image lookup.  First accept a proven
+                    # empty Job; otherwise perform exactly one complete fresh
+                    # identity query, which may now yield the legal singleton.
+                    if job.wait_empty(PROCESS_EXIT_RACE_RECHECK_SECONDS):
+                        details["process_exit_race_rechecked"] = True
+                        empty = True
+                        physically_empty = True
+                    else:
+                        try:
+                            identities = job.active_process_identities()
+                            details["process_identity_query_retried"] = True
+                        except OSError as retry_exc:
+                            details["containment_query_error"] = (
+                                f"first={type(first_query_error).__name__}: {first_query_error}; "
+                                f"retry={type(retry_exc).__name__}: {retry_exc}"
+                            )
+                            identities = None
+                if not empty and identities:
+                    details["descendant_processes_seen"] = identities
+                    details["descendant_paths_seen"] = [
+                        str(item["image_path"]) for item in identities
+                    ]
+                    classification = classify_expected_tool_daemons(
+                        identities,
+                        list(details.get("expected_tool_daemon_paths", [])),
+                    )
+                    details["expected_tool_daemon_classification"] = classification
+                else:
+                    classification = "UNAPPROVED"
+                if not empty and classification in {
+                    "SINGLE_EXACT_CS_SERVER",
+                    "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
+                }:
+                    # This is not a generic descendant grace.  It applies only
+                    # to one exact cs_server or its known direct parent-child
+                    # topology under the invoked Vivado root.  PASS still
+                    # requires the complete Job to exit naturally.
+                    details["expected_tool_daemon_grace_used"] = True
+                    details["expected_tool_daemon_grace_seconds"] = (
+                        EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+                    )
+                    empty = job.wait_empty(EXPECTED_TOOL_DAEMON_GRACE_SECONDS)
+                    physically_empty = empty
+                if not empty:
+                    details["containment_cleanup_terminated"] = bool(job.terminate())
+                    physically_empty = job.wait_empty(10.0)
+                    # Forced cleanup proves the machine was made safe, but it
+                    # must not promote a lingering or unrecognized child to PASS.
+                    empty = False
+        except OSError as exc:
+            # Errors outside the one explicitly retried identity snapshot are
+            # fail-closed unless the Job itself is now proven empty.
             try:
-                job.terminate()
-                physically_empty = job.wait_empty(10.0)
+                empty = job.wait_empty(PROCESS_EXIT_RACE_RECHECK_SECONDS)
             except OSError:
-                pass
+                empty = False
+            physically_empty = empty
+            if empty:
+                details["process_exit_race_rechecked"] = True
+            else:
+                details["containment_query_error"] = f"{type(exc).__name__}: {exc}"
+                try:
+                    details["containment_cleanup_terminated"] = bool(job.terminate())
+                    physically_empty = job.wait_empty(10.0)
+                except OSError:
+                    pass
         finally:
             job.close()
-        details = _CONTAINMENT_DETAILS.setdefault(process, {})
         details["containment_closed"] = True
         details["descendant_count_after"] = 0 if physically_empty else -1
         result = bool(empty and process.poll() is not None)
@@ -1092,12 +1378,32 @@ def containment_record(process: subprocess.Popen[Any] | None) -> dict[str, Any]:
             "containment_assigned": False,
             "containment_closed": True,
             "descendant_count_after": 0,
+            "expected_tool_daemon_grace_used": False,
+            "expected_tool_daemon_grace_seconds": 0.0,
+            "expected_tool_daemon_paths": [],
+            "descendant_paths_seen": [],
+            "descendant_processes_seen": [],
+            "expected_tool_daemon_classification": "NONE",
+            "containment_cleanup_terminated": False,
+            "process_exit_race_rechecked": False,
+            "process_identity_query_retried": False,
+            "containment_query_error": "",
         }
     return {
         "containment_kind": "MISSING",
         "containment_assigned": False,
         "containment_closed": False,
         "descendant_count_after": -1,
+        "expected_tool_daemon_grace_used": False,
+        "expected_tool_daemon_grace_seconds": 0.0,
+        "expected_tool_daemon_paths": [],
+        "descendant_paths_seen": [],
+        "descendant_processes_seen": [],
+        "expected_tool_daemon_classification": "NONE",
+        "containment_cleanup_terminated": False,
+        "process_exit_race_rechecked": False,
+        "process_identity_query_retried": False,
+        "containment_query_error": "",
         **_CONTAINMENT_DETAILS.get(process, {}),
     }
 
@@ -1296,6 +1602,7 @@ def run_bounded_process(
     else:
         returncode = int(raw_returncode)
     containment = containment_record(process)
+    tree_terminated = tree_terminated or bool(containment.get("containment_cleanup_terminated", False))
     return ProcessResult(
         name=name,
         returncode=returncode,
@@ -1314,6 +1621,30 @@ def run_bounded_process(
         containment_assigned=bool(containment["containment_assigned"]),
         containment_closed=bool(containment["containment_closed"]),
         descendant_count_after=int(containment["descendant_count_after"]),
+        expected_tool_daemon_grace_used=bool(
+            containment.get("expected_tool_daemon_grace_used", False)
+        ),
+        expected_tool_daemon_grace_seconds=float(
+            containment.get("expected_tool_daemon_grace_seconds", 0.0)
+        ),
+        expected_tool_daemon_paths=list(containment.get("expected_tool_daemon_paths", [])),
+        descendant_paths_seen=list(containment.get("descendant_paths_seen", [])),
+        descendant_processes_seen=list(
+            containment.get("descendant_processes_seen", [])
+        ),
+        expected_tool_daemon_classification=str(
+            containment.get("expected_tool_daemon_classification", "NONE")
+        ),
+        containment_cleanup_terminated=bool(
+            containment.get("containment_cleanup_terminated", False)
+        ),
+        process_exit_race_rechecked=bool(
+            containment.get("process_exit_race_rechecked", False)
+        ),
+        process_identity_query_retried=bool(
+            containment.get("process_identity_query_retried", False)
+        ),
+        containment_query_error=str(containment.get("containment_query_error", "")),
         launch_error=launch_error,
     )
 
@@ -1326,6 +1657,14 @@ def deadline_timeout(requested_sec: int, deadline: float, *, reserve_sec: int = 
             f"global runtime budget exhausted before launch; reserve={reserve_sec} seconds"
         )
     return min(requested_sec, available)
+
+
+def containment_allowance(process_count: int) -> int:
+    if not 0 <= process_count <= JTAG_WRAPPER_VIVADO_PROCESS_COUNT:
+        raise ValueError("contained Vivado process count is outside the fixed 0..4 wrapper contract")
+    return process_count * (
+        CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS + EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+    )
 
 
 def record_global_runtime(
@@ -1372,6 +1711,7 @@ def evaluate_stage(
         "P7_JTAG_AXI_TRANSACTIONS": "PASS",
         "P7_HW_TARGET": expected_target,
         "P7_HW_PART": expected_part,
+        "P7_HW_DEVICE": CANONICAL_LIVE_DEVICE,
     }
     for key, value in expected.items():
         if markers.get(key) != value:
@@ -1386,6 +1726,16 @@ def evaluate_stage(
         )
     if parse_markers(stdout).get("P7_JTAG_STAGE_RESULT") != "PASS":
         failures.append("stage PASS marker missing from stdout")
+    failures.extend(
+        canonical_live_identity_failures(
+            markers,
+            expected_part=expected_part,
+            prefix="P7_HW",
+            label="JTAG stage",
+        )
+    )
+    if normalize_p7_idcode(markers.get("P7_HW_IDCODE", "")) != CANONICAL_LIVE_IDCODE_HEX:
+        failures.append("JTAG stage compatibility IDCODE marker is missing or not the exact authorized IDCODE")
     return not failures, failures
 
 
@@ -1547,6 +1897,13 @@ def main(argv: list[str] | None = None) -> int:
     global_deadline = execution_started + int(args.max_runtime_sec)
     manifest["global_runtime_deadline_source"] = "host_monotonic"
     manifest["global_runtime_guard_seconds"] = GLOBAL_RUNTIME_GUARD_SECONDS
+    manifest["global_runtime_budget_components"] = {
+        "contained_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
+        "initial_empty_wait_seconds_per_process": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
+        "expected_tool_daemon_grace_seconds_per_process": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+        "other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
+    }
     event_log = evidence_dir / "p7_jtag_axi_stage_events.jsonl"
     manifest["evidence_dir"] = str(evidence_dir)
     manifest["event_log"] = str(event_log)
@@ -1569,7 +1926,8 @@ def main(argv: list[str] | None = None) -> int:
             reserve_sec=(
                 2 * args.shutdown_timeout_sec
                 + args.stage_timeout_sec
-                + GLOBAL_RUNTIME_GUARD_SECONDS
+                + containment_allowance(3)
+                + JTAG_WRAPPER_OTHER_GUARD_SECONDS
             ),
         ),
         abort_file=abort_file,
@@ -1647,7 +2005,8 @@ def main(argv: list[str] | None = None) -> int:
                 reserve_sec=(
                     args.stage_timeout_sec
                     + args.shutdown_timeout_sec
-                    + GLOBAL_RUNTIME_GUARD_SECONDS
+                    + containment_allowance(2)
+                    + JTAG_WRAPPER_OTHER_GUARD_SECONDS
                 ),
             ),
             abort_file=abort_file,
@@ -1691,7 +2050,11 @@ def main(argv: list[str] | None = None) -> int:
         stage_timeout = deadline_timeout(
             args.stage_timeout_sec,
             global_deadline,
-            reserve_sec=args.shutdown_timeout_sec + GLOBAL_RUNTIME_GUARD_SECONDS,
+            reserve_sec=(
+                args.shutdown_timeout_sec
+                + containment_allowance(1)
+                + JTAG_WRAPPER_OTHER_GUARD_SECONDS
+            ),
         )
         minimum_stage_runtime = int(
             transaction.get("runtime_feasibility", {}).get("minimum_stage_runtime_sec", 0)
@@ -1797,6 +2160,7 @@ def main(argv: list[str] | None = None) -> int:
                 after_timeout = deadline_timeout(
                     args.shutdown_timeout_sec,
                     global_deadline,
+                    reserve_sec=JTAG_WRAPPER_OTHER_GUARD_SECONDS,
                 )
             except RuntimeError as exc:
                 # Safety takes precedence if an earlier process exceeded its bounded

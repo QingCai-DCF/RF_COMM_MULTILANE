@@ -48,6 +48,34 @@ class P7JtagBackendTests(unittest.TestCase):
             expected[1048576][2], jtag_frequency_hz=100_000
         )
         self.assertFalse(slow["feasible_within_authorized_runtime"])
+        one_mib_global = runtime_feasibility(
+            expected[1048576][2],
+            preflight_timeout_sec=120,
+            shutdown_timeout_sec=60,
+            configured_stage_timeout_sec=1450,
+        )
+        self.assertTrue(one_mib_global["feasible_within_authorized_runtime"])
+        self.assertEqual(1372, one_mib_global["minimum_stage_runtime_sec"])
+        self.assertEqual(
+            {
+                "containment": 44,
+                "other": 45,
+                "configured": 1779,
+                "margin": 21,
+            },
+            {
+                "containment": one_mib_global["global_runtime_budget"][
+                    "containment_allowance_seconds"
+                ],
+                "other": one_mib_global["global_runtime_budget"]["other_guard_seconds"],
+                "configured": one_mib_global["global_runtime_budget"][
+                    "configured_global_timeout_ceiling_sec"
+                ],
+                "margin": one_mib_global["global_runtime_budget"][
+                    "configured_unallocated_margin_seconds"
+                ],
+            },
+        )
         self.assertEqual(128 * 1024 * 1024, MAX_TRANSACTION_BYTES)
         self.assertGreater(
             transaction_shape(8 * 1024 * 1024)["operation_count"],

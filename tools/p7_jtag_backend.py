@@ -57,6 +57,22 @@ REFERENCE_JTAG_FREQUENCY_HZ = 1_000_000
 ESTIMATED_AXI_OPERATION_US_AT_1MHZ = 1_250
 ESTIMATED_STAGE_FIXED_OVERHEAD_SECONDS = 30.0
 MAX_AUTHORIZED_RUNTIME_SECONDS = 1800
+# The JTAG safe wrapper launches exactly four Vivado children: read-only
+# preflight, shutdown-before, candidate, and shutdown-after.  Each successful
+# child may spend up to one second proving the Job is initially nonempty and a
+# further ten seconds waiting for the exact Vivado cs_server singleton or its
+# verified direct parent-child process topology to exit naturally.  The bound
+# is per contained Vivado Job, not per PID, and is separate from
+# Python/hash/Tcl bookkeeping.
+CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS = 1
+EXPECTED_TOOL_DAEMON_GRACE_SECONDS = 10
+JTAG_WRAPPER_VIVADO_PROCESS_COUNT = 4
+JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS = (
+    JTAG_WRAPPER_VIVADO_PROCESS_COUNT
+    * (CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS + EXPECTED_TOOL_DAEMON_GRACE_SECONDS)
+)
+JTAG_WRAPPER_OTHER_GUARD_SECONDS = 45
+JTAG_OUTER_WRAPPER_GRACE_SECONDS = 120
 BASELINE_OPERATION_COUNT = 19
 PER_FRAGMENT_FIXED_OPERATION_COUNT = 34
 FINAL_OPERATION_COUNT = 3
@@ -145,7 +161,10 @@ def runtime_feasibility(
     *,
     jtag_frequency_hz: int = REFERENCE_JTAG_FREQUENCY_HZ,
     authorized_runtime_sec: int = MAX_AUTHORIZED_RUNTIME_SECONDS,
-) -> dict[str, int | float | bool]:
+    preflight_timeout_sec: int | None = None,
+    shutdown_timeout_sec: int | None = None,
+    configured_stage_timeout_sec: int | None = None,
+) -> dict[str, Any]:
     """Conservative planning estimate; hard process/Tcl deadlines remain authoritative."""
     if not 1 <= operation_count <= MAX_TRANSACTION_OPERATIONS:
         raise ValueError(f"operation count must be in 1..{MAX_TRANSACTION_OPERATIONS}")
@@ -158,7 +177,7 @@ def runtime_feasibility(
         operation_count * ESTIMATED_AXI_OPERATION_US_AT_1MHZ * frequency_scale / 1_000_000.0
     )
     minimum_runtime = math.ceil(estimated_seconds)
-    return {
+    result: dict[str, Any] = {
         "jtag_frequency_hz": jtag_frequency_hz,
         "reference_jtag_frequency_hz": REFERENCE_JTAG_FREQUENCY_HZ,
         "estimated_axi_operation_us_at_1mhz": ESTIMATED_AXI_OPERATION_US_AT_1MHZ,
@@ -168,7 +187,61 @@ def runtime_feasibility(
         "minimum_stage_runtime_sec": minimum_runtime,
         "authorized_runtime_sec": authorized_runtime_sec,
         "feasible_within_authorized_runtime": minimum_runtime <= authorized_runtime_sec,
+        "containment_initial_empty_wait_seconds": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
+        "expected_tool_daemon_grace_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "jtag_wrapper_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
+        "jtag_wrapper_containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+        "jtag_wrapper_other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
     }
+    wrapper_values = (
+        preflight_timeout_sec,
+        shutdown_timeout_sec,
+        configured_stage_timeout_sec,
+    )
+    if any(value is not None for value in wrapper_values):
+        if any(value is None for value in wrapper_values):
+            raise ValueError(
+                "preflight, shutdown, and configured stage timeouts must be provided together"
+            )
+        assert preflight_timeout_sec is not None
+        assert shutdown_timeout_sec is not None
+        assert configured_stage_timeout_sec is not None
+        if preflight_timeout_sec < 1 or shutdown_timeout_sec < 1 or configured_stage_timeout_sec < 1:
+            raise ValueError("wrapper phase timeouts must be positive")
+        minimum_global = (
+            preflight_timeout_sec
+            + 2 * shutdown_timeout_sec
+            + minimum_runtime
+            + JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS
+            + JTAG_WRAPPER_OTHER_GUARD_SECONDS
+        )
+        configured_global = (
+            preflight_timeout_sec
+            + 2 * shutdown_timeout_sec
+            + configured_stage_timeout_sec
+            + JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS
+            + JTAG_WRAPPER_OTHER_GUARD_SECONDS
+        )
+        global_budget = {
+            "minimum_estimated_global_runtime_sec": minimum_global,
+            "configured_global_timeout_ceiling_sec": configured_global,
+            "authorized_global_runtime_sec": authorized_runtime_sec,
+            "containment_initial_empty_wait_seconds": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
+            "expected_tool_daemon_grace_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+            "contained_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
+            "containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+            "other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
+            "configured_unallocated_margin_seconds": authorized_runtime_sec - configured_global,
+            "estimated_unallocated_margin_seconds": authorized_runtime_sec - minimum_global,
+            "minimum_stage_fits_configured_timeout": minimum_runtime
+            <= configured_stage_timeout_sec,
+            "feasible": minimum_runtime <= configured_stage_timeout_sec
+            and minimum_global <= authorized_runtime_sec
+            and configured_global <= authorized_runtime_sec,
+        }
+        result["global_runtime_budget"] = global_budget
+        result["feasible_within_authorized_runtime"] = bool(global_budget["feasible"])
+    return result
 
 
 class BackendValidationError(RuntimeError):

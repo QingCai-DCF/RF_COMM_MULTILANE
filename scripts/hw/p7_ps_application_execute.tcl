@@ -65,11 +65,21 @@ proc p7_parse_hex32 {text label} {
 }
 
 proc p7_normal_idcode {value} {
-  set normalized [string tolower [string trim $value]]
-  if {[string match "0x*" $normalized]} { set normalized [string range $normalized 2 end] }
-  set normalized [string trimleft $normalized 0]
-  if {$normalized eq ""} { set normalized 0 }
-  return $normalized
+  set clean [string tolower [string map {_ ""} [string trim $value]]]
+  if {[regexp {^[01]{32}$} $clean]} {
+    set numeric 0
+    foreach bit [split $clean ""] {
+      set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+    }
+    return [format %08X $numeric]
+  }
+  if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+    return [string toupper $hexadecimal]
+  }
+  if {[regexp {^[0-9a-f]{8}$} $clean]} {
+    return [string toupper $clean]
+  }
+  return ""
 }
 
 proc p7_read32 {address} {
@@ -596,6 +606,10 @@ set rc [catch {
   set idle_margin_sec [lindex $argv 15]
   set shutdown_bit [file normalize [lindex $argv 16]]
   set counts_per_second [lindex $argv 17]
+  set p7_canonical_part "xc7z010clg400-1"
+  set p7_live_part "xc7z010"
+  set p7_live_device "xc7z010_1"
+  set p7_live_idcode "13722093"
   set result_partial "${result_file}.write_partial"
 
   if {![info exists ::env(RF_COMM_HW_AUTH)] ||
@@ -604,6 +618,9 @@ set rc [catch {
   }
   if {$mode ni {functional fault-fallback queue abort-restart stationary}} {
     error "unsupported P7 PS mode: $mode"
+  }
+  if {![string equal -nocase $expected_part $p7_canonical_part]} {
+    error "P7 PS executor supports only canonical part $p7_canonical_part"
   }
   if {![string is integer -strict $max_runtime_sec] ||
       $max_runtime_sec < 1 || $max_runtime_sec > 1800} {
@@ -749,6 +766,9 @@ set rc [catch {
       P7_HW_PREFLIGHT_READ_ONLY 1 \
       P7_HW_PREFLIGHT_BOARD_ID $expected_board_id \
       P7_HW_PREFLIGHT_PART $expected_part \
+      P7_HW_PREFLIGHT_CANONICAL_PART $expected_part \
+      P7_HW_PREFLIGHT_LIVE_PART $p7_live_part \
+      P7_HW_PREFLIGHT_LIVE_DEVICE $p7_live_device \
       P7_HW_PREFLIGHT_TARGET $expected_target] {
     if {[p7_marker_value $preflight_text $key] ne $expected} {
       error "P7 preflight attestation mismatch: $key"
@@ -1011,10 +1031,14 @@ set rc [catch {
   }
 
   set preflight_device [p7_marker_value $preflight_text P7_HW_PREFLIGHT_DEVICE]
+  set preflight_live_part [p7_marker_value $preflight_text P7_HW_PREFLIGHT_LIVE_PART]
   set preflight_idcode [p7_marker_value $preflight_text P7_HW_PREFLIGHT_IDCODE]
-  if {![regexp -nocase {^[a-z0-9_.-]+$} $preflight_device] ||
-      ![regexp -nocase {^(0x)?[0-9a-f]+$} $preflight_idcode]} {
-    error "P7 preflight device/IDCODE identity is missing or malformed"
+  set preflight_live_idcode [p7_marker_value $preflight_text P7_HW_PREFLIGHT_LIVE_IDCODE]
+  if {![string equal -nocase $preflight_device $p7_live_device] ||
+      ![string equal -nocase $preflight_live_part $p7_live_part] ||
+      [p7_normal_idcode $preflight_idcode] ne $p7_live_idcode ||
+      [p7_normal_idcode $preflight_live_idcode] ne $p7_live_idcode} {
+    error "P7 preflight exact live part/device/IDCODE identity is missing or mismatched"
   }
 
   catch {file delete -force $result_partial}
@@ -1030,10 +1054,7 @@ set rc [catch {
   # No XSDB connection or hardware command may occur before the checks above.
   connect -url $xsdb_url
   set connected 1
-  set device_root [lindex [split $preflight_device _] 0]
-  if {![string match -nocase "${device_root}*" $expected_part]} {
-    error "P7 expected part is inconsistent with the preflight device root"
-  }
+  set device_root $p7_live_part
   if {[string first [string tolower $expected_board_id] [string tolower $expected_target]] < 0} {
     error "P7 exact target does not contain the authorized board serial"
   }
@@ -1045,6 +1066,9 @@ set rc [catch {
   set cable_matches {}
   set device_matches {}
   set expected_idcode_normal [p7_normal_idcode $preflight_idcode]
+  if {$expected_idcode_normal ne $p7_live_idcode} {
+    error "P7 preflight IDCODE does not equal the one canonical live IDCODE"
+  }
   foreach props $live_jtag_properties {
     if {[dict exists $props jtag_cable_serial] &&
         [string equal -nocase [dict get $props jtag_cable_serial] $expected_board_id] &&
@@ -1111,6 +1135,10 @@ set rc [catch {
   targets [dict get $fpga_target target_id]
   p7_say $result_handle "P7_HW_TARGET=$expected_target"
   p7_say $result_handle "P7_HW_PART=$expected_part"
+  p7_say $result_handle "P7_HW_CANONICAL_PART=$expected_part"
+  p7_say $result_handle "P7_HW_LIVE_PART=$preflight_live_part"
+  p7_say $result_handle "P7_HW_LIVE_DEVICE=$preflight_device"
+  p7_say $result_handle "P7_HW_LIVE_IDCODE=$preflight_live_idcode"
   p7_say $result_handle "P7_HW_BOARD_ID=$expected_board_id"
   p7_say $result_handle "P7_XSDB_LIVE_DEVICE=$live_device_name"
   p7_say $result_handle "P7_XSDB_LIVE_DEVICE_MATCH=1"

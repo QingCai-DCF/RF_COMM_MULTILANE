@@ -428,6 +428,56 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertFalse(passed)
         self.assertTrue(any("nonzero exit code" in item for item in failures))
 
+    def test_ps_result_binds_canonical_part_vivado_identity_and_xsdb_idcode(self) -> None:
+        raw_lines = [
+            "P7_PS_STAGE_RESULT=PASS",
+            "P7_PS_CANDIDATE_PROGRAMMED=1",
+            "P7_PS_ELF_DOWNLOADED=1",
+            "P7_PS_MODE=functional",
+            "P7_HW_TARGET=target",
+            f"P7_HW_PART={stage.CANONICAL_FULL_PART}",
+            f"P7_HW_CANONICAL_PART={stage.CANONICAL_FULL_PART}",
+            f"P7_HW_LIVE_PART={stage.CANONICAL_LIVE_PART}",
+            f"P7_HW_LIVE_DEVICE={stage.CANONICAL_LIVE_DEVICE}",
+            f"P7_HW_LIVE_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
+            "P7_XSDB_LIVE_DEVICE_MATCH=1",
+            f"P7_XSDB_LIVE_DEVICE={stage.CANONICAL_LIVE_PART}",
+            "P7_XSDB_LIVE_BOARD_ID=board",
+            f"P7_XSDB_LIVE_IDCODE=0x{stage.CANONICAL_LIVE_IDCODE_HEX}",
+            f"P7_XSDB_PREFLIGHT_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
+            "P7_XSDB_TARGET_SELECTION=EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
+        ]
+        passed, failures = stage.evaluate_ps_process(
+            0,
+            "P7_PS_STAGE_RESULT=PASS\n",
+            "\n".join(raw_lines),
+            mode="functional",
+            target="target",
+            part=stage.CANONICAL_FULL_PART,
+            board_id="board",
+        )
+        self.assertTrue(passed, failures)
+        for key, replacement in (
+            ("P7_HW_LIVE_PART", "xc7z020"),
+            ("P7_XSDB_LIVE_DEVICE", "xc7z020"),
+            ("P7_XSDB_LIVE_IDCODE", "0x03722093"),
+        ):
+            mutated = [
+                f"{key}={replacement}" if line.startswith(key + "=") else line
+                for line in raw_lines
+            ]
+            rejected, identity_failures = stage.evaluate_ps_process(
+                0,
+                "P7_PS_STAGE_RESULT=PASS\n",
+                "\n".join(mutated),
+                mode="functional",
+                target="target",
+                part=stage.CANONICAL_FULL_PART,
+                board_id="board",
+            )
+            self.assertFalse(rejected)
+            self.assertTrue(identity_failures)
+
     def test_core_readiness_attestation_is_hash_and_source_bound(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "readiness.json"
@@ -996,6 +1046,12 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertGreater(tcl.index("P7_XSDB_LIVE_DEVICE_MATCH=1"), tcl.index("connect -url"))
         self.assertIn("jtag targets -target-properties", tcl)
         self.assertIn("P7_XSDB_TARGET_SELECTION=EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS", tcl)
+        self.assertIn('set p7_canonical_part "xc7z010clg400-1"', tcl)
+        self.assertIn('set p7_live_part "xc7z010"', tcl)
+        self.assertIn('set p7_live_device "xc7z010_1"', tcl)
+        self.assertIn('set p7_live_idcode "13722093"', tcl)
+        self.assertIn("P7_HW_CANONICAL_PART=", tcl)
+        self.assertIn("P7_HW_LIVE_PART=", tcl)
         self.assertIn("targets [dict get $fpga_target target_id]", tcl)
         self.assertIn("targets [dict get $cpu_target target_id]", tcl)
         self.assertNotIn("targets -set -filter", tcl)
@@ -1162,6 +1218,25 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertNotIn('env["RF_COMM_HW_AUTH"] =', text)
         self.assertEqual(1800, stage.MAX_SERVICE_RUNTIME_SEC)
         self.assertEqual(1800, stage.CALIBRATION_SEC + stage.ACCEPTANCE_SEC)
+        stationary = stage.ps_wrapper_wall_budget(
+            mode="stationary",
+            max_runtime_sec=1800,
+            preflight_timeout_sec=60,
+            shutdown_timeout_sec=30,
+        )
+        self.assertEqual(1800, stationary["service_active_window_seconds"])
+        self.assertTrue(stationary["stationary_active_window_is_not_extended"])
+        self.assertEqual(2221.5, stationary["candidate_process_bound_seconds"])
+        self.assertEqual(33, stationary["vivado_containment_allowance_seconds"])
+        self.assertEqual(1, stationary["xsdb_containment_allowance_seconds"])
+        self.assertEqual(2496, stationary["minimum_outer_wrapper_timeout_seconds"])
+        nonstationary = stage.ps_wrapper_wall_budget(
+            mode="functional",
+            max_runtime_sec=900,
+            preflight_timeout_sec=60,
+            shutdown_timeout_sec=30,
+        )
+        self.assertEqual(1294, nonstationary["minimum_outer_wrapper_timeout_seconds"])
 
 
 if __name__ == "__main__":
