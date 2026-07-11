@@ -71,6 +71,9 @@ HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE = (
 HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT = (
     "DIAGNOSTIC_SUFFIX_1M_JTAG_SINGLE_WORD_TRANSACTIONS_TIMED_OUT"
 )
+HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT = (
+    "DIAGNOSTIC_SUFFIX_1M_JTAG_QUEUED_TRANSACTIONS_TIMED_OUT"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3438,6 +3441,26 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 and stage_process.get("process_tree_reaped") is True
                 and candidate.data.get("stage_failures") == expected_timeout_failures
                 and raw.get("P7_CANDIDATE_PROGRAMMED") == "1"
+                and isinstance(candidate.data.get("transaction_validation"), dict)
+                and candidate.data["transaction_validation"].get("minimum_run_hw_axi_call_count") == 224401
+                and candidate.data["transaction_validation"].get("multi_transaction_batch_count") == 58527
+                and candidate.data["transaction_validation"].get("batched_single_word_transaction_count") == 907164
+                and candidate.data["transaction_validation"].get("max_batch_transactions") == 16
+                and candidate.data["transaction_validation"].get("standalone_run_hw_axi_call_count") == 165874
+                and raw.get("P7F01666_FRAME_BAD") == "00000000"
+                and not any(key.startswith("P7F01667_") for key in raw)
+            ):
+                return HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
+            if (
+                not raw_duplicates
+                and candidate.data.get("stage_name") == "p7_large_jtag_1m_l0_random"
+                and isinstance(stage_process, dict)
+                and stage_process.get("returncode") == 124
+                and stage_process.get("timed_out") is True
+                and stage_process.get("process_tree_terminated") is True
+                and stage_process.get("process_tree_reaped") is True
+                and candidate.data.get("stage_failures") == expected_timeout_failures
+                and raw.get("P7_CANDIDATE_PROGRAMMED") == "1"
                 and raw.get("P7F00944_RXW017") == "F72C793C"
                 and not any(key.startswith("P7F00945_") for key in raw)
             ):
@@ -4856,6 +4879,125 @@ def _old_commit_1m_jtag_timeout_errors(
     errors.extend(f"{label} lock: {item}" for item in lock_errors)
     runtime = data.get("global_runtime")
     append_error(errors, isinstance(runtime, dict) and runtime.get("authorized_max_seconds") == 1800 and runtime.get("within_authorized_limit") is True and isinstance(runtime.get("elapsed_seconds"), (int, float)) and 1400 <= float(runtime.get("elapsed_seconds")) <= 1800, f"{label} runtime record is invalid")
+    return errors
+
+
+def _old_commit_1m_jtag_queued_timeout_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    """Validate r13's bounded queued 1 MiB diagnostic timeout with zero coverage."""
+
+    data = candidate.data
+    errors: list[str] = []
+    label = "historical r13"
+    append_error(errors, candidate.kind == "jtag" and candidate.stage == "large_object_jtag", f"{label} failure is not a large-object JTAG stage")
+    append_error(errors, candidate.executed and candidate.marker == "FAIL_STAGE", f"{label} execution/result boundary mismatch")
+    append_error(errors, data.get("hardware_acceptance") == "PENDING_HW", f"{label} promoted or omitted hardware acceptance")
+    append_error(errors, data.get("stage_name") == "p7_large_jtag_1m_l0_random" and data.get("semantic_mode") == "rfap", f"{label} stage identity/semantic mode mismatch")
+    for key in ("programmed_fpga", "programmed_candidate", "programmed_shutdown_before", "programmed_shutdown_after", "drove_tfdu_txd", "enabled_tfdu_receiver"):
+        append_error(errors, data.get(key) is True, f"{label} does not preserve {key}=true")
+    for key in ("started_ps_elf", "uart_access", "ethernet_used", "motion_used"):
+        append_error(errors, data.get(key) is False, f"{label} does not explicitly prove {key}=false")
+    append_error(errors, data.get("child_reaped_before_shutdown_after") is True, f"{label} candidate was not reaped before shutdown-after")
+
+    transaction = data.get("transaction_validation")
+    backend_manifest = transaction.get("backend_manifest") if isinstance(transaction, dict) else None
+    append_error(
+        errors,
+        isinstance(transaction, dict)
+        and transaction.get("valid") is True
+        and transaction.get("operation_count") == 1_073_038
+        and transaction.get("minimum_single_word_axi4lite_transaction_count") == 1_073_038
+        and transaction.get("minimum_run_hw_axi_call_count") == 224_401
+        and transaction.get("multi_transaction_batch_count") == 58_527
+        and transaction.get("batched_single_word_transaction_count") == 907_164
+        and transaction.get("max_batch_transactions") == 16
+        and transaction.get("standalone_run_hw_axi_call_count") == 165_874
+        and transaction.get("metadata") == {"BACKEND": "p7_jtag_backend", "LANE_POLICY": "LANE0_ONLY"}
+        and isinstance(backend_manifest, dict)
+        and backend_manifest.get("schema") == JTAG_MANIFEST_SCHEMA
+        and backend_manifest.get("input_length") == 1_048_576
+        and backend_manifest.get("input_sha256") == "de7e28fb7ae8b57b4280dc13d61316442d564631d71caa52b28284929b0a8549"
+        and backend_manifest.get("lane_policy") == "LANE0_ONLY"
+        and backend_manifest.get("transaction_operation_count") == 1_073_038,
+        f"{label} queued transaction/backend manifest boundary mismatch",
+    )
+    preflight = data.get("preflight_process")
+    if not isinstance(preflight, dict):
+        errors.append(f"{label} preflight process record missing")
+    else:
+        errors.extend(process_record_errors(preflight, f"{label} preflight", document=candidate.path, repo_root=evidence.repo_root))
+    preflight_markers, preflight_duplicates = parse_marker_text(
+        marker_text(candidate.path.parent / "p7_preflight_result.txt")
+    )
+    append_error(errors, not preflight_duplicates and _historical_preflight_variant(candidate) == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT, f"{label} failure class mismatch")
+    append_error(errors, data.get("target_identity") == dict(preflight_markers) and data.get("preflight_failures") == [], f"{label} preflight identity/failure boundary mismatch")
+    errors.extend(shutdown_errors(candidate, "before", evidence=evidence))
+    errors.extend(shutdown_errors(candidate, "after", evidence=evidence))
+
+    expected_stage_failures = [
+        "stage process returned nonzero exit code: 124",
+        "stage marker mismatch: P7_JTAG_STAGE_RESULT expected=PASS observed=MISSING",
+        "stage marker mismatch: P7_JTAG_AXI_TRANSACTIONS expected=PASS observed=MISSING",
+        "stage marker mismatch: P7_TRANSACTION_COUNT expected=1073038 observed=MISSING",
+        "stage PASS marker missing from stdout",
+    ]
+    stage = data.get("stage_process")
+    if not isinstance(stage, dict):
+        errors.append(f"{label} candidate process record missing")
+        stage = {}
+    else:
+        expected_stdout = (candidate.path.parent / "p7_jtag_axi_stage.stdout.log").resolve(strict=False)
+        expected_stderr = (candidate.path.parent / "p7_jtag_axi_stage.stderr.log").resolve(strict=False)
+        append_error(errors, resolve_reference(stage.get("stdout_path"), document=candidate.path, repo_root=evidence.repo_root) == expected_stdout and expected_stdout.is_file(), f"{label} candidate stdout binding mismatch")
+        append_error(errors, resolve_reference(stage.get("stderr_path"), document=candidate.path, repo_root=evidence.repo_root) == expected_stderr and expected_stderr.is_file(), f"{label} candidate stderr binding mismatch")
+    append_error(errors, stage.get("name") == "jtag_axi_stage" and stage.get("returncode") == 124 and stage.get("passed") is False, f"{label} candidate return/result mismatch")
+    append_error(errors, stage.get("timed_out") is True and stage.get("abort_seen") is False and stage.get("interrupted") is False, f"{label} candidate timeout boundary mismatch")
+    append_error(errors, stage.get("process_tree_terminated") is True and stage.get("process_tree_reaped") is True, f"{label} candidate was not safely terminated/reaped")
+    append_error(errors, stage.get("containment_cleanup_attempted") is True and stage.get("containment_cleanup_terminated") is True, f"{label} candidate forced-cleanup provenance mismatch")
+    append_error(errors, stage.get("expected_tool_daemon_classification") == "NONE" and stage.get("expected_tool_daemon_grace_used") is False, f"{label} candidate helper topology mismatch")
+    append_error(errors, stage.get("failures") == expected_stage_failures and stage.get("launch_error") == "", f"{label} candidate failure provenance mismatch")
+    append_error(errors, data.get("stage_failures") == expected_stage_failures and data.get("backend_parse_failure") == "" and data.get("backend_parse") is None and data.get("internal_error") == "", f"{label} wrapper failure fields mismatch")
+    append_error(errors, data.get("reason") == "stage return code/markers failed; nonzero return codes can never be promoted", f"{label} wrapper reason mismatch")
+    append_error(errors, not (candidate.path.parent / "p7_jtag_backend_parse_summary.json").exists(), f"{label} unexpectedly contains a backend PASS summary")
+
+    raw, raw_duplicates = raw_markers(candidate)
+    append_error(errors, not raw_duplicates, f"{label} raw result contains duplicate markers")
+    expected_identity = {
+        "P7_HW_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "P7_HW_DEVICE": CANONICAL_LIVE_DEVICE,
+        "P7_HW_PART": CANONICAL_FULL_PART,
+        "P7_HW_IDCODE": CANONICAL_LIVE_IDCODE_BINARY,
+        "P7_HW_CANONICAL_PART": CANONICAL_FULL_PART,
+        "P7_HW_LIVE_PART": CANONICAL_LIVE_PART,
+        "P7_HW_LIVE_DEVICE": CANONICAL_LIVE_DEVICE,
+        "P7_HW_LIVE_IDCODE": CANONICAL_LIVE_IDCODE_BINARY,
+        "P7_CANDIDATE_PROGRAMMED": "1",
+    }
+    append_error(errors, all(raw.get(key) == value for key, value in expected_identity.items()), f"{label} raw identity/programming boundary mismatch")
+    append_error(errors, raw.get("P7F00000_DONE") == "00000017" and raw.get("P7F01666_FRAME_BAD") == "00000000", f"{label} raw queued partial-progress boundary mismatch")
+    append_error(errors, not any(key.startswith("P7F01667_") for key in raw), f"{label} raw log advanced beyond the frozen timeout boundary")
+    try:
+        raw_text = (candidate.path.parent / "p7_jtag_axi_raw_result.txt").read_text(encoding="utf-8", errors="strict")
+    except (OSError, UnicodeError) as exc:
+        errors.append(f"{label} raw result unreadable: {exc}")
+        raw_text = ""
+    append_error(errors, raw_text.endswith("P7F01666_ACK_SEN") and not raw_text.endswith("\n"), f"{label} raw torn terminal write boundary mismatch")
+    for forbidden in ("P7_JTAG_AXI_TRANSACTIONS", "P7_TRANSACTION_COUNT", "P7_JTAG_STAGE_RESULT"):
+        append_error(errors, forbidden not in raw, f"{label} raw timeout incorrectly contains terminal marker {forbidden}")
+    errors.extend(authorized_event_errors(candidate, evidence))
+    _event_path, events, event_errors = load_authorized_events(candidate)
+    errors.extend(event_errors)
+    append_error(errors, [item.get("event") for item in events] == ["authorized_execution_begin", "preflight_finished", "shutdown_before_finished", "candidate_started", "candidate_child_reaped", "stage_finished", "shutdown_after_started", "shutdown_after_finished", "authorized_execution_end"], f"{label} event sequence mismatch")
+    if len(events) == 9:
+        append_error(errors, events[5].get("returncode") == 124 and events[5].get("passed") is False, f"{label} timeout event mismatch")
+        append_error(errors, events[7].get("returncode") == 0 and events[7].get("passed") is True, f"{label} shutdown-after event mismatch")
+        append_error(errors, events[8].get("status") == "FAIL_STAGE", f"{label} end event status mismatch")
+    lock_errors, _lock_record = hardware_execution_lock_errors(candidate, evidence)
+    errors.extend(f"{label} lock: {item}" for item in lock_errors)
+    runtime = data.get("global_runtime")
+    append_error(errors, isinstance(runtime, dict) and runtime.get("authorized_max_seconds") == 1800 and runtime.get("within_authorized_limit") is True and isinstance(runtime.get("elapsed_seconds"), (int, float)) and 1500 <= float(runtime.get("elapsed_seconds")) <= 1800, f"{label} runtime record is invalid")
     return errors
 
 
@@ -6312,6 +6454,10 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         return {}, ["historical outer sequence ledger is not an object"]
     source = _candidate_source_commit(candidate)
     historical_variant = _historical_preflight_variant(candidate)
+    one_m_timeout_variants = {
+        HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
+    }
     failed_stage_variants = {
         HISTORICAL_STAGE_SHUTDOWN_TCL_CHAR_MAP_REJECTED,
         HISTORICAL_STAGE_WRITE_ALLOWLIST_REJECTED,
@@ -6321,13 +6467,14 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
         HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }
     failed_stage_variant = historical_variant in failed_stage_variants
     failed_stage_index = (
         7
-        if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+        if historical_variant in one_m_timeout_variants
         else 54
         if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
         else 27
@@ -6349,7 +6496,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     )
     full_failed_stage_ordinal = (
         58
-        if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+        if historical_variant in one_m_timeout_variants
         else failed_stage_index + 1
     )
     recovery_failed_stage_label = (
@@ -6357,6 +6504,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         if historical_variant
         in {
             HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+            HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
             HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
             HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
         }
@@ -6369,12 +6517,15 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, str(outer.get("source_commit", "")).lower() == source, "historical outer sequence ledger source commit mismatch")
     if historical_variant in {
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }:
         diagnostic_label = (
             "historical r10"
             if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+            else "historical r13"
+            if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
             else "historical r11"
             if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
             else "historical r12"
@@ -6445,7 +6596,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     epoch_label="historical r9",
                 )
             )
-        elif historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT:
+        elif historical_variant in one_m_timeout_variants:
             errors.extend(
                 _historical_r10_pass_prefix_errors(
                     attempts[:failed_stage_index],
@@ -6472,12 +6623,15 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, attempt.get("attempt") == failed_stage_index + 1 and attempt.get("stage_index") == failed_stage_index, "historical outer attempt identity mismatch")
     if historical_variant in {
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }:
         diagnostic_label = (
             "historical r10"
             if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+            else "historical r13"
+            if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
             else "historical r11"
             if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
             else "historical r12"
@@ -6486,7 +6640,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, attempt.get("stage_id") == candidate.data.get("stage_name"), "historical outer attempt stage mismatch")
     expected_group = (
         "large_object_jtag"
-        if historical_variant in {HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED, HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT}
+        if historical_variant in {HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED, *one_m_timeout_variants}
         else "fragment_boundary"
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
         else "p6_frame_regression"
@@ -6499,7 +6653,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     )
     expected_case = (
         {"lane_policy": "LANE0_ONLY", "object_size": 1048576, "pattern": "deterministic_random"}
-        if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+        if historical_variant in one_m_timeout_variants
         else {"lane_policy": "STRIPE_ROUND_ROBIN", "object_size": 65536, "pattern": "prbs15"}
         if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
         else {"lane_policy": "REPLICATE_0X3", "object_size": 216}
@@ -6516,7 +6670,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, attempt.get("state") == "TERMINAL" and attempt.get("result") == "FAIL", "historical outer attempt is not terminal FAIL")
     expected_risk = (
         32
-        if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+        if historical_variant in one_m_timeout_variants
         else 31
         if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
         else 25
@@ -6710,6 +6864,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
         HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }:
@@ -6768,12 +6923,15 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, frozen_manifest.get("stage_index") == failed_stage_index and frozen_manifest.get("stage_id") == candidate.data.get("stage_name"), "historical preflight input manifest stage mismatch")
     if historical_variant in {
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }:
         diagnostic_label = (
             "historical r10"
             if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+            else "historical r13"
+            if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
             else "historical r11"
             if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
             else "historical r12"
@@ -6803,6 +6961,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                     HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
                     HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+                    HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
                     HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                     HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
                 }
@@ -6847,6 +7006,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
         HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
         HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
     }:
@@ -6910,7 +7070,6 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             "sequence_plan": resolve_reference(outer_plan.get("path"), document=outer_path, repo_root=evidence.repo_root),
             "stage_authorization": resolve_reference(authorization.get("path"), document=candidate.path, repo_root=evidence.repo_root),
             "stage_transactions": resolve_reference(transaction.get("path"), document=candidate.path, repo_root=evidence.repo_root),
-            "generation_manifest": (evidence.repo_root / "build/p7_authorized_sequence" / epoch_root.name / "p7_authorized_sequence_generation_manifest.json").resolve(strict=False),
             **(
                 {
                     "historical_stage_tcl": (
@@ -6935,6 +7094,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                             HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                             HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
                             HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+                            HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
                             HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                             HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
                         }
@@ -6955,6 +7115,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                     HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
                     HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+                    HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
                     HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                     HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
                 }
@@ -6968,6 +7129,20 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 and Path(frozen_records[role]["original_resolved_path"]) == expected_original,
                 f"historical frozen input original_path does not bind recorded {role} path",
             )
+        generation_original = Path(frozen_records["generation_manifest"]["original_resolved_path"])
+        generation_root = (evidence.repo_root / "build/p7_authorized_sequence").resolve(strict=False)
+        try:
+            generation_relative = generation_original.relative_to(generation_root)
+        except ValueError:
+            generation_relative = None
+        append_error(
+            errors,
+            generation_relative is not None
+            and len(generation_relative.parts) == 2
+            and generation_relative.parts[0].startswith(epoch_root.name)
+            and generation_relative.parts[1] == "p7_authorized_sequence_generation_manifest.json",
+            "historical frozen generation manifest original_path does not bind a run-scoped generator bundle",
+        )
         append_error(errors, str(outer_offline.get("sha256", "")).lower() == frozen_records["offline_checkpoint"]["frozen_file"]["sha256"], "historical frozen offline checkpoint does not bind outer ledger")
         append_error(errors, str(outer_plan.get("sha256", "")).lower() == frozen_records["sequence_plan"]["frozen_file"]["sha256"], "historical frozen sequence plan does not bind outer ledger")
         append_error(errors, str(authorization.get("actual_sha256", "")).lower() == frozen_records["stage_authorization"]["frozen_file"]["sha256"], "historical frozen stage authorization does not bind wrapper summary")
@@ -7315,11 +7490,14 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             elif historical_variant in {
                 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                 HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
+                HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
             }:
                 source_label = (
                     "historical r11"
                     if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
                     else "historical r12"
+                    if historical_variant == HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED
+                    else "historical r13"
                 )
                 source_records: dict[str, dict[str, Any]] = {}
                 for role, relative in (
@@ -7375,10 +7553,10 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     }
                 else:
                     queue_run_count = historical_tcl_text.count("run_hw_axi -queue")
-                    append_error(errors, historical_tcl_text.count("proc p7_axi_write_batch") == 1 and historical_tcl_text.count("proc p7_axi_read_batch") == 1 and queue_run_count == 2, "historical r12 Tcl does not bind the two queued single-word batch paths")
-                    append_error(errors, "-burst INCR" not in historical_tcl_text and historical_tcl_text.count("-len 1 -force") >= 4, "historical r12 Tcl does not prove LEN=1 without AXI bursts")
-                    append_error(errors, "minimum_single_word_axi4lite_transaction_count" in wrapper_text and "max_batch_transactions" in wrapper_text, "historical r12 wrapper omits the queued-single dry metrics")
-                    append_error(errors, "coalesced_hw_axi_transaction_count" not in wrapper_text and "burst_group_count" not in wrapper_text, "historical r12 wrapper retains rejected burst metrics")
+                    append_error(errors, historical_tcl_text.count("proc p7_axi_write_batch") == 1 and historical_tcl_text.count("proc p7_axi_read_batch") == 1 and queue_run_count == 2, f"{source_label} Tcl does not bind the two queued single-word batch paths")
+                    append_error(errors, "-burst INCR" not in historical_tcl_text and historical_tcl_text.count("-len 1 -force") >= 4, f"{source_label} Tcl does not prove LEN=1 without AXI bursts")
+                    append_error(errors, "minimum_single_word_axi4lite_transaction_count" in wrapper_text and "max_batch_transactions" in wrapper_text, f"{source_label} wrapper omits the queued-single dry metrics")
+                    append_error(errors, "coalesced_hw_axi_transaction_count" not in wrapper_text and "burst_group_count" not in wrapper_text, f"{source_label} wrapper retains rejected burst metrics")
                     try:
                         old_ip_props = subprocess.run(
                             ["git", "show", f"{source}:evidence/generated/vivado/p6_ip_inspect/jtag_axi_properties.txt"],
@@ -7397,26 +7575,34 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                             check=False,
                         )
                     except (OSError, subprocess.SubprocessError) as exc:
-                        errors.append(f"unable to read historical r12 JTAG_AXI build configuration: {exc}")
+                        errors.append(f"unable to read {source_label} JTAG_AXI build configuration: {exc}")
                         old_ip_text = ""
                         old_build_text = ""
                     else:
-                        append_error(errors, old_ip_props.returncode == 0 and old_build_tcl.returncode == 0, "historical r12 JTAG_AXI build configuration is absent from the source commit")
+                        append_error(errors, old_ip_props.returncode == 0 and old_build_tcl.returncode == 0, f"{source_label} JTAG_AXI build configuration is absent from the source commit")
                         old_ip_text = old_ip_props.stdout if old_ip_props.returncode == 0 else ""
                         old_build_text = old_build_tcl.stdout if old_build_tcl.returncode == 0 else ""
                     queue_depth_one = "CONFIG.RD_TXN_QUEUE_LENGTH=1" in old_ip_text and "CONFIG.WR_TXN_QUEUE_LENGTH=1" in old_ip_text
                     queue_depth_not_overridden = "CONFIG.RD_TXN_QUEUE_LENGTH" not in old_build_text and "CONFIG.WR_TXN_QUEUE_LENGTH" not in old_build_text
-                    append_error(errors, queue_depth_one, "historical r12 source does not prove JTAG_AXI read/write queue depth one")
-                    append_error(errors, queue_depth_not_overridden, "historical r12 build Tcl unexpectedly overrides the queue-depth-one default")
+                    queue_depth_sixteen = "CONFIG.RD_TXN_QUEUE_LENGTH=16" in old_ip_text and "CONFIG.WR_TXN_QUEUE_LENGTH=16" in old_ip_text
+                    queue_depth_overridden_sixteen = "CONFIG.RD_TXN_QUEUE_LENGTH {16}" in old_build_text and "CONFIG.WR_TXN_QUEUE_LENGTH {16}" in old_build_text
+                    if historical_variant == HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED:
+                        append_error(errors, queue_depth_one, "historical r12 source does not prove JTAG_AXI read/write queue depth one")
+                        append_error(errors, queue_depth_not_overridden, "historical r12 build Tcl unexpectedly overrides the queue-depth-one default")
+                    else:
+                        append_error(errors, queue_depth_sixteen, "historical r13 source does not prove JTAG_AXI read/write queue depth sixteen")
+                        append_error(errors, queue_depth_overridden_sixteen, "historical r13 build Tcl does not bind queue depth sixteen")
                     historical_source_control_flow = {
                         **common_source_control,
                         "tcl_queued_single_word_run_count": queue_run_count,
                         "tcl_len_one_without_burst": "-burst INCR" not in historical_tcl_text,
                         "wrapper_queued_single_metrics_present": "minimum_single_word_axi4lite_transaction_count" in wrapper_text,
-                        "source_commit_ip_read_queue_length": 1 if queue_depth_one else None,
-                        "source_commit_ip_write_queue_length": 1 if queue_depth_one else None,
+                        "source_commit_ip_read_queue_length": 16 if queue_depth_sixteen else 1 if queue_depth_one else None,
+                        "source_commit_ip_write_queue_length": 16 if queue_depth_sixteen else 1 if queue_depth_one else None,
                         "source_commit_build_queue_override_absent": queue_depth_not_overridden,
-                        "historical_queue_contract_mismatch_proven": queue_run_count == 2 and queue_depth_one and queue_depth_not_overridden,
+                        "source_commit_build_queue_override_sixteen": queue_depth_overridden_sixteen,
+                        "historical_queue_contract_mismatch_proven": historical_variant == HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED and queue_run_count == 2 and queue_depth_one and queue_depth_not_overridden,
+                        "historical_queue_timeout_configuration_proven": historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT and queue_run_count == 2 and queue_depth_sixteen and queue_depth_overridden_sixteen,
                     }
         try:
             old_offline = json.loads(role_paths["offline_checkpoint"].read_text(encoding="utf-8", errors="strict"))
@@ -7478,6 +7664,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             append_error(errors, str(old_plan.get("source_commit", "")).lower() == source, "historical frozen sequence plan source mismatch")
             diagnostic_variant = historical_variant in {
                 HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+                HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
                 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                 HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
             }
@@ -7487,6 +7674,8 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 diagnostic_label = (
                     "historical r10"
                     if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+                    else "historical r13"
+                    if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
                     else "historical r11"
                     if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
                     else "historical r12"
@@ -7541,6 +7730,10 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 append_error(errors, argv_value("--shutdown-timeout-sec") == "60", "historical r10 failed stage shutdown timeout mismatch")
                 append_error(errors, argv_value("--stage-timeout-sec") == "1400", "historical r10 failed stage candidate timeout mismatch")
                 append_error(errors, argv_value("--max-runtime-sec") == "1800", "historical r10 failed stage max runtime mismatch")
+            if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT:
+                append_error(errors, argv_value("--shutdown-timeout-sec") == "60", "historical r13 failed stage shutdown timeout mismatch")
+                append_error(errors, argv_value("--stage-timeout-sec") == "1400", "historical r13 failed stage candidate timeout mismatch")
+                append_error(errors, argv_value("--max-runtime-sec") == "1800", "historical r13 failed stage max runtime mismatch")
             if historical_variant in {
                 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                 HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
@@ -7575,7 +7768,12 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             append_error(errors, str(generation_plan.get("sha256", "")).lower() == frozen_records["sequence_plan"]["frozen_file"]["sha256"], "historical frozen generation manifest sequence-plan SHA mismatch")
             append_error(errors, generation_plan.get("stage_count") == (15 if diagnostic_variant else 66), "historical frozen generation manifest sequence-plan stage count mismatch")
             if diagnostic_variant:
-                diagnostic_label = "historical r10" if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT else "historical r11"
+                diagnostic_label = (
+                    "historical r10" if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT
+                    else "historical r13" if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
+                    else "historical r11" if historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED
+                    else "historical r12"
+                )
                 append_error(errors, generation.get("plan_mode") == "DIAGNOSTIC_SUFFIX_55" and generation.get("coverage_claimed") is False and generation.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"{diagnostic_label} frozen generation manifest diagnostic boundary mismatch")
                 append_error(errors, generation.get("full_stage_ordinals") == [1, 2, 3, 4, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65], f"{diagnostic_label} frozen generation manifest ordinal matrix mismatch")
             generation_authorizations = generation.get("authorization_records")
@@ -7991,15 +8189,19 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             and effective_records[0].get("tfdu_shutdown_programmed_seen") is True,
             "historical r9 recovery does not prove one TFDU marker with normalized raw rc125 and SHUTDOWN_EXIT=0",
         )
-    elif historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT:
-        append_error(errors, len(recovery_dirs) == 1 and not no_action_records and len(effective_records) == 1, "historical r10 must contain exactly one effective recovery and no recovery-directory no-action record")
+    elif historical_variant in {
+        HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+        HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
+    }:
+        recovery_label = "historical r10" if historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT else "historical r13"
+        append_error(errors, len(recovery_dirs) == 1 and not no_action_records and len(effective_records) == 1, f"{recovery_label} must contain exactly one effective recovery and no recovery-directory no-action record")
         append_error(
             errors,
             len(effective_records) == 1
             and effective_records[0].get("observed_raw_exit") == 125
             and effective_records[0].get("shutdown_exit") == 0
             and effective_records[0].get("tfdu_shutdown_programmed_seen") is True,
-            "historical r10 recovery does not prove one TFDU marker with normalized raw rc125 and SHUTDOWN_EXIT=0",
+            f"{recovery_label} recovery does not prove one TFDU marker with normalized raw rc125 and SHUTDOWN_EXIT=0",
         )
     elif historical_variant in {
         HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
@@ -8177,6 +8379,25 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         **(
             {
                 "historical_source_control_flow": historical_source_control_flow,
+                "queued_jtag_timeout_failure": {
+                    "candidate_returncode": candidate.data.get("stage_process", {}).get("returncode"),
+                    "candidate_timed_out": candidate.data.get("stage_process", {}).get("timed_out"),
+                    "candidate_reaped": candidate.data.get("stage_process", {}).get("process_tree_reaped"),
+                    "candidate_programmed": candidate.data.get("programmed_candidate"),
+                    "raw_result_file": _hash_record(raw_marker_path(candidate)),
+                    "minimum_run_hw_axi_call_count": candidate.data.get("transaction_validation", {}).get("minimum_run_hw_axi_call_count"),
+                    "multi_transaction_batch_count": candidate.data.get("transaction_validation", {}).get("multi_transaction_batch_count"),
+                    "max_batch_transactions": candidate.data.get("transaction_validation", {}).get("max_batch_transactions"),
+                    "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
+                    "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
+                },
+            }
+            if historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT
+            else {}
+        ),
+        **(
+            {
+                "historical_source_control_flow": historical_source_control_flow,
                 "shutdown_helper_exit_race_failure": {
                     "candidate_returncode": candidate.data.get("stage_process", {}).get("returncode"),
                     "candidate_passed": candidate.data.get("stage_process", {}).get("passed"),
@@ -8272,6 +8493,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                 HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
                 HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+                HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
                 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
                 HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
             }
@@ -8418,6 +8640,9 @@ def _candidate_checkpoint_relation(
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     elif historical_variant == HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT:
         errors.extend(_old_commit_1m_jtag_timeout_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT:
+        errors.extend(_old_commit_1m_jtag_queued_timeout_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     elif historical_variant == HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED:
         errors.extend(_old_commit_axi4lite_burst_failure_errors(candidate, evidence))
@@ -8750,6 +8975,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
             HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
             HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+            HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
             HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
             HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
         }:

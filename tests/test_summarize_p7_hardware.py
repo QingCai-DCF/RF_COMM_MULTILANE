@@ -2463,29 +2463,44 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
 
-    def test_p6_jtag_candidate_binds_axi4lite_queue_depth_sixteen(self) -> None:
+    def test_p6_jtag_candidate_binds_axi4_bursts_through_axi4lite_converter(self) -> None:
         build_tcl = (ROOT / "scripts/build_p6_jtag_candidate.tcl").read_text(encoding="utf-8")
         inspect_tcl = (ROOT / "scripts/vivado_inspect_p6_ip.tcl").read_text(encoding="utf-8")
         properties = (ROOT / "evidence/generated/vivado/p6_ip_inspect/jtag_axi_properties.txt").read_text(encoding="utf-8")
+        converter_properties = (ROOT / "evidence/generated/vivado/p6_ip_inspect/axi_protocol_converter_properties.txt").read_text(encoding="utf-8")
+        top = (ROOT / "rtl/p6_jtag_top.sv").read_text(encoding="utf-8")
+        stage_tcl = (ROOT / "scripts/hw/p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")
         summary = json.loads(
             (ROOT / "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json").read_text(
                 encoding="utf-8"
             )
         )
         for text in (build_tcl, inspect_tcl):
+            self.assertIn("CONFIG.PROTOCOL {0}", text)
             self.assertIn("CONFIG.RD_TXN_QUEUE_LENGTH {16}", text)
             self.assertIn("CONFIG.WR_TXN_QUEUE_LENGTH {16}", text)
+            self.assertIn("CONFIG.SI_PROTOCOL {AXI4}", text)
+            self.assertIn("CONFIG.MI_PROTOCOL {AXI4LITE}", text)
+        self.assertIn("CONFIG.PROTOCOL=0", properties)
         self.assertIn("CONFIG.RD_TXN_QUEUE_LENGTH=16", properties)
         self.assertIn("CONFIG.WR_TXN_QUEUE_LENGTH=16", properties)
+        self.assertIn("CONFIG.SI_PROTOCOL=AXI4", converter_properties)
+        self.assertIn("CONFIG.MI_PROTOCOL=AXI4LITE", converter_properties)
+        self.assertIn("p6_axi_protocol_converter u_axi_protocol_converter", top)
+        self.assertEqual(1, stage_tcl.count("proc p7_axi_write_burst"))
+        self.assertEqual(1, stage_tcl.count("proc p7_axi_read_burst"))
+        self.assertEqual(2, stage_tcl.count("-burst INCR"))
         self.assertEqual("PASS", summary["P6_JTAG_CANDIDATE_BUILD"])
         self.assertTrue(summary["timing_met"])
         self.assertTrue(summary["drc_clean"])
         self.assertEqual(
             {
-                "protocol": "AXI4-Lite",
+                "protocol": "AXI4",
                 "read_transaction_queue_length": 16,
                 "write_transaction_queue_length": 16,
-                "transaction_len_words": 1,
+                "maximum_incr_burst_words": 64,
+                "downstream_protocol": "AXI4-Lite",
+                "protocol_converter": "xilinx.com:ip:axi_protocol_converter",
             },
             summary["jtag_axi_config"],
         )
@@ -2494,7 +2509,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertTrue(immutable.is_file())
             self.assertEqual(artifact["sha256"], subject.sha256_file(immutable))
 
-    def test_real_r1_through_r12_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
+    def test_real_r1_through_r13_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
         evidence = subject.RepositoryEvidence(
             ROOT,
             ROOT / "evidence" / "hardware" / "p7",
@@ -2513,12 +2528,13 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260711_stationary_app_r10_diag_suffix55",
             "p7_20260711_stationary_app_r11_diag_suffix55",
             "p7_20260711_stationary_app_r12_diag_suffix55",
+            "p7_20260711_stationary_app_r13_diag_suffix55",
         )
         candidates: dict[str, subject.Candidate] = {}
         for epoch_name in epoch_names:
             stage_directory = (
                 "058_p7_large_jtag_1m_l0_random"
-                if epoch_name.endswith("_r10_diag_suffix55")
+                if epoch_name.endswith(("_r10_diag_suffix55", "_r13_diag_suffix55"))
                 else "002_p7_p6_frame_regression_m1"
                 if epoch_name.endswith(("_r11_diag_suffix55", "_r12_diag_suffix55"))
                 else "003_p7_p6_frame_regression_m2"
@@ -2553,6 +2569,8 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             candidates[epoch_name] = candidate
             if epoch_name.endswith("_r10_diag_suffix55"):
                 inner_errors = subject._old_commit_1m_jtag_timeout_errors(candidate, evidence)
+            elif epoch_name.endswith("_r13_diag_suffix55"):
+                inner_errors = subject._old_commit_1m_jtag_queued_timeout_errors(candidate, evidence)
             elif epoch_name.endswith("_r11_diag_suffix55"):
                 inner_errors = subject._old_commit_axi4lite_burst_failure_errors(candidate, evidence)
             elif epoch_name.endswith("_r12_diag_suffix55"):
@@ -2592,6 +2610,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
         for epoch_name in (
             "p7_20260711_stationary_app_r11_diag_suffix55",
             "p7_20260711_stationary_app_r12_diag_suffix55",
+            "p7_20260711_stationary_app_r13_diag_suffix55",
         ):
             epoch_candidates = [
                 item
@@ -2600,7 +2619,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             ]
             self.assertEqual(1, len(epoch_candidates), epoch_name)
             self.assertEqual(
-                "002_p7_p6_frame_regression_m1",
+                "058_p7_large_jtag_1m_l0_random" if epoch_name.endswith("_r13_diag_suffix55") else "002_p7_p6_frame_regression_m1",
                 epoch_candidates[0].path.parent.name,
             )
 
@@ -2822,6 +2841,21 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             tampered = subject.Candidate(r12.path, tampered_data, r12.kind, r12.stage, r12.timestamp)
             errors = subject._old_commit_jtag_axi_queue_depth_failure_errors(tampered, evidence)
             self.assertTrue(errors, f"r12 {label} tamper unexpectedly validated")
+
+        r13 = candidates["p7_20260711_stationary_app_r13_diag_suffix55"]
+        r13_tamper_cases = (
+            ("timeout fact", lambda data: data["stage_process"].__setitem__("timed_out", False)),
+            ("queue batch count", lambda data: data["transaction_validation"].__setitem__("multi_transaction_batch_count", 0)),
+            ("candidate programming", lambda data: data.__setitem__("programmed_candidate", False)),
+            ("shutdown-after", lambda data: data["shutdown_after"].__setitem__("passed", False)),
+            ("hardware promotion", lambda data: data.__setitem__("hardware_acceptance", "PASS")),
+        )
+        for label, mutate in r13_tamper_cases:
+            tampered_data = json.loads(json.dumps(r13.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(r13.path, tampered_data, r13.kind, r13.stage, r13.timestamp)
+            errors = subject._old_commit_1m_jtag_queued_timeout_errors(tampered, evidence)
+            self.assertTrue(errors, f"r13 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -1,6 +1,6 @@
 # P7 Segmentation and Reassembly
 
-generated_at_utc: 2026-07-11T16:58:56+00:00
+generated_at_utc: 2026-07-11T17:11:55+00:00
 P7_SEGMENTATION_REASSEMBLY: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
@@ -43,7 +43,7 @@ test_real_r8_retry_evidence_parses (test_p7_jtag_backend.P7JtagBackendTests.test
 test_retry_delta_allows_duplicate_valid_frames_and_is_bounded (test_p7_jtag_backend.P7JtagBackendTests.test_retry_delta_allows_duplicate_valid_frames_and_is_bounded) ... ok
 
 ----------------------------------------------------------------------
-Ran 39 tests in 1.329s
+Ran 39 tests in 0.885s
 
 OK
 

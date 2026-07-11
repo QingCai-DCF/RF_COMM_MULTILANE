@@ -76,10 +76,12 @@ def main() -> int:
         "motion_used": False,
         "max_lane_mask": "0x3",
         "jtag_axi_config": {
-            "protocol": "AXI4-Lite",
+            "protocol": "AXI4",
             "read_transaction_queue_length": 16,
             "write_transaction_queue_length": 16,
-            "transaction_len_words": 1,
+            "maximum_incr_burst_words": 64,
+            "downstream_protocol": "AXI4-Lite",
+            "protocol_converter": "xilinx.com:ip:axi_protocol_converter",
         },
     }
     (OUT / "p6_jtag_candidate_build_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")

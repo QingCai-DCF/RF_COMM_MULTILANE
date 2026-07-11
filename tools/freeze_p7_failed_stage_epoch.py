@@ -34,6 +34,48 @@ def resolve_recorded(root: Path, raw: Any) -> Path:
     return path.resolve(strict=False) if path.is_absolute() else (root / path).resolve(strict=False)
 
 
+def resolve_generation_manifest(
+    root: Path,
+    run_id: str,
+    *,
+    source_commit: str,
+    sequence_plan_path: Path,
+    sequence_plan_sha256: str,
+) -> Path:
+    """Find the unique generator manifest bound to the executed plan.
+
+    A pre-hardware plan can become stale after a source/checkpoint change.  A
+    replacement plan must use a new bundle directory rather than overwriting
+    the stale bundle, so the run ID alone is not a sufficient provenance key.
+    """
+
+    build_root = root / "build" / "p7_authorized_sequence"
+    matches: list[Path] = []
+    if build_root.is_dir():
+        for bundle in build_root.iterdir():
+            if not bundle.is_dir() or bundle.is_symlink() or not bundle.name.startswith(run_id):
+                continue
+            candidate = bundle / "p7_authorized_sequence_generation_manifest.json"
+            if not candidate.is_file() or candidate.is_symlink():
+                continue
+            payload = read_json(candidate)
+            plan = payload.get("sequence_plan")
+            if (
+                payload.get("schema") == "rf-comm-p7-authorized-sequence-generator-v1"
+                and str(payload.get("source_commit", "")).lower() == source_commit.lower()
+                and isinstance(plan, dict)
+                and str(plan.get("sha256", "")).lower() == sequence_plan_sha256.lower()
+                and resolve_recorded(root, plan.get("path")) == sequence_plan_path.resolve(strict=False)
+            ):
+                matches.append(candidate.resolve(strict=True))
+    if len(matches) != 1:
+        raise ValueError(
+            "executed sequence plan must bind exactly one generation manifest; "
+            f"observed {len(matches)} matches"
+        )
+    return matches[0]
+
+
 def copy_record(root: Path, destination: Path, role: str, original: Path) -> dict[str, Any]:
     original = original.resolve(strict=True)
     data = original.read_bytes()
@@ -123,16 +165,24 @@ def main() -> int:
     destination.mkdir(parents=False, exist_ok=False)
     safety = summary["safety_validation"]
     transaction = summary["transaction_validation"]
+    sequence_plan_path = resolve_recorded(root, ledger["sequence_plan"]["path"])
+    generation_manifest_path = resolve_generation_manifest(
+        root,
+        args.run_id,
+        source_commit=source,
+        sequence_plan_path=sequence_plan_path,
+        sequence_plan_sha256=str(ledger["sequence_plan"]["sha256"]),
+    )
     records = [
         copy_record(root, destination, "offline_checkpoint", resolve_recorded(root, ledger["offline_checkpoint"]["path"])),
-        copy_record(root, destination, "sequence_plan", resolve_recorded(root, ledger["sequence_plan"]["path"])),
+        copy_record(root, destination, "sequence_plan", sequence_plan_path),
         copy_record(root, destination, "stage_authorization", resolve_recorded(root, safety["authorization"]["path"])),
         copy_record(root, destination, "stage_transactions", resolve_recorded(root, transaction["path"])),
         copy_record(
             root,
             destination,
             "generation_manifest",
-            root / "build" / "p7_authorized_sequence" / args.run_id / "p7_authorized_sequence_generation_manifest.json",
+            generation_manifest_path,
         ),
         copy_record(root, destination, "recovery_p4_authorization", root / ".hardware_authorization" / "P4_APPROVED.txt"),
     ]

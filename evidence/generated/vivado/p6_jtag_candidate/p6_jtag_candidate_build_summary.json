@@ -1,6 +1,6 @@
 {
   "P6_JTAG_CANDIDATE_BUILD": "PASS",
-  "generated_at_utc": "2026-07-11T15:40:55+00:00",
+  "generated_at_utc": "2026-07-11T18:42:27+00:00",
   "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
   "returncode": 0,
   "timing_met": true,
@@ -8,8 +8,8 @@
   "artifacts": {
     "bit": {
       "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
-      "sha256": "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
-      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit"
+      "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit"
     },
     "ltx": {
       "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
@@ -36,11 +36,11 @@
     },
     "build_python": {
       "path": "scripts/build_p6_jtag_candidate.py",
-      "sha256": "390f805160d3e0222aec591e1f3dc9fa5600e2ac767fbbb76f77eaf9ea02818a"
+      "sha256": "450735c2b51fe2faef5ca6dcba12cd5a18b0e689389780a52415b11c94fd4095"
     },
     "build_tcl": {
       "path": "scripts/build_p6_jtag_candidate.tcl",
-      "sha256": "6620511a1bcda2b05b28bf87bd188f38c908a9a8d628c2e5c012810c2364a23c"
+      "sha256": "14d662fdac6af2e0f9bcbc10de65c8999d4a73e94aedf1038bc7fc2e32cc4d0c"
     }
   },
   "live_jtag_axi_ingress": true,
@@ -49,9 +49,11 @@
   "motion_used": false,
   "max_lane_mask": "0x3",
   "jtag_axi_config": {
-    "protocol": "AXI4-Lite",
+    "protocol": "AXI4",
     "read_transaction_queue_length": 16,
     "write_transaction_queue_length": 16,
-    "transaction_len_words": 1
+    "maximum_incr_burst_words": 64,
+    "downstream_protocol": "AXI4-Lite",
+    "protocol_converter": "xilinx.com:ip:axi_protocol_converter"
   }
 }

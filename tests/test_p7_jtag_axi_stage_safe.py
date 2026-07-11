@@ -210,16 +210,50 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual(manifest["transaction_operation_count"], report["operation_count"])
         self.assertEqual(manifest["transaction_file_bytes"], report["size_bytes"])
         self.assertEqual(40, report["poll_operation_count"])
-        self.assertEqual(4269, report["minimum_single_word_axi4lite_transaction_count"])
-        self.assertEqual(933, report["minimum_run_hw_axi_call_count"])
-        self.assertEqual(231, report["multi_transaction_batch_count"])
-        self.assertEqual(3567, report["batched_single_word_transaction_count"])
-        self.assertEqual(16, report["max_batch_transactions"])
-        self.assertEqual(702, report["standalone_run_hw_axi_call_count"])
+        self.assertEqual(4269, report["logical_axi_operation_count"])
+        self.assertEqual(226, report["minimum_run_hw_axi_call_count"])
+        self.assertEqual(122, report["multi_transaction_batch_count"])
+        self.assertEqual(4165, report["batched_single_word_transaction_count"])
+        self.assertEqual(62, report["max_batch_transactions"])
+        self.assertEqual(104, report["standalone_run_hw_axi_call_count"])
+        self.assertEqual(60, report["axi4_incr_burst_count"])
+        self.assertEqual(3567, report["axi4_incr_burst_word_count"])
+        self.assertEqual(62, report["max_axi4_incr_burst_words"])
+        self.assertEqual(126, report["queued_single_run_hw_axi_call_count"])
+        self.assertEqual(62, report["queued_single_multi_transaction_batch_count"])
+        self.assertEqual(662, report["queued_single_transaction_count"])
+        self.assertEqual(16, report["max_queued_single_transactions"])
         self.assertLess(
             report["minimum_run_hw_axi_call_count"],
             report["operation_count"] // 4,
         )
+
+    def test_generated_1m_transaction_binds_burst_call_reduction(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            transaction = root / "1m.transactions.txt"
+            manifest = backend.generate_bundle(
+                bytes(index & 0xFF for index in range(1_048_576)),
+                transaction_path=transaction,
+                manifest_path=root / "1m.manifest.json",
+                session_epoch=0x50370001,
+                object_id=8,
+                lane_policy="LANE0_ONLY",
+            )
+            report = stage.validate_transaction_file(
+                str(transaction), manifest["transaction_sha256"]
+            )
+        self.assertTrue(report["valid"], report["errors"])
+        self.assertEqual(1_073_038, report["logical_axi_operation_count"])
+        self.assertEqual(53_664, report["minimum_run_hw_axi_call_count"])
+        self.assertEqual(14_634, report["axi4_incr_burst_count"])
+        self.assertEqual(907_164, report["axi4_incr_burst_word_count"])
+        self.assertEqual(62, report["max_axi4_incr_burst_words"])
+        self.assertEqual(29_274, report["queued_single_run_hw_axi_call_count"])
+        self.assertEqual(156_118, report["queued_single_transaction_count"])
+        self.assertEqual(16, report["max_queued_single_transactions"])
+        self.assertEqual(24_394, report["standalone_run_hw_axi_call_count"])
+        self.assertLess(report["minimum_run_hw_axi_call_count"], 224_401 // 4)
 
     def test_safe_idle_semantics_forbid_transmission_and_parse_zero_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -1342,7 +1376,7 @@ class P7JtagAxiStageTests(unittest.TestCase):
         ):
             interp.call("p7_validate_write", offset, data)
 
-    def test_tcl_axi4lite_batches_preserve_single_word_order_and_evidence(self) -> None:
+    def test_tcl_axi4_queues_preserve_single_word_order_and_evidence(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(
             encoding="utf-8"
         )
@@ -1376,12 +1410,12 @@ class P7JtagAxiStageTests(unittest.TestCase):
                 "set out [open $p7_test_result_path w]\n"
                 "set pending 0\n"
                 "set txn_index 0\n"
-                "set kind W\n"
+                "set kind WQ\n"
                 "set addresses {0x43c00200 0x43c00204}\n"
                 "set data_words {0x11111111 0x22222222}\n"
                 "set keys {}\n"
                 "p7_flush_axi_batch hw_axi kind addresses data_words keys txn_index $out pending\n"
-                "set kind R\n"
+                "set kind RQ\n"
                 "set addresses {0x43c00300 0x43c00304}\n"
                 "set data_words {}\n"
                 "set keys {P7_TEST_RXW000 P7_TEST_RXW001}\n"
@@ -1423,6 +1457,53 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual("", str(interp.getvar("kind")))
         self.assertEqual(0, len(interp.splitlist(interp.getvar("addresses"))))
         self.assertEqual("4", str(interp.getvar("txn_index")))
+
+    def test_tcl_axi4_bursts_preserve_word_order_and_read_evidence(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        interp.eval(tcl[: tcl.index('set result_file ""')])
+        interp.eval(
+            "set ::p7_created {}\n"
+            "set ::p7_run_calls {}\n"
+            "set ::p7_deleted {}\n"
+            "array set ::p7_txn_args {}\n"
+            "proc create_hw_axi_txn {name hw_axi args} {\n"
+            "  lappend ::p7_created $name\n"
+            "  set ::p7_txn_args($name) $args\n"
+            "}\n"
+            "proc get_hw_axi_txns {name} {return $name}\n"
+            "proc run_hw_axi {args} {lappend ::p7_run_calls $args}\n"
+            "proc delete_hw_axi_txn {txn} {lappend ::p7_deleted $txn}\n"
+            "proc get_property {property txn} {\n"
+            "  if {$property ne \"DATA\" || $txn ne \"p7_rburst_2\"} {error \"unexpected property request\"}\n"
+            "  return 11223344_AABBCCDD\n"
+            "}"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            result_path = Path(temp) / "burst_result.txt"
+            interp.setvar("p7_test_result_path", str(result_path))
+            interp.eval(
+                "set out [open $p7_test_result_path w]\n"
+                "set pending 0\n"
+                "set txn_index 0\n"
+                "p7_axi_write_burst hw_axi {0x43c00200 0x43c00204} {0x11111111 0x22222222} txn_index\n"
+                "p7_axi_read_burst hw_axi {0x43c00300 0x43c00304} {P7_TEST_RXW000 P7_TEST_RXW001} txn_index $out pending\n"
+                "flush $out\n"
+                "close $out"
+            )
+            result = result_path.read_text(encoding="utf-8")
+        self.assertEqual(("p7_wburst_1", "p7_rburst_2"), tuple(interp.splitlist(interp.getvar("p7_created"))))
+        write_args = tuple(interp.splitlist(interp.getvar("p7_txn_args(p7_wburst_1)")))
+        self.assertEqual("0x43C00200", write_args[write_args.index("-address") + 1])
+        self.assertEqual("11111111_22222222", write_args[write_args.index("-data") + 1])
+        self.assertEqual("2", str(write_args[write_args.index("-len") + 1]))
+        self.assertEqual("INCR", write_args[write_args.index("-burst") + 1])
+        read_args = tuple(interp.splitlist(interp.getvar("p7_txn_args(p7_rburst_2)")))
+        self.assertEqual("2", str(read_args[read_args.index("-len") + 1]))
+        self.assertEqual("INCR", read_args[read_args.index("-burst") + 1])
+        run_calls = tuple(interp.splitlist(interp.getvar("p7_run_calls")))
+        self.assertEqual((("p7_wburst_1",), ("p7_rburst_2",)), tuple(tuple(interp.splitlist(call)) for call in run_calls))
+        self.assertEqual(["P7_TEST_RXW000=11223344", "P7_TEST_RXW001=AABBCCDD"], result.splitlines())
 
     def test_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")

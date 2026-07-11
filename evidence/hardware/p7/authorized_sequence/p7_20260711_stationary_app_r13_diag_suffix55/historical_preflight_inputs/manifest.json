@@ -1,0 +1,91 @@
+{
+  "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
+  "run_id": "p7_20260711_stationary_app_r13_diag_suffix55",
+  "source_commit": "d614ed203eca9b615e9fd3782da1e81f01d93fea",
+  "stage_index": 7,
+  "full_stage_ordinal": 58,
+  "stage_id": "p7_large_jtag_1m_l0_random",
+  "result": "FAIL_STAGE",
+  "mutation_attempted": true,
+  "candidate_mutation_attempted": true,
+  "coverage_claimed": false,
+  "recovery_directories": [
+    "recovery_shutdown_after_failed_stage058_20260711T181718Z"
+  ],
+  "files": [
+    {
+      "role": "offline_checkpoint",
+      "original_path": "evidence/generated/p7_offline_gate_summary.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_offline_gate_summary_5dca5487a44ddd17396704959ef080171a867579202822e7650d7b9a1627ab72.json",
+      "bytes": 7626,
+      "sha256": "5dca5487a44ddd17396704959ef080171a867579202822e7650d7b9a1627ab72"
+    },
+    {
+      "role": "sequence_plan",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r13_diag_suffix55_d614ed20_sequence_plan.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_sequence_plan_442f597b75b1d8261c443b5f7611096cfab0a592a8adb5e966c62453ef9824c7.txt",
+      "bytes": 89686,
+      "sha256": "442f597b75b1d8261c443b5f7611096cfab0a592a8adb5e966c62453ef9824c7"
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r13_diag_suffix55_d614ed20/p7_20260711_stationary_app_r13_diag_suffix55_058_p7_large_jtag_1m_l0_random.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_stage_001_authorization_ccde97cc2d1a6cda8f2e76389014c04c7f072bd184f6bd4022de4515a011cd12.txt",
+      "bytes": 3451,
+      "sha256": "ccde97cc2d1a6cda8f2e76389014c04c7f072bd184f6bd4022de4515a011cd12"
+    },
+    {
+      "role": "stage_transactions",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55_d614ed20/transactions/058_p7_large_jtag_1m_l0_random.transactions.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_stage_001_transactions_7a4018b7c0b3d7ef82a79c26f3727851f3a62220189dbb7f2fc029e3838418c5.txt",
+      "bytes": 32614920,
+      "sha256": "7a4018b7c0b3d7ef82a79c26f3727851f3a62220189dbb7f2fc029e3838418c5"
+    },
+    {
+      "role": "generation_manifest",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55_d614ed20/p7_authorized_sequence_generation_manifest.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_generation_manifest_a33eb09b6bc71016577eedf7463ca147d84298f75b26c95ab4738e241ad8f5b7.json",
+      "bytes": 54724,
+      "sha256": "a33eb09b6bc71016577eedf7463ca147d84298f75b26c95ab4738e241ad8f5b7"
+    },
+    {
+      "role": "recovery_p4_authorization",
+      "original_path": ".hardware_authorization/P4_APPROVED.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p4_recovery_authorization_61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476.txt",
+      "bytes": 201,
+      "sha256": "61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476"
+    },
+    {
+      "role": "historical_stage_tcl",
+      "original_path": "scripts/hw/p7_jtag_axi_transactions.tcl",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_jtag_axi_transactions_d614ed20_3ce772b375a35208d4d39205cc761cf7edd1846b.tcl",
+      "git_blob_sha1": "3ce772b375a35208d4d39205cc761cf7edd1846b",
+      "bytes": 32014,
+      "sha256": "702c21b8701befd2bec8bf4656557f0c2230a7cf80bec3b1710170f33d6ba632"
+    },
+    {
+      "role": "historical_stage_wrapper_python",
+      "original_path": "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/run_p7_jtag_axi_stage_safe_d614ed20_76d509116583d5885f46970adb8c62096f0c6460.py",
+      "git_blob_sha1": "76d509116583d5885f46970adb8c62096f0c6460",
+      "bytes": 143506,
+      "sha256": "c4f4a9a1252b7dcf9796ae54589127baab1e9b988540dc73b9f265f39c938dfa"
+    },
+    {
+      "role": "historical_backend_python",
+      "original_path": "tools/p7_jtag_backend.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/p7_jtag_backend_d614ed20_7447a5c4203ab83db049de32b9652d481178fb22.py",
+      "git_blob_sha1": "7447a5c4203ab83db049de32b9652d481178fb22",
+      "bytes": 80403,
+      "sha256": "593185c5fa9c23244a0bfd0355da61df098e194319435c626132b7f3a1726018"
+    },
+    {
+      "role": "historical_lane_phy_rtl",
+      "original_path": "rtl/tfdu_lane_phy.sv",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/historical_preflight_inputs/tfdu_lane_phy_d614ed20_970cbc860290698c4f417959f7e7fc0bcfbd6933.sv",
+      "git_blob_sha1": "970cbc860290698c4f417959f7e7fc0bcfbd6933",
+      "bytes": 5199,
+      "sha256": "2f515a22fedc5abdf3f58bbdaa6df8baee8a2f919747a3622ece0a63009e920a"
+    }
+  ]
+}

@@ -293,6 +293,13 @@ def validate_transaction_file(
     multi_transaction_batch_count = 0
     batched_single_word_transaction_count = 0
     max_batch_transactions = 0
+    axi4_incr_burst_count = 0
+    axi4_incr_burst_word_count = 0
+    max_axi4_incr_burst_words = 0
+    queued_single_call_count = 0
+    queued_single_multi_transaction_batch_count = 0
+    queued_single_transaction_count = 0
+    max_queued_single_transactions = 0
     pending_batch_kind: str | None = None
     pending_batch_last_address: int | None = None
     pending_batch_transactions = 0
@@ -300,6 +307,10 @@ def validate_transaction_file(
     def flush_batch() -> None:
         nonlocal batched_run_hw_axi_call_count, multi_transaction_batch_count
         nonlocal batched_single_word_transaction_count, max_batch_transactions
+        nonlocal axi4_incr_burst_count, axi4_incr_burst_word_count
+        nonlocal max_axi4_incr_burst_words, queued_single_call_count
+        nonlocal queued_single_multi_transaction_batch_count
+        nonlocal queued_single_transaction_count, max_queued_single_transactions
         nonlocal pending_batch_kind, pending_batch_last_address, pending_batch_transactions
         if pending_batch_transactions:
             batched_run_hw_axi_call_count += 1
@@ -307,18 +318,27 @@ def validate_transaction_file(
                 multi_transaction_batch_count += 1
                 batched_single_word_transaction_count += pending_batch_transactions
             max_batch_transactions = max(max_batch_transactions, pending_batch_transactions)
+            if pending_batch_kind in ("WB", "RB"):
+                axi4_incr_burst_count += 1
+                axi4_incr_burst_word_count += pending_batch_transactions
+                max_axi4_incr_burst_words = max(max_axi4_incr_burst_words, pending_batch_transactions)
+            elif pending_batch_kind in ("WQ", "RQ"):
+                queued_single_call_count += 1
+                queued_single_transaction_count += pending_batch_transactions
+                if pending_batch_transactions > 1:
+                    queued_single_multi_transaction_batch_count += 1
+                max_queued_single_transactions = max(max_queued_single_transactions, pending_batch_transactions)
         pending_batch_kind = None
         pending_batch_last_address = None
         pending_batch_transactions = 0
 
     def record_batch_transaction(kind: str, address: int) -> None:
         nonlocal pending_batch_kind, pending_batch_last_address, pending_batch_transactions
-        if not (
-            pending_batch_kind == kind
-            and pending_batch_last_address is not None
-            and address == pending_batch_last_address + 4
-            and pending_batch_transactions < 16
-        ):
+        limit = 64 if kind in ("WB", "RB") else 16
+        can_extend = pending_batch_kind == kind and pending_batch_transactions < limit
+        if can_extend and kind in ("WB", "RB"):
+            can_extend = pending_batch_last_address is not None and address == pending_batch_last_address + 4
+        if not can_extend:
             flush_batch()
             pending_batch_kind = kind
             pending_batch_transactions = 0
@@ -410,10 +430,7 @@ def validate_transaction_file(
                         write_operations.append((offset, data))
                         if 0x200 <= offset <= 0x2FC:
                             payload_write_count += 1
-                            record_batch_transaction("W", address)
-                        else:
-                            flush_batch()
-                            batched_run_hw_axi_call_count += 1
+                        record_batch_transaction("WB" if 0x200 <= offset <= 0x2FC else "WQ", address)
                         if offset == 0x10C:
                             seen_lane = True
                             lane_value = data
@@ -457,11 +474,8 @@ def validate_transaction_file(
                             raise ValueError(f"result key is invalid or duplicate: {fields[2]}")
                         keys.add(fields[2])
                         offset = address - AXI_BASE
-                        if 0x200 <= offset <= 0x2FC or 0x300 <= offset <= 0x3FC:
-                            record_batch_transaction("R", address)
-                        else:
-                            flush_batch()
-                            batched_run_hw_axi_call_count += 1
+                        in_payload_window = 0x200 <= offset <= 0x2FC or 0x300 <= offset <= 0x3FC
+                        record_batch_transaction("RB" if in_payload_window else "RQ", address)
                         last_operation = (op, address, 0)
                     elif op in ("POLL32", "ASSERT32"):
                         flush_batch()
@@ -527,11 +541,18 @@ def validate_transaction_file(
     report["start_operation_count"] = start_operation_count
     report["commit_operation_count"] = commit_operation_count
     report["payload_write_count"] = payload_write_count
-    report["minimum_single_word_axi4lite_transaction_count"] = operation_count
+    report["logical_axi_operation_count"] = operation_count
     report["minimum_run_hw_axi_call_count"] = batched_run_hw_axi_call_count
     report["multi_transaction_batch_count"] = multi_transaction_batch_count
     report["batched_single_word_transaction_count"] = batched_single_word_transaction_count
     report["max_batch_transactions"] = max_batch_transactions
+    report["axi4_incr_burst_count"] = axi4_incr_burst_count
+    report["axi4_incr_burst_word_count"] = axi4_incr_burst_word_count
+    report["max_axi4_incr_burst_words"] = max_axi4_incr_burst_words
+    report["queued_single_run_hw_axi_call_count"] = queued_single_call_count
+    report["queued_single_multi_transaction_batch_count"] = queued_single_multi_transaction_batch_count
+    report["queued_single_transaction_count"] = queued_single_transaction_count
+    report["max_queued_single_transactions"] = max_queued_single_transactions
     report["standalone_run_hw_axi_call_count"] = (
         batched_run_hw_axi_call_count - multi_transaction_batch_count
     )

@@ -19,7 +19,7 @@ set_property top p6_jtag_top [current_fileset]
 
 create_ip -name jtag_axi -vendor xilinx.com -library ip -module_name p6_jtag_axi_master
 set_property -dict [list \
-  CONFIG.PROTOCOL {2} \
+  CONFIG.PROTOCOL {0} \
   CONFIG.M_AXI_ADDR_WIDTH {32} \
   CONFIG.M_AXI_DATA_WIDTH {32} \
   CONFIG.RD_TXN_QUEUE_LENGTH {16} \
@@ -28,6 +28,17 @@ set_property -dict [list \
 ] [get_ips p6_jtag_axi_master]
 set_property GENERATE_SYNTH_CHECKPOINT false [get_files p6_jtag_axi_master.xci]
 generate_target all [get_ips p6_jtag_axi_master]
+
+create_ip -name axi_protocol_converter -vendor xilinx.com -library ip -module_name p6_axi_protocol_converter
+set_property -dict [list \
+  CONFIG.SI_PROTOCOL {AXI4} \
+  CONFIG.MI_PROTOCOL {AXI4LITE} \
+  CONFIG.DATA_WIDTH {32} \
+  CONFIG.ADDR_WIDTH {32} \
+  CONFIG.TRANSLATION_MODE {2} \
+] [get_ips p6_axi_protocol_converter]
+set_property GENERATE_SYNTH_CHECKPOINT false [get_files p6_axi_protocol_converter.xci]
+generate_target all [get_ips p6_axi_protocol_converter]
 
 read_xdc "$root_dir/constraints/active/PORT1.generated.xdc"
 update_compile_order -fileset sources_1

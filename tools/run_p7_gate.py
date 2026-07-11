@@ -27,8 +27,8 @@ P6_ARTIFACTS = {
         "1e2fd052c0954abeb87427b9473f9ab6465a03aef95f791121f91bda1d4133e5",
     ),
     "p6_jtag_bit": (
-        "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit",
-        "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
+        "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+        "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
     ),
     "p6_jtag_ltx": (
         "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
@@ -119,7 +119,7 @@ def p6_recheck() -> tuple[bool, dict[str, Any]]:
         "artifacts": files,
         "p6_build_recorded_head": summary.get("HEAD", "UNKNOWN"),
         "p7_starting_clean_successor": P6_BASELINE_COMMIT,
-        "provenance_note": "The P6 package and PS artifacts retain their baseline provenance; the active JTAG candidate was rebuilt offline after r12 with explicit AXI4-Lite RD/WR queue depth 16 and is bound by its content-addressed build summary.",
+        "provenance_note": "The P6 package and PS artifacts retain their baseline provenance; the active JTAG candidate uses full AXI4 JTAG bursts through an explicit AXI4-to-AXI4-Lite protocol converter and is bound by its content-addressed build summary.",
     }
 
 
