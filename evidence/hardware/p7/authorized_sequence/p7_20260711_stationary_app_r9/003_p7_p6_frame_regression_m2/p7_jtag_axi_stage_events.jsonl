@@ -1,0 +1,9 @@
+{"timestamp_utc": "2026-07-11T11:16:15.404996+00:00", "event": "authorized_execution_begin", "stage": "p7_p6_frame_regression_m2"}
+{"timestamp_utc": "2026-07-11T11:16:46.943239+00:00", "event": "preflight_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T11:17:35.315688+00:00", "event": "shutdown_before_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T11:17:35.322786+00:00", "event": "candidate_started", "semantic_mode": "rfap"}
+{"timestamp_utc": "2026-07-11T11:17:57.724516+00:00", "event": "candidate_child_reaped", "process_tree_reaped": true, "candidate_returncode": 130}
+{"timestamp_utc": "2026-07-11T11:17:57.739435+00:00", "event": "stage_finished", "returncode": 130, "passed": false}
+{"timestamp_utc": "2026-07-11T11:17:57.742138+00:00", "event": "shutdown_after_started", "candidate_child_reaped": true, "candidate_returncode": 130}
+{"timestamp_utc": "2026-07-11T11:18:47.267733+00:00", "event": "shutdown_after_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T11:18:47.268379+00:00", "event": "authorized_execution_end", "status": "FAIL_STAGE"}

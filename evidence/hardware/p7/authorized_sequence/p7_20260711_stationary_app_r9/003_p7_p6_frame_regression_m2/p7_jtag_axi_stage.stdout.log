@@ -1,0 +1,207 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE\scripts\hw\p7_jtag_axi_transactions.tcl}
+# proc p7_auth_value {text key} {
+#   foreach raw_line [split $text "\n"] {
+#     set line [string trim $raw_line]
+#     if {$line eq "" || [string match "#*" $line]} { continue }
+#     set separator [string first "=" $line]
+#     if {$separator < 1} { continue }
+#     set observed_key [string trim [string range $line 0 [expr {$separator - 1}]]]
+#     if {$observed_key eq $key} {
+#       return [string trim [string range $line [expr {$separator + 1}] end]]
+#     }
+#   }
+#   return ""
+# }
+# proc p7_has_marker {text expected} {
+#   foreach raw_line [split $text "\n"] {
+#     set line [string trim $raw_line]
+#     if {$line eq $expected} { return 1 }
+#   }
+#   return 0
+# }
+# proc p7_require_auth_value {text key expected} {
+#   set observed [p7_auth_value $text $key]
+#   if {![string equal -nocase $observed $expected]} {
+#     error "P7 authorization mismatch for $key expected=$expected observed=$observed"
+#   }
+# }
+# proc p7_normal_path {value} {
+#   return [string tolower [string map [list "\\" "/"] [file normalize $value]]]
+# }
+# proc p7_sanitize_error {text} {
+#   # Build an explicit even mapping list.  A malformed diagnostic formatter
+#   # must never replace the error that the outer catch actually captured.
+#   if {[catch {string map [list "\r" " " "\n" " "] $text} sanitized]} {
+#     return $text
+#   }
+#   return $sanitized
+# }
+# proc p7_require_auth_path {text key expected} {
+#   set observed [p7_auth_value $text $key]
+#   if {$observed eq "" || [p7_normal_path $observed] ne [p7_normal_path $expected]} {
+#     error "P7 authorization path mismatch for $key expected=$expected observed=$observed"
+#   }
+# }
+# proc p7_parse_hex32 {text label} {
+#   if {![regexp -nocase {^0x[0-9a-f]{8}$} $text]} {
+#     error "$label must be exactly 0x plus eight hex digits: $text"
+#   }
+#   scan [string range $text 2 end] %x value
+#   return $value
+# }
+# proc p7_normal_idcode {value} {
+#   set clean [string tolower [string map {_ ""} [string trim $value]]]
+#   if {[regexp {^[01]{32}$} $clean]} {
+#     set numeric 0
+#     foreach bit [split $clean ""] {
+#       set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+#     }
+#     return [format %08X $numeric]
+#   }
+#   if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+#     return [string toupper $hexadecimal]
+#   }
+#   if {[regexp {^[0-9a-f]{8}$} $clean]} {
+#     return [string toupper $clean]
+#   }
+#   return ""
+# }
+# proc p7_require_result_key {key} {
+#   if {![regexp {^[A-Z][A-Z0-9_]{0,63}$} $key]} {
+#     error "invalid result key: $key"
+#   }
+# }
+# proc p7_check_stop {abort_file deadline_ms} {
+#   if {[file exists $abort_file]} { error "P7 abort file appeared during stage" }
+#   if {[clock milliseconds] >= $deadline_ms} { error "P7 Tcl stage runtime limit exceeded" }
+# }
+# proc p7_validate_address {address axi_base} {
+#   if {$address % 4 != 0 || $address < $axi_base || $address > $axi_base + 0x03FC} {
+#     error "AXI address is outside the aligned P6 candidate window: [format 0x%08X $address]"
+#   }
+#   return [expr {$address - $axi_base}]
+# }
+# proc p7_validate_write {offset data} {
+#   # ``offset`` is the numeric result of p7_validate_address (for example
+#   # decimal "256"), so keep the allowlist numeric as well.  Tcl's exact list
+#   # search does not consider the string "0x100" equal to "256".
+#   set fixed [list \
+#       [expr {0x100}] [expr {0x108}] [expr {0x10C}] [expr {0x110}] \
+#       [expr {0x114}] [expr {0x118}] [expr {0x11C}] [expr {0x15C}] \
+#       [expr {0x16C}] [expr {0x170}] [expr {0x174}]]
+#   set payload_window [expr {$offset >= 0x200 && $offset <= 0x2FC && $offset % 4 == 0}]
+#   if {[lsearch -exact $fixed $offset] < 0 && !$payload_window} {
+#     error "write offset is outside the P6 candidate allowlist: [format 0x%03X $offset]"
+#   }
+#   if {$offset == 0x100 && ($data == 0 || ($data & 0xFFFFFFC0) != 0)} {
+#     error "P6_CTRL may use only nonzero bits 0x01..0x20"
+#   }
+#   if {($offset == 0x10C || $offset == 0x110) && $data ni {1 2 3}} {
+#     error "lane mask must be 0x1, 0x2, or 0x3"
+#   }
+#   if {$offset == 0x114 && ($data < 1 || $data > 247)} {
+#     error "payload length must be in 1..247"
+#   }
+#   if {$offset == 0x108 && $data > 0xFFFF} { error "P6 session must fit 16 bits" }
+#   if {($offset == 0x16C || $offset == 0x174) && $data > 63} {
+#     error "payload/RX word index must be in 0..63"
+#   }
+#   if {$offset == 0x15C && $data == 0} { error "bounded timeout cycles must be nonzero" }
+# }
+# proc p7_axi_write {hw_axi address data txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   incr txn_index
+#   set name "p7_w_$txn_index"
+#   set address_text [format 0x%08X $address]
+#   set data_text [format 0x%08X $data]
+#   create_hw_axi_txn $name $hw_axi -type write -address $address_text -data $data_text -len 1 -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   delete_hw_axi_txn [get_hw_axi_txns $name]
+# }
+# proc p7_axi_read {hw_axi address txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   incr txn_index
+#   set name "p7_r_$txn_index"
+#   set address_text [format 0x%08X $address]
+#   create_hw_axi_txn $name $hw_axi -type read -address $address_text -len 1 -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   set txn [get_hw_axi_txns $name]
+#   set raw [string trim [get_property DATA $txn]]
+#   delete_hw_axi_txn $txn
+#   set clean [string map [list "0x" "" "0X" "" "_" ""] $raw]
+#   if {![regexp -nocase {^[0-9a-f]+$} $clean]} { error "invalid AXI read data: $raw" }
+#   set padded "00000000$clean"
+#   return [string toupper [string range $padded end-7 end]]
+# }
+# proc p7_emit_identity {out target device canonical_part live_part idcode} {
+#   foreach line [list \
+#       "P7_HW_TARGET=$target" \
+#       "P7_HW_DEVICE=$device" \
+#       "P7_HW_PART=$canonical_part" \
+#       "P7_HW_IDCODE=$idcode" \
+#       "P7_HW_CANONICAL_PART=$canonical_part" \
+#       "P7_HW_LIVE_PART=$live_part" \
+#       "P7_HW_LIVE_DEVICE=$device" \
+#       "P7_HW_LIVE_IDCODE=$idcode"] {
+#     puts $out $line
+#     puts $line
+#   }
+#   flush $out
+# }
+# proc p7_result_line {out text pending_var} {
+#   upvar $pending_var pending
+#   puts $out $text
+#   incr pending
+#   if {$pending >= 256} {
+#     flush $out
+#     set pending 0
+#   }
+# }
+# set result_file ""
+# set result_handle ""
+# set selected_target ""
+# set selected_device ""
+# set manager_open 0
+# set server_connected 0
+# set target_open 0
+# set candidate_programming_attempted 0
+# set emergency_shutdown_programmed 0
+# set mode "UNKNOWN"
+# set shutdown_bit ""
+# set p7_canonical_part "xc7z010clg400-1"
+# set p7_live_part "xc7z010"
+# set p7_live_device "xc7z010_1"
+# set p7_live_idcode "13722093"
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_DEVICE=xc7z010_1
+P7_HW_PART=xc7z010clg400-1
+P7_HW_IDCODE=00010011011100100010000010010011
+P7_HW_CANONICAL_PART=xc7z010clg400-1
+P7_HW_LIVE_PART=xc7z010
+P7_HW_LIVE_DEVICE=xc7z010_1
+P7_HW_LIVE_IDCODE=00010011011100100010000010010011

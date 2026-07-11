@@ -1,0 +1,19 @@
+{
+  "schema": "rf-comm-p7-outer-deadline-abort-record-v1",
+  "run_id": "p7_20260711_stationary_app_r9",
+  "result": "ABORT_REQUESTED",
+  "outer_interactive_command_timeout_seconds": 7200,
+  "historical_r8_first_55_stage_elapsed_minutes": 182.68,
+  "reason": "configured outer interactive command deadline cannot contain the complete 66-stage sequence; abort requested before external termination so the active safe wrapper can execute shutdown-on-exit",
+  "abort_file": ".hardware_authorization/ABORT_NOW.txt",
+  "abort_file_content": {
+    "P7_ABORT_REQUESTED": "1",
+    "REASON": "outer_interactive_process_deadline_insufficient_for_full_sequence"
+  },
+  "failed_stage_index_zero_based": 2,
+  "failed_stage": "p7_p6_frame_regression_m2",
+  "failed_stage_candidate_returncode": 130,
+  "failed_stage_shutdown_after_result": "PASS",
+  "coverage_claimed": false,
+  "stationary_started": false
+}

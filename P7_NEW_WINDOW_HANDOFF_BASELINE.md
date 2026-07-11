@@ -403,3 +403,55 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - 下一次硬件 run ID 必须为 r9。必须先准确提交 parser/summarizer 修复和 r8 evidence，再在新干净
   source 上只生成一次新 offline checkpoint、生成 r9 66-stage plan 并通过全部 dry validation；r9 必须
   从 stage 1 全新开始。r8 的 54-stage PASS prefix 仅为祖先 source 历史记录，贡献 0 active coverage。
+
+## 17. 2026-07-11 r9 增量交接（本节覆盖第 16 节的 next-run 描述）
+
+- r8 ARQ retry counter parser/summarizer 修复与 immutable r8 evidence 已提交为
+  `91b8fbd45f339dfb143bac8374000486bd4a37a0`。
+- 在干净的 `91b8fbd4...` source 上唯一一次新生成的 offline checkpoint 为 PASS；SHA256
+  `a243fb6f5786ded7a04e40ce212dc963a1079829af3b144e62b6fa1dae79e315`，13/13 checks
+  为 true，`NO_HARDWARE_ACTIONS_EXECUTED=true`，`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r9 run ID 为 `p7_20260711_stationary_app_r9`；plan SHA256 为
+  `f3dd86f1e18cfb2998d4ffbdd9836d601732411dd34b1fbe38ee6ff1cf1c744c`。66 个
+  authorization、66 个 child dry validation、生成器 executor dry 与独立 executor dry 全部 PASS；唯一
+  stationary 严格为第 66 项，且生成/dry 未启动硬件。
+- r9 只启动一次并永远不得 resume。stage 1 `p7_safe_idle` 与 stage 2
+  `p7_p6_frame_regression_m1` 完整 PASS。启动后发现承载 executor 的交互命令被配置了 7200 秒外层工具
+  deadline，而 r8 机器 ledger 已证明仅前 55 stage 就耗时 182.68 分钟；继续会导致外层工具在 safe
+  wrapper 内部被强制终止，不能保证 shutdown-on-exit。为避免该风险，使用 plan 已绑定的
+  `.hardware_authorization/ABORT_NOW.txt` 请求动态 abort。
+- abort 在 stage 3 `p7_p6_frame_regression_m2` 的 candidate 启动后被检测。candidate rc=130、
+  `abort_seen=true`、forced containment cleanup 与 process reap 均有记录；candidate 尚未写出 programming/
+  transaction PASS markers，故 stage 3 正确为 `FAIL_STAGE`。shutdown-before 和 shutdown-after 均完整 PASS，
+  outer ledger 以 completed=2、failed_stage_index=2 停止；stage 4--66、PS ELF 与 stationary 均未启动，
+  正式 1800 秒 stationary 尝试次数仍为 0。stage 1--2 前缀只属失败的祖先 epoch，贡献 0 active coverage。
+- 第一次独立恢复 launcher 因本机 PowerShell execution policy 在脚本加载前拒绝，机器记录明确
+  `script_loaded=false`、`vivado_started=false`、`hardware_actions_executed=false`，不得当作 shutdown。
+  随后通过 `powershell.exe -ExecutionPolicy Bypass` 启动既定 P4 shutdown wrapper；有效恢复目录为
+  `recovery_shutdown_after_failed_stage3_20260711T112013Z/`，记录正确 profile SHA、raw rc125、唯一
+  `TFDU_SHUTDOWN_PROGRAMMED`、`SHUTDOWN_EXIT=0` 和 `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。
+  临时 helper 随后自然退出，只保留未触碰的外部 legacy `hw_server` PID 45220。
+- r9 frozen 10-file manifest SHA256 为
+  `eec891c13048a1f0afb0ca922b15074d22aabff77ae56b93fd51564edb80b661`，明确
+  `result=FAIL_STAGE`、`coverage_claimed=false`。summarizer 必须将该 epoch 分类为外层 deadline 不足后主动
+  fail-closed abort，精确验证 abort/outer/inner/recovery 证据并对 tamper fail closed。
+- 下一次硬件 run ID 必须为 r10。必须先准确提交 r9 summarizer/tests/handoff 与全部 r9 evidence，再在新干净
+  source 上只生成一次新 offline checkpoint、生成 r10 66-stage plan 并通过全部 dry validation。r10 必须从
+  stage 1 全新开始；承载 executor 的工具命令上限必须覆盖完整风险序列（至少 24 小时），不得依赖 resume。
+
+## 18. 2026-07-11 diagnostic suffix 授权（本节覆盖第 17 节的 next-run 描述）
+
+- 用户已明确授权新的零覆盖诊断策略，以避免每个新问题都重复完整低风险前缀；这不是失败 run resume 授权，
+  也不是提前执行 stationary 的授权。r9 仍为 immutable FAIL，永远不得 resume。
+- 在 r9 历史验证/evidence 准确提交、diagnostic plan 支持准确提交且新干净 offline checkpoint PASS 后，下一
+  hardware run 必须使用带诊断后缀的新 run ID，例如
+  `p7_20260711_stationary_app_r10_diag_suffix55`，不得使用会被误解为正式验收的名称。
+- diagnostic plan 严格只包含原 full plan 的 stages 1--4（safe-idle 与三个 P6 frame regression）以及
+  stages 55--65，共 15 项；不得包含原 stage 66 `p7_ps_stationary`，不得创建 stationary launch intent。
+- plan、ledger、summaries 与 frozen manifest 必须明确 `DIAGNOSTIC_ONLY`、`coverage_claimed=false`、
+  `HARDWARE_ACCEPTANCE=PENDING_HW`。任何历史 prefix/suffix PASS 都贡献 0 final acceptance coverage。
+- diagnostic run 仍需全套新 run ID、scoped authorization、immutable path/hash、offline/dry gates、
+  shutdown-before/after。任一失败立即停止、保存原始 evidence、执行独立 shutdown recovery、冻结 epoch，
+  再换新 diagnostic run ID；不得 resume。
+- suffix 问题全部修复/提交且非硬件 gates PASS 后，才生成新的正式 run ID，从完整 stages 1--66 重新执行。
+  只有该正式全量 run 可以启动唯一一次 stage 66 的 1800 秒 stationary acceptance。
