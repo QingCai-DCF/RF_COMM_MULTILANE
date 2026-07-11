@@ -3982,6 +3982,22 @@ def main(argv: list[str] | None = None) -> int:
     internal_error = ""
     candidate_child_reaped = False
     candidate_returncode: int | None = None
+    before_final = evidence_dir / "shutdown_before_result.txt"
+    after_final = evidence_dir / "shutdown_after_result.txt"
+    summary["shutdown_before"] = {
+        "attempted": False,
+        "programming_attempted": False,
+        "passed": False,
+        "result_file": str(before_final),
+        "failures": ["shutdown-before was not launched"],
+    }
+    summary["shutdown_after"] = {
+        "attempted": False,
+        "programming_attempted": False,
+        "passed": False,
+        "result_file": str(after_final),
+        "failures": ["shutdown-after was not launched"],
+    }
     raw_final = evidence_dir / "p7_ps_application_raw_result.log"
     try:
         for value, expected, label in (
@@ -3991,7 +4007,6 @@ def main(argv: list[str] | None = None) -> int:
             error = _verify_hash(value, expected, label)
             if error:
                 raise RuntimeError(error)
-        before_final = evidence_dir / "shutdown_before_result.txt"
         before_partial = _atomic_result_path(before_final)
         before_proc = _atomic_process(
             name="shutdown_before",
@@ -4002,10 +4017,20 @@ def main(argv: list[str] | None = None) -> int:
             watch_abort=False,
         )
         _promote_result(before_partial, before_final)
-        before_stdout = Path(before_proc.stdout_path).read_text(encoding="utf-8", errors="replace")
         before_text = before_final.read_text(encoding="utf-8", errors="replace") if before_final.is_file() else ""
-        before_ok, before_failures = process_support.evaluate_shutdown(before_proc.returncode, before_stdout, before_text)
-        summary["shutdown_before"] = {**_process_record(before_proc), "passed": before_ok, "failures": before_failures}
+        before_ok, before_failures = process_support.evaluate_shutdown(
+            before_proc.returncode,
+            before_text,
+            expected_shutdown_bit=frozen_shutdown,
+        )
+        summary["shutdown_before"] = {
+            **_process_record(before_proc),
+            "attempted": True,
+            "programming_attempted": process_support.shutdown_programming_attempted(before_text),
+            "result_file": str(before_final),
+            "passed": before_ok,
+            "failures": before_failures,
+        }
         summary["programmed_shutdown_before"] = before_ok
         summary["programmed_fpga"] = before_ok
         event("shutdown_before_finished", returncode=before_proc.returncode, passed=before_ok)
@@ -4080,7 +4105,6 @@ def main(argv: list[str] | None = None) -> int:
         internal_error = f"{type(exc).__name__}: {exc}"
         event("stage_exception", error=internal_error)
     finally:
-        after_final = evidence_dir / "shutdown_after_result.txt"
         after_partial = _atomic_result_path(after_final)
         summary["child_reaped_before_shutdown_after"] = candidate_child_reaped
         event(
@@ -4099,12 +4123,17 @@ def main(argv: list[str] | None = None) -> int:
                 watch_abort=False,
             )
             _promote_result(after_partial, after_final)
-            after_stdout = Path(after_proc.stdout_path).read_text(encoding="utf-8", errors="replace")
             after_text = after_final.read_text(encoding="utf-8", errors="replace") if after_final.is_file() else ""
-            after_ok, after_failures = process_support.evaluate_shutdown(after_proc.returncode, after_stdout, after_text)
+            after_ok, after_failures = process_support.evaluate_shutdown(
+                after_proc.returncode,
+                after_text,
+                expected_shutdown_bit=frozen_shutdown,
+            )
             summary["shutdown_after"] = {
                 **_process_record(after_proc),
                 "attempted": True,
+                "programming_attempted": process_support.shutdown_programming_attempted(after_text),
+                "result_file": str(after_final),
                 "passed": after_ok,
                 "failures": after_failures,
             }
@@ -4115,8 +4144,10 @@ def main(argv: list[str] | None = None) -> int:
             after_ok = False
             summary["shutdown_after"] = {
                 "attempted": False,
+                "programming_attempted": False,
                 "passed": False,
                 "returncode": 126,
+                "result_file": str(after_final),
                 "failures": [f"{type(shutdown_exc).__name__}: {shutdown_exc}"],
             }
             event("shutdown_after_failed_to_launch", reason=str(shutdown_exc))

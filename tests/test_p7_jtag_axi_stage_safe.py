@@ -5,11 +5,17 @@ import hashlib
 import importlib.util
 import io
 import json
+import re
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
+
+try:
+    import tkinter
+except ImportError:  # pragma: no cover - Tcl runtime is optional outside release gates.
+    tkinter = None
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +32,24 @@ import p7_jtag_backend as backend  # noqa: E402
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def tcl_interpreter():
+    if tkinter is None:
+        raise unittest.SkipTest("Python Tcl runtime is unavailable")
+    try:
+        return tkinter.Tcl()
+    except Exception as exc:  # pragma: no cover - platform Tcl installation failure.
+        raise unittest.SkipTest(f"Python Tcl runtime is unavailable: {exc}") from exc
+
+
+def install_captured_tcl_exit(interp) -> None:
+    interp.eval(
+        "proc exit {code} {\n"
+        "  set ::p7_captured_exit_code $code\n"
+        "  return -code error \"__P7_CAPTURED_EXIT__$code\"\n"
+        "}"
+    )
 
 
 HELPER_PATHS = [
@@ -468,14 +492,85 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertTrue(any("identity marker mismatch" in item for item in failures))
 
     def test_shutdown_requires_both_zero_exit_and_marker(self) -> None:
+        valid_result = "\n".join(
+            [
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                "TFDU_SHUTDOWN_PROGRAMMED=C:/shutdown.bit",
+                "P7_SHUTDOWN_RESULT=PASS",
+                "",
+            ]
+        )
         passed, failures = stage.evaluate_shutdown(
             125,
-            "TFDU_SHUTDOWN_PROGRAMMED=C:/shutdown.bit\n",
-            "P7_SHUTDOWN_RESULT=PASS\n",
+            valid_result,
+            expected_shutdown_bit="C:/shutdown.bit",
         )
         self.assertFalse(passed)
         self.assertTrue(any("nonzero exit code" in item for item in failures))
-        passed, failures = stage.evaluate_shutdown(0, "", "P7_SHUTDOWN_RESULT=PASS\n")
+        passed, failures = stage.evaluate_shutdown(
+            0,
+            valid_result,
+            expected_shutdown_bit="C:/shutdown.bit",
+        )
+        self.assertTrue(passed, failures)
+        self.assertTrue(stage.shutdown_programming_attempted("P7_TCL_PROGRAMMING_ATTEMPTED=1\n"))
+        for duplicate_line in (
+            "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+            "TFDU_SHUTDOWN_PROGRAMMED=C:/shutdown.bit",
+            "P7_SHUTDOWN_RESULT=PASS",
+        ):
+            duplicate_result = valid_result + duplicate_line + "\n"
+            passed, failures = stage.evaluate_shutdown(
+                0,
+                duplicate_result,
+                expected_shutdown_bit="C:/shutdown.bit",
+            )
+            self.assertFalse(passed)
+            self.assertTrue(any("duplicate markers" in item for item in failures))
+        self.assertIsNone(
+            stage.shutdown_programming_attempted(
+                valid_result + "P7_TCL_PROGRAMMING_ATTEMPTED=1\n"
+            )
+        )
+        for result_text, expected_attempted in (
+            ("P7_SHUTDOWN_RESULT=PASS\n", None),
+            ("P7_TCL_PROGRAMMING_ATTEMPTED=0\nP7_SHUTDOWN_RESULT=PASS\n", False),
+            ("P7_TCL_PROGRAMMING_ATTEMPTED=unknown\nP7_SHUTDOWN_RESULT=PASS\n", None),
+        ):
+            passed, failures = stage.evaluate_shutdown(
+                0,
+                "TFDU_SHUTDOWN_PROGRAMMED=C:/shutdown.bit\n" + result_text,
+                expected_shutdown_bit="C:/shutdown.bit",
+            )
+            self.assertFalse(passed)
+            self.assertTrue(any("P7_TCL_PROGRAMMING_ATTEMPTED=1" in item for item in failures))
+            self.assertIs(expected_attempted, stage.shutdown_programming_attempted(result_text))
+        stdout_echo_spoof = "\n".join(
+            [
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                'puts "TFDU_SHUTDOWN_PROGRAMMED=C:/shutdown.bit"',
+                "P7_SHUTDOWN_RESULT=PASS",
+            ]
+        )
+        passed, failures = stage.evaluate_shutdown(
+            0,
+            stdout_echo_spoof,
+            expected_shutdown_bit="C:/shutdown.bit",
+        )
+        self.assertFalse(passed)
+        self.assertTrue(any("fresh result file" in item for item in failures))
+        passed, failures = stage.evaluate_shutdown(
+            0,
+            valid_result.replace("C:/shutdown.bit", "C:/wrong.bit"),
+            expected_shutdown_bit="C:/shutdown.bit",
+        )
+        self.assertFalse(passed)
+        self.assertTrue(any("authorized shutdown bit" in item for item in failures))
+        passed, failures = stage.evaluate_shutdown(
+            0,
+            "P7_SHUTDOWN_RESULT=PASS\n",
+            expected_shutdown_bit="C:/shutdown.bit",
+        )
         self.assertFalse(passed)
         self.assertTrue(any("marker missing" in item for item in failures))
 
@@ -1134,6 +1229,230 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertIn("P7_HW_CANONICAL_PART=", tcl)
         self.assertIn("P7_HW_LIVE_PART=", tcl)
         self.assertNotIn("string match -nocase *xc7z010*", tcl)
+        self.assertNotIn(r"string map {\ /}", tcl)
+        self.assertEqual(3, tcl.count('string map [list "\\\\" "/"]'))
+        self.assertEqual(2, tcl.count("P7_JTAG_STAGE_ERROR=[p7_sanitize_error $error_text]"))
+        self.assertNotIn("P7_JTAG_STAGE_ERROR=[string map", tcl)
+        self.assertGreaterEqual(tcl.count("P7_TCL_PROGRAMMING_ATTEMPTED="), 5)
+        attempt_assignments = [
+            match.start()
+            for match in re.finditer("set candidate_programming_attempted 1", tcl)
+        ]
+        self.assertEqual(2, len(attempt_assignments))
+        program_calls = [
+            match.start()
+            for match in re.finditer("program_hw_devices \\$selected_device", tcl)
+        ]
+        self.assertGreaterEqual(len(program_calls), 3)
+        self.assertLess(attempt_assignments[0], program_calls[0])
+        self.assertLess(attempt_assignments[1], program_calls[1])
+        wrapper = MODULE_PATH.read_text(encoding="utf-8")
+        self.assertIn('markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") != "1"', wrapper)
+        self.assertEqual(2, wrapper.count('"programming_attempted": shutdown_programming_attempted('))
+        self.assertNotIn("combined = stdout", wrapper)
+        self.assertEqual(2, wrapper.count("expected_shutdown_bit=shutdown_bit"))
+
+    def test_tcl_path_mapping_and_error_sanitizer_execute_in_tcl(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        self.assertEqual(1, int(interp.call("info", "complete", tcl)))
+        prefix = tcl[: tcl.index("proc p7_require_auth_path")]
+        interp.eval(prefix)
+        normalized = str(interp.call("p7_normal_path", r"C:\Temp\TFDU Shutdown.bit"))
+        self.assertNotIn("\\", normalized)
+        self.assertTrue(normalized.endswith("c:/temp/tfdu shutdown.bit"), normalized)
+        original = "ORIGINAL_FAILURE first line\nsecond line\rthird line"
+        self.assertEqual(
+            "ORIGINAL_FAILURE first line second line third line",
+            str(interp.call("p7_sanitize_error", original)),
+        )
+        with self.assertRaises(tkinter.TclError):
+            interp.eval(r"string map {\ /} {C:\Temp\broken.bit}")
+
+    def test_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            result_path = root / "failure.txt"
+            interp = tcl_interpreter()
+            install_captured_tcl_exit(interp)
+            interp.setvar("env(RF_COMM_HW_AUTH)", "P7_STATIONARY_APP_LAYER_APPROVED")
+            interp.setvar(
+                "argv",
+                (
+                    str(root),
+                    "SHUTDOWN",
+                    str(root / "missing-auth.txt"),
+                    "210512180081",
+                    "xc7z010clg400-1",
+                    "localhost:3121/xilinx_tcf/Digilent/210512180081",
+                    "localhost:3121",
+                    "1000000",
+                    str(root / "missing.bit"),
+                    "-",
+                    "-",
+                    str(result_path),
+                    "0x43c00000",
+                    "1",
+                    "1",
+                    "0",
+                    str(root / "missing.bit"),
+                ),
+            )
+            with self.assertRaises(tkinter.TclError) as raised:
+                interp.eval(tcl)
+            self.assertIn("__P7_CAPTURED_EXIT__41", str(raised.exception))
+            self.assertEqual("41", str(interp.getvar("p7_captured_exit_code")))
+            result = result_path.read_text(encoding="utf-8")
+        self.assertIn("P7_JTAG_STAGE_RESULT=FAIL", result)
+        self.assertIn("P7_TCL_PROGRAMMING_ATTEMPTED=0", result)
+        self.assertIn("P7_JTAG_STAGE_ERROR=P7 max runtime must be in 1..1800 seconds", result)
+        self.assertNotIn("char map list unbalanced", result)
+
+    def test_tcl_shutdown_path_reaches_pass_with_offline_command_stubs(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            auth_dir = root / ".hardware_authorization"
+            auth_dir.mkdir()
+            shutdown_bit = root / "tfdu_shutdown.bit"
+            shutdown_bit.write_bytes(b"offline-tcl-fixture")
+            result_path = root / "shutdown_result.txt"
+            board_id = "210512180081"
+            target = f"localhost:3121/xilinx_tcf/Digilent/{board_id}"
+            auth_path = auth_dir / "offline_shutdown.txt"
+            auth_path.write_text(
+                "\n".join(
+                    [
+                        "P7_STATIONARY_APP_LAYER_APPROVED",
+                        "AUTHORIZED_STAGE=P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET",
+                        "USER_HARDWARE_AUTHORIZATION_FOR_P7=GRANTED",
+                        f"BOARD_ID={board_id}",
+                        "EXPECTED_PART=xc7z010clg400-1",
+                        f"EXPECTED_TARGET={target}",
+                        "SHUTDOWN_ON_EXIT=required",
+                        "NO_ETHERNET=true",
+                        "NO_MOTION=true",
+                        "LANE_COUNT=2",
+                        "MAX_LANE_MASK=0x3",
+                        f"SHUTDOWN_BITSTREAM_PATH={shutdown_bit}",
+                        "MAX_RUNTIME_SEC=30",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            interp = tcl_interpreter()
+            install_captured_tcl_exit(interp)
+            interp.setvar("env(RF_COMM_HW_AUTH)", "P7_STATIONARY_APP_LAYER_APPROVED")
+            interp.setvar("p7_stub_target", target)
+            stub_prelude = (
+                "set ::p7_stub_calls {}\n"
+                "proc open_hw_manager {} {lappend ::p7_stub_calls open_hw_manager}\n"
+                "proc connect_hw_server {args} {lappend ::p7_stub_calls connect_hw_server}\n"
+                "proc get_hw_targets {args} {return $::p7_stub_target}\n"
+                "proc current_hw_target {args} {}\n"
+                "proc set_property {args} {}\n"
+                "proc open_hw_target {args} {}\n"
+                "proc get_hw_devices {args} {return xc7z010_1}\n"
+                "proc get_property {property object} {\n"
+                "  switch -- $property {\n"
+                "    PART {return xc7z010}\n"
+                "    NAME {return xc7z010_1}\n"
+                "    IDCODE {return 13722093}\n"
+                "    default {error \"unexpected property $property\"}\n"
+                "  }\n"
+                "}\n"
+                "proc current_hw_device {args} {}\n"
+                "proc program_hw_devices {args} {lappend ::p7_stub_calls program_hw_devices}\n"
+                "proc refresh_hw_device {args} {}\n"
+                "proc close_hw_target {args} {}\n"
+                "proc disconnect_hw_server {args} {}\n"
+                "proc close_hw_manager {args} {}"
+            )
+            interp.eval(stub_prelude)
+            interp.setvar(
+                "argv",
+                (
+                    str(root),
+                    "SHUTDOWN",
+                    str(auth_path),
+                    board_id,
+                    "xc7z010clg400-1",
+                    target,
+                    "localhost:3121",
+                    "1000000",
+                    str(shutdown_bit),
+                    "-",
+                    "-",
+                    str(result_path),
+                    "0x43c00000",
+                    "1",
+                    "4096",
+                    "30",
+                    str(shutdown_bit),
+                ),
+            )
+            with self.assertRaises(tkinter.TclError) as raised:
+                interp.eval(tcl)
+            self.assertIn("__P7_CAPTURED_EXIT__0", str(raised.exception))
+            self.assertEqual("0", str(interp.getvar("p7_captured_exit_code")))
+            calls = tuple(interp.splitlist(interp.getvar("p7_stub_calls")))
+            result = result_path.read_text(encoding="utf-8")
+            self.assertEqual(("open_hw_manager", "connect_hw_server", "program_hw_devices"), calls)
+            self.assertIn("P7_TCL_PROGRAMMING_ATTEMPTED=1", result)
+            self.assertIn("TFDU_SHUTDOWN_PROGRAMMED=", result)
+            self.assertIn("P7_SHUTDOWN_RESULT=PASS", result)
+            self.assertNotIn("char map list unbalanced", result)
+            passed, failures = stage.evaluate_shutdown(
+                0,
+                result,
+                expected_shutdown_bit=shutdown_bit,
+            )
+            self.assertTrue(passed, failures)
+
+            failure_result_path = root / "shutdown_failure_result.txt"
+            failure_interp = tcl_interpreter()
+            install_captured_tcl_exit(failure_interp)
+            failure_interp.setvar("env(RF_COMM_HW_AUTH)", "P7_STATIONARY_APP_LAYER_APPROVED")
+            failure_interp.setvar("p7_stub_target", target)
+            failure_interp.eval(
+                stub_prelude.replace(
+                    "proc program_hw_devices {args} {lappend ::p7_stub_calls program_hw_devices}",
+                    "proc program_hw_devices {args} {error synthetic_program_failure}",
+                )
+            )
+            failure_interp.setvar(
+                "argv",
+                (
+                    str(root),
+                    "SHUTDOWN",
+                    str(auth_path),
+                    board_id,
+                    "xc7z010clg400-1",
+                    target,
+                    "localhost:3121",
+                    "1000000",
+                    str(shutdown_bit),
+                    "-",
+                    "-",
+                    str(failure_result_path),
+                    "0x43c00000",
+                    "1",
+                    "4096",
+                    "30",
+                    str(shutdown_bit),
+                ),
+            )
+            with self.assertRaises(tkinter.TclError) as raised:
+                failure_interp.eval(tcl)
+            self.assertIn("__P7_CAPTURED_EXIT__41", str(raised.exception))
+            failure_result = failure_result_path.read_text(encoding="utf-8")
+            self.assertIn("P7_TCL_PROGRAMMING_ATTEMPTED=1", failure_result)
+            self.assertIn("P7_JTAG_STAGE_RESULT=FAIL", failure_result)
+            self.assertIn("synthetic_program_failure", failure_result)
+            self.assertNotIn("TFDU_SHUTDOWN_PROGRAMMED=", failure_result)
+            self.assertNotIn("P7_SHUTDOWN_RESULT=PASS", failure_result)
 
     def test_wrapper_never_sets_external_hardware_authorization(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")

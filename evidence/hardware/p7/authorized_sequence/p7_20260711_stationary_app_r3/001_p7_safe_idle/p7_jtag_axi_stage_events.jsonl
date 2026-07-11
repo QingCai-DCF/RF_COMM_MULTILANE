@@ -1,0 +1,7 @@
+{"timestamp_utc": "2026-07-11T02:51:08.757364+00:00", "event": "authorized_execution_begin", "stage": "p7_safe_idle"}
+{"timestamp_utc": "2026-07-11T02:51:41.333242+00:00", "event": "preflight_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T02:51:44.990647+00:00", "event": "shutdown_before_finished", "returncode": 41, "passed": false}
+{"timestamp_utc": "2026-07-11T02:51:44.992195+00:00", "event": "stage_exception", "error": "RuntimeError: shutdown-before requires normal rc=0 and TFDU_SHUTDOWN_PROGRAMMED marker"}
+{"timestamp_utc": "2026-07-11T02:51:44.995246+00:00", "event": "shutdown_after_started", "candidate_child_reaped": false, "candidate_returncode": null}
+{"timestamp_utc": "2026-07-11T02:51:48.643901+00:00", "event": "shutdown_after_finished", "returncode": 41, "passed": false}
+{"timestamp_utc": "2026-07-11T02:51:48.644603+00:00", "event": "authorized_execution_end", "status": "FAIL_SHUTDOWN_AFTER"}

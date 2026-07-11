@@ -1039,6 +1039,103 @@ def _resolve_summary_reference(value: Any, summary_path: Path) -> Path | None:
     return local if local.exists() else resolve_path(value)
 
 
+def _parse_unique_fresh_markers(text: str) -> tuple[dict[str, str], list[str]]:
+    markers: dict[str, str] = {}
+    duplicates: set[str] = set()
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key in markers:
+            duplicates.add(key)
+            continue
+        markers[key] = value.strip()
+    return markers, sorted(duplicates)
+
+
+def _validate_p7_shutdown_summary_block(
+    *,
+    summary: Mapping[str, Any],
+    summary_path: Path,
+    which: str,
+    expected_shutdown_bit: Path,
+    require: bool,
+) -> tuple[list[str], dict[str, Any]]:
+    """Validate one P7 shutdown barrier solely from its fresh result file."""
+
+    errors: list[str] = []
+    block = summary.get(f"shutdown_{which}")
+    record: dict[str, Any] = {"present": isinstance(block, dict)}
+    label = f"shutdown-{which}"
+    if not isinstance(block, dict):
+        if require:
+            errors.append(f"wrapper {label} record is missing")
+        return errors, record
+
+    record.update(
+        {
+            "returncode": block.get("returncode"),
+            "passed": block.get("passed"),
+            "attempted": block.get("attempted"),
+            "programming_attempted": block.get("programming_attempted"),
+            "process_tree_reaped": block.get("process_tree_reaped"),
+            "process_tree_terminated": block.get("process_tree_terminated"),
+            "containment_cleanup_attempted": block.get("containment_cleanup_attempted"),
+            "containment_cleanup_terminated": block.get("containment_cleanup_terminated"),
+        }
+    )
+    if block.get("returncode") != 0 or block.get("passed") is not True:
+        errors.append(f"wrapper {label} did not return rc=0 and PASS")
+    if block.get("attempted") is not True:
+        errors.append(f"wrapper {label} does not prove attempted=true")
+    if block.get("programming_attempted") is not True:
+        errors.append(f"wrapper {label} does not prove programming_attempted=true")
+    if block.get("process_tree_reaped") is not True:
+        errors.append(f"wrapper {label} process tree was not reaped")
+    if block.get("containment_cleanup_attempted") is not False:
+        errors.append(f"wrapper {label} used or omits forced-cleanup evidence")
+    if block.get("containment_cleanup_terminated") is not False:
+        errors.append(f"wrapper {label} reports forced containment termination")
+    if block.get("process_tree_terminated") is not False:
+        errors.append(f"wrapper {label} reports process-tree termination")
+
+    result_path = _resolve_summary_reference(block.get("result_file"), summary_path)
+    record["result_file"] = _file_record(result_path) if result_path else {"missing": True}
+    result_text = ""
+    if result_path is None or not result_path.is_file():
+        errors.append(f"{label} fresh result file is missing")
+    else:
+        try:
+            result_text = result_path.read_text(encoding="utf-8", errors="strict")
+        except (OSError, UnicodeError) as exc:
+            errors.append(f"{label} fresh result file is unreadable: {type(exc).__name__}: {exc}")
+    result_markers, duplicate_markers = _parse_unique_fresh_markers(result_text)
+    record["duplicate_markers"] = duplicate_markers
+    if duplicate_markers:
+        errors.append(f"{label} fresh result contains duplicate markers: {duplicate_markers}")
+    programmed_path = result_markers.get("TFDU_SHUTDOWN_PROGRAMMED", "")
+    exact_programmed_path = bool(programmed_path) and _path_equal(
+        Path(programmed_path), expected_shutdown_bit
+    )
+    record["tfdu_shutdown_programmed"] = programmed_path or None
+    record["tfdu_shutdown_programmed_exact"] = exact_programmed_path
+    record["p7_tcl_programming_attempted"] = result_markers.get(
+        "P7_TCL_PROGRAMMING_ATTEMPTED"
+    )
+    record["p7_shutdown_result"] = result_markers.get("P7_SHUTDOWN_RESULT")
+    if not programmed_path:
+        errors.append(f"{label} fresh result lacks exact TFDU_SHUTDOWN_PROGRAMMED marker")
+    elif not exact_programmed_path:
+        errors.append(f"{label} fresh result programs a path other than the authorized shutdown bit")
+    if result_markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") != "1":
+        errors.append(f"{label} fresh result lacks P7_TCL_PROGRAMMING_ATTEMPTED=1")
+    if result_markers.get("P7_SHUTDOWN_RESULT") != "PASS":
+        errors.append(f"{label} fresh result lacks P7_SHUTDOWN_RESULT=PASS")
+    return errors, record
+
+
 def validate_wrapper_summary(
     stage: Mapping[str, Any], summary_path: Path, *, require_pass: bool
 ) -> tuple[dict[str, Any] | None, list[str], dict[str, Any]]:
@@ -1070,48 +1167,57 @@ def validate_wrapper_summary(
         stage["options"].get("--source-commit", "")
     ).lower():
         errors.append("wrapper summary source commit is missing or mismatched")
+    raw_options = stage.get("options")
+    options = raw_options if isinstance(raw_options, Mapping) else {}
+    expected_shutdown_bit: Path | None = None
+    if is_jtag:
+        expected_shutdown_value = options.get("--shutdown-bitstream")
+        if expected_shutdown_value:
+            expected_shutdown_bit = resolve_path(str(expected_shutdown_value))
+    else:
+        frozen_shutdown = summary.get("frozen_shutdown")
+        expected_shutdown_sha = str(options.get("--shutdown-bitstream-sha256", "")).lower()
+        if not isinstance(frozen_shutdown, dict):
+            errors.append("PS wrapper summary frozen_shutdown record is missing")
+        else:
+            frozen_path = _resolve_summary_reference(frozen_shutdown.get("path"), summary_path)
+            recorded_sha = str(frozen_shutdown.get("sha256", "")).lower()
+            if frozen_path is None or not frozen_path.is_file():
+                errors.append("PS wrapper frozen shutdown file is missing")
+            else:
+                expected_shutdown_bit = frozen_path
+                actual_sha = sha256_file(frozen_path)
+                if actual_sha != expected_shutdown_sha:
+                    errors.append("PS wrapper frozen shutdown actual SHA256 mismatches authorization")
+                if actual_sha != recorded_sha:
+                    errors.append("PS wrapper frozen shutdown actual SHA256 mismatches summary")
+            if not SHA256_RE.fullmatch(expected_shutdown_sha):
+                errors.append("PS wrapper stage shutdown SHA256 is missing or malformed")
+            if recorded_sha != expected_shutdown_sha:
+                errors.append("PS wrapper frozen shutdown SHA256 mismatches authorized shutdown SHA256")
+    if expected_shutdown_bit is None:
+        errors.append("wrapper stage does not bind an authorized shutdown bit path")
+    if summary.get("programmed_shutdown_before") is not True:
+        errors.append("wrapper summary does not prove programmed_shutdown_before=true")
     if summary.get("programmed_shutdown_after") is not True:
         errors.append("wrapper summary does not prove programmed_shutdown_after=true")
-    shutdown = summary.get("shutdown_after")
-    if not isinstance(shutdown, dict):
-        errors.append("wrapper shutdown-after record is missing")
-    else:
-        shutdown_record = {
-            "present": True,
-            "returncode": shutdown.get("returncode"),
-            "passed": shutdown.get("passed"),
-            "process_tree_reaped": shutdown.get("process_tree_reaped"),
-            "process_tree_terminated": shutdown.get("process_tree_terminated"),
-            "containment_cleanup_attempted": shutdown.get("containment_cleanup_attempted"),
-            "containment_cleanup_terminated": shutdown.get("containment_cleanup_terminated"),
-        }
-        if shutdown.get("returncode") != 0 or shutdown.get("passed") is not True:
-            errors.append("wrapper shutdown-after did not return rc=0 and PASS")
-        if shutdown.get("process_tree_reaped") is not True:
-            errors.append("wrapper shutdown-after process tree was not reaped")
-        if shutdown.get("containment_cleanup_attempted") is not False:
-            errors.append("wrapper shutdown-after used or omits forced-cleanup evidence")
-        if shutdown.get("containment_cleanup_terminated") is not False:
-            errors.append("wrapper shutdown-after reports forced containment termination")
-        if shutdown.get("process_tree_terminated") is not False:
-            errors.append("wrapper shutdown-after reports process-tree termination")
-        result_path = _resolve_summary_reference(shutdown.get("result_file"), summary_path)
-        shutdown_record["result_file"] = _file_record(result_path) if result_path else {"missing": True}
-        result_text = (
-            result_path.read_text(encoding="utf-8", errors="strict")
-            if result_path is not None and result_path.is_file()
-            else ""
+    if expected_shutdown_bit is not None:
+        before_errors, _before_record = _validate_p7_shutdown_summary_block(
+            summary=summary,
+            summary_path=summary_path,
+            which="before",
+            expected_shutdown_bit=expected_shutdown_bit,
+            require=require_pass or isinstance(summary.get("shutdown_before"), dict),
         )
-        result_markers = parse_markers(result_text)
-        shutdown_marker = bool(result_markers.get("TFDU_SHUTDOWN_PROGRAMMED")) or result_markers.get(
-            "SHUTDOWN_EXIT"
-        ) == "0"
-        shutdown_record["shutdown_marker"] = shutdown_marker
-        shutdown_record["p7_shutdown_result"] = result_markers.get("P7_SHUTDOWN_RESULT")
-        if not shutdown_marker:
-            errors.append("shutdown-after fresh result lacks TFDU_SHUTDOWN_PROGRAMMED or SHUTDOWN_EXIT=0")
-        if result_markers.get("P7_SHUTDOWN_RESULT") != "PASS":
-            errors.append("shutdown-after fresh result lacks P7_SHUTDOWN_RESULT=PASS")
+        errors.extend(before_errors)
+        after_errors, shutdown_record = _validate_p7_shutdown_summary_block(
+            summary=summary,
+            summary_path=summary_path,
+            which="after",
+            expected_shutdown_bit=expected_shutdown_bit,
+            require=True,
+        )
+        errors.extend(after_errors)
     process_key = "stage_process" if is_jtag else "ps_process"
     process = summary.get(process_key)
     if not isinstance(process, dict):

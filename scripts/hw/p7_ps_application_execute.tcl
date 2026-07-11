@@ -34,7 +34,16 @@ proc p7_require_value {text key expected} {
 }
 
 proc p7_normal_path {path} {
-  return [string tolower [string map {\ /} [file normalize $path]]]
+  return [string tolower [string map [list "\\" "/"] [file normalize $path]]]
+}
+
+proc p7_sanitize_error {text} {
+  # Build an explicit even mapping list.  A malformed diagnostic formatter
+  # must never replace the error that the outer catch actually captured.
+  if {[catch {string map [list "\r" " " "\n" " "] $text} sanitized]} {
+    return $text
+  }
+  return $sanitized
 }
 
 proc p7_require_path {text key expected} {
@@ -643,8 +652,8 @@ set rc [catch {
   if {![string match -nocase "tcp:*" $xsdb_url]} { set xsdb_url "tcp:$xsdb_url" }
 
   set authorization_root [file normalize [file join $root_dir .hardware_authorization]]
-  set auth_slash [string map {\ /} $authorization_file]
-  set auth_root_slash [string trimright [string map {\ /} $authorization_root] "/"]
+  set auth_slash [string map [list "\\" "/"] $authorization_file]
+  set auth_root_slash [string trimright [string map [list "\\" "/"] $authorization_root] "/"]
   if {![string match -nocase "${auth_root_slash}/*" $auth_slash]} {
     error "P7 authorization file must be under .hardware_authorization"
   }
@@ -2021,7 +2030,7 @@ if {$rc != 0} {
   if {$result_handle ne ""} {
     catch {
       p7_say $result_handle "P7_PS_STAGE_RESULT=FAIL"
-      p7_say $result_handle "P7_PS_STAGE_ERROR=[string map [list \n " " \r " "] $error_text]"
+      p7_say $result_handle "P7_PS_STAGE_ERROR=[p7_sanitize_error $error_text]"
       close $result_handle
       set result_handle ""
       file rename -force $result_partial $result_file
@@ -2030,7 +2039,7 @@ if {$rc != 0} {
     catch {
       set failure_handle [open $result_partial w]
       puts $failure_handle "P7_PS_STAGE_RESULT=FAIL"
-      puts $failure_handle "P7_PS_STAGE_ERROR=[string map [list \n " " \r " "] $error_text]"
+      puts $failure_handle "P7_PS_STAGE_ERROR=[p7_sanitize_error $error_text]"
       close $failure_handle
       file rename -force $result_partial $result_file
     }

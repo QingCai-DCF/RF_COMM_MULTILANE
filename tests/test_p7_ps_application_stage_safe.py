@@ -14,6 +14,11 @@ import zlib
 from pathlib import Path
 from unittest import mock
 
+try:
+    import tkinter
+except ImportError:  # pragma: no cover - Tcl runtime is optional outside release gates.
+    tkinter = None
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts" / "hw" / "run_p7_ps_application_stage_safe.py"
@@ -26,6 +31,24 @@ SPEC.loader.exec_module(stage)
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def tcl_interpreter():
+    if tkinter is None:
+        raise unittest.SkipTest("Python Tcl runtime is unavailable")
+    try:
+        return tkinter.Tcl()
+    except Exception as exc:  # pragma: no cover - platform Tcl installation failure.
+        raise unittest.SkipTest(f"Python Tcl runtime is unavailable: {exc}") from exc
+
+
+def install_captured_tcl_exit(interp) -> None:
+    interp.eval(
+        "proc exit {code} {\n"
+        "  set ::p7_captured_exit_code $code\n"
+        "  return -code error \"__P7_CAPTURED_EXIT__$code\"\n"
+        "}"
+    )
 
 
 class P7PsApplicationSafeStageTests(unittest.TestCase):
@@ -1097,6 +1120,78 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_QUEUE_OVERFLOW_DDR_WRITE=0", tcl)
         self.assertIn("queue_overflow_ring_before.bin", tcl)
         self.assertIn("queue_overflow_ring_after.bin", tcl)
+        self.assertNotIn(r"string map {\ /}", tcl)
+        self.assertEqual(3, tcl.count('string map [list "\\\\" "/"]'))
+        self.assertEqual(2, tcl.count("P7_PS_STAGE_ERROR=[p7_sanitize_error $error_text]"))
+        self.assertNotIn("P7_PS_STAGE_ERROR=[string map", tcl)
+        wrapper = MODULE_PATH.read_text(encoding="utf-8")
+        self.assertEqual(
+            2,
+            wrapper.count(
+                '"programming_attempted": process_support.shutdown_programming_attempted('
+            ),
+        )
+        self.assertGreaterEqual(wrapper.count('"programming_attempted": False'), 3)
+        self.assertEqual(2, wrapper.count("expected_shutdown_bit=frozen_shutdown"))
+        self.assertEqual(2, wrapper.count('"result_file": str(before_final)'))
+        self.assertEqual(3, wrapper.count('"result_file": str(after_final)'))
+
+    def test_xsdb_tcl_path_mapping_and_error_sanitizer_execute_in_tcl(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        self.assertEqual(1, int(interp.call("info", "complete", tcl)))
+        prefix = tcl[: tcl.index("proc p7_require_path")]
+        interp.eval(prefix)
+        normalized = str(interp.call("p7_normal_path", r"C:\Temp\P7 Runtime.elf"))
+        self.assertNotIn("\\", normalized)
+        self.assertTrue(normalized.endswith("c:/temp/p7 runtime.elf"), normalized)
+        original = "ORIGINAL_PS_FAILURE first line\nsecond line\rthird line"
+        self.assertEqual(
+            "ORIGINAL_PS_FAILURE first line second line third line",
+            str(interp.call("p7_sanitize_error", original)),
+        )
+        with self.assertRaises(tkinter.TclError):
+            interp.eval(r"string map {\ /} {C:\Temp\broken.elf}")
+
+    def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            result_path = root / "failure.txt"
+            interp = tcl_interpreter()
+            install_captured_tcl_exit(interp)
+            interp.setvar("env(RF_COMM_HW_AUTH)", "P7_STATIONARY_APP_LAYER_APPROVED")
+            interp.setvar(
+                "argv",
+                (
+                    str(root),
+                    str(root / "missing-auth.txt"),
+                    str(root / "missing-preflight.txt"),
+                    str(root / "missing.bit"),
+                    str(root / "missing.elf"),
+                    str(root / "missing-ps7-init.tcl"),
+                    str(root / "missing-bundle"),
+                    str(root / "missing-plan.txt"),
+                    str(result_path),
+                    "localhost:3121",
+                    "210512180081",
+                    "xc7z010clg400-1",
+                    "localhost:3121/xilinx_tcf/Digilent/210512180081",
+                    "0",
+                    "functional",
+                    "10",
+                    str(root / "missing-shutdown.bit"),
+                    "333333343",
+                ),
+            )
+            with self.assertRaises(tkinter.TclError) as raised:
+                interp.eval(tcl)
+            self.assertIn("__P7_CAPTURED_EXIT__42", str(raised.exception))
+            self.assertEqual("42", str(interp.getvar("p7_captured_exit_code")))
+            result = result_path.read_text(encoding="utf-8")
+        self.assertIn("P7_PS_STAGE_RESULT=FAIL", result)
+        self.assertIn("P7_PS_STAGE_ERROR=P7 service runtime must be in 1..1800 seconds", result)
+        self.assertNotIn("char map list unbalanced", result)
 
     def test_stationary_sampling_and_requeue_cutoff_use_fresh_ps_ticks(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")

@@ -80,11 +80,26 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
     def test_wrapper_summary_rejects_any_inner_forced_cleanup_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            shutdown_result = root / "shutdown.txt"
-            shutdown_result.write_text(
-                "TFDU_SHUTDOWN_PROGRAMMED=1\nP7_SHUTDOWN_RESULT=PASS\n",
-                encoding="utf-8",
-            )
+            shutdown_bit = root / "shutdown.bit"
+            shutdown_bit.write_bytes(b"authorized shutdown fixture")
+            shutdown_before_result = root / "shutdown_before.txt"
+            shutdown_after_result = root / "shutdown_after.txt"
+
+            def write_shutdown_result(path: Path, programmed: Path = shutdown_bit) -> None:
+                path.write_text(
+                    "\n".join(
+                        [
+                            "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                            f"TFDU_SHUTDOWN_PROGRAMMED={programmed}",
+                            "P7_SHUTDOWN_RESULT=PASS",
+                            "",
+                        ]
+                    ),
+                    encoding="utf-8",
+                )
+
+            write_shutdown_result(shutdown_before_result)
+            write_shutdown_result(shutdown_after_result)
             summary_path = root / "summary.json"
             process = {
                 "returncode": 0,
@@ -102,10 +117,19 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
                 "ethernet_used": False,
                 "motion_used": False,
                 "safety_validation": {"source_commit_requested": "b" * 40},
+                "programmed_shutdown_before": True,
                 "programmed_shutdown_after": True,
+                "shutdown_before": {
+                    **process,
+                    "attempted": True,
+                    "programming_attempted": True,
+                    "result_file": str(shutdown_before_result),
+                },
                 "shutdown_after": {
                     **process,
-                    "result_file": str(shutdown_result),
+                    "attempted": True,
+                    "programming_attempted": True,
+                    "result_file": str(shutdown_after_result),
                 },
                 "stage_process": dict(process),
                 "backend_parse": {
@@ -116,7 +140,10 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
             stage_record = {
                 "id": "safe_idle",
                 "wrapper": str(subject.JTAG_WRAPPER),
-                "options": {"--source-commit": "b" * 40},
+                "options": {
+                    "--source-commit": "b" * 40,
+                    "--shutdown-bitstream": str(shutdown_bit),
+                },
                 "group": "safe_idle",
             }
             summary_path.write_text(json.dumps(summary), encoding="utf-8")
@@ -139,6 +166,76 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
                 stage_record, summary_path, require_pass=True
             )
             self.assertTrue(any("shutdown-after used" in item for item in errors))
+            summary["shutdown_after"] = {
+                **process,
+                "attempted": True,
+                "programming_attempted": False,
+                "result_file": str(shutdown_after_result),
+            }
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("shutdown-after does not prove programming_attempted" in item for item in errors))
+
+            summary["shutdown_after"]["programming_attempted"] = True
+            echoed_stdout = root / "shutdown_after.stdout.log"
+            echoed_stdout.write_text(
+                '# puts "TFDU_SHUTDOWN_PROGRAMMED=' + str(shutdown_bit) + '"\n',
+                encoding="utf-8",
+            )
+            summary["shutdown_after"]["stdout_path"] = str(echoed_stdout)
+            shutdown_after_result.write_text(
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1\nSHUTDOWN_EXIT=0\nP7_SHUTDOWN_RESULT=PASS\n",
+                encoding="utf-8",
+            )
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("lacks exact TFDU_SHUTDOWN_PROGRAMMED" in item for item in errors))
+
+            write_shutdown_result(shutdown_after_result, root / "wrong_shutdown.bit")
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("other than the authorized shutdown bit" in item for item in errors))
+
+            write_shutdown_result(shutdown_after_result)
+            summary["shutdown_before"]["programming_attempted"] = True
+            shutdown_before_result.write_text(
+                f"TFDU_SHUTDOWN_PROGRAMMED={shutdown_bit}\nP7_SHUTDOWN_RESULT=PASS\n",
+                encoding="utf-8",
+            )
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("shutdown-before fresh result lacks P7_TCL_PROGRAMMING_ATTEMPTED=1" in item for item in errors))
+
+            write_shutdown_result(shutdown_before_result)
+            summary["shutdown_before"]["attempted"] = False
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("shutdown-before does not prove attempted=true" in item for item in errors))
+            summary["shutdown_before"]["attempted"] = True
+
+            for duplicate_line in (
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                f"TFDU_SHUTDOWN_PROGRAMMED={shutdown_bit}",
+                "P7_SHUTDOWN_RESULT=PASS",
+            ):
+                write_shutdown_result(shutdown_after_result)
+                with shutdown_after_result.open("a", encoding="utf-8") as handle:
+                    handle.write(duplicate_line + "\n")
+                summary_path.write_text(json.dumps(summary), encoding="utf-8")
+                _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                    stage_record, summary_path, require_pass=True
+                )
+                self.assertTrue(any("shutdown-after fresh result contains duplicate markers" in item for item in errors))
 
     def test_sequence_dry_run_launches_no_stage_process(self) -> None:
         plan = {
@@ -167,6 +264,95 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
         run_mock.assert_not_called()
         self.assertIn('"P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED"', output.getvalue())
         self.assertIn('"hardware_actions_executed": false', output.getvalue())
+
+    def test_ps_wrapper_summary_binds_frozen_shutdown_path_hash_and_fresh_results(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            payload = b"authorized frozen shutdown fixture"
+            authorized_shutdown = root / "authorized_shutdown.bit"
+            frozen_shutdown = root / "p7_frozen_shutdown.bit"
+            authorized_shutdown.write_bytes(payload)
+            frozen_shutdown.write_bytes(payload)
+            expected_sha = subject.sha256_file(authorized_shutdown)
+            before_result = root / "shutdown_before_result.txt"
+            after_result = root / "shutdown_after_result.txt"
+            marker_text = "\n".join(
+                [
+                    "P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                    f"TFDU_SHUTDOWN_PROGRAMMED={frozen_shutdown}",
+                    "P7_SHUTDOWN_RESULT=PASS",
+                    "",
+                ]
+            )
+            before_result.write_text(marker_text, encoding="utf-8")
+            after_result.write_text(marker_text, encoding="utf-8")
+            process = {
+                "returncode": 0,
+                "passed": True,
+                "process_tree_reaped": True,
+                "process_tree_terminated": False,
+                "containment_cleanup_attempted": False,
+                "containment_cleanup_terminated": False,
+            }
+            summary = {
+                "P7_PS_APPLICATION_SAFE_STAGE": "PASS",
+                "stage_name": "ps_functional",
+                "mode": "functional",
+                "hardware_actions_executed": True,
+                "network_used": False,
+                "ethernet_used": False,
+                "motion_used": False,
+                "safety_validation": {"source_commit_requested": "b" * 40},
+                "frozen_shutdown": subject._file_record(frozen_shutdown),
+                "programmed_shutdown_before": True,
+                "programmed_shutdown_after": True,
+                "shutdown_before": {
+                    **process,
+                    "attempted": True,
+                    "programming_attempted": True,
+                    "result_file": str(before_result),
+                },
+                "shutdown_after": {
+                    **process,
+                    "attempted": True,
+                    "programming_attempted": True,
+                    "result_file": str(after_result),
+                },
+                "ps_process": dict(process),
+                "postprocess": {"passed": True},
+            }
+            summary_path = root / "summary.json"
+            stage_record = {
+                "id": "ps_functional",
+                "wrapper": str(subject.PS_WRAPPER),
+                "options": {
+                    "--source-commit": "b" * 40,
+                    "--shutdown-bitstream": str(authorized_shutdown),
+                    "--shutdown-bitstream-sha256": expected_sha,
+                },
+                "group": "ps_functional",
+            }
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertEqual([], errors)
+            self.assertEqual(str(frozen_shutdown), shutdown["tfdu_shutdown_programmed"])
+            self.assertTrue(shutdown["tfdu_shutdown_programmed_exact"])
+
+            frozen_shutdown.write_bytes(b"tampered")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("actual SHA256 mismatches authorization" in item for item in errors))
+            frozen_shutdown.write_bytes(payload)
+
+            summary["frozen_shutdown"]["sha256"] = "0" * 64
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("SHA256 mismatches authorized" in item for item in errors))
 
     def test_resume_skips_only_hash_verified_pass_records(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

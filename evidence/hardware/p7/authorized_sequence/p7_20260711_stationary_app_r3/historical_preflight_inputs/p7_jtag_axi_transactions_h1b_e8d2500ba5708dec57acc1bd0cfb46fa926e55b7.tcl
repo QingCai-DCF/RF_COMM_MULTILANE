@@ -35,16 +35,7 @@ proc p7_require_auth_value {text key expected} {
 }
 
 proc p7_normal_path {value} {
-  return [string tolower [string map [list "\\" "/"] [file normalize $value]]]
-}
-
-proc p7_sanitize_error {text} {
-  # Build an explicit even mapping list.  A malformed diagnostic formatter
-  # must never replace the error that the outer catch actually captured.
-  if {[catch {string map [list "\r" " " "\n" " "] $text} sanitized]} {
-    return $text
-  }
-  return $sanitized
+  return [string tolower [string map {\ /} [file normalize $value]]]
 }
 
 proc p7_require_auth_path {text key expected} {
@@ -248,8 +239,8 @@ set rc [catch {
   if {$axi_base != 0x43C00000} { error "P7 AXI base must be exactly 0x43C00000" }
 
   set authorization_root [file normalize [file join $root_dir .hardware_authorization]]
-  set auth_slash [string map [list "\\" "/"] $authorization_file]
-  set auth_root_slash [string trimright [string map [list "\\" "/"] $authorization_root] "/"]
+  set auth_slash [string map {\ /} $authorization_file]
+  set auth_root_slash [string trimright [string map {\ /} $authorization_root] "/"]
   if {![string match -nocase "${auth_root_slash}/*" $auth_slash]} {
     error "P7 authorization file must be under .hardware_authorization"
   }
@@ -376,11 +367,9 @@ set rc [catch {
     catch {set_property PROBES.FILE {} $selected_device}
     catch {set_property FULL_PROBES.FILE {} $selected_device}
     set_property PROGRAM.FILE $bit_file $selected_device
-    set candidate_programming_attempted 1
     program_hw_devices $selected_device
     refresh_hw_device -update_hw_probes false $selected_device
     foreach line [list \
-        "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted" \
         "TFDU_SHUTDOWN_PROGRAMMED=$bit_file" \
         "P7_SHUTDOWN_RESULT=PASS"] {
       puts $result_handle $line
@@ -577,7 +566,6 @@ set rc [catch {
       error "final P7 operation must be W32 0x43c00100 0x00000030"
     }
     foreach line [list \
-        "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted" \
         "P7_TRANSACTION_COUNT=$operation_count" \
         "P7_JTAG_AXI_TRANSACTIONS=PASS" \
         "P7_JTAG_STAGE_RESULT=PASS"] {
@@ -611,9 +599,8 @@ if {$rc != 0 && $candidate_programming_attempted && $selected_device ne "" && $s
 if {$result_handle ne ""} {
   catch {
     puts $result_handle "P7_TCL_EMERGENCY_SHUTDOWN_PROGRAMMED=$emergency_shutdown_programmed"
-    puts $result_handle "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
     puts $result_handle "P7_JTAG_STAGE_RESULT=FAIL"
-    puts $result_handle "P7_JTAG_STAGE_ERROR=[p7_sanitize_error $error_text]"
+    puts $result_handle "P7_JTAG_STAGE_ERROR=[string map [list \n " " \r " "] $error_text]"
     close $result_handle
   }
   set result_handle ""
@@ -621,9 +608,8 @@ if {$result_handle ne ""} {
   catch {
     set failure_handle [open $result_file w]
     puts $failure_handle "P7_TCL_EMERGENCY_SHUTDOWN_PROGRAMMED=$emergency_shutdown_programmed"
-    puts $failure_handle "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
     puts $failure_handle "P7_JTAG_STAGE_RESULT=FAIL"
-    puts $failure_handle "P7_JTAG_STAGE_ERROR=[p7_sanitize_error $error_text]"
+    puts $failure_handle "P7_JTAG_STAGE_ERROR=[string map [list \n " " \r " "] $error_text]"
     close $failure_handle
   }
 }
@@ -633,7 +619,6 @@ if {$server_connected} { catch {disconnect_hw_server} }
 if {$manager_open} { catch {close_hw_manager} }
 
 if {$rc != 0} {
-  puts stderr "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
   puts stderr "P7_JTAG_STAGE_RESULT=FAIL"
   puts stderr "P7_JTAG_STAGE_ERROR=$error_text"
   exit 41

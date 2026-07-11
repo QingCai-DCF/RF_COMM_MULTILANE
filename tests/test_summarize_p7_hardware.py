@@ -261,12 +261,17 @@ class SyntheticEvidence:
             if key == "raw":
                 path.write_text("\n".join(raw_lines) + "\n", encoding="utf-8")
             elif "before_stdout" == key or "after_stdout" == key:
-                path.write_text("TFDU_SHUTDOWN_PROGRAMMED=synthetic\n", encoding="utf-8")
+                path.write_text("Vivado shutdown transcript (not authoritative)\n", encoding="utf-8")
             else:
                 path.write_text("\n", encoding="utf-8")
         for which in ("before", "after"):
             result = run / f"shutdown_{which}_result.txt"
-            result.write_text("P7_SHUTDOWN_RESULT=PASS\nTFDU_SHUTDOWN_PROGRAMMED=synthetic\n", encoding="utf-8")
+            result.write_text(
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1\n"
+                f"TFDU_SHUTDOWN_PROGRAMMED={self.artifacts['shutdown_bitstream'].resolve()}\n"
+                "P7_SHUTDOWN_RESULT=PASS\n",
+                encoding="utf-8",
+            )
             files[f"{which}_result"] = result
         return files
 
@@ -293,6 +298,7 @@ class SyntheticEvidence:
             result_file=str(files[f"{which}_result"]),
             passed=True,
             attempted=True,
+            programming_attempted=True,
             failures=[],
             **timing,
         )
@@ -2053,6 +2059,81 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(payload["stages"]["consistency"]["result"], "FAIL")
             self.assertIn("no parseable final safe-wrapper summary", "\n".join(payload["stages"]["consistency"]["errors"]))
 
+    def test_generic_shutdown_accepts_only_unique_fresh_authorized_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = SyntheticEvidence(Path(temporary))
+            summary_path, _summary = fixture.make_jtag(
+                "p7_safe_idle_recheck",
+                [
+                    "P7_SAFE_IDLE_RESULT=PASS",
+                    "P7_SAFE_IDLE_TXD_IDLE=1",
+                    "P7_SAFE_IDLE_SD_SHUTDOWN=1",
+                    "P7_SAFE_IDLE_STUCK_HIGH_VIOLATIONS=0",
+                    "P7_SAFE_IDLE_DUTY_VIOLATIONS=0",
+                    "P7_SAFE_IDLE_ERROR_COUNT=0",
+                ],
+            )
+            evidence = subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output)
+            subject.discover(evidence)
+            candidate = next(item for item in evidence.candidates if item.path == summary_path)
+            result_path = summary_path.parent / "p7_shutdown_after_result.txt"
+            stdout_path = summary_path.parent / "shutdown_after.stdout.log"
+            valid_result = result_path.read_text(encoding="utf-8")
+            self.assertEqual([], subject.shutdown_errors(candidate, "after", evidence=evidence))
+            ledger_shutdown = subject._ledger_shutdown(candidate, "after", evidence)
+            self.assertTrue(ledger_shutdown["attempted"])
+            self.assertTrue(ledger_shutdown["programming_attempted"])
+            self.assertTrue(ledger_shutdown["programming_attempted_marker"])
+            self.assertTrue(ledger_shutdown["tfdu_shutdown_marker"])
+            self.assertTrue(ledger_shutdown["tfdu_shutdown_path_matches_authorized"])
+            self.assertTrue(ledger_shutdown["p7_shutdown_result_pass"])
+
+            def errors_for(result_text: str, *, attempted: object = True, programming_attempted: object = True) -> str:
+                result_path.write_text(result_text, encoding="utf-8")
+                candidate.data["shutdown_after"]["attempted"] = attempted
+                candidate.data["shutdown_after"]["programming_attempted"] = programming_attempted
+                return "\n".join(subject.shutdown_errors(candidate, "after", evidence=evidence))
+
+            authorized = fixture.artifacts["shutdown_bitstream"].resolve()
+            stdout_path.write_text(valid_result, encoding="utf-8")
+            self.assertIn(
+                "fresh result lacks TFDU_SHUTDOWN_PROGRAMMED",
+                errors_for("P7_TCL_PROGRAMMING_ATTEMPTED=1\nP7_SHUTDOWN_RESULT=PASS\nSHUTDOWN_EXIT=0\n"),
+            )
+            self.assertIn(
+                "fresh result lacks TFDU_SHUTDOWN_PROGRAMMED",
+                errors_for("P7_TCL_PROGRAMMING_ATTEMPTED=1\nP7_SHUTDOWN_RESULT=PASS\n"),
+            )
+            self.assertIn(
+                "does not match the authorized shutdown bit",
+                errors_for(
+                    "P7_TCL_PROGRAMMING_ATTEMPTED=1\n"
+                    "TFDU_SHUTDOWN_PROGRAMMED=C:/wrong/shutdown.bit\n"
+                    "P7_SHUTDOWN_RESULT=PASS\n"
+                ),
+            )
+            self.assertIn(
+                "duplicate markers",
+                errors_for(valid_result + f"TFDU_SHUTDOWN_PROGRAMMED={authorized}\n"),
+            )
+            self.assertIn(
+                "lacks exact P7_TCL_PROGRAMMING_ATTEMPTED=1",
+                errors_for(
+                    f"TFDU_SHUTDOWN_PROGRAMMED={authorized}\nP7_SHUTDOWN_RESULT=PASS\n"
+                ),
+            )
+            self.assertIn(
+                "was not attempted",
+                errors_for(valid_result, attempted=False),
+            )
+            self.assertIn(
+                "does not prove programming_attempted=true",
+                errors_for(valid_result, programming_attempted=False),
+            )
+            result_path.write_text(valid_result, encoding="utf-8")
+            candidate.data["shutdown_after"]["attempted"] = True
+            candidate.data["shutdown_after"]["programming_attempted"] = True
+
     def test_process_record_recomputes_daemon_topology_and_rejects_tampering(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -2381,6 +2462,75 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(returncode, 0, json.dumps(payload["stages"]["consistency"], indent=2))
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
+
+    def test_real_r1_r2_r3_epochs_validate_and_r3_summary_tamper_fails_closed(self) -> None:
+        evidence = subject.RepositoryEvidence(
+            ROOT,
+            ROOT / "evidence" / "hardware" / "p7",
+            ROOT / "evidence" / "generated",
+        )
+        epoch_names = (
+            "p7_20260711_stationary_app",
+            "p7_20260711_stationary_app_r2",
+            "p7_20260711_stationary_app_r3",
+        )
+        candidates: dict[str, subject.Candidate] = {}
+        for epoch_name in epoch_names:
+            summary_path = (
+                evidence.hardware_root
+                / "authorized_sequence"
+                / epoch_name
+                / "001_p7_safe_idle"
+                / "p7_jtag_axi_stage_summary.json"
+            )
+            self.assertTrue(summary_path.is_file(), f"missing immutable historical epoch: {epoch_name}")
+            data = json.loads(summary_path.read_text(encoding="utf-8"))
+            candidate = subject.Candidate(
+                summary_path,
+                data,
+                "jtag",
+                subject.classify_jtag_stage(data),
+                subject.parse_time(data.get("generated_at_utc"), summary_path.stat().st_mtime),
+            )
+            candidates[epoch_name] = candidate
+            if epoch_name.endswith("_r3"):
+                inner_errors = subject._old_commit_shutdown_tcl_failure_errors(candidate, evidence)
+            else:
+                inner_errors = subject._old_commit_read_only_preflight_errors(candidate, evidence)
+            epoch, epoch_errors = subject._historical_epoch_record(candidate, evidence)
+            self.assertEqual([], inner_errors, f"{epoch_name}: {inner_errors}")
+            self.assertEqual([], epoch_errors, f"{epoch_name}: {epoch_errors}")
+            self.assertEqual([], epoch["coverage_keys"])
+            self.assertEqual("FAIL", epoch["result"])
+
+        r3 = candidates["p7_20260711_stationary_app_r3"]
+        tamper_cases = (
+            ("candidate programming", lambda data: data.__setitem__("programmed_candidate", True)),
+            (
+                "shutdown return code",
+                lambda data: data["shutdown_after"].__setitem__("returncode", 0),
+            ),
+            (
+                "post-fix provenance field",
+                lambda data: data["shutdown_after"].__setitem__("programming_attempted", True),
+            ),
+            (
+                "candidate child",
+                lambda data: data.__setitem__("stage_process", {"returncode": 0}),
+            ),
+        )
+        for label, mutate in tamper_cases:
+            tampered_data = json.loads(json.dumps(r3.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(
+                r3.path,
+                tampered_data,
+                r3.kind,
+                r3.stage,
+                r3.timestamp,
+            )
+            errors = subject._old_commit_shutdown_tcl_failure_errors(tampered, evidence)
+            self.assertTrue(errors, f"r3 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -2351,16 +2351,66 @@ def record_global_runtime(
     return within
 
 
-def evaluate_shutdown(returncode: int, stdout: str, result_text: str) -> tuple[bool, list[str]]:
+def _parse_unique_fresh_markers(text: str) -> tuple[dict[str, str], list[str]]:
+    markers: dict[str, str] = {}
+    duplicates: set[str] = set()
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key in markers:
+            duplicates.add(key)
+            continue
+        markers[key] = value.strip()
+    return markers, sorted(duplicates)
+
+
+def evaluate_shutdown(
+    returncode: int,
+    result_text: str,
+    *,
+    expected_shutdown_bit: str | Path,
+) -> tuple[bool, list[str]]:
+    """Validate shutdown from the fresh result file, never Vivado stdout echo."""
+
     failures: list[str] = []
-    combined = stdout + "\n" + result_text
+    markers, duplicate_markers = _parse_unique_fresh_markers(result_text)
+    if duplicate_markers:
+        failures.append(
+            f"shutdown fresh result contains duplicate markers: {duplicate_markers}"
+        )
     if returncode != 0:
         failures.append(f"shutdown process returned nonzero exit code: {returncode}")
-    if "TFDU_SHUTDOWN_PROGRAMMED=" not in combined:
-        failures.append("TFDU_SHUTDOWN_PROGRAMMED marker missing")
-    if parse_markers(result_text).get("P7_SHUTDOWN_RESULT") != "PASS":
+    programmed_path = markers.get("TFDU_SHUTDOWN_PROGRAMMED", "")
+    if not programmed_path:
+        failures.append("TFDU_SHUTDOWN_PROGRAMMED marker missing from fresh result file")
+    elif normalized_path(programmed_path) != normalized_path(expected_shutdown_bit):
+        failures.append(
+            "TFDU_SHUTDOWN_PROGRAMMED fresh result path does not match the authorized shutdown bit"
+        )
+    if markers.get("P7_SHUTDOWN_RESULT") != "PASS":
         failures.append("P7_SHUTDOWN_RESULT=PASS marker missing from fresh result file")
+    if markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") != "1":
+        failures.append(
+            "P7_TCL_PROGRAMMING_ATTEMPTED=1 marker missing from fresh result file"
+        )
     return not failures, failures
+
+
+def shutdown_programming_attempted(result_text: str) -> bool | None:
+    """Decode a fresh Tcl attempt marker; missing/malformed evidence is unknown."""
+
+    markers, duplicate_markers = _parse_unique_fresh_markers(result_text)
+    if duplicate_markers:
+        return None
+    marker = markers.get("P7_TCL_PROGRAMMING_ATTEMPTED")
+    if marker == "1":
+        return True
+    if marker == "0":
+        return False
+    return None
 
 
 def evaluate_stage(
@@ -2651,6 +2701,18 @@ def main(argv: list[str] | None = None) -> int:
     internal_error = ""
     candidate_child_reaped = False
     candidate_returncode: int | None = None
+    manifest["shutdown_before"] = {
+        "attempted": False,
+        "programming_attempted": False,
+        "passed": False,
+        "failures": ["shutdown-before was not launched"],
+    }
+    manifest["shutdown_after"] = {
+        "attempted": False,
+        "programming_attempted": False,
+        "passed": False,
+        "failures": ["shutdown-after was not launched"],
+    }
     shutdown_bit = resolve_path(args.shutdown_bitstream)
     candidate_bit = resolve_path(args.bitstream)
     candidate_ltx = resolve_path(args.ltx)
@@ -2694,13 +2756,16 @@ def main(argv: list[str] | None = None) -> int:
             abort_file=abort_file,
             watch_abort=False,
         )
+        before_result_text = safe_text(before_result_file)
         before_ok, before_failures = evaluate_shutdown(
             before_proc.returncode,
-            safe_text(Path(before_proc.stdout_path)),
-            safe_text(before_result_file),
+            before_result_text,
+            expected_shutdown_bit=shutdown_bit,
         )
         manifest["shutdown_before"] = {
             **asdict(before_proc),
+            "attempted": True,
+            "programming_attempted": shutdown_programming_attempted(before_result_text),
             "result_file": str(before_result_file),
             "passed": before_ok,
             "failures": before_failures,
@@ -2819,6 +2884,7 @@ def main(argv: list[str] | None = None) -> int:
                 "failures": reverify_errors,
                 "returncode": 126,
                 "attempted": False,
+                "programming_attempted": False,
                 "result_file": str(after_result_file),
             }
             append_event(event_log, "shutdown_after_blocked", failures=reverify_errors)
@@ -2860,16 +2926,18 @@ def main(argv: list[str] | None = None) -> int:
                 abort_file=abort_file,
                 watch_abort=False,
             )
+            after_result_text = safe_text(after_result_file)
             after_ok, after_failures = evaluate_shutdown(
                 after_proc.returncode,
-                safe_text(Path(after_proc.stdout_path)),
-                safe_text(after_result_file),
+                after_result_text,
+                expected_shutdown_bit=shutdown_bit,
             )
             manifest["shutdown_after"] = {
                 **asdict(after_proc),
                 "passed": after_ok,
                 "failures": after_failures,
                 "attempted": True,
+                "programming_attempted": shutdown_programming_attempted(after_result_text),
                 "result_file": str(after_result_file),
             }
             manifest["programmed_shutdown_after"] = after_ok
