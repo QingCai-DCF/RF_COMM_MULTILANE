@@ -1421,7 +1421,12 @@ def authorized_execution_boundaries(candidate: Candidate) -> tuple[str | None, s
     return str(begin[0]), str(end[0])
 
 
-def common_runner_errors(candidate: Candidate, evidence: RepositoryEvidence) -> tuple[list[str], dict[str, Any]]:
+def common_runner_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+    *,
+    accepted_historical_source: str | None = None,
+) -> tuple[list[str], dict[str, Any]]:
     data = candidate.data
     errors: list[str] = []
     provenance: dict[str, Any] = {"summary": rel(candidate.path, evidence.repo_root), "kind": candidate.kind, "stage": candidate.stage}
@@ -1480,9 +1485,24 @@ def common_runner_errors(candidate: Candidate, evidence: RepositoryEvidence) -> 
     append_error(errors, bool(COMMIT_RE.fullmatch(source_requested)), "source commit is missing/malformed")
     append_error(errors, source_requested == source_current, "requested and current source commits differ")
     if (evidence.repo_root / ".git").exists():
-        actual_head = current_repository_head(evidence)
-        append_error(errors, actual_head is not None, "unable to read current repository HEAD")
-        append_error(errors, actual_head == source_requested, "hardware source commit does not match current repository HEAD")
+        if accepted_historical_source is None:
+            actual_head = current_repository_head(evidence)
+            append_error(errors, actual_head is not None, "unable to read current repository HEAD")
+            append_error(errors, actual_head == source_requested, "hardware source commit does not match current repository HEAD")
+        else:
+            historical_source = str(accepted_historical_source).lower()
+            append_error(errors, bool(COMMIT_RE.fullmatch(historical_source)), "accepted historical source commit is missing/malformed")
+            append_error(errors, source_requested == historical_source, "hardware source commit does not match accepted historical source")
+            actual_head = current_repository_head(evidence)
+            append_error(errors, actual_head is not None, "unable to read current repository HEAD for historical source validation")
+            if actual_head is not None:
+                errors.extend(
+                    _git_source_ancestry_errors(
+                        evidence,
+                        old_commit=historical_source,
+                        active_commit=actual_head,
+                    )
+                )
     provenance["source_commit"] = source_requested
 
     auth_fields = safety.get("authorization_fields")
@@ -1804,8 +1824,17 @@ def integer_marker(sources: Sequence[Mapping[str, Any]], names: Sequence[str]) -
     return None
 
 
-def validate_safe_idle(candidate: Candidate, evidence: RepositoryEvidence) -> StageResult:
-    errors, provenance = common_runner_errors(candidate, evidence)
+def validate_safe_idle(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+    *,
+    accepted_historical_source: str | None = None,
+) -> StageResult:
+    errors, provenance = common_runner_errors(
+        candidate,
+        evidence,
+        accepted_historical_source=accepted_historical_source,
+    )
     observed = markers(candidate)
     append_error(errors, candidate.kind == "jtag", "safe-idle evidence is not a direct JTAG safe-wrapper run")
     append_error(errors, candidate.data.get("semantic_mode") == "safe-idle", "safe-idle wrapper semantic_mode is not exact safe-idle")
@@ -4508,11 +4537,13 @@ def _historical_r5_safe_idle_prefix_errors(
     )
     append_error(errors, _candidate_source_commit(prefix) == source, f"{label} source mismatch")
     append_error(errors, prefix.marker == "PASS" and prefix.executed, f"{label} wrapper is not executed PASS")
-    common_errors, _provenance = common_runner_errors(prefix, evidence)
-    errors.extend(f"{label}: {item}" for item in common_errors)
     provenance_count = len(evidence.provenance_rows)
     try:
-        safe_idle = validate_safe_idle(prefix, evidence)
+        safe_idle = validate_safe_idle(
+            prefix,
+            evidence,
+            accepted_historical_source=source,
+        )
     finally:
         del evidence.provenance_rows[provenance_count:]
     errors.extend(f"{label}: {item}" for item in safe_idle.errors)

@@ -2514,6 +2514,37 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual([], epoch["coverage_keys"])
             self.assertEqual("FAIL", epoch["result"])
 
+        r5_source = subject._candidate_source_commit(candidates["p7_20260711_stationary_app_r5"])
+        r5_prefix_path = (
+            evidence.hardware_root
+            / "authorized_sequence"
+            / "p7_20260711_stationary_app_r5"
+            / "001_p7_safe_idle"
+            / "p7_jtag_axi_stage_summary.json"
+        )
+        r5_prefix_data = json.loads(r5_prefix_path.read_text(encoding="utf-8"))
+        r5_prefix = subject.Candidate(
+            r5_prefix_path,
+            r5_prefix_data,
+            "jtag",
+            subject.classify_jtag_stage(r5_prefix_data),
+            subject.parse_time(r5_prefix_data.get("generated_at_utc"), r5_prefix_path.stat().st_mtime),
+        )
+        active_errors, _ = subject.common_runner_errors(r5_prefix, evidence)
+        self.assertIn("hardware source commit does not match current repository HEAD", active_errors)
+        historical_errors, _ = subject.common_runner_errors(
+            r5_prefix,
+            evidence,
+            accepted_historical_source=r5_source,
+        )
+        self.assertEqual([], historical_errors)
+        mismatched_errors, _ = subject.common_runner_errors(
+            r5_prefix,
+            evidence,
+            accepted_historical_source="0" * 40,
+        )
+        self.assertIn("hardware source commit does not match accepted historical source", mismatched_errors)
+
         r3 = candidates["p7_20260711_stationary_app_r3"]
         tamper_cases = (
             ("candidate programming", lambda data: data.__setitem__("programmed_candidate", True)),
