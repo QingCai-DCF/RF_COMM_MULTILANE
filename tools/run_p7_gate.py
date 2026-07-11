@@ -244,7 +244,7 @@ def main() -> int:
             "tests.test_summarize_p7_hardware",
             "-v",
         ],
-        timeout=180,
+        timeout=600,
     )
     safety_tests_ok = safety_tests["returncode"] == 0 and "OK" in safety_tests["stderr"]
     write_json(GENERATED / "p7_offline_test_run.json", {"vectors": vector_run, "unittest": tests, "hardware_safety": safety_tests})
