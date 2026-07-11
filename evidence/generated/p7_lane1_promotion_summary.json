@@ -1,0 +1,44 @@
+{
+  "P7_LANE1_RELIABILITY_PROMOTION_GATE": "PASS",
+  "generated_at_utc": "2026-07-11T14:28:41+00:00",
+  "source_commit": "ca041d4877b831de84fe7829788ac835b0b46acd",
+  "reason": "fresh raw-pulse, frame CRC, ACK-only, session/lane/ACK-mask readback and P6 lane1 physical-frame gates verified",
+  "checks": {
+    "raw_stage_pass": true,
+    "raw_ab_l1": true,
+    "raw_ba_l1": true,
+    "raw_safety": true,
+    "frame_crc_100": true,
+    "frame_session_mask_readback": true,
+    "frame_safety_shutdown": true,
+    "ack_100": true,
+    "ack_session_masks_readback": true,
+    "ack_errors_safety_shutdown": true,
+    "p6_lane1_160": true,
+    "p6_shutdown": true,
+    "p6_immutable_hash": true
+  },
+  "sources": {
+    "raw": {
+      "path": "evidence/hardware/p5/raw_lane_matrix/p5_stage_result.json",
+      "sha256": "86d308b2af633f0055b2fc89a628988a8096ed2d6fb9e11999eab5c70eec4acc"
+    },
+    "frame": {
+      "path": "evidence/hardware/p5/protocol/lane1_frame_crc_100/p5_stage_result.json",
+      "sha256": "406af4a4c701b450aeb8ca03dd61cec6ea57a33ccaa19efb9dfe622d15a90d2a"
+    },
+    "ack": {
+      "path": "evidence/hardware/p5/protocol/lane1_ack_retry_100/p5_stage_result.json",
+      "sha256": "ed9838aaca9d502d86e2708dfa165346f0c98e0f8fdcecdb70267ad5c606b295"
+    },
+    "p6": {
+      "path": "evidence/hardware/p6/protocol/lane1_dynamic_payload/p6_jtag_axi_matrix_summary.json",
+      "sha256": "06223f36a6fb5d2abc6125f33c42a349c5356d1973796212c5c54735bd99650e"
+    }
+  },
+  "hardware_actions_executed": false,
+  "source_evidence_contains_hardware_actions": true,
+  "network_used": false,
+  "motion_used": false,
+  "boundary": "promotion eligibility from existing matching evidence; P7 still requires fresh staged regression before acceptance"
+}
