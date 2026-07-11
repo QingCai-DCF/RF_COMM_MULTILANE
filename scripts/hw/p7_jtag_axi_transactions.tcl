@@ -153,6 +153,86 @@ proc p7_axi_read {hw_axi address txn_index_var} {
   return [string toupper [string range $padded end-7 end]]
 }
 
+# Coalesce only naturally aligned, consecutive payload-window words.  The
+# transaction DSL, authorization count, and emitted per-word evidence remain
+# unchanged; this merely replaces up to 64 identical single-word JTAG/AXI
+# launches with one bounded INCR burst.  Vivado defines burst DATA with the
+# lowest-address word at the left (least-significant) end.
+proc p7_axi_write_burst {hw_axi addresses data_words txn_index_var} {
+  upvar $txn_index_var txn_index
+  set count [llength $addresses]
+  if {$count < 1 || $count > 64 || $count != [llength $data_words]} {
+    error "invalid P7 AXI write burst shape"
+  }
+  set first [lindex $addresses 0]
+  set encoded {}
+  for {set index 0} {$index < $count} {incr index} {
+    if {[lindex $addresses $index] != $first + 4 * $index} {
+      error "P7 AXI write burst is not naturally consecutive"
+    }
+    lappend encoded [format %08X [lindex $data_words $index]]
+  }
+  incr txn_index
+  set name "p7_wb_$txn_index"
+  create_hw_axi_txn $name $hw_axi -type write -address [format 0x%08X $first] \
+      -data [join $encoded _] -len $count -burst INCR -force
+  run_hw_axi [get_hw_axi_txns $name]
+  delete_hw_axi_txn [get_hw_axi_txns $name]
+}
+
+proc p7_axi_read_burst {hw_axi addresses keys txn_index_var out pending_var} {
+  upvar $txn_index_var txn_index
+  upvar $pending_var pending
+  set count [llength $addresses]
+  if {$count < 1 || $count > 64 || $count != [llength $keys]} {
+    error "invalid P7 AXI read burst shape"
+  }
+  set first [lindex $addresses 0]
+  for {set index 0} {$index < $count} {incr index} {
+    if {[lindex $addresses $index] != $first + 4 * $index} {
+      error "P7 AXI read burst is not naturally consecutive"
+    }
+  }
+  incr txn_index
+  set name "p7_rb_$txn_index"
+  create_hw_axi_txn $name $hw_axi -type read -address [format 0x%08X $first] \
+      -len $count -burst INCR -force
+  run_hw_axi [get_hw_axi_txns $name]
+  set txn [get_hw_axi_txns $name]
+  set raw [string trim [get_property DATA $txn]]
+  delete_hw_axi_txn $txn
+  set clean [string map [list "0x" "" "0X" "" "_" "" " " ""] $raw]
+  if {![regexp -nocase {^[0-9a-f]+$} $clean] || [string length $clean] != 8 * $count} {
+    error "invalid P7 AXI burst read data length: expected=[expr {8 * $count}] observed=[string length $clean]"
+  }
+  set clean [string toupper $clean]
+  for {set index 0} {$index < $count} {incr index} {
+    set start [expr {8 * $index}]
+    set value [string range $clean $start [expr {$start + 7}]]
+    p7_result_line $out "[lindex $keys $index]=$value" pending
+  }
+}
+
+proc p7_flush_axi_batch {hw_axi kind_var addresses_var data_var keys_var txn_index_var out pending_var} {
+  upvar $kind_var kind
+  upvar $addresses_var addresses
+  upvar $data_var data_words
+  upvar $keys_var keys
+  upvar $txn_index_var txn_index
+  upvar $pending_var pending
+  if {$kind eq "W"} {
+    p7_axi_write_burst $hw_axi $addresses $data_words txn_index
+  } elseif {$kind eq "R"} {
+    p7_axi_read_burst $hw_axi $addresses $keys txn_index $out pending
+  } elseif {$kind ne ""} {
+    error "invalid pending P7 AXI batch kind"
+  }
+  set kind ""
+  set addresses {}
+  set data_words {}
+  set keys {}
+}
+
 proc p7_emit_identity {out target device canonical_part live_part idcode} {
   foreach line [list \
       "P7_HW_TARGET=$target" \
@@ -431,6 +511,10 @@ set rc [catch {
     set seen_length 0
     set seen_commit 0
     set last_op ""
+    set batch_kind ""
+    set batch_addresses {}
+    set batch_data {}
+    set batch_keys {}
     array set used_keys {}
     array set used_meta {}
     while {[gets $txn_handle raw_line] >= 0} {
@@ -454,10 +538,14 @@ set rc [catch {
       if {$ended} { error "transaction content after END is forbidden" }
       if {$op eq "END"} {
         if {[llength $fields] != 1} { error "END takes no arguments" }
+        p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+            txn_index $result_handle result_lines_pending
         set ended 1
         continue
       }
       if {$op eq "META"} {
+        p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+            txn_index $result_handle result_lines_pending
         if {[llength $fields] != 3} { error "META syntax invalid" }
         set key [lindex $fields 1]
         set value [lindex $fields 2]
@@ -508,7 +596,22 @@ set rc [catch {
           error "START requires a bounded committed configuration"
         }
         if {$offset == 0x100 && ($data & 0x08) != 0} { set seen_commit 0 }
-        p7_axi_write $hw_axi $address $data txn_index
+        set burstable [expr {$offset >= 0x200 && $offset <= 0x2FC}]
+        if {$burstable} {
+          set consecutive [expr {$batch_kind eq "W" && [llength $batch_addresses] < 64 &&
+              $address == [lindex $batch_addresses end] + 4}]
+          if {!$consecutive} {
+            p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+                txn_index $result_handle result_lines_pending
+            set batch_kind "W"
+          }
+          lappend batch_addresses $address
+          lappend batch_data $data
+        } else {
+          p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+              txn_index $result_handle result_lines_pending
+          p7_axi_write $hw_axi $address $data txn_index
+        }
         set last_op "W32_[format 0x%08X $address]_[format 0x%08X $data]"
       } elseif {$op eq "R32"} {
         if {[llength $fields] != 3} { error "R32 syntax invalid" }
@@ -518,10 +621,29 @@ set rc [catch {
         p7_require_result_key $key
         if {[info exists used_keys($key)]} { error "duplicate result key: $key" }
         set used_keys($key) 1
-        set value [p7_axi_read $hw_axi $address txn_index]
-        p7_result_line $result_handle "$key=$value" result_lines_pending
+        set offset [expr {$address - $axi_base}]
+        set burstable [expr {($offset >= 0x200 && $offset <= 0x2FC) ||
+            ($offset >= 0x300 && $offset <= 0x3FC)}]
+        if {$burstable} {
+          set consecutive [expr {$batch_kind eq "R" && [llength $batch_addresses] < 64 &&
+              $address == [lindex $batch_addresses end] + 4}]
+          if {!$consecutive} {
+            p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+                txn_index $result_handle result_lines_pending
+            set batch_kind "R"
+          }
+          lappend batch_addresses $address
+          lappend batch_keys $key
+        } else {
+          p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+              txn_index $result_handle result_lines_pending
+          set value [p7_axi_read $hw_axi $address txn_index]
+          p7_result_line $result_handle "$key=$value" result_lines_pending
+        }
         set last_op R32
       } elseif {$op eq "POLL32" || $op eq "ASSERT32"} {
+        p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+            txn_index $result_handle result_lines_pending
         set expected_fields [expr {$op eq "POLL32" ? 7 : 5}]
         if {[llength $fields] != $expected_fields} { error "$op syntax invalid" }
         set address [p7_parse_hex32 [lindex $fields 1] address]

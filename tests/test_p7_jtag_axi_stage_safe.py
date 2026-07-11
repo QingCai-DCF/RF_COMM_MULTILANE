@@ -210,6 +210,15 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual(manifest["transaction_operation_count"], report["operation_count"])
         self.assertEqual(manifest["transaction_file_bytes"], report["size_bytes"])
         self.assertEqual(40, report["poll_operation_count"])
+        self.assertEqual(762, report["coalesced_hw_axi_transaction_count"])
+        self.assertEqual(60, report["burst_group_count"])
+        self.assertEqual(3567, report["burst_word_count"])
+        self.assertEqual(62, report["max_burst_words"])
+        self.assertEqual(702, report["single_word_hw_axi_transaction_count"])
+        self.assertLess(
+            report["coalesced_hw_axi_transaction_count"],
+            report["operation_count"] // 5,
+        )
 
     def test_safe_idle_semantics_forbid_transmission_and_parse_zero_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -1331,6 +1340,67 @@ class P7JtagAxiStageTests(unittest.TestCase):
             (0x200, 0),
         ):
             interp.call("p7_validate_write", offset, data)
+
+    def test_tcl_payload_bursts_preserve_word_order_and_per_word_evidence(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(
+            encoding="utf-8"
+        )
+        interp = tcl_interpreter()
+        interp.eval(tcl[: tcl.index('set result_file ""')])
+        interp.eval(
+            "set ::p7_created {}\n"
+            "array set ::p7_txn_args {}\n"
+            "proc create_hw_axi_txn {name hw_axi args} {\n"
+            "  lappend ::p7_created $name\n"
+            "  set ::p7_txn_args($name) $args\n"
+            "}\n"
+            "proc get_hw_axi_txns {name} {return $name}\n"
+            "proc run_hw_axi {txn} {}\n"
+            "proc delete_hw_axi_txn {txn} {}\n"
+            "proc get_property {property txn} {\n"
+            "  if {$property ne \"DATA\" || ![string match p7_rb_* $txn]} {\n"
+            "    error \"unexpected property request\"\n"
+            "  }\n"
+            "  return 11223344_AABBCCDD\n"
+            "}"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            result_path = Path(temp) / "burst_result.txt"
+            interp.setvar("p7_test_result_path", str(result_path))
+            interp.eval(
+                "set out [open $p7_test_result_path w]\n"
+                "set pending 0\n"
+                "set txn_index 0\n"
+                "set kind W\n"
+                "set addresses {0x43c00200 0x43c00204}\n"
+                "set data_words {0x11111111 0x22222222}\n"
+                "set keys {}\n"
+                "p7_flush_axi_batch hw_axi kind addresses data_words keys txn_index $out pending\n"
+                "set kind R\n"
+                "set addresses {0x43c00300 0x43c00304}\n"
+                "set data_words {}\n"
+                "set keys {P7_TEST_RXW000 P7_TEST_RXW001}\n"
+                "p7_flush_axi_batch hw_axi kind addresses data_words keys txn_index $out pending\n"
+                "flush $out\n"
+                "close $out"
+            )
+            result = result_path.read_text(encoding="utf-8")
+        self.assertEqual(
+            ("p7_wb_1", "p7_rb_2"),
+            tuple(interp.splitlist(interp.getvar("p7_created"))),
+        )
+        write_args = tuple(interp.splitlist(interp.getvar("p7_txn_args(p7_wb_1)")))
+        self.assertEqual("0x43C00200", write_args[write_args.index("-address") + 1])
+        self.assertEqual("11111111_22222222", write_args[write_args.index("-data") + 1])
+        self.assertEqual("2", str(write_args[write_args.index("-len") + 1]))
+        self.assertEqual("INCR", write_args[write_args.index("-burst") + 1])
+        self.assertEqual(
+            ["P7_TEST_RXW000=11223344", "P7_TEST_RXW001=AABBCCDD"],
+            result.splitlines(),
+        )
+        self.assertEqual("", str(interp.getvar("kind")))
+        self.assertEqual(0, len(interp.splitlist(interp.getvar("addresses"))))
+        self.assertEqual("2", str(interp.getvar("txn_index")))
 
     def test_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")

@@ -261,6 +261,8 @@ The wrapper performs the strict backend parse after shutdown and binds the parse
 
 Each case must preserve the backend manifest, transaction file, raw result, reassembled output, parser JSON, safe-wrapper JSON, event log, and shutdown logs. A parser result from a mock or a different raw log is invalid.
 
+The authorization-bound Tcl executor may coalesce only naturally consecutive words in the TX payload window (`0x200..0x2fc`) and the TX/RX readback windows (`0x200..0x3fc`) into bounded AXI `INCR` bursts of at most 64 words. It must keep the original DSL operation count, validation order, per-word result keys, and strict backend evidence unchanged. Fixed control/status accesses and polls remain separate transactions. Dry validation records `coalesced_hw_axi_transaction_count`, burst groups/words, and maximum burst length; a missing or malformed coalescing record cannot justify a 1 MiB hardware timeout increase beyond the 1800-second authorization ceiling.
+
 For each required tuple, the summary must recompute the positive per-fragment poll-latency upper-bound distribution from the strict fragment ledger, prove that the object transport upper bound is their sum, and verify the poll-bound application-goodput lower-bound formula. It must separately report host-monotonic child elapsed time and host end-to-end goodput, explicitly labeled as including Vivado/programming/JTAG/polling/host overhead and not as optical-only latency. These JTAG bounds are auxiliary and are never substituted for PS application metrics.
 
 ### 3.5 Real PS functional and recovery modes

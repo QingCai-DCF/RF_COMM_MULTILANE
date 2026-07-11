@@ -85,7 +85,23 @@ def main() -> int:
     failed_attempt = attempts[failed_index]
     stage_id = str(failed_attempt.get("stage_id", ""))
     stage_ordinal = failed_index + 1
-    summary_path = epoch / f"{stage_ordinal:03d}_{stage_id}" / "p7_jtag_axi_stage_summary.json"
+    full_stage_ordinal_raw = failed_attempt.get("full_stage_ordinal", stage_ordinal)
+    if (
+        not isinstance(full_stage_ordinal_raw, int)
+        or isinstance(full_stage_ordinal_raw, bool)
+        or full_stage_ordinal_raw < 1
+    ):
+        raise ValueError("outer ledger failed attempt full-stage ordinal is malformed")
+    full_stage_ordinal = full_stage_ordinal_raw
+    ledger_full_ordinals = ledger.get("full_stage_ordinals")
+    if ledger_full_ordinals is not None:
+        if (
+            not isinstance(ledger_full_ordinals, list)
+            or failed_index >= len(ledger_full_ordinals)
+            or ledger_full_ordinals[failed_index] != full_stage_ordinal
+        ):
+            raise ValueError("outer ledger failed attempt/full-stage ordinal matrix mismatch")
+    summary_path = epoch / f"{full_stage_ordinal:03d}_{stage_id}" / "p7_jtag_axi_stage_summary.json"
     summary = read_json(summary_path)
     source = str(ledger.get("source_commit", "")).lower()
     summary_result = str(summary.get("P7_JTAG_AXI_SAFE_STAGE", ""))
@@ -182,7 +198,7 @@ def main() -> int:
 
     recoveries = sorted(
         path.name
-        for path in epoch.glob(f"recovery_shutdown_after_failed_stage{stage_ordinal}_*")
+        for path in epoch.glob(f"recovery_shutdown_after_failed_stage{full_stage_ordinal:03d}_*")
         if path.is_dir()
     )
     if not recoveries:
@@ -196,6 +212,7 @@ def main() -> int:
         "run_id": args.run_id,
         "source_commit": source,
         "stage_index": failed_index,
+        "full_stage_ordinal": full_stage_ordinal,
         "stage_id": stage_id,
         "result": summary_result,
         "mutation_attempted": True,
