@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -127,6 +128,17 @@ class P7JtagBackendTests(unittest.TestCase):
                         self.assertTrue(
                             all("rx_bytes_hex" in record for record in summary["fragments"])
                         )
+                        self.assertTrue(
+                            all(
+                                record["raw_pulse_counter_semantics"]
+                                == "clear_scoped_per_fragment_observation"
+                                and record["counter_deltas"]["RAW_TX_PULSES"]
+                                == record["counters"]["RAW_TX_PULSES"]
+                                and record["counter_deltas"]["RAW_RX_PULSES"]
+                                == record["counters"]["RAW_RX_PULSES"]
+                                for record in summary["fragments"]
+                            )
+                        )
 
     def test_missing_and_duplicate_raw_keys_are_rejected_atomically(self) -> None:
         with tempfile.TemporaryDirectory() as temp_text:
@@ -198,6 +210,14 @@ class P7JtagBackendTests(unittest.TestCase):
                     ),
                     "P7F00000_RXW000=00000000",
                 ),
+                "RAW_PULSE_COUNTER": original.replace(
+                    next(
+                        line
+                        for line in original.splitlines()
+                        if line.startswith("P7F00000_RAW_TX_PULSES=")
+                    ),
+                    "P7F00000_RAW_TX_PULSES=00000000",
+                ),
             }
             for expected_code, content in variants.items():
                 with self.subTest(expected_code=expected_code):
@@ -210,6 +230,41 @@ class P7JtagBackendTests(unittest.TestCase):
                             output_path=output,
                         )
                     self.assertEqual(caught.exception.code, expected_code)
+
+    def test_real_r5_clear_scoped_raw_pulse_evidence_parses(self) -> None:
+        stage = (
+            ROOT
+            / "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r5"
+            / "002_p7_p6_frame_regression_m1"
+        )
+        summary_path = stage / "p7_jtag_axi_stage_summary.json"
+        self.assertTrue(summary_path.is_file(), "r5 failed-stage summary must remain immutable evidence")
+        wrapper_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(wrapper_summary["P7_JTAG_AXI_SAFE_STAGE"], "FAIL_STAGE")
+        self.assertEqual(
+            wrapper_summary["backend_parse_failure"],
+            "BackendValidationError: RAW_PULSE_COUNTER: fragment 1 RAW_TX_PULSES did not increase",
+        )
+        manifest = Path(wrapper_summary["transaction_validation"]["backend_manifest"]["path"])
+        raw = stage / "p7_jtag_axi_raw_result.txt"
+        with tempfile.TemporaryDirectory() as temp_text:
+            output = Path(temp_text) / "r5_reassembled.bin"
+            parsed = parse_raw_result(
+                manifest_path=manifest,
+                raw_log_path=raw,
+                output_path=output,
+            )
+        self.assertEqual(parsed["P7_JTAG_BACKEND_PARSE"], "PASS")
+        self.assertEqual(len(parsed["fragments"]), 20)
+        self.assertTrue(
+            all(
+                record["raw_pulse_counter_semantics"]
+                == "clear_scoped_per_fragment_observation"
+                and record["counters"]["RAW_TX_PULSES"] > 0
+                and record["counters"]["RAW_RX_PULSES"] > 0
+                for record in parsed["fragments"]
+            )
+        )
 
     def test_embedded_self_test(self) -> None:
         result = run_memory_mock_self_test()

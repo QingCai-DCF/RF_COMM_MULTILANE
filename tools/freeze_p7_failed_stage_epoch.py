@@ -69,17 +69,36 @@ def main() -> int:
     args = parser.parse_args()
     root = args.repo_root.resolve(strict=True)
     epoch = root / "evidence" / "hardware" / "p7" / "authorized_sequence" / args.run_id
-    summary_path = epoch / "001_p7_safe_idle" / "p7_jtag_axi_stage_summary.json"
     ledger_path = epoch / "sequence_execution_ledger.json"
-    summary = read_json(summary_path)
     ledger = read_json(ledger_path)
+    failed_index = ledger.get("failed_stage_index")
+    attempts = ledger.get("attempts")
+    if (
+        not isinstance(failed_index, int)
+        or isinstance(failed_index, bool)
+        or not isinstance(attempts, list)
+        or failed_index < 0
+        or failed_index >= len(attempts)
+        or not isinstance(attempts[failed_index], dict)
+    ):
+        raise ValueError("outer ledger failed-stage index/attempt list is malformed")
+    failed_attempt = attempts[failed_index]
+    stage_id = str(failed_attempt.get("stage_id", ""))
+    stage_ordinal = failed_index + 1
+    summary_path = epoch / f"{stage_ordinal:03d}_{stage_id}" / "p7_jtag_axi_stage_summary.json"
+    summary = read_json(summary_path)
     source = str(ledger.get("source_commit", "")).lower()
     if summary.get("P7_JTAG_AXI_SAFE_STAGE") != "FAIL_STAGE":
         raise ValueError("only an exact FAIL_STAGE epoch may be frozen by this helper")
     if str(summary.get("safety_validation", {}).get("source_commit_requested", "")).lower() != source:
         raise ValueError("summary/ledger source commit mismatch")
-    if ledger.get("status") != "FAIL" or ledger.get("attempt_count") != 1 or ledger.get("completed_stage_count") != 0:
-        raise ValueError("outer ledger is not the exact one-attempt, zero-completion FAIL boundary")
+    if (
+        ledger.get("status") != "FAIL"
+        or ledger.get("attempt_count") != stage_ordinal
+        or ledger.get("completed_stage_count") != failed_index
+        or ledger.get("next_stage_index") != failed_index
+    ):
+        raise ValueError("outer ledger does not bind a contiguous PASS prefix followed by one failed stage")
 
     destination = epoch / "historical_preflight_inputs"
     destination.mkdir(parents=False, exist_ok=False)
@@ -125,15 +144,55 @@ def main() -> int:
         }
     )
 
-    recoveries = sorted(path.name for path in epoch.glob("recovery_shutdown_after_failed_stage1_*") if path.is_dir())
-    if len(recoveries) != 2:
-        raise ValueError(f"expected exactly two r4 recovery directories, found {len(recoveries)}")
+    if stage_id != "p7_safe_idle":
+        for role, relative in (
+            ("historical_backend_python", "tools/p7_jtag_backend.py"),
+            ("historical_lane_phy_rtl", "rtl/tfdu_lane_phy.sv"),
+        ):
+            committed_source = subprocess.run(
+                ["git", "show", f"{source}:{relative}"],
+                cwd=root,
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+            if committed_source.returncode != 0:
+                raise RuntimeError(f"unable to read historical source from {source}: {relative}")
+            source_bytes = committed_source.stdout
+            source_blob = hashlib.sha1(
+                f"blob {len(source_bytes)}\0".encode("ascii") + source_bytes
+            ).hexdigest()
+            source_sha = sha256_bytes(source_bytes)
+            frozen_source = destination / f"{Path(relative).stem}_{source[:8]}_{source_blob}{Path(relative).suffix}"
+            frozen_source.write_bytes(source_bytes)
+            records.append(
+                {
+                    "role": role,
+                    "original_path": relative,
+                    "frozen_path": frozen_source.relative_to(root).as_posix(),
+                    "git_blob_sha1": source_blob,
+                    "bytes": len(source_bytes),
+                    "sha256": source_sha,
+                }
+            )
+
+    recoveries = sorted(
+        path.name
+        for path in epoch.glob(f"recovery_shutdown_after_failed_stage{stage_ordinal}_*")
+        if path.is_dir()
+    )
+    if not recoveries:
+        raise ValueError("failed stage has no independent shutdown recovery directory")
+    final_recovery = epoch / recoveries[-1] / "program_tfdu_shutdown_safe.summary.txt"
+    final_text = final_recovery.read_text(encoding="utf-8", errors="strict")
+    if "SHUTDOWN_EXIT=0" not in final_text or "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS" not in final_text:
+        raise ValueError("final independent recovery does not prove shutdown PASS")
     manifest = {
         "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
         "run_id": args.run_id,
         "source_commit": source,
-        "stage_index": 0,
-        "stage_id": "p7_safe_idle",
+        "stage_index": failed_index,
+        "stage_id": stage_id,
         "result": "FAIL_STAGE",
         "mutation_attempted": True,
         "candidate_mutation_attempted": True,

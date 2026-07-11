@@ -1111,14 +1111,6 @@ def parse_raw_result(
 
         current = {name: _require_int(values, f"{prefix}_{name}") for name in COUNTER_OFFSETS}
         deltas = {name: _delta32(current[name], previous[name]) for name in COUNTER_OFFSETS}
-        # The real P6 RTL routes P6_CTRL_CLEAR_STICKY into each tfdu_lane_phy
-        # ``clear_sticky`` input.  RAW_TX_PULSES and RAW_RX_PULSES therefore
-        # restart at zero before every fragment; they are per-fragment
-        # observations, not cumulative counters.  Keep the cumulative-delta
-        # contract for the other counters and record the clear-scoped raw
-        # observations directly.
-        for name in ("RAW_TX_PULSES", "RAW_RX_PULSES"):
-            deltas[name] = current[name]
         expected_l0 = 1 if int(plan["lane_mask"]) & 0x1 else 0
         expected_l1 = 1 if int(plan["lane_mask"]) & 0x2 else 0
         exact_deltas = {
@@ -1139,8 +1131,8 @@ def parse_raw_result(
             if deltas[name] != 0:
                 _fail("ERROR_COUNTER", f"fragment {index} {name} increased by {deltas[name]}")
         for name in ("RAW_TX_PULSES", "RAW_RX_PULSES"):
-            if current[name] == 0:
-                _fail("RAW_PULSE_COUNTER", f"fragment {index} {name} is zero after the clear-scoped transfer")
+            if deltas[name] == 0:
+                _fail("RAW_PULSE_COUNTER", f"fragment {index} {name} did not increase")
         if _require_int(values, f"{prefix}_ERROR_CODE") != 0:
             _fail("P6_ERROR_CODE", f"fragment {index} ERROR_CODE is nonzero")
         if _require_int(values, f"{prefix}_STICKY_ERROR") != 0:
@@ -1166,7 +1158,6 @@ def parse_raw_result(
                 "transfer_polls": done_poll_count,
                 "counters": current,
                 "counter_deltas": deltas,
-                "raw_pulse_counter_semantics": "clear_scoped_per_fragment_observation",
                 "txd_high_max_cycles": txd_high,
                 "rx_length": encoded_length,
                 "rx_crc32": expected_crc,
@@ -1312,8 +1303,6 @@ class MemoryMockExecutor:
         if value & P6_CTRL_CLEAR_STICKY:
             self.registers[regs.IR_REG_P6_ERROR_CODE] = 0
             self.registers[regs.IR_REG_P6_STICKY_ERROR] = 0
-            self.registers[regs.IR_REG_COUNTER_TX_PULSE] = 0
-            self.registers[regs.IR_REG_COUNTER_RX_RAW_PULSE] = 0
             self.registers[regs.IR_REG_P6_STATUS] = P6_STATUS_READY | (
                 P6_STATUS_COMMITTED if self.committed else 0
             )

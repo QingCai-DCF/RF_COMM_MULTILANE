@@ -254,3 +254,38 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - 后续只能先准确提交 r4 修复/失败证据，再在新的干净 source commit 上生成一次新 offline checkpoint，
   生成 r5 plan 并通过全部 dry validation；之后才允许使用既定 wrapper/scoped authorization 启动 r5。
 - 最终 1800 秒 stationary run 仍为 `NOT_RUN`，其正式执行次数仍为 0。
+
+## 13. 2026-07-11 r5 增量交接（本节覆盖第 12 节的 next-run 描述）
+
+- r4 allowlist 修复和 immutable r4 evidence 已提交：
+  `63d08f78dabaa2dcd0369dc2c89f6006b93fa04f`。
+- 在干净的 `63d08f78...` source 上新生成的 offline checkpoint 为 PASS；SHA256
+  `5e14ab0f7dae66481045a0bf738ac1c2d9ed1dd7414cb10b9ad97ebf573bf567`；
+  `HARDWARE_ACCEPTANCE` 仍为 `PENDING_HW`。
+- r5 计划 SHA256 为 `b90330e38ea641b283510bb02abfabf517fe77e56ca184105f98a6faa2c55fa3`；
+  66 个授权、66 个 child dry validation 和 executor dry validation 均通过。
+- r5 run ID 为 `p7_20260711_stationary_app_r5`。它只启动一次：stage 1 / `p7_safe_idle`
+  PASS，stage 2 / `p7_p6_frame_regression_m1` 为 `FAIL_STAGE`，随后立即停止。completed stage count
+  为 1；r5 永远不得 resume；下一次硬件 run ID 必须是 r6。
+- r5 stage 2 的 inner candidate transaction、20 个 fragment、lane0 frame/CRC/ACK、shutdown-before 和
+  shutdown-after 均完成；strict backend parser 随后以
+  `RAW_PULSE_COUNTER: fragment 1 RAW_TX_PULSES did not increase` 拒绝整个 stage。
+- 根因是 evidence contract 错配：真实 `tfdu_lane_phy.sv` 在每个 fragment 前的
+  `P6_CTRL_CLEAR_STICKY` 上把 raw TX/RX pulse counters 清零；旧 parser 却把它们当作跨 fragment
+  cumulative counter 并要求 delta 增长。修复后 raw pulse counters 按每个 fragment 的 clear-scoped
+  非零 observation 验证，其他累计 counters 仍使用严格 delta。
+- r5 失败后的独立恢复目录为
+  `recovery_shutdown_after_failed_stage2_20260711T043700Z`，记录 raw rc125、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0` 和
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。恢复 PASS 不得写成 stage 2 PASS。
+- r5 原始 ledger/log、恢复和 9 项 frozen inputs 位于：
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r5/`。
+  frozen sources 同时绑定旧 backend Python、Tcl 和 lane-PHY RTL Git blobs，以机器证明旧 parser/RTL
+  contract mismatch。
+- 修复后的 parser 已对真实 r5 raw log 严格重解析 PASS；这只是 bug-fix 回归，不改变 immutable r5
+  wrapper 的 FAIL 状态，也不贡献 active-checkpoint coverage。
+- 提交前非硬件结果：focused wrapper/safety suites 89/89、application/backend suites 37/37、
+  summarizer suite 13/13、真实 r1-r5 历史正向验证与 r5 tamper fail-closed 均 PASS。
+- 后续只能先提交本修复和 r5 失败证据，再在新干净 source commit 上生成一次新 offline checkpoint、
+  r6 plan 和全部 dry validation；之后才允许启动 r6。
+- 最终 1800 秒 stationary run 仍为 `NOT_RUN`，正式执行次数仍为 0。
