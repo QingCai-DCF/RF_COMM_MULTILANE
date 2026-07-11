@@ -1,0 +1,42 @@
+{
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "FAIL",
+  "generated_at_utc": "2026-07-10T17:50:54.441730+00:00",
+  "hardware_actions_executed": true,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "sequence_plan": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r2_sequence_plan.txt",
+    "sha256": "6423388ede5c7e9321902ec7c90f9be2b1bf3d711ed9e676ea08ba2be69403b0",
+    "source_commit": "246d06f58986593e53dbde2b9cd62888e2bafa35",
+    "stage_count": 66
+  },
+  "offline_checkpoint": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+    "sha256": "54aa4ca3c39a50e5634ee9ebb4eacb0708d02de87fa35acbcffd74fdc5b0589c"
+  },
+  "validation_errors": [],
+  "reason": "sequence stopped at the first wrapper/summary/shutdown failure",
+  "failed_stage": {
+    "index": 0,
+    "id": "p7_safe_idle",
+    "failures": [
+      "outer wrapper process containment/return-code policy failed",
+      "wrapper result is not PASS: P7_JTAG_AXI_SAFE_STAGE=FAIL_PREFLIGHT",
+      "wrapper summary does not prove programmed_shutdown_after=true",
+      "wrapper shutdown-after record is missing",
+      "wrapper candidate process record is missing: stage_process",
+      "JTAG wrapper strict backend parse is missing or not bound to this run"
+    ]
+  },
+  "execution_ledger": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\sequence_execution_ledger.json",
+    "sha256": "c38ad192cbbfda8f1f9108b41b3b766cdb0bb196c5d89eef072f3c5afdff366a",
+    "bytes": 14282
+  }
+}

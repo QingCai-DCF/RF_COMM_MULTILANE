@@ -1,0 +1,408 @@
+{
+  "P7_JTAG_AXI_SAFE_STAGE": "FAIL_PREFLIGHT",
+  "generated_at_utc": "2026-07-10T17:50:54.652247+00:00",
+  "stage_name": "p7_safe_idle",
+  "semantic_mode": "safe-idle",
+  "requested_execute_hardware": true,
+  "hardware_actions_executed": true,
+  "programmed_fpga": false,
+  "programmed_candidate": false,
+  "programmed_shutdown_before": false,
+  "programmed_shutdown_after": false,
+  "started_ps_elf": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "ethernet_used": false,
+  "motion_used": false,
+  "hardware_acceptance": "PENDING_HW",
+  "safety_validation": {
+    "P7_HARDWARE_SAFETY": "PASS",
+    "ready_for_hardware_preflight": true,
+    "hardware_actions_executed": false,
+    "programmed_fpga": false,
+    "drove_tfdu_txd": false,
+    "started_ps_elf": false,
+    "authorization_environment_present": true,
+    "authorization": {
+      "exists": true,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r2_001_p7_safe_idle.txt",
+      "actual_sha256": "24637420522c52233e8971e5de789b8e024ebdab39f9dc53bd1e73513d18d993",
+      "expected_sha256": "24637420522c52233e8971e5de789b8e024ebdab39f9dc53bd1e73513d18d993",
+      "markers": [
+        "P7_STATIONARY_APP_LAYER_APPROVED"
+      ],
+      "duplicate_keys": []
+    },
+    "authorization_fields": {
+      "AUTHORIZED_STAGE": "P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET",
+      "USER_HARDWARE_AUTHORIZATION_FOR_P7": "GRANTED",
+      "BOARD_ID": "210512180081",
+      "EXPECTED_PART": "xc7z010clg400-1",
+      "EXPECTED_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "SOURCE_COMMIT": "246d06f58986593e53dbde2b9cd62888e2bafa35",
+      "MAX_RUNTIME_SEC": "300",
+      "SHUTDOWN_ON_EXIT": "required",
+      "NO_ETHERNET": "true",
+      "NO_MOTION": "true",
+      "LANE_COUNT": "2",
+      "MAX_LANE_MASK": "0x3",
+      "P7_PLAN_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+      "P7_PLAN_SHA256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+      "BITSTREAM_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
+      "BITSTREAM_SHA256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+      "XSA_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+      "XSA_SHA256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+      "ELF_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+      "ELF_SHA256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+      "PROFILE_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+      "PROFILE_SHA256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+      "ACTIVE_XDC_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+      "ACTIVE_XDC_SHA256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+      "PINMAP_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+      "PINMAP_SHA256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+      "REGISTER_MAP_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+      "REGISTER_MAP_SHA256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+      "SHUTDOWN_BITSTREAM_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+      "SHUTDOWN_BITSTREAM_SHA256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+      "LTX_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+      "LTX_SHA256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "P7_JTAG_STAGE_NAME": "p7_safe_idle",
+      "P7_JTAG_SEMANTIC_MODE": "safe-idle",
+      "P7_JTAG_TRANSACTION_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r2\\transactions\\001_p7_safe_idle.transactions.txt",
+      "P7_JTAG_TRANSACTION_SHA256": "c164be9bf94510474c01711914bb37bdc800f28b9f5a3134e59f344e912c391d",
+      "P7_JTAG_FREQUENCY_HZ": "1000000",
+      "P7_JTAG_AXI_BASE": "0x43c00000"
+    },
+    "source_commit_requested": "246d06f58986593e53dbde2b9cd62888e2bafa35",
+    "source_commit_current": "246d06f58986593e53dbde2b9cd62888e2bafa35",
+    "dirty_files": [
+      "?? evidence/generated/p7_2lane_scope_summary.md",
+      "?? evidence/generated/p7_application_protocol_summary.md",
+      "?? evidence/generated/p7_artifact_provenance_summary.json",
+      "?? evidence/generated/p7_artifact_provenance_summary.md",
+      "?? evidence/generated/p7_backend_conformance_summary.md",
+      "?? evidence/generated/p7_fault_recovery_summary.md",
+      "?? evidence/generated/p7_file_integrity_summary.md",
+      "?? evidence/generated/p7_fragmentation_reassembly_summary.md",
+      "?? evidence/generated/p7_lane1_promotion_summary.json",
+      "?? evidence/generated/p7_lane1_promotion_summary.md",
+      "?? evidence/generated/p7_lane_scheduler_summary.md",
+      "?? evidence/generated/p7_no_ethernet_summary.md",
+      "?? evidence/generated/p7_no_motion_summary.md",
+      "?? evidence/generated/p7_offline_gate_summary.json",
+      "?? evidence/generated/p7_offline_gate_summary.md",
+      "?? evidence/generated/p7_offline_test_run.json",
+      "?? evidence/generated/p7_protocol_vector_summary.json",
+      "?? evidence/generated/p7_protocol_vector_summary.md",
+      "?? evidence/generated/p7_ps_core_hardware_readiness.json",
+      "?? evidence/generated/p7_ps_core_hardware_readiness.md",
+      "?? evidence/generated/p7_ps_runtime_summary.md",
+      "?? evidence/generated/p7_queue_backpressure_summary.md",
+      "?? evidence/generated/p7_repo_intake.md",
+      "?? evidence/generated/p7_repo_intake_summary.json",
+      "?? evidence/generated/p7_repo_intake_summary.md",
+      "?? evidence/generated/p7_segmentation_reassembly_summary.md",
+      "?? evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r2/"
+    ],
+    "max_runtime_sec": 300,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "no_ethernet": true,
+    "no_motion": true,
+    "shutdown_on_exit": true,
+    "abort_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\ABORT_NOW.txt",
+    "abort_file_present": false,
+    "hw_server_url": "localhost:3121",
+    "preflight_tcl": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_hw_preflight.tcl",
+    "preflight_tcl_sha256": "95bfbdf7e6c429e6637c1b4224a9dcecaa1fd756a1f665b21a797d54afbfc464",
+    "artifacts": {
+      "plan": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+        "expected_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+        "exists": true,
+        "actual_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd"
+      },
+      "bitstream": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
+        "expected_sha256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+        "exists": true,
+        "actual_sha256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c"
+      },
+      "xsa": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+        "expected_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+        "exists": true,
+        "actual_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9"
+      },
+      "elf": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+        "expected_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+        "exists": true,
+        "actual_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce"
+      },
+      "profile": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+        "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+        "exists": true,
+        "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94"
+      },
+      "active_xdc": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+        "expected_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+        "exists": true,
+        "actual_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+      },
+      "pinmap": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+        "expected_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+        "exists": true,
+        "actual_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+      },
+      "register_map": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+        "expected_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+        "exists": true,
+        "actual_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+      },
+      "shutdown_bitstream": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+        "expected_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "exists": true,
+        "actual_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+      },
+      "ltx": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+        "expected_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+        "exists": true,
+        "actual_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083"
+      }
+    },
+    "errors": [],
+    "warnings": [
+      "workspace has uncommitted changes; frozen artifact hashes remain authoritative"
+    ]
+  },
+  "stage_validation_errors": [],
+  "transaction_validation": {
+    "format": "P7_JTAG_AXI_TRANSACTIONS_V1",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r2\\transactions\\001_p7_safe_idle.transactions.txt",
+    "expected_sha256": "c164be9bf94510474c01711914bb37bdc800f28b9f5a3134e59f344e912c391d",
+    "actual_sha256": "c164be9bf94510474c01711914bb37bdc800f28b9f5a3134e59f344e912c391d",
+    "operation_count": 13,
+    "poll_operation_count": 0,
+    "poll_iteration_ceiling": 0,
+    "metadata": {
+      "EVIDENCE_KIND": "safe_idle"
+    },
+    "errors": [],
+    "size_bytes": 790,
+    "start_operation_count": 0,
+    "commit_operation_count": 0,
+    "payload_write_count": 0,
+    "result_keys": [
+      "SAFE_CRC_BAD",
+      "SAFE_DUTY_VIOLATION",
+      "SAFE_ERROR_CODE",
+      "SAFE_PAYLOAD_MISMATCH",
+      "SAFE_RETRY_EXHAUSTED",
+      "SAFE_RX_GOOD_L0",
+      "SAFE_RX_GOOD_L1",
+      "SAFE_STATUS",
+      "SAFE_STICKY_ERROR",
+      "SAFE_TXD_HIGH_MAX",
+      "SAFE_TX_COUNT",
+      "SAFE_TX_FAIL"
+    ],
+    "write_operations": [
+      {
+        "offset": "0x100",
+        "value": "0x00000030"
+      }
+    ],
+    "runtime_feasibility": {
+      "jtag_frequency_hz": 1000000,
+      "reference_jtag_frequency_hz": 1000000,
+      "estimated_axi_operation_us_at_1mhz": 1250,
+      "estimated_stage_fixed_overhead_seconds": 30.0,
+      "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+      "estimated_stage_runtime_seconds": 30.01625,
+      "minimum_stage_runtime_sec": 31,
+      "authorized_runtime_sec": 300,
+      "feasible_within_authorized_runtime": true,
+      "containment_initial_empty_wait_seconds": 1,
+      "expected_tool_daemon_grace_seconds": 10,
+      "jtag_wrapper_vivado_process_count": 4,
+      "jtag_wrapper_containment_allowance_seconds": 44,
+      "jtag_wrapper_other_guard_seconds": 45,
+      "global_runtime_budget": {
+        "minimum_estimated_global_runtime_sec": 210,
+        "configured_global_timeout_ceiling_sec": 269,
+        "authorized_global_runtime_sec": 300,
+        "containment_initial_empty_wait_seconds": 1,
+        "expected_tool_daemon_grace_seconds": 10,
+        "contained_vivado_process_count": 4,
+        "containment_allowance_seconds": 44,
+        "other_guard_seconds": 45,
+        "configured_unallocated_margin_seconds": 31,
+        "estimated_unallocated_margin_seconds": 90,
+        "minimum_stage_fits_configured_timeout": true,
+        "feasible": true
+      }
+    },
+    "valid": true,
+    "backend_manifest": {
+      "semantic_mode": "safe-idle",
+      "required": false
+    },
+    "global_runtime_budget": {
+      "minimum_estimated_global_runtime_sec": 210,
+      "configured_global_timeout_ceiling_sec": 269,
+      "authorized_global_runtime_sec": 300,
+      "containment_initial_empty_wait_seconds": 1,
+      "expected_tool_daemon_grace_seconds": 10,
+      "contained_vivado_process_count": 4,
+      "containment_allowance_seconds": 44,
+      "other_guard_seconds": 45,
+      "configured_unallocated_margin_seconds": 31,
+      "estimated_unallocated_margin_seconds": 90,
+      "minimum_stage_fits_configured_timeout": true,
+      "feasible": true
+    }
+  },
+  "exit_code_policy": "returncode_must_be_exactly_zero_and_required_markers_must_match",
+  "transaction_format_boundary": "strict_P7_JTAG_AXI_TRANSACTIONS_V1_no_source_no_eval_no_external_commands",
+  "hardware_execution_lock": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\P7_HARDWARE_EXECUTION.lock",
+    "token_sha256": "445c82b4f580b5b615fb854d9fc404f41e6577823afe5e41bc1b06d3a1cfe59c",
+    "owner": {
+      "schema": "rf-comm-p7-hardware-execution-lock-v1",
+      "pid": 24840,
+      "wrapper": "run_p7_jtag_axi_stage_safe.py",
+      "stage_name": "p7_safe_idle",
+      "acquired_at_utc": "2026-07-10T17:50:54.652492+00:00",
+      "evidence_dir": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle"
+    },
+    "acquired": true,
+    "stale_lock_auto_recovery": false
+  },
+  "global_runtime_deadline_source": "host_monotonic",
+  "global_runtime_guard_seconds": 45,
+  "global_runtime_budget_components": {
+    "contained_vivado_process_count": 4,
+    "initial_empty_wait_seconds_per_process": 1,
+    "expected_tool_daemon_grace_seconds_per_process": 10,
+    "containment_allowance_seconds": 44,
+    "other_guard_seconds": 45
+  },
+  "evidence_dir": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle",
+  "event_log": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle\\p7_jtag_axi_stage_events.jsonl",
+  "preflight_process": {
+    "name": "preflight",
+    "returncode": 125,
+    "stdout_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle\\p7_preflight.stdout.log",
+    "stderr_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle\\p7_preflight.stderr.log",
+    "elapsed_seconds": 13.17005,
+    "argv": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_hw_preflight.tcl",
+      "-tclargs",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r2_001_p7_safe_idle.txt",
+      "210512180081",
+      "xc7z010clg400-1",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "localhost:3121",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle\\p7_preflight_result.txt"
+    ],
+    "started_at_utc": "2026-07-10T17:50:54.655360+00:00",
+    "ended_at_utc": "2026-07-10T17:51:07.825417+00:00",
+    "timed_out": false,
+    "abort_seen": false,
+    "interrupted": false,
+    "process_tree_terminated": true,
+    "process_tree_reaped": false,
+    "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+    "containment_assigned": true,
+    "containment_closed": true,
+    "descendant_count_after": 0,
+    "expected_tool_daemon_grace_used": false,
+    "expected_tool_daemon_grace_seconds": 0.0,
+    "expected_tool_daemon_paths": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe"
+    ],
+    "descendant_paths_seen": [
+      "C:\\Windows\\System32\\conhost.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "C:\\Windows\\System32\\conhost.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe"
+    ],
+    "descendant_processes_seen": [
+      {
+        "pid": 26780,
+        "parent_pid": 43148,
+        "image_path": "C:\\Windows\\System32\\conhost.exe"
+      },
+      {
+        "pid": 29740,
+        "parent_pid": 43676,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe"
+      },
+      {
+        "pid": 39216,
+        "parent_pid": 29740,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe"
+      },
+      {
+        "pid": 30352,
+        "parent_pid": 35356,
+        "image_path": "C:\\Windows\\System32\\cmd.exe"
+      },
+      {
+        "pid": 33772,
+        "parent_pid": 30352,
+        "image_path": "C:\\Windows\\System32\\conhost.exe"
+      },
+      {
+        "pid": 45200,
+        "parent_pid": 30352,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe"
+      }
+    ],
+    "expected_tool_daemon_classification": "UNAPPROVED",
+    "containment_cleanup_terminated": true,
+    "process_exit_race_rechecked": false,
+    "process_identity_query_retried": false,
+    "containment_query_error": "",
+    "launch_error": ""
+  },
+  "preflight_result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r2\\001_p7_safe_idle\\p7_preflight_result.txt",
+  "preflight_failures": [
+    "preflight process returned nonzero exit code: 125"
+  ],
+  "target_identity": {
+    "P7_HW_PREFLIGHT_AUTHORIZED": "1",
+    "P7_HW_PREFLIGHT_READ_ONLY": "1",
+    "P7_HW_PREFLIGHT_BOARD_ID": "210512180081",
+    "P7_HW_PREFLIGHT_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+    "P7_HW_PREFLIGHT_DEVICE": "xc7z010_1",
+    "P7_HW_PREFLIGHT_PART": "xc7z010clg400-1",
+    "P7_HW_PREFLIGHT_IDCODE": "00010011011100100010000010010011",
+    "P7_HW_PREFLIGHT_CANONICAL_PART": "xc7z010clg400-1",
+    "P7_HW_PREFLIGHT_LIVE_PART": "xc7z010",
+    "P7_HW_PREFLIGHT_LIVE_DEVICE": "xc7z010_1",
+    "P7_HW_PREFLIGHT_LIVE_IDCODE": "00010011011100100010000010010011",
+    "P7_HW_PREFLIGHT_RESULT": "PASS"
+  },
+  "reason": "read-only target preflight did not return rc=0 with exact identity markers",
+  "global_runtime": {
+    "elapsed_seconds": 13.1832,
+    "authorized_max_seconds": 300,
+    "within_authorized_limit": true
+  }
+}

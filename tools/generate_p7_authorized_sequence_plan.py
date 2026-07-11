@@ -172,19 +172,19 @@ def build_stage_specs() -> list[StageSpec]:
         if group == "safe_idle":
             stage_id = "p7_safe_idle"
             kind, mode, pattern = "jtag", "safe-idle", "none"
-            runtime, preflight, stage_timeout, shutdown = 300, 30, 90, 30
+            runtime, preflight, stage_timeout, shutdown = 600, 30, 90, 30
         elif group == "p6_frame_regression":
             mask = int(case["lane_mask"])
             stage_id = f"p7_p6_frame_regression_m{mask}"
             kind, mode, pattern = "jtag", "rfap", "counter"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
+            runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
         elif group == "fragment_boundary":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
             stage_id = f"p7_fragment_boundary_{length}_{policy_slug(policy)}"
             kind, mode = "jtag", "rfap"
             pattern = "counter" if length == 0 else "binary_all_byte_values_repeated"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
+            runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
         elif group == "large_object_jtag":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
@@ -197,9 +197,9 @@ def build_stage_specs() -> list[StageSpec]:
             # needs the separately authorized 1800 s global ceiling at 1 MHz.
             # It is not a timed stationary service run.
             if length == 1_048_576:
-                runtime, preflight, stage_timeout, shutdown = 1800, 120, 1450, 60
+                runtime, preflight, stage_timeout, shutdown = 1800, 60, 1400, 60
             else:
-                runtime, preflight, stage_timeout, shutdown = 900, 60, 650, 30
+                runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
         else:
             mode = {
                 "ps_functional": "functional",
@@ -664,6 +664,8 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     xsdb = Path(args.xsdb_path).resolve(strict=False)
     if not vivado.is_file() or not xsdb.is_file():
         raise ValueError("explicit Vivado and XSDB executables must both exist")
+    if not sequence.is_exact_vivado_batch_launcher(vivado):
+        raise ValueError("explicit Vivado launcher must be exactly vivado.bat; vivado.exe is forbidden")
     specs = build_stage_specs()
     validate_stage_specs(specs)
     for spec in specs:

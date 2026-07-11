@@ -12,6 +12,7 @@ not hardware evidence by themselves.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import csv
 import hashlib
 import json
@@ -41,6 +42,27 @@ CANONICAL_FULL_PART = "xc7z010clg400-1"
 CANONICAL_LIVE_PART = "xc7z010"
 CANONICAL_LIVE_DEVICE = "xc7z010_1"
 CANONICAL_LIVE_IDCODE_HEX = "13722093"
+CANONICAL_LIVE_IDCODE_BINARY = "00010011011100100010000010010011"
+HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED = "PART_IDENTITY_REJECTED"
+HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED = (
+    "IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED"
+)
+EXPECTED_VIVADO_HELPER_ROLES = ("cs_server", "rdi_xsdb", "cmd", "conhost")
+EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE = {
+    "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+    "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+    "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+    "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911",
+}
+APPROVED_VIVADO_HELPER_INITIAL_CLASSIFICATIONS = frozenset(
+    {
+        "SINGLE_EXACT_CS_SERVER",
+        "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
+        "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    }
+)
+VIVADO_HELPER_GRACE_SECONDS = 30.0
+VIVADO_HELPER_MAX_TOPOLOGY_SAMPLE_GAP_SECONDS = 0.25
 P7_TRACE_MAGIC = 0x52543750
 HARDWARE_EXECUTION_LOCK_RELATIVE = Path(".hardware_authorization") / "P7_HARDWARE_EXECUTION.lock"
 CHECKPOINT_RELATION_BOUND = "BOUND_TO_ACTIVE_OFFLINE_CHECKPOINT"
@@ -497,6 +519,329 @@ def append_error(errors: list[str], condition: bool, message: str) -> None:
         errors.append(message)
 
 
+def _normalized_windows_process_path(value: Any) -> str:
+    return str(Path(str(value)).resolve(strict=False)).replace("/", "\\").casefold()
+
+
+def _audited_windows_system_directory() -> Path | None:
+    if os.name == "nt":
+        try:
+            buffer = ctypes.create_unicode_buffer(32768)
+            length = ctypes.windll.kernel32.GetSystemDirectoryW(buffer, len(buffer))
+        except (AttributeError, OSError):
+            return None
+        return Path(buffer.value).resolve(strict=False) if 0 < int(length) < len(buffer) else None
+    return (Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32").resolve(strict=False)
+
+
+def _derived_vivado_helper_paths(argv: Any) -> dict[str, str] | None:
+    if (
+        not isinstance(argv, list)
+        or not argv
+        or not all(isinstance(item, str) and bool(item) for item in argv)
+    ):
+        return None
+    executable = Path(argv[0]).resolve(strict=False)
+    if executable.name.casefold() != "vivado.bat":
+        return None
+    helper_dir = executable.parent / "unwrapped" / "win64.o"
+    system_directory = _audited_windows_system_directory()
+    if system_directory is None:
+        return None
+    return {
+        "cs_server": _normalized_windows_process_path(helper_dir / "cs_server.exe"),
+        "rdi_xsdb": _normalized_windows_process_path(helper_dir / "rdi_xsdb.exe"),
+        "cmd": _normalized_windows_process_path(system_directory / "cmd.exe"),
+        "conhost": _normalized_windows_process_path(system_directory / "conhost.exe"),
+    }
+
+
+def _normalize_v2_helper_processes(
+    processes: Any,
+    helper_paths: Mapping[str, str],
+    *,
+    allow_empty: bool,
+) -> dict[int, tuple[int, str, str, int]] | None:
+    if not isinstance(processes, list) or (not processes and not allow_empty):
+        return None
+    path_to_role = {path: role for role, path in helper_paths.items()}
+    if len(path_to_role) != len(EXPECTED_VIVADO_HELPER_ROLES):
+        return None
+    normalized: dict[int, tuple[int, str, str, int]] = {}
+    parent_activity: dict[int, bool] = {}
+    ordered_ids: list[int] = []
+    for item in processes:
+        if not isinstance(item, dict) or set(item) != {
+            "pid",
+            "parent_pid",
+            "parent_active_globally",
+            "image_path",
+            "creation_time_100ns",
+        }:
+            return None
+        process_id = item.get("pid")
+        parent_id = item.get("parent_pid")
+        parent_active_globally = item.get("parent_active_globally")
+        image_path = item.get("image_path")
+        creation_time = item.get("creation_time_100ns")
+        if (
+            type(process_id) is not int
+            or type(parent_id) is not int
+            or type(parent_active_globally) is not bool
+            or type(image_path) is not str
+            or type(creation_time) is not int
+            or process_id <= 0
+            or parent_id <= 0
+            or creation_time <= 0
+            or process_id == parent_id
+            or process_id in normalized
+        ):
+            return None
+        path = _normalized_windows_process_path(image_path)
+        role = path_to_role.get(path)
+        if role is None:
+            return None
+        ordered_ids.append(process_id)
+        normalized[process_id] = (parent_id, path, role, creation_time)
+        parent_activity[process_id] = parent_active_globally
+    if ordered_ids != sorted(ordered_ids) or any(
+        parent_activity[process_id] is not (parent_id in normalized)
+        for process_id, (parent_id, _path, _role, _creation_time) in normalized.items()
+    ):
+        return None
+    return normalized
+
+
+def _classify_v2_initial_helper_topology(
+    normalized: Mapping[int, tuple[int, str, str, int]],
+) -> str:
+    counts = {role: 0 for role in EXPECTED_VIVADO_HELPER_ROLES}
+    for _parent_id, _path, role, _creation_time in normalized.values():
+        counts[role] += 1
+    edges = sorted(
+        (normalized[parent_id][2], role)
+        for _process_id, (parent_id, _path, role, _creation_time) in normalized.items()
+        if parent_id in normalized
+    )
+    if counts == {"cs_server": 1, "rdi_xsdb": 0, "cmd": 0, "conhost": 0}:
+        return "SINGLE_EXACT_CS_SERVER" if not edges else "UNAPPROVED"
+    if counts == {"cs_server": 2, "rdi_xsdb": 0, "cmd": 0, "conhost": 0}:
+        return (
+            "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"
+            if edges == [("cs_server", "cs_server")]
+            else "UNAPPROVED"
+        )
+    if counts != {"cs_server": 2, "rdi_xsdb": 1, "cmd": 1, "conhost": 2}:
+        return "UNAPPROVED"
+    roots = [
+        (process_id, parent_id, role)
+        for process_id, (parent_id, _path, role, _creation_time) in normalized.items()
+        if parent_id not in normalized
+    ]
+    expected_edges = sorted(
+        [("cs_server", "cs_server"), ("cmd", "conhost"), ("cmd", "rdi_xsdb")]
+    )
+    return (
+        "EXACT_R2_VIVADO_EXIT_HELPER_FOREST"
+        if edges == expected_edges
+        and sorted(role for _process_id, _parent_id, role in roots)
+        == sorted(["cs_server", "cmd", "conhost"])
+        and len({parent_id for _process_id, parent_id, _role in roots}) == 3
+        else "UNAPPROVED"
+    )
+
+
+def _v2_process_containment_errors(record: Mapping[str, Any], label: str) -> list[str]:
+    errors: list[str] = []
+    containment_kind = record.get("containment_kind")
+    windows_job = containment_kind == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE"
+    posix_group = containment_kind == "POSIX_PROCESS_GROUP"
+    append_error(errors, windows_job or posix_group, f"{label} containment_kind is missing/unsupported")
+    append_error(errors, record.get("containment_cleanup_attempted") is False, f"{label} attempted forced containment cleanup")
+    append_error(errors, record.get("containment_cleanup_terminated") is False, f"{label} required forced containment termination")
+    for key in (
+        "expected_tool_daemon_grace_used",
+        "expected_tool_daemon_topology_monotonic",
+        "expected_tool_daemon_hashes_verified",
+        "expected_tool_daemon_prelaunch_hashes_verified",
+        "expected_tool_daemon_postexit_hashes_verified",
+        "expected_tool_daemon_topology_terminal_empty",
+        "process_exit_race_rechecked",
+        "process_identity_query_retried",
+    ):
+        append_error(errors, type(record.get(key)) is bool, f"{label} {key} is not boolean")
+    for key in ("process_identity_query_retry_count", "process_exit_race_recheck_count"):
+        append_error(errors, type(record.get(key)) is int and int(record.get(key)) >= 0, f"{label} {key} is missing/malformed")
+    for key, message in (
+        ("containment_query_error", "containment identity query error"),
+        ("expected_tool_daemon_topology_error", "helper topology error"),
+        ("expected_tool_daemon_hash_error", "helper aggregate hash error"),
+        ("expected_tool_daemon_prelaunch_hash_error", "helper prelaunch hash error"),
+        ("expected_tool_daemon_postexit_hash_error", "helper postexit hash error"),
+    ):
+        append_error(errors, record.get(key) == "", f"{label} has a {message}")
+
+    retry_count = record.get("process_identity_query_retry_count")
+    recheck_count = record.get("process_exit_race_recheck_count")
+    append_error(errors, type(retry_count) is int and 0 <= retry_count <= 1, f"{label} identity-query retry count exceeds the global bound")
+    append_error(errors, type(recheck_count) is int and 0 <= recheck_count <= 2, f"{label} exit-race recheck count exceeds the global bound")
+    append_error(errors, record.get("process_identity_query_retried") is (retry_count == 1), f"{label} identity-query retry boolean/count mismatch")
+    append_error(errors, record.get("process_exit_race_rechecked") is (isinstance(recheck_count, int) and recheck_count > 0), f"{label} exit-race recheck boolean/count mismatch")
+
+    if posix_group:
+        append_error(errors, record.get("expected_tool_daemon_paths") == [], f"{label} POSIX record contains Windows helper paths")
+        append_error(errors, record.get("expected_tool_daemon_grace_used") is False, f"{label} POSIX record claims Windows helper grace")
+        append_error(errors, type(record.get("expected_tool_daemon_grace_seconds")) in {int, float} and not isinstance(record.get("expected_tool_daemon_grace_seconds"), bool) and float(record.get("expected_tool_daemon_grace_seconds")) == 0.0, f"{label} POSIX record contains a Windows helper grace duration")
+        append_error(errors, type(record.get("expected_tool_daemon_grace_elapsed_seconds")) in {int, float} and not isinstance(record.get("expected_tool_daemon_grace_elapsed_seconds"), bool) and float(record.get("expected_tool_daemon_grace_elapsed_seconds")) == 0.0, f"{label} POSIX record contains Windows helper grace elapsed time")
+        append_error(errors, record.get("expected_tool_daemon_classification") == "NONE", f"{label} POSIX record contains a Windows helper classification")
+        append_error(errors, record.get("descendant_paths_seen") == [] and record.get("descendant_processes_seen") == [], f"{label} POSIX record contains Windows helper descendants")
+        append_error(errors, record.get("expected_tool_daemon_topology_snapshots") == [], f"{label} POSIX record contains Windows topology snapshots")
+        append_error(errors, record.get("expected_tool_daemon_topology_sample_elapsed_seconds") == [], f"{label} POSIX record contains Windows topology samples")
+        append_error(errors, record.get("expected_tool_daemon_topology_revalidation_count") == 0 and not isinstance(record.get("expected_tool_daemon_topology_revalidation_count"), bool), f"{label} POSIX record contains Windows topology revalidation")
+        append_error(errors, record.get("expected_tool_daemon_topology_monotonic") is False, f"{label} POSIX record claims monotonic Windows topology")
+        append_error(errors, type(record.get("expected_tool_daemon_topology_max_sample_gap_seconds")) in {int, float} and not isinstance(record.get("expected_tool_daemon_topology_max_sample_gap_seconds"), bool) and float(record.get("expected_tool_daemon_topology_max_sample_gap_seconds")) == 0.0, f"{label} POSIX record contains a Windows topology sample gap")
+        append_error(errors, record.get("expected_tool_daemon_topology_terminal_empty") is False, f"{label} POSIX record claims Windows terminal EMPTY topology")
+        for key in (
+            "expected_tool_daemon_hashes_verified",
+            "expected_tool_daemon_prelaunch_hashes_verified",
+            "expected_tool_daemon_postexit_hashes_verified",
+        ):
+            append_error(errors, record.get(key) is False, f"{label} POSIX record claims Windows helper hash verification")
+        for key in (
+            "expected_tool_daemon_sha256_by_role",
+            "expected_tool_daemon_prelaunch_sha256_by_role",
+            "expected_tool_daemon_postexit_sha256_by_role",
+        ):
+            append_error(errors, record.get(key) == {}, f"{label} POSIX record contains Windows helper hashes")
+        append_error(errors, retry_count == 0 and record.get("process_identity_query_retried") is False, f"{label} POSIX record contains a Windows identity retry")
+        append_error(errors, recheck_count == 0 and record.get("process_exit_race_rechecked") is False, f"{label} POSIX record contains a Windows exit-race recheck")
+        return errors
+
+    helper_paths = _derived_vivado_helper_paths(record.get("argv"))
+    recorded_paths = record.get("expected_tool_daemon_paths")
+    if helper_paths is None:
+        append_error(errors, recorded_paths == [], f"{label} non-Vivado process records helper paths")
+    else:
+        expected_path_list = [helper_paths[role] for role in EXPECTED_VIVADO_HELPER_ROLES]
+        recorded_normalized = (
+            [_normalized_windows_process_path(path) for path in recorded_paths]
+            if isinstance(recorded_paths, list) and all(isinstance(path, str) for path in recorded_paths)
+            else []
+        )
+        append_error(errors, recorded_normalized == expected_path_list, f"{label} helper paths are not exactly derived from argv[0]")
+        for prefix in ("expected_tool_daemon_prelaunch", "expected_tool_daemon_postexit"):
+            phase = "prelaunch" if prefix.endswith("prelaunch") else "postexit"
+            append_error(errors, record.get(f"{prefix}_hashes_verified") is True, f"{label} helper {phase} hashes were not verified")
+            append_error(errors, record.get(f"{prefix}_sha256_by_role") == EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, f"{label} helper {phase} hash map mismatch")
+        append_error(errors, record.get("expected_tool_daemon_hashes_verified") is True, f"{label} aggregate helper hashes were not verified")
+        append_error(errors, record.get("expected_tool_daemon_sha256_by_role") == EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, f"{label} aggregate helper hash map mismatch")
+    if helper_paths is None:
+        for key in (
+            "expected_tool_daemon_hashes_verified",
+            "expected_tool_daemon_prelaunch_hashes_verified",
+            "expected_tool_daemon_postexit_hashes_verified",
+        ):
+            append_error(errors, record.get(key) is False, f"{label} non-Vivado process claims helper hash verification")
+        for key in (
+            "expected_tool_daemon_sha256_by_role",
+            "expected_tool_daemon_prelaunch_sha256_by_role",
+            "expected_tool_daemon_postexit_sha256_by_role",
+        ):
+            append_error(errors, record.get(key) == {}, f"{label} non-Vivado process records helper hashes")
+
+    samples_raw = record.get("expected_tool_daemon_topology_sample_elapsed_seconds")
+    samples = (
+        [float(value) for value in samples_raw]
+        if isinstance(samples_raw, list)
+        and samples_raw
+        and all(isinstance(value, (int, float)) and not isinstance(value, bool) for value in samples_raw)
+        else []
+    )
+    append_error(errors, bool(samples), f"{label} Windows containment topology samples are missing/malformed")
+    append_error(errors, samples == sorted(samples) and all(0 <= value <= VIVADO_HELPER_GRACE_SECONDS for value in samples), f"{label} topology sample timeline is invalid")
+    append_error(errors, bool(samples) and samples[0] <= VIVADO_HELPER_MAX_TOPOLOGY_SAMPLE_GAP_SECONDS, f"{label} initial topology sample exceeds 250 ms")
+    gaps = [max(0.0, current - previous) for previous, current in zip(samples, samples[1:])]
+    recomputed_gap = round(max(gaps, default=0.0), 6)
+    max_gap = record.get("expected_tool_daemon_topology_max_sample_gap_seconds")
+    append_error(errors, isinstance(max_gap, (int, float)) and not isinstance(max_gap, bool) and round(float(max_gap), 6) == recomputed_gap, f"{label} topology max-sample-gap record mismatch")
+    append_error(errors, recomputed_gap <= VIVADO_HELPER_MAX_TOPOLOGY_SAMPLE_GAP_SECONDS, f"{label} topology sampling gap exceeds 250 ms")
+    snapshots = record.get("expected_tool_daemon_topology_snapshots")
+    append_error(errors, isinstance(snapshots, list) and bool(snapshots) and all(isinstance(item, dict) for item in snapshots), f"{label} topology snapshots are missing/malformed")
+    snapshots = snapshots if isinstance(snapshots, list) else []
+    append_error(
+        errors,
+        bool(snapshots)
+        and all(set(item) == {"classification", "elapsed_seconds", "processes"} for item in snapshots if isinstance(item, dict)),
+        f"{label} topology snapshot fields are not exact",
+    )
+    snapshot_times = [item.get("elapsed_seconds") for item in snapshots if isinstance(item, dict)]
+    snapshot_times_valid = (
+        len(snapshot_times) == len(snapshots)
+        and bool(snapshot_times)
+        and all(isinstance(value, (int, float)) and not isinstance(value, bool) for value in snapshot_times)
+    )
+    snapshot_time_values = [float(value) for value in snapshot_times] if snapshot_times_valid else []
+    append_error(errors, snapshot_times_valid, f"{label} topology snapshot times are malformed")
+    append_error(errors, bool(snapshot_time_values) and snapshot_time_values == sorted(snapshot_time_values), f"{label} topology snapshot chronology is invalid")
+    append_error(errors, bool(snapshot_time_values) and bool(samples) and all(value in samples for value in snapshot_time_values), f"{label} topology snapshots are not bound to sample times")
+    append_error(errors, bool(snapshot_time_values) and bool(samples) and snapshot_time_values[-1] == samples[-1], f"{label} terminal EMPTY snapshot is not the final topology sample")
+    append_error(errors, bool(snapshots) and snapshots[-1].get("classification") == "EMPTY" and snapshots[-1].get("processes") == [], f"{label} topology does not terminate in EMPTY")
+    append_error(errors, record.get("expected_tool_daemon_topology_terminal_empty") is True, f"{label} does not prove terminal EMPTY topology")
+
+    grace_used = record.get("expected_tool_daemon_grace_used") is True
+    grace_seconds = record.get("expected_tool_daemon_grace_seconds")
+    grace_elapsed = record.get("expected_tool_daemon_grace_elapsed_seconds")
+    revalidation_count = record.get("expected_tool_daemon_topology_revalidation_count")
+    append_error(errors, type(revalidation_count) is int and revalidation_count >= 0, f"{label} topology revalidation count is malformed")
+    if grace_used:
+        append_error(errors, helper_paths is not None, f"{label} grants helper grace to a non-Vivado process")
+        append_error(errors, grace_seconds == VIVADO_HELPER_GRACE_SECONDS, f"{label} helper grace is not the fixed 30-second window")
+        append_error(errors, isinstance(grace_elapsed, (int, float)) and not isinstance(grace_elapsed, bool) and samples and samples[-1] <= float(grace_elapsed) <= VIVADO_HELPER_GRACE_SECONDS, f"{label} helper grace elapsed time is invalid")
+        append_error(errors, record.get("expected_tool_daemon_topology_monotonic") is True, f"{label} helper topology is not monotonic")
+        append_error(errors, type(revalidation_count) is int and revalidation_count >= 1 and len(samples) == revalidation_count + 2, f"{label} topology sample/revalidation count mismatch")
+        append_error(errors, len(samples) >= 2 and bool(snapshot_time_values) and snapshot_time_values[0] == samples[1], f"{label} initial helper snapshot is not bound to the post-identity sample")
+        initial_processes = snapshots[0].get("processes") if snapshots else None
+        initial = _normalize_v2_helper_processes(initial_processes, helper_paths or {}, allow_empty=False)
+        initial_classification = _classify_v2_initial_helper_topology(initial or {})
+        append_error(errors, initial_classification in APPROVED_VIVADO_HELPER_INITIAL_CLASSIFICATIONS, f"{label} initial helper topology is not independently approved")
+        append_error(errors, record.get("expected_tool_daemon_classification") == initial_classification and snapshots and snapshots[0].get("classification") == initial_classification, f"{label} initial helper classification mismatch")
+        append_error(errors, record.get("descendant_processes_seen") == initial_processes, f"{label} initial descendant identities do not bind the first snapshot")
+        append_error(errors, record.get("descendant_paths_seen") == [item.get("image_path") for item in initial_processes] if isinstance(initial_processes, list) else False, f"{label} initial descendant paths do not bind identities")
+        previous_ids = set(initial or {})
+        for index, snapshot in enumerate(snapshots[1:-1], 1):
+            current = _normalize_v2_helper_processes(snapshot.get("processes"), helper_paths or {}, allow_empty=False)
+            current_ids = set(current or {})
+            valid_subset = (
+                initial is not None
+                and current is not None
+                and bool(current_ids)
+                and current_ids < previous_ids
+                and current_ids <= set(initial)
+                and all(current[pid] == initial[pid] for pid in current_ids)
+            )
+            append_error(errors, valid_subset, f"{label} topology snapshot {index} is not an immutable strict shrink")
+            append_error(errors, snapshot.get("classification") == f"STRICT_SHRINK_SUBSET_OF_{initial_classification}", f"{label} topology snapshot {index} classification mismatch")
+            previous_ids = current_ids if current is not None else set()
+    else:
+        append_error(
+            errors,
+            type(grace_seconds) in {int, float}
+            and not isinstance(grace_seconds, bool)
+            and float(grace_seconds) == 0.0
+            and type(grace_elapsed) in {int, float}
+            and not isinstance(grace_elapsed, bool)
+            and float(grace_elapsed) == 0.0,
+            f"{label} records grace duration without helper grace",
+        )
+        append_error(errors, record.get("expected_tool_daemon_classification") == "NONE", f"{label} records a helper classification without grace")
+        append_error(errors, record.get("descendant_paths_seen") == [] and record.get("descendant_processes_seen") == [], f"{label} records descendants without helper grace")
+        append_error(errors, record.get("expected_tool_daemon_topology_monotonic") is False, f"{label} records monotonic helper topology without grace")
+        append_error(errors, revalidation_count == 0, f"{label} records topology revalidation without grace")
+        append_error(errors, len(snapshots) == 1, f"{label} no-grace topology must contain only terminal EMPTY")
+        append_error(errors, len(samples) in {1, 2}, f"{label} no-grace topology sample count is invalid")
+    return errors
+
+
 def process_record_errors(record: Any, label: str, *, document: Path, repo_root: Path) -> list[str]:
     errors: list[str] = []
     if not isinstance(record, dict):
@@ -510,195 +855,10 @@ def process_record_errors(record: Any, label: str, *, document: Path, repo_root:
         f"{label} reports process_tree_terminated=true",
     )
     append_error(errors, record.get("process_tree_reaped") is True, f"{label} does not prove process_tree_reaped=true")
-    append_error(
-        errors,
-        record.get("containment_kind") in {"WINDOWS_JOB_OBJECT_KILL_ON_CLOSE", "POSIX_PROCESS_GROUP"},
-        f"{label} containment_kind is missing/unsupported",
-    )
     append_error(errors, record.get("containment_assigned") is True, f"{label} does not prove containment assignment")
     append_error(errors, record.get("containment_closed") is True, f"{label} does not prove containment closure")
     append_error(errors, record.get("descendant_count_after") == 0, f"{label} does not prove zero descendants after reap")
-    append_error(
-        errors,
-        record.get("containment_cleanup_terminated", False) is False,
-        f"{label} required forced containment cleanup",
-    )
-    for key in (
-        "expected_tool_daemon_grace_used",
-        "process_exit_race_rechecked",
-        "process_identity_query_retried",
-    ):
-        append_error(
-            errors,
-            isinstance(record.get(key, False), bool),
-            f"{label} {key} is not boolean",
-        )
-    append_error(
-        errors,
-        isinstance(record.get("containment_query_error", ""), str)
-        and record.get("containment_query_error", "") == "",
-        f"{label} has a containment identity query error",
-    )
-    if record.get("expected_tool_daemon_grace_used", False) is True:
-        append_error(
-            errors,
-            record.get("containment_kind") == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
-            f"{label} daemon grace is only valid for Windows Job containment",
-        )
-        append_error(
-            errors,
-            record.get("expected_tool_daemon_grace_seconds") == 10.0,
-            f"{label} daemon grace duration is not the fixed 10-second bound",
-        )
-        expected_paths = record.get("expected_tool_daemon_paths")
-        seen_paths = record.get("descendant_paths_seen")
-        processes = record.get("descendant_processes_seen")
-        expected_exact = (
-            isinstance(expected_paths, list)
-            and len(expected_paths) == 1
-            and isinstance(expected_paths[0], str)
-            and bool(expected_paths[0])
-        )
-        argv = record.get("argv")
-        argv_valid = (
-            isinstance(argv, list)
-            and bool(argv)
-            and all(isinstance(item, str) and bool(item) for item in argv)
-        )
-        derived_expected = ""
-        if argv_valid:
-            executable = Path(argv[0]).resolve(strict=False)
-            if executable.stem.casefold() == "vivado":
-                derived_expected = (
-                    str(
-                        (
-                            executable.parent
-                            / "unwrapped"
-                            / "win64.o"
-                            / "cs_server.exe"
-                        ).resolve(strict=False)
-                    )
-                    .replace("/", "\\")
-                    .casefold()
-                )
-        append_error(
-            errors,
-            bool(derived_expected),
-            f"{label} daemon grace argv does not identify the invoked Vivado installation",
-        )
-        process_records_valid = (
-            isinstance(processes, list)
-            and len(processes) in {1, 2}
-            and all(isinstance(item, dict) for item in processes)
-        )
-        seen_exact = (
-            isinstance(seen_paths, list)
-            and process_records_valid
-            and len(seen_paths) == len(processes)
-            and all(isinstance(path, str) and bool(path) for path in seen_paths)
-        )
-        append_error(
-            errors,
-            expected_exact and process_records_valid and seen_exact,
-            f"{label} daemon grace process/path records are malformed",
-        )
-        expected_normal = (
-            str(Path(expected_paths[0]).resolve(strict=False)).replace("/", "\\").casefold()
-            if expected_exact
-            else ""
-        )
-        append_error(
-            errors,
-            bool(expected_normal) and expected_normal == derived_expected,
-            f"{label} expected daemon path is not derived from argv[0]",
-        )
-        normalized_processes: list[tuple[int, int, str]] = []
-        if process_records_valid:
-            try:
-                if any(
-                    not isinstance(item.get("pid"), int)
-                    or isinstance(item.get("pid"), bool)
-                    or not isinstance(item.get("parent_pid"), int)
-                    or isinstance(item.get("parent_pid"), bool)
-                    for item in processes
-                ):
-                    raise TypeError("PID fields must be non-boolean integers")
-                normalized_processes = [
-                    (
-                        item["pid"],
-                        item["parent_pid"],
-                        str(Path(str(item["image_path"])).resolve(strict=False))
-                        .replace("/", "\\")
-                        .casefold(),
-                    )
-                    for item in processes
-                ]
-            except (KeyError, TypeError, ValueError):
-                normalized_processes = []
-        ids = [item[0] for item in normalized_processes]
-        records_exact = (
-            len(normalized_processes) in {1, 2}
-            and len(set(ids)) == len(ids)
-            and all(process_id > 0 and parent_id >= 0 for process_id, parent_id, _path in normalized_processes)
-            and all(process_id != parent_id for process_id, parent_id, _path in normalized_processes)
-            and all(path == expected_normal for _process_id, _parent_id, path in normalized_processes)
-        )
-        append_error(errors, records_exact, f"{label} daemon process identities are not exact/unique")
-        paths_match_records = seen_exact and all(
-            str(Path(str(seen_path)).resolve(strict=False)).replace("/", "\\").casefold()
-            == normalized_processes[index][2]
-            for index, seen_path in enumerate(seen_paths)
-        ) if normalized_processes else False
-        append_error(
-            errors,
-            paths_match_records,
-            f"{label} daemon seen paths do not exactly match the process identity records",
-        )
-        if records_exact and len(normalized_processes) == 1:
-            recomputed_classification = "SINGLE_EXACT_CS_SERVER"
-        elif records_exact and len(normalized_processes) == 2:
-            first, second = normalized_processes
-            direct_edges = int(first[1] == second[0]) + int(second[1] == first[0])
-            recomputed_classification = (
-                "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"
-                if direct_edges == 1
-                else "UNAPPROVED"
-            )
-        else:
-            recomputed_classification = "UNAPPROVED"
-        append_error(
-            errors,
-            recomputed_classification
-            in {"SINGLE_EXACT_CS_SERVER", "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"}
-            and record.get("expected_tool_daemon_classification") == recomputed_classification,
-            f"{label} daemon topology classification is not independently reproducible",
-        )
-    else:
-        append_error(
-            errors,
-            record.get("expected_tool_daemon_grace_seconds", 0.0) == 0.0,
-            f"{label} records nonzero daemon grace seconds without using daemon grace",
-        )
-        append_error(
-            errors,
-            record.get("expected_tool_daemon_classification", "NONE") == "NONE",
-            f"{label} records a daemon classification without using daemon grace",
-        )
-        append_error(
-            errors,
-            record.get("descendant_paths_seen", []) == [],
-            f"{label} records descendant paths without using daemon grace",
-        )
-        append_error(
-            errors,
-            record.get("descendant_processes_seen", []) == [],
-            f"{label} records descendant identities without using daemon grace",
-        )
-        append_error(
-            errors,
-            record.get("process_identity_query_retried", False) is False,
-            f"{label} records an identity retry without using daemon grace",
-        )
+    errors.extend(_v2_process_containment_errors(record, label))
     append_error(errors, not record.get("launch_error"), f"{label} has a launch error")
     for stream in ("stdout_path", "stderr_path"):
         if stream in record:
@@ -2899,6 +3059,242 @@ def _candidate_source_commit(candidate: Candidate) -> str:
     return str(safety.get("source_commit_requested", "")).lower() if isinstance(safety, dict) else ""
 
 
+def _historical_preflight_variant(candidate: Candidate) -> str:
+    preflight_path = candidate.path.parent / (
+        "p7_hw_preflight_result.txt" if candidate.kind == "ps" else "p7_preflight_result.txt"
+    )
+    markers, duplicates = parse_marker_text(marker_text(preflight_path))
+    if duplicates:
+        return "UNKNOWN"
+    if markers == {
+        "P7_HW_PREFLIGHT_AUTHORIZED": "0",
+        "P7_HW_PREFLIGHT_READ_ONLY": "1",
+        "P7_HW_PREFLIGHT_RESULT": "FAIL",
+        "P7_HW_PREFLIGHT_ERROR": "P7 expected exactly one authorized part match; found 0",
+    }:
+        return HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED
+    if markers == {
+        "P7_HW_PREFLIGHT_AUTHORIZED": "1",
+        "P7_HW_PREFLIGHT_READ_ONLY": "1",
+        "P7_HW_PREFLIGHT_BOARD_ID": "210512180081",
+        "P7_HW_PREFLIGHT_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "P7_HW_PREFLIGHT_DEVICE": CANONICAL_LIVE_DEVICE,
+        "P7_HW_PREFLIGHT_PART": CANONICAL_FULL_PART,
+        "P7_HW_PREFLIGHT_IDCODE": CANONICAL_LIVE_IDCODE_BINARY,
+        "P7_HW_PREFLIGHT_CANONICAL_PART": CANONICAL_FULL_PART,
+        "P7_HW_PREFLIGHT_LIVE_PART": CANONICAL_LIVE_PART,
+        "P7_HW_PREFLIGHT_LIVE_DEVICE": CANONICAL_LIVE_DEVICE,
+        "P7_HW_PREFLIGHT_LIVE_IDCODE": CANONICAL_LIVE_IDCODE_BINARY,
+        "P7_HW_PREFLIGHT_RESULT": "PASS",
+    }:
+        return HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED
+    return "UNKNOWN"
+
+
+def _historical_identity_pass_containment_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+    preflight: Mapping[str, Any],
+    preflight_markers: Mapping[str, str],
+) -> list[str]:
+    """Validate the frozen r2 helper-topology rejection without reusing PASS rules."""
+
+    errors: list[str] = []
+    append_error(errors, preflight.get("returncode") == 125, "historical r2 inner preflight returncode is not exactly 125")
+    append_error(errors, preflight.get("process_tree_terminated") is True, "historical r2 inner preflight did not record forced containment cleanup")
+    append_error(errors, preflight.get("process_tree_reaped") is False, "historical r2 inner preflight unexpectedly claims a natural reap")
+    append_error(errors, preflight.get("containment_kind") == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE", "historical r2 inner preflight containment is not a Windows Job")
+    append_error(errors, preflight.get("containment_cleanup_terminated") is True, "historical r2 inner preflight does not bind forced cleanup")
+    append_error(errors, preflight.get("expected_tool_daemon_grace_used") is False, "historical r2 inner preflight unexpectedly claims daemon grace")
+    append_error(errors, preflight.get("expected_tool_daemon_grace_seconds") == 0.0, "historical r2 inner preflight daemon-grace duration is not zero")
+    append_error(errors, preflight.get("expected_tool_daemon_classification") == "UNAPPROVED", "historical r2 helper topology was not rejected as UNAPPROVED")
+    append_error(errors, preflight.get("process_exit_race_rechecked") is False, "historical r2 inner preflight unexpectedly claims an exit-race recheck")
+    append_error(errors, preflight.get("process_identity_query_retried") is False, "historical r2 inner preflight unexpectedly claims an identity-query retry")
+    append_error(errors, preflight.get("containment_query_error") == "", "historical r2 inner preflight containment query error is nonempty")
+
+    argv = preflight.get("argv")
+    safety = candidate.data.get("safety_validation")
+    authorization = safety.get("authorization") if isinstance(safety, dict) else None
+    auth_fields = safety.get("authorization_fields") if isinstance(safety, dict) else None
+    result_path = candidate.path.parent / "p7_preflight_result.txt"
+    expected_tail = [
+        "-mode",
+        "batch",
+        "-source",
+        str((evidence.repo_root / "scripts/hw/p7_hw_preflight.tcl").resolve(strict=False)),
+        "-tclargs",
+        str(evidence.repo_root.resolve(strict=False)),
+        str(authorization.get("path", "")) if isinstance(authorization, dict) else "",
+        "210512180081",
+        CANONICAL_FULL_PART,
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "localhost:3121",
+        str(result_path.resolve(strict=False)),
+    ]
+    argv_exact = (
+        isinstance(argv, list)
+        and len(argv) == 13
+        and isinstance(argv[0], str)
+        and str(argv[0]).replace("/", "\\").casefold().endswith("\\vivado\\2023.1\\bin\\vivado.bat")
+        and argv[1:] == expected_tail
+    )
+    append_error(errors, argv_exact, "historical r2 inner preflight argv does not bind exact identity inputs")
+    append_error(
+        errors,
+        isinstance(auth_fields, dict)
+        and str(auth_fields.get("BOARD_ID", "")) == "210512180081"
+        and str(auth_fields.get("EXPECTED_PART", "")).casefold() == CANONICAL_FULL_PART.casefold()
+        and str(auth_fields.get("EXPECTED_TARGET", "")).casefold()
+        == "localhost:3121/xilinx_tcf/Digilent/210512180081".casefold(),
+        "historical r2 authorization does not bind the exact target identity",
+    )
+
+    expected_cs = ""
+    expected_rdi = ""
+    if argv_exact:
+        vivado = Path(str(argv[0])).resolve(strict=False)
+        expected_cs = str((vivado.parent / "unwrapped/win64.o/cs_server.exe").resolve(strict=False)).replace("/", "\\").casefold()
+        expected_rdi = str((vivado.parent / "unwrapped/win64.o/rdi_xsdb.exe").resolve(strict=False)).replace("/", "\\").casefold()
+    expected_paths = preflight.get("expected_tool_daemon_paths")
+    append_error(
+        errors,
+        bool(expected_cs)
+        and isinstance(expected_paths, list)
+        and len(expected_paths) == 1
+        and str(Path(str(expected_paths[0])).resolve(strict=False)).replace("/", "\\").casefold() == expected_cs,
+        "historical r2 expected cs_server path mismatch",
+    )
+
+    processes = preflight.get("descendant_processes_seen")
+    normalized: list[tuple[int, int, str]] = []
+    if isinstance(processes, list) and len(processes) == 6 and all(isinstance(item, dict) for item in processes):
+        try:
+            if any(
+                not isinstance(item.get("pid"), int)
+                or isinstance(item.get("pid"), bool)
+                or not isinstance(item.get("parent_pid"), int)
+                or isinstance(item.get("parent_pid"), bool)
+                for item in processes
+            ):
+                raise TypeError("PID fields must be non-boolean integers")
+            normalized = [
+                (
+                    int(item["pid"]),
+                    int(item["parent_pid"]),
+                    str(Path(str(item["image_path"])).resolve(strict=False)).replace("/", "\\").casefold(),
+                )
+                for item in processes
+            ]
+        except (KeyError, TypeError, ValueError):
+            normalized = []
+    ids = [pid for pid, _parent_pid, _path in normalized]
+    append_error(
+        errors,
+        len(normalized) == 6
+        and len(set(ids)) == 6
+        and all(pid > 0 and parent_pid >= 0 and pid != parent_pid for pid, parent_pid, _path in normalized),
+        "historical r2 helper process identities are malformed/duplicated",
+    )
+    observed_paths = preflight.get("descendant_paths_seen")
+    append_error(
+        errors,
+        isinstance(observed_paths, list)
+        and len(observed_paths) == len(normalized) == 6
+        and all(
+            str(Path(str(observed_paths[index])).resolve(strict=False)).replace("/", "\\").casefold()
+            == normalized[index][2]
+            for index in range(len(normalized))
+        ),
+        "historical r2 helper path list does not bind process identities",
+    )
+
+    system_root = Path(os.environ.get("SystemRoot", r"C:\Windows"))
+    expected_conhost = str((system_root / "System32/conhost.exe").resolve(strict=False)).replace("/", "\\").casefold()
+    expected_cmd = str((system_root / "System32/cmd.exe").resolve(strict=False)).replace("/", "\\").casefold()
+    by_path: dict[str, list[tuple[int, int]]] = {}
+    for pid, parent_pid, path in normalized:
+        by_path.setdefault(path, []).append((pid, parent_pid))
+    append_error(
+        errors,
+        bool(expected_cs)
+        and bool(expected_rdi)
+        and sorted(len(by_path.get(path, [])) for path in (expected_cs, expected_conhost, expected_cmd, expected_rdi))
+        == [1, 1, 2, 2]
+        and len(by_path) == 4,
+        "historical r2 observed helper image multiset mismatch",
+    )
+    cs_records = by_path.get(expected_cs, [])
+    cmd_records = by_path.get(expected_cmd, [])
+    conhost_records = by_path.get(expected_conhost, [])
+    rdi_records = by_path.get(expected_rdi, [])
+    active_ids = set(ids)
+    cs_direct_edges = sum(parent == other_pid for pid, parent in cs_records for other_pid, _other_parent in cs_records if pid != other_pid)
+    cmd_pid = cmd_records[0][0] if len(cmd_records) == 1 else -1
+    append_error(errors, len(cs_records) == 2 and cs_direct_edges == 1, "historical r2 cs_server pair is not a direct parent-child topology")
+    append_error(
+        errors,
+        len(cmd_records) == 1
+        and len(rdi_records) == 1
+        and rdi_records[0][1] == cmd_pid
+        and sum(parent_pid == cmd_pid for _pid, parent_pid in conhost_records) == 1,
+        "historical r2 cmd/rdi_xsdb/conhost helper topology mismatch",
+    )
+    cs_roots = [(pid, parent_pid) for pid, parent_pid in cs_records if parent_pid not in {item[0] for item in cs_records}]
+    root_conhosts = [(pid, parent_pid) for pid, parent_pid in conhost_records if parent_pid != cmd_pid]
+    root_parent_ids = (
+        [cs_roots[0][1], cmd_records[0][1], root_conhosts[0][1]]
+        if len(cs_roots) == len(cmd_records) == len(root_conhosts) == 1
+        else []
+    )
+    append_error(
+        errors,
+        len(cs_roots) == 1
+        and cs_roots[0][1] not in active_ids
+        and len(cmd_records) == 1
+        and cmd_records[0][1] not in active_ids
+        and len(root_conhosts) == 1
+        and root_conhosts[0][1] not in active_ids,
+        "historical r2 helper forest roots do not have inactive parents",
+    )
+    append_error(
+        errors,
+        len(root_parent_ids) == 3
+        and all(parent_id > 0 for parent_id in root_parent_ids)
+        and len(set(root_parent_ids)) == 3,
+        "historical r2 helper forest root parent PIDs are not positive/distinct",
+    )
+
+    target = candidate.data.get("target_identity")
+    append_error(errors, isinstance(target, dict) and target == dict(preflight_markers), "historical r2 raw/summary exact identity records differ")
+    append_error(
+        errors,
+        candidate.data.get("preflight_failures") == ["preflight process returned nonzero exit code: 125"],
+        "historical r2 preflight failure list does not bind inner rc125",
+    )
+    append_error(
+        errors,
+        resolve_reference(candidate.data.get("preflight_result_file"), document=candidate.path, repo_root=evidence.repo_root)
+        == result_path.resolve(strict=False),
+        "historical r2 preflight result path mismatch",
+    )
+    append_error(
+        errors,
+        candidate.data.get("reason") == "read-only target preflight did not return rc=0 with exact identity markers",
+        "historical r2 wrapper reason is not the exact identity-pass/containment-fail boundary",
+    )
+    runtime = candidate.data.get("global_runtime")
+    append_error(
+        errors,
+        isinstance(runtime, dict)
+        and runtime.get("authorized_max_seconds") == 300
+        and runtime.get("within_authorized_limit") is True
+        and isinstance(runtime.get("elapsed_seconds"), (int, float))
+        and 0 <= float(runtime.get("elapsed_seconds")) <= 300,
+        "historical r2 runtime record is invalid",
+    )
+    return errors
+
+
 def _old_commit_read_only_preflight_errors(candidate: Candidate, evidence: RepositoryEvidence) -> list[str]:
     """Prove that a superseded-commit record is diagnostic only.
 
@@ -2913,6 +3309,7 @@ def _old_commit_read_only_preflight_errors(candidate: Candidate, evidence: Repos
     errors: list[str] = []
     append_error(errors, candidate.executed, "old-commit diagnostic did not record hardware_actions_executed=true")
     append_error(errors, candidate.marker == "FAIL_PREFLIGHT", "old-commit diagnostic result is not exactly FAIL_PREFLIGHT")
+    append_error(errors, data.get("hardware_acceptance") == "PENDING_HW", "old-commit diagnostic promoted or omitted hardware acceptance")
     append_error(errors, candidate.stage == "safe_idle", "old-commit diagnostic is not the safe-idle preflight stage")
     append_error(errors, not _candidate_mutation_attempted(candidate), "old-commit diagnostic contains a hardware mutation attempt")
     for key in (
@@ -2929,16 +3326,37 @@ def _old_commit_read_only_preflight_errors(candidate: Candidate, evidence: Repos
     append_error(errors, not isinstance(data.get("shutdown_after"), dict), "old-commit diagnostic contains shutdown-after process evidence")
     candidate_key = "ps_process" if candidate.kind == "ps" else "stage_process"
     append_error(errors, not isinstance(data.get(candidate_key), dict), "old-commit diagnostic contains a candidate child process")
+    transaction = data.get("transaction_validation")
+    append_error(
+        errors,
+        isinstance(transaction, dict)
+        and transaction.get("valid") is True
+        and transaction.get("metadata") == {"EVIDENCE_KIND": "safe_idle"},
+        "old-commit diagnostic transaction validation is not the exact safe-idle boundary",
+    )
 
     preflight_key = "preflight" if candidate.kind == "ps" else "preflight_process"
     preflight = data.get(preflight_key)
+    historical_variant = _historical_preflight_variant(candidate)
+    append_error(
+        errors,
+        historical_variant
+        in {
+            HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED,
+            HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED,
+        },
+        "old-commit diagnostic preflight failure shape is not recognized",
+    )
     if not isinstance(preflight, dict):
         errors.append("old-commit diagnostic preflight process record missing")
     else:
-        append_error(errors, isinstance(preflight.get("returncode"), int) and preflight.get("returncode") != 0, "old-commit diagnostic preflight did not fail")
+        append_error(errors, preflight.get("returncode") == 125, "old-commit diagnostic preflight returncode is not exactly 125")
         append_error(errors, preflight.get("passed") is not True, "old-commit diagnostic preflight incorrectly reports PASS")
-        for key in ("timed_out", "abort_seen", "interrupted", "process_tree_terminated"):
+        for key in ("timed_out", "abort_seen", "interrupted"):
             append_error(errors, preflight.get(key) is False, f"old-commit diagnostic preflight reports {key}=true or missing")
+        append_error(errors, preflight.get("process_tree_reaped") is False, "old-commit diagnostic preflight unexpectedly claims process_tree_reaped=true")
+        if historical_variant == HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED:
+            append_error(errors, preflight.get("process_tree_terminated") is False, "old-commit part-identity diagnostic reports process_tree_terminated=true or missing")
         append_error(
             errors,
             preflight.get("containment_kind") in {"WINDOWS_JOB_OBJECT_KILL_ON_CLOSE", "POSIX_PROCESS_GROUP"},
@@ -2955,12 +3373,17 @@ def _old_commit_read_only_preflight_errors(candidate: Candidate, evidence: Repos
     append_error(errors, preflight_path.is_file(), "old-commit diagnostic preflight result file missing")
     append_error(errors, not preflight_duplicates, "old-commit diagnostic preflight result contains duplicate markers")
     append_error(errors, preflight_markers.get("P7_HW_PREFLIGHT_READ_ONLY") == "1", "old-commit diagnostic preflight is not read-only")
-    append_error(errors, preflight_markers.get("P7_HW_PREFLIGHT_RESULT") == "FAIL", "old-commit diagnostic raw preflight result is not FAIL")
-    append_error(
-        errors,
-        preflight_markers.get("P7_HW_PREFLIGHT_ERROR") == "P7 expected exactly one authorized part match; found 0",
-        "old-commit diagnostic failure is not the preserved part-identity mismatch",
-    )
+    if historical_variant == HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED:
+        append_error(errors, data.get("target_identity") == dict(preflight_markers), "old-commit part-identity raw/summary records differ")
+    elif historical_variant == HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED and isinstance(preflight, dict):
+        errors.extend(
+            _historical_identity_pass_containment_errors(
+                candidate,
+                evidence,
+                preflight,
+                preflight_markers,
+            )
+        )
     if isinstance(preflight, dict):
         preflight_stdout = resolve_reference(preflight.get("stdout_path"), document=candidate.path, repo_root=evidence.repo_root)
         preflight_stderr = resolve_reference(preflight.get("stderr_path"), document=candidate.path, repo_root=evidence.repo_root)
@@ -3044,6 +3467,84 @@ def _verify_historical_hash_file(record: Any, *, label: str, document: Path, rep
     return errors
 
 
+def _historical_r2_outer_containment_errors(
+    attempt: Mapping[str, Any],
+    process: Mapping[str, Any],
+    *,
+    epoch_root: Path,
+    outer_path: Path,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    errors: list[str] = []
+    append_error(errors, process.get("name") == "sequence_p7_safe_idle", "historical r2 outer process name mismatch")
+    append_error(errors, process.get("returncode") == 1, "historical r2 outer process returncode is not exactly 1")
+    append_error(errors, process.get("process_tree_terminated") is False, "historical r2 outer process required forced cleanup")
+    append_error(errors, process.get("process_tree_reaped") is True, "historical r2 outer process did not reap the inner wrapper tree")
+    append_error(errors, process.get("containment_kind") == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE", "historical r2 outer process containment is not a Windows Job")
+    append_error(errors, process.get("containment_assigned") is True and process.get("containment_closed") is True, "historical r2 outer process containment assignment/closure mismatch")
+    append_error(errors, process.get("descendant_count_after") == 0, "historical r2 outer process retained descendants")
+    append_error(errors, process.get("containment_cleanup_terminated") is False, "historical r2 outer process claims containment cleanup")
+    append_error(errors, process.get("expected_tool_daemon_grace_used") is False, "historical r2 outer process claims daemon grace")
+    append_error(errors, process.get("expected_tool_daemon_grace_seconds") == 0.0, "historical r2 outer process daemon-grace duration is not zero")
+    append_error(errors, process.get("expected_tool_daemon_paths") == [], "historical r2 outer process records expected daemon paths")
+    append_error(errors, process.get("descendant_paths_seen") == [], "historical r2 outer process records descendant paths")
+    append_error(errors, process.get("descendant_processes_seen") == [], "historical r2 outer process records descendant identities")
+    append_error(errors, process.get("expected_tool_daemon_classification") == "NONE", "historical r2 outer process daemon classification is not NONE")
+    append_error(errors, process.get("process_exit_race_rechecked") is False, "historical r2 outer process claims an exit-race recheck")
+    append_error(errors, process.get("process_identity_query_retried") is False, "historical r2 outer process claims an identity retry")
+    append_error(errors, process.get("containment_query_error") == "", "historical r2 outer process containment query error is nonempty")
+    append_error(errors, process.get("launch_error") == "", "historical r2 outer process launch error is nonempty")
+    append_error(
+        errors,
+        isinstance(process.get("elapsed_seconds"), (int, float))
+        and 0 <= float(process.get("elapsed_seconds")) <= 300,
+        "historical r2 outer elapsed time is invalid",
+    )
+    wrapper_logs = epoch_root / ".sequence_execution_ledger_wrapper_logs"
+    stdout = wrapper_logs / "001_p7_safe_idle.stdout.log"
+    stderr = wrapper_logs / "001_p7_safe_idle.stderr.log"
+    append_error(
+        errors,
+        resolve_reference(process.get("stdout_path"), document=outer_path, repo_root=evidence.repo_root)
+        == stdout.resolve(strict=False),
+        "historical r2 outer stdout path mismatch",
+    )
+    append_error(
+        errors,
+        resolve_reference(process.get("stderr_path"), document=outer_path, repo_root=evidence.repo_root)
+        == stderr.resolve(strict=False),
+        "historical r2 outer stderr path mismatch",
+    )
+    append_error(errors, stderr.is_file() and stderr.stat().st_size == 0, "historical r2 outer stderr is missing/nonempty")
+    expected_failures = [
+        "outer wrapper process containment/return-code policy failed",
+        "wrapper result is not PASS: P7_JTAG_AXI_SAFE_STAGE=FAIL_PREFLIGHT",
+        "wrapper summary does not prove programmed_shutdown_after=true",
+        "wrapper shutdown-after record is missing",
+        "wrapper candidate process record is missing: stage_process",
+        "JTAG wrapper strict backend parse is missing or not bound to this run",
+    ]
+    append_error(errors, attempt.get("failures") == expected_failures, "historical r2 outer failure list mismatch")
+    append_error(errors, attempt.get("shutdown_after") == {"present": False}, "historical r2 outer attempt shutdown-after boundary mismatch")
+    orchestrator_elapsed = attempt.get("orchestrator_elapsed_seconds")
+    process_elapsed = process.get("elapsed_seconds")
+    append_error(
+        errors,
+        isinstance(orchestrator_elapsed, (int, float))
+        and isinstance(process_elapsed, (int, float))
+        and float(orchestrator_elapsed) >= float(process_elapsed) >= 0,
+        "historical r2 orchestrator elapsed time does not cover the outer child",
+    )
+    launch_intent = parse_time(attempt.get("launch_intent_at_utc"), float("nan"))
+    started = parse_time(attempt.get("started_at_utc"), float("nan"))
+    append_error(
+        errors,
+        launch_intent == launch_intent and started == started and launch_intent <= started,
+        "historical r2 launch-intent chronology is invalid",
+    )
+    return errors
+
+
 def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence) -> tuple[dict[str, Any], list[str]]:
     """Bind the superseded executor attempt and manifest-declared recoveries.
 
@@ -3064,6 +3565,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     if not isinstance(outer, dict):
         return {}, ["historical outer sequence ledger is not an object"]
     source = _candidate_source_commit(candidate)
+    historical_variant = _historical_preflight_variant(candidate)
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", "historical outer sequence ledger schema mismatch")
     append_error(errors, outer.get("status") == "FAIL", "historical outer sequence ledger is not FAIL")
     append_error(errors, outer.get("hardware_actions_executed") is True, "historical outer sequence ledger omits hardware_actions_executed=true")
@@ -3119,6 +3621,16 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 repo_root=evidence.repo_root,
             )
         )
+    if historical_variant == HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED:
+        errors.extend(
+            _historical_r2_outer_containment_errors(
+                attempt,
+                process,
+                epoch_root=epoch_root,
+                outer_path=outer_path,
+                evidence=evidence,
+            )
+        )
 
     wrapper_start, wrapper_end = authorized_execution_boundaries(candidate)
     outer_start = parse_time(attempt.get("started_at_utc"), float("nan"))
@@ -3144,6 +3656,12 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         append_error(errors, path.is_file() and not path.is_symlink(), f"historical diagnostic file missing/symbolic: {name}")
         if path.is_file():
             diagnostic_files[name] = _hash_record(path)
+    append_error(
+        errors,
+        {path.name for path in candidate.path.parent.iterdir() if path.is_file()}
+        == set(diagnostic_file_names),
+        "historical diagnostic stage file set mismatch",
+    )
 
     frozen_dir = epoch_root / "historical_preflight_inputs"
     frozen_manifest_path = frozen_dir / "manifest.json"
@@ -3585,12 +4103,26 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             record["hardware_actions_executed"] = True
             record["tfdu_shutdown_programmed_seen"] = True
             record["shutdown_exit"] = 0
-            record["observed_raw_exit"] = int(recovery_markers.get("SHUTDOWN_RAW_EXIT", "-1"))
+            raw_exit_text = str(recovery_markers.get("SHUTDOWN_RAW_EXIT", ""))
+            record["observed_raw_exit"] = int(raw_exit_text) if re.fullmatch(r"\d+", raw_exit_text) else None
             effective_records.append(record)
         else:
             errors.append(f"historical recovery status is neither no-action nor PASS: {recovery_dir.name}")
     append_error(errors, len(no_action_records) + len(effective_records) == len(recovery_dirs), "historical epoch contains an unclassified recovery")
     append_error(errors, len(effective_records) == 1, "historical epoch must contain exactly one effective shutdown recovery")
+    if historical_variant == HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED:
+        append_error(
+            errors,
+            len(recovery_dirs) == 1 and not no_action_records and len(effective_records) == 1,
+            "historical r2 must contain exactly one effective recovery and no no-action recovery",
+        )
+        append_error(
+            errors,
+            len(effective_records) == 1
+            and effective_records[0].get("observed_raw_exit") == 125
+            and effective_records[0].get("shutdown_exit") == 0,
+            "historical r2 recovery does not prove normalized raw rc125 with SHUTDOWN_EXIT=0",
+        )
     ordered_recoveries = sorted(recovery_times)
     append_error(
         errors,
@@ -3609,6 +4141,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         "schema": "rf-comm-p7-historical-read-only-preflight-epoch-v1",
         "epoch_root": str(epoch_root),
         "source_commit": source,
+        "preflight_failure_class": historical_variant,
         "result": "FAIL",
         "coverage_keys": [],
         "mutation_attempted_by_candidate": False,
@@ -3621,6 +4154,22 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             "descendant_count_after": process.get("descendant_count_after"),
         },
         "inner_preflight_process_tree_reaped": inner_preflight.get("process_tree_reaped") if isinstance(inner_preflight, dict) else None,
+        "read_only_target_identity": candidate.data.get("target_identity"),
+        "inner_preflight_containment": {
+            "returncode": inner_preflight.get("returncode"),
+            "process_tree_terminated": inner_preflight.get("process_tree_terminated"),
+            "process_tree_reaped": inner_preflight.get("process_tree_reaped"),
+            "containment_kind": inner_preflight.get("containment_kind"),
+            "containment_assigned": inner_preflight.get("containment_assigned"),
+            "containment_closed": inner_preflight.get("containment_closed"),
+            "descendant_count_after": inner_preflight.get("descendant_count_after"),
+            "containment_cleanup_terminated": inner_preflight.get("containment_cleanup_terminated"),
+            "expected_tool_daemon_paths": inner_preflight.get("expected_tool_daemon_paths"),
+            "expected_tool_daemon_classification": inner_preflight.get("expected_tool_daemon_classification"),
+            "descendant_paths_seen": inner_preflight.get("descendant_paths_seen"),
+            "descendant_processes_seen": inner_preflight.get("descendant_processes_seen"),
+            "containment_query_error": inner_preflight.get("containment_query_error"),
+        } if isinstance(inner_preflight, dict) else None,
         "diagnostic_preflight_files": diagnostic_files,
         "frozen_preflight_inputs": {
             "manifest": _hash_record(frozen_manifest_path) if frozen_manifest_path.is_file() else None,
@@ -3673,6 +4222,49 @@ def _git_source_ancestry_errors(
         errors.append(f"unable to validate historical source ancestry: {exc}")
     else:
         append_error(errors, ancestry.returncode == 0, "historical source commit is not an ancestor of the active checkpoint")
+    return errors
+
+
+def _historical_epoch_order_errors(
+    epochs: Sequence[Mapping[str, Any]],
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    """Require complete epoch intervals and monotonic source/checkpoint history."""
+
+    errors: list[str] = []
+    for index, epoch in enumerate(epochs):
+        start = parse_time(epoch.get("started_at_utc"), float("nan"))
+        end = parse_time(epoch.get("ended_at_utc"), float("nan"))
+        append_error(
+            errors,
+            start == start and end == end and start <= end,
+            f"historical epoch {index} interval is missing/malformed",
+        )
+    for index, (previous, following) in enumerate(zip(epochs, epochs[1:])):
+        previous_end = parse_time(previous.get("ended_at_utc"), float("nan"))
+        following_start = parse_time(following.get("started_at_utc"), float("nan"))
+        append_error(
+            errors,
+            previous_end == previous_end
+            and following_start == following_start
+            and previous_end <= following_start,
+            f"historical epoch order {index}->{index + 1} overlaps or regresses",
+        )
+        previous_source = str(previous.get("source_commit", "")).lower()
+        following_source = str(following.get("source_commit", "")).lower()
+        if previous_source == following_source:
+            continue
+        if COMMIT_RE.fullmatch(previous_source) and COMMIT_RE.fullmatch(following_source):
+            errors.extend(
+                f"historical source order {index}->{index + 1}: {item}"
+                for item in _git_source_ancestry_errors(
+                    evidence,
+                    old_commit=previous_source,
+                    active_commit=following_source,
+                )
+            )
+        else:
+            errors.append(f"historical source order {index}->{index + 1} has malformed commit identity")
     return errors
 
 
@@ -4018,6 +4610,7 @@ def generate_sequence_ledger(
     executed = sorted((item for item in evidence.candidates if candidate_has_hardware_footprint(item)), key=start_key)
     runs: list[dict[str, Any]] = []
     diagnostic_count = 0
+    historical_epochs: list[dict[str, Any]] = []
     for sequence, candidate in enumerate(executed, 1):
         process = _candidate_process(candidate)
         raw_path = _candidate_raw_path(candidate)
@@ -4039,6 +4632,8 @@ def generate_sequence_ledger(
             )
         diagnostic_only = checkpoint_relation == CHECKPOINT_RELATION_OLD_DIAGNOSTIC
         diagnostic_count += int(diagnostic_only)
+        if diagnostic_only and isinstance(historical_epoch, dict):
+            historical_epochs.append(historical_epoch)
         wrapper_start, wrapper_end = authorized_execution_boundaries(candidate)
         runs.append(
             {
@@ -4076,6 +4671,9 @@ def generate_sequence_ledger(
                 "shutdown_after": _ledger_shutdown(candidate, "after", evidence),
             }
         )
+    historical_order_errors = _historical_epoch_order_errors(historical_epochs, evidence)
+    if historical_order_errors:
+        raise ValueError("; ".join(historical_order_errors))
     payload = {
         "schema": "rf-comm-p7-run-sequence-ledger-v1",
         "generated_at_utc": utc_now(),
@@ -4172,6 +4770,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
     seen_summaries: set[Path] = set()
     ordered_starts: list[float] = []
     ordered_intervals: list[tuple[float, float]] = []
+    historical_epochs: list[dict[str, Any]] = []
     passed_keys: set[str] = set()
     all_required_keys = set().union(*(keys for _risk, keys in SEQUENCE_REQUIRED_GROUPS))
     for index, run in enumerate(runs):
@@ -4202,6 +4801,8 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         errors.extend(f"run sequence entry {index}: {item}" for item in relation_errors)
         diagnostic_only = expected_relation == CHECKPOINT_RELATION_OLD_DIAGNOSTIC
         recorded_historical_epoch = run.get("historical_epoch") if isinstance(run.get("historical_epoch"), dict) else {}
+        if diagnostic_only and isinstance(historical_epoch, dict):
+            historical_epochs.append(historical_epoch)
         append_error(errors, run.get("stage") == candidate.stage and run.get("kind") == candidate.kind, f"run sequence entry {index} stage/kind mismatch")
         append_error(errors, run.get("risk_index") == _candidate_risk(candidate, evidence), f"run sequence entry {index} risk index mismatch")
         append_error(errors, run.get("attempted_coverage_keys") == expected_attempted, f"run sequence entry {index} attempted coverage mismatch")
@@ -4317,6 +4918,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             passed_keys.difference_update(attempted_keys)
 
     append_error(errors, seen_summaries == set(candidates_by_path), "run sequence ledger does not list every executed hardware summary exactly once")
+    errors.extend(_historical_epoch_order_errors(historical_epochs, evidence))
     append_error(errors, ordered_starts == sorted(ordered_starts), "run sequence UTC start order is not chronological")
     append_error(
         errors,

@@ -58,21 +58,48 @@ ESTIMATED_AXI_OPERATION_US_AT_1MHZ = 1_250
 ESTIMATED_STAGE_FIXED_OVERHEAD_SECONDS = 30.0
 MAX_AUTHORIZED_RUNTIME_SECONDS = 1800
 # The JTAG safe wrapper launches exactly four Vivado children: read-only
-# preflight, shutdown-before, candidate, and shutdown-after.  Each successful
-# child may spend up to one second proving the Job is initially nonempty and a
-# further ten seconds waiting for the exact Vivado cs_server singleton or its
-# verified direct parent-child process topology to exit naturally.  The bound
-# is per contained Vivado Job, not per PID, and is separate from
-# Python/hash/Tcl bookkeeping.
-CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS = 1
-EXPECTED_TOOL_DAEMON_GRACE_SECONDS = 10
+# preflight, shutdown-before, candidate, and shutdown-after.  For each child,
+# the initial empty check and any approved-helper natural-exit grace share one
+# fixed 30 second deadline.  The deadline is per contained Vivado Job, not per
+# PID, and never resets while the approved topology shrinks.  Forced cleanup
+# is a FAIL-only safety action; at most two such cleanup waits can occur along
+# one wrapper path (a failed before/candidate child plus shutdown-after), and
+# that reserve is carried inside the independent other-overhead guard.
+CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS = 0
+NON_VIVADO_EMPTY_PROOF_ALLOWANCE_SECONDS = 1
+EXPECTED_TOOL_DAEMON_GRACE_SECONDS = 30
+CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS = 0.10
+CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS = 10
+CONTAINMENT_FAILURE_BOUND_SECONDS = (
+    EXPECTED_TOOL_DAEMON_GRACE_SECONDS + CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+)
 JTAG_WRAPPER_VIVADO_PROCESS_COUNT = 4
 JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS = (
     JTAG_WRAPPER_VIVADO_PROCESS_COUNT
-    * (CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS + EXPECTED_TOOL_DAEMON_GRACE_SECONDS)
+    * EXPECTED_TOOL_DAEMON_GRACE_SECONDS
 )
-JTAG_WRAPPER_OTHER_GUARD_SECONDS = 45
+JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS = 2
+JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS = (
+    JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS * CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+)
+JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS = 45
+JTAG_WRAPPER_OTHER_GUARD_SECONDS = (
+    JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS
+    + JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS
+)
 JTAG_OUTER_WRAPPER_GRACE_SECONDS = 120
+
+# Source-bound hashes for the only four executables that may remain in a
+# Vivado Job after the batch parent exits.  A path match alone cannot grant a
+# natural-exit window.
+EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE = {
+    "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+    "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+    "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+    "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911",
+}
+if JTAG_WRAPPER_OTHER_GUARD_SECONDS < JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS:
+    raise RuntimeError("P7 JTAG other guard does not reserve every bounded forced cleanup")
 BASELINE_OPERATION_COUNT = 19
 PER_FRAGMENT_FIXED_OPERATION_COUNT = 34
 FINAL_OPERATION_COUNT = 3
@@ -189,9 +216,24 @@ def runtime_feasibility(
         "feasible_within_authorized_runtime": minimum_runtime <= authorized_runtime_sec,
         "containment_initial_empty_wait_seconds": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
         "expected_tool_daemon_grace_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "containment_total_exit_window_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "containment_topology_revalidation_interval_seconds": (
+            CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS
+        ),
+        "containment_forced_cleanup_wait_seconds": CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
+        "containment_failure_bound_seconds": CONTAINMENT_FAILURE_BOUND_SECONDS,
         "jtag_wrapper_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
         "jtag_wrapper_containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+        "jtag_wrapper_max_forced_cleanup_events": JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS,
+        "jtag_wrapper_forced_cleanup_reserve_seconds": (
+            JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS
+        ),
         "jtag_wrapper_other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
+        "jtag_wrapper_bookkeeping_guard_seconds": JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
+        "jtag_wrapper_other_guard_after_forced_cleanup_seconds": (
+            JTAG_WRAPPER_OTHER_GUARD_SECONDS
+            - JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS
+        ),
     }
     wrapper_values = (
         preflight_timeout_sec,
@@ -228,9 +270,23 @@ def runtime_feasibility(
             "authorized_global_runtime_sec": authorized_runtime_sec,
             "containment_initial_empty_wait_seconds": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
             "expected_tool_daemon_grace_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+            "containment_total_exit_window_seconds": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+            "containment_topology_revalidation_interval_seconds": (
+                CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS
+            ),
+            "containment_success_bound_seconds_each": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+            "containment_failure_bound_seconds_each": CONTAINMENT_FAILURE_BOUND_SECONDS,
             "contained_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
             "containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+            "max_forced_cleanup_events": JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS,
+            "forced_cleanup_wait_seconds": CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
+            "forced_cleanup_reserve_seconds": JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS,
             "other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
+            "bookkeeping_guard_seconds": JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
+            "other_guard_after_forced_cleanup_seconds": (
+                JTAG_WRAPPER_OTHER_GUARD_SECONDS
+                - JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS
+            ),
             "configured_unallocated_margin_seconds": authorized_runtime_sec - configured_global,
             "estimated_unallocated_margin_seconds": authorized_runtime_sec - minimum_global,
             "minimum_stage_fits_configured_timeout": minimum_runtime

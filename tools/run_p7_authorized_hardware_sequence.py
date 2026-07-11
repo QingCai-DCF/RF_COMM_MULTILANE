@@ -80,6 +80,7 @@ PS_NONSTATIONARY_XSDB_GRACE_SECONDS = 120
 PS_OUTER_ORCHESTRATION_GUARD_SECONDS = 120
 PS_VIVADO_PROCESS_COUNT = 3
 PS_XSDB_PROCESS_COUNT = 1
+PS_MAX_FORCED_CLEANUP_EVENTS = 2
 
 # Vivado reports the package/speed-grade-qualified build part and the live
 # silicon identity through different properties.  Keep the mapping explicit:
@@ -90,6 +91,12 @@ CANONICAL_LIVE_PART = "xc7z010"
 CANONICAL_LIVE_DEVICE = "xc7z010_1"
 CANONICAL_LIVE_IDCODE_BINARY = "00010011011100100010000010010011"
 CANONICAL_LIVE_IDCODE_HEX = "13722093"
+
+
+def is_exact_vivado_batch_launcher(value: str | Path) -> bool:
+    """Forbid direct vivado.exe so the contained batch/process topology is stable."""
+
+    return Path(value).resolve(strict=False).name.casefold() == "vivado.bat"
 
 COMMON_BOOLEAN_OPTIONS = {
     "--execute-hardware",
@@ -512,13 +519,14 @@ def _int_option(
 def minimum_ps_outer_wrapper_timeout(
     *, mode: str, max_runtime: int, preflight: int, shutdown: int
 ) -> int:
-    vivado_per_process = (
-        jtag_backend.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
-        + jtag_backend.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
-    )
+    vivado_per_process = jtag_backend.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
     containment = (
         PS_VIVADO_PROCESS_COUNT * vivado_per_process
-        + PS_XSDB_PROCESS_COUNT * jtag_backend.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+        + PS_XSDB_PROCESS_COUNT * jtag_backend.NON_VIVADO_EMPTY_PROOF_ALLOWANCE_SECONDS
+    )
+    forced_cleanup_reserve = (
+        PS_MAX_FORCED_CLEANUP_EVENTS
+        * jtag_backend.CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
     )
     if mode == "stationary":
         candidate = (
@@ -534,6 +542,7 @@ def minimum_ps_outer_wrapper_timeout(
         + 2 * shutdown
         + candidate
         + containment
+        + forced_cleanup_reserve
         + PS_OUTER_ORCHESTRATION_GUARD_SECONDS
     )
 
@@ -719,6 +728,8 @@ def _validate_stage_command(
     for executable_option in ("--vivado-path", "--xsdb-path"):
         if executable_option in options and not Path(str(options[executable_option])).resolve(strict=False).is_file():
             errors.append(f"wrapper executable is missing: {executable_option}")
+    if not is_exact_vivado_batch_launcher(str(options.get("--vivado-path", ""))):
+        errors.append("wrapper --vivado-path must resolve to exactly vivado.bat; vivado.exe is forbidden")
     paths = _validate_hash_pairs(options, errors)
     _validate_authorization_binding(
         wrapper=wrapper,
@@ -1070,11 +1081,20 @@ def validate_wrapper_summary(
             "returncode": shutdown.get("returncode"),
             "passed": shutdown.get("passed"),
             "process_tree_reaped": shutdown.get("process_tree_reaped"),
+            "process_tree_terminated": shutdown.get("process_tree_terminated"),
+            "containment_cleanup_attempted": shutdown.get("containment_cleanup_attempted"),
+            "containment_cleanup_terminated": shutdown.get("containment_cleanup_terminated"),
         }
         if shutdown.get("returncode") != 0 or shutdown.get("passed") is not True:
             errors.append("wrapper shutdown-after did not return rc=0 and PASS")
         if shutdown.get("process_tree_reaped") is not True:
             errors.append("wrapper shutdown-after process tree was not reaped")
+        if shutdown.get("containment_cleanup_attempted") is not False:
+            errors.append("wrapper shutdown-after used or omits forced-cleanup evidence")
+        if shutdown.get("containment_cleanup_terminated") is not False:
+            errors.append("wrapper shutdown-after reports forced containment termination")
+        if shutdown.get("process_tree_terminated") is not False:
+            errors.append("wrapper shutdown-after reports process-tree termination")
         result_path = _resolve_summary_reference(shutdown.get("result_file"), summary_path)
         shutdown_record["result_file"] = _file_record(result_path) if result_path else {"missing": True}
         result_text = (
@@ -1101,6 +1121,12 @@ def validate_wrapper_summary(
             errors.append("wrapper candidate process did not return rc=0 and PASS")
         if process.get("process_tree_reaped") is not True:
             errors.append("wrapper candidate process tree was not reaped")
+        if process.get("containment_cleanup_attempted") is not False:
+            errors.append("wrapper candidate used or omits forced-cleanup evidence")
+        if process.get("containment_cleanup_terminated") is not False:
+            errors.append("wrapper candidate reports forced containment termination")
+        if process.get("process_tree_terminated") is not False:
+            errors.append("wrapper candidate reports process-tree termination")
     if is_jtag:
         backend = summary.get("backend_parse")
         if not isinstance(backend, dict) or backend.get("passed") is not True or backend.get(
@@ -1201,6 +1227,12 @@ def _attempt_errors(
             errors.append("ledger attempt does not prove outer wrapper process containment/reap")
         if process.get("containment_closed") is not True or process.get("descendant_count_after") != 0:
             errors.append("ledger attempt outer process containment is not closed and empty")
+        if process.get("containment_cleanup_attempted") is not False:
+            errors.append("ledger attempt outer process used or omits forced-cleanup evidence")
+        if process.get("containment_cleanup_terminated") is not False:
+            errors.append("ledger attempt outer process reports forced containment termination")
+        if process.get("process_tree_terminated") is not False:
+            errors.append("ledger attempt outer process reports process-tree termination")
         errors.extend(_verify_file_record("ledger wrapper stdout", process.get("stdout_file")))
         errors.extend(_verify_file_record("ledger wrapper stderr", process.get("stderr_file")))
     errors.extend(_verify_file_record("ledger wrapper summary", attempt.get("summary_file")))
@@ -1458,6 +1490,9 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             and process.get("process_tree_reaped") is True
             and process.get("containment_closed") is True
             and process.get("descendant_count_after") == 0
+            and process.get("containment_cleanup_attempted") is False
+            and process.get("containment_cleanup_terminated") is False
+            and process.get("process_tree_terminated") is False
         )
         passed = process_ok and not summary_errors
         attempt = {
@@ -1747,6 +1782,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.evidence_dir:
             evidence_dir = resolve_path(args.evidence_dir)
             _write_json(evidence_dir / "p7_preflight_stage_manifest.json", manifest)
+        print(json.dumps(manifest, indent=2, ensure_ascii=False) if args.json_summary else "P7_AUTHORIZED_HARDWARE_SEQUENCE: BLOCKED")
+        return 2
+
+    if not is_exact_vivado_batch_launcher(args.vivado_path):
+        manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "BLOCKED"
+        manifest["reason"] = "Vivado launcher must be exactly vivado.bat; direct vivado.exe is forbidden"
         print(json.dumps(manifest, indent=2, ensure_ascii=False) if args.json_summary else "P7_AUTHORIZED_HARDWARE_SEQUENCE: BLOCKED")
         return 2
 

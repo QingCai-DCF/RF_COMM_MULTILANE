@@ -47,11 +47,19 @@ from p7_hardware_safety import (  # noqa: E402
     validate_request,
 )
 from p7_jtag_backend import (  # noqa: E402
+    CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
+    CONTAINMENT_FAILURE_BOUND_SECONDS,
     CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
+    CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS,
     EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+    JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
     JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+    JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS,
+    JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS,
     JTAG_WRAPPER_OTHER_GUARD_SECONDS,
     JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
+    NON_VIVADO_EMPTY_PROOF_ALLOWANCE_SECONDS,
     MAX_TRANSACTION_BYTES as BACKEND_MAX_TRANSACTION_BYTES,
     MAX_TRANSACTION_LINE_BYTES,
     MAX_TRANSACTION_OPERATIONS,
@@ -70,6 +78,7 @@ from run_p7_authorized_hardware_sequence import (  # noqa: E402
     build_preflight_command,
     canonical_live_identity_failures,
     evaluate_preflight,
+    is_exact_vivado_batch_launcher,
     normalize_p7_idcode,
     parse_markers,
 )
@@ -143,6 +152,26 @@ class ProcessResult:
     descendant_paths_seen: list[str] = field(default_factory=list)
     descendant_processes_seen: list[dict[str, Any]] = field(default_factory=list)
     expected_tool_daemon_classification: str = "NONE"
+    expected_tool_daemon_topology_snapshots: list[dict[str, Any]] = field(default_factory=list)
+    expected_tool_daemon_topology_revalidation_count: int = 0
+    expected_tool_daemon_topology_monotonic: bool = False
+    expected_tool_daemon_topology_sample_elapsed_seconds: list[float] = field(default_factory=list)
+    expected_tool_daemon_topology_max_sample_gap_seconds: float = 0.0
+    expected_tool_daemon_grace_elapsed_seconds: float = 0.0
+    expected_tool_daemon_hashes_verified: bool = False
+    expected_tool_daemon_sha256_by_role: dict[str, str] = field(default_factory=dict)
+    expected_tool_daemon_hash_error: str = ""
+    expected_tool_daemon_prelaunch_hashes_verified: bool = False
+    expected_tool_daemon_prelaunch_sha256_by_role: dict[str, str] = field(default_factory=dict)
+    expected_tool_daemon_prelaunch_hash_error: str = ""
+    expected_tool_daemon_postexit_hashes_verified: bool = False
+    expected_tool_daemon_postexit_sha256_by_role: dict[str, str] = field(default_factory=dict)
+    expected_tool_daemon_postexit_hash_error: str = ""
+    expected_tool_daemon_topology_error: str = ""
+    expected_tool_daemon_topology_terminal_empty: bool = False
+    process_identity_query_retry_count: int = 0
+    process_exit_race_recheck_count: int = 0
+    containment_cleanup_attempted: bool = False
     containment_cleanup_terminated: bool = False
     process_exit_race_rechecked: bool = False
     process_identity_query_retried: bool = False
@@ -793,6 +822,8 @@ def _stage_control_errors(args: argparse.Namespace) -> tuple[list[str], dict[str
         errors.append("preflight timeout may not exceed --max-runtime-sec")
     if resolve_path(args.abort_file or str(DEFAULT_ABORT_FILE)) != DEFAULT_ABORT_FILE.resolve(strict=False):
         errors.append(f"abort file must be the canonical path: {DEFAULT_ABORT_FILE}")
+    if not is_exact_vivado_batch_launcher(args.vivado_path):
+        errors.append("Vivado launcher must be exactly vivado.bat; direct vivado.exe is forbidden")
     if Path(args.vivado_path).suffix.casefold() in (".bat", ".cmd"):
         for label, value in vars(args).items():
             if isinstance(value, str) and any(char in value for char in BATCH_FORBIDDEN_CHARS):
@@ -825,12 +856,30 @@ _CONTAINMENT_RESULTS: dict[subprocess.Popen[Any], bool] = {}
 _CONTAINMENT_DETAILS: dict[subprocess.Popen[Any], dict[str, Any]] = {}
 _POSIX_PROCESS_GROUPS: dict[subprocess.Popen[Any], int] = {}
 
-# Vivado may launch its own ChipScope server and keep it alive briefly after
-# the batch process exits.  Only this exact executable under the invoked
-# Vivado installation may receive a short natural-exit grace.  Any other
-# descendant, a same-named executable elsewhere, or a grace timeout remains a
-# containment failure and is terminated before returning.
-PROCESS_EXIT_RACE_RECHECK_SECONDS = 0.25
+# Vivado 2023.1 may leave one exact cs_server topology, or the exact six-node
+# helper forest observed in the read-only r2 preflight, alive briefly after
+# the batch parent exits.  Only those complete initial states receive a fixed
+# natural-exit window.  Every later snapshot must be a shrink-only subset with
+# immutable PID/path/parent identity.  Any other descendant, topology growth,
+# path/hash mismatch, query error, or grace timeout is a containment failure
+# and is terminated before returning.
+PROCESS_EXIT_RACE_RECHECK_SECONDS = 0.05
+MAX_TOPOLOGY_SAMPLE_GAP_SECONDS = 0.25
+MAX_PROCESS_IDENTITY_QUERY_RETRIES = 1
+EXPECTED_HELPER_ROLES = ("cs_server", "rdi_xsdb", "cmd", "conhost")
+EXACT_R2_HELPER_COUNTS = {
+    "cs_server": 2,
+    "rdi_xsdb": 1,
+    "cmd": 1,
+    "conhost": 2,
+}
+APPROVED_INITIAL_HELPER_CLASSIFICATIONS = frozenset(
+    {
+        "SINGLE_EXACT_CS_SERVER",
+        "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
+        "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    }
+)
 
 
 def _normalized_windows_image_path(value: str | Path) -> str:
@@ -841,56 +890,260 @@ def _expected_tool_daemon_paths(command: list[str]) -> list[str]:
     if not command:
         return []
     executable = Path(command[0]).resolve(strict=False)
-    if executable.stem.casefold() != "vivado":
+    if not is_exact_vivado_batch_launcher(executable):
         return []
-    expected = executable.parent / "unwrapped" / "win64.o" / "cs_server.exe"
-    return [str(expected.resolve(strict=False))]
+    helper_dir = executable.parent / "unwrapped" / "win64.o"
+    if os.name == "nt":
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.GetSystemDirectoryW.argtypes = [wintypes.LPWSTR, wintypes.UINT]
+        kernel32.GetSystemDirectoryW.restype = wintypes.UINT
+        buffer = ctypes.create_unicode_buffer(32768)
+        length = int(kernel32.GetSystemDirectoryW(buffer, len(buffer)))
+        if length < 1 or length >= len(buffer):
+            raise OSError(ctypes.get_last_error(), "GetSystemDirectoryW failed")
+        system32 = Path(buffer.value).resolve(strict=False)
+    else:  # Not used for POSIX containment; retained for import-time tests.
+        system32 = Path(r"C:\Windows\System32")
+    return [
+        str((helper_dir / "cs_server.exe").resolve(strict=False)),
+        str((helper_dir / "rdi_xsdb.exe").resolve(strict=False)),
+        str((system32 / "cmd.exe").resolve(strict=False)),
+        str((system32 / "conhost.exe").resolve(strict=False)),
+    ]
+
+
+def _approved_helper_paths_by_role(approved_paths: list[str]) -> dict[str, str] | None:
+    if len(approved_paths) != len(EXPECTED_HELPER_ROLES):
+        return None
+    if any(type(value) is not str or not value for value in approved_paths):
+        return None
+    normalized = {
+        role: _normalized_windows_image_path(path)
+        for role, path in zip(EXPECTED_HELPER_ROLES, approved_paths)
+    }
+    if len(set(normalized.values())) != len(normalized):
+        return None
+    expected_names = {
+        "cs_server": "cs_server.exe",
+        "rdi_xsdb": "rdi_xsdb.exe",
+        "cmd": "cmd.exe",
+        "conhost": "conhost.exe",
+    }
+    if any(Path(normalized[role]).name.casefold() != name for role, name in expected_names.items()):
+        return None
+    if str(Path(normalized["cs_server"]).parent) != str(Path(normalized["rdi_xsdb"]).parent):
+        return None
+    if str(Path(normalized["cmd"]).parent) != str(Path(normalized["conhost"]).parent):
+        return None
+    if Path(normalized["cmd"]).parent.name.casefold() != "system32":
+        return None
+    return normalized
+
+
+def verify_expected_tool_daemon_binary_hashes(
+    approved_paths: list[str],
+) -> tuple[bool, dict[str, str], str]:
+    """Bind every grace-capable helper path to its source-controlled SHA-256."""
+
+    by_role = _approved_helper_paths_by_role(approved_paths)
+    if by_role is None:
+        return False, {}, "approved helper path contract is malformed"
+    actual: dict[str, str] = {}
+    for role in EXPECTED_HELPER_ROLES:
+        path = Path(by_role[role])
+        try:
+            if not path.is_file() or path.is_symlink():
+                return False, actual, f"expected helper is missing, non-file, or symlink: role={role} path={path}"
+            digest = sha256_file(path)
+        except OSError as exc:
+            return (
+                False,
+                actual,
+                f"expected helper hash read failed: role={role} {type(exc).__name__}: {exc}",
+            )
+        actual[role] = digest
+        expected = EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE[role]
+        if digest != expected:
+            return (
+                False,
+                actual,
+                f"expected helper hash mismatch: role={role} expected={expected} actual={digest}",
+            )
+    return True, actual, ""
+
+
+def _normalized_helper_identities(
+    identities: list[dict[str, Any]], approved_paths: list[str]
+) -> dict[int, tuple[int, str, str, int]] | None:
+    """Validate identities plus dynamic global-parent liveness.
+
+    The returned immutable tuple deliberately excludes parent liveness: when
+    an approved parent exits, a surviving child becomes a root.  Every fresh
+    snapshot must still prove its boolean exactly matches current Job
+    membership, so an external/live parent can never masquerade as a root.
+    """
+    by_role = _approved_helper_paths_by_role(approved_paths)
+    if by_role is None or not identities:
+        return None
+    path_to_role = {path: role for role, path in by_role.items()}
+    normalized: dict[int, tuple[int, str, str, int]] = {}
+    parent_activity: dict[int, bool] = {}
+    for item in identities:
+        if type(item) is not dict:
+            return None
+        try:
+            process_id = item["pid"]
+            parent_id = item["parent_pid"]
+            parent_active_globally = item["parent_active_globally"]
+            image_path = item["image_path"]
+            creation_time_100ns = item["creation_time_100ns"]
+        except KeyError:
+            return None
+        if (
+            type(process_id) is not int
+            or type(parent_id) is not int
+            or type(parent_active_globally) is not bool
+            or type(image_path) is not str
+            or type(creation_time_100ns) is not int
+        ):
+            return None
+        if (
+            process_id <= 0
+            or parent_id <= 0
+            or creation_time_100ns <= 0
+            or process_id == parent_id
+            or process_id in normalized
+        ):
+            return None
+        normalized_path = _normalized_windows_image_path(image_path)
+        role = path_to_role.get(normalized_path)
+        if role is None:
+            return None
+        normalized[process_id] = (
+            parent_id,
+            normalized_path,
+            role,
+            creation_time_100ns,
+        )
+        parent_activity[process_id] = parent_active_globally
+    if any(
+        parent_activity[process_id] is not (parent_id in normalized)
+        for process_id, (parent_id, _path, _role, _creation_time) in normalized.items()
+    ):
+        return None
+    return normalized
 
 
 def classify_expected_tool_daemons(
     identities: list[dict[str, Any]], approved_paths: list[str]
 ) -> str:
-    """Accept only the canonical singleton or exact direct parent-child pair."""
+    """Classify only a complete approved initial helper topology."""
 
-    if len(approved_paths) != 1 or not isinstance(approved_paths[0], str):
+    normalized = _normalized_helper_identities(identities, approved_paths)
+    if normalized is None:
         return "UNAPPROVED"
-    approved = _normalized_windows_image_path(approved_paths[0])
-    normalized: list[tuple[int, int, str]] = []
-    for item in identities:
-        try:
-            raw_process_id = item["pid"]
-            raw_parent_id = item["parent_pid"]
-            image_path = str(item["image_path"])
-        except (KeyError, TypeError, ValueError):
-            return "UNAPPROVED"
-        if (
-            not isinstance(raw_process_id, int)
-            or isinstance(raw_process_id, bool)
-            or not isinstance(raw_parent_id, int)
-            or isinstance(raw_parent_id, bool)
-        ):
-            return "UNAPPROVED"
-        process_id = raw_process_id
-        parent_id = raw_parent_id
-        if process_id <= 0 or parent_id < 0 or process_id == parent_id:
-            return "UNAPPROVED"
-        normalized.append((process_id, parent_id, _normalized_windows_image_path(image_path)))
-    process_ids = [item[0] for item in normalized]
-    if len(set(process_ids)) != len(process_ids):
+    counts = {role: 0 for role in EXPECTED_HELPER_ROLES}
+    for _parent_id, _path, role, _creation_time in normalized.values():
+        counts[role] += 1
+    active_edges = sorted(
+        (normalized[parent_process_id][2], role)
+        for _process_id, (parent_process_id, _path, role, _creation_time) in normalized.items()
+        if parent_process_id in normalized
+    )
+    if counts == {"cs_server": 1, "rdi_xsdb": 0, "cmd": 0, "conhost": 0}:
+        return "SINGLE_EXACT_CS_SERVER" if not active_edges else "UNAPPROVED"
+    if counts == {"cs_server": 2, "rdi_xsdb": 0, "cmd": 0, "conhost": 0}:
+        return (
+            "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"
+            if active_edges == [("cs_server", "cs_server")]
+            else "UNAPPROVED"
+        )
+    if counts != EXACT_R2_HELPER_COUNTS:
         return "UNAPPROVED"
-    if any(item[2] != approved for item in normalized):
-        return "UNAPPROVED"
-    if len(normalized) == 1:
-        return "SINGLE_EXACT_CS_SERVER"
-    if len(normalized) != 2:
-        return "UNAPPROVED"
-    first, second = normalized
-    direct_edges = int(first[1] == second[0]) + int(second[1] == first[0])
+    expected_edges = sorted(
+        [
+            ("cs_server", "cs_server"),
+            ("cmd", "conhost"),
+            ("cmd", "rdi_xsdb"),
+        ]
+    )
+    roots = [
+        (process_id, parent_process_id, role)
+        for process_id, (
+            parent_process_id,
+            _path,
+            role,
+            _creation_time,
+        ) in normalized.items()
+        if parent_process_id not in normalized
+    ]
+    exact_roots = sorted(role for _process_id, _parent_id, role in roots) == sorted(
+        ["cs_server", "cmd", "conhost"]
+    )
+    distinct_root_parents = len({parent_id for _process_id, parent_id, _role in roots}) == 3
     return (
-        "DIRECT_PARENT_CHILD_EXACT_CS_SERVER"
-        if direct_edges == 1
+        "EXACT_R2_VIVADO_EXIT_HELPER_FOREST"
+        if active_edges == expected_edges and exact_roots and distinct_root_parents
         else "UNAPPROVED"
     )
+
+
+def classify_expected_tool_daemon_subset(
+    identities: list[dict[str, Any]],
+    *,
+    approved_paths: list[str],
+    initial_identities: dict[int, tuple[int, str, str, int]],
+    previous_process_ids: set[int],
+    initial_classification: str,
+) -> str:
+    """Require an immutable, non-growing subset of one approved initial forest."""
+
+    normalized = _normalized_helper_identities(identities, approved_paths)
+    if normalized is None or initial_classification not in APPROVED_INITIAL_HELPER_CLASSIFICATIONS:
+        return "UNAPPROVED"
+    current_ids = set(normalized)
+    if not current_ids.issubset(previous_process_ids) or not current_ids.issubset(initial_identities):
+        return "UNAPPROVED"
+    if any(normalized[process_id] != initial_identities[process_id] for process_id in current_ids):
+        return "UNAPPROVED"
+    if current_ids == set(initial_identities):
+        return initial_classification
+    return f"STRICT_SHRINK_SUBSET_OF_{initial_classification}"
+
+
+def _containment_detail_defaults(*, expected_paths: list[str] | None = None) -> dict[str, Any]:
+    return {
+        "expected_tool_daemon_grace_used": False,
+        "expected_tool_daemon_grace_seconds": 0.0,
+        "expected_tool_daemon_paths": list(expected_paths or []),
+        "descendant_paths_seen": [],
+        "descendant_processes_seen": [],
+        "expected_tool_daemon_classification": "NONE",
+        "expected_tool_daemon_topology_snapshots": [],
+        "expected_tool_daemon_topology_revalidation_count": 0,
+        "expected_tool_daemon_topology_monotonic": False,
+        "expected_tool_daemon_topology_sample_elapsed_seconds": [],
+        "expected_tool_daemon_topology_max_sample_gap_seconds": 0.0,
+        "expected_tool_daemon_grace_elapsed_seconds": 0.0,
+        "expected_tool_daemon_hashes_verified": False,
+        "expected_tool_daemon_sha256_by_role": {},
+        "expected_tool_daemon_hash_error": "",
+        "expected_tool_daemon_prelaunch_hashes_verified": False,
+        "expected_tool_daemon_prelaunch_sha256_by_role": {},
+        "expected_tool_daemon_prelaunch_hash_error": "",
+        "expected_tool_daemon_postexit_hashes_verified": False,
+        "expected_tool_daemon_postexit_sha256_by_role": {},
+        "expected_tool_daemon_postexit_hash_error": "",
+        "expected_tool_daemon_topology_error": "",
+        "expected_tool_daemon_topology_terminal_empty": False,
+        "process_identity_query_retry_count": 0,
+        "process_exit_race_recheck_count": 0,
+        "containment_cleanup_attempted": False,
+        "containment_cleanup_terminated": False,
+        "process_exit_race_rechecked": False,
+        "process_identity_query_retried": False,
+        "containment_query_error": "",
+    }
 
 
 if os.name == "nt":
@@ -999,6 +1252,14 @@ if os.name == "nt":
         ctypes.POINTER(wintypes.DWORD),
     ]
     _KERNEL32.QueryFullProcessImageNameW.restype = wintypes.BOOL
+    _KERNEL32.GetProcessTimes.argtypes = [
+        wintypes.HANDLE,
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+    ]
+    _KERNEL32.GetProcessTimes.restype = wintypes.BOOL
     _KERNEL32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
     _KERNEL32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
     _KERNEL32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(_ProcessEntry32W)]
@@ -1063,7 +1324,7 @@ if os.name == "nt":
             return [int(process_ids.ProcessIdList[index]) for index in range(count)]
 
         @staticmethod
-        def process_image_path(process_id: int) -> str:
+        def process_identity(process_id: int) -> tuple[str, int]:
             handle = _KERNEL32.OpenProcess(
                 PROCESS_QUERY_LIMITED_INFORMATION, False, wintypes.DWORD(process_id)
             )
@@ -1079,15 +1340,40 @@ if os.name == "nt":
                         ctypes.get_last_error(),
                         f"QueryFullProcessImageNameW failed for contained PID {process_id}",
                     )
-                return buffer.value
+                creation = wintypes.FILETIME()
+                exit_time = wintypes.FILETIME()
+                kernel_time = wintypes.FILETIME()
+                user_time = wintypes.FILETIME()
+                if not _KERNEL32.GetProcessTimes(
+                    handle,
+                    ctypes.byref(creation),
+                    ctypes.byref(exit_time),
+                    ctypes.byref(kernel_time),
+                    ctypes.byref(user_time),
+                ):
+                    raise OSError(
+                        ctypes.get_last_error(),
+                        f"GetProcessTimes failed for contained PID {process_id}",
+                    )
+                creation_time_100ns = (
+                    int(creation.dwHighDateTime) << 32
+                ) | int(creation.dwLowDateTime)
+                if creation_time_100ns <= 0:
+                    raise OSError(f"contained PID {process_id} has invalid creation time")
+                return buffer.value, creation_time_100ns
             finally:
                 _KERNEL32.CloseHandle(handle)
 
         def active_process_images(self) -> list[tuple[int, str]]:
-            return [(process_id, self.process_image_path(process_id)) for process_id in self.active_process_ids()]
+            return [
+                (process_id, self.process_identity(process_id)[0])
+                for process_id in self.active_process_ids()
+            ]
 
         @staticmethod
-        def process_parent_ids(process_ids: list[int]) -> dict[int, int]:
+        def process_parent_state(
+            process_ids: list[int],
+        ) -> tuple[dict[int, int], set[int]]:
             requested = set(process_ids)
             if len(requested) != len(process_ids):
                 raise OSError("Job Object returned duplicate active process IDs")
@@ -1101,6 +1387,7 @@ if os.name == "nt":
             if not snapshot_value or snapshot_value == invalid_handle:
                 raise OSError(ctypes.get_last_error(), "CreateToolhelp32Snapshot failed")
             parents: dict[int, int] = {}
+            globally_active_process_ids: set[int] = set()
             try:
                 entry = _ProcessEntry32W()
                 entry.dwSize = ctypes.sizeof(entry)
@@ -1108,6 +1395,8 @@ if os.name == "nt":
                     raise OSError(ctypes.get_last_error(), "Process32FirstW failed")
                 while True:
                     process_id = int(entry.th32ProcessID)
+                    if process_id > 0:
+                        globally_active_process_ids.add(process_id)
                     if process_id in requested:
                         parents[process_id] = int(entry.th32ParentProcessID)
                     entry.dwSize = ctypes.sizeof(entry)
@@ -1122,24 +1411,42 @@ if os.name == "nt":
             if set(parents) != requested:
                 missing = sorted(requested - set(parents))
                 raise OSError(f"parent PID lookup missed active contained processes: {missing}")
-            return parents
+            return parents, globally_active_process_ids
 
         def active_process_identities(self) -> list[dict[str, Any]]:
-            process_ids = self.active_process_ids()
-            parents = self.process_parent_ids(process_ids)
-            return [
-                {
-                    "pid": process_id,
-                    "parent_pid": parents[process_id],
-                    "image_path": self.process_image_path(process_id),
-                }
-                for process_id in process_ids
-            ]
+            process_ids_before = self.active_process_ids()
+            parents, globally_active_process_ids = self.process_parent_state(
+                process_ids_before
+            )
+            identities: list[dict[str, Any]] = []
+            for process_id in process_ids_before:
+                image_path, creation_time_100ns = self.process_identity(process_id)
+                identities.append(
+                    {
+                        "pid": process_id,
+                        "parent_pid": parents[process_id],
+                        "parent_active_globally": (
+                            parents[process_id] in globally_active_process_ids
+                        ),
+                        "image_path": image_path,
+                        "creation_time_100ns": creation_time_100ns,
+                    }
+                )
+            process_ids_after = self.active_process_ids()
+            if set(process_ids_before) != set(process_ids_after):
+                raise OSError(
+                    "Job Object active PID set changed across identity snapshot: "
+                    f"before={sorted(process_ids_before)} after={sorted(process_ids_after)}"
+                )
+            return sorted(identities, key=lambda item: int(item["pid"]))
 
         def terminate(self) -> bool:
             return bool(_KERNEL32.TerminateJobObject(self.handle, 125))
 
-        def wait_empty(self, timeout_sec: float = 10.0) -> bool:
+        def wait_empty(
+            self,
+            timeout_sec: float = CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
+        ) -> bool:
             deadline = time.monotonic() + timeout_sec
             while time.monotonic() < deadline:
                 if self.active_processes() == 0:
@@ -1172,20 +1479,15 @@ def launch_contained_process(
             "containment_assigned": True,
             "containment_closed": False,
             "descendant_count_after": -1,
-            "expected_tool_daemon_grace_used": False,
-            "expected_tool_daemon_grace_seconds": 0.0,
-            "expected_tool_daemon_paths": [],
-            "descendant_paths_seen": [],
-            "descendant_processes_seen": [],
-            "expected_tool_daemon_classification": "NONE",
-            "containment_cleanup_terminated": False,
-            "process_exit_race_rechecked": False,
-            "process_identity_query_retried": False,
-            "containment_query_error": "",
+            **_containment_detail_defaults(),
         }
         return process
     if not CONTAINED_LAUNCHER.is_file():
         raise OSError(f"P7 contained launcher missing: {CONTAINED_LAUNCHER}")
+    expected_paths = _expected_tool_daemon_paths(command)
+    prelaunch_hashes_verified = False
+    prelaunch_hashes: dict[str, str] = {}
+    prelaunch_hash_error = ""
     payload = base64.urlsafe_b64encode(
         json.dumps(command, ensure_ascii=False).encode("utf-8")
     ).decode("ascii").rstrip("=")
@@ -1206,17 +1508,30 @@ def launch_contained_process(
             "containment_assigned": True,
             "containment_closed": False,
             "descendant_count_after": -1,
-            "expected_tool_daemon_grace_used": False,
-            "expected_tool_daemon_grace_seconds": 0.0,
-            "expected_tool_daemon_paths": _expected_tool_daemon_paths(command),
-            "descendant_paths_seen": [],
-            "descendant_processes_seen": [],
-            "expected_tool_daemon_classification": "NONE",
-            "containment_cleanup_terminated": False,
-            "process_exit_race_rechecked": False,
-            "process_identity_query_retried": False,
-            "containment_query_error": "",
+            **_containment_detail_defaults(
+                expected_paths=expected_paths
+            ),
         }
+        if expected_paths:
+            (
+                prelaunch_hashes_verified,
+                prelaunch_hashes,
+                prelaunch_hash_error,
+            ) = verify_expected_tool_daemon_binary_hashes(expected_paths)
+        _CONTAINMENT_DETAILS[process].update(
+            {
+                "expected_tool_daemon_prelaunch_hashes_verified": (
+                    prelaunch_hashes_verified
+                ),
+                "expected_tool_daemon_prelaunch_sha256_by_role": prelaunch_hashes,
+                "expected_tool_daemon_prelaunch_hash_error": prelaunch_hash_error,
+            }
+        )
+        if expected_paths and not prelaunch_hashes_verified:
+            raise OSError(
+                "Vivado helper prelaunch hash binding failed before P7_GO: "
+                + prelaunch_hash_error
+            )
         assert process.stdin is not None
         process.stdin.write("P7_GO\n")
         process.stdin.flush()
@@ -1226,12 +1541,13 @@ def launch_contained_process(
         if process is not None and process.poll() is None:
             try:
                 process.kill()
-                process.wait(timeout=10)
+                process.wait(timeout=CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS)
             except (OSError, subprocess.SubprocessError):
                 pass
         if process is not None:
             _WINDOWS_JOBS.pop(process, None)
             details = _CONTAINMENT_DETAILS.setdefault(process, {})
+            details["containment_cleanup_attempted"] = True
             details["containment_closed"] = True
             details["descendant_count_after"] = -1
             _CONTAINMENT_RESULTS[process] = False
@@ -1249,6 +1565,136 @@ def _posix_group_empty(pgid: int) -> bool:
     return False
 
 
+def _topology_snapshot(
+    identities: list[dict[str, Any]], classification: str, *, elapsed_seconds: float
+) -> dict[str, Any]:
+    return {
+        "classification": classification,
+        "elapsed_seconds": round(elapsed_seconds, 6),
+        "processes": sorted(
+            [
+                {
+                    "pid": item["pid"],
+                    "parent_pid": item["parent_pid"],
+                    "parent_active_globally": item[
+                        "parent_active_globally"
+                    ],
+                    "image_path": item["image_path"],
+                    "creation_time_100ns": item["creation_time_100ns"],
+                }
+                for item in identities
+            ],
+            key=lambda item: item["pid"],
+        ),
+    }
+
+
+def _append_changed_topology_snapshot(
+    details: dict[str, Any], identities: list[dict[str, Any]], classification: str, *, elapsed_seconds: float
+) -> None:
+    snapshot = _topology_snapshot(
+        identities, classification, elapsed_seconds=elapsed_seconds
+    )
+    snapshots = details.setdefault("expected_tool_daemon_topology_snapshots", [])
+    if (
+        not snapshots
+        or snapshots[-1].get("classification") != snapshot["classification"]
+        or snapshots[-1].get("processes") != snapshot["processes"]
+    ):
+        snapshots.append(snapshot)
+
+
+def _record_topology_sample(
+    details: dict[str, Any], *, window_started: float
+) -> float:
+    elapsed = round(max(0.0, time.monotonic() - window_started), 6)
+    samples = details.setdefault(
+        "expected_tool_daemon_topology_sample_elapsed_seconds", []
+    )
+    if samples:
+        gap = max(0.0, elapsed - float(samples[-1]))
+        details["expected_tool_daemon_topology_max_sample_gap_seconds"] = round(
+            max(
+                float(
+                    details.get(
+                        "expected_tool_daemon_topology_max_sample_gap_seconds", 0.0
+                    )
+                ),
+                gap,
+            ),
+            6,
+        )
+    samples.append(elapsed)
+    return elapsed
+
+
+def _query_identity_snapshot_with_one_global_retry(
+    job: Any,
+    details: dict[str, Any],
+    *,
+    deadline: float,
+) -> tuple[list[dict[str, Any]] | None, bool]:
+    """Return (identities, terminal_empty) without ever resetting deadline."""
+
+    first_error = ""
+    try:
+        identities = job.active_process_identities()
+    except OSError as exc:
+        identities = None
+        first_error = f"{type(exc).__name__}: {exc}"
+    if identities:
+        return identities, False
+
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        details["containment_query_error"] = first_error or "identity query reached containment deadline"
+        return None, False
+    details["process_exit_race_rechecked"] = True
+    details["process_exit_race_recheck_count"] = int(
+        details.get("process_exit_race_recheck_count", 0)
+    ) + 1
+    try:
+        if job.wait_empty(min(PROCESS_EXIT_RACE_RECHECK_SECONDS, remaining)):
+            return [], True
+    except OSError as exc:
+        details["containment_query_error"] = f"{type(exc).__name__}: {exc}"
+        return None, False
+
+    retry_count = int(details.get("process_identity_query_retry_count", 0))
+    if retry_count >= MAX_PROCESS_IDENTITY_QUERY_RETRIES:
+        details["containment_query_error"] = (
+            first_error or "empty identity snapshot while Job remained nonempty"
+        )
+        return None, False
+    details["process_identity_query_retried"] = True
+    details["process_identity_query_retry_count"] = retry_count + 1
+    try:
+        identities = job.active_process_identities()
+    except OSError as exc:
+        details["containment_query_error"] = (
+            f"first={first_error or 'EMPTY'}; retry={type(exc).__name__}: {exc}"
+        )
+        return None, False
+    if identities:
+        return identities, False
+
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        details["containment_query_error"] = "retried identity query was empty at containment deadline"
+        return None, False
+    details["process_exit_race_recheck_count"] = int(
+        details.get("process_exit_race_recheck_count", 0)
+    ) + 1
+    try:
+        if job.wait_empty(min(PROCESS_EXIT_RACE_RECHECK_SECONDS, remaining)):
+            return [], True
+    except OSError as exc:
+        details["containment_query_error"] = f"{type(exc).__name__}: {exc}"
+        return None, False
+    details["containment_query_error"] = "retried identity snapshot was empty while Job remained nonempty"
+    return None, False
+
+
 def verify_process_tree_reaped(process: subprocess.Popen[Any]) -> bool:
     """Close containment only after proving no process remains in it."""
 
@@ -1263,85 +1709,233 @@ def verify_process_tree_reaped(process: subprocess.Popen[Any]) -> bool:
         details = _CONTAINMENT_DETAILS.setdefault(process, {})
         physically_empty = False
         empty = False
+        window_started = time.monotonic()
+        window_deadline = window_started + EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+
+        def force_cleanup() -> None:
+            nonlocal physically_empty
+            details["containment_cleanup_attempted"] = True
+            try:
+                details["containment_cleanup_terminated"] = bool(job.terminate())
+            except OSError as exc:
+                details["containment_query_error"] = details.get("containment_query_error") or (
+                    f"TerminateJobObject {type(exc).__name__}: {exc}"
+                )
+            try:
+                physically_empty = job.wait_empty(CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS)
+            except OSError as exc:
+                details["containment_query_error"] = details.get("containment_query_error") or (
+                    f"cleanup wait {type(exc).__name__}: {exc}"
+                )
+
         try:
-            empty = job.wait_empty(CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS)
+            approved_paths = list(details.get("expected_tool_daemon_paths", []))
+            # Immediate zero-wait Job proof/snapshot: no unknown descendant is
+            # allowed to run blindly before classification.
+            empty = job.wait_empty(0.0)
             physically_empty = empty
-            if not empty:
-                identities: list[dict[str, Any]] | None = None
-                first_query_error: OSError | None = None
-                try:
-                    identities = job.active_process_identities()
-                except OSError as exc:
-                    first_query_error = exc
-                if identities is None or not identities:
-                    # A parent can exit between Job PID enumeration, Toolhelp
-                    # parent lookup, and image lookup.  First accept a proven
-                    # empty Job; otherwise perform exactly one complete fresh
-                    # identity query, which may now yield the legal singleton.
-                    if job.wait_empty(PROCESS_EXIT_RACE_RECHECK_SECONDS):
-                        details["process_exit_race_rechecked"] = True
-                        empty = True
-                        physically_empty = True
-                    else:
-                        try:
-                            identities = job.active_process_identities()
-                            details["process_identity_query_retried"] = True
-                        except OSError as retry_exc:
-                            details["containment_query_error"] = (
-                                f"first={type(first_query_error).__name__}: {first_query_error}; "
-                                f"retry={type(retry_exc).__name__}: {retry_exc}"
-                            )
-                            identities = None
-                if not empty and identities:
+            initial_elapsed = _record_topology_sample(
+                details, window_started=window_started
+            )
+            if empty:
+                details["expected_tool_daemon_topology_terminal_empty"] = True
+                _append_changed_topology_snapshot(
+                    details, [], "EMPTY", elapsed_seconds=initial_elapsed
+                )
+            else:
+                identities, terminal_empty = _query_identity_snapshot_with_one_global_retry(
+                    job, details, deadline=window_deadline
+                )
+                initial_elapsed = _record_topology_sample(
+                    details, window_started=window_started
+                )
+                if terminal_empty:
+                    empty = True
+                    physically_empty = True
+                    details["expected_tool_daemon_topology_terminal_empty"] = True
+                    _append_changed_topology_snapshot(
+                        details, [], "EMPTY", elapsed_seconds=initial_elapsed
+                    )
+                elif (
+                    details["expected_tool_daemon_topology_max_sample_gap_seconds"]
+                    > MAX_TOPOLOGY_SAMPLE_GAP_SECONDS
+                ):
+                    details["expected_tool_daemon_topology_error"] = (
+                        "initial topology sampling gap exceeded the fixed 250 ms ceiling"
+                    )
+                elif identities:
+                    classification = classify_expected_tool_daemons(
+                        identities, approved_paths
+                    )
+                    details["expected_tool_daemon_classification"] = classification
                     details["descendant_processes_seen"] = identities
                     details["descendant_paths_seen"] = [
                         str(item["image_path"]) for item in identities
                     ]
-                    classification = classify_expected_tool_daemons(
-                        identities,
-                        list(details.get("expected_tool_daemon_paths", [])),
-                    )
-                    details["expected_tool_daemon_classification"] = classification
-                else:
-                    classification = "UNAPPROVED"
-                if not empty and classification in {
-                    "SINGLE_EXACT_CS_SERVER",
-                    "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
-                }:
-                    # This is not a generic descendant grace.  It applies only
-                    # to one exact cs_server or its known direct parent-child
-                    # topology under the invoked Vivado root.  PASS still
-                    # requires the complete Job to exit naturally.
-                    details["expected_tool_daemon_grace_used"] = True
-                    details["expected_tool_daemon_grace_seconds"] = (
-                        EXPECTED_TOOL_DAEMON_GRACE_SECONDS
-                    )
-                    empty = job.wait_empty(EXPECTED_TOOL_DAEMON_GRACE_SECONDS)
-                    physically_empty = empty
+                    if classification not in APPROVED_INITIAL_HELPER_CLASSIFICATIONS:
+                        details["expected_tool_daemon_topology_error"] = (
+                            "initial nonempty topology is neither exact r2 forest nor exact cs state"
+                        )
+                    elif (
+                        details.get("expected_tool_daemon_prelaunch_hashes_verified")
+                        is not True
+                    ):
+                        details["expected_tool_daemon_hash_error"] = (
+                            "prelaunch helper hashes were not verified before P7_GO"
+                        )
+                    else:
+                        initial_normalized = _normalized_helper_identities(
+                            identities, approved_paths
+                        )
+                        assert initial_normalized is not None
+                        previous_ids = set(initial_normalized)
+                        details["expected_tool_daemon_grace_used"] = True
+                        details["expected_tool_daemon_grace_seconds"] = float(
+                            EXPECTED_TOOL_DAEMON_GRACE_SECONDS
+                        )
+                        details["expected_tool_daemon_topology_monotonic"] = True
+                        _append_changed_topology_snapshot(
+                            details,
+                            identities,
+                            classification,
+                            elapsed_seconds=initial_elapsed,
+                        )
+                        while time.monotonic() < window_deadline:
+                            remaining = window_deadline - time.monotonic()
+                            slice_seconds = min(
+                                CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS,
+                                remaining,
+                            )
+                            became_empty = job.wait_empty(slice_seconds)
+                            details["expected_tool_daemon_topology_revalidation_count"] += 1
+                            if became_empty:
+                                sample_elapsed = _record_topology_sample(
+                                    details, window_started=window_started
+                                )
+                                if (
+                                    details[
+                                        "expected_tool_daemon_topology_max_sample_gap_seconds"
+                                    ]
+                                    > MAX_TOPOLOGY_SAMPLE_GAP_SECONDS
+                                ):
+                                    details["expected_tool_daemon_topology_monotonic"] = False
+                                    details["expected_tool_daemon_topology_error"] = (
+                                        "topology sampling gap exceeded the fixed 250 ms ceiling"
+                                    )
+                                    break
+                                empty = True
+                                physically_empty = True
+                                details["expected_tool_daemon_topology_terminal_empty"] = True
+                                _append_changed_topology_snapshot(
+                                    details,
+                                    [],
+                                    "EMPTY",
+                                    elapsed_seconds=sample_elapsed,
+                                )
+                                break
+                            next_identities, terminal_empty = (
+                                _query_identity_snapshot_with_one_global_retry(
+                                    job, details, deadline=window_deadline
+                                )
+                            )
+                            sample_elapsed = _record_topology_sample(
+                                details, window_started=window_started
+                            )
+                            if (
+                                details["expected_tool_daemon_topology_max_sample_gap_seconds"]
+                                > MAX_TOPOLOGY_SAMPLE_GAP_SECONDS
+                            ):
+                                details["expected_tool_daemon_topology_monotonic"] = False
+                                details["expected_tool_daemon_topology_error"] = (
+                                    "topology sampling gap exceeded the fixed 250 ms ceiling"
+                                )
+                                break
+                            if terminal_empty:
+                                empty = True
+                                physically_empty = True
+                                details["expected_tool_daemon_topology_terminal_empty"] = True
+                                _append_changed_topology_snapshot(
+                                    details,
+                                    [],
+                                    "EMPTY",
+                                    elapsed_seconds=sample_elapsed,
+                                )
+                                break
+                            if not next_identities:
+                                break
+                            subset_classification = classify_expected_tool_daemon_subset(
+                                next_identities,
+                                approved_paths=approved_paths,
+                                initial_identities=initial_normalized,
+                                previous_process_ids=previous_ids,
+                                initial_classification=classification,
+                            )
+                            if subset_classification == "UNAPPROVED":
+                                details["expected_tool_daemon_topology_monotonic"] = False
+                                details["expected_tool_daemon_topology_error"] = (
+                                    "helper topology grew, reappeared, mutated identity, or left the approved forest"
+                                )
+                                _append_changed_topology_snapshot(
+                                    details,
+                                    next_identities,
+                                    "UNAPPROVED_MUTATION",
+                                    elapsed_seconds=sample_elapsed,
+                                )
+                                break
+                            _append_changed_topology_snapshot(
+                                details,
+                                next_identities,
+                                subset_classification,
+                                elapsed_seconds=sample_elapsed,
+                            )
+                            previous_ids = {
+                                int(item["pid"]) for item in next_identities
+                            }
                 if not empty:
-                    details["containment_cleanup_terminated"] = bool(job.terminate())
-                    physically_empty = job.wait_empty(10.0)
-                    # Forced cleanup proves the machine was made safe, but it
-                    # must not promote a lingering or unrecognized child to PASS.
+                    force_cleanup()
+                    # Forced cleanup proves safety only; it never promotes the
+                    # process or stage to PASS.
                     empty = False
         except OSError as exc:
-            # Errors outside the one explicitly retried identity snapshot are
-            # fail-closed unless the Job itself is now proven empty.
-            try:
-                empty = job.wait_empty(PROCESS_EXIT_RACE_RECHECK_SECONDS)
-            except OSError:
-                empty = False
-            physically_empty = empty
-            if empty:
-                details["process_exit_race_rechecked"] = True
-            else:
-                details["containment_query_error"] = f"{type(exc).__name__}: {exc}"
-                try:
-                    details["containment_cleanup_terminated"] = bool(job.terminate())
-                    physically_empty = job.wait_empty(10.0)
-                except OSError:
-                    pass
+            details["containment_query_error"] = f"{type(exc).__name__}: {exc}"
+            force_cleanup()
+            empty = False
         finally:
+            if details.get("expected_tool_daemon_grace_used"):
+                details["expected_tool_daemon_grace_elapsed_seconds"] = round(
+                    min(
+                        EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+                        max(0.0, time.monotonic() - window_started),
+                    ),
+                    6,
+                )
+            if approved_paths:
+                post_ok, post_hashes, post_error = (
+                    verify_expected_tool_daemon_binary_hashes(approved_paths)
+                )
+                details["expected_tool_daemon_postexit_hashes_verified"] = post_ok
+                details["expected_tool_daemon_postexit_sha256_by_role"] = post_hashes
+                details["expected_tool_daemon_postexit_hash_error"] = post_error
+                pre_hashes = details.get(
+                    "expected_tool_daemon_prelaunch_sha256_by_role", {}
+                )
+                aggregate_hash_ok = bool(
+                    details.get("expected_tool_daemon_prelaunch_hashes_verified")
+                    and post_ok
+                    and pre_hashes == post_hashes
+                )
+                details["expected_tool_daemon_hashes_verified"] = aggregate_hash_ok
+                details["expected_tool_daemon_sha256_by_role"] = post_hashes
+                if not aggregate_hash_ok:
+                    details["expected_tool_daemon_hash_error"] = (
+                        post_error
+                        or "prelaunch/postexit helper hash records differ"
+                    )
+                    empty = False
+            if not physically_empty:
+                # Closing a nonempty KILL_ON_JOB_CLOSE handle is itself forced
+                # cleanup, even if TerminateJobObject failed or was skipped.
+                details["containment_cleanup_attempted"] = True
             job.close()
         details["containment_closed"] = True
         details["descendant_count_after"] = 0 if physically_empty else -1
@@ -1353,17 +1947,23 @@ def verify_process_tree_reaped(process: subprocess.Popen[Any]) -> bool:
             return False
         empty = _posix_group_empty(pgid)
         physically_empty = empty
+        details = _CONTAINMENT_DETAILS.setdefault(process, {})
         if not empty:
+            details["containment_cleanup_attempted"] = True
+            signal_succeeded = False
             try:
                 os.killpg(pgid, signal.SIGKILL)
+                signal_succeeded = True
             except ProcessLookupError:
                 pass
-            deadline = time.monotonic() + 10.0
+            details["containment_cleanup_terminated"] = signal_succeeded
+            deadline = (
+                time.monotonic() + CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+            )
             while time.monotonic() < deadline and not _posix_group_empty(pgid):
                 time.sleep(0.05)
             physically_empty = _posix_group_empty(pgid)
             empty = False
-        details = _CONTAINMENT_DETAILS.setdefault(process, {})
         details["containment_closed"] = physically_empty
         details["descendant_count_after"] = 0 if physically_empty else -1
         result = bool(empty and process.poll() is not None)
@@ -1378,32 +1978,14 @@ def containment_record(process: subprocess.Popen[Any] | None) -> dict[str, Any]:
             "containment_assigned": False,
             "containment_closed": True,
             "descendant_count_after": 0,
-            "expected_tool_daemon_grace_used": False,
-            "expected_tool_daemon_grace_seconds": 0.0,
-            "expected_tool_daemon_paths": [],
-            "descendant_paths_seen": [],
-            "descendant_processes_seen": [],
-            "expected_tool_daemon_classification": "NONE",
-            "containment_cleanup_terminated": False,
-            "process_exit_race_rechecked": False,
-            "process_identity_query_retried": False,
-            "containment_query_error": "",
+            **_containment_detail_defaults(),
         }
     return {
         "containment_kind": "MISSING",
         "containment_assigned": False,
         "containment_closed": False,
         "descendant_count_after": -1,
-        "expected_tool_daemon_grace_used": False,
-        "expected_tool_daemon_grace_seconds": 0.0,
-        "expected_tool_daemon_paths": [],
-        "descendant_paths_seen": [],
-        "descendant_processes_seen": [],
-        "expected_tool_daemon_classification": "NONE",
-        "containment_cleanup_terminated": False,
-        "process_exit_race_rechecked": False,
-        "process_identity_query_retried": False,
-        "containment_query_error": "",
+        **_containment_detail_defaults(),
         **_CONTAINMENT_DETAILS.get(process, {}),
     }
 
@@ -1414,45 +1996,72 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> bool:
     if os.name == "nt" and process in _WINDOWS_JOBS:
         job = _WINDOWS_JOBS.pop(process)
         empty = False
+        signaled = False
+        details = _CONTAINMENT_DETAILS.setdefault(process, {})
+        details["containment_cleanup_attempted"] = True
+        cleanup_deadline = (
+            time.monotonic() + CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+        )
         try:
             signaled = job.terminate()
-            try:
-                process.wait(timeout=10)
-            except (subprocess.SubprocessError, OSError):
-                signaled = False
-            empty = job.wait_empty(10.0)
+            empty = job.wait_empty(
+                max(0.0, cleanup_deadline - time.monotonic())
+            )
+            if empty and process.poll() is None:
+                remaining = max(0.0, cleanup_deadline - time.monotonic())
+                if remaining > 0.0:
+                    try:
+                        process.wait(timeout=remaining)
+                    except (subprocess.SubprocessError, OSError):
+                        pass
             result = bool(signaled and empty and process.poll() is not None)
         except OSError:
             result = False
         finally:
+            if not empty:
+                details["containment_cleanup_attempted"] = True
             job.close()
-        details = _CONTAINMENT_DETAILS.setdefault(process, {})
+        details["containment_cleanup_terminated"] = bool(signaled)
         details["containment_closed"] = True
         details["descendant_count_after"] = 0 if empty else -1
         _CONTAINMENT_RESULTS[process] = result
         return result
     if os.name != "nt" and process in _POSIX_PROCESS_GROUPS:
         pgid = _POSIX_PROCESS_GROUPS.pop(process)
+        details = _CONTAINMENT_DETAILS.setdefault(process, {})
+        details["containment_cleanup_attempted"] = True
+        signal_succeeded = False
+        cleanup_deadline = (
+            time.monotonic() + CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+        )
         try:
             os.killpg(pgid, signal.SIGTERM)
+            signal_succeeded = True
         except ProcessLookupError:
             pass
         try:
-            process.wait(timeout=10)
+            process.wait(
+                timeout=min(1.0, max(0.001, cleanup_deadline - time.monotonic()))
+            )
         except subprocess.TimeoutExpired:
             try:
                 os.killpg(pgid, signal.SIGKILL)
+                signal_succeeded = True
             except ProcessLookupError:
                 pass
+        except OSError:
+            pass
+        if not _posix_group_empty(pgid):
             try:
-                process.wait(timeout=10)
-            except (subprocess.SubprocessError, OSError):
+                os.killpg(pgid, signal.SIGKILL)
+                signal_succeeded = True
+            except ProcessLookupError:
                 pass
-        deadline = time.monotonic() + 10.0
-        while time.monotonic() < deadline and not _posix_group_empty(pgid):
+        while time.monotonic() < cleanup_deadline and not _posix_group_empty(pgid):
+            process.poll()
             time.sleep(0.05)
         result = process.poll() is not None and _posix_group_empty(pgid)
-        details = _CONTAINMENT_DETAILS.setdefault(process, {})
+        details["containment_cleanup_terminated"] = signal_succeeded
         details["containment_closed"] = result
         details["descendant_count_after"] = 0 if result else -1
         _CONTAINMENT_RESULTS[process] = result
@@ -1460,6 +2069,11 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> bool:
     if process.poll() is not None:
         return verify_process_tree_reaped(process)
     tree_signal_succeeded = False
+    details = _CONTAINMENT_DETAILS.setdefault(process, {})
+    details["containment_cleanup_attempted"] = True
+    cleanup_deadline = (
+        time.monotonic() + CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+    )
     if os.name == "nt":
         taskkill = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "taskkill.exe"
         try:
@@ -1467,7 +2081,7 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> bool:
                 [str(taskkill), "/PID", str(process.pid), "/T", "/F"],
                 text=True,
                 capture_output=True,
-                timeout=20,
+                timeout=min(5.0, max(0.001, cleanup_deadline - time.monotonic())),
                 check=False,
             )
             tree_signal_succeeded = taskkill_result.returncode == 0
@@ -1479,19 +2093,17 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> bool:
             tree_signal_succeeded = True
         except (OSError, ProcessLookupError):
             pass
-    try:
-        process.wait(timeout=10)
-    except subprocess.TimeoutExpired:
+    while process.poll() is None and time.monotonic() < cleanup_deadline:
+        time.sleep(0.05)
+    if process.poll() is None:
         try:
             process.kill()
+            tree_signal_succeeded = True
         except OSError:
             pass
-        try:
-            process.wait(timeout=10)
-        except (subprocess.TimeoutExpired, OSError):
-            return False
-    except OSError:
-        return False
+        while process.poll() is None and time.monotonic() < cleanup_deadline:
+            time.sleep(0.05)
+    details["containment_cleanup_terminated"] = tree_signal_succeeded
     return tree_signal_succeeded and process.poll() is not None
 
 
@@ -1525,6 +2137,7 @@ def run_bounded_process(
     abort_seen = False
     interrupted = False
     tree_terminated = False
+    termination_attempted = False
     process_tree_reaped = False
     raw_returncode: int | None = None
     launch_error = ""
@@ -1540,10 +2153,12 @@ def run_bounded_process(
                 while process.poll() is None:
                     if watch_abort and abort_file.exists():
                         abort_seen = True
+                        termination_attempted = True
                         tree_terminated = terminate_process_tree(process)
                         break
                     if time.monotonic() >= deadline:
                         timed_out = True
+                        termination_attempted = True
                         tree_terminated = terminate_process_tree(process)
                         break
                     time.sleep(0.10)
@@ -1553,16 +2168,10 @@ def run_bounded_process(
                 launch_error = f"{type(exc).__name__}: {exc}"
             finally:
                 if process is not None:
-                    if process.poll() is None:
+                    if process.poll() is None and not termination_attempted:
+                        termination_attempted = True
                         tree_terminated = terminate_process_tree(process) or tree_terminated
-                    try:
-                        raw_returncode = process.wait(timeout=10)
-                    except (subprocess.TimeoutExpired, OSError):
-                        tree_terminated = terminate_process_tree(process) or tree_terminated
-                        try:
-                            raw_returncode = process.wait(timeout=10)
-                        except (subprocess.TimeoutExpired, OSError):
-                            raw_returncode = process.poll()
+                    raw_returncode = process.poll()
                     process_tree_reaped = (
                         raw_returncode is not None
                         and process.poll() is not None
@@ -1571,12 +2180,14 @@ def run_bounded_process(
     except BaseException as exc:
         launch_error = launch_error or f"{type(exc).__name__}: {exc}"
     finally:
-        if process is not None and process.poll() is None:
+        if (
+            process is not None
+            and process.poll() is None
+            and not termination_attempted
+        ):
+            termination_attempted = True
             tree_terminated = terminate_process_tree(process) or tree_terminated
-            try:
-                raw_returncode = process.wait(timeout=10)
-            except (subprocess.TimeoutExpired, OSError):
-                raw_returncode = process.poll()
+            raw_returncode = process.poll()
             process_tree_reaped = (
                 raw_returncode is not None
                 and process.poll() is not None
@@ -1602,7 +2213,9 @@ def run_bounded_process(
     else:
         returncode = int(raw_returncode)
     containment = containment_record(process)
-    tree_terminated = tree_terminated or bool(containment.get("containment_cleanup_terminated", False))
+    tree_terminated = tree_terminated or bool(
+        containment.get("containment_cleanup_attempted", False)
+    )
     return ProcessResult(
         name=name,
         returncode=returncode,
@@ -1635,6 +2248,66 @@ def run_bounded_process(
         expected_tool_daemon_classification=str(
             containment.get("expected_tool_daemon_classification", "NONE")
         ),
+        expected_tool_daemon_topology_snapshots=list(
+            containment.get("expected_tool_daemon_topology_snapshots", [])
+        ),
+        expected_tool_daemon_topology_revalidation_count=int(
+            containment.get("expected_tool_daemon_topology_revalidation_count", 0)
+        ),
+        expected_tool_daemon_topology_monotonic=bool(
+            containment.get("expected_tool_daemon_topology_monotonic", False)
+        ),
+        expected_tool_daemon_topology_sample_elapsed_seconds=list(
+            containment.get("expected_tool_daemon_topology_sample_elapsed_seconds", [])
+        ),
+        expected_tool_daemon_topology_max_sample_gap_seconds=float(
+            containment.get("expected_tool_daemon_topology_max_sample_gap_seconds", 0.0)
+        ),
+        expected_tool_daemon_grace_elapsed_seconds=float(
+            containment.get("expected_tool_daemon_grace_elapsed_seconds", 0.0)
+        ),
+        expected_tool_daemon_hashes_verified=bool(
+            containment.get("expected_tool_daemon_hashes_verified", False)
+        ),
+        expected_tool_daemon_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_sha256_by_role", {})
+        ),
+        expected_tool_daemon_hash_error=str(
+            containment.get("expected_tool_daemon_hash_error", "")
+        ),
+        expected_tool_daemon_prelaunch_hashes_verified=bool(
+            containment.get("expected_tool_daemon_prelaunch_hashes_verified", False)
+        ),
+        expected_tool_daemon_prelaunch_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_prelaunch_sha256_by_role", {})
+        ),
+        expected_tool_daemon_prelaunch_hash_error=str(
+            containment.get("expected_tool_daemon_prelaunch_hash_error", "")
+        ),
+        expected_tool_daemon_postexit_hashes_verified=bool(
+            containment.get("expected_tool_daemon_postexit_hashes_verified", False)
+        ),
+        expected_tool_daemon_postexit_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_postexit_sha256_by_role", {})
+        ),
+        expected_tool_daemon_postexit_hash_error=str(
+            containment.get("expected_tool_daemon_postexit_hash_error", "")
+        ),
+        expected_tool_daemon_topology_error=str(
+            containment.get("expected_tool_daemon_topology_error", "")
+        ),
+        expected_tool_daemon_topology_terminal_empty=bool(
+            containment.get("expected_tool_daemon_topology_terminal_empty", False)
+        ),
+        process_identity_query_retry_count=int(
+            containment.get("process_identity_query_retry_count", 0)
+        ),
+        process_exit_race_recheck_count=int(
+            containment.get("process_exit_race_recheck_count", 0)
+        ),
+        containment_cleanup_attempted=bool(
+            containment.get("containment_cleanup_attempted", False)
+        ),
         containment_cleanup_terminated=bool(
             containment.get("containment_cleanup_terminated", False)
         ),
@@ -1662,9 +2335,7 @@ def deadline_timeout(requested_sec: int, deadline: float, *, reserve_sec: int = 
 def containment_allowance(process_count: int) -> int:
     if not 0 <= process_count <= JTAG_WRAPPER_VIVADO_PROCESS_COUNT:
         raise ValueError("contained Vivado process count is outside the fixed 0..4 wrapper contract")
-    return process_count * (
-        CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS + EXPECTED_TOOL_DAEMON_GRACE_SECONDS
-    )
+    return process_count * EXPECTED_TOOL_DAEMON_GRACE_SECONDS
 
 
 def record_global_runtime(
@@ -1901,7 +2572,18 @@ def main(argv: list[str] | None = None) -> int:
         "contained_vivado_process_count": JTAG_WRAPPER_VIVADO_PROCESS_COUNT,
         "initial_empty_wait_seconds_per_process": CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
         "expected_tool_daemon_grace_seconds_per_process": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "total_containment_window_seconds_per_process": EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
+        "topology_revalidation_interval_seconds": (
+            CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS
+        ),
         "containment_allowance_seconds": JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
+        "forced_cleanup_wait_seconds": CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
+        "failure_containment_bound_seconds_per_failed_process": (
+            CONTAINMENT_FAILURE_BOUND_SECONDS
+        ),
+        "max_forced_cleanup_events": JTAG_WRAPPER_MAX_FORCED_CLEANUP_EVENTS,
+        "forced_cleanup_reserve_seconds": JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS,
+        "bookkeeping_guard_seconds": JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
         "other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
     }
     event_log = evidence_dir / "p7_jtag_axi_stage_events.jsonl"

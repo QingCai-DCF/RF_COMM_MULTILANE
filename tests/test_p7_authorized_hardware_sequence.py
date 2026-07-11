@@ -74,6 +74,71 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
         ]
         _wrapper, _options, errors = subject._parse_exact_wrapper_command(command)
         self.assertTrue(any("unknown or positional" in item for item in errors))
+        self.assertTrue(subject.is_exact_vivado_batch_launcher(r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat"))
+        self.assertFalse(subject.is_exact_vivado_batch_launcher(r"D:\Xilinx\Vivado\2023.1\bin\vivado.exe"))
+
+    def test_wrapper_summary_rejects_any_inner_forced_cleanup_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            shutdown_result = root / "shutdown.txt"
+            shutdown_result.write_text(
+                "TFDU_SHUTDOWN_PROGRAMMED=1\nP7_SHUTDOWN_RESULT=PASS\n",
+                encoding="utf-8",
+            )
+            summary_path = root / "summary.json"
+            process = {
+                "returncode": 0,
+                "passed": True,
+                "process_tree_reaped": True,
+                "process_tree_terminated": False,
+                "containment_cleanup_attempted": False,
+                "containment_cleanup_terminated": False,
+            }
+            summary = {
+                "P7_JTAG_AXI_SAFE_STAGE": "PASS",
+                "stage_name": "safe_idle",
+                "hardware_actions_executed": True,
+                "network_used": False,
+                "ethernet_used": False,
+                "motion_used": False,
+                "safety_validation": {"source_commit_requested": "b" * 40},
+                "programmed_shutdown_after": True,
+                "shutdown_after": {
+                    **process,
+                    "result_file": str(shutdown_result),
+                },
+                "stage_process": dict(process),
+                "backend_parse": {
+                    "passed": True,
+                    "raw_log_bound_to_this_hardware_process": True,
+                },
+            }
+            stage_record = {
+                "id": "safe_idle",
+                "wrapper": str(subject.JTAG_WRAPPER),
+                "options": {"--source-commit": "b" * 40},
+                "group": "safe_idle",
+            }
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertEqual([], errors)
+            summary["stage_process"]["containment_cleanup_attempted"] = True
+            summary["stage_process"]["process_tree_terminated"] = True
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("candidate used" in item for item in errors))
+            summary["stage_process"] = dict(process)
+            summary["shutdown_after"]["containment_cleanup_attempted"] = True
+            summary["shutdown_after"]["process_tree_terminated"] = True
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+            _summary, errors, _shutdown = subject.validate_wrapper_summary(
+                stage_record, summary_path, require_pass=True
+            )
+            self.assertTrue(any("shutdown-after used" in item for item in errors))
 
     def test_sequence_dry_run_launches_no_stage_process(self) -> None:
         plan = {
@@ -138,8 +203,11 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
                 "process": {
                     "returncode": 0,
                     "process_tree_reaped": True,
+                    "process_tree_terminated": False,
                     "containment_closed": True,
                     "descendant_count_after": 0,
+                    "containment_cleanup_attempted": False,
+                    "containment_cleanup_terminated": False,
                     "stdout_file": stdout,
                     "stderr_file": stderr,
                 },
@@ -162,6 +230,13 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
             with mock.patch.object(subject, "validate_wrapper_summary", return_value=({}, [], {})):
                 prefix, errors = subject.validate_resume_ledger(ledger, plan)
                 self.assertEqual((1, []), (prefix, errors))
+                attempt["process"]["containment_cleanup_attempted"] = True
+                attempt["process"]["process_tree_terminated"] = True
+                prefix, errors = subject.validate_resume_ledger(ledger, plan)
+                self.assertEqual(0, prefix)
+                self.assertTrue(any("forced-cleanup" in item for item in errors))
+                attempt["process"]["containment_cleanup_attempted"] = False
+                attempt["process"]["process_tree_terminated"] = False
                 attempt["result"] = "FAIL"
                 prefix, errors = subject.validate_resume_ledger(ledger, plan)
         self.assertEqual(0, prefix)

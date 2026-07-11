@@ -1218,6 +1218,23 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertNotIn('env["RF_COMM_HW_AUTH"] =', text)
         self.assertEqual(1800, stage.MAX_SERVICE_RUNTIME_SEC)
         self.assertEqual(1800, stage.CALIBRATION_SEC + stage.ACCEPTANCE_SEC)
+        direct_args = stage.build_parser().parse_args(
+            [
+                "--mode",
+                "functional",
+                "--max-runtime-sec",
+                "900",
+                "--vivado-path",
+                r"D:\Xilinx\Vivado\2023.1\bin\vivado.exe",
+            ]
+        )
+        with mock.patch.object(stage, "_profile_errors", return_value=[]), mock.patch.object(
+            stage, "_active_profile_errors", return_value=[]
+        ), mock.patch.object(stage, "_immutable_errors", return_value=[]), mock.patch.object(
+            stage, "_summary_errors", return_value=[]
+        ), mock.patch.object(stage, "_authorization_extension_errors", return_value=[]):
+            direct_errors = stage._stage_validation(direct_args, {"errors": []})
+        self.assertTrue(any("vivado.exe is forbidden" in item for item in direct_errors))
         stationary = stage.ps_wrapper_wall_budget(
             mode="stationary",
             max_runtime_sec=1800,
@@ -1227,16 +1244,19 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual(1800, stationary["service_active_window_seconds"])
         self.assertTrue(stationary["stationary_active_window_is_not_extended"])
         self.assertEqual(2221.5, stationary["candidate_process_bound_seconds"])
-        self.assertEqual(33, stationary["vivado_containment_allowance_seconds"])
+        self.assertEqual(90, stationary["vivado_containment_allowance_seconds"])
+        self.assertEqual(30, stationary["vivado_success_containment_window_seconds_each"])
+        self.assertEqual(40, stationary["vivado_failure_containment_window_seconds_each"])
         self.assertEqual(1, stationary["xsdb_containment_allowance_seconds"])
-        self.assertEqual(2496, stationary["minimum_outer_wrapper_timeout_seconds"])
+        self.assertEqual(20, stationary["forced_cleanup_reserve_seconds"])
+        self.assertEqual(2573, stationary["minimum_outer_wrapper_timeout_seconds"])
         nonstationary = stage.ps_wrapper_wall_budget(
             mode="functional",
             max_runtime_sec=900,
             preflight_timeout_sec=60,
             shutdown_timeout_sec=30,
         )
-        self.assertEqual(1294, nonstationary["minimum_outer_wrapper_timeout_seconds"])
+        self.assertEqual(1371, nonstationary["minimum_outer_wrapper_timeout_seconds"])
 
 
 if __name__ == "__main__":

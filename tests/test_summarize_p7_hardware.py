@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import struct
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import tempfile
 import unittest
 import zlib
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -203,6 +205,38 @@ class SyntheticEvidence:
             "containment_assigned": True,
             "containment_closed": True,
             "descendant_count_after": 0,
+            "expected_tool_daemon_grace_used": False,
+            "expected_tool_daemon_grace_seconds": 0.0,
+            "expected_tool_daemon_paths": [],
+            "descendant_paths_seen": [],
+            "descendant_processes_seen": [],
+            "expected_tool_daemon_classification": "NONE",
+            "expected_tool_daemon_topology_snapshots": [
+                {"classification": "EMPTY", "elapsed_seconds": 0.0, "processes": []}
+            ],
+            "expected_tool_daemon_topology_revalidation_count": 0,
+            "expected_tool_daemon_topology_monotonic": False,
+            "expected_tool_daemon_topology_sample_elapsed_seconds": [0.0],
+            "expected_tool_daemon_topology_max_sample_gap_seconds": 0.0,
+            "expected_tool_daemon_grace_elapsed_seconds": 0.0,
+            "expected_tool_daemon_hashes_verified": False,
+            "expected_tool_daemon_sha256_by_role": {},
+            "expected_tool_daemon_hash_error": "",
+            "expected_tool_daemon_prelaunch_hashes_verified": False,
+            "expected_tool_daemon_prelaunch_sha256_by_role": {},
+            "expected_tool_daemon_prelaunch_hash_error": "",
+            "expected_tool_daemon_postexit_hashes_verified": False,
+            "expected_tool_daemon_postexit_sha256_by_role": {},
+            "expected_tool_daemon_postexit_hash_error": "",
+            "expected_tool_daemon_topology_error": "",
+            "expected_tool_daemon_topology_terminal_empty": True,
+            "process_identity_query_retry_count": 0,
+            "process_exit_race_recheck_count": 0,
+            "containment_cleanup_attempted": False,
+            "containment_cleanup_terminated": False,
+            "process_exit_race_rechecked": False,
+            "process_identity_query_retried": False,
+            "containment_query_error": "",
             "launch_error": "",
             "argv": ["synthetic", name],
             "started_at_utc": "2026-07-10T00:00:00+00:00",
@@ -280,30 +314,48 @@ class SyntheticEvidence:
             "stale_lock_auto_recovery": False,
         }
 
-    def make_historical_read_only_preflight_epoch(self, source_commit: str) -> Path:
+    def make_historical_read_only_preflight_epoch(
+        self,
+        source_commit: str,
+        *,
+        epoch_name: str = "historical_epoch",
+        hour: int = 0,
+        minute_offset: int = 0,
+        identity_pass_containment_failure: bool = False,
+    ) -> Path:
         self.sequence += 1
-        epoch = self.hardware / "authorized_sequence" / "historical_epoch"
+        epoch = self.hardware / "authorized_sequence" / epoch_name
         run = epoch / "001_p7_safe_idle"
         run.mkdir(parents=True)
+        def at(minute: int, second: int = 0) -> str:
+            total_minutes = hour * 60 + minute_offset + minute
+            return f"2026-07-10T{total_minutes // 60:02d}:{total_minutes % 60:02d}:{second:02d}+00:00"
         preflight_stdout = run / "p7_preflight.stdout.log"
         preflight_stderr = run / "p7_preflight.stderr.log"
         preflight_result = run / "p7_preflight_result.txt"
+        identity = self._identity()
+        identity["P7_HW_PREFLIGHT_AUTHORIZED"] = "1"
+        if identity_pass_containment_failure:
+            preflight_markers = identity
+        else:
+            preflight_markers = {
+                "P7_HW_PREFLIGHT_AUTHORIZED": "0",
+                "P7_HW_PREFLIGHT_READ_ONLY": "1",
+                "P7_HW_PREFLIGHT_RESULT": "FAIL",
+                "P7_HW_PREFLIGHT_ERROR": "P7 expected exactly one authorized part match; found 0",
+            }
         preflight_stdout.write_text(
             "INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121\n"
             "INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081\n"
-            "P7_HW_PREFLIGHT_RESULT=FAIL\n"
-            "P7_HW_PREFLIGHT_ERROR=P7 expected exactly one authorized part match; found 0\n",
+            + "".join(f"{key}={value}\n" for key, value in preflight_markers.items()),
             encoding="utf-8",
         )
         preflight_stderr.write_bytes(b"")
         preflight_result.write_text(
-            "P7_HW_PREFLIGHT_AUTHORIZED=0\n"
-            "P7_HW_PREFLIGHT_READ_ONLY=1\n"
-            "P7_HW_PREFLIGHT_RESULT=FAIL\n"
-            "P7_HW_PREFLIGHT_ERROR=P7 expected exactly one authorized part match; found 0\n",
+            "".join(f"{key}={value}\n" for key, value in preflight_markers.items()),
             encoding="utf-8",
         )
-        transaction = self.root / "old_inputs" / "001_p7_safe_idle.transactions.txt"
+        transaction = self.root / "old_inputs" / epoch_name / "001_p7_safe_idle.transactions.txt"
         transaction.parent.mkdir(parents=True)
         transaction.write_text("P7_JTAG_AXI_TRANSACTIONS_V1\nEND\n", encoding="ascii")
         transaction_sha = digest(transaction)
@@ -337,17 +389,75 @@ class SyntheticEvidence:
         )
         safety["authorization"] = self._record(auth_path)
         events = [
-            {"timestamp_utc": "2026-07-10T00:10:00+00:00", "event": "authorized_execution_begin", "stage": "p7_safe_idle"},
-            {"timestamp_utc": "2026-07-10T00:11:00+00:00", "event": "preflight_finished", "returncode": 125, "passed": False},
-            {"timestamp_utc": "2026-07-10T00:11:01+00:00", "event": "authorized_execution_end", "status": "FAIL_PREFLIGHT"},
+            {"timestamp_utc": at(10), "event": "authorized_execution_begin", "stage": "p7_safe_idle"},
+            {"timestamp_utc": at(11), "event": "preflight_finished", "returncode": 125, "passed": False},
+            {"timestamp_utc": at(11, 1), "event": "authorized_execution_end", "status": "FAIL_PREFLIGHT"},
         ]
         (run / "p7_jtag_axi_stage_events.jsonl").write_text(
             "".join(json.dumps(item) + "\n" for item in events),
             encoding="utf-8",
         )
+        vivado = r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat"
+        cs_server = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"
+        rdi_xsdb = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\rdi_xsdb.exe"
+        system_root = Path(os.environ.get("SystemRoot", r"C:\Windows"))
+        conhost = str(system_root / "System32/conhost.exe")
+        cmd = str(system_root / "System32/cmd.exe")
+        if identity_pass_containment_failure:
+            preflight_argv = [
+                vivado,
+                "-mode",
+                "batch",
+                "-source",
+                str((self.root / "scripts/hw/p7_hw_preflight.tcl").resolve()),
+                "-tclargs",
+                str(self.root.resolve()),
+                str(auth_path),
+                BOARD,
+                PART,
+                TARGET,
+                "localhost:3121",
+                str(preflight_result.resolve()),
+            ]
+            preflight_extra: dict[str, object] = {
+                "process_tree_terminated": True,
+                "containment_cleanup_terminated": True,
+                "expected_tool_daemon_grace_used": False,
+                "expected_tool_daemon_grace_seconds": 0.0,
+                "expected_tool_daemon_paths": [cs_server],
+                "descendant_paths_seen": [conhost, cs_server, cs_server, cmd, conhost, rdi_xsdb],
+                "descendant_processes_seen": [
+                    {"pid": 101, "parent_pid": 9001, "image_path": conhost},
+                    {"pid": 201, "parent_pid": 9002, "image_path": cs_server},
+                    {"pid": 202, "parent_pid": 201, "image_path": cs_server},
+                    {"pid": 301, "parent_pid": 9003, "image_path": cmd},
+                    {"pid": 302, "parent_pid": 301, "image_path": conhost},
+                    {"pid": 303, "parent_pid": 301, "image_path": rdi_xsdb},
+                ],
+                "expected_tool_daemon_classification": "UNAPPROVED",
+                "process_exit_race_rechecked": False,
+                "process_identity_query_retried": False,
+                "containment_query_error": "",
+            }
+        else:
+            preflight_argv = ["synthetic-vivado", "read-only-preflight"]
+            preflight_extra = {"process_tree_terminated": False}
+        preflight_process = self._process(
+            "preflight",
+            preflight_stdout,
+            preflight_stderr,
+            returncode=125,
+            passed=False,
+            result_file=str(preflight_result),
+            process_tree_reaped=False,
+            argv=preflight_argv,
+            started_at_utc=at(10, 1),
+            ended_at_utc=at(10, 59),
+            **preflight_extra,
+        )
         summary: dict[str, object] = {
             subject.JTAG_MARKER: "FAIL_PREFLIGHT",
-            "generated_at_utc": "2026-07-10T00:10:00+00:00",
+            "generated_at_utc": at(10),
             "stage_name": "p7_safe_idle",
             "semantic_mode": "safe-idle",
             "requested_execute_hardware": True,
@@ -362,6 +472,7 @@ class SyntheticEvidence:
             "uart_access": False,
             "ethernet_used": False,
             "motion_used": False,
+            "hardware_acceptance": "PENDING_HW",
             "safety_validation": safety,
             "transaction_validation": {
                 "path": str(transaction),
@@ -371,26 +482,26 @@ class SyntheticEvidence:
                 "metadata": {"EVIDENCE_KIND": "safe_idle"},
             },
             "hardware_execution_lock": self._hardware_lock(run, kind="jtag", stage_name="p7_safe_idle"),
-            "preflight_process": self._process(
-                "preflight",
-                preflight_stdout,
-                preflight_stderr,
-                returncode=125,
-                passed=False,
-                result_file=str(preflight_result),
-                process_tree_reaped=False,
-                argv=["synthetic-vivado", "read-only-preflight"],
-                started_at_utc="2026-07-10T00:10:01+00:00",
-                ended_at_utc="2026-07-10T00:10:59+00:00",
+            "preflight_process": preflight_process,
+            "target_identity": preflight_markers,
+            "reason": (
+                "read-only target preflight did not return rc=0 with exact identity markers"
+                if identity_pass_containment_failure
+                else "read-only target preflight failed part identity"
             ),
-            "target_identity": {
-                "P7_HW_PREFLIGHT_AUTHORIZED": "0",
-                "P7_HW_PREFLIGHT_READ_ONLY": "1",
-                "P7_HW_PREFLIGHT_RESULT": "FAIL",
-                "P7_HW_PREFLIGHT_ERROR": "P7 expected exactly one authorized part match; found 0",
-            },
-            "reason": "read-only target preflight failed part identity",
         }
+        if identity_pass_containment_failure:
+            summary.update(
+                {
+                    "preflight_result_file": str(preflight_result),
+                    "preflight_failures": ["preflight process returned nonzero exit code: 125"],
+                    "global_runtime": {
+                        "elapsed_seconds": 59.0,
+                        "authorized_max_seconds": 300,
+                        "within_authorized_limit": True,
+                    },
+                }
+            )
         summary_path = run / "p7_jtag_axi_stage_summary.json"
         summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
@@ -414,10 +525,14 @@ class SyntheticEvidence:
         )
         p4_fields = {"MAX_RUNTIME_SEC": "300", "AUTHORIZED_BY": "synthetic", "DATE": "2026-07-10"}
 
-        recovery_names = [
-            "recovery_shutdown_after_failed_preflight_20260710T0012",
-            "recovery_shutdown_after_failed_preflight_20260710T0013",
-        ]
+        recovery_names = (
+            [f"recovery_shutdown_after_failed_preflight_20260710T{hour:02d}12"]
+            if identity_pass_containment_failure
+            else [
+                f"recovery_shutdown_after_failed_preflight_20260710T{hour:02d}12",
+                f"recovery_shutdown_after_failed_preflight_20260710T{hour:02d}13",
+            ]
+        )
 
         def make_recovery(name: str, *, effective: bool) -> None:
             directory = epoch / name
@@ -465,8 +580,8 @@ class SyntheticEvidence:
                     encoding="utf-8",
                 )
                 (directory / "program_tfdu_shutdown_safe.stderr.log").write_bytes(b"")
-            start = "2026-07-10T00:13:00+00:00" if effective else "2026-07-10T00:12:00+00:00"
-            end = "2026-07-10T00:14:00+00:00" if effective else "2026-07-10T00:12:01+00:00"
+            start = at(13) if effective and not identity_pass_containment_failure else at(12)
+            end = at(14) if effective and not identity_pass_containment_failure else at(12, 1)
             lines = [
                 f"PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN {start}",
                 f"PROFILE_PATH={canonical_files['profile']}",
@@ -505,8 +620,11 @@ class SyntheticEvidence:
             lines.append(f"PROGRAM_TFDU_SHUTDOWN_SAFE_END {end}")
             (directory / "program_tfdu_shutdown_safe.summary.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-        make_recovery(recovery_names[0], effective=False)
-        make_recovery(recovery_names[1], effective=True)
+        if identity_pass_containment_failure:
+            make_recovery(recovery_names[0], effective=True)
+        else:
+            make_recovery(recovery_names[0], effective=False)
+            make_recovery(recovery_names[1], effective=True)
 
         tree_listing = subprocess.run(
             ["git", "ls-tree", "-r", "--full-tree", source_commit],
@@ -524,7 +642,8 @@ class SyntheticEvidence:
                 check=True,
             ).stdout
             checkpoint_hashes[relative] = hashlib.sha256(blob).hexdigest()
-        old_offline = self.root / "old_inputs/p7_offline_gate_summary.json"
+        old_offline = self.root / "old_inputs" / epoch_name / "p7_offline_gate_summary.json"
+        old_offline.parent.mkdir(parents=True, exist_ok=True)
         old_offline.write_text(
             json.dumps(
                 {
@@ -549,7 +668,7 @@ class SyntheticEvidence:
             "--transaction-sha256", transaction_sha,
             "--evidence-dir", str(run),
         ]
-        old_plan = self.root / "old_inputs/p7_sequence_plan.txt"
+        old_plan = self.root / "old_inputs" / epoch_name / "p7_sequence_plan.txt"
         old_stages = [
             {
                 "id": "p7_safe_idle",
@@ -583,7 +702,7 @@ class SyntheticEvidence:
             + "\n",
             encoding="utf-8",
         )
-        generation = self.root / "build/p7_authorized_sequence/historical_epoch/p7_authorized_sequence_generation_manifest.json"
+        generation = self.root / "build/p7_authorized_sequence" / epoch_name / "p7_authorized_sequence_generation_manifest.json"
         generation.parent.mkdir(parents=True, exist_ok=True)
         generation.write_text(
             json.dumps(
@@ -628,7 +747,7 @@ class SyntheticEvidence:
             json.dumps(
                 {
                     "schema": "rf-comm-p7-historical-preflight-inputs-v1",
-                    "run_id": "historical_epoch",
+                    "run_id": epoch_name,
                     "source_commit": source_commit,
                     "stage_index": 0,
                     "stage_id": "p7_safe_idle",
@@ -652,8 +771,8 @@ class SyntheticEvidence:
         outer_stderr.write_bytes(b"")
         outer = {
             "schema": "rf-comm-p7-sequence-execution-ledger-v1",
-            "created_at_utc": "2026-07-10T00:09:00+00:00",
-            "updated_at_utc": "2026-07-10T00:11:02+00:00",
+            "created_at_utc": at(9),
+            "updated_at_utc": at(11, 2),
             "status": "FAIL",
             "hardware_actions_executed": True,
             "network_used": False,
@@ -676,13 +795,24 @@ class SyntheticEvidence:
                     "command": command,
                     "state": "TERMINAL",
                     "result": "FAIL",
-                    "started_at_utc": "2026-07-10T00:09:59+00:00",
-                    "ended_at_utc": "2026-07-10T00:11:02+00:00",
+                    "started_at_utc": at(9, 59),
+                    "ended_at_utc": at(11, 2),
+                    **({"launch_intent_at_utc": at(9, 58)} if identity_pass_containment_failure else {}),
                     "process": {
+                        **(
+                            {
+                                "name": "sequence_p7_safe_idle",
+                                "stdout_path": str(outer_stdout),
+                                "stderr_path": str(outer_stderr),
+                                "elapsed_seconds": 63.0,
+                            }
+                            if identity_pass_containment_failure
+                            else {}
+                        ),
                         "returncode": 1,
                         "argv": command,
-                        "started_at_utc": "2026-07-10T00:09:59+00:00",
-                        "ended_at_utc": "2026-07-10T00:11:02+00:00",
+                        "started_at_utc": at(9, 59),
+                        "ended_at_utc": at(11, 2),
                         "timed_out": False,
                         "abort_seen": False,
                         "interrupted": False,
@@ -693,12 +823,40 @@ class SyntheticEvidence:
                         "containment_closed": True,
                         "descendant_count_after": 0,
                         "launch_error": "",
+                        **(
+                            {
+                                "expected_tool_daemon_grace_used": False,
+                                "expected_tool_daemon_grace_seconds": 0.0,
+                                "expected_tool_daemon_paths": [],
+                                "descendant_paths_seen": [],
+                                "descendant_processes_seen": [],
+                                "expected_tool_daemon_classification": "NONE",
+                                "containment_cleanup_terminated": False,
+                                "process_exit_race_rechecked": False,
+                                "process_identity_query_retried": False,
+                                "containment_query_error": "",
+                            }
+                            if identity_pass_containment_failure
+                            else {}
+                        ),
                         "stdout_file": {"path": str(outer_stdout), "sha256": digest(outer_stdout), "bytes": outer_stdout.stat().st_size},
                         "stderr_file": {"path": str(outer_stderr), "sha256": digest(outer_stderr), "bytes": outer_stderr.stat().st_size},
                     },
                     "summary_file": {"path": str(summary_path), "sha256": digest(summary_path), "bytes": summary_path.stat().st_size},
                     "shutdown_after": {"present": False},
-                    "failures": ["read-only preflight failed"],
+                    "failures": (
+                        [
+                            "outer wrapper process containment/return-code policy failed",
+                            "wrapper result is not PASS: P7_JTAG_AXI_SAFE_STAGE=FAIL_PREFLIGHT",
+                            "wrapper summary does not prove programmed_shutdown_after=true",
+                            "wrapper shutdown-after record is missing",
+                            "wrapper candidate process record is missing: stage_process",
+                            "JTAG wrapper strict backend parse is missing or not bound to this run",
+                        ]
+                        if identity_pass_containment_failure
+                        else ["read-only preflight failed"]
+                    ),
+                    **({"orchestrator_elapsed_seconds": 64.0} if identity_pass_containment_failure else {}),
                 }
             ],
         }
@@ -1833,6 +1991,44 @@ class SummarizeP7HardwareTests(unittest.TestCase):
         fixture.full_pass()
         return fixture, old_commit, active_commit
 
+    def _make_multi_historical_fixture(
+        self,
+        root: Path,
+    ) -> tuple[SyntheticEvidence, str, str, str]:
+        fixture = SyntheticEvidence(root)
+        self._git(root, "init")
+        self._git(root, "config", "user.email", "synthetic@example.invalid")
+        self._git(root, "config", "user.name", "Synthetic P7 Test")
+        for relative in set(subject.OFFLINE_CRITICAL_SOURCES) | set(subject.HISTORICAL_GIT_CRITICAL_SOURCES):
+            source = root / relative
+            if not source.is_file():
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text(f"synthetic pre-commit source: {relative}\n", encoding="utf-8")
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-m", "r1 source checkpoint")
+        r1_commit = self._git(root, "rev-parse", "HEAD")
+        fixture.make_historical_read_only_preflight_epoch(
+            r1_commit,
+            epoch_name="historical_epoch_r1",
+            hour=0,
+        )
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-m", "r2 source checkpoint")
+        r2_commit = self._git(root, "rev-parse", "HEAD")
+        fixture.make_historical_read_only_preflight_epoch(
+            r2_commit,
+            epoch_name="historical_epoch_r2",
+            hour=0,
+            minute_offset=20,
+            identity_pass_containment_failure=True,
+        )
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-m", "active source checkpoint")
+        active_commit = self._git(root, "rev-parse", "HEAD")
+        fixture.commit = active_commit
+        fixture.full_pass()
+        return fixture, r1_commit, r2_commit, active_commit
+
     @staticmethod
     def _validate_ledger(fixture: SyntheticEvidence) -> tuple[str, list[str], dict[str, object]]:
         evidence = subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output)
@@ -1864,7 +2060,27 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             stderr = root / "stderr.log"
             stdout.write_text("ok\n", encoding="utf-8")
             stderr.write_text("", encoding="utf-8")
-            daemon = r"D:\Xilinx\Vivado\2023.1\bin\unwrapped\win64.o\cs_server.exe"
+            vivado = r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat"
+            helper_dir = Path(vivado).parent / "unwrapped/win64.o"
+            system_root = Path(os.environ.get("SystemRoot", r"C:\Windows"))
+            paths = {
+                "cs_server": str(helper_dir / "cs_server.exe"),
+                "rdi_xsdb": str(helper_dir / "rdi_xsdb.exe"),
+                "cmd": str(system_root / "System32/cmd.exe"),
+                "conhost": str(system_root / "System32/conhost.exe"),
+            }
+            initial = [
+                {"pid": 100, "parent_pid": 9001, "parent_active_globally": False, "image_path": paths["cs_server"], "creation_time_100ns": 1000},
+                {"pid": 101, "parent_pid": 100, "parent_active_globally": True, "image_path": paths["cs_server"], "creation_time_100ns": 1001},
+                {"pid": 200, "parent_pid": 9002, "parent_active_globally": False, "image_path": paths["cmd"], "creation_time_100ns": 2000},
+                {"pid": 201, "parent_pid": 200, "parent_active_globally": True, "image_path": paths["rdi_xsdb"], "creation_time_100ns": 2001},
+                {"pid": 202, "parent_pid": 200, "parent_active_globally": True, "image_path": paths["conhost"], "creation_time_100ns": 2002},
+                {"pid": 300, "parent_pid": 9003, "parent_active_globally": False, "image_path": paths["conhost"], "creation_time_100ns": 3000},
+            ]
+            shrink = [
+                {**initial[1], "parent_active_globally": False},
+                {**initial[3], "parent_active_globally": False},
+            ]
             record = {
                 "returncode": 0,
                 "timed_out": False,
@@ -1876,17 +2092,50 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 "containment_assigned": True,
                 "containment_closed": True,
                 "descendant_count_after": 0,
+                "containment_cleanup_attempted": False,
                 "containment_cleanup_terminated": False,
                 "expected_tool_daemon_grace_used": True,
-                "expected_tool_daemon_grace_seconds": 10.0,
-                "expected_tool_daemon_paths": [daemon],
-                "descendant_paths_seen": [daemon],
-                "descendant_processes_seen": [
-                    {"pid": 2002, "parent_pid": 1001, "image_path": daemon}
+                "expected_tool_daemon_grace_seconds": 30.0,
+                "expected_tool_daemon_grace_elapsed_seconds": 0.21,
+                "expected_tool_daemon_paths": [paths[role] for role in subject.EXPECTED_VIVADO_HELPER_ROLES],
+                "descendant_paths_seen": [item["image_path"] for item in initial],
+                "descendant_processes_seen": initial,
+                "expected_tool_daemon_classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+                "expected_tool_daemon_topology_snapshots": [
+                    {
+                        "classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+                        "elapsed_seconds": 0.01,
+                        "processes": initial,
+                    },
+                    {
+                        "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+                        "elapsed_seconds": 0.11,
+                        "processes": shrink,
+                    },
+                    {"classification": "EMPTY", "elapsed_seconds": 0.21, "processes": []},
                 ],
-                "expected_tool_daemon_classification": "SINGLE_EXACT_CS_SERVER",
+                "expected_tool_daemon_topology_revalidation_count": 2,
+                "expected_tool_daemon_topology_monotonic": True,
+                "expected_tool_daemon_topology_sample_elapsed_seconds": [0.0, 0.01, 0.11, 0.21],
+                "expected_tool_daemon_topology_max_sample_gap_seconds": 0.1,
+                "expected_tool_daemon_topology_terminal_empty": True,
+                "expected_tool_daemon_hashes_verified": True,
+                "expected_tool_daemon_sha256_by_role": subject.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+                "expected_tool_daemon_hash_error": "",
+                "expected_tool_daemon_prelaunch_hashes_verified": True,
+                "expected_tool_daemon_prelaunch_sha256_by_role": subject.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+                "expected_tool_daemon_prelaunch_hash_error": "",
+                "expected_tool_daemon_postexit_hashes_verified": True,
+                "expected_tool_daemon_postexit_sha256_by_role": subject.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+                "expected_tool_daemon_postexit_hash_error": "",
+                "expected_tool_daemon_topology_error": "",
+                "process_identity_query_retry_count": 0,
+                "process_exit_race_recheck_count": 0,
+                "process_exit_race_rechecked": False,
+                "process_identity_query_retried": False,
+                "containment_query_error": "",
                 "launch_error": "",
-                "argv": [r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat", "-mode", "batch"],
+                "argv": [vivado, "-mode", "batch"],
                 "stdout_path": str(stdout),
                 "stderr_path": str(stderr),
             }
@@ -1896,143 +2145,100 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                     record, "process", document=root / "summary.json", repo_root=root
                 ),
             )
-            terminated = {**record, "process_tree_terminated": True}
-            self.assertTrue(
-                any(
-                    "process_tree_terminated=true" in error
-                    for error in subject.process_record_errors(
-                        terminated, "process", document=root / "summary.json", repo_root=root
+
+            def errors_for(value: dict[str, object]) -> str:
+                return "\n".join(
+                    subject.process_record_errors(
+                        value, "process", document=root / "summary.json", repo_root=root
                     )
                 )
+
+            self.assertIn("process_tree_terminated=true", errors_for({**record, "process_tree_terminated": True}))
+            self.assertIn("attempted forced containment cleanup", errors_for({**record, "containment_cleanup_attempted": True}))
+            self.assertIn("helper prelaunch hash map mismatch", errors_for({**record, "expected_tool_daemon_prelaunch_sha256_by_role": {**subject.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, "cs_server": "0" * 64}}))
+            self.assertIn("helper grace is not the fixed 30-second window", errors_for({**record, "expected_tool_daemon_grace_seconds": 10.0}))
+            self.assertIn("identity-query retry count exceeds the global bound", errors_for({**record, "process_identity_query_retry_count": 2, "process_identity_query_retried": True}))
+            self.assertIn("non-Vivado process records helper paths", errors_for({**record, "argv": [r"D:\Xilinx\Vivado\2023.1\bin\vivado.exe"]}))
+            system_path_tamper = list(record["expected_tool_daemon_paths"])
+            system_path_tamper[2] = r"C:\attacker\cmd.exe"
+            self.assertIn("helper paths are not exactly derived from argv[0]", errors_for({**record, "expected_tool_daemon_paths": system_path_tamper}))
+            with mock.patch.object(subject, "_audited_windows_system_directory", return_value=None):
+                self.assertIn("non-Vivado process records helper paths", errors_for(record))
+            self.assertIn("topology does not terminate in EMPTY", errors_for({**record, "expected_tool_daemon_topology_snapshots": record["expected_tool_daemon_topology_snapshots"][:-1]}))
+
+            mutated_creation = json.loads(json.dumps(record))
+            mutated_creation["expected_tool_daemon_topology_snapshots"][1]["processes"][0]["creation_time_100ns"] += 1
+            self.assertIn("is not an immutable strict shrink", errors_for(mutated_creation))
+            mutated_parent = json.loads(json.dumps(record))
+            mutated_parent["expected_tool_daemon_topology_snapshots"][1]["processes"][0]["parent_pid"] = 9999
+            self.assertIn("is not an immutable strict shrink", errors_for(mutated_parent))
+            mutated_parent_activity = json.loads(json.dumps(record))
+            mutated_parent_activity["expected_tool_daemon_topology_snapshots"][1]["processes"][0]["parent_active_globally"] = True
+            self.assertIn("is not an immutable strict shrink", errors_for(mutated_parent_activity))
+            mutated_root_activity = json.loads(json.dumps(record))
+            mutated_root_activity["expected_tool_daemon_topology_snapshots"][0]["processes"][0]["parent_active_globally"] = True
+            self.assertIn("initial helper topology is not independently approved", errors_for(mutated_root_activity))
+            nonterminal_empty_time = json.loads(json.dumps(record))
+            nonterminal_empty_time["expected_tool_daemon_topology_snapshots"][-1]["elapsed_seconds"] = 0.11
+            self.assertIn("terminal EMPTY snapshot is not the final topology sample", errors_for(nonterminal_empty_time))
+            wrong_initial_time = json.loads(json.dumps(record))
+            wrong_initial_time["expected_tool_daemon_topology_snapshots"][0]["elapsed_seconds"] = 0.0
+            self.assertIn("initial helper snapshot is not bound to the post-identity sample", errors_for(wrong_initial_time))
+            reappearing = json.loads(json.dumps(record))
+            reappearing["expected_tool_daemon_topology_snapshots"].insert(
+                2,
+                {
+                    "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+                    "elapsed_seconds": 0.16,
+                    "processes": [
+                        {**initial[1], "parent_active_globally": False},
+                        initial[2],
+                        initial[3],
+                    ],
+                },
             )
-            duplicate = {
-                **record,
-                "expected_tool_daemon_paths": [daemon, daemon],
-                "descendant_paths_seen": [daemon, daemon],
-                "descendant_processes_seen": [
-                    {"pid": 2002, "parent_pid": 1001, "image_path": daemon},
-                    {"pid": 2003, "parent_pid": 2002, "image_path": daemon},
-                ],
-            }
-            self.assertTrue(
-                any(
-                    "process/path records are malformed" in error
-                    for error in subject.process_record_errors(
-                        duplicate, "process", document=root / "summary.json", repo_root=root
-                    )
-                )
-            )
-            pair = {
-                **record,
-                "descendant_paths_seen": [daemon, daemon],
-                "descendant_processes_seen": [
-                    {"pid": 3003, "parent_pid": 1001, "image_path": daemon},
-                    {"pid": 4004, "parent_pid": 3003, "image_path": daemon},
-                ],
-                "expected_tool_daemon_classification": "DIRECT_PARENT_CHILD_EXACT_CS_SERVER",
-            }
-            self.assertEqual(
-                [],
-                subject.process_record_errors(
-                    pair, "process", document=root / "summary.json", repo_root=root
-                ),
-            )
-            sibling_tamper = {
-                **pair,
-                "descendant_processes_seen": [
-                    {"pid": 3003, "parent_pid": 1001, "image_path": daemon},
-                    {"pid": 4004, "parent_pid": 1001, "image_path": daemon},
-                ],
-            }
-            self.assertTrue(
-                any(
-                    "topology classification is not independently reproducible" in error
-                    for error in subject.process_record_errors(
-                        sibling_tamper,
-                        "process",
-                        document=root / "summary.json",
-                        repo_root=root,
-                    )
-                )
-            )
-            attacker = r"C:\attacker\cs_server.exe"
-            argv_path_tamper = {
-                **record,
-                "expected_tool_daemon_paths": [attacker],
-                "descendant_paths_seen": [attacker],
-                "descendant_processes_seen": [
-                    {"pid": 2002, "parent_pid": 1001, "image_path": attacker}
-                ],
-            }
-            self.assertTrue(
-                any(
-                    "not derived from argv[0]" in error
-                    for error in subject.process_record_errors(
-                        argv_path_tamper,
-                        "process",
-                        document=root / "summary.json",
-                        repo_root=root,
-                    )
-                )
-            )
-            posix_tamper = {**record, "containment_kind": "POSIX_PROCESS_GROUP"}
-            self.assertTrue(
-                any(
-                    "only valid for Windows Job" in error
-                    for error in subject.process_record_errors(
-                        posix_tamper,
-                        "process",
-                        document=root / "summary.json",
-                        repo_root=root,
-                    )
-                )
-            )
-            self_parent = {
-                **record,
-                "descendant_processes_seen": [
-                    {"pid": 2002, "parent_pid": 2002, "image_path": daemon}
-                ],
-            }
-            self.assertTrue(
-                any(
-                    "identities are not exact/unique" in error
-                    for error in subject.process_record_errors(
-                        self_parent,
-                        "process",
-                        document=root / "summary.json",
-                        repo_root=root,
-                    )
-                )
-            )
-            boolean_pid = {
-                **record,
-                "descendant_processes_seen": [
-                    {"pid": True, "parent_pid": 1001, "image_path": daemon}
-                ],
-            }
-            self.assertTrue(
-                any(
-                    "identities are not exact/unique" in error
-                    for error in subject.process_record_errors(
-                        boolean_pid,
-                        "process",
-                        document=root / "summary.json",
-                        repo_root=root,
-                    )
-                )
-            )
-            misleading_without_grace = {
+            reappearing["expected_tool_daemon_topology_sample_elapsed_seconds"].insert(3, 0.16)
+            reappearing["expected_tool_daemon_topology_revalidation_count"] = 3
+            self.assertIn("is not an immutable strict shrink", errors_for(reappearing))
+
+            no_grace = {
                 **record,
                 "expected_tool_daemon_grace_used": False,
+                "expected_tool_daemon_grace_seconds": 0.0,
+                "expected_tool_daemon_grace_elapsed_seconds": 0.0,
+                "descendant_paths_seen": [],
+                "descendant_processes_seen": [],
+                "expected_tool_daemon_classification": "NONE",
+                "expected_tool_daemon_topology_snapshots": [
+                    {"classification": "EMPTY", "elapsed_seconds": 0.0, "processes": []}
+                ],
+                "expected_tool_daemon_topology_revalidation_count": 0,
+                "expected_tool_daemon_topology_monotonic": False,
+                "expected_tool_daemon_topology_sample_elapsed_seconds": [0.0],
+                "expected_tool_daemon_topology_max_sample_gap_seconds": 0.0,
             }
-            misleading_errors = subject.process_record_errors(
-                misleading_without_grace,
-                "process",
-                document=root / "summary.json",
-                repo_root=root,
+            self.assertEqual([], subject.process_record_errors(no_grace, "process", document=root / "summary.json", repo_root=root))
+            self.assertIn("records grace duration without helper grace", errors_for({**no_grace, "expected_tool_daemon_grace_seconds": False}))
+
+            posix = {
+                **no_grace,
+                "containment_kind": "POSIX_PROCESS_GROUP",
+                "expected_tool_daemon_paths": [],
+                "expected_tool_daemon_topology_snapshots": [],
+                "expected_tool_daemon_topology_sample_elapsed_seconds": [],
+                "expected_tool_daemon_topology_terminal_empty": False,
+                "expected_tool_daemon_hashes_verified": False,
+                "expected_tool_daemon_sha256_by_role": {},
+                "expected_tool_daemon_prelaunch_hashes_verified": False,
+                "expected_tool_daemon_prelaunch_sha256_by_role": {},
+                "expected_tool_daemon_postexit_hashes_verified": False,
+                "expected_tool_daemon_postexit_sha256_by_role": {},
+            }
+            self.assertEqual([], subject.process_record_errors(posix, "process", document=root / "summary.json", repo_root=root))
+            self.assertIn(
+                "POSIX record claims Windows helper hash verification",
+                errors_for({**posix, "expected_tool_daemon_hashes_verified": True}),
             )
-            self.assertTrue(any("without using daemon grace" in error for error in misleading_errors))
-            self.assertTrue(any("nonzero daemon grace seconds" in error for error in misleading_errors))
 
     def test_missing_hardware_stays_pending_and_writes_aliases(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -2175,6 +2381,170 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(returncode, 0, json.dumps(payload["stages"]["consistency"], indent=2))
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
+
+    def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture, r1_commit, r2_commit, active_commit = self._make_multi_historical_fixture(Path(temporary))
+            ledger_path = fixture.hardware / "p7_run_sequence_ledger.json"
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            historical = [
+                run
+                for run in ledger["runs"]
+                if run["checkpoint_relation"] == subject.CHECKPOINT_RELATION_OLD_DIAGNOSTIC
+            ]
+            self.assertEqual(ledger["precheckpoint_read_only_diagnostic_count"], 2)
+            self.assertEqual([run["source_commit"] for run in historical], [r1_commit, r2_commit])
+            self.assertEqual(
+                [run["historical_epoch"]["preflight_failure_class"] for run in historical],
+                [
+                    subject.HISTORICAL_PREFLIGHT_PART_IDENTITY_REJECTED,
+                    subject.HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED,
+                ],
+            )
+            for run in historical:
+                self.assertEqual(run["risk_index"], 5)
+                self.assertEqual(run["result"], "FAIL")
+                self.assertFalse(run["mutation_attempted"])
+                self.assertFalse(run["eligible_for_checkpoint_coverage"])
+                self.assertEqual(run["attempted_coverage_keys"], [])
+                self.assertEqual(run["coverage_keys"], [])
+            r2_epoch = historical[1]["historical_epoch"]
+            self.assertEqual(r2_epoch["read_only_target_identity"]["P7_HW_PREFLIGHT_RESULT"], "PASS")
+            self.assertEqual(r2_epoch["read_only_target_identity"]["P7_HW_PREFLIGHT_CANONICAL_PART"], PART)
+            self.assertEqual(r2_epoch["read_only_target_identity"]["P7_HW_PREFLIGHT_LIVE_PART"], subject.CANONICAL_LIVE_PART)
+            self.assertEqual(r2_epoch["read_only_target_identity"]["P7_HW_PREFLIGHT_LIVE_DEVICE"], subject.CANONICAL_LIVE_DEVICE)
+            self.assertEqual(r2_epoch["read_only_target_identity"]["P7_HW_PREFLIGHT_LIVE_IDCODE"], subject.CANONICAL_LIVE_IDCODE_BINARY)
+            self.assertEqual(r2_epoch["inner_preflight_containment"]["returncode"], 125)
+            self.assertTrue(r2_epoch["inner_preflight_containment"]["process_tree_terminated"])
+            self.assertFalse(r2_epoch["inner_preflight_containment"]["process_tree_reaped"])
+            self.assertEqual(r2_epoch["inner_preflight_containment"]["expected_tool_daemon_classification"], "UNAPPROVED")
+            self.assertEqual(len(r2_epoch["inner_preflight_containment"]["descendant_processes_seen"]), 6)
+            self.assertTrue(r2_epoch["outer_process_containment"]["process_tree_reaped"])
+            self.assertEqual(r2_epoch["effective_shutdown_recovery"]["shutdown_exit"], 0)
+            self.assertEqual(r2_epoch["effective_shutdown_recovery"]["observed_raw_exit"], 125)
+            safe_idle_coverage = [run for run in ledger["runs"] if "safe_idle" in run["coverage_keys"]]
+            self.assertEqual(len(safe_idle_coverage), 1)
+            self.assertEqual(safe_idle_coverage[0]["source_commit"], active_commit)
+            status, errors, _metrics = self._validate_ledger(fixture)
+            self.assertEqual(status, "PASS", "\n".join(errors))
+
+    def test_r2_historical_epoch_tamper_recovery_order_and_nonancestor_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture, r1_commit, _r2_commit, _active_commit = self._make_multi_historical_fixture(Path(temporary))
+            r1_epoch = fixture.hardware / "authorized_sequence/historical_epoch_r1"
+            r2_epoch = fixture.hardware / "authorized_sequence/historical_epoch_r2"
+
+            def assert_tamper_fails(path: Path, mutate, expected: str) -> None:
+                original = path.read_bytes()
+                try:
+                    mutate(path)
+                    status, errors, _metrics = self._validate_ledger(fixture)
+                    self.assertEqual(status, "FAIL")
+                    self.assertIn(expected, "\n".join(errors))
+                finally:
+                    path.write_bytes(original)
+
+            r2_summary = r2_epoch / "001_p7_safe_idle/p7_jtag_axi_stage_summary.json"
+
+            def tamper_helper_topology(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["preflight_process"]["descendant_processes_seen"][2]["parent_pid"] = 9999
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(r2_summary, tamper_helper_topology, "historical r2 cs_server pair is not a direct parent-child topology")
+
+            def tamper_duplicate_root_parent(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                processes = value["preflight_process"]["descendant_processes_seen"]
+                processes[3]["parent_pid"] = processes[1]["parent_pid"]
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(
+                r2_summary,
+                tamper_duplicate_root_parent,
+                "historical r2 helper forest root parent PIDs are not positive/distinct",
+            )
+
+            def tamper_identity(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["target_identity"]["P7_HW_PREFLIGHT_LIVE_PART"] = "xc7z020"
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(r2_summary, tamper_identity, "historical r2 raw/summary exact identity records differ")
+
+            def tamper_candidate_started(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["stage_process"] = {"returncode": 0}
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(r2_summary, tamper_candidate_started, "old-commit diagnostic contains a candidate child process")
+
+            outer = r2_epoch / "sequence_execution_ledger.json"
+
+            def tamper_outer_containment(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["attempts"][0]["process"]["process_tree_reaped"] = False
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(outer, tamper_outer_containment, "historical r2 outer process did not reap the inner wrapper tree")
+
+            frozen_checkpoint = next((r2_epoch / "historical_preflight_inputs").glob("offline_checkpoint.json"))
+
+            def tamper_frozen_checkpoint(path: Path) -> None:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                value["source_commit"] = "0" * 40
+                path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+            assert_tamper_fails(frozen_checkpoint, tamper_frozen_checkpoint, "historical frozen offline checkpoint source mismatch")
+
+            recovery_summary = next(r2_epoch.glob("recovery_shutdown_after_failed_preflight_*/program_tfdu_shutdown_safe.summary.txt"))
+
+            def tamper_recovery(path: Path) -> None:
+                path.write_text(path.read_text(encoding="utf-8").replace("SHUTDOWN_EXIT=0", "SHUTDOWN_EXIT=9"), encoding="utf-8")
+
+            assert_tamper_fails(recovery_summary, tamper_recovery, "historical effective recovery lacks SHUTDOWN_EXIT=0")
+
+            def tamper_recovery_raw_exit(path: Path) -> None:
+                path.write_text(path.read_text(encoding="utf-8").replace("SHUTDOWN_RAW_EXIT=125", "SHUTDOWN_RAW_EXIT=0"), encoding="utf-8")
+
+            assert_tamper_fails(
+                recovery_summary,
+                tamper_recovery_raw_exit,
+                "historical r2 recovery does not prove normalized raw rc125 with SHUTDOWN_EXIT=0",
+            )
+
+            r1_recovery = sorted(r1_epoch.glob("recovery_shutdown_after_failed_preflight_*/program_tfdu_shutdown_safe.summary.txt"))[-1]
+
+            def tamper_epoch_order(path: Path) -> None:
+                path.write_text(
+                    path.read_text(encoding="utf-8").replace(
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_END 2026-07-10T00:14:00+00:00",
+                        "PROGRAM_TFDU_SHUTDOWN_SAFE_END 2026-07-10T00:40:00+00:00",
+                    ),
+                    encoding="utf-8",
+                )
+
+            assert_tamper_fails(r1_recovery, tamper_epoch_order, "historical epoch order 0->1 overlaps or regresses")
+
+            tree = self._git(fixture.root, "rev-parse", f"{r1_commit}^{{tree}}")
+            orphan = subprocess.run(
+                ["git", "commit-tree", tree],
+                cwd=fixture.root,
+                input="unrelated r2 source\n",
+                text=True,
+                capture_output=True,
+                check=True,
+            ).stdout.strip()
+            evidence = subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output)
+            ancestry_errors = subject._historical_epoch_order_errors(
+                [
+                    {"source_commit": r1_commit, "started_at_utc": "2026-07-10T00:00:00+00:00", "ended_at_utc": "2026-07-10T00:01:00+00:00"},
+                    {"source_commit": orphan, "started_at_utc": "2026-07-10T00:02:00+00:00", "ended_at_utc": "2026-07-10T00:03:00+00:00"},
+                ],
+                evidence,
+            )
+            self.assertIn("historical source order 0->1", "\n".join(ancestry_errors))
+            self.assertIn("not an ancestor", "\n".join(ancestry_errors))
 
     def test_historical_epoch_tamper_and_nonancestor_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

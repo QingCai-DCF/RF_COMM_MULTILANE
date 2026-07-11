@@ -50,18 +50,18 @@ class P7JtagBackendTests(unittest.TestCase):
         self.assertFalse(slow["feasible_within_authorized_runtime"])
         one_mib_global = runtime_feasibility(
             expected[1048576][2],
-            preflight_timeout_sec=120,
+            preflight_timeout_sec=60,
             shutdown_timeout_sec=60,
-            configured_stage_timeout_sec=1450,
+            configured_stage_timeout_sec=1400,
         )
         self.assertTrue(one_mib_global["feasible_within_authorized_runtime"])
         self.assertEqual(1372, one_mib_global["minimum_stage_runtime_sec"])
         self.assertEqual(
             {
-                "containment": 44,
-                "other": 45,
-                "configured": 1779,
-                "margin": 21,
+                "containment": 120,
+                "other": 65,
+                "configured": 1765,
+                "margin": 35,
             },
             {
                 "containment": one_mib_global["global_runtime_budget"][

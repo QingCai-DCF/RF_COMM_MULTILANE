@@ -76,6 +76,7 @@ from run_p7_authorized_hardware_sequence import (  # noqa: E402
     build_preflight_command,
     canonical_live_identity_failures,
     evaluate_preflight,
+    is_exact_vivado_batch_launcher,
     normalize_p7_idcode,
     parse_markers,
 )
@@ -107,6 +108,7 @@ STATIONARY_SETUP_WATCHDOG_SEC = 300
 POST_SAFE_REAP_GRACE_SEC = 120
 PS_VIVADO_PROCESS_COUNT = 3
 PS_XSDB_PROCESS_COUNT = 1
+PS_MAX_FORCED_CLEANUP_EVENTS = 2
 PS_OUTER_ORCHESTRATION_GUARD_SEC = 120
 FRAGMENT_CHUNK_BYTES = 215
 MAX_OBJECT_BYTES = 8 * 1024 * 1024
@@ -133,13 +135,14 @@ def ps_wrapper_wall_budget(
         raise ValueError(f"unsupported PS mode for wall budget: {mode}")
     if min(max_runtime_sec, preflight_timeout_sec, shutdown_timeout_sec) < 1:
         raise ValueError("PS wall-budget phase limits must be positive")
-    vivado_per_process = (
-        process_support.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
-        + process_support.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
-    )
+    vivado_per_process = process_support.EXPECTED_TOOL_DAEMON_GRACE_SECONDS
     vivado_containment = PS_VIVADO_PROCESS_COUNT * vivado_per_process
     xsdb_containment = (
-        PS_XSDB_PROCESS_COUNT * process_support.CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS
+        PS_XSDB_PROCESS_COUNT * process_support.NON_VIVADO_EMPTY_PROOF_ALLOWANCE_SECONDS
+    )
+    forced_cleanup_reserve = (
+        PS_MAX_FORCED_CLEANUP_EVENTS
+        * process_support.CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
     )
     if mode == "stationary":
         candidate_bound = (
@@ -160,6 +163,7 @@ def ps_wrapper_wall_budget(
         + candidate_bound
         + vivado_containment
         + xsdb_containment
+        + forced_cleanup_reserve
         + PS_OUTER_ORCHESTRATION_GUARD_SEC
     )
     return {
@@ -170,9 +174,22 @@ def ps_wrapper_wall_budget(
         "preflight_timeout_seconds": preflight_timeout_sec,
         "shutdown_timeout_seconds_each": shutdown_timeout_sec,
         "vivado_process_count": PS_VIVADO_PROCESS_COUNT,
+        "vivado_success_containment_window_seconds_each": vivado_per_process,
+        "vivado_failure_containment_window_seconds_each": (
+            vivado_per_process
+            + process_support.CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+        ),
         "vivado_containment_allowance_seconds": vivado_containment,
         "xsdb_process_count": PS_XSDB_PROCESS_COUNT,
+        "xsdb_empty_proof_allowance_seconds_each": (
+            process_support.NON_VIVADO_EMPTY_PROOF_ALLOWANCE_SECONDS
+        ),
         "xsdb_containment_allowance_seconds": xsdb_containment,
+        "max_forced_cleanup_events": PS_MAX_FORCED_CLEANUP_EVENTS,
+        "forced_cleanup_wait_seconds_each": (
+            process_support.CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS
+        ),
+        "forced_cleanup_reserve_seconds": forced_cleanup_reserve,
         "outer_orchestration_guard_seconds": PS_OUTER_ORCHESTRATION_GUARD_SEC,
         "minimum_outer_wrapper_timeout_seconds": total,
     }
@@ -1650,6 +1667,8 @@ def _stage_validation(args: argparse.Namespace, core_readiness: dict[str, Any]) 
         errors.append("stationary base object size must be exactly 65536 bytes")
     if resolve_path(args.abort_file or str(DEFAULT_ABORT_FILE)) != DEFAULT_ABORT_FILE.resolve(strict=False):
         errors.append(f"abort file must be canonical: {DEFAULT_ABORT_FILE}")
+    if not is_exact_vivado_batch_launcher(args.vivado_path):
+        errors.append("Vivado launcher must be exactly vivado.bat; direct vivado.exe is forbidden")
     for label, value, expected in (
         ("PS7 init", args.ps7_init, args.ps7_init_sha256),
         ("input file", args.input_file, args.input_sha256),
@@ -1754,6 +1773,7 @@ def _run_stationary_watchdog_process(
     abort_seen = False
     interrupted = False
     tree_terminated = False
+    termination_attempted = False
     process_tree_reaped = False
     watchdog_reason = ""
     launch_error = ""
@@ -1818,19 +1838,11 @@ def _run_stationary_watchdog_process(
             finally:
                 if process is not None:
                     if process.poll() is None and (timed_out or abort_seen or interrupted or launch_error):
+                        termination_attempted = True
                         tree_terminated = (
                             process_support.terminate_process_tree(process) or tree_terminated
                         )
-                    try:
-                        raw_returncode = process.wait(timeout=10)
-                    except (subprocess.TimeoutExpired, OSError):
-                        tree_terminated = (
-                            process_support.terminate_process_tree(process) or tree_terminated
-                        )
-                        try:
-                            raw_returncode = process.wait(timeout=10)
-                        except (subprocess.TimeoutExpired, OSError):
-                            raw_returncode = process.poll()
+                    raw_returncode = process.poll()
                     process_tree_reaped = (
                         raw_returncode is not None
                         and process.poll() is not None
@@ -1840,12 +1852,14 @@ def _run_stationary_watchdog_process(
         launch_error = launch_error or f"{type(exc).__name__}: {exc}"
         watchdog_reason = watchdog_reason or "launch_error"
     finally:
-        if process is not None and process.poll() is None:
+        if (
+            process is not None
+            and process.poll() is None
+            and not termination_attempted
+        ):
+            termination_attempted = True
             tree_terminated = process_support.terminate_process_tree(process) or tree_terminated
-            try:
-                raw_returncode = process.wait(timeout=10)
-            except (subprocess.TimeoutExpired, OSError):
-                raw_returncode = process.poll()
+            raw_returncode = process.poll()
             process_tree_reaped = (
                 raw_returncode is not None
                 and process.poll() is not None
@@ -1871,7 +1885,9 @@ def _run_stationary_watchdog_process(
     else:
         returncode = int(raw_returncode)
     containment = process_support.containment_record(process)
-    tree_terminated = tree_terminated or bool(containment.get("containment_cleanup_terminated", False))
+    tree_terminated = tree_terminated or bool(
+        containment.get("containment_cleanup_attempted", False)
+    )
     result = process_support.ProcessResult(
         name=name,
         returncode=returncode,
@@ -1903,6 +1919,66 @@ def _run_stationary_watchdog_process(
         ),
         expected_tool_daemon_classification=str(
             containment.get("expected_tool_daemon_classification", "NONE")
+        ),
+        expected_tool_daemon_topology_snapshots=list(
+            containment.get("expected_tool_daemon_topology_snapshots", [])
+        ),
+        expected_tool_daemon_topology_revalidation_count=int(
+            containment.get("expected_tool_daemon_topology_revalidation_count", 0)
+        ),
+        expected_tool_daemon_topology_monotonic=bool(
+            containment.get("expected_tool_daemon_topology_monotonic", False)
+        ),
+        expected_tool_daemon_topology_sample_elapsed_seconds=list(
+            containment.get("expected_tool_daemon_topology_sample_elapsed_seconds", [])
+        ),
+        expected_tool_daemon_topology_max_sample_gap_seconds=float(
+            containment.get("expected_tool_daemon_topology_max_sample_gap_seconds", 0.0)
+        ),
+        expected_tool_daemon_grace_elapsed_seconds=float(
+            containment.get("expected_tool_daemon_grace_elapsed_seconds", 0.0)
+        ),
+        expected_tool_daemon_hashes_verified=bool(
+            containment.get("expected_tool_daemon_hashes_verified", False)
+        ),
+        expected_tool_daemon_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_sha256_by_role", {})
+        ),
+        expected_tool_daemon_hash_error=str(
+            containment.get("expected_tool_daemon_hash_error", "")
+        ),
+        expected_tool_daemon_prelaunch_hashes_verified=bool(
+            containment.get("expected_tool_daemon_prelaunch_hashes_verified", False)
+        ),
+        expected_tool_daemon_prelaunch_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_prelaunch_sha256_by_role", {})
+        ),
+        expected_tool_daemon_prelaunch_hash_error=str(
+            containment.get("expected_tool_daemon_prelaunch_hash_error", "")
+        ),
+        expected_tool_daemon_postexit_hashes_verified=bool(
+            containment.get("expected_tool_daemon_postexit_hashes_verified", False)
+        ),
+        expected_tool_daemon_postexit_sha256_by_role=dict(
+            containment.get("expected_tool_daemon_postexit_sha256_by_role", {})
+        ),
+        expected_tool_daemon_postexit_hash_error=str(
+            containment.get("expected_tool_daemon_postexit_hash_error", "")
+        ),
+        expected_tool_daemon_topology_error=str(
+            containment.get("expected_tool_daemon_topology_error", "")
+        ),
+        expected_tool_daemon_topology_terminal_empty=bool(
+            containment.get("expected_tool_daemon_topology_terminal_empty", False)
+        ),
+        process_identity_query_retry_count=int(
+            containment.get("process_identity_query_retry_count", 0)
+        ),
+        process_exit_race_recheck_count=int(
+            containment.get("process_exit_race_recheck_count", 0)
+        ),
+        containment_cleanup_attempted=bool(
+            containment.get("containment_cleanup_attempted", False)
         ),
         containment_cleanup_terminated=bool(
             containment.get("containment_cleanup_terminated", False)
