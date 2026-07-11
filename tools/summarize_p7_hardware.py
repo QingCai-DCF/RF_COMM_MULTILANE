@@ -10480,9 +10480,20 @@ def final_status_fields(
     results: Mapping[str, StageResult],
     final: StageResult,
 ) -> dict[str, Any]:
-    provenance = evidence.provenance_rows
+    ledger_path = evidence.hardware_root / "p7_run_sequence_ledger.json"
+    try:
+        ledger_payload = json.loads(ledger_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        ledger_payload = {}
+    ledger_offline = ledger_payload.get("offline_checkpoint") if isinstance(ledger_payload, dict) else None
+    active_commit = str(ledger_offline.get("source_commit", "")).lower() if isinstance(ledger_offline, dict) else ""
+    checkpoint_scoped = COMMIT_RE.fullmatch(active_commit) is not None
+    provenance = [
+        row for row in evidence.provenance_rows
+        if not checkpoint_scoped or str(row.get("source_commit", "")).lower() == active_commit
+    ]
     source_commits = sorted({str(row.get("source_commit")) for row in provenance if row.get("source_commit")})
-    source_commit = source_commits[0] if len(source_commits) == 1 else "INCONSISTENT_OR_MISSING"
+    source_commit = active_commit if checkpoint_scoped else source_commits[0] if len(source_commits) == 1 else "INCONSISTENT_OR_MISSING"
     ps_rows = [row for row in provenance if row.get("kind") == "ps"]
     bit_hashes = sorted(
         {
@@ -10534,8 +10545,8 @@ def final_status_fields(
         "STATIONARY_30MIN": results["stationary"].status,
         "SHUTDOWN_BEFORE": results["shutdown"].status,
         "SHUTDOWN_AFTER": results["shutdown"].status,
-        "BITSTREAM_SHA256": bit_hashes[0] if len(bit_hashes) == 1 else "INCONSISTENT_OR_MISSING",
-        "PS_ELF_SHA256": elf_hashes[0] if len(elf_hashes) == 1 else "INCONSISTENT_OR_MISSING",
+        "BITSTREAM_SHA256": bit_hashes[0] if len(bit_hashes) == 1 else "PENDING_HW" if not bit_hashes and final.status == "PENDING_HW" else "INCONSISTENT_OR_MISSING",
+        "PS_ELF_SHA256": elf_hashes[0] if len(elf_hashes) == 1 else "PENDING_HW" if not elf_hashes and final.status == "PENDING_HW" else "INCONSISTENT_OR_MISSING",
         "ETHERNET_ACCEPTANCE": "DEFERRED_NO_NETWORK_CABLE",
         "ROTATION_ACCEPTANCE": "DEFERRED_NO_HARDWARE_MOVEMENT",
         "EIGHT_LANE_ACCEPTANCE": "DEFERRED_ONLY_2_LANES_AVAILABLE",

@@ -20,14 +20,12 @@
   "drove_tfdu_txd": null,
   "elf": [],
   "enabled_tfdu_receiver": null,
-  "errors": [
-    "offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py"
-  ],
+  "errors": [],
   "evidence": [
     "evidence/hardware/p7/p7_run_sequence_ledger.json"
   ],
-  "generated_at_utc": "2026-07-11T20:05:08+00:00",
-  "hardware_acceptance": "FAIL",
+  "generated_at_utc": "2026-07-11T20:19:43+00:00",
+  "hardware_acceptance": "PENDING_HW",
   "hardware_actions_executed": false,
   "input_file_hashes": [],
   "ltx": [],
@@ -35,7 +33,7 @@
   "metrics": {
     "full_duration_stationary_attempts": 0,
     "inventory_files": 2269,
-    "ledger_sha256": "141db97034fae4de1b697ce42f743d03d38160a619168570a1b0383fa426cfce",
+    "ledger_sha256": "9b53c5863f817ed8bab8fb29e23c9c68d83677bdc384c8268aa90244ae7d0e86",
     "listed_executed_summaries": 13,
     "passed_coverage_keys": [],
     "qualified_stationary_passes": 0,
@@ -50,9 +48,9 @@
   "product_final_acceptance": "PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT",
   "profile": [],
   "programmed_fpga": false,
-  "reason": "evidence consistency failed closed",
+  "reason": "run-sequence ledger is pending",
   "repo": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
-  "result": "FAIL",
+  "result": "PENDING_HW",
   "runner_provenance": [],
   "shutdown_after": [],
   "shutdown_before": [],

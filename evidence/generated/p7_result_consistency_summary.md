@@ -1,8 +1,8 @@
 # consistency
 
-RESULT: FAIL
-REASON: evidence consistency failed closed
-GENERATED_AT_UTC: 2026-07-11T20:05:08+00:00
+RESULT: PENDING_HW
+REASON: run-sequence ledger is pending
+GENERATED_AT_UTC: 2026-07-11T20:19:43+00:00
 REPO: C:\Users\user\Documents\RF_COMM_MULTILANE
 HEAD: INCONSISTENT_OR_MISSING
 HARDWARE_ACTIONS_EXECUTED_BY_SUMMARIZER: false
@@ -36,11 +36,11 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `run_count`: `13`
 - `listed_executed_summaries`: `13`
 - `passed_coverage_keys`: `[]`
-- `ledger_sha256`: `141db97034fae4de1b697ce42f743d03d38160a619168570a1b0383fa426cfce`
+- `ledger_sha256`: `9b53c5863f817ed8bab8fb29e23c9c68d83677bdc384c8268aa90244ae7d0e86`
 
 ## Errors
 
-- offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py
+- None.
 
 ## Hardware evidence envelope
 

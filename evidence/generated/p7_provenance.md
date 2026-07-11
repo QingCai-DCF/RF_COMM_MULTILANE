@@ -1,6 +1,6 @@
 # P7 hardware provenance
 
-RESULT: FAIL
+RESULT: PENDING_HW
 
 | Stage | Kind | Source commit | Target | Summary |
 |---|---|---|---|---|

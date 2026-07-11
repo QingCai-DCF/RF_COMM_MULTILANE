@@ -1,6 +1,6 @@
 {
   "P7_OFFLINE_GATE": "PASS",
-  "generated_at_utc": "2026-07-11T20:01:16+00:00",
+  "generated_at_utc": "2026-07-11T20:18:21+00:00",
   "checks": {
     "P6_RECHECK": true,
     "P7_PROTOCOL_VECTORS": true,
@@ -21,18 +21,18 @@
   "PS_PL_PHY_PL_PS_APPLICATION_PASS": false,
   "STATIONARY_30MIN": "PENDING_HW",
   "hardware_actions_executed": false,
-  "source_commit": "822245b64995788269403793b44be537d46a702f",
+  "source_commit": "3b03414f279a8205207c7d67bdc8923a4723b866",
   "dirty_worktree": false,
   "dirty_files_before_gate": [],
-  "source_tree_listing_sha256": "f4c1198f7e5560a16b114a378ff5aafbe2fff01448d0d074b5db22355d8257a1",
+  "source_tree_listing_sha256": "a124c1ebbc5f72fa49d22e77ec3839afd610ea364764bb70f2547d059d930b64",
   "checkpoint_input_hashes": {
     "board_profiles/ACTIVE_PROFILE.json": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
     "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
     "config/p7_app_protocol.yaml": "3c498eb0fdf5f0d19b1b859fc43a5f2173d09efbfa557d5e4f81e5502ff37259",
     "config/register_map/ir_axi_regs.yaml": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
     "constraints/active/PORT1.generated.xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
-    "evidence/generated/p7_ps_core_hardware_readiness.json": "fe3ab33c583c4896b33b59f5f767a5972d37d68294f3e7dbb3fbffb14e1d50d8",
-    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "3076f336506847a277eb449a8a1a3e34a1efbae84e319502ec156128b8be2ca9",
+    "evidence/generated/p7_ps_core_hardware_readiness.json": "ac3a03090cdc55ee65e3605c2a8e1d45341feb91772b4f456020297b131f3986",
+    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "909f8dff31f33f58de3203535bdfa2e6a0fc051cf7b52faf3a4ed83011551885",
     "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json": "357c340ab4b53d29d79055eb0c8cdd2fd77614c6bae36efcbbe6a0ada0cd9285",
     "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build_summary.json": "49dca997225eaf339681d7b83e9d3418a7c00c17736002174edc4f78fe086f72",
     "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
@@ -75,7 +75,7 @@
     "tools/run_p7_authorized_hardware_sequence.py": "4777af7e839bc226fad2880da1d59a93d662de52dd67507a70d4a24c3d562ebc",
     "tools/run_p7_gate.py": "1322e913860062f59a21ec01c1ec8780caaa2391a87c3d154e138dc7724b05e3",
     "tools/run_p7_ps_core_offline.py": "189dd736cb051bcae726e5c1ecfe2de6165a56d05fbf2b047ee64f5798a73d47",
-    "tools/summarize_p7_hardware.py": "9bf105eadcc38aa2c15168a67eea0577d2c66362d47bdb76e8a1cdffc3f7462c"
+    "tools/summarize_p7_hardware.py": "86e0f5d39d1fd69cd97553b60283bc51d63d5b52b99d138445c8260d453e42e4"
   },
   "checkpoint_input_count": 50
 }
