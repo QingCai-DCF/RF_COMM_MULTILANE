@@ -8750,6 +8750,8 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
             HISTORICAL_STAGE_OPERATOR_ABORTED_FOR_OUTER_DEADLINE,
             HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
+            HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED,
+            HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

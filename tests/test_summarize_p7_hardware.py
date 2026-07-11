@@ -2579,6 +2579,31 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual([], epoch["coverage_keys"])
             self.assertEqual("FAIL", epoch["result"])
 
+        discovered = subject.RepositoryEvidence(
+            ROOT,
+            ROOT / "evidence" / "hardware" / "p7",
+            ROOT / "evidence" / "generated",
+        )
+        subject.discover(discovered)
+        collapsed = subject._collapse_historical_epoch_candidates(
+            [item for item in discovered.candidates if subject.candidate_has_hardware_footprint(item)],
+            "f" * 40,
+        )
+        for epoch_name in (
+            "p7_20260711_stationary_app_r11_diag_suffix55",
+            "p7_20260711_stationary_app_r12_diag_suffix55",
+        ):
+            epoch_candidates = [
+                item
+                for item in collapsed
+                if item.path.parent.parent.name == epoch_name
+            ]
+            self.assertEqual(1, len(epoch_candidates), epoch_name)
+            self.assertEqual(
+                "002_p7_p6_frame_regression_m1",
+                epoch_candidates[0].path.parent.name,
+            )
+
         r5_source = subject._candidate_source_commit(candidates["p7_20260711_stationary_app_r5"])
         r5_prefix_path = (
             evidence.hardware_root

@@ -1,6 +1,6 @@
 {
   "P7_OFFLINE_GATE": "PASS",
-  "generated_at_utc": "2026-07-11T15:21:14+00:00",
+  "generated_at_utc": "2026-07-11T16:58:56+00:00",
   "checks": {
     "P6_RECHECK": true,
     "P7_PROTOCOL_VECTORS": true,
@@ -21,21 +21,21 @@
   "PS_PL_PHY_PL_PS_APPLICATION_PASS": false,
   "STATIONARY_30MIN": "PENDING_HW",
   "hardware_actions_executed": false,
-  "source_commit": "999cbc327009459fcd768380fe25918c5213a763",
+  "source_commit": "9a83eca66bbc5718e52aaccea0a14e1493fc44a9",
   "dirty_worktree": false,
   "dirty_files_before_gate": [],
-  "source_tree_listing_sha256": "9ae171870417c0c4aeb543a7acbb6f4708847d18591f6e7f8e565098cbd7ed17",
+  "source_tree_listing_sha256": "a765979e38c0bb0523ac89f561821fbbcbad3e05faee11994b52abf983bead74",
   "checkpoint_input_hashes": {
     "board_profiles/ACTIVE_PROFILE.json": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
     "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
     "config/p7_app_protocol.yaml": "3c498eb0fdf5f0d19b1b859fc43a5f2173d09efbfa557d5e4f81e5502ff37259",
     "config/register_map/ir_axi_regs.yaml": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
     "constraints/active/PORT1.generated.xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
-    "evidence/generated/p7_ps_core_hardware_readiness.json": "82b1d7a38e8e721e07240049aa6d4ce6b6492254ec4bb7aca506726f9653ff5d",
-    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "e461c3bc72a08a1c08a29d9f294d09de680d26bdc30152135a719a34993e6666",
-    "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json": "4ec12743c26ca349b6caebb5b97ed955c6c170df22fdf3a1092f7e95e2775f30",
+    "evidence/generated/p7_ps_core_hardware_readiness.json": "0ec111f17626cbec620de891484509882f43f6d086be38859c32e0f4da244aab",
+    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "175082450b5305ad1ebb01e5388f05c20715eed1da060ee46b08375644f96eec",
+    "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json": "97841f11f5935d4c253a5eda8f37f9bcbb96716c54d0ae8c0c293c78e9c82f49",
     "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build_summary.json": "49dca997225eaf339681d7b83e9d3418a7c00c17736002174edc4f78fe086f72",
-    "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+    "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit": "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
     "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
     "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
     "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
@@ -73,9 +73,9 @@
     "tools/p7_jtag_backend.py": "593185c5fa9c23244a0bfd0355da61df098e194319435c626132b7f3a1726018",
     "tools/p7_ps_mailbox_backend.py": "8b3a6295f876c05789c96ac47fbff34c795557d2eaa9f7a5f84c90752ed2fbc5",
     "tools/run_p7_authorized_hardware_sequence.py": "4777af7e839bc226fad2880da1d59a93d662de52dd67507a70d4a24c3d562ebc",
-    "tools/run_p7_gate.py": "2660fa4af37bebdfc63069e1dd1514135ddf57fe7c649e808f37758b9f59a1ed",
+    "tools/run_p7_gate.py": "2843fc4c925733cadc29b4545fc63b13993bfe83ed557e812cfe9d8ef712126f",
     "tools/run_p7_ps_core_offline.py": "189dd736cb051bcae726e5c1ecfe2de6165a56d05fbf2b047ee64f5798a73d47",
-    "tools/summarize_p7_hardware.py": "d51a0e88a32e925ccbdefab0774ed49ebefb1d9e655c3f1c202b68f9ee6616ec"
+    "tools/summarize_p7_hardware.py": "81a423a8e634fe8de20cddeb6ae414b1557d79ed81443f197bdc63d613b961fb"
   },
   "checkpoint_input_count": 50
 }
