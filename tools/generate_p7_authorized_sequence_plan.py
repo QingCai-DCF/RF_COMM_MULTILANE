@@ -172,19 +172,19 @@ def build_stage_specs() -> list[StageSpec]:
         if group == "safe_idle":
             stage_id = "p7_safe_idle"
             kind, mode, pattern = "jtag", "safe-idle", "none"
-            runtime, preflight, stage_timeout, shutdown = 600, 30, 90, 30
+            runtime, preflight, stage_timeout, shutdown = 600, 30, 90, 60
         elif group == "p6_frame_regression":
             mask = int(case["lane_mask"])
             stage_id = f"p7_p6_frame_regression_m{mask}"
             kind, mode, pattern = "jtag", "rfap", "counter"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
+            runtime, preflight, stage_timeout, shutdown = 960, 60, 550, 60
         elif group == "fragment_boundary":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
             stage_id = f"p7_fragment_boundary_{length}_{policy_slug(policy)}"
             kind, mode = "jtag", "rfap"
             pattern = "counter" if length == 0 else "binary_all_byte_values_repeated"
-            runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
+            runtime, preflight, stage_timeout, shutdown = 960, 60, 550, 60
         elif group == "large_object_jtag":
             length = int(case["object_size"])
             policy = str(case["lane_policy"])
@@ -199,7 +199,7 @@ def build_stage_specs() -> list[StageSpec]:
             if length == 1_048_576:
                 runtime, preflight, stage_timeout, shutdown = 1800, 60, 1400, 60
             else:
-                runtime, preflight, stage_timeout, shutdown = 900, 60, 550, 30
+                runtime, preflight, stage_timeout, shutdown = 960, 60, 550, 60
         else:
             mode = {
                 "ps_functional": "functional",
@@ -211,7 +211,7 @@ def build_stage_specs() -> list[StageSpec]:
             stage_id = f"p7_ps_{mode.replace('-', '_')}"
             kind, pattern = "ps", "deterministic_seed"
             runtime = 1800 if group == "ps_stationary" else 900
-            preflight, stage_timeout, shutdown = 60, None, 30
+            preflight, stage_timeout, shutdown = 60, None, 60
         if kind == "jtag":
             # The child JTAG wrapper's --max-runtime-sec is a global ceiling
             # that already includes every phase, all four containment

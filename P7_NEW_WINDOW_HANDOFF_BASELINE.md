@@ -334,3 +334,38 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   只生成一次新 offline checkpoint，生成 r7 66-stage plan，并通过所有 dry validation。
   r7 也必须从 stage 1 全新开始；r6 的 27-stage PASS prefix 只作为已验证历史记录，贡献 0
   active-checkpoint coverage。
+
+## 15. 2026-07-11 r7 增量交接（本节覆盖第 14 节的 next-run 描述）
+
+- r6 helper-exit race 修复与 immutable r6 evidence 已提交为
+  `f3333ec561d8981793573ef6a934c1948db8bce5`。
+- 在干净的 `f3333ec5...` source 上唯一一次新生成的 offline checkpoint 为 PASS；SHA256
+  `7d2622a3fb6afae23eaae9c710dc9f8da9881225debf483e60a4a1cc1a6699dd`，13/13 checks
+  为 true，`NO_HARDWARE_ACTIONS_EXECUTED=true`，`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r7 run ID 为 `p7_20260711_stationary_app_r7`；plan SHA256 为
+  `1a5df0cf5f7461f27647d0604f26d0b3de89d6e4fb75c6719869e531c6f9034e`。66 个
+  authorization、66 个 child dry validation、生成器 executor dry 和独立 executor dry 均 PASS；唯一
+  stationary 仍是第 66 项，生成和 dry 阶段未启动 Vivado/XSDB/硬件。
+- r7 只启动一次并永远不得 resume。stage 1 `p7_safe_idle` 和 stage 2
+  `p7_p6_frame_regression_m1` 完整 PASS；stage 3 `p7_p6_frame_regression_m2` 以
+  `FAIL_SHUTDOWN_AFTER` 停止。完成前缀为 2/66；stage 4--66、PS ELF 和 stationary 均未启动，正式
+  1800 秒 stationary 尝试次数仍为 0。
+- r7 stage 3 candidate transaction 自身 rc=0、process tree reaped=true，lane1 frame/CRC/ACK 原始结果
+  为 PASS；但 shutdown-after 的旧固定 30 秒上限在 Vivado 仅写出 target identity 后到期，return code
+  124、`timed_out=true`，在 shutdown bitstream programming attempt 之前被 wrapper 强制回收。因此整个
+  stage 正确 FAIL；candidate PASS 不得提升 stage 3，也不得贡献 active-checkpoint coverage。
+- r7 第一次独立恢复因输入 profile SHA 拼写错误在授权阶段安全拒绝，记录
+  `AUTHORIZATION_MISSING` 与 `NO_HARDWARE_ACTIONS_EXECUTED=1`。随后在新的 evidence 目录使用机器读取的
+  正确 SHA 重试，记录 `SHUTDOWN_RAW_EXIT=125`、`TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、
+  `SHUTDOWN_EXIT=0` 和 `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。恢复 PASS 不得写成 stage 3 PASS。
+- r7 原始 ledger/log、两次恢复与 frozen inputs 位于
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r7/`。frozen 10-file manifest SHA256
+  为 `05683b694f95ee04a873c6b8c99ee0d7342ffc645e4c697407a8b4fb5be3f906`，明确
+  `result=FAIL_SHUTDOWN_AFTER`、`coverage_claimed=false`。
+- 当前修复把所有 shutdown barrier 预算从 30 秒提高到 60 秒。普通 JTAG stage 的 global ceiling 从
+  900 秒提高到 960 秒，使最坏情况预算 `60 + 2*60 + 550 + 120 + 65 = 915` 秒后仍保留 45 秒余量；
+  safe-idle 为 425/600 秒。PS stationary 的 active service window 仍严格为 1800 秒，未提前执行或重复。
+- summarizer 已新增 r7 精确历史失败分类、2-stage 历史 PASS prefix 零覆盖验证、30 秒旧 plan 绑定、两次
+  recovery 顺序/分类和 r7 tamper fail-closed 测试。下一次硬件 run ID 必须为 r8；只有本修复和 r7
+  evidence 准确提交、在新干净 source 上生成唯一一次新 offline checkpoint、生成 r8 plan 且全部 dry
+  validation PASS 后，才允许从 stage 1 全新启动 r8。

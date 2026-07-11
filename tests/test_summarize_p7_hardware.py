@@ -2463,7 +2463,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
 
-    def test_real_r1_r2_r3_r4_r5_r6_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
+    def test_real_r1_r2_r3_r4_r5_r6_r7_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
         evidence = subject.RepositoryEvidence(
             ROOT,
             ROOT / "evidence" / "hardware" / "p7",
@@ -2476,11 +2476,14 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260711_stationary_app_r4",
             "p7_20260711_stationary_app_r5",
             "p7_20260711_stationary_app_r6",
+            "p7_20260711_stationary_app_r7",
         )
         candidates: dict[str, subject.Candidate] = {}
         for epoch_name in epoch_names:
             stage_directory = (
-                "028_p7_fragment_boundary_216_rep3"
+                "003_p7_p6_frame_regression_m2"
+                if epoch_name.endswith("_r7")
+                else "028_p7_fragment_boundary_216_rep3"
                 if epoch_name.endswith("_r6")
                 else "002_p7_p6_frame_regression_m1"
                 if epoch_name.endswith("_r5")
@@ -2503,7 +2506,9 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 subject.parse_time(data.get("generated_at_utc"), summary_path.stat().st_mtime),
             )
             candidates[epoch_name] = candidate
-            if epoch_name.endswith("_r6"):
+            if epoch_name.endswith("_r7"):
+                inner_errors = subject._old_commit_shutdown_timeout_failure_errors(candidate, evidence)
+            elif epoch_name.endswith("_r6"):
                 inner_errors = subject._old_commit_shutdown_helper_exit_race_failure_errors(candidate, evidence)
             elif epoch_name.endswith("_r5"):
                 inner_errors = subject._old_commit_backend_raw_pulse_failure_errors(candidate, evidence)
@@ -2641,6 +2646,27 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             )
             errors = subject._old_commit_shutdown_helper_exit_race_failure_errors(tampered, evidence)
             self.assertTrue(errors, f"r6 {label} tamper unexpectedly validated")
+
+        r7 = candidates["p7_20260711_stationary_app_r7"]
+        r7_tamper_cases = (
+            ("candidate result", lambda data: data["stage_process"].__setitem__("passed", False)),
+            ("shutdown return code", lambda data: data["shutdown_after"].__setitem__("returncode", 0)),
+            ("timeout fact", lambda data: data["shutdown_after"].__setitem__("timed_out", False)),
+            ("programming promotion", lambda data: data["shutdown_after"].__setitem__("programming_attempted", True)),
+            ("shutdown promotion", lambda data: data.__setitem__("programmed_shutdown_after", True)),
+        )
+        for label, mutate in r7_tamper_cases:
+            tampered_data = json.loads(json.dumps(r7.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(
+                r7.path,
+                tampered_data,
+                r7.kind,
+                r7.stage,
+                r7.timestamp,
+            )
+            errors = subject._old_commit_shutdown_timeout_failure_errors(tampered, evidence)
+            self.assertTrue(errors, f"r7 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -84,19 +84,22 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
         self.assertEqual("stationary", stationary.mode)
         self.assertTrue(
             all(
-                spec.wrapper_timeout_sec >= 1380
+                spec.wrapper_timeout_sec >= 1440
                 for spec in specs
                 if spec.kind == "ps" and spec.group != "ps_stationary"
             )
         )
-        self.assertEqual(2580, stationary.wrapper_timeout_sec)
+        self.assertEqual(2640, stationary.wrapper_timeout_sec)
         safe_idle = specs[0]
         self.assertEqual(600, safe_idle.max_runtime_sec)
+        self.assertEqual(60, safe_idle.shutdown_timeout_sec)
         self.assertEqual(90, safe_idle.stage_timeout_sec)
-        self.assertEqual(365, 30 + 2 * 30 + 90 + 120 + 65)
+        self.assertEqual(425, 30 + 2 * 60 + 90 + 120 + 65)
         ordinary_jtag = next(spec for spec in specs if spec.group == "fragment_boundary")
+        self.assertEqual(960, ordinary_jtag.max_runtime_sec)
+        self.assertEqual(60, ordinary_jtag.shutdown_timeout_sec)
         self.assertEqual(550, ordinary_jtag.stage_timeout_sec)
-        self.assertEqual(855, 60 + 2 * 30 + 550 + 120 + 65)
+        self.assertEqual(915, 60 + 2 * 60 + 550 + 120 + 65)
         self.assertEqual(66, len({spec.stage_id for spec in specs}))
         self.assertTrue(all(len(spec.stage_id) <= 64 for spec in specs))
         subject.validate_stage_specs(specs)
