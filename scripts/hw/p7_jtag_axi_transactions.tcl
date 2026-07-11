@@ -153,64 +153,67 @@ proc p7_axi_read {hw_axi address txn_index_var} {
   return [string toupper [string range $padded end-7 end]]
 }
 
-# Coalesce only naturally aligned, consecutive payload-window words.  The
-# transaction DSL, authorization count, and emitted per-word evidence remain
-# unchanged; this merely replaces up to 64 identical single-word JTAG/AXI
-# launches with one bounded INCR burst.  Vivado defines burst DATA with the
-# lowest-address word at the left (least-significant) end.
-proc p7_axi_write_burst {hw_axi addresses data_words txn_index_var} {
+# Batch only naturally aligned, consecutive payload-window words.  The live
+# P6 JTAG master is AXI4-Lite, so every transaction remains LEN=1 and no burst
+# option is legal.  Batching reduces Tcl/run_hw_axi round trips by submitting
+# up to 16 ordered single-word transactions in one queued run_hw_axi call (the
+# Vivado 2023.1 documented per-direction queue limit).  The DSL,
+# AXI transfer order, authorization, and per-word evidence remain unchanged.
+proc p7_axi_write_batch {hw_axi addresses data_words txn_index_var} {
   upvar $txn_index_var txn_index
   set count [llength $addresses]
-  if {$count < 1 || $count > 64 || $count != [llength $data_words]} {
-    error "invalid P7 AXI write burst shape"
+  if {$count < 1 || $count > 16 || $count != [llength $data_words]} {
+    error "invalid P7 AXI4-Lite write batch shape"
   }
   set first [lindex $addresses 0]
-  set encoded {}
+  set txns {}
   for {set index 0} {$index < $count} {incr index} {
     if {[lindex $addresses $index] != $first + 4 * $index} {
-      error "P7 AXI write burst is not naturally consecutive"
+      error "P7 AXI4-Lite write batch is not naturally consecutive"
     }
-    lappend encoded [format %08X [lindex $data_words $index]]
+    incr txn_index
+    set name "p7_wb_$txn_index"
+    create_hw_axi_txn $name $hw_axi -type write \
+        -address [format 0x%08X [lindex $addresses $index]] \
+        -data [format 0x%08X [lindex $data_words $index]] -len 1 -force
+    lappend txns [get_hw_axi_txns $name]
   }
-  incr txn_index
-  set name "p7_wb_$txn_index"
-  create_hw_axi_txn $name $hw_axi -type write -address [format 0x%08X $first] \
-      -data [join $encoded _] -len $count -burst INCR -force
-  run_hw_axi [get_hw_axi_txns $name]
-  delete_hw_axi_txn [get_hw_axi_txns $name]
+  run_hw_axi -queue {*}$txns
+  foreach txn $txns { delete_hw_axi_txn $txn }
 }
 
-proc p7_axi_read_burst {hw_axi addresses keys txn_index_var out pending_var} {
+proc p7_axi_read_batch {hw_axi addresses keys txn_index_var out pending_var} {
   upvar $txn_index_var txn_index
   upvar $pending_var pending
   set count [llength $addresses]
-  if {$count < 1 || $count > 64 || $count != [llength $keys]} {
-    error "invalid P7 AXI read burst shape"
+  if {$count < 1 || $count > 16 || $count != [llength $keys]} {
+    error "invalid P7 AXI4-Lite read batch shape"
   }
   set first [lindex $addresses 0]
+  set txns {}
   for {set index 0} {$index < $count} {incr index} {
     if {[lindex $addresses $index] != $first + 4 * $index} {
-      error "P7 AXI read burst is not naturally consecutive"
+      error "P7 AXI4-Lite read batch is not naturally consecutive"
     }
+    incr txn_index
+    set name "p7_rb_$txn_index"
+    create_hw_axi_txn $name $hw_axi -type read \
+        -address [format 0x%08X [lindex $addresses $index]] -len 1 -force
+    lappend txns [get_hw_axi_txns $name]
   }
-  incr txn_index
-  set name "p7_rb_$txn_index"
-  create_hw_axi_txn $name $hw_axi -type read -address [format 0x%08X $first] \
-      -len $count -burst INCR -force
-  run_hw_axi [get_hw_axi_txns $name]
-  set txn [get_hw_axi_txns $name]
-  set raw [string trim [get_property DATA $txn]]
-  delete_hw_axi_txn $txn
-  set clean [string map [list "0x" "" "0X" "" "_" "" " " ""] $raw]
-  if {![regexp -nocase {^[0-9a-f]+$} $clean] || [string length $clean] != 8 * $count} {
-    error "invalid P7 AXI burst read data length: expected=[expr {8 * $count}] observed=[string length $clean]"
-  }
-  set clean [string toupper $clean]
+  run_hw_axi -queue {*}$txns
   for {set index 0} {$index < $count} {incr index} {
-    set start [expr {8 * $index}]
-    set value [string range $clean $start [expr {$start + 7}]]
+    set txn [lindex $txns $index]
+    set raw [string trim [get_property DATA $txn]]
+    set clean [string map [list "0x" "" "0X" "" "_" "" " " ""] $raw]
+    if {![regexp -nocase {^[0-9a-f]+$} $clean] || [string length $clean] > 8} {
+      error "invalid P7 AXI4-Lite read data: $raw"
+    }
+    set padded "00000000$clean"
+    set value [string toupper [string range $padded end-7 end]]
     p7_result_line $out "[lindex $keys $index]=$value" pending
   }
+  foreach txn $txns { delete_hw_axi_txn $txn }
 }
 
 proc p7_flush_axi_batch {hw_axi kind_var addresses_var data_var keys_var txn_index_var out pending_var} {
@@ -221,9 +224,9 @@ proc p7_flush_axi_batch {hw_axi kind_var addresses_var data_var keys_var txn_ind
   upvar $txn_index_var txn_index
   upvar $pending_var pending
   if {$kind eq "W"} {
-    p7_axi_write_burst $hw_axi $addresses $data_words txn_index
+    p7_axi_write_batch $hw_axi $addresses $data_words txn_index
   } elseif {$kind eq "R"} {
-    p7_axi_read_burst $hw_axi $addresses $keys txn_index $out pending
+    p7_axi_read_batch $hw_axi $addresses $keys txn_index $out pending
   } elseif {$kind ne ""} {
     error "invalid pending P7 AXI batch kind"
   }
@@ -598,7 +601,7 @@ set rc [catch {
         if {$offset == 0x100 && ($data & 0x08) != 0} { set seen_commit 0 }
         set burstable [expr {$offset >= 0x200 && $offset <= 0x2FC}]
         if {$burstable} {
-          set consecutive [expr {$batch_kind eq "W" && [llength $batch_addresses] < 64 &&
+          set consecutive [expr {$batch_kind eq "W" && [llength $batch_addresses] < 16 &&
               $address == [lindex $batch_addresses end] + 4}]
           if {!$consecutive} {
             p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
@@ -625,7 +628,7 @@ set rc [catch {
         set burstable [expr {($offset >= 0x200 && $offset <= 0x2FC) ||
             ($offset >= 0x300 && $offset <= 0x3FC)}]
         if {$burstable} {
-          set consecutive [expr {$batch_kind eq "R" && [llength $batch_addresses] < 64 &&
+          set consecutive [expr {$batch_kind eq "R" && [llength $batch_addresses] < 16 &&
               $address == [lindex $batch_addresses end] + 4}]
           if {!$consecutive} {
             p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \

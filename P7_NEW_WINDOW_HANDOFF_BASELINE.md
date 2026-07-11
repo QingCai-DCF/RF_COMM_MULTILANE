@@ -488,3 +488,51 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   `p7_20260711_stationary_app_r11_diag_suffix55` 计划并通过全部 dry validation。r11 仍是零覆盖 diagnostic，
   只运行 full ordinals 1--4 与 55--65，绝不运行 stage 66。任何失败仍需新 run ID、独立 shutdown recovery，
   不得 resume。只有 suffix 全部 PASS、所有修复提交并重新生成 clean checkpoint 后，才可另建正式 full run。
+
+## 20. 2026-07-11 r11 diagnostic suffix 增量交接（本节覆盖第 19 节的 next-run 与 INCR-burst 结论）
+
+- 在 `9cdfe6c22f1efc2e51f44803d4aeae1da40a6342` 上运行的 canonical full-project offline gate 为 PASS，
+  summary SHA256 为 `3ab076c8717836fff97a241f5dcfd2f80d1947b454ec98a925618f41f023e63b`，
+  `NO_HARDWARE=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。它重生成了 52 个 tracked generic reports，导致紧随其后的
+  第一次 P7 gate 正确地只在 `P7_CLEAN_SOURCE_CHECKPOINT` fail-closed；该失败 summary SHA256 为
+  `02686d70ddc99e608dea53c02d5dc4bfe972f4d657ffb2fe0187f7d2ec73b1f9`，其余 12 项 PASS，未执行硬件。
+  通用 PASS 输出与该失败 checkpoint 已准确提交为 `b9bb0b93b711bb5eefcfc4aebb6bc25b39c8c31d`。
+- 在干净的 `b9bb0b93...` 上重新生成的 P7 checkpoint 13/13 PASS，SHA256 为
+  `118c8aab027a22fcea5188340f2741594ff08ee8d7a00340ba0e4edbf6ca95f8`，
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r11 run ID 为 `p7_20260711_stationary_app_r11_diag_suffix55`；15-stage plan SHA256 为
+  `c04e2796b5431958234b0ae986dcc876e873e455382e8c533cbeac160ead7041`。生成器、15 个 authorization、
+  15 个 child dry validation、生成器 executor dry 与独立 executor dry 均 PASS；精确 ordinals 为
+  `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`，无 stationary stage/PS stationary mode，
+  `DIAGNOSTIC_ONLY`、`coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- 第一次 outer execution 请求因临时环境授权值错误，在 ledger/wrapper/hardware 之前返回
+  `P7_AUTHORIZED_HARDWARE_SEQUENCE=BLOCKED`、`hardware_actions_executed=false`；它没有启动 r11 epoch 或消费 run ID。
+  随后使用代码唯一要求的 scoped 值启动一次真实 r11，且没有 `--resume`。
+- r11 stage 1 / `p7_safe_idle` 终态 PASS；full ordinal 2 / `p7_p6_frame_regression_m1` 终态
+  `FAIL_STAGE`，outer ledger 为 attempts=2、completed=1、failed_stage_index=1。stage 3 以后均未启动，
+  stationary 正式尝试次数仍为 0；r11 永远不得 resume，stage 1 历史 PASS 贡献零 acceptance coverage。
+- stage 2 的 candidate 已编程，但在任何 `P7F*` fragment traffic 前以 rc=41 失败。raw error 为：
+  `Protocol 'AXI4-Lite' does not support bursts. Only value '1' is valid for option 'LEN'`。
+  因此第 19 节“用多 word INCR burst 优化”的假设已被真实硬件否证；这不是 optical/CRC/ACK failure。
+  stage 2 的 shutdown-before/after 均 PASS，但不改变 stage FAIL。
+- 独立 recovery 位于
+  `recovery_shutdown_after_failed_stage002_20260711T144611Z/`，记录 `SHUTDOWN_RAW_EXIT=125`、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0`、`PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；
+  临时 helper 已自然退出，外部 legacy `hw_server` PID 45220 未被触碰。
+- r11 frozen 10-file manifest SHA256 为
+  `0d97cb0e67fe3bf3ebef6a2afba3cd03ec2e5babfb70aa9f4385bd70fe5c76db`，明确
+  `full_stage_ordinal=2`、`result=FAIL_STAGE`、`coverage_claimed=false`。
+- 当前修复保持所有 live AXI transaction 为 `LEN=1` 且完全删除 `-burst`；只把最多 16 个有序单字
+  AXI4-Lite transaction（Vivado 2023.1 文档规定的单方向 queue 上限）交给一次 `run_hw_axi -queue`。DSL operation、实际单字 AXI transfer 数、顺序、
+  per-word evidence 与 strict backend contract 不变。dry metrics 现在分别报告最小单字 AXI4-Lite transaction 数、
+  最小 `run_hw_axi` call 数和 batch 结构，不再把 batch 冒充 burst 或减少后的 AXI transaction 数。
+- 新 validator 对 frozen r11 stage 2 报告 4,269 个单字 AXI4-Lite transactions、最少 933 次
+  `run_hw_axi`、231 个 multi-transaction batches、最大 batch 16；对 frozen stage 58 报告 1,073,038 个
+  单字 transactions、最少 224,401 次 `run_hw_axi`、58,527 个 multi-transaction batches、最大 batch 16。
+  Vivado 2023.1 本机 `help run_hw_axi` 明确证明该命令接受多个 transaction objects，且 `-queue` 单方向最多 16 个。
+- 最终非硬件回归：summarizer 13/13、top-level discovery 106/106、`tests/p7` 39/39，合计 145/145 PASS；
+  `py_compile`、`check_no_hardware_calls.py`、`git diff --check` PASS；Vivado Tcl 真实 parser 在无参数时于任何
+  hardware-manager 动作前按预期拒绝，证明修改后的 Tcl 可被 Vivado 2023.1 加载。这些结果不提升硬件 acceptance。
+- 下一次硬件 run ID 必须是新的 `p7_20260711_stationary_app_r12_diag_suffix55`。必须先准确提交 r11 evidence、
+  summarizer/tamper tests 与本修复，再在新干净 source 上生成新 P7 checkpoint、r12 plan 并通过全部 dry validation。
+  r12 仍只允许 ordinals 1--4 与 55--65，不得运行 stage 66；任何失败仍需新 ID、独立 recovery、永不 resume。

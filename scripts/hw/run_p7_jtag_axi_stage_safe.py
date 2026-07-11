@@ -289,41 +289,41 @@ def validate_transaction_file(
     start_operation_count = 0
     commit_operation_count = 0
     payload_write_count = 0
-    coalesced_hw_axi_transaction_count = 0
-    burst_group_count = 0
-    burst_word_count = 0
-    max_burst_words = 0
-    pending_burst_kind: str | None = None
-    pending_burst_last_address: int | None = None
-    pending_burst_words = 0
+    batched_run_hw_axi_call_count = 0
+    multi_transaction_batch_count = 0
+    batched_single_word_transaction_count = 0
+    max_batch_transactions = 0
+    pending_batch_kind: str | None = None
+    pending_batch_last_address: int | None = None
+    pending_batch_transactions = 0
 
-    def flush_burst() -> None:
-        nonlocal coalesced_hw_axi_transaction_count, burst_group_count
-        nonlocal burst_word_count, max_burst_words
-        nonlocal pending_burst_kind, pending_burst_last_address, pending_burst_words
-        if pending_burst_words:
-            coalesced_hw_axi_transaction_count += 1
-            if pending_burst_words > 1:
-                burst_group_count += 1
-                burst_word_count += pending_burst_words
-            max_burst_words = max(max_burst_words, pending_burst_words)
-        pending_burst_kind = None
-        pending_burst_last_address = None
-        pending_burst_words = 0
+    def flush_batch() -> None:
+        nonlocal batched_run_hw_axi_call_count, multi_transaction_batch_count
+        nonlocal batched_single_word_transaction_count, max_batch_transactions
+        nonlocal pending_batch_kind, pending_batch_last_address, pending_batch_transactions
+        if pending_batch_transactions:
+            batched_run_hw_axi_call_count += 1
+            if pending_batch_transactions > 1:
+                multi_transaction_batch_count += 1
+                batched_single_word_transaction_count += pending_batch_transactions
+            max_batch_transactions = max(max_batch_transactions, pending_batch_transactions)
+        pending_batch_kind = None
+        pending_batch_last_address = None
+        pending_batch_transactions = 0
 
-    def record_burst_word(kind: str, address: int) -> None:
-        nonlocal pending_burst_kind, pending_burst_last_address, pending_burst_words
+    def record_batch_transaction(kind: str, address: int) -> None:
+        nonlocal pending_batch_kind, pending_batch_last_address, pending_batch_transactions
         if not (
-            pending_burst_kind == kind
-            and pending_burst_last_address is not None
-            and address == pending_burst_last_address + 4
-            and pending_burst_words < 64
+            pending_batch_kind == kind
+            and pending_batch_last_address is not None
+            and address == pending_batch_last_address + 4
+            and pending_batch_transactions < 16
         ):
-            flush_burst()
-            pending_burst_kind = kind
-            pending_burst_words = 0
-        pending_burst_last_address = address
-        pending_burst_words += 1
+            flush_batch()
+            pending_batch_kind = kind
+            pending_batch_transactions = 0
+        pending_batch_last_address = address
+        pending_batch_transactions += 1
     write_operations: list[tuple[int, int]] = []
     last_operation: tuple[str, int, int] | None = None
     seen_lane = False
@@ -369,13 +369,13 @@ def validate_transaction_file(
                 fields = line.split()
                 op = fields[0]
                 if op == "END":
-                    flush_burst()
+                    flush_batch()
                     if len(fields) != 1:
                         errors.append(f"line {line_number}: END takes no arguments")
                     ended = True
                     continue
                 if op == "META":
-                    flush_burst()
+                    flush_batch()
                     if (
                         len(fields) != 3
                         or not KEY_RE.fullmatch(fields[1])
@@ -410,10 +410,10 @@ def validate_transaction_file(
                         write_operations.append((offset, data))
                         if 0x200 <= offset <= 0x2FC:
                             payload_write_count += 1
-                            record_burst_word("W", address)
+                            record_batch_transaction("W", address)
                         else:
-                            flush_burst()
-                            coalesced_hw_axi_transaction_count += 1
+                            flush_batch()
+                            batched_run_hw_axi_call_count += 1
                         if offset == 0x10C:
                             seen_lane = True
                             lane_value = data
@@ -458,14 +458,14 @@ def validate_transaction_file(
                         keys.add(fields[2])
                         offset = address - AXI_BASE
                         if 0x200 <= offset <= 0x2FC or 0x300 <= offset <= 0x3FC:
-                            record_burst_word("R", address)
+                            record_batch_transaction("R", address)
                         else:
-                            flush_burst()
-                            coalesced_hw_axi_transaction_count += 1
+                            flush_batch()
+                            batched_run_hw_axi_call_count += 1
                         last_operation = (op, address, 0)
                     elif op in ("POLL32", "ASSERT32"):
-                        flush_burst()
-                        coalesced_hw_axi_transaction_count += 1
+                        flush_batch()
+                        batched_run_hw_axi_call_count += 1
                         expected_len = 7 if op == "POLL32" else 5
                         if len(fields) != expected_len:
                             raise ValueError(
@@ -512,7 +512,7 @@ def validate_transaction_file(
     except OSError as exc:
         errors.append(f"unable to stream transaction file: {exc}")
 
-    flush_burst()
+    flush_batch()
 
     if not saw_magic:
         errors.append(f"first non-comment line must be {TRANSACTION_MAGIC}")
@@ -527,12 +527,13 @@ def validate_transaction_file(
     report["start_operation_count"] = start_operation_count
     report["commit_operation_count"] = commit_operation_count
     report["payload_write_count"] = payload_write_count
-    report["coalesced_hw_axi_transaction_count"] = coalesced_hw_axi_transaction_count
-    report["burst_group_count"] = burst_group_count
-    report["burst_word_count"] = burst_word_count
-    report["max_burst_words"] = max_burst_words
-    report["single_word_hw_axi_transaction_count"] = (
-        coalesced_hw_axi_transaction_count - burst_group_count
+    report["minimum_single_word_axi4lite_transaction_count"] = operation_count
+    report["minimum_run_hw_axi_call_count"] = batched_run_hw_axi_call_count
+    report["multi_transaction_batch_count"] = multi_transaction_batch_count
+    report["batched_single_word_transaction_count"] = batched_single_word_transaction_count
+    report["max_batch_transactions"] = max_batch_transactions
+    report["standalone_run_hw_axi_call_count"] = (
+        batched_run_hw_axi_call_count - multi_transaction_batch_count
     )
     report["result_keys"] = sorted(keys)
     report["write_operations"] = [
