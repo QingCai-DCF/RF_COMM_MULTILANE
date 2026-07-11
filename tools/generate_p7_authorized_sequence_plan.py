@@ -55,6 +55,9 @@ CANONICAL_PART = "xc7z010clg400-1"
 CANONICAL_TARGET = "localhost:3121/xilinx_tcf/Digilent/210512180081"
 CANONICAL_HW_SERVER_URL = "localhost:3121"
 CANONICAL_JTAG_FREQUENCY_HZ = 1_000_000
+POST_GATE_GENERATED_DIRTY_EXACT = frozenset(
+    {"evidence/hardware/p7/p7_run_sequence_ledger.json"}
+)
 
 
 ARTIFACT_ARGUMENTS = (
@@ -403,7 +406,7 @@ def git_state() -> tuple[str | None, list[str], str | None]:
 
 
 def classify_dirty_entries(entries: list[str]) -> tuple[list[str], list[str]]:
-    """Allow only post-gate generated evidence; reject every source/hardware path."""
+    """Allow only reproducible post-gate summaries; reject source/raw hardware paths."""
 
     allowed: list[str] = []
     rejected: list[str] = []
@@ -426,7 +429,11 @@ def classify_dirty_entries(entries: list[str]) -> tuple[list[str], list[str]]:
         if (
             not ambiguous
             and normalized
-            and all(path.startswith("evidence/generated/") for path in normalized)
+            and all(
+                path.startswith("evidence/generated/")
+                or path in POST_GATE_GENERATED_DIRTY_EXACT
+                for path in normalized
+            )
         ):
             allowed.append(entry)
         else:
@@ -641,7 +648,7 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     allowed_generated_dirty, rejected_dirty = classify_dirty_entries(dirty)
     if rejected_dirty:
         raise ValueError(
-            "generator permits only post-gate evidence/generated changes; rejected dirty entries: "
+            "generator permits only post-gate reproducible summary changes; rejected dirty entries: "
             f"{rejected_dirty}"
         )
     checkpoint = sequence.resolve_path(args.offline_checkpoint)

@@ -171,12 +171,13 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
             [
                 " M evidence/generated/p7_offline_gate_summary.json",
                 "?? evidence/generated/new_gate_output.md",
+                " M evidence/hardware/p7/p7_run_sequence_ledger.json",
                 " M tools/run_p7_gate.py",
                 "?? evidence/hardware/p7/fake.json",
                 "R  software/a.c -> evidence/generated/a.c",
             ]
         )
-        self.assertEqual(2, len(allowed))
+        self.assertEqual(3, len(allowed))
         self.assertEqual(3, len(rejected))
 
     def test_noncanonical_live_identity_is_rejected_before_git_or_outputs(self) -> None:
