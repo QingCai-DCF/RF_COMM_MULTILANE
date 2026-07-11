@@ -27,6 +27,29 @@ def write_bytes(path: Path, value: bytes) -> dict[str, object]:
 
 
 class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
+    def test_diagnostic_suffix_matrix_is_exact_and_excludes_stationary(self) -> None:
+        full = subject.expected_stage_contracts()
+        ordinals = list(subject.DIAGNOSTIC_FULL_STAGE_ORDINALS)
+        stages = [dict(full[ordinal - 1]) for ordinal in ordinals]
+        self.assertEqual(
+            [],
+            subject.validate_stage_matrix(
+                stages,
+                plan_mode=subject.DIAGNOSTIC_PLAN_MODE,
+                full_stage_ordinals=ordinals,
+            ),
+        )
+        self.assertEqual(15, len(stages))
+        self.assertNotIn("ps_stationary", [stage["group"] for stage in stages])
+        bad_ordinals = list(ordinals)
+        bad_ordinals[-1] = 66
+        errors = subject.validate_stage_matrix(
+            stages,
+            plan_mode=subject.DIAGNOSTIC_PLAN_MODE,
+            full_stage_ordinals=bad_ordinals,
+        )
+        self.assertTrue(any("full_stage_ordinals" in item for item in errors))
+
     def test_canonical_matrix_is_exact_and_stationary_is_once_last(self) -> None:
         stages = subject.expected_stage_contracts()
         self.assertEqual(66, len(stages))

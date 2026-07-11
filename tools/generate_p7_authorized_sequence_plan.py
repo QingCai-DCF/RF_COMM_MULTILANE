@@ -4,8 +4,9 @@
 This generator never launches Vivado, XSDB, a P7 safe wrapper, or any hardware
 process.  It does not read or set ``RF_COMM_HW_AUTH``.  It only validates a
 clean frozen offline checkpoint, writes deterministic inputs/transaction
-bundles and user-authorized stage binding files, assembles the exact 66-stage
-plan, and calls ``validate_sequence_plan`` locally.
+bundles and user-authorized stage binding files, assembles either the exact
+66-stage formal plan or the explicitly zero-coverage diagnostic suffix plan,
+and calls ``validate_sequence_plan`` locally.
 """
 
 from __future__ import annotations
@@ -313,6 +314,20 @@ def validate_stage_specs(specs: list[StageSpec]) -> None:
             )
 
 
+def select_stage_specs(
+    specs: list[StageSpec], *, diagnostic_suffix55: bool
+) -> list[StageSpec]:
+    if not diagnostic_suffix55:
+        return list(specs)
+    wanted = set(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS)
+    selected = [spec for spec in specs if spec.index in wanted]
+    if [spec.index for spec in selected] != list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS):
+        raise ValueError("diagnostic suffix selection must be exactly full ordinals 1--4 and 55--65")
+    if len(selected) != 15 or any(spec.group == "ps_stationary" for spec in selected):
+        raise ValueError("diagnostic suffix must contain 15 stages and exclude stationary")
+    return selected
+
+
 def patterned_data(pattern: str, size: int, salt: int) -> bytes:
     if pattern == "counter":
         return bytes((index + salt) & 0xFF for index in range(size))
@@ -609,6 +624,11 @@ def validate_canonical_identity(args: argparse.Namespace) -> None:
 def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     if not RUN_ID_RE.fullmatch(args.run_id):
         raise ValueError("--run-id must match [a-z0-9][a-z0-9_-]{2,63}")
+    diagnostic_suffix55 = bool(getattr(args, "diagnostic_suffix55", False))
+    if diagnostic_suffix55 and "diag_suffix55" not in args.run_id:
+        raise ValueError("diagnostic suffix run-id must contain diag_suffix55")
+    if not diagnostic_suffix55 and "diag" in args.run_id:
+        raise ValueError("run-id containing diag requires the explicit diagnostic suffix mode")
     source_commit = args.source_commit.lower()
     if not sequence.COMMIT_RE.fullmatch(source_commit):
         raise ValueError("--source-commit must be exactly 40 lowercase hex characters")
@@ -666,8 +686,9 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("explicit Vivado and XSDB executables must both exist")
     if not sequence.is_exact_vivado_batch_launcher(vivado):
         raise ValueError("explicit Vivado launcher must be exactly vivado.bat; vivado.exe is forbidden")
-    specs = build_stage_specs()
-    validate_stage_specs(specs)
+    full_specs = build_stage_specs()
+    validate_stage_specs(full_specs)
+    specs = select_stage_specs(full_specs, diagnostic_suffix55=diagnostic_suffix55)
     for spec in specs:
         auth_path = authorization_dir / f"{args.run_id}_{spec.index:03d}_{spec.stage_id}.txt"
         if auth_path.exists() or auth_path.with_name(auth_path.name + ".partial").exists():
@@ -691,6 +712,12 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         "vivado": vivado,
         "xsdb": xsdb,
         "specs": specs,
+        "plan_mode": (
+            sequence.DIAGNOSTIC_PLAN_MODE
+            if diagnostic_suffix55
+            else sequence.FULL_PLAN_MODE
+        ),
+        "full_stage_ordinals": [spec.index for spec in specs],
         "allowed_post_gate_generated_dirty": allowed_generated_dirty,
     }
 
@@ -731,6 +758,15 @@ def common_authorization_lines(
         "LANE_COUNT=2",
         "MAX_LANE_MASK=0x3",
     ]
+    if context.get("plan_mode") == sequence.DIAGNOSTIC_PLAN_MODE:
+        lines.extend(
+            [
+                "P7_EXECUTION_MODE=DIAGNOSTIC_ONLY",
+                "P7_COVERAGE_CLAIMED=false",
+                "HARDWARE_ACCEPTANCE=PENDING_HW",
+                f"P7_FULL_STAGE_ORDINAL={spec.index}",
+            ]
+        )
     for prefix, artifact in bindings:
         path_key = "P7_PLAN_PATH" if prefix == "P7_PLAN" else f"{prefix}_PATH"
         sha_key = "P7_PLAN_SHA256" if prefix == "P7_PLAN" else f"{prefix}_SHA256"
@@ -1148,6 +1184,8 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     ]
     authorization_records: list[dict[str, Any]] = []
     child_dry_validations: list[dict[str, Any]] = []
+    plan_mode = str(context["plan_mode"])
+    diagnostic = plan_mode == sequence.DIAGNOSTIC_PLAN_MODE
 
     for spec in context["specs"]:
         auth_path = authorization_dir / f"{args.run_id}_{spec.index:03d}_{spec.stage_id}.txt"
@@ -1256,7 +1294,10 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     plan = {
         "schema": sequence.SEQUENCE_SCHEMA,
         "description": (
-            "Deterministic offline-generated P7 safe-wrapper sequence; no Ethernet, no motion, two lanes; "
+            "DIAGNOSTIC_ONLY deterministic zero-coverage P7 suffix; no Ethernet, no motion, two lanes; "
+            "formal ordinals 1--4 and 55--65 only; stationary is forbidden."
+            if diagnostic
+            else "Deterministic offline-generated P7 safe-wrapper sequence; no Ethernet, no motion, two lanes; "
             "the sole timed 1800-second PS stationary run is final."
         ),
         "source_commit": context["source_commit"],
@@ -1265,6 +1306,16 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             "sha256": context["checkpoint_sha256"],
         },
         "stages": plan_stages,
+        **(
+            {
+                "plan_mode": sequence.DIAGNOSTIC_PLAN_MODE,
+                "full_stage_ordinals": context["full_stage_ordinals"],
+                "coverage_claimed": False,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+            }
+            if diagnostic
+            else {}
+        ),
     }
     atomic_write_json(context["plan_path"], plan)
     plan_hash = sha256_file(context["plan_path"])
@@ -1274,8 +1325,12 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             "generated plan failed the executor's strict local dry validation: "
             + "; ".join(str(item) for item in validation["errors"])
         )
-    if validation.get("stage_count") != 66:
-        raise RuntimeError("generated plan validator did not observe exactly 66 stages")
+    expected_stage_count = 15 if diagnostic else 66
+    if validation.get("stage_count") != expected_stage_count:
+        raise RuntimeError(
+            f"generated plan validator did not observe exactly {expected_stage_count} stages"
+        )
+    groups = [spec.group for spec in context["specs"]]
     manifest = {
         "schema": GENERATOR_SCHEMA,
         "P7_AUTHORIZED_SEQUENCE_GENERATOR": "PASS",
@@ -1287,6 +1342,10 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "authorization_environment_modified": False,
         "network_used": False,
         "motion_used": False,
+        "plan_mode": plan_mode,
+        "coverage_claimed": False if diagnostic else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if diagnostic else None,
+        "full_stage_ordinals": context["full_stage_ordinals"],
         "source_commit": context["source_commit"],
         "allowed_post_gate_generated_dirty": context["allowed_post_gate_generated_dirty"],
         "offline_checkpoint": {
@@ -1300,16 +1359,16 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "sequence_plan": {
             "path": str(context["plan_path"]),
             "sha256": plan_hash,
-            "stage_count": 66,
+            "stage_count": expected_stage_count,
             "executor_dry_validation": "PASS",
         },
         "counts": {
-            "safe_idle": 1,
-            "p6_frame_regression": 3,
-            "fragment_boundary": 48,
-            "large_object_jtag": 9,
-            "ps_modes": 5,
-            "stationary": 1,
+            "safe_idle": groups.count("safe_idle"),
+            "p6_frame_regression": groups.count("p6_frame_regression"),
+            "fragment_boundary": groups.count("fragment_boundary"),
+            "large_object_jtag": groups.count("large_object_jtag"),
+            "ps_modes": sum(group.startswith("ps_") for group in groups),
+            "stationary": groups.count("ps_stationary"),
         },
         "authorization_count": len(authorization_records),
         "authorization_records": authorization_records,
@@ -1330,7 +1389,7 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Generate and locally validate a deterministic P7 66-stage sequence; never touches hardware."
+        description="Generate and locally validate a formal P7 sequence or zero-coverage diagnostic suffix; never touches hardware."
     )
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--source-commit", required=True)
@@ -1353,6 +1412,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--authorization-dir", default="")
     parser.add_argument("--output-plan", default="")
     parser.add_argument("--evidence-root", default="")
+    parser.add_argument(
+        "--diagnostic-suffix55",
+        action="store_true",
+        help="Generate only formal ordinals 1--4 and 55--65; excludes stationary and claims zero coverage.",
+    )
     parser.add_argument("--json-summary", action="store_true")
     return parser
 

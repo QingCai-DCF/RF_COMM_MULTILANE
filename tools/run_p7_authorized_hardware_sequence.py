@@ -4,10 +4,10 @@
 Without ``--execute-hardware`` this module only validates immutable inputs and
 never launches a wrapper.  Hardware execution is possible only from a hashed
 ``rf-comm-p7-hardware-sequence-plan-v1`` document whose commands are exact argv
-vectors for one of the two P7 safe wrappers.  The plan is deliberately rigid:
-safe-idle, three P6 masks, the complete 48-case boundary matrix, the exact
-nine-case large-object matrix, then functional/fault/abort/queue and one final
-1800-second stationary run.
+vectors for one of the two P7 safe wrappers.  Formal acceptance remains the
+rigid 66-stage matrix ending in one 1800-second stationary run.  A separately
+marked, zero-coverage diagnostic suffix mode may contain only formal ordinals
+1--4 and 55--65 and can never include stationary or promote acceptance.
 
 The old read-only preflight entry point and its public helper functions remain
 available when no sequence plan is supplied.
@@ -48,6 +48,9 @@ from p7_hardware_safety import (
 
 SEQUENCE_SCHEMA = "rf-comm-p7-hardware-sequence-plan-v1"
 LEDGER_SCHEMA = "rf-comm-p7-sequence-execution-ledger-v1"
+FULL_PLAN_MODE = "FULL_ACCEPTANCE"
+DIAGNOSTIC_PLAN_MODE = "DIAGNOSTIC_SUFFIX_55"
+DIAGNOSTIC_FULL_STAGE_ORDINALS = tuple(range(1, 5)) + tuple(range(55, 66))
 HARDWARE_ROOT = (ROOT / "evidence" / "hardware" / "p7").resolve(strict=False)
 JTAG_WRAPPER = (ROOT / "scripts" / "hw" / "run_p7_jtag_axi_stage_safe.py").resolve(strict=False)
 PS_WRAPPER = (ROOT / "scripts" / "hw" / "run_p7_ps_application_stage_safe.py").resolve(strict=False)
@@ -410,16 +413,34 @@ def expected_stage_contracts() -> list[dict[str, Any]]:
     return contracts
 
 
-def validate_stage_matrix(stages: Any) -> list[str]:
+def validate_stage_matrix(
+    stages: Any,
+    *,
+    plan_mode: str = FULL_PLAN_MODE,
+    full_stage_ordinals: Any = None,
+) -> list[str]:
     errors: list[str] = []
     if not isinstance(stages, list):
         return ["sequence plan stages must be a list"]
-    expected = expected_stage_contracts()
+    full_expected = expected_stage_contracts()
+    if plan_mode == FULL_PLAN_MODE:
+        expected_ordinals = tuple(range(1, len(full_expected) + 1))
+        if full_stage_ordinals not in (None, list(expected_ordinals)):
+            errors.append("full acceptance plan full_stage_ordinals is malformed")
+    elif plan_mode == DIAGNOSTIC_PLAN_MODE:
+        expected_ordinals = DIAGNOSTIC_FULL_STAGE_ORDINALS
+        if full_stage_ordinals != list(expected_ordinals):
+            errors.append(
+                "diagnostic suffix full_stage_ordinals must be exactly 1--4 plus 55--65"
+            )
+    else:
+        return [f"unsupported sequence plan mode: {plan_mode}"]
+    expected = [full_expected[ordinal - 1] for ordinal in expected_ordinals]
     if len(stages) != len(expected):
         errors.append(f"sequence must contain exactly {len(expected)} stages, observed {len(stages)}")
-    for index, contract in enumerate(expected):
+    for index, (ordinal, contract) in enumerate(zip(expected_ordinals, expected)):
         if index >= len(stages):
-            errors.append(f"sequence stage {index + 1} is missing: {contract}")
+            errors.append(f"sequence stage {index + 1} (full ordinal {ordinal}) is missing: {contract}")
             continue
         stage = stages[index]
         if not isinstance(stage, dict):
@@ -432,15 +453,21 @@ def validate_stage_matrix(stages: Any) -> list[str]:
         }
         if observed != contract:
             errors.append(
-                f"sequence stage {index + 1} contract mismatch: expected={contract} observed={observed}"
+                f"sequence stage {index + 1} (full ordinal {ordinal}) contract mismatch: expected={contract} observed={observed}"
             )
     if len(stages) > len(expected):
-        errors.append("sequence contains stages after the single final stationary stage")
+        errors.append("sequence contains stages outside the selected exact matrix")
     groups = [item.get("group") for item in stages if isinstance(item, dict)]
-    if groups.count("ps_stationary") != 1:
-        errors.append("sequence must contain exactly one stationary stage")
-    if groups and groups[-1] != "ps_stationary":
-        errors.append("stationary stage must be the final planned hardware stage")
+    if plan_mode == FULL_PLAN_MODE:
+        if groups.count("ps_stationary") != 1:
+            errors.append("sequence must contain exactly one stationary stage")
+        if groups and groups[-1] != "ps_stationary":
+            errors.append("stationary stage must be the final planned hardware stage")
+    else:
+        if "ps_stationary" in groups:
+            errors.append("diagnostic suffix must not contain stationary")
+        if len(stages) != 15:
+            errors.append("diagnostic suffix must contain exactly 15 stages")
     if "ps_abort" in groups and "ps_queue" in groups:
         if groups.index("ps_abort") >= groups.index("ps_queue"):
             errors.append("abort stage must precede queue stage")
@@ -937,7 +964,18 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         plan = _load_json_object(plan_path)
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
         return {"errors": errors + [f"sequence plan JSON is invalid: {exc}"], "stages": []}
-    allowed_top = {"schema", "generated_at_utc", "description", "source_commit", "offline_checkpoint", "stages"}
+    allowed_top = {
+        "schema",
+        "generated_at_utc",
+        "description",
+        "source_commit",
+        "offline_checkpoint",
+        "stages",
+        "plan_mode",
+        "full_stage_ordinals",
+        "coverage_claimed",
+        "HARDWARE_ACCEPTANCE",
+    }
     unknown_top = sorted(set(plan) - allowed_top)
     if unknown_top:
         errors.append(f"sequence plan contains unknown top-level keys: {unknown_top}")
@@ -964,8 +1002,25 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             checkpoint_path, checkpoint_sha, source_commit
         )
         errors.extend(checkpoint_errors)
+    plan_mode = str(plan.get("plan_mode", FULL_PLAN_MODE))
+    full_stage_ordinals = plan.get("full_stage_ordinals")
+    if plan_mode == DIAGNOSTIC_PLAN_MODE:
+        if plan.get("coverage_claimed") is not False:
+            errors.append("diagnostic suffix must declare coverage_claimed=false")
+        if plan.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
+            errors.append("diagnostic suffix must keep HARDWARE_ACCEPTANCE=PENDING_HW")
+        if "DIAGNOSTIC_ONLY" not in str(plan.get("description", "")):
+            errors.append("diagnostic suffix description must include DIAGNOSTIC_ONLY")
+    elif any(key in plan for key in ("coverage_claimed", "HARDWARE_ACCEPTANCE")):
+        errors.append("formal plan must not use diagnostic coverage/acceptance declarations")
     stages = plan.get("stages")
-    errors.extend(validate_stage_matrix(stages))
+    errors.extend(
+        validate_stage_matrix(
+            stages,
+            plan_mode=plan_mode,
+            full_stage_ordinals=full_stage_ordinals,
+        )
+    )
     normalized_stages: list[dict[str, Any]] = []
     ids: set[str] = set()
     evidence_dirs: set[str] = set()
@@ -998,6 +1053,28 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             errors.extend(f"stage {index + 1} ({stage_id}): {item}" for item in stage_errors)
             if normalized is None:
                 continue
+            if plan_mode == DIAGNOSTIC_PLAN_MODE:
+                auth = resolve_path(str(normalized["options"].get("--authorization-file", "")))
+                try:
+                    auth_fields, _auth_markers, auth_duplicates = parse_authorization_file(auth)
+                except (OSError, UnicodeError) as exc:
+                    errors.append(f"stage {index + 1} diagnostic authorization cannot be parsed: {exc}")
+                else:
+                    expected_ordinal = (
+                        DIAGNOSTIC_FULL_STAGE_ORDINALS[index]
+                        if index < len(DIAGNOSTIC_FULL_STAGE_ORDINALS)
+                        else None
+                    )
+                    if auth_duplicates:
+                        errors.append(f"stage {index + 1} diagnostic authorization contains duplicates")
+                    if auth_fields.get("P7_EXECUTION_MODE") != "DIAGNOSTIC_ONLY":
+                        errors.append(f"stage {index + 1} diagnostic authorization mode mismatch")
+                    if auth_fields.get("P7_COVERAGE_CLAIMED") != "false":
+                        errors.append(f"stage {index + 1} diagnostic authorization coverage mismatch")
+                    if auth_fields.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
+                        errors.append(f"stage {index + 1} diagnostic authorization acceptance mismatch")
+                    if expected_ordinal is None or auth_fields.get("P7_FULL_STAGE_ORDINAL") != str(expected_ordinal):
+                        errors.append(f"stage {index + 1} diagnostic authorization full ordinal mismatch")
             normalized_stages.append(normalized)
             evidence_key = os.path.normcase(normalized["evidence_dir"])
             summary_key = os.path.normcase(normalized["summary_path"])
@@ -1018,6 +1095,14 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "path": str(plan_path),
         "sha256": sha256_file(plan_path),
         "source_commit": source_commit,
+        "plan_mode": plan_mode,
+        "full_stage_ordinals": (
+            list(range(1, 67))
+            if plan_mode == FULL_PLAN_MODE
+            else list(DIAGNOSTIC_FULL_STAGE_ORDINALS)
+        ),
+        "coverage_claimed": False if plan_mode == DIAGNOSTIC_PLAN_MODE else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan_mode == DIAGNOSTIC_PLAN_MODE else None,
         "offline_checkpoint": {
             "path": str(checkpoint_path),
             "sha256": checkpoint_sha,
@@ -1286,11 +1371,17 @@ def _new_ledger(plan: Mapping[str, Any]) -> dict[str, Any]:
         "hardware_actions_executed": False,
         "network_used": False,
         "motion_used": False,
+        "plan_mode": plan.get("plan_mode", FULL_PLAN_MODE),
+        "coverage_claimed": False if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "full_stage_ordinals": plan.get("full_stage_ordinals", list(range(1, 67))),
         "source_commit": plan["source_commit"],
         "sequence_plan": {
             "path": plan["path"],
             "sha256": plan["sha256"],
             "stage_count": plan["stage_count"],
+            "plan_mode": plan.get("plan_mode", FULL_PLAN_MODE),
+            "full_stage_ordinals": plan.get("full_stage_ordinals", list(range(1, 67))),
         },
         "offline_checkpoint": {
             "path": plan["offline_checkpoint"]["path"],
@@ -1421,6 +1512,8 @@ def _outer_sequence_errors(args: argparse.Namespace, plan: Mapping[str, Any]) ->
     errors: list[str] = []
     if os.environ.get(AUTH_ENV) != AUTH_ENV_VALUE:
         errors.append(f"external environment authorization required: {AUTH_ENV}={AUTH_ENV_VALUE}")
+    if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE and args.resume:
+        errors.append("diagnostic suffix runs are single-attempt epochs and can never use --resume")
     if args.source_commit.lower() != plan["source_commit"]:
         errors.append("outer --source-commit must match the frozen plan/checkpoint commit")
     if args.max_runtime_sec != 1800:
@@ -1465,6 +1558,10 @@ def _sequence_manifest(plan: Mapping[str, Any]) -> dict[str, Any]:
         "uart_access": False,
         "network_used": False,
         "motion_used": False,
+        "plan_mode": plan.get("plan_mode", FULL_PLAN_MODE),
+        "coverage_claimed": False if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "full_stage_ordinals": plan.get("full_stage_ordinals", list(range(1, 67))),
         "sequence_plan": {
             "path": plan.get("path"),
             "sha256": plan.get("sha256"),
@@ -1514,16 +1611,25 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         next_index = 0
         _atomic_write_json(ledger_path, ledger)
     if next_index == len(plan["stages"]):
-        manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "PASS"
-        manifest["reason"] = "all stages were already verified from the immutable resume ledger"
+        diagnostic = plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+        manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
+        manifest["reason"] = (
+            "all diagnostic stages were already verified; zero acceptance coverage"
+            if diagnostic
+            else "all stages were already verified from the immutable resume ledger"
+        )
         manifest["execution_ledger"] = _file_record(ledger_path)
         manifest["hardware_actions_executed"] = bool(ledger.get("hardware_actions_executed"))
         return 0, manifest
 
     log_dir = ledger_path.parent / f".{ledger_path.stem}_wrapper_logs"
     log_dir.mkdir(parents=True, exist_ok=True)
+    full_stage_ordinals = plan.get(
+        "full_stage_ordinals", list(range(1, len(plan["stages"]) + 1))
+    )
     for stage_index in range(next_index, len(plan["stages"])):
         stage = {**plan["stages"][stage_index], "stage_index": stage_index}
+        full_stage_ordinal = int(full_stage_ordinals[stage_index])
         evidence_dir = Path(stage["evidence_dir"])
         if evidence_dir.exists() and (
             evidence_dir.is_symlink() or not evidence_dir.is_dir() or any(evidence_dir.iterdir())
@@ -1542,8 +1648,8 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "BLOCKED"
             manifest["reason"] = "one-time stationary invariant forbids launching a second stationary attempt"
             return 2, manifest
-        stdout_path = log_dir / f"{stage_index + 1:03d}_{stage['id']}.stdout.log"
-        stderr_path = log_dir / f"{stage_index + 1:03d}_{stage['id']}.stderr.log"
+        stdout_path = log_dir / f"{full_stage_ordinal:03d}_{stage['id']}.stdout.log"
+        stderr_path = log_dir / f"{full_stage_ordinal:03d}_{stage['id']}.stderr.log"
         # Persist the exact launch intent before the wrapper can possibly be
         # spawned.  An interrupted/orphan intent is never auto-resumable.  This
         # makes a host/orchestrator crash during the final stationary window a
@@ -1552,6 +1658,7 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         intent: dict[str, Any] = {
             "attempt": len(ledger["attempts"]) + 1,
             "stage_index": stage_index,
+            "full_stage_ordinal": full_stage_ordinal,
             "stage_id": stage["id"],
             "group": stage["group"],
             "risk_index": stage["risk_index"],
@@ -1626,7 +1733,13 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         if passed:
             ledger["completed_stage_count"] = stage_index + 1
             ledger["next_stage_index"] = stage_index + 1
-            ledger["status"] = "RUNNING" if stage_index + 1 < len(plan["stages"]) else "PASS"
+            ledger["status"] = (
+                "RUNNING"
+                if stage_index + 1 < len(plan["stages"])
+                else "DIAGNOSTIC_PASS"
+                if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+                else "PASS"
+            )
         else:
             ledger["status"] = "FAIL"
             ledger["failed_stage_index"] = stage_index
@@ -1643,8 +1756,13 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             manifest["execution_ledger"] = _file_record(ledger_path)
             manifest["hardware_actions_executed"] = True
             return 1, manifest
-    manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "PASS"
-    manifest["reason"] = "all 66 stages passed in strict order; the sole 1800-second stationary stage was last"
+    diagnostic = plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+    manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
+    manifest["reason"] = (
+        "all 15 diagnostic-only stages passed; stationary was excluded and zero acceptance coverage is claimed"
+        if diagnostic
+        else "all 66 stages passed in strict order; the sole 1800-second stationary stage was last"
+    )
     manifest["hardware_actions_executed"] = True
     manifest["execution_ledger"] = _file_record(ledger_path)
     return 0, manifest
@@ -1667,7 +1785,9 @@ def _sequence_main(args: argparse.Namespace) -> int:
         returncode = 2
     elif not args.execute_hardware:
         manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DRY_RUN_VALIDATED"
-        manifest["reason"] = "all 66 planned wrapper argv vectors and immutable inputs validated; no process was launched"
+        manifest["reason"] = (
+            f"all {plan['stage_count']} planned wrapper argv vectors and immutable inputs validated; no process was launched"
+        )
         returncode = 0
     else:
         returncode, manifest = _execute_sequence(args, plan)

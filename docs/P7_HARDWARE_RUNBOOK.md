@@ -148,6 +148,19 @@ try {
 
 Never proceed to the next risk tier unless the current wrapper returns `0`, its semantic/postprocess gate is PASS, and shutdown-after is independently valid.
 
+### Diagnostic suffix mode
+
+When explicitly authorized after a failed full run, the generator may use
+`--diagnostic-suffix55` with a new run ID containing `diag_suffix55`. This mode
+contains only formal ordinals 1--4 and 55--65 (15 stages total), excludes the
+stationary stage, and must declare `DIAGNOSTIC_ONLY`, `coverage_claimed=false`,
+and `HARDWARE_ACCEPTANCE=PENDING_HW` in its hashed plan and stage authorizations.
+It is a single-attempt diagnostic epoch: `--resume` is forbidden. A failure
+still requires independent shutdown recovery and a new run ID. Diagnostic PASS
+records contribute no final acceptance coverage; after all suffix defects are
+fixed, a new formal 66-stage run must start from stage 1 and is the only run
+permitted to launch the one-time stationary stage.
+
 All P7 wrappers share one exclusive board lock. Never launch two wrappers concurrently, never delete or auto-recover a lock as "stale", and do not use non-overlapping timestamps as a substitute for the recorded lock acquisition. If a lock remains after a crash, stop and inspect the physical board/shutdown state before a human-authorized recovery.
 
 ### 3.1 Safe-idle recheck

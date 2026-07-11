@@ -40,6 +40,36 @@ def option(command: list[str], name: str) -> str:
 
 
 class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
+    def test_diagnostic_suffix_selection_is_exact_zero_stationary_matrix(self) -> None:
+        full = subject.build_stage_specs()
+        selected = subject.select_stage_specs(full, diagnostic_suffix55=True)
+        self.assertEqual(list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS), [spec.index for spec in selected])
+        self.assertEqual(15, len(selected))
+        self.assertEqual(["safe_idle", "p6_frame_regression", "p6_frame_regression", "p6_frame_regression"], [spec.group for spec in selected[:4]])
+        self.assertEqual(7, sum(spec.group == "large_object_jtag" for spec in selected))
+        self.assertEqual(4, sum(spec.group.startswith("ps_") for spec in selected))
+        self.assertFalse(any(spec.group == "ps_stationary" for spec in selected))
+        stages = [
+            {"group": spec.group, "risk_index": spec.risk_index, "case": spec.case}
+            for spec in selected
+        ]
+        self.assertEqual(
+            [],
+            sequence.validate_stage_matrix(
+                stages,
+                plan_mode=sequence.DIAGNOSTIC_PLAN_MODE,
+                full_stage_ordinals=list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS),
+            ),
+        )
+        tampered = list(stages)
+        tampered[-1] = {"group": "ps_stationary", "risk_index": 80, "case": {}}
+        errors = sequence.validate_stage_matrix(
+            tampered,
+            plan_mode=sequence.DIAGNOSTIC_PLAN_MODE,
+            full_stage_ordinals=list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS),
+        )
+        self.assertTrue(any("stationary" in item for item in errors))
+
     def test_stage_specs_are_exact_and_1m_budget_is_separately_1800_capable(self) -> None:
         specs = subject.build_stage_specs()
         self.assertEqual(66, len(specs))
