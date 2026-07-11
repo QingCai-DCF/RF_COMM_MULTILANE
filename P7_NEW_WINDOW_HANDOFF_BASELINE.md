@@ -455,3 +455,36 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   再换新 diagnostic run ID；不得 resume。
 - suffix 问题全部修复/提交且非硬件 gates PASS 后，才生成新的正式 run ID，从完整 stages 1--66 重新执行。
   只有该正式全量 run 可以启动唯一一次 stage 66 的 1800 秒 stationary acceptance。
+
+## 19. 2026-07-11 r10 diagnostic suffix 增量交接（本节覆盖第 18 节的 next-run 描述）
+
+- r10 diagnostic source 为 `6bd9980eb7cc82093e47099dcd7fe38ebbc5f3d7`；clean offline checkpoint SHA256 为
+  `4304f94d4bff6e449955c487257064477b4bdbe58d150cdb94d2aa3b3134636c`；15-stage diagnostic plan SHA256 为
+  `5cefcc79a8c3d4114688086631c1ed1974355f4d74a26db28715ab4814fccb8d`。
+- run ID `p7_20260711_stationary_app_r10_diag_suffix55` 只启动一次且永远不得 resume。full ordinals
+  1--4 与 55--57 完整 PASS；full ordinal 58 / `p7_large_jtag_1m_l0_random` 在 candidate 的 1400 秒硬截止
+  到期后 rc=124、`timed_out=true`、forced containment/reap，并以 `FAIL_STAGE` 停止。outer ledger 为
+  completed=7、attempts=8、failed_stage_index=7、full_stage_ordinal=58。
+- stage 58 原始日志只到 `P7F00944_RXW017=F72C793C`，没有 `P7F00945_*`、`P7_TRANSACTION_COUNT`、
+  `P7_JTAG_AXI_TRANSACTIONS=PASS` 或 `P7_JTAG_STAGE_RESULT=PASS`。因此它是 immutable timeout FAIL，
+  不是部分 PASS；r10 的所有 prefix/suffix 仍贡献零 acceptance coverage。
+- stage wrapper 的 shutdown-before 与 shutdown-after 均 PASS。独立 recovery 位于
+  `recovery_shutdown_after_failed_stage058_20260711T125648Z/`，记录唯一 TFDU shutdown marker、
+  `SHUTDOWN_EXIT=0` 和 `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。该 recovery PASS 不改变 stage 58 FAIL。
+- r10 frozen 10-file input manifest SHA256 为
+  `d1897482ed7ab9e77e2a293f6d2a2d0a133cc2352ae3d1b48190a3650db4af29`，并明确
+  `full_stage_ordinal=58`、`coverage_claimed=false`。r10 evidence、历史/tamper validator 与修复已提交为
+  `f508e864fbf4c9103684637faa864e5f8d4c6494`。
+- 根因不是 optical/CRC/ACK failure，而是旧 Tcl 对每个 payload/readback word 各启动一个 JTAG/AXI transaction；
+  1 MiB DSL 有 1,073,038 个 operations，在 1400 秒只完成到 fragment 944。修复只把自然连续的 TX payload
+  与 TX/RX readback words 合并为最多 64 words 的授权 `INCR` burst；control/status/poll 仍逐项执行，原 DSL
+  operation count、验证顺序、每 word result key 和 strict backend evidence 不变。对 frozen stage 58 transaction
+  的 dry validation 把实际 JTAG transaction launch 数从 1,073,038 降为 180,508，最大 burst 62 words。
+- 完整非硬件回归结果：top-level discovery 106/106 PASS，`tests/p7` 39/39 PASS，合计 145/145；
+  `py_compile`、`check_no_hardware_calls.py` 与 `git diff --check` PASS。这些结果仍只属于非硬件验证。
+- 最终 1800 秒 stationary 正式尝试次数仍为 0；r10 明确为 `DIAGNOSTIC_ONLY`、
+  `coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`，未创建任何 stationary stage directory/marker。
+- 下一次只允许先在本节提交后的 clean source 上生成一次新 offline checkpoint，再生成新的
+  `p7_20260711_stationary_app_r11_diag_suffix55` 计划并通过全部 dry validation。r11 仍是零覆盖 diagnostic，
+  只运行 full ordinals 1--4 与 55--65，绝不运行 stage 66。任何失败仍需新 run ID、独立 shutdown recovery，
+  不得 resume。只有 suffix 全部 PASS、所有修复提交并重新生成 clean checkpoint 后，才可另建正式 full run。
