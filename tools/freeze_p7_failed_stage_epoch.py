@@ -88,8 +88,11 @@ def main() -> int:
     summary_path = epoch / f"{stage_ordinal:03d}_{stage_id}" / "p7_jtag_axi_stage_summary.json"
     summary = read_json(summary_path)
     source = str(ledger.get("source_commit", "")).lower()
-    if summary.get("P7_JTAG_AXI_SAFE_STAGE") != "FAIL_STAGE":
-        raise ValueError("only an exact FAIL_STAGE epoch may be frozen by this helper")
+    summary_result = str(summary.get("P7_JTAG_AXI_SAFE_STAGE", ""))
+    if summary_result not in {"FAIL_STAGE", "FAIL_SHUTDOWN_AFTER"}:
+        raise ValueError(
+            "only an exact FAIL_STAGE or FAIL_SHUTDOWN_AFTER epoch may be frozen by this helper"
+        )
     if str(summary.get("safety_validation", {}).get("source_commit_requested", "")).lower() != source:
         raise ValueError("summary/ledger source commit mismatch")
     if (
@@ -146,6 +149,7 @@ def main() -> int:
 
     if stage_id != "p7_safe_idle":
         for role, relative in (
+            ("historical_stage_wrapper_python", "scripts/hw/run_p7_jtag_axi_stage_safe.py"),
             ("historical_backend_python", "tools/p7_jtag_backend.py"),
             ("historical_lane_phy_rtl", "rtl/tfdu_lane_phy.sv"),
         ):
@@ -193,7 +197,7 @@ def main() -> int:
         "source_commit": source,
         "stage_index": failed_index,
         "stage_id": stage_id,
-        "result": "FAIL_STAGE",
+        "result": summary_result,
         "mutation_attempted": True,
         "candidate_mutation_attempted": True,
         "coverage_claimed": False,

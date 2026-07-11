@@ -1,0 +1,90 @@
+{
+  "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
+  "run_id": "p7_20260711_stationary_app_r6",
+  "source_commit": "36a67aef2e39c7ca52ec2765d5eebb0363c44bdb",
+  "stage_index": 27,
+  "stage_id": "p7_fragment_boundary_216_rep3",
+  "result": "FAIL_SHUTDOWN_AFTER",
+  "mutation_attempted": true,
+  "candidate_mutation_attempted": true,
+  "coverage_claimed": false,
+  "recovery_directories": [
+    "recovery_shutdown_after_failed_stage28_20260711T063732Z"
+  ],
+  "files": [
+    {
+      "role": "offline_checkpoint",
+      "original_path": "evidence/generated/p7_offline_gate_summary.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_offline_gate_summary_f1e770a00435ead1126f62986772d9912c707e0e86ef2aa3409a313159a5a412.json",
+      "bytes": 7626,
+      "sha256": "f1e770a00435ead1126f62986772d9912c707e0e86ef2aa3409a313159a5a412"
+    },
+    {
+      "role": "sequence_plan",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r6_sequence_plan.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_sequence_plan_9ce58238a1fa8264b56d5bf3cdd13af1b48ff70e5c4a90f73a44d2cf044c12cd.txt",
+      "bytes": 373889,
+      "sha256": "9ce58238a1fa8264b56d5bf3cdd13af1b48ff70e5c4a90f73a44d2cf044c12cd"
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r6_028_p7_fragment_boundary_216_rep3.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_stage_001_authorization_5662a1b2412f80ff3ae4a388ebf14ed406b64a4b21f7689bc7f3967be8d3db93.txt",
+      "bytes": 3295,
+      "sha256": "5662a1b2412f80ff3ae4a388ebf14ed406b64a4b21f7689bc7f3967be8d3db93"
+    },
+    {
+      "role": "stage_transactions",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r6/transactions/028_p7_fragment_boundary_216_rep3.transactions.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_stage_001_transactions_3ab7e4d0cc6d7a79de6f540fff0158ad824ded8c00091d17acf0dc610437b076.txt",
+      "bytes": 9775,
+      "sha256": "3ab7e4d0cc6d7a79de6f540fff0158ad824ded8c00091d17acf0dc610437b076"
+    },
+    {
+      "role": "generation_manifest",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r6/p7_authorized_sequence_generation_manifest.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_generation_manifest_ff85cc163a37d77a089d21911c7d58827bc699f1ed464715ca8203c74a81f75c.json",
+      "bytes": 271136,
+      "sha256": "ff85cc163a37d77a089d21911c7d58827bc699f1ed464715ca8203c74a81f75c"
+    },
+    {
+      "role": "recovery_p4_authorization",
+      "original_path": ".hardware_authorization/P4_APPROVED.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p4_recovery_authorization_61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476.txt",
+      "bytes": 201,
+      "sha256": "61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476"
+    },
+    {
+      "role": "historical_stage_tcl",
+      "original_path": "scripts/hw/p7_jtag_axi_transactions.tcl",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_jtag_axi_transactions_36a67aef_0b1c05ba9de293ef73197739edfd5e91624fa1c8.tcl",
+      "git_blob_sha1": "0b1c05ba9de293ef73197739edfd5e91624fa1c8",
+      "bytes": 26680,
+      "sha256": "68e8b394a8db0ab94ddc1ed4051f8bdc5ce73243e30da6946dc8705ae643b16e"
+    },
+    {
+      "role": "historical_stage_wrapper_python",
+      "original_path": "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/run_p7_jtag_axi_stage_safe_36a67aef_fbd3f21e1cdd52e1097aeb6c3370c541e09c50c7.py",
+      "git_blob_sha1": "fbd3f21e1cdd52e1097aeb6c3370c541e09c50c7",
+      "bytes": 136802,
+      "sha256": "cbfc29493ee5ad5fbfc3e7f9b64f43ec844dfeb822eb500751b42405258ea767"
+    },
+    {
+      "role": "historical_backend_python",
+      "original_path": "tools/p7_jtag_backend.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/p7_jtag_backend_36a67aef_b47de1c9e823a1f0190f233c6848bf0d5ca0223a.py",
+      "git_blob_sha1": "b47de1c9e823a1f0190f233c6848bf0d5ca0223a",
+      "bytes": 79756,
+      "sha256": "3ae1b84a68ccdc42120bcfe07b0c1356315d7638a9669d5444c6f588a2884bd9"
+    },
+    {
+      "role": "historical_lane_phy_rtl",
+      "original_path": "rtl/tfdu_lane_phy.sv",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/tfdu_lane_phy_36a67aef_970cbc860290698c4f417959f7e7fc0bcfbd6933.sv",
+      "git_blob_sha1": "970cbc860290698c4f417959f7e7fc0bcfbd6933",
+      "bytes": 5199,
+      "sha256": "2f515a22fedc5abdf3f58bbdaa6df8baee8a2f919747a3622ece0a63009e920a"
+    }
+  ]
+}

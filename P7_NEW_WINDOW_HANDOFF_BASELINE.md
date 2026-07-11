@@ -289,3 +289,48 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - 后续只能先提交本修复和 r5 失败证据，再在新干净 source commit 上生成一次新 offline checkpoint、
   r6 plan 和全部 dry validation；之后才允许启动 r6。
 - 最终 1800 秒 stationary run 仍为 `NOT_RUN`，正式执行次数仍为 0。
+
+## 14. 2026-07-11 r6 增量交接（本节覆盖第 13 节的 next-run 描述）
+
+- r5 raw-pulse 修复与 immutable r5 evidence 已提交：
+  `c64baa0a5ca57e35249e6ec49869095c8da388ae`。
+- 首次在该提交上运行的 clean-source offline gate 暴露历史 r5 safe-idle 仍错误要求等于当前 HEAD；
+  修复历史 source 必须为当前 HEAD 的祖先且保持活动证据 HEAD 严格绑定后，提交为
+  `36a67aef2e39c7ca52ec2765d5eebb0363c44bdb`。
+- 在干净的 `36a67aef...` source 上唯一新生成的 offline checkpoint 为 PASS；SHA256
+  `f1e770a00435ead1126f62986772d9912c707e0e86ef2aa3409a313159a5a412`，
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`，`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r6 run ID 为 `p7_20260711_stationary_app_r6`；plan SHA256 为
+  `9ce58238a1fa8264b56d5bf3cdd13af1b48ff70e5c4a90f73a44d2cf044c12cd`。
+  66 个 authorization、66 个 child dry validation 和 executor dry validation 全部 PASS，
+  且 stationary 是唯一的第 66 项；生成和 dry 阶段未启动 Vivado/XSDB/硬件。
+- r6 只启动一次且永远不得 resume。stage 1--27 均在 outer ledger 中终态 PASS；stage 28 /
+  `p7_fragment_boundary_216_rep3` 以 `FAIL_SHUTDOWN_AFTER` 停止。stage 29--66、PS ELF 和
+  stationary 均未启动；最终 1800 秒 stationary 正式尝试次数仍为 0。
+- r6 stage 28 的 candidate transaction、frame/CRC/ACK 和 in-band STOP|SHUTDOWN 均 PASS；
+  shutdown-after 的 fresh result 也包含唯一的 `P7_TCL_PROGRAMMING_ATTEMPTED=1`、
+  `TFDU_SHUTDOWN_PROGRAMMED=<canonical shutdown bitstream>` 和 `P7_SHUTDOWN_RESULT=PASS`。
+  但 Vivado helper forest 在约 20 秒 idle 边界发生父 PID 查询退出竞态；wrapper 在仍未取得
+  terminal-empty Job proof 时执行 forced cleanup，故 return code 125、process_tree_reaped=false，
+  并正确拒绝整个 stage。不得把 shutdown marker 或 recovery PASS 写成 stage 28 PASS。
+- r6 独立恢复目录：
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/recovery_shutdown_after_failed_stage28_20260711T063732Z/`。
+  其中记录 `SHUTDOWN_RAW_EXIT=125`、`TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、
+  `SHUTDOWN_EXIT=0` 和 `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。恢复后临时
+  `rdi_xsdb/cs_server` 均自然退出，只保留未触碰的 legacy `hw_server`。
+- r6 冻结目录：
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/historical_preflight_inputs/`。
+  其 10-file manifest SHA256 为
+  `bba8f98ce66d115120ae11d97ceaf8b7c2860685748810ac4eeace4f319efa07`，并明确
+  `result=FAIL_SHUTDOWN_AFTER`、`coverage_claimed=false`；同时冻结 checkpoint、plan、stage
+  authorization/transactions、generation manifest、P4 authorization、历史 Tcl、JTAG wrapper、
+  backend 和 lane-PHY RTL Git blobs。
+- 当前未提交修复仅允许在同一固定 30 秒 deadline 内，在身份查询重试耗尽后增加一次不超过
+  0.1 秒的 Job terminal-empty proof；只有 Job 直接证明空且采样 gap 仍不超过 250 ms 才可
+  清除 transient query error 并 PASS。任何仍非空 Job、拓扑增长/变异、hash/path 不匹配或
+  deadline 到期仍继续 forced cleanup 并 FAIL。完整 JTAG wrapper suite 34/34、summarizer
+  suite 13/13（含真实 r1--r6 与 r6 tamper）已 PASS。
+- 下一次硬件 run ID 必须是 r7。必须先准确提交本修复和 r6 evidence，再在新干净 source 上
+  只生成一次新 offline checkpoint，生成 r7 66-stage plan，并通过所有 dry validation。
+  r7 也必须从 stage 1 全新开始；r6 的 27-stage PASS prefix 只作为已验证历史记录，贡献 0
+  active-checkpoint coverage。

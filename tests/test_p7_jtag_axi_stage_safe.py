@@ -960,6 +960,53 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertIn("post hash mismatch", record["expected_tool_daemon_hash_error"])
         self.assertFalse(record["containment_cleanup_attempted"])
 
+    @unittest.skipUnless(sys.platform == "win32", "Windows terminal-empty race test")
+    def test_exhausted_identity_retry_may_pass_only_on_one_final_job_empty_proof(self) -> None:
+        full = exact_r2_forest()
+
+        class ExitRaceJob:
+            def __init__(self) -> None:
+                self.queries = 0
+                self.waits: list[float] = []
+
+            def wait_empty(self, timeout_sec: float) -> bool:
+                self.waits.append(timeout_sec)
+                return len(self.waits) == 5
+
+            def active_process_identities(self):
+                self.queries += 1
+                if self.queries in (1, 3):
+                    raise OSError("parent PID lookup missed exiting helper")
+                return full
+
+            @staticmethod
+            def terminate():
+                raise AssertionError("terminal-empty Job must not be terminated")
+
+            @staticmethod
+            def close():
+                pass
+
+        job = ExitRaceJob()
+        passed, record = verify_fake_job(job)
+        self.assertTrue(passed)
+        self.assertEqual(3, job.queries)
+        self.assertEqual(5, len(job.waits))
+        self.assertEqual(1, record["process_identity_query_retry_count"])
+        self.assertEqual(3, record["process_exit_race_recheck_count"])
+        self.assertEqual("", record["containment_query_error"])
+        self.assertEqual(1, len(record["process_identity_query_transient_errors"]))
+        self.assertIn(
+            "parent PID lookup missed exiting helper",
+            record["process_identity_query_transient_errors"][0],
+        )
+        self.assertTrue(record["expected_tool_daemon_topology_terminal_empty"])
+        self.assertEqual(
+            "EMPTY",
+            record["expected_tool_daemon_topology_snapshots"][-1]["classification"],
+        )
+        self.assertFalse(record["containment_cleanup_attempted"])
+
     @unittest.skipUnless(sys.platform == "win32", "Windows prelaunch binding test")
     def test_prelaunch_hash_failure_never_releases_contained_launcher(self) -> None:
         class FakeStdin:

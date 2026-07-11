@@ -171,6 +171,7 @@ class ProcessResult:
     expected_tool_daemon_topology_terminal_empty: bool = False
     process_identity_query_retry_count: int = 0
     process_exit_race_recheck_count: int = 0
+    process_identity_query_transient_errors: list[str] = field(default_factory=list)
     containment_cleanup_attempted: bool = False
     containment_cleanup_terminated: bool = False
     process_exit_race_rechecked: bool = False
@@ -861,8 +862,9 @@ _POSIX_PROCESS_GROUPS: dict[subprocess.Popen[Any], int] = {}
 # the batch parent exits.  Only those complete initial states receive a fixed
 # natural-exit window.  Every later snapshot must be a shrink-only subset with
 # immutable PID/path/parent identity.  Any other descendant, topology growth,
-# path/hash mismatch, query error, or grace timeout is a containment failure
-# and is terminated before returning.
+# path/hash mismatch or grace timeout is a containment failure and is terminated
+# before returning.  A transient identity-query error may recover only through
+# a direct terminal-empty Job proof inside the same fixed deadline.
 PROCESS_EXIT_RACE_RECHECK_SECONDS = 0.05
 MAX_TOPOLOGY_SAMPLE_GAP_SECONDS = 0.25
 MAX_PROCESS_IDENTITY_QUERY_RETRIES = 1
@@ -1138,6 +1140,7 @@ def _containment_detail_defaults(*, expected_paths: list[str] | None = None) -> 
         "expected_tool_daemon_topology_terminal_empty": False,
         "process_identity_query_retry_count": 0,
         "process_exit_race_recheck_count": 0,
+        "process_identity_query_transient_errors": [],
         "containment_cleanup_attempted": False,
         "containment_cleanup_terminated": False,
         "process_exit_race_rechecked": False,
@@ -1861,6 +1864,62 @@ def verify_process_tree_reaped(process: subprocess.Popen[Any]) -> bool:
                                     elapsed_seconds=sample_elapsed,
                                 )
                                 break
+                            if next_identities is None:
+                                # A PID/parent lookup may race the approved helper
+                                # forest's final exit.  Spend one final bounded Job
+                                # wait, without another identity query or deadline
+                                # reset, and accept only a direct terminal-empty
+                                # proof.  Any still-nonempty Job remains FAIL and is
+                                # forcibly cleaned up below.
+                                remaining = window_deadline - time.monotonic()
+                                details["process_exit_race_recheck_count"] = int(
+                                    details.get("process_exit_race_recheck_count", 0)
+                                ) + 1
+                                final_empty = False
+                                if remaining > 0:
+                                    final_empty = job.wait_empty(
+                                        min(
+                                            CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS,
+                                            remaining,
+                                        )
+                                    )
+                                sample_elapsed = _record_topology_sample(
+                                    details, window_started=window_started
+                                )
+                                if (
+                                    final_empty
+                                    and details[
+                                        "expected_tool_daemon_topology_max_sample_gap_seconds"
+                                    ]
+                                    <= MAX_TOPOLOGY_SAMPLE_GAP_SECONDS
+                                ):
+                                    transient_error = str(
+                                        details.get("containment_query_error", "")
+                                    )
+                                    if transient_error:
+                                        details.setdefault(
+                                            "process_identity_query_transient_errors", []
+                                        ).append(transient_error)
+                                    details["containment_query_error"] = ""
+                                    empty = True
+                                    physically_empty = True
+                                    details[
+                                        "expected_tool_daemon_topology_terminal_empty"
+                                    ] = True
+                                    _append_changed_topology_snapshot(
+                                        details,
+                                        [],
+                                        "EMPTY",
+                                        elapsed_seconds=sample_elapsed,
+                                    )
+                                elif final_empty:
+                                    details[
+                                        "expected_tool_daemon_topology_monotonic"
+                                    ] = False
+                                    details["expected_tool_daemon_topology_error"] = (
+                                        "terminal identity-race empty proof exceeded the fixed 250 ms sampling ceiling"
+                                    )
+                                break
                             if not next_identities:
                                 break
                             subset_classification = classify_expected_tool_daemon_subset(
@@ -2316,6 +2375,9 @@ def run_bounded_process(
         ),
         process_identity_query_retried=bool(
             containment.get("process_identity_query_retried", False)
+        ),
+        process_identity_query_transient_errors=list(
+            containment.get("process_identity_query_transient_errors", [])
         ),
         containment_query_error=str(containment.get("containment_query_error", "")),
         launch_error=launch_error,
