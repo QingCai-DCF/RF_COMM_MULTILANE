@@ -369,3 +369,37 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   recovery 顺序/分类和 r7 tamper fail-closed 测试。下一次硬件 run ID 必须为 r8；只有本修复和 r7
   evidence 准确提交、在新干净 source 上生成唯一一次新 offline checkpoint、生成 r8 plan 且全部 dry
   validation PASS 后，才允许从 stage 1 全新启动 r8。
+
+## 16. 2026-07-11 r8 增量交接（本节覆盖第 15 节的 next-run 描述）
+
+- r7 shutdown-budget 修复与 immutable r7 evidence 已提交为
+  `11961c92d22713032d92095d87e6c4362b3254dc`。
+- 在干净的 `11961c92...` source 上唯一一次新生成的 offline checkpoint 为 PASS；SHA256
+  `7146e8000b2e4763f95d07e9ca7671646c5536b89077a615cb645538d6d132a1`，13/13 checks
+  为 true，`NO_HARDWARE_ACTIONS_EXECUTED=true`，`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r8 run ID 为 `p7_20260711_stationary_app_r8`；plan SHA256 为
+  `58e07164f1aa38816b9b360bb28a838d6afd986a292863e3152f6daab914522d`。66 个
+  authorization、66 个 child dry validation、生成器 executor dry 与独立 executor dry 全部 PASS。
+- r8 只启动一次并永远不得 resume。stage 1--54 在 outer ledger 中终态 PASS；stage 55
+  `p7_large_jtag_64k_rr_prbs15` 以 `FAIL_STAGE` 停止，completed stage count 为 54。stage 56--66、
+  PS ELF 与唯一 1800 秒 stationary 均未启动；正式 stationary 尝试次数仍为 0。
+- r8 stage 55 candidate transaction rc=0、process tree reaped=true，305 个 fragment 的 payload/CRC/ACK
+  与 shutdown-before/after 均完成。strict backend parser 随后以
+  `COUNTER_DELTA: fragment 200 FRAME_GOOD delta=2 expected=1` 拒绝整个 stage。
+- 原始 fragment 199/200/201 证明 fragment 200 发生一次合法 ARQ retry：`RETRY_COUNT` 当前值为 1，
+  `TX_COUNT`、`ACK_SEEN` 和目标 lane `RX_GOOD` 各增加 1，而累计 `FRAME_GOOD`、`ACK_SENT` 各增加 2；
+  `RETRY_EXHAUSTED=0`、CRC/error counters 为 0。RTL 在每次 `clear_pulse` 把 `retry_count` 清零，因此旧
+  parser 同时错把 RETRY_COUNT 当累计计数，并错误要求 FRAME_GOOD/ACK_SENT 固定增量 1。
+- r8 失败后的独立恢复目录为
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r8/recovery_shutdown_after_failed_stage55_20260711T104455Z/`，
+  记录 `SHUTDOWN_RAW_EXIT=125`、`TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0` 与
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。恢复 PASS 不得写成 stage 55 PASS。
+- r8 frozen 10-file manifest SHA256 为
+  `df2b3e3854d6eb948c0939cb237f895bee40d77e18ddb40a6818689047021f9d`，明确
+  `result=FAIL_STAGE`、`coverage_claimed=false`。
+- 当前 parser 修复把 `RETRY_COUNT` 作为 clear-scoped per-fragment observation，严格限制在 RTL
+  `MAX_RETRY=3` 的 0..3 范围；累计 `FRAME_GOOD` 与 `ACK_SENT` 的期望增量改为
+  `1 + retry_count`，而 `TX_COUNT`、`ACK_SEEN`、目标 lane `RX_GOOD` 仍严格要求增量 1。
+- 下一次硬件 run ID 必须为 r9。必须先准确提交 parser/summarizer 修复和 r8 evidence，再在新干净
+  source 上只生成一次新 offline checkpoint、生成 r9 66-stage plan 并通过全部 dry validation；r9 必须
+  从 stage 1 全新开始。r8 的 54-stage PASS prefix 仅为祖先 source 历史记录，贡献 0 active coverage。

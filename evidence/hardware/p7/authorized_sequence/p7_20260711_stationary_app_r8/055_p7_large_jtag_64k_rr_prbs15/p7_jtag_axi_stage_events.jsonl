@@ -1,0 +1,10 @@
+{"timestamp_utc": "2026-07-11T10:34:15.564847+00:00", "event": "authorized_execution_begin", "stage": "p7_large_jtag_64k_rr_prbs15"}
+{"timestamp_utc": "2026-07-11T10:34:46.824828+00:00", "event": "preflight_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T10:35:35.343324+00:00", "event": "shutdown_before_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T10:35:35.353073+00:00", "event": "candidate_started", "semantic_mode": "rfap"}
+{"timestamp_utc": "2026-07-11T10:43:49.519270+00:00", "event": "candidate_child_reaped", "process_tree_reaped": true, "candidate_returncode": 0}
+{"timestamp_utc": "2026-07-11T10:43:49.551477+00:00", "event": "stage_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T10:43:49.554324+00:00", "event": "shutdown_after_started", "candidate_child_reaped": true, "candidate_returncode": 0}
+{"timestamp_utc": "2026-07-11T10:44:38.096936+00:00", "event": "shutdown_after_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T10:44:38.212281+00:00", "event": "backend_parse_finished", "passed": false, "failure": "BackendValidationError: COUNTER_DELTA: fragment 200 FRAME_GOOD delta=2 expected=1"}
+{"timestamp_utc": "2026-07-11T10:44:38.215601+00:00", "event": "authorized_execution_end", "status": "FAIL_STAGE"}

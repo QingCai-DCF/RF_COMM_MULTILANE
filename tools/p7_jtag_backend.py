@@ -53,6 +53,7 @@ MAX_TRANSACTION_OPERATIONS = 1_100_000
 MAX_TRANSACTION_BYTES = 128 * 1024 * 1024
 MAX_TRANSACTION_LINE_BYTES = 512
 MAX_RAW_LOG_BYTES = 128 * 1024 * 1024
+P6_MAX_RETRY_PER_FRAGMENT = 3
 REFERENCE_JTAG_FREQUENCY_HZ = 1_000_000
 ESTIMATED_AXI_OPERATION_US_AT_1MHZ = 1_250
 ESTIMATED_STAGE_FIXED_OVERHEAD_SECONDS = 30.0
@@ -1112,21 +1113,30 @@ def parse_raw_result(
         current = {name: _require_int(values, f"{prefix}_{name}") for name in COUNTER_OFFSETS}
         deltas = {name: _delta32(current[name], previous[name]) for name in COUNTER_OFFSETS}
         # The real P6 RTL routes P6_CTRL_CLEAR_STICKY into each tfdu_lane_phy
-        # ``clear_sticky`` input.  RAW_TX_PULSES and RAW_RX_PULSES therefore
-        # restart at zero before every fragment; they are per-fragment
-        # observations, not cumulative counters.  Keep the cumulative-delta
-        # contract for the other counters and record the clear-scoped raw
-        # observations directly.
-        for name in ("RAW_TX_PULSES", "RAW_RX_PULSES"):
+        # ``clear_sticky`` input, and the engine's clear pulse also resets
+        # RETRY_COUNT.  These three values therefore restart at zero before
+        # every fragment and are per-fragment observations, not cumulative
+        # counters.  Keep the cumulative-delta contract for the other
+        # counters and record the clear-scoped observations directly.
+        for name in ("RAW_TX_PULSES", "RAW_RX_PULSES", "RETRY_COUNT"):
             deltas[name] = current[name]
         expected_l0 = 1 if int(plan["lane_mask"]) & 0x1 else 0
         expected_l1 = 1 if int(plan["lane_mask"]) & 0x2 else 0
+        retry_delta = deltas["RETRY_COUNT"]
+        if not 0 <= retry_delta <= P6_MAX_RETRY_PER_FRAGMENT:
+            _fail(
+                "RETRY_DELTA",
+                f"fragment {index} RETRY_COUNT delta={retry_delta} outside 0..{P6_MAX_RETRY_PER_FRAGMENT}",
+            )
         exact_deltas = {
             "TX_COUNT": 1,
             "RX_GOOD_COUNT_L0": expected_l0,
             "RX_GOOD_COUNT_L1": expected_l1,
-            "FRAME_GOOD": 1,
-            "ACK_SENT": 1,
+            # Every retry re-transmits one valid frame.  The receiver counts
+            # and ACKs each valid duplicate, while the sender records one
+            # eventual ACK_SEEN and one completed TX_COUNT.
+            "FRAME_GOOD": 1 + retry_delta,
+            "ACK_SENT": 1 + retry_delta,
             "ACK_SEEN": 1,
         }
         for name, expected in exact_deltas.items():
@@ -1166,6 +1176,7 @@ def parse_raw_result(
                 "transfer_polls": done_poll_count,
                 "counters": current,
                 "counter_deltas": deltas,
+                "retry_count_delta": retry_delta,
                 "raw_pulse_counter_semantics": "clear_scoped_per_fragment_observation",
                 "txd_high_max_cycles": txd_high,
                 "rx_length": encoded_length,

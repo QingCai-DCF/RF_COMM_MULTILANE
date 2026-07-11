@@ -231,6 +231,80 @@ class P7JtagBackendTests(unittest.TestCase):
                         )
                     self.assertEqual(caught.exception.code, expected_code)
 
+    def test_retry_delta_allows_duplicate_valid_frames_and_is_bounded(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_text:
+            temp = Path(temp_text)
+            transaction = temp / "object.transactions.txt"
+            manifest = temp / "object.manifest.json"
+            raw = temp / "object.raw.log"
+            output = temp / "object.output.bin"
+            generate_bundle(
+                data_pattern(216, 7),
+                transaction_path=transaction,
+                manifest_path=manifest,
+                session_epoch=7,
+                object_id=8,
+                lane_policy=LanePolicy.STRIPE_ROUND_ROBIN,
+            )
+            MemoryMockExecutor().execute(transaction, raw)
+            original = raw.read_text(encoding="utf-8")
+            retried = (
+                original.replace("P7F00001_RETRY_COUNT=00000000", "P7F00001_RETRY_COUNT=00000001")
+                .replace("P7F00001_FRAME_GOOD=00000002", "P7F00001_FRAME_GOOD=00000003")
+                .replace("P7F00001_ACK_SENT=00000002", "P7F00001_ACK_SENT=00000003")
+            )
+            raw.write_text(retried, encoding="utf-8")
+            parsed = parse_raw_result(
+                manifest_path=manifest,
+                raw_log_path=raw,
+                output_path=output,
+            )
+            self.assertEqual(parsed["P7_JTAG_BACKEND_PARSE"], "PASS")
+            self.assertEqual(parsed["fragments"][1]["retry_count_delta"], 1)
+            self.assertEqual(parsed["fragments"][1]["counter_deltas"]["FRAME_GOOD"], 2)
+            self.assertEqual(parsed["fragments"][1]["counter_deltas"]["ACK_SENT"], 2)
+
+            excessive = retried.replace(
+                "P7F00001_RETRY_COUNT=00000001",
+                "P7F00001_RETRY_COUNT=00000004",
+            )
+            raw.write_text(excessive, encoding="utf-8")
+            with self.assertRaises(BackendValidationError) as caught:
+                parse_raw_result(
+                    manifest_path=manifest,
+                    raw_log_path=raw,
+                    output_path=output,
+                )
+            self.assertEqual(caught.exception.code, "RETRY_DELTA")
+
+    def test_real_r8_retry_evidence_parses(self) -> None:
+        stage = (
+            ROOT
+            / "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r8"
+            / "055_p7_large_jtag_64k_rr_prbs15"
+        )
+        summary_path = stage / "p7_jtag_axi_stage_summary.json"
+        self.assertTrue(summary_path.is_file(), "r8 failed-stage summary must remain immutable evidence")
+        wrapper_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(wrapper_summary["P7_JTAG_AXI_SAFE_STAGE"], "FAIL_STAGE")
+        self.assertEqual(
+            wrapper_summary["backend_parse_failure"],
+            "BackendValidationError: COUNTER_DELTA: fragment 200 FRAME_GOOD delta=2 expected=1",
+        )
+        manifest = Path(wrapper_summary["transaction_validation"]["backend_manifest"]["path"])
+        with tempfile.TemporaryDirectory() as temp_text:
+            output = Path(temp_text) / "r8_reassembled.bin"
+            parsed = parse_raw_result(
+                manifest_path=manifest,
+                raw_log_path=stage / "p7_jtag_axi_raw_result.txt",
+                output_path=output,
+            )
+        self.assertEqual(parsed["P7_JTAG_BACKEND_PARSE"], "PASS")
+        self.assertEqual(len(parsed["fragments"]), 305)
+        self.assertEqual(parsed["fragments"][200]["retry_count_delta"], 1)
+        self.assertEqual(parsed["fragments"][200]["counter_deltas"]["FRAME_GOOD"], 2)
+        self.assertEqual(parsed["fragments"][200]["counter_deltas"]["ACK_SENT"], 2)
+
     def test_real_r5_clear_scoped_raw_pulse_evidence_parses(self) -> None:
         stage = (
             ROOT

@@ -62,6 +62,9 @@ HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED = (
 HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED = (
     "STAGE_PASS_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING"
 )
+HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED = (
+    "STAGE_AND_SHUTDOWN_PASS_BACKEND_RETRY_SEMANTICS_REJECTED"
+)
 EXPECTED_VIVADO_HELPER_ROLES = ("cs_server", "rdi_xsdb", "cmd", "conhost")
 EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE = {
     "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
@@ -702,10 +705,20 @@ def _v2_process_containment_errors(record: Mapping[str, Any], label: str) -> lis
 
     retry_count = record.get("process_identity_query_retry_count")
     recheck_count = record.get("process_exit_race_recheck_count")
+    transient_errors = record.get("process_identity_query_transient_errors", [])
+    append_error(
+        errors,
+        isinstance(transient_errors, list)
+        and len(transient_errors) <= 1
+        and all(isinstance(item, str) and bool(item) for item in transient_errors),
+        f"{label} identity-query transient-error provenance is malformed",
+    )
     append_error(errors, type(retry_count) is int and 0 <= retry_count <= 1, f"{label} identity-query retry count exceeds the global bound")
     append_error(errors, type(recheck_count) is int and 0 <= recheck_count <= 2, f"{label} exit-race recheck count exceeds the global bound")
     append_error(errors, record.get("process_identity_query_retried") is (retry_count == 1), f"{label} identity-query retry boolean/count mismatch")
     append_error(errors, record.get("process_exit_race_rechecked") is (isinstance(recheck_count, int) and recheck_count > 0), f"{label} exit-race recheck boolean/count mismatch")
+    if isinstance(transient_errors, list) and transient_errors:
+        append_error(errors, retry_count == 1 and isinstance(recheck_count, int) and recheck_count >= 1, f"{label} transient identity error is not bound to the single retry/final empty proof")
 
     if posix_group:
         append_error(errors, record.get("expected_tool_daemon_paths") == [], f"{label} POSIX record contains Windows helper paths")
@@ -817,7 +830,9 @@ def _v2_process_containment_errors(record: Mapping[str, Any], label: str) -> lis
         append_error(errors, grace_seconds == VIVADO_HELPER_GRACE_SECONDS, f"{label} helper grace is not the fixed 30-second window")
         append_error(errors, isinstance(grace_elapsed, (int, float)) and not isinstance(grace_elapsed, bool) and samples and samples[-1] <= float(grace_elapsed) <= VIVADO_HELPER_GRACE_SECONDS, f"{label} helper grace elapsed time is invalid")
         append_error(errors, record.get("expected_tool_daemon_topology_monotonic") is True, f"{label} helper topology is not monotonic")
-        append_error(errors, type(revalidation_count) is int and revalidation_count >= 1 and len(samples) == revalidation_count + 2, f"{label} topology sample/revalidation count mismatch")
+        transient_errors = record.get("process_identity_query_transient_errors", [])
+        transient_count = len(transient_errors) if isinstance(transient_errors, list) else 0
+        append_error(errors, type(revalidation_count) is int and revalidation_count >= 1 and len(samples) == revalidation_count + 2 + transient_count, f"{label} topology sample/revalidation count mismatch")
         append_error(errors, len(samples) >= 2 and bool(snapshot_time_values) and snapshot_time_values[0] == samples[1], f"{label} initial helper snapshot is not bound to the post-identity sample")
         initial_processes = snapshots[0].get("processes") if snapshots else None
         initial = _normalize_v2_helper_processes(initial_processes, helper_paths or {}, allow_empty=False)
@@ -3300,6 +3315,18 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 == "BackendValidationError: RAW_PULSE_COUNTER: fragment 1 RAW_TX_PULSES did not increase"
             ):
                 return HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED
+            if (
+                not raw_duplicates
+                and candidate.data.get("stage_name") == "p7_large_jtag_64k_rr_prbs15"
+                and raw.get("P7_CANDIDATE_PROGRAMMED") == "1"
+                and raw.get("P7_TCL_PROGRAMMING_ATTEMPTED") == "1"
+                and raw.get("P7_JTAG_AXI_TRANSACTIONS") == "PASS"
+                and raw.get("P7_TRANSACTION_COUNT") == "67092"
+                and raw.get("P7_JTAG_STAGE_RESULT") == "PASS"
+                and candidate.data.get("backend_parse_failure")
+                == "BackendValidationError: COUNTER_DELTA: fragment 200 FRAME_GOOD delta=2 expected=1"
+            ):
+                return HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
         if candidate.marker == "FAIL_PREFLIGHT":
             return HISTORICAL_PREFLIGHT_IDENTITY_PASS_HELPER_CONTAINMENT_REJECTED
     return "UNKNOWN"
@@ -4113,6 +4140,101 @@ def _old_commit_backend_raw_pulse_failure_errors(
         and 0 <= float(runtime.get("elapsed_seconds")) <= 900,
         f"{label} runtime record is invalid",
     )
+    return errors
+
+
+def _old_commit_backend_retry_failure_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    """Validate r8's post-shutdown retry-semantics rejection without coverage."""
+
+    data = candidate.data
+    errors: list[str] = []
+    label = "historical r8"
+    append_error(errors, candidate.kind == "jtag" and candidate.stage == "large_object_jtag", f"{label} failure is not the large-object JTAG stage")
+    append_error(errors, candidate.executed and candidate.marker == "FAIL_STAGE", f"{label} execution/result boundary mismatch")
+    append_error(errors, data.get("hardware_acceptance") == "PENDING_HW", f"{label} promoted or omitted hardware acceptance")
+    append_error(errors, data.get("stage_name") == "p7_large_jtag_64k_rr_prbs15" and data.get("semantic_mode") == "rfap", f"{label} stage identity/semantic mode mismatch")
+    for key in ("programmed_fpga", "programmed_candidate", "programmed_shutdown_before", "programmed_shutdown_after", "drove_tfdu_txd", "enabled_tfdu_receiver"):
+        append_error(errors, data.get(key) is True, f"{label} does not preserve {key}=true")
+    for key in ("started_ps_elf", "uart_access", "ethernet_used", "motion_used"):
+        append_error(errors, data.get(key) is False, f"{label} does not explicitly prove {key}=false")
+    append_error(errors, data.get("child_reaped_before_shutdown_after") is True, f"{label} candidate was not reaped before shutdown-after")
+
+    transaction = data.get("transaction_validation")
+    backend_manifest = transaction.get("backend_manifest") if isinstance(transaction, dict) else None
+    append_error(
+        errors,
+        isinstance(transaction, dict)
+        and transaction.get("valid") is True
+        and transaction.get("operation_count") == 67092
+        and transaction.get("metadata") == {"BACKEND": "p7_jtag_backend", "LANE_POLICY": "STRIPE_ROUND_ROBIN"}
+        and isinstance(backend_manifest, dict)
+        and backend_manifest.get("schema") == JTAG_MANIFEST_SCHEMA
+        and backend_manifest.get("input_length") == 65536
+        and backend_manifest.get("input_sha256") == "ca45ccdf9f0c2be72656e6414cd71ae407b860df22830092d92fb0dbf1a0f1eb"
+        and backend_manifest.get("lane_policy") == "STRIPE_ROUND_ROBIN"
+        and backend_manifest.get("transaction_operation_count") == 67092,
+        f"{label} transaction/backend manifest boundary mismatch",
+    )
+    preflight = data.get("preflight_process")
+    if not isinstance(preflight, dict):
+        errors.append(f"{label} preflight process record missing")
+    else:
+        errors.extend(process_record_errors(preflight, f"{label} preflight", document=candidate.path, repo_root=evidence.repo_root))
+    preflight_markers, preflight_duplicates = parse_marker_text(marker_text(candidate.path.parent / "p7_preflight_result.txt"))
+    append_error(errors, not preflight_duplicates and _historical_preflight_variant(candidate) == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED, f"{label} failure class mismatch")
+    append_error(errors, data.get("target_identity") == dict(preflight_markers) and data.get("preflight_failures") == [], f"{label} preflight identity/failure boundary mismatch")
+    errors.extend(shutdown_errors(candidate, "before", evidence=evidence))
+    errors.extend(shutdown_errors(candidate, "after", evidence=evidence))
+    stage = data.get("stage_process")
+    if not isinstance(stage, dict):
+        errors.append(f"{label} candidate process record missing")
+        stage = {}
+    else:
+        errors.extend(process_record_errors(stage, f"{label} candidate", document=candidate.path, repo_root=evidence.repo_root))
+    append_error(errors, stage.get("name") == "jtag_axi_stage" and stage.get("returncode") == 0 and stage.get("passed") is True and stage.get("failures") == [], f"{label} candidate process is not exact inner PASS")
+    expected_failure = "BackendValidationError: COUNTER_DELTA: fragment 200 FRAME_GOOD delta=2 expected=1"
+    append_error(errors, data.get("stage_failures") == [] and data.get("internal_error") == "", f"{label} wrapper stage/internal failure fields mismatch")
+    append_error(errors, data.get("backend_parse_failure") == expected_failure and data.get("backend_parse") == {"passed": False, "failure": expected_failure, "attempted_after_shutdown": True}, f"{label} backend rejection mismatch")
+    append_error(errors, data.get("reason") == "stage return code/markers failed; nonzero return codes can never be promoted", f"{label} wrapper reason mismatch")
+    append_error(errors, not (candidate.path.parent / "p7_jtag_backend_parse_summary.json").exists(), f"{label} unexpectedly contains a backend PASS summary")
+
+    raw, raw_duplicates = raw_markers(candidate)
+    expected_raw = {
+        "P7_CANDIDATE_PROGRAMMED": "1",
+        "P7_TCL_PROGRAMMING_ATTEMPTED": "1",
+        "P7_JTAG_AXI_TRANSACTIONS": "PASS",
+        "P7_TRANSACTION_COUNT": "67092",
+        "P7_JTAG_STAGE_RESULT": "PASS",
+        "P7F00199_RETRY_COUNT": "00000000",
+        "P7F00200_RETRY_COUNT": "00000001",
+        "P7F00201_RETRY_COUNT": "00000000",
+        "P7F00199_FRAME_GOOD": "000000C8",
+        "P7F00200_FRAME_GOOD": "000000CA",
+        "P7F00201_FRAME_GOOD": "000000CB",
+        "P7F00199_ACK_SENT": "000000C8",
+        "P7F00200_ACK_SENT": "000000CA",
+        "P7F00201_ACK_SENT": "000000CB",
+        "P7F00199_ACK_SEEN": "000000C8",
+        "P7F00200_ACK_SEEN": "000000C9",
+        "P7F00201_ACK_SEEN": "000000CA",
+    }
+    append_error(errors, not raw_duplicates and all(raw.get(key) == value for key, value in expected_raw.items()), f"{label} raw retry evidence mismatch")
+    errors.extend(authorized_event_errors(candidate, evidence))
+    _event_path, events, event_errors = load_authorized_events(candidate)
+    errors.extend(event_errors)
+    append_error(errors, [item.get("event") for item in events] == ["authorized_execution_begin", "preflight_finished", "shutdown_before_finished", "candidate_started", "candidate_child_reaped", "stage_finished", "shutdown_after_started", "shutdown_after_finished", "backend_parse_finished", "authorized_execution_end"], f"{label} event sequence mismatch")
+    if len(events) == 10:
+        append_error(errors, events[5].get("returncode") == 0 and events[5].get("passed") is True, f"{label} inner stage event is not PASS")
+        append_error(errors, events[7].get("returncode") == 0 and events[7].get("passed") is True, f"{label} shutdown-after event mismatch")
+        append_error(errors, events[8].get("passed") is False and events[8].get("failure") == expected_failure, f"{label} backend-parse event mismatch")
+        append_error(errors, events[9].get("status") == "FAIL_STAGE", f"{label} end event status mismatch")
+    lock_errors, _lock_record = hardware_execution_lock_errors(candidate, evidence)
+    errors.extend(f"{label} lock: {item}" for item in lock_errors)
+    runtime = data.get("global_runtime")
+    append_error(errors, isinstance(runtime, dict) and runtime.get("authorized_max_seconds") == 960 and runtime.get("within_authorized_limit") is True and isinstance(runtime.get("elapsed_seconds"), (int, float)) and 0 <= float(runtime.get("elapsed_seconds")) <= 960, f"{label} runtime record is invalid")
     return errors
 
 
@@ -5290,6 +5412,61 @@ def _historical_r7_outer_containment_errors(
     return errors
 
 
+def _historical_r8_outer_containment_errors(
+    attempt: Mapping[str, Any],
+    process: Mapping[str, Any],
+    *,
+    candidate: Candidate,
+    epoch_root: Path,
+    outer_path: Path,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    errors: list[str] = []
+    label = "historical r8"
+    stage_id = "p7_large_jtag_64k_rr_prbs15"
+    append_error(errors, process.get("name") == f"sequence_{stage_id}", f"{label} outer process name mismatch")
+    append_error(errors, process.get("returncode") == 1, f"{label} outer process returncode is not exactly 1")
+    append_error(errors, process.get("process_tree_terminated") is False and process.get("process_tree_reaped") is True, f"{label} outer process reap/termination mismatch")
+    append_error(errors, process.get("containment_kind") == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE", f"{label} outer containment is not a Windows Job")
+    append_error(errors, process.get("containment_assigned") is True and process.get("containment_closed") is True and process.get("descendant_count_after") == 0, f"{label} outer containment mismatch")
+    errors.extend(_v2_process_containment_errors(process, f"{label} outer process"))
+    append_error(errors, process.get("launch_error") == "", f"{label} outer launch error is nonempty")
+    append_error(errors, isinstance(process.get("elapsed_seconds"), (int, float)) and 0 <= float(process.get("elapsed_seconds")) <= 960, f"{label} outer elapsed time is invalid")
+    wrapper_logs = epoch_root / ".sequence_execution_ledger_wrapper_logs"
+    stdout = wrapper_logs / f"055_{stage_id}.stdout.log"
+    stderr = wrapper_logs / f"055_{stage_id}.stderr.log"
+    append_error(errors, resolve_reference(process.get("stdout_path"), document=outer_path, repo_root=evidence.repo_root) == stdout.resolve(strict=False), f"{label} outer stdout path mismatch")
+    append_error(errors, resolve_reference(process.get("stderr_path"), document=outer_path, repo_root=evidence.repo_root) == stderr.resolve(strict=False), f"{label} outer stderr path mismatch")
+    append_error(errors, stderr.is_file() and stderr.stat().st_size == 0, f"{label} outer stderr missing/nonempty")
+    append_error(errors, attempt.get("failures") == ["outer wrapper process containment/return-code policy failed", "wrapper result is not PASS: P7_JTAG_AXI_SAFE_STAGE=FAIL_STAGE", "JTAG wrapper strict backend parse is missing or not bound to this run"], f"{label} outer failure list mismatch")
+    shutdown_after = attempt.get("shutdown_after")
+    append_error(
+        errors,
+        isinstance(shutdown_after, dict)
+        and shutdown_after.get("present") is True
+        and shutdown_after.get("returncode") == 0
+        and shutdown_after.get("passed") is True
+        and shutdown_after.get("attempted") is True
+        and shutdown_after.get("programming_attempted") is True
+        and shutdown_after.get("process_tree_reaped") is True
+        and shutdown_after.get("process_tree_terminated") is False
+        and shutdown_after.get("containment_cleanup_attempted") is False
+        and shutdown_after.get("containment_cleanup_terminated") is False
+        and shutdown_after.get("tfdu_shutdown_programmed_exact") is True
+        and shutdown_after.get("p7_tcl_programming_attempted") == "1"
+        and shutdown_after.get("p7_shutdown_result") == "PASS",
+        f"{label} outer shutdown-after facts mismatch",
+    )
+    if isinstance(shutdown_after, dict):
+        errors.extend(_verify_historical_hash_file(shutdown_after.get("result_file"), label=f"{label} outer shutdown-after result", document=outer_path, repo_root=evidence.repo_root))
+        result_path = resolve_reference(shutdown_after.get("result_file", {}).get("path") if isinstance(shutdown_after.get("result_file"), dict) else None, document=outer_path, repo_root=evidence.repo_root)
+        append_error(errors, result_path == (candidate.path.parent / "p7_shutdown_after_result.txt").resolve(strict=False), f"{label} outer shutdown-after result path mismatch")
+    orchestrator_elapsed = attempt.get("orchestrator_elapsed_seconds")
+    process_elapsed = process.get("elapsed_seconds")
+    append_error(errors, isinstance(orchestrator_elapsed, (int, float)) and isinstance(process_elapsed, (int, float)) and float(orchestrator_elapsed) >= float(process_elapsed) >= 0, f"{label} orchestrator elapsed mismatch")
+    return errors
+
+
 def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence) -> tuple[dict[str, Any], list[str]]:
     """Bind the superseded executor attempt and manifest-declared recoveries.
 
@@ -5317,10 +5494,13 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
         HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
         HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+        HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
     }
     failed_stage_variant = historical_variant in failed_stage_variants
     failed_stage_index = (
-        27
+        54
+        if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
+        else 27
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
         else 2
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED
@@ -5372,11 +5552,25 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     epoch_label="historical r7",
                 )
             )
+        elif historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+            errors.extend(
+                _historical_r6_pass_prefix_errors(
+                    attempts[:failed_stage_index],
+                    epoch_root=epoch_root,
+                    outer_path=outer_path,
+                    evidence=evidence,
+                    source=source,
+                    expected_count=54,
+                    epoch_label="historical r8",
+                )
+            )
         attempt = attempts[failed_stage_index]
     append_error(errors, attempt.get("attempt") == failed_stage_index + 1 and attempt.get("stage_index") == failed_stage_index, "historical outer attempt identity mismatch")
     append_error(errors, attempt.get("stage_id") == candidate.data.get("stage_name"), "historical outer attempt stage mismatch")
     expected_group = (
-        "fragment_boundary"
+        "large_object_jtag"
+        if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
+        else "fragment_boundary"
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
         else "p6_frame_regression"
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED
@@ -5385,7 +5579,9 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         else "safe_idle"
     )
     expected_case = (
-        {"lane_policy": "REPLICATE_0X3", "object_size": 216}
+        {"lane_policy": "STRIPE_ROUND_ROBIN", "object_size": 65536, "pattern": "prbs15"}
+        if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
+        else {"lane_policy": "REPLICATE_0X3", "object_size": 216}
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
         else {"lane_mask": 2, "minimum_fragments": 10}
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED
@@ -5396,7 +5592,9 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     append_error(errors, attempt.get("group") == expected_group and attempt.get("case") == expected_case, "historical outer attempt group/case mismatch")
     append_error(errors, attempt.get("state") == "TERMINAL" and attempt.get("result") == "FAIL", "historical outer attempt is not terminal FAIL")
     expected_risk = (
-        25
+        31
+        if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
+        else 25
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
         else 20
         if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED
@@ -5510,6 +5708,17 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 evidence=evidence,
             )
         )
+    elif historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+        errors.extend(
+            _historical_r8_outer_containment_errors(
+                attempt,
+                process,
+                candidate=candidate,
+                epoch_root=epoch_root,
+                outer_path=outer_path,
+                evidence=evidence,
+            )
+        )
 
     wrapper_start, wrapper_end = authorized_execution_boundaries(candidate)
     outer_start = parse_time(attempt.get("started_at_utc"), float("nan"))
@@ -5541,6 +5750,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
         HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
         HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+        HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
     }:
         diagnostic_file_names = (
             candidate.path.name,
@@ -5616,6 +5826,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
                     HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
                     HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+                    HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                 }
             ),
             "historical failed-stage input manifest candidate-mutation fact mismatch",
@@ -5655,6 +5866,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     elif historical_variant in {
         HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
         HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+        HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
     }:
         expected_roles.update(
             {
@@ -5738,6 +5950,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                         in {
                             HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
                             HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+                            HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                         }
                         else {}
                     ),
@@ -5753,6 +5966,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
                     HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
                     HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+                    HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
                 }
                 else {}
             ),
@@ -6016,6 +6230,57 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     ),
                     "r5_clear_scoped_backend_fix_present": "clear_scoped_per_fragment_observation" in backend_text,
                 }
+            elif historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+                source_records: dict[str, dict[str, Any]] = {}
+                for role, relative in (
+                    ("historical_stage_wrapper_python", "scripts/hw/run_p7_jtag_axi_stage_safe.py"),
+                    ("historical_backend_python", "tools/p7_jtag_backend.py"),
+                    ("historical_lane_phy_rtl", "rtl/tfdu_lane_phy.sv"),
+                ):
+                    frozen_source = role_paths[role]
+                    frozen_bytes = frozen_source.read_bytes()
+                    computed_blob = hashlib.sha1(f"blob {len(frozen_bytes)}\0".encode("ascii") + frozen_bytes).hexdigest()
+                    recorded_blob = str(frozen_records[role].get("git_blob_sha1", "")).lower()
+                    append_error(errors, computed_blob == recorded_blob, f"historical r8 frozen source Git blob mismatch: {role}")
+                    try:
+                        committed_source = subprocess.run(["git", "show", f"{source}:{relative}"], cwd=evidence.repo_root, capture_output=True, timeout=30, check=False)
+                    except (OSError, subprocess.SubprocessError) as exc:
+                        errors.append(f"unable to read historical r8 source {relative}: {exc}")
+                    else:
+                        append_error(errors, committed_source.returncode == 0 and committed_source.stdout == frozen_bytes, f"historical r8 frozen source differs from source commit: {role}")
+                    try:
+                        source_text = frozen_bytes.decode("utf-8", errors="strict")
+                    except UnicodeError as exc:
+                        errors.append(f"historical r8 frozen source is not strict UTF-8 ({role}): {exc}")
+                        source_text = ""
+                    source_records[role] = {"path": str(frozen_source), "git_blob_sha1": computed_blob, "sha256": hashlib.sha256(frozen_bytes).hexdigest(), "size_bytes": len(frozen_bytes), "text": source_text}
+                backend_text = source_records.get("historical_backend_python", {}).pop("text", "")
+                old_clear_scope = 'for name in ("RAW_TX_PULSES", "RAW_RX_PULSES"):'
+                old_frame_exact = '"FRAME_GOOD": 1,'
+                old_ack_exact = '"ACK_SENT": 1,'
+                append_error(errors, backend_text.count(old_clear_scope) == 2 and backend_text.count(old_frame_exact) == 1 and backend_text.count(old_ack_exact) == 1, "historical r8 backend does not bind the exact retry-semantics mismatch")
+                append_error(errors, "P6_MAX_RETRY_PER_FRAGMENT" not in backend_text, "historical r8 backend unexpectedly contains the retry-semantics fix")
+                try:
+                    engine = subprocess.run(["git", "show", f"{source}:rtl/p6_dynamic_transport_engine.sv"], cwd=evidence.repo_root, text=True, capture_output=True, timeout=30, check=False)
+                except (OSError, subprocess.SubprocessError) as exc:
+                    errors.append(f"unable to read historical r8 transport engine: {exc}")
+                    engine_text = ""
+                else:
+                    append_error(errors, engine.returncode == 0, "historical r8 transport engine is absent from source commit")
+                    engine_text = engine.stdout if engine.returncode == 0 else ""
+                clear_bodies = re.findall(r"if \(clear_pulse\) begin(?P<body>.*?)end", engine_text, re.DOTALL)
+                retry_clear_scoped = any("retry_count <= 32'd0;" in body for body in clear_bodies)
+                append_error(errors, retry_clear_scoped, "historical r8 RTL does not prove RETRY_COUNT is clear-scoped")
+                historical_source_control_flow = {
+                    **historical_source_control_flow,
+                    "stage_wrapper": source_records.get("historical_stage_wrapper_python", {}),
+                    "backend": source_records.get("historical_backend_python", {}),
+                    "lane_phy_rtl": source_records.get("historical_lane_phy_rtl", {}),
+                    "backend_treats_retry_count_as_cumulative": old_clear_scope in backend_text,
+                    "backend_requires_frame_and_ack_sent_delta_one": old_frame_exact in backend_text and old_ack_exact in backend_text,
+                    "rtl_clear_pulse_resets_retry_count": retry_clear_scoped,
+                    "historical_retry_contract_mismatch_proven": old_clear_scope in backend_text and old_frame_exact in backend_text and old_ack_exact in backend_text and retry_clear_scoped,
+                }
         try:
             old_offline = json.loads(role_paths["offline_checkpoint"].read_text(encoding="utf-8", errors="strict"))
             old_plan = json.loads(role_paths["sequence_plan"].read_text(encoding="utf-8", errors="strict"))
@@ -6112,6 +6377,9 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED:
                 append_error(errors, argv_value("--shutdown-timeout-sec") == "30", "historical r7 failed stage does not bind the undersized 30-second shutdown timeout")
                 append_error(errors, argv_value("--max-runtime-sec") == "900", "historical r7 failed stage max runtime mismatch")
+            if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+                append_error(errors, argv_value("--shutdown-timeout-sec") == "60", "historical r8 failed stage shutdown timeout mismatch")
+                append_error(errors, argv_value("--max-runtime-sec") == "960", "historical r8 failed stage max runtime mismatch")
             append_error(
                 errors,
                 resolve_reference(argv_value("--authorization-file"), document=role_paths["sequence_plan"], repo_root=evidence.repo_root)
@@ -6530,6 +6798,16 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             and effective_records[0].get("tfdu_shutdown_programmed_seen") is True,
             "historical r7 recovery does not prove one TFDU marker with normalized raw rc125 and SHUTDOWN_EXIT=0",
         )
+    elif historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+        append_error(errors, len(recovery_dirs) == 1 and not no_action_records and len(effective_records) == 1, "historical r8 must contain exactly one effective recovery and no no-action recovery")
+        append_error(
+            errors,
+            len(effective_records) == 1
+            and effective_records[0].get("observed_raw_exit") == 125
+            and effective_records[0].get("shutdown_exit") == 0
+            and effective_records[0].get("tfdu_shutdown_programmed_seen") is True,
+            "historical r8 recovery does not prove one TFDU marker with normalized raw rc125 and SHUTDOWN_EXIT=0",
+        )
     ordered_recoveries = sorted(recovery_times)
     append_error(
         errors,
@@ -6678,6 +6956,23 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         **(
             {
                 "historical_source_control_flow": historical_source_control_flow,
+                "backend_retry_semantics_failure": {
+                    "candidate_returncode": candidate.data.get("stage_process", {}).get("returncode"),
+                    "candidate_passed": candidate.data.get("stage_process", {}).get("passed"),
+                    "candidate_reaped": candidate.data.get("stage_process", {}).get("process_tree_reaped"),
+                    "candidate_programmed": candidate.data.get("programmed_candidate"),
+                    "raw_result_file": _hash_record(raw_marker_path(candidate)),
+                    "backend_parse_failure": candidate.data.get("backend_parse_failure"),
+                    "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
+                    "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
+                },
+            }
+            if historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED
+            else {}
+        ),
+        **(
+            {
+                "historical_source_control_flow": historical_source_control_flow,
                 "shutdown_timeout_before_programming_failure": {
                     "candidate_returncode": candidate.data.get("stage_process", {}).get("returncode"),
                     "candidate_passed": candidate.data.get("stage_process", {}).get("passed"),
@@ -6712,6 +7007,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
                 HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
                 HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+                HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
             }
             else []
         ),
@@ -6847,6 +7143,9 @@ def _candidate_checkpoint_relation(
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     elif historical_variant == HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED:
         errors.extend(_old_commit_shutdown_timeout_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED:
+        errors.extend(_old_commit_backend_retry_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
@@ -7170,6 +7469,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
             HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED,
             HISTORICAL_STAGE_SHUTDOWN_TIMEOUT_BEFORE_PROGRAMMING_REJECTED,
+            HISTORICAL_STAGE_BACKEND_RETRY_SEMANTICS_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

@@ -1,0 +1,4946 @@
+{
+  "P7_JTAG_AXI_SAFE_STAGE": "PASS",
+  "generated_at_utc": "2026-07-11T10:13:50.608428+00:00",
+  "stage_name": "p7_fragment_boundary_1024_rr",
+  "semantic_mode": "rfap",
+  "requested_execute_hardware": true,
+  "hardware_actions_executed": true,
+  "programmed_fpga": true,
+  "programmed_candidate": true,
+  "programmed_shutdown_before": true,
+  "programmed_shutdown_after": true,
+  "started_ps_elf": false,
+  "drove_tfdu_txd": true,
+  "enabled_tfdu_receiver": true,
+  "uart_access": false,
+  "ethernet_used": false,
+  "motion_used": false,
+  "hardware_acceptance": "PENDING_HW",
+  "safety_validation": {
+    "P7_HARDWARE_SAFETY": "PASS",
+    "ready_for_hardware_preflight": true,
+    "hardware_actions_executed": false,
+    "programmed_fpga": false,
+    "drove_tfdu_txd": false,
+    "started_ps_elf": false,
+    "authorization_environment_present": true,
+    "authorization": {
+      "exists": true,
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r8_051_p7_fragment_boundary_1024_rr.txt",
+      "actual_sha256": "44ae2a55d68a1da1c9dc4bfb8d83998235f14c457111d9eb5f52d4fce9b74ef4",
+      "expected_sha256": "44ae2a55d68a1da1c9dc4bfb8d83998235f14c457111d9eb5f52d4fce9b74ef4",
+      "markers": [
+        "P7_STATIONARY_APP_LAYER_APPROVED"
+      ],
+      "duplicate_keys": []
+    },
+    "authorization_fields": {
+      "AUTHORIZED_STAGE": "P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET",
+      "USER_HARDWARE_AUTHORIZATION_FOR_P7": "GRANTED",
+      "BOARD_ID": "210512180081",
+      "EXPECTED_PART": "xc7z010clg400-1",
+      "EXPECTED_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "SOURCE_COMMIT": "11961c92d22713032d92095d87e6c4362b3254dc",
+      "MAX_RUNTIME_SEC": "960",
+      "SHUTDOWN_ON_EXIT": "required",
+      "NO_ETHERNET": "true",
+      "NO_MOTION": "true",
+      "LANE_COUNT": "2",
+      "MAX_LANE_MASK": "0x3",
+      "P7_PLAN_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+      "P7_PLAN_SHA256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+      "BITSTREAM_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
+      "BITSTREAM_SHA256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+      "XSA_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+      "XSA_SHA256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+      "ELF_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+      "ELF_SHA256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+      "PROFILE_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+      "PROFILE_SHA256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+      "ACTIVE_XDC_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+      "ACTIVE_XDC_SHA256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+      "PINMAP_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+      "PINMAP_SHA256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+      "REGISTER_MAP_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+      "REGISTER_MAP_SHA256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+      "SHUTDOWN_BITSTREAM_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+      "SHUTDOWN_BITSTREAM_SHA256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+      "LTX_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+      "LTX_SHA256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+      "P7_JTAG_STAGE_NAME": "p7_fragment_boundary_1024_rr",
+      "P7_JTAG_SEMANTIC_MODE": "rfap",
+      "P7_JTAG_TRANSACTION_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r8\\transactions\\051_p7_fragment_boundary_1024_rr.transactions.txt",
+      "P7_JTAG_TRANSACTION_SHA256": "378f68780b670f19e81ec97594b06d7f912285b8175dc1cad8aae5931079cc22",
+      "P7_JTAG_FREQUENCY_HZ": "1000000",
+      "P7_JTAG_AXI_BASE": "0x43c00000",
+      "P7_JTAG_BACKEND_MANIFEST_PATH": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r8\\manifests\\051_p7_fragment_boundary_1024_rr.manifest.json",
+      "P7_JTAG_BACKEND_MANIFEST_SHA256": "353ce18662db602488eeda4a5eb4b50f78c28c24ae476182a4facf218ce40354"
+    },
+    "source_commit_requested": "11961c92d22713032d92095d87e6c4362b3254dc",
+    "source_commit_current": "11961c92d22713032d92095d87e6c4362b3254dc",
+    "dirty_files": [
+      " M evidence/generated/p7_ps_runtime_build_summary.json",
+      " M evidence/generated/p7_ps_runtime_build_summary.md",
+      " M evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json",
+      "?? evidence/generated/p7_2lane_scope_summary.md",
+      "?? evidence/generated/p7_application_protocol_summary.md",
+      "?? evidence/generated/p7_artifact_provenance_summary.json",
+      "?? evidence/generated/p7_artifact_provenance_summary.md",
+      "?? evidence/generated/p7_backend_conformance_summary.md",
+      "?? evidence/generated/p7_fault_recovery_summary.md",
+      "?? evidence/generated/p7_file_integrity_summary.md",
+      "?? evidence/generated/p7_fragmentation_reassembly_summary.md",
+      "?? evidence/generated/p7_lane1_promotion_summary.json",
+      "?? evidence/generated/p7_lane1_promotion_summary.md",
+      "?? evidence/generated/p7_lane_scheduler_summary.md",
+      "?? evidence/generated/p7_no_ethernet_summary.md",
+      "?? evidence/generated/p7_no_motion_summary.md",
+      "?? evidence/generated/p7_offline_gate_summary.json",
+      "?? evidence/generated/p7_offline_gate_summary.md",
+      "?? evidence/generated/p7_offline_test_run.json",
+      "?? evidence/generated/p7_protocol_vector_summary.json",
+      "?? evidence/generated/p7_protocol_vector_summary.md",
+      "?? evidence/generated/p7_ps_core_hardware_readiness.json",
+      "?? evidence/generated/p7_ps_core_hardware_readiness.md",
+      "?? evidence/generated/p7_ps_runtime_summary.md",
+      "?? evidence/generated/p7_queue_backpressure_summary.md",
+      "?? evidence/generated/p7_repo_intake.md",
+      "?? evidence/generated/p7_repo_intake_summary.json",
+      "?? evidence/generated/p7_repo_intake_summary.md",
+      "?? evidence/generated/p7_segmentation_reassembly_summary.md",
+      "?? evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r8/"
+    ],
+    "max_runtime_sec": 960,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "no_ethernet": true,
+    "no_motion": true,
+    "shutdown_on_exit": true,
+    "abort_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\ABORT_NOW.txt",
+    "abort_file_present": false,
+    "hw_server_url": "localhost:3121",
+    "preflight_tcl": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_hw_preflight.tcl",
+    "preflight_tcl_sha256": "95bfbdf7e6c429e6637c1b4224a9dcecaa1fd756a1f665b21a797d54afbfc464",
+    "artifacts": {
+      "plan": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+        "expected_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+        "exists": true,
+        "actual_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd"
+      },
+      "bitstream": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
+        "expected_sha256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+        "exists": true,
+        "actual_sha256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c"
+      },
+      "xsa": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+        "expected_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+        "exists": true,
+        "actual_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9"
+      },
+      "elf": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+        "expected_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+        "exists": true,
+        "actual_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce"
+      },
+      "profile": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+        "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+        "exists": true,
+        "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94"
+      },
+      "active_xdc": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+        "expected_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+        "exists": true,
+        "actual_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+      },
+      "pinmap": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+        "expected_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+        "exists": true,
+        "actual_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+      },
+      "register_map": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+        "expected_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+        "exists": true,
+        "actual_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+      },
+      "shutdown_bitstream": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+        "expected_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "exists": true,
+        "actual_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+      },
+      "ltx": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+        "expected_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+        "exists": true,
+        "actual_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083"
+      }
+    },
+    "errors": [],
+    "warnings": [
+      "workspace has uncommitted changes; frozen artifact hashes remain authoritative"
+    ]
+  },
+  "stage_validation_errors": [],
+  "transaction_validation": {
+    "format": "P7_JTAG_AXI_TRANSACTIONS_V1",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r8\\transactions\\051_p7_fragment_boundary_1024_rr.transactions.txt",
+    "expected_sha256": "378f68780b670f19e81ec97594b06d7f912285b8175dc1cad8aae5931079cc22",
+    "actual_sha256": "378f68780b670f19e81ec97594b06d7f912285b8175dc1cad8aae5931079cc22",
+    "operation_count": 1083,
+    "poll_operation_count": 10,
+    "poll_iteration_ceiling": 60000,
+    "metadata": {
+      "BACKEND": "p7_jtag_backend",
+      "LANE_POLICY": "STRIPE_ROUND_ROBIN"
+    },
+    "errors": [],
+    "size_bytes": 33353,
+    "start_operation_count": 5,
+    "commit_operation_count": 5,
+    "payload_write_count": 297,
+    "result_keys": [
+      "P7F00000_ACK_SEEN",
+      "P7F00000_ACK_SENT",
+      "P7F00000_COMMIT",
+      "P7F00000_COMMIT_POLLS",
+      "P7F00000_CRC_BAD",
+      "P7F00000_DONE",
+      "P7F00000_DONE_POLLS",
+      "P7F00000_DUTY_VIOLATION",
+      "P7F00000_ERROR_CODE",
+      "P7F00000_FRAME_BAD",
+      "P7F00000_FRAME_GOOD",
+      "P7F00000_MAILBOX",
+      "P7F00000_PAYLOAD_MISMATCH",
+      "P7F00000_RAW_RX_PULSES",
+      "P7F00000_RAW_TX_PULSES",
+      "P7F00000_RETRY_COUNT",
+      "P7F00000_RETRY_EXHAUSTED",
+      "P7F00000_RXW000",
+      "P7F00000_RXW001",
+      "P7F00000_RXW002",
+      "P7F00000_RXW003",
+      "P7F00000_RXW004",
+      "P7F00000_RXW005",
+      "P7F00000_RXW006",
+      "P7F00000_RXW007",
+      "P7F00000_RXW008",
+      "P7F00000_RXW009",
+      "P7F00000_RXW010",
+      "P7F00000_RXW011",
+      "P7F00000_RXW012",
+      "P7F00000_RXW013",
+      "P7F00000_RXW014",
+      "P7F00000_RXW015",
+      "P7F00000_RXW016",
+      "P7F00000_RXW017",
+      "P7F00000_RXW018",
+      "P7F00000_RXW019",
+      "P7F00000_RXW020",
+      "P7F00000_RXW021",
+      "P7F00000_RXW022",
+      "P7F00000_RXW023",
+      "P7F00000_RXW024",
+      "P7F00000_RXW025",
+      "P7F00000_RXW026",
+      "P7F00000_RXW027",
+      "P7F00000_RXW028",
+      "P7F00000_RXW029",
+      "P7F00000_RXW030",
+      "P7F00000_RXW031",
+      "P7F00000_RXW032",
+      "P7F00000_RXW033",
+      "P7F00000_RXW034",
+      "P7F00000_RXW035",
+      "P7F00000_RXW036",
+      "P7F00000_RXW037",
+      "P7F00000_RXW038",
+      "P7F00000_RXW039",
+      "P7F00000_RXW040",
+      "P7F00000_RXW041",
+      "P7F00000_RXW042",
+      "P7F00000_RXW043",
+      "P7F00000_RXW044",
+      "P7F00000_RXW045",
+      "P7F00000_RXW046",
+      "P7F00000_RXW047",
+      "P7F00000_RXW048",
+      "P7F00000_RXW049",
+      "P7F00000_RXW050",
+      "P7F00000_RXW051",
+      "P7F00000_RXW052",
+      "P7F00000_RXW053",
+      "P7F00000_RXW054",
+      "P7F00000_RXW055",
+      "P7F00000_RXW056",
+      "P7F00000_RXW057",
+      "P7F00000_RXW058",
+      "P7F00000_RXW059",
+      "P7F00000_RXW060",
+      "P7F00000_RXW061",
+      "P7F00000_RX_CRC32",
+      "P7F00000_RX_DIGEST",
+      "P7F00000_RX_GOOD_COUNT_L0",
+      "P7F00000_RX_GOOD_COUNT_L1",
+      "P7F00000_RX_LEN",
+      "P7F00000_STATUS",
+      "P7F00000_STICKY_ERROR",
+      "P7F00000_TXD_HIGH_MAX",
+      "P7F00000_TXW000",
+      "P7F00000_TXW001",
+      "P7F00000_TXW002",
+      "P7F00000_TXW003",
+      "P7F00000_TXW004",
+      "P7F00000_TXW005",
+      "P7F00000_TXW006",
+      "P7F00000_TXW007",
+      "P7F00000_TXW008",
+      "P7F00000_TXW009",
+      "P7F00000_TXW010",
+      "P7F00000_TXW011",
+      "P7F00000_TXW012",
+      "P7F00000_TXW013",
+      "P7F00000_TXW014",
+      "P7F00000_TXW015",
+      "P7F00000_TXW016",
+      "P7F00000_TXW017",
+      "P7F00000_TXW018",
+      "P7F00000_TXW019",
+      "P7F00000_TXW020",
+      "P7F00000_TXW021",
+      "P7F00000_TXW022",
+      "P7F00000_TXW023",
+      "P7F00000_TXW024",
+      "P7F00000_TXW025",
+      "P7F00000_TXW026",
+      "P7F00000_TXW027",
+      "P7F00000_TXW028",
+      "P7F00000_TXW029",
+      "P7F00000_TXW030",
+      "P7F00000_TXW031",
+      "P7F00000_TXW032",
+      "P7F00000_TXW033",
+      "P7F00000_TXW034",
+      "P7F00000_TXW035",
+      "P7F00000_TXW036",
+      "P7F00000_TXW037",
+      "P7F00000_TXW038",
+      "P7F00000_TXW039",
+      "P7F00000_TXW040",
+      "P7F00000_TXW041",
+      "P7F00000_TXW042",
+      "P7F00000_TXW043",
+      "P7F00000_TXW044",
+      "P7F00000_TXW045",
+      "P7F00000_TXW046",
+      "P7F00000_TXW047",
+      "P7F00000_TXW048",
+      "P7F00000_TXW049",
+      "P7F00000_TXW050",
+      "P7F00000_TXW051",
+      "P7F00000_TXW052",
+      "P7F00000_TXW053",
+      "P7F00000_TXW054",
+      "P7F00000_TXW055",
+      "P7F00000_TXW056",
+      "P7F00000_TXW057",
+      "P7F00000_TXW058",
+      "P7F00000_TXW059",
+      "P7F00000_TXW060",
+      "P7F00000_TXW061",
+      "P7F00000_TX_COUNT",
+      "P7F00000_TX_CRC32",
+      "P7F00000_TX_FAIL",
+      "P7F00001_ACK_SEEN",
+      "P7F00001_ACK_SENT",
+      "P7F00001_COMMIT",
+      "P7F00001_COMMIT_POLLS",
+      "P7F00001_CRC_BAD",
+      "P7F00001_DONE",
+      "P7F00001_DONE_POLLS",
+      "P7F00001_DUTY_VIOLATION",
+      "P7F00001_ERROR_CODE",
+      "P7F00001_FRAME_BAD",
+      "P7F00001_FRAME_GOOD",
+      "P7F00001_MAILBOX",
+      "P7F00001_PAYLOAD_MISMATCH",
+      "P7F00001_RAW_RX_PULSES",
+      "P7F00001_RAW_TX_PULSES",
+      "P7F00001_RETRY_COUNT",
+      "P7F00001_RETRY_EXHAUSTED",
+      "P7F00001_RXW000",
+      "P7F00001_RXW001",
+      "P7F00001_RXW002",
+      "P7F00001_RXW003",
+      "P7F00001_RXW004",
+      "P7F00001_RXW005",
+      "P7F00001_RXW006",
+      "P7F00001_RXW007",
+      "P7F00001_RXW008",
+      "P7F00001_RXW009",
+      "P7F00001_RXW010",
+      "P7F00001_RXW011",
+      "P7F00001_RXW012",
+      "P7F00001_RXW013",
+      "P7F00001_RXW014",
+      "P7F00001_RXW015",
+      "P7F00001_RXW016",
+      "P7F00001_RXW017",
+      "P7F00001_RXW018",
+      "P7F00001_RXW019",
+      "P7F00001_RXW020",
+      "P7F00001_RXW021",
+      "P7F00001_RXW022",
+      "P7F00001_RXW023",
+      "P7F00001_RXW024",
+      "P7F00001_RXW025",
+      "P7F00001_RXW026",
+      "P7F00001_RXW027",
+      "P7F00001_RXW028",
+      "P7F00001_RXW029",
+      "P7F00001_RXW030",
+      "P7F00001_RXW031",
+      "P7F00001_RXW032",
+      "P7F00001_RXW033",
+      "P7F00001_RXW034",
+      "P7F00001_RXW035",
+      "P7F00001_RXW036",
+      "P7F00001_RXW037",
+      "P7F00001_RXW038",
+      "P7F00001_RXW039",
+      "P7F00001_RXW040",
+      "P7F00001_RXW041",
+      "P7F00001_RXW042",
+      "P7F00001_RXW043",
+      "P7F00001_RXW044",
+      "P7F00001_RXW045",
+      "P7F00001_RXW046",
+      "P7F00001_RXW047",
+      "P7F00001_RXW048",
+      "P7F00001_RXW049",
+      "P7F00001_RXW050",
+      "P7F00001_RXW051",
+      "P7F00001_RXW052",
+      "P7F00001_RXW053",
+      "P7F00001_RXW054",
+      "P7F00001_RXW055",
+      "P7F00001_RXW056",
+      "P7F00001_RXW057",
+      "P7F00001_RXW058",
+      "P7F00001_RXW059",
+      "P7F00001_RXW060",
+      "P7F00001_RXW061",
+      "P7F00001_RX_CRC32",
+      "P7F00001_RX_DIGEST",
+      "P7F00001_RX_GOOD_COUNT_L0",
+      "P7F00001_RX_GOOD_COUNT_L1",
+      "P7F00001_RX_LEN",
+      "P7F00001_STATUS",
+      "P7F00001_STICKY_ERROR",
+      "P7F00001_TXD_HIGH_MAX",
+      "P7F00001_TXW000",
+      "P7F00001_TXW001",
+      "P7F00001_TXW002",
+      "P7F00001_TXW003",
+      "P7F00001_TXW004",
+      "P7F00001_TXW005",
+      "P7F00001_TXW006",
+      "P7F00001_TXW007",
+      "P7F00001_TXW008",
+      "P7F00001_TXW009",
+      "P7F00001_TXW010",
+      "P7F00001_TXW011",
+      "P7F00001_TXW012",
+      "P7F00001_TXW013",
+      "P7F00001_TXW014",
+      "P7F00001_TXW015",
+      "P7F00001_TXW016",
+      "P7F00001_TXW017",
+      "P7F00001_TXW018",
+      "P7F00001_TXW019",
+      "P7F00001_TXW020",
+      "P7F00001_TXW021",
+      "P7F00001_TXW022",
+      "P7F00001_TXW023",
+      "P7F00001_TXW024",
+      "P7F00001_TXW025",
+      "P7F00001_TXW026",
+      "P7F00001_TXW027",
+      "P7F00001_TXW028",
+      "P7F00001_TXW029",
+      "P7F00001_TXW030",
+      "P7F00001_TXW031",
+      "P7F00001_TXW032",
+      "P7F00001_TXW033",
+      "P7F00001_TXW034",
+      "P7F00001_TXW035",
+      "P7F00001_TXW036",
+      "P7F00001_TXW037",
+      "P7F00001_TXW038",
+      "P7F00001_TXW039",
+      "P7F00001_TXW040",
+      "P7F00001_TXW041",
+      "P7F00001_TXW042",
+      "P7F00001_TXW043",
+      "P7F00001_TXW044",
+      "P7F00001_TXW045",
+      "P7F00001_TXW046",
+      "P7F00001_TXW047",
+      "P7F00001_TXW048",
+      "P7F00001_TXW049",
+      "P7F00001_TXW050",
+      "P7F00001_TXW051",
+      "P7F00001_TXW052",
+      "P7F00001_TXW053",
+      "P7F00001_TXW054",
+      "P7F00001_TXW055",
+      "P7F00001_TXW056",
+      "P7F00001_TXW057",
+      "P7F00001_TXW058",
+      "P7F00001_TXW059",
+      "P7F00001_TXW060",
+      "P7F00001_TXW061",
+      "P7F00001_TX_COUNT",
+      "P7F00001_TX_CRC32",
+      "P7F00001_TX_FAIL",
+      "P7F00002_ACK_SEEN",
+      "P7F00002_ACK_SENT",
+      "P7F00002_COMMIT",
+      "P7F00002_COMMIT_POLLS",
+      "P7F00002_CRC_BAD",
+      "P7F00002_DONE",
+      "P7F00002_DONE_POLLS",
+      "P7F00002_DUTY_VIOLATION",
+      "P7F00002_ERROR_CODE",
+      "P7F00002_FRAME_BAD",
+      "P7F00002_FRAME_GOOD",
+      "P7F00002_MAILBOX",
+      "P7F00002_PAYLOAD_MISMATCH",
+      "P7F00002_RAW_RX_PULSES",
+      "P7F00002_RAW_TX_PULSES",
+      "P7F00002_RETRY_COUNT",
+      "P7F00002_RETRY_EXHAUSTED",
+      "P7F00002_RXW000",
+      "P7F00002_RXW001",
+      "P7F00002_RXW002",
+      "P7F00002_RXW003",
+      "P7F00002_RXW004",
+      "P7F00002_RXW005",
+      "P7F00002_RXW006",
+      "P7F00002_RXW007",
+      "P7F00002_RXW008",
+      "P7F00002_RXW009",
+      "P7F00002_RXW010",
+      "P7F00002_RXW011",
+      "P7F00002_RXW012",
+      "P7F00002_RXW013",
+      "P7F00002_RXW014",
+      "P7F00002_RXW015",
+      "P7F00002_RXW016",
+      "P7F00002_RXW017",
+      "P7F00002_RXW018",
+      "P7F00002_RXW019",
+      "P7F00002_RXW020",
+      "P7F00002_RXW021",
+      "P7F00002_RXW022",
+      "P7F00002_RXW023",
+      "P7F00002_RXW024",
+      "P7F00002_RXW025",
+      "P7F00002_RXW026",
+      "P7F00002_RXW027",
+      "P7F00002_RXW028",
+      "P7F00002_RXW029",
+      "P7F00002_RXW030",
+      "P7F00002_RXW031",
+      "P7F00002_RXW032",
+      "P7F00002_RXW033",
+      "P7F00002_RXW034",
+      "P7F00002_RXW035",
+      "P7F00002_RXW036",
+      "P7F00002_RXW037",
+      "P7F00002_RXW038",
+      "P7F00002_RXW039",
+      "P7F00002_RXW040",
+      "P7F00002_RXW041",
+      "P7F00002_RXW042",
+      "P7F00002_RXW043",
+      "P7F00002_RXW044",
+      "P7F00002_RXW045",
+      "P7F00002_RXW046",
+      "P7F00002_RXW047",
+      "P7F00002_RXW048",
+      "P7F00002_RXW049",
+      "P7F00002_RXW050",
+      "P7F00002_RXW051",
+      "P7F00002_RXW052",
+      "P7F00002_RXW053",
+      "P7F00002_RXW054",
+      "P7F00002_RXW055",
+      "P7F00002_RXW056",
+      "P7F00002_RXW057",
+      "P7F00002_RXW058",
+      "P7F00002_RXW059",
+      "P7F00002_RXW060",
+      "P7F00002_RXW061",
+      "P7F00002_RX_CRC32",
+      "P7F00002_RX_DIGEST",
+      "P7F00002_RX_GOOD_COUNT_L0",
+      "P7F00002_RX_GOOD_COUNT_L1",
+      "P7F00002_RX_LEN",
+      "P7F00002_STATUS",
+      "P7F00002_STICKY_ERROR",
+      "P7F00002_TXD_HIGH_MAX",
+      "P7F00002_TXW000",
+      "P7F00002_TXW001",
+      "P7F00002_TXW002",
+      "P7F00002_TXW003",
+      "P7F00002_TXW004",
+      "P7F00002_TXW005",
+      "P7F00002_TXW006",
+      "P7F00002_TXW007",
+      "P7F00002_TXW008",
+      "P7F00002_TXW009",
+      "P7F00002_TXW010",
+      "P7F00002_TXW011",
+      "P7F00002_TXW012",
+      "P7F00002_TXW013",
+      "P7F00002_TXW014",
+      "P7F00002_TXW015",
+      "P7F00002_TXW016",
+      "P7F00002_TXW017",
+      "P7F00002_TXW018",
+      "P7F00002_TXW019",
+      "P7F00002_TXW020",
+      "P7F00002_TXW021",
+      "P7F00002_TXW022",
+      "P7F00002_TXW023",
+      "P7F00002_TXW024",
+      "P7F00002_TXW025",
+      "P7F00002_TXW026",
+      "P7F00002_TXW027",
+      "P7F00002_TXW028",
+      "P7F00002_TXW029",
+      "P7F00002_TXW030",
+      "P7F00002_TXW031",
+      "P7F00002_TXW032",
+      "P7F00002_TXW033",
+      "P7F00002_TXW034",
+      "P7F00002_TXW035",
+      "P7F00002_TXW036",
+      "P7F00002_TXW037",
+      "P7F00002_TXW038",
+      "P7F00002_TXW039",
+      "P7F00002_TXW040",
+      "P7F00002_TXW041",
+      "P7F00002_TXW042",
+      "P7F00002_TXW043",
+      "P7F00002_TXW044",
+      "P7F00002_TXW045",
+      "P7F00002_TXW046",
+      "P7F00002_TXW047",
+      "P7F00002_TXW048",
+      "P7F00002_TXW049",
+      "P7F00002_TXW050",
+      "P7F00002_TXW051",
+      "P7F00002_TXW052",
+      "P7F00002_TXW053",
+      "P7F00002_TXW054",
+      "P7F00002_TXW055",
+      "P7F00002_TXW056",
+      "P7F00002_TXW057",
+      "P7F00002_TXW058",
+      "P7F00002_TXW059",
+      "P7F00002_TXW060",
+      "P7F00002_TXW061",
+      "P7F00002_TX_COUNT",
+      "P7F00002_TX_CRC32",
+      "P7F00002_TX_FAIL",
+      "P7F00003_ACK_SEEN",
+      "P7F00003_ACK_SENT",
+      "P7F00003_COMMIT",
+      "P7F00003_COMMIT_POLLS",
+      "P7F00003_CRC_BAD",
+      "P7F00003_DONE",
+      "P7F00003_DONE_POLLS",
+      "P7F00003_DUTY_VIOLATION",
+      "P7F00003_ERROR_CODE",
+      "P7F00003_FRAME_BAD",
+      "P7F00003_FRAME_GOOD",
+      "P7F00003_MAILBOX",
+      "P7F00003_PAYLOAD_MISMATCH",
+      "P7F00003_RAW_RX_PULSES",
+      "P7F00003_RAW_TX_PULSES",
+      "P7F00003_RETRY_COUNT",
+      "P7F00003_RETRY_EXHAUSTED",
+      "P7F00003_RXW000",
+      "P7F00003_RXW001",
+      "P7F00003_RXW002",
+      "P7F00003_RXW003",
+      "P7F00003_RXW004",
+      "P7F00003_RXW005",
+      "P7F00003_RXW006",
+      "P7F00003_RXW007",
+      "P7F00003_RXW008",
+      "P7F00003_RXW009",
+      "P7F00003_RXW010",
+      "P7F00003_RXW011",
+      "P7F00003_RXW012",
+      "P7F00003_RXW013",
+      "P7F00003_RXW014",
+      "P7F00003_RXW015",
+      "P7F00003_RXW016",
+      "P7F00003_RXW017",
+      "P7F00003_RXW018",
+      "P7F00003_RXW019",
+      "P7F00003_RXW020",
+      "P7F00003_RXW021",
+      "P7F00003_RXW022",
+      "P7F00003_RXW023",
+      "P7F00003_RXW024",
+      "P7F00003_RXW025",
+      "P7F00003_RXW026",
+      "P7F00003_RXW027",
+      "P7F00003_RXW028",
+      "P7F00003_RXW029",
+      "P7F00003_RXW030",
+      "P7F00003_RXW031",
+      "P7F00003_RXW032",
+      "P7F00003_RXW033",
+      "P7F00003_RXW034",
+      "P7F00003_RXW035",
+      "P7F00003_RXW036",
+      "P7F00003_RXW037",
+      "P7F00003_RXW038",
+      "P7F00003_RXW039",
+      "P7F00003_RXW040",
+      "P7F00003_RXW041",
+      "P7F00003_RXW042",
+      "P7F00003_RXW043",
+      "P7F00003_RXW044",
+      "P7F00003_RXW045",
+      "P7F00003_RXW046",
+      "P7F00003_RXW047",
+      "P7F00003_RXW048",
+      "P7F00003_RXW049",
+      "P7F00003_RXW050",
+      "P7F00003_RXW051",
+      "P7F00003_RXW052",
+      "P7F00003_RXW053",
+      "P7F00003_RXW054",
+      "P7F00003_RXW055",
+      "P7F00003_RXW056",
+      "P7F00003_RXW057",
+      "P7F00003_RXW058",
+      "P7F00003_RXW059",
+      "P7F00003_RXW060",
+      "P7F00003_RXW061",
+      "P7F00003_RX_CRC32",
+      "P7F00003_RX_DIGEST",
+      "P7F00003_RX_GOOD_COUNT_L0",
+      "P7F00003_RX_GOOD_COUNT_L1",
+      "P7F00003_RX_LEN",
+      "P7F00003_STATUS",
+      "P7F00003_STICKY_ERROR",
+      "P7F00003_TXD_HIGH_MAX",
+      "P7F00003_TXW000",
+      "P7F00003_TXW001",
+      "P7F00003_TXW002",
+      "P7F00003_TXW003",
+      "P7F00003_TXW004",
+      "P7F00003_TXW005",
+      "P7F00003_TXW006",
+      "P7F00003_TXW007",
+      "P7F00003_TXW008",
+      "P7F00003_TXW009",
+      "P7F00003_TXW010",
+      "P7F00003_TXW011",
+      "P7F00003_TXW012",
+      "P7F00003_TXW013",
+      "P7F00003_TXW014",
+      "P7F00003_TXW015",
+      "P7F00003_TXW016",
+      "P7F00003_TXW017",
+      "P7F00003_TXW018",
+      "P7F00003_TXW019",
+      "P7F00003_TXW020",
+      "P7F00003_TXW021",
+      "P7F00003_TXW022",
+      "P7F00003_TXW023",
+      "P7F00003_TXW024",
+      "P7F00003_TXW025",
+      "P7F00003_TXW026",
+      "P7F00003_TXW027",
+      "P7F00003_TXW028",
+      "P7F00003_TXW029",
+      "P7F00003_TXW030",
+      "P7F00003_TXW031",
+      "P7F00003_TXW032",
+      "P7F00003_TXW033",
+      "P7F00003_TXW034",
+      "P7F00003_TXW035",
+      "P7F00003_TXW036",
+      "P7F00003_TXW037",
+      "P7F00003_TXW038",
+      "P7F00003_TXW039",
+      "P7F00003_TXW040",
+      "P7F00003_TXW041",
+      "P7F00003_TXW042",
+      "P7F00003_TXW043",
+      "P7F00003_TXW044",
+      "P7F00003_TXW045",
+      "P7F00003_TXW046",
+      "P7F00003_TXW047",
+      "P7F00003_TXW048",
+      "P7F00003_TXW049",
+      "P7F00003_TXW050",
+      "P7F00003_TXW051",
+      "P7F00003_TXW052",
+      "P7F00003_TXW053",
+      "P7F00003_TXW054",
+      "P7F00003_TXW055",
+      "P7F00003_TXW056",
+      "P7F00003_TXW057",
+      "P7F00003_TXW058",
+      "P7F00003_TXW059",
+      "P7F00003_TXW060",
+      "P7F00003_TXW061",
+      "P7F00003_TX_COUNT",
+      "P7F00003_TX_CRC32",
+      "P7F00003_TX_FAIL",
+      "P7F00004_ACK_SEEN",
+      "P7F00004_ACK_SENT",
+      "P7F00004_COMMIT",
+      "P7F00004_COMMIT_POLLS",
+      "P7F00004_CRC_BAD",
+      "P7F00004_DONE",
+      "P7F00004_DONE_POLLS",
+      "P7F00004_DUTY_VIOLATION",
+      "P7F00004_ERROR_CODE",
+      "P7F00004_FRAME_BAD",
+      "P7F00004_FRAME_GOOD",
+      "P7F00004_MAILBOX",
+      "P7F00004_PAYLOAD_MISMATCH",
+      "P7F00004_RAW_RX_PULSES",
+      "P7F00004_RAW_TX_PULSES",
+      "P7F00004_RETRY_COUNT",
+      "P7F00004_RETRY_EXHAUSTED",
+      "P7F00004_RXW000",
+      "P7F00004_RXW001",
+      "P7F00004_RXW002",
+      "P7F00004_RXW003",
+      "P7F00004_RXW004",
+      "P7F00004_RXW005",
+      "P7F00004_RXW006",
+      "P7F00004_RXW007",
+      "P7F00004_RXW008",
+      "P7F00004_RXW009",
+      "P7F00004_RXW010",
+      "P7F00004_RXW011",
+      "P7F00004_RXW012",
+      "P7F00004_RXW013",
+      "P7F00004_RXW014",
+      "P7F00004_RXW015",
+      "P7F00004_RXW016",
+      "P7F00004_RXW017",
+      "P7F00004_RXW018",
+      "P7F00004_RXW019",
+      "P7F00004_RXW020",
+      "P7F00004_RXW021",
+      "P7F00004_RXW022",
+      "P7F00004_RXW023",
+      "P7F00004_RXW024",
+      "P7F00004_RXW025",
+      "P7F00004_RXW026",
+      "P7F00004_RXW027",
+      "P7F00004_RXW028",
+      "P7F00004_RXW029",
+      "P7F00004_RXW030",
+      "P7F00004_RXW031",
+      "P7F00004_RXW032",
+      "P7F00004_RXW033",
+      "P7F00004_RXW034",
+      "P7F00004_RXW035",
+      "P7F00004_RXW036",
+      "P7F00004_RXW037",
+      "P7F00004_RXW038",
+      "P7F00004_RXW039",
+      "P7F00004_RXW040",
+      "P7F00004_RXW041",
+      "P7F00004_RXW042",
+      "P7F00004_RXW043",
+      "P7F00004_RXW044",
+      "P7F00004_RXW045",
+      "P7F00004_RXW046",
+      "P7F00004_RXW047",
+      "P7F00004_RXW048",
+      "P7F00004_RX_CRC32",
+      "P7F00004_RX_DIGEST",
+      "P7F00004_RX_GOOD_COUNT_L0",
+      "P7F00004_RX_GOOD_COUNT_L1",
+      "P7F00004_RX_LEN",
+      "P7F00004_STATUS",
+      "P7F00004_STICKY_ERROR",
+      "P7F00004_TXD_HIGH_MAX",
+      "P7F00004_TXW000",
+      "P7F00004_TXW001",
+      "P7F00004_TXW002",
+      "P7F00004_TXW003",
+      "P7F00004_TXW004",
+      "P7F00004_TXW005",
+      "P7F00004_TXW006",
+      "P7F00004_TXW007",
+      "P7F00004_TXW008",
+      "P7F00004_TXW009",
+      "P7F00004_TXW010",
+      "P7F00004_TXW011",
+      "P7F00004_TXW012",
+      "P7F00004_TXW013",
+      "P7F00004_TXW014",
+      "P7F00004_TXW015",
+      "P7F00004_TXW016",
+      "P7F00004_TXW017",
+      "P7F00004_TXW018",
+      "P7F00004_TXW019",
+      "P7F00004_TXW020",
+      "P7F00004_TXW021",
+      "P7F00004_TXW022",
+      "P7F00004_TXW023",
+      "P7F00004_TXW024",
+      "P7F00004_TXW025",
+      "P7F00004_TXW026",
+      "P7F00004_TXW027",
+      "P7F00004_TXW028",
+      "P7F00004_TXW029",
+      "P7F00004_TXW030",
+      "P7F00004_TXW031",
+      "P7F00004_TXW032",
+      "P7F00004_TXW033",
+      "P7F00004_TXW034",
+      "P7F00004_TXW035",
+      "P7F00004_TXW036",
+      "P7F00004_TXW037",
+      "P7F00004_TXW038",
+      "P7F00004_TXW039",
+      "P7F00004_TXW040",
+      "P7F00004_TXW041",
+      "P7F00004_TXW042",
+      "P7F00004_TXW043",
+      "P7F00004_TXW044",
+      "P7F00004_TXW045",
+      "P7F00004_TXW046",
+      "P7F00004_TXW047",
+      "P7F00004_TXW048",
+      "P7F00004_TX_COUNT",
+      "P7F00004_TX_CRC32",
+      "P7F00004_TX_FAIL",
+      "P7_BASE_ACK_SEEN",
+      "P7_BASE_ACK_SENT",
+      "P7_BASE_CRC_BAD",
+      "P7_BASE_DUTY_VIOLATION",
+      "P7_BASE_ERROR_CODE",
+      "P7_BASE_FRAME_BAD",
+      "P7_BASE_FRAME_GOOD",
+      "P7_BASE_PAYLOAD_MISMATCH",
+      "P7_BASE_RAW_RX_PULSES",
+      "P7_BASE_RAW_TX_PULSES",
+      "P7_BASE_RETRY_COUNT",
+      "P7_BASE_RETRY_EXHAUSTED",
+      "P7_BASE_RX_GOOD_COUNT_L0",
+      "P7_BASE_RX_GOOD_COUNT_L1",
+      "P7_BASE_STICKY_ERROR",
+      "P7_BASE_TXD_HIGH_MAX",
+      "P7_BASE_TX_COUNT",
+      "P7_BASE_TX_FAIL",
+      "P7_FINAL_SHUTDOWN_REASON"
+    ],
+    "write_operations": [
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x200",
+        "value": "0x50414652"
+      },
+      {
+        "offset": "0x204",
+        "value": "0x00200101"
+      },
+      {
+        "offset": "0x208",
+        "value": "0x50370033"
+      },
+      {
+        "offset": "0x20c",
+        "value": "0x00000033"
+      },
+      {
+        "offset": "0x210",
+        "value": "0x00000400"
+      },
+      {
+        "offset": "0x214",
+        "value": "0x00050000"
+      },
+      {
+        "offset": "0x218",
+        "value": "0x000000d7"
+      },
+      {
+        "offset": "0x21c",
+        "value": "0xb70b4c26"
+      },
+      {
+        "offset": "0x220",
+        "value": "0x03020100"
+      },
+      {
+        "offset": "0x224",
+        "value": "0x07060504"
+      },
+      {
+        "offset": "0x228",
+        "value": "0x0b0a0908"
+      },
+      {
+        "offset": "0x22c",
+        "value": "0x0f0e0d0c"
+      },
+      {
+        "offset": "0x230",
+        "value": "0x13121110"
+      },
+      {
+        "offset": "0x234",
+        "value": "0x17161514"
+      },
+      {
+        "offset": "0x238",
+        "value": "0x1b1a1918"
+      },
+      {
+        "offset": "0x23c",
+        "value": "0x1f1e1d1c"
+      },
+      {
+        "offset": "0x240",
+        "value": "0x23222120"
+      },
+      {
+        "offset": "0x244",
+        "value": "0x27262524"
+      },
+      {
+        "offset": "0x248",
+        "value": "0x2b2a2928"
+      },
+      {
+        "offset": "0x24c",
+        "value": "0x2f2e2d2c"
+      },
+      {
+        "offset": "0x250",
+        "value": "0x33323130"
+      },
+      {
+        "offset": "0x254",
+        "value": "0x37363534"
+      },
+      {
+        "offset": "0x258",
+        "value": "0x3b3a3938"
+      },
+      {
+        "offset": "0x25c",
+        "value": "0x3f3e3d3c"
+      },
+      {
+        "offset": "0x260",
+        "value": "0x43424140"
+      },
+      {
+        "offset": "0x264",
+        "value": "0x47464544"
+      },
+      {
+        "offset": "0x268",
+        "value": "0x4b4a4948"
+      },
+      {
+        "offset": "0x26c",
+        "value": "0x4f4e4d4c"
+      },
+      {
+        "offset": "0x270",
+        "value": "0x53525150"
+      },
+      {
+        "offset": "0x274",
+        "value": "0x57565554"
+      },
+      {
+        "offset": "0x278",
+        "value": "0x5b5a5958"
+      },
+      {
+        "offset": "0x27c",
+        "value": "0x5f5e5d5c"
+      },
+      {
+        "offset": "0x280",
+        "value": "0x63626160"
+      },
+      {
+        "offset": "0x284",
+        "value": "0x67666564"
+      },
+      {
+        "offset": "0x288",
+        "value": "0x6b6a6968"
+      },
+      {
+        "offset": "0x28c",
+        "value": "0x6f6e6d6c"
+      },
+      {
+        "offset": "0x290",
+        "value": "0x73727170"
+      },
+      {
+        "offset": "0x294",
+        "value": "0x77767574"
+      },
+      {
+        "offset": "0x298",
+        "value": "0x7b7a7978"
+      },
+      {
+        "offset": "0x29c",
+        "value": "0x7f7e7d7c"
+      },
+      {
+        "offset": "0x2a0",
+        "value": "0x83828180"
+      },
+      {
+        "offset": "0x2a4",
+        "value": "0x87868584"
+      },
+      {
+        "offset": "0x2a8",
+        "value": "0x8b8a8988"
+      },
+      {
+        "offset": "0x2ac",
+        "value": "0x8f8e8d8c"
+      },
+      {
+        "offset": "0x2b0",
+        "value": "0x93929190"
+      },
+      {
+        "offset": "0x2b4",
+        "value": "0x97969594"
+      },
+      {
+        "offset": "0x2b8",
+        "value": "0x9b9a9998"
+      },
+      {
+        "offset": "0x2bc",
+        "value": "0x9f9e9d9c"
+      },
+      {
+        "offset": "0x2c0",
+        "value": "0xa3a2a1a0"
+      },
+      {
+        "offset": "0x2c4",
+        "value": "0xa7a6a5a4"
+      },
+      {
+        "offset": "0x2c8",
+        "value": "0xabaaa9a8"
+      },
+      {
+        "offset": "0x2cc",
+        "value": "0xafaeadac"
+      },
+      {
+        "offset": "0x2d0",
+        "value": "0xb3b2b1b0"
+      },
+      {
+        "offset": "0x2d4",
+        "value": "0xb7b6b5b4"
+      },
+      {
+        "offset": "0x2d8",
+        "value": "0xbbbab9b8"
+      },
+      {
+        "offset": "0x2dc",
+        "value": "0xbfbebdbc"
+      },
+      {
+        "offset": "0x2e0",
+        "value": "0xc3c2c1c0"
+      },
+      {
+        "offset": "0x2e4",
+        "value": "0xc7c6c5c4"
+      },
+      {
+        "offset": "0x2e8",
+        "value": "0xcbcac9c8"
+      },
+      {
+        "offset": "0x2ec",
+        "value": "0xcfcecdcc"
+      },
+      {
+        "offset": "0x2f0",
+        "value": "0xd3d2d1d0"
+      },
+      {
+        "offset": "0x2f4",
+        "value": "0x00d6d5d4"
+      },
+      {
+        "offset": "0x108",
+        "value": "0x00002201"
+      },
+      {
+        "offset": "0x10c",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x110",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x114",
+        "value": "0x000000f7"
+      },
+      {
+        "offset": "0x15c",
+        "value": "0x0061a800"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000004"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000008"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x200",
+        "value": "0x50414652"
+      },
+      {
+        "offset": "0x204",
+        "value": "0x00200001"
+      },
+      {
+        "offset": "0x208",
+        "value": "0x50370033"
+      },
+      {
+        "offset": "0x20c",
+        "value": "0x00000033"
+      },
+      {
+        "offset": "0x210",
+        "value": "0x00000400"
+      },
+      {
+        "offset": "0x214",
+        "value": "0x00050001"
+      },
+      {
+        "offset": "0x218",
+        "value": "0x000000d7"
+      },
+      {
+        "offset": "0x21c",
+        "value": "0xb70b4c26"
+      },
+      {
+        "offset": "0x220",
+        "value": "0xdad9d8d7"
+      },
+      {
+        "offset": "0x224",
+        "value": "0xdedddcdb"
+      },
+      {
+        "offset": "0x228",
+        "value": "0xe2e1e0df"
+      },
+      {
+        "offset": "0x22c",
+        "value": "0xe6e5e4e3"
+      },
+      {
+        "offset": "0x230",
+        "value": "0xeae9e8e7"
+      },
+      {
+        "offset": "0x234",
+        "value": "0xeeedeceb"
+      },
+      {
+        "offset": "0x238",
+        "value": "0xf2f1f0ef"
+      },
+      {
+        "offset": "0x23c",
+        "value": "0xf6f5f4f3"
+      },
+      {
+        "offset": "0x240",
+        "value": "0xfaf9f8f7"
+      },
+      {
+        "offset": "0x244",
+        "value": "0xfefdfcfb"
+      },
+      {
+        "offset": "0x248",
+        "value": "0x020100ff"
+      },
+      {
+        "offset": "0x24c",
+        "value": "0x06050403"
+      },
+      {
+        "offset": "0x250",
+        "value": "0x0a090807"
+      },
+      {
+        "offset": "0x254",
+        "value": "0x0e0d0c0b"
+      },
+      {
+        "offset": "0x258",
+        "value": "0x1211100f"
+      },
+      {
+        "offset": "0x25c",
+        "value": "0x16151413"
+      },
+      {
+        "offset": "0x260",
+        "value": "0x1a191817"
+      },
+      {
+        "offset": "0x264",
+        "value": "0x1e1d1c1b"
+      },
+      {
+        "offset": "0x268",
+        "value": "0x2221201f"
+      },
+      {
+        "offset": "0x26c",
+        "value": "0x26252423"
+      },
+      {
+        "offset": "0x270",
+        "value": "0x2a292827"
+      },
+      {
+        "offset": "0x274",
+        "value": "0x2e2d2c2b"
+      },
+      {
+        "offset": "0x278",
+        "value": "0x3231302f"
+      },
+      {
+        "offset": "0x27c",
+        "value": "0x36353433"
+      },
+      {
+        "offset": "0x280",
+        "value": "0x3a393837"
+      },
+      {
+        "offset": "0x284",
+        "value": "0x3e3d3c3b"
+      },
+      {
+        "offset": "0x288",
+        "value": "0x4241403f"
+      },
+      {
+        "offset": "0x28c",
+        "value": "0x46454443"
+      },
+      {
+        "offset": "0x290",
+        "value": "0x4a494847"
+      },
+      {
+        "offset": "0x294",
+        "value": "0x4e4d4c4b"
+      },
+      {
+        "offset": "0x298",
+        "value": "0x5251504f"
+      },
+      {
+        "offset": "0x29c",
+        "value": "0x56555453"
+      },
+      {
+        "offset": "0x2a0",
+        "value": "0x5a595857"
+      },
+      {
+        "offset": "0x2a4",
+        "value": "0x5e5d5c5b"
+      },
+      {
+        "offset": "0x2a8",
+        "value": "0x6261605f"
+      },
+      {
+        "offset": "0x2ac",
+        "value": "0x66656463"
+      },
+      {
+        "offset": "0x2b0",
+        "value": "0x6a696867"
+      },
+      {
+        "offset": "0x2b4",
+        "value": "0x6e6d6c6b"
+      },
+      {
+        "offset": "0x2b8",
+        "value": "0x7271706f"
+      },
+      {
+        "offset": "0x2bc",
+        "value": "0x76757473"
+      },
+      {
+        "offset": "0x2c0",
+        "value": "0x7a797877"
+      },
+      {
+        "offset": "0x2c4",
+        "value": "0x7e7d7c7b"
+      },
+      {
+        "offset": "0x2c8",
+        "value": "0x8281807f"
+      },
+      {
+        "offset": "0x2cc",
+        "value": "0x86858483"
+      },
+      {
+        "offset": "0x2d0",
+        "value": "0x8a898887"
+      },
+      {
+        "offset": "0x2d4",
+        "value": "0x8e8d8c8b"
+      },
+      {
+        "offset": "0x2d8",
+        "value": "0x9291908f"
+      },
+      {
+        "offset": "0x2dc",
+        "value": "0x96959493"
+      },
+      {
+        "offset": "0x2e0",
+        "value": "0x9a999897"
+      },
+      {
+        "offset": "0x2e4",
+        "value": "0x9e9d9c9b"
+      },
+      {
+        "offset": "0x2e8",
+        "value": "0xa2a1a09f"
+      },
+      {
+        "offset": "0x2ec",
+        "value": "0xa6a5a4a3"
+      },
+      {
+        "offset": "0x2f0",
+        "value": "0xaaa9a8a7"
+      },
+      {
+        "offset": "0x2f4",
+        "value": "0x00adacab"
+      },
+      {
+        "offset": "0x108",
+        "value": "0x00002201"
+      },
+      {
+        "offset": "0x10c",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x110",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x114",
+        "value": "0x000000f7"
+      },
+      {
+        "offset": "0x15c",
+        "value": "0x0061a800"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000004"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000008"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x200",
+        "value": "0x50414652"
+      },
+      {
+        "offset": "0x204",
+        "value": "0x00200001"
+      },
+      {
+        "offset": "0x208",
+        "value": "0x50370033"
+      },
+      {
+        "offset": "0x20c",
+        "value": "0x00000033"
+      },
+      {
+        "offset": "0x210",
+        "value": "0x00000400"
+      },
+      {
+        "offset": "0x214",
+        "value": "0x00050002"
+      },
+      {
+        "offset": "0x218",
+        "value": "0x000000d7"
+      },
+      {
+        "offset": "0x21c",
+        "value": "0xb70b4c26"
+      },
+      {
+        "offset": "0x220",
+        "value": "0xb1b0afae"
+      },
+      {
+        "offset": "0x224",
+        "value": "0xb5b4b3b2"
+      },
+      {
+        "offset": "0x228",
+        "value": "0xb9b8b7b6"
+      },
+      {
+        "offset": "0x22c",
+        "value": "0xbdbcbbba"
+      },
+      {
+        "offset": "0x230",
+        "value": "0xc1c0bfbe"
+      },
+      {
+        "offset": "0x234",
+        "value": "0xc5c4c3c2"
+      },
+      {
+        "offset": "0x238",
+        "value": "0xc9c8c7c6"
+      },
+      {
+        "offset": "0x23c",
+        "value": "0xcdcccbca"
+      },
+      {
+        "offset": "0x240",
+        "value": "0xd1d0cfce"
+      },
+      {
+        "offset": "0x244",
+        "value": "0xd5d4d3d2"
+      },
+      {
+        "offset": "0x248",
+        "value": "0xd9d8d7d6"
+      },
+      {
+        "offset": "0x24c",
+        "value": "0xdddcdbda"
+      },
+      {
+        "offset": "0x250",
+        "value": "0xe1e0dfde"
+      },
+      {
+        "offset": "0x254",
+        "value": "0xe5e4e3e2"
+      },
+      {
+        "offset": "0x258",
+        "value": "0xe9e8e7e6"
+      },
+      {
+        "offset": "0x25c",
+        "value": "0xedecebea"
+      },
+      {
+        "offset": "0x260",
+        "value": "0xf1f0efee"
+      },
+      {
+        "offset": "0x264",
+        "value": "0xf5f4f3f2"
+      },
+      {
+        "offset": "0x268",
+        "value": "0xf9f8f7f6"
+      },
+      {
+        "offset": "0x26c",
+        "value": "0xfdfcfbfa"
+      },
+      {
+        "offset": "0x270",
+        "value": "0x0100fffe"
+      },
+      {
+        "offset": "0x274",
+        "value": "0x05040302"
+      },
+      {
+        "offset": "0x278",
+        "value": "0x09080706"
+      },
+      {
+        "offset": "0x27c",
+        "value": "0x0d0c0b0a"
+      },
+      {
+        "offset": "0x280",
+        "value": "0x11100f0e"
+      },
+      {
+        "offset": "0x284",
+        "value": "0x15141312"
+      },
+      {
+        "offset": "0x288",
+        "value": "0x19181716"
+      },
+      {
+        "offset": "0x28c",
+        "value": "0x1d1c1b1a"
+      },
+      {
+        "offset": "0x290",
+        "value": "0x21201f1e"
+      },
+      {
+        "offset": "0x294",
+        "value": "0x25242322"
+      },
+      {
+        "offset": "0x298",
+        "value": "0x29282726"
+      },
+      {
+        "offset": "0x29c",
+        "value": "0x2d2c2b2a"
+      },
+      {
+        "offset": "0x2a0",
+        "value": "0x31302f2e"
+      },
+      {
+        "offset": "0x2a4",
+        "value": "0x35343332"
+      },
+      {
+        "offset": "0x2a8",
+        "value": "0x39383736"
+      },
+      {
+        "offset": "0x2ac",
+        "value": "0x3d3c3b3a"
+      },
+      {
+        "offset": "0x2b0",
+        "value": "0x41403f3e"
+      },
+      {
+        "offset": "0x2b4",
+        "value": "0x45444342"
+      },
+      {
+        "offset": "0x2b8",
+        "value": "0x49484746"
+      },
+      {
+        "offset": "0x2bc",
+        "value": "0x4d4c4b4a"
+      },
+      {
+        "offset": "0x2c0",
+        "value": "0x51504f4e"
+      },
+      {
+        "offset": "0x2c4",
+        "value": "0x55545352"
+      },
+      {
+        "offset": "0x2c8",
+        "value": "0x59585756"
+      },
+      {
+        "offset": "0x2cc",
+        "value": "0x5d5c5b5a"
+      },
+      {
+        "offset": "0x2d0",
+        "value": "0x61605f5e"
+      },
+      {
+        "offset": "0x2d4",
+        "value": "0x65646362"
+      },
+      {
+        "offset": "0x2d8",
+        "value": "0x69686766"
+      },
+      {
+        "offset": "0x2dc",
+        "value": "0x6d6c6b6a"
+      },
+      {
+        "offset": "0x2e0",
+        "value": "0x71706f6e"
+      },
+      {
+        "offset": "0x2e4",
+        "value": "0x75747372"
+      },
+      {
+        "offset": "0x2e8",
+        "value": "0x79787776"
+      },
+      {
+        "offset": "0x2ec",
+        "value": "0x7d7c7b7a"
+      },
+      {
+        "offset": "0x2f0",
+        "value": "0x81807f7e"
+      },
+      {
+        "offset": "0x2f4",
+        "value": "0x00848382"
+      },
+      {
+        "offset": "0x108",
+        "value": "0x00002201"
+      },
+      {
+        "offset": "0x10c",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x110",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x114",
+        "value": "0x000000f7"
+      },
+      {
+        "offset": "0x15c",
+        "value": "0x0061a800"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000004"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000008"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x200",
+        "value": "0x50414652"
+      },
+      {
+        "offset": "0x204",
+        "value": "0x00200001"
+      },
+      {
+        "offset": "0x208",
+        "value": "0x50370033"
+      },
+      {
+        "offset": "0x20c",
+        "value": "0x00000033"
+      },
+      {
+        "offset": "0x210",
+        "value": "0x00000400"
+      },
+      {
+        "offset": "0x214",
+        "value": "0x00050003"
+      },
+      {
+        "offset": "0x218",
+        "value": "0x000000d7"
+      },
+      {
+        "offset": "0x21c",
+        "value": "0xb70b4c26"
+      },
+      {
+        "offset": "0x220",
+        "value": "0x88878685"
+      },
+      {
+        "offset": "0x224",
+        "value": "0x8c8b8a89"
+      },
+      {
+        "offset": "0x228",
+        "value": "0x908f8e8d"
+      },
+      {
+        "offset": "0x22c",
+        "value": "0x94939291"
+      },
+      {
+        "offset": "0x230",
+        "value": "0x98979695"
+      },
+      {
+        "offset": "0x234",
+        "value": "0x9c9b9a99"
+      },
+      {
+        "offset": "0x238",
+        "value": "0xa09f9e9d"
+      },
+      {
+        "offset": "0x23c",
+        "value": "0xa4a3a2a1"
+      },
+      {
+        "offset": "0x240",
+        "value": "0xa8a7a6a5"
+      },
+      {
+        "offset": "0x244",
+        "value": "0xacabaaa9"
+      },
+      {
+        "offset": "0x248",
+        "value": "0xb0afaead"
+      },
+      {
+        "offset": "0x24c",
+        "value": "0xb4b3b2b1"
+      },
+      {
+        "offset": "0x250",
+        "value": "0xb8b7b6b5"
+      },
+      {
+        "offset": "0x254",
+        "value": "0xbcbbbab9"
+      },
+      {
+        "offset": "0x258",
+        "value": "0xc0bfbebd"
+      },
+      {
+        "offset": "0x25c",
+        "value": "0xc4c3c2c1"
+      },
+      {
+        "offset": "0x260",
+        "value": "0xc8c7c6c5"
+      },
+      {
+        "offset": "0x264",
+        "value": "0xcccbcac9"
+      },
+      {
+        "offset": "0x268",
+        "value": "0xd0cfcecd"
+      },
+      {
+        "offset": "0x26c",
+        "value": "0xd4d3d2d1"
+      },
+      {
+        "offset": "0x270",
+        "value": "0xd8d7d6d5"
+      },
+      {
+        "offset": "0x274",
+        "value": "0xdcdbdad9"
+      },
+      {
+        "offset": "0x278",
+        "value": "0xe0dfdedd"
+      },
+      {
+        "offset": "0x27c",
+        "value": "0xe4e3e2e1"
+      },
+      {
+        "offset": "0x280",
+        "value": "0xe8e7e6e5"
+      },
+      {
+        "offset": "0x284",
+        "value": "0xecebeae9"
+      },
+      {
+        "offset": "0x288",
+        "value": "0xf0efeeed"
+      },
+      {
+        "offset": "0x28c",
+        "value": "0xf4f3f2f1"
+      },
+      {
+        "offset": "0x290",
+        "value": "0xf8f7f6f5"
+      },
+      {
+        "offset": "0x294",
+        "value": "0xfcfbfaf9"
+      },
+      {
+        "offset": "0x298",
+        "value": "0x00fffefd"
+      },
+      {
+        "offset": "0x29c",
+        "value": "0x04030201"
+      },
+      {
+        "offset": "0x2a0",
+        "value": "0x08070605"
+      },
+      {
+        "offset": "0x2a4",
+        "value": "0x0c0b0a09"
+      },
+      {
+        "offset": "0x2a8",
+        "value": "0x100f0e0d"
+      },
+      {
+        "offset": "0x2ac",
+        "value": "0x14131211"
+      },
+      {
+        "offset": "0x2b0",
+        "value": "0x18171615"
+      },
+      {
+        "offset": "0x2b4",
+        "value": "0x1c1b1a19"
+      },
+      {
+        "offset": "0x2b8",
+        "value": "0x201f1e1d"
+      },
+      {
+        "offset": "0x2bc",
+        "value": "0x24232221"
+      },
+      {
+        "offset": "0x2c0",
+        "value": "0x28272625"
+      },
+      {
+        "offset": "0x2c4",
+        "value": "0x2c2b2a29"
+      },
+      {
+        "offset": "0x2c8",
+        "value": "0x302f2e2d"
+      },
+      {
+        "offset": "0x2cc",
+        "value": "0x34333231"
+      },
+      {
+        "offset": "0x2d0",
+        "value": "0x38373635"
+      },
+      {
+        "offset": "0x2d4",
+        "value": "0x3c3b3a39"
+      },
+      {
+        "offset": "0x2d8",
+        "value": "0x403f3e3d"
+      },
+      {
+        "offset": "0x2dc",
+        "value": "0x44434241"
+      },
+      {
+        "offset": "0x2e0",
+        "value": "0x48474645"
+      },
+      {
+        "offset": "0x2e4",
+        "value": "0x4c4b4a49"
+      },
+      {
+        "offset": "0x2e8",
+        "value": "0x504f4e4d"
+      },
+      {
+        "offset": "0x2ec",
+        "value": "0x54535251"
+      },
+      {
+        "offset": "0x2f0",
+        "value": "0x58575655"
+      },
+      {
+        "offset": "0x2f4",
+        "value": "0x005b5a59"
+      },
+      {
+        "offset": "0x108",
+        "value": "0x00002201"
+      },
+      {
+        "offset": "0x10c",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x110",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x114",
+        "value": "0x000000f7"
+      },
+      {
+        "offset": "0x15c",
+        "value": "0x0061a800"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000004"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000008"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000002"
+      },
+      {
+        "offset": "0x200",
+        "value": "0x50414652"
+      },
+      {
+        "offset": "0x204",
+        "value": "0x00200201"
+      },
+      {
+        "offset": "0x208",
+        "value": "0x50370033"
+      },
+      {
+        "offset": "0x20c",
+        "value": "0x00000033"
+      },
+      {
+        "offset": "0x210",
+        "value": "0x00000400"
+      },
+      {
+        "offset": "0x214",
+        "value": "0x00050004"
+      },
+      {
+        "offset": "0x218",
+        "value": "0x000000a4"
+      },
+      {
+        "offset": "0x21c",
+        "value": "0xb70b4c26"
+      },
+      {
+        "offset": "0x220",
+        "value": "0x5f5e5d5c"
+      },
+      {
+        "offset": "0x224",
+        "value": "0x63626160"
+      },
+      {
+        "offset": "0x228",
+        "value": "0x67666564"
+      },
+      {
+        "offset": "0x22c",
+        "value": "0x6b6a6968"
+      },
+      {
+        "offset": "0x230",
+        "value": "0x6f6e6d6c"
+      },
+      {
+        "offset": "0x234",
+        "value": "0x73727170"
+      },
+      {
+        "offset": "0x238",
+        "value": "0x77767574"
+      },
+      {
+        "offset": "0x23c",
+        "value": "0x7b7a7978"
+      },
+      {
+        "offset": "0x240",
+        "value": "0x7f7e7d7c"
+      },
+      {
+        "offset": "0x244",
+        "value": "0x83828180"
+      },
+      {
+        "offset": "0x248",
+        "value": "0x87868584"
+      },
+      {
+        "offset": "0x24c",
+        "value": "0x8b8a8988"
+      },
+      {
+        "offset": "0x250",
+        "value": "0x8f8e8d8c"
+      },
+      {
+        "offset": "0x254",
+        "value": "0x93929190"
+      },
+      {
+        "offset": "0x258",
+        "value": "0x97969594"
+      },
+      {
+        "offset": "0x25c",
+        "value": "0x9b9a9998"
+      },
+      {
+        "offset": "0x260",
+        "value": "0x9f9e9d9c"
+      },
+      {
+        "offset": "0x264",
+        "value": "0xa3a2a1a0"
+      },
+      {
+        "offset": "0x268",
+        "value": "0xa7a6a5a4"
+      },
+      {
+        "offset": "0x26c",
+        "value": "0xabaaa9a8"
+      },
+      {
+        "offset": "0x270",
+        "value": "0xafaeadac"
+      },
+      {
+        "offset": "0x274",
+        "value": "0xb3b2b1b0"
+      },
+      {
+        "offset": "0x278",
+        "value": "0xb7b6b5b4"
+      },
+      {
+        "offset": "0x27c",
+        "value": "0xbbbab9b8"
+      },
+      {
+        "offset": "0x280",
+        "value": "0xbfbebdbc"
+      },
+      {
+        "offset": "0x284",
+        "value": "0xc3c2c1c0"
+      },
+      {
+        "offset": "0x288",
+        "value": "0xc7c6c5c4"
+      },
+      {
+        "offset": "0x28c",
+        "value": "0xcbcac9c8"
+      },
+      {
+        "offset": "0x290",
+        "value": "0xcfcecdcc"
+      },
+      {
+        "offset": "0x294",
+        "value": "0xd3d2d1d0"
+      },
+      {
+        "offset": "0x298",
+        "value": "0xd7d6d5d4"
+      },
+      {
+        "offset": "0x29c",
+        "value": "0xdbdad9d8"
+      },
+      {
+        "offset": "0x2a0",
+        "value": "0xdfdedddc"
+      },
+      {
+        "offset": "0x2a4",
+        "value": "0xe3e2e1e0"
+      },
+      {
+        "offset": "0x2a8",
+        "value": "0xe7e6e5e4"
+      },
+      {
+        "offset": "0x2ac",
+        "value": "0xebeae9e8"
+      },
+      {
+        "offset": "0x2b0",
+        "value": "0xefeeedec"
+      },
+      {
+        "offset": "0x2b4",
+        "value": "0xf3f2f1f0"
+      },
+      {
+        "offset": "0x2b8",
+        "value": "0xf7f6f5f4"
+      },
+      {
+        "offset": "0x2bc",
+        "value": "0xfbfaf9f8"
+      },
+      {
+        "offset": "0x2c0",
+        "value": "0xfffefdfc"
+      },
+      {
+        "offset": "0x108",
+        "value": "0x00002201"
+      },
+      {
+        "offset": "0x10c",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x110",
+        "value": "0x00000001"
+      },
+      {
+        "offset": "0x114",
+        "value": "0x000000c4"
+      },
+      {
+        "offset": "0x15c",
+        "value": "0x0061a800"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000004"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000008"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000030"
+      },
+      {
+        "offset": "0x100",
+        "value": "0x00000030"
+      }
+    ],
+    "runtime_feasibility": {
+      "jtag_frequency_hz": 1000000,
+      "reference_jtag_frequency_hz": 1000000,
+      "estimated_axi_operation_us_at_1mhz": 1250,
+      "estimated_stage_fixed_overhead_seconds": 30.0,
+      "estimate_model": "one_axi_read_per_poll_operation_global_deadline_authoritative",
+      "estimated_stage_runtime_seconds": 31.35375,
+      "minimum_stage_runtime_sec": 32,
+      "authorized_runtime_sec": 960,
+      "feasible_within_authorized_runtime": true,
+      "containment_initial_empty_wait_seconds": 0,
+      "expected_tool_daemon_grace_seconds": 30,
+      "containment_total_exit_window_seconds": 30,
+      "containment_topology_revalidation_interval_seconds": 0.1,
+      "containment_forced_cleanup_wait_seconds": 10,
+      "containment_failure_bound_seconds": 40,
+      "jtag_wrapper_vivado_process_count": 4,
+      "jtag_wrapper_containment_allowance_seconds": 120,
+      "jtag_wrapper_max_forced_cleanup_events": 2,
+      "jtag_wrapper_forced_cleanup_reserve_seconds": 20,
+      "jtag_wrapper_other_guard_seconds": 65,
+      "jtag_wrapper_bookkeeping_guard_seconds": 45,
+      "jtag_wrapper_other_guard_after_forced_cleanup_seconds": 45,
+      "global_runtime_budget": {
+        "minimum_estimated_global_runtime_sec": 397,
+        "configured_global_timeout_ceiling_sec": 915,
+        "authorized_global_runtime_sec": 960,
+        "containment_initial_empty_wait_seconds": 0,
+        "expected_tool_daemon_grace_seconds": 30,
+        "containment_total_exit_window_seconds": 30,
+        "containment_topology_revalidation_interval_seconds": 0.1,
+        "containment_success_bound_seconds_each": 30,
+        "containment_failure_bound_seconds_each": 40,
+        "contained_vivado_process_count": 4,
+        "containment_allowance_seconds": 120,
+        "max_forced_cleanup_events": 2,
+        "forced_cleanup_wait_seconds": 10,
+        "forced_cleanup_reserve_seconds": 20,
+        "other_guard_seconds": 65,
+        "bookkeeping_guard_seconds": 45,
+        "other_guard_after_forced_cleanup_seconds": 45,
+        "configured_unallocated_margin_seconds": 45,
+        "estimated_unallocated_margin_seconds": 563,
+        "minimum_stage_fits_configured_timeout": true,
+        "feasible": true
+      }
+    },
+    "valid": true,
+    "backend_manifest": {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r8\\manifests\\051_p7_fragment_boundary_1024_rr.manifest.json",
+      "expected_sha256": "353ce18662db602488eeda4a5eb4b50f78c28c24ae476182a4facf218ce40354",
+      "actual_sha256": "353ce18662db602488eeda4a5eb4b50f78c28c24ae476182a4facf218ce40354",
+      "schema": "rfap-p7-jtag-axi-dry-run-v1",
+      "input_length": 1024,
+      "input_sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "lane_policy": "STRIPE_ROUND_ROBIN",
+      "transaction_operation_count": 1083
+    },
+    "global_runtime_budget": {
+      "minimum_estimated_global_runtime_sec": 397,
+      "configured_global_timeout_ceiling_sec": 915,
+      "authorized_global_runtime_sec": 960,
+      "containment_initial_empty_wait_seconds": 0,
+      "expected_tool_daemon_grace_seconds": 30,
+      "containment_total_exit_window_seconds": 30,
+      "containment_topology_revalidation_interval_seconds": 0.1,
+      "containment_success_bound_seconds_each": 30,
+      "containment_failure_bound_seconds_each": 40,
+      "contained_vivado_process_count": 4,
+      "containment_allowance_seconds": 120,
+      "max_forced_cleanup_events": 2,
+      "forced_cleanup_wait_seconds": 10,
+      "forced_cleanup_reserve_seconds": 20,
+      "other_guard_seconds": 65,
+      "bookkeeping_guard_seconds": 45,
+      "other_guard_after_forced_cleanup_seconds": 45,
+      "configured_unallocated_margin_seconds": 45,
+      "estimated_unallocated_margin_seconds": 563,
+      "minimum_stage_fits_configured_timeout": true,
+      "feasible": true
+    }
+  },
+  "exit_code_policy": "returncode_must_be_exactly_zero_and_required_markers_must_match",
+  "transaction_format_boundary": "strict_P7_JTAG_AXI_TRANSACTIONS_V1_no_source_no_eval_no_external_commands",
+  "hardware_execution_lock": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\P7_HARDWARE_EXECUTION.lock",
+    "token_sha256": "53e6a92c799d4cddcf785095e8b1ec3cbd23cad2535b98690c049cc452c15d6c",
+    "owner": {
+      "schema": "rf-comm-p7-hardware-execution-lock-v1",
+      "pid": 43748,
+      "wrapper": "run_p7_jtag_axi_stage_safe.py",
+      "stage_name": "p7_fragment_boundary_1024_rr",
+      "acquired_at_utc": "2026-07-11T10:13:50.608661+00:00",
+      "evidence_dir": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr"
+    },
+    "acquired": true,
+    "stale_lock_auto_recovery": false
+  },
+  "global_runtime_deadline_source": "host_monotonic",
+  "global_runtime_guard_seconds": 65,
+  "global_runtime_budget_components": {
+    "contained_vivado_process_count": 4,
+    "initial_empty_wait_seconds_per_process": 0,
+    "expected_tool_daemon_grace_seconds_per_process": 30,
+    "total_containment_window_seconds_per_process": 30,
+    "topology_revalidation_interval_seconds": 0.1,
+    "containment_allowance_seconds": 120,
+    "forced_cleanup_wait_seconds": 10,
+    "failure_containment_bound_seconds_per_failed_process": 40,
+    "max_forced_cleanup_events": 2,
+    "forced_cleanup_reserve_seconds": 20,
+    "bookkeeping_guard_seconds": 45,
+    "other_guard_seconds": 65
+  },
+  "evidence_dir": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr",
+  "event_log": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_axi_stage_events.jsonl",
+  "preflight_process": {
+    "name": "preflight",
+    "returncode": 0,
+    "stdout_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_preflight.stdout.log",
+    "stderr_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_preflight.stderr.log",
+    "elapsed_seconds": 31.449634,
+    "argv": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_hw_preflight.tcl",
+      "-tclargs",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r8_051_p7_fragment_boundary_1024_rr.txt",
+      "210512180081",
+      "xc7z010clg400-1",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "localhost:3121",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_preflight_result.txt"
+    ],
+    "started_at_utc": "2026-07-11T10:13:50.611861+00:00",
+    "ended_at_utc": "2026-07-11T10:14:22.061504+00:00",
+    "timed_out": false,
+    "abort_seen": false,
+    "interrupted": false,
+    "process_tree_terminated": false,
+    "process_tree_reaped": true,
+    "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+    "containment_assigned": true,
+    "containment_closed": true,
+    "descendant_count_after": 0,
+    "expected_tool_daemon_grace_used": true,
+    "expected_tool_daemon_grace_seconds": 30.0,
+    "expected_tool_daemon_paths": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_paths_seen": [
+      "C:\\Windows\\System32\\conhost.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\conhost.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe"
+    ],
+    "descendant_processes_seen": [
+      {
+        "pid": 1092,
+        "parent_pid": 6724,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282384387035475
+      },
+      {
+        "pid": 14420,
+        "parent_pid": 8392,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\cmd.exe",
+        "creation_time_100ns": 134282384399110632
+      },
+      {
+        "pid": 18212,
+        "parent_pid": 31140,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282384394884109
+      },
+      {
+        "pid": 19600,
+        "parent_pid": 14420,
+        "parent_active_globally": true,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282384399178715
+      },
+      {
+        "pid": 24936,
+        "parent_pid": 14420,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "creation_time_100ns": 134282384402445890
+      },
+      {
+        "pid": 31140,
+        "parent_pid": 37964,
+        "parent_active_globally": false,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282384393938525
+      }
+    ],
+    "expected_tool_daemon_classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    "expected_tool_daemon_topology_snapshots": [
+      {
+        "classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 0.00766,
+        "processes": [
+          {
+            "pid": 1092,
+            "parent_pid": 6724,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384387035475
+          },
+          {
+            "pid": 14420,
+            "parent_pid": 8392,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\cmd.exe",
+            "creation_time_100ns": 134282384399110632
+          },
+          {
+            "pid": 18212,
+            "parent_pid": 31140,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384394884109
+          },
+          {
+            "pid": 19600,
+            "parent_pid": 14420,
+            "parent_active_globally": true,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384399178715
+          },
+          {
+            "pid": 24936,
+            "parent_pid": 14420,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+            "creation_time_100ns": 134282384402445890
+          },
+          {
+            "pid": 31140,
+            "parent_pid": 37964,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384393938525
+          }
+        ]
+      },
+      {
+        "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 19.602955,
+        "processes": [
+          {
+            "pid": 1092,
+            "parent_pid": 6724,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384387035475
+          },
+          {
+            "pid": 18212,
+            "parent_pid": 31140,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384394884109
+          },
+          {
+            "pid": 31140,
+            "parent_pid": 37964,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384393938525
+          }
+        ]
+      },
+      {
+        "classification": "EMPTY",
+        "elapsed_seconds": 20.681518,
+        "processes": []
+      }
+    ],
+    "expected_tool_daemon_topology_revalidation_count": 190,
+    "expected_tool_daemon_topology_monotonic": true,
+    "expected_tool_daemon_topology_sample_elapsed_seconds": [
+      4.5e-05,
+      0.00766,
+      0.116168,
+      0.224891,
+      0.334226,
+      0.442724,
+      0.549658,
+      0.658247,
+      0.767065,
+      0.874262,
+      0.983149,
+      1.092261,
+      1.201335,
+      1.30997,
+      1.418863,
+      1.528751,
+      1.63715,
+      1.745112,
+      1.853495,
+      1.962482,
+      2.071599,
+      2.178659,
+      2.287809,
+      2.3974,
+      2.506685,
+      2.615579,
+      2.724799,
+      2.834161,
+      2.943838,
+      3.052724,
+      3.160394,
+      3.270088,
+      3.37951,
+      3.48706,
+      3.595657,
+      3.704218,
+      3.813154,
+      3.92228,
+      4.030864,
+      4.140762,
+      4.249853,
+      4.358715,
+      4.4677,
+      4.577038,
+      4.68572,
+      4.794743,
+      4.903296,
+      5.010619,
+      5.119049,
+      5.228253,
+      5.337059,
+      5.446008,
+      5.555316,
+      5.664778,
+      5.77356,
+      5.88088,
+      5.989744,
+      6.098804,
+      6.207692,
+      6.316024,
+      6.424976,
+      6.533652,
+      6.641992,
+      6.750505,
+      6.858764,
+      6.966975,
+      7.079674,
+      7.188861,
+      7.298411,
+      7.408246,
+      7.515867,
+      7.624887,
+      7.733478,
+      7.842494,
+      7.949739,
+      8.059766,
+      8.168482,
+      8.276601,
+      8.384883,
+      8.492998,
+      8.602204,
+      8.710961,
+      8.818914,
+      8.927572,
+      9.035227,
+      9.14425,
+      9.253052,
+      9.361591,
+      9.47136,
+      9.579928,
+      9.688922,
+      9.794921,
+      9.9038,
+      10.012976,
+      10.122908,
+      10.233289,
+      10.342103,
+      10.448592,
+      10.557362,
+      10.666727,
+      10.774846,
+      10.883626,
+      10.991803,
+      11.101034,
+      11.20997,
+      11.318619,
+      11.427587,
+      11.536532,
+      11.645335,
+      11.754491,
+      11.86337,
+      11.971828,
+      12.080527,
+      12.189721,
+      12.296417,
+      12.40556,
+      12.517754,
+      12.62669,
+      12.735597,
+      12.845309,
+      12.954324,
+      13.062557,
+      13.171179,
+      13.27779,
+      13.386944,
+      13.495666,
+      13.604203,
+      13.713887,
+      13.823101,
+      13.932786,
+      14.041289,
+      14.151348,
+      14.261185,
+      14.369477,
+      14.478578,
+      14.587588,
+      14.69675,
+      14.80394,
+      14.913163,
+      15.022242,
+      15.130132,
+      15.23952,
+      15.34845,
+      15.4576,
+      15.568231,
+      15.676734,
+      15.78449,
+      15.893094,
+      16.00219,
+      16.111497,
+      16.218981,
+      16.32852,
+      16.437493,
+      16.545553,
+      16.65434,
+      16.764041,
+      16.873342,
+      16.981786,
+      17.092101,
+      17.201409,
+      17.31038,
+      17.419025,
+      17.526908,
+      17.636503,
+      17.746222,
+      17.854333,
+      17.963446,
+      18.072261,
+      18.181442,
+      18.289576,
+      18.398648,
+      18.508767,
+      18.618743,
+      18.72769,
+      18.836828,
+      18.950577,
+      19.059551,
+      19.167583,
+      19.276788,
+      19.385778,
+      19.494854,
+      19.602955,
+      19.713807,
+      19.822159,
+      19.930958,
+      20.040288,
+      20.147304,
+      20.254531,
+      20.36343,
+      20.472221,
+      20.579912,
+      20.681518
+    ],
+    "expected_tool_daemon_topology_max_sample_gap_seconds": 0.113749,
+    "expected_tool_daemon_grace_elapsed_seconds": 20.681536,
+    "expected_tool_daemon_hashes_verified": true,
+    "expected_tool_daemon_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_hash_error": "",
+    "expected_tool_daemon_prelaunch_hashes_verified": true,
+    "expected_tool_daemon_prelaunch_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_prelaunch_hash_error": "",
+    "expected_tool_daemon_postexit_hashes_verified": true,
+    "expected_tool_daemon_postexit_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_postexit_hash_error": "",
+    "expected_tool_daemon_topology_error": "",
+    "expected_tool_daemon_topology_terminal_empty": true,
+    "process_identity_query_retry_count": 0,
+    "process_exit_race_recheck_count": 0,
+    "process_identity_query_transient_errors": [],
+    "containment_cleanup_attempted": false,
+    "containment_cleanup_terminated": false,
+    "process_exit_race_rechecked": false,
+    "process_identity_query_retried": false,
+    "containment_query_error": "",
+    "launch_error": ""
+  },
+  "preflight_result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_preflight_result.txt",
+  "preflight_failures": [],
+  "target_identity": {
+    "P7_HW_PREFLIGHT_AUTHORIZED": "1",
+    "P7_HW_PREFLIGHT_READ_ONLY": "1",
+    "P7_HW_PREFLIGHT_BOARD_ID": "210512180081",
+    "P7_HW_PREFLIGHT_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+    "P7_HW_PREFLIGHT_DEVICE": "xc7z010_1",
+    "P7_HW_PREFLIGHT_PART": "xc7z010clg400-1",
+    "P7_HW_PREFLIGHT_IDCODE": "00010011011100100010000010010011",
+    "P7_HW_PREFLIGHT_CANONICAL_PART": "xc7z010clg400-1",
+    "P7_HW_PREFLIGHT_LIVE_PART": "xc7z010",
+    "P7_HW_PREFLIGHT_LIVE_DEVICE": "xc7z010_1",
+    "P7_HW_PREFLIGHT_LIVE_IDCODE": "00010011011100100010000010010011",
+    "P7_HW_PREFLIGHT_RESULT": "PASS"
+  },
+  "shutdown_before": {
+    "name": "shutdown_before",
+    "returncode": 0,
+    "stdout_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_before.stdout.log",
+    "stderr_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_before.stderr.log",
+    "elapsed_seconds": 48.677808,
+    "argv": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_jtag_axi_transactions.tcl",
+      "-tclargs",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+      "SHUTDOWN",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r8_051_p7_fragment_boundary_1024_rr.txt",
+      "210512180081",
+      "xc7z010clg400-1",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "localhost:3121",
+      "1000000",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+      "-",
+      "-",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_before_result.txt",
+      "0x43c00000",
+      "1100000",
+      "134217728",
+      "550",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit"
+    ],
+    "started_at_utc": "2026-07-11T10:14:22.075732+00:00",
+    "ended_at_utc": "2026-07-11T10:15:10.753547+00:00",
+    "timed_out": false,
+    "abort_seen": false,
+    "interrupted": false,
+    "process_tree_terminated": false,
+    "process_tree_reaped": true,
+    "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+    "containment_assigned": true,
+    "containment_closed": true,
+    "descendant_count_after": 0,
+    "expected_tool_daemon_grace_used": true,
+    "expected_tool_daemon_grace_seconds": 30.0,
+    "expected_tool_daemon_paths": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_paths_seen": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\conhost.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_processes_seen": [
+      {
+        "pid": 2140,
+        "parent_pid": 20508,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282384710918144
+      },
+      {
+        "pid": 11344,
+        "parent_pid": 7740,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\cmd.exe",
+        "creation_time_100ns": 134282384715272233
+      },
+      {
+        "pid": 20508,
+        "parent_pid": 16892,
+        "parent_active_globally": false,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282384709963649
+      },
+      {
+        "pid": 37004,
+        "parent_pid": 15700,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282384702781726
+      },
+      {
+        "pid": 47564,
+        "parent_pid": 11344,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "creation_time_100ns": 134282384718663814
+      },
+      {
+        "pid": 48336,
+        "parent_pid": 11344,
+        "parent_active_globally": true,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282384715343129
+      }
+    ],
+    "expected_tool_daemon_classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    "expected_tool_daemon_topology_snapshots": [
+      {
+        "classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 0.007948,
+        "processes": [
+          {
+            "pid": 2140,
+            "parent_pid": 20508,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384710918144
+          },
+          {
+            "pid": 11344,
+            "parent_pid": 7740,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\cmd.exe",
+            "creation_time_100ns": 134282384715272233
+          },
+          {
+            "pid": 20508,
+            "parent_pid": 16892,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384709963649
+          },
+          {
+            "pid": 37004,
+            "parent_pid": 15700,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384702781726
+          },
+          {
+            "pid": 47564,
+            "parent_pid": 11344,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+            "creation_time_100ns": 134282384718663814
+          },
+          {
+            "pid": 48336,
+            "parent_pid": 11344,
+            "parent_active_globally": true,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384715343129
+          }
+        ]
+      },
+      {
+        "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 19.131379,
+        "processes": [
+          {
+            "pid": 2140,
+            "parent_pid": 20508,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384710918144
+          },
+          {
+            "pid": 20508,
+            "parent_pid": 16892,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282384709963649
+          },
+          {
+            "pid": 37004,
+            "parent_pid": 15700,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282384702781726
+          }
+        ]
+      },
+      {
+        "classification": "EMPTY",
+        "elapsed_seconds": 20.158676,
+        "processes": []
+      }
+    ],
+    "expected_tool_daemon_topology_revalidation_count": 185,
+    "expected_tool_daemon_topology_monotonic": true,
+    "expected_tool_daemon_topology_sample_elapsed_seconds": [
+      4.2e-05,
+      0.007948,
+      0.11724,
+      0.224453,
+      0.333286,
+      0.441695,
+      0.550744,
+      0.661358,
+      0.770462,
+      0.879089,
+      0.988681,
+      1.098547,
+      1.206418,
+      1.31542,
+      1.42425,
+      1.533266,
+      1.640243,
+      1.748898,
+      1.857861,
+      1.967169,
+      2.076008,
+      2.185187,
+      2.293786,
+      2.402838,
+      2.512423,
+      2.621447,
+      2.729937,
+      2.838877,
+      2.94791,
+      3.056479,
+      3.166273,
+      3.274694,
+      3.384315,
+      3.492264,
+      3.601115,
+      3.710172,
+      3.818576,
+      3.92697,
+      4.035933,
+      4.144592,
+      4.253338,
+      4.361942,
+      4.470632,
+      4.579623,
+      4.688259,
+      4.796925,
+      4.90612,
+      5.015374,
+      5.12287,
+      5.231877,
+      5.341727,
+      5.450835,
+      5.559187,
+      5.668767,
+      5.777728,
+      5.888361,
+      5.997715,
+      6.107209,
+      6.216085,
+      6.324756,
+      6.433499,
+      6.542971,
+      6.651856,
+      6.760857,
+      6.869778,
+      6.97897,
+      7.08614,
+      7.194196,
+      7.303241,
+      7.411933,
+      7.520995,
+      7.628084,
+      7.737445,
+      7.846742,
+      7.956601,
+      8.064672,
+      8.173855,
+      8.282906,
+      8.391634,
+      8.500538,
+      8.609099,
+      8.717996,
+      8.826576,
+      8.935671,
+      9.044613,
+      9.15411,
+      9.263834,
+      9.372228,
+      9.481651,
+      9.590745,
+      9.698445,
+      9.807059,
+      9.915901,
+      10.025264,
+      10.132386,
+      10.241446,
+      10.350127,
+      10.459005,
+      10.56765,
+      10.67615,
+      10.789565,
+      10.898643,
+      11.006435,
+      11.116509,
+      11.225368,
+      11.333148,
+      11.441778,
+      11.551212,
+      11.660347,
+      11.769269,
+      11.878956,
+      11.98598,
+      12.094519,
+      12.204583,
+      12.316446,
+      12.430154,
+      12.540296,
+      12.650258,
+      12.758606,
+      12.867927,
+      12.977889,
+      13.086582,
+      13.195277,
+      13.303791,
+      13.410254,
+      13.517735,
+      13.626261,
+      13.735228,
+      13.844066,
+      13.953222,
+      14.06287,
+      14.17223,
+      14.284014,
+      14.393539,
+      14.502644,
+      14.611728,
+      14.719423,
+      14.829279,
+      14.938161,
+      15.047068,
+      15.156876,
+      15.265606,
+      15.372512,
+      15.481554,
+      15.590283,
+      15.698501,
+      15.807702,
+      15.916974,
+      16.025633,
+      16.133626,
+      16.242311,
+      16.352516,
+      16.461179,
+      16.569549,
+      16.678527,
+      16.787165,
+      16.89626,
+      17.00382,
+      17.112668,
+      17.221853,
+      17.330895,
+      17.440119,
+      17.548719,
+      17.657419,
+      17.764515,
+      17.873938,
+      17.98332,
+      18.091923,
+      18.201054,
+      18.310298,
+      18.419331,
+      18.528573,
+      18.637596,
+      18.745372,
+      18.854649,
+      18.963894,
+      19.131379,
+      19.240047,
+      19.348197,
+      19.455325,
+      19.564111,
+      19.672792,
+      19.781808,
+      19.890493,
+      19.999174,
+      20.108035,
+      20.158676
+    ],
+    "expected_tool_daemon_topology_max_sample_gap_seconds": 0.167485,
+    "expected_tool_daemon_grace_elapsed_seconds": 20.158695,
+    "expected_tool_daemon_hashes_verified": true,
+    "expected_tool_daemon_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_hash_error": "",
+    "expected_tool_daemon_prelaunch_hashes_verified": true,
+    "expected_tool_daemon_prelaunch_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_prelaunch_hash_error": "",
+    "expected_tool_daemon_postexit_hashes_verified": true,
+    "expected_tool_daemon_postexit_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_postexit_hash_error": "",
+    "expected_tool_daemon_topology_error": "",
+    "expected_tool_daemon_topology_terminal_empty": true,
+    "process_identity_query_retry_count": 1,
+    "process_exit_race_recheck_count": 1,
+    "process_identity_query_transient_errors": [],
+    "containment_cleanup_attempted": false,
+    "containment_cleanup_terminated": false,
+    "process_exit_race_rechecked": true,
+    "process_identity_query_retried": true,
+    "containment_query_error": "",
+    "launch_error": "",
+    "attempted": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_before_result.txt",
+    "passed": true,
+    "failures": []
+  },
+  "shutdown_after": {
+    "name": "shutdown_after",
+    "returncode": 0,
+    "stdout_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_after.stdout.log",
+    "stderr_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_after.stderr.log",
+    "elapsed_seconds": 48.574726,
+    "argv": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_jtag_axi_transactions.tcl",
+      "-tclargs",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+      "SHUTDOWN",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r8_051_p7_fragment_boundary_1024_rr.txt",
+      "210512180081",
+      "xc7z010clg400-1",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "localhost:3121",
+      "1000000",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+      "-",
+      "-",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_after_result.txt",
+      "0x43c00000",
+      "1100000",
+      "134217728",
+      "550",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit"
+    ],
+    "started_at_utc": "2026-07-11T10:16:08.298024+00:00",
+    "ended_at_utc": "2026-07-11T10:16:56.872757+00:00",
+    "timed_out": false,
+    "abort_seen": false,
+    "interrupted": false,
+    "process_tree_terminated": false,
+    "process_tree_reaped": true,
+    "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+    "containment_assigned": true,
+    "containment_closed": true,
+    "descendant_count_after": 0,
+    "expected_tool_daemon_grace_used": true,
+    "expected_tool_daemon_grace_seconds": 30.0,
+    "expected_tool_daemon_paths": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_paths_seen": [
+      "C:\\Windows\\System32\\cmd.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\conhost.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_processes_seen": [
+      {
+        "pid": 8296,
+        "parent_pid": 28464,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\cmd.exe",
+        "creation_time_100ns": 134282385775860978
+      },
+      {
+        "pid": 9020,
+        "parent_pid": 15792,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282385771596341
+      },
+      {
+        "pid": 15792,
+        "parent_pid": 16360,
+        "parent_active_globally": false,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282385770596299
+      },
+      {
+        "pid": 20032,
+        "parent_pid": 46332,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282385763920273
+      },
+      {
+        "pid": 23176,
+        "parent_pid": 8296,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "creation_time_100ns": 134282385779281762
+      },
+      {
+        "pid": 30776,
+        "parent_pid": 8296,
+        "parent_active_globally": true,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282385775928249
+      }
+    ],
+    "expected_tool_daemon_classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    "expected_tool_daemon_topology_snapshots": [
+      {
+        "classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 0.007321,
+        "processes": [
+          {
+            "pid": 8296,
+            "parent_pid": 28464,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\cmd.exe",
+            "creation_time_100ns": 134282385775860978
+          },
+          {
+            "pid": 9020,
+            "parent_pid": 15792,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385771596341
+          },
+          {
+            "pid": 15792,
+            "parent_pid": 16360,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385770596299
+          },
+          {
+            "pid": 20032,
+            "parent_pid": 46332,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385763920273
+          },
+          {
+            "pid": 23176,
+            "parent_pid": 8296,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+            "creation_time_100ns": 134282385779281762
+          },
+          {
+            "pid": 30776,
+            "parent_pid": 8296,
+            "parent_active_globally": true,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385775928249
+          }
+        ]
+      },
+      {
+        "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 19.117306,
+        "processes": [
+          {
+            "pid": 9020,
+            "parent_pid": 15792,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385771596341
+          },
+          {
+            "pid": 15792,
+            "parent_pid": 16360,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385770596299
+          },
+          {
+            "pid": 20032,
+            "parent_pid": 46332,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385763920273
+          }
+        ]
+      },
+      {
+        "classification": "EMPTY",
+        "elapsed_seconds": 20.254509,
+        "processes": []
+      }
+    ],
+    "expected_tool_daemon_topology_revalidation_count": 186,
+    "expected_tool_daemon_topology_monotonic": true,
+    "expected_tool_daemon_topology_sample_elapsed_seconds": [
+      5e-05,
+      0.007321,
+      0.11672,
+      0.225249,
+      0.333823,
+      0.441409,
+      0.55013,
+      0.660241,
+      0.773814,
+      0.883126,
+      0.99194,
+      1.103714,
+      1.211636,
+      1.321152,
+      1.430021,
+      1.539054,
+      1.64777,
+      1.756086,
+      1.866298,
+      1.97344,
+      2.082187,
+      2.190845,
+      2.299457,
+      2.409198,
+      2.518705,
+      2.627926,
+      2.736777,
+      2.846202,
+      2.954184,
+      3.063064,
+      3.172674,
+      3.281096,
+      3.388839,
+      3.497881,
+      3.610112,
+      3.718941,
+      3.827743,
+      3.936989,
+      4.044598,
+      4.153405,
+      4.26216,
+      4.371339,
+      4.480042,
+      4.588617,
+      4.697265,
+      4.806857,
+      4.915349,
+      5.023584,
+      5.132368,
+      5.2406,
+      5.349703,
+      5.457417,
+      5.566016,
+      5.675038,
+      5.784292,
+      5.893449,
+      6.00203,
+      6.110945,
+      6.221884,
+      6.329758,
+      6.439249,
+      6.547918,
+      6.655741,
+      6.764704,
+      6.873724,
+      6.980969,
+      7.090182,
+      7.198953,
+      7.30794,
+      7.417307,
+      7.526356,
+      7.635465,
+      7.744497,
+      7.853168,
+      7.962661,
+      8.071462,
+      8.179811,
+      8.288536,
+      8.397254,
+      8.505767,
+      8.614198,
+      8.722043,
+      8.831428,
+      8.940887,
+      9.051188,
+      9.160661,
+      9.270595,
+      9.378233,
+      9.486881,
+      9.595594,
+      9.704687,
+      9.812579,
+      9.921414,
+      10.030478,
+      10.139182,
+      10.247039,
+      10.354321,
+      10.463416,
+      10.572626,
+      10.681837,
+      10.790468,
+      10.899925,
+      11.008678,
+      11.116664,
+      11.225572,
+      11.33457,
+      11.443033,
+      11.551797,
+      11.660553,
+      11.770072,
+      11.879001,
+      11.986384,
+      12.095298,
+      12.204456,
+      12.311873,
+      12.421098,
+      12.533483,
+      12.642258,
+      12.749879,
+      12.859807,
+      12.970252,
+      13.079451,
+      13.188996,
+      13.296981,
+      13.404927,
+      13.514544,
+      13.624191,
+      13.731416,
+      13.841086,
+      13.95009,
+      14.057729,
+      14.1668,
+      14.276082,
+      14.38522,
+      14.492301,
+      14.601722,
+      14.711146,
+      14.820153,
+      14.928824,
+      15.037218,
+      15.145297,
+      15.25471,
+      15.36359,
+      15.472577,
+      15.580064,
+      15.688644,
+      15.797131,
+      15.905526,
+      16.014341,
+      16.122973,
+      16.23078,
+      16.339292,
+      16.448225,
+      16.556346,
+      16.664885,
+      16.773105,
+      16.88214,
+      16.990095,
+      17.099542,
+      17.208547,
+      17.317734,
+      17.42648,
+      17.53506,
+      17.643887,
+      17.752659,
+      17.859144,
+      17.967784,
+      18.076835,
+      18.184599,
+      18.293012,
+      18.402608,
+      18.511483,
+      18.620635,
+      18.734005,
+      18.841727,
+      18.950139,
+      19.117306,
+      19.224881,
+      19.331837,
+      19.44058,
+      19.549529,
+      19.656487,
+      19.764581,
+      19.873124,
+      19.981364,
+      20.094574,
+      20.203758,
+      20.254509
+    ],
+    "expected_tool_daemon_topology_max_sample_gap_seconds": 0.167167,
+    "expected_tool_daemon_grace_elapsed_seconds": 20.254526,
+    "expected_tool_daemon_hashes_verified": true,
+    "expected_tool_daemon_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_hash_error": "",
+    "expected_tool_daemon_prelaunch_hashes_verified": true,
+    "expected_tool_daemon_prelaunch_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_prelaunch_hash_error": "",
+    "expected_tool_daemon_postexit_hashes_verified": true,
+    "expected_tool_daemon_postexit_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_postexit_hash_error": "",
+    "expected_tool_daemon_topology_error": "",
+    "expected_tool_daemon_topology_terminal_empty": true,
+    "process_identity_query_retry_count": 1,
+    "process_exit_race_recheck_count": 1,
+    "process_identity_query_transient_errors": [],
+    "containment_cleanup_attempted": false,
+    "containment_cleanup_terminated": false,
+    "process_exit_race_rechecked": true,
+    "process_identity_query_retried": true,
+    "containment_query_error": "",
+    "launch_error": "",
+    "passed": true,
+    "failures": [],
+    "attempted": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_shutdown_after_result.txt"
+  },
+  "tfdu_activity_semantics": "conservative_true_once_transmitting_candidate_command_is_launched",
+  "stage_process": {
+    "name": "jtag_axi_stage",
+    "returncode": 0,
+    "stdout_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_axi_stage.stdout.log",
+    "stderr_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_axi_stage.stderr.log",
+    "elapsed_seconds": 57.523032,
+    "argv": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_jtag_axi_transactions.tcl",
+      "-tclargs",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+      "STAGE",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r8_051_p7_fragment_boundary_1024_rr.txt",
+      "210512180081",
+      "xc7z010clg400-1",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "localhost:3121",
+      "1000000",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260711_stationary_app_r8\\transactions\\051_p7_fragment_boundary_1024_rr.transactions.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_axi_raw_result.txt",
+      "0x43c00000",
+      "1100000",
+      "134217728",
+      "550",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit"
+    ],
+    "started_at_utc": "2026-07-11T10:15:10.762371+00:00",
+    "ended_at_utc": "2026-07-11T10:16:08.285408+00:00",
+    "timed_out": false,
+    "abort_seen": false,
+    "interrupted": false,
+    "process_tree_terminated": false,
+    "process_tree_reaped": true,
+    "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+    "containment_assigned": true,
+    "containment_closed": true,
+    "descendant_count_after": 0,
+    "expected_tool_daemon_grace_used": true,
+    "expected_tool_daemon_grace_seconds": 30.0,
+    "expected_tool_daemon_paths": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_paths_seen": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "C:\\Windows\\System32\\cmd.exe",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "C:\\Windows\\System32\\conhost.exe",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "descendant_processes_seen": [
+      {
+        "pid": 18428,
+        "parent_pid": 46596,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282385195026819
+      },
+      {
+        "pid": 18436,
+        "parent_pid": 40616,
+        "parent_active_globally": true,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "creation_time_100ns": 134282385202974155
+      },
+      {
+        "pid": 40616,
+        "parent_pid": 29400,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\cmd.exe",
+        "creation_time_100ns": 134282385199620444
+      },
+      {
+        "pid": 46596,
+        "parent_pid": 44496,
+        "parent_active_globally": false,
+        "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "creation_time_100ns": 134282385194035400
+      },
+      {
+        "pid": 46684,
+        "parent_pid": 3196,
+        "parent_active_globally": false,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282385187386438
+      },
+      {
+        "pid": 47424,
+        "parent_pid": 40616,
+        "parent_active_globally": true,
+        "image_path": "C:\\Windows\\System32\\conhost.exe",
+        "creation_time_100ns": 134282385199836322
+      }
+    ],
+    "expected_tool_daemon_classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+    "expected_tool_daemon_topology_snapshots": [
+      {
+        "classification": "EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 0.007865,
+        "processes": [
+          {
+            "pid": 18428,
+            "parent_pid": 46596,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385195026819
+          },
+          {
+            "pid": 18436,
+            "parent_pid": 40616,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+            "creation_time_100ns": 134282385202974155
+          },
+          {
+            "pid": 40616,
+            "parent_pid": 29400,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\cmd.exe",
+            "creation_time_100ns": 134282385199620444
+          },
+          {
+            "pid": 46596,
+            "parent_pid": 44496,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385194035400
+          },
+          {
+            "pid": 46684,
+            "parent_pid": 3196,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385187386438
+          },
+          {
+            "pid": 47424,
+            "parent_pid": 40616,
+            "parent_active_globally": true,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385199836322
+          }
+        ]
+      },
+      {
+        "classification": "STRICT_SHRINK_SUBSET_OF_EXACT_R2_VIVADO_EXIT_HELPER_FOREST",
+        "elapsed_seconds": 19.490211,
+        "processes": [
+          {
+            "pid": 18428,
+            "parent_pid": 46596,
+            "parent_active_globally": true,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385195026819
+          },
+          {
+            "pid": 46596,
+            "parent_pid": 44496,
+            "parent_active_globally": false,
+            "image_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+            "creation_time_100ns": 134282385194035400
+          },
+          {
+            "pid": 46684,
+            "parent_pid": 3196,
+            "parent_active_globally": false,
+            "image_path": "C:\\Windows\\System32\\conhost.exe",
+            "creation_time_100ns": 134282385187386438
+          }
+        ]
+      },
+      {
+        "classification": "EMPTY",
+        "elapsed_seconds": 20.567954,
+        "processes": []
+      }
+    ],
+    "expected_tool_daemon_topology_revalidation_count": 189,
+    "expected_tool_daemon_topology_monotonic": true,
+    "expected_tool_daemon_topology_sample_elapsed_seconds": [
+      4.3e-05,
+      0.007865,
+      0.11766,
+      0.226632,
+      0.335632,
+      0.444973,
+      0.552258,
+      0.661468,
+      0.769466,
+      0.878936,
+      0.987916,
+      1.096816,
+      1.204974,
+      1.313046,
+      1.421649,
+      1.530289,
+      1.639343,
+      1.748456,
+      1.857616,
+      1.966565,
+      2.075368,
+      2.184573,
+      2.29237,
+      2.399399,
+      2.507993,
+      2.616523,
+      2.724921,
+      2.833602,
+      2.942735,
+      3.050209,
+      3.158197,
+      3.267244,
+      3.376103,
+      3.483725,
+      3.593445,
+      3.702049,
+      3.810901,
+      3.919787,
+      4.028906,
+      4.138306,
+      4.247224,
+      4.356031,
+      4.465237,
+      4.573007,
+      4.682475,
+      4.791183,
+      4.898185,
+      5.007045,
+      5.116253,
+      5.226361,
+      5.333704,
+      5.443564,
+      5.552006,
+      5.660418,
+      5.769883,
+      5.878923,
+      5.987095,
+      6.095923,
+      6.205089,
+      6.313796,
+      6.422598,
+      6.530983,
+      6.638057,
+      6.748112,
+      6.85758,
+      6.966607,
+      7.075365,
+      7.184226,
+      7.293534,
+      7.402504,
+      7.511724,
+      7.619337,
+      7.728677,
+      7.842183,
+      7.950528,
+      8.059802,
+      8.168546,
+      8.277508,
+      8.386079,
+      8.500724,
+      8.608923,
+      8.718049,
+      8.826898,
+      8.935871,
+      9.042725,
+      9.15205,
+      9.260772,
+      9.369656,
+      9.479047,
+      9.588144,
+      9.69699,
+      9.805974,
+      9.913756,
+      10.021567,
+      10.130487,
+      10.239167,
+      10.347545,
+      10.456615,
+      10.565283,
+      10.674188,
+      10.781471,
+      10.890503,
+      10.999677,
+      11.106714,
+      11.213902,
+      11.323126,
+      11.432079,
+      11.541103,
+      11.650155,
+      11.758804,
+      11.866248,
+      11.97575,
+      12.084616,
+      12.192067,
+      12.300669,
+      12.409328,
+      12.517974,
+      12.629479,
+      12.738846,
+      12.848195,
+      12.957366,
+      13.066268,
+      13.175147,
+      13.284256,
+      13.393669,
+      13.50211,
+      13.6114,
+      13.720906,
+      13.828531,
+      13.937055,
+      14.045808,
+      14.154017,
+      14.263114,
+      14.372538,
+      14.481007,
+      14.589194,
+      14.697386,
+      14.807431,
+      14.916468,
+      15.025882,
+      15.139202,
+      15.247002,
+      15.355864,
+      15.465353,
+      15.574161,
+      15.683107,
+      15.792006,
+      15.900809,
+      16.009123,
+      16.117669,
+      16.226786,
+      16.336285,
+      16.445312,
+      16.553695,
+      16.662094,
+      16.771093,
+      16.879916,
+      16.989149,
+      17.097642,
+      17.206365,
+      17.315349,
+      17.42454,
+      17.533783,
+      17.642746,
+      17.750661,
+      17.859346,
+      17.968188,
+      18.077925,
+      18.186442,
+      18.294392,
+      18.401654,
+      18.510662,
+      18.620201,
+      18.728977,
+      18.837878,
+      18.946576,
+      19.054519,
+      19.16359,
+      19.272134,
+      19.381181,
+      19.490211,
+      19.59646,
+      19.705308,
+      19.814146,
+      19.923076,
+      20.031495,
+      20.140321,
+      20.249515,
+      20.357949,
+      20.466727,
+      20.567954
+    ],
+    "expected_tool_daemon_topology_max_sample_gap_seconds": 0.114645,
+    "expected_tool_daemon_grace_elapsed_seconds": 20.56797,
+    "expected_tool_daemon_hashes_verified": true,
+    "expected_tool_daemon_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_hash_error": "",
+    "expected_tool_daemon_prelaunch_hashes_verified": true,
+    "expected_tool_daemon_prelaunch_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_prelaunch_hash_error": "",
+    "expected_tool_daemon_postexit_hashes_verified": true,
+    "expected_tool_daemon_postexit_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+      "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+    },
+    "expected_tool_daemon_postexit_hash_error": "",
+    "expected_tool_daemon_topology_error": "",
+    "expected_tool_daemon_topology_terminal_empty": true,
+    "process_identity_query_retry_count": 0,
+    "process_exit_race_recheck_count": 0,
+    "process_identity_query_transient_errors": [],
+    "containment_cleanup_attempted": false,
+    "containment_cleanup_terminated": false,
+    "process_exit_race_rechecked": false,
+    "process_identity_query_retried": false,
+    "containment_query_error": "",
+    "launch_error": "",
+    "passed": true,
+    "failures": [],
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_axi_raw_result.txt"
+  },
+  "stage_result_markers": {
+    "P7_HW_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+    "P7_HW_DEVICE": "xc7z010_1",
+    "P7_HW_PART": "xc7z010clg400-1",
+    "P7_HW_IDCODE": "00010011011100100010000010010011",
+    "P7_HW_CANONICAL_PART": "xc7z010clg400-1",
+    "P7_HW_LIVE_PART": "xc7z010",
+    "P7_HW_LIVE_DEVICE": "xc7z010_1",
+    "P7_HW_LIVE_IDCODE": "00010011011100100010000010010011",
+    "P7_CANDIDATE_PROGRAMMED": "1",
+    "P7_HW_AXI": "hw_axi_1",
+    "P7_TXN_META_BACKEND": "p7_jtag_backend",
+    "P7_TXN_META_LANE_POLICY": "STRIPE_ROUND_ROBIN",
+    "P7_BASE_TX_COUNT": "00000000",
+    "P7_BASE_RX_GOOD_COUNT_L0": "00000000",
+    "P7_BASE_RX_GOOD_COUNT_L1": "00000000",
+    "P7_BASE_CRC_BAD": "00000000",
+    "P7_BASE_PAYLOAD_MISMATCH": "00000000",
+    "P7_BASE_RETRY_COUNT": "00000000",
+    "P7_BASE_RETRY_EXHAUSTED": "00000000",
+    "P7_BASE_TX_FAIL": "00000000",
+    "P7_BASE_DUTY_VIOLATION": "00000000",
+    "P7_BASE_RAW_TX_PULSES": "00000000",
+    "P7_BASE_RAW_RX_PULSES": "00000000",
+    "P7_BASE_FRAME_GOOD": "00000000",
+    "P7_BASE_FRAME_BAD": "00000000",
+    "P7_BASE_ACK_SENT": "00000000",
+    "P7_BASE_ACK_SEEN": "00000000",
+    "P7_BASE_TXD_HIGH_MAX": "00000000",
+    "P7_BASE_ERROR_CODE": "00000000",
+    "P7_BASE_STICKY_ERROR": "00000000",
+    "P7F00000_TXW000": "50414652",
+    "P7F00000_TXW001": "00200101",
+    "P7F00000_TXW002": "50370033",
+    "P7F00000_TXW003": "00000033",
+    "P7F00000_TXW004": "00000400",
+    "P7F00000_TXW005": "00050000",
+    "P7F00000_TXW006": "000000D7",
+    "P7F00000_TXW007": "B70B4C26",
+    "P7F00000_TXW008": "03020100",
+    "P7F00000_TXW009": "07060504",
+    "P7F00000_TXW010": "0B0A0908",
+    "P7F00000_TXW011": "0F0E0D0C",
+    "P7F00000_TXW012": "13121110",
+    "P7F00000_TXW013": "17161514",
+    "P7F00000_TXW014": "1B1A1918",
+    "P7F00000_TXW015": "1F1E1D1C",
+    "P7F00000_TXW016": "23222120",
+    "P7F00000_TXW017": "27262524",
+    "P7F00000_TXW018": "2B2A2928",
+    "P7F00000_TXW019": "2F2E2D2C",
+    "P7F00000_TXW020": "33323130",
+    "P7F00000_TXW021": "37363534",
+    "P7F00000_TXW022": "3B3A3938",
+    "P7F00000_TXW023": "3F3E3D3C",
+    "P7F00000_TXW024": "43424140",
+    "P7F00000_TXW025": "47464544",
+    "P7F00000_TXW026": "4B4A4948",
+    "P7F00000_TXW027": "4F4E4D4C",
+    "P7F00000_TXW028": "53525150",
+    "P7F00000_TXW029": "57565554",
+    "P7F00000_TXW030": "5B5A5958",
+    "P7F00000_TXW031": "5F5E5D5C",
+    "P7F00000_TXW032": "63626160",
+    "P7F00000_TXW033": "67666564",
+    "P7F00000_TXW034": "6B6A6968",
+    "P7F00000_TXW035": "6F6E6D6C",
+    "P7F00000_TXW036": "73727170",
+    "P7F00000_TXW037": "77767574",
+    "P7F00000_TXW038": "7B7A7978",
+    "P7F00000_TXW039": "7F7E7D7C",
+    "P7F00000_TXW040": "83828180",
+    "P7F00000_TXW041": "87868584",
+    "P7F00000_TXW042": "8B8A8988",
+    "P7F00000_TXW043": "8F8E8D8C",
+    "P7F00000_TXW044": "93929190",
+    "P7F00000_TXW045": "97969594",
+    "P7F00000_TXW046": "9B9A9998",
+    "P7F00000_TXW047": "9F9E9D9C",
+    "P7F00000_TXW048": "A3A2A1A0",
+    "P7F00000_TXW049": "A7A6A5A4",
+    "P7F00000_TXW050": "ABAAA9A8",
+    "P7F00000_TXW051": "AFAEADAC",
+    "P7F00000_TXW052": "B3B2B1B0",
+    "P7F00000_TXW053": "B7B6B5B4",
+    "P7F00000_TXW054": "BBBAB9B8",
+    "P7F00000_TXW055": "BFBEBDBC",
+    "P7F00000_TXW056": "C3C2C1C0",
+    "P7F00000_TXW057": "C7C6C5C4",
+    "P7F00000_TXW058": "CBCAC9C8",
+    "P7F00000_TXW059": "CFCECDCC",
+    "P7F00000_TXW060": "D3D2D1D0",
+    "P7F00000_TXW061": "00D6D5D4",
+    "P7F00000_COMMIT": "00000007",
+    "P7F00000_COMMIT_POLLS": "1",
+    "P7F00000_TX_CRC32": "632D72B7",
+    "P7F00000_DONE": "00000017",
+    "P7F00000_DONE_POLLS": "1",
+    "P7F00000_STATUS": "00000017",
+    "P7F00000_MAILBOX": "50364F4B",
+    "P7F00000_RX_LEN": "000000F7",
+    "P7F00000_RX_CRC32": "632D72B7",
+    "P7F00000_RX_DIGEST": "632D72B7",
+    "P7F00000_TX_COUNT": "00000001",
+    "P7F00000_RX_GOOD_COUNT_L0": "00000001",
+    "P7F00000_RX_GOOD_COUNT_L1": "00000000",
+    "P7F00000_CRC_BAD": "00000000",
+    "P7F00000_PAYLOAD_MISMATCH": "00000000",
+    "P7F00000_RETRY_COUNT": "00000000",
+    "P7F00000_RETRY_EXHAUSTED": "00000000",
+    "P7F00000_TX_FAIL": "00000000",
+    "P7F00000_DUTY_VIOLATION": "00000000",
+    "P7F00000_RAW_TX_PULSES": "00000460",
+    "P7F00000_RAW_RX_PULSES": "000008C0",
+    "P7F00000_FRAME_GOOD": "00000001",
+    "P7F00000_FRAME_BAD": "00000000",
+    "P7F00000_ACK_SENT": "00000001",
+    "P7F00000_ACK_SEEN": "00000001",
+    "P7F00000_TXD_HIGH_MAX": "00000008",
+    "P7F00000_ERROR_CODE": "00000000",
+    "P7F00000_STICKY_ERROR": "00000000",
+    "P7F00000_RXW000": "50414652",
+    "P7F00000_RXW001": "00200101",
+    "P7F00000_RXW002": "50370033",
+    "P7F00000_RXW003": "00000033",
+    "P7F00000_RXW004": "00000400",
+    "P7F00000_RXW005": "00050000",
+    "P7F00000_RXW006": "000000D7",
+    "P7F00000_RXW007": "B70B4C26",
+    "P7F00000_RXW008": "03020100",
+    "P7F00000_RXW009": "07060504",
+    "P7F00000_RXW010": "0B0A0908",
+    "P7F00000_RXW011": "0F0E0D0C",
+    "P7F00000_RXW012": "13121110",
+    "P7F00000_RXW013": "17161514",
+    "P7F00000_RXW014": "1B1A1918",
+    "P7F00000_RXW015": "1F1E1D1C",
+    "P7F00000_RXW016": "23222120",
+    "P7F00000_RXW017": "27262524",
+    "P7F00000_RXW018": "2B2A2928",
+    "P7F00000_RXW019": "2F2E2D2C",
+    "P7F00000_RXW020": "33323130",
+    "P7F00000_RXW021": "37363534",
+    "P7F00000_RXW022": "3B3A3938",
+    "P7F00000_RXW023": "3F3E3D3C",
+    "P7F00000_RXW024": "43424140",
+    "P7F00000_RXW025": "47464544",
+    "P7F00000_RXW026": "4B4A4948",
+    "P7F00000_RXW027": "4F4E4D4C",
+    "P7F00000_RXW028": "53525150",
+    "P7F00000_RXW029": "57565554",
+    "P7F00000_RXW030": "5B5A5958",
+    "P7F00000_RXW031": "5F5E5D5C",
+    "P7F00000_RXW032": "63626160",
+    "P7F00000_RXW033": "67666564",
+    "P7F00000_RXW034": "6B6A6968",
+    "P7F00000_RXW035": "6F6E6D6C",
+    "P7F00000_RXW036": "73727170",
+    "P7F00000_RXW037": "77767574",
+    "P7F00000_RXW038": "7B7A7978",
+    "P7F00000_RXW039": "7F7E7D7C",
+    "P7F00000_RXW040": "83828180",
+    "P7F00000_RXW041": "87868584",
+    "P7F00000_RXW042": "8B8A8988",
+    "P7F00000_RXW043": "8F8E8D8C",
+    "P7F00000_RXW044": "93929190",
+    "P7F00000_RXW045": "97969594",
+    "P7F00000_RXW046": "9B9A9998",
+    "P7F00000_RXW047": "9F9E9D9C",
+    "P7F00000_RXW048": "A3A2A1A0",
+    "P7F00000_RXW049": "A7A6A5A4",
+    "P7F00000_RXW050": "ABAAA9A8",
+    "P7F00000_RXW051": "AFAEADAC",
+    "P7F00000_RXW052": "B3B2B1B0",
+    "P7F00000_RXW053": "B7B6B5B4",
+    "P7F00000_RXW054": "BBBAB9B8",
+    "P7F00000_RXW055": "BFBEBDBC",
+    "P7F00000_RXW056": "C3C2C1C0",
+    "P7F00000_RXW057": "C7C6C5C4",
+    "P7F00000_RXW058": "CBCAC9C8",
+    "P7F00000_RXW059": "CFCECDCC",
+    "P7F00000_RXW060": "D3D2D1D0",
+    "P7F00000_RXW061": "00D6D5D4",
+    "P7F00001_TXW000": "50414652",
+    "P7F00001_TXW001": "00200001",
+    "P7F00001_TXW002": "50370033",
+    "P7F00001_TXW003": "00000033",
+    "P7F00001_TXW004": "00000400",
+    "P7F00001_TXW005": "00050001",
+    "P7F00001_TXW006": "000000D7",
+    "P7F00001_TXW007": "B70B4C26",
+    "P7F00001_TXW008": "DAD9D8D7",
+    "P7F00001_TXW009": "DEDDDCDB",
+    "P7F00001_TXW010": "E2E1E0DF",
+    "P7F00001_TXW011": "E6E5E4E3",
+    "P7F00001_TXW012": "EAE9E8E7",
+    "P7F00001_TXW013": "EEEDECEB",
+    "P7F00001_TXW014": "F2F1F0EF",
+    "P7F00001_TXW015": "F6F5F4F3",
+    "P7F00001_TXW016": "FAF9F8F7",
+    "P7F00001_TXW017": "FEFDFCFB",
+    "P7F00001_TXW018": "020100FF",
+    "P7F00001_TXW019": "06050403",
+    "P7F00001_TXW020": "0A090807",
+    "P7F00001_TXW021": "0E0D0C0B",
+    "P7F00001_TXW022": "1211100F",
+    "P7F00001_TXW023": "16151413",
+    "P7F00001_TXW024": "1A191817",
+    "P7F00001_TXW025": "1E1D1C1B",
+    "P7F00001_TXW026": "2221201F",
+    "P7F00001_TXW027": "26252423",
+    "P7F00001_TXW028": "2A292827",
+    "P7F00001_TXW029": "2E2D2C2B",
+    "P7F00001_TXW030": "3231302F",
+    "P7F00001_TXW031": "36353433",
+    "P7F00001_TXW032": "3A393837",
+    "P7F00001_TXW033": "3E3D3C3B",
+    "P7F00001_TXW034": "4241403F",
+    "P7F00001_TXW035": "46454443",
+    "P7F00001_TXW036": "4A494847",
+    "P7F00001_TXW037": "4E4D4C4B",
+    "P7F00001_TXW038": "5251504F",
+    "P7F00001_TXW039": "56555453",
+    "P7F00001_TXW040": "5A595857",
+    "P7F00001_TXW041": "5E5D5C5B",
+    "P7F00001_TXW042": "6261605F",
+    "P7F00001_TXW043": "66656463",
+    "P7F00001_TXW044": "6A696867",
+    "P7F00001_TXW045": "6E6D6C6B",
+    "P7F00001_TXW046": "7271706F",
+    "P7F00001_TXW047": "76757473",
+    "P7F00001_TXW048": "7A797877",
+    "P7F00001_TXW049": "7E7D7C7B",
+    "P7F00001_TXW050": "8281807F",
+    "P7F00001_TXW051": "86858483",
+    "P7F00001_TXW052": "8A898887",
+    "P7F00001_TXW053": "8E8D8C8B",
+    "P7F00001_TXW054": "9291908F",
+    "P7F00001_TXW055": "96959493",
+    "P7F00001_TXW056": "9A999897",
+    "P7F00001_TXW057": "9E9D9C9B",
+    "P7F00001_TXW058": "A2A1A09F",
+    "P7F00001_TXW059": "A6A5A4A3",
+    "P7F00001_TXW060": "AAA9A8A7",
+    "P7F00001_TXW061": "00ADACAB",
+    "P7F00001_COMMIT": "00000007",
+    "P7F00001_COMMIT_POLLS": "1",
+    "P7F00001_TX_CRC32": "1790B111",
+    "P7F00001_DONE": "00000017",
+    "P7F00001_DONE_POLLS": "1",
+    "P7F00001_STATUS": "00000017",
+    "P7F00001_MAILBOX": "50364F4B",
+    "P7F00001_RX_LEN": "000000F7",
+    "P7F00001_RX_CRC32": "1790B111",
+    "P7F00001_RX_DIGEST": "1790B111",
+    "P7F00001_TX_COUNT": "00000002",
+    "P7F00001_RX_GOOD_COUNT_L0": "00000001",
+    "P7F00001_RX_GOOD_COUNT_L1": "00000001",
+    "P7F00001_CRC_BAD": "00000000",
+    "P7F00001_PAYLOAD_MISMATCH": "00000000",
+    "P7F00001_RETRY_COUNT": "00000000",
+    "P7F00001_RETRY_EXHAUSTED": "00000000",
+    "P7F00001_TX_FAIL": "00000000",
+    "P7F00001_DUTY_VIOLATION": "00000000",
+    "P7F00001_RAW_TX_PULSES": "00000460",
+    "P7F00001_RAW_RX_PULSES": "000008C1",
+    "P7F00001_FRAME_GOOD": "00000002",
+    "P7F00001_FRAME_BAD": "00000000",
+    "P7F00001_ACK_SENT": "00000002",
+    "P7F00001_ACK_SEEN": "00000002",
+    "P7F00001_TXD_HIGH_MAX": "00000008",
+    "P7F00001_ERROR_CODE": "00000000",
+    "P7F00001_STICKY_ERROR": "00000000",
+    "P7F00001_RXW000": "50414652",
+    "P7F00001_RXW001": "00200001",
+    "P7F00001_RXW002": "50370033",
+    "P7F00001_RXW003": "00000033",
+    "P7F00001_RXW004": "00000400",
+    "P7F00001_RXW005": "00050001",
+    "P7F00001_RXW006": "000000D7",
+    "P7F00001_RXW007": "B70B4C26",
+    "P7F00001_RXW008": "DAD9D8D7",
+    "P7F00001_RXW009": "DEDDDCDB",
+    "P7F00001_RXW010": "E2E1E0DF",
+    "P7F00001_RXW011": "E6E5E4E3",
+    "P7F00001_RXW012": "EAE9E8E7",
+    "P7F00001_RXW013": "EEEDECEB",
+    "P7F00001_RXW014": "F2F1F0EF",
+    "P7F00001_RXW015": "F6F5F4F3",
+    "P7F00001_RXW016": "FAF9F8F7",
+    "P7F00001_RXW017": "FEFDFCFB",
+    "P7F00001_RXW018": "020100FF",
+    "P7F00001_RXW019": "06050403",
+    "P7F00001_RXW020": "0A090807",
+    "P7F00001_RXW021": "0E0D0C0B",
+    "P7F00001_RXW022": "1211100F",
+    "P7F00001_RXW023": "16151413",
+    "P7F00001_RXW024": "1A191817",
+    "P7F00001_RXW025": "1E1D1C1B",
+    "P7F00001_RXW026": "2221201F",
+    "P7F00001_RXW027": "26252423",
+    "P7F00001_RXW028": "2A292827",
+    "P7F00001_RXW029": "2E2D2C2B",
+    "P7F00001_RXW030": "3231302F",
+    "P7F00001_RXW031": "36353433",
+    "P7F00001_RXW032": "3A393837",
+    "P7F00001_RXW033": "3E3D3C3B",
+    "P7F00001_RXW034": "4241403F",
+    "P7F00001_RXW035": "46454443",
+    "P7F00001_RXW036": "4A494847",
+    "P7F00001_RXW037": "4E4D4C4B",
+    "P7F00001_RXW038": "5251504F",
+    "P7F00001_RXW039": "56555453",
+    "P7F00001_RXW040": "5A595857",
+    "P7F00001_RXW041": "5E5D5C5B",
+    "P7F00001_RXW042": "6261605F",
+    "P7F00001_RXW043": "66656463",
+    "P7F00001_RXW044": "6A696867",
+    "P7F00001_RXW045": "6E6D6C6B",
+    "P7F00001_RXW046": "7271706F",
+    "P7F00001_RXW047": "76757473",
+    "P7F00001_RXW048": "7A797877",
+    "P7F00001_RXW049": "7E7D7C7B",
+    "P7F00001_RXW050": "8281807F",
+    "P7F00001_RXW051": "86858483",
+    "P7F00001_RXW052": "8A898887",
+    "P7F00001_RXW053": "8E8D8C8B",
+    "P7F00001_RXW054": "9291908F",
+    "P7F00001_RXW055": "96959493",
+    "P7F00001_RXW056": "9A999897",
+    "P7F00001_RXW057": "9E9D9C9B",
+    "P7F00001_RXW058": "A2A1A09F",
+    "P7F00001_RXW059": "A6A5A4A3",
+    "P7F00001_RXW060": "AAA9A8A7",
+    "P7F00001_RXW061": "00ADACAB",
+    "P7F00002_TXW000": "50414652",
+    "P7F00002_TXW001": "00200001",
+    "P7F00002_TXW002": "50370033",
+    "P7F00002_TXW003": "00000033",
+    "P7F00002_TXW004": "00000400",
+    "P7F00002_TXW005": "00050002",
+    "P7F00002_TXW006": "000000D7",
+    "P7F00002_TXW007": "B70B4C26",
+    "P7F00002_TXW008": "B1B0AFAE",
+    "P7F00002_TXW009": "B5B4B3B2",
+    "P7F00002_TXW010": "B9B8B7B6",
+    "P7F00002_TXW011": "BDBCBBBA",
+    "P7F00002_TXW012": "C1C0BFBE",
+    "P7F00002_TXW013": "C5C4C3C2",
+    "P7F00002_TXW014": "C9C8C7C6",
+    "P7F00002_TXW015": "CDCCCBCA",
+    "P7F00002_TXW016": "D1D0CFCE",
+    "P7F00002_TXW017": "D5D4D3D2",
+    "P7F00002_TXW018": "D9D8D7D6",
+    "P7F00002_TXW019": "DDDCDBDA",
+    "P7F00002_TXW020": "E1E0DFDE",
+    "P7F00002_TXW021": "E5E4E3E2",
+    "P7F00002_TXW022": "E9E8E7E6",
+    "P7F00002_TXW023": "EDECEBEA",
+    "P7F00002_TXW024": "F1F0EFEE",
+    "P7F00002_TXW025": "F5F4F3F2",
+    "P7F00002_TXW026": "F9F8F7F6",
+    "P7F00002_TXW027": "FDFCFBFA",
+    "P7F00002_TXW028": "0100FFFE",
+    "P7F00002_TXW029": "05040302",
+    "P7F00002_TXW030": "09080706",
+    "P7F00002_TXW031": "0D0C0B0A",
+    "P7F00002_TXW032": "11100F0E",
+    "P7F00002_TXW033": "15141312",
+    "P7F00002_TXW034": "19181716",
+    "P7F00002_TXW035": "1D1C1B1A",
+    "P7F00002_TXW036": "21201F1E",
+    "P7F00002_TXW037": "25242322",
+    "P7F00002_TXW038": "29282726",
+    "P7F00002_TXW039": "2D2C2B2A",
+    "P7F00002_TXW040": "31302F2E",
+    "P7F00002_TXW041": "35343332",
+    "P7F00002_TXW042": "39383736",
+    "P7F00002_TXW043": "3D3C3B3A",
+    "P7F00002_TXW044": "41403F3E",
+    "P7F00002_TXW045": "45444342",
+    "P7F00002_TXW046": "49484746",
+    "P7F00002_TXW047": "4D4C4B4A",
+    "P7F00002_TXW048": "51504F4E",
+    "P7F00002_TXW049": "55545352",
+    "P7F00002_TXW050": "59585756",
+    "P7F00002_TXW051": "5D5C5B5A",
+    "P7F00002_TXW052": "61605F5E",
+    "P7F00002_TXW053": "65646362",
+    "P7F00002_TXW054": "69686766",
+    "P7F00002_TXW055": "6D6C6B6A",
+    "P7F00002_TXW056": "71706F6E",
+    "P7F00002_TXW057": "75747372",
+    "P7F00002_TXW058": "79787776",
+    "P7F00002_TXW059": "7D7C7B7A",
+    "P7F00002_TXW060": "81807F7E",
+    "P7F00002_TXW061": "00848382",
+    "P7F00002_COMMIT": "00000007",
+    "P7F00002_COMMIT_POLLS": "1",
+    "P7F00002_TX_CRC32": "F2817B86",
+    "P7F00002_DONE": "00000017",
+    "P7F00002_DONE_POLLS": "1",
+    "P7F00002_STATUS": "00000017",
+    "P7F00002_MAILBOX": "50364F4B",
+    "P7F00002_RX_LEN": "000000F7",
+    "P7F00002_RX_CRC32": "F2817B86",
+    "P7F00002_RX_DIGEST": "F2817B86",
+    "P7F00002_TX_COUNT": "00000003",
+    "P7F00002_RX_GOOD_COUNT_L0": "00000002",
+    "P7F00002_RX_GOOD_COUNT_L1": "00000001",
+    "P7F00002_CRC_BAD": "00000000",
+    "P7F00002_PAYLOAD_MISMATCH": "00000000",
+    "P7F00002_RETRY_COUNT": "00000000",
+    "P7F00002_RETRY_EXHAUSTED": "00000000",
+    "P7F00002_TX_FAIL": "00000000",
+    "P7F00002_DUTY_VIOLATION": "00000000",
+    "P7F00002_RAW_TX_PULSES": "00000460",
+    "P7F00002_RAW_RX_PULSES": "000008C0",
+    "P7F00002_FRAME_GOOD": "00000003",
+    "P7F00002_FRAME_BAD": "00000000",
+    "P7F00002_ACK_SENT": "00000003",
+    "P7F00002_ACK_SEEN": "00000003",
+    "P7F00002_TXD_HIGH_MAX": "00000008",
+    "P7F00002_ERROR_CODE": "00000000",
+    "P7F00002_STICKY_ERROR": "00000000",
+    "P7F00002_RXW000": "50414652",
+    "P7F00002_RXW001": "00200001",
+    "P7F00002_RXW002": "50370033",
+    "P7F00002_RXW003": "00000033",
+    "P7F00002_RXW004": "00000400",
+    "P7F00002_RXW005": "00050002",
+    "P7F00002_RXW006": "000000D7",
+    "P7F00002_RXW007": "B70B4C26",
+    "P7F00002_RXW008": "B1B0AFAE",
+    "P7F00002_RXW009": "B5B4B3B2",
+    "P7F00002_RXW010": "B9B8B7B6",
+    "P7F00002_RXW011": "BDBCBBBA",
+    "P7F00002_RXW012": "C1C0BFBE",
+    "P7F00002_RXW013": "C5C4C3C2",
+    "P7F00002_RXW014": "C9C8C7C6",
+    "P7F00002_RXW015": "CDCCCBCA",
+    "P7F00002_RXW016": "D1D0CFCE",
+    "P7F00002_RXW017": "D5D4D3D2",
+    "P7F00002_RXW018": "D9D8D7D6",
+    "P7F00002_RXW019": "DDDCDBDA",
+    "P7F00002_RXW020": "E1E0DFDE",
+    "P7F00002_RXW021": "E5E4E3E2",
+    "P7F00002_RXW022": "E9E8E7E6",
+    "P7F00002_RXW023": "EDECEBEA",
+    "P7F00002_RXW024": "F1F0EFEE",
+    "P7F00002_RXW025": "F5F4F3F2",
+    "P7F00002_RXW026": "F9F8F7F6",
+    "P7F00002_RXW027": "FDFCFBFA",
+    "P7F00002_RXW028": "0100FFFE",
+    "P7F00002_RXW029": "05040302",
+    "P7F00002_RXW030": "09080706",
+    "P7F00002_RXW031": "0D0C0B0A",
+    "P7F00002_RXW032": "11100F0E",
+    "P7F00002_RXW033": "15141312",
+    "P7F00002_RXW034": "19181716",
+    "P7F00002_RXW035": "1D1C1B1A",
+    "P7F00002_RXW036": "21201F1E",
+    "P7F00002_RXW037": "25242322",
+    "P7F00002_RXW038": "29282726",
+    "P7F00002_RXW039": "2D2C2B2A",
+    "P7F00002_RXW040": "31302F2E",
+    "P7F00002_RXW041": "35343332",
+    "P7F00002_RXW042": "39383736",
+    "P7F00002_RXW043": "3D3C3B3A",
+    "P7F00002_RXW044": "41403F3E",
+    "P7F00002_RXW045": "45444342",
+    "P7F00002_RXW046": "49484746",
+    "P7F00002_RXW047": "4D4C4B4A",
+    "P7F00002_RXW048": "51504F4E",
+    "P7F00002_RXW049": "55545352",
+    "P7F00002_RXW050": "59585756",
+    "P7F00002_RXW051": "5D5C5B5A",
+    "P7F00002_RXW052": "61605F5E",
+    "P7F00002_RXW053": "65646362",
+    "P7F00002_RXW054": "69686766",
+    "P7F00002_RXW055": "6D6C6B6A",
+    "P7F00002_RXW056": "71706F6E",
+    "P7F00002_RXW057": "75747372",
+    "P7F00002_RXW058": "79787776",
+    "P7F00002_RXW059": "7D7C7B7A",
+    "P7F00002_RXW060": "81807F7E",
+    "P7F00002_RXW061": "00848382",
+    "P7F00003_TXW000": "50414652",
+    "P7F00003_TXW001": "00200001",
+    "P7F00003_TXW002": "50370033",
+    "P7F00003_TXW003": "00000033",
+    "P7F00003_TXW004": "00000400",
+    "P7F00003_TXW005": "00050003",
+    "P7F00003_TXW006": "000000D7",
+    "P7F00003_TXW007": "B70B4C26",
+    "P7F00003_TXW008": "88878685",
+    "P7F00003_TXW009": "8C8B8A89",
+    "P7F00003_TXW010": "908F8E8D",
+    "P7F00003_TXW011": "94939291",
+    "P7F00003_TXW012": "98979695",
+    "P7F00003_TXW013": "9C9B9A99",
+    "P7F00003_TXW014": "A09F9E9D",
+    "P7F00003_TXW015": "A4A3A2A1",
+    "P7F00003_TXW016": "A8A7A6A5",
+    "P7F00003_TXW017": "ACABAAA9",
+    "P7F00003_TXW018": "B0AFAEAD",
+    "P7F00003_TXW019": "B4B3B2B1",
+    "P7F00003_TXW020": "B8B7B6B5",
+    "P7F00003_TXW021": "BCBBBAB9",
+    "P7F00003_TXW022": "C0BFBEBD",
+    "P7F00003_TXW023": "C4C3C2C1",
+    "P7F00003_TXW024": "C8C7C6C5",
+    "P7F00003_TXW025": "CCCBCAC9",
+    "P7F00003_TXW026": "D0CFCECD",
+    "P7F00003_TXW027": "D4D3D2D1",
+    "P7F00003_TXW028": "D8D7D6D5",
+    "P7F00003_TXW029": "DCDBDAD9",
+    "P7F00003_TXW030": "E0DFDEDD",
+    "P7F00003_TXW031": "E4E3E2E1",
+    "P7F00003_TXW032": "E8E7E6E5",
+    "P7F00003_TXW033": "ECEBEAE9",
+    "P7F00003_TXW034": "F0EFEEED",
+    "P7F00003_TXW035": "F4F3F2F1",
+    "P7F00003_TXW036": "F8F7F6F5",
+    "P7F00003_TXW037": "FCFBFAF9",
+    "P7F00003_TXW038": "00FFFEFD",
+    "P7F00003_TXW039": "04030201",
+    "P7F00003_TXW040": "08070605",
+    "P7F00003_TXW041": "0C0B0A09",
+    "P7F00003_TXW042": "100F0E0D",
+    "P7F00003_TXW043": "14131211",
+    "P7F00003_TXW044": "18171615",
+    "P7F00003_TXW045": "1C1B1A19",
+    "P7F00003_TXW046": "201F1E1D",
+    "P7F00003_TXW047": "24232221",
+    "P7F00003_TXW048": "28272625",
+    "P7F00003_TXW049": "2C2B2A29",
+    "P7F00003_TXW050": "302F2E2D",
+    "P7F00003_TXW051": "34333231",
+    "P7F00003_TXW052": "38373635",
+    "P7F00003_TXW053": "3C3B3A39",
+    "P7F00003_TXW054": "403F3E3D",
+    "P7F00003_TXW055": "44434241",
+    "P7F00003_TXW056": "48474645",
+    "P7F00003_TXW057": "4C4B4A49",
+    "P7F00003_TXW058": "504F4E4D",
+    "P7F00003_TXW059": "54535251",
+    "P7F00003_TXW060": "58575655",
+    "P7F00003_TXW061": "005B5A59",
+    "P7F00003_COMMIT": "00000007",
+    "P7F00003_COMMIT_POLLS": "1",
+    "P7F00003_TX_CRC32": "A0FFE11B",
+    "P7F00003_DONE": "00000017",
+    "P7F00003_DONE_POLLS": "1",
+    "P7F00003_STATUS": "00000017",
+    "P7F00003_MAILBOX": "50364F4B",
+    "P7F00003_RX_LEN": "000000F7",
+    "P7F00003_RX_CRC32": "A0FFE11B",
+    "P7F00003_RX_DIGEST": "A0FFE11B",
+    "P7F00003_TX_COUNT": "00000004",
+    "P7F00003_RX_GOOD_COUNT_L0": "00000002",
+    "P7F00003_RX_GOOD_COUNT_L1": "00000002",
+    "P7F00003_CRC_BAD": "00000000",
+    "P7F00003_PAYLOAD_MISMATCH": "00000000",
+    "P7F00003_RETRY_COUNT": "00000000",
+    "P7F00003_RETRY_EXHAUSTED": "00000000",
+    "P7F00003_TX_FAIL": "00000000",
+    "P7F00003_DUTY_VIOLATION": "00000000",
+    "P7F00003_RAW_TX_PULSES": "00000460",
+    "P7F00003_RAW_RX_PULSES": "000008C1",
+    "P7F00003_FRAME_GOOD": "00000004",
+    "P7F00003_FRAME_BAD": "00000000",
+    "P7F00003_ACK_SENT": "00000004",
+    "P7F00003_ACK_SEEN": "00000004",
+    "P7F00003_TXD_HIGH_MAX": "00000008",
+    "P7F00003_ERROR_CODE": "00000000",
+    "P7F00003_STICKY_ERROR": "00000000",
+    "P7F00003_RXW000": "50414652",
+    "P7F00003_RXW001": "00200001",
+    "P7F00003_RXW002": "50370033",
+    "P7F00003_RXW003": "00000033",
+    "P7F00003_RXW004": "00000400",
+    "P7F00003_RXW005": "00050003",
+    "P7F00003_RXW006": "000000D7",
+    "P7F00003_RXW007": "B70B4C26",
+    "P7F00003_RXW008": "88878685",
+    "P7F00003_RXW009": "8C8B8A89",
+    "P7F00003_RXW010": "908F8E8D",
+    "P7F00003_RXW011": "94939291",
+    "P7F00003_RXW012": "98979695",
+    "P7F00003_RXW013": "9C9B9A99",
+    "P7F00003_RXW014": "A09F9E9D",
+    "P7F00003_RXW015": "A4A3A2A1",
+    "P7F00003_RXW016": "A8A7A6A5",
+    "P7F00003_RXW017": "ACABAAA9",
+    "P7F00003_RXW018": "B0AFAEAD",
+    "P7F00003_RXW019": "B4B3B2B1",
+    "P7F00003_RXW020": "B8B7B6B5",
+    "P7F00003_RXW021": "BCBBBAB9",
+    "P7F00003_RXW022": "C0BFBEBD",
+    "P7F00003_RXW023": "C4C3C2C1",
+    "P7F00003_RXW024": "C8C7C6C5",
+    "P7F00003_RXW025": "CCCBCAC9",
+    "P7F00003_RXW026": "D0CFCECD",
+    "P7F00003_RXW027": "D4D3D2D1",
+    "P7F00003_RXW028": "D8D7D6D5",
+    "P7F00003_RXW029": "DCDBDAD9",
+    "P7F00003_RXW030": "E0DFDEDD",
+    "P7F00003_RXW031": "E4E3E2E1",
+    "P7F00003_RXW032": "E8E7E6E5",
+    "P7F00003_RXW033": "ECEBEAE9",
+    "P7F00003_RXW034": "F0EFEEED",
+    "P7F00003_RXW035": "F4F3F2F1",
+    "P7F00003_RXW036": "F8F7F6F5",
+    "P7F00003_RXW037": "FCFBFAF9",
+    "P7F00003_RXW038": "00FFFEFD",
+    "P7F00003_RXW039": "04030201",
+    "P7F00003_RXW040": "08070605",
+    "P7F00003_RXW041": "0C0B0A09",
+    "P7F00003_RXW042": "100F0E0D",
+    "P7F00003_RXW043": "14131211",
+    "P7F00003_RXW044": "18171615",
+    "P7F00003_RXW045": "1C1B1A19",
+    "P7F00003_RXW046": "201F1E1D",
+    "P7F00003_RXW047": "24232221",
+    "P7F00003_RXW048": "28272625",
+    "P7F00003_RXW049": "2C2B2A29",
+    "P7F00003_RXW050": "302F2E2D",
+    "P7F00003_RXW051": "34333231",
+    "P7F00003_RXW052": "38373635",
+    "P7F00003_RXW053": "3C3B3A39",
+    "P7F00003_RXW054": "403F3E3D",
+    "P7F00003_RXW055": "44434241",
+    "P7F00003_RXW056": "48474645",
+    "P7F00003_RXW057": "4C4B4A49",
+    "P7F00003_RXW058": "504F4E4D",
+    "P7F00003_RXW059": "54535251",
+    "P7F00003_RXW060": "58575655",
+    "P7F00003_RXW061": "005B5A59",
+    "P7F00004_TXW000": "50414652",
+    "P7F00004_TXW001": "00200201",
+    "P7F00004_TXW002": "50370033",
+    "P7F00004_TXW003": "00000033",
+    "P7F00004_TXW004": "00000400",
+    "P7F00004_TXW005": "00050004",
+    "P7F00004_TXW006": "000000A4",
+    "P7F00004_TXW007": "B70B4C26",
+    "P7F00004_TXW008": "5F5E5D5C",
+    "P7F00004_TXW009": "63626160",
+    "P7F00004_TXW010": "67666564",
+    "P7F00004_TXW011": "6B6A6968",
+    "P7F00004_TXW012": "6F6E6D6C",
+    "P7F00004_TXW013": "73727170",
+    "P7F00004_TXW014": "77767574",
+    "P7F00004_TXW015": "7B7A7978",
+    "P7F00004_TXW016": "7F7E7D7C",
+    "P7F00004_TXW017": "83828180",
+    "P7F00004_TXW018": "87868584",
+    "P7F00004_TXW019": "8B8A8988",
+    "P7F00004_TXW020": "8F8E8D8C",
+    "P7F00004_TXW021": "93929190",
+    "P7F00004_TXW022": "97969594",
+    "P7F00004_TXW023": "9B9A9998",
+    "P7F00004_TXW024": "9F9E9D9C",
+    "P7F00004_TXW025": "A3A2A1A0",
+    "P7F00004_TXW026": "A7A6A5A4",
+    "P7F00004_TXW027": "ABAAA9A8",
+    "P7F00004_TXW028": "AFAEADAC",
+    "P7F00004_TXW029": "B3B2B1B0",
+    "P7F00004_TXW030": "B7B6B5B4",
+    "P7F00004_TXW031": "BBBAB9B8",
+    "P7F00004_TXW032": "BFBEBDBC",
+    "P7F00004_TXW033": "C3C2C1C0",
+    "P7F00004_TXW034": "C7C6C5C4",
+    "P7F00004_TXW035": "CBCAC9C8",
+    "P7F00004_TXW036": "CFCECDCC",
+    "P7F00004_TXW037": "D3D2D1D0",
+    "P7F00004_TXW038": "D7D6D5D4",
+    "P7F00004_TXW039": "DBDAD9D8",
+    "P7F00004_TXW040": "DFDEDDDC",
+    "P7F00004_TXW041": "E3E2E1E0",
+    "P7F00004_TXW042": "E7E6E5E4",
+    "P7F00004_TXW043": "EBEAE9E8",
+    "P7F00004_TXW044": "EFEEEDEC",
+    "P7F00004_TXW045": "F3F2F1F0",
+    "P7F00004_TXW046": "F7F6F5F4",
+    "P7F00004_TXW047": "FBFAF9F8",
+    "P7F00004_TXW048": "FFFEFDFC",
+    "P7F00004_COMMIT": "00000007",
+    "P7F00004_COMMIT_POLLS": "1",
+    "P7F00004_TX_CRC32": "43C70BFF",
+    "P7F00004_DONE": "00000017",
+    "P7F00004_DONE_POLLS": "1",
+    "P7F00004_STATUS": "00000017",
+    "P7F00004_MAILBOX": "50364F4B",
+    "P7F00004_RX_LEN": "000000C4",
+    "P7F00004_RX_CRC32": "43C70BFF",
+    "P7F00004_RX_DIGEST": "43C70BFF",
+    "P7F00004_TX_COUNT": "00000005",
+    "P7F00004_RX_GOOD_COUNT_L0": "00000003",
+    "P7F00004_RX_GOOD_COUNT_L1": "00000002",
+    "P7F00004_CRC_BAD": "00000000",
+    "P7F00004_PAYLOAD_MISMATCH": "00000000",
+    "P7F00004_RETRY_COUNT": "00000000",
+    "P7F00004_RETRY_EXHAUSTED": "00000000",
+    "P7F00004_TX_FAIL": "00000000",
+    "P7F00004_DUTY_VIOLATION": "00000000",
+    "P7F00004_RAW_TX_PULSES": "00000394",
+    "P7F00004_RAW_RX_PULSES": "00000728",
+    "P7F00004_FRAME_GOOD": "00000005",
+    "P7F00004_FRAME_BAD": "00000000",
+    "P7F00004_ACK_SENT": "00000005",
+    "P7F00004_ACK_SEEN": "00000005",
+    "P7F00004_TXD_HIGH_MAX": "00000008",
+    "P7F00004_ERROR_CODE": "00000000",
+    "P7F00004_STICKY_ERROR": "00000000",
+    "P7F00004_RXW000": "50414652",
+    "P7F00004_RXW001": "00200201",
+    "P7F00004_RXW002": "50370033",
+    "P7F00004_RXW003": "00000033",
+    "P7F00004_RXW004": "00000400",
+    "P7F00004_RXW005": "00050004",
+    "P7F00004_RXW006": "000000A4",
+    "P7F00004_RXW007": "B70B4C26",
+    "P7F00004_RXW008": "5F5E5D5C",
+    "P7F00004_RXW009": "63626160",
+    "P7F00004_RXW010": "67666564",
+    "P7F00004_RXW011": "6B6A6968",
+    "P7F00004_RXW012": "6F6E6D6C",
+    "P7F00004_RXW013": "73727170",
+    "P7F00004_RXW014": "77767574",
+    "P7F00004_RXW015": "7B7A7978",
+    "P7F00004_RXW016": "7F7E7D7C",
+    "P7F00004_RXW017": "83828180",
+    "P7F00004_RXW018": "87868584",
+    "P7F00004_RXW019": "8B8A8988",
+    "P7F00004_RXW020": "8F8E8D8C",
+    "P7F00004_RXW021": "93929190",
+    "P7F00004_RXW022": "97969594",
+    "P7F00004_RXW023": "9B9A9998",
+    "P7F00004_RXW024": "9F9E9D9C",
+    "P7F00004_RXW025": "A3A2A1A0",
+    "P7F00004_RXW026": "A7A6A5A4",
+    "P7F00004_RXW027": "ABAAA9A8",
+    "P7F00004_RXW028": "AFAEADAC",
+    "P7F00004_RXW029": "B3B2B1B0",
+    "P7F00004_RXW030": "B7B6B5B4",
+    "P7F00004_RXW031": "BBBAB9B8",
+    "P7F00004_RXW032": "BFBEBDBC",
+    "P7F00004_RXW033": "C3C2C1C0",
+    "P7F00004_RXW034": "C7C6C5C4",
+    "P7F00004_RXW035": "CBCAC9C8",
+    "P7F00004_RXW036": "CFCECDCC",
+    "P7F00004_RXW037": "D3D2D1D0",
+    "P7F00004_RXW038": "D7D6D5D4",
+    "P7F00004_RXW039": "DBDAD9D8",
+    "P7F00004_RXW040": "DFDEDDDC",
+    "P7F00004_RXW041": "E3E2E1E0",
+    "P7F00004_RXW042": "E7E6E5E4",
+    "P7F00004_RXW043": "EBEAE9E8",
+    "P7F00004_RXW044": "EFEEEDEC",
+    "P7F00004_RXW045": "F3F2F1F0",
+    "P7F00004_RXW046": "F7F6F5F4",
+    "P7F00004_RXW047": "FBFAF9F8",
+    "P7F00004_RXW048": "FFFEFDFC",
+    "P7_FINAL_SHUTDOWN_REASON": "54464455",
+    "P7_TCL_PROGRAMMING_ATTEMPTED": "1",
+    "P7_TRANSACTION_COUNT": "1083",
+    "P7_JTAG_AXI_TRANSACTIONS": "PASS",
+    "P7_JTAG_STAGE_RESULT": "PASS"
+  },
+  "child_reaped_before_shutdown_after": true,
+  "backend_parse": {
+    "passed": true,
+    "semantic_mode": "rfap",
+    "summary_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_backend_parse_summary.json",
+    "summary_sha256": "78a834fea3213ba030e9fb9c15080648b2ed5b59b236f853629079e131175450",
+    "output_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r8\\051_p7_fragment_boundary_1024_rr\\p7_jtag_reassembled_output.bin",
+    "output_sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+    "object_length": 1024,
+    "object_crc32": 3070970918,
+    "object_sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+    "lane_policy": "STRIPE_ROUND_ROBIN",
+    "fragment_count": 5,
+    "missing_fragments": 0,
+    "duplicate_fragments": 0,
+    "error_counter_increments": 0,
+    "fragment_latency_upper_bound_us": {
+      "sample_count": 5,
+      "min": 2000,
+      "mean": 2000.0,
+      "p50": 2000,
+      "p95": 2000,
+      "p99": 2000,
+      "max": 2000,
+      "percentile_method": "nearest_rank",
+      "semantics": "upper_bound",
+      "source": "bounded_commit_plus_transfer_poll_counts_x_manifest_poll_period"
+    },
+    "object_transport_latency_upper_bound_us": 10000,
+    "object_transport_latency_semantics": "sum_of_sequential_fragment_poll_upper_bounds",
+    "poll_bound_application_goodput_lower_bound_bps": 819200,
+    "poll_bound_goodput_semantics": "lower_bound_from_object_bytes_over_transport_latency_upper_bound",
+    "host_end_to_end_elapsed_seconds": 57.523032,
+    "host_end_to_end_goodput_bps": 142.412521,
+    "host_end_to_end_time_source": "host_monotonic_child_process_elapsed",
+    "host_end_to_end_semantics": "includes Vivado startup, FPGA programming, JTAG/AXI operations, polling, and host overhead; not optical-only fragment latency",
+    "raw_log_bound_to_this_hardware_process": true
+  },
+  "internal_error": "",
+  "stage_failures": [],
+  "backend_parse_failure": "",
+  "global_runtime": {
+    "elapsed_seconds": 186.27942,
+    "authorized_max_seconds": 960,
+    "within_authorized_limit": true
+  },
+  "reason": "authorized direct JTAG/AXI stage, strict byte/counter parser, and both shutdown barriers passed"
+}
