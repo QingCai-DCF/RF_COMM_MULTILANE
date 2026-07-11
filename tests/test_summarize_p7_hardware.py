@@ -2463,7 +2463,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
 
-    def test_real_r1_r2_r3_epochs_validate_and_r3_summary_tamper_fails_closed(self) -> None:
+    def test_real_r1_r2_r3_r4_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
         evidence = subject.RepositoryEvidence(
             ROOT,
             ROOT / "evidence" / "hardware" / "p7",
@@ -2473,6 +2473,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260711_stationary_app",
             "p7_20260711_stationary_app_r2",
             "p7_20260711_stationary_app_r3",
+            "p7_20260711_stationary_app_r4",
         )
         candidates: dict[str, subject.Candidate] = {}
         for epoch_name in epoch_names:
@@ -2493,7 +2494,9 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 subject.parse_time(data.get("generated_at_utc"), summary_path.stat().st_mtime),
             )
             candidates[epoch_name] = candidate
-            if epoch_name.endswith("_r3"):
+            if epoch_name.endswith("_r4"):
+                inner_errors = subject._old_commit_write_allowlist_failure_errors(candidate, evidence)
+            elif epoch_name.endswith("_r3"):
                 inner_errors = subject._old_commit_shutdown_tcl_failure_errors(candidate, evidence)
             else:
                 inner_errors = subject._old_commit_read_only_preflight_errors(candidate, evidence)
@@ -2531,6 +2534,27 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             )
             errors = subject._old_commit_shutdown_tcl_failure_errors(tampered, evidence)
             self.assertTrue(errors, f"r3 {label} tamper unexpectedly validated")
+
+        r4 = candidates["p7_20260711_stationary_app_r4"]
+        r4_tamper_cases = (
+            ("candidate programming", lambda data: data.__setitem__("programmed_candidate", False)),
+            ("candidate return code", lambda data: data["stage_process"].__setitem__("returncode", 0)),
+            ("TFDU drive", lambda data: data.__setitem__("drove_tfdu_txd", True)),
+            ("shutdown-after PASS", lambda data: data["shutdown_after"].__setitem__("passed", False)),
+            ("candidate reap", lambda data: data.__setitem__("child_reaped_before_shutdown_after", False)),
+        )
+        for label, mutate in r4_tamper_cases:
+            tampered_data = json.loads(json.dumps(r4.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(
+                r4.path,
+                tampered_data,
+                r4.kind,
+                r4.stage,
+                r4.timestamp,
+            )
+            errors = subject._old_commit_write_allowlist_failure_errors(tampered, evidence)
+            self.assertTrue(errors, f"r4 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

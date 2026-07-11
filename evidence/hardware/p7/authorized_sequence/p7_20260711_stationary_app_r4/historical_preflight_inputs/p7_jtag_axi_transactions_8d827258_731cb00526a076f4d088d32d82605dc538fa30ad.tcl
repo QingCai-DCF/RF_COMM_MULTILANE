@@ -99,13 +99,7 @@ proc p7_validate_address {address axi_base} {
 }
 
 proc p7_validate_write {offset data} {
-  # ``offset`` is the numeric result of p7_validate_address (for example
-  # decimal "256"), so keep the allowlist numeric as well.  Tcl's exact list
-  # search does not consider the string "0x100" equal to "256".
-  set fixed [list \
-      [expr {0x100}] [expr {0x108}] [expr {0x10C}] [expr {0x110}] \
-      [expr {0x114}] [expr {0x118}] [expr {0x11C}] [expr {0x15C}] \
-      [expr {0x16C}] [expr {0x170}] [expr {0x174}]]
+  set fixed [list 0x100 0x108 0x10C 0x110 0x114 0x118 0x11C 0x15C 0x16C 0x170 0x174]
   set payload_window [expr {$offset >= 0x200 && $offset <= 0x2FC && $offset % 4 == 0}]
   if {[lsearch -exact $fixed $offset] < 0 && !$payload_window} {
     error "write offset is outside the P6 candidate allowlist: [format 0x%03X $offset]"

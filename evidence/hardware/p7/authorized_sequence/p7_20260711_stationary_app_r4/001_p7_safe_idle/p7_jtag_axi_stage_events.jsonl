@@ -1,0 +1,9 @@
+{"timestamp_utc": "2026-07-11T04:01:46.267309+00:00", "event": "authorized_execution_begin", "stage": "p7_safe_idle"}
+{"timestamp_utc": "2026-07-11T04:02:17.661351+00:00", "event": "preflight_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T04:03:05.849314+00:00", "event": "shutdown_before_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T04:03:05.855497+00:00", "event": "candidate_started", "semantic_mode": "safe-idle"}
+{"timestamp_utc": "2026-07-11T04:04:11.174051+00:00", "event": "candidate_child_reaped", "process_tree_reaped": true, "candidate_returncode": 41}
+{"timestamp_utc": "2026-07-11T04:04:11.185959+00:00", "event": "stage_finished", "returncode": 41, "passed": false}
+{"timestamp_utc": "2026-07-11T04:04:11.188671+00:00", "event": "shutdown_after_started", "candidate_child_reaped": true, "candidate_returncode": 41}
+{"timestamp_utc": "2026-07-11T04:04:59.650389+00:00", "event": "shutdown_after_finished", "returncode": 0, "passed": true}
+{"timestamp_utc": "2026-07-11T04:04:59.651056+00:00", "event": "authorized_execution_end", "status": "FAIL_STAGE"}

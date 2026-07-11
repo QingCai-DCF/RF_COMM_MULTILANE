@@ -1268,6 +1268,22 @@ class P7JtagAxiStageTests(unittest.TestCase):
         )
         with self.assertRaises(tkinter.TclError):
             interp.eval(r"string map {\ /} {C:\Temp\broken.bit}")
+        interp.eval(tcl[: tcl.index("proc p7_axi_write")])
+        for offset, data in (
+            (0x100, 0x30),
+            (0x108, 0x2201),
+            (0x10C, 0x3),
+            (0x110, 0x3),
+            (0x114, 247),
+            (0x118, 0),
+            (0x11C, 0),
+            (0x15C, 1),
+            (0x16C, 0),
+            (0x170, 0),
+            (0x174, 0),
+            (0x200, 0),
+        ):
+            interp.call("p7_validate_write", offset, data)
 
     def test_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")

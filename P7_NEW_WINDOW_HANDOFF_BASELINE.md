@@ -226,3 +226,31 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - 不要把独立 P4 recovery shutdown PASS 伪装为 r3 wrapper shutdown-before/after PASS。
 - 不要覆盖失败 evidence；不要修饰旧 raw logs；通过独立历史解析说明旧 schema 与旧缺陷。
 - 若观察与本文件不同，以可复现的当前证据为准，并在新 evidence 中解释差异。
+
+## 12. 2026-07-11 r4 增量交接（本节覆盖前文过时的 HEAD/run-id 描述）
+
+- H1c 已提交：`dfcd26a1d343e81761c3bd591b47ba05c5a426f9`。
+- offline gate 超时修复已提交：`8d827258c9ec89689e8debdaddf422ee30f8df18`。
+- 在干净的 `8d827258...` source 上生成的 r4 offline checkpoint 为 PASS；SHA256
+  `6f28d380cfdfe41f979d70a87db578b68ec3f604ceebfd362b9bd2c2864a8df3`，硬件状态仍为
+  `HARDWARE_ACCEPTANCE: PENDING_HW`。
+- r4 plan SHA256 为 `bea97a123cd089f8d43f5df211e96e0505113147774338fa10588b93c5b878bc`；
+  66 个授权和 66 个 dry validation 均通过且未触发硬件。
+- r4 run ID 为 `p7_20260711_stationary_app_r4`。它只启动一次，在 stage index 0 / `p7_safe_idle`
+  以 `FAIL_STAGE` 停止；completed stage count 为 0。r4 永远不得 resume；下一次硬件 run ID 必须是 r5。
+- r4 的 candidate bitstream、shutdown-before 和 shutdown-after 均曾被编程；safe-idle 状态读取均为 0；
+  第一个事务 `0x100` 在真正 AXI 写入前被 Tcl allowlist 的十六进制字符串/十进制数值比较缺陷拒绝。
+  未启动 PS ELF，未驱动 TXd，未启用接收，未使用 UART/Ethernet，未移动硬件，未启动 stationary run。
+- r4 失败后第一次独立恢复因参数/授权不足而 `AUTHORIZATION_MISSING` 且
+  `NO_HARDWARE_ACTIONS_EXECUTED=1`；第二次独立恢复记录 raw rc125、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0` 和
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。恢复 PASS 不得记为 r4 stage PASS。
+- r4 原始 ledger/log、两个恢复目录和 7 项 frozen input manifest 位于：
+  `evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r4/`。
+- allowlist 修复把固定 offset 改为 Tcl 数值，并增加真实 r1/r2/r3/r4 历史正向验证及 r4 tamper
+  fail-closed 回归。提交前非硬件结果：JTAG suite 33/33、focused wrapper/safety suites 89/89、
+  application/backend suites 36/36、summarizer suite 13/13；`py_compile` 与
+  `check_no_hardware_calls.py` 通过。
+- 后续只能先准确提交 r4 修复/失败证据，再在新的干净 source commit 上生成一次新 offline checkpoint，
+  生成 r5 plan 并通过全部 dry validation；之后才允许使用既定 wrapper/scoped authorization 启动 r5。
+- 最终 1800 秒 stationary run 仍为 `NOT_RUN`，其正式执行次数仍为 0。
