@@ -155,9 +155,11 @@ proc p7_axi_read {hw_axi address txn_index_var} {
 
 # The active JTAG master is full AXI4 followed by an AXI4-to-AXI4-Lite
 # protocol converter.  Consecutive payload-window words use bounded INCR
-# bursts (at most 64 words); other adjacent same-direction DSL operations use
-# the independent transaction queue (at most 16 LEN=1 operations).  Direction
-# changes, dependencies, END, and bounds flush pending work.  The converter
+# bursts (at most 64 words); other independent same-direction DSL operations
+# use the transaction queue (at most 16 LEN=1 operations).  Every side-effect
+# P6_CTRL write is flushed and executed alone so COMMIT/START/CLEAR/STOP order
+# cannot depend on AXI4 queued-transaction scheduling.  Direction changes,
+# dependencies, END, and bounds flush pending work.  The converter
 # serializes every burst beat into the existing safety-reviewed AXI4-Lite
 # peripheral without changing DSL order, authorization, or result evidence.
 proc p7_axi_write_queue {hw_axi addresses data_words txn_index_var} {
@@ -651,6 +653,13 @@ set rc [catch {
           error "START requires a bounded committed configuration"
         }
         if {$offset == 0x100 && ($data & 0x08) != 0} { set seen_commit 0 }
+        set last_op "W32_[format 0x%08X $address]_[format 0x%08X $data]"
+        if {$offset == 0x100} {
+          p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+              txn_index $result_handle result_lines_pending
+          p7_axi_write $hw_axi $address $data txn_index
+          continue
+        }
         set next_kind [expr {$offset >= 0x200 && $offset <= 0x2FC ? "WB" : "WQ"}]
         set batch_limit [expr {$next_kind eq "WB" ? 64 : 16}]
         set can_extend [expr {$batch_kind eq $next_kind && [llength $batch_addresses] < $batch_limit}]
@@ -664,7 +673,6 @@ set rc [catch {
         }
         lappend batch_addresses $address
         lappend batch_data $data
-        set last_op "W32_[format 0x%08X $address]_[format 0x%08X $data]"
       } elseif {$op eq "R32"} {
         if {[llength $fields] != 3} { error "R32 syntax invalid" }
         set address [p7_parse_hex32 [lindex $fields 1] address]

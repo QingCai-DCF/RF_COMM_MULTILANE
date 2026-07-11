@@ -211,18 +211,20 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual(manifest["transaction_file_bytes"], report["size_bytes"])
         self.assertEqual(40, report["poll_operation_count"])
         self.assertEqual(4269, report["logical_axi_operation_count"])
-        self.assertEqual(226, report["minimum_run_hw_axi_call_count"])
+        self.assertEqual(246, report["minimum_run_hw_axi_call_count"])
         self.assertEqual(122, report["multi_transaction_batch_count"])
-        self.assertEqual(4165, report["batched_single_word_transaction_count"])
+        self.assertEqual(4145, report["batched_single_word_transaction_count"])
         self.assertEqual(62, report["max_batch_transactions"])
-        self.assertEqual(104, report["standalone_run_hw_axi_call_count"])
+        self.assertEqual(124, report["standalone_run_hw_axi_call_count"])
         self.assertEqual(60, report["axi4_incr_burst_count"])
         self.assertEqual(3567, report["axi4_incr_burst_word_count"])
         self.assertEqual(62, report["max_axi4_incr_burst_words"])
-        self.assertEqual(126, report["queued_single_run_hw_axi_call_count"])
+        self.assertEqual(83, report["queued_single_run_hw_axi_call_count"])
         self.assertEqual(62, report["queued_single_multi_transaction_batch_count"])
-        self.assertEqual(662, report["queued_single_transaction_count"])
+        self.assertEqual(599, report["queued_single_transaction_count"])
         self.assertEqual(16, report["max_queued_single_transactions"])
+        self.assertEqual(63, report["ordered_control_write_run_hw_axi_call_count"])
+        self.assertEqual(0, report["queued_control_write_transaction_count"])
         self.assertLess(
             report["minimum_run_hw_axi_call_count"],
             report["operation_count"] // 4,
@@ -245,15 +247,17 @@ class P7JtagAxiStageTests(unittest.TestCase):
             )
         self.assertTrue(report["valid"], report["errors"])
         self.assertEqual(1_073_038, report["logical_axi_operation_count"])
-        self.assertEqual(53_664, report["minimum_run_hw_axi_call_count"])
+        self.assertEqual(58_542, report["minimum_run_hw_axi_call_count"])
         self.assertEqual(14_634, report["axi4_incr_burst_count"])
         self.assertEqual(907_164, report["axi4_incr_burst_word_count"])
         self.assertEqual(62, report["max_axi4_incr_burst_words"])
-        self.assertEqual(29_274, report["queued_single_run_hw_axi_call_count"])
-        self.assertEqual(156_118, report["queued_single_transaction_count"])
+        self.assertEqual(19_515, report["queued_single_run_hw_axi_call_count"])
+        self.assertEqual(141_481, report["queued_single_transaction_count"])
         self.assertEqual(16, report["max_queued_single_transactions"])
-        self.assertEqual(24_394, report["standalone_run_hw_axi_call_count"])
-        self.assertLess(report["minimum_run_hw_axi_call_count"], 224_401 // 4)
+        self.assertEqual(29_272, report["standalone_run_hw_axi_call_count"])
+        self.assertEqual(14_637, report["ordered_control_write_run_hw_axi_call_count"])
+        self.assertEqual(0, report["queued_control_write_transaction_count"])
+        self.assertLess(report["minimum_run_hw_axi_call_count"], 224_401 // 3)
 
     def test_safe_idle_semantics_forbid_transmission_and_parse_zero_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -1457,6 +1461,22 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual("", str(interp.getvar("kind")))
         self.assertEqual(0, len(interp.splitlist(interp.getvar("addresses"))))
         self.assertEqual("4", str(interp.getvar("txn_index")))
+
+    def test_p6_control_writes_flush_pending_batches_and_run_standalone(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(
+            encoding="utf-8"
+        )
+        control_block = re.search(
+            r"if \{\$offset == 0x100\} \{(?P<body>.*?)\n\s*\}",
+            tcl,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(control_block)
+        body = control_block.group("body")
+        self.assertLess(body.index("p7_flush_axi_batch"), body.index("p7_axi_write"))
+        self.assertIn("continue", body)
+        self.assertNotIn("lappend batch_addresses", body)
+        self.assertNotIn("run_hw_axi -queue", body)
 
     def test_tcl_axi4_bursts_preserve_word_order_and_read_evidence(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_jtag_axi_transactions.tcl").read_text(encoding="utf-8")

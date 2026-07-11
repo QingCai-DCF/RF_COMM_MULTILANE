@@ -300,6 +300,7 @@ def validate_transaction_file(
     queued_single_multi_transaction_batch_count = 0
     queued_single_transaction_count = 0
     max_queued_single_transactions = 0
+    ordered_control_write_call_count = 0
     pending_batch_kind: str | None = None
     pending_batch_last_address: int | None = None
     pending_batch_transactions = 0
@@ -430,7 +431,6 @@ def validate_transaction_file(
                         write_operations.append((offset, data))
                         if 0x200 <= offset <= 0x2FC:
                             payload_write_count += 1
-                        record_batch_transaction("WB" if 0x200 <= offset <= 0x2FC else "WQ", address)
                         if offset == 0x10C:
                             seen_lane = True
                             lane_value = data
@@ -463,6 +463,14 @@ def validate_transaction_file(
                                         f"line {line_number}: START requires a bounded committed configuration"
                                     )
                                 seen_commit = False
+                        if offset == 0x100:
+                            flush_batch()
+                            batched_run_hw_axi_call_count += 1
+                            ordered_control_write_call_count += 1
+                        else:
+                            record_batch_transaction(
+                                "WB" if 0x200 <= offset <= 0x2FC else "WQ", address
+                            )
                         last_operation = (op, address, data)
                     elif op == "R32":
                         if len(fields) != 3:
@@ -553,6 +561,8 @@ def validate_transaction_file(
     report["queued_single_multi_transaction_batch_count"] = queued_single_multi_transaction_batch_count
     report["queued_single_transaction_count"] = queued_single_transaction_count
     report["max_queued_single_transactions"] = max_queued_single_transactions
+    report["ordered_control_write_run_hw_axi_call_count"] = ordered_control_write_call_count
+    report["queued_control_write_transaction_count"] = 0
     report["standalone_run_hw_axi_call_count"] = (
         batched_run_hw_axi_call_count - multi_transaction_batch_count
     )
@@ -3221,6 +3231,12 @@ def main(argv: list[str] | None = None) -> int:
     elif not before_ok:
         manifest["P7_JTAG_AXI_SAFE_STAGE"] = "FAIL_SHUTDOWN_BEFORE"
         manifest["reason"] = "candidate was not allowed because shutdown-before failed"
+        return_code = 1
+    elif not backend_parse_ok:
+        manifest["P7_JTAG_AXI_SAFE_STAGE"] = "FAIL_STAGE"
+        manifest["reason"] = (
+            "strict backend parser rejected candidate evidence; candidate and shutdown success cannot promote the stage"
+        )
         return_code = 1
     else:
         manifest["P7_JTAG_AXI_SAFE_STAGE"] = "FAIL_STAGE"

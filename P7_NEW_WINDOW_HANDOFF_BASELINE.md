@@ -577,3 +577,59 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   r12 exact summarizer/history/tamper 回归、提交全部 r12 evidence 与 queue-depth 修复，再从新 clean source 生成一次
   P7 checkpoint、r13 plan 并通过全部 dry validation。r13 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；
   任一失败仍需立即停止、独立 shutdown recovery、冻结证据并更换 run ID。
+
+## 22. 2026-07-11 r13 diagnostic suffix 增量交接（本节覆盖第 21 节的 next-run 描述）
+
+- r12 evidence、queue-depth 修复与新 candidate build 已提交为 `9a83eca66bbc5718e52aaccea0a14e1493fc44a9`；历史
+  diagnostic prefix collapse 修复提交为 `d614ed203eca9b615e9fd3782da1e81f01d93fea`。在后者 clean source 上生成的
+  P7 checkpoint 13/13 PASS，SHA256 为 `5dca5487a44ddd17396704959ef080171a867579202822e7650d7b9a1627ab72`，
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r13 run ID 为 `p7_20260711_stationary_app_r13_diag_suffix55`，15-stage plan SHA256 为
+  `442f597b75b1d8261c443b5f7611096cfab0a592a8adb5e966c62453ef9824c7`。它只启动一次且永远不得 resume；
+  full ordinals 1--4 与 55--57 PASS，full ordinal 58 / `p7_large_jtag_1m_l0_random` 在 candidate 的
+  1400 秒上限以 rc=124、`timed_out=true`、forced containment/reap 终止。outer ledger 为 attempts=8、completed=7、
+  failed_stage_index=7；stage 59--65 与 stage 66 均未启动，所有 prefix/suffix 贡献零 acceptance coverage。
+- stage 58 原始结果只完整到 fragment 1665，fragment 1666 在 `P7F01666_ACK_SEN...` 处中断，没有终端
+  `P7_TRANSACTION_COUNT` / transaction PASS / stage PASS marker。因此 r13 是 immutable timeout FAIL，不是部分 PASS。
+  shutdown-before/after 均 PASS；独立 recovery 位于 `recovery_shutdown_after_failed_stage058_20260711T181718Z/`，
+  记录 raw rc125、唯一 TFDU shutdown marker、`SHUTDOWN_EXIT=0` 与
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`，但不改变 stage 58 FAIL。
+- r13 frozen 10-file manifest SHA256 为 `8b5352ca562518dc4f2e49872b90819c5318b12b9dbe0aa8d7e97cefc3ad6984`；
+  r13 timeout、完整原始 evidence、历史 validator 与 AXI4/AXI4-Lite converter candidate rebuild 已提交为
+  `822245b64995788269403793b44be537d46a702f`。后续 checkpoint provenance 修复提交为
+  `3b03414f279a8205207c7d67bdc8923a4723b866` 与 `4ac85146409b58d4715e2d9350f993681cdddc5d`。新 candidate bit SHA256 为
+  `798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f`，LTX SHA256 为
+  `76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083`。
+
+## 23. 2026-07-11 r14 diagnostic suffix 增量交接（本节覆盖第 22 节的 next-run 描述）
+
+- post-gate global ledger allowlist 修复提交为 `bd3f1a41c69173915abbc294dc16b0233dbb244c`。首次 P7 checkpoint 在其余
+  12 项 PASS 时仅 `P7_CLEAN_SOURCE_CHECKPOINT` 正确 FAIL；该可复现 cleanliness-failure 输出提交为
+  `dac35ce44fa8b2316ff67b2abd6a45ad6a7d6998`。随后只在该 clean source 上重新生成一次 checkpoint：13/13 PASS，
+  SHA256 为 `a4783583d1f098b6d8145ea043cd68b702e0e6f61136cf4fdd503145537dbb68`，硬件状态仍为 PENDING。
+- r14 run ID 为 `p7_20260711_stationary_app_r14_diag_suffix55`，15-stage plan SHA256 为
+  `396b6974bfc117cbc61f6ca0db9c78d948f349b04c7d7d5b430152a22fc1e82d`。一次缺少 outer control 参数的请求在
+  ledger/wrapper/hardware 前安全 BLOCKED，未消耗该 ID；随后真实 r14 只启动一次且没有 `--resume`。
+- r14 stage 1 / `p7_safe_idle` PASS；full ordinal 2 / `p7_p6_frame_regression_m1` 的 candidate process rc=0、
+  Tcl transaction markers PASS、shutdown-before/after PASS，但 strict backend 以
+  `BackendValidationError: TX_CRC32: fragment 0 committed CRC differs from manifest` 拒绝。fragment 0 的预期 CRC 为
+  `3ED470A1`，观测 `TX_CRC32=RX_CRC32=RX_DIGEST=A155F91B`；TX word 回读与 manifest 一致，但
+  `TXW000=50414652`、`RXW000=00414652`。因此 stage 2 正确为 immutable `FAIL_STAGE`，outer ledger SHA256 为
+  `c7302e43b37061d549c488707e2662bfdc6c5d119130b05cb0a400c0a09481a7`，attempts=2、completed=1、
+  failed_stage_index=1；其余 stages 与 stationary 均未启动。
+- 独立 recovery 位于 `recovery_shutdown_after_failed_stage002_20260711T210200Z/`，记录
+  `SHUTDOWN_RAW_EXIT=125`、唯一 shutdown marker、`SHUTDOWN_EXIT=0` 与
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；它不提升 r14 stage 2。r14 frozen 10-file manifest SHA256 为
+  `429a7c45f0570f3184b84bf4f1ae7e6b04b6b11a1671ad63c02a8f635d3fb540`。
+- 根因边界是 full AXI4 JTAG master 仍把 P6 `0x100` side-effect control writes 与依赖它们的数据操作放入独立 queued
+  transactions；`COMMIT` 可以先于完整 payload 写入生效。修复保持 payload/readback 的 bounded INCR burst 和真正独立的
+  queued singles，但把每个 `0x100` control write 作为 dependency barrier：先 flush，再 standalone 执行，且 dry report
+  强制 `queued_control_write_transaction_count=0`。r1--r14 exact history/tamper test 与完整 14-test summarizer suite 已 PASS。
+- 完整非硬件回归为 top-level 112/112、`tests/p7` 39/39，合计 151/151 PASS；`py_compile`、两项 no-hardware
+  static/dry-run scan 与 `git diff --check` PASS。随后只启动一次 canonical `scripts/run_offline_gates.py`，同一进程在
+  3334 秒后自然返回 `OFFLINE_GATES_RAN=1 status=PASS`；JSON SHA256 为
+  `dcc8b007b4f6916f4ca7c73b43527d134f8c7890e035978375a6ab1bfd18e2aa`，明确
+  `no_hardware=true`、`hardware_acceptance=PENDING_HW`。未启动第二个 offline gate，也未连接硬件。
+- r14 永远不得 resume。下一硬件 ID 必须为新的 `p7_20260711_stationary_app_r15_diag_suffix55`；必须先准确提交 r14
+  evidence、summarizer/tests、control-order 修复与本交接，再从新 clean source 只生成一次 P7 checkpoint、r15 plan 并通过
+  全部 dry validation。r15 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；最终 1800 秒 stationary 启动次数仍为 0。
