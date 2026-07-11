@@ -1,0 +1,62 @@
+{
+  "HEAD": "INCONSISTENT_OR_MISSING",
+  "SHUTDOWN_EXIT": null,
+  "artifact_provenance": {
+    "active_xdc": [],
+    "bitstream": [],
+    "elf": [],
+    "ltx": [],
+    "pinmap": [],
+    "plan": [],
+    "profile": [],
+    "register_map": [],
+    "shutdown_bitstream": [],
+    "xsa": []
+  },
+  "authorization": [],
+  "available_lanes": 2,
+  "bitstream": [],
+  "checks": {},
+  "drove_tfdu_txd": null,
+  "elf": [],
+  "enabled_tfdu_receiver": null,
+  "errors": [
+    "offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py"
+  ],
+  "evidence": [
+    "evidence/hardware/p7/p7_run_sequence_ledger.json"
+  ],
+  "generated_at_utc": "2026-07-11T20:05:08+00:00",
+  "hardware_acceptance": "FAIL",
+  "hardware_actions_executed": false,
+  "input_file_hashes": [],
+  "ltx": [],
+  "max_lane_mask": "0x3",
+  "metrics": {
+    "full_duration_stationary_attempts": 0,
+    "inventory_files": 2269,
+    "ledger_sha256": "141db97034fae4de1b697ce42f743d03d38160a619168570a1b0383fa426cfce",
+    "listed_executed_summaries": 13,
+    "passed_coverage_keys": [],
+    "qualified_stationary_passes": 0,
+    "run_count": 13,
+    "selected_provenance_rows": 0,
+    "stationary_attempts": 0
+  },
+  "motion_used": false,
+  "network_used": false,
+  "notes": [],
+  "output_file_hashes": [],
+  "product_final_acceptance": "PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT",
+  "profile": [],
+  "programmed_fpga": false,
+  "reason": "evidence consistency failed closed",
+  "repo": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+  "result": "FAIL",
+  "runner_provenance": [],
+  "shutdown_after": [],
+  "shutdown_before": [],
+  "stage": "consistency",
+  "uart_access": null,
+  "xsa": []
+}

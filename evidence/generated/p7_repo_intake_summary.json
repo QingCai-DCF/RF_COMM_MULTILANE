@@ -1,12 +1,12 @@
 {
   "P7_REPO_INTAKE": "PASS",
-  "generated_at_utc": "2026-07-11T17:08:06+00:00",
+  "generated_at_utc": "2026-07-11T19:56:59+00:00",
   "branch": "codex/p7-stationary-application",
-  "HEAD": "d614ed203eca9b615e9fd3782da1e81f01d93fea",
-  "SOURCE_COMMIT": "d614ed203eca9b615e9fd3782da1e81f01d93fea",
+  "HEAD": "822245b64995788269403793b44be537d46a702f",
+  "SOURCE_COMMIT": "822245b64995788269403793b44be537d46a702f",
   "dirty_files_at_gate": [],
   "dirty_worktree": false,
-  "source_tree_listing_sha256": "00d65db7ba9fec48a90bd4d877594d2a3cf9629afbc7618bb6434c12a92e1b85",
+  "source_tree_listing_sha256": "f4c1198f7e5560a16b114a378ff5aafbe2fff01448d0d074b5db22355d8257a1",
   "p6": {
     "P6_RECHECK": "PASS",
     "p6_summary_pass": true,
@@ -18,9 +18,9 @@
         "valid": true
       },
       "p6_jtag_bit": {
-        "path": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit",
-        "expected_sha256": "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
-        "actual_sha256": "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
+        "path": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+        "expected_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+        "actual_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
         "valid": true
       },
       "p6_jtag_ltx": {
@@ -56,7 +56,7 @@
     },
     "p6_build_recorded_head": "UNKNOWN",
     "p7_starting_clean_successor": "ca041d4877b831de84fe7829788ac835b0b46acd",
-    "provenance_note": "The P6 package and PS artifacts retain their baseline provenance; the active JTAG candidate was rebuilt offline after r12 with explicit AXI4-Lite RD/WR queue depth 16 and is bound by its content-addressed build summary."
+    "provenance_note": "The P6 package and PS artifacts retain their baseline provenance; the active JTAG candidate uses full AXI4 JTAG bursts through an explicit AXI4-to-AXI4-Lite protocol converter and is bound by its content-addressed build summary."
   },
   "plan": "C:/Users/user/Downloads/p7_stationary_local_application_layer_no_ethernet_30min_plan.md",
   "plan_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",

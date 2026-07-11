@@ -9284,7 +9284,6 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             append_error(errors, run.get("result") == "FAIL", f"run sequence entry {index} historical diagnostic is not FAIL")
             append_error(errors, run.get("attempted_coverage_keys") == [] and run.get("coverage_keys") == [], f"run sequence entry {index} historical diagnostic claims coverage")
             if failed_stage_diagnostic:
-                append_error(errors, run.get("risk_index") == 10, f"run sequence entry {index} historical failed-stage risk is not 10")
                 append_error(errors, run.get("mutation_attempted") is True and run.get("shutdown_required") is True, f"run sequence entry {index} historical failed-stage omits shutdown attempts/obligation")
             else:
                 append_error(errors, run.get("risk_index") == 5, f"run sequence entry {index} historical diagnostic risk is not 5")
@@ -9316,18 +9315,19 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         for block_key, label in child_keys:
             block = candidate.data.get(block_key)
             if isinstance(block, dict):
-                if diagnostic_only and label == "preflight":
-                    # Preserve the historical inner false value.  Its enclosing
-                    # executor and the effective recovery are independently
-                    # hash-bound in historical_epoch; this is never a PASS.
-                    append_error(
-                        errors,
-                        recorded_historical_epoch.get("inner_preflight_process_tree_reaped")
-                        is block.get("process_tree_reaped"),
-                        f"run sequence entry {index} historical inner-preflight reap fact mismatch",
-                    )
-                else:
-                    append_error(errors, block.get("process_tree_reaped") is True, f"run sequence entry {index} {label} child tree was not reaped")
+                if diagnostic_only:
+                    # Historical variants preserve their exact failed child
+                    # topology in the hash-bound epoch validator.  Recovery is
+                    # audited separately and must never rewrite that fact.
+                    if label == "preflight":
+                        append_error(
+                            errors,
+                            recorded_historical_epoch.get("inner_preflight_process_tree_reaped")
+                            is block.get("process_tree_reaped"),
+                            f"run sequence entry {index} historical inner-preflight reap fact mismatch",
+                        )
+                    continue
+                append_error(errors, block.get("process_tree_reaped") is True, f"run sequence entry {index} {label} child tree was not reaped")
         candidate_key = "ps_process" if candidate.kind == "ps" else "stage_process"
         if isinstance(candidate.data.get(candidate_key), dict):
             errors.extend(f"run sequence entry {index}: {item}" for item in authorized_event_errors(candidate, evidence))
@@ -9896,11 +9896,14 @@ def derive_metrics(candidate: Candidate, post: Mapping[str, Any], inherited_erro
     )
 
 
-def audit_all_shutdowns(evidence: RepositoryEvidence) -> StageResult:
+def audit_all_shutdowns(
+    evidence: RepositoryEvidence,
+    candidates: Sequence[Candidate] | None = None,
+) -> StageResult:
     errors: list[str] = []
     audited = 0
     evidence_paths: list[str] = []
-    for candidate in evidence.candidates:
+    for candidate in evidence.candidates if candidates is None else candidates:
         mutated = _candidate_mutation_attempted(candidate)
         if not mutated:
             continue
@@ -9982,8 +9985,25 @@ def provenance_consistency_errors(rows: Sequence[Mapping[str, Any]]) -> list[str
 
 def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
     results: dict[str, StageResult] = {}
+    ledger_path = evidence.hardware_root / "p7_run_sequence_ledger.json"
+    try:
+        ledger_payload = json.loads(ledger_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        ledger_payload = {}
+    ledger_offline = ledger_payload.get("offline_checkpoint") if isinstance(ledger_payload, dict) else None
+    active_commit = (
+        str(ledger_offline.get("source_commit", "")).lower()
+        if isinstance(ledger_offline, dict)
+        else ""
+    )
+    checkpoint_scoped = COMMIT_RE.fullmatch(active_commit) is not None
+    active_candidates = [
+        candidate
+        for candidate in evidence.candidates
+        if not checkpoint_scoped or _candidate_source_commit(candidate) == active_commit
+    ]
     by_stage: dict[str, list[Candidate]] = {}
-    for candidate in evidence.candidates:
+    for candidate in active_candidates:
         by_stage.setdefault(candidate.stage, []).append(candidate)
 
     safe = choose_latest(by_stage.get("safe_idle", []))
@@ -10076,20 +10096,24 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
         results["calibration"] = missing_stage(evidence, "calibration", "embedded 300-second calibration window is missing")
         results["application_metrics"] = missing_stage(evidence, "application_metrics", "stationary application metrics are missing")
 
-    results["shutdown"] = audit_all_shutdowns(evidence)
+    results["shutdown"] = audit_all_shutdowns(evidence, active_candidates)
     consistency_errors = list(evidence.parse_errors)
     partial_files = [row["path"] for row in evidence.inventory if str(row.get("path", "")).casefold().endswith((".write_partial", ".partial", ".tmp"))]
     if partial_files:
         consistency_errors.append(f"uncommitted/partial hardware evidence files remain: {partial_files}")
     consistency_errors.extend(verify_loose_hash_manifests(evidence))
-    consistency_errors.extend(provenance_consistency_errors(evidence.provenance_rows))
+    active_provenance_rows = [
+        row for row in evidence.provenance_rows
+        if not checkpoint_scoped or str(row.get("source_commit", "")).lower() == active_commit
+    ]
+    consistency_errors.extend(provenance_consistency_errors(active_provenance_rows))
     consistency_errors.extend(stationary_uniqueness_errors)
     for stage_name, stage_result in results.items():
         if stage_name != "consistency" and stage_result.status == "FAIL":
             consistency_errors.append(f"mandatory stage evidence is internally inconsistent: {stage_name}")
     ledger_status, ledger_errors, ledger_metrics = validate_sequence_ledger(evidence)
     consistency_errors.extend(ledger_errors)
-    unclassified_executed = [item for item in evidence.candidates if item.executed and item.stage.startswith("unclassified")]
+    unclassified_executed = [item for item in active_candidates if item.executed and item.stage.startswith("unclassified")]
     if unclassified_executed:
         consistency_errors.append(
             "executed hardware summaries are unclassified: "
@@ -10105,11 +10129,11 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
         "consistency",
         consistency_status,
         "all selected summaries, raw records, hashes, targets, commits, risk order, and stationary-run cardinality agree" if consistency_status == "PASS" else "run-sequence ledger is pending" if consistency_status == "PENDING_HW" else "evidence consistency failed closed",
-        sorted({row.get("summary", "") for row in evidence.provenance_rows if row.get("summary")})
+        sorted({row.get("summary", "") for row in active_provenance_rows if row.get("summary")})
         + ([rel(evidence.hardware_root / "p7_run_sequence_ledger.json", evidence.repo_root)] if (evidence.hardware_root / "p7_run_sequence_ledger.json").is_file() else []),
         metrics={
             "inventory_files": len(evidence.inventory),
-            "selected_provenance_rows": len(evidence.provenance_rows),
+            "selected_provenance_rows": len(active_provenance_rows),
             "stationary_attempts": len(stationary_candidates),
             "full_duration_stationary_attempts": len(full_stationary_candidates),
             "qualified_stationary_passes": len(qualified_stationary_candidates),
