@@ -27,8 +27,8 @@ P6_ARTIFACTS = {
         "1e2fd052c0954abeb87427b9473f9ab6465a03aef95f791121f91bda1d4133e5",
     ),
     "p6_jtag_bit": (
-        "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit",
-        "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
+        "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit",
+        "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
     ),
     "p6_jtag_ltx": (
         "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
@@ -119,7 +119,7 @@ def p6_recheck() -> tuple[bool, dict[str, Any]]:
         "artifacts": files,
         "p6_build_recorded_head": summary.get("HEAD", "UNKNOWN"),
         "p7_starting_clean_successor": P6_BASELINE_COMMIT,
-        "provenance_note": "P6 artifacts were built in the pre-commit worktree recorded as 5b90d41; ca041d committed the final P6 source/evidence tree",
+        "provenance_note": "The P6 package and PS artifacts retain their baseline provenance; the active JTAG candidate was rebuilt offline after r12 with explicit AXI4-Lite RD/WR queue depth 16 and is bound by its content-addressed build summary.",
     }
 
 

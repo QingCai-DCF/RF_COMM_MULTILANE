@@ -1,0 +1,24 @@
+{
+  "P7_SAFE_IDLE_PARSE": "PASS",
+  "semantic_mode": "safe-idle",
+  "expected_operation_count": 13,
+  "observed_operation_count": 13,
+  "required_values": {
+    "SAFE_CRC_BAD": "0x00000000",
+    "SAFE_DUTY_VIOLATION": "0x00000000",
+    "SAFE_ERROR_CODE": "0x00000000",
+    "SAFE_PAYLOAD_MISMATCH": "0x00000000",
+    "SAFE_RETRY_EXHAUSTED": "0x00000000",
+    "SAFE_RX_GOOD_L0": "0x00000000",
+    "SAFE_RX_GOOD_L1": "0x00000000",
+    "SAFE_STATUS": "0x00000000",
+    "SAFE_STICKY_ERROR": "0x00000000",
+    "SAFE_TXD_HIGH_MAX": "0x00000000",
+    "SAFE_TX_COUNT": "0x00000000",
+    "SAFE_TX_FAIL": "0x00000000"
+  },
+  "forbidden_status_mask": "0x000000e8",
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "failures": []
+}

@@ -56,6 +56,8 @@ def main() -> int:
         "pinmap": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
         "active_profile": "board_profiles/ACTIVE_PROFILE.json",
         "register_map": "config/register_map/ir_axi_regs.yaml",
+        "build_python": "scripts/build_p6_jtag_candidate.py",
+        "build_tcl": "scripts/build_p6_jtag_candidate.tcl",
     }.items():
         path = ROOT / relpath
         inputs[name] = {"path": relpath, "sha256": sha256(path)}
@@ -73,6 +75,12 @@ def main() -> int:
         "ethernet_used": False,
         "motion_used": False,
         "max_lane_mask": "0x3",
+        "jtag_axi_config": {
+            "protocol": "AXI4-Lite",
+            "read_transaction_queue_length": 16,
+            "write_transaction_queue_length": 16,
+            "transaction_len_words": 1,
+        },
     }
     (OUT / "p6_jtag_candidate_build_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary))

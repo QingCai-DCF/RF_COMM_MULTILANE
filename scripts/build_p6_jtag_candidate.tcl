@@ -22,6 +22,8 @@ set_property -dict [list \
   CONFIG.PROTOCOL {2} \
   CONFIG.M_AXI_ADDR_WIDTH {32} \
   CONFIG.M_AXI_DATA_WIDTH {32} \
+  CONFIG.RD_TXN_QUEUE_LENGTH {16} \
+  CONFIG.WR_TXN_QUEUE_LENGTH {16} \
   CONFIG.SIGNAL_CLOCK.FREQ_HZ {64000000} \
 ] [get_ips p6_jtag_axi_master]
 set_property GENERATE_SYNTH_CHECKPOINT false [get_files p6_jtag_axi_master.xci]

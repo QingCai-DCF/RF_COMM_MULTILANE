@@ -1,6 +1,6 @@
 {
   "P6_JTAG_CANDIDATE_BUILD": "PASS",
-  "generated_at_utc": "2026-07-10T12:37:15+00:00",
+  "generated_at_utc": "2026-07-11T15:40:55+00:00",
   "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
   "returncode": 0,
   "timing_met": true,
@@ -8,8 +8,8 @@
   "artifacts": {
     "bit": {
       "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.bit",
-      "sha256": "4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c",
-      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_4830d547d6a667edda8deebae855c3a7154478e298efca70e2526e6f3570b23c.bit"
+      "sha256": "674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9.bit"
     },
     "ltx": {
       "source": "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate.ltx",
@@ -33,11 +33,25 @@
     "register_map": {
       "path": "config/register_map/ir_axi_regs.yaml",
       "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    },
+    "build_python": {
+      "path": "scripts/build_p6_jtag_candidate.py",
+      "sha256": "390f805160d3e0222aec591e1f3dc9fa5600e2ac767fbbb76f77eaf9ea02818a"
+    },
+    "build_tcl": {
+      "path": "scripts/build_p6_jtag_candidate.tcl",
+      "sha256": "6620511a1bcda2b05b28bf87bd188f38c908a9a8d628c2e5c012810c2364a23c"
     }
   },
   "live_jtag_axi_ingress": true,
   "dynamic_payload_physical_engine": true,
   "ethernet_used": false,
   "motion_used": false,
-  "max_lane_mask": "0x3"
+  "max_lane_mask": "0x3",
+  "jtag_axi_config": {
+    "protocol": "AXI4-Lite",
+    "read_transaction_queue_length": 16,
+    "write_transaction_queue_length": 16,
+    "transaction_len_words": 1
+  }
 }

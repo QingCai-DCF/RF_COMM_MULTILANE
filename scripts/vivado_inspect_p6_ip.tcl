@@ -4,7 +4,13 @@ file mkdir $out_dir
 create_project p6_ip_inspect $out_dir/project -part xc7z010clg400-1 -force
 create_ip -name jtag_axi -vendor xilinx.com -library ip -module_name p6_jtag_axi_master
 set ip [get_ips p6_jtag_axi_master]
-set_property -dict [list CONFIG.PROTOCOL {2} CONFIG.M_AXI_ADDR_WIDTH {32} CONFIG.M_AXI_DATA_WIDTH {32}] $ip
+set_property -dict [list \
+  CONFIG.PROTOCOL {2} \
+  CONFIG.M_AXI_ADDR_WIDTH {32} \
+  CONFIG.M_AXI_DATA_WIDTH {32} \
+  CONFIG.RD_TXN_QUEUE_LENGTH {16} \
+  CONFIG.WR_TXN_QUEUE_LENGTH {16} \
+] $ip
 set f [open "$out_dir/jtag_axi_properties.txt" w]
 foreach prop [lsort -dictionary [list_property $ip]] {
   if {[string match "CONFIG.*" $prop]} {

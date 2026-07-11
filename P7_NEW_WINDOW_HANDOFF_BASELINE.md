@@ -536,3 +536,44 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - 下一次硬件 run ID 必须是新的 `p7_20260711_stationary_app_r12_diag_suffix55`。必须先准确提交 r11 evidence、
   summarizer/tamper tests 与本修复，再在新干净 source 上生成新 P7 checkpoint、r12 plan 并通过全部 dry validation。
   r12 仍只允许 ordinals 1--4 与 55--65，不得运行 stage 66；任何失败仍需新 ID、独立 recovery、永不 resume。
+
+## 21. 2026-07-11 r12 diagnostic suffix 增量交接（本节覆盖第 20 节的 next-run 与 queue-limit 结论）
+
+- r11 evidence、queued-single fix 与历史验证已提交为
+  `999cbc327009459fcd768380fe25918c5213a763`。在该 clean source 上生成的 P7 checkpoint 13/13 PASS，
+  SHA256 为 `e5865683587f203ddc292fd998c5bc04f84a1de931bbc0c05cc7260382b42452`；
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r12 run ID 为 `p7_20260711_stationary_app_r12_diag_suffix55`，15-stage diagnostic plan SHA256 为
+  `afbd14093989a62d3bc149abc3d840647e352ccd87e5c221ee689ee849d2ef0d`。生成器、15 个 authorization、
+  15 个 child dry validation 与 executor dry validation 均 PASS；full ordinals 精确为
+  `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`，无 stage 66/stationary。
+- r12 只启动一次且永远不得 resume。stage 1 / `p7_safe_idle` PASS；full ordinal 2 /
+  `p7_p6_frame_regression_m1` 以 `FAIL_STAGE` 停止；outer ledger 为 attempts=2、completed=1、
+  failed_stage_index=1。后续所有 stage 和 stationary 均未启动；整次仍为 `DIAGNOSTIC_ONLY`、
+  `coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- stage 2 candidate 已编程，但在任何 `P7F*` fragment traffic 前 rc=41。raw result 只记录通用
+  `ERROR: [Common 17-39] 'run_hw_axi' failed due to earlier errors.`；stderr 的精确根因是
+  `ERROR: [Xicom 50-38] xicom:  Queueing Transaction Failed. As total write transactions count 16 is greater than maximum allowed value 1 of targetted JTAG_AXI IP.`。
+  shutdown-before/after 均 PASS，但不能提升失败 stage。
+- 独立 recovery 位于 `recovery_shutdown_after_failed_stage002_20260711T152922Z/`，记录 raw rc125、唯一 TFDU
+  shutdown marker、`SHUTDOWN_EXIT=0` 与 `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。recovery PASS 不改变 r12 FAIL。
+  frozen 10-file manifest SHA256 为
+  `d3c9f93a43d1c45e63507fd24c7933f1d9f9360a4fa7d0a9628a32cb9321c9b9`。
+- 根因是 content-addressed P6 JTAG candidate 的 JTAG_AXI IP 仍使用 Vivado 默认
+  `CONFIG.RD_TXN_QUEUE_LENGTH=1` / `CONFIG.WR_TXN_QUEUE_LENGTH=1`；工具支持最多 16 个 transaction objects
+  不等于目标 IP queue depth 已是 16。旧 build Tcl 没有覆盖这两个参数。
+- 本次离线修复把正式 build 与独立 IP inspection 均设为 RD/WR queue depth 16。本机 Vivado 2023.1 离线 IP
+  generation 已证明两个属性均接受并回读为 16。随后唯一一次离线全量 synth/place/route/bitstream build PASS，
+  timing met、DRC clean；新 immutable bit SHA256 为
+  `674cf4a14988bbce15b8025162e7d528aa888c44e188a3a94ef5acd97d01d8d9`，LTX SHA256 仍为
+  `76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083`，旧 artifacts 保持不变。
+- r12 exact summarizer suite 14/14 PASS（含真实 r1--r12 与 r12 tamper fail-closed）；top-level discovery
+  107/107、`tests/p7` 39/39，合计 146/146 PASS。`py_compile`、`check_no_hardware_calls.py` 与
+  `git diff --check` PASS。canonical generic offline gate 的唯一进程最终自然完成并写出
+  `status=PASS`、`no_hardware=true`、`hardware_acceptance=PENDING_HW`，summary SHA256 为
+  `c9499340c17aa9d8c5ec1ce8d252563114bdd9d3af87abc36cfe09efb8de04b2`。调用端在 904 秒先结束等待，
+  但原 gate PID 继续同一离线 Vivado matrix 到终态；未启动第二次 gate，也未连接硬件。
+- 下一次硬件 run ID 必须是新的 `p7_20260711_stationary_app_r13_diag_suffix55`，绝不得恢复 r12。必须先完成
+  r12 exact summarizer/history/tamper 回归、提交全部 r12 evidence 与 queue-depth 修复，再从新 clean source 生成一次
+  P7 checkpoint、r13 plan 并通过全部 dry validation。r13 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；
+  任一失败仍需立即停止、独立 shutdown recovery、冻结证据并更换 run ID。
