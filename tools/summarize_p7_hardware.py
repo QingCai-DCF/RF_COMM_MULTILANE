@@ -89,6 +89,9 @@ HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED = (
 HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_CHILD_TARGET_IDENTITY_REJECTED"
 )
+HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_JTAG_DEVICE_CARDINALITY_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3354,6 +3357,36 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 ]
             ):
                 return HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and shutdown_before.get("programming_attempted") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and shutdown_after.get("programming_attempted") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and isinstance(ps_failures, list)
+                and ps_failures == ps_process.get("failures")
+                and candidate.data.get("programmed_candidate") is False
+                and candidate.data.get("started_ps_elf") is False
+                and marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()
+                == [
+                    "P7_PS_MODE=functional",
+                    "P7_PS_STAGE_RESULT=FAIL",
+                    "P7_PS_STAGE_ERROR=P7 XSDB live chain must contain only the one exact device/IDCODE match",
+                ]
+            ):
+                return HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5120,7 +5153,8 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     errors: list[str] = []
     variant = _historical_preflight_variant(candidate)
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
-    label = "historical r21" if r21 else "historical r18"
+    r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
+    label = "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     data = candidate.data
     expected_ps_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5185,7 +5219,9 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
         and safety.get("errors") == []
         and str(safety.get("source_commit_requested", "")).lower()
         == (
-            "b149620f92a2abda4add8529166dd7d5f5359506"
+            "0da648c128e4cdf363754f06a20560bc42b76aae"
+            if r22
+            else "b149620f92a2abda4add8529166dd7d5f5359506"
             if r21
             else "b1765f8d8671e0c650122029bc72146f43274558"
         ),
@@ -5258,6 +5294,11 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
         f"{label} PS process exact rejection mismatch",
     )
     raw_lines = marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()
+    raw_error = (
+        "P7 XSDB live chain must contain only the one exact device/IDCODE match"
+        if r22
+        else "P7 XSDB reset target is not unique on the exact authorized device"
+    )
     expected_raw_lines = [
         "P7_PS_MODE=functional",
         *(
@@ -5271,7 +5312,7 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
             else []
         ),
         "P7_PS_STAGE_RESULT=FAIL",
-        "P7_PS_STAGE_ERROR=P7 XSDB reset target is not unique on the exact authorized device",
+        f"P7_PS_STAGE_ERROR={raw_error}",
     ]
     append_error(
         errors,
@@ -5281,7 +5322,7 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     for name in ("ps_application_stage.stdout.log", "ps_application_stage.stderr.log"):
         append_error(
             errors,
-            "P7_PS_STAGE_ERROR=P7 XSDB reset target is not unique on the exact authorized device"
+            f"P7_PS_STAGE_ERROR={raw_error}"
             in marker_text(candidate.path.parent / name),
             f"{label} exact XSDB error missing from {name}",
         )
@@ -5302,6 +5343,7 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
         in {
             HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
             HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
+            HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
         },
         f"{label} failure class mismatch",
     )
@@ -7732,7 +7774,8 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     errors: list[str] = []
     variant = _historical_preflight_variant(candidate)
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
-    label = "historical r21" if r21 else "historical r18"
+    r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
+    label = "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     expected_ordinals = [1, 2, 3, 4, 62, 63, 64, 65]
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
@@ -7949,20 +7992,35 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "![dict exists $props jtag_device_id]" in old_ps_tcl
             and "![dict exists $props jtag_cable_serial]" in old_ps_tcl
         )
+        device_cardinality_predicate = (
+            "proc p7_classify_debug_targets" in old_ps_tcl
+            and "[llength $all_device_nodes] != 1 || [llength $device_matches] != 1" in old_ps_tcl
+            and "P7 XSDB live chain must contain only the one exact device/IDCODE match" in old_ps_tcl
+        )
         append_error(
             errors,
-            child_identity_predicate if r21 else old_row_predicate,
+            device_cardinality_predicate
+            if r22
+            else child_identity_predicate
+            if r21
+            else old_row_predicate,
             f"{label} frozen source does not prove its exact target-selection predicate",
         )
         historical_source_control_flow = {
             "target_uniqueness_basis": (
-                "DISTINCT_TARGET_ID_WITH_CHILD_ROWS_REQUIRING_DIRECT_JTAG_IDENTITY"
+                "SINGLE_CABLE_AND_SINGLE_ANY_IDCODE_ROW_BEFORE_CHILD_CLASSIFICATION"
+                if r22
+                else "DISTINCT_TARGET_ID_WITH_CHILD_ROWS_REQUIRING_DIRECT_JTAG_IDENTITY"
                 if r21
                 else "PROPERTY_ROW_COUNT"
             ),
-            "numeric_target_id_dedup_present": r21,
+            "numeric_target_id_dedup_present": r21 or r22,
             "historical_target_rejection_proven": (
-                child_identity_predicate if r21 else old_row_predicate
+                device_cardinality_predicate
+                if r22
+                else child_identity_predicate
+                if r21
+                else old_row_predicate
             ),
             "sources": {
                 role: _hash_record(Path(record["resolved_path"]))
@@ -8092,7 +8150,11 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "started_ps_elf": candidate.data.get("started_ps_elf"),
             "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
             "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
-            "raw_error": "P7 XSDB reset target is not unique on the exact authorized device",
+            "raw_error": (
+                "P7 XSDB live chain must contain only the one exact device/IDCODE match"
+                if r22
+                else "P7 XSDB reset target is not unique on the exact authorized device"
+            ),
         },
         "frozen_inputs_manifest": _hash_record(frozen_manifest_path),
         "failed_stage_files": {
@@ -8140,6 +8202,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
     if historical_variant in {
         HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
         HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
+        HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
     }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
@@ -10581,6 +10644,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED:
         errors.extend(_old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED:
+        errors.extend(_old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -10914,6 +10980,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED,
             HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
             HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
+            HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

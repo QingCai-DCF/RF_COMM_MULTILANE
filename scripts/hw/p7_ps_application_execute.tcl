@@ -1142,8 +1142,8 @@ set rc [catch {
   if {[llength $all_cable_roots] != 1 || [llength $cable_matches] != 1} {
     error "P7 XSDB live chain must contain only the one authorized cable serial"
   }
-  if {[llength $all_device_nodes] != 1 || [llength $device_matches] != 1} {
-    error "P7 XSDB live chain must contain only the one exact device/IDCODE match"
+  if {[llength $device_matches] != 1} {
+    error "P7 XSDB live chain must contain exactly one authorized device/IDCODE match"
   }
   set live_device [lindex $device_matches 0]
   set live_cable [lindex $cable_matches 0]
@@ -1153,10 +1153,12 @@ set rc [catch {
   set live_idcode [p7_normal_idcode [dict get $live_device idcode]]
 
   # The low-level JTAG inventory above proves that this XSDB connection has
-  # exactly one cable and exactly one device, both the authorized identities.
+  # exactly one cable and exactly one authorized Zynq device/IDCODE match.
   # Child APU/CPU debug rows do not necessarily repeat jtag_device_id or cable
   # properties, so bind them to that single-device connection and fail closed
-  # on every duplicate distinct target ID.  The FPGA row is still required to
+  # on every duplicate distinct target ID.  On the one cable, a second Zynq
+  # debug context would create duplicate APU/CPU identities and fail closed.
+  # The FPGA row is still required to
   # carry the exact low-level JTAG device/cable identity itself.
   set debug_properties [targets -target-properties]
   set debug_sets [p7_classify_debug_targets \

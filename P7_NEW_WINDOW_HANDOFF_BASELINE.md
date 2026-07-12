@@ -795,3 +795,28 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   必须先提交 r21 exact history/tamper、两次 recovery、child-target 修复和本交接，再在新 clean source 上重新完成 exactly-once
   suites、checkpoint、impact proof、plan 与全部 dry validation。r22 仍只允许零 coverage diagnostic ordinals
   `1,2,3,4,62,63,64,65`，严禁 stage 66。
+
+## 29. 2026-07-12 r22 adaptive diagnostic 增量交接（本节覆盖第 28 节的 next-run 描述）
+
+- 在 commit `0da648c128e4cdf363754f06a20560bc42b76aae` 上，required complete suites exactly once 为
+  121 + 39 = 160/160 PASS；P7 checkpoint 13/13 PASS，SHA256 为
+  `254c26015f164e7a855533ed47950eb9d0aba1b3b7c2e5f9ac9adadb52e63ac4`。r22 impact proof SHA256 为
+  `bf976a86d44b35250c251ad8c72d8fca0394611aebd68d1d76b253ea536bedd1`；plan SHA256 为
+  `aea4a1e20a24eb97552c4d86ef96a4ff3a3f71e7c530ed0dfdefe4eb528d7277`。generator、8 个 child dry
+  validations 与 independent executor dry 均 PASS；plan 仍严格只含 `1,2,3,4,62,63,64,65`。
+- r22 只启动一次且没有 `--resume`。ordinals 1--4 exact PASS；stage 62 在 reset、candidate programming 和 ELF start
+  前以 `P7 XSDB live chain must contain only the one exact device/IDCODE match` fail closed。该证据证明新加的
+  `all_device_nodes == 1` 条件过严：low-level JTAG inventory 可含多个带 IDCODE 的 node，而旧有 exact
+  device-name/IDCODE predicate 仍只匹配一个授权 Zynq device。stage 63--65 未启动，stage 66 不在 plan 中。
+  ledger SHA256 为 `347f3e2e20eec662b6af16b807ae9b03a4d9076f4556ee656b149c1134f54ab5`，失败 summary SHA256 为
+  `b9b385a1bc370b500bb1f82d2873d2119ffe4affc9c9356f65b1495ef64124c2`。
+- r22 后独立 recovery 精确记录 `SHUTDOWN_RAW_EXIT=125`、`TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、
+  `SHUTDOWN_EXIT=0`、`PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；外部 `hw_server` PID 45220 未被触碰。frozen
+  12-file manifest SHA256 为 `e5b428566872c1f2fd4577690dc3d5dbe7f1453588bf78e98a9413a73ccc7ee9`。
+- 修复保留整个 XSDB connection 恰好一个授权 cable root，保留授权 Zynq device-name/IDCODE match 恰好一个，删除
+  对“所有任意 IDCODE nodes 总数必须为 1”的无根据限制。随后 child debug targets 仍按 distinct target ID 唯一化；若同一
+  cable 上存在第二个 Zynq debug context，它会形成额外 APU/CPU identity 并 fail closed；FPGA row 仍需直接匹配授权
+  JTAG device/cable identity。
+- r22 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r23_diag_suffix62`。仍须先提交 r22 exact
+  history/tamper、recovery、cardinality 修复与本交接，再从 clean source 重新完成 exactly-once suites、checkpoint、impact
+  proof、plan 和全部 dry validation。r23 仍为零 coverage diagnostic，无 stage 66。
