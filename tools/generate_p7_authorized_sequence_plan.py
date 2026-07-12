@@ -1720,7 +1720,7 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "stages": plan_stages,
         **(
             {
-                "plan_mode": sequence.DIAGNOSTIC_PLAN_MODE,
+                "plan_mode": plan_mode,
                 "full_stage_ordinals": context["full_stage_ordinals"],
                 "coverage_claimed": False,
                 "HARDWARE_ACCEPTANCE": "PENDING_HW",

@@ -1,0 +1,1767 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "current_source_commit": "d62f6b325b23c7bda6cb5819f266bf8236e0b7d2",
+  "first_unresolved_ordinal": 62,
+  "historical_exact_passes": [
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "960",
+          "name": "--max-runtime-sec",
+          "prior": "960",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_64k_rr_prbs15",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_64k_rr_prbs15",
+          "unchanged": true
+        },
+        {
+          "current": "550",
+          "name": "--stage-timeout-sec",
+          "prior": "550",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 55,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "6b2687c382f974c3bb377e90a5816030aa1c1d49d8272f6bc6187d807bf29583",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\055_p7_large_jtag_64k_rr_prbs15\\backend_manifest.json",
+          "prior_canonical_sha256": "6b2687c382f974c3bb377e90a5816030aa1c1d49d8272f6bc6187d807bf29583",
+          "prior_sha256": "67852175abfd018fa5b2bc707bb05a82909f53d8b3c3cf546a5542deeefc0d32",
+          "sha256": "8fe79a42116e9d676c1485ef52d002fc090442052de014a4bfc634665ad598d7"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\055_p7_large_jtag_64k_rr_prbs15\\input.bin",
+          "prior_sha256": "ca45ccdf9f0c2be72656e6414cd71ae407b860df22830092d92fb0dbf1a0f1eb",
+          "sha256": "ca45ccdf9f0c2be72656e6414cd71ae407b860df22830092d92fb0dbf1a0f1eb"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\055_p7_large_jtag_64k_rr_prbs15\\transactions.txt",
+          "prior_sha256": "31dbc2e8d86406f3c0106714e7a849a464d09f2665b7383904af855098c5b8bf",
+          "sha256": "31dbc2e8d86406f3c0106714e7a849a464d09f2665b7383904af855098c5b8bf"
+        }
+      },
+      "stage_id": "p7_large_jtag_64k_rr_prbs15",
+      "summary": {
+        "bytes": 4501449,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\055_p7_large_jtag_64k_rr_prbs15\\p7_jtag_axi_stage_summary.json",
+        "sha256": "40fdb75c87cacf13c2b84c0b4c0467262a652a18144377129f370ce2c2e117b5"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "960",
+          "name": "--max-runtime-sec",
+          "prior": "960",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_64k_rr_random",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_64k_rr_random",
+          "unchanged": true
+        },
+        {
+          "current": "550",
+          "name": "--stage-timeout-sec",
+          "prior": "550",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 56,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "9df2655b0da517aad15c8c0737f741e7f071c11205815ae56f8a8691fbb0e846",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\056_p7_large_jtag_64k_rr_random\\backend_manifest.json",
+          "prior_canonical_sha256": "9df2655b0da517aad15c8c0737f741e7f071c11205815ae56f8a8691fbb0e846",
+          "prior_sha256": "7bafeb013e36216f18f2bb010c0f70019baea181c18880c830f8f4ba649b7dba",
+          "sha256": "e908afcea7e07d10ffb479b78621c0d5afbf06068c638bfbab082dd92da0e788"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\056_p7_large_jtag_64k_rr_random\\input.bin",
+          "prior_sha256": "ca1a191acfd778bc9609a3d9c88d7ff52b710af06ce7cbf8ff98999680deead7",
+          "sha256": "ca1a191acfd778bc9609a3d9c88d7ff52b710af06ce7cbf8ff98999680deead7"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\056_p7_large_jtag_64k_rr_random\\transactions.txt",
+          "prior_sha256": "e20df7ea6c20c1da0e56054b96fe95f6df13341de23e66c863900359ca4826c6",
+          "sha256": "e20df7ea6c20c1da0e56054b96fe95f6df13341de23e66c863900359ca4826c6"
+        }
+      },
+      "stage_id": "p7_large_jtag_64k_rr_random",
+      "summary": {
+        "bytes": 4501333,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\056_p7_large_jtag_64k_rr_random\\p7_jtag_axi_stage_summary.json",
+        "sha256": "580be685e6811f30631cd6430234d69614c3dbe55beb7ce412549737d6ae1aaf"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "960",
+          "name": "--max-runtime-sec",
+          "prior": "960",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_64k_rr_all_bytes",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_64k_rr_all_bytes",
+          "unchanged": true
+        },
+        {
+          "current": "550",
+          "name": "--stage-timeout-sec",
+          "prior": "550",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 57,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "0fb964ede5b8d4e15abb16dfc5ade0fe285fb190ed0c4055336189a62a28538d",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\057_p7_large_jtag_64k_rr_all_bytes\\backend_manifest.json",
+          "prior_canonical_sha256": "0fb964ede5b8d4e15abb16dfc5ade0fe285fb190ed0c4055336189a62a28538d",
+          "prior_sha256": "e8800abefd4044e0db6eeaf06343abe5f1447e87a8036968515cb282a06da375",
+          "sha256": "be08c6cc2c44d2362a70f7495cb0af9205d3f239c6dca0001f3e4774fc6b1974"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\057_p7_large_jtag_64k_rr_all_bytes\\input.bin",
+          "prior_sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+          "sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\057_p7_large_jtag_64k_rr_all_bytes\\transactions.txt",
+          "prior_sha256": "679db96746011c61bf36094e86a2deb4046a919d1a108ca16ea49f00c9833228",
+          "sha256": "679db96746011c61bf36094e86a2deb4046a919d1a108ca16ea49f00c9833228"
+        }
+      },
+      "stage_id": "p7_large_jtag_64k_rr_all_bytes",
+      "summary": {
+        "bytes": 4501446,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\057_p7_large_jtag_64k_rr_all_bytes\\p7_jtag_axi_stage_summary.json",
+        "sha256": "c5d5d0dd3e9ac9eaba1ff3c2f7bf1225997ceb5a49a0511f5e1ab8e7e8cc4613"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "1800",
+          "name": "--max-runtime-sec",
+          "prior": "1800",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_1m_l0_random",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_1m_l0_random",
+          "unchanged": true
+        },
+        {
+          "current": "1400",
+          "name": "--stage-timeout-sec",
+          "prior": "1400",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 58,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "6f88f042ace41a410c24f9f9269214edf62819afb204a4378ba57c61377c2f7f",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\058_p7_large_jtag_1m_l0_random\\backend_manifest.json",
+          "prior_canonical_sha256": "6f88f042ace41a410c24f9f9269214edf62819afb204a4378ba57c61377c2f7f",
+          "prior_sha256": "17a8039ce92ea3599fb01581854491ff5fe788ee2b459c7a204f19e7904af109",
+          "sha256": "806c55724dd6a9055263102a62962efc1b78b523622d927af9ea1af0f8960d9f"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\058_p7_large_jtag_1m_l0_random\\input.bin",
+          "prior_sha256": "de7e28fb7ae8b57b4280dc13d61316442d564631d71caa52b28284929b0a8549",
+          "sha256": "de7e28fb7ae8b57b4280dc13d61316442d564631d71caa52b28284929b0a8549"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\058_p7_large_jtag_1m_l0_random\\transactions.txt",
+          "prior_sha256": "7a4018b7c0b3d7ef82a79c26f3727851f3a62220189dbb7f2fc029e3838418c5",
+          "sha256": "7a4018b7c0b3d7ef82a79c26f3727851f3a62220189dbb7f2fc029e3838418c5"
+        }
+      },
+      "stage_id": "p7_large_jtag_1m_l0_random",
+      "summary": {
+        "bytes": 70857395,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\058_p7_large_jtag_1m_l0_random\\p7_jtag_axi_stage_summary.json",
+        "sha256": "c0bcd8971e1828847dcc354f6a466922aade2d564e3347aea1e616cf2485e998"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "1800",
+          "name": "--max-runtime-sec",
+          "prior": "1800",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_1m_l1_random",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_1m_l1_random",
+          "unchanged": true
+        },
+        {
+          "current": "1400",
+          "name": "--stage-timeout-sec",
+          "prior": "1400",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 59,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "d08cb877ec3658de9381ad8ae349b02d648a5a7b21901d588ce866d1e385ef8b",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\059_p7_large_jtag_1m_l1_random\\backend_manifest.json",
+          "prior_canonical_sha256": "d08cb877ec3658de9381ad8ae349b02d648a5a7b21901d588ce866d1e385ef8b",
+          "prior_sha256": "3b91b2877b456465251b2974e1a5f7c2bc37d80d82dbd9c234c611009d3f39d2",
+          "sha256": "cd2c0b70dccaec5432f72e0608808b53c711c6ecf181532798d36ed5760554d4"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\059_p7_large_jtag_1m_l1_random\\input.bin",
+          "prior_sha256": "92981a26065607345aece3ce7a4bf428997814425a847a5f374d564a955ef822",
+          "sha256": "92981a26065607345aece3ce7a4bf428997814425a847a5f374d564a955ef822"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\059_p7_large_jtag_1m_l1_random\\transactions.txt",
+          "prior_sha256": "f327c67b8b478269a96c2a1dc9e512b263634848f27dae503a9926807b53f1df",
+          "sha256": "f327c67b8b478269a96c2a1dc9e512b263634848f27dae503a9926807b53f1df"
+        }
+      },
+      "stage_id": "p7_large_jtag_1m_l1_random",
+      "summary": {
+        "bytes": 70857262,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\059_p7_large_jtag_1m_l1_random\\p7_jtag_axi_stage_summary.json",
+        "sha256": "1e6d51f16f3bcb08b4b259e415d044c2e1b516313325891e3b78092da89c139b"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "1800",
+          "name": "--max-runtime-sec",
+          "prior": "1800",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_1m_rr_random",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_1m_rr_random",
+          "unchanged": true
+        },
+        {
+          "current": "1400",
+          "name": "--stage-timeout-sec",
+          "prior": "1400",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 60,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "05ca733b0d19fc724d7284573c84374dea836bd4aabdcd3586388737d8f0a94e",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\060_p7_large_jtag_1m_rr_random\\backend_manifest.json",
+          "prior_canonical_sha256": "05ca733b0d19fc724d7284573c84374dea836bd4aabdcd3586388737d8f0a94e",
+          "prior_sha256": "98d62c9ba9fa9891c1ce1784d21ba6901deccce145ed90e36f79e22f850701be",
+          "sha256": "86e363f5a2286c862d2e38d4d461ea51287d1b416506a2b4af48a758692779a1"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\060_p7_large_jtag_1m_rr_random\\input.bin",
+          "prior_sha256": "847ff69ec3010814fe5af6530d426b620fae9988a6ea18fed1260b8f74ef4774",
+          "sha256": "847ff69ec3010814fe5af6530d426b620fae9988a6ea18fed1260b8f74ef4774"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\060_p7_large_jtag_1m_rr_random\\transactions.txt",
+          "prior_sha256": "39e63ac1a4d10e53e8e3a796b95bdb9c3f0f764de16c74022d543a58a182a50b",
+          "sha256": "39e63ac1a4d10e53e8e3a796b95bdb9c3f0f764de16c74022d543a58a182a50b"
+        }
+      },
+      "stage_id": "p7_large_jtag_1m_rr_random",
+      "summary": {
+        "bytes": 70857327,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\060_p7_large_jtag_1m_rr_random\\p7_jtag_axi_stage_summary.json",
+        "sha256": "64f10579225d39e224aaf4bfe000581d2cdf6591f4cd402cc9c2b1aeb410a205"
+      }
+    },
+    {
+      "authorization_settings": [
+        {
+          "current": "0x43c00000",
+          "name": "--axi-base-address",
+          "prior": "0x43c00000",
+          "unchanged": true
+        },
+        {
+          "current": "210512180081",
+          "name": "--board-id",
+          "prior": "210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "xc7z010clg400-1",
+          "name": "--expected-part",
+          "prior": "xc7z010clg400-1",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "name": "--expected-target",
+          "prior": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+          "unchanged": true
+        },
+        {
+          "current": "localhost:3121",
+          "name": "--hw-server-url",
+          "prior": "localhost:3121",
+          "unchanged": true
+        },
+        {
+          "current": "1000000",
+          "name": "--jtag-frequency-hz",
+          "prior": "1000000",
+          "unchanged": true
+        },
+        {
+          "current": "2",
+          "name": "--lane-count",
+          "prior": "2",
+          "unchanged": true
+        },
+        {
+          "current": "0x3",
+          "name": "--max-lane-mask",
+          "prior": "0x3",
+          "unchanged": true
+        },
+        {
+          "current": "1800",
+          "name": "--max-runtime-sec",
+          "prior": "1800",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-ethernet",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--no-motion",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--preflight-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "rfap",
+          "name": "--semantic-mode",
+          "prior": "rfap",
+          "unchanged": true
+        },
+        {
+          "current": true,
+          "name": "--shutdown-on-exit",
+          "prior": true,
+          "unchanged": true
+        },
+        {
+          "current": "60",
+          "name": "--shutdown-timeout-sec",
+          "prior": "60",
+          "unchanged": true
+        },
+        {
+          "current": "p7_large_jtag_1m_rep3_random",
+          "name": "--stage-name",
+          "prior": "p7_large_jtag_1m_rep3_random",
+          "unchanged": true
+        },
+        {
+          "current": "1400",
+          "name": "--stage-timeout-sec",
+          "prior": "1400",
+          "unchanged": true
+        },
+        {
+          "current": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "name": "--vivado-path",
+          "prior": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+          "unchanged": true
+        }
+      ],
+      "consumed_inputs": [
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "current_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "prior_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "role": "plan",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "current_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+          "prior_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+          "role": "bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "current_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+          "prior_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+          "role": "xsa",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "current_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce.elf",
+          "prior_sha256": "14450369d4c6cbe27899bc69f210278e3b2076573e0122859d266fe63cc8e0ce",
+          "role": "elf",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "current_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "prior_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "role": "profile",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "current_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "prior_sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+          "role": "active_xdc",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "current_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "prior_sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+          "role": "pinmap",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "current_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "prior_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "role": "register_map",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "current_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "prior_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "role": "shutdown_bitstream",
+          "unchanged": true
+        },
+        {
+          "current_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "current_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "prior_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+          "prior_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+          "role": "ltx",
+          "unchanged": true
+        }
+      ],
+      "coverage_contributed": false,
+      "ordinal": 61,
+      "result": "EXACT_HARDWARE_PASS",
+      "shadow_generated_inputs": {
+        "backend_manifest": {
+          "canonical_sha256": "9a543f962ddf6761a4ae53fa483bdc0a94929aff5821f10b99b00619ce72bbdb",
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\061_p7_large_jtag_1m_rep3_random\\backend_manifest.json",
+          "prior_canonical_sha256": "9a543f962ddf6761a4ae53fa483bdc0a94929aff5821f10b99b00619ce72bbdb",
+          "prior_sha256": "2fc4438643e39bcb3109673735e290271d661e12a0238481b60f1fb12849b573",
+          "sha256": "6e793c6a92b1a708e78f9c01c1d72a1ddb9ca8e0137ea333e86fecb1df669207"
+        },
+        "input": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\061_p7_large_jtag_1m_rep3_random\\input.bin",
+          "prior_sha256": "70a2712e321d4cdafa35830e852c0f0187d629050093fa246a7244bf7d799034",
+          "sha256": "70a2712e321d4cdafa35830e852c0f0187d629050093fa246a7244bf7d799034"
+        },
+        "transaction": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260712_stationary_app_r17_diag_suffix62_d62f6b32\\diagnostic_impact_proof\\shadow_generated_inputs\\061_p7_large_jtag_1m_rep3_random\\transactions.txt",
+          "prior_sha256": "dfcdb193344109aa17bc601c3953003c91435b5772c3439abdabe2d161711817",
+          "sha256": "dfcdb193344109aa17bc601c3953003c91435b5772c3439abdabe2d161711817"
+        }
+      },
+      "stage_id": "p7_large_jtag_1m_rep3_random",
+      "summary": {
+        "bytes": 70857342,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\061_p7_large_jtag_1m_rep3_random\\p7_jtag_axi_stage_summary.json",
+        "sha256": "c33f894581fc375d79d66aae1e5ca95a48005f0f54641667c6a3248fce001e84"
+      }
+    }
+  ],
+  "mandatory_prefix_ordinals": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "prior_execution_ledger": {
+    "bytes": 200782,
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260711_stationary_app_r16_diag_suffix55\\sequence_execution_ledger.json",
+    "sha256": "f645d6fa82cb86eb1d8627adfc47d95af277e67f47b040c1bb63309c45955a49"
+  },
+  "prior_run_id": "p7_20260711_stationary_app_r16_diag_suffix55",
+  "prior_sequence_plan": {
+    "bytes": 89646,
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260711_stationary_app_r16_diag_suffix55_594f91c_sequence_plan.txt",
+    "sha256": "bcbbcbe6378df274232d445e774385398ad9efaedb2ed0c8a7c1df6b73632cbe"
+  },
+  "prior_source_commit": "594f91c14a9a28b0be98463bd9faac33ff92d75d",
+  "proof_errors": [],
+  "runtime_identity": {
+    "python": {
+      "historical_identity_basis": "immutable prior plan and execution ledger argv",
+      "historical_path": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "path": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "sha256": "cce21c0e8710e304273e98ac4b2b0f5aceb639acbcd2343cbaa5c4e81619c45b"
+    },
+    "vivado_helpers": [
+      {
+        "historical_sha256": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+        "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "role": "cs_server",
+        "sha256": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536"
+      },
+      {
+        "historical_sha256": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+        "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "role": "rdi_xsdb",
+        "sha256": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc"
+      },
+      {
+        "historical_sha256": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "role": "cmd",
+        "sha256": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4"
+      },
+      {
+        "historical_sha256": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "role": "conhost",
+        "sha256": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+      }
+    ],
+    "vivado_launcher": {
+      "historical_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "sha256": "ebc3c5285bce0cf5dd13ad0e96f628ef34734435801c8f0c73d57981a2bfc7e1",
+      "version_identity": "Vivado v2023.1"
+    }
+  },
+  "schema": "rf-comm-p7-diagnostic-impact-proof-v1",
+  "selected_ordinals": [
+    1,
+    2,
+    3,
+    4,
+    62,
+    63,
+    64,
+    65
+  ],
+  "sequence_import_symbols": [
+    {
+      "current_sha256": "4afa55da5f9f4a0f926600270093f870961c1cc7544efe26830e88d8b270e6ec",
+      "prior_sha256": "4afa55da5f9f4a0f926600270093f870961c1cc7544efe26830e88d8b270e6ec",
+      "symbol": "CANONICAL_FULL_PART",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "646b8f6c2d9b03562ffe40dbe279189a0b685bb05c88115cfd975fafcfc9c5fe",
+      "prior_sha256": "646b8f6c2d9b03562ffe40dbe279189a0b685bb05c88115cfd975fafcfc9c5fe",
+      "symbol": "CANONICAL_LIVE_DEVICE",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "0403ffc012269faa5f5ffc67a3116f248c86aaba4bbbdd4aec96198ba7ac1d35",
+      "prior_sha256": "0403ffc012269faa5f5ffc67a3116f248c86aaba4bbbdd4aec96198ba7ac1d35",
+      "symbol": "CANONICAL_LIVE_IDCODE_BINARY",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "2005385c4f48bbc51bab9291c0f38b74cccd94685dfd84279148e5b1904e991a",
+      "prior_sha256": "2005385c4f48bbc51bab9291c0f38b74cccd94685dfd84279148e5b1904e991a",
+      "symbol": "CANONICAL_LIVE_IDCODE_HEX",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "795273632cd1837b2f2ebd8f12e5654575d620587a196e730bbbb367a796bbac",
+      "prior_sha256": "795273632cd1837b2f2ebd8f12e5654575d620587a196e730bbbb367a796bbac",
+      "symbol": "CANONICAL_LIVE_PART",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "f4d237da4b5732fc9753d968ed6adc2f5fd8f81cb037666c68fc2494b3be68cc",
+      "prior_sha256": "f4d237da4b5732fc9753d968ed6adc2f5fd8f81cb037666c68fc2494b3be68cc",
+      "symbol": "build_preflight_command",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "91a6cb96090af238293f65173c4d22c868bd2a2bc9546254ef7948ccd191e127",
+      "prior_sha256": "91a6cb96090af238293f65173c4d22c868bd2a2bc9546254ef7948ccd191e127",
+      "symbol": "canonical_live_identity_failures",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "272824b4a81d072b3da28e7eec168d25d17c6e1411622edd127f7cb6af7b5564",
+      "prior_sha256": "272824b4a81d072b3da28e7eec168d25d17c6e1411622edd127f7cb6af7b5564",
+      "symbol": "evaluate_preflight",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "e7ab0a337820872110493aa1a22ebc5d799175cc69fa8b71cd0d1a6a832b7b3d",
+      "prior_sha256": "e7ab0a337820872110493aa1a22ebc5d799175cc69fa8b71cd0d1a6a832b7b3d",
+      "symbol": "is_exact_vivado_batch_launcher",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "69efdb2bbe8f6b4320bb5d4031e29d114fddb3da28c3f03b7ce9de17a8bd5337",
+      "prior_sha256": "69efdb2bbe8f6b4320bb5d4031e29d114fddb3da28c3f03b7ce9de17a8bd5337",
+      "symbol": "normalize_p7_idcode",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "ca4b124fc4b672fbb8974e81d1cfdc9e28d65df1725c3faae6c2acbbe3540d6c",
+      "prior_sha256": "ca4b124fc4b672fbb8974e81d1cfdc9e28d65df1725c3faae6c2acbbe3540d6c",
+      "symbol": "parse_markers",
+      "unchanged": true
+    }
+  ],
+  "skipped_ordinals": [
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "skipped_stages_contribute_acceptance_coverage": false,
+  "source_dependencies": [
+    {
+      "current_sha256": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
+      "path": "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+      "prior_sha256": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "95bfbdf7e6c429e6637c1b4224a9dcecaa1fd756a1f665b21a797d54afbfc464",
+      "path": "scripts/hw/p7_hw_preflight.tcl",
+      "prior_sha256": "95bfbdf7e6c429e6637c1b4224a9dcecaa1fd756a1f665b21a797d54afbfc464",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "4d4674d25da3ca6384309d7acbc3212adb89f88346c7749d7218984ce3561ec4",
+      "path": "scripts/hw/p7_jtag_axi_transactions.tcl",
+      "prior_sha256": "4d4674d25da3ca6384309d7acbc3212adb89f88346c7749d7218984ce3561ec4",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "41f9de0e441bd81b6d734ec4d143bd814100b6f1b00184d072b19eeb31a20922",
+      "path": "tools/p7_hardware_safety.py",
+      "prior_sha256": "41f9de0e441bd81b6d734ec4d143bd814100b6f1b00184d072b19eeb31a20922",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "593185c5fa9c23244a0bfd0355da61df098e194319435c626132b7f3a1726018",
+      "path": "tools/p7_jtag_backend.py",
+      "prior_sha256": "593185c5fa9c23244a0bfd0355da61df098e194319435c626132b7f3a1726018",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "51ccba4529ac2e5b2a3fefbee6b3a0b128ba59f03bb561096754811a8919298e",
+      "path": "tools/p7_app_protocol.py",
+      "prior_sha256": "51ccba4529ac2e5b2a3fefbee6b3a0b128ba59f03bb561096754811a8919298e",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "938037c8f48b6154b5a5cf5338290b087ed10fa7c70472fd961364595742ec77",
+      "path": "tools/p7_app_transport.py",
+      "prior_sha256": "938037c8f48b6154b5a5cf5338290b087ed10fa7c70472fd961364595742ec77",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "fe7ab681732b2ce2cb30c9233a1f58e3235d5f7b0da570a924af4a89f2fc7ca1",
+      "path": "tools/p7_contained_launcher.py",
+      "prior_sha256": "fe7ab681732b2ce2cb30c9233a1f58e3235d5f7b0da570a924af4a89f2fc7ca1",
+      "unchanged": true
+    },
+    {
+      "current_sha256": "a0feba5d5411a7d56dc85f8c6348f7dc7c5d97a2b8d5ff96b21f3ecd1109394c",
+      "path": "config/register_map/generated/ir_regs.py",
+      "prior_sha256": "a0feba5d5411a7d56dc85f8c6348f7dc7c5d97a2b8d5ff96b21f3ecd1109394c",
+      "unchanged": true
+    }
+  ],
+  "status": "PASS"
+}

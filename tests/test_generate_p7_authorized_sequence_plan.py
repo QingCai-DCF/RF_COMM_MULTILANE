@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 import sys
@@ -92,6 +93,9 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
             ),
         )
         self.assertFalse(any(spec.group == "ps_stationary" for spec in selected))
+        generation_source = inspect.getsource(subject.generate_sequence)
+        self.assertIn('"plan_mode": plan_mode', generation_source)
+        self.assertNotIn('"plan_mode": sequence.DIAGNOSTIC_PLAN_MODE', generation_source)
         with self.assertRaises(ValueError):
             subject.select_stage_specs(
                 full,

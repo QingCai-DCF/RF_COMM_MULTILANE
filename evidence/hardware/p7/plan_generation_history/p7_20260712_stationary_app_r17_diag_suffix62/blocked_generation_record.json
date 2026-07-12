@@ -1,0 +1,28 @@
+{
+  "schema": "rf-comm-p7-blocked-plan-generation-v1",
+  "run_id": "p7_20260712_stationary_app_r17_diag_suffix62",
+  "source_commit": "d62f6b325b23c7bda6cb5819f266bf8236e0b7d2",
+  "status": "BLOCKED_OFFLINE_PLAN_VALIDATION",
+  "hardware_actions_executed": false,
+  "safe_wrapper_processes_launched": false,
+  "vivado_invoked": false,
+  "xsdb_invoked": false,
+  "authorization_environment_modified": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "intended_full_stage_ordinals": [1, 2, 3, 4, 62, 63, 64, 65],
+  "failure": "The generated plan accidentally serialized legacy plan_mode=DIAGNOSTIC_SUFFIX_55 instead of the selected adaptive plan mode, so the independent executor correctly rejected the 8-stage matrix before any hardware process could launch.",
+  "blocked_plan": {
+    "path": "evidence/hardware/p7/plan_generation_history/p7_20260712_stationary_app_r17_diag_suffix62/blocked_sequence_plan.txt",
+    "sha256": "88115f2bbe4a38d5848afc5b3837867762e858d94173e72560fc32c88917c732",
+    "bytes": 49449
+  },
+  "impact_proof": {
+    "path": "evidence/hardware/p7/plan_generation_history/p7_20260712_stationary_app_r17_diag_suffix62/diagnostic_impact_proof.json",
+    "sha256": "3df08c027c6de0dee418b8d377c9352bc60a7a19f77f76974b0217db696228bb",
+    "bytes": 85115,
+    "status": "PASS_BUT_PLAN_NOT_AUTHORIZABLE"
+  },
+  "immutable_disposition": "Do not overwrite or use this blocked plan. The next generated diagnostic and any next hardware attempt must use a new run ID.",
+  "next_run_id": "p7_20260712_stationary_app_r18_diag_suffix62"
+}
