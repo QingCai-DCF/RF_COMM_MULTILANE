@@ -730,3 +730,34 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   top-level discovery 与独立 `tests/p7` complete suite 各运行恰好一次，记录命令、discovered count、return code、原始 log hashes 与
   `FULL_SUITE_INVOCATION_COUNT`。checkpoint 用 path+SHA256 重新验证该 summary/logs，不重复执行已覆盖的 suites；任何后续 code/validator
   改动都会使 source-commit binding 失效并要求生成一份新的 exactly-once regression summary。
+
+## 27. 2026-07-12 r17/r18 adaptive diagnostic 增量交接（本节覆盖第 25 节的 next-run 描述）
+
+- r17 仅完成离线计划生成，未连接或操作硬件。生成器错误地把 adaptive plan 序列化为旧的
+  `DIAGNOSTIC_SUFFIX_55`，独立 executor 在任何硬件动作前 fail closed。该 blocked 计划及 proof 已冻结在
+  `evidence/hardware/p7/plan_generation_history/p7_20260712_stationary_app_r17_diag_suffix62/`；r17 不是硬件
+  acceptance run，也永远不得 resume。
+- 修复 adaptive plan-mode 序列化后，clean-source exactly-once regression 为 158/158 PASS，P7 checkpoint 为
+  13/13 PASS。r18 run ID 为 `p7_20260712_stationary_app_r18_diag_suffix62`；机器 impact proof 允许且计划严格只含
+  full ordinals `1,2,3,4,62,63,64,65`，保持 `DIAGNOSTIC_ONLY`、`coverage_claimed=false`、
+  `HARDWARE_ACCEPTANCE=PENDING_HW`，没有 stage 66。
+- r18 只启动一次且没有 `--resume`。ordinals 1--4 全部 exact PASS；stage 62 在 candidate bit programming 和 ELF
+  start 之前以 `P7 XSDB reset target is not unique on the exact authorized device` fail closed。stage 63--65 未启动；
+  stationary 正式启动次数仍为 0。r18 ledger SHA256 为
+  `2fc74e20e1056960cb6d5fcd06c150b6fd0143aad8fdd18690ad96e309e2fbad`，失败 stage summary SHA256 为
+  `6532f6506eaaafa47bc84f13c7c9c9a4c08e5b8f9cc3240617d332cebb5f9d4a`。
+- stage 62 的 read-only preflight、shutdown-before、shutdown-after 都 PASS；summary 明确记录
+  `programmed_candidate=false`、`started_ps_elf=false`。失败后的独立 recovery 位于
+  `recovery_shutdown_after_failed_stage062_20260712T044704Z/`，精确记录 `SHUTDOWN_RAW_EXIT=125`、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0`、`PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；外部既有
+  `hw_server` PID 45220 未被触碰。r18 frozen 12-file manifest SHA256 为
+  `c2e48dfa2ebc3e0e967f4cba1706c2d6de083df58c61c0cfb963838c2a674331`。
+- r18 的证据只证明旧 Tcl 的 identity-filtered property row count 不唯一；它没有记录各 row 的 target ID，因此不能
+  声称已证明“重复 target-ID row”是现场原因。修复采用更稳健且仍 fail-closed 的规则：先验证每条已 identity-filtered
+  row 都有非负整数 `target_id`，按 numeric target ID 去重，再要求恰好一个 distinct reset/FPGA/CPU target；在任何 reset
+  或 candidate programming 前输出 distinct target counts。
+- r18 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r19_diag_suffix62`（若离线生成阻断则继续更换
+  新 ID）。必须先准确提交 r18 exact history、target-ID 修复和本交接，再在新 clean source 上完成 required complete suites
+  exactly once、P7 checkpoint、impact proof、plan 和全部 dry validation。只有机器 proof 证明 55--61 的全部 transitive
+  consumed inputs 未变，r19 才允许严格运行 `1,2,3,4,62,63,64,65`；否则从最早受影响 stage 开始。r19 仍为零 coverage
+  diagnostic，严禁 stage 66。

@@ -1088,6 +1088,8 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_XSDB_LIVE_DEVICE_MATCH=1", tcl)
         self.assertGreater(tcl.index("P7_XSDB_LIVE_DEVICE_MATCH=1"), tcl.index("connect -url"))
         self.assertIn("jtag targets -target-properties", tcl)
+        self.assertIn("proc p7_unique_targets_by_id", tcl)
+        self.assertIn("P7_XSDB_APU_DISTINCT_TARGET_COUNT=", tcl)
         self.assertIn("P7_XSDB_TARGET_SELECTION=EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS", tcl)
         self.assertIn('set p7_canonical_part "xc7z010clg400-1"', tcl)
         self.assertIn('set p7_live_part "xc7z010"', tcl)
@@ -1172,6 +1174,23 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         )
         with self.assertRaises(tkinter.TclError):
             interp.eval(r"string map {\ /} {C:\Temp\broken.elf}")
+
+    def test_xsdb_target_uniqueness_is_by_numeric_target_id_not_property_row_count(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        prefix = tcl[: tcl.index("proc p7_read32")]
+        interp.eval(prefix)
+        count = int(
+            interp.eval(
+                "llength [p7_unique_targets_by_id [list "
+                "[dict create target_id 7 name APU] "
+                "[dict create target_id 7 name APU] "
+                "[dict create target_id 8 name APU]]]"
+            )
+        )
+        self.assertEqual(2, count)
+        with self.assertRaises(tkinter.TclError):
+            interp.eval("p7_unique_targets_by_id [list [dict create name APU]]")
 
     def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")

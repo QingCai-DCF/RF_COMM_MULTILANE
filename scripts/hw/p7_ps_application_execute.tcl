@@ -91,6 +91,24 @@ proc p7_normal_idcode {value} {
   return ""
 }
 
+proc p7_unique_targets_by_id {records} {
+  set unique {}
+  set seen [dict create]
+  foreach props $records {
+    if {![dict exists $props target_id]} {
+      error "P7 XSDB target property row lacks target_id"
+    }
+    set target_id [dict get $props target_id]
+    if {![string is integer -strict $target_id] || $target_id < 0} {
+      error "P7 XSDB target_id is not a non-negative integer"
+    }
+    if {[dict exists $seen $target_id]} { continue }
+    dict set seen $target_id 1
+    lappend unique $props
+  }
+  return $unique
+}
+
 proc p7_read32 {address} {
   set value [mrd -value $address]
   return [expr {$value & 0xFFFFFFFF}]
@@ -1122,6 +1140,18 @@ set rc [catch {
     if {[string equal -nocase $live_name $device_root]} { lappend fpga_matches $props }
     if {[string match -nocase "*Cortex-A9*#0" $live_name]} { lappend cpu_matches $props }
   }
+  # XSDB may emit more than one property row for the same numeric target.
+  # Uniqueness is a target-ID property, not a row-count property.  Retain the
+  # first already identity-filtered row for each ID and still fail closed if
+  # more than one distinct target remains.
+  set dap_matches [p7_unique_targets_by_id $dap_matches]
+  set apu_matches [p7_unique_targets_by_id $apu_matches]
+  set fpga_matches [p7_unique_targets_by_id $fpga_matches]
+  set cpu_matches [p7_unique_targets_by_id $cpu_matches]
+  p7_say $result_handle "P7_XSDB_DAP_DISTINCT_TARGET_COUNT=[llength $dap_matches]"
+  p7_say $result_handle "P7_XSDB_APU_DISTINCT_TARGET_COUNT=[llength $apu_matches]"
+  p7_say $result_handle "P7_XSDB_FPGA_DISTINCT_TARGET_COUNT=[llength $fpga_matches]"
+  p7_say $result_handle "P7_XSDB_CPU0_DISTINCT_TARGET_COUNT=[llength $cpu_matches]"
   if {[llength $dap_matches] == 1} {
     set reset_target [lindex $dap_matches 0]
     set reset_target_name DAP
