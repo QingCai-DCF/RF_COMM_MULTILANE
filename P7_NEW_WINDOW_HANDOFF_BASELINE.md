@@ -869,3 +869,18 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - r24 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r25_diag_suffix62`。必须先提交 r24 exact
   history/tamper、recovery、capture-direction 修复与本交接，再从 clean source 完成 exactly-once suites、checkpoint、impact
   proof、plan 和全部 dry validation。r25 仍为零 coverage diagnostic，无 stage 66。
+
+## 32. 2026-07-12 r24 提交后通用非硬件回归增量交接
+
+- r24 evidence、exact history/tamper、独立 recovery 与 descriptor capture-direction 修复已提交为
+  `460d8de525c34fde98240398359d31758c8e5f3f`。
+- 随后在该 clean source 上完成一次通用 `scripts/run_offline_gates.py` 非硬件回归；结果为 `status=PASS`、
+  `no_hardware=true`、`hardware_acceptance=PENDING_HW`、`OFFLINE_CACHE_STATUS=BYPASS`、
+  `OFFLINE_REAL_BUILD_PROCESS_RAN=true`。`evidence/generated/offline_gate_summary.json` SHA256 为
+  `5d8a09f1357aee6f26f532bcc165c9b567ba00a5ac1e4b5fb79176b549b52c81`。外部 legacy `hw_server` PID 45220
+  未被触碰；本次通用回归未连接硬件。
+- 该通用回归不是 r25 的 P7 authorization checkpoint，也没有提升任何硬件 stage/acceptance。必须先准确提交这些生成输出，
+  再从新的 clean source 用 `tools/run_p7_regression_suites.py` 完成 required complete suites 各恰好一次，并由
+  `tools/run_p7_gate.py` 以 summary path+SHA256 消费该结果生成新的 P7 checkpoint；不得复用 r24 checkpoint。
+- r24 仍永远不得 resume；下一硬件 ID 仍必须是 `p7_20260712_stationary_app_r25_diag_suffix62`。r25 仍只允许
+  `1,2,3,4,62,63,64,65`（且必须先通过 r16-based transitive impact proof）、零 coverage、PENDING_HW、无 stage 66。
