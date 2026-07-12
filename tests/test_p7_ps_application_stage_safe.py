@@ -1209,18 +1209,31 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual("1", interp.eval("llength [dict get $sets fpga]"))
         self.assertEqual("0", interp.eval("llength [dict get $sets dap]"))
 
-    def test_functional_boundary_failure_preserves_status_error_and_descriptor(self) -> None:
+    def test_functional_boundary_failure_preserves_status_error_descriptor_output_and_trace(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
-        capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1")
+        status = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status")
+        descriptor_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1")
+        output_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED=1")
+        trace_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1")
         terminal_error = tcl.index(
-            'error "P7 functional boundary case failed:', capture
+            'error "P7 functional boundary case failed:', trace_capture
         )
-        self.assertLess(capture, terminal_error)
+        self.assertLess(status, descriptor_capture)
+        self.assertLess(descriptor_capture, output_capture)
+        self.assertLess(output_capture, trace_capture)
+        self.assertLess(trace_capture, terminal_error)
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status", tcl)
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code", tcl)
         self.assertIn("boundary_${boundary_index}_descriptor_failure.bin", tcl)
+        self.assertIn("boundary_${boundary_index}_output_failure.bin", tcl)
+        self.assertIn("boundary_${boundary_index}_trace_failure.bin", tcl)
         self.assertIn("p7_atomic_dump $failure_descriptor $descriptor_address 256", tcl)
+        self.assertIn("p7_atomic_dump $failure_output $boundary_output($boundary_index)", tcl)
+        self.assertIn("p7_atomic_dump $failure_trace $boundary_trace($boundary_index)", tcl)
+        self.assertIn("$boundary_trace_capacity($boundary_index) * 64", tcl)
         self.assertNotIn("dow -data $failure_descriptor $descriptor_address", tcl)
+        self.assertNotIn("dow -data $failure_output $boundary_output($boundary_index)", tcl)
+        self.assertNotIn("dow -data $failure_trace $boundary_trace($boundary_index)", tcl)
 
     def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")

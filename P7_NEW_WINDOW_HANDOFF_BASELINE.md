@@ -916,3 +916,47 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - r25 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r26_diag_suffix62`。必须先准确提交 r25
   exact history/tamper、recovery、integrity snapshot 修复、新 candidate 与本交接，再从 clean source 完成 exactly-once suites、
   checkpoint、r16-based impact proof、plan 和全部 dry validation。r26 仍为零 coverage diagnostic，无 stage 66。
+
+## 34. 2026-07-12 r26 diagnostic suffix 增量交接（本节覆盖第 33 节的 next-run 描述）
+
+- r25 evidence、single-snapshot integrity 修复与新 Vitis candidate 已准确提交为
+  `e4d6937ad559065a650054998807599f859f34bf`。在该 clean source 上，required complete suites 各运行恰好一次，
+  122 + 39 = 161/161 PASS；regression summary SHA256 为
+  `2978f86f5e23bf9c74c51e713ca0353184ea19dc935fdc794b7a0e64d7825b28`。新 P7 offline checkpoint
+  13/13 PASS，SHA256 为 `e200f338f8ef1cd251fe38da1dac8e8d4a5017fc1146348abfa7024120c3f3b1`，明确
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`、cache BYPASS 与 real build。
+- 首次请求 r26 adaptive suffix62 在任何 plan/authorization/hardware action 前 fail closed：机器 impact proof 发现 r16
+  ordinal 55 的 transitive consumed `elf` 已改变，因此不得跳过 55--61。该阻断没有消费硬件 run ID。随后生成的实际
+  r26 为 `p7_20260712_stationary_app_r26_diag_suffix55`，sequence plan SHA256
+  `0cfdfa7604dcc652715f3f519e3998329dbdadde4abcbd6033d0a671de68371c`，generation manifest SHA256
+  `8150e41ab81b69f9208f72018ea2035d605500484f3651259d88e71b56d8adef`；15 个 authorization、15 个 child dry
+  validation、generator executor dry 与独立 executor dry 全部 PASS。plan 仅含 ordinals
+  `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`，零 coverage、PENDING_HW、无 stage 66。
+- r26 只启动一次且没有 `--resume`。ordinals 1--4 与 55--61 exact PASS，但它们只属于 immutable diagnostic
+  prefix/suffix，贡献零 acceptance coverage。stage 62 `p7_ps_functional` 完成 exact target selection
+  (`DAP=0, APU=1, FPGA=1, CPU0=1, cable_root=1, JTAG_device_nodes=2`)、candidate programming、
+  4,456,448-byte preload、ELF start 与 service ready；boundary 0--7 PASS，boundary index 8 / length 30 / lane0
+  以 status 4、`P7_ERROR_OBJECT_CRC`(13) 终止。stage 62 正确为 FAIL，63--65 未运行，stage 66 不在 plan；正式
+  stationary 启动次数仍为 0。outer ledger SHA256 为
+  `72acea5438a578619bd1c508e3d5649c4a1779058d985255278c80f789cafa45`。
+- captured descriptor `boundary_8_descriptor_failure.bin` SHA256 为
+  `e367cde75315414d98e2db62c6ef175f6ee156f9566ea7f73192148662647847`。它机器可解析地绑定 30-byte input
+  `00..1d`、expected/input SHA256 `f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f`、
+  expected CRC32 `0xc5665f58`、recorded output CRC32 `0x0a703d75` 与 recorded output SHA256
+  `7b1241c20725167eb4bf923caa908244ee622a994ec2e3fcc8cadea7584f1d46`。r26 没有捕获失败 output/trace
+  bytes，因此这些 digest 只能证明 terminal integrity rejection，不能证明实际 output bytes 或更底层根因。r25 修复已把首个失败
+  从 length 1/index 6 推进到 length 30/index 8，但不得把任何 boundary PASS 提升为 stage PASS。
+- r26 后独立 recovery `recovery_shutdown_after_failed_stage062_20260712T105210Z` 精确记录 raw rc125、唯一 shutdown
+  programming marker、`SHUTDOWN_EXIT=0` 与 PASS；summary SHA256 为
+  `59f57517f0094a7dc09c1b8b12a727a50c0642685b3ab45c3aa924245e46806c`。recovery PASS 不改变 stage 62 FAIL。
+  frozen 12-file manifest SHA256 为 `aad1f3da5324f3c13f4919d8ae437a36225325b257c22fd714d225f28362b799`；
+  外部 legacy `hw_server` PID 45220 未被触碰，临时 helper 已自然退出。
+- 当前诊断改动不改变 candidate 行为：在 functional boundary 失败后、抛出终端错误前，按顺序 atomic capture descriptor、
+  output bytes 与完整 trace capacity，并分别输出机器可解析 capture marker；status/error markers 在 capture 前先写出，从而即使某个
+  capture 自身失败也保留原始 terminal 状态。r26 frozen source 明确不存在这些新的 output/trace capture，因此历史验证必须继续要求
+  r26 bundle 中没有 `boundary_8_output_failure.bin` 与 `boundary_8_trace_failure.bin`。
+- r26 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r27_diag_suffix62`（若任何离线 gate 或 impact proof
+  阻断则更换新 ID）。必须先准确提交 r26 exact history/tamper、recovery、output/trace capture 与本交接，再以新 clean source 完成
+  required complete suites exactly once、cache-bypassed canonical P7 checkpoint、impact proof、plan 和全部 dry validation。只有机器
+  proof 证明 r26 的 55--61 全部 transitive consumed inputs 未变，r27 才允许 `1,2,3,4,62,63,64,65`；否则从最早受影响 stage
+  fail closed。r27 仍是零 coverage diagnostic，严禁 stage 66。

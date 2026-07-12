@@ -1667,12 +1667,22 @@ set rc [catch {
         if {$status != 3 || $error_code != 0} {
           set failure_descriptor [file join $bundle_dir \
               "boundary_${boundary_index}_descriptor_failure.bin"]
-          p7_atomic_dump $failure_descriptor $descriptor_address 256
+          set failure_output [file join $bundle_dir \
+              "boundary_${boundary_index}_output_failure.bin"]
+          set failure_trace [file join $bundle_dir \
+              "boundary_${boundary_index}_trace_failure.bin"]
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX=$boundary_index"
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH=$boundary_length($boundary_index)"
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status"
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code"
+          p7_atomic_dump $failure_descriptor $descriptor_address 256
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1"
+          p7_atomic_dump $failure_output $boundary_output($boundary_index) \
+              $boundary_length($boundary_index)
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED=1"
+          p7_atomic_dump $failure_trace $boundary_trace($boundary_index) \
+              [expr {$boundary_trace_capacity($boundary_index) * 64}]
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1"
           error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index) status=$status error=$error_code"
         }
         p7_dump_case $bundle_dir $boundary_index $boundary_input($boundary_index) \

@@ -101,6 +101,9 @@ HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED = (
 HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_OUTPUT_CRC_SHA_DIVERGENCE_REJECTED"
 )
+HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_BOUNDARY_30_OBJECT_INTEGRITY_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3486,6 +3489,41 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 ).is_file()
             ):
                 return HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and candidate.data.get("programmed_candidate") is True
+                and candidate.data.get("started_ps_elf") is True
+                and raw_lines[-7:]
+                == [
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX=8",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH=30",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=4",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=13",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1",
+                    "P7_PS_STAGE_RESULT=FAIL",
+                    "P7_PS_STAGE_ERROR=P7 functional boundary case failed: index=8 length=30 status=4 error=13",
+                ]
+                and (
+                    candidate.path.parent
+                    / "bundle"
+                    / "boundary_8_descriptor_failure.bin"
+                ).is_file()
+            ):
+                return HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5456,13 +5494,14 @@ def _old_commit_ps_functional_boundary_failure_errors(
     candidate: Candidate,
     evidence: RepositoryEvidence,
 ) -> list[str]:
-    """Validate r23's exact post-program functional boundary rejection."""
+    """Validate r23-r26 exact post-program functional boundary rejections."""
 
     errors: list[str] = []
     variant = _historical_preflight_variant(candidate)
     r24 = variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
     r25 = variant == HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED
-    label = "historical r25" if r25 else "historical r24" if r24 else "historical r23"
+    r26 = variant == HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED
+    label = "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23"
     data = candidate.data
     expected_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5489,7 +5528,9 @@ def _old_commit_ps_functional_boundary_failure_errors(
         and safety.get("errors") == []
         and str(safety.get("source_commit_requested", "")).lower()
         == (
-            "6cb92a2cdd7c056d67f79b83e7de4b9fd139104d"
+            "e4d6937ad559065a650054998807599f859f34bf"
+            if r26
+            else "6cb92a2cdd7c056d67f79b83e7de4b9fd139104d"
             if r25
             else "9a01b3da79f8a0e3561a56f799355915c132f3b1"
             if r24
@@ -5551,26 +5592,28 @@ def _old_commit_ps_functional_boundary_failure_errors(
         "P7_XSDB_TARGET_SELECTION": "EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
         "P7_PS_CANDIDATE_PROGRAMMED": "1",
         "P7_HOST_TO_PS_INPUT_BYTES": "4456448",
-        "P7_HOST_TO_PS_INPUT_DURATION_MS": "77849" if r25 else "74283" if r24 else "72445",
-        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "57244" if r25 else "59992" if r24 else "61514",
-        "P7_HOST_TO_PS_INPUT_BPS": "457958" if r25 else "479942" if r24 else "492119",
+        "P7_HOST_TO_PS_INPUT_DURATION_MS": "79224" if r26 else "77849" if r25 else "74283" if r24 else "72445",
+        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "56251" if r26 else "57244" if r25 else "59992" if r24 else "61514",
+        "P7_HOST_TO_PS_INPUT_BPS": "450009" if r26 else "457958" if r25 else "479942" if r24 else "492119",
         "P7_PS_ELF_DOWNLOADED": "1",
         "P7_PS_SERVICE_READY_POLLS": "3",
         "P7_PS_SERVICE_HEARTBEAT_AND_START_TICKS": "1",
         **(
             {
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": "6",
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH": "1",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": "8" if r26 else "6",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH": "30" if r26 else "1",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS": "4",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE": "13",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED": "1",
             }
-            if r25
+            if r25 or r26
             else {}
         ),
         "P7_PS_STAGE_RESULT": "FAIL",
         "P7_PS_STAGE_ERROR": (
-            "P7 functional boundary case failed: index=6 length=1 status=4 error=13"
+            "P7 functional boundary case failed: index=8 length=30 status=4 error=13"
+            if r26
+            else "P7 functional boundary case failed: index=6 length=1 status=4 error=13"
             if r25
             else 'couldn\'t open "C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/'
             'p7_20260712_stationary_app_r24_diag_suffix62/062_p7_ps_functional/bundle/'
@@ -5580,14 +5623,15 @@ def _old_commit_ps_functional_boundary_failure_errors(
         ),
     }
     append_error(errors, not duplicates and raw_markers == expected_markers, f"{label} raw marker set mismatch")
-    failure_descriptor = candidate.path.parent / "bundle" / "boundary_6_descriptor_failure.bin"
-    if r25:
+    failure_index = 8 if r26 else 6
+    failure_descriptor = candidate.path.parent / "bundle" / f"boundary_{failure_index}_descriptor_failure.bin"
+    if r25 or r26:
         try:
             descriptor = decode_p7_descriptor(failure_descriptor.read_bytes())
         except (OSError, ValueError, struct.error) as exc:
             errors.append(f"{label} failure descriptor invalid: {exc}")
             descriptor = {}
-        boundary_input = candidate.path.parent / "bundle" / "boundary_6_input.bin"
+        boundary_input = candidate.path.parent / "bundle" / f"boundary_{failure_index}_input.bin"
         try:
             input_bytes = boundary_input.read_bytes()
         except OSError as exc:
@@ -5596,27 +5640,31 @@ def _old_commit_ps_functional_boundary_failure_errors(
         expected_sha = hashlib.sha256(input_bytes).hexdigest()
         append_error(
             errors,
-            input_bytes == b"\x00"
+            input_bytes == (bytes(range(30)) if r26 else b"\x00")
             and descriptor.get("magic") == 0x53443750
             and descriptor.get("version") == 1
             and descriptor.get("command") == 1
             and descriptor.get("status") == 4
             and descriptor.get("session_epoch") == 0x50370001
-            and descriptor.get("object_id") == 7
-            and descriptor.get("object_length") == 1
-            and descriptor.get("expected_crc32") == (zlib.crc32(input_bytes) & 0xFFFFFFFF) == 0xD202EF8D
-            and descriptor.get("lane_policy") == 3
+            and descriptor.get("object_id") == (9 if r26 else 7)
+            and descriptor.get("object_length") == (30 if r26 else 1)
+            and descriptor.get("expected_crc32") == (zlib.crc32(input_bytes) & 0xFFFFFFFF) == (0xC5665F58 if r26 else 0xD202EF8D)
+            and descriptor.get("lane_policy") == (1 if r26 else 3)
             and descriptor.get("max_retries") == 3
             and descriptor.get("error_code") == 13
             and descriptor.get("bytes_completed") == 0
             and descriptor.get("fragments_total") == 1
             and descriptor.get("fragments_completed") == 1
-            and descriptor.get("output_crc32") == (zlib.crc32(b"\x02") & 0xFFFFFFFF) == 0x3C0C8EA1
+            and descriptor.get("output_crc32") == (0x0A703D75 if r26 else (zlib.crc32(b"\x02") & 0xFFFFFFFF))
             and descriptor.get("fragment_attempts") == 1
             and descriptor.get("fallback_count") == 0
             and descriptor.get("expected_sha256") == expected_sha
             and descriptor.get("input_sha256") == expected_sha
-            and descriptor.get("output_sha256") == expected_sha
+            and descriptor.get("output_sha256") == (
+                "7b1241c20725167eb4bf923caa908244ee622a994ec2e3fcc8cadea7584f1d46"
+                if r26
+                else expected_sha
+            )
             and descriptor.get("p6_retry_count") == 0
             and descriptor.get("p6_retry_exhausted") == 0
             and descriptor.get("p6_tx_fail") == 0
@@ -5630,11 +5678,17 @@ def _old_commit_ps_functional_boundary_failure_errors(
             and int(descriptor.get("start_ticks", 0)) > 0
             and int(descriptor.get("end_ticks", 0)) >= int(descriptor.get("start_ticks", 0))
             and descriptor.get("restart_count") == 0
-            and descriptor.get("completion_sequence") == 7
+            and descriptor.get("completion_sequence") == (9 if r26 else 7)
             and sha256_file(failure_descriptor)
-            == "06be977397d309af45d492dea1208171153b9fa7324b4f52faccca01d21d1acb"
-            and not (candidate.path.parent / "bundle" / "boundary_6_output_result.bin").exists()
-            and not (candidate.path.parent / "bundle" / "boundary_6_trace_result.bin").exists(),
+            == (
+                "e367cde75315414d98e2db62c6ef175f6ee156f9566ea7f73192148662647847"
+                if r26
+                else "06be977397d309af45d492dea1208171153b9fa7324b4f52faccca01d21d1acb"
+            )
+            and not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_output_result.bin").exists()
+            and not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_result.bin").exists()
+            and not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_output_failure.bin").exists()
+            and not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_failure.bin").exists(),
             f"{label} exact CRC/SHA divergence descriptor boundary mismatch",
         )
     else:
@@ -5661,6 +5715,7 @@ def _old_commit_ps_functional_boundary_failure_errors(
             HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
             HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED,
+            HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED,
         },
         f"{label} failure class mismatch",
     )
@@ -8095,15 +8150,18 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     r23 = variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
     r24 = variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
     r25 = variant == HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED
-    label = "historical r25" if r25 else "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
-    expected_ordinals = [1, 2, 3, 4, 62, 63, 64, 65]
+    r26 = variant == HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED
+    label = "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    expected_ordinals = [1, 2, 3, 4, *range(55, 66)] if r26 else [1, 2, 3, 4, 62, 63, 64, 65]
+    prefix_count = 11 if r26 else 4
+    failed_index = prefix_count
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
     append_error(errors, outer.get("network_used") is False and outer.get("motion_used") is False, f"{label} outer no-network/no-motion mismatch")
     append_error(errors, str(outer.get("source_commit", "")).lower() == source, f"{label} outer source mismatch")
     append_error(
         errors,
-        outer.get("plan_mode") == "DIAGNOSTIC_ADAPTIVE_SUFFIX"
+        outer.get("plan_mode") == ("DIAGNOSTIC_SUFFIX_55" if r26 else "DIAGNOSTIC_ADAPTIVE_SUFFIX")
         and outer.get("coverage_claimed") is False
         and outer.get("HARDWARE_ACCEPTANCE") == "PENDING_HW"
         and outer.get("full_stage_ordinals") == expected_ordinals,
@@ -8111,36 +8169,36 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     )
     append_error(
         errors,
-        outer.get("attempt_count") == 5
-        and outer.get("completed_stage_count") == 4
-        and outer.get("failed_stage_index") == 4
-        and outer.get("next_stage_index") == 4,
+        outer.get("attempt_count") == prefix_count + 1
+        and outer.get("completed_stage_count") == prefix_count
+        and outer.get("failed_stage_index") == failed_index
+        and outer.get("next_stage_index") == failed_index,
         f"{label} failed-stage boundary mismatch",
     )
     attempts = outer.get("attempts")
-    if not isinstance(attempts, list) or len(attempts) != 5 or not all(isinstance(item, dict) for item in attempts):
+    if not isinstance(attempts, list) or len(attempts) != prefix_count + 1 or not all(isinstance(item, dict) for item in attempts):
         errors.append(f"{label} outer attempts malformed")
         attempts = []
     if attempts:
         errors.extend(
             _historical_r6_pass_prefix_errors(
-                attempts[:4],
+                attempts[:prefix_count],
                 epoch_root=epoch_root,
                 outer_path=outer_path,
                 evidence=evidence,
                 source=source,
-                expected_count=4,
+                expected_count=prefix_count,
                 epoch_label=label,
-                full_stage_ordinals=expected_ordinals[:4],
+                full_stage_ordinals=expected_ordinals[:prefix_count],
             )
         )
-        attempt = attempts[4]
+        attempt = attempts[prefix_count]
     else:
         attempt = {}
     append_error(
         errors,
-        attempt.get("attempt") == 5
-        and attempt.get("stage_index") == 4
+        attempt.get("attempt") == prefix_count + 1
+        and attempt.get("stage_index") == failed_index
         and attempt.get("full_stage_ordinal") == 62
         and attempt.get("stage_id") == "p7_ps_functional"
         and attempt.get("group") == "ps_functional"
@@ -8251,7 +8309,7 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         frozen_manifest.get("schema") == "rf-comm-p7-historical-failed-stage-inputs-v1"
         and frozen_manifest.get("run_id") == epoch_root.name
         and str(frozen_manifest.get("source_commit", "")).lower() == source
-        and frozen_manifest.get("stage_index") == 4
+        and frozen_manifest.get("stage_index") == failed_index
         and frozen_manifest.get("full_stage_ordinal") == 62
         and frozen_manifest.get("stage_id") == "p7_ps_functional"
         and frozen_manifest.get("result") == "FAIL_STAGE"
@@ -8333,9 +8391,18 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "dow -data $failure_descriptor $descriptor_address" not in old_ps_tcl
             and "p7_atomic_dump $failure_descriptor $descriptor_address 256" in old_ps_tcl
         )
+        boundary_30_capture_predicate = (
+            output_integrity_capture_predicate
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED" not in old_ps_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED" not in old_ps_tcl
+            and "boundary_${boundary_index}_output_failure.bin" not in old_ps_tcl
+            and "boundary_${boundary_index}_trace_failure.bin" not in old_ps_tcl
+        )
         append_error(
             errors,
-            output_integrity_capture_predicate
+            boundary_30_capture_predicate
+            if r26
+            else output_integrity_capture_predicate
             if r25
             else failure_capture_predicate
             if r24
@@ -8350,7 +8417,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         )
         historical_source_control_flow = {
             "target_uniqueness_basis": (
-                "FUNCTIONAL_FAILURE_DESCRIPTOR_ATOMIC_CAPTURED_OUTPUT_CRC_SHA_DIVERGENCE"
+                "FUNCTIONAL_BOUNDARY_30_DESCRIPTOR_CAPTURED_WITHOUT_OUTPUT_OR_TRACE_BYTES"
+                if r26
+                else "FUNCTIONAL_FAILURE_DESCRIPTOR_ATOMIC_CAPTURED_OUTPUT_CRC_SHA_DIVERGENCE"
                 if r25
                 else "FUNCTIONAL_FAILURE_DESCRIPTOR_CAPTURE_USED_DOW_IN_WRONG_DIRECTION"
                 if r24
@@ -8362,9 +8431,11 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
                 if r21
                 else "PROPERTY_ROW_COUNT"
             ),
-            "numeric_target_id_dedup_present": r21 or r22 or r23 or r24 or r25,
+            "numeric_target_id_dedup_present": r21 or r22 or r23 or r24 or r25 or r26,
             "historical_target_rejection_proven": (
-                output_integrity_capture_predicate
+                boundary_30_capture_predicate
+                if r26
+                else output_integrity_capture_predicate
                 if r25
                 else failure_capture_predicate
                 if r24
@@ -8505,7 +8576,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
             "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
             "raw_error": (
-                "P7 functional boundary case failed: index=6 length=1 status=4 error=13; descriptor output CRC corresponds to byte 0x02 while output SHA256 equals the expected byte 0x00 digest"
+                "P7 functional boundary case failed: index=8 length=30 status=4 error=13; descriptor expected/input SHA256=f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f, output CRC32=0x0a703d75, output SHA256=7b1241c20725167eb4bf923caa908244ee622a994ec2e3fcc8cadea7584f1d46; output bytes were not captured"
+                if r26
+                else "P7 functional boundary case failed: index=6 length=1 status=4 error=13; descriptor output CRC corresponds to byte 0x02 while output SHA256 equals the expected byte 0x00 digest"
                 if r25
                 else "failure descriptor capture used XSDB dow and failed before status/error markers"
                 if r24
@@ -8516,6 +8589,17 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
                 else "P7 XSDB reset target is not unique on the exact authorized device"
             ),
         },
+        "verified_historical_pass_prefix": [
+            {
+                "stage_index": index,
+                "full_stage_ordinal": prefix_attempt.get("full_stage_ordinal"),
+                "stage_id": prefix_attempt.get("stage_id"),
+                "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+                "coverage_keys": [],
+                "summary_file": prefix_attempt.get("summary_file"),
+            }
+            for index, prefix_attempt in enumerate(attempts[:prefix_count])
+        ],
         "frozen_inputs_manifest": _hash_record(frozen_manifest_path),
         "failed_stage_files": {
             name: _hash_record(candidate.path.parent / name) for name in sorted(expected_stage_files)
@@ -8566,6 +8650,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
         HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
         HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED,
+        HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED,
     }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
@@ -11019,6 +11104,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED:
         errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED:
+        errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -11356,6 +11444,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
             HISTORICAL_STAGE_PS_OUTPUT_INTEGRITY_DIVERGENCE_REJECTED,
+            HISTORICAL_STAGE_PS_BOUNDARY_30_INTEGRITY_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [
