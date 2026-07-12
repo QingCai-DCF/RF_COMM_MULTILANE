@@ -2625,6 +2625,11 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual([], epoch_errors, f"{epoch_name}: {epoch_errors}")
             self.assertEqual([], epoch["coverage_keys"])
             self.assertEqual("FAIL", epoch["result"])
+            if candidate_kind == "ps":
+                self.assertIs(
+                    data["preflight"]["process_tree_reaped"],
+                    epoch["inner_preflight_process_tree_reaped"],
+                )
             if epoch_name.endswith(("_r26_diag_suffix55", "_r28_diag_suffix55")):
                 self.assertEqual(11, len(epoch["verified_historical_pass_prefix"]))
                 self.assertEqual(list(range(1, 5)) + list(range(55, 62)), [

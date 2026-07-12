@@ -8249,6 +8249,9 @@ def _historical_ps_shutdown_arg_count_epoch_record(
             "containment_closed": process.get("containment_closed"),
             "descendant_count_after": process.get("descendant_count_after"),
         },
+        "inner_preflight_process_tree_reaped": candidate.data.get("preflight", {}).get(
+            "process_tree_reaped"
+        ),
         "read_only_target_identity": candidate.data.get("target_identity"),
         "historical_source_control_flow": historical_source_control_flow,
         "ps_shutdown_argument_count_rejection_failure": {
@@ -8751,6 +8754,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "containment_closed": process.get("containment_closed"),
             "descendant_count_after": process.get("descendant_count_after"),
         },
+        "inner_preflight_process_tree_reaped": candidate.data.get("preflight", {}).get(
+            "process_tree_reaped"
+        ),
         "read_only_target_identity": candidate.data.get("target_identity"),
         "historical_source_control_flow": historical_source_control_flow,
         "ps_reset_target_uniqueness_rejection": {

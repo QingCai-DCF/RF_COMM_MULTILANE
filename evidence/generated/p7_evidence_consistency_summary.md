@@ -2,7 +2,7 @@
 
 RESULT: FAIL
 REASON: evidence consistency failed closed
-GENERATED_AT_UTC: 2026-07-12T13:59:43+00:00
+GENERATED_AT_UTC: 2026-07-12T14:10:56+00:00
 REPO: C:\Users\user\Documents\RF_COMM_MULTILANE
 HEAD: INCONSISTENT_OR_MISSING
 HARDWARE_ACTIONS_EXECUTED_BY_SUMMARIZER: false
@@ -33,26 +33,23 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `stationary_attempts`: `0`
 - `full_duration_stationary_attempts`: `0`
 - `qualified_stationary_passes`: `0`
-- `run_count`: `13`
-- `listed_executed_summaries`: `13`
+- `run_count`: `25`
+- `listed_executed_summaries`: `25`
 - `passed_coverage_keys`: `[]`
-- `ledger_sha256`: `337edf8b2f154b24783c383e4d95c656c9c2f48630193f75d2b1cdf93095513a`
+- `ledger_sha256`: `547059a74e5d41096efc8017ad834b03ecf9a0132924d1163f2ad15f5b15fdcd`
 
 ## Errors
 
-- run sequence offline checkpoint SHA256 mismatch
-- run sequence offline checkpoint recorded actual SHA256 mismatch
-- offline checkpoint source_commit does not match the frozen ledger commit
-- offline checkpoint source changed after freeze: evidence/generated/p7_ps_core_hardware_readiness.json
-- offline checkpoint source changed after freeze: evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json
-- offline checkpoint source changed after freeze: scripts/hw/p7_ps_application_execute.tcl
-- offline checkpoint source changed after freeze: scripts/hw/run_p7_ps_application_stage_safe.py
-- offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.c
-- offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.h
-- offline checkpoint source changed after freeze: tools/p7_ps_mailbox_backend.py
-- offline checkpoint source changed after freeze: tools/run_p7_ps_core_offline.py
-- offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py
-- run sequence ledger does not list every executed hardware summary exactly once
+- run sequence entry 15 historical inner-preflight reap fact mismatch
+- run sequence entry 16 historical inner-preflight reap fact mismatch
+- run sequence entry 17 historical inner-preflight reap fact mismatch
+- run sequence entry 18 historical inner-preflight reap fact mismatch
+- run sequence entry 19 historical inner-preflight reap fact mismatch
+- run sequence entry 20 historical inner-preflight reap fact mismatch
+- run sequence entry 21 historical inner-preflight reap fact mismatch
+- run sequence entry 22 historical inner-preflight reap fact mismatch
+- run sequence entry 23 historical inner-preflight reap fact mismatch
+- run sequence entry 24 historical inner-preflight reap fact mismatch
 
 ## Hardware evidence envelope
 
