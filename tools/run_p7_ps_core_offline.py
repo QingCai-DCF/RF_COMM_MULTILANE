@@ -133,13 +133,19 @@ def main() -> int:
             "failure_snapshot_address" in service
             and "failure_snapshot_bytes" in service
             and "failure_snapshot_status" in service
+            and "failure_snapshot_magic_readback" in service
             and "P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED" in service
+            and "P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED" in service
+            and "P7_FAILURE_SNAPSHOT_BASEADDR" in service
+            and "Xil_In32(address)" in service
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=" in execute_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=" in execute_tcl
             and "0x0002009C" in execute_tcl
             and "0x000200A0" in execute_tcl
-            and "0x000200A4" in execute_tcl,
+            and "0x000200A4" in execute_tcl
+            and "0x000200A8" in execute_tcl,
         "descriptor_ready_published_last":
             "def descriptor_ready_publication" in codec
             and "P7_DESCRIPTOR_FREE" in codec

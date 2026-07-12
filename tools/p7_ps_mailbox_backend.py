@@ -455,6 +455,7 @@ def unpack_mailbox(raw: bytes) -> dict[str, int | list[int]]:
         "failure_snapshot_address": words[39],
         "failure_snapshot_bytes": words[40],
         "failure_snapshot_status": words[41],
+        "failure_snapshot_magic_readback": words[42],
         "words": words,
     }
 

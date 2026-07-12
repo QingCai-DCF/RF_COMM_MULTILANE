@@ -2,6 +2,7 @@
 #include "p7_admission_contract.h"
 
 #include "xil_cache.h"
+#include "xil_io.h"
 #include "xil_types.h"
 #include "xpseudo_asm.h"
 #include "xtime_l.h"
@@ -33,6 +34,15 @@ _Static_assert(sizeof(p7_fragment_trace_t) == 64U,
                "P7 fragment trace must be 64 bytes");
 _Static_assert(sizeof(p7_failure_snapshot_header_t) == 64U,
                "P7 failure snapshot header must be 64 bytes");
+_Static_assert((P7_FAILURE_SNAPSHOT_BASEADDR & (P7_DDR_ALIGNMENT - 1U)) == 0U,
+               "P7 failure snapshot must be 64-byte aligned");
+_Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR >=
+                   P7_DESCRIPTOR_BASEADDR +
+                       P7_DESCRIPTOR_QUEUE_DEPTH * P7_DESCRIPTOR_BYTES,
+               "P7 failure snapshot must not overlap the descriptor queue");
+_Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR + P7_FAILURE_SNAPSHOT_TOTAL_BYTES <=
+                   P7_MAILBOX_RESERVED_END,
+               "P7 failure snapshot must remain in reserved OCM");
 
 typedef struct p7_sha256_context {
   uint32_t state[8];
@@ -679,9 +689,10 @@ static int p7_ranges_overlap(uint32_t a_address, uint32_t a_size,
 
 static uint32_t p7_publish_failure_snapshot_diagnostic(
     volatile p7_mailbox_control_t *mailbox, uint32_t status,
-    uint32_t address, uint32_t bytes) {
+    uint32_t address, uint32_t bytes, uint32_t magic_readback) {
   mailbox->failure_snapshot_address = address;
   mailbox->failure_snapshot_bytes = bytes;
+  mailbox->failure_snapshot_magic_readback = magic_readback;
   dmb();
   mailbox->failure_snapshot_status = status;
   dmb();
@@ -694,46 +705,25 @@ static uint32_t p7_publish_integrity_failure_snapshot(
     const p7_object_descriptor_t *request, const uint8_t *snapshot,
     uint32_t captured_length, uint32_t output_crc,
     const uint8_t output_sha[32], uint32_t error_code) {
-  uint64_t trace_bytes =
-      (uint64_t)request->trace_capacity * sizeof(p7_fragment_trace_t);
-  uint64_t address64 = (uint64_t)request->trace_address + trace_bytes;
-  uint32_t address;
-  uint32_t total_bytes = sizeof(p7_failure_snapshot_header_t) +
-                         P7_FAILURE_SNAPSHOT_MAX_BYTES;
+  const uint32_t address = P7_FAILURE_SNAPSHOT_BASEADDR;
+  const uint32_t total_bytes = P7_FAILURE_SNAPSHOT_TOTAL_BYTES;
+  uint32_t magic_readback;
   p7_failure_snapshot_header_t header;
   volatile p7_failure_snapshot_header_t *published;
   uint8_t *published_data;
   if (snapshot == NULL)
     return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT, 0U, 0U);
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT, 0U, 0U, 0U);
   if (output_sha == NULL)
     return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SHA256, 0U, 0U);
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SHA256, 0U, 0U, 0U);
   if (captured_length == 0U)
     return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH, 0U, 0U);
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH, 0U, 0U, 0U);
   if (captured_length > P7_FAILURE_SNAPSHOT_MAX_BYTES)
     return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_LENGTH_LIMIT, 0U, captured_length);
-  if (address64 > UINT32_MAX)
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ADDRESS_OVERFLOW, 0U, total_bytes);
-  address = (uint32_t)address64;
-  if (!p7_range_valid(address, total_bytes))
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_RANGE_INVALID, address, total_bytes);
-  if (p7_ranges_overlap(address, total_bytes, request->input_address,
-                        request->object_length))
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_INPUT_OVERLAP, address, total_bytes);
-  if (p7_ranges_overlap(address, total_bytes, request->output_address,
-                        request->object_length))
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP, address, total_bytes);
-  if (p7_ranges_overlap(address, total_bytes, request->trace_address,
-                        (uint32_t)trace_bytes))
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP, address, total_bytes);
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_LENGTH_LIMIT, 0U, captured_length,
+        0U);
   memset(&header, 0, sizeof(header));
   header.version = P7_RUNTIME_VERSION;
   header.session_epoch = request->session_epoch;
@@ -750,11 +740,18 @@ static uint32_t p7_publish_integrity_failure_snapshot(
   memset(published_data, 0, P7_FAILURE_SNAPSHOT_MAX_BYTES);
   memcpy(published_data, snapshot, captured_length);
   p7_flush((const void *)(uintptr_t)address, total_bytes);
-  published->magic = P7_FAILURE_SNAPSHOT_MAGIC;
-  dmb();
+  Xil_Out32(address, P7_FAILURE_SNAPSHOT_MAGIC);
+  dsb();
   p7_flush(&published->magic, sizeof(published->magic));
+  dsb();
+  magic_readback = Xil_In32(address);
+  if (magic_readback != P7_FAILURE_SNAPSHOT_MAGIC)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED, address,
+        total_bytes, magic_readback);
   return p7_publish_failure_snapshot_diagnostic(
-      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes);
+      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes,
+      magic_readback);
 }
 
 static uint32_t p7_preferred_lane(uint32_t policy, uint32_t index) {
@@ -1403,6 +1400,11 @@ int p7_app_service_run(const ir_mmio_t *io,
   mailbox->failure_snapshot_address = 0U;
   mailbox->failure_snapshot_bytes = 0U;
   mailbox->failure_snapshot_status = P7_FAILURE_SNAPSHOT_STATUS_NONE;
+  mailbox->failure_snapshot_magic_readback = 0U;
+  memset((void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR, 0,
+         P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
+  p7_flush((const void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR,
+           P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
   for (uint32_t index = 0U; index < P7_DESCRIPTOR_QUEUE_DEPTH; ++index) {
     memset((void *)&descriptors[index], 0, sizeof(descriptors[index]));
     p7_flush(&descriptors[index], sizeof(descriptors[index]));

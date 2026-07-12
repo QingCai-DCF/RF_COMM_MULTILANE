@@ -1698,21 +1698,23 @@ set rc [catch {
               [expr {$boundary_trace_capacity($boundary_index) * 64}]
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1"
           if {$error_code == 13 || $error_code == 14} {
-            set failure_snapshot_address [expr {$boundary_trace($boundary_index) + \
-                $boundary_trace_capacity($boundary_index) * 64}]
+            set failure_snapshot_address 0x00021000
             set firmware_snapshot_address [p7_read32 0x0002009C]
             set firmware_snapshot_bytes [p7_read32 0x000200A0]
             set firmware_snapshot_status [p7_read32 0x000200A4]
+            set firmware_snapshot_magic_readback [p7_read32 0x000200A8]
             p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=[format 0x%08x $firmware_snapshot_address]"
             p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=$firmware_snapshot_bytes"
             p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=$firmware_snapshot_status"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=[format 0x%08x $firmware_snapshot_magic_readback]"
             set failure_snapshot [file join $bundle_dir \
                 "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
             set failure_snapshot_wipe [file join $bundle_dir \
                 "boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin"]
             if {$firmware_snapshot_status != 1 ||
                 $firmware_snapshot_address != $failure_snapshot_address ||
-                $firmware_snapshot_bytes != 320} {
+                $firmware_snapshot_bytes != 320 ||
+                $firmware_snapshot_magic_readback != 0x53463750} {
               error "P7 integrity failure snapshot firmware diagnostic rejected publication"
             }
             if {[p7_read32 $firmware_snapshot_address] != 0x53463750} {

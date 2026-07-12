@@ -18,6 +18,7 @@ extern "C" {
 #define P7_DESCRIPTOR_QUEUE_DEPTH UINT32_C(8)
 #define P7_DESCRIPTOR_BASEADDR                                           \
   (P7_MAILBOX_BASEADDR + P7_MAILBOX_CONTROL_BYTES)
+#define P7_FAILURE_SNAPSHOT_BASEADDR UINT32_C(0x00021000)
 #define P7_MAILBOX_RESERVED_END UINT32_C(0x00030000)
 
 #define P7_DDR_BASEADDR UINT32_C(0x00100000)
@@ -33,6 +34,8 @@ extern "C" {
 #define P7_TRACE_MAGIC UINT32_C(0x52543750) /* P7TR */
 #define P7_FAILURE_SNAPSHOT_MAGIC UINT32_C(0x53463750) /* P7FS */
 #define P7_FAILURE_SNAPSHOT_MAX_BYTES UINT32_C(256)
+#define P7_FAILURE_SNAPSHOT_TOTAL_BYTES                                 \
+  (UINT32_C(64) + P7_FAILURE_SNAPSHOT_MAX_BYTES)
 #define P7_FAILURE_SNAPSHOT_STATUS_NONE UINT32_C(0)
 #define P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED UINT32_C(1)
 #define P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT UINT32_C(2)
@@ -44,6 +47,7 @@ extern "C" {
 #define P7_FAILURE_SNAPSHOT_STATUS_INPUT_OVERLAP UINT32_C(8)
 #define P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP UINT32_C(9)
 #define P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP UINT32_C(10)
+#define P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED UINT32_C(11)
 #define P7_RUNTIME_VERSION UINT32_C(1)
 
 enum p7_service_state {
@@ -210,7 +214,8 @@ typedef struct __attribute__((aligned(64))) p7_mailbox_control {
   volatile uint32_t failure_snapshot_address;
   volatile uint32_t failure_snapshot_bytes;
   volatile uint32_t failure_snapshot_status;
-  uint32_t reserved[22];
+  volatile uint32_t failure_snapshot_magic_readback;
+  uint32_t reserved[21];
 } p7_mailbox_control_t;
 
 /* Exactly 64 bytes; the optional DDR trace buffer must have one entry per
@@ -235,7 +240,7 @@ typedef struct __attribute__((aligned(64))) p7_fragment_trace {
 } p7_fragment_trace_t;
 
 /* Exactly 64 bytes.  On an object-integrity rejection the service publishes
- * this header immediately after the fragment trace array, followed by the
+ * this header in the fixed OCM diagnostic region, followed by the
  * first at most 256 bytes from the same immutable snapshot consumed by both
  * output digests.  The host captures and wipes the diagnostic region before
  * the stage exits; the normal output range is still wiped before FAILED is

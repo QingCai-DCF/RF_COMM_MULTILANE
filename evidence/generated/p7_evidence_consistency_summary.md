@@ -1,8 +1,8 @@
 # consistency
 
-RESULT: FAIL
-REASON: evidence consistency failed closed
-GENERATED_AT_UTC: 2026-07-12T14:10:56+00:00
+RESULT: PENDING_HW
+REASON: run-sequence ledger is pending
+GENERATED_AT_UTC: 2026-07-12T14:21:21+00:00
 REPO: C:\Users\user\Documents\RF_COMM_MULTILANE
 HEAD: INCONSISTENT_OR_MISSING
 HARDWARE_ACTIONS_EXECUTED_BY_SUMMARIZER: false
@@ -36,20 +36,11 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `run_count`: `25`
 - `listed_executed_summaries`: `25`
 - `passed_coverage_keys`: `[]`
-- `ledger_sha256`: `547059a74e5d41096efc8017ad834b03ecf9a0132924d1163f2ad15f5b15fdcd`
+- `ledger_sha256`: `46de5e5bb238bbe068000ddd9536b17eda52a41f396329ad8af7d244600fe707`
 
 ## Errors
 
-- run sequence entry 15 historical inner-preflight reap fact mismatch
-- run sequence entry 16 historical inner-preflight reap fact mismatch
-- run sequence entry 17 historical inner-preflight reap fact mismatch
-- run sequence entry 18 historical inner-preflight reap fact mismatch
-- run sequence entry 19 historical inner-preflight reap fact mismatch
-- run sequence entry 20 historical inner-preflight reap fact mismatch
-- run sequence entry 21 historical inner-preflight reap fact mismatch
-- run sequence entry 22 historical inner-preflight reap fact mismatch
-- run sequence entry 23 historical inner-preflight reap fact mismatch
-- run sequence entry 24 historical inner-preflight reap fact mismatch
+- None.
 
 ## Hardware evidence envelope
 
