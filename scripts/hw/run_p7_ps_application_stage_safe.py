@@ -212,6 +212,7 @@ CORE_READINESS_CHECKS = (
     "failure_wipe_uses_private_validated_range",
     "integrity_crc_sha_immutable_chunk_snapshot",
     "integrity_failure_snapshot_precedes_output_wipe",
+    "integrity_failure_snapshot_mailbox_diagnostic",
     "descriptor_ready_published_last",
     "terminal_descriptor_stable_snapshot",
     "phy_reenabled_and_startup_ready_waited",

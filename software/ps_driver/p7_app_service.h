@@ -33,6 +33,17 @@ extern "C" {
 #define P7_TRACE_MAGIC UINT32_C(0x52543750) /* P7TR */
 #define P7_FAILURE_SNAPSHOT_MAGIC UINT32_C(0x53463750) /* P7FS */
 #define P7_FAILURE_SNAPSHOT_MAX_BYTES UINT32_C(256)
+#define P7_FAILURE_SNAPSHOT_STATUS_NONE UINT32_C(0)
+#define P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED UINT32_C(1)
+#define P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT UINT32_C(2)
+#define P7_FAILURE_SNAPSHOT_STATUS_NULL_SHA256 UINT32_C(3)
+#define P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH UINT32_C(4)
+#define P7_FAILURE_SNAPSHOT_STATUS_LENGTH_LIMIT UINT32_C(5)
+#define P7_FAILURE_SNAPSHOT_STATUS_ADDRESS_OVERFLOW UINT32_C(6)
+#define P7_FAILURE_SNAPSHOT_STATUS_RANGE_INVALID UINT32_C(7)
+#define P7_FAILURE_SNAPSHOT_STATUS_INPUT_OVERLAP UINT32_C(8)
+#define P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP UINT32_C(9)
+#define P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP UINT32_C(10)
 #define P7_RUNTIME_VERSION UINT32_C(1)
 
 enum p7_service_state {
@@ -193,7 +204,13 @@ typedef struct __attribute__((aligned(64))) p7_mailbox_control {
    * admission_guard_seconds of this runtime-relative cutoff. */
   uint32_t scheduling_cutoff_seconds;
   uint32_t admission_guard_seconds;
-  uint32_t reserved[25];
+  /* Firmware publishes these before a terminal integrity-failure descriptor.
+   * They make snapshot rejection/publication machine-readable even if the
+   * host cannot observe the separate DDR publication marker. */
+  volatile uint32_t failure_snapshot_address;
+  volatile uint32_t failure_snapshot_bytes;
+  volatile uint32_t failure_snapshot_status;
+  uint32_t reserved[22];
 } p7_mailbox_control_t;
 
 /* Exactly 64 bytes; the optional DDR trace buffer must have one entry per

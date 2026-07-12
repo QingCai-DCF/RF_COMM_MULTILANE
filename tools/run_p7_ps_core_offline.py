@@ -127,8 +127,19 @@ def main() -> int:
             < process_descriptor_block.find("failed:")
             < process_descriptor_block.find("p7_wipe_partial(")
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1" in execute_tcl
-            and "p7_zero_words_and_verify $failure_snapshot_address 320" in execute_tcl
+            and "p7_zero_words_and_verify $firmware_snapshot_address 320" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1" in execute_tcl,
+        "integrity_failure_snapshot_mailbox_diagnostic":
+            "failure_snapshot_address" in service
+            and "failure_snapshot_bytes" in service
+            and "failure_snapshot_status" in service
+            and "P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED" in service
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=" in execute_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=" in execute_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=" in execute_tcl
+            and "0x0002009C" in execute_tcl
+            and "0x000200A0" in execute_tcl
+            and "0x000200A4" in execute_tcl,
         "descriptor_ready_published_last":
             "def descriptor_ready_publication" in codec
             and "P7_DESCRIPTOR_FREE" in codec

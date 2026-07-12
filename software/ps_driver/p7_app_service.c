@@ -677,7 +677,20 @@ static int p7_ranges_overlap(uint32_t a_address, uint32_t a_size,
          b_address < a_end;
 }
 
-static int p7_publish_integrity_failure_snapshot(
+static uint32_t p7_publish_failure_snapshot_diagnostic(
+    volatile p7_mailbox_control_t *mailbox, uint32_t status,
+    uint32_t address, uint32_t bytes) {
+  mailbox->failure_snapshot_address = address;
+  mailbox->failure_snapshot_bytes = bytes;
+  dmb();
+  mailbox->failure_snapshot_status = status;
+  dmb();
+  p7_flush(mailbox, sizeof(*mailbox));
+  return status;
+}
+
+static uint32_t p7_publish_integrity_failure_snapshot(
+    volatile p7_mailbox_control_t *mailbox,
     const p7_object_descriptor_t *request, const uint8_t *snapshot,
     uint32_t captured_length, uint32_t output_crc,
     const uint8_t output_sha[32], uint32_t error_code) {
@@ -690,21 +703,37 @@ static int p7_publish_integrity_failure_snapshot(
   p7_failure_snapshot_header_t header;
   volatile p7_failure_snapshot_header_t *published;
   uint8_t *published_data;
-  if (snapshot == NULL || output_sha == NULL || captured_length == 0U ||
-      captured_length > P7_FAILURE_SNAPSHOT_MAX_BYTES ||
-      address64 > UINT32_MAX) {
-    return 0;
-  }
+  if (snapshot == NULL)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT, 0U, 0U);
+  if (output_sha == NULL)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SHA256, 0U, 0U);
+  if (captured_length == 0U)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH, 0U, 0U);
+  if (captured_length > P7_FAILURE_SNAPSHOT_MAX_BYTES)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_LENGTH_LIMIT, 0U, captured_length);
+  if (address64 > UINT32_MAX)
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ADDRESS_OVERFLOW, 0U, total_bytes);
   address = (uint32_t)address64;
-  if (!p7_range_valid(address, total_bytes) ||
-      p7_ranges_overlap(address, total_bytes, request->input_address,
-                        request->object_length) ||
-      p7_ranges_overlap(address, total_bytes, request->output_address,
-                        request->object_length) ||
-      p7_ranges_overlap(address, total_bytes, request->trace_address,
-                        (uint32_t)trace_bytes)) {
-    return 0;
-  }
+  if (!p7_range_valid(address, total_bytes))
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_RANGE_INVALID, address, total_bytes);
+  if (p7_ranges_overlap(address, total_bytes, request->input_address,
+                        request->object_length))
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_INPUT_OVERLAP, address, total_bytes);
+  if (p7_ranges_overlap(address, total_bytes, request->output_address,
+                        request->object_length))
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP, address, total_bytes);
+  if (p7_ranges_overlap(address, total_bytes, request->trace_address,
+                        (uint32_t)trace_bytes))
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP, address, total_bytes);
   memset(&header, 0, sizeof(header));
   header.version = P7_RUNTIME_VERSION;
   header.session_epoch = request->session_epoch;
@@ -724,7 +753,8 @@ static int p7_publish_integrity_failure_snapshot(
   published->magic = P7_FAILURE_SNAPSHOT_MAGIC;
   dmb();
   p7_flush(&published->magic, sizeof(published->magic));
-  return 1;
+  return p7_publish_failure_snapshot_diagnostic(
+      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes);
 }
 
 static uint32_t p7_preferred_lane(uint32_t policy, uint32_t index) {
@@ -1199,14 +1229,14 @@ static int p7_process_descriptor(
       output_crc != request.expected_crc32) {
     error = P7_ERROR_OBJECT_CRC;
     (void)p7_publish_integrity_failure_snapshot(
-        &request, output_snapshot, output_snapshot_length, output_crc,
+        mailbox, &request, output_snapshot, output_snapshot_length, output_crc,
         output_sha, (uint32_t)error);
     goto failed;
   }
   if (!p7_digest_matches_words(output_sha, request.expected_sha256)) {
     error = P7_ERROR_OBJECT_SHA256;
     (void)p7_publish_integrity_failure_snapshot(
-        &request, output_snapshot, output_snapshot_length, output_crc,
+        mailbox, &request, output_snapshot, output_snapshot_length, output_crc,
         output_sha, (uint32_t)error);
     goto failed;
   }
@@ -1370,6 +1400,9 @@ int p7_app_service_run(const ir_mmio_t *io,
   mailbox->runtime_elapsed_sequence = 0U;
   mailbox->runtime_elapsed_request = 0U;
   mailbox->runtime_elapsed_ack = 0U;
+  mailbox->failure_snapshot_address = 0U;
+  mailbox->failure_snapshot_bytes = 0U;
+  mailbox->failure_snapshot_status = P7_FAILURE_SNAPSHOT_STATUS_NONE;
   for (uint32_t index = 0U; index < P7_DESCRIPTOR_QUEUE_DEPTH; ++index) {
     memset((void *)&descriptors[index], 0, sizeof(descriptors[index]));
     p7_flush(&descriptors[index], sizeof(descriptors[index]));

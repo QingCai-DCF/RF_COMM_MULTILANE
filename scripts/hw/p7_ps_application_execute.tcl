@@ -1700,17 +1700,28 @@ set rc [catch {
           if {$error_code == 13 || $error_code == 14} {
             set failure_snapshot_address [expr {$boundary_trace($boundary_index) + \
                 $boundary_trace_capacity($boundary_index) * 64}]
+            set firmware_snapshot_address [p7_read32 0x0002009C]
+            set firmware_snapshot_bytes [p7_read32 0x000200A0]
+            set firmware_snapshot_status [p7_read32 0x000200A4]
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=[format 0x%08x $firmware_snapshot_address]"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=$firmware_snapshot_bytes"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=$firmware_snapshot_status"
             set failure_snapshot [file join $bundle_dir \
                 "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
             set failure_snapshot_wipe [file join $bundle_dir \
                 "boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin"]
-            if {[p7_read32 $failure_snapshot_address] != 0x53463750} {
+            if {$firmware_snapshot_status != 1 ||
+                $firmware_snapshot_address != $failure_snapshot_address ||
+                $firmware_snapshot_bytes != 320} {
+              error "P7 integrity failure snapshot firmware diagnostic rejected publication"
+            }
+            if {[p7_read32 $firmware_snapshot_address] != 0x53463750} {
               error "P7 integrity failure snapshot publication marker missing"
             }
-            p7_atomic_dump $failure_snapshot $failure_snapshot_address 320
+            p7_atomic_dump $failure_snapshot $firmware_snapshot_address 320
             p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1"
-            p7_zero_words_and_verify $failure_snapshot_address 320
-            p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320
+            p7_zero_words_and_verify $firmware_snapshot_address 320
+            p7_atomic_dump $failure_snapshot_wipe $firmware_snapshot_address 320
             p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
           }
           error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index) status=$status error=$error_code"

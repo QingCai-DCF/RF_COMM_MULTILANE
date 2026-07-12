@@ -1009,3 +1009,40 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   必须先准确提交 r27 exact history/tamper、recovery、pre-wipe integrity snapshot capture 与本交接，再从新 clean source 完成
   required complete suites exactly once、cache-bypassed checkpoint、plan 与全部 dry validation。r28 仍只能是零 coverage diagnostic，
   不得包含 stage 66。
+
+## 36. 2026-07-12 r28 suffix55 diagnostic 增量交接（本节覆盖第 35 节的 next-run 描述）
+
+- clean source `e4c369f380119d527b3238b09fc5fe3d628760d7` 上 exactly-once 非硬件回归为 161 PASS，摘要
+  `build/p7_regression_e4c369f_r28.json` SHA256
+  `7b0ad946dc1259042f55a0787bbb2a1cfc27a7dd7507f736048d6be343955707`；cache-bypassed canonical offline checkpoint
+  13/13 PASS，SHA256 `2d617d9ba3668a4e8c7e8247db31cf924b6f06f40f3e5927a0b237bebaa598fd`，保持
+  `HARDWARE_ACCEPTANCE=PENDING_HW`。因 ELF 改变，55--61 impact 无法证明不变，按 fail-closed 规则直接选择 suffix55。
+- r28 run ID `p7_20260712_stationary_app_r28_diag_suffix55` 只启动一次、没有 `--resume`。15-stage diagnostic plan SHA256
+  `beb36742ff67111b67ca7e2ce1034d1ea04f3ce284fc03127587c05d450de5f8`，generation manifest SHA256
+  `631fa6b89f71d6bcf8b97011a9fdd6a9196ab4592e2f25f00d5b25a9fd474c87`；全部 authorization/dry validation PASS。
+  r28 是 `DIAGNOSTIC_ONLY`、`coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`，无 stage 66。
+- r28 ordinals 1--4、55--61 exact PASS，但只属于 superseded diagnostic prefix，零 acceptance coverage。stage 62 在 functional
+  boundary index 11、length 30、replicate-0x3 policy 处 FAIL，status 4、error 13；63--65 未运行。outer ledger SHA256
+  `268f91df72b7b9956772ddc7f8fba6b1e0ed2925f80c4a5f081de435dd321f4a`。不得将前缀或 recovery 写成 stage 62 PASS。
+- r28 failure descriptor SHA256 `042c8059fca445532853554af7b4b67acba1a56fb5a32a96c6df557c25fff58e`：session
+  `0x50370001`、object 12、expected/input CRC32 `0xc5665f58`、output CRC32 `0x0b14a45e`、output SHA256
+  `152b23e36032b5b79a2f47434511a939aa869078ef97c37d757772102af7972c`、fragments/completed 1/1、lane0/lane1/replicated
+  1/1/1、completion sequence 12。post-terminal output 是 30 个零字节（SHA256
+  `0679246d6c4216de0daa08e5523fb2674db2b6599c3b72ff946b488a15290b62`），仅证明安全清理后的状态。
+- r28 trace SHA256 `775a705154de00d454df4390dc4d8cabaa66f00eb17a75333d840eee7b53c608` 精确记录 lane mask `0x3`、attempt 1、
+  result 1、error 0；它证明该 fragment 的 P6 accepted trace，不提升整个 stage。Tcl 随后因
+  `P7 integrity failure snapshot publication marker missing` fail closed；没有生成 integrity snapshot 或 wipe-verify 文件。
+- r28 后独立 recovery `recovery_shutdown_after_failed_stage062_20260712T134058Z` 记录 raw exit 125、唯一 shutdown marker、
+  `SHUTDOWN_EXIT=0`、PASS；summary SHA256 `d2947f41dc28832f93599d27f8ed6130a1f57addce569768ee582c522edfd208`。
+  historical freeze manifest SHA256 `2ccf309c28f907388152e393b4cae877754955bf0b7fd7cb03e39ed47bceb81a`。
+- 当前修复把 failure snapshot address/bytes/status 放入 mailbox words 39--41，并在 terminal descriptor 之前发布；Tcl 先记录
+  三个机器可解析 marker，再核对 status/address/320-byte length 和 DDR magic，仍在退出前 capture 后 wipe。这样下一次新 run
+  即使仍失败，也能区分 firmware validation rejection 与 DDR publication visibility mismatch。
+- focused wrapper/history tests、py_compile、core-readiness 24/24 与真实 Vitis build PASS；新 candidate ELF SHA256
+  `814ebddc5a84635556530d9f62d628c4626e582a58eeb2d3b60a98c672cbc031`，map SHA256
+  `4191e2a75016dd56abf67f03e148cc790fbf66328048354a335cfca089441320`，OCM image end `0x00015830`，低于
+  hard boundary `0x00020000`。这些仍是非硬件结果，不提升 stage 62 或 hardware acceptance。
+- r28 永远不得 resume。下一硬件 run ID 必须为新的 r29；先准确提交 r28 history/tamper/recovery 与 mailbox diagnostic 修复，
+  在 clean source 上完成 exactly-once required suites、cache-bypassed offline checkpoint、plan/authorization/全部 dry validation。
+  ELF 再次改变，因此除非新的机器 transitive impact proof 证明 55--61 consumed inputs 全部不变，否则 r29 仍必须 fail closed
+  从 stage 55 开始。r29 仍为零 coverage diagnostic，严禁 stage 66；最终 1800 秒 stationary 仍保持零次启动。

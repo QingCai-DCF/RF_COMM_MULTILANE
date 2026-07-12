@@ -2,7 +2,7 @@
 
 RESULT: FAIL
 REASON: evidence consistency failed closed
-GENERATED_AT_UTC: 2026-07-12T05:00:28+00:00
+GENERATED_AT_UTC: 2026-07-12T13:59:43+00:00
 REPO: C:\Users\user\Documents\RF_COMM_MULTILANE
 HEAD: INCONSISTENT_OR_MISSING
 HARDWARE_ACTIONS_EXECUTED_BY_SUMMARIZER: false
@@ -28,7 +28,7 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 
 ## Metrics
 
-- `inventory_files`: `3191`
+- `inventory_files`: `6378`
 - `selected_provenance_rows`: `0`
 - `stationary_attempts`: `0`
 - `full_duration_stationary_attempts`: `0`
@@ -43,7 +43,14 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - run sequence offline checkpoint SHA256 mismatch
 - run sequence offline checkpoint recorded actual SHA256 mismatch
 - offline checkpoint source_commit does not match the frozen ledger commit
+- offline checkpoint source changed after freeze: evidence/generated/p7_ps_core_hardware_readiness.json
+- offline checkpoint source changed after freeze: evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json
 - offline checkpoint source changed after freeze: scripts/hw/p7_ps_application_execute.tcl
+- offline checkpoint source changed after freeze: scripts/hw/run_p7_ps_application_stage_safe.py
+- offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.c
+- offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.h
+- offline checkpoint source changed after freeze: tools/p7_ps_mailbox_backend.py
+- offline checkpoint source changed after freeze: tools/run_p7_ps_core_offline.py
 - offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py
 - run sequence ledger does not list every executed hardware summary exactly once
 

@@ -1,0 +1,55 @@
+{
+  "events": [
+    {
+      "event": "authorized_execution_begin",
+      "mode": "functional",
+      "timestamp_utc": "2026-07-12T13:35:09.293680+00:00"
+    },
+    {
+      "event": "preflight_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-12T13:35:40.845812+00:00"
+    },
+    {
+      "event": "shutdown_before_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-12T13:36:29.583726+00:00"
+    },
+    {
+      "event": "candidate_started",
+      "mode": "functional",
+      "timestamp_utc": "2026-07-12T13:36:29.736700+00:00"
+    },
+    {
+      "candidate_returncode": 0,
+      "event": "candidate_child_reaped",
+      "process_tree_reaped": true,
+      "timestamp_utc": "2026-07-12T13:39:54.591785+00:00"
+    },
+    {
+      "event": "ps_stage_finished",
+      "passed": false,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-12T13:39:54.599966+00:00"
+    },
+    {
+      "candidate_child_reaped": true,
+      "candidate_returncode": 0,
+      "event": "shutdown_after_started",
+      "timestamp_utc": "2026-07-12T13:39:54.600016+00:00"
+    },
+    {
+      "event": "shutdown_after_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-12T13:40:43.436027+00:00"
+    },
+    {
+      "event": "authorized_execution_end",
+      "status": "FAIL_STAGE",
+      "timestamp_utc": "2026-07-12T13:40:43.699939+00:00"
+    }
+  ]
+}

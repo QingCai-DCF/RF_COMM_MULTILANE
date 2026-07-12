@@ -452,6 +452,9 @@ def unpack_mailbox(raw: bytes) -> dict[str, int | list[int]]:
         "runtime_elapsed_ack": words[36],
         "scheduling_cutoff_seconds": words[37],
         "admission_guard_seconds": words[38],
+        "failure_snapshot_address": words[39],
+        "failure_snapshot_bytes": words[40],
+        "failure_snapshot_status": words[41],
         "words": words,
     }
 

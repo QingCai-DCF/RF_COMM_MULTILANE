@@ -159,14 +159,21 @@
     "consistency: run sequence offline checkpoint SHA256 mismatch",
     "consistency: run sequence offline checkpoint recorded actual SHA256 mismatch",
     "consistency: offline checkpoint source_commit does not match the frozen ledger commit",
+    "consistency: offline checkpoint source changed after freeze: evidence/generated/p7_ps_core_hardware_readiness.json",
+    "consistency: offline checkpoint source changed after freeze: evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json",
     "consistency: offline checkpoint source changed after freeze: scripts/hw/p7_ps_application_execute.tcl",
+    "consistency: offline checkpoint source changed after freeze: scripts/hw/run_p7_ps_application_stage_safe.py",
+    "consistency: offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.c",
+    "consistency: offline checkpoint source changed after freeze: software/ps_driver/p7_app_service.h",
+    "consistency: offline checkpoint source changed after freeze: tools/p7_ps_mailbox_backend.py",
+    "consistency: offline checkpoint source changed after freeze: tools/run_p7_ps_core_offline.py",
     "consistency: offline checkpoint source changed after freeze: tools/summarize_p7_hardware.py",
     "consistency: run sequence ledger does not list every executed hardware summary exactly once"
   ],
   "evidence": [
     "evidence/hardware/p7/p7_run_sequence_ledger.json"
   ],
-  "generated_at_utc": "2026-07-12T05:00:28+00:00",
+  "generated_at_utc": "2026-07-12T13:59:43+00:00",
   "hardware_acceptance": "FAIL",
   "hardware_actions_executed": false,
   "input_file_hashes": [],
