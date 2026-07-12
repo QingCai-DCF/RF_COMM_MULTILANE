@@ -1364,6 +1364,19 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             process.index("object_start = p7_get_ticks()"),
             process.index("p7_integrity_checked("),
         )
+        integrity_start = service.index("static int p7_integrity_checked(")
+        integrity_end = service.index("static int p7_p6_open(", integrity_start)
+        integrity = service[integrity_start:integrity_end]
+        self.assertIn("uint8_t snapshot[256] __attribute__((aligned(64)))", integrity)
+        invalidate = integrity.index("p7_invalidate(data + offset, chunk);")
+        snapshot = integrity.index("memcpy(snapshot, data + offset, chunk);")
+        crc = integrity.index("crc ^= snapshot[index];")
+        sha = integrity.index("p7_sha256_update(&sha, snapshot, chunk);")
+        self.assertLess(invalidate, snapshot)
+        self.assertLess(snapshot, crc)
+        self.assertLess(crc, sha)
+        self.assertNotIn("crc ^= data[offset + index];", integrity)
+        self.assertNotIn("p7_sha256_update(&sha, data + offset, chunk);", integrity)
         submit_start = service.index("static int p7_p6_submit(")
         submit_end = service.index("static int p7_p6_poll(", submit_start)
         submit = service[submit_start:submit_end]

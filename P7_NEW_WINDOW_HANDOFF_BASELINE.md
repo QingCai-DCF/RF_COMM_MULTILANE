@@ -884,3 +884,35 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   `tools/run_p7_gate.py` 以 summary path+SHA256 消费该结果生成新的 P7 checkpoint；不得复用 r24 checkpoint。
 - r24 仍永远不得 resume；下一硬件 ID 仍必须是 `p7_20260712_stationary_app_r25_diag_suffix62`。r25 仍只允许
   `1,2,3,4,62,63,64,65`（且必须先通过 r16-based transitive impact proof）、零 coverage、PENDING_HW、无 stage 66。
+
+## 33. 2026-07-12 r25 adaptive diagnostic 增量交接（本节覆盖第 32 节的 next-run 描述）
+
+- 通用非硬件刷新已提交为 `6cb92a2cdd7c056d67f79b83e7de4b9fd139104d`。在该 clean source 上，required
+  complete suites 各运行恰好一次，122 + 39 = 161/161 PASS；regression summary SHA256 为
+  `be1117c4f39e46e39424ccc3cf40c0d41cf0706d887f996bfdcdf011c1e8a07b`。P7 checkpoint 13/13 PASS，
+  SHA256 为 `eb1854a9ad1002ca54d75c683e3597159389cc0d3e3700e71275a30f35e6c72c`，明确 no-hardware、
+  PENDING_HW、cache BYPASS。
+- r25 impact proof SHA256 为 `9eeb81a36b641d14d9031ac2d2595ce5f22719d0bd7f58de5fbff9e76a63a089`；plan
+  SHA256 为 `d38f35e6e2475652fc88d168dd07e7b00d7bd41f09d8c2904a053ffd85d1a324`。generator、8 个 child
+  wrapper dry validations 与独立 executor dry validation 全部 PASS；plan 严格只含 `1,2,3,4,62,63,64,65`。
+- r25 只启动一次且没有 `--resume`。ordinals 1--4 exact PASS；stage 62 成功完成 exact target selection、candidate
+  programming、4,456,448-byte host-to-PS preload 与 ELF start。正确的 atomic descriptor capture 随后在 boundary index 6、
+  length 1 记录 status 4 / `P7_ERROR_OBJECT_CRC`(13)，stage 立即 FAIL；63--65 未启动，无 stage 66。ledger SHA256 为
+  `3219623758db68abfc9dd81f1e1f93d1b450abca3f3a1844cf35c0408d2b8e6c`，失败 stage summary SHA256 为
+  `50cf351e5e45c0af3b714fecd668afa4c3568c4d931823863e14e5918722578e`。
+- captured 256-byte descriptor SHA256 为 `06be977397d309af45d492dea1208171153b9fa7324b4f52faccca01d21d1acb`。
+  它机器可解析地绑定：input 为单字节 `0x00`，expected/input/output SHA256 都是该字节的
+  `6e340b9c...17afa01d`，expected CRC32 为 `0xd202ef8d`，但 recorded output CRC32 为 `0x3c0c8ea1`
+  （等于单字节 `0x02` 的 CRC32）。这证明旧实现的 CRC/SHA 两次 DDR 读取产生了自相矛盾的 terminal integrity snapshot；
+  它不单独证明该瞬态可见性变化的更底层写入来源。
+- r25 后独立 recovery `recovery_shutdown_after_failed_stage062_20260712T084539Z` 精确记录 raw rc125、唯一 shutdown
+  programming marker、`SHUTDOWN_EXIT=0` 与 PASS；外部 legacy `hw_server` PID 45220 未被触碰。frozen 12-file manifest
+  SHA256 为 `4b28cd6d3f53eb28c66a19cfe43842f976b14a4b40e0ea296e594af7d19549a3`。
+- 修复把 `p7_integrity_checked` 改为每个最多 256-byte chunk 先 invalidate 并复制到 64-byte aligned local snapshot，
+  再让 CRC32 与 SHA256 只消费同一份 immutable snapshot，禁止两个 digest 分别重读 DDR。focused wrapper/history tests、
+  py_compile、no-hardware checker 与真实 Vitis build PASS；新 candidate ELF SHA256 为
+  `72c6d51db888f15e18fc8de459f41707e9c9601507bf42bfed6a07385b79523a`，map SHA256 为
+  `8af051f80babc7e075c668ebb500f8e796e1d8c9616ab7dbbc6dd7a6a7a99fec`；这些仍是非硬件结果。
+- r25 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r26_diag_suffix62`。必须先准确提交 r25
+  exact history/tamper、recovery、integrity snapshot 修复、新 candidate 与本交接，再从 clean source 完成 exactly-once suites、
+  checkpoint、r16-based impact proof、plan 和全部 dry validation。r26 仍为零 coverage diagnostic，无 stage 66。

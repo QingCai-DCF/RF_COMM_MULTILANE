@@ -210,6 +210,7 @@ CORE_READINESS_CHECKS = (
     "shutdown_readback_verified",
     "failure_cleanup_shutdown_first",
     "failure_wipe_uses_private_validated_range",
+    "integrity_crc_sha_immutable_chunk_snapshot",
     "descriptor_ready_published_last",
     "terminal_descriptor_stable_snapshot",
     "phy_reenabled_and_startup_ready_waited",

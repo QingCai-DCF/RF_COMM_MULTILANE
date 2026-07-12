@@ -112,6 +112,14 @@ def main() -> int:
             and "uint32_t completed" in wipe_block
             and "request->output_address" in wipe_block
             and "descriptor->output_address" not in wipe_block,
+        "integrity_crc_sha_immutable_chunk_snapshot":
+            "uint8_t snapshot[256] __attribute__((aligned(64)))" in service
+            and "p7_invalidate(data + offset, chunk);" in service
+            and "memcpy(snapshot, data + offset, chunk);" in service
+            and "crc ^= snapshot[index];" in service
+            and "p7_sha256_update(&sha, snapshot, chunk);" in service
+            and "crc ^= data[offset + index];" not in service
+            and "p7_sha256_update(&sha, data + offset, chunk);" not in service,
         "descriptor_ready_published_last":
             "def descriptor_ready_publication" in codec
             and "P7_DESCRIPTOR_FREE" in codec

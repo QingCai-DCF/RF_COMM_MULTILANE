@@ -361,6 +361,7 @@ static int p7_integrity_checked(p7_service_context_t *service,
       UINT32_C(0x9b64c2b0), UINT32_C(0x86d3d2d4),
       UINT32_C(0xa00ae278), UINT32_C(0xbdbdf21c)};
   p7_sha256_context_t sha;
+  uint8_t snapshot[256] __attribute__((aligned(64)));
   uint32_t crc = UINT32_C(0xffffffff);
   uint32_t offset = 0U;
   if ((data == NULL && size != 0U) || crc_out == NULL || sha_out == NULL) {
@@ -374,12 +375,18 @@ static int p7_integrity_checked(p7_service_context_t *service,
       (void)p7_stop_and_shutdown(service);
       return 0;
     }
+    /* CRC32 and SHA256 must consume one immutable observation.  The buffers
+     * live in DDR and are also visible to JTAG/PL, so independently rereading
+     * the same address for each digest can publish a self-contradictory
+     * terminal descriptor if cache visibility changes between those reads. */
+    p7_invalidate(data + offset, chunk);
+    memcpy(snapshot, data + offset, chunk);
     for (uint32_t index = 0U; index < chunk; ++index) {
-      crc ^= data[offset + index];
+      crc ^= snapshot[index];
       crc = crc_table[crc & UINT32_C(0x0f)] ^ (crc >> 4);
       crc = crc_table[crc & UINT32_C(0x0f)] ^ (crc >> 4);
     }
-    p7_sha256_update(&sha, data + offset, chunk);
+    p7_sha256_update(&sha, snapshot, chunk);
     offset += chunk;
   }
   if (p7_active_stop_requested(service)) {
