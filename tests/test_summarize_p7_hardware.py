@@ -2509,7 +2509,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertTrue(immutable.is_file())
             self.assertEqual(artifact["sha256"], subject.sha256_file(immutable))
 
-    def test_real_r1_through_r15_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
+    def test_real_r1_through_r16_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
         evidence = subject.RepositoryEvidence(
             ROOT,
             ROOT / "evidence" / "hardware" / "p7",
@@ -2531,11 +2531,14 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260711_stationary_app_r13_diag_suffix55",
             "p7_20260711_stationary_app_r14_diag_suffix55",
             "p7_20260711_stationary_app_r15_diag_suffix55",
+            "p7_20260711_stationary_app_r16_diag_suffix55",
         )
         candidates: dict[str, subject.Candidate] = {}
         for epoch_name in epoch_names:
             stage_directory = (
-                "058_p7_large_jtag_1m_l0_random"
+                "062_p7_ps_functional"
+                if epoch_name.endswith("_r16_diag_suffix55")
+                else "058_p7_large_jtag_1m_l0_random"
                 if epoch_name.endswith(("_r10_diag_suffix55", "_r13_diag_suffix55"))
                 else "002_p7_p6_frame_regression_m1"
                 if epoch_name.endswith(("_r11_diag_suffix55", "_r12_diag_suffix55", "_r14_diag_suffix55", "_r15_diag_suffix55"))
@@ -2557,19 +2560,26 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 / "authorized_sequence"
                 / epoch_name
                 / stage_directory
-                / "p7_jtag_axi_stage_summary.json"
+                / (
+                    "p7_ps_application_stage_summary.json"
+                    if epoch_name.endswith("_r16_diag_suffix55")
+                    else "p7_jtag_axi_stage_summary.json"
+                )
             )
             self.assertTrue(summary_path.is_file(), f"missing immutable historical epoch: {epoch_name}")
             data = json.loads(summary_path.read_text(encoding="utf-8"))
+            candidate_kind = "ps" if epoch_name.endswith("_r16_diag_suffix55") else "jtag"
             candidate = subject.Candidate(
                 summary_path,
                 data,
-                "jtag",
-                subject.classify_jtag_stage(data),
+                candidate_kind,
+                subject.classify_ps_stage(data) if candidate_kind == "ps" else subject.classify_jtag_stage(data),
                 subject.parse_time(data.get("generated_at_utc"), summary_path.stat().st_mtime),
             )
             candidates[epoch_name] = candidate
-            if epoch_name.endswith("_r10_diag_suffix55"):
+            if epoch_name.endswith("_r16_diag_suffix55"):
+                inner_errors = subject._old_commit_ps_shutdown_arg_count_failure_errors(candidate, evidence)
+            elif epoch_name.endswith("_r10_diag_suffix55"):
                 inner_errors = subject._old_commit_1m_jtag_timeout_errors(candidate, evidence)
             elif epoch_name.endswith("_r13_diag_suffix55"):
                 inner_errors = subject._old_commit_1m_jtag_queued_timeout_errors(candidate, evidence)
@@ -2626,6 +2636,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260711_stationary_app_r13_diag_suffix55",
             "p7_20260711_stationary_app_r14_diag_suffix55",
             "p7_20260711_stationary_app_r15_diag_suffix55",
+            "p7_20260711_stationary_app_r16_diag_suffix55",
         ):
             epoch_candidates = [
                 item
@@ -2634,7 +2645,11 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             ]
             self.assertEqual(1, len(epoch_candidates), epoch_name)
             self.assertEqual(
-                "058_p7_large_jtag_1m_l0_random" if epoch_name.endswith("_r13_diag_suffix55") else "002_p7_p6_frame_regression_m1",
+                "062_p7_ps_functional"
+                if epoch_name.endswith("_r16_diag_suffix55")
+                else "058_p7_large_jtag_1m_l0_random"
+                if epoch_name.endswith("_r13_diag_suffix55")
+                else "002_p7_p6_frame_regression_m1",
                 epoch_candidates[0].path.parent.name,
             )
 
@@ -2901,6 +2916,21 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             tampered = subject.Candidate(r15.path, tampered_data, r15.kind, r15.stage, r15.timestamp)
             errors = subject._old_commit_axi4_burst_word_order_failure_errors(tampered, evidence)
             self.assertTrue(errors, f"r15 {label} tamper unexpectedly validated")
+
+        r16 = candidates["p7_20260711_stationary_app_r16_diag_suffix55"]
+        r16_tamper_cases = (
+            ("shutdown-before return code", lambda data: data["shutdown_before"].__setitem__("returncode", 0)),
+            ("candidate programming", lambda data: data.__setitem__("programmed_candidate", True)),
+            ("PS ELF start", lambda data: data.__setitem__("started_ps_elf", True)),
+            ("shutdown-after reap", lambda data: data["shutdown_after"].__setitem__("process_tree_reaped", False)),
+            ("hardware promotion", lambda data: data.__setitem__("HARDWARE_ACCEPTANCE", "PASS")),
+        )
+        for label, mutate in r16_tamper_cases:
+            tampered_data = json.loads(json.dumps(r16.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(r16.path, tampered_data, r16.kind, r16.stage, r16.timestamp)
+            errors = subject._old_commit_ps_shutdown_arg_count_failure_errors(tampered, evidence)
+            self.assertTrue(errors, f"r16 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

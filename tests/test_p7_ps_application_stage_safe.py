@@ -52,6 +52,26 @@ def install_captured_tcl_exit(interp) -> None:
 
 
 class P7PsApplicationSafeStageTests(unittest.TestCase):
+    def test_shutdown_command_matches_the_17_argument_jtag_tcl_contract(self) -> None:
+        args = stage.build_parser().parse_args([])
+        args.vivado_path = str(ROOT / "synthetic-vivado.bat")
+        args.authorization_file = str(ROOT / ".hardware_authorization" / "synthetic.txt")
+        args.board_id = "210512180081"
+        args.expected_part = "xc7z010clg400-1"
+        args.expected_target = "localhost:3121/xilinx_tcf/Digilent/210512180081"
+        args.hw_server_url = "localhost:3121"
+        args.jtag_frequency_hz = 1_000_000
+        args.shutdown_bitstream = str(ROOT / "shutdown_bitstream" / "tfdu_shutdown_j10_j11.bit")
+        args.max_runtime_sec = 900
+        result = ROOT / "synthetic-shutdown-result.txt.partial"
+        command = stage.build_shutdown_command(args, result)
+        tclargs = command[command.index("-tclargs") + 1 :]
+        self.assertEqual(17, len(tclargs))
+        self.assertEqual("1", tclargs[13])
+        self.assertEqual(str(stage.process_support.MAX_TRANSACTION_BYTES), tclargs[14])
+        self.assertEqual("900", tclargs[15])
+        self.assertEqual(str(Path(args.shutdown_bitstream).resolve()), tclargs[16])
+
     def test_all_modes_build_bounded_atomic_mailbox_descriptor_bundles(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

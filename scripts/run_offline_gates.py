@@ -265,6 +265,10 @@ def write_summary(outdir, results):
         "status": status,
         "no_hardware": True,
         "hardware_acceptance": "PENDING_HW",
+        "OFFLINE_CACHE_STATUS": "BYPASS",
+        "OFFLINE_CACHE_KEY": None,
+        "OFFLINE_CACHE_VALIDATED_OUTPUT_HASHES": {},
+        "OFFLINE_REAL_BUILD_PROCESS_RAN": True,
         "results": results,
     }
     (outdir / "offline_gate_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -274,6 +278,8 @@ def write_summary(outdir, results):
         f"BOOTSTRAP_STATUS: {status}",
         "NO_HARDWARE_ACTIONS_EXECUTED: true",
         "HARDWARE_ACCEPTANCE: PENDING_HW",
+        "OFFLINE_CACHE_STATUS: BYPASS",
+        "OFFLINE_REAL_BUILD_PROCESS_RAN: true",
         "",
     ]
     for r in results:

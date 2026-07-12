@@ -161,6 +161,21 @@ records contribute no final acceptance coverage; after all suffix defects are
 fixed, a new formal 66-stage run must start from stage 1 and is the only run
 permitted to launch the one-time stationary stage.
 
+For later failures inside that suffix, use the adaptive mode only when the new
+generator can create and the executor can independently revalidate a hashed
+`rf-comm-p7-diagnostic-impact-proof-v1`.  Pass
+`--diagnostic-first-ordinal <N>` plus the exact prior run ID, sequence-plan
+path/hash, and terminal execution-ledger path/hash.  The generated matrix is
+always formal ordinals 1--4 followed by the contiguous unresolved suffix
+`N..65`; it never includes 66.  The proof binds every skipped exact PASS
+summary, the prior FAIL ledger, all stage-consumed artifact hashes and runtime
+settings, a closed JTAG wrapper/Tcl/backend/register dependency set, the exact
+sequence symbols imported by the JTAG wrapper, regenerated transaction/input
+and normalized backend-manifest hashes, and Python/Vivado/helper identity.
+Any missing field, changed hash, uncertain dependency, or tamper blocks plan
+generation/validation and requires starting at the earliest affected stage.
+The proof and skipped stages explicitly contribute zero acceptance coverage.
+
 All P7 wrappers share one exclusive board lock. Never launch two wrappers concurrently, never delete or auto-recover a lock as "stale", and do not use non-overlapping timestamps as a substitute for the recorded lock acquisition. If a lock remains after a crash, stop and inspect the physical board/shutdown state before a human-authorized recovery.
 
 ### 3.1 Safe-idle recheck
@@ -264,6 +279,8 @@ Each case must preserve the backend manifest, transaction file, raw result, reas
 The live JTAG debug master is full AXI4 and feeds an explicit Xilinx AXI protocol converter whose downstream interface remains the existing safety-reviewed AXI4-Lite peripheral. Only naturally consecutive words in the TX payload window (`0x200..0x2fc`) and TX/RX readback windows (`0x200..0x3fc`) may use `INCR` bursts, bounded to 64 words; the converter serializes every beat into ordered AXI4-Lite accesses. Other adjacent same-direction independent control/status operations may use at most 16 `LEN=1` transactions in one `run_hw_axi -queue` call. Every P6 control-register write at offset `0x100` (`CLEAR`, `COMMIT`, `START`, `STOP`, or `SHUTDOWN`) is a dependency barrier: flush all pending transactions first, execute that control write alone, and never put it in a queued call. Direction changes, polls/assertions, `END`, address discontinuity for a burst, a control dependency, and either size bound force a flush. The active JTAG_AXI IP must be built with `CONFIG.PROTOCOL=0`, `CONFIG.RD_TXN_QUEUE_LENGTH=16`, and `CONFIG.WR_TXN_QUEUE_LENGTH=16`; the converter must bind `SI_PROTOCOL=AXI4` and `MI_PROTOCOL=AXI4LITE`. The content-addressed build summary and offline Vivado property inspection must prove those settings before authorization. The executor preserves the original DSL operation count, authorization checks, dependency order, validation order, and per-word result evidence. Dry validation reports burst, queued-single, and standalone ordered-control metrics separately, requires zero queued control writes, and never treats the downstream converter as reducing the logical AXI operation count. No performance optimization may increase the 1800-second authorization ceiling.
 
 Vivado renders a multiword JTAG-AXI `DATA` property most-significant word first: the rightmost rendered word maps to the lowest `INCR` address. The Tcl writer must therefore reverse the natural low-to-high DSL word list before creating a multiword write transaction, and the Tcl reader must reverse the rendered property-word index before assigning per-address evidence keys. The offline Tcl stub test must prove both directions with distinct word values; otherwise a write/read pair can appear self-consistent while the target memory contains whole-burst word reversal.
+
+The PS safe wrapper uses the same JTAG Tcl entrypoint for its mandatory shutdown-before and shutdown-after barriers. Its `SHUTDOWN` argv must therefore remain byte-for-byte aligned with the JTAG wrapper's 17-argument contract, including both `max_operations` and `max_transaction_bytes` before `max_runtime_sec`. A focused offline test must count and position all 17 Tcl arguments; a read-only preflight PASS cannot promote a PS stage whose shutdown argv is rejected before programming.
 
 For each required tuple, the summary must recompute the positive per-fragment poll-latency upper-bound distribution from the strict fragment ledger, prove that the object transport upper bound is their sum, and verify the poll-bound application-goodput lower-bound formula. It must separately report host-monotonic child elapsed time and host end-to-end goodput, explicitly labeled as including Vivado/programming/JTAG/polling/host overhead and not as optical-only latency. These JTAG bounds are auxiliary and are never substituted for PS application metrics.
 

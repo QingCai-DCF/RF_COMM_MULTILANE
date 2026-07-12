@@ -29,6 +29,7 @@ if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
 import p7_hardware_safety as safety  # noqa: E402
+import p7_diagnostic_impact as diagnostic_impact  # noqa: E402
 import p7_jtag_backend as jtag_backend  # noqa: E402
 import run_p7_authorized_hardware_sequence as sequence  # noqa: E402
 
@@ -318,16 +319,23 @@ def validate_stage_specs(specs: list[StageSpec]) -> None:
 
 
 def select_stage_specs(
-    specs: list[StageSpec], *, diagnostic_suffix55: bool
+    specs: list[StageSpec], *, diagnostic_suffix55: bool, diagnostic_first_ordinal: int | None = None
 ) -> list[StageSpec]:
-    if not diagnostic_suffix55:
+    if not diagnostic_suffix55 and diagnostic_first_ordinal is None:
         return list(specs)
-    wanted = set(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS)
+    if diagnostic_suffix55 and diagnostic_first_ordinal is not None:
+        raise ValueError("legacy --diagnostic-suffix55 and adaptive diagnostic selection are mutually exclusive")
+    wanted_ordinals = (
+        list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS)
+        if diagnostic_suffix55
+        else diagnostic_impact.expected_selected_ordinals(int(diagnostic_first_ordinal))
+    )
+    wanted = set(wanted_ordinals)
     selected = [spec for spec in specs if spec.index in wanted]
-    if [spec.index for spec in selected] != list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS):
-        raise ValueError("diagnostic suffix selection must be exactly full ordinals 1--4 and 55--65")
-    if len(selected) != 15 or any(spec.group == "ps_stationary" for spec in selected):
-        raise ValueError("diagnostic suffix must contain 15 stages and exclude stationary")
+    if [spec.index for spec in selected] != wanted_ordinals:
+        raise ValueError(f"diagnostic suffix selection mismatch: expected {wanted_ordinals}")
+    if any(spec.group == "ps_stationary" for spec in selected):
+        raise ValueError("diagnostic suffix must exclude stationary")
     return selected
 
 
@@ -632,10 +640,25 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     if not RUN_ID_RE.fullmatch(args.run_id):
         raise ValueError("--run-id must match [a-z0-9][a-z0-9_-]{2,63}")
     diagnostic_suffix55 = bool(getattr(args, "diagnostic_suffix55", False))
+    diagnostic_first_ordinal = getattr(args, "diagnostic_first_ordinal", None)
+    adaptive_diagnostic = diagnostic_first_ordinal is not None
     if diagnostic_suffix55 and "diag_suffix55" not in args.run_id:
         raise ValueError("diagnostic suffix run-id must contain diag_suffix55")
-    if not diagnostic_suffix55 and "diag" in args.run_id:
+    if adaptive_diagnostic and f"diag_suffix{diagnostic_first_ordinal}" not in args.run_id:
+        raise ValueError("adaptive diagnostic run-id must contain its diag_suffix ordinal")
+    if not diagnostic_suffix55 and not adaptive_diagnostic and "diag" in args.run_id:
         raise ValueError("run-id containing diag requires the explicit diagnostic suffix mode")
+    prior_arguments = (
+        getattr(args, "prior_run_id", ""),
+        getattr(args, "prior_sequence_plan", ""),
+        getattr(args, "prior_sequence_plan_sha256", ""),
+        getattr(args, "prior_execution_ledger", ""),
+        getattr(args, "prior_execution_ledger_sha256", ""),
+    )
+    if adaptive_diagnostic and not all(prior_arguments):
+        raise ValueError("adaptive diagnostic selection requires the complete prior-run plan/ledger binding")
+    if not adaptive_diagnostic and any(prior_arguments):
+        raise ValueError("prior-run impact-proof arguments are valid only for adaptive diagnostics")
     source_commit = args.source_commit.lower()
     if not sequence.COMMIT_RE.fullmatch(source_commit):
         raise ValueError("--source-commit must be exactly 40 lowercase hex characters")
@@ -695,7 +718,11 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("explicit Vivado launcher must be exactly vivado.bat; vivado.exe is forbidden")
     full_specs = build_stage_specs()
     validate_stage_specs(full_specs)
-    specs = select_stage_specs(full_specs, diagnostic_suffix55=diagnostic_suffix55)
+    specs = select_stage_specs(
+        full_specs,
+        diagnostic_suffix55=diagnostic_suffix55,
+        diagnostic_first_ordinal=diagnostic_first_ordinal,
+    )
     for spec in specs:
         auth_path = authorization_dir / f"{args.run_id}_{spec.index:03d}_{spec.stage_id}.txt"
         if auth_path.exists() or auth_path.with_name(auth_path.name + ".partial").exists():
@@ -720,10 +747,15 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         "xsdb": xsdb,
         "specs": specs,
         "plan_mode": (
-            sequence.DIAGNOSTIC_PLAN_MODE
+            sequence.ADAPTIVE_DIAGNOSTIC_PLAN_MODE
+            if adaptive_diagnostic
+            else sequence.DIAGNOSTIC_PLAN_MODE
             if diagnostic_suffix55
             else sequence.FULL_PLAN_MODE
         ),
+        "adaptive_diagnostic": adaptive_diagnostic,
+        "diagnostic_first_ordinal": diagnostic_first_ordinal,
+        "full_specs": full_specs,
         "full_stage_ordinals": [spec.index for spec in specs],
         "allowed_post_gate_generated_dirty": allowed_generated_dirty,
     }
@@ -765,7 +797,7 @@ def common_authorization_lines(
         "LANE_COUNT=2",
         "MAX_LANE_MASK=0x3",
     ]
-    if context.get("plan_mode") == sequence.DIAGNOSTIC_PLAN_MODE:
+    if sequence.is_diagnostic_plan_mode(str(context.get("plan_mode"))):
         lines.extend(
             [
                 "P7_EXECUTION_MODE=DIAGNOSTIC_ONLY",
@@ -1161,6 +1193,374 @@ def validate_child_wrapper_dry(spec: StageSpec, command: list[str]) -> dict[str,
     return report
 
 
+def _load_json_object(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"JSON root must be an object: {path}")
+    return value
+
+
+def _command_options(command: list[str]) -> dict[str, str | bool]:
+    _wrapper, options, errors = sequence._parse_exact_wrapper_command(command)
+    if errors:
+        raise ValueError("historical stage command is not an exact safe-wrapper argv: " + "; ".join(errors))
+    return options
+
+
+def build_adaptive_impact_proof(
+    args: argparse.Namespace,
+    context: Mapping[str, Any],
+    proof_dir: Path,
+) -> Artifact:
+    """Build and independently revalidate a zero-coverage skip proof."""
+
+    first = int(context["diagnostic_first_ordinal"])
+    if first < 56:
+        raise ValueError("adaptive proof is required only when at least one previously passed suffix stage is skipped")
+    skipped = list(range(55, first))
+    selected = list(context["full_stage_ordinals"])
+    prior_plan_path = sequence.resolve_path(args.prior_sequence_plan)
+    prior_ledger_path = sequence.resolve_path(args.prior_execution_ledger)
+    prior_plan_sha = args.prior_sequence_plan_sha256.lower()
+    prior_ledger_sha = args.prior_execution_ledger_sha256.lower()
+    if sha256_file(prior_plan_path) != prior_plan_sha:
+        raise ValueError("prior sequence plan SHA256 mismatch")
+    if sha256_file(prior_ledger_path) != prior_ledger_sha:
+        raise ValueError("prior execution ledger SHA256 mismatch")
+    prior_plan = _load_json_object(prior_plan_path)
+    prior_ledger = _load_json_object(prior_ledger_path)
+    prior_commit = str(prior_plan.get("source_commit", "")).lower()
+    if not sequence.COMMIT_RE.fullmatch(prior_commit):
+        raise ValueError("prior sequence plan source commit is malformed")
+    if prior_plan.get("plan_mode") != sequence.DIAGNOSTIC_PLAN_MODE:
+        raise ValueError("adaptive proof prior plan must be the immutable suffix55 diagnostic mode")
+    if prior_plan.get("full_stage_ordinals") != list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS):
+        raise ValueError("adaptive proof prior plan ordinal matrix is not exact")
+    if prior_ledger.get("plan_mode") != sequence.DIAGNOSTIC_PLAN_MODE:
+        raise ValueError("adaptive proof prior ledger plan mode mismatch")
+    if prior_ledger.get("coverage_claimed") is not False or prior_ledger.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
+        raise ValueError("adaptive proof prior run improperly claims acceptance coverage")
+    if prior_ledger.get("status") != "FAIL" or prior_ledger.get("failed_stage_index") != 11:
+        raise ValueError("adaptive proof prior ledger is not the exact stage-62 terminal failure")
+    attempts = prior_ledger.get("attempts")
+    stages = prior_plan.get("stages")
+    if not isinstance(attempts, list) or not isinstance(stages, list):
+        raise ValueError("adaptive proof prior plan/ledger stage arrays are missing")
+
+    artifacts: Mapping[str, Artifact] = context["artifacts"]
+    artifact_bindings = {
+        "plan": ("--plan-sha256", "goal_plan"),
+        "bitstream": ("--bitstream-sha256", "jtag_bitstream"),
+        "xsa": ("--xsa-sha256", "xsa"),
+        "elf": ("--elf-sha256", "elf"),
+        "profile": ("--profile-sha256", "jtag_profile"),
+        "active_xdc": ("--active-xdc-sha256", "active_xdc"),
+        "pinmap": ("--pinmap-sha256", "pinmap"),
+        "register_map": ("--register-map-sha256", "register_map"),
+        "shutdown_bitstream": ("--shutdown-bitstream-sha256", "shutdown_bitstream"),
+        "ltx": ("--ltx-sha256", "jtag_ltx"),
+    }
+    option_path_keys = {
+        "--plan-sha256": "--plan-file",
+        "--bitstream-sha256": "--bitstream",
+        "--xsa-sha256": "--xsa",
+        "--elf-sha256": "--elf",
+        "--profile-sha256": "--profile",
+        "--active-xdc-sha256": "--active-xdc",
+        "--pinmap-sha256": "--pinmap",
+        "--register-map-sha256": "--register-map",
+        "--shutdown-bitstream-sha256": "--shutdown-bitstream",
+        "--ltx-sha256": "--ltx",
+    }
+    settings_expected: dict[str, str | bool] = {
+        "--board-id": args.board_id,
+        "--expected-part": args.expected_part,
+        "--expected-target": args.expected_target,
+        "--shutdown-on-exit": True,
+        "--no-ethernet": True,
+        "--no-motion": True,
+        "--lane-count": "2",
+        "--max-lane-mask": "0x3",
+        "--vivado-path": str(context["vivado"]),
+        "--hw-server-url": args.hw_server_url,
+        "--axi-base-address": f"0x{args.axi_base_address:08x}",
+        "--jtag-frequency-hz": str(args.jtag_frequency_hz),
+    }
+    full_specs = {spec.index: spec for spec in context["full_specs"]}
+    proof_dir.mkdir()
+    shadow_dir = proof_dir / "shadow_generated_inputs"
+    shadow_dir.mkdir()
+    historical_passes: list[dict[str, Any]] = []
+    historical_helper_hashes: dict[str, str] | None = None
+
+    prior_ordinal_list = list(prior_plan["full_stage_ordinals"])
+    for ordinal in skipped:
+        plan_index = prior_ordinal_list.index(ordinal)
+        stage = stages[plan_index]
+        attempt = next(
+            (item for item in attempts if isinstance(item, dict) and item.get("full_stage_ordinal") == ordinal),
+            None,
+        )
+        if not isinstance(stage, dict) or not isinstance(attempt, dict):
+            raise ValueError(f"prior exact stage/attempt is missing for ordinal {ordinal}")
+        if (
+            attempt.get("result") != "PASS"
+            or attempt.get("state") != "TERMINAL"
+            or attempt.get("failures") != []
+            or attempt.get("process", {}).get("returncode") != 0
+            or attempt.get("shutdown_after", {}).get("passed") is not True
+        ):
+            raise ValueError(f"prior ordinal {ordinal} is not an exact terminal PASS")
+        summary_record = attempt.get("summary_file")
+        if not isinstance(summary_record, dict):
+            raise ValueError(f"prior ordinal {ordinal} summary record is missing")
+        summary_path = Path(str(summary_record.get("path", ""))).resolve(strict=False)
+        if sha256_file(summary_path) != str(summary_record.get("sha256", "")).lower():
+            raise ValueError(f"prior ordinal {ordinal} summary SHA256 mismatch")
+        summary = _load_json_object(summary_path)
+        if (
+            summary.get("P7_JTAG_AXI_SAFE_STAGE") != "PASS"
+            or summary.get("hardware_actions_executed") is not True
+            or summary.get("hardware_acceptance") != "PENDING_HW"
+            or summary.get("ethernet_used") is not False
+            or summary.get("motion_used") is not False
+            or summary.get("shutdown_before", {}).get("passed") is not True
+            or summary.get("shutdown_after", {}).get("passed") is not True
+            or summary.get("stage_failures") != []
+        ):
+            raise ValueError(f"prior ordinal {ordinal} summary is not an exact safe JTAG PASS")
+        helper_hashes = summary.get("preflight_process", {}).get("expected_tool_daemon_sha256_by_role")
+        if not isinstance(helper_hashes, dict) or helper_hashes != jtag_backend.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE:
+            raise ValueError(f"prior ordinal {ordinal} Vivado helper identity is missing or changed")
+        historical_helper_hashes = helper_hashes
+        command = stage.get("command")
+        if command != attempt.get("command") or not isinstance(command, list):
+            raise ValueError(f"prior ordinal {ordinal} plan/ledger command mismatch")
+        options = _command_options(command)
+        consumed_inputs: list[dict[str, Any]] = []
+        for role, (hash_key, artifact_name) in artifact_bindings.items():
+            prior_hash = str(options.get(hash_key, "")).lower()
+            current = artifacts[artifact_name]
+            prior_path = Path(str(options.get(option_path_keys[hash_key], ""))).resolve(strict=False)
+            if not prior_path.is_file() or sha256_file(prior_path) != prior_hash:
+                raise ValueError(f"prior ordinal {ordinal} consumed artifact is missing or changed: {role}")
+            if prior_hash != current.sha256:
+                raise ValueError(f"ordinal {ordinal} consumed artifact changed: {role}")
+            consumed_inputs.append(
+                {
+                    "role": role,
+                    "prior_path": str(prior_path),
+                    "prior_sha256": prior_hash,
+                    "current_path": str(current.path),
+                    "current_sha256": current.sha256,
+                    "unchanged": True,
+                }
+            )
+        settings = dict(settings_expected)
+        spec = full_specs[ordinal]
+        settings.update(
+            {
+                "--max-runtime-sec": str(spec.max_runtime_sec),
+                "--preflight-timeout-sec": str(spec.preflight_timeout_sec),
+                "--stage-timeout-sec": str(spec.stage_timeout_sec),
+                "--shutdown-timeout-sec": str(spec.shutdown_timeout_sec),
+                "--stage-name": spec.stage_id,
+                "--semantic-mode": spec.mode,
+            }
+        )
+        changed_settings = {
+            key: {"prior": options.get(key), "current": value}
+            for key, value in settings.items()
+            if options.get(key) != value
+        }
+        if changed_settings:
+            raise ValueError(f"ordinal {ordinal} authorization/runtime settings changed: {changed_settings}")
+
+        stage_shadow = shadow_dir / f"{ordinal:03d}_{spec.stage_id}"
+        stage_shadow.mkdir()
+        object_size = int(spec.case["object_size"])
+        lane_policy = str(spec.case["lane_policy"])
+        data = patterned_data(spec.pattern, object_size, spec.index)
+        input_path = stage_shadow / "input.bin"
+        transaction_path = stage_shadow / "transactions.txt"
+        manifest_path = stage_shadow / "backend_manifest.json"
+        atomic_write_bytes(input_path, data)
+        manifest = jtag_backend.generate_bundle(
+            data,
+            transaction_path=transaction_path,
+            manifest_path=manifest_path,
+            session_epoch=0x50370000 + spec.index,
+            object_id=spec.index,
+            lane_policy=lane_policy,
+            base_address=args.axi_base_address,
+            p6_session=args.p6_session,
+            jtag_frequency_hz=args.jtag_frequency_hz,
+            authorized_runtime_sec=spec.max_runtime_sec,
+        )
+        manifest["payload_pattern"] = spec.pattern
+        manifest["sequence_stage_id"] = spec.stage_id
+        manifest["input_file"] = str(input_path.resolve(strict=False))
+        manifest["input_file_sha256"] = sha256_file(input_path)
+        manifest_path.unlink()
+        atomic_write_json(manifest_path, manifest)
+        prior_transaction = Path(str(options.get("--transaction-file", ""))).resolve(strict=False)
+        prior_manifest = Path(str(options.get("--backend-manifest", ""))).resolve(strict=False)
+        prior_transaction_sha = str(options.get("--transaction-sha256", "")).lower()
+        prior_manifest_sha = str(options.get("--backend-manifest-sha256", "")).lower()
+        if sha256_file(prior_transaction) != prior_transaction_sha or sha256_file(prior_manifest) != prior_manifest_sha:
+            raise ValueError(f"prior ordinal {ordinal} generated transaction/manifest changed")
+        prior_manifest_value = _load_json_object(prior_manifest)
+        prior_input = Path(str(prior_manifest_value.get("input_file", ""))).resolve(strict=False)
+        prior_input_sha = str(prior_manifest_value.get("input_file_sha256", "")).lower()
+        if sha256_file(prior_input) != prior_input_sha:
+            raise ValueError(f"prior ordinal {ordinal} generated input changed")
+        current_transaction_sha = sha256_file(transaction_path)
+        current_input_sha = sha256_file(input_path)
+        prior_canonical_manifest_sha = diagnostic_impact.canonical_backend_manifest_sha256(prior_manifest)
+        current_canonical_manifest_sha = diagnostic_impact.canonical_backend_manifest_sha256(manifest_path)
+        if (
+            current_transaction_sha != prior_transaction_sha
+            or current_input_sha != prior_input_sha
+            or current_canonical_manifest_sha != prior_canonical_manifest_sha
+        ):
+            raise ValueError(f"ordinal {ordinal} shadow-generated transitive inputs changed")
+        historical_passes.append(
+            {
+                "ordinal": ordinal,
+                "stage_id": spec.stage_id,
+                "result": "EXACT_HARDWARE_PASS",
+                "coverage_contributed": False,
+                "summary": {
+                    "path": str(summary_path),
+                    "sha256": sha256_file(summary_path),
+                    "bytes": summary_path.stat().st_size,
+                },
+                "consumed_inputs": consumed_inputs,
+                "authorization_settings": [
+                    {"name": key, "prior": options.get(key), "current": value, "unchanged": True}
+                    for key, value in sorted(settings.items())
+                ],
+                "shadow_generated_inputs": {
+                    "input": {
+                        "path": str(input_path.resolve(strict=False)),
+                        "sha256": current_input_sha,
+                        "prior_sha256": prior_input_sha,
+                    },
+                    "transaction": {
+                        "path": str(transaction_path.resolve(strict=False)),
+                        "sha256": current_transaction_sha,
+                        "prior_sha256": prior_transaction_sha,
+                    },
+                    "backend_manifest": {
+                        "path": str(manifest_path.resolve(strict=False)),
+                        "sha256": sha256_file(manifest_path),
+                        "prior_sha256": prior_manifest_sha,
+                        "canonical_sha256": current_canonical_manifest_sha,
+                        "prior_canonical_sha256": prior_canonical_manifest_sha,
+                    },
+                },
+            }
+        )
+
+    source_dependencies: list[dict[str, Any]] = []
+    for relative in diagnostic_impact.SOURCE_DEPENDENCIES:
+        prior_hash = diagnostic_impact.normalized_source_sha256(
+            diagnostic_impact.git_blob(ROOT, prior_commit, relative)
+        )
+        current_hash = diagnostic_impact.normalized_source_sha256((ROOT / relative).read_bytes())
+        if prior_hash != current_hash:
+            raise ValueError(f"skipped-stage transitive source changed: {relative}")
+        source_dependencies.append(
+            {"path": relative, "prior_sha256": prior_hash, "current_sha256": current_hash, "unchanged": True}
+        )
+    old_sequence = diagnostic_impact.git_blob(
+        ROOT, prior_commit, "tools/run_p7_authorized_hardware_sequence.py"
+    )
+    current_sequence = (ROOT / "tools" / "run_p7_authorized_hardware_sequence.py").read_bytes()
+    symbol_records: list[dict[str, Any]] = []
+    for symbol in diagnostic_impact.SEQUENCE_IMPORTED_SYMBOLS:
+        old_hash = diagnostic_impact.symbol_sha256(old_sequence, symbol)
+        current_hash = diagnostic_impact.symbol_sha256(current_sequence, symbol)
+        if old_hash != current_hash:
+            raise ValueError(f"skipped-stage imported sequence symbol changed: {symbol}")
+        symbol_records.append(
+            {"symbol": symbol, "prior_sha256": old_hash, "current_sha256": current_hash, "unchanged": True}
+        )
+
+    helper_paths = jtag_safe_wrapper._expected_tool_daemon_paths([str(context["vivado"])])
+    helper_roles = ("cs_server", "rdi_xsdb", "cmd", "conhost")
+    if historical_helper_hashes is None or len(helper_paths) != len(helper_roles):
+        raise ValueError("unable to bind exact Vivado helper runtime identity")
+    helpers: list[dict[str, Any]] = []
+    for role, raw_path in zip(helper_roles, helper_paths):
+        path = Path(raw_path).resolve(strict=False)
+        actual = sha256_file(path)
+        historical = str(historical_helper_hashes.get(role, "")).lower()
+        if actual != historical:
+            raise ValueError(f"Vivado helper runtime identity changed: {role}")
+        helpers.append(
+            {"role": role, "path": str(path), "sha256": actual, "historical_sha256": historical}
+        )
+    python_path = Path(sys.executable).resolve(strict=False)
+    vivado_path = Path(context["vivado"]).resolve(strict=False)
+    proof = {
+        "schema": diagnostic_impact.SCHEMA,
+        "status": "PASS",
+        "coverage_claimed": False,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        "prior_run_id": args.prior_run_id,
+        "prior_source_commit": prior_commit,
+        "current_source_commit": context["source_commit"],
+        "mandatory_prefix_ordinals": diagnostic_impact.MANDATORY_PREFIX,
+        "first_unresolved_ordinal": first,
+        "selected_ordinals": selected,
+        "skipped_ordinals": skipped,
+        "skipped_stages_contribute_acceptance_coverage": False,
+        "prior_sequence_plan": {
+            "path": str(prior_plan_path), "sha256": prior_plan_sha, "bytes": prior_plan_path.stat().st_size
+        },
+        "prior_execution_ledger": {
+            "path": str(prior_ledger_path), "sha256": prior_ledger_sha, "bytes": prior_ledger_path.stat().st_size
+        },
+        "source_dependencies": source_dependencies,
+        "sequence_import_symbols": symbol_records,
+        "historical_exact_passes": historical_passes,
+        "runtime_identity": {
+            "python": {
+                "path": str(python_path),
+                "sha256": sha256_file(python_path),
+                "historical_path": str(stages[0]["command"][0]),
+                "historical_identity_basis": "immutable prior plan and execution ledger argv",
+            },
+            "vivado_launcher": {
+                "path": str(vivado_path),
+                "sha256": sha256_file(vivado_path),
+                "historical_path": str(_command_options(stages[4]["command"])["--vivado-path"]),
+                "version_identity": "Vivado v2023.1",
+            },
+            "vivado_helpers": helpers,
+        },
+        "proof_errors": [],
+    }
+    if proof["runtime_identity"]["python"]["historical_path"] != str(python_path):
+        raise ValueError("Python runtime path changed since prior run")
+    if proof["runtime_identity"]["vivado_launcher"]["historical_path"] != str(vivado_path):
+        raise ValueError("Vivado launcher path/version identity changed since prior run")
+    proof_path = proof_dir / "p7_diagnostic_impact_proof.json"
+    atomic_write_json(proof_path, proof)
+    proof_sha = sha256_file(proof_path)
+    _payload, proof_errors = diagnostic_impact.validate_impact_proof(
+        proof_path,
+        proof_sha,
+        root=ROOT,
+        current_source_commit=context["source_commit"],
+        selected_ordinals=selected,
+    )
+    if proof_errors:
+        raise ValueError("generated adaptive diagnostic impact proof failed revalidation: " + "; ".join(proof_errors))
+    return Artifact(path=proof_path.resolve(strict=False), sha256=proof_sha)
+
+
 def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     context = validate_preconditions(args)
     bundle_dir: Path = context["bundle_dir"]
@@ -1192,7 +1592,12 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     authorization_records: list[dict[str, Any]] = []
     child_dry_validations: list[dict[str, Any]] = []
     plan_mode = str(context["plan_mode"])
-    diagnostic = plan_mode == sequence.DIAGNOSTIC_PLAN_MODE
+    diagnostic = sequence.is_diagnostic_plan_mode(plan_mode)
+    impact_proof: Artifact | None = None
+    if context["adaptive_diagnostic"]:
+        impact_proof = build_adaptive_impact_proof(
+            args, context, bundle_dir / "diagnostic_impact_proof"
+        )
 
     for spec in context["specs"]:
         auth_path = authorization_dir / f"{args.run_id}_{spec.index:03d}_{spec.stage_id}.txt"
@@ -1301,8 +1706,8 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     plan = {
         "schema": sequence.SEQUENCE_SCHEMA,
         "description": (
-            "DIAGNOSTIC_ONLY deterministic zero-coverage P7 suffix; no Ethernet, no motion, two lanes; "
-            "formal ordinals 1--4 and 55--65 only; stationary is forbidden."
+            "DIAGNOSTIC_ONLY deterministic zero-coverage P7 adaptive suffix; no Ethernet, no motion, two lanes; "
+            f"formal ordinals {context['full_stage_ordinals']} only; stationary is forbidden and skipped stages claim zero coverage."
             if diagnostic
             else "Deterministic offline-generated P7 safe-wrapper sequence; no Ethernet, no motion, two lanes; "
             "the sole timed 1800-second PS stationary run is final."
@@ -1319,6 +1724,16 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
                 "full_stage_ordinals": context["full_stage_ordinals"],
                 "coverage_claimed": False,
                 "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                **(
+                    {
+                        "diagnostic_impact_proof": {
+                            "path": str(impact_proof.path),
+                            "sha256": impact_proof.sha256,
+                        }
+                    }
+                    if impact_proof is not None
+                    else {}
+                ),
             }
             if diagnostic
             else {}
@@ -1332,7 +1747,7 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             "generated plan failed the executor's strict local dry validation: "
             + "; ".join(str(item) for item in validation["errors"])
         )
-    expected_stage_count = 15 if diagnostic else 66
+    expected_stage_count = len(context["specs"])
     if validation.get("stage_count") != expected_stage_count:
         raise RuntimeError(
             f"generated plan validator did not observe exactly {expected_stage_count} stages"
@@ -1353,6 +1768,11 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "coverage_claimed": False if diagnostic else None,
         "HARDWARE_ACCEPTANCE": "PENDING_HW" if diagnostic else None,
         "full_stage_ordinals": context["full_stage_ordinals"],
+        "diagnostic_impact_proof": (
+            {"path": str(impact_proof.path), "sha256": impact_proof.sha256}
+            if impact_proof is not None
+            else None
+        ),
         "source_commit": context["source_commit"],
         "allowed_post_gate_generated_dirty": context["allowed_post_gate_generated_dirty"],
         "offline_checkpoint": {
@@ -1424,6 +1844,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Generate only formal ordinals 1--4 and 55--65; excludes stationary and claims zero coverage.",
     )
+    parser.add_argument(
+        "--diagnostic-first-ordinal",
+        type=int,
+        default=None,
+        help="Generate adaptive DIAGNOSTIC_ONLY prefix plus this unresolved ordinal through 65; requires an exact prior-run impact proof.",
+    )
+    parser.add_argument("--prior-run-id", default="")
+    parser.add_argument("--prior-sequence-plan", default="")
+    parser.add_argument("--prior-sequence-plan-sha256", default="")
+    parser.add_argument("--prior-execution-ledger", default="")
+    parser.add_argument("--prior-execution-ledger-sha256", default="")
     parser.add_argument("--json-summary", action="store_true")
     return parser
 

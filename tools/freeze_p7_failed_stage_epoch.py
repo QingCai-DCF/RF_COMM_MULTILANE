@@ -86,6 +86,8 @@ def copy_record(root: Path, destination: Path, role: str, original: Path) -> dic
         "sequence_plan": "p7_sequence_plan",
         "stage_authorization": "p7_stage_001_authorization",
         "stage_transactions": "p7_stage_001_transactions",
+        "stage_execution_plan": "p7_stage_execution_plan",
+        "stage_bundle_manifest": "p7_stage_bundle_manifest",
         "generation_manifest": "p7_generation_manifest",
         "recovery_p4_authorization": "p4_recovery_authorization",
     }
@@ -143,10 +145,21 @@ def main() -> int:
             or ledger_full_ordinals[failed_index] != full_stage_ordinal
         ):
             raise ValueError("outer ledger failed attempt/full-stage ordinal matrix mismatch")
-    summary_path = epoch / f"{full_stage_ordinal:03d}_{stage_id}" / "p7_jtag_axi_stage_summary.json"
+    summary_file = failed_attempt.get("summary_file")
+    if not isinstance(summary_file, dict):
+        raise ValueError("outer ledger failed attempt summary record is missing")
+    summary_path = resolve_recorded(root, summary_file.get("path"))
+    expected_stage_dir = (epoch / f"{full_stage_ordinal:03d}_{stage_id}").resolve(strict=False)
+    if summary_path.parent != expected_stage_dir:
+        raise ValueError("outer ledger failed attempt summary path does not bind the failed stage directory")
     summary = read_json(summary_path)
     source = str(ledger.get("source_commit", "")).lower()
-    summary_result = str(summary.get("P7_JTAG_AXI_SAFE_STAGE", ""))
+    is_ps = summary_path.name == "p7_ps_application_stage_summary.json"
+    if not is_ps and summary_path.name != "p7_jtag_axi_stage_summary.json":
+        raise ValueError("outer ledger failed attempt summary filename is unsupported")
+    summary_result = str(
+        summary.get("P7_PS_APPLICATION_SAFE_STAGE" if is_ps else "P7_JTAG_AXI_SAFE_STAGE", "")
+    )
     if summary_result not in {"FAIL_STAGE", "FAIL_SHUTDOWN_AFTER"}:
         raise ValueError(
             "only an exact FAIL_STAGE or FAIL_SHUTDOWN_AFTER epoch may be frozen by this helper"
@@ -164,7 +177,6 @@ def main() -> int:
     destination = epoch / "historical_preflight_inputs"
     destination.mkdir(parents=False, exist_ok=False)
     safety = summary["safety_validation"]
-    transaction = summary["transaction_validation"]
     sequence_plan_path = resolve_recorded(root, ledger["sequence_plan"]["path"])
     generation_manifest_path = resolve_generation_manifest(
         root,
@@ -177,7 +189,6 @@ def main() -> int:
         copy_record(root, destination, "offline_checkpoint", resolve_recorded(root, ledger["offline_checkpoint"]["path"])),
         copy_record(root, destination, "sequence_plan", sequence_plan_path),
         copy_record(root, destination, "stage_authorization", resolve_recorded(root, safety["authorization"]["path"])),
-        copy_record(root, destination, "stage_transactions", resolve_recorded(root, transaction["path"])),
         copy_record(
             root,
             destination,
@@ -186,6 +197,33 @@ def main() -> int:
         ),
         copy_record(root, destination, "recovery_p4_authorization", root / ".hardware_authorization" / "P4_APPROVED.txt"),
     ]
+    if is_ps:
+        records.extend(
+            [
+                copy_record(
+                    root,
+                    destination,
+                    "stage_execution_plan",
+                    resolve_recorded(root, summary["execution_plan"]["path"]),
+                ),
+                copy_record(
+                    root,
+                    destination,
+                    "stage_bundle_manifest",
+                    resolve_recorded(root, summary["bundle_manifest"]["path"]),
+                ),
+            ]
+        )
+    else:
+        transaction = summary["transaction_validation"]
+        records.append(
+            copy_record(
+                root,
+                destination,
+                "stage_transactions",
+                resolve_recorded(root, transaction["path"]),
+            )
+        )
 
     tcl_relative = "scripts/hw/p7_jtag_axi_transactions.tcl"
     committed = subprocess.run(
@@ -214,11 +252,21 @@ def main() -> int:
     )
 
     if stage_id != "p7_safe_idle":
-        for role, relative in (
-            ("historical_stage_wrapper_python", "scripts/hw/run_p7_jtag_axi_stage_safe.py"),
-            ("historical_backend_python", "tools/p7_jtag_backend.py"),
-            ("historical_lane_phy_rtl", "rtl/tfdu_lane_phy.sv"),
-        ):
+        historical_sources = (
+            (
+                ("historical_stage_wrapper_python", "scripts/hw/run_p7_ps_application_stage_safe.py"),
+                ("historical_process_support_python", "scripts/hw/run_p7_jtag_axi_stage_safe.py"),
+                ("historical_ps_execute_tcl", "scripts/hw/p7_ps_application_execute.tcl"),
+                ("historical_ps_mailbox_backend", "tools/p7_ps_mailbox_backend.py"),
+            )
+            if is_ps
+            else (
+                ("historical_stage_wrapper_python", "scripts/hw/run_p7_jtag_axi_stage_safe.py"),
+                ("historical_backend_python", "tools/p7_jtag_backend.py"),
+                ("historical_lane_phy_rtl", "rtl/tfdu_lane_phy.sv"),
+            )
+        )
+        for role, relative in historical_sources:
             committed_source = subprocess.run(
                 ["git", "show", f"{source}:{relative}"],
                 cwd=root,
@@ -257,6 +305,18 @@ def main() -> int:
     final_text = final_recovery.read_text(encoding="utf-8", errors="strict")
     if "SHUTDOWN_EXIT=0" not in final_text or "PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS" not in final_text:
         raise ValueError("final independent recovery does not prove shutdown PASS")
+    failed_stage_mutation_attempted = any(
+        summary.get(key) is True
+        for key in (
+            "programmed_fpga",
+            "programmed_candidate",
+            "programmed_shutdown_before",
+            "programmed_shutdown_after",
+            "started_ps_elf",
+            "drove_tfdu_txd",
+            "enabled_tfdu_receiver",
+        )
+    )
     manifest = {
         "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
         "run_id": args.run_id,
@@ -265,8 +325,12 @@ def main() -> int:
         "full_stage_ordinal": full_stage_ordinal,
         "stage_id": stage_id,
         "result": summary_result,
-        "mutation_attempted": True,
-        "candidate_mutation_attempted": True,
+        "mutation_attempted": failed_stage_mutation_attempted,
+        "candidate_mutation_attempted": bool(
+            summary.get("programmed_candidate") is True
+            or summary.get("programmed_fpga") is True
+            or summary.get("started_ps_elf") is True
+        ),
         "coverage_claimed": False,
         "recovery_directories": recoveries,
         "files": records,

@@ -677,3 +677,56 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   summarizer/history/tamper 与完整非硬件回归，准确提交全部 r15 evidence、word-order 修复和本交接，再从新 clean source 只生成一次
   checkpoint、r16 plan 并通过全部 dry validation。r16 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；最终 1800 秒
   stationary 正式启动次数仍为 0。
+
+## 25. 2026-07-12 r16 diagnostic suffix 增量交接（本节覆盖第 24 节的 next-run 描述）
+
+- r15 immutable failure/recovery、20-fragment word-order machine proof、修复、历史/tamper validator、完整 generic offline 输出与交接已提交为
+  `594f91c14a9a28b0be98463bd9faac33ff92d75d`。在该 clean source 上只生成一次新的 P7 checkpoint，13/13 PASS，
+  SHA256 为 `c6d9f5758476a5daa353d5bd7e4af446b086d3ada76b08801057ae78b9d31709`；
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r16 run ID 为 `p7_20260711_stationary_app_r16_diag_suffix55`；15-stage diagnostic plan SHA256 为
+  `bcbbcbe6378df274232d445e774385398ad9efaedb2ed0c8a7c1df6b73632cbe`，generation manifest SHA256 为
+  `ede962b26269cf995ac046283e5824b239102de4671a8f4375f6a8e65ed21673`。generator、15 个 authorizations、
+  15 个 child dry validations、generator executor dry 与独立 executor dry 均 PASS；精确 ordinals 为
+  `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`，无 stage 66/stationary，整次仍为 `DIAGNOSTIC_ONLY`、
+  `coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r16 只启动一次且没有 `--resume`。full ordinals 1--4 与 55--61 全部终态 PASS；这精确证明 word-order 修复后的三个 P6
+  frame regressions、三个 64 KiB cases 和四个 1 MiB lane-policy cases 在 r16 source 上通过，但它们仍只属于 superseded diagnostic
+  prefix，贡献零最终 acceptance coverage。full ordinal 62 / `p7_ps_functional` 终态 `FAIL_SHUTDOWN_AFTER`，outer ledger
+  SHA256 为 `f645d6fa82cb86eb1d8627adfc47d95af277e67f47b040c1bb63309c45955a49`，attempts=12、completed=11、
+  failed_stage_index=11；ordinals 63--65 与 stage 66 均未启动。
+- r16 stage 62 的 read-only hardware preflight PASS，但 shutdown-before 和 finally shutdown-after 都在任何 programming 前以 rc=41
+  fail-closed；两份 stdout 的精确终端错误均为 `P7 JTAG Tcl requires exactly 17 arguments`。PS candidate 未编程、PS ELF 未启动、
+  TFDU TXD 未驱动，summary SHA256 为 `19900c6a4b9b470e8ce54b440e0bfad1b4fb8ab4c0e0dacab4df11089748c999`。
+  根因是 PS wrapper 的 `build_shutdown_command()` 仍只传 16 个 Tcl arguments，遗漏 JTAG Tcl 新增的
+  `max_transaction_bytes`；修复在 `max_operations` 与 `max_runtime_sec` 之间传入同一 canonical upper bound，并新增逐位置 17-argument
+  offline regression。read-only preflight PASS 和 recovery PASS 均不得提升 stage 62。
+- r16 失败后的独立 recovery 位于
+  `recovery_shutdown_after_failed_stage062_20260712T020031Z/`，记录 `SHUTDOWN_RAW_EXIT=125`、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0`、`PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；外部 legacy
+  `hw_server` PID 45220 未被触碰。r16 frozen 12-file manifest SHA256 为
+  `0ab0dc9ba4116efd196f769ddb73bdbceed6391be2a7accf383bceae3050993e`，并准确记录失败 PS stage 自身
+  `mutation_attempted=false`、`candidate_mutation_attempted=false`。
+- r16 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r17_diag_suffix62`。必须先完成 r16 exact
+  summarizer/history/tamper、完整非硬件回归与 generic offline gate，准确提交全部 r16 evidence、PS shutdown argv 修复、运行优化约束和本交接，
+  再从新 clean source 只生成一次 checkpoint、r17 plan 并通过全部 dry validation。只有机器可重验的
+  `rf-comm-p7-diagnostic-impact-proof-v1` 同时绑定 r16 plan/FAIL ledger、55--61 exact PASS summaries、所有 stage-consumed
+  artifacts/settings、完整 JTAG source/Tcl/backend/register closure、重新生成的 input/transaction/manifest 及 Python/Vivado/helper identity，
+  且逐项 unchanged 时，r17 才允许精确 ordinals `1,2,3,4,62,63,64,65`；任一缺失/不确定/哈希变化都 fail closed 并从最早受影响
+  stage 重跑。r17 仍为 `DIAGNOSTIC_ONLY`、零 coverage、PENDING_HW，严禁 stage 66；最终 1800 秒 stationary 正式启动次数仍为 0。
+
+## 26. 2026-07-12 P7 runtime optimization 约束增量交接
+
+- `AGENTS.md` 与 `docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md` 现在是每个新 P7 diagnostic、offline checkpoint cycle 和 formal
+  preparation 的强制入口。优化不改变失败 run 永不 resume、新 ID、scoped authorization、immutable hashes、dry gates、独立 shutdown
+  recovery、no-Ethernet、no-motion、max mask 0x3、外部 `hw_server` 隔离或最终 formal 1--66 约束。
+- adaptive diagnostic 必须先跑 safety/regression prefix 1--4，然后从 earliest unresolved 或 earliest provably affected ordinal 开始。
+  skipped historical PASS 始终贡献零 coverage；diagnostic 永不包含 stationary。当前 r16 的 earliest unresolved 是 62，55--61 只有在上述
+  transitive impact proof 完整 PASS 时才能跳过。
+- canonical offline gate 当前显式记录 `OFFLINE_CACHE_STATUS=BYPASS` 与真实 build 已运行。未来若加入 cache，只允许完整 content-addressed、
+  tool hash/version 与全部 transitive inputs 绑定、hit 后重验 outputs 的 offline cache；hardware auth/raw/shutdown/PASS 永不缓存。最终 formal
+  full run 前仍必须在 exact clean source 上保存至少一次 cache-bypassed canonical offline gate。
+- 开发迭代只跑 focused tests；用于 hardware authorization 的 checkpoint 前，由 `tools/run_p7_regression_suites.py` 在 clean source 上把
+  top-level discovery 与独立 `tests/p7` complete suite 各运行恰好一次，记录命令、discovered count、return code、原始 log hashes 与
+  `FULL_SUITE_INVOCATION_COUNT`。checkpoint 用 path+SHA256 重新验证该 summary/logs，不重复执行已覆盖的 suites；任何后续 code/validator
+  改动都会使 source-commit binding 失效并要求生成一份新的 exactly-once regression summary。

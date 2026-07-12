@@ -1,0 +1,43 @@
+{
+  "events": [
+    {
+      "event": "authorized_execution_begin",
+      "mode": "functional",
+      "timestamp_utc": "2026-07-12T01:58:52.454362+00:00"
+    },
+    {
+      "event": "preflight_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-12T01:59:23.819507+00:00"
+    },
+    {
+      "event": "shutdown_before_finished",
+      "passed": false,
+      "returncode": 41,
+      "timestamp_utc": "2026-07-12T01:59:27.769345+00:00"
+    },
+    {
+      "error": "RuntimeError: shutdown-before requires rc=0 plus TFDU_SHUTDOWN_PROGRAMMED",
+      "event": "stage_exception",
+      "timestamp_utc": "2026-07-12T01:59:27.769354+00:00"
+    },
+    {
+      "candidate_child_reaped": false,
+      "candidate_returncode": null,
+      "event": "shutdown_after_started",
+      "timestamp_utc": "2026-07-12T01:59:27.769382+00:00"
+    },
+    {
+      "event": "shutdown_after_finished",
+      "passed": false,
+      "returncode": 41,
+      "timestamp_utc": "2026-07-12T01:59:31.715108+00:00"
+    },
+    {
+      "event": "authorized_execution_end",
+      "status": "FAIL_SHUTDOWN_AFTER",
+      "timestamp_utc": "2026-07-12T01:59:31.959149+00:00"
+    }
+  ]
+}

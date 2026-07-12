@@ -5,9 +5,11 @@ Without ``--execute-hardware`` this module only validates immutable inputs and
 never launches a wrapper.  Hardware execution is possible only from a hashed
 ``rf-comm-p7-hardware-sequence-plan-v1`` document whose commands are exact argv
 vectors for one of the two P7 safe wrappers.  Formal acceptance remains the
-rigid 66-stage matrix ending in one 1800-second stationary run.  A separately
-marked, zero-coverage diagnostic suffix mode may contain only formal ordinals
-1--4 and 55--65 and can never include stationary or promote acceptance.
+rigid 66-stage matrix ending in one 1800-second stationary run.  Diagnostic
+plans are separately marked, zero-coverage epochs: the legacy suffix55 matrix
+is fixed, while an adaptive matrix requires a machine-revalidated transitive
+impact proof.  Both start with ordinals 1--4, exclude stationary, and can never
+promote acceptance.
 
 The old read-only preflight entry point and its public helper functions remain
 available when no sequence plan is supplied.
@@ -30,6 +32,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import p7_jtag_backend as jtag_backend
+import p7_diagnostic_impact as diagnostic_impact
 
 from p7_hardware_safety import (
     AUTH_ENV,
@@ -50,6 +53,7 @@ SEQUENCE_SCHEMA = "rf-comm-p7-hardware-sequence-plan-v1"
 LEDGER_SCHEMA = "rf-comm-p7-sequence-execution-ledger-v1"
 FULL_PLAN_MODE = "FULL_ACCEPTANCE"
 DIAGNOSTIC_PLAN_MODE = "DIAGNOSTIC_SUFFIX_55"
+ADAPTIVE_DIAGNOSTIC_PLAN_MODE = "DIAGNOSTIC_ADAPTIVE_SUFFIX"
 DIAGNOSTIC_FULL_STAGE_ORDINALS = tuple(range(1, 5)) + tuple(range(55, 66))
 HARDWARE_ROOT = (ROOT / "evidence" / "hardware" / "p7").resolve(strict=False)
 JTAG_WRAPPER = (ROOT / "scripts" / "hw" / "run_p7_jtag_axi_stage_safe.py").resolve(strict=False)
@@ -84,6 +88,10 @@ PS_OUTER_ORCHESTRATION_GUARD_SECONDS = 120
 PS_VIVADO_PROCESS_COUNT = 3
 PS_XSDB_PROCESS_COUNT = 1
 PS_MAX_FORCED_CLEANUP_EVENTS = 2
+
+
+def is_diagnostic_plan_mode(value: str) -> bool:
+    return value in {DIAGNOSTIC_PLAN_MODE, ADAPTIVE_DIAGNOSTIC_PLAN_MODE}
 
 # Vivado reports the package/speed-grade-qualified build part and the live
 # silicon identity through different properties.  Keep the mapping explicit:
@@ -433,6 +441,20 @@ def validate_stage_matrix(
             errors.append(
                 "diagnostic suffix full_stage_ordinals must be exactly 1--4 plus 55--65"
             )
+    elif plan_mode == ADAPTIVE_DIAGNOSTIC_PLAN_MODE:
+        if not isinstance(full_stage_ordinals, list):
+            return ["adaptive diagnostic full_stage_ordinals must be a list"]
+        try:
+            first_unresolved = int(full_stage_ordinals[4])
+            expected_ordinals = tuple(
+                diagnostic_impact.expected_selected_ordinals(first_unresolved)
+            )
+        except (IndexError, TypeError, ValueError) as exc:
+            return [f"adaptive diagnostic ordinal matrix is malformed: {exc}"]
+        if full_stage_ordinals != list(expected_ordinals):
+            errors.append(
+                "adaptive diagnostic ordinals must be exact mandatory prefix 1--4 plus one contiguous unresolved suffix through 65"
+            )
     else:
         return [f"unsupported sequence plan mode: {plan_mode}"]
     expected = [full_expected[ordinal - 1] for ordinal in expected_ordinals]
@@ -466,7 +488,7 @@ def validate_stage_matrix(
     else:
         if "ps_stationary" in groups:
             errors.append("diagnostic suffix must not contain stationary")
-        if len(stages) != 15:
+        if plan_mode == DIAGNOSTIC_PLAN_MODE and len(stages) != 15:
             errors.append("diagnostic suffix must contain exactly 15 stages")
     if "ps_abort" in groups and "ps_queue" in groups:
         if groups.index("ps_abort") >= groups.index("ps_queue"):
@@ -975,6 +997,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "full_stage_ordinals",
         "coverage_claimed",
         "HARDWARE_ACCEPTANCE",
+        "diagnostic_impact_proof",
     }
     unknown_top = sorted(set(plan) - allowed_top)
     if unknown_top:
@@ -1004,7 +1027,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         errors.extend(checkpoint_errors)
     plan_mode = str(plan.get("plan_mode", FULL_PLAN_MODE))
     full_stage_ordinals = plan.get("full_stage_ordinals")
-    if plan_mode == DIAGNOSTIC_PLAN_MODE:
+    if is_diagnostic_plan_mode(plan_mode):
         if plan.get("coverage_claimed") is not False:
             errors.append("diagnostic suffix must declare coverage_claimed=false")
         if plan.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
@@ -1021,6 +1044,24 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             full_stage_ordinals=full_stage_ordinals,
         )
     )
+    impact_proof_payload: dict[str, Any] | None = None
+    if plan_mode == ADAPTIVE_DIAGNOSTIC_PLAN_MODE:
+        proof_record = plan.get("diagnostic_impact_proof")
+        if not isinstance(proof_record, dict) or set(proof_record) != {"path", "sha256"}:
+            errors.append("adaptive diagnostic plan requires exactly one hashed impact proof")
+        else:
+            proof_path = resolve_path(str(proof_record.get("path", "")))
+            proof_sha = str(proof_record.get("sha256", "")).lower()
+            impact_proof_payload, proof_errors = diagnostic_impact.validate_impact_proof(
+                proof_path,
+                proof_sha,
+                root=ROOT,
+                current_source_commit=source_commit,
+                selected_ordinals=full_stage_ordinals if isinstance(full_stage_ordinals, list) else [],
+            )
+            errors.extend(f"diagnostic impact proof: {item}" for item in proof_errors)
+    elif "diagnostic_impact_proof" in plan:
+        errors.append("only adaptive diagnostics may bind a diagnostic impact proof")
     normalized_stages: list[dict[str, Any]] = []
     ids: set[str] = set()
     evidence_dirs: set[str] = set()
@@ -1053,7 +1094,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             errors.extend(f"stage {index + 1} ({stage_id}): {item}" for item in stage_errors)
             if normalized is None:
                 continue
-            if plan_mode == DIAGNOSTIC_PLAN_MODE:
+            if is_diagnostic_plan_mode(plan_mode):
                 auth = resolve_path(str(normalized["options"].get("--authorization-file", "")))
                 try:
                     auth_fields, _auth_markers, auth_duplicates = parse_authorization_file(auth)
@@ -1061,8 +1102,8 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
                     errors.append(f"stage {index + 1} diagnostic authorization cannot be parsed: {exc}")
                 else:
                     expected_ordinal = (
-                        DIAGNOSTIC_FULL_STAGE_ORDINALS[index]
-                        if index < len(DIAGNOSTIC_FULL_STAGE_ORDINALS)
+                        full_stage_ordinals[index]
+                        if isinstance(full_stage_ordinals, list) and index < len(full_stage_ordinals)
                         else None
                     )
                     if auth_duplicates:
@@ -1099,10 +1140,11 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "full_stage_ordinals": (
             list(range(1, 67))
             if plan_mode == FULL_PLAN_MODE
-            else list(DIAGNOSTIC_FULL_STAGE_ORDINALS)
+            else list(full_stage_ordinals) if isinstance(full_stage_ordinals, list) else []
         ),
-        "coverage_claimed": False if plan_mode == DIAGNOSTIC_PLAN_MODE else None,
-        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan_mode == DIAGNOSTIC_PLAN_MODE else None,
+        "coverage_claimed": False if is_diagnostic_plan_mode(plan_mode) else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if is_diagnostic_plan_mode(plan_mode) else None,
+        "diagnostic_impact_proof": impact_proof_payload,
         "offline_checkpoint": {
             "path": str(checkpoint_path),
             "sha256": checkpoint_sha,
@@ -1372,8 +1414,8 @@ def _new_ledger(plan: Mapping[str, Any]) -> dict[str, Any]:
         "network_used": False,
         "motion_used": False,
         "plan_mode": plan.get("plan_mode", FULL_PLAN_MODE),
-        "coverage_claimed": False if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
-        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "coverage_claimed": False if is_diagnostic_plan_mode(str(plan.get("plan_mode"))) else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if is_diagnostic_plan_mode(str(plan.get("plan_mode"))) else None,
         "full_stage_ordinals": plan.get("full_stage_ordinals", list(range(1, 67))),
         "source_commit": plan["source_commit"],
         "sequence_plan": {
@@ -1512,7 +1554,7 @@ def _outer_sequence_errors(args: argparse.Namespace, plan: Mapping[str, Any]) ->
     errors: list[str] = []
     if os.environ.get(AUTH_ENV) != AUTH_ENV_VALUE:
         errors.append(f"external environment authorization required: {AUTH_ENV}={AUTH_ENV_VALUE}")
-    if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE and args.resume:
+    if is_diagnostic_plan_mode(str(plan.get("plan_mode"))) and args.resume:
         errors.append("diagnostic suffix runs are single-attempt epochs and can never use --resume")
     if args.source_commit.lower() != plan["source_commit"]:
         errors.append("outer --source-commit must match the frozen plan/checkpoint commit")
@@ -1559,8 +1601,8 @@ def _sequence_manifest(plan: Mapping[str, Any]) -> dict[str, Any]:
         "network_used": False,
         "motion_used": False,
         "plan_mode": plan.get("plan_mode", FULL_PLAN_MODE),
-        "coverage_claimed": False if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
-        "HARDWARE_ACCEPTANCE": "PENDING_HW" if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE else None,
+        "coverage_claimed": False if is_diagnostic_plan_mode(str(plan.get("plan_mode"))) else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW" if is_diagnostic_plan_mode(str(plan.get("plan_mode"))) else None,
         "full_stage_ordinals": plan.get("full_stage_ordinals", list(range(1, 67))),
         "sequence_plan": {
             "path": plan.get("path"),
@@ -1611,7 +1653,7 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         next_index = 0
         _atomic_write_json(ledger_path, ledger)
     if next_index == len(plan["stages"]):
-        diagnostic = plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+        diagnostic = is_diagnostic_plan_mode(str(plan.get("plan_mode")))
         manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
         manifest["reason"] = (
             "all diagnostic stages were already verified; zero acceptance coverage"
@@ -1737,7 +1779,7 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
                 "RUNNING"
                 if stage_index + 1 < len(plan["stages"])
                 else "DIAGNOSTIC_PASS"
-                if plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+                if is_diagnostic_plan_mode(str(plan.get("plan_mode")))
                 else "PASS"
             )
         else:
@@ -1756,10 +1798,10 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             manifest["execution_ledger"] = _file_record(ledger_path)
             manifest["hardware_actions_executed"] = True
             return 1, manifest
-    diagnostic = plan.get("plan_mode") == DIAGNOSTIC_PLAN_MODE
+    diagnostic = is_diagnostic_plan_mode(str(plan.get("plan_mode")))
     manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
     manifest["reason"] = (
-        "all 15 diagnostic-only stages passed; stationary was excluded and zero acceptance coverage is claimed"
+        f"all {len(plan['stages'])} diagnostic-only stages passed; stationary was excluded and zero acceptance coverage is claimed"
         if diagnostic
         else "all 66 stages passed in strict order; the sole 1800-second stationary stage was last"
     )

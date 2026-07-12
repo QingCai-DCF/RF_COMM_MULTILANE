@@ -2077,6 +2077,7 @@ def build_shutdown_command(args: argparse.Namespace, result_path: Path, shutdown
         str(result_path),
         "0x43c00000",
         "1",
+        str(process_support.MAX_TRANSACTION_BYTES),
         str(args.max_runtime_sec),
         str(shutdown_bit),
     ]

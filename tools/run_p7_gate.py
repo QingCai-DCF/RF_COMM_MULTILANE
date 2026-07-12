@@ -20,6 +20,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED = ROOT / "evidence/generated"
 P6_BASELINE_COMMIT = "ca041d4877b831de84fe7829788ac835b0b46acd"
+REGRESSION_SCHEMA = "rf-comm-p7-complete-regression-suites-v1"
 
 P6_ARTIFACTS = {
     "p6_results_package": (
@@ -98,6 +99,74 @@ def run(command: list[str], *, timeout: int = 1800) -> dict[str, Any]:
         "stdout": proc.stdout,
         "stderr": proc.stderr,
     }
+
+
+def validate_regression_summary(path: Path, expected_sha256: str, source_commit: str) -> tuple[bool, dict[str, Any]]:
+    errors: list[str] = []
+    path = path.resolve(strict=False)
+    build_root = (ROOT / "build").resolve(strict=False)
+    if not path.is_relative_to(build_root) or path == build_root or not path.is_file() or path.is_symlink():
+        return False, {"errors": ["validated regression summary must be a regular file under build"]}
+    actual_sha = sha(path)
+    if actual_sha != expected_sha256.lower():
+        errors.append("validated regression summary SHA256 mismatch")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return False, {"path": str(path), "sha256": actual_sha, "errors": errors + [f"invalid regression JSON: {exc}"]}
+    if not isinstance(payload, dict) or payload.get("schema") != REGRESSION_SCHEMA or payload.get("status") != "PASS":
+        errors.append("validated regression summary schema/status is not PASS")
+    if str(payload.get("source_commit", "")).lower() != source_commit:
+        errors.append("validated regression summary source commit mismatch")
+    if payload.get("dirty_worktree_before_suites") is not False:
+        errors.append("validated regression suites did not start from clean source")
+    if payload.get("NO_HARDWARE_ACTIONS_EXECUTED") is not True or payload.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
+        errors.append("validated regression summary violates no-hardware/PENDING boundary")
+    if payload.get("FULL_SUITE_INVOCATION_COUNT") != 2 or payload.get("suite_invocation_count_by_name") != {
+        "top_level_discovery": 1,
+        "tests_p7_discovery": 1,
+    }:
+        errors.append("required complete suites were not invoked exactly once each")
+    suites = payload.get("suites")
+    if not isinstance(suites, list):
+        errors.append("validated regression suite records are missing")
+        suites = []
+    by_name = {item.get("name"): item for item in suites if isinstance(item, dict)}
+    if set(by_name) != {"top_level_discovery", "tests_p7_discovery"}:
+        errors.append("validated regression suite record set is not exact")
+    expected_commands = {
+        "top_level_discovery": subprocess.list2cmdline(
+            [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test*.py", "-v"]
+        ),
+        "tests_p7_discovery": subprocess.list2cmdline(
+            [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests/p7", "-p", "test_*.py", "-v"]
+        ),
+    }
+    discovered_total = 0
+    for name, item in by_name.items():
+        if (
+            item.get("invocation_count") != 1
+            or item.get("returncode") != 0
+            or item.get("status") != "PASS"
+            or not isinstance(item.get("discovered_test_count"), int)
+            or item.get("discovered_test_count", 0) < 1
+        ):
+            errors.append(f"validated regression suite is not an exact PASS: {name}")
+        if item.get("command") != expected_commands.get(name):
+            errors.append(f"validated regression suite command mismatch: {name}")
+        if isinstance(item.get("discovered_test_count"), int):
+            discovered_total += int(item["discovered_test_count"])
+        for stream in ("stdout", "stderr"):
+            record = item.get(stream)
+            if not isinstance(record, dict):
+                errors.append(f"validated regression {name} {stream} record missing")
+                continue
+            log_path = Path(str(record.get("path", ""))).resolve(strict=False)
+            if not log_path.is_file() or log_path.is_symlink() or sha(log_path) != str(record.get("sha256", "")).lower():
+                errors.append(f"validated regression {name} {stream} log hash mismatch")
+    if payload.get("total_discovered_test_count") != discovered_total:
+        errors.append("validated regression total discovered test count mismatch")
+    return not errors, {"path": str(path), "sha256": actual_sha, "payload": payload, "errors": errors}
 
 
 def p6_recheck() -> tuple[bool, dict[str, Any]]:
@@ -183,6 +252,8 @@ def main() -> int:
     parser.add_argument("--json-summary", action="store_true")
     parser.add_argument("--allow-skips", action="store_true")
     parser.add_argument("--skip-ps-build", action="store_true")
+    parser.add_argument("--validated-regression-summary", default="")
+    parser.add_argument("--validated-regression-summary-sha256", default="")
     args = parser.parse_args()
     GENERATED.mkdir(parents=True, exist_ok=True)
 
@@ -229,25 +300,57 @@ def main() -> int:
     write_md(GENERATED / "p7_protocol_vector_summary.md", "P7 Protocol Golden Vectors", "P7_PROTOCOL_VECTORS", "PASS" if vectors_ok else "FAIL", vector_details)
     write_md(GENERATED / "p7_application_protocol_summary.md", "P7 Application Protocol", "P7_APPLICATION_PROTOCOL", "PASS" if vectors_ok else "FAIL", {"header_bytes": 32, "max_chunk_bytes": 215, "p6_payload_bytes": 247, **vector_details})
 
-    tests = run([sys.executable, "-m", "unittest", "discover", "-s", "tests/p7", "-p", "test_*.py", "-v"], timeout=600)
-    tests_ok = tests["returncode"] == 0 and "Ran " in tests["stderr"] and "OK" in tests["stderr"]
-    safety_tests = run(
-        [
-            sys.executable,
-            "-m",
-            "unittest",
-            "tests.test_p7_hardware_safety",
-            "tests.test_p7_jtag_axi_stage_safe",
-            "tests.test_p7_ps_application_stage_safe",
-            "tests.test_p7_authorized_hardware_sequence",
-            "tests.test_generate_p7_authorized_sequence_plan",
-            "tests.test_summarize_p7_hardware",
-            "-v",
-        ],
-        timeout=600,
+    regression_record: dict[str, Any] | None = None
+    if args.validated_regression_summary or args.validated_regression_summary_sha256:
+        if not args.validated_regression_summary or not re.fullmatch(
+            r"[0-9a-fA-F]{64}", args.validated_regression_summary_sha256
+        ):
+            regression_ok = False
+            regression_record = {"errors": ["both validated regression summary path and SHA256 are required"]}
+        else:
+            regression_ok, regression_record = validate_regression_summary(
+                Path(args.validated_regression_summary),
+                args.validated_regression_summary_sha256,
+                source_commit,
+            )
+        tests = {
+            "command": "VALIDATED_COMPLETE_SUITES_EXACTLY_ONCE",
+            "returncode": 0 if regression_ok else 1,
+            "stdout": "",
+            "stderr": "" if regression_ok else "; ".join(regression_record.get("errors", [])),
+        }
+        safety_tests = dict(tests)
+        tests_ok = regression_ok
+        safety_tests_ok = regression_ok
+    else:
+        tests = run([sys.executable, "-m", "unittest", "discover", "-s", "tests/p7", "-p", "test_*.py", "-v"], timeout=600)
+        tests_ok = tests["returncode"] == 0 and "Ran " in tests["stderr"] and "OK" in tests["stderr"]
+        safety_tests = run(
+            [
+                sys.executable,
+                "-m",
+                "unittest",
+                "tests.test_p7_hardware_safety",
+                "tests.test_p7_jtag_axi_stage_safe",
+                "tests.test_p7_ps_application_stage_safe",
+                "tests.test_p7_authorized_hardware_sequence",
+                "tests.test_generate_p7_authorized_sequence_plan",
+                "tests.test_p7_diagnostic_impact",
+                "tests.test_summarize_p7_hardware",
+                "-v",
+            ],
+            timeout=600,
+        )
+        safety_tests_ok = safety_tests["returncode"] == 0 and "OK" in safety_tests["stderr"]
+    write_json(
+        GENERATED / "p7_offline_test_run.json",
+        {
+            "vectors": vector_run,
+            "unittest": tests,
+            "hardware_safety": safety_tests,
+            "validated_complete_regression_summary": regression_record,
+        },
     )
-    safety_tests_ok = safety_tests["returncode"] == 0 and "OK" in safety_tests["stderr"]
-    write_json(GENERATED / "p7_offline_test_run.json", {"vectors": vector_run, "unittest": tests, "hardware_safety": safety_tests})
 
     lane_run = run([sys.executable, "tools/check_p7_lane1_promotion.py"], timeout=60)
     lane_ok = lane_run["returncode"] == 0
@@ -311,6 +414,8 @@ def main() -> int:
             "tools/summarize_p7_hardware.py",
             "tools/run_p7_authorized_hardware_sequence.py",
             "tools/generate_p7_authorized_sequence_plan.py",
+            "tools/p7_diagnostic_impact.py",
+            "tools/run_p7_regression_suites.py",
             "tools/p7_hardware_safety.py",
             "tools/p7_jtag_backend.py",
             "tools/p7_app_protocol.py",
@@ -324,6 +429,8 @@ def main() -> int:
             "scripts/hw/run_p7_ps_application_stage_safe.py",
             "scripts/hw/p7_jtag_axi_transactions.tcl",
             "scripts/hw/p7_ps_application_execute.tcl",
+            "AGENTS.md",
+            "docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md",
             "software/common/rf_app_protocol.h",
             "software/common/rf_app_protocol.c",
             "software/common/rf_transport_backend.h",
@@ -374,6 +481,11 @@ def main() -> int:
         "PS_PL_PHY_PL_PS_APPLICATION_PASS": False,
         "STATIONARY_30MIN": "PENDING_HW",
         "hardware_actions_executed": False,
+        "OFFLINE_CACHE_STATUS": "BYPASS",
+        "OFFLINE_CACHE_KEY": None,
+        "OFFLINE_CACHE_VALIDATED_OUTPUT_HASHES": {},
+        "OFFLINE_REAL_BUILD_PROCESS_RAN": True,
+        "validated_complete_regression_summary": regression_record,
         "source_commit": source_commit,
         "dirty_worktree": dirty_worktree,
         "dirty_files_before_gate": dirty_files_before_gate,

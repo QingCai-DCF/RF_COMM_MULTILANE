@@ -1,0 +1,32 @@
+{
+  "schema": "rf-comm-p7-invalidated-offline-gate-run-v1",
+  "status": "PASS_BUT_INVALIDATED_FOR_AUTHORIZATION",
+  "valid_for_authorization": false,
+  "valid_for_clean_checkpoint": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "invocation_count": 1,
+  "command": "$env:NO_HARDWARE='1'; python scripts/run_offline_gates.py",
+  "started_at_utc": "2026-07-12T02:22:42Z",
+  "elapsed_seconds": 3318.7,
+  "source_commit_at_start": "594f91c14a9a28b0be98463bd9faac33ff92d75d",
+  "invalidation_reason": "AGENTS.md, the runtime-optimization policy, offline-gate cache markers, adaptive diagnostic proof code, and related tests changed while this already-running process was consuming source files; its internally PASS output is not a coherent exact-source gate.",
+  "must_not_be_reported_as": [
+    "clean-source checkpoint",
+    "hardware PASS",
+    "acceptance coverage",
+    "final coherent non-hardware regression"
+  ],
+  "raw_summaries": {
+    "json": {
+      "path": "evidence/hardware/p7/offline_history/20260712T022242Z_invalidated_concurrent_source_change/offline_gate_summary.json",
+      "sha256": "997f4aef1f576bd552e83cd0c335f089ce5088bfd088b8677b654cb4d9a4b82a",
+      "bytes": 47317
+    },
+    "markdown": {
+      "path": "evidence/hardware/p7/offline_history/20260712T022242Z_invalidated_concurrent_source_change/offline_gate_summary.md",
+      "sha256": "90dc77863bb5d5ecd8b136c4a2b573f541f31496c40a9783ab94cb0a44928458",
+      "bytes": 37658
+    }
+  }
+}

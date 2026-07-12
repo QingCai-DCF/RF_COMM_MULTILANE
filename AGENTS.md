@@ -47,3 +47,11 @@
 - Future hardware requires `RF_COMM_HW_AUTH`, an authorization file, explicit board/bitstream/profile/hash inputs, max runtime, and shutdown-on-exit.
 - TFDU6102 startup wait, stuck-high guard, Txd default-low, SD shutdown, and shutdown-on-exit constraints remain mandatory.
 - Do not claim hardware, lane, Ethernet, rotation, soak, or product-final pass without real authorized P4 evidence.
+
+## P7 Runtime Optimization Constraints
+- Read and follow `docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md` for every new P7 diagnostic plan, offline checkpoint cycle, and formal run preparation.
+- New diagnostic run IDs must use adaptive suffix selection: run the mandatory safety prefix, then begin at the earliest unresolved or provably affected stage. Never resume a failed run, and never treat skipped historical PASS stages as acceptance coverage.
+- Skipping a stage requires machine-readable proof that all transitive stage inputs are unchanged; uncertainty fails closed and includes the stage.
+- Prefer fail-closed content-addressed caching for unchanged offline Vivado/Vitis substeps, but never cache hardware authorization, raw evidence, shutdown results, or hardware PASS. A cache-bypassed canonical offline gate remains mandatory before the final formal full run.
+- Run focused tests while iterating and each required complete suite exactly once before an authorization checkpoint; remove duplicate invocations, not required coverage.
+- These optimizations never change the formal complete acceptance run, never permit diagnostic stationary execution, and never weaken per-run authorization, containment, shutdown, evidence, no-Ethernet, no-motion, or lane-mask constraints.

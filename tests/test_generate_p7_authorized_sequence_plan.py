@@ -70,6 +70,35 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
         )
         self.assertTrue(any("stationary" in item for item in errors))
 
+    def test_adaptive_diagnostic_selection_is_prefix_plus_exact_unresolved_suffix(self) -> None:
+        full = subject.build_stage_specs()
+        selected = subject.select_stage_specs(
+            full,
+            diagnostic_suffix55=False,
+            diagnostic_first_ordinal=62,
+        )
+        ordinals = [spec.index for spec in selected]
+        self.assertEqual([1, 2, 3, 4, 62, 63, 64, 65], ordinals)
+        stages = [
+            {"group": spec.group, "risk_index": spec.risk_index, "case": spec.case}
+            for spec in selected
+        ]
+        self.assertEqual(
+            [],
+            sequence.validate_stage_matrix(
+                stages,
+                plan_mode=sequence.ADAPTIVE_DIAGNOSTIC_PLAN_MODE,
+                full_stage_ordinals=ordinals,
+            ),
+        )
+        self.assertFalse(any(spec.group == "ps_stationary" for spec in selected))
+        with self.assertRaises(ValueError):
+            subject.select_stage_specs(
+                full,
+                diagnostic_suffix55=False,
+                diagnostic_first_ordinal=66,
+            )
+
     def test_stage_specs_are_exact_and_1m_budget_is_separately_1800_capable(self) -> None:
         specs = subject.build_stage_specs()
         self.assertEqual(66, len(specs))

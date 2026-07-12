@@ -80,6 +80,9 @@ HISTORICAL_STAGE_AXI4_QUEUED_CONTROL_ORDER_REJECTED = (
 HISTORICAL_STAGE_AXI4_BURST_WORD_ORDER_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4_BURST_WORD_ORDER_REJECTED"
 )
+HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_SHUTDOWN_TCL_ARG_COUNT_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3242,6 +3245,43 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
         preflight = candidate.data.get(preflight_key)
         shutdown_after = candidate.data.get("shutdown_after")
         stage_process = candidate.data.get("stage_process")
+        if candidate.kind == "ps":
+            shutdown_before = candidate.data.get("shutdown_before")
+            expected_failures = [
+                "shutdown process returned nonzero exit code: 41",
+                "TFDU_SHUTDOWN_PROGRAMMED marker missing from fresh result file",
+                "P7_SHUTDOWN_RESULT=PASS marker missing from fresh result file",
+                "P7_TCL_PROGRAMMING_ATTEMPTED=1 marker missing from fresh result file",
+            ]
+            if (
+                candidate.marker == "FAIL_SHUTDOWN_AFTER"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and isinstance(shutdown_after, dict)
+                and all(
+                    shutdown.get("returncode") == 41
+                    and shutdown.get("passed") is False
+                    and shutdown.get("programming_attempted") is None
+                    and shutdown.get("process_tree_reaped") is True
+                    and shutdown.get("process_tree_terminated") is False
+                    and shutdown.get("failures") == expected_failures
+                    for shutdown in (shutdown_before, shutdown_after)
+                )
+                and candidate.data.get("internal_error")
+                == "RuntimeError: shutdown-before requires rc=0 plus TFDU_SHUTDOWN_PROGRAMMED"
+                and candidate.data.get("ps_process") is None
+                and candidate.data.get("programmed_candidate") is False
+                and candidate.data.get("started_ps_elf") is False
+                and "P7_JTAG_STAGE_ERROR=P7 JTAG Tcl requires exactly 17 arguments"
+                in marker_text(candidate.path.parent / "shutdown_before.stdout.log")
+                and "P7_JTAG_STAGE_ERROR=P7 JTAG Tcl requires exactly 17 arguments"
+                in marker_text(candidate.path.parent / "shutdown_after.stdout.log")
+            ):
+                return HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -4836,6 +4876,167 @@ def _axi4_burst_word_order_reversal_proofs(
         f"{label} frozen authorized payload-word matrix mismatch",
     )
     return reversal_proofs, errors
+
+
+def _old_commit_ps_shutdown_arg_count_failure_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    """Validate r16's exact pre-candidate PS shutdown argv rejection."""
+
+    errors: list[str] = []
+    label = "historical r16"
+    data = candidate.data
+    append_error(errors, candidate.kind == "ps" and candidate.stage == "ps_runtime", f"{label} failure is not the PS functional stage")
+    append_error(errors, candidate.executed and candidate.marker == "FAIL_SHUTDOWN_AFTER", f"{label} execution/result boundary mismatch")
+    append_error(errors, data.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"{label} promoted or omitted hardware acceptance")
+    append_error(errors, data.get("stage_name") == "p7_ps_functional" and data.get("mode") == "functional", f"{label} stage identity/mode mismatch")
+    append_error(errors, data.get("hardware_actions_executed") is True, f"{label} omits the hardware execution attempt")
+    for key in (
+        "programmed_fpga",
+        "programmed_candidate",
+        "programmed_shutdown_before",
+        "programmed_shutdown_after",
+        "started_ps_elf",
+        "drove_tfdu_txd",
+        "enabled_tfdu_receiver",
+        "uart_access",
+        "ethernet_used",
+        "motion_used",
+    ):
+        append_error(errors, data.get(key) is False, f"{label} does not preserve {key}=false")
+    append_error(errors, data.get("child_reaped_before_shutdown_after") is False, f"{label} candidate-child absence fact mismatch")
+    append_error(errors, data.get("ps_process") is None, f"{label} unexpectedly contains a PS candidate process")
+    append_error(
+        errors,
+        data.get("internal_error")
+        == "RuntimeError: shutdown-before requires rc=0 plus TFDU_SHUTDOWN_PROGRAMMED",
+        f"{label} internal failure mismatch",
+    )
+    append_error(
+        errors,
+        isinstance(data.get("postprocess"), dict)
+        and data["postprocess"].get("passed") is False
+        and data["postprocess"].get("failures")
+        == ["PS process did not pass exact rc/marker policy"],
+        f"{label} postprocess failure mismatch",
+    )
+    safety = data.get("safety_validation")
+    append_error(
+        errors,
+        isinstance(safety, dict)
+        and safety.get("P7_HARDWARE_SAFETY") == "PASS"
+        and safety.get("ready_for_hardware_preflight") is True
+        and safety.get("authorization_environment_present") is True
+        and safety.get("errors") == []
+        and str(safety.get("source_commit_requested", "")).lower()
+        == "594f91c14a9a28b0be98463bd9faac33ff92d75d",
+        f"{label} safety/source boundary mismatch",
+    )
+    preflight = data.get("preflight")
+    if isinstance(preflight, dict):
+        errors.extend(process_record_errors(preflight, f"{label} preflight", document=candidate.path, repo_root=evidence.repo_root))
+    else:
+        errors.append(f"{label} preflight process record missing")
+    preflight_markers, preflight_duplicates = parse_marker_text(
+        marker_text(candidate.path.parent / "p7_hw_preflight_result.txt")
+    )
+    append_error(
+        errors,
+        not preflight_duplicates
+        and isinstance(preflight, dict)
+        and preflight.get("returncode") == 0
+        and preflight.get("passed") is True
+        and data.get("target_identity") == dict(preflight_markers),
+        f"{label} read-only preflight identity mismatch",
+    )
+    expected_shutdown_failures = [
+        "shutdown process returned nonzero exit code: 41",
+        "TFDU_SHUTDOWN_PROGRAMMED marker missing from fresh result file",
+        "P7_SHUTDOWN_RESULT=PASS marker missing from fresh result file",
+        "P7_TCL_PROGRAMMING_ATTEMPTED=1 marker missing from fresh result file",
+    ]
+    for which in ("before", "after"):
+        shutdown = data.get(f"shutdown_{which}")
+        if not isinstance(shutdown, dict):
+            errors.append(f"{label} shutdown-{which} process record missing")
+            continue
+        errors.extend(_v2_process_containment_errors(shutdown, f"{label} shutdown-{which}"))
+        append_error(
+            errors,
+            shutdown.get("name") == f"shutdown_{which}"
+            and shutdown.get("returncode") == 41
+            and shutdown.get("passed") is False
+            and shutdown.get("programming_attempted") is None
+            and shutdown.get("process_tree_reaped") is True
+            and shutdown.get("process_tree_terminated") is False
+            and shutdown.get("failures") == expected_shutdown_failures,
+            f"{label} shutdown-{which} exact rejection mismatch",
+        )
+        command = shutdown.get("argv")
+        tclargs: list[Any] = []
+        if isinstance(command, list) and command.count("-tclargs") == 1:
+            tclargs = command[command.index("-tclargs") + 1 :]
+        append_error(
+            errors,
+            len(tclargs) == 16
+            and tclargs[1] == "SHUTDOWN"
+            and tclargs[13] == "1"
+            and tclargs[14] == "900"
+            and str(tclargs[15]).endswith(
+                "p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit"
+            ),
+            f"{label} shutdown-{which} does not prove the exact missing max-transaction-bytes argument",
+        )
+        stdout_path = candidate.path.parent / f"shutdown_{which}.stdout.log"
+        stderr_path = candidate.path.parent / f"shutdown_{which}.stderr.log"
+        append_error(errors, stdout_path.is_file() and stderr_path.is_file() and stderr_path.stat().st_size == 0, f"{label} shutdown-{which} log set mismatch")
+        append_error(
+            errors,
+            "P7_JTAG_STAGE_ERROR=P7 JTAG Tcl requires exactly 17 arguments"
+            in marker_text(stdout_path),
+            f"{label} shutdown-{which} exact Tcl error missing",
+        )
+        append_error(errors, not (candidate.path.parent / f"shutdown_{which}_result.txt").exists(), f"{label} shutdown-{which} unexpectedly produced a promoted result file")
+    events_path = candidate.path.parent / "p7_ps_application_events.json"
+    try:
+        events_payload = json.loads(events_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        errors.append(f"{label} event log invalid: {exc}")
+    else:
+        event_names = [item.get("event") for item in events_payload.get("events", []) if isinstance(item, dict)]
+        append_error(
+            errors,
+            event_names
+            == [
+                "authorized_execution_begin",
+                "preflight_finished",
+                "shutdown_before_finished",
+                "stage_exception",
+                "shutdown_after_started",
+                "shutdown_after_finished",
+                "authorized_execution_end",
+            ],
+            f"{label} event sequence mismatch",
+        )
+    raw_manifest_errors, _raw_manifest_record = validate_raw_evidence_manifest(candidate, evidence)
+    errors.extend(raw_manifest_errors)
+    append_error(
+        errors,
+        isinstance(data.get("bundle_post_shutdown_verification"), dict)
+        and data["bundle_post_shutdown_verification"].get("passed") is True
+        and data["bundle_post_shutdown_verification"].get("immutable_pre_post_equal") is True,
+        f"{label} immutable bundle post-shutdown verification mismatch",
+    )
+    lock_errors, _lock_record = hardware_execution_lock_errors(candidate, evidence)
+    errors.extend(f"{label} lock: {item}" for item in lock_errors)
+    append_error(
+        errors,
+        _historical_preflight_variant(candidate)
+        == HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED,
+        f"{label} failure class mismatch",
+    )
+    return errors
 
 
 def _old_commit_axi4_burst_word_order_failure_errors(
@@ -6861,6 +7062,393 @@ def _historical_r9_outer_containment_errors(
     return errors
 
 
+def _historical_ps_shutdown_arg_count_epoch_record(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+    *,
+    outer: Mapping[str, Any],
+    outer_path: Path,
+    epoch_root: Path,
+    source: str,
+) -> tuple[dict[str, Any], list[str]]:
+    """Bind r16's 11-stage PASS prefix and pre-candidate PS shutdown failure."""
+
+    errors: list[str] = []
+    label = "historical r16"
+    expected_ordinals = [1, 2, 3, 4, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]
+    append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
+    append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
+    append_error(errors, outer.get("network_used") is False and outer.get("motion_used") is False, f"{label} outer no-network/no-motion boundary mismatch")
+    append_error(errors, str(outer.get("source_commit", "")).lower() == source, f"{label} outer source mismatch")
+    append_error(
+        errors,
+        outer.get("plan_mode") == "DIAGNOSTIC_SUFFIX_55"
+        and outer.get("coverage_claimed") is False
+        and outer.get("HARDWARE_ACCEPTANCE") == "PENDING_HW"
+        and outer.get("full_stage_ordinals") == expected_ordinals,
+        f"{label} diagnostic zero-coverage boundary mismatch",
+    )
+    append_error(
+        errors,
+        outer.get("attempt_count") == 12
+        and outer.get("completed_stage_count") == 11
+        and outer.get("failed_stage_index") == 11
+        and outer.get("next_stage_index") == 11,
+        f"{label} failed-stage boundary mismatch",
+    )
+    attempts = outer.get("attempts")
+    if not isinstance(attempts, list) or len(attempts) != 12 or not all(isinstance(item, dict) for item in attempts):
+        errors.append(f"{label} outer attempts are malformed")
+        attempts = []
+    if attempts:
+        errors.extend(
+            _historical_r6_pass_prefix_errors(
+                attempts[:11],
+                epoch_root=epoch_root,
+                outer_path=outer_path,
+                evidence=evidence,
+                source=source,
+                expected_count=11,
+                epoch_label=label,
+                full_stage_ordinals=expected_ordinals[:11],
+            )
+        )
+        attempt = attempts[11]
+    else:
+        attempt = {}
+    append_error(
+        errors,
+        attempt.get("attempt") == 12
+        and attempt.get("stage_index") == 11
+        and attempt.get("full_stage_ordinal") == 62
+        and attempt.get("stage_id") == "p7_ps_functional"
+        and attempt.get("group") == "ps_functional"
+        and attempt.get("risk_index") == 40
+        and attempt.get("case") == {}
+        and attempt.get("state") == "TERMINAL"
+        and attempt.get("result") == "FAIL",
+        f"{label} failed attempt identity mismatch",
+    )
+    expected_failures = [
+        "outer wrapper process containment/return-code policy failed",
+        "wrapper result is not PASS: P7_PS_APPLICATION_SAFE_STAGE=FAIL_SHUTDOWN_AFTER",
+        "wrapper summary does not prove programmed_shutdown_before=true",
+        "wrapper summary does not prove programmed_shutdown_after=true",
+        "wrapper shutdown-before did not return rc=0 and PASS",
+        "wrapper shutdown-before does not prove programming_attempted=true",
+        "shutdown-before fresh result file is missing",
+        "shutdown-before fresh result lacks exact TFDU_SHUTDOWN_PROGRAMMED marker",
+        "shutdown-before fresh result lacks P7_TCL_PROGRAMMING_ATTEMPTED=1",
+        "shutdown-before fresh result lacks P7_SHUTDOWN_RESULT=PASS",
+        "wrapper shutdown-after did not return rc=0 and PASS",
+        "wrapper shutdown-after does not prove programming_attempted=true",
+        "shutdown-after fresh result file is missing",
+        "shutdown-after fresh result lacks exact TFDU_SHUTDOWN_PROGRAMMED marker",
+        "shutdown-after fresh result lacks P7_TCL_PROGRAMMING_ATTEMPTED=1",
+        "shutdown-after fresh result lacks P7_SHUTDOWN_RESULT=PASS",
+        "wrapper candidate process record is missing: ps_process",
+        "PS wrapper postprocess is missing or not PASS",
+    ]
+    append_error(errors, attempt.get("failures") == expected_failures, f"{label} outer failure list mismatch")
+    summary_record = attempt.get("summary_file")
+    errors.extend(_verify_historical_hash_file(summary_record, label=f"{label} failed summary", document=outer_path, repo_root=evidence.repo_root))
+    append_error(
+        errors,
+        resolve_reference(summary_record.get("path") if isinstance(summary_record, dict) else None, document=outer_path, repo_root=evidence.repo_root)
+        == candidate.path.resolve(strict=False),
+        f"{label} outer summary binding mismatch",
+    )
+    process = attempt.get("process")
+    if not isinstance(process, dict):
+        errors.append(f"{label} outer process missing")
+        process = {}
+    append_error(
+        errors,
+        process.get("name") == "sequence_p7_ps_functional"
+        and process.get("returncode") == 1
+        and process.get("process_tree_reaped") is True
+        and process.get("process_tree_terminated") is False
+        and process.get("containment_kind") == "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE"
+        and process.get("containment_assigned") is True
+        and process.get("containment_closed") is True
+        and process.get("descendant_count_after") == 0
+        and process.get("argv") == attempt.get("command"),
+        f"{label} outer process/containment mismatch",
+    )
+    errors.extend(_v2_process_containment_errors(process, f"{label} outer process"))
+    for key in ("stdout_file", "stderr_file"):
+        errors.extend(_verify_historical_hash_file(process.get(key), label=f"{label} outer {key}", document=outer_path, repo_root=evidence.repo_root))
+    outer_shutdown = attempt.get("shutdown_after")
+    append_error(
+        errors,
+        isinstance(outer_shutdown, dict)
+        and outer_shutdown.get("present") is True
+        and outer_shutdown.get("returncode") == 41
+        and outer_shutdown.get("passed") is False
+        and outer_shutdown.get("attempted") is True
+        and outer_shutdown.get("programming_attempted") is None
+        and outer_shutdown.get("process_tree_reaped") is True
+        and outer_shutdown.get("process_tree_terminated") is False
+        and outer_shutdown.get("result_file") == {
+            "path": str(candidate.path.parent / "shutdown_after_result.txt"),
+            "missing": True,
+        },
+        f"{label} outer shutdown-after facts mismatch",
+    )
+
+    expected_stage_files = {
+        "p7_hw_preflight_result.txt",
+        "p7_ps_application_events.json",
+        "p7_ps_application_stage_summary.json",
+        "p7_raw_evidence_sha256_manifest.json",
+        "preflight.stderr.log",
+        "preflight.stdout.log",
+        "shutdown_after.stderr.log",
+        "shutdown_after.stdout.log",
+        "shutdown_before.stderr.log",
+        "shutdown_before.stdout.log",
+    }
+    append_error(
+        errors,
+        {path.name for path in candidate.path.parent.iterdir() if path.is_file()} == expected_stage_files
+        and (candidate.path.parent / "bundle").is_dir(),
+        f"{label} failed-stage file set mismatch",
+    )
+    diagnostic_files = {
+        name: _hash_record(candidate.path.parent / name) for name in sorted(expected_stage_files)
+    }
+
+    frozen_dir = epoch_root / "historical_preflight_inputs"
+    frozen_manifest_path = frozen_dir / "manifest.json"
+    try:
+        frozen_manifest = json.loads(frozen_manifest_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        errors.append(f"{label} frozen manifest invalid: {exc}")
+        frozen_manifest = {}
+    expected_roles = {
+        "offline_checkpoint",
+        "sequence_plan",
+        "stage_authorization",
+        "generation_manifest",
+        "recovery_p4_authorization",
+        "stage_execution_plan",
+        "stage_bundle_manifest",
+        "historical_stage_tcl",
+        "historical_stage_wrapper_python",
+        "historical_process_support_python",
+        "historical_ps_execute_tcl",
+        "historical_ps_mailbox_backend",
+    }
+    append_error(
+        errors,
+        isinstance(frozen_manifest, dict)
+        and frozen_manifest.get("schema") == "rf-comm-p7-historical-failed-stage-inputs-v1"
+        and frozen_manifest.get("run_id") == epoch_root.name
+        and str(frozen_manifest.get("source_commit", "")).lower() == source
+        and frozen_manifest.get("stage_index") == 11
+        and frozen_manifest.get("full_stage_ordinal") == 62
+        and frozen_manifest.get("stage_id") == "p7_ps_functional"
+        and frozen_manifest.get("result") == "FAIL_SHUTDOWN_AFTER"
+        and frozen_manifest.get("mutation_attempted") is False
+        and frozen_manifest.get("candidate_mutation_attempted") is False
+        and frozen_manifest.get("coverage_claimed") is False,
+        f"{label} frozen manifest boundary mismatch",
+    )
+    frozen_records: dict[str, dict[str, Any]] = {}
+    frozen_files = frozen_manifest.get("files") if isinstance(frozen_manifest, dict) else None
+    if not isinstance(frozen_files, list) or len(frozen_files) != len(expected_roles):
+        errors.append(f"{label} frozen manifest role count mismatch")
+    else:
+        for item in frozen_files:
+            if not isinstance(item, dict):
+                errors.append(f"{label} frozen manifest contains a malformed file record")
+                continue
+            role = str(item.get("role", ""))
+            path = resolve_reference(item.get("frozen_path"), document=frozen_manifest_path, repo_root=evidence.repo_root)
+            digest = str(item.get("sha256", "")).lower()
+            append_error(errors, role in expected_roles and role not in frozen_records, f"{label} frozen role invalid/duplicate: {role}")
+            append_error(errors, path is not None and path.is_file() and not path.is_symlink(), f"{label} frozen file missing/symbolic: {role}")
+            if path is not None and path.is_file():
+                append_error(errors, path.stat().st_size == item.get("bytes"), f"{label} frozen file size mismatch: {role}")
+                append_error(errors, SHA256_RE.fullmatch(digest) is not None and sha256_file(path) == digest, f"{label} frozen file SHA mismatch: {role}")
+                frozen_records[role] = {**item, "resolved_path": str(path)}
+    append_error(errors, set(frozen_records) == expected_roles, f"{label} frozen roles incomplete")
+    historical_source_control_flow: dict[str, Any] = {}
+    if set(frozen_records) == expected_roles:
+        source_paths = {
+            "historical_stage_tcl": "scripts/hw/p7_jtag_axi_transactions.tcl",
+            "historical_stage_wrapper_python": "scripts/hw/run_p7_ps_application_stage_safe.py",
+            "historical_process_support_python": "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+            "historical_ps_execute_tcl": "scripts/hw/p7_ps_application_execute.tcl",
+            "historical_ps_mailbox_backend": "tools/p7_ps_mailbox_backend.py",
+        }
+        texts: dict[str, str] = {}
+        for role, relative in source_paths.items():
+            frozen_path = Path(frozen_records[role]["resolved_path"])
+            frozen_bytes = frozen_path.read_bytes()
+            computed_blob = hashlib.sha1(f"blob {len(frozen_bytes)}\0".encode("ascii") + frozen_bytes).hexdigest()
+            append_error(errors, computed_blob == str(frozen_records[role].get("git_blob_sha1", "")).lower(), f"{label} frozen Git blob mismatch: {role}")
+            try:
+                committed = subprocess.run(["git", "show", f"{source}:{relative}"], cwd=evidence.repo_root, capture_output=True, timeout=30, check=False)
+            except (OSError, subprocess.SubprocessError) as exc:
+                errors.append(f"{label} unable to read source {relative}: {exc}")
+            else:
+                append_error(errors, committed.returncode == 0 and committed.stdout == frozen_bytes, f"{label} frozen source differs from commit: {role}")
+            try:
+                texts[role] = frozen_bytes.decode("utf-8", errors="strict")
+            except UnicodeError as exc:
+                errors.append(f"{label} frozen source is not UTF-8 ({role}): {exc}")
+                texts[role] = ""
+        old_tcl = texts.get("historical_stage_tcl", "")
+        old_wrapper = texts.get("historical_stage_wrapper_python", "")
+        function_start = old_wrapper.find("def build_shutdown_command(")
+        function_end = old_wrapper.find("\ndef build_ps_command(", function_start)
+        old_function = old_wrapper[function_start:function_end] if 0 <= function_start < function_end else ""
+        arg_mismatch = (
+            "if {[llength $argv] != 17}" in old_tcl
+            and old_function.count('        "1",') == 1
+            and "process_support.MAX_TRANSACTION_BYTES" not in old_function
+        )
+        append_error(errors, arg_mismatch, f"{label} frozen source does not prove the 17-vs-16 shutdown argv mismatch")
+        historical_source_control_flow = {
+            "jtag_tcl_requires_argument_count": 17,
+            "ps_wrapper_shutdown_argument_count": 16,
+            "ps_wrapper_max_transaction_bytes_argument_present": False,
+            "historical_shutdown_argv_mismatch_proven": arg_mismatch,
+            "sources": {
+                role: _hash_record(Path(record["resolved_path"]))
+                for role, record in frozen_records.items()
+                if role.startswith("historical_")
+            },
+        }
+
+    recovery_dirs = sorted(epoch_root.glob("recovery_shutdown_after_failed_stage062_*"))
+    declared_recoveries = frozen_manifest.get("recovery_directories") if isinstance(frozen_manifest, dict) else None
+    append_error(
+        errors,
+        len(recovery_dirs) == 1
+        and isinstance(declared_recoveries, list)
+        and declared_recoveries == [recovery_dirs[0].name],
+        f"{label} recovery directory binding mismatch",
+    )
+    recovery_record: dict[str, Any] | None = None
+    recovery_end = float("nan")
+    if len(recovery_dirs) == 1:
+        recovery_dir = recovery_dirs[0]
+        expected_recovery_files = {
+            "program_tfdu_shutdown_safe.summary.txt",
+            "hardware_authorization.json",
+            "hash_manifest.json",
+            "hash_manifest.csv",
+            "program_tfdu_shutdown_safe.stdout.log",
+            "program_tfdu_shutdown_safe.stderr.log",
+        }
+        append_error(errors, {path.name for path in recovery_dir.iterdir() if path.is_file()} == expected_recovery_files, f"{label} recovery file set mismatch")
+        summary = recovery_dir / "program_tfdu_shutdown_safe.summary.txt"
+        recovery_text = marker_text(summary)
+        recovery_markers, recovery_duplicates = parse_marker_text(recovery_text)
+        recovery_begin_text = next(
+            (
+                line.removeprefix("PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN ").strip()
+                for line in recovery_text.splitlines()
+                if line.startswith("PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN ")
+            ),
+            "",
+        )
+        recovery_end_text = next(
+            (
+                line.removeprefix("PROGRAM_TFDU_SHUTDOWN_SAFE_END ").strip()
+                for line in recovery_text.splitlines()
+                if line.startswith("PROGRAM_TFDU_SHUTDOWN_SAFE_END ")
+            ),
+            "",
+        )
+        append_error(
+            errors,
+            not recovery_duplicates
+            and recovery_markers.get("SHUTDOWN_RAW_EXIT") == "125"
+            and recovery_markers.get("TFDU_SHUTDOWN_PROGRAMMED_SEEN") == "1"
+            and recovery_markers.get("SHUTDOWN_EXIT") == "0"
+            and recovery_markers.get("PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS") == "PASS",
+            f"{label} independent recovery markers mismatch",
+        )
+        try:
+            authorization = json.loads((recovery_dir / "hardware_authorization.json").read_text(encoding="utf-8", errors="strict"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            errors.append(f"{label} recovery authorization invalid: {exc}")
+            authorization = {}
+        append_error(errors, isinstance(authorization, dict) and authorization.get("AUTHORIZED") is True and authorization.get("P4_AUTHORIZATION") == "AUTHORIZED" and authorization.get("missing") == [], f"{label} recovery authorization mismatch")
+        start = parse_time(recovery_begin_text, float("nan"))
+        recovery_end = parse_time(recovery_end_text, float("nan"))
+        recovery_record = {
+            "directory": str(recovery_dir),
+            "observed_raw_exit": 125,
+            "shutdown_exit": 0,
+            "tfdu_shutdown_programmed_seen": True,
+            "started_at_utc": recovery_begin_text,
+            "ended_at_utc": recovery_end_text,
+            "files": [_hash_record(recovery_dir / name) for name in sorted(expected_recovery_files)],
+        }
+        outer_end = parse_time(attempt.get("ended_at_utc"), float("nan"))
+        append_error(errors, outer_end == outer_end and start == start and recovery_end == recovery_end and outer_end <= start <= recovery_end, f"{label} recovery chronology mismatch")
+
+    started_at = attempts[0].get("started_at_utc") if attempts else attempt.get("started_at_utc")
+    record = {
+        "schema": "rf-comm-p7-historical-failed-stage-epoch-v1",
+        "epoch_root": str(epoch_root),
+        "source_commit": source,
+        "failure_class": HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED,
+        "result": "FAIL",
+        "coverage_keys": [],
+        "mutation_attempted_by_wrapper": False,
+        "mutation_attempted_by_candidate": False,
+        "candidate_process_present": False,
+        "outer_sequence_ledger": _hash_record(outer_path),
+        "outer_process_containment": {
+            "process_tree_reaped": process.get("process_tree_reaped"),
+            "containment_kind": process.get("containment_kind"),
+            "containment_assigned": process.get("containment_assigned"),
+            "containment_closed": process.get("containment_closed"),
+            "descendant_count_after": process.get("descendant_count_after"),
+        },
+        "read_only_target_identity": candidate.data.get("target_identity"),
+        "historical_source_control_flow": historical_source_control_flow,
+        "ps_shutdown_argument_count_rejection_failure": {
+            "shutdown_before_returncode": candidate.data.get("shutdown_before", {}).get("returncode"),
+            "shutdown_after_returncode": candidate.data.get("shutdown_after", {}).get("returncode"),
+            "candidate_process_present": False,
+            "candidate_programmed": False,
+            "started_ps_elf": False,
+            "exact_tcl_error": "P7 JTAG Tcl requires exactly 17 arguments",
+        },
+        "verified_historical_pass_prefix": [
+            {
+                "stage_index": index,
+                "full_stage_ordinal": prefix_attempt.get("full_stage_ordinal"),
+                "stage_id": prefix_attempt.get("stage_id"),
+                "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+                "coverage_keys": [],
+                "summary_file": prefix_attempt.get("summary_file"),
+            }
+            for index, prefix_attempt in enumerate(attempts[:11])
+        ],
+        "diagnostic_preflight_files": diagnostic_files,
+        "frozen_preflight_inputs": {
+            "manifest": _hash_record(frozen_manifest_path) if frozen_manifest_path.is_file() else None,
+            "files": [
+                {key: value for key, value in frozen_records[role].items() if key != "resolved_path"}
+                for role in sorted(frozen_records)
+            ],
+        },
+        "authorization_missing_no_action_recoveries": [],
+        "effective_shutdown_recovery": recovery_record,
+        "started_at_utc": started_at,
+        "ended_at_utc": recovery_record.get("ended_at_utc") if isinstance(recovery_record, dict) else None,
+        "ended_at_epoch_seconds": recovery_end,
+    }
+    return record, errors
+
+
 def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence) -> tuple[dict[str, Any], list[str]]:
     """Bind the superseded executor attempt and manifest-declared recoveries.
 
@@ -6882,6 +7470,15 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         return {}, ["historical outer sequence ledger is not an object"]
     source = _candidate_source_commit(candidate)
     historical_variant = _historical_preflight_variant(candidate)
+    if historical_variant == HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED:
+        return _historical_ps_shutdown_arg_count_epoch_record(
+            candidate,
+            evidence,
+            outer=outer,
+            outer_path=outer_path,
+            epoch_root=epoch_root,
+            source=source,
+        )
     one_m_timeout_variants = {
         HISTORICAL_STAGE_1M_JTAG_SINGLE_WORD_TIMEOUT,
         HISTORICAL_STAGE_1M_JTAG_QUEUED_TIMEOUT,
@@ -9305,6 +9902,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_AXI4_BURST_WORD_ORDER_REJECTED:
         errors.extend(_old_commit_axi4_burst_word_order_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED:
+        errors.extend(_old_commit_ps_shutdown_arg_count_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -9635,6 +10235,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED,
             HISTORICAL_STAGE_AXI4_QUEUED_CONTROL_ORDER_REJECTED,
             HISTORICAL_STAGE_AXI4_BURST_WORD_ORDER_REJECTED,
+            HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [
