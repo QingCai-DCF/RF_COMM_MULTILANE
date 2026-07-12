@@ -92,6 +92,9 @@ HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED = (
 HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_JTAG_DEVICE_CARDINALITY_REJECTED"
 )
+HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_BOUNDARY_30_LANE0_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3387,6 +3390,31 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 ]
             ):
                 return HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and candidate.data.get("programmed_candidate") is True
+                and candidate.data.get("started_ps_elf") is True
+                and marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()[-2:]
+                == [
+                    "P7_PS_STAGE_RESULT=FAIL",
+                    "P7_PS_STAGE_ERROR=P7 functional boundary case failed: index=8 length=30",
+                ]
+            ):
+                return HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5154,7 +5182,8 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     variant = _historical_preflight_variant(candidate)
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
     r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
-    label = "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    r23 = variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
+    label = "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     data = candidate.data
     expected_ps_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5345,6 +5374,130 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
             HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
             HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
         },
+        f"{label} failure class mismatch",
+    )
+    return errors
+
+
+def _old_commit_ps_functional_boundary_failure_errors(
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+) -> list[str]:
+    """Validate r23's exact post-program functional boundary rejection."""
+
+    errors: list[str] = []
+    label = "historical r23"
+    data = candidate.data
+    expected_failures = [
+        "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
+        "P7_PS_STAGE_RESULT=PASS missing from stdout",
+    ]
+    append_error(errors, candidate.kind == "ps" and candidate.stage == "ps_runtime", f"{label} kind/stage mismatch")
+    append_error(errors, candidate.executed and candidate.marker == "FAIL_STAGE", f"{label} result boundary mismatch")
+    append_error(errors, data.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"{label} hardware acceptance promoted")
+    append_error(
+        errors,
+        data.get("stage_name") == "p7_ps_functional"
+        and data.get("mode") == "functional"
+        and data.get("programmed_candidate") is True
+        and data.get("started_ps_elf") is True
+        and data.get("ethernet_used") is False
+        and data.get("motion_used") is False,
+        f"{label} execution/scope facts mismatch",
+    )
+    safety = data.get("safety_validation")
+    append_error(
+        errors,
+        isinstance(safety, dict)
+        and safety.get("P7_HARDWARE_SAFETY") == "PASS"
+        and safety.get("errors") == []
+        and str(safety.get("source_commit_requested", "")).lower()
+        == "f9a3d34641c2aabd08d88e84070e2a1e98ccef79",
+        f"{label} safety/source mismatch",
+    )
+    for name in ("preflight", "shutdown_before", "shutdown_after"):
+        process = data.get(name)
+        if not isinstance(process, dict):
+            errors.append(f"{label} {name} record missing")
+            continue
+        errors.extend(_v2_process_containment_errors(process, f"{label} {name}"))
+        append_error(
+            errors,
+            process.get("returncode") == 0
+            and process.get("passed") is True
+            and process.get("process_tree_reaped") is True
+            and process.get("process_tree_terminated") is False
+            and process.get("failures") == [],
+            f"{label} {name} exact PASS mismatch",
+        )
+    ps_process = data.get("ps_process")
+    append_error(
+        errors,
+        isinstance(ps_process, dict)
+        and ps_process.get("name") == "ps_application_stage"
+        and ps_process.get("returncode") == 0
+        and ps_process.get("passed") is False
+        and ps_process.get("process_tree_reaped") is True
+        and ps_process.get("process_tree_terminated") is False
+        and ps_process.get("failures") == expected_failures
+        and data.get("ps_failures") == expected_failures,
+        f"{label} PS process rejection mismatch",
+    )
+    raw_path = candidate.path.parent / "p7_ps_application_raw_result.log"
+    raw_markers, duplicates = parse_marker_text(marker_text(raw_path))
+    expected_markers = {
+        "P7_PS_MODE": "functional",
+        "P7_XSDB_DAP_DISTINCT_TARGET_COUNT": "0",
+        "P7_XSDB_APU_DISTINCT_TARGET_COUNT": "1",
+        "P7_XSDB_FPGA_DISTINCT_TARGET_COUNT": "1",
+        "P7_XSDB_CPU0_DISTINCT_TARGET_COUNT": "1",
+        "P7_XSDB_CABLE_ROOT_COUNT": "1",
+        "P7_XSDB_JTAG_DEVICE_COUNT": "2",
+        "P7_PS_RESET_TARGET": "APU",
+        "P7_HW_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "P7_HW_PART": "xc7z010clg400-1",
+        "P7_HW_CANONICAL_PART": "xc7z010clg400-1",
+        "P7_HW_LIVE_PART": "xc7z010",
+        "P7_HW_LIVE_DEVICE": "xc7z010_1",
+        "P7_HW_LIVE_IDCODE": "00010011011100100010000010010011",
+        "P7_HW_BOARD_ID": "210512180081",
+        "P7_XSDB_LIVE_DEVICE": "xc7z010",
+        "P7_XSDB_LIVE_DEVICE_MATCH": "1",
+        "P7_XSDB_LIVE_BOARD_ID": "210512180081",
+        "P7_XSDB_LIVE_IDCODE": "0x13722093",
+        "P7_XSDB_PREFLIGHT_IDCODE": "00010011011100100010000010010011",
+        "P7_XSDB_TARGET_SELECTION": "EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
+        "P7_PS_CANDIDATE_PROGRAMMED": "1",
+        "P7_HOST_TO_PS_INPUT_BYTES": "4456448",
+        "P7_HOST_TO_PS_INPUT_DURATION_MS": "72445",
+        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "61514",
+        "P7_HOST_TO_PS_INPUT_BPS": "492119",
+        "P7_PS_ELF_DOWNLOADED": "1",
+        "P7_PS_SERVICE_READY_POLLS": "3",
+        "P7_PS_SERVICE_HEARTBEAT_AND_START_TICKS": "1",
+        "P7_PS_STAGE_RESULT": "FAIL",
+        "P7_PS_STAGE_ERROR": "P7 functional boundary case failed: index=8 length=30",
+    }
+    append_error(errors, not duplicates and raw_markers == expected_markers, f"{label} raw marker set mismatch")
+    append_error(
+        errors,
+        not (candidate.path.parent / "bundle" / "boundary_8_descriptor_failure.bin").exists(),
+        f"{label} unexpectedly contains the later diagnostic failure descriptor",
+    )
+    raw_manifest_errors, _record = validate_raw_evidence_manifest(candidate, evidence)
+    errors.extend(raw_manifest_errors)
+    append_error(
+        errors,
+        isinstance(data.get("bundle_post_shutdown_verification"), dict)
+        and data["bundle_post_shutdown_verification"].get("passed") is True
+        and data["bundle_post_shutdown_verification"].get("immutable_pre_post_equal") is True,
+        f"{label} immutable bundle verification mismatch",
+    )
+    lock_errors, _lock_record = hardware_execution_lock_errors(candidate, evidence)
+    errors.extend(f"{label} lock: {item}" for item in lock_errors)
+    append_error(
+        errors,
+        _historical_preflight_variant(candidate) == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
         f"{label} failure class mismatch",
     )
     return errors
@@ -7775,7 +7928,8 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     variant = _historical_preflight_variant(candidate)
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
     r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
-    label = "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    r23 = variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
+    label = "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     expected_ordinals = [1, 2, 3, 4, 62, 63, 64, 65]
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
@@ -7997,9 +8151,17 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "[llength $all_device_nodes] != 1 || [llength $device_matches] != 1" in old_ps_tcl
             and "P7 XSDB live chain must contain only the one exact device/IDCODE match" in old_ps_tcl
         )
+        functional_boundary_predicate = (
+            "proc p7_classify_debug_targets" in old_ps_tcl
+            and "[llength $all_device_nodes] != 1 || [llength $device_matches] != 1" not in old_ps_tcl
+            and "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index)" in old_ps_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED" not in old_ps_tcl
+        )
         append_error(
             errors,
-            device_cardinality_predicate
+            functional_boundary_predicate
+            if r23
+            else device_cardinality_predicate
             if r22
             else child_identity_predicate
             if r21
@@ -8008,15 +8170,19 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         )
         historical_source_control_flow = {
             "target_uniqueness_basis": (
-                "SINGLE_CABLE_AND_SINGLE_ANY_IDCODE_ROW_BEFORE_CHILD_CLASSIFICATION"
+                "SINGLE_CABLE_EXACT_DEVICE_MATCH_AND_DISTINCT_CHILD_TARGET_IDS"
+                if r23
+                else "SINGLE_CABLE_AND_SINGLE_ANY_IDCODE_ROW_BEFORE_CHILD_CLASSIFICATION"
                 if r22
                 else "DISTINCT_TARGET_ID_WITH_CHILD_ROWS_REQUIRING_DIRECT_JTAG_IDENTITY"
                 if r21
                 else "PROPERTY_ROW_COUNT"
             ),
-            "numeric_target_id_dedup_present": r21 or r22,
+            "numeric_target_id_dedup_present": r21 or r22 or r23,
             "historical_target_rejection_proven": (
-                device_cardinality_predicate
+                functional_boundary_predicate
+                if r23
+                else device_cardinality_predicate
                 if r22
                 else child_identity_predicate
                 if r21
@@ -8131,8 +8297,8 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         "coverage_keys": [],
         "mutation_attempted_by_wrapper": True,
         "mutation_attempted_by_candidate": True,
-        "candidate_programmed": False,
-        "started_ps_elf": False,
+        "candidate_programmed": candidate.data.get("programmed_candidate"),
+        "started_ps_elf": candidate.data.get("started_ps_elf"),
         "outer_sequence_ledger": _hash_record(outer_path),
         "outer_process_containment": {
             "process_tree_reaped": process.get("process_tree_reaped"),
@@ -8151,7 +8317,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
             "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
             "raw_error": (
-                "P7 XSDB live chain must contain only the one exact device/IDCODE match"
+                "P7 functional boundary case failed: index=8 length=30"
+                if r23
+                else "P7 XSDB live chain must contain only the one exact device/IDCODE match"
                 if r22
                 else "P7 XSDB reset target is not unique on the exact authorized device"
             ),
@@ -8203,6 +8371,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
         HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
         HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
+        HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
     }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
@@ -10647,6 +10816,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED:
         errors.extend(_old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED:
+        errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -10981,6 +11153,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
             HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
             HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
+            HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

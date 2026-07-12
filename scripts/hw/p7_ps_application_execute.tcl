@@ -1665,7 +1665,15 @@ set rc [catch {
         lassign [p7_wait_descriptor_terminal $abort_file $descriptor_address $phase_deadline \
             "P7_FUNCTIONAL_BOUNDARY_$boundary_index"] status error_code
         if {$status != 3 || $error_code != 0} {
-          error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index)"
+          set failure_descriptor [file join $bundle_dir \
+              "boundary_${boundary_index}_descriptor_failure.bin"]
+          dow -data $failure_descriptor $descriptor_address
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX=$boundary_index"
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH=$boundary_length($boundary_index)"
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status"
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code"
+          p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1"
+          error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index) status=$status error=$error_code"
         }
         p7_dump_case $bundle_dir $boundary_index $boundary_input($boundary_index) \
             $boundary_output($boundary_index) $boundary_length($boundary_index) \

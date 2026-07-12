@@ -1209,6 +1209,17 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual("1", interp.eval("llength [dict get $sets fpga]"))
         self.assertEqual("0", interp.eval("llength [dict get $sets dap]"))
 
+    def test_functional_boundary_failure_preserves_status_error_and_descriptor(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1")
+        terminal_error = tcl.index(
+            'error "P7 functional boundary case failed:', capture
+        )
+        self.assertLess(capture, terminal_error)
+        self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status", tcl)
+        self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code", tcl)
+        self.assertIn("boundary_${boundary_index}_descriptor_failure.bin", tcl)
+
     def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
         with tempfile.TemporaryDirectory() as temp:

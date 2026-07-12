@@ -820,3 +820,29 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - r22 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r23_diag_suffix62`。仍须先提交 r22 exact
   history/tamper、recovery、cardinality 修复与本交接，再从 clean source 重新完成 exactly-once suites、checkpoint、impact
   proof、plan 和全部 dry validation。r23 仍为零 coverage diagnostic，无 stage 66。
+
+## 30. 2026-07-12 r23 adaptive diagnostic 增量交接（本节覆盖第 29 节的 next-run 描述）
+
+- 在 commit `f9a3d34641c2aabd08d88e84070e2a1e98ccef79` 上，required complete suites exactly once 为
+  121 + 39 = 160/160 PASS；P7 checkpoint 13/13 PASS，SHA256 为
+  `6167e0bdfa1936340f745aa3382b3f8a69e5589d9c565bd3297b346e438e0643`。r23 impact proof SHA256 为
+  `60b823582b487dba2df805de7bf385b86fb9721f868c25278ba5556b119f6514`；plan SHA256 为
+  `18f868adbda3fde8e8e882bc319d0c7f4807b335b07bff40a3c13f7caa15308f`。全部 dry validation PASS，plan
+  仍严格只含 `1,2,3,4,62,63,64,65`。
+- r23 只启动一次且没有 `--resume`。ordinals 1--4 exact PASS。stage 62 成功证明 `DAP=0, APU=1, FPGA=1,
+  CPU0=1, cable_root=1, JTAG_device_nodes=2`，安全选择 APU reset target，精确匹配授权 target/part/serial/IDCODE，
+  candidate bit 编程成功，4,456,448 bytes host-to-PS preload 完成，PS ELF 下载并启动且 service ready；随后第一个
+  非空 30-byte lane0 functional boundary（index 8）终态失败。原 Tcl 仅保留
+  `P7 functional boundary case failed: index=8 length=30`，没有在 shutdown 前保存 descriptor status/error，因此当前证据不能
+  猜测具体 firmware/P6 error code。stage 63--65 未启动，stage 66 不在 plan 中。ledger SHA256 为
+  `08c16478121c8384e410aad6c64f779610ac04eb13fedc1914a30bcc08f5a9cb`，失败 summary SHA256 为
+  `f8439034d8d7a54a2d93b3b350877c198b7d5ad532d12cf5e6c8f49792d0b757`。
+- r23 后独立 recovery 精确记录 shutdown programming marker 与 `SHUTDOWN_EXIT=0`；外部 `hw_server` PID 45220 未被
+  触碰。frozen 12-file manifest SHA256 为
+  `2b3947bcb922289190490b69a3b617226658ed5ccd6f2bf64187950ef8d9c3ed`。
+- 诊断改动不改变 candidate 行为：当 functional boundary 非 DONE/zero-error 时，先把失败 descriptor 下载到 immutable bundle，
+  输出 index、length、status、error_code 与 capture marker，再抛出包含 status/error 的终端错误。这样下一新-ID run 若在同一点失败，
+  可由机器证据定位，仍不会把 recovery 或部分 boundary 结果提升为 stage PASS。
+- r23 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r24_diag_suffix62`。必须先提交 r23 exact
+  history/tamper、recovery、failure-descriptor capture 与本交接，再从 clean source 完成 exactly-once suites、checkpoint、impact
+  proof、plan 和全部 dry validation。r24 仍为零 coverage diagnostic，无 stage 66。

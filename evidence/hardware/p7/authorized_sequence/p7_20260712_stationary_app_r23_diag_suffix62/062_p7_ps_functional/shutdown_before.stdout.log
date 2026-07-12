@@ -1,0 +1,828 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE\scripts\hw\p7_jtag_axi_transactions.tcl}
+# proc p7_auth_value {text key} {
+#   foreach raw_line [split $text "\n"] {
+#     set line [string trim $raw_line]
+#     if {$line eq "" || [string match "#*" $line]} { continue }
+#     set separator [string first "=" $line]
+#     if {$separator < 1} { continue }
+#     set observed_key [string trim [string range $line 0 [expr {$separator - 1}]]]
+#     if {$observed_key eq $key} {
+#       return [string trim [string range $line [expr {$separator + 1}] end]]
+#     }
+#   }
+#   return ""
+# }
+# proc p7_has_marker {text expected} {
+#   foreach raw_line [split $text "\n"] {
+#     set line [string trim $raw_line]
+#     if {$line eq $expected} { return 1 }
+#   }
+#   return 0
+# }
+# proc p7_require_auth_value {text key expected} {
+#   set observed [p7_auth_value $text $key]
+#   if {![string equal -nocase $observed $expected]} {
+#     error "P7 authorization mismatch for $key expected=$expected observed=$observed"
+#   }
+# }
+# proc p7_normal_path {value} {
+#   return [string tolower [string map [list "\\" "/"] [file normalize $value]]]
+# }
+# proc p7_sanitize_error {text} {
+#   # Build an explicit even mapping list.  A malformed diagnostic formatter
+#   # must never replace the error that the outer catch actually captured.
+#   if {[catch {string map [list "\r" " " "\n" " "] $text} sanitized]} {
+#     return $text
+#   }
+#   return $sanitized
+# }
+# proc p7_require_auth_path {text key expected} {
+#   set observed [p7_auth_value $text $key]
+#   if {$observed eq "" || [p7_normal_path $observed] ne [p7_normal_path $expected]} {
+#     error "P7 authorization path mismatch for $key expected=$expected observed=$observed"
+#   }
+# }
+# proc p7_parse_hex32 {text label} {
+#   if {![regexp -nocase {^0x[0-9a-f]{8}$} $text]} {
+#     error "$label must be exactly 0x plus eight hex digits: $text"
+#   }
+#   scan [string range $text 2 end] %x value
+#   return $value
+# }
+# proc p7_normal_idcode {value} {
+#   set clean [string tolower [string map {_ ""} [string trim $value]]]
+#   if {[regexp {^[01]{32}$} $clean]} {
+#     set numeric 0
+#     foreach bit [split $clean ""] {
+#       set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+#     }
+#     return [format %08X $numeric]
+#   }
+#   if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+#     return [string toupper $hexadecimal]
+#   }
+#   if {[regexp {^[0-9a-f]{8}$} $clean]} {
+#     return [string toupper $clean]
+#   }
+#   return ""
+# }
+# proc p7_require_result_key {key} {
+#   if {![regexp {^[A-Z][A-Z0-9_]{0,63}$} $key]} {
+#     error "invalid result key: $key"
+#   }
+# }
+# proc p7_check_stop {abort_file deadline_ms} {
+#   if {[file exists $abort_file]} { error "P7 abort file appeared during stage" }
+#   if {[clock milliseconds] >= $deadline_ms} { error "P7 Tcl stage runtime limit exceeded" }
+# }
+# proc p7_validate_address {address axi_base} {
+#   if {$address % 4 != 0 || $address < $axi_base || $address > $axi_base + 0x03FC} {
+#     error "AXI address is outside the aligned P6 candidate window: [format 0x%08X $address]"
+#   }
+#   return [expr {$address - $axi_base}]
+# }
+# proc p7_validate_write {offset data} {
+#   # ``offset`` is the numeric result of p7_validate_address (for example
+#   # decimal "256"), so keep the allowlist numeric as well.  Tcl's exact list
+#   # search does not consider the string "0x100" equal to "256".
+#   set fixed [list \
+#       [expr {0x100}] [expr {0x108}] [expr {0x10C}] [expr {0x110}] \
+#       [expr {0x114}] [expr {0x118}] [expr {0x11C}] [expr {0x15C}] \
+#       [expr {0x16C}] [expr {0x170}] [expr {0x174}]]
+#   set payload_window [expr {$offset >= 0x200 && $offset <= 0x2FC && $offset % 4 == 0}]
+#   if {[lsearch -exact $fixed $offset] < 0 && !$payload_window} {
+#     error "write offset is outside the P6 candidate allowlist: [format 0x%03X $offset]"
+#   }
+#   if {$offset == 0x100 && ($data == 0 || ($data & 0xFFFFFFC0) != 0)} {
+#     error "P6_CTRL may use only nonzero bits 0x01..0x20"
+#   }
+#   if {($offset == 0x10C || $offset == 0x110) && $data ni {1 2 3}} {
+#     error "lane mask must be 0x1, 0x2, or 0x3"
+#   }
+#   if {$offset == 0x114 && ($data < 1 || $data > 247)} {
+#     error "payload length must be in 1..247"
+#   }
+#   if {$offset == 0x108 && $data > 0xFFFF} { error "P6 session must fit 16 bits" }
+#   if {($offset == 0x16C || $offset == 0x174) && $data > 63} {
+#     error "payload/RX word index must be in 0..63"
+#   }
+#   if {$offset == 0x15C && $data == 0} { error "bounded timeout cycles must be nonzero" }
+# }
+# proc p7_axi_write {hw_axi address data txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   incr txn_index
+#   set name "p7_w_$txn_index"
+#   set address_text [format 0x%08X $address]
+#   set data_text [format 0x%08X $data]
+#   create_hw_axi_txn $name $hw_axi -type write -address $address_text -data $data_text -len 1 -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   delete_hw_axi_txn [get_hw_axi_txns $name]
+# }
+# proc p7_axi_read {hw_axi address txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   incr txn_index
+#   set name "p7_r_$txn_index"
+#   set address_text [format 0x%08X $address]
+#   create_hw_axi_txn $name $hw_axi -type read -address $address_text -len 1 -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   set txn [get_hw_axi_txns $name]
+#   set raw [string trim [get_property DATA $txn]]
+#   delete_hw_axi_txn $txn
+#   set clean [string map [list "0x" "" "0X" "" "_" ""] $raw]
+#   if {![regexp -nocase {^[0-9a-f]+$} $clean]} { error "invalid AXI read data: $raw" }
+#   set padded "00000000$clean"
+#   return [string toupper [string range $padded end-7 end]]
+# }
+# proc p7_axi_write_queue {hw_axi addresses data_words txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   set count [llength $addresses]
+#   if {$count < 1 || $count > 16 || $count != [llength $data_words]} {
+#     error "invalid P7 AXI write queue shape"
+#   }
+#   set txns {}
+#   for {set index 0} {$index < $count} {incr index} {
+#     incr txn_index
+#     set name "p7_wb_$txn_index"
+#     create_hw_axi_txn $name $hw_axi -type write \
+#         -address [format 0x%08X [lindex $addresses $index]] \
+#         -data [format 0x%08X [lindex $data_words $index]] -len 1 -force
+#     lappend txns [get_hw_axi_txns $name]
+#   }
+#   run_hw_axi -queue {*}$txns
+#   foreach txn $txns { delete_hw_axi_txn $txn }
+# }
+# proc p7_axi_read_queue {hw_axi addresses keys txn_index_var out pending_var} {
+#   upvar $txn_index_var txn_index
+#   upvar $pending_var pending
+#   set count [llength $addresses]
+#   if {$count < 1 || $count > 16 || $count != [llength $keys]} {
+#     error "invalid P7 AXI read queue shape"
+#   }
+#   set txns {}
+#   for {set index 0} {$index < $count} {incr index} {
+#     incr txn_index
+#     set name "p7_rb_$txn_index"
+#     create_hw_axi_txn $name $hw_axi -type read \
+#         -address [format 0x%08X [lindex $addresses $index]] -len 1 -force
+#     lappend txns [get_hw_axi_txns $name]
+#   }
+#   run_hw_axi -queue {*}$txns
+#   for {set index 0} {$index < $count} {incr index} {
+#     set txn [lindex $txns $index]
+#     set raw [string trim [get_property DATA $txn]]
+#     set clean [string map [list "0x" "" "0X" "" "_" "" " " ""] $raw]
+#     if {![regexp -nocase {^[0-9a-f]+$} $clean] || [string length $clean] > 8} {
+#       error "invalid P7 AXI queued read data: $raw"
+#     }
+#     set padded "00000000$clean"
+#     set value [string toupper [string range $padded end-7 end]]
+#     p7_result_line $out "[lindex $keys $index]=$value" pending
+#   }
+#   foreach txn $txns { delete_hw_axi_txn $txn }
+# }
+# proc p7_axi_write_burst {hw_axi addresses data_words txn_index_var} {
+#   upvar $txn_index_var txn_index
+#   set count [llength $addresses]
+#   if {$count < 1 || $count > 64 || $count != [llength $data_words]} {
+#     error "invalid P7 AXI write burst shape"
+#   }
+#   set first [lindex $addresses 0]
+#   set encoded {}
+#   for {set index 0} {$index < $count} {incr index} {
+#     if {[lindex $addresses $index] != $first + 4 * $index} {
+#       error "P7 AXI write burst is not naturally consecutive"
+#     }
+#     lappend encoded [format %08X [lindex $data_words $index]]
+#   }
+#   incr txn_index
+#   set name "p7_wburst_$txn_index"
+#   # Vivado's multiword DATA property is displayed most-significant word first:
+#   # the rightmost word is the lowest INCR address.  Reverse the natural
+#   # low-to-high DSL words before creating the transaction.
+#   create_hw_axi_txn $name $hw_axi -type write -address [format 0x%08X $first] \
+#       -data [join [lreverse $encoded] _] -len $count -burst INCR -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   delete_hw_axi_txn [get_hw_axi_txns $name]
+# }
+# proc p7_axi_read_burst {hw_axi addresses keys txn_index_var out pending_var} {
+#   upvar $txn_index_var txn_index
+#   upvar $pending_var pending
+#   set count [llength $addresses]
+#   if {$count < 1 || $count > 64 || $count != [llength $keys]} {
+#     error "invalid P7 AXI read burst shape"
+#   }
+#   set first [lindex $addresses 0]
+#   for {set index 0} {$index < $count} {incr index} {
+#     if {[lindex $addresses $index] != $first + 4 * $index} {
+#       error "P7 AXI read burst is not naturally consecutive"
+#     }
+#   }
+#   incr txn_index
+#   set name "p7_rburst_$txn_index"
+#   create_hw_axi_txn $name $hw_axi -type read -address [format 0x%08X $first] \
+#       -len $count -burst INCR -force
+#   run_hw_axi [get_hw_axi_txns $name]
+#   set txn [get_hw_axi_txns $name]
+#   set raw [string trim [get_property DATA $txn]]
+#   delete_hw_axi_txn $txn
+#   set clean [string map [list "0x" "" "0X" "" "_" "" " " ""] $raw]
+#   if {![regexp -nocase {^[0-9a-f]+$} $clean] || [string length $clean] != 8 * $count} {
+#     error "invalid P7 AXI burst read data length: expected=[expr {8 * $count}] observed=[string length $clean]"
+#   }
+#   set clean [string toupper $clean]
+#   for {set index 0} {$index < $count} {incr index} {
+#     # DATA uses the same most-significant-word-first rendering.  Map the
+#     # rightmost property word back to the lowest INCR address/evidence key.
+#     set start [expr {8 * ($count - 1 - $index)}]
+#     set value [string range $clean $start [expr {$start + 7}]]
+#     p7_result_line $out "[lindex $keys $index]=$value" pending
+#   }
+# }
+# proc p7_flush_axi_batch {hw_axi kind_var addresses_var data_var keys_var txn_index_var out pending_var} {
+#   upvar $kind_var kind
+#   upvar $addresses_var addresses
+#   upvar $data_var data_words
+#   upvar $keys_var keys
+#   upvar $txn_index_var txn_index
+#   upvar $pending_var pending
+#   if {$kind eq "WQ"} {
+#     p7_axi_write_queue $hw_axi $addresses $data_words txn_index
+#   } elseif {$kind eq "RQ"} {
+#     p7_axi_read_queue $hw_axi $addresses $keys txn_index $out pending
+#   } elseif {$kind eq "WB"} {
+#     p7_axi_write_burst $hw_axi $addresses $data_words txn_index
+#   } elseif {$kind eq "RB"} {
+#     p7_axi_read_burst $hw_axi $addresses $keys txn_index $out pending
+#   } elseif {$kind ne ""} {
+#     error "invalid pending P7 AXI batch kind"
+#   }
+#   set kind ""
+#   set addresses {}
+#   set data_words {}
+#   set keys {}
+# }
+# proc p7_emit_identity {out target device canonical_part live_part idcode} {
+#   foreach line [list \
+#       "P7_HW_TARGET=$target" \
+#       "P7_HW_DEVICE=$device" \
+#       "P7_HW_PART=$canonical_part" \
+#       "P7_HW_IDCODE=$idcode" \
+#       "P7_HW_CANONICAL_PART=$canonical_part" \
+#       "P7_HW_LIVE_PART=$live_part" \
+#       "P7_HW_LIVE_DEVICE=$device" \
+#       "P7_HW_LIVE_IDCODE=$idcode"] {
+#     puts $out $line
+#     puts $line
+#   }
+#   flush $out
+# }
+# proc p7_result_line {out text pending_var} {
+#   upvar $pending_var pending
+#   puts $out $text
+#   incr pending
+#   if {$pending >= 256} {
+#     flush $out
+#     set pending 0
+#   }
+# }
+# set result_file ""
+# set result_handle ""
+# set selected_target ""
+# set selected_device ""
+# set manager_open 0
+# set server_connected 0
+# set target_open 0
+# set candidate_programming_attempted 0
+# set emergency_shutdown_programmed 0
+# set mode "UNKNOWN"
+# set shutdown_bit ""
+# set p7_canonical_part "xc7z010clg400-1"
+# set p7_live_part "xc7z010"
+# set p7_live_device "xc7z010_1"
+# set p7_live_idcode "13722093"
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_DEVICE=xc7z010_1
+P7_HW_PART=xc7z010clg400-1
+P7_HW_IDCODE=00010011011100100010000010010011
+P7_HW_CANONICAL_PART=xc7z010clg400-1
+P7_HW_LIVE_PART=xc7z010
+P7_HW_LIVE_DEVICE=xc7z010_1
+P7_HW_LIVE_IDCODE=00010011011100100010000010010011
+INFO: [Labtools 27-3164] End of startup status: HIGH
+program_hw_devices: Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 1419.422 ; gain = 0.000
+INFO: [Labtools 27-1434] Device xc7z010 (JTAG device index = 1) is programmed with a design that has no supported debug core(s) in it.
+P7_TCL_PROGRAMMING_ATTEMPTED=1
+TFDU_SHUTDOWN_PROGRAMMED=C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p7/shutdown/p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit
+P7_SHUTDOWN_RESULT=PASS
+# set rc [catch {
+#   if {[llength $argv] != 17} {
+#     error "P7 JTAG Tcl requires exactly 17 arguments"
+#   }
+#   set root_dir [file normalize [lindex $argv 0]]
+#   set mode [string toupper [lindex $argv 1]]
+#   set authorization_file [file normalize [lindex $argv 2]]
+#   set expected_board_id [lindex $argv 3]
+#   set expected_part [lindex $argv 4]
+#   set expected_target [lindex $argv 5]
+#   set hw_server_url [lindex $argv 6]
+#   set jtag_frequency_hz [lindex $argv 7]
+#   set bit_file [file normalize [lindex $argv 8]]
+#   set ltx_arg [lindex $argv 9]
+#   set txn_arg [lindex $argv 10]
+#   set result_file [file normalize [lindex $argv 11]]
+#   set axi_base_text [lindex $argv 12]
+#   set max_operations [lindex $argv 13]
+#   set max_transaction_bytes [lindex $argv 14]
+#   set max_runtime_sec [lindex $argv 15]
+#   set shutdown_bit [file normalize [lindex $argv 16]]
+# 
+#   if {$mode ni {STAGE SHUTDOWN}} { error "P7 mode must be STAGE or SHUTDOWN" }
+#   if {![info exists ::env(RF_COMM_HW_AUTH)] ||
+#       $::env(RF_COMM_HW_AUTH) ne "P7_STATIONARY_APP_LAYER_APPROVED"} {
+#     error "RF_COMM_HW_AUTH=P7_STATIONARY_APP_LAYER_APPROVED required"
+#   }
+#   if {$expected_board_id eq "" || $expected_part eq "" || $expected_target eq ""} {
+#     error "P7 board, part, and target must be explicit"
+#   }
+#   if {![string equal -nocase $expected_part $p7_canonical_part]} {
+#     error "P7 JTAG executor supports only canonical part $p7_canonical_part"
+#   }
+#   set local_server_ok 0
+#   if {[regexp -nocase {^(tcp:)?(localhost|127[.]0[.]0[.]1):([0-9]+)$} \
+#       $hw_server_url full protocol host server_port]} {
+#     if {$server_port >= 1 && $server_port <= 65535} { set local_server_ok 1 }
+#   }
+#   if {!$local_server_ok} { error "P7 hw_server URL must be local with a valid port" }
+#   if {![string is integer -strict $jtag_frequency_hz] ||
+#       $jtag_frequency_hz < 100000 || $jtag_frequency_hz > 5000000} {
+#     error "P7 JTAG frequency must be in 100000..5000000 Hz"
+#   }
+#   if {![string is integer -strict $max_operations] ||
+#       $max_operations < 1 || $max_operations > 1100000} {
+#     error "P7 max operations must be in 1..1100000"
+#   }
+#   if {![string is integer -strict $max_transaction_bytes] ||
+#       $max_transaction_bytes < 1 || $max_transaction_bytes > 134217728} {
+#     error "P7 max transaction bytes must be in 1..134217728"
+#   }
+#   if {![string is integer -strict $max_runtime_sec] ||
+#       $max_runtime_sec < 1 || $max_runtime_sec > 1800} {
+#     error "P7 max runtime must be in 1..1800 seconds"
+#   }
+#   set axi_base [p7_parse_hex32 $axi_base_text AXI_BASE]
+#   if {$axi_base != 0x43C00000} { error "P7 AXI base must be exactly 0x43C00000" }
+# 
+#   set authorization_root [file normalize [file join $root_dir .hardware_authorization]]
+#   set auth_slash [string map [list "\\" "/"] $authorization_file]
+#   set auth_root_slash [string trimright [string map [list "\\" "/"] $authorization_root] "/"]
+#   if {![string match -nocase "${auth_root_slash}/*" $auth_slash]} {
+#     error "P7 authorization file must be under .hardware_authorization"
+#   }
+#   if {![file isfile $authorization_file]} { error "P7 authorization file missing" }
+#   set abort_file [file join $authorization_root ABORT_NOW.txt]
+#   if {$mode eq "STAGE" && [file exists $abort_file]} { error "P7 abort file is present" }
+#   if {![file isfile $shutdown_bit]} { error "P7 shutdown bitstream missing" }
+#   if {![file isfile $bit_file]} { error "P7 requested bitstream missing" }
+#   if {![file isdirectory [file dirname $result_file]]} { error "P7 result directory missing" }
+# 
+#   set auth_handle [open $authorization_file r]
+#   set auth_text [read $auth_handle]
+#   close $auth_handle
+#   if {![p7_has_marker $auth_text P7_STATIONARY_APP_LAYER_APPROVED]} {
+#     error "P7 authorization marker missing"
+#   }
+#   p7_require_auth_value $auth_text AUTHORIZED_STAGE P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET
+#   p7_require_auth_value $auth_text USER_HARDWARE_AUTHORIZATION_FOR_P7 GRANTED
+#   p7_require_auth_value $auth_text BOARD_ID $expected_board_id
+#   p7_require_auth_value $auth_text EXPECTED_PART $expected_part
+#   p7_require_auth_value $auth_text EXPECTED_TARGET $expected_target
+#   p7_require_auth_value $auth_text SHUTDOWN_ON_EXIT required
+#   p7_require_auth_value $auth_text NO_ETHERNET true
+#   p7_require_auth_value $auth_text NO_MOTION true
+#   p7_require_auth_value $auth_text LANE_COUNT 2
+#   p7_require_auth_value $auth_text MAX_LANE_MASK 0x3
+#   set authorized_shutdown_path [p7_auth_value $auth_text SHUTDOWN_BITSTREAM_PATH]
+#   if {$mode eq "SHUTDOWN" &&
+#       [p7_normal_path $shutdown_bit] ne [p7_normal_path $authorized_shutdown_path]} {
+#     # The PS runner freezes the already hash-verified canonical image before
+#     # any hardware action.  The authorization binds that deterministic,
+#     # content-addressed path and its digest; Python verifies the bytes before
+#     # both shutdown barriers.
+#     if {[p7_normal_path $bit_file] ne [p7_normal_path $shutdown_bit]} {
+#       error "P7 frozen shutdown mode requires identical program/emergency images"
+#     }
+#     p7_require_auth_path $auth_text P7_FROZEN_SHUTDOWN_PATH $shutdown_bit
+#     set frozen_sha [string tolower [p7_auth_value $auth_text P7_FROZEN_SHUTDOWN_SHA256]]
+#     set canonical_sha [string tolower [p7_auth_value $auth_text SHUTDOWN_BITSTREAM_SHA256]]
+#     if {![regexp {^[0-9a-f]{64}$} $frozen_sha] || $frozen_sha ne $canonical_sha ||
+#         [string tolower [file tail $shutdown_bit]] ne "p7_frozen_shutdown_${frozen_sha}.bit"} {
+#       error "P7 frozen shutdown digest/path binding is invalid"
+#     }
+#   } else {
+#     p7_require_auth_path $auth_text SHUTDOWN_BITSTREAM_PATH $shutdown_bit
+#     if {$mode eq "SHUTDOWN" && [p7_normal_path $bit_file] ne [p7_normal_path $shutdown_bit]} {
+#       error "P7 shutdown mode requires identical program/emergency images"
+#     }
+#   }
+#   set authorized_runtime [p7_auth_value $auth_text MAX_RUNTIME_SEC]
+#   if {![string is integer -strict $authorized_runtime] ||
+#       $authorized_runtime < $max_runtime_sec || $authorized_runtime > 1800} {
+#     error "P7 authorization runtime is invalid or lower than requested"
+#   }
+# 
+#   if {$mode eq "STAGE"} {
+#     if {$ltx_arg eq "-" || $txn_arg eq "-"} { error "P7 STAGE requires LTX and transaction paths" }
+#     set ltx_file [file normalize $ltx_arg]
+#     set txn_file [file normalize $txn_arg]
+#     if {![file isfile $ltx_file] || ![file isfile $txn_file]} {
+#       error "P7 STAGE LTX or transaction file missing"
+#     }
+#     set txn_size [file size $txn_file]
+#     if {$txn_size < 1 || $txn_size > $max_transaction_bytes} {
+#       error "P7 transaction file size is outside the authorized bound: $txn_size"
+#     }
+#     p7_require_auth_path $auth_text BITSTREAM_PATH $bit_file
+#     p7_require_auth_path $auth_text LTX_PATH $ltx_file
+#     p7_require_auth_path $auth_text P7_JTAG_TRANSACTION_PATH $txn_file
+#     p7_require_auth_value $auth_text P7_JTAG_FREQUENCY_HZ $jtag_frequency_hz
+#     p7_require_auth_value $auth_text P7_JTAG_AXI_BASE $axi_base_text
+#   }
+# 
+#   # No hardware command may appear before all authorization checks above.
+#   open_hw_manager
+#   set manager_open 1
+#   connect_hw_server -url $hw_server_url
+#   set server_connected 1
+#   set target_matches {}
+#   foreach candidate [get_hw_targets -quiet *] {
+#     if {[string equal -nocase [string trim "$candidate"] $expected_target]} {
+#       lappend target_matches $candidate
+#     }
+#   }
+#   if {[llength $target_matches] != 1} {
+#     error "P7 expected exactly one authorized target match; found [llength $target_matches]"
+#   }
+#   set selected_target [lindex $target_matches 0]
+#   if {[string first [string tolower $expected_board_id] [string tolower "$selected_target"]] < 0} {
+#     error "P7 selected target does not contain authorized board id"
+#   }
+#   current_hw_target $selected_target
+#   set_property PARAM.FREQUENCY $jtag_frequency_hz $selected_target
+#   open_hw_target $selected_target
+#   set target_open 1
+# 
+#   set device_matches {}
+#   foreach candidate [get_hw_devices -quiet *] {
+#     set candidate_part ""
+#     set candidate_name ""
+#     set candidate_idcode ""
+#     catch {set candidate_part [get_property PART $candidate]}
+#     catch {set candidate_name [get_property NAME $candidate]}
+#     catch {set candidate_idcode [get_property IDCODE $candidate]}
+#     if {[string equal -nocase $candidate_part $p7_live_part] &&
+#         [string equal -nocase $candidate_name $p7_live_device] &&
+#         [p7_normal_idcode $candidate_idcode] eq $p7_live_idcode} {
+#       lappend device_matches $candidate
+#     }
+#   }
+#   if {[llength $device_matches] != 1} {
+#     error "P7 expected exactly one canonical live part/device/IDCODE match; found [llength $device_matches]"
+#   }
+#   set selected_device [lindex $device_matches 0]
+#   current_hw_device $selected_device
+#   set selected_part [get_property PART $selected_device]
+#   set selected_name [get_property NAME $selected_device]
+#   set selected_idcode UNKNOWN
+#   catch {set selected_idcode [get_property IDCODE $selected_device]}
+#   set result_handle [open $result_file w]
+#   p7_emit_identity $result_handle $selected_target $selected_name $expected_part $selected_part $selected_idcode
+# 
+#   if {$mode eq "SHUTDOWN"} {
+#     catch {set_property PROBES.FILE {} $selected_device}
+#     catch {set_property FULL_PROBES.FILE {} $selected_device}
+#     set_property PROGRAM.FILE $bit_file $selected_device
+#     set candidate_programming_attempted 1
+#     program_hw_devices $selected_device
+#     refresh_hw_device -update_hw_probes false $selected_device
+#     foreach line [list \
+#         "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted" \
+#         "TFDU_SHUTDOWN_PROGRAMMED=$bit_file" \
+#         "P7_SHUTDOWN_RESULT=PASS"] {
+#       puts $result_handle $line
+#       puts $line
+#     }
+#     flush $result_handle
+#   } else {
+#     set deadline_ms [expr {[clock milliseconds] + 1000 * $max_runtime_sec}]
+#     p7_check_stop $abort_file $deadline_ms
+#     set_property PROGRAM.FILE $bit_file $selected_device
+#     set_property PROBES.FILE $ltx_file $selected_device
+#     set_property FULL_PROBES.FILE $ltx_file $selected_device
+#     set candidate_programming_attempted 1
+#     program_hw_devices $selected_device
+#     refresh_hw_device -update_hw_probes true $selected_device
+#     after 1
+#     puts $result_handle "P7_CANDIDATE_PROGRAMMED=1"
+#     puts "P7_CANDIDATE_PROGRAMMED=1"
+#     flush $result_handle
+#     p7_check_stop $abort_file $deadline_ms
+# 
+#     set hw_axis [get_hw_axis -quiet -of_objects $selected_device]
+#     if {[llength $hw_axis] != 1} {
+#       error "P7 requires exactly one JTAG AXI master; found [llength $hw_axis]"
+#     }
+#     set hw_axi [lindex $hw_axis 0]
+#     puts $result_handle "P7_HW_AXI=[get_property NAME $hw_axi]"
+# 
+#     # Stream the bounded DSL.  Never read/source/eval the transaction as Tcl.
+#     set txn_handle [open $txn_file r]
+#     fconfigure $txn_handle -encoding ascii -translation auto
+#     set operation_count 0
+#     set txn_index 0
+#     set ended 0
+#     set saw_magic 0
+#     set txn_line_number 0
+#     set result_lines_pending 0
+#     set seen_lane 0
+#     set seen_ack 0
+#     set lane_value -1
+#     set ack_value -1
+#     set seen_length 0
+#     set seen_commit 0
+#     set last_op ""
+#     set batch_kind ""
+#     set batch_addresses {}
+#     set batch_data {}
+#     set batch_keys {}
+#     array set used_keys {}
+#     array set used_meta {}
+#     while {[gets $txn_handle raw_line] >= 0} {
+#       incr txn_line_number
+#       p7_check_stop $abort_file $deadline_ms
+#       if {[string length $raw_line] > 511} {
+#         error "transaction line exceeds 512-byte bound at line $txn_line_number"
+#       }
+#       set line [string trim $raw_line]
+#       if {$line eq "" || [string match "#*" $line]} { continue }
+#       if {![regexp {^[ -~]+$} $line]} {
+#         error "transaction line contains non-printable/non-ASCII data"
+#       }
+#       if {!$saw_magic} {
+#         if {$line ne "P7_JTAG_AXI_TRANSACTIONS_V1"} { error "P7 transaction magic missing" }
+#         set saw_magic 1
+#         continue
+#       }
+#       set fields [regexp -all -inline {\S+} $line]
+#       set op [lindex $fields 0]
+#       if {$ended} { error "transaction content after END is forbidden" }
+#       if {$op eq "END"} {
+#         if {[llength $fields] != 1} { error "END takes no arguments" }
+#         p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#             txn_index $result_handle result_lines_pending
+#         set ended 1
+#         continue
+#       }
+#       if {$op eq "META"} {
+#         p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#             txn_index $result_handle result_lines_pending
+#         if {[llength $fields] != 3} { error "META syntax invalid" }
+#         set key [lindex $fields 1]
+#         set value [lindex $fields 2]
+#         p7_require_result_key $key
+#         if {![regexp {^[A-Za-z0-9_.:+/@-]{1,128}$} $value]} { error "META value invalid" }
+#         if {[info exists used_meta($key)]} { error "duplicate META key: $key" }
+#         if {[array size used_meta] >= 64} { error "META entry limit exceeded" }
+#         set used_meta($key) 1
+#         p7_result_line $result_handle "P7_TXN_META_${key}=$value" result_lines_pending
+#         continue
+#       }
+#       incr operation_count
+#       if {$operation_count > $max_operations} { error "P7 transaction operation limit exceeded" }
+# 
+#       if {$op eq "W32"} {
+#         if {[llength $fields] != 3} { error "W32 syntax invalid" }
+#         set address [p7_parse_hex32 [lindex $fields 1] address]
+#         set data [p7_parse_hex32 [lindex $fields 2] data]
+#         set offset [p7_validate_address $address $axi_base]
+#         p7_validate_write $offset $data
+#         if {$offset == 0x10C} {
+#           set seen_lane 1
+#           set lane_value $data
+#           set seen_commit 0
+#         }
+#         if {$offset == 0x110} {
+#           set seen_ack 1
+#           set ack_value $data
+#           set seen_commit 0
+#         }
+#         if {$offset == 0x114} {
+#           set seen_length 1
+#           set seen_commit 0
+#         }
+#         if {$offset == 0x108 || $offset == 0x15C ||
+#             ($offset >= 0x200 && $offset <= 0x2FC)} {
+#           set seen_commit 0
+#         }
+#         if {$offset == 0x100 && ($data & 0x04) != 0} {
+#           if {!$seen_lane || !$seen_ack || !$seen_length} {
+#             error "COMMIT requires lane, ACK lane, and payload length first"
+#           }
+#           if {$lane_value != $ack_value} { error "P6 lane mask and ACK lane mask must match" }
+#           set seen_commit 1
+#         }
+#         if {$offset == 0x100 && ($data & 0x08) != 0 &&
+#             (!$seen_lane || !$seen_ack || !$seen_length || !$seen_commit)} {
+#           error "START requires a bounded committed configuration"
+#         }
+#         if {$offset == 0x100 && ($data & 0x08) != 0} { set seen_commit 0 }
+#         set last_op "W32_[format 0x%08X $address]_[format 0x%08X $data]"
+#         if {$offset == 0x100} {
+#           p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#               txn_index $result_handle result_lines_pending
+#           p7_axi_write $hw_axi $address $data txn_index
+#           continue
+#         }
+#         set next_kind [expr {$offset >= 0x200 && $offset <= 0x2FC ? "WB" : "WQ"}]
+#         set batch_limit [expr {$next_kind eq "WB" ? 64 : 16}]
+#         set can_extend [expr {$batch_kind eq $next_kind && [llength $batch_addresses] < $batch_limit}]
+#         if {$can_extend && $next_kind eq "WB"} {
+#           set can_extend [expr {$address == [lindex $batch_addresses end] + 4}]
+#         }
+#         if {!$can_extend} {
+#           p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#               txn_index $result_handle result_lines_pending
+#           set batch_kind $next_kind
+#         }
+#         lappend batch_addresses $address
+#         lappend batch_data $data
+#       } elseif {$op eq "R32"} {
+#         if {[llength $fields] != 3} { error "R32 syntax invalid" }
+#         set address [p7_parse_hex32 [lindex $fields 1] address]
+#         p7_validate_address $address $axi_base
+#         set key [lindex $fields 2]
+#         p7_require_result_key $key
+#         if {[info exists used_keys($key)]} { error "duplicate result key: $key" }
+#         set used_keys($key) 1
+#         set offset [expr {$address - $axi_base}]
+#         set in_payload_window [expr {($offset >= 0x200 && $offset <= 0x2FC) ||
+#             ($offset >= 0x300 && $offset <= 0x3FC)}]
+#         set next_kind [expr {$in_payload_window ? "RB" : "RQ"}]
+#         set batch_limit [expr {$next_kind eq "RB" ? 64 : 16}]
+#         set can_extend [expr {$batch_kind eq $next_kind && [llength $batch_addresses] < $batch_limit}]
+#         if {$can_extend && $next_kind eq "RB"} {
+#           set can_extend [expr {$address == [lindex $batch_addresses end] + 4}]
+#         }
+#         if {!$can_extend} {
+#           p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#               txn_index $result_handle result_lines_pending
+#           set batch_kind $next_kind
+#         }
+#         lappend batch_addresses $address
+#         lappend batch_keys $key
+#         set last_op R32
+#       } elseif {$op eq "POLL32" || $op eq "ASSERT32"} {
+#         p7_flush_axi_batch $hw_axi batch_kind batch_addresses batch_data batch_keys \
+#             txn_index $result_handle result_lines_pending
+#         set expected_fields [expr {$op eq "POLL32" ? 7 : 5}]
+#         if {[llength $fields] != $expected_fields} { error "$op syntax invalid" }
+#         set address [p7_parse_hex32 [lindex $fields 1] address]
+#         p7_validate_address $address $axi_base
+#         set mask [p7_parse_hex32 [lindex $fields 2] mask]
+#         set expected [p7_parse_hex32 [lindex $fields 3] expected]
+#         if {$mask == 0 || ($expected & (~$mask)) != 0} { error "$op mask/expected invalid" }
+#         if {$op eq "POLL32"} {
+#           set key [lindex $fields 6]
+#         } else {
+#           set key [lindex $fields 4]
+#         }
+#         p7_require_result_key $key
+#         if {[info exists used_keys($key)]} { error "duplicate result key: $key" }
+#         set used_keys($key) 1
+#         if {$op eq "POLL32"} {
+#           set polls_key "${key}_POLLS"
+#           p7_require_result_key $polls_key
+#           if {[info exists used_keys($polls_key)]} { error "duplicate result key: $polls_key" }
+#           set used_keys($polls_key) 1
+#           set max_polls [lindex $fields 4]
+#           set delay_ms [lindex $fields 5]
+#           if {![string is integer -strict $max_polls] || $max_polls < 1 || $max_polls > 10000} {
+#             error "POLL32 max polls must be in 1..10000"
+#           }
+#           if {![string is integer -strict $delay_ms] || $delay_ms < 0 || $delay_ms > 100} {
+#             error "POLL32 delay must be in 0..100 ms"
+#           }
+#           set matched 0
+#           set value 0
+#           for {set poll 0} {$poll < $max_polls} {incr poll} {
+#             p7_check_stop $abort_file $deadline_ms
+#             set value_text [p7_axi_read $hw_axi $address txn_index]
+#             scan $value_text %x value
+#             if {($value & $mask) == $expected} {
+#               set matched 1
+#               p7_result_line $result_handle "$key=$value_text" result_lines_pending
+#               p7_result_line $result_handle "${key}_POLLS=[expr {$poll + 1}]" result_lines_pending
+#               break
+#             }
+#             if {$delay_ms > 0} { after $delay_ms }
+#           }
+#           if {!$matched} { error "P7 bounded poll timeout key=$key" }
+#         } else {
+#           set value_text [p7_axi_read $hw_axi $address txn_index]
+#           scan $value_text %x value
+#           p7_result_line $result_handle "$key=$value_text" result_lines_pending
+#           if {($value & $mask) != $expected} { error "P7 assertion failed key=$key" }
+#         }
+#         set last_op $op
+#       } else {
+#         error "unsupported P7 transaction operation: $op"
+#       }
+#     }
+#     close $txn_handle
+#     if {!$saw_magic} { error "P7 transaction magic missing" }
+#     if {!$ended} { error "P7 transaction END marker missing" }
+#     if {$last_op ne "W32_0x43C00100_0x00000030"} {
+#       error "final P7 operation must be W32 0x43c00100 0x00000030"
+#     }
+#     foreach line [list \
+#         "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted" \
+#         "P7_TRANSACTION_COUNT=$operation_count" \
+#         "P7_JTAG_AXI_TRANSACTIONS=PASS" \
+#         "P7_JTAG_STAGE_RESULT=PASS"] {
+#       p7_result_line $result_handle $line result_lines_pending
+#       puts $line
+#     }
+#     flush $result_handle
+#   }
+#   close $result_handle
+#   set result_handle ""
+# } error_text error_options]
+# if {$rc != 0 && $candidate_programming_attempted && $selected_device ne "" && $shutdown_bit ne ""} {
+#   if {![catch {
+#     catch {set_property PROBES.FILE {} $selected_device}
+#     catch {set_property FULL_PROBES.FILE {} $selected_device}
+#     set_property PROGRAM.FILE $shutdown_bit $selected_device
+#     program_hw_devices $selected_device
+#     refresh_hw_device -update_hw_probes false $selected_device
+#   } emergency_error]} {
+#     set emergency_shutdown_programmed 1
+#     puts stderr "P7_TCL_EMERGENCY_TFDU_SHUTDOWN_PROGRAMMED=$shutdown_bit"
+#   } else {
+#     puts stderr "P7_TCL_EMERGENCY_SHUTDOWN_FAILED=$emergency_error"
+#   }
+# }
+# if {$result_handle ne ""} {
+#   catch {
+#     puts $result_handle "P7_TCL_EMERGENCY_SHUTDOWN_PROGRAMMED=$emergency_shutdown_programmed"
+#     puts $result_handle "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
+#     puts $result_handle "P7_JTAG_STAGE_RESULT=FAIL"
+#     puts $result_handle "P7_JTAG_STAGE_ERROR=[p7_sanitize_error $error_text]"
+#     close $result_handle
+#   }
+#   set result_handle ""
+# } elseif {$rc != 0 && $result_file ne ""} {
+#   catch {
+#     set failure_handle [open $result_file w]
+#     puts $failure_handle "P7_TCL_EMERGENCY_SHUTDOWN_PROGRAMMED=$emergency_shutdown_programmed"
+#     puts $failure_handle "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
+#     puts $failure_handle "P7_JTAG_STAGE_RESULT=FAIL"
+#     puts $failure_handle "P7_JTAG_STAGE_ERROR=[p7_sanitize_error $error_text]"
+#     close $failure_handle
+#   }
+# }
+# if {$target_open} { catch {close_hw_target $selected_target} }
+INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+# if {$server_connected} { catch {disconnect_hw_server} }
+# if {$manager_open} { catch {close_hw_manager} }
+# if {$rc != 0} {
+#   puts stderr "P7_TCL_PROGRAMMING_ATTEMPTED=$candidate_programming_attempted"
+#   puts stderr "P7_JTAG_STAGE_RESULT=FAIL"
+#   puts stderr "P7_JTAG_STAGE_ERROR=$error_text"
+#   exit 41
+# }
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Sun Jul 12 14:34:06 2026...
