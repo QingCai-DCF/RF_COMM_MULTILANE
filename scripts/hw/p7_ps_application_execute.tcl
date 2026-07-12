@@ -1667,7 +1667,7 @@ set rc [catch {
         if {$status != 3 || $error_code != 0} {
           set failure_descriptor [file join $bundle_dir \
               "boundary_${boundary_index}_descriptor_failure.bin"]
-          dow -data $failure_descriptor $descriptor_address
+          p7_atomic_dump $failure_descriptor $descriptor_address 256
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX=$boundary_index"
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH=$boundary_length($boundary_index)"
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status"

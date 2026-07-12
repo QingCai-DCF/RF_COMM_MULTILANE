@@ -95,6 +95,9 @@ HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED = (
 HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_BOUNDARY_30_LANE0_REJECTED"
 )
+HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_FAILURE_CAPTURE_DOW_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3415,6 +3418,35 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 ]
             ):
                 return HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
+            raw_lines = marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and candidate.data.get("programmed_candidate") is True
+                and candidate.data.get("started_ps_elf") is True
+                and len(raw_lines) >= 2
+                and raw_lines[-2] == "P7_PS_STAGE_RESULT=FAIL"
+                and raw_lines[-1].startswith(
+                    'P7_PS_STAGE_ERROR=couldn\'t open "C:/Users/user/Documents/RF_COMM_MULTILANE/'
+                )
+                and raw_lines[-1].endswith(
+                    '/bundle/boundary_8_descriptor_failure.bin": no such file or directory'
+                )
+            ):
+                return HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5183,7 +5215,8 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
     r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
     r23 = variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
-    label = "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    r24 = variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
+    label = "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     data = candidate.data
     expected_ps_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5386,7 +5419,9 @@ def _old_commit_ps_functional_boundary_failure_errors(
     """Validate r23's exact post-program functional boundary rejection."""
 
     errors: list[str] = []
-    label = "historical r23"
+    variant = _historical_preflight_variant(candidate)
+    r24 = variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
+    label = "historical r24" if r24 else "historical r23"
     data = candidate.data
     expected_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5412,7 +5447,11 @@ def _old_commit_ps_functional_boundary_failure_errors(
         and safety.get("P7_HARDWARE_SAFETY") == "PASS"
         and safety.get("errors") == []
         and str(safety.get("source_commit_requested", "")).lower()
-        == "f9a3d34641c2aabd08d88e84070e2a1e98ccef79",
+        == (
+            "9a01b3da79f8a0e3561a56f799355915c132f3b1"
+            if r24
+            else "f9a3d34641c2aabd08d88e84070e2a1e98ccef79"
+        ),
         f"{label} safety/source mismatch",
     )
     for name in ("preflight", "shutdown_before", "shutdown_after"):
@@ -5469,14 +5508,20 @@ def _old_commit_ps_functional_boundary_failure_errors(
         "P7_XSDB_TARGET_SELECTION": "EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
         "P7_PS_CANDIDATE_PROGRAMMED": "1",
         "P7_HOST_TO_PS_INPUT_BYTES": "4456448",
-        "P7_HOST_TO_PS_INPUT_DURATION_MS": "72445",
-        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "61514",
-        "P7_HOST_TO_PS_INPUT_BPS": "492119",
+        "P7_HOST_TO_PS_INPUT_DURATION_MS": "74283" if r24 else "72445",
+        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "59992" if r24 else "61514",
+        "P7_HOST_TO_PS_INPUT_BPS": "479942" if r24 else "492119",
         "P7_PS_ELF_DOWNLOADED": "1",
         "P7_PS_SERVICE_READY_POLLS": "3",
         "P7_PS_SERVICE_HEARTBEAT_AND_START_TICKS": "1",
         "P7_PS_STAGE_RESULT": "FAIL",
-        "P7_PS_STAGE_ERROR": "P7 functional boundary case failed: index=8 length=30",
+        "P7_PS_STAGE_ERROR": (
+            'couldn\'t open "C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/'
+            'p7_20260712_stationary_app_r24_diag_suffix62/062_p7_ps_functional/bundle/'
+            'boundary_8_descriptor_failure.bin": no such file or directory'
+            if r24
+            else "P7 functional boundary case failed: index=8 length=30"
+        ),
     }
     append_error(errors, not duplicates and raw_markers == expected_markers, f"{label} raw marker set mismatch")
     append_error(
@@ -5497,7 +5542,11 @@ def _old_commit_ps_functional_boundary_failure_errors(
     errors.extend(f"{label} lock: {item}" for item in lock_errors)
     append_error(
         errors,
-        _historical_preflight_variant(candidate) == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
+        variant
+        in {
+            HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
+            HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
+        },
         f"{label} failure class mismatch",
     )
     return errors
@@ -7929,7 +7978,8 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
     r22 = variant == HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED
     r23 = variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED
-    label = "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    r24 = variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED
+    label = "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
     expected_ordinals = [1, 2, 3, 4, 62, 63, 64, 65]
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
@@ -8157,9 +8207,16 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index)" in old_ps_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED" not in old_ps_tcl
         )
+        failure_capture_predicate = (
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1" in old_ps_tcl
+            and "dow -data $failure_descriptor $descriptor_address" in old_ps_tcl
+            and "p7_atomic_dump $failure_descriptor $descriptor_address 256" not in old_ps_tcl
+        )
         append_error(
             errors,
-            functional_boundary_predicate
+            failure_capture_predicate
+            if r24
+            else functional_boundary_predicate
             if r23
             else device_cardinality_predicate
             if r22
@@ -8170,7 +8227,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         )
         historical_source_control_flow = {
             "target_uniqueness_basis": (
-                "SINGLE_CABLE_EXACT_DEVICE_MATCH_AND_DISTINCT_CHILD_TARGET_IDS"
+                "FUNCTIONAL_FAILURE_DESCRIPTOR_CAPTURE_USED_DOW_IN_WRONG_DIRECTION"
+                if r24
+                else "SINGLE_CABLE_EXACT_DEVICE_MATCH_AND_DISTINCT_CHILD_TARGET_IDS"
                 if r23
                 else "SINGLE_CABLE_AND_SINGLE_ANY_IDCODE_ROW_BEFORE_CHILD_CLASSIFICATION"
                 if r22
@@ -8178,9 +8237,11 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
                 if r21
                 else "PROPERTY_ROW_COUNT"
             ),
-            "numeric_target_id_dedup_present": r21 or r22 or r23,
+            "numeric_target_id_dedup_present": r21 or r22 or r23 or r24,
             "historical_target_rejection_proven": (
-                functional_boundary_predicate
+                failure_capture_predicate
+                if r24
+                else functional_boundary_predicate
                 if r23
                 else device_cardinality_predicate
                 if r22
@@ -8317,7 +8378,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
             "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
             "raw_error": (
-                "P7 functional boundary case failed: index=8 length=30"
+                "failure descriptor capture used XSDB dow and failed before status/error markers"
+                if r24
+                else "P7 functional boundary case failed: index=8 length=30"
                 if r23
                 else "P7 XSDB live chain must contain only the one exact device/IDCODE match"
                 if r22
@@ -8372,6 +8435,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
         HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
         HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
+        HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
     }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
@@ -10819,6 +10883,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED:
         errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED:
+        errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -11154,6 +11221,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
             HISTORICAL_STAGE_PS_JTAG_DEVICE_CARDINALITY_REJECTED,
             HISTORICAL_STAGE_PS_FUNCTIONAL_BOUNDARY_REJECTED,
+            HISTORICAL_STAGE_PS_FAILURE_CAPTURE_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

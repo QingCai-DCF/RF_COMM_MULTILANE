@@ -846,3 +846,26 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - r23 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r24_diag_suffix62`。必须先提交 r23 exact
   history/tamper、recovery、failure-descriptor capture 与本交接，再从 clean source 完成 exactly-once suites、checkpoint、impact
   proof、plan 和全部 dry validation。r24 仍为零 coverage diagnostic，无 stage 66。
+
+## 31. 2026-07-12 r24 adaptive diagnostic 增量交接（本节覆盖第 30 节的 next-run 描述）
+
+- 在 commit `9a01b3da79f8a0e3561a56f799355915c132f3b1` 上，required complete suites exactly once 为
+  122 + 39 = 161/161 PASS；P7 checkpoint 13/13 PASS，SHA256 为
+  `c6e2ec78fd44430e3fb453f8b518ab4fbee69f65d2b3f8cf41132f86a7ae318a`。r24 impact proof SHA256 为
+  `c96a2f5d50c91660fe4fef85f93a9b526395c11dc16d7f5e8a608f9d850ea720`；plan SHA256 为
+  `a9376a13b08eef4890abe7a064aaca5902dbe0ba492a7ba3c48b2910bfb900d6`；全部 dry validation PASS。
+- r24 只启动一次且没有 `--resume`。ordinals 1--4 exact PASS；stage 62 再次完成 exact target selection、candidate
+  programming、host-to-PS preload 与 ELF start，但新的 failure capture 错误使用 XSDB `dow -data`（host file 到 target
+  memory）去执行 target-to-host snapshot，因目标 host file 不存在而在输出 descriptor status/error markers 前 fail closed。
+  这次失败证明 capture 实现方向错误，不证明原 30-byte boundary 的具体 error code。stage 63--65 未启动，无 stage 66。
+  ledger SHA256 为 `305c4a23b771f4d355bd0225d73c1fa266ccb471b10ab30911439e18b80e7d60`，失败 summary SHA256 为
+  `f05bbd4320bcaa1f177f4a3617f487a5e199ca4ea46d4fa4de3566aa863fa0a9`。
+- r24 后独立 recovery 精确记录 `SHUTDOWN_RAW_EXIT=125`、shutdown programming marker 与 `SHUTDOWN_EXIT=0`；外部
+  `hw_server` PID 45220 未被触碰。frozen 12-file manifest SHA256 为
+  `07f616f8050801505a3b76cd5a8c38bd9d9cf0824f0669533c9fd69f656f7e34`。
+- 修复把错误的 `dow -data` 替换为既有、已验证的 atomic target-to-host dump helper
+  `p7_atomic_dump ... 256`，保持先 capture descriptor、再输出 status/error markers、最后抛错的顺序。不得把 r24 的
+  candidate programming/ELF start 或独立 recovery 提升为 stage PASS。
+- r24 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r25_diag_suffix62`。必须先提交 r24 exact
+  history/tamper、recovery、capture-direction 修复与本交接，再从 clean source 完成 exactly-once suites、checkpoint、impact
+  proof、plan 和全部 dry validation。r25 仍为零 coverage diagnostic，无 stage 66。

@@ -1219,6 +1219,8 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status", tcl)
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code", tcl)
         self.assertIn("boundary_${boundary_index}_descriptor_failure.bin", tcl)
+        self.assertIn("p7_atomic_dump $failure_descriptor $descriptor_address 256", tcl)
+        self.assertNotIn("dow -data $failure_descriptor $descriptor_address", tcl)
 
     def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
