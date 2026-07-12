@@ -1496,7 +1496,7 @@ class P7JtagAxiStageTests(unittest.TestCase):
             "proc delete_hw_axi_txn {txn} {lappend ::p7_deleted $txn}\n"
             "proc get_property {property txn} {\n"
             "  if {$property ne \"DATA\" || $txn ne \"p7_rburst_2\"} {error \"unexpected property request\"}\n"
-            "  return 11223344_AABBCCDD\n"
+            "  return AABBCCDD_11223344\n"
             "}"
         )
         with tempfile.TemporaryDirectory() as temp:
@@ -1515,7 +1515,7 @@ class P7JtagAxiStageTests(unittest.TestCase):
         self.assertEqual(("p7_wburst_1", "p7_rburst_2"), tuple(interp.splitlist(interp.getvar("p7_created"))))
         write_args = tuple(interp.splitlist(interp.getvar("p7_txn_args(p7_wburst_1)")))
         self.assertEqual("0x43C00200", write_args[write_args.index("-address") + 1])
-        self.assertEqual("11111111_22222222", write_args[write_args.index("-data") + 1])
+        self.assertEqual("22222222_11111111", write_args[write_args.index("-data") + 1])
         self.assertEqual("2", str(write_args[write_args.index("-len") + 1]))
         self.assertEqual("INCR", write_args[write_args.index("-burst") + 1])
         read_args = tuple(interp.splitlist(interp.getvar("p7_txn_args(p7_rburst_2)")))

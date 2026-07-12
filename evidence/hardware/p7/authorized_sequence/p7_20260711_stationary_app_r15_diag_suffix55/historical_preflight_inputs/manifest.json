@@ -1,0 +1,91 @@
+{
+  "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
+  "run_id": "p7_20260711_stationary_app_r15_diag_suffix55",
+  "source_commit": "28e7bb8f5266d654aefdbd3fede7b7dae7ab584e",
+  "stage_index": 1,
+  "full_stage_ordinal": 2,
+  "stage_id": "p7_p6_frame_regression_m1",
+  "result": "FAIL_STAGE",
+  "mutation_attempted": true,
+  "candidate_mutation_attempted": true,
+  "coverage_claimed": false,
+  "recovery_directories": [
+    "recovery_shutdown_after_failed_stage002_20260711T224807Z"
+  ],
+  "files": [
+    {
+      "role": "offline_checkpoint",
+      "original_path": "evidence/generated/p7_offline_gate_summary.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_offline_gate_summary_b3cee8d98e748ec8af42fea56b4e205887d0d9eea8ee4bbf849a607d64f460b7.json",
+      "bytes": 7626,
+      "sha256": "b3cee8d98e748ec8af42fea56b4e205887d0d9eea8ee4bbf849a607d64f460b7"
+    },
+    {
+      "role": "sequence_plan",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r15_diag_suffix55_28e7bb8_sequence_plan.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_sequence_plan_35bbff877b3c5de0b4cdcac9a06adfb4fade9f7f3dcf6b5421c41eb94c0bc2b5.txt",
+      "bytes": 89646,
+      "sha256": "35bbff877b3c5de0b4cdcac9a06adfb4fade9f7f3dcf6b5421c41eb94c0bc2b5"
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260711_stationary_app_r15_diag_suffix55_28e7bb8/p7_20260711_stationary_app_r15_diag_suffix55_002_p7_p6_frame_regression_m1.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_stage_001_authorization_b4cd41f400eaca0e7acf30e802b7240d1e208d374fb2bfd0993e48d89b4647bb.txt",
+      "bytes": 3444,
+      "sha256": "b4cd41f400eaca0e7acf30e802b7240d1e208d374fb2bfd0993e48d89b4647bb"
+    },
+    {
+      "role": "stage_transactions",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55_28e7bb8/transactions/002_p7_p6_frame_regression_m1.transactions.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_stage_001_transactions_4569a727fa2fc7f64afbdbf9f029b6da1489ca48e84262bd7e9c45d51a909fbd.txt",
+      "bytes": 130270,
+      "sha256": "4569a727fa2fc7f64afbdbf9f029b6da1489ca48e84262bd7e9c45d51a909fbd"
+    },
+    {
+      "role": "generation_manifest",
+      "original_path": "build/p7_authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55_28e7bb8/p7_authorized_sequence_generation_manifest.json",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_generation_manifest_5a072ab06e91e7f00b2f766c64881ae97db96a3d59774061dd2fa1e875c0af94.json",
+      "bytes": 54697,
+      "sha256": "5a072ab06e91e7f00b2f766c64881ae97db96a3d59774061dd2fa1e875c0af94"
+    },
+    {
+      "role": "recovery_p4_authorization",
+      "original_path": ".hardware_authorization/P4_APPROVED.txt",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p4_recovery_authorization_61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476.txt",
+      "bytes": 201,
+      "sha256": "61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476"
+    },
+    {
+      "role": "historical_stage_tcl",
+      "original_path": "scripts/hw/p7_jtag_axi_transactions.tcl",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_jtag_axi_transactions_28e7bb8f_396d71e8cf4fa799f979c3134a6d095c30e2bb54.tcl",
+      "git_blob_sha1": "396d71e8cf4fa799f979c3134a6d095c30e2bb54",
+      "bytes": 34295,
+      "sha256": "0788fd90b635a7800b140316d44c00349bfc941dbc0acb4f5b4620bb714a407f"
+    },
+    {
+      "role": "historical_stage_wrapper_python",
+      "original_path": "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/run_p7_jtag_axi_stage_safe_28e7bb8f_02a003d11ba4c3b27ca363d6290d95229b684cbb.py",
+      "git_blob_sha1": "02a003d11ba4c3b27ca363d6290d95229b684cbb",
+      "bytes": 145926,
+      "sha256": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2"
+    },
+    {
+      "role": "historical_backend_python",
+      "original_path": "tools/p7_jtag_backend.py",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/p7_jtag_backend_28e7bb8f_7447a5c4203ab83db049de32b9652d481178fb22.py",
+      "git_blob_sha1": "7447a5c4203ab83db049de32b9652d481178fb22",
+      "bytes": 80403,
+      "sha256": "593185c5fa9c23244a0bfd0355da61df098e194319435c626132b7f3a1726018"
+    },
+    {
+      "role": "historical_lane_phy_rtl",
+      "original_path": "rtl/tfdu_lane_phy.sv",
+      "frozen_path": "evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/historical_preflight_inputs/tfdu_lane_phy_28e7bb8f_970cbc860290698c4f417959f7e7fc0bcfbd6933.sv",
+      "git_blob_sha1": "970cbc860290698c4f417959f7e7fc0bcfbd6933",
+      "bytes": 5199,
+      "sha256": "2f515a22fedc5abdf3f58bbdaa6df8baee8a2f919747a3622ece0a63009e920a"
+    }
+  ]
+}

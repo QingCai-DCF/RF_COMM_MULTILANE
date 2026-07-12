@@ -227,8 +227,11 @@ proc p7_axi_write_burst {hw_axi addresses data_words txn_index_var} {
   }
   incr txn_index
   set name "p7_wburst_$txn_index"
+  # Vivado's multiword DATA property is displayed most-significant word first:
+  # the rightmost word is the lowest INCR address.  Reverse the natural
+  # low-to-high DSL words before creating the transaction.
   create_hw_axi_txn $name $hw_axi -type write -address [format 0x%08X $first] \
-      -data [join $encoded _] -len $count -burst INCR -force
+      -data [join [lreverse $encoded] _] -len $count -burst INCR -force
   run_hw_axi [get_hw_axi_txns $name]
   delete_hw_axi_txn [get_hw_axi_txns $name]
 }
@@ -260,7 +263,9 @@ proc p7_axi_read_burst {hw_axi addresses keys txn_index_var out pending_var} {
   }
   set clean [string toupper $clean]
   for {set index 0} {$index < $count} {incr index} {
-    set start [expr {8 * $index}]
+    # DATA uses the same most-significant-word-first rendering.  Map the
+    # rightmost property word back to the lowest INCR address/evidence key.
+    set start [expr {8 * ($count - 1 - $index)}]
     set value [string range $clean $start [expr {$start + 7}]]
     p7_result_line $out "[lindex $keys $index]=$value" pending
   }

@@ -621,8 +621,8 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   `SHUTDOWN_RAW_EXIT=125`、唯一 shutdown marker、`SHUTDOWN_EXIT=0` 与
   `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；它不提升 r14 stage 2。r14 frozen 10-file manifest SHA256 为
   `429a7c45f0570f3184b84bf4f1ae7e6b04b6b11a1671ad63c02a8f635d3fb540`。
-- 根因边界是 full AXI4 JTAG master 仍把 P6 `0x100` side-effect control writes 与依赖它们的数据操作放入独立 queued
-  transactions；`COMMIT` 可以先于完整 payload 写入生效。修复保持 payload/readback 的 bounded INCR burst 和真正独立的
+- 当时的首要根因假设是 full AXI4 JTAG master 仍把 P6 `0x100` side-effect control writes 与依赖它们的数据操作放入独立 queued
+  transactions；该假设及其 control-order 修复后来由 r15 的精确 20-fragment word-reversal 证据进一步收窄，不能再作为最终根因。修复保持 payload/readback 的 bounded INCR burst 和真正独立的
   queued singles，但把每个 `0x100` control write 作为 dependency barrier：先 flush，再 standalone 执行，且 dry report
   强制 `queued_control_write_transaction_count=0`。r1--r14 exact history/tamper test 与完整 14-test summarizer suite 已 PASS。
 - 完整非硬件回归为 top-level 112/112、`tests/p7` 39/39，合计 151/151 PASS；`py_compile`、两项 no-hardware
@@ -633,3 +633,47 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 - r14 永远不得 resume。下一硬件 ID 必须为新的 `p7_20260711_stationary_app_r15_diag_suffix55`；必须先准确提交 r14
   evidence、summarizer/tests、control-order 修复与本交接，再从新 clean source 只生成一次 P7 checkpoint、r15 plan 并通过
   全部 dry validation。r15 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；最终 1800 秒 stationary 启动次数仍为 0。
+
+## 24. 2026-07-11 r15 diagnostic suffix 增量交接（本节覆盖第 23 节的根因与 next-run 描述）
+
+- r14 immutable evidence、独立 recovery、control-order 修复、r1--r14 历史验证、完整 generic offline gate 与交接已提交为
+  `28e7bb8f5266d654aefdbd3fede7b7dae7ab584e`。在该 clean source 上只生成一次新的 P7 checkpoint，13/13 PASS，
+  summary SHA256 为 `b3cee8d98e748ec8af42fea56b4e205887d0d9eea8ee4bbf849a607d64f460b7`；
+  `NO_HARDWARE_ACTIONS_EXECUTED=true`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r15 run ID 为 `p7_20260711_stationary_app_r15_diag_suffix55`；15-stage diagnostic plan SHA256 为
+  `35bbff877b3c5de0b4cdcac9a06adfb4fade9f7f3dcf6b5421c41eb94c0bc2b5`，generation manifest SHA256 为
+  `5a072ab06e91e7f00b2f766c64881ae97db96a3d59774061dd2fa1e875c0af94`。generator、15 个 authorization、
+  15 个 child dry validation、generator executor dry 与独立 executor dry 均 PASS；精确 ordinals 为
+  `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`，无 stage 66/stationary，整次为 `DIAGNOSTIC_ONLY`、
+  `coverage_claimed=false`、`HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r15 只启动一次且没有 `--resume`。stage 1 / `p7_safe_idle` PASS；full ordinal 2 /
+  `p7_p6_frame_regression_m1` 的 candidate rc=0、transaction/stage markers PASS、shutdown-before/after PASS，但 strict backend 仍以
+  `BackendValidationError: TX_CRC32: fragment 0 committed CRC differs from manifest` 拒绝，因此 stage 2 是 immutable
+  `FAIL_STAGE`。outer ledger 在退出时 SHA256 为
+  `bede8b3173f1ff3f2059c3d2222a1b24e0fe91fd1b5499cf631c948a8f119b49`，attempts=2、completed=1、
+  failed_stage_index=1；其余 stages 与 stationary 均未启动。
+- r15 dry/runtime metrics 证明第 23 节的 control-order 修复确已生效：`ordered_control_write_run_hw_axi_call_count=63`、
+  `queued_control_write_transaction_count=0`，但相同 CRC failure 仍存在。对全部 20 个 fragment 的原始 `TXW*` 机器重算均精确证明：
+  每个 raw `TXW*` 都逐项等于 frozen authorization transaction 中同地址的 low-to-high payload word；该自然顺序的 CRC 不等于硬件观测 CRC，
+  而把同一组 32-bit words 整体反转后再按 encoded length
+  截断，其 CRC 则逐 fragment 精确等于观测 `TX_CRC32`。fragment 0 的自然 CRC 为 `3ED470A1`，反转后及观测值均为
+  `A155F91B`。因此第 23 节的 queued-control 解释只是已被 r15 否证的中间假设，最终根因是 Vivado multiword AXI `DATA`
+  property 为 MSW-first（右端 word 对应最低 `INCR` address），而旧 Tcl 写入与读取解析都按左端最低地址处理；读回路径的同向错误掩盖了
+  物理 memory 中的 whole-burst word reversal。
+- 修复现在在 multiword write 时反转 natural DSL word list，在 multiword read 时把 property word index 反向映射回低到高地址；
+  独立 Tcl stub 使用不同 word 值验证两个方向。它不改变 bitstream、DSL operation count、授权边界、control barrier、每-word evidence
+  或 strict backend contract。
+- r15 失败后的独立 recovery 位于
+  `recovery_shutdown_after_failed_stage002_20260711T224807Z/`，记录 `SHUTDOWN_RAW_EXIT=125`、
+  `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0`、`PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`；它不提升失败 stage。
+  r15 frozen 10-file manifest SHA256 为 `c2e71047cae5cfe01012d5da4461a9e0c18d0a5de5dc9842dad66decc9e6812d`。
+- r1--r15 exact history/tamper test、完整 summarizer 14/14、top-level 112/112、`tests/p7` 39/39 均 PASS；
+  `py_compile`、JTAG wrapper 38/38、两项 no-hardware static/dry-run scan 与 `git diff --check` 均 PASS。随后只启动一次
+  canonical `scripts/run_offline_gates.py`，同一进程在 3277 秒后自然返回 `OFFLINE_GATES_RAN=1 status=PASS`；
+  `evidence/generated/offline_gate_summary.json` SHA256 为
+  `988fcd16f14f88c098cea514099c35f5dba94533b876b371da404d6b55276845`，明确 `no_hardware=true`、
+  `hardware_acceptance=PENDING_HW`。这些全部是非硬件结果，不提升任何硬件 stage 或 acceptance。
+- r15 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260711_stationary_app_r16_diag_suffix55`。必须先完成 r15 exact
+  summarizer/history/tamper 与完整非硬件回归，准确提交全部 r15 evidence、word-order 修复和本交接，再从新 clean source 只生成一次
+  checkpoint、r16 plan 并通过全部 dry validation。r16 仍只允许 full ordinals 1--4 与 55--65，严禁 stage 66；最终 1800 秒
+  stationary 正式启动次数仍为 0。
