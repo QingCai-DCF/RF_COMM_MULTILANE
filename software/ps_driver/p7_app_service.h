@@ -31,6 +31,8 @@ extern "C" {
 #define P7_MAILBOX_MAGIC UINT32_C(0x424d3750) /* P7MB, little endian */
 #define P7_DESCRIPTOR_MAGIC UINT32_C(0x53443750) /* P7DS */
 #define P7_TRACE_MAGIC UINT32_C(0x52543750) /* P7TR */
+#define P7_FAILURE_SNAPSHOT_MAGIC UINT32_C(0x53463750) /* P7FS */
+#define P7_FAILURE_SNAPSHOT_MAX_BYTES UINT32_C(256)
 #define P7_RUNTIME_VERSION UINT32_C(1)
 
 enum p7_service_state {
@@ -214,6 +216,24 @@ typedef struct __attribute__((aligned(64))) p7_fragment_trace {
   uint32_t p6_tx_fail;
   uint32_t p6_error_code;
 } p7_fragment_trace_t;
+
+/* Exactly 64 bytes.  On an object-integrity rejection the service publishes
+ * this header immediately after the fragment trace array, followed by the
+ * first at most 256 bytes from the same immutable snapshot consumed by both
+ * output digests.  The host captures and wipes the diagnostic region before
+ * the stage exits; the normal output range is still wiped before FAILED is
+ * published. */
+typedef struct __attribute__((aligned(64))) p7_failure_snapshot_header {
+  volatile uint32_t magic;
+  uint32_t version;
+  uint32_t session_epoch;
+  uint32_t object_id;
+  uint32_t object_length;
+  uint32_t captured_length;
+  uint32_t output_crc32;
+  uint32_t error_code;
+  uint32_t output_sha256[8];
+} p7_failure_snapshot_header_t;
 
 int p7_app_service_run(const ir_mmio_t *io,
                        volatile p7_mailbox_control_t *mailbox,

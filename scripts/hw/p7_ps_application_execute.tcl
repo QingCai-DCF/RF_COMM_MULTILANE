@@ -288,6 +288,20 @@ proc p7_atomic_dump {path address byte_count} {
   file rename -force $partial $path
 }
 
+proc p7_zero_words_and_verify {address byte_count} {
+  if {$byte_count <= 0 || ($byte_count % 4) != 0} {
+    error "P7 diagnostic wipe requires a positive whole-word byte count"
+  }
+  for {set offset 0} {$offset < $byte_count} {incr offset 4} {
+    mwr [expr {$address + $offset}] 0
+  }
+  for {set offset 0} {$offset < $byte_count} {incr offset 4} {
+    if {[p7_read32 [expr {$address + $offset}]] != 0} {
+      error "P7 diagnostic wipe readback failed"
+    }
+  }
+}
+
 proc p7_check_abort {abort_file} {
   if {[file exists $abort_file]} {
     catch {mwr 0x0002000C 3}
@@ -1683,6 +1697,22 @@ set rc [catch {
           p7_atomic_dump $failure_trace $boundary_trace($boundary_index) \
               [expr {$boundary_trace_capacity($boundary_index) * 64}]
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1"
+          if {$error_code == 13 || $error_code == 14} {
+            set failure_snapshot_address [expr {$boundary_trace($boundary_index) + \
+                $boundary_trace_capacity($boundary_index) * 64}]
+            set failure_snapshot [file join $bundle_dir \
+                "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
+            set failure_snapshot_wipe [file join $bundle_dir \
+                "boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin"]
+            if {[p7_read32 $failure_snapshot_address] != 0x53463750} {
+              error "P7 integrity failure snapshot publication marker missing"
+            }
+            p7_atomic_dump $failure_snapshot $failure_snapshot_address 320
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1"
+            p7_zero_words_and_verify $failure_snapshot_address 320
+            p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
+          }
           error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index) status=$status error=$error_code"
         }
         p7_dump_case $bundle_dir $boundary_index $boundary_input($boundary_index) \

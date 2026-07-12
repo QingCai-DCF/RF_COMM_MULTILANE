@@ -12,6 +12,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - failure_cleanup_shutdown_first: PASS
 - failure_wipe_uses_private_validated_range: PASS
 - integrity_crc_sha_immutable_chunk_snapshot: PASS
+- integrity_failure_snapshot_precedes_output_wipe: PASS
 - descriptor_ready_published_last: PASS
 - terminal_descriptor_stable_snapshot: PASS
 - phy_reenabled_and_startup_ready_waited: PASS

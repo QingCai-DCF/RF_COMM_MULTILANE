@@ -1,0 +1,126 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE\scripts\legacy_safe_tools\program_tfdu_shutdown.tcl}
+# set script_dir [file normalize [file dirname [info script]]]
+# set repo_root [file normalize [file join $script_dir ".." ".."]]
+# source [file join $repo_root legacy RF_COMM tools hw_connect_utils.tcl]
+## proc rf_hw_log {line} {
+##   if {[llength [info commands say]] > 0} {
+##     say $line
+##   } else {
+##     puts $line
+##   }
+## }
+## proc rf_hw_disconnect_stale {} {
+##   set stale_targets {}
+##   catch {set stale_targets [get_hw_targets -quiet *]}
+##   foreach target $stale_targets {
+##     catch {close_hw_target $target}
+##   }
+##   catch {disconnect_hw_server}
+## }
+## proc rf_hw_open_target {{hw_url "localhost:3121"} {jtag_frequency_hz 1000000}} {
+##   open_hw_manager
+##   rf_hw_disconnect_stale
+##   after 500
+## 
+##   connect_hw_server -url $hw_url
+##   set targets [get_hw_targets -quiet *]
+##   rf_hw_log "HW_TARGET_COUNT [llength $targets]"
+##   if {[llength $targets] == 0} {
+##     error "No hw_target found after connect_hw_server."
+##   }
+## 
+##   set target [lindex $targets 0]
+##   current_hw_target $target
+##   rf_hw_log "HW_TARGET $target"
+## 
+##   if {$jtag_frequency_hz > 0} {
+##     if {[catch {set_property PARAM.FREQUENCY $jtag_frequency_hz $target} freq_err]} {
+##       rf_hw_log "HW_JTAG_FREQUENCY_WARN $freq_err"
+##     } else {
+##       rf_hw_log "HW_JTAG_FREQUENCY_HZ $jtag_frequency_hz"
+##     }
+##   }
+## 
+##   if {[catch {open_hw_target $target} open_err]} {
+##     rf_hw_log "HW_TARGET_OPEN_RETRY $open_err"
+##     rf_hw_disconnect_stale
+##     after 1000
+##     connect_hw_server -url $hw_url
+##     set targets [get_hw_targets -quiet *]
+##     rf_hw_log "HW_TARGET_COUNT_RETRY [llength $targets]"
+##     if {[llength $targets] == 0} {
+##       error "No hw_target found after reconnect_hw_server."
+##     }
+##     set target [lindex $targets 0]
+##     current_hw_target $target
+##     if {$jtag_frequency_hz > 0} {
+##       catch {set_property PARAM.FREQUENCY $jtag_frequency_hz $target}
+##     }
+##     open_hw_target $target
+##   }
+## 
+##   return $target
+## }
+## proc rf_hw_find_zynq_device {} {
+##   foreach dev [get_hw_devices -quiet *] {
+##     set name [get_property NAME $dev]
+##     if {[string match -nocase *xc7z* $name] || [string match -nocase *7z* $name]} {
+##       return $dev
+##     }
+##   }
+##   return ""
+## }
+## proc rf_hw_open_zynq_device {{hw_url "localhost:3121"} {jtag_frequency_hz 1000000}} {
+##   set target [rf_hw_open_target $hw_url $jtag_frequency_hz]
+##   set dev [rf_hw_find_zynq_device]
+##   if {$dev eq ""} {
+##     error "No programmable Zynq/FPGA hw_device found. Devices: [get_hw_devices]"
+##   }
+##   current_hw_device $dev
+##   rf_hw_log "HW_DEVICE $dev"
+##   return $dev
+## }
+# set bit_file [file join $repo_root "shutdown_bitstream" "tfdu_shutdown_j10_j11.bit"]
+# set jtag_frequency_hz 1000000
+# if {![file exists $bit_file]} {
+#   error "Missing shutdown bitstream: $bit_file. Run tools/build_tfdu_shutdown.tcl first."
+# }
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+HW_TARGET_COUNT 1
+HW_TARGET localhost:3121/xilinx_tcf/Digilent/210512180081
+HW_JTAG_FREQUENCY_HZ 1000000
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+HW_DEVICE xc7z010_1
+# set dev [rf_hw_open_zynq_device localhost:3121 $jtag_frequency_hz]
+# refresh_hw_device -update_hw_probes false $dev
+INFO: [Labtools 27-1434] Device xc7z010 (JTAG device index = 1) is programmed with a design that has no supported debug core(s) in it.
+# set_property PROGRAM.FILE $bit_file $dev
+# program_hw_devices $dev
+INFO: [Labtools 27-3164] End of startup status: HIGH
+program_hw_devices: Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 1464.047 ; gain = 0.777
+# puts "TFDU_SHUTDOWN_PROGRAMMED $bit_file"
+TFDU_SHUTDOWN_PROGRAMMED C:/Users/user/Documents/RF_COMM_MULTILANE/shutdown_bitstream/tfdu_shutdown_j10_j11.bit
+INFO: [Common 17-206] Exiting Vivado at Sun Jul 12 19:36:11 2026...

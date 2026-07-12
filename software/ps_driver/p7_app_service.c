@@ -31,6 +31,8 @@ _Static_assert(sizeof(p7_object_descriptor_t) == 256U,
                "P7 descriptor must be 256 bytes");
 _Static_assert(sizeof(p7_fragment_trace_t) == 64U,
                "P7 fragment trace must be 64 bytes");
+_Static_assert(sizeof(p7_failure_snapshot_header_t) == 64U,
+               "P7 failure snapshot header must be 64 bytes");
 
 typedef struct p7_sha256_context {
   uint32_t state[8];
@@ -350,7 +352,9 @@ static int p7_active_stop_requested(p7_service_context_t *service) {
 
 static int p7_integrity_checked(p7_service_context_t *service,
                                 const uint8_t *data, uint32_t size,
-                                uint32_t *crc_out, uint8_t sha_out[32]) {
+                                uint32_t *crc_out, uint8_t sha_out[32],
+                                uint8_t *retained_snapshot,
+                                uint32_t *retained_length) {
   static const uint32_t crc_table[16] = {
       UINT32_C(0x00000000), UINT32_C(0x1db71064),
       UINT32_C(0x3b6e20c8), UINT32_C(0x26d930ac),
@@ -364,9 +368,11 @@ static int p7_integrity_checked(p7_service_context_t *service,
   uint8_t snapshot[256] __attribute__((aligned(64)));
   uint32_t crc = UINT32_C(0xffffffff);
   uint32_t offset = 0U;
-  if ((data == NULL && size != 0U) || crc_out == NULL || sha_out == NULL) {
+  if ((data == NULL && size != 0U) || crc_out == NULL || sha_out == NULL ||
+      ((retained_snapshot == NULL) != (retained_length == NULL))) {
     return 0;
   }
+  if (retained_length != NULL) *retained_length = 0U;
   p7_sha256_init(&sha);
   while (offset < size) {
     uint32_t chunk = size - offset;
@@ -381,6 +387,13 @@ static int p7_integrity_checked(p7_service_context_t *service,
      * terminal descriptor if cache visibility changes between those reads. */
     p7_invalidate(data + offset, chunk);
     memcpy(snapshot, data + offset, chunk);
+    if (retained_snapshot != NULL &&
+        offset < P7_FAILURE_SNAPSHOT_MAX_BYTES) {
+      uint32_t retained = P7_FAILURE_SNAPSHOT_MAX_BYTES - offset;
+      if (retained > chunk) retained = chunk;
+      memcpy(retained_snapshot + offset, snapshot, retained);
+      *retained_length = offset + retained;
+    }
     for (uint32_t index = 0U; index < chunk; ++index) {
       crc ^= snapshot[index];
       crc = crc_table[crc & UINT32_C(0x0f)] ^ (crc >> 4);
@@ -664,6 +677,56 @@ static int p7_ranges_overlap(uint32_t a_address, uint32_t a_size,
          b_address < a_end;
 }
 
+static int p7_publish_integrity_failure_snapshot(
+    const p7_object_descriptor_t *request, const uint8_t *snapshot,
+    uint32_t captured_length, uint32_t output_crc,
+    const uint8_t output_sha[32], uint32_t error_code) {
+  uint64_t trace_bytes =
+      (uint64_t)request->trace_capacity * sizeof(p7_fragment_trace_t);
+  uint64_t address64 = (uint64_t)request->trace_address + trace_bytes;
+  uint32_t address;
+  uint32_t total_bytes = sizeof(p7_failure_snapshot_header_t) +
+                         P7_FAILURE_SNAPSHOT_MAX_BYTES;
+  p7_failure_snapshot_header_t header;
+  volatile p7_failure_snapshot_header_t *published;
+  uint8_t *published_data;
+  if (snapshot == NULL || output_sha == NULL || captured_length == 0U ||
+      captured_length > P7_FAILURE_SNAPSHOT_MAX_BYTES ||
+      address64 > UINT32_MAX) {
+    return 0;
+  }
+  address = (uint32_t)address64;
+  if (!p7_range_valid(address, total_bytes) ||
+      p7_ranges_overlap(address, total_bytes, request->input_address,
+                        request->object_length) ||
+      p7_ranges_overlap(address, total_bytes, request->output_address,
+                        request->object_length) ||
+      p7_ranges_overlap(address, total_bytes, request->trace_address,
+                        (uint32_t)trace_bytes)) {
+    return 0;
+  }
+  memset(&header, 0, sizeof(header));
+  header.version = P7_RUNTIME_VERSION;
+  header.session_epoch = request->session_epoch;
+  header.object_id = request->object_id;
+  header.object_length = request->object_length;
+  header.captured_length = captured_length;
+  header.output_crc32 = output_crc;
+  header.error_code = error_code;
+  p7_copy_digest_words(header.output_sha256, output_sha);
+  published =
+      (volatile p7_failure_snapshot_header_t *)(uintptr_t)address;
+  published_data = (uint8_t *)(uintptr_t)(address + sizeof(header));
+  memcpy((void *)published, &header, sizeof(header));
+  memset(published_data, 0, P7_FAILURE_SNAPSHOT_MAX_BYTES);
+  memcpy(published_data, snapshot, captured_length);
+  p7_flush((const void *)(uintptr_t)address, total_bytes);
+  published->magic = P7_FAILURE_SNAPSHOT_MAGIC;
+  dmb();
+  p7_flush(&published->magic, sizeof(published->magic));
+  return 1;
+}
+
 static uint32_t p7_preferred_lane(uint32_t policy, uint32_t index) {
   if (policy == RF_APP_LANE_POLICY_LANE0_ONLY) return 1U;
   if (policy == RF_APP_LANE_POLICY_LANE1_ONLY) return 2U;
@@ -865,6 +928,9 @@ static int p7_process_descriptor(
   uint16_t fragment_count = 0U;
   uint8_t input_sha[32];
   uint8_t output_sha[32];
+  uint8_t output_snapshot[P7_FAILURE_SNAPSHOT_MAX_BYTES]
+      __attribute__((aligned(64)));
+  uint32_t output_snapshot_length = 0U;
   uint32_t input_crc;
   uint32_t output_crc;
   uint32_t completed_bytes = 0U;
@@ -915,7 +981,7 @@ static int p7_process_descriptor(
                 request.object_length);
   if (!p7_integrity_checked(
           service, (const uint8_t *)(uintptr_t)request.input_address,
-          request.object_length, &input_crc, input_sha)) {
+          request.object_length, &input_crc, input_sha, NULL, NULL)) {
     error = p7_runtime_expired(service) ? P7_ERROR_RUNTIME_LIMIT
                                         : P7_ERROR_ABORTED;
     goto failed;
@@ -1120,7 +1186,8 @@ static int p7_process_descriptor(
            request.object_length);
   if (!p7_integrity_checked(
           service, (const uint8_t *)(uintptr_t)request.output_address,
-          request.object_length, &output_crc, output_sha)) {
+          request.object_length, &output_crc, output_sha, output_snapshot,
+          &output_snapshot_length)) {
     error = p7_runtime_expired(service) ? P7_ERROR_RUNTIME_LIMIT
                                         : P7_ERROR_ABORTED;
     goto failed;
@@ -1131,10 +1198,16 @@ static int p7_process_descriptor(
       descriptor->bytes_completed != request.object_length ||
       output_crc != request.expected_crc32) {
     error = P7_ERROR_OBJECT_CRC;
+    (void)p7_publish_integrity_failure_snapshot(
+        &request, output_snapshot, output_snapshot_length, output_crc,
+        output_sha, (uint32_t)error);
     goto failed;
   }
   if (!p7_digest_matches_words(output_sha, request.expected_sha256)) {
     error = P7_ERROR_OBJECT_SHA256;
+    (void)p7_publish_integrity_failure_snapshot(
+        &request, output_snapshot, output_snapshot_length, output_crc,
+        output_sha, (uint32_t)error);
     goto failed;
   }
   object_end = p7_get_ticks();

@@ -120,6 +120,15 @@ def main() -> int:
             and "p7_sha256_update(&sha, snapshot, chunk);" in service
             and "crc ^= data[offset + index];" not in service
             and "p7_sha256_update(&sha, data + offset, chunk);" not in service,
+        "integrity_failure_snapshot_precedes_output_wipe":
+            "P7_FAILURE_SNAPSHOT_MAGIC" in service
+            and "p7_publish_integrity_failure_snapshot(" in process_descriptor_block
+            and process_descriptor_block.find("p7_publish_integrity_failure_snapshot(")
+            < process_descriptor_block.find("failed:")
+            < process_descriptor_block.find("p7_wipe_partial(")
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1" in execute_tcl
+            and "p7_zero_words_and_verify $failure_snapshot_address 320" in execute_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1" in execute_tcl,
         "descriptor_ready_published_last":
             "def descriptor_ready_publication" in codec
             and "P7_DESCRIPTOR_FREE" in codec

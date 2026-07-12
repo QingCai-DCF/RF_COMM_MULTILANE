@@ -2509,7 +2509,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertTrue(immutable.is_file())
             self.assertEqual(artifact["sha256"], subject.sha256_file(immutable))
 
-    def test_real_r1_through_r26_hardware_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
+    def test_real_r1_through_r27_hardware_epochs_validate_and_failed_stage_tamper_fails_closed(self) -> None:
         evidence = subject.RepositoryEvidence(
             ROOT,
             ROOT / "evidence" / "hardware" / "p7",
@@ -2539,12 +2539,13 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260712_stationary_app_r24_diag_suffix62",
             "p7_20260712_stationary_app_r25_diag_suffix62",
             "p7_20260712_stationary_app_r26_diag_suffix55",
+            "p7_20260712_stationary_app_r27_diag_suffix62",
         )
         candidates: dict[str, subject.Candidate] = {}
         for epoch_name in epoch_names:
             stage_directory = (
                 "062_p7_ps_functional"
-                if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55"))
+                if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55", "_r27_diag_suffix62"))
                 else "058_p7_large_jtag_1m_l0_random"
                 if epoch_name.endswith(("_r10_diag_suffix55", "_r13_diag_suffix55"))
                 else "002_p7_p6_frame_regression_m1"
@@ -2569,13 +2570,13 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 / stage_directory
                 / (
                     "p7_ps_application_stage_summary.json"
-                    if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55"))
+                    if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55", "_r27_diag_suffix62"))
                     else "p7_jtag_axi_stage_summary.json"
                 )
             )
             self.assertTrue(summary_path.is_file(), f"missing immutable historical epoch: {epoch_name}")
             data = json.loads(summary_path.read_text(encoding="utf-8"))
-            candidate_kind = "ps" if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55")) else "jtag"
+            candidate_kind = "ps" if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55", "_r27_diag_suffix62")) else "jtag"
             candidate = subject.Candidate(
                 summary_path,
                 data,
@@ -2584,7 +2585,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 subject.parse_time(data.get("generated_at_utc"), summary_path.stat().st_mtime),
             )
             candidates[epoch_name] = candidate
-            if epoch_name.endswith(("_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55")):
+            if epoch_name.endswith(("_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55", "_r27_diag_suffix62")):
                 inner_errors = subject._old_commit_ps_functional_boundary_failure_errors(candidate, evidence)
             elif epoch_name.endswith(("_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62")):
                 inner_errors = subject._old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence)
@@ -2660,6 +2661,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             "p7_20260712_stationary_app_r24_diag_suffix62",
             "p7_20260712_stationary_app_r25_diag_suffix62",
             "p7_20260712_stationary_app_r26_diag_suffix55",
+            "p7_20260712_stationary_app_r27_diag_suffix62",
         ):
             epoch_candidates = [
                 item
@@ -2669,7 +2671,7 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(1, len(epoch_candidates), epoch_name)
             self.assertEqual(
                 "062_p7_ps_functional"
-                if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55"))
+                if epoch_name.endswith(("_r16_diag_suffix55", "_r18_diag_suffix62", "_r21_diag_suffix62", "_r22_diag_suffix62", "_r23_diag_suffix62", "_r24_diag_suffix62", "_r25_diag_suffix62", "_r26_diag_suffix55", "_r27_diag_suffix62"))
                 else "058_p7_large_jtag_1m_l0_random"
                 if epoch_name.endswith("_r13_diag_suffix55")
                 else "002_p7_p6_frame_regression_m1",
@@ -3024,6 +3026,14 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             tampered = subject.Candidate(r26.path, tampered_data, r26.kind, r26.stage, r26.timestamp)
             errors = subject._old_commit_ps_functional_boundary_failure_errors(tampered, evidence)
             self.assertTrue(errors, f"r26 {label} tamper unexpectedly validated")
+
+        r27 = candidates["p7_20260712_stationary_app_r27_diag_suffix62"]
+        for label, mutate in r23_tamper_cases:
+            tampered_data = json.loads(json.dumps(r27.data))
+            mutate(tampered_data)
+            tampered = subject.Candidate(r27.path, tampered_data, r27.kind, r27.stage, r27.timestamp)
+            errors = subject._old_commit_ps_functional_boundary_failure_errors(tampered, evidence)
+            self.assertTrue(errors, f"r27 {label} tamper unexpectedly validated")
 
     def test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

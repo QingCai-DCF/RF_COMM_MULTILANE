@@ -960,3 +960,52 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   required complete suites exactly once、cache-bypassed canonical P7 checkpoint、impact proof、plan 和全部 dry validation。只有机器
   proof 证明 r26 的 55--61 全部 transitive consumed inputs 未变，r27 才允许 `1,2,3,4,62,63,64,65`；否则从最早受影响 stage
   fail closed。r27 仍是零 coverage diagnostic，严禁 stage 66。
+
+## 35. 2026-07-12 r27 adaptive diagnostic 增量交接（本节覆盖第 34 节的 next-run 描述）
+
+- r26 exact history、recovery 与 failure output/trace capture 已准确提交为
+  `164cedde1e7d91a7eeb3787ec160525e3352da9f`。在该 clean source 上，required complete suites 的唯一 invocation
+  自然完成 122 + 39 = 161/161 PASS；regression summary SHA256 为
+  `140bb4694ef5ef147f9fcdd67e8c6b34af99daa6c2be47197ad9b81a4ef8e210`。cache-bypassed canonical P7 checkpoint
+  13/13 PASS，SHA256 为 `605fb5d8b914e654c70fe29167a7ce5f7339604919813477f9ff0365c465d6f1`，明确 no-hardware、
+  real build 与 `HARDWARE_ACCEPTANCE=PENDING_HW`。
+- r27 machine impact proof 直接绑定 r26 immutable plan/ledger，逐项重验 ordinals 55--61 的 authorization settings、
+  tool/runtime identity、source dependencies、bit/LTX/profile/transactions/backend manifests、ELF/XSA、register map、XDC 与 pinmap；
+  所有 transitive consumed inputs unchanged，proof SHA256 为
+  `c42727a4c438b757247a039023c6a71e32affddda8665e37060c53657433cc8c`。r27 plan SHA256 为
+  `66cbbf3471ce8a2cef7d653ffb16be2bb56f27374dff1276b090bdf7277f0cc2`，generation manifest SHA256 为
+  `1761ca1db20e91953bdce7c4f3bdcaf353e9807d9524bace4baa568d9c08fa8c`；8 个 authorization、8 个 child dry、
+  generator executor dry 与独立 executor dry 全部 PASS。plan 只含 `1,2,3,4,62,63,64,65`，零 coverage、PENDING_HW、
+  无 stage 66。
+- r27 run ID 为 `p7_20260712_stationary_app_r27_diag_suffix62`，只启动一次且没有 `--resume`。ordinals 1--4 exact PASS；
+  stage 62 完成 exact target selection、candidate programming、4,456,448-byte preload、ELF start 与 service ready，boundary
+  0--7 PASS，但 boundary index 8 / length 30 / lane0 再次以 status 4、`P7_ERROR_OBJECT_CRC`(13) FAIL。63--65 未运行，
+  stage 66 不在 plan，stationary 正式启动次数仍为 0。outer ledger SHA256 为
+  `16bf3a1c6a9c6f39a1254c951b1fc1c1aeb6f338265d00a5d6b664d0ccf41134`；stage summary SHA256 为
+  `bdc64ce7ef248aa2e9e25d1496a80a51ebf0b6d867aa89461a444cb05e140662`。
+- r27 descriptor SHA256 `d6ff7937295d60a6c337a60989c80da61c58767b07082e5df965895ba8f0483a` 绑定 expected/input
+  SHA256 `f2192584...e86c32f`、expected CRC32 `0xc5665f58`、recorded output CRC32 `0x1fda9db9` 与 recorded
+  output SHA256 `85cc3c9bdc8b6699e216e48c446c9f4f7d861a8bcfef504fcaeb02b3e99ad750`；两个 output digest 来自同一
+  immutable firmware snapshot。fragment trace SHA256 `dd4721823cdd22ae8537c86582eca9ea268e3e9faf4abd824a22fae2bbd71bda`
+  精确记录 lane0、fragment 0/1、attempt 1、`result=0` 与 zero error/retry failure；该 trace 不得写成 accepted PASS。host terminal output capture SHA256
+  `0679246d6c4216de0daa08e5523fb2674db2b6599c3b72ff946b488a15290b62` 是 30 个零字节；frozen firmware 明确先
+  `p7_wipe_partial` 再发布 FAILED，因此该文件证明 cleanup wipe 生效，不是 digest 所消费的失败 snapshot，也不能用于猜测原始错误字节。
+- r27 后独立 recovery `recovery_shutdown_after_failed_stage062_20260712T113542Z` 精确记录 raw rc125、唯一 shutdown marker、
+  `SHUTDOWN_EXIT=0` 与 PASS；summary SHA256 为
+  `4f10313c44b51f3cb5dd922a7117c248466b2e9df56ab856d1559cf8440a4992`。recovery PASS 不改变 stage 62 FAIL。
+  frozen 12-file manifest SHA256 为 `ff14c3fd754fe22d2defe3fc9be11819305f4ea9350a5d1123913e4a50fc9b45`；临时 helper
+  已自然退出，外部 legacy `hw_server` PID 45220 未被触碰。
+- 当前诊断修复保留 r27 的安全清理顺序：output digest 使用的 immutable snapshot 最多保留前 256 bytes；若发生 CRC/SHA
+  integrity rejection，firmware 在进入 shutdown/wipe/FAILED 路径前把 64-byte self-describing header 与该 retained snapshot
+  发布到 trace array 后的独立、对齐、range/overlap-validated diagnostic region。host 只对 error 13/14 验证 publication magic，
+  atomic capture 320 bytes，随后逐 word 清零、读回验证、保存 wipe verification，再抛出原始 stage error。正常成功路径、P6 事务、
+  output wipe、shutdown 与 acceptance 语义不变；该机制只用于在下一次失败时机器验证 digest 对应的实际 bytes。
+- focused history/wrapper tests、py_compile、core-readiness 23/23 与真实 Vitis build PASS；新 candidate ELF SHA256 为
+  `96233942db9e17ace2ab240303e8402c8075c706094de416d5c7347769ae8731`，map SHA256 为
+  `bcd406305971fad92e760075b912020ff3b265b2ecf68046bade13ecbf5bcf43`，OCM image end `0x00015830` 仍低于
+  hard boundary `0x00020000`。这些均为非硬件结果，不能提升 stage 62 或 hardware acceptance。
+- r27 永远不得 resume；下一硬件 ID 必须为新 ID r28。由于 firmware/ELF 改变，任何跳过 55--61 的请求都必须重新通过机器
+  transitive impact proof；若现有 proof 模型把 ELF 视为 ordinal 55 consumed input，则必须 fail closed 从 55 开始，不得人工豁免。
+  必须先准确提交 r27 exact history/tamper、recovery、pre-wipe integrity snapshot capture 与本交接，再从新 clean source 完成
+  required complete suites exactly once、cache-bypassed checkpoint、plan 与全部 dry validation。r28 仍只能是零 coverage diagnostic，
+  不得包含 stage 66。
