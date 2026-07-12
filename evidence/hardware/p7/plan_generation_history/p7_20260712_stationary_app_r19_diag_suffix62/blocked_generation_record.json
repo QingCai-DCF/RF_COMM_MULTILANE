@@ -1,0 +1,31 @@
+{
+  "schema": "rf-comm-p7-blocked-plan-generation-v1",
+  "run_id": "p7_20260712_stationary_app_r19_diag_suffix62",
+  "source_commit": "ec6b5495cf7590b105db5c0a6ff1fa3b9ccedd6d",
+  "generated_at_utc": "2026-07-12T05:17:28.232730+00:00",
+  "status": "BLOCKED_OFFLINE_IMPACT_PROOF_VALIDATION",
+  "hardware_actions_executed": false,
+  "safe_wrapper_processes_launched": false,
+  "vivado_invoked": false,
+  "xsdb_invoked": false,
+  "authorization_environment_modified": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "intended_full_stage_ordinals": [1, 2, 3, 4, 62, 63, 64, 65],
+  "failure": "ValueError: adaptive proof prior plan must be the immutable suffix55 diagnostic mode",
+  "failure_boundary": "The fail-closed impact validator rejected r18's immutable DIAGNOSTIC_ADAPTIVE_SUFFIX plan before producing a plan, proof, authorization, or hardware-capable process.",
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "6d84e5e21f22552434d26b7c1bfa6d84b9108e942688bfbee466e7375071459b"
+  },
+  "prior_plan": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r18_diag_suffix62/historical_preflight_inputs/p7_sequence_plan_6bc65f049517fb2a7059ce9fd496ec7ef198466b8791f1a58ec32ccf73a84064.txt",
+    "sha256": "6bc65f049517fb2a7059ce9fd496ec7ef198466b8791f1a58ec32ccf73a84064"
+  },
+  "prior_execution_ledger": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r18_diag_suffix62/sequence_execution_ledger.json",
+    "sha256": "2fc74e20e1056960cb6d5fcd06c150b6fd0143aad8fdd18690ad96e309e2fbad"
+  },
+  "immutable_disposition": "Do not reuse r19. The next generated diagnostic and any next hardware attempt must use a new run ID.",
+  "next_run_id": "p7_20260712_stationary_app_r20_diag_suffix62"
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "rf-comm-p7-blocked-plan-generation-v1",
+  "run_id": "p7_20260712_stationary_app_r20_diag_suffix62",
+  "source_commit": "ec6b5495cf7590b105db5c0a6ff1fa3b9ccedd6d",
+  "generated_at_utc": "2026-07-12T05:19:46.478582+00:00",
+  "status": "BLOCKED_OFFLINE_DIRTY_SCOPE_VALIDATION",
+  "hardware_actions_executed": false,
+  "safe_wrapper_processes_launched": false,
+  "vivado_invoked": false,
+  "xsdb_invoked": false,
+  "authorization_environment_modified": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "intended_full_stage_ordinals": [1, 2, 3, 4, 62, 63, 64, 65],
+  "failure": "ValueError: generator permits only post-gate reproducible summary changes; rejected dirty entries: ['?? evidence/hardware/p7/plan_generation_history/p7_20260712_stationary_app_r19_diag_suffix62/blocked_generation_record.json']",
+  "failure_boundary": "The fail-closed generator rejected an uncommitted plan-generation history record before producing a plan, proof, authorization, or hardware-capable process.",
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "6d84e5e21f22552434d26b7c1bfa6d84b9108e942688bfbee466e7375071459b"
+  },
+  "prior_run_id_used_for_impact_proof": "p7_20260711_stationary_app_r16_diag_suffix55",
+  "immutable_disposition": "Do not reuse r20. The next generated diagnostic and any next hardware attempt must use a new run ID after committing both blocked records.",
+  "next_run_id": "p7_20260712_stationary_app_r21_diag_suffix62"
+}

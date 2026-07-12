@@ -1,6 +1,6 @@
 {
   "P7_OFFLINE_GATE": "PASS",
-  "generated_at_utc": "2026-07-12T04:29:59+00:00",
+  "generated_at_utc": "2026-07-12T05:15:55+00:00",
   "checks": {
     "P6_RECHECK": true,
     "P7_PROTOCOL_VECTORS": true,
@@ -26,16 +26,16 @@
   "OFFLINE_CACHE_VALIDATED_OUTPUT_HASHES": {},
   "OFFLINE_REAL_BUILD_PROCESS_RAN": true,
   "validated_complete_regression_summary": {
-    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_b1765f8.json",
-    "sha256": "09b4cc5af61df8940c081d50f56008437da4bfd9be8db97da613c81f97d12584",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_ec6b5495_r19_retry_after_host_timeout.json",
+    "sha256": "579f83d36249766dbd06d097ba9fac866e24e69cf551231a0853a30ef2c3782e",
     "payload": {
       "FULL_SUITE_INVOCATION_COUNT": 2,
       "HARDWARE_ACCEPTANCE": "PENDING_HW",
       "NO_HARDWARE_ACTIONS_EXECUTED": true,
       "dirty_worktree_before_suites": false,
-      "generated_at_utc": "2026-07-12T04:29:28.000746+00:00",
+      "generated_at_utc": "2026-07-12T05:15:18.013425+00:00",
       "schema": "rf-comm-p7-complete-regression-suites-v1",
-      "source_commit": "b1765f8d8671e0c650122029bc72146f43274558",
+      "source_commit": "ec6b5495cf7590b105db5c0a6ff1fa3b9ccedd6d",
       "status": "PASS",
       "suite_invocation_count_by_name": {
         "tests_p7_discovery": 1,
@@ -44,20 +44,20 @@
       "suites": [
         {
           "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
-          "discovered_test_count": 119,
+          "discovered_test_count": 120,
           "invocation_count": 1,
           "name": "top_level_discovery",
           "returncode": 0,
           "status": "PASS",
           "stderr": {
-            "bytes": 23088,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_b1765f8_logs\\top_level_discovery.stderr.log",
-            "sha256": "466e938e351c193c64eb4c8c243945e483898b7d58d134f5df118b5e29815a20"
+            "bytes": 23329,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_ec6b5495_r19_retry_after_host_timeout_logs\\top_level_discovery.stderr.log",
+            "sha256": "07cf298d53d10a186adf9263c6a15ae884af73a549e085eb35bc8622f8a5aab7"
           },
           "stdout": {
             "bytes": 641,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_b1765f8_logs\\top_level_discovery.stdout.log",
-            "sha256": "37a69a8076373d7ba4decd685c92dcc1f22a8305333d3189bd29caeb1474ca36"
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_ec6b5495_r19_retry_after_host_timeout_logs\\top_level_discovery.stdout.log",
+            "sha256": "2304148b9301ae7e2755d71b1c64745c6984de5b1c22d5495529b87b2b34e61b"
           }
         },
         {
@@ -69,24 +69,24 @@
           "status": "PASS",
           "stderr": {
             "bytes": 4790,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_b1765f8_logs\\tests_p7_discovery.stderr.log",
-            "sha256": "a7f81b3af539d83beaab6ed1965f1cf00c42ad36ce8ff681cbc1aee2c4db7e72"
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_ec6b5495_r19_retry_after_host_timeout_logs\\tests_p7_discovery.stderr.log",
+            "sha256": "4c62b2f70db2544a2644853a8c84085089ef03d29985f3b625b5d5a182012bbf"
           },
           "stdout": {
             "bytes": 0,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_b1765f8_logs\\tests_p7_discovery.stdout.log",
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_ec6b5495_r19_retry_after_host_timeout_logs\\tests_p7_discovery.stdout.log",
             "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
           }
         }
       ],
-      "total_discovered_test_count": 158
+      "total_discovered_test_count": 159
     },
     "errors": []
   },
-  "source_commit": "b1765f8d8671e0c650122029bc72146f43274558",
+  "source_commit": "ec6b5495cf7590b105db5c0a6ff1fa3b9ccedd6d",
   "dirty_worktree": false,
   "dirty_files_before_gate": [],
-  "source_tree_listing_sha256": "5e8ed686c3026ca8cbdcc46fe30f3344370fd1a2e73407ac1d4721dccdf1a210",
+  "source_tree_listing_sha256": "32287267b94589a54cb1b9e9f1c9f4152a2e03ad5d3e82c7da6f4f9e4dd31069",
   "checkpoint_input_hashes": {
     "AGENTS.md": "352bac6445b94fb3a9770bd05b30dcccfd8c7575ae316b100082ec240c29905e",
     "board_profiles/ACTIVE_PROFILE.json": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
@@ -95,8 +95,8 @@
     "config/register_map/ir_axi_regs.yaml": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
     "constraints/active/PORT1.generated.xdc": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
     "docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md": "45d54d022b27d2cc282b80cffb2c41465c2bfebb687ad9fd4c26873c4969ceb8",
-    "evidence/generated/p7_ps_core_hardware_readiness.json": "8f65e163ccee7f5b5cc9b355089611087f9bd39afa45594fa578a31ee91cfdfd",
-    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "8d702503dd95c27f41cf1dfaa656737eee16ad1f527fa08e99ed26284fb63885",
+    "evidence/generated/p7_ps_core_hardware_readiness.json": "4b02214415aa4ff2907f807dbae5d762b36ad698e422407640187b8d9ed88846",
+    "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json": "3f9610335f94c18f2eabf9bfc7c330326920cc30678b90543ed6bdd28a1947cf",
     "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json": "357c340ab4b53d29d79055eb0c8cdd2fd77614c6bae36efcbbe6a0ada0cd9285",
     "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build_summary.json": "49dca997225eaf339681d7b83e9d3418a7c00c17736002174edc4f78fe086f72",
     "evidence/hardware/p6/bitstreams/p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
@@ -115,7 +115,7 @@
     "scripts/build_p7_ps_runtime.tcl": "25de611cbe61432c003f99d2437d771a3c131b3a9786391defb0d41e4e0ed639",
     "scripts/hw/p7_hw_preflight.tcl": "95bfbdf7e6c429e6637c1b4224a9dcecaa1fd756a1f665b21a797d54afbfc464",
     "scripts/hw/p7_jtag_axi_transactions.tcl": "4d4674d25da3ca6384309d7acbc3212adb89f88346c7749d7218984ce3561ec4",
-    "scripts/hw/p7_ps_application_execute.tcl": "89ee5c8dc11b498efe808647c3e2b3d112fd2c5e84e8a593dd972866e1f68c51",
+    "scripts/hw/p7_ps_application_execute.tcl": "02b6f8432489062635c947aebc18b071cfc2ca747e494a2985b4e979413b1525",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
     "scripts/hw/run_p7_ps_application_stage_safe.py": "8d23189757ea5063cb71cb6d8d16700df27e5ccb6d7cee159d22fe717069e12b",
     "shutdown_bitstream/tfdu_shutdown_j10_j11.bit": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
@@ -141,7 +141,7 @@
     "tools/run_p7_gate.py": "f3f7b7b6c5e4c55fdbc1c384878cc97764620a53f4703efe93e2b690c6fb59d7",
     "tools/run_p7_ps_core_offline.py": "189dd736cb051bcae726e5c1ecfe2de6165a56d05fbf2b047ee64f5798a73d47",
     "tools/run_p7_regression_suites.py": "6b10934cf8b0b0ded94e3164dddae06c95a1964da2552770079e55e464545424",
-    "tools/summarize_p7_hardware.py": "55ac81397a8073320e584e3d0360c82249a44ac0cce5957ba6c00361a7ab618e"
+    "tools/summarize_p7_hardware.py": "82e089adb6f0af132f5d64348f04be9f138ecb002bd7b48c51ffddaab7bfbf12"
   },
   "checkpoint_input_count": 54
 }
