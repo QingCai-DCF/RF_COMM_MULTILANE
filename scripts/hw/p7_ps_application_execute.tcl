@@ -109,6 +109,32 @@ proc p7_unique_targets_by_id {records} {
   return $unique
 }
 
+proc p7_classify_debug_targets {records live_jtag_device_id expected_board_id device_root} {
+  set dap_matches {}
+  set apu_matches {}
+  set fpga_matches {}
+  set cpu_matches {}
+  foreach props $records {
+    if {![dict exists $props name] || ![dict exists $props target_id]} { continue }
+    set live_name [dict get $props name]
+    if {[string match -nocase "*DAP*" $live_name]} { lappend dap_matches $props }
+    if {[string equal -nocase $live_name APU]} { lappend apu_matches $props }
+    if {[string equal -nocase $live_name $device_root] &&
+        [dict exists $props jtag_device_id] &&
+        [dict get $props jtag_device_id] == $live_jtag_device_id &&
+        [dict exists $props jtag_cable_serial] &&
+        [string equal -nocase [dict get $props jtag_cable_serial] $expected_board_id]} {
+      lappend fpga_matches $props
+    }
+    if {[string match -nocase "*Cortex-A9*#0" $live_name]} { lappend cpu_matches $props }
+  }
+  return [dict create \
+    dap [p7_unique_targets_by_id $dap_matches] \
+    apu [p7_unique_targets_by_id $apu_matches] \
+    fpga [p7_unique_targets_by_id $fpga_matches] \
+    cpu0 [p7_unique_targets_by_id $cpu_matches]]
+}
+
 proc p7_read32 {address} {
   set value [mrd -value $address]
   return [expr {$value & 0xFFFFFFFF}]
@@ -1090,6 +1116,8 @@ set rc [catch {
   # cable serial, device name and actual IDCODE.  Do not infer identity from
   # the human-readable `targets` listing.
   set live_jtag_properties [jtag targets -target-properties]
+  set all_cable_roots {}
+  set all_device_nodes {}
   set cable_matches {}
   set device_matches {}
   set expected_idcode_normal [p7_normal_idcode $preflight_idcode]
@@ -1098,21 +1126,24 @@ set rc [catch {
   }
   foreach props $live_jtag_properties {
     if {[dict exists $props jtag_cable_serial] &&
-        [string equal -nocase [dict get $props jtag_cable_serial] $expected_board_id] &&
         [dict exists $props level] && [dict get $props level] == 0} {
-      lappend cable_matches $props
+      lappend all_cable_roots $props
+      if {[string equal -nocase [dict get $props jtag_cable_serial] $expected_board_id]} {
+        lappend cable_matches $props
+      }
     }
     if {![dict exists $props idcode] || ![dict exists $props name]} { continue }
+    lappend all_device_nodes $props
     if {[string equal -nocase [dict get $props name] $device_root] &&
         [p7_normal_idcode [dict get $props idcode]] eq $expected_idcode_normal} {
       lappend device_matches $props
     }
   }
-  if {[llength $cable_matches] != 1} {
-    error "P7 XSDB live chain must contain exactly one authorized cable serial; found [llength $cable_matches]"
+  if {[llength $all_cable_roots] != 1 || [llength $cable_matches] != 1} {
+    error "P7 XSDB live chain must contain only the one authorized cable serial"
   }
-  if {[llength $device_matches] != 1} {
-    error "P7 XSDB live chain must contain exactly one exact device/IDCODE match; found [llength $device_matches]"
+  if {[llength $all_device_nodes] != 1 || [llength $device_matches] != 1} {
+    error "P7 XSDB live chain must contain only the one exact device/IDCODE match"
   }
   set live_device [lindex $device_matches 0]
   set live_cable [lindex $cable_matches 0]
@@ -1121,37 +1152,25 @@ set rc [catch {
   set live_board_serial [dict get $live_cable jtag_cable_serial]
   set live_idcode [p7_normal_idcode [dict get $live_device idcode]]
 
-  # Resolve every high-level XSDB node once, require uniqueness on the exact
-  # verified JTAG device/cable, and subsequently select by numeric target ID.
+  # The low-level JTAG inventory above proves that this XSDB connection has
+  # exactly one cable and exactly one device, both the authorized identities.
+  # Child APU/CPU debug rows do not necessarily repeat jtag_device_id or cable
+  # properties, so bind them to that single-device connection and fail closed
+  # on every duplicate distinct target ID.  The FPGA row is still required to
+  # carry the exact low-level JTAG device/cable identity itself.
   set debug_properties [targets -target-properties]
-  set dap_matches {}
-  set apu_matches {}
-  set fpga_matches {}
-  set cpu_matches {}
-  foreach props $debug_properties {
-    if {![dict exists $props jtag_device_id] ||
-        [dict get $props jtag_device_id] != $live_jtag_device_id ||
-        ![dict exists $props jtag_cable_serial] ||
-        ![string equal -nocase [dict get $props jtag_cable_serial] $expected_board_id] ||
-        ![dict exists $props name] || ![dict exists $props target_id]} { continue }
-    set live_name [dict get $props name]
-    if {[string match -nocase "*DAP*" $live_name]} { lappend dap_matches $props }
-    if {[string equal -nocase $live_name APU]} { lappend apu_matches $props }
-    if {[string equal -nocase $live_name $device_root]} { lappend fpga_matches $props }
-    if {[string match -nocase "*Cortex-A9*#0" $live_name]} { lappend cpu_matches $props }
-  }
-  # XSDB may emit more than one property row for the same numeric target.
-  # Uniqueness is a target-ID property, not a row-count property.  Retain the
-  # first already identity-filtered row for each ID and still fail closed if
-  # more than one distinct target remains.
-  set dap_matches [p7_unique_targets_by_id $dap_matches]
-  set apu_matches [p7_unique_targets_by_id $apu_matches]
-  set fpga_matches [p7_unique_targets_by_id $fpga_matches]
-  set cpu_matches [p7_unique_targets_by_id $cpu_matches]
+  set debug_sets [p7_classify_debug_targets \
+    $debug_properties $live_jtag_device_id $expected_board_id $device_root]
+  set dap_matches [dict get $debug_sets dap]
+  set apu_matches [dict get $debug_sets apu]
+  set fpga_matches [dict get $debug_sets fpga]
+  set cpu_matches [dict get $debug_sets cpu0]
   p7_say $result_handle "P7_XSDB_DAP_DISTINCT_TARGET_COUNT=[llength $dap_matches]"
   p7_say $result_handle "P7_XSDB_APU_DISTINCT_TARGET_COUNT=[llength $apu_matches]"
   p7_say $result_handle "P7_XSDB_FPGA_DISTINCT_TARGET_COUNT=[llength $fpga_matches]"
   p7_say $result_handle "P7_XSDB_CPU0_DISTINCT_TARGET_COUNT=[llength $cpu_matches]"
+  p7_say $result_handle "P7_XSDB_CABLE_ROOT_COUNT=[llength $all_cable_roots]"
+  p7_say $result_handle "P7_XSDB_JTAG_DEVICE_COUNT=[llength $all_device_nodes]"
   if {[llength $dap_matches] == 1} {
     set reset_target [lindex $dap_matches 0]
     set reset_target_name DAP

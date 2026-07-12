@@ -86,6 +86,9 @@ HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED = (
 HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_RESET_TARGET_UNIQUENESS_REJECTED"
 )
+HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_CHILD_TARGET_IDENTITY_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -3317,6 +3320,40 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 ]
             ):
                 return HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and shutdown_before.get("programming_attempted") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and shutdown_after.get("programming_attempted") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and isinstance(ps_failures, list)
+                and ps_failures == ps_process.get("failures")
+                and candidate.data.get("programmed_candidate") is False
+                and candidate.data.get("started_ps_elf") is False
+                and marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()
+                == [
+                    "P7_PS_MODE=functional",
+                    "P7_XSDB_DAP_DISTINCT_TARGET_COUNT=0",
+                    "P7_XSDB_APU_DISTINCT_TARGET_COUNT=0",
+                    "P7_XSDB_FPGA_DISTINCT_TARGET_COUNT=1",
+                    "P7_XSDB_CPU0_DISTINCT_TARGET_COUNT=0",
+                    "P7_PS_STAGE_RESULT=FAIL",
+                    "P7_PS_STAGE_ERROR=P7 XSDB reset target is not unique on the exact authorized device",
+                ]
+            ):
+                return HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5081,7 +5118,9 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     """Validate r18's exact pre-reset/pre-candidate XSDB target rejection."""
 
     errors: list[str] = []
-    label = "historical r18"
+    variant = _historical_preflight_variant(candidate)
+    r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
+    label = "historical r21" if r21 else "historical r18"
     data = candidate.data
     expected_ps_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5145,7 +5184,11 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
         and safety.get("authorization_environment_present") is True
         and safety.get("errors") == []
         and str(safety.get("source_commit_requested", "")).lower()
-        == "b1765f8d8671e0c650122029bc72146f43274558",
+        == (
+            "b149620f92a2abda4add8529166dd7d5f5359506"
+            if r21
+            else "b1765f8d8671e0c650122029bc72146f43274558"
+        ),
         f"{label} safety/source boundary mismatch",
     )
     preflight = data.get("preflight")
@@ -5215,14 +5258,24 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
         f"{label} PS process exact rejection mismatch",
     )
     raw_lines = marker_text(candidate.path.parent / "p7_ps_application_raw_result.log").splitlines()
+    expected_raw_lines = [
+        "P7_PS_MODE=functional",
+        *(
+            [
+                "P7_XSDB_DAP_DISTINCT_TARGET_COUNT=0",
+                "P7_XSDB_APU_DISTINCT_TARGET_COUNT=0",
+                "P7_XSDB_FPGA_DISTINCT_TARGET_COUNT=1",
+                "P7_XSDB_CPU0_DISTINCT_TARGET_COUNT=0",
+            ]
+            if r21
+            else []
+        ),
+        "P7_PS_STAGE_RESULT=FAIL",
+        "P7_PS_STAGE_ERROR=P7 XSDB reset target is not unique on the exact authorized device",
+    ]
     append_error(
         errors,
-        raw_lines
-        == [
-            "P7_PS_MODE=functional",
-            "P7_PS_STAGE_RESULT=FAIL",
-            "P7_PS_STAGE_ERROR=P7 XSDB reset target is not unique on the exact authorized device",
-        ],
+        raw_lines == expected_raw_lines,
         f"{label} raw XSDB failure mismatch",
     )
     for name in ("ps_application_stage.stdout.log", "ps_application_stage.stderr.log"):
@@ -5245,8 +5298,11 @@ def _old_commit_ps_reset_target_uniqueness_failure_errors(
     errors.extend(f"{label} lock: {item}" for item in lock_errors)
     append_error(
         errors,
-        _historical_preflight_variant(candidate)
-        == HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
+        variant
+        in {
+            HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
+            HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
+        },
         f"{label} failure class mismatch",
     )
     return errors
@@ -7674,7 +7730,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     """Bind r18's adaptive prefix and exact pre-reset XSDB rejection."""
 
     errors: list[str] = []
-    label = "historical r18"
+    variant = _historical_preflight_variant(candidate)
+    r21 = variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED
+    label = "historical r21" if r21 else "historical r18"
     expected_ordinals = [1, 2, 3, 4, 62, 63, 64, 65]
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
@@ -7885,11 +7943,27 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "[llength $dap_matches] == 0 && [llength $apu_matches] == 1" in old_ps_tcl
             and "proc p7_unique_targets_by_id" not in old_ps_tcl
         )
-        append_error(errors, old_row_predicate, f"{label} frozen source does not prove row-count target uniqueness predicate")
+        child_identity_predicate = (
+            "proc p7_unique_targets_by_id" in old_ps_tcl
+            and "proc p7_classify_debug_targets" not in old_ps_tcl
+            and "![dict exists $props jtag_device_id]" in old_ps_tcl
+            and "![dict exists $props jtag_cable_serial]" in old_ps_tcl
+        )
+        append_error(
+            errors,
+            child_identity_predicate if r21 else old_row_predicate,
+            f"{label} frozen source does not prove its exact target-selection predicate",
+        )
         historical_source_control_flow = {
-            "target_uniqueness_basis": "PROPERTY_ROW_COUNT",
-            "numeric_target_id_dedup_present": False,
-            "historical_row_count_rejection_proven": old_row_predicate,
+            "target_uniqueness_basis": (
+                "DISTINCT_TARGET_ID_WITH_CHILD_ROWS_REQUIRING_DIRECT_JTAG_IDENTITY"
+                if r21
+                else "PROPERTY_ROW_COUNT"
+            ),
+            "numeric_target_id_dedup_present": r21,
+            "historical_target_rejection_proven": (
+                child_identity_predicate if r21 else old_row_predicate
+            ),
             "sources": {
                 role: _hash_record(Path(record["resolved_path"]))
                 for role, record in frozen_records.items()
@@ -7899,22 +7973,73 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
 
     recovery_dirs = sorted(epoch_root.glob("recovery_shutdown_after_failed_stage062_*"))
     declared = frozen_manifest.get("recovery_directories") if isinstance(frozen_manifest, dict) else None
-    append_error(errors, len(recovery_dirs) == 1 and declared == [recovery_dirs[0].name], f"{label} recovery directory binding mismatch")
+    expected_recovery_count = 2 if r21 else 1
+    append_error(
+        errors,
+        len(recovery_dirs) == expected_recovery_count
+        and declared == [path.name for path in recovery_dirs],
+        f"{label} recovery directory binding mismatch",
+    )
     recovery_record: dict[str, Any] | None = None
+    no_action_recoveries: list[dict[str, Any]] = []
     recovery_end = float("nan")
-    if len(recovery_dirs) == 1:
-        recovery_dir = recovery_dirs[0]
+    previous_end = parse_time(attempt.get("ended_at_utc"), float("nan"))
+    for recovery_dir in recovery_dirs:
         expected_recovery_files = {
             "program_tfdu_shutdown_safe.summary.txt", "hardware_authorization.json",
             "hash_manifest.json", "hash_manifest.csv", "program_tfdu_shutdown_safe.stdout.log",
             "program_tfdu_shutdown_safe.stderr.log",
         }
-        append_error(errors, {path.name for path in recovery_dir.iterdir() if path.is_file()} == expected_recovery_files, f"{label} recovery file set mismatch")
+        observed_files = {path.name for path in recovery_dir.iterdir() if path.is_file()}
         summary_path = recovery_dir / "program_tfdu_shutdown_safe.summary.txt"
         text = marker_text(summary_path)
         markers, duplicates = parse_marker_text(text)
         begin_text = next((line.split(" ", 1)[1].strip() for line in text.splitlines() if line.startswith("PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN ")), "")
         end_text = next((line.split(" ", 1)[1].strip() for line in text.splitlines() if line.startswith("PROGRAM_TFDU_SHUTDOWN_SAFE_END ")), "")
+        try:
+            authorization = json.loads((recovery_dir / "hardware_authorization.json").read_text(encoding="utf-8", errors="strict"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            errors.append(f"{label} recovery authorization invalid: {exc}")
+            authorization = {}
+        recovery_start = parse_time(begin_text, float("nan"))
+        current_end = parse_time(end_text, float("nan"))
+        append_error(
+            errors,
+            previous_end == previous_end
+            and recovery_start == recovery_start
+            and current_end == current_end
+            and previous_end <= recovery_start <= current_end,
+            f"{label} recovery chronology mismatch",
+        )
+        previous_end = current_end
+        if markers.get("PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS") == "AUTHORIZATION_MISSING":
+            expected_no_action_files = expected_recovery_files - {
+                "program_tfdu_shutdown_safe.stdout.log",
+                "program_tfdu_shutdown_safe.stderr.log",
+            }
+            append_error(errors, observed_files == expected_no_action_files, f"{label} no-action recovery file set mismatch")
+            append_error(
+                errors,
+                not duplicates
+                and markers.get("HARDWARE_AUTHORIZATION_EXIT") == "2"
+                and markers.get("AUTHORIZATION_MISSING") == "1"
+                and markers.get("NO_HARDWARE_ACTIONS_EXECUTED") == "1"
+                and authorization.get("AUTHORIZED") is False
+                and "RF_COMM_HW_AUTH=I_ACCEPT_TFDU6102_RISK_AND_AUTHORIZE_HW"
+                in authorization.get("missing", []),
+                f"{label} no-action recovery boundary mismatch",
+            )
+            no_action_recoveries.append(
+                {
+                    "directory": str(recovery_dir),
+                    "hardware_actions_executed": False,
+                    "started_at_utc": begin_text,
+                    "ended_at_utc": end_text,
+                    "files": [_hash_record(recovery_dir / name) for name in sorted(expected_no_action_files)],
+                }
+            )
+            continue
+        append_error(errors, observed_files == expected_recovery_files, f"{label} effective recovery file set mismatch")
         append_error(
             errors,
             not duplicates
@@ -7924,16 +8049,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and markers.get("PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS") == "PASS",
             f"{label} independent recovery markers mismatch",
         )
-        try:
-            authorization = json.loads((recovery_dir / "hardware_authorization.json").read_text(encoding="utf-8", errors="strict"))
-        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-            errors.append(f"{label} recovery authorization invalid: {exc}")
-            authorization = {}
+        append_error(errors, recovery_record is None, f"{label} has more than one effective recovery")
         append_error(errors, authorization.get("AUTHORIZED") is True and authorization.get("P4_AUTHORIZATION") == "AUTHORIZED" and authorization.get("missing") == [], f"{label} recovery authorization mismatch")
-        recovery_start = parse_time(begin_text, float("nan"))
-        recovery_end = parse_time(end_text, float("nan"))
-        outer_end = parse_time(attempt.get("ended_at_utc"), float("nan"))
-        append_error(errors, outer_end == outer_end and recovery_start == recovery_start and recovery_end == recovery_end and outer_end <= recovery_start <= recovery_end, f"{label} recovery chronology mismatch")
+        recovery_end = current_end
         recovery_record = {
             "directory": str(recovery_dir),
             "observed_raw_exit": 125,
@@ -7943,12 +8061,14 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "ended_at_utc": end_text,
             "files": [_hash_record(recovery_dir / name) for name in sorted(expected_recovery_files)],
         }
+    append_error(errors, recovery_record is not None, f"{label} effective recovery missing")
+    append_error(errors, len(no_action_recoveries) == (1 if r21 else 0), f"{label} no-action recovery count mismatch")
 
     record = {
         "schema": "rf-comm-p7-historical-failed-stage-epoch-v1",
         "epoch_root": str(epoch_root),
         "source_commit": source,
-        "failure_class": HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
+        "failure_class": variant,
         "result": "FAIL",
         "coverage_keys": [],
         "mutation_attempted_by_wrapper": True,
@@ -7978,6 +8098,7 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         "failed_stage_files": {
             name: _hash_record(candidate.path.parent / name) for name in sorted(expected_stage_files)
         },
+        "authorization_missing_no_action_recoveries": no_action_recoveries,
         "effective_shutdown_recovery": recovery_record,
         "started_at_utc": attempts[0].get("started_at_utc") if attempts else attempt.get("started_at_utc"),
         "ended_at_utc": recovery_record.get("ended_at_utc") if isinstance(recovery_record, dict) else None,
@@ -8016,7 +8137,10 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             epoch_root=epoch_root,
             source=source,
         )
-    if historical_variant == HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED:
+    if historical_variant in {
+        HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
+        HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
+    }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
             evidence,
@@ -10454,6 +10578,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED:
         errors.extend(_old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED:
+        errors.extend(_old_commit_ps_reset_target_uniqueness_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -10786,6 +10913,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_AXI4_BURST_WORD_ORDER_REJECTED,
             HISTORICAL_STAGE_PS_SHUTDOWN_ARG_COUNT_REJECTED,
             HISTORICAL_STAGE_PS_RESET_TARGET_UNIQUENESS_REJECTED,
+            HISTORICAL_STAGE_PS_CHILD_TARGET_IDENTITY_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

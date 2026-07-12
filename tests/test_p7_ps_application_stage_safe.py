@@ -1192,6 +1192,23 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         with self.assertRaises(tkinter.TclError):
             interp.eval("p7_unique_targets_by_id [list [dict create name APU]]")
 
+    def test_xsdb_child_targets_bind_to_the_proven_single_device_connection(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        interp.eval(tcl[: tcl.index("proc p7_read32")])
+        interp.eval(
+            "set rows [list "
+            "[dict create target_id 1 name APU] "
+            "[dict create target_id 2 name {ARM Cortex-A9 MPCore #0}] "
+            "[dict create target_id 3 name xc7z010 jtag_device_id 44 jtag_cable_serial SERIAL] "
+            "[dict create target_id 4 name xc7z010 jtag_device_id 45 jtag_cable_serial OTHER]]"
+        )
+        interp.eval("set sets [p7_classify_debug_targets $rows 44 SERIAL xc7z010]")
+        self.assertEqual("1", interp.eval("llength [dict get $sets apu]"))
+        self.assertEqual("1", interp.eval("llength [dict get $sets cpu0]"))
+        self.assertEqual("1", interp.eval("llength [dict get $sets fpga]"))
+        self.assertEqual("0", interp.eval("llength [dict get $sets dap]"))
+
     def test_xsdb_tcl_failure_result_preserves_original_error_before_hardware(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
         with tempfile.TemporaryDirectory() as temp:

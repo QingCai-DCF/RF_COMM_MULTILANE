@@ -761,3 +761,37 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
   exactly once、P7 checkpoint、impact proof、plan 和全部 dry validation。只有机器 proof 证明 55--61 的全部 transitive
   consumed inputs 未变，r19 才允许严格运行 `1,2,3,4,62,63,64,65`；否则从最早受影响 stage 开始。r19 仍为零 coverage
   diagnostic，严禁 stage 66。
+
+## 28. 2026-07-12 r19--r21 adaptive diagnostic 增量交接（本节覆盖第 27 节的 next-run 描述）
+
+- r19 与 r20 都只在离线 plan generation 阶段 fail closed，均未生成可执行授权或连接硬件。r19 暴露 adaptive proof
+  validator 只接受原始 `DIAGNOSTIC_SUFFIX_55` parent；r20 因尚未提交的 r19 blocked record 超出 post-checkpoint
+  reproducible-dirty allowlist 而拒绝。两次机器记录分别位于
+  `evidence/hardware/p7/plan_generation_history/p7_20260712_stationary_app_r19_diag_suffix62/` 与同级 r20 目录；两者
+  永远不得复用。
+- 在 commit `b149620f92a2abda4add8529166dd7d5f5359506` 上，required complete suites exactly once 为
+  120 + 39 = 159/159 PASS；P7 checkpoint 13/13 PASS，SHA256 为
+  `3417abe3497a450bacfb000cede722fa5eff930ded6feeeb7b280eff0b5a9f7b`。r21 impact proof 重新直接绑定 r16 的
+  immutable suffix55 plan/ledger 与 55--61 exact PASS，不依赖或提升 r18；proof SHA256 为
+  `fa18fcd7efb3cb92583181ee034b1a9e9433b26f59c725d9d4d5b0829277b9b9`。r21 plan SHA256 为
+  `d221abb909316b3ab71af5fd8a375077084b03a12d211609b65480655c19b3c3`，严格只含 ordinals
+  `1,2,3,4,62,63,64,65`，全部 generator/child/independent dry validation PASS。
+- r21 只启动一次且没有 `--resume`。ordinals 1--4 exact PASS；stage 62 的 low-level exact FPGA target count 为 1，
+  但旧 high-level filter 得到 `DAP=0, APU=0, CPU0=0`，因此在 reset、candidate programming 和 ELF start 前以
+  `P7 XSDB reset target is not unique on the exact authorized device` fail closed。stage 63--65 未启动；stage 66 不在
+  plan 中，stationary 正式启动次数仍为 0。ledger SHA256 为
+  `7fdd5f36b290666c2b0fe8959db54c1a9476db0bf7bd641d5468f6989b504dc9`，失败 summary SHA256 为
+  `feedcbbb8e19609a8cfd35a696d3469574caead2cf67b9eca77ba40366350dc5`。
+- 第一次独立 recovery 因使用错误的 P7 outer authorization token 而准确记录 `AUTHORIZATION_MISSING` 且
+  `NO_HARDWARE_ACTIONS_EXECUTED=1`；随后新 recovery directory 使用既有 P4 scoped authorization，精确记录
+  `SHUTDOWN_RAW_EXIT=125`、`TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`、`SHUTDOWN_EXIT=0`、
+  `PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS=PASS`。外部 `hw_server` PID 45220 未被触碰。r21 frozen 12-file manifest
+  SHA256 为 `29360ddae81a9e847e2858e0067517b6813c9293a331d8ecc9b83bd98cc4dc46`。
+- r21 只证明旧 predicate 把所有 APU/CPU0 rows 排除，不能声称现场 row 缺少某个特定 property。修复先把 low-level
+  JTAG inventory 收紧为整个连接恰好一个 cable root、一个 device node，且两者精确匹配授权 serial/device/IDCODE；在此
+  单设备连接证明成立后，APU/DAP/CPU child rows 按 name 与 distinct numeric target ID 唯一化，FPGA row 仍必须直接携带
+  exact JTAG device/cable identity。任何额外 cable/device、重复 distinct child target 或缺失 target ID 都 fail closed。
+- r21 永远不得 resume；下一硬件 ID 必须为新的 `p7_20260712_stationary_app_r22_diag_suffix62`（若离线阻断则继续换新 ID）。
+  必须先提交 r21 exact history/tamper、两次 recovery、child-target 修复和本交接，再在新 clean source 上重新完成 exactly-once
+  suites、checkpoint、impact proof、plan 与全部 dry validation。r22 仍只允许零 coverage diagnostic ordinals
+  `1,2,3,4,62,63,64,65`，严禁 stage 66。
