@@ -1,7 +1,7 @@
 {
   "schema": "rf-comm-p7-ps-core-hardware-readiness-v1",
-  "P7_PS_CORE_HARDWARE_READINESS": "PASS",
-  "generated_at_utc": "2026-07-13T02:18:51+00:00",
+  "P7_PS_CORE_HARDWARE_READINESS": "FAIL",
+  "generated_at_utc": "2026-07-13T07:02:12+00:00",
   "hardware_actions_executed": false,
   "HARDWARE_ACCEPTANCE": "PENDING_HW",
   "checks": {
@@ -14,6 +14,13 @@
     "failure_wipe_uses_private_validated_range": true,
     "integrity_crc_sha_immutable_chunk_snapshot": true,
     "critical_payload_copies_are_volatile_byte_verified": true,
+    "first_error_diagnostic_is_atomic_and_first_only": true,
+    "first_error_capture_precedes_validation_and_is_input_bound": true,
+    "pre_repair_encode_raw_compared_to_fixed_input_reference": true,
+    "p6_tx_mmio_readback_and_rx_boundaries_observed": true,
+    "local_payload_buffers_are_64_byte_aligned": true,
+    "end_to_end_output_compare_is_independent": true,
+    "nonzero_output_canary_is_manifest_bound": true,
     "integrity_failure_snapshot_precedes_output_wipe": true,
     "integrity_failure_snapshot_mailbox_diagnostic": true,
     "descriptor_ready_published_last": true,
@@ -28,21 +35,32 @@
     "strict_ring_host_publication_supported": true,
     "stationary_identity_ledger_bound": true,
     "native_shutdown_readback_test": true,
-    "p7_python_and_codec_tests": true,
+    "native_payload_alignment_matrix_test": true,
+    "p7_python_and_codec_tests": false,
     "real_vitis_build_source_bound": true
   },
   "sources": {
-    "software/ps_driver/p7_app_service.h": "652b8e99ab24556b892fada2828e8be7f654486d4db3f6779f8468ea71810b04",
+    "software/ps_driver/p7_app_service.h": "3b1d4bcb59bd8118299401dc416ce6562f2c8f8b5af086861f1fb5032e761012",
     "software/ps_driver/p7_admission_contract.h": "12f38347e8cb15857342d9c70a61a6e92a1eeddb40224637a0280c5400ce5d41",
-    "software/ps_driver/p7_app_service.c": "ce1fe453edaebbfee899fc04f87536fb9d58165acecc10cd664a15551fdcd89a",
+    "software/ps_driver/p7_app_service.c": "953593a0dde3459a6cdcfd4656a968eb948110c96a213b1e933361f7b9549a9a",
     "software/ps_driver/p7_runtime_main.c": "cd5d98832dfd7bbe76a5ed90d70fba29008f1359710625dbe293e3eca0d5f6c9",
-    "software/ps_driver/ir_driver.h": "09f0329fbec7d79429e4a4e3894526244dd74439540650692a28fd2867d29d07",
-    "software/ps_driver/ir_driver.c": "0aaaf6234bf17d00ecac436b79cd43cc8690880f7e807e7cc92ce1b0f5fcd614",
-    "tools/p7_ps_mailbox_backend.py": "a7df62be68acef5e55b075f615c7136bb79b3de7fad0e171713aedab92ab375b",
-    "scripts/hw/run_p7_ps_application_stage_safe.py": "f8601396e9d9083de57991cada1bfd00a2966625947420fdc8f9253efe79af54",
-    "scripts/hw/p7_ps_application_execute.tcl": "2fa85cbf1b04e32dc1041a2a7e2eb3c0fa1ce776a69a35759e86deaed14ac42c",
+    "software/ps_driver/ir_driver.h": "88cfaccb8692af31489287251495500fad42780034fe822c69fa22b589240e9c",
+    "software/ps_driver/ir_driver.c": "c69bdccaa0cab491b8415e2e43b513570e2c3c94298f3055e220abd43c27940f",
+    "tools/p7_ps_mailbox_backend.py": "17621a7f9843c4d6ad0ac49c88c18a1cc3f019d8debdb849c5371cc8a66a0d94",
+    "scripts/hw/run_p7_ps_application_stage_safe.py": "4a930a08dbdd5314c2d21e6fc85602288e623fabb0d8a8d527edb93ac6feafc7",
+    "scripts/hw/p7_ps_application_execute.tcl": "2f128f46019c835d945adc33977e4eeef43bb485f29ce2e194668aaa9c346850",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
-    "tools/p7_contained_launcher.py": "fe7ab681732b2ce2cb30c9233a1f58e3235d5f7b0da570a924af4a89f2fc7ca1"
+    "tools/p7_contained_launcher.py": "fe7ab681732b2ce2cb30c9233a1f58e3235d5f7b0da570a924af4a89f2fc7ca1",
+    "software/ps_driver/ir_regs.h": "30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745",
+    "tools/p7_app_protocol.py": "51ccba4529ac2e5b2a3fefbee6b3a0b128ba59f03bb561096754811a8919298e",
+    "tools/run_p7_ps_core_offline.py": "3713a960cf4240b65741d4cdb6047412013f5671c7af12aef5c5e9e0a925372b",
+    "tools/p7_regression_evidence.py": "3e1e7110d27d670417117987270a3184dc450c92b30fc88537da746b2bec51cd",
+    "tools/run_p7_regression_suites.py": "27260813e5e45e1793f47deec4eea746a6a9fdb43d7f2cae845fb2ee07359489",
+    "scripts/build_p7_ps_runtime.py": "46dde7206568c151d47a4a9ef652a6c26f9d2d25307687ba30c8339f945134fd",
+    "scripts/build_p7_ps_runtime.tcl": "d2b778b4d5339715f8c19017539bd190af972a1a4e57760b4966f5cb359de366",
+    "tests/p7/test_p7_application.py": "4705f93b9502fb75adba6ce5fa2b2da373c98603a7e05ce2b7b9d7c10e4f511a",
+    "tests/p7/ir_driver_payload_alignment_test.c": "07450b204a424489c7f702348f01d3d754ea3f5093435a650a666ef978e22a01",
+    "tests/test_p7_regression_dedup.py": "56ed579533b2b9f45b5223e374a12b2079b804f4216845321f7e135dab7b5fab"
   },
   "native_shutdown_test": {
     "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
@@ -62,11 +80,167 @@
     "stdout": "",
     "stderr": ""
   },
-  "unit_tests": {
-    "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test*.py -v",
+  "native_payload_alignment_matrix_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
     "returncode": 0,
-    "stdout": "",
-    "stderr": "test_completed_object_replay_same_is_idempotent (test_p7_application.ProtocolTests.test_completed_object_replay_same_is_idempotent) ... ok\ntest_duplicate_different_rejected (test_p7_application.ProtocolTests.test_duplicate_different_rejected) ... ok\ntest_duplicate_same_is_idempotent (test_p7_application.ProtocolTests.test_duplicate_same_is_idempotent) ... ok\ntest_empty_object_is_header_only (test_p7_application.ProtocolTests.test_empty_object_is_header_only) ... ok\ntest_invalid_header_fields (test_p7_application.ProtocolTests.test_invalid_header_fields) ... ok\ntest_missing_fragment_never_complete (test_p7_application.ProtocolTests.test_missing_fragment_never_complete) ... ok\ntest_object_crc_failure (test_p7_application.ProtocolTests.test_object_crc_failure) ... ok\ntest_out_of_order_rejected (test_p7_application.ProtocolTests.test_out_of_order_rejected) ... ok\ntest_pattern_matrix (test_p7_application.ProtocolTests.test_pattern_matrix) ... ok\ntest_size_matrix (test_p7_application.ProtocolTests.test_size_matrix) ... ok\ntest_stale_session_rejected (test_p7_application.ProtocolTests.test_stale_session_rejected) ... ok\ntest_completed_descriptor_integrity (test_p7_application.PsMailboxCodecTests.test_completed_descriptor_integrity) ... ok\ntest_completed_descriptor_rejects_safety_and_lane_mismatch (test_p7_application.PsMailboxCodecTests.test_completed_descriptor_rejects_safety_and_lane_mismatch) ... ok\ntest_completed_descriptor_rejects_stale_identity_and_sequence (test_p7_application.PsMailboxCodecTests.test_completed_descriptor_rejects_stale_identity_and_sequence) ... ok\ntest_descriptor_ready_is_a_separate_last_publication (test_p7_application.PsMailboxCodecTests.test_descriptor_ready_is_a_separate_last_publication) ... ok\ntest_descriptor_roundtrip (test_p7_application.PsMailboxCodecTests.test_descriptor_roundtrip) ... ok\ntest_invalid_ps_ranges_rejected (test_p7_application.PsMailboxCodecTests.test_invalid_ps_ranges_rejected) ... ok\ntest_mailbox_codec (test_p7_application.PsMailboxCodecTests.test_mailbox_codec) ... ok\ntest_mailbox_runtime_bounds (test_p7_application.PsMailboxCodecTests.test_mailbox_runtime_bounds) ... ok\ntest_runtime_elapsed_seqlock_rejects_rollover_tears_and_regression (test_p7_application.PsMailboxCodecTests.test_runtime_elapsed_seqlock_rejects_rollover_tears_and_regression) ... ok\ntest_terminal_snapshot_rejects_torn_reads (test_p7_application.PsMailboxCodecTests.test_terminal_snapshot_rejects_torn_reads) ... ok\ntest_trace_geometry_overlap_and_end_boundary (test_p7_application.PsMailboxCodecTests.test_trace_geometry_overlap_and_end_boundary) ... ok\ntest_uint32_identity_boundaries (test_p7_application.PsMailboxCodecTests.test_uint32_identity_boundaries) ... ok\ntest_abort_and_restart_new_epoch (test_p7_application.TransportTests.test_abort_and_restart_new_epoch) ... ok\ntest_atomic_file_commit (test_p7_application.TransportTests.test_atomic_file_commit) ... ok\ntest_backend_conformance (test_p7_application.TransportTests.test_backend_conformance) ... ok\ntest_both_lanes_unavailable_bounded_failure (test_p7_application.TransportTests.test_both_lanes_unavailable_bounded_failure) ... ok\ntest_lane_fallback (test_p7_application.TransportTests.test_lane_fallback) ... ok\ntest_queue_backpressure_and_order (test_p7_application.TransportTests.test_queue_backpressure_and_order) ... ok\ntest_replication_semantics (test_p7_application.TransportTests.test_replication_semantics) ... ok\ntest_tcp_stub_cannot_open (test_p7_application.TransportTests.test_tcp_stub_cannot_open) ... ok\ntest_embedded_self_test (test_p7_jtag_backend.P7JtagBackendTests.test_embedded_self_test) ... ok\ntest_error_counter_and_rx_corruption_are_rejected (test_p7_jtag_backend.P7JtagBackendTests.test_error_counter_and_rx_corruption_are_rejected) ... ok\ntest_large_object_operation_formula_and_limits (test_p7_jtag_backend.P7JtagBackendTests.test_large_object_operation_formula_and_limits) ... ok\ntest_memory_mock_roundtrip_sizes_and_lane_policies (test_p7_jtag_backend.P7JtagBackendTests.test_memory_mock_roundtrip_sizes_and_lane_policies) ... ok\ntest_missing_and_duplicate_raw_keys_are_rejected_atomically (test_p7_jtag_backend.P7JtagBackendTests.test_missing_and_duplicate_raw_keys_are_rejected_atomically) ... ok\ntest_real_r5_clear_scoped_raw_pulse_evidence_parses (test_p7_jtag_backend.P7JtagBackendTests.test_real_r5_clear_scoped_raw_pulse_evidence_parses) ... ok\ntest_real_r8_retry_evidence_parses (test_p7_jtag_backend.P7JtagBackendTests.test_real_r8_retry_evidence_parses) ... ok\ntest_retry_delta_allows_duplicate_valid_frames_and_is_bounded (test_p7_jtag_backend.P7JtagBackendTests.test_retry_delta_allows_duplicate_valid_frames_and_is_bounded) ... ok\n\n----------------------------------------------------------------------\nRan 39 tests in 1.281s\n\nOK\n"
+    "stdout": "P7_PAYLOAD_ALIGNMENT_MATRIX_CASES=1000\nP7_PAYLOAD_ALIGNMENT_MATRIX_LENGTH_RANGE=1..247\nP7_PAYLOAD_ALIGNMENT_MATRIX_SOURCE_MOD64_COUNT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_DESTINATION_MOD64_COUNT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_SOURCE_DESTINATION_MOD4_PAIRS=16\nP7_PAYLOAD_ALIGNMENT_MATRIX_ARGUMENT_LIMITS=PASS\nP7_PAYLOAD_ALIGNMENT_MATRIX_BUFFER_BASE_ALIGNMENT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_CANARY=0xA5\n",
+    "stderr": ""
   },
+  "unit_tests": {
+    "command": "VALIDATED_COMPLETE_SUITE:tests_p7_discovery",
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "validated regression summary source commit mismatch; validated regression post-suite source commit mismatch; validated regression suites did not leave source clean; validated regression source commit changed during suites",
+    "evidence_mode": "VALIDATED_REUSE_NO_TEST_INVOCATION",
+    "invocation_count_in_core_gate": 0,
+    "original_suite": {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 39,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 4790,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "validated_complete_regression_summary": {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31.json",
+      "sha256": "c2a71a9d7097e7f6172b229352f0bd855d762ee93d15e2e4c7985ef81ccd4d67",
+      "payload": {
+        "FULL_SUITE_INVOCATION_COUNT": 2,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        "NO_HARDWARE_ACTIONS_EXECUTED": true,
+        "dirty_worktree_before_suites": false,
+        "generated_at_utc": "2026-07-13T02:29:16.629381+00:00",
+        "schema": "rf-comm-p7-complete-regression-suites-v1",
+        "source_commit": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
+        "status": "PASS",
+        "suite_invocation_count_by_name": {
+          "tests_p7_discovery": 1,
+          "top_level_discovery": 1
+        },
+        "suites": [
+          {
+            "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+            "discovered_test_count": 122,
+            "invocation_count": 1,
+            "name": "top_level_discovery",
+            "returncode": 0,
+            "status": "PASS",
+            "stderr": {
+              "bytes": 23779,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stderr.log",
+              "sha256": "a6366d45dc21b52594a9805c36e8359324f5ba193d94caf82363ec030315bbbd"
+            },
+            "stdout": {
+              "bytes": 641,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stdout.log",
+              "sha256": "c891449d4efc9c7dd523b7cc741c78f08d6ed0519e047614e7e033cb3b7415f8"
+            }
+          },
+          {
+            "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+            "discovered_test_count": 39,
+            "invocation_count": 1,
+            "name": "tests_p7_discovery",
+            "returncode": 0,
+            "status": "PASS",
+            "stderr": {
+              "bytes": 4790,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
+              "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+            },
+            "stdout": {
+              "bytes": 0,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ],
+        "total_discovered_test_count": 161
+      },
+      "errors": [
+        "validated regression summary source commit mismatch",
+        "validated regression post-suite source commit mismatch",
+        "validated regression suites did not leave source clean",
+        "validated regression source commit changed during suites"
+      ]
+    }
+  },
+  "validated_complete_regression_summary": {
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31.json",
+    "sha256": "c2a71a9d7097e7f6172b229352f0bd855d762ee93d15e2e4c7985ef81ccd4d67",
+    "payload": {
+      "FULL_SUITE_INVOCATION_COUNT": 2,
+      "HARDWARE_ACCEPTANCE": "PENDING_HW",
+      "NO_HARDWARE_ACTIONS_EXECUTED": true,
+      "dirty_worktree_before_suites": false,
+      "generated_at_utc": "2026-07-13T02:29:16.629381+00:00",
+      "schema": "rf-comm-p7-complete-regression-suites-v1",
+      "source_commit": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
+      "status": "PASS",
+      "suite_invocation_count_by_name": {
+        "tests_p7_discovery": 1,
+        "top_level_discovery": 1
+      },
+      "suites": [
+        {
+          "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+          "discovered_test_count": 122,
+          "invocation_count": 1,
+          "name": "top_level_discovery",
+          "returncode": 0,
+          "status": "PASS",
+          "stderr": {
+            "bytes": 23779,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stderr.log",
+            "sha256": "a6366d45dc21b52594a9805c36e8359324f5ba193d94caf82363ec030315bbbd"
+          },
+          "stdout": {
+            "bytes": 641,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stdout.log",
+            "sha256": "c891449d4efc9c7dd523b7cc741c78f08d6ed0519e047614e7e033cb3b7415f8"
+          }
+        },
+        {
+          "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+          "discovered_test_count": 39,
+          "invocation_count": 1,
+          "name": "tests_p7_discovery",
+          "returncode": 0,
+          "status": "PASS",
+          "stderr": {
+            "bytes": 4790,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
+            "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+          },
+          "stdout": {
+            "bytes": 0,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "total_discovered_test_count": 161
+    },
+    "errors": [
+      "validated regression summary source commit mismatch",
+      "validated regression post-suite source commit mismatch",
+      "validated regression suites did not leave source clean",
+      "validated regression source commit changed during suites"
+    ]
+  },
+  "source_commit": "ab357ff8a787a9e4e253ef10e9e773c5f70cb025",
   "build_summary": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json"
 }

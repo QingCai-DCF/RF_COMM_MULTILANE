@@ -52,6 +52,20 @@ def main() -> int:
     end_address = None
     linker_ocm_hard_boundary = False
     critical_payload_byte_copy_verified = False
+    first_error_diagnostic_disassembly_verified = False
+    stack_usage_verified = False
+    process_descriptor_stack_bytes = None
+    user_stack_bytes = None
+    diagnostic_chain_stack_bytes = None
+    diagnostic_chain_stack_margin_bytes = None
+    stack_usage_by_function: dict[str, int] = {}
+    copy_ldrb_count = 0
+    copy_strb_count = 0
+    copy_dsb_count = 0
+    equal_ldrb_count = 0
+    critical_payload_copy_call_count = 0
+    critical_payload_equal_call_count = 0
+    first_error_publish_call_count = 0
     cpu_clock_hz = None
     counts_per_second = None
     if built.exists():
@@ -64,7 +78,11 @@ def main() -> int:
             checked = run([str(tool), *args], timeout=120)
             path = OUT / f"p7_runtime_{name}.txt"
             path.write_text(checked.stdout + "\n" + checked.stderr, encoding="utf-8")
-            inspection[name] = {"returncode": checked.returncode, "path": rel(path)}
+            inspection[name] = {
+                "returncode": checked.returncode,
+                "path": rel(path),
+                "sha256": sha(path),
+            }
             if name == "symbols" and checked.returncode == 0:
                 for line in checked.stdout.splitlines():
                     fields = line.split()
@@ -95,15 +113,42 @@ def main() -> int:
                 )
                 copy_body = "" if copy_match is None else copy_match.group(1)
                 equal_body = "" if equal_match is None else equal_match.group(1)
+                copy_ldrb_count = len(re.findall(r"\bldrb\b", copy_body))
+                copy_strb_count = len(re.findall(r"\bstrb\b", copy_body))
+                copy_dsb_count = len(re.findall(r"\bdsb\b", copy_body))
+                equal_ldrb_count = len(re.findall(r"\bldrb\b", equal_body))
+                critical_payload_copy_call_count = copy_calls
+                critical_payload_equal_call_count = equal_calls
                 critical_payload_byte_copy_verified = (
-                    "ldrb" in copy_body
-                    and "strb" in copy_body
-                    and "dsb" in copy_body
+                    copy_ldrb_count >= 2
+                    and copy_strb_count >= 1
+                    and copy_dsb_count >= 1
                     and "memcpy" not in copy_body
-                    and "ldrb" in equal_body
+                    and equal_ldrb_count >= 2
                     and "memcmp" not in equal_body
                     and copy_calls >= 4
                     and equal_calls >= 1
+                )
+                first_error_match = re.search(
+                    r"<p7_publish_first_error_diagnostic>:(.*?)(?=\n[0-9a-f]+ <)",
+                    checked.stdout,
+                    re.DOTALL,
+                )
+                first_error_calls = len(
+                    re.findall(
+                        r"\bbl\s+[0-9a-f]+\s+<p7_publish_first_error_diagnostic>",
+                        checked.stdout,
+                    )
+                )
+                first_error_publish_call_count = first_error_calls
+                first_error_body = (
+                    "" if first_error_match is None else first_error_match.group(1)
+                )
+                first_error_diagnostic_disassembly_verified = (
+                    first_error_match is not None
+                    and "p7_hash_volatile_bytes" in first_error_body
+                    and "p7_publish_failure_snapshot_diagnostic" in first_error_body
+                    and first_error_calls >= 7
                 )
     passed = (
         proc.returncode == 0
@@ -119,6 +164,70 @@ def main() -> int:
         linker_ocm_hard_boundary = re.search(
             r"^ps7_ram_0\s+0x0+\s+0x0*20000\s*$", map_text, re.MULTILINE
         ) is not None
+        stack_match = re.search(
+            r"^\s*(0x[0-9a-fA-F]+)\s+_STACK_SIZE\s+=",
+            map_text,
+            re.MULTILINE,
+        )
+        if stack_match is not None:
+            user_stack_bytes = int(stack_match.group(1), 16)
+    stack_usage_sources = sorted(
+        (ROOT / "build/p7_ps_vitis_workspace/p7_runtime/Debug/src").glob("*.su")
+    )
+    if stack_usage_sources:
+        stack_text = "\n".join(
+            source.read_text(encoding="utf-8", errors="strict")
+            for source in stack_usage_sources
+        )
+        stack_copy = OUT / "p7_runtime_stack_usage.txt"
+        stack_copy.write_text(stack_text, encoding="utf-8")
+        inspection["stack_usage"] = {
+            "returncode": 0,
+            "path": rel(stack_copy),
+            "sha256": sha(stack_copy),
+            "source_count": len(stack_usage_sources),
+        }
+        for line in stack_text.splitlines():
+            fields = line.rsplit("\t", 2)
+            if len(fields) == 3 and fields[-2].isdigit():
+                function_name = fields[0].rsplit(":", 1)[-1]
+                stack_usage_by_function[function_name] = max(
+                    int(fields[-2]), stack_usage_by_function.get(function_name, 0)
+                )
+        process_descriptor_stack_bytes = stack_usage_by_function.get(
+            "p7_process_descriptor"
+        )
+        diagnostic_chain_functions = (
+            "p7_process_descriptor",
+            "rf_transport_submit_fragment",
+            "p7_p6_submit",
+            "p7_publish_first_error_diagnostic",
+            "p7_hash_volatile_bytes",
+            "p7_sha256_update",
+            "p7_sha256_transform",
+        )
+        if all(name in stack_usage_by_function for name in diagnostic_chain_functions):
+            diagnostic_chain_stack_bytes = sum(
+                stack_usage_by_function[name] for name in diagnostic_chain_functions
+            )
+        if user_stack_bytes is not None and diagnostic_chain_stack_bytes is not None:
+            diagnostic_chain_stack_margin_bytes = (
+                user_stack_bytes - diagnostic_chain_stack_bytes
+            )
+        stack_usage_verified = (
+            process_descriptor_stack_bytes is not None
+            and process_descriptor_stack_bytes <= 4096
+            and user_stack_bytes is not None
+            and diagnostic_chain_stack_bytes is not None
+            and diagnostic_chain_stack_margin_bytes is not None
+            and diagnostic_chain_stack_margin_bytes >= 2048
+        )
+    else:
+        inspection["stack_usage"] = {
+            "returncode": 127,
+            "path": None,
+            "reason": "p7_app_service.su missing",
+        }
     if bsp_parameters.is_file():
         parameters_text = bsp_parameters.read_text(encoding="utf-8", errors="strict")
         clock_match = re.search(
@@ -133,6 +242,8 @@ def main() -> int:
         passed
         and linker_ocm_hard_boundary
         and critical_payload_byte_copy_verified
+        and first_error_diagnostic_disassembly_verified
+        and stack_usage_verified
         and counts_per_second is not None
     )
     artifacts: dict[str, object] = {}
@@ -174,7 +285,8 @@ def main() -> int:
         "software/ps_driver/p7_runtime_main.c", "software/ps_driver/p7_app_service.c",
         "software/ps_driver/p7_app_service.h", "software/ps_driver/p7_admission_contract.h",
         "software/ps_driver/ir_driver.c",
-        "software/ps_driver/ir_driver.h", "software/common/rf_app_protocol.c",
+        "software/ps_driver/ir_driver.h", "software/ps_driver/ir_regs.h",
+        "software/common/rf_app_protocol.c",
         "software/common/rf_app_protocol.h", "software/common/rf_transport_backend.c",
         "software/common/rf_transport_backend.h",
     ):
@@ -193,6 +305,24 @@ def main() -> int:
         "mailbox_overlap": end_address is None or end_address >= 0x00020000,
         "linker_ocm_hard_boundary_0x20000": linker_ocm_hard_boundary,
         "critical_payload_byte_copy_verified": critical_payload_byte_copy_verified,
+        "critical_payload_copy_disassembly": {
+            "copy_ldrb_count": copy_ldrb_count,
+            "copy_strb_count": copy_strb_count,
+            "copy_dsb_count": copy_dsb_count,
+            "equal_ldrb_count": equal_ldrb_count,
+            "copy_call_count": critical_payload_copy_call_count,
+            "equal_call_count": critical_payload_equal_call_count,
+        },
+        "first_error_diagnostic_disassembly_verified": first_error_diagnostic_disassembly_verified,
+        "first_error_publish_call_count": first_error_publish_call_count,
+        "stack_usage_verified": stack_usage_verified,
+        "p7_process_descriptor_stack_bytes": process_descriptor_stack_bytes,
+        "p7_process_descriptor_stack_limit_bytes": 4096,
+        "user_stack_bytes": user_stack_bytes,
+        "diagnostic_chain_stack_bytes": diagnostic_chain_stack_bytes,
+        "diagnostic_chain_stack_margin_bytes": diagnostic_chain_stack_margin_bytes,
+        "diagnostic_chain_minimum_margin_bytes": 2048,
+        "stack_usage_by_function": stack_usage_by_function,
         "max_object_bytes": 8388608,
         "queue_depth": 8,
         "cpu_clock_hz": cpu_clock_hz,
@@ -219,6 +349,12 @@ def main() -> int:
         f"MAILBOX_OVERLAP: {str(summary['mailbox_overlap']).lower()}",
         f"LINKER_OCM_HARD_BOUNDARY_0X20000: {str(summary['linker_ocm_hard_boundary_0x20000']).lower()}",
         f"CRITICAL_PAYLOAD_BYTE_COPY_VERIFIED: {str(summary['critical_payload_byte_copy_verified']).lower()}",
+        f"FIRST_ERROR_DIAGNOSTIC_DISASSEMBLY_VERIFIED: {str(summary['first_error_diagnostic_disassembly_verified']).lower()}",
+        f"STACK_USAGE_VERIFIED: {str(summary['stack_usage_verified']).lower()}",
+        f"P7_PROCESS_DESCRIPTOR_STACK_BYTES: {summary['p7_process_descriptor_stack_bytes']}",
+        f"USER_STACK_BYTES: {summary['user_stack_bytes']}",
+        f"DIAGNOSTIC_CHAIN_STACK_BYTES: {summary['diagnostic_chain_stack_bytes']}",
+        f"DIAGNOSTIC_CHAIN_STACK_MARGIN_BYTES: {summary['diagnostic_chain_stack_margin_bytes']}",
         f"COUNTS_PER_SECOND: {summary['counts_per_second']}",
     ]
     if artifacts:

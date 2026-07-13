@@ -231,6 +231,24 @@ int ir_driver_p6_write_payload(const ir_mmio_t *io, const uint8_t *payload, uint
   return 0;
 }
 
+int ir_driver_p6_read_tx_payload(const ir_mmio_t *io, uint8_t *payload,
+                                 uint32_t payload_capacity,
+                                 uint32_t payload_len) {
+  if (!io || !io->read32 || !io->write32 || !payload) return -1;
+  if (payload_len == 0u || payload_len > payload_capacity ||
+      payload_len > IR_P6_MAX_PAYLOAD_BYTES) {
+    return -2;
+  }
+  uint32_t word_count = (payload_len + 3u) / 4u;
+  for (uint32_t word_index = 0u; word_index < word_count; word_index++) {
+    if (ir_write_readback(io, IR_REG_P6_PAYLOAD_WORD_INDEX, word_index))
+      return -3;
+    ir_unpack_payload_word(io->read32(io->ctx, IR_REG_P6_PAYLOAD_WORD_DATA),
+                           payload, payload_len, word_index);
+  }
+  return 0;
+}
+
 int ir_driver_p6_read_rx_payload(const ir_mmio_t *io, uint8_t *payload, uint32_t payload_capacity, uint32_t *payload_len) {
   if (!io || !io->read32 || !io->write32 || !payload || !payload_len) return -1;
   uint32_t observed_len = io->read32(io->ctx, IR_REG_P6_RX_PAYLOAD_LEN) & 0xFFFFu;

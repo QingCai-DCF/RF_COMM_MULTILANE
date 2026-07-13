@@ -26,6 +26,37 @@ P7_TRACE_BYTES = 64
 P7_ALIGNMENT = 64
 P7_UINT32_MAX = 0xFFFFFFFF
 P7_KNOWN_GOOD_TXD_HIGH_CYCLES = 8
+P7_FAILURE_SNAPSHOT_BASE = 0x00021000
+P7_FIRST_ERROR_DIAGNOSTIC_MAGIC = 0x44433750
+P7_FIRST_ERROR_DIAGNOSTIC_BYTES = 320
+P7_FIRST_ERROR_SNAPSHOT_BYTES = 64
+P7_DIAGNOSTIC_MISSING_BYTE = 0x100
+P7_DIAGNOSTIC_NOT_APPLICABLE = P7_UINT32_MAX
+
+P7_FIRST_ERROR_STAGE_NAMES = {
+    1: "INPUT_REF",
+    2: "ENCODE_RAW",
+    3: "ENCODE_REPAIR",
+    4: "P6_TX_LOCAL",
+    5: "P6_TX_MMIO_READBACK",
+    6: "P6_RX_LOCAL",
+    7: "RECEIVED",
+    8: "DDR_OUTPUT_IMMEDIATE_READBACK",
+    9: "DDR_OUTPUT_END_TO_END",
+    10: "INTEGRITY_SNAPSHOT",
+}
+_P7_FIRST_ERROR_ALLOWED_ERRORS = {
+    1: frozenset({24}),
+    2: frozenset({25}),
+    3: frozenset({21}),
+    4: frozenset({26}),
+    5: frozenset({27}),
+    6: frozenset({28}),
+    7: frozenset({22, 29}),
+    8: frozenset({23, 30}),
+    9: frozenset({31}),
+    10: frozenset({13, 14}),
+}
 
 P7_MAILBOX_MAGIC = 0x424D3750
 P7_DESCRIPTOR_MAGIC = 0x53443750
@@ -79,6 +110,7 @@ _TERMINAL_DESCRIPTOR_STATUSES = frozenset(
 )
 _WORDS = struct.Struct("<64I")
 _STATUS_WORD = struct.Struct("<I")
+_FIRST_ERROR_HEADER_WORDS = struct.Struct("<48I")
 
 
 def _require_u32(name: str, value: int) -> int:
@@ -175,6 +207,120 @@ def words_sha256(words: tuple[int, ...] | list[int]) -> str:
     if len(words) != 8:
         raise ValueError("SHA256 word array must contain eight words")
     return b"".join(int(word).to_bytes(4, "big") for word in words).hex()
+
+
+def unpack_first_error_diagnostic(raw: bytes) -> dict[str, object]:
+    """Decode and fail-closed validate one committed P7CD first-error image."""
+    if len(raw) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
+        raise ValueError("first-error diagnostic must contain exactly 320 bytes")
+    words = list(_FIRST_ERROR_HEADER_WORDS.unpack(raw[:192]))
+    if words[0] != P7_FIRST_ERROR_DIAGNOSTIC_MAGIC:
+        raise ValueError("first-error diagnostic commit magic is missing")
+    if words[1] != P7_RUNTIME_VERSION:
+        raise ValueError("first-error diagnostic version is unsupported")
+    stage = words[2]
+    error_code = words[3]
+    if stage not in P7_FIRST_ERROR_STAGE_NAMES:
+        raise ValueError("first-error diagnostic stage is invalid")
+    if error_code not in _P7_FIRST_ERROR_ALLOWED_ERRORS[stage]:
+        raise ValueError("first-error diagnostic stage/error pair is invalid")
+    expected_length = words[8]
+    actual_length = words[9]
+    first_bad_offset = words[10]
+    expected_byte = words[11]
+    actual_byte = words[12]
+    if expected_length > P7_MAX_OBJECT_BYTES or actual_length > P7_MAX_OBJECT_BYTES:
+        raise ValueError("first-error diagnostic length exceeds the P7 object limit")
+    max_length = max(expected_length, actual_length)
+    if max_length == 0 or first_bad_offset >= max_length:
+        raise ValueError("first-error diagnostic mismatch offset is out of range")
+    if expected_byte > P7_DIAGNOSTIC_MISSING_BYTE or actual_byte > P7_DIAGNOSTIC_MISSING_BYTE:
+        raise ValueError("first-error diagnostic byte value is invalid")
+    if (first_bad_offset >= expected_length) != (
+        expected_byte == P7_DIAGNOSTIC_MISSING_BYTE
+    ):
+        raise ValueError("first-error expected-byte sentinel contradicts length")
+    if (first_bad_offset >= actual_length) != (
+        actual_byte == P7_DIAGNOSTIC_MISSING_BYTE
+    ):
+        raise ValueError("first-error actual-byte sentinel contradicts length")
+    if expected_byte == actual_byte:
+        raise ValueError("first-error diagnostic bytes do not describe a mismatch")
+    fragment_index = words[6]
+    lane_mask = words[7]
+    if stage in (9, 10):
+        if fragment_index != P7_DIAGNOSTIC_NOT_APPLICABLE or lane_mask != 0:
+            raise ValueError("object-level first-error identity is invalid")
+    elif fragment_index == P7_DIAGNOSTIC_NOT_APPLICABLE or lane_mask not in (1, 2, 3):
+        raise ValueError("fragment-level first-error identity is invalid")
+    snapshot_offset = words[17]
+    snapshot_length = words[18]
+    if (
+        snapshot_length == 0
+        or snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES
+        or snapshot_offset > first_bad_offset
+        or snapshot_offset + snapshot_length > max_length
+        or not snapshot_offset <= first_bad_offset < snapshot_offset + snapshot_length
+    ):
+        raise ValueError("first-error diagnostic snapshot geometry is invalid")
+    if words[19] != 0 or any(words[36:48]):
+        raise ValueError("first-error diagnostic reserved words are nonzero")
+    expected_snapshot = raw[192:256]
+    actual_snapshot = raw[256:320]
+    for index in range(P7_FIRST_ERROR_SNAPSHOT_BYTES):
+        source_index = snapshot_offset + index
+        if (index >= snapshot_length or source_index >= expected_length) and expected_snapshot[index] != 0:
+            raise ValueError("first-error expected snapshot padding is nonzero")
+        if (index >= snapshot_length or source_index >= actual_length) and actual_snapshot[index] != 0:
+            raise ValueError("first-error actual snapshot padding is nonzero")
+    relative_bad = first_bad_offset - snapshot_offset
+    if first_bad_offset < expected_length and expected_snapshot[relative_bad] != expected_byte:
+        raise ValueError("first-error expected byte disagrees with snapshot")
+    if first_bad_offset < actual_length and actual_snapshot[relative_bad] != actual_byte:
+        raise ValueError("first-error actual byte disagrees with snapshot")
+    expected_sha256 = words_sha256(words[20:28])
+    actual_sha256 = words_sha256(words[28:36])
+    if snapshot_offset == 0 and snapshot_length >= expected_length:
+        expected_full = expected_snapshot[:expected_length]
+        if zlib.crc32(expected_full) & P7_UINT32_MAX != words[15]:
+            raise ValueError("first-error expected CRC32 disagrees with full snapshot")
+        if hashlib.sha256(expected_full).hexdigest() != expected_sha256:
+            raise ValueError("first-error expected SHA256 disagrees with full snapshot")
+    if snapshot_offset == 0 and snapshot_length >= actual_length:
+        actual_full = actual_snapshot[:actual_length]
+        if zlib.crc32(actual_full) & P7_UINT32_MAX != words[16]:
+            raise ValueError("first-error actual CRC32 disagrees with full snapshot")
+        if hashlib.sha256(actual_full).hexdigest() != actual_sha256:
+            raise ValueError("first-error actual SHA256 disagrees with full snapshot")
+    return {
+        "magic": words[0],
+        "version": words[1],
+        "stage": stage,
+        "stage_name": P7_FIRST_ERROR_STAGE_NAMES[stage],
+        "error_code": error_code,
+        "session_epoch": words[4],
+        "object_id": words[5],
+        "fragment_index": fragment_index,
+        "lane_mask": lane_mask,
+        "expected_length": expected_length,
+        "actual_length": actual_length,
+        "first_bad_offset": first_bad_offset,
+        "expected_byte": expected_byte,
+        "actual_byte": actual_byte,
+        "expected_address": words[13],
+        "actual_address": words[14],
+        "expected_address_low6": words[13] & 0x3F,
+        "actual_address_low6": words[14] & 0x3F,
+        "expected_crc32": words[15],
+        "actual_crc32": words[16],
+        "snapshot_offset": snapshot_offset,
+        "snapshot_length": snapshot_length,
+        "expected_sha256": expected_sha256,
+        "actual_sha256": actual_sha256,
+        "expected_snapshot": expected_snapshot[:snapshot_length].hex(),
+        "actual_snapshot": actual_snapshot[:snapshot_length].hex(),
+        "words": words,
+    }
 
 
 def validate_range(address: int, length: int) -> None:

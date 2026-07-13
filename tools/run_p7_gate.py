@@ -17,10 +17,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from p7_regression_evidence import REGRESSION_SCHEMA, validate_regression_summary
+
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED = ROOT / "evidence/generated"
 P6_BASELINE_COMMIT = "ca041d4877b831de84fe7829788ac835b0b46acd"
-REGRESSION_SCHEMA = "rf-comm-p7-complete-regression-suites-v1"
 
 P6_ARTIFACTS = {
     "p6_results_package": (
@@ -99,74 +100,6 @@ def run(command: list[str], *, timeout: int = 1800) -> dict[str, Any]:
         "stdout": proc.stdout,
         "stderr": proc.stderr,
     }
-
-
-def validate_regression_summary(path: Path, expected_sha256: str, source_commit: str) -> tuple[bool, dict[str, Any]]:
-    errors: list[str] = []
-    path = path.resolve(strict=False)
-    build_root = (ROOT / "build").resolve(strict=False)
-    if not path.is_relative_to(build_root) or path == build_root or not path.is_file() or path.is_symlink():
-        return False, {"errors": ["validated regression summary must be a regular file under build"]}
-    actual_sha = sha(path)
-    if actual_sha != expected_sha256.lower():
-        errors.append("validated regression summary SHA256 mismatch")
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        return False, {"path": str(path), "sha256": actual_sha, "errors": errors + [f"invalid regression JSON: {exc}"]}
-    if not isinstance(payload, dict) or payload.get("schema") != REGRESSION_SCHEMA or payload.get("status") != "PASS":
-        errors.append("validated regression summary schema/status is not PASS")
-    if str(payload.get("source_commit", "")).lower() != source_commit:
-        errors.append("validated regression summary source commit mismatch")
-    if payload.get("dirty_worktree_before_suites") is not False:
-        errors.append("validated regression suites did not start from clean source")
-    if payload.get("NO_HARDWARE_ACTIONS_EXECUTED") is not True or payload.get("HARDWARE_ACCEPTANCE") != "PENDING_HW":
-        errors.append("validated regression summary violates no-hardware/PENDING boundary")
-    if payload.get("FULL_SUITE_INVOCATION_COUNT") != 2 or payload.get("suite_invocation_count_by_name") != {
-        "top_level_discovery": 1,
-        "tests_p7_discovery": 1,
-    }:
-        errors.append("required complete suites were not invoked exactly once each")
-    suites = payload.get("suites")
-    if not isinstance(suites, list):
-        errors.append("validated regression suite records are missing")
-        suites = []
-    by_name = {item.get("name"): item for item in suites if isinstance(item, dict)}
-    if set(by_name) != {"top_level_discovery", "tests_p7_discovery"}:
-        errors.append("validated regression suite record set is not exact")
-    expected_commands = {
-        "top_level_discovery": subprocess.list2cmdline(
-            [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test*.py", "-v"]
-        ),
-        "tests_p7_discovery": subprocess.list2cmdline(
-            [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests/p7", "-p", "test_*.py", "-v"]
-        ),
-    }
-    discovered_total = 0
-    for name, item in by_name.items():
-        if (
-            item.get("invocation_count") != 1
-            or item.get("returncode") != 0
-            or item.get("status") != "PASS"
-            or not isinstance(item.get("discovered_test_count"), int)
-            or item.get("discovered_test_count", 0) < 1
-        ):
-            errors.append(f"validated regression suite is not an exact PASS: {name}")
-        if item.get("command") != expected_commands.get(name):
-            errors.append(f"validated regression suite command mismatch: {name}")
-        if isinstance(item.get("discovered_test_count"), int):
-            discovered_total += int(item["discovered_test_count"])
-        for stream in ("stdout", "stderr"):
-            record = item.get(stream)
-            if not isinstance(record, dict):
-                errors.append(f"validated regression {name} {stream} record missing")
-                continue
-            log_path = Path(str(record.get("path", ""))).resolve(strict=False)
-            if not log_path.is_file() or log_path.is_symlink() or sha(log_path) != str(record.get("sha256", "")).lower():
-                errors.append(f"validated regression {name} {stream} log hash mismatch")
-    if payload.get("total_discovered_test_count") != discovered_total:
-        errors.append("validated regression total discovered test count mismatch")
-    return not errors, {"path": str(path), "sha256": actual_sha, "payload": payload, "errors": errors}
 
 
 def p6_recheck() -> tuple[bool, dict[str, Any]]:
@@ -361,12 +294,29 @@ def main() -> int:
     else:
         ps_build_run = {"command": "SKIPPED", "returncode": 0 if args.skip_ps_build else 127, "stdout": "", "stderr": ""}
     ps_ok, ps_detail = latest_p7_elf()
-    core_run = run([sys.executable, "tools/run_p7_ps_core_offline.py"], timeout=600)
+    core_command = [sys.executable, "tools/run_p7_ps_core_offline.py"]
+    if args.validated_regression_summary:
+        core_command.extend(
+            ["--validated-regression-summary", args.validated_regression_summary]
+        )
+    if args.validated_regression_summary_sha256:
+        core_command.extend(
+            [
+                "--validated-regression-summary-sha256",
+                args.validated_regression_summary_sha256,
+            ]
+        )
+    core_run = run(core_command, timeout=600)
     core_ok = core_run["returncode"] == 0
     write_json(
         GENERATED / "p7_offline_test_run.json",
-        {"vectors": vector_run, "unittest": tests,
-         "hardware_safety": safety_tests, "ps_core_readiness": core_run},
+        {
+            "vectors": vector_run,
+            "unittest": tests,
+            "hardware_safety": safety_tests,
+            "ps_core_readiness": core_run,
+            "validated_complete_regression_summary": regression_record,
+        },
     )
 
     ethernet_ok, ethernet = scan_no_ethernet()
@@ -412,6 +362,7 @@ def main() -> int:
             "evidence/generated/p7_ps_core_hardware_readiness.json",
             "tools/run_p7_gate.py",
             "tools/run_p7_ps_core_offline.py",
+            "tools/p7_regression_evidence.py",
             "tools/summarize_p7_hardware.py",
             "tools/run_p7_authorized_hardware_sequence.py",
             "tools/generate_p7_authorized_sequence_plan.py",

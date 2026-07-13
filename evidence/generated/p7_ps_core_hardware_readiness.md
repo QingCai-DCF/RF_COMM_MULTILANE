@@ -1,6 +1,6 @@
 # P7 PS Core Hardware Readiness
 
-P7_PS_CORE_HARDWARE_READINESS: PASS
+P7_PS_CORE_HARDWARE_READINESS: FAIL
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
@@ -13,6 +13,13 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - failure_wipe_uses_private_validated_range: PASS
 - integrity_crc_sha_immutable_chunk_snapshot: PASS
 - critical_payload_copies_are_volatile_byte_verified: PASS
+- first_error_diagnostic_is_atomic_and_first_only: PASS
+- first_error_capture_precedes_validation_and_is_input_bound: PASS
+- pre_repair_encode_raw_compared_to_fixed_input_reference: PASS
+- p6_tx_mmio_readback_and_rx_boundaries_observed: PASS
+- local_payload_buffers_are_64_byte_aligned: PASS
+- end_to_end_output_compare_is_independent: PASS
+- nonzero_output_canary_is_manifest_bound: PASS
 - integrity_failure_snapshot_precedes_output_wipe: PASS
 - integrity_failure_snapshot_mailbox_diagnostic: PASS
 - descriptor_ready_published_last: PASS
@@ -27,5 +34,6 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - strict_ring_host_publication_supported: PASS
 - stationary_identity_ledger_bound: PASS
 - native_shutdown_readback_test: PASS
-- p7_python_and_codec_tests: PASS
+- native_payload_alignment_matrix_test: PASS
+- p7_python_and_codec_tests: FAIL
 - real_vitis_build_source_bound: PASS

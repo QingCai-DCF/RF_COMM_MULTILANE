@@ -45,6 +45,7 @@ foreach source_path [list \
 app build -name p7_runtime
 set debug_dir [file normalize "$workspace/p7_runtime/Debug"]
 set makefile "$debug_dir/Makefile"
+set subdir_makefile "$debug_dir/src/subdir.mk"
 set map_file [file normalize "$debug_dir/p7_runtime.map"]
 set make_handle [open $makefile r]
 set make_text [read $make_handle]
@@ -57,6 +58,25 @@ if {[string first $map_flag $make_text] < 0} {
   set make_handle [open $makefile w]
   puts -nonewline $make_handle $make_text
   close $make_handle
+}
+set subdir_handle [open $subdir_makefile r]
+set subdir_text [read $subdir_handle]
+close $subdir_handle
+if {[string first "-fstack-usage" $subdir_text] < 0} {
+  set subdir_text [string map [list \
+      "-fmessage-length=0 -MT" \
+      "-fmessage-length=0 -fstack-usage -MT"] $subdir_text]
+  if {[string first "-fstack-usage" $subdir_text] < 0} {
+    error "P7 stack-usage compiler flag was not applied"
+  }
+  set subdir_handle [open $subdir_makefile w]
+  puts -nonewline $subdir_handle $subdir_text
+  close $subdir_handle
+}
+foreach stale [concat \
+    [glob -nocomplain "$debug_dir/src/*.o"] \
+    [glob -nocomplain "$debug_dir/src/*.su"]] {
+  file delete -force $stale
 }
 file delete -force "$debug_dir/p7_runtime.elf"
 set make_output [exec make -C $debug_dir p7_runtime.elf 2>@1]

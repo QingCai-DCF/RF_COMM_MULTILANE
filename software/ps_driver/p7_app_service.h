@@ -19,6 +19,8 @@ extern "C" {
 #define P7_DESCRIPTOR_BASEADDR                                           \
   (P7_MAILBOX_BASEADDR + P7_MAILBOX_CONTROL_BYTES)
 #define P7_FAILURE_SNAPSHOT_BASEADDR UINT32_C(0x00021000)
+#define P7_INPUT_REFERENCE_BASEADDR UINT32_C(0x00022000)
+#define P7_P6_TX_READBACK_BASEADDR UINT32_C(0x00022100)
 #define P7_MAILBOX_RESERVED_END UINT32_C(0x00030000)
 
 #define P7_DDR_BASEADDR UINT32_C(0x00100000)
@@ -33,6 +35,7 @@ extern "C" {
 #define P7_DESCRIPTOR_MAGIC UINT32_C(0x53443750) /* P7DS */
 #define P7_TRACE_MAGIC UINT32_C(0x52543750) /* P7TR */
 #define P7_FAILURE_SNAPSHOT_MAGIC UINT32_C(0x53463750) /* P7FS */
+#define P7_FIRST_ERROR_DIAGNOSTIC_MAGIC UINT32_C(0x44433750) /* P7CD */
 #define P7_FAILURE_SNAPSHOT_MAX_BYTES UINT32_C(256)
 #define P7_FAILURE_SNAPSHOT_TOTAL_BYTES                                 \
   (UINT32_C(64) + P7_FAILURE_SNAPSHOT_MAX_BYTES)
@@ -48,7 +51,25 @@ extern "C" {
 #define P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP UINT32_C(9)
 #define P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP UINT32_C(10)
 #define P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED UINT32_C(11)
+#define P7_FIRST_ERROR_SNAPSHOT_BYTES UINT32_C(64)
+#define P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES UINT32_C(320)
+#define P7_LOCAL_PAYLOAD_BYTES UINT32_C(256)
+#define P7_DIAGNOSTIC_MISSING_BYTE UINT32_C(0x100)
+#define P7_DIAGNOSTIC_NOT_APPLICABLE UINT32_MAX
 #define P7_RUNTIME_VERSION UINT32_C(1)
+
+enum p7_first_error_stage {
+  P7_FIRST_ERROR_STAGE_INPUT_REF = 1,
+  P7_FIRST_ERROR_STAGE_ENCODE_RAW = 2,
+  P7_FIRST_ERROR_STAGE_ENCODE_REPAIR = 3,
+  P7_FIRST_ERROR_STAGE_P6_TX_LOCAL = 4,
+  P7_FIRST_ERROR_STAGE_P6_TX_MMIO_READBACK = 5,
+  P7_FIRST_ERROR_STAGE_P6_RX_LOCAL = 6,
+  P7_FIRST_ERROR_STAGE_RECEIVED = 7,
+  P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK = 8,
+  P7_FIRST_ERROR_STAGE_DDR_OUTPUT_END_TO_END = 9,
+  P7_FIRST_ERROR_STAGE_INTEGRITY_SNAPSHOT = 10
+};
 
 enum p7_service_state {
   P7_SERVICE_BOOTING = 0,
@@ -112,7 +133,15 @@ enum p7_error_code {
   P7_ERROR_RUNTIME_LIMIT = 20,
   P7_ERROR_FRAGMENT_ENCODE_COPY = 21,
   P7_ERROR_FRAGMENT_TRANSFER_COPY = 22,
-  P7_ERROR_OUTPUT_COPY = 23
+  P7_ERROR_OUTPUT_COPY = 23,
+  P7_ERROR_INPUT_REFERENCE_COPY = 24,
+  P7_ERROR_ENCODE_RAW_MISMATCH = 25,
+  P7_ERROR_P6_TX_LOCAL_COPY = 26,
+  P7_ERROR_P6_TX_MMIO_READBACK = 27,
+  P7_ERROR_P6_RX_LOCAL_MISMATCH = 28,
+  P7_ERROR_RECEIVED_INPUT_MISMATCH = 29,
+  P7_ERROR_DDR_OUTPUT_IMMEDIATE_READBACK = 30,
+  P7_ERROR_DDR_OUTPUT_END_TO_END = 31
 };
 
 /* Exactly 256 bytes. Descriptor status is the publication/commit word and is
@@ -259,6 +288,38 @@ typedef struct __attribute__((aligned(64))) p7_failure_snapshot_header {
   uint32_t error_code;
   uint32_t output_sha256[8];
 } p7_failure_snapshot_header_t;
+
+/* Exactly 320 bytes in the fixed OCM diagnostic region.  The first mismatch
+ * is published once, with magic written and read back last.  SHA256 arrays
+ * contain standard digest words in big-endian word order.  A byte value of
+ * P7_DIAGNOSTIC_MISSING_BYTE means that side ended before first_bad_offset. */
+typedef struct __attribute__((aligned(64))) p7_first_error_diagnostic {
+  volatile uint32_t magic;
+  uint32_t version;
+  uint32_t stage;
+  uint32_t error_code;
+  uint32_t session_epoch;
+  uint32_t object_id;
+  uint32_t fragment_index;
+  uint32_t lane_mask;
+  uint32_t expected_length;
+  uint32_t actual_length;
+  uint32_t first_bad_offset;
+  uint32_t expected_byte;
+  uint32_t actual_byte;
+  uint32_t expected_address;
+  uint32_t actual_address;
+  uint32_t expected_crc32;
+  uint32_t actual_crc32;
+  uint32_t snapshot_offset;
+  uint32_t snapshot_length;
+  uint32_t reserved_metadata;
+  uint32_t expected_sha256[8];
+  uint32_t actual_sha256[8];
+  uint32_t reserved_header[12];
+  uint8_t expected_snapshot[P7_FIRST_ERROR_SNAPSHOT_BYTES];
+  uint8_t actual_snapshot[P7_FIRST_ERROR_SNAPSHOT_BYTES];
+} p7_first_error_diagnostic_t;
 
 int p7_app_service_run(const ir_mmio_t *io,
                        volatile p7_mailbox_control_t *mailbox,

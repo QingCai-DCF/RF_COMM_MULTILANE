@@ -62,11 +62,15 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     P7_DESCRIPTOR_BASE,
     P7_QUEUE_DEPTH,
     P7_RUNTIME_DEADLINE_REACHED,
+    P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+    P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
     pack_mailbox,
+    unpack_first_error_diagnostic,
     unpack_descriptor,
     unpack_mailbox,
     validate_completed,
 )
+from p7_app_protocol import segment_object  # noqa: E402
 from run_p7_authorized_hardware_sequence import (  # noqa: E402
     CANONICAL_FULL_PART,
     CANONICAL_LIVE_DEVICE,
@@ -102,6 +106,7 @@ ACCEPTANCE_SEC = 1500
 MIN_IDLE_MARGIN_SEC = 5
 MAX_IDLE_MARGIN_SEC = 60
 P7_COUNTS_PER_SECOND = 333_333_343
+OUTPUT_PREFILL_BYTE = 0xA5
 XSDB_PROCESS_GRACE_SEC = 120
 STATIONARY_ACTIVE_WATCHDOG_TOLERANCE_SEC = 1.5
 STATIONARY_SETUP_WATCHDOG_SEC = 300
@@ -111,6 +116,7 @@ PS_XSDB_PROCESS_COUNT = 1
 PS_MAX_FORCED_CLEANUP_EVENTS = 2
 PS_OUTER_ORCHESTRATION_GUARD_SEC = 120
 FRAGMENT_CHUNK_BYTES = 215
+RF_APP_HEADER_BYTES = 32
 MAX_OBJECT_BYTES = 8 * 1024 * 1024
 SLOT_STRIDE = 0x02000000
 SLOT_INPUT_OFFSET = 0x00000000
@@ -212,6 +218,13 @@ CORE_READINESS_CHECKS = (
     "failure_wipe_uses_private_validated_range",
     "integrity_crc_sha_immutable_chunk_snapshot",
     "critical_payload_copies_are_volatile_byte_verified",
+    "first_error_diagnostic_is_atomic_and_first_only",
+    "first_error_capture_precedes_validation_and_is_input_bound",
+    "pre_repair_encode_raw_compared_to_fixed_input_reference",
+    "p6_tx_mmio_readback_and_rx_boundaries_observed",
+    "local_payload_buffers_are_64_byte_aligned",
+    "end_to_end_output_compare_is_independent",
+    "nonzero_output_canary_is_manifest_bound",
     "integrity_failure_snapshot_precedes_output_wipe",
     "integrity_failure_snapshot_mailbox_diagnostic",
     "descriptor_ready_published_last",
@@ -226,11 +239,12 @@ CORE_READINESS_CHECKS = (
     "strict_ring_host_publication_supported",
     "stationary_identity_ledger_bound",
     "native_shutdown_readback_test",
+    "native_payload_alignment_matrix_test",
     "p7_python_and_codec_tests",
     "real_vitis_build_source_bound",
 )
 KNOWN_UNSAFE_CORE_FINGERPRINT = "6f17835efdcb8ed22b80d7568f7e55413c60058182e4cd22a2be724d2b9dc63e"
-CORE_READINESS_SOURCES = (
+CORE_DENYLIST_FINGERPRINT_SOURCES = (
     "software/ps_driver/p7_app_service.h",
     "software/ps_driver/p7_admission_contract.h",
     "software/ps_driver/p7_app_service.c",
@@ -242,6 +256,18 @@ CORE_READINESS_SOURCES = (
     "scripts/hw/p7_ps_application_execute.tcl",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py",
     "tools/p7_contained_launcher.py",
+)
+CORE_READINESS_SOURCES = CORE_DENYLIST_FINGERPRINT_SOURCES + (
+    "software/ps_driver/ir_regs.h",
+    "tools/p7_app_protocol.py",
+    "tools/run_p7_ps_core_offline.py",
+    "tools/p7_regression_evidence.py",
+    "tools/run_p7_regression_suites.py",
+    "scripts/build_p7_ps_runtime.py",
+    "scripts/build_p7_ps_runtime.tcl",
+    "tests/p7/test_p7_application.py",
+    "tests/p7/ir_driver_payload_alignment_test.c",
+    "tests/test_p7_regression_dedup.py",
 )
 STAGE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,63}$")
 
@@ -316,6 +342,8 @@ def patterned_data(pattern: str, seed: bytes, size: int, salt: int) -> bytes:
         return bytes((index + salt) & 0xFF for index in range(size))
     if pattern == "binary_all_byte_values_repeated":
         return bytes(range(256)) * (size // 256) + bytes(range(size % 256))
+    if pattern == "nonzero_counter":
+        return bytes(((index + salt) % 255) + 1 for index in range(size))
     if pattern == "prbs15":
         state = ((salt << 7) ^ 0x4A6D) & 0x7FFF or 1
         output = bytearray(size)
@@ -527,7 +555,11 @@ def build_functional_boundary_cases(input_data: bytes) -> list[StageCase]:
     for size in sizes:
         for lane_policy, policy_name in policies:
             ring_slot = logical_index % P7_QUEUE_DEPTH
-            pattern = "binary_all_byte_values_repeated" if size else "counter"
+            pattern = (
+                "nonzero_counter"
+                if size == 30
+                else ("binary_all_byte_values_repeated" if size else "counter")
+            )
             case = _make_case(
                 slot=ring_slot,
                 name=f"functional_boundary_{size}_{policy_name}",
@@ -606,7 +638,7 @@ def build_stage_bundle(
         free_image = bytearray(packed)
         struct.pack_into("<I", free_image, 12, 0)
         atomic_write_bytes(input_file, case.request.data)
-        atomic_write_bytes(output_zero, b"\x00" * len(case.request.data))
+        atomic_write_bytes(output_zero, bytes([OUTPUT_PREFILL_BYTE]) * len(case.request.data))
         atomic_write_bytes(trace_zero, b"\x00" * (case.trace_capacity * 64))
         atomic_write_bytes(descriptor_free, bytes(free_image))
         records.append(
@@ -627,6 +659,7 @@ def build_stage_bundle(
                 "expected_status": case.expected_status,
                 "expected_error": case.expected_error,
                 "pattern": case.pattern,
+                "output_prefill_byte": OUTPUT_PREFILL_BYTE,
                 "input": file_record(input_file),
                 "output_zero": file_record(output_zero),
                 "trace_zero": file_record(trace_zero),
@@ -656,7 +689,7 @@ def build_stage_bundle(
                 ring_slot * P7_DESCRIPTOR_BYTES : (ring_slot + 1) * P7_DESCRIPTOR_BYTES
             ] = packed
             atomic_write_bytes(input_file, case.request.data)
-            atomic_write_bytes(output_zero, b"\x00" * len(case.request.data))
+            atomic_write_bytes(output_zero, bytes([OUTPUT_PREFILL_BYTE]) * len(case.request.data))
             atomic_write_bytes(trace_zero, b"\x00" * (case.trace_capacity * 64))
             atomic_write_bytes(descriptor_free, packed)
             boundary_records.append(
@@ -670,6 +703,7 @@ def build_stage_bundle(
                     "object_id": case.request.object_id,
                     "lane_policy": case.request.lane_policy,
                     "trace_capacity": case.trace_capacity,
+                    "output_prefill_byte": OUTPUT_PREFILL_BYTE,
                     "input": file_record(input_file),
                     "output_zero": file_record(output_zero),
                     "trace_zero": file_record(trace_zero),
@@ -695,7 +729,7 @@ def build_stage_bundle(
         trace_zero = bundle_dir / f"{prefix}_trace_zero.bin"
         descriptor_free = bundle_dir / f"{prefix}_descriptor_free.bin"
         atomic_write_bytes(input_file, case.request.data)
-        atomic_write_bytes(output_zero, b"\x00" * len(case.request.data))
+        atomic_write_bytes(output_zero, bytes([OUTPUT_PREFILL_BYTE]) * len(case.request.data))
         atomic_write_bytes(trace_zero, b"\x00" * (case.trace_capacity * 64))
         atomic_write_bytes(descriptor_free, case.request.pack())
         functional_checkpoint_record = {
@@ -709,6 +743,7 @@ def build_stage_bundle(
             "trace_capacity": case.trace_capacity,
             "lane_policy": case.request.lane_policy,
             "expected_completion_sequence": 49,
+            "output_prefill_byte": OUTPUT_PREFILL_BYTE,
             "input": file_record(input_file),
             "output_zero": file_record(output_zero),
             "trace_zero": file_record(trace_zero),
@@ -730,7 +765,7 @@ def build_stage_bundle(
         descriptor_free = bundle_dir / f"{prefix}_descriptor_free.bin"
         packed = case.request.pack()
         atomic_write_bytes(input_file, case.request.data)
-        atomic_write_bytes(output_zero, b"\x00" * len(case.request.data))
+        atomic_write_bytes(output_zero, bytes([OUTPUT_PREFILL_BYTE]) * len(case.request.data))
         atomic_write_bytes(trace_zero, b"\x00" * (case.trace_capacity * 64))
         atomic_write_bytes(descriptor_free, packed)
         queue_overflow_record = {
@@ -744,6 +779,7 @@ def build_stage_bundle(
             "object_length": len(case.request.data),
             "trace_capacity": case.trace_capacity,
             "lane_policy": case.request.lane_policy,
+            "output_prefill_byte": OUTPUT_PREFILL_BYTE,
             "input": file_record(input_file),
             "output_zero": file_record(output_zero),
             "trace_zero": file_record(trace_zero),
@@ -807,6 +843,7 @@ def build_stage_bundle(
         f"IDLE_MARGIN_SECONDS {idle_margin_sec}",
         f"SCHEDULING_CUTOFF_SECONDS {scheduling_cutoff}",
         f"COUNTS_PER_SECOND {P7_COUNTS_PER_SECOND}",
+        f"OUTPUT_PREFILL_BYTE {OUTPUT_PREFILL_BYTE}",
         f"CASE_COUNT {len(cases)}",
         f"BOUNDARY_COUNT {len(boundary_cases)}",
         f"CHECKPOINT_COUNT {1 if functional_checkpoint is not None else 0}",
@@ -867,6 +904,8 @@ def build_stage_bundle(
         "mailbox": file_record(mailbox_file),
         "descriptors": file_record(descriptor_file),
         "execution_plan": file_record(plan_path),
+        "output_prefill_byte": OUTPUT_PREFILL_BYTE,
+        "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
         "queue_phase_mailboxes": queue_phase_mailboxes,
         "case_count": len(cases),
         "cases": records,
@@ -918,6 +957,14 @@ def _verify_manifest_record(record: Any, expected_path: Path, expected_size: int
     return errors
 
 
+def _verify_output_prefill(path: Path, label: str) -> list[str]:
+    if not path.is_file() or path.is_symlink():
+        return [f"output prefill file missing or symbolic link: {label}"]
+    if any(value != OUTPUT_PREFILL_BYTE for value in path.read_bytes()):
+        return [f"output prefill is not exact 0x{OUTPUT_PREFILL_BYTE:02X}: {label}"]
+    return []
+
+
 def verify_bundle_integrity(bundle: StageBundle) -> None:
     """Revalidate the immutable execution bundle immediately before XSDB."""
 
@@ -934,6 +981,8 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
         errors.append("bundle manifest schema mismatch")
     if manifest.get("case_count") != len(bundle.cases):
         errors.append("bundle manifest case count mismatch")
+    if manifest.get("output_prefill_byte") != OUTPUT_PREFILL_BYTE:
+        errors.append("bundle manifest output prefill byte mismatch")
     schedule = manifest.get("schedule")
     if not isinstance(schedule, dict) or schedule.get("counts_per_second") != P7_COUNTS_PER_SECOND:
         errors.append("bundle manifest PS timer frequency is missing or mismatched")
@@ -977,6 +1026,8 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
         }
         if record.get("ready_publication") != expected_publication:
             errors.append(f"bundle READY-publication contract mismatch: slot {case.slot}")
+        if record.get("output_prefill_byte") != OUTPUT_PREFILL_BYTE:
+            errors.append(f"bundle output prefill record mismatch: slot {case.slot}")
         expected = (
             ("input", bundle.directory / f"input_{case.slot}.bin", len(case.request.data)),
             ("output_zero", bundle.directory / f"output_zero_{case.slot}.bin", len(case.request.data)),
@@ -985,6 +1036,12 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
         )
         for key, path, size in expected:
             errors.extend(_verify_manifest_record(record.get(key), path, size, f"slot {case.slot} {key}"))
+        errors.extend(
+            _verify_output_prefill(
+                bundle.directory / f"output_zero_{case.slot}.bin",
+                f"slot {case.slot}",
+            )
+        )
     descriptor_bytes = (bundle.directory / "descriptors.bin").read_bytes()
     for case in bundle.cases:
         body_status = struct.unpack_from("<I", descriptor_bytes, case.slot * P7_DESCRIPTOR_BYTES + 12)[0]
@@ -1038,6 +1095,8 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
             }
             if record.get("ready_publication") != expected_publication:
                 errors.append(f"functional boundary READY-publication contract mismatch: slot {case.slot}")
+            if record.get("output_prefill_byte") != OUTPUT_PREFILL_BYTE:
+                errors.append(f"functional boundary output prefill record mismatch: slot {case.slot}")
             for key, path, size in (
                 ("input", bundle.directory / f"{prefix}_input.bin", len(case.request.data)),
                 ("output_zero", bundle.directory / f"{prefix}_output_zero.bin", len(case.request.data)),
@@ -1045,6 +1104,12 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
                 ("descriptor_free", bundle.directory / f"{prefix}_descriptor_free.bin", P7_DESCRIPTOR_BYTES),
             ):
                 errors.extend(_verify_manifest_record(record.get(key), path, size, f"boundary slot {case.slot} {key}"))
+            errors.extend(
+                _verify_output_prefill(
+                    bundle.directory / f"{prefix}_output_zero.bin",
+                    f"boundary slot {case.slot}",
+                )
+            )
             if (
                 len(boundary_batch_bytes[batch]) != P7_DESCRIPTOR_BYTES * P7_QUEUE_DEPTH
                 or boundary_batch_bytes[batch][
@@ -1075,6 +1140,8 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
                 }
             ):
                 errors.append("functional 4KiB checkpoint identity/publication contract mismatch")
+            if checkpoint_record.get("output_prefill_byte") != OUTPUT_PREFILL_BYTE:
+                errors.append("functional 4KiB checkpoint output prefill record mismatch")
             prefix = "functional_checkpoint_4k"
             for key, path, size in (
                 ("input", bundle.directory / f"{prefix}_input.bin", len(case.request.data)),
@@ -1083,6 +1150,12 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
                 ("descriptor_free", bundle.directory / f"{prefix}_descriptor_free.bin", P7_DESCRIPTOR_BYTES),
             ):
                 errors.extend(_verify_manifest_record(checkpoint_record.get(key), path, size, f"functional checkpoint {key}"))
+            errors.extend(
+                _verify_output_prefill(
+                    bundle.directory / f"{prefix}_output_zero.bin",
+                    "functional checkpoint",
+                )
+            )
             descriptor_path = bundle.directory / f"{prefix}_descriptor_free.bin"
             if (
                 not descriptor_path.is_file()
@@ -1108,6 +1181,8 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
             }
             if overflow_record.get("admission_contract") != expected_contract:
                 errors.append("queue overflow admission contract mismatch")
+            if overflow_record.get("output_prefill_byte") != OUTPUT_PREFILL_BYTE:
+                errors.append("queue overflow output prefill record mismatch")
             if (
                 overflow_record.get("candidate_index") != P7_QUEUE_DEPTH
                 or overflow_record.get("object_id") != 9
@@ -1123,6 +1198,12 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
                 ("descriptor_free", bundle.directory / f"{prefix}_descriptor_free.bin", P7_DESCRIPTOR_BYTES),
             ):
                 errors.extend(_verify_manifest_record(overflow_record.get(key), path, size, f"queue overflow candidate {key}"))
+            errors.extend(
+                _verify_output_prefill(
+                    bundle.directory / f"{prefix}_output_zero.bin",
+                    "queue overflow candidate",
+                )
+            )
             descriptor_path = bundle.directory / f"{prefix}_descriptor_free.bin"
             if descriptor_path.is_file() and descriptor_path.stat().st_size == P7_DESCRIPTOR_BYTES:
                 descriptor = unpack_descriptor(descriptor_path.read_bytes())
@@ -1147,6 +1228,230 @@ def snapshot_directory_files(directory: Path) -> dict[str, dict[str, Any]]:
         relative = path.relative_to(directory).as_posix()
         snapshot[relative] = {"size_bytes": path.stat().st_size, "sha256": sha256_file(path)}
     return snapshot
+
+
+def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[str, Any]:
+    """Validate a terminal P7CD capture even though the hardware stage failed."""
+    markers = parse_markers(raw_text)
+    index_text = markers.get("P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX")
+    error_text = markers.get("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE")
+    required_errors = frozenset(range(21, 32))
+    try:
+        failure_index = int(index_text) if index_text is not None else None
+        failure_error = int(error_text) if error_text is not None else None
+    except ValueError:
+        failure_index = None
+        failure_error = None
+    required = failure_error in required_errors
+    captured = (
+        markers.get(
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED"
+        )
+        == "1"
+    )
+    result: dict[str, Any] = {
+        "present": captured,
+        "required": required,
+        "passed": not required and not captured,
+        "failures": [],
+    }
+    failures: list[str] = result["failures"]
+    if not captured:
+        if required:
+            failures.append("required first-error diagnostic capture marker is missing")
+            result["passed"] = False
+        return result
+    if markers.get(
+        "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED"
+    ) != "1":
+        failures.append("first-error diagnostic wipe marker is missing")
+    if failure_index is None or not 0 <= failure_index < len(bundle.boundary_cases):
+        failures.append("first-error diagnostic boundary index is invalid")
+        result["passed"] = False
+        return result
+    case = bundle.boundary_cases[failure_index]
+    diagnostic_path = (
+        bundle.directory
+        / f"boundary_{failure_index}_first_error_diagnostic_failure.bin"
+    )
+    wipe_path = (
+        bundle.directory
+        / f"boundary_{failure_index}_first_error_diagnostic_wipe_verify.bin"
+    )
+    if not diagnostic_path.is_file() or diagnostic_path.is_symlink():
+        failures.append("first-error diagnostic capture file is missing or symbolic")
+    if not wipe_path.is_file() or wipe_path.is_symlink():
+        failures.append("first-error diagnostic wipe-verification file is missing or symbolic")
+    decoded: dict[str, Any] | None = None
+    if diagnostic_path.is_file() and not diagnostic_path.is_symlink():
+        try:
+            decoded = unpack_first_error_diagnostic(diagnostic_path.read_bytes())
+        except ValueError as exc:
+            failures.append(f"first-error diagnostic decode failed: {exc}")
+    if wipe_path.is_file() and not wipe_path.is_symlink():
+        wiped = wipe_path.read_bytes()
+        if len(wiped) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES or any(wiped):
+            failures.append("first-error diagnostic wipe verification is not exactly 320 zero bytes")
+    if decoded is not None:
+        if decoded["session_epoch"] != case.request.session_epoch:
+            failures.append("first-error diagnostic session does not match boundary request")
+        if decoded["object_id"] != case.request.object_id:
+            failures.append("first-error diagnostic object does not match boundary request")
+        if decoded["error_code"] != failure_error:
+            failures.append("first-error diagnostic error does not match terminal descriptor")
+        diagnostic_stage = int(decoded["stage"])
+        diagnostic_error = int(decoded["error_code"])
+        diagnostic_fragment = int(decoded["fragment_index"])
+        diagnostic_lane = int(decoded["lane_mask"])
+        if diagnostic_stage in (9, 10):
+            if diagnostic_fragment != 0xFFFFFFFF or diagnostic_lane != 0:
+                failures.append("object-level first-error diagnostic identity is invalid")
+            chunk_length = len(case.request.data)
+        else:
+            if not 0 <= diagnostic_fragment < case.trace_capacity:
+                failures.append("first-error diagnostic fragment is outside boundary geometry")
+                chunk_length = 0
+            else:
+                chunk_length = min(
+                    FRAGMENT_CHUNK_BYTES,
+                    max(
+                        0,
+                        len(case.request.data)
+                        - diagnostic_fragment * FRAGMENT_CHUNK_BYTES,
+                    ),
+                )
+            expected_lane = {
+                1: 1,
+                2: 2,
+                3: 1 if diagnostic_fragment % 2 == 0 else 2,
+                4: 3,
+            }[case.request.lane_policy]
+            if diagnostic_lane != expected_lane:
+                failures.append("first-error diagnostic lane contradicts boundary policy")
+        encoded_length = RF_APP_HEADER_BYTES + chunk_length
+        expected_lengths = {
+            21: {chunk_length},
+            22: {encoded_length},
+            23: {chunk_length},
+            24: {chunk_length},
+            25: {chunk_length},
+            26: {encoded_length},
+            27: {encoded_length},
+            28: {encoded_length},
+            29: {chunk_length, encoded_length},
+            30: {chunk_length},
+            31: {len(case.request.data)},
+            13: {len(case.request.data)},
+            14: {len(case.request.data)},
+        }.get(diagnostic_error, set())
+        if int(decoded["expected_length"]) not in expected_lengths:
+            failures.append("first-error diagnostic expected length contradicts failure boundary")
+        if diagnostic_error in {21, 23, 24, 25, 26, 29, 30, 31} and (
+            int(decoded["actual_length"]) != int(decoded["expected_length"])
+        ):
+            failures.append("first-error diagnostic equal-geometry stage has unequal lengths")
+        if diagnostic_error in {22, 27, 28} and not (
+            0 <= int(decoded["actual_length"]) <= encoded_length
+        ):
+            failures.append("first-error diagnostic transport length is outside fragment bounds")
+        independent_expected: bytes | None = None
+        fragments = segment_object(
+            case.request.data,
+            session_epoch=case.request.session_epoch,
+            object_id=case.request.object_id,
+        )
+        if diagnostic_stage in (9, 10):
+            independent_expected = case.request.data
+        elif 0 <= diagnostic_fragment < len(fragments):
+            fragment = fragments[diagnostic_fragment]
+            if diagnostic_error in {21, 23, 24, 25, 30}:
+                independent_expected = fragment.chunk
+            elif diagnostic_error in {22, 26, 27, 28}:
+                independent_expected = fragment.encode()
+            elif diagnostic_error == 29:
+                independent_expected = (
+                    fragment.chunk
+                    if int(decoded["expected_length"]) == len(fragment.chunk)
+                    else fragment.encode()
+                )
+        if independent_expected is None:
+            failures.append("first-error diagnostic independent expected input is unavailable")
+        else:
+            if int(decoded["expected_length"]) != len(independent_expected):
+                failures.append("first-error diagnostic expected length is not input-reference bound")
+            if int(decoded["expected_crc32"]) != (
+                zlib.crc32(independent_expected) & 0xFFFFFFFF
+            ):
+                failures.append("first-error diagnostic expected CRC32 is not input-reference bound")
+            if decoded["expected_sha256"] != hashlib.sha256(
+                independent_expected
+            ).hexdigest():
+                failures.append("first-error diagnostic expected SHA256 is not input-reference bound")
+            snapshot_offset = int(decoded["snapshot_offset"])
+            snapshot_length = int(decoded["snapshot_length"])
+            expected_slice = independent_expected[
+                snapshot_offset : snapshot_offset + snapshot_length
+            ]
+            observed_slice = bytes.fromhex(str(decoded["expected_snapshot"]))[
+                : len(expected_slice)
+            ]
+            if observed_slice != expected_slice:
+                failures.append("first-error diagnostic expected snapshot is not input-reference bound")
+        marker_fields = {
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION": decoded["version"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE": decoded["stage"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE": decoded["error_code"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FRAGMENT_INDEX": decoded["fragment_index"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_LENGTH": decoded["expected_length"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_LENGTH": decoded["actual_length"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FIRST_BAD_OFFSET": decoded["first_bad_offset"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_BYTE": decoded["expected_byte"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_BYTE": decoded["actual_byte"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS_LOW6": decoded["expected_address_low6"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS_LOW6": decoded["actual_address_low6"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET": decoded["snapshot_offset"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH": decoded["snapshot_length"],
+        }
+        for key, expected in marker_fields.items():
+            if markers.get(key) != str(expected):
+                failures.append(f"first-error diagnostic marker mismatch: {key}")
+        numeric_markers = {
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SESSION_EPOCH": decoded["session_epoch"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_OBJECT_ID": decoded["object_id"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_LANE_MASK": decoded["lane_mask"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS": decoded["expected_address"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS": decoded["actual_address"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_CRC32": decoded["expected_crc32"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_CRC32": decoded["actual_crc32"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_ADDRESS": 0x00021000,
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES": P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_STATUS": 1,
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_MAGIC_READBACK": P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+        }
+        for key, expected in numeric_markers.items():
+            try:
+                observed = int(markers.get(key, ""), 0)
+            except (TypeError, ValueError):
+                observed = None
+            if observed != expected:
+                failures.append(f"first-error diagnostic numeric marker mismatch: {key}")
+        if markers.get(
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_SHA256"
+        ) != decoded["expected_sha256"]:
+            failures.append("first-error expected SHA256 marker mismatch")
+        if markers.get(
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_SHA256"
+        ) != decoded["actual_sha256"]:
+            failures.append("first-error actual SHA256 marker mismatch")
+        result["decoded"] = {
+            key: value for key, value in decoded.items() if key != "words"
+        }
+    if diagnostic_path.is_file() and not diagnostic_path.is_symlink():
+        result["capture"] = file_record(diagnostic_path)
+    if wipe_path.is_file() and not wipe_path.is_symlink():
+        result["wipe_verification"] = file_record(wipe_path)
+    result["passed"] = not failures
+    return result
 
 
 def write_evidence_sha256_manifest(evidence_dir: Path) -> Path:
@@ -1613,7 +1918,10 @@ def validate_core_readiness(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(sources, dict):
         errors.append("core-readiness source hashes missing")
     else:
+        if set(sources) != set(CORE_READINESS_SOURCES):
+            errors.append("core-readiness source hash set is not exact")
         fingerprint = hashlib.sha256()
+        attestation_fingerprint = hashlib.sha256()
         for source in CORE_READINESS_SOURCES:
             expected = sources.get(source)
             source_path = resolve_path(source)
@@ -1621,11 +1929,21 @@ def validate_core_readiness(args: argparse.Namespace) -> dict[str, Any]:
                 errors.append(f"core-readiness source hash missing: {source}")
             elif not source_path.is_file() or sha256_file(source_path) != str(expected).lower():
                 errors.append(f"core-readiness source hash mismatch: {source}")
-            fingerprint.update(source.encode("utf-8"))
-            fingerprint.update(b"\0")
-            fingerprint.update(str(expected or "").lower().encode("ascii", errors="replace"))
-            fingerprint.update(b"\n")
+            attestation_fingerprint.update(source.encode("utf-8"))
+            attestation_fingerprint.update(b"\0")
+            attestation_fingerprint.update(
+                str(expected or "").lower().encode("ascii", errors="replace")
+            )
+            attestation_fingerprint.update(b"\n")
+            if source in CORE_DENYLIST_FINGERPRINT_SOURCES:
+                fingerprint.update(source.encode("utf-8"))
+                fingerprint.update(b"\0")
+                fingerprint.update(
+                    str(expected or "").lower().encode("ascii", errors="replace")
+                )
+                fingerprint.update(b"\n")
         report["source_fingerprint"] = fingerprint.hexdigest()
+        report["attestation_fingerprint"] = attestation_fingerprint.hexdigest()
         if fingerprint.hexdigest() == KNOWN_UNSAFE_CORE_FINGERPRINT:
             errors.append("audited current P7 PS core snapshot has unresolved P0 safety blockers and cannot reach hardware")
     report["status"] = "PASS" if not errors else "BLOCKED"
@@ -4176,6 +4494,9 @@ def main(argv: list[str] | None = None) -> int:
         "post_shutdown_file_count": len(bundle_post_snapshot),
     }
     raw_text = raw_final.read_text(encoding="utf-8", errors="replace") if raw_final.is_file() else ""
+    summary["first_error_diagnostic"] = collect_first_error_diagnostic(
+        bundle, raw_text
+    )
     postprocess = postprocess_bundle(bundle, args.mode, raw_text) if ps_process_ok else {
         "passed": False,
         "failures": ["PS process did not pass exact rc/marker policy"],
@@ -4185,6 +4506,12 @@ def main(argv: list[str] | None = None) -> int:
     if bundle_integrity_failures:
         postprocess["passed"] = False
         postprocess.setdefault("failures", []).extend(bundle_integrity_failures)
+    if not summary["first_error_diagnostic"]["passed"]:
+        postprocess["passed"] = False
+        postprocess.setdefault("failures", []).extend(
+            f"first-error diagnostic: {failure}"
+            for failure in summary["first_error_diagnostic"]["failures"]
+        )
     summary["postprocess"] = postprocess
     summary["internal_error"] = internal_error
     summary["ps_failures"] = ps_failures
@@ -4192,6 +4519,7 @@ def main(argv: list[str] | None = None) -> int:
         before_ok
         and ps_process_ok
         and postprocess["passed"]
+        and summary["first_error_diagnostic"]["passed"]
         and after_ok
         and candidate_child_reaped
         and not internal_error

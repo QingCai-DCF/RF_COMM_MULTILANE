@@ -34,6 +34,13 @@ _Static_assert(sizeof(p7_fragment_trace_t) == 64U,
                "P7 fragment trace must be 64 bytes");
 _Static_assert(sizeof(p7_failure_snapshot_header_t) == 64U,
                "P7 failure snapshot header must be 64 bytes");
+_Static_assert(sizeof(p7_first_error_diagnostic_t) == 320U,
+               "P7 first-error diagnostic must be 320 bytes");
+_Static_assert(RF_APP_P6_MAX_PAYLOAD_BYTES <= P7_LOCAL_PAYLOAD_BYTES,
+               "P7 local payload storage must contain the protocol maximum");
+_Static_assert(RF_TRANSPORT_MAX_PAYLOAD_BYTES ==
+                   RF_APP_P6_MAX_PAYLOAD_BYTES,
+               "P7 transport and RFAP protocol payload limits must agree");
 _Static_assert((P7_FAILURE_SNAPSHOT_BASEADDR & (P7_DDR_ALIGNMENT - 1U)) == 0U,
                "P7 failure snapshot must be 64-byte aligned");
 _Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR >=
@@ -41,8 +48,18 @@ _Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR >=
                        P7_DESCRIPTOR_QUEUE_DEPTH * P7_DESCRIPTOR_BYTES,
                "P7 failure snapshot must not overlap the descriptor queue");
 _Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR + P7_FAILURE_SNAPSHOT_TOTAL_BYTES <=
+                   P7_INPUT_REFERENCE_BASEADDR,
+               "P7 failure snapshot must precede fixed input reference");
+_Static_assert((P7_INPUT_REFERENCE_BASEADDR & (P7_DDR_ALIGNMENT - 1U)) == 0U,
+               "P7 input reference must be 64-byte aligned");
+_Static_assert(P7_INPUT_REFERENCE_BASEADDR + P7_LOCAL_PAYLOAD_BYTES <=
+                   P7_P6_TX_READBACK_BASEADDR,
+               "P7 input reference must not overlap TX readback scratch");
+_Static_assert((P7_P6_TX_READBACK_BASEADDR & (P7_DDR_ALIGNMENT - 1U)) == 0U,
+               "P7 TX readback scratch must be 64-byte aligned");
+_Static_assert(P7_P6_TX_READBACK_BASEADDR + P7_LOCAL_PAYLOAD_BYTES <=
                    P7_MAILBOX_RESERVED_END,
-               "P7 failure snapshot must remain in reserved OCM");
+               "P7 diagnostic scratch must remain in reserved OCM");
 
 typedef struct p7_sha256_context {
   uint32_t state[8];
@@ -76,16 +93,32 @@ typedef struct p7_service_context {
 typedef struct p7_p6_backend_context {
   const ir_mmio_t *io;
   p7_service_context_t *service;
-  uint8_t tx_payload[RF_TRANSPORT_MAX_PAYLOAD_BYTES];
-  uint8_t rx_payload[RF_TRANSPORT_MAX_PAYLOAD_BYTES];
+  const p7_object_descriptor_t *request;
+  uint8_t tx_payload[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)));
+  uint8_t rx_payload[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)));
   size_t tx_size;
   size_t rx_size;
   uint32_t lane_mask;
+  uint32_t fragment_index;
+  uint32_t diagnostic_error;
   uint32_t token;
   int run_status;
   ir_p6_payload_result_t p6;
   rf_transport_metrics_t metrics;
 } p7_p6_backend_context_t;
+
+_Static_assert(_Alignof(p7_p6_backend_context_t) >= P7_DDR_ALIGNMENT,
+               "P7 backend context must preserve 64-byte member alignment");
+_Static_assert((offsetof(p7_p6_backend_context_t, tx_payload) &
+                (P7_DDR_ALIGNMENT - 1U)) == 0U,
+               "P7 local TX payload must be 64-byte aligned");
+_Static_assert((offsetof(p7_p6_backend_context_t, rx_payload) &
+                (P7_DDR_ALIGNMENT - 1U)) == 0U,
+               "P7 local RX payload must be 64-byte aligned");
+
+static uint32_t p7_publish_failure_snapshot_diagnostic(
+    volatile p7_mailbox_control_t *mailbox, uint32_t status,
+    uint32_t address, uint32_t bytes, uint32_t magic_readback);
 
 static uint32_t p7_rotr(uint32_t value, uint32_t count) {
   return (value >> count) | (value << (32U - count));
@@ -365,26 +398,60 @@ static int p7_active_stop_requested(p7_service_context_t *service) {
  * P6 fragment compared equal before the DDR output write.  Volatile byte
  * accesses make each transfer observable, and the second pass fails closed
  * before the copied bytes can contribute to a successful descriptor. */
-static int p7_copy_bytes_verified(volatile uint8_t *destination,
-                                  const volatile uint8_t *source,
-                                  uint32_t size) {
+typedef struct p7_mismatch_observation {
+  uint32_t offset;
+  uint32_t expected_byte;
+  uint32_t actual_byte;
+} p7_mismatch_observation_t;
+
+static void p7_reset_mismatch(p7_mismatch_observation_t *observation) {
+  if (observation == NULL) return;
+  observation->offset = UINT32_MAX;
+  observation->expected_byte = P7_DIAGNOSTIC_MISSING_BYTE;
+  observation->actual_byte = P7_DIAGNOSTIC_MISSING_BYTE;
+}
+
+static __attribute__((noinline)) int p7_copy_bytes_verified(
+    volatile uint8_t *destination, const volatile uint8_t *source,
+    uint32_t size, p7_mismatch_observation_t *observation) {
+  p7_reset_mismatch(observation);
   if ((destination == NULL || source == NULL) && size != 0U) return 0;
   for (uint32_t index = 0U; index < size; ++index) {
     destination[index] = source[index];
   }
   dsb();
   for (uint32_t index = 0U; index < size; ++index) {
-    if (destination[index] != source[index]) return 0;
+    uint32_t expected_byte = source[index];
+    uint32_t actual_byte = destination[index];
+    if (actual_byte != expected_byte) {
+      if (observation != NULL) {
+        observation->offset = index;
+        observation->expected_byte = expected_byte;
+        observation->actual_byte = actual_byte;
+      }
+      return 0;
+    }
   }
   return 1;
 }
 
-static int p7_bytes_equal_volatile(const volatile uint8_t *left,
-                                   const volatile uint8_t *right,
-                                   uint32_t size) {
+static __attribute__((noinline)) int p7_bytes_equal_volatile(
+    const volatile uint8_t *left, const volatile uint8_t *right,
+    uint32_t size, p7_mismatch_observation_t *observation) {
+  p7_reset_mismatch(observation);
   if ((left == NULL || right == NULL) && size != 0U) return 0;
+  dsb();
   for (uint32_t index = 0U; index < size; ++index) {
-    if (left[index] != right[index]) return 0;
+    uint32_t expected_byte = left[index];
+    uint32_t actual_byte = right[index];
+    if (actual_byte != expected_byte) {
+      if (observation != NULL) {
+        observation->offset = index;
+        observation->expected_byte = expected_byte;
+        observation->actual_byte = actual_byte;
+      }
+      return 0;
+    }
   }
   return 1;
 }
@@ -450,11 +517,207 @@ static int p7_integrity_checked(p7_service_context_t *service,
   return 1;
 }
 
+static void p7_hash_volatile_bytes(const volatile uint8_t *data,
+                                   uint32_t size, uint32_t *crc_out,
+                                   uint8_t sha_out[32],
+                                   uint32_t observed_offset,
+                                   uint32_t observed_byte) {
+  static const uint32_t crc_table[16] = {
+      UINT32_C(0x00000000), UINT32_C(0x1db71064),
+      UINT32_C(0x3b6e20c8), UINT32_C(0x26d930ac),
+      UINT32_C(0x76dc4190), UINT32_C(0x6b6b51f4),
+      UINT32_C(0x4db26158), UINT32_C(0x5005713c),
+      UINT32_C(0xedb88320), UINT32_C(0xf00f9344),
+      UINT32_C(0xd6d6a3e8), UINT32_C(0xcb61b38c),
+      UINT32_C(0x9b64c2b0), UINT32_C(0x86d3d2d4),
+      UINT32_C(0xa00ae278), UINT32_C(0xbdbdf21c)};
+  p7_sha256_context_t sha;
+  uint8_t observation[64] __attribute__((aligned(64)));
+  uint32_t crc = UINT32_C(0xffffffff);
+  uint32_t offset = 0U;
+  p7_sha256_init(&sha);
+  while (offset < size) {
+    uint32_t chunk = size - offset;
+    if (chunk > sizeof(observation)) chunk = sizeof(observation);
+    for (uint32_t index = 0U; index < chunk; ++index) {
+      uint32_t absolute_index = offset + index;
+      observation[index] = absolute_index == observed_offset &&
+                                   observed_byte <= UINT8_MAX
+                               ? (uint8_t)observed_byte
+                               : data[absolute_index];
+      crc ^= observation[index];
+      crc = (crc >> 4) ^ crc_table[crc & 0x0fU];
+      crc = (crc >> 4) ^ crc_table[crc & 0x0fU];
+    }
+    p7_sha256_update(&sha, observation, chunk);
+    offset += chunk;
+  }
+  *crc_out = crc ^ UINT32_C(0xffffffff);
+  p7_sha256_final(&sha, sha_out);
+}
+
+static uint32_t p7_first_mismatch_offset(
+    const volatile uint8_t *expected, uint32_t expected_length,
+    const volatile uint8_t *actual, uint32_t actual_length) {
+  uint32_t common = expected_length < actual_length ? expected_length
+                                                     : actual_length;
+  p7_mismatch_observation_t observation;
+  if (!p7_bytes_equal_volatile(expected, actual, common, &observation)) {
+    return observation.offset;
+  }
+  return expected_length == actual_length ? UINT32_MAX : common;
+}
+
+static int p7_compare_object_checked(
+    p7_service_context_t *service, const volatile uint8_t *expected,
+    const volatile uint8_t *actual, uint32_t size,
+    p7_mismatch_observation_t *observation) {
+  uint32_t offset = 0U;
+  if (observation == NULL) return -1;
+  p7_reset_mismatch(observation);
+  while (offset < size) {
+    uint32_t chunk = size - offset;
+    p7_mismatch_observation_t local;
+    if (chunk > 256U) chunk = 256U;
+    if (p7_active_stop_requested(service)) return -1;
+    p7_invalidate((const void *)(expected + offset), chunk);
+    p7_invalidate((const void *)(actual + offset), chunk);
+    if (!p7_bytes_equal_volatile(expected + offset, actual + offset, chunk,
+                                 &local)) {
+      *observation = local;
+      observation->offset += offset;
+      return 0;
+    }
+    offset += chunk;
+  }
+  return 1;
+}
+
+static uint32_t p7_publish_first_error_diagnostic(
+    volatile p7_mailbox_control_t *mailbox,
+    const p7_object_descriptor_t *request, uint32_t stage,
+    uint32_t error_code, uint32_t fragment_index, uint32_t lane_mask,
+    const volatile uint8_t *expected, uint32_t expected_length,
+    const volatile uint8_t *actual, uint32_t actual_length,
+    const p7_mismatch_observation_t *observation) {
+  const uint32_t address = P7_FAILURE_SNAPSHOT_BASEADDR;
+  const uint32_t total_bytes = P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES;
+  p7_first_error_diagnostic_t diagnostic;
+  volatile p7_first_error_diagnostic_t *published;
+  uint8_t expected_sha[32];
+  uint8_t actual_sha[32];
+  uint32_t mismatch;
+  uint32_t max_length;
+  uint32_t magic_readback;
+  uint32_t observed_expected_byte = P7_DIAGNOSTIC_MISSING_BYTE;
+  uint32_t observed_actual_byte = P7_DIAGNOSTIC_MISSING_BYTE;
+
+  if (mailbox == NULL || request == NULL ||
+      (expected == NULL && expected_length != 0U) ||
+      (actual == NULL && actual_length != 0U)) {
+    if (mailbox == NULL) return P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT;
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT, 0U, 0U, 0U);
+  }
+  /* A nonzero marker belongs to the first already-published observation.
+   * Never overwrite it with a later consequence of the same failure. */
+  if (Xil_In32(address) != 0U) return mailbox->failure_snapshot_status;
+  max_length = expected_length > actual_length ? expected_length
+                                                : actual_length;
+  mismatch = observation != NULL ? observation->offset : UINT32_MAX;
+  if (mismatch < max_length &&
+      observation->expected_byte <= P7_DIAGNOSTIC_MISSING_BYTE &&
+      observation->actual_byte <= P7_DIAGNOSTIC_MISSING_BYTE &&
+      observation->expected_byte != observation->actual_byte &&
+      ((mismatch >= expected_length) ==
+       (observation->expected_byte == P7_DIAGNOSTIC_MISSING_BYTE)) &&
+      ((mismatch >= actual_length) ==
+       (observation->actual_byte == P7_DIAGNOSTIC_MISSING_BYTE))) {
+    observed_expected_byte = observation->expected_byte;
+    observed_actual_byte = observation->actual_byte;
+  } else {
+    mismatch = p7_first_mismatch_offset(expected, expected_length, actual,
+                                        actual_length);
+    if (mismatch < max_length) {
+      observed_expected_byte = mismatch < expected_length
+                                   ? expected[mismatch]
+                                   : P7_DIAGNOSTIC_MISSING_BYTE;
+      observed_actual_byte = mismatch < actual_length
+                                 ? actual[mismatch]
+                                 : P7_DIAGNOSTIC_MISSING_BYTE;
+    }
+  }
+  if (mismatch == UINT32_MAX) {
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH, 0U, 0U, 0U);
+  }
+  memset(&diagnostic, 0, sizeof(diagnostic));
+  diagnostic.version = P7_RUNTIME_VERSION;
+  diagnostic.stage = stage;
+  diagnostic.error_code = error_code;
+  diagnostic.session_epoch = request->session_epoch;
+  diagnostic.object_id = request->object_id;
+  diagnostic.fragment_index = fragment_index;
+  diagnostic.lane_mask = lane_mask;
+  diagnostic.expected_length = expected_length;
+  diagnostic.actual_length = actual_length;
+  diagnostic.first_bad_offset = mismatch;
+  diagnostic.expected_byte = observed_expected_byte;
+  diagnostic.actual_byte = observed_actual_byte;
+  diagnostic.expected_address = (uint32_t)(uintptr_t)expected;
+  diagnostic.actual_address = (uint32_t)(uintptr_t)actual;
+  p7_hash_volatile_bytes(expected, expected_length,
+                         &diagnostic.expected_crc32, expected_sha, mismatch,
+                         observed_expected_byte);
+  p7_hash_volatile_bytes(actual, actual_length, &diagnostic.actual_crc32,
+                         actual_sha, mismatch, observed_actual_byte);
+  p7_copy_digest_words(diagnostic.expected_sha256, expected_sha);
+  p7_copy_digest_words(diagnostic.actual_sha256, actual_sha);
+  diagnostic.snapshot_offset = mismatch > 32U ? mismatch - 32U : 0U;
+  diagnostic.snapshot_length = max_length - diagnostic.snapshot_offset;
+  if (diagnostic.snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES) {
+    diagnostic.snapshot_length = P7_FIRST_ERROR_SNAPSHOT_BYTES;
+  }
+  for (uint32_t index = 0U; index < diagnostic.snapshot_length; ++index) {
+    uint32_t source_index = diagnostic.snapshot_offset + index;
+    if (source_index < expected_length) {
+      diagnostic.expected_snapshot[index] =
+          source_index == mismatch && observed_expected_byte <= UINT8_MAX
+              ? (uint8_t)observed_expected_byte
+              : expected[source_index];
+    }
+    if (source_index < actual_length) {
+      diagnostic.actual_snapshot[index] =
+          source_index == mismatch && observed_actual_byte <= UINT8_MAX
+              ? (uint8_t)observed_actual_byte
+              : actual[source_index];
+    }
+  }
+  published =
+      (volatile p7_first_error_diagnostic_t *)(uintptr_t)address;
+  memcpy((void *)published, &diagnostic, sizeof(diagnostic));
+  p7_flush((const void *)(uintptr_t)address, total_bytes);
+  Xil_Out32(address, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC);
+  dsb();
+  p7_flush(&published->magic, sizeof(published->magic));
+  dsb();
+  magic_readback = Xil_In32(address);
+  if (magic_readback != P7_FIRST_ERROR_DIAGNOSTIC_MAGIC) {
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED, address,
+        total_bytes, magic_readback);
+  }
+  return p7_publish_failure_snapshot_diagnostic(
+      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes,
+      magic_readback);
+}
+
 static int p7_p6_open(rf_transport_backend_t *backend) {
   p7_p6_backend_context_t *context =
       (p7_p6_backend_context_t *)backend->context;
   memset(&context->metrics, 0, sizeof(context->metrics));
   context->token = 0U;
+  context->diagnostic_error = P7_ERROR_NONE;
   return RF_TRANSPORT_OK;
 }
 
@@ -495,19 +758,33 @@ static int p7_p6_submit(rf_transport_backend_t *backend,
   p7_p6_backend_context_t *context =
       (p7_p6_backend_context_t *)backend->context;
   ir_p6_payload_config_t config;
+  volatile uint8_t *tx_readback =
+      (volatile uint8_t *)(uintptr_t)P7_P6_TX_READBACK_BASEADDR;
   uint32_t observed_size = 0U;
+  p7_mismatch_observation_t mismatch;
   if (payload_size == 0U || payload_size > RF_TRANSPORT_MAX_PAYLOAD_BYTES ||
       (lane_mask != 1U && lane_mask != 2U && lane_mask != 3U)) {
     return RF_TRANSPORT_ERR_ARGUMENT;
   }
   if (!p7_copy_bytes_verified(
           (volatile uint8_t *)context->tx_payload,
-          (const volatile uint8_t *)payload, (uint32_t)payload_size)) {
+          (const volatile uint8_t *)payload, (uint32_t)payload_size,
+          &mismatch)) {
+    context->diagnostic_error = P7_ERROR_P6_TX_LOCAL_COPY;
+    (void)p7_publish_first_error_diagnostic(
+        context->service->mailbox, context->request,
+        P7_FIRST_ERROR_STAGE_P6_TX_LOCAL, context->diagnostic_error,
+        context->fragment_index, lane_mask,
+        (const volatile uint8_t *)payload, (uint32_t)payload_size,
+        (const volatile uint8_t *)context->tx_payload,
+        (uint32_t)payload_size, &mismatch);
+    (void)p7_stop_and_shutdown(context->service);
     return RF_TRANSPORT_ERR_IO;
   }
   context->tx_size = payload_size;
   context->rx_size = 0U;
   context->lane_mask = lane_mask;
+  context->diagnostic_error = P7_ERROR_NONE;
   memset(&context->p6, 0, sizeof(context->p6));
   memset(&config, 0, sizeof(config));
   config.session = P7_P6_SESSION;
@@ -531,8 +808,37 @@ static int p7_p6_submit(rf_transport_backend_t *backend,
     p7_p6_snapshot_and_shutdown(context);
   } else if (context->run_status == -1 &&
              ir_driver_p6_write_payload(context->io, context->tx_payload,
-                                        config.payload_len) != 0) {
+                                         config.payload_len) != 0) {
     context->run_status = -3;
+    p7_p6_snapshot_and_shutdown(context);
+  } else if (context->run_status == -1) {
+    memset((void *)tx_readback, 0xa5, P7_LOCAL_PAYLOAD_BYTES);
+  }
+  if (context->run_status == -1 &&
+             ir_driver_p6_read_tx_payload(
+                 context->io, (uint8_t *)tx_readback,
+                 P7_LOCAL_PAYLOAD_BYTES, config.payload_len) != 0) {
+    context->diagnostic_error = P7_ERROR_P6_TX_MMIO_READBACK;
+    context->run_status = -13;
+    (void)p7_publish_first_error_diagnostic(
+        context->service->mailbox, context->request,
+        P7_FIRST_ERROR_STAGE_P6_TX_MMIO_READBACK,
+        context->diagnostic_error, context->fragment_index, lane_mask,
+        (const volatile uint8_t *)context->tx_payload, config.payload_len,
+        tx_readback, 0U, NULL);
+    p7_p6_snapshot_and_shutdown(context);
+  } else if (context->run_status == -1 &&
+             !p7_bytes_equal_volatile(
+                  (const volatile uint8_t *)context->tx_payload, tx_readback,
+                  config.payload_len, &mismatch)) {
+    context->diagnostic_error = P7_ERROR_P6_TX_MMIO_READBACK;
+    context->run_status = -13;
+    (void)p7_publish_first_error_diagnostic(
+        context->service->mailbox, context->request,
+        P7_FIRST_ERROR_STAGE_P6_TX_MMIO_READBACK,
+        context->diagnostic_error, context->fragment_index, lane_mask,
+        (const volatile uint8_t *)context->tx_payload, config.payload_len,
+        tx_readback, config.payload_len, &mismatch);
     p7_p6_snapshot_and_shutdown(context);
   } else if (context->run_status == -1 &&
              ir_driver_p6_commit_payload(context->io, &config) != 0) {
@@ -581,11 +887,40 @@ static int p7_p6_submit(rf_transport_backend_t *backend,
   }
   if (context->run_status == 0) {
     if (ir_driver_p6_read_rx_payload(context->io, context->rx_payload,
-                                     sizeof(context->rx_payload),
+                                     RF_APP_P6_MAX_PAYLOAD_BYTES,
                                      &observed_size) == 0) {
       context->rx_size = observed_size;
+      p7_reset_mismatch(&mismatch);
+      if (context->rx_size != context->tx_size ||
+          !p7_bytes_equal_volatile(
+              (const volatile uint8_t *)context->tx_payload,
+              (const volatile uint8_t *)context->rx_payload,
+               (uint32_t)(context->rx_size < context->tx_size
+                              ? context->rx_size
+                              : context->tx_size),
+               &mismatch)) {
+        context->diagnostic_error = P7_ERROR_P6_RX_LOCAL_MISMATCH;
+        context->run_status = -14;
+        (void)p7_publish_first_error_diagnostic(
+            context->service->mailbox, context->request,
+            P7_FIRST_ERROR_STAGE_P6_RX_LOCAL, context->diagnostic_error,
+            context->fragment_index, lane_mask,
+            (const volatile uint8_t *)context->tx_payload,
+            (uint32_t)context->tx_size,
+            (const volatile uint8_t *)context->rx_payload,
+            (uint32_t)context->rx_size, &mismatch);
+        (void)p7_stop_and_shutdown(context->service);
+      }
     } else {
-      context->run_status = -11;
+      context->diagnostic_error = P7_ERROR_P6_RX_LOCAL_MISMATCH;
+      context->run_status = -14;
+      (void)p7_publish_first_error_diagnostic(
+          context->service->mailbox, context->request,
+          P7_FIRST_ERROR_STAGE_P6_RX_LOCAL, context->diagnostic_error,
+          context->fragment_index, lane_mask,
+          (const volatile uint8_t *)context->tx_payload,
+          (uint32_t)context->tx_size,
+          (const volatile uint8_t *)context->rx_payload, 0U, NULL);
       (void)p7_stop_and_shutdown(context->service);
     }
   }
@@ -625,7 +960,10 @@ static int p7_p6_poll(rf_transport_backend_t *backend, uint32_t token,
   result->payload_mismatch = context->p6.payload_mismatch;
   result->txd_high_consecutive_max = context->p6.txd_high_consecutive_max;
   result->duty_violation_count = context->p6.duty_violation;
-  result->error_code = context->p6.error_code;
+  /* The earliest local/MMIO boundary failure is the primary diagnosis.  A
+   * later result-register snapshot must not replace its stage/error identity. */
+  result->error_code = context->diagnostic_error;
+  if (result->error_code == 0U) result->error_code = context->p6.error_code;
   if (result->error_code == 0U && context->p6.sticky_error != 0U) {
     result->error_code = P7_ERROR_P6_RESULT;
   }
@@ -670,13 +1008,23 @@ static int p7_p6_read(rf_transport_backend_t *backend, uint32_t token,
                       size_t *payload_size) {
   p7_p6_backend_context_t *context =
       (p7_p6_backend_context_t *)backend->context;
+  p7_mismatch_observation_t mismatch;
   if (token != context->token || payload_capacity < context->rx_size) {
     return RF_TRANSPORT_ERR_BUFFER;
   }
   if (!p7_copy_bytes_verified(
           (volatile uint8_t *)payload,
           (const volatile uint8_t *)context->rx_payload,
-          (uint32_t)context->rx_size)) {
+          (uint32_t)context->rx_size, &mismatch)) {
+    context->diagnostic_error = P7_ERROR_RECEIVED_INPUT_MISMATCH;
+    (void)p7_publish_first_error_diagnostic(
+        context->service->mailbox, context->request,
+        P7_FIRST_ERROR_STAGE_RECEIVED, context->diagnostic_error,
+        context->fragment_index, context->lane_mask,
+        (const volatile uint8_t *)context->rx_payload,
+        (uint32_t)context->rx_size, (const volatile uint8_t *)payload,
+        (uint32_t)context->rx_size, &mismatch);
+    (void)p7_stop_and_shutdown(context->service);
     return RF_TRANSPORT_ERR_IO;
   }
   *payload_size = context->rx_size;
@@ -877,12 +1225,18 @@ static void p7_wipe_partial(const p7_object_descriptor_t *request,
                             uint32_t completed,
                             volatile p7_object_descriptor_t *descriptor) {
   if (completed > request->object_length) completed = request->object_length;
-  if (completed != 0U && completed <= P7_MAX_OBJECT_BYTES &&
-      p7_range_valid(request->output_address, completed)) {
+  /* The output file is prefilled with a nonzero canary.  A terminal failure
+   * must erase the entire privately validated output range, including bytes
+   * that were never reached, so the host cannot mistake an unwritten canary
+   * for application data or a partial commit. */
+  if (request->object_length != 0U &&
+      request->object_length <= P7_MAX_OBJECT_BYTES &&
+      p7_range_valid(request->output_address, request->object_length)) {
     uint8_t *output = (uint8_t *)(uintptr_t)request->output_address;
-    memset(output, 0, completed);
-    p7_flush(output, completed);
+    memset(output, 0, request->object_length);
+    p7_flush(output, request->object_length);
   }
+  (void)completed;
   descriptor->bytes_completed = 0U;
 }
 
@@ -990,6 +1344,8 @@ static int p7_process_descriptor(
   p7_p6_backend_context_t backend_context;
   rf_transport_backend_t backend;
   rf_transport_capabilities_t capabilities;
+  volatile uint8_t *input_reference =
+      (volatile uint8_t *)(uintptr_t)P7_INPUT_REFERENCE_BASEADDR;
   uint16_t fragment_count = 0U;
   uint8_t input_sha[32];
   uint8_t output_sha[32];
@@ -1001,8 +1357,10 @@ static int p7_process_descriptor(
   uint32_t completed_bytes = 0U;
   uint32_t sticky_unavailable = 0U;
   uint32_t fallback_reported_mask = 0U;
+  p7_mismatch_observation_t end_to_end_mismatch;
   uint64_t object_start;
   uint64_t object_end;
+  int end_to_end_status;
   int error;
 
   p7_invalidate(descriptor, sizeof(*descriptor));
@@ -1011,6 +1369,8 @@ static int p7_process_descriptor(
   p7_reset_descriptor_results(descriptor);
   if (error != P7_ERROR_NONE) {
     (void)p7_stop_and_shutdown(service);
+    /* The rejected descriptor has not established a private, nonoverlapping
+     * output range.  Never write through an unvalidated output address. */
     descriptor->error_code = (uint32_t)error;
     mailbox->objects_failed += 1U;
     mailbox->last_error_code = (uint32_t)error;
@@ -1086,8 +1446,8 @@ static int p7_process_descriptor(
                           ? RF_APP_FLAG_LAST
                           : 0U);
     rf_app_header_t header;
-    uint8_t encoded[RF_APP_P6_MAX_PAYLOAD_BYTES];
-    uint8_t received[RF_APP_P6_MAX_PAYLOAD_BYTES];
+    uint8_t encoded[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)));
+    uint8_t received[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)));
     size_t encoded_size = 0U;
     size_t received_size = 0U;
     uint32_t injected_unavailable =
@@ -1099,6 +1459,7 @@ static int p7_process_descriptor(
     uint32_t lane;
     uint32_t token = 0U;
     uint32_t attempts = 1U;
+    p7_mismatch_observation_t mismatch;
     rf_transport_fragment_result_t result;
     uint64_t fragment_start;
     uint64_t fragment_end;
@@ -1142,29 +1503,79 @@ static int p7_process_descriptor(
     header.chunk_length = (uint16_t)chunk_length;
     header.object_crc32 = request.expected_crc32;
     header.flags = (uint8_t)flags;
+    backend_context.request = &request;
+    backend_context.fragment_index = fragment_index;
+    if (chunk_length != 0U) {
+      p7_invalidate(
+          (const void *)(uintptr_t)(request.input_address + offset),
+          chunk_length);
+      memset((void *)input_reference, 0, P7_LOCAL_PAYLOAD_BYTES);
+      if (!p7_copy_bytes_verified(
+              input_reference,
+              (const volatile uint8_t *)(uintptr_t)(request.input_address +
+                                                     offset),
+              chunk_length, &mismatch)) {
+        error = P7_ERROR_INPUT_REFERENCE_COPY;
+        (void)p7_publish_first_error_diagnostic(
+            mailbox, &request, P7_FIRST_ERROR_STAGE_INPUT_REF,
+            (uint32_t)error, fragment_index, lane,
+            (const volatile uint8_t *)(uintptr_t)(request.input_address +
+                                                   offset),
+            chunk_length, input_reference, chunk_length, &mismatch);
+        goto failed;
+      }
+    }
     if (rf_app_encode_fragment(
             &header,
             (const uint8_t *)(uintptr_t)(request.input_address + offset),
-            chunk_length, encoded, sizeof(encoded), &encoded_size) !=
+            chunk_length, encoded, RF_APP_P6_MAX_PAYLOAD_BYTES,
+            &encoded_size) !=
         RF_APP_OK) {
       error = P7_ERROR_FRAGMENT_GEOMETRY;
       goto failed;
     }
-    if (!p7_copy_bytes_verified(
-            (volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
-            (const volatile uint8_t *)(uintptr_t)(request.input_address +
-                                                   offset),
-            chunk_length)) {
-      error = P7_ERROR_FRAGMENT_ENCODE_COPY;
-      goto failed;
+    if (chunk_length != 0U) {
+      if (!p7_bytes_equal_volatile(
+              input_reference,
+              (const volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
+              chunk_length, &mismatch)) {
+        error = P7_ERROR_ENCODE_RAW_MISMATCH;
+        (void)p7_publish_first_error_diagnostic(
+            mailbox, &request, P7_FIRST_ERROR_STAGE_ENCODE_RAW,
+            (uint32_t)error, fragment_index, lane, input_reference,
+            chunk_length,
+            (const volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
+            chunk_length, &mismatch);
+        goto failed;
+      }
+      /* Preserve the verified byte-copy hardening, but only after the raw
+       * encoder observation above has proved that it is not hiding the first
+       * corruption boundary. */
+      if (!p7_copy_bytes_verified(
+              (volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
+              input_reference, chunk_length, &mismatch)) {
+        error = P7_ERROR_FRAGMENT_ENCODE_COPY;
+        (void)p7_publish_first_error_diagnostic(
+            mailbox, &request, P7_FIRST_ERROR_STAGE_ENCODE_REPAIR,
+            (uint32_t)error, fragment_index, lane, input_reference,
+            chunk_length,
+            (const volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
+            chunk_length, &mismatch);
+        goto failed;
+      }
     }
     fragment_start = p7_get_ticks();
     memset(&result, 0, sizeof(result));
     descriptor->fragment_attempts += 1U;
     if (rf_transport_submit_fragment(&backend, encoded, encoded_size, lane,
-                                     &token) != RF_TRANSPORT_OK ||
-        rf_transport_poll_fragment_result(&backend, token, P7_P6_MAX_POLLS,
-                                          &result) != RF_TRANSPORT_OK) {
+                                     &token) != RF_TRANSPORT_OK) {
+      result.accepted = 0U;
+      result.error_code = backend_context.diagnostic_error != P7_ERROR_NONE
+                              ? backend_context.diagnostic_error
+                              : P7_ERROR_P6_SUBMIT;
+    } else if (rf_transport_poll_fragment_result(
+                   &backend, token, P7_P6_MAX_POLLS, &result) !=
+               RF_TRANSPORT_OK) {
       result.accepted = 0U;
       result.error_code = P7_ERROR_P6_SUBMIT;
     }
@@ -1195,6 +1606,9 @@ static int p7_process_descriptor(
       } else if (p7_active_stop_requested(service)) {
         error = p7_runtime_expired(service) ? P7_ERROR_RUNTIME_LIMIT
                                             : P7_ERROR_ABORTED;
+      } else if (result.error_code >= P7_ERROR_P6_TX_LOCAL_COPY &&
+                 result.error_code <= P7_ERROR_P6_RX_LOCAL_MISMATCH) {
+        error = (int)result.error_code;
       } else {
         error = P7_ERROR_P6_RESULT;
       }
@@ -1205,21 +1619,38 @@ static int p7_process_descriptor(
                       &result, fragment_start, fragment_end);
       goto failed;
     }
-    if (rf_transport_read_fragment(&backend, token, received,
-                                   sizeof(received), &received_size) !=
-            RF_TRANSPORT_OK ||
-        received_size != encoded_size ||
-        !p7_bytes_equal_volatile(
-            (const volatile uint8_t *)received,
-            (const volatile uint8_t *)encoded, (uint32_t)encoded_size)) {
-      error = received_size == encoded_size
-                  ? P7_ERROR_FRAGMENT_TRANSFER_COPY
-                  : P7_ERROR_FRAGMENT_MISMATCH;
-      result.accepted = 0U;
-      result.error_code = (uint32_t)error;
-      p7_record_trace(&request, fragment_index, fragment_count, lane,
-                      attempts, &result, fragment_start, fragment_end);
-      goto failed;
+    {
+      int read_status = rf_transport_read_fragment(
+          &backend, token, received, RF_APP_P6_MAX_PAYLOAD_BYTES,
+          &received_size);
+      p7_reset_mismatch(&mismatch);
+      int received_matches =
+          read_status == RF_TRANSPORT_OK && received_size == encoded_size &&
+          p7_bytes_equal_volatile(
+              (const volatile uint8_t *)encoded,
+              (const volatile uint8_t *)received, (uint32_t)encoded_size,
+              &mismatch);
+      if (!received_matches) {
+        error = backend_context.diagnostic_error != P7_ERROR_NONE
+                    ? (int)backend_context.diagnostic_error
+                    : (received_size == encoded_size
+                           ? P7_ERROR_FRAGMENT_TRANSFER_COPY
+                           : P7_ERROR_FRAGMENT_MISMATCH);
+        if (backend_context.diagnostic_error == P7_ERROR_NONE &&
+            read_status == RF_TRANSPORT_OK) {
+          (void)p7_publish_first_error_diagnostic(
+              mailbox, &request, P7_FIRST_ERROR_STAGE_RECEIVED,
+              (uint32_t)error, fragment_index, lane,
+              (const volatile uint8_t *)encoded, (uint32_t)encoded_size,
+              (const volatile uint8_t *)received, (uint32_t)received_size,
+              &mismatch);
+        }
+        result.accepted = 0U;
+        result.error_code = (uint32_t)error;
+        p7_record_trace(&request, fragment_index, fragment_count, lane,
+                        attempts, &result, fragment_start, fragment_end);
+        goto failed;
+      }
     }
     {
       rf_app_fragment_view_t view;
@@ -1239,12 +1670,58 @@ static int p7_process_descriptor(
                         fragment_end);
         goto failed;
       }
+      if (chunk_length != 0U &&
+          !p7_bytes_equal_volatile(
+              input_reference, (const volatile uint8_t *)view.chunk,
+              chunk_length, &mismatch)) {
+        error = P7_ERROR_RECEIVED_INPUT_MISMATCH;
+        (void)p7_publish_first_error_diagnostic(
+            mailbox, &request, P7_FIRST_ERROR_STAGE_RECEIVED,
+            (uint32_t)error, fragment_index, lane, input_reference,
+            chunk_length, (const volatile uint8_t *)view.chunk,
+            chunk_length, &mismatch);
+        result.accepted = 0U;
+        result.error_code = (uint32_t)error;
+        p7_record_trace(&request, fragment_index, fragment_count, lane,
+                        attempts, &result, fragment_start, fragment_end);
+        goto failed;
+      }
       if (chunk_length != 0U) {
         if (!p7_copy_bytes_verified(
                 (volatile uint8_t *)(uintptr_t)(request.output_address +
                                                 offset),
-                (const volatile uint8_t *)view.chunk, chunk_length)) {
+                (const volatile uint8_t *)view.chunk, chunk_length,
+                &mismatch)) {
           error = P7_ERROR_OUTPUT_COPY;
+          (void)p7_publish_first_error_diagnostic(
+              mailbox, &request,
+              P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK,
+              (uint32_t)error, fragment_index, lane, input_reference,
+              chunk_length,
+              (const volatile uint8_t *)(uintptr_t)(request.output_address +
+                                                     offset),
+              chunk_length, &mismatch);
+          result.accepted = 0U;
+          result.error_code = (uint32_t)error;
+          completed_bytes = offset + chunk_length;
+          p7_record_trace(&request, fragment_index, fragment_count, lane,
+                          attempts, &result, fragment_start, fragment_end);
+          goto failed;
+        }
+        if (!p7_bytes_equal_volatile(
+                input_reference,
+                (const volatile uint8_t *)(uintptr_t)(request.output_address +
+                                                       offset),
+                chunk_length, &mismatch)) {
+          error = P7_ERROR_DDR_OUTPUT_IMMEDIATE_READBACK;
+          (void)p7_publish_first_error_diagnostic(
+              mailbox, &request,
+              P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK,
+              (uint32_t)error, fragment_index, lane, input_reference,
+              chunk_length,
+              (const volatile uint8_t *)(uintptr_t)(request.output_address +
+                                                     offset),
+              chunk_length, &mismatch);
           result.accepted = 0U;
           result.error_code = (uint32_t)error;
           completed_bytes = offset + chunk_length;
@@ -1281,20 +1758,41 @@ static int p7_process_descriptor(
   }
   descriptor->output_crc32 = output_crc;
   p7_copy_digest_words(descriptor->output_sha256, output_sha);
+  end_to_end_status = p7_compare_object_checked(
+      service,
+      (const volatile uint8_t *)(uintptr_t)request.input_address,
+      (const volatile uint8_t *)(uintptr_t)request.output_address,
+      request.object_length, &end_to_end_mismatch);
+  if (end_to_end_status < 0) {
+    error = p7_runtime_expired(service) ? P7_ERROR_RUNTIME_LIMIT
+                                        : P7_ERROR_ABORTED;
+    goto failed;
+  }
+  if (end_to_end_status == 0) {
+    error = P7_ERROR_DDR_OUTPUT_END_TO_END;
+    (void)p7_publish_first_error_diagnostic(
+        mailbox, &request, P7_FIRST_ERROR_STAGE_DDR_OUTPUT_END_TO_END,
+        (uint32_t)error, P7_DIAGNOSTIC_NOT_APPLICABLE, 0U,
+        (const volatile uint8_t *)(uintptr_t)request.input_address,
+        request.object_length,
+        (const volatile uint8_t *)(uintptr_t)request.output_address,
+        request.object_length, &end_to_end_mismatch);
+    goto failed;
+  }
   if (descriptor->fragments_completed != fragment_count ||
       descriptor->bytes_completed != request.object_length ||
       output_crc != request.expected_crc32) {
     error = P7_ERROR_OBJECT_CRC;
     (void)p7_publish_integrity_failure_snapshot(
-        mailbox, &request, output_snapshot, output_snapshot_length, output_crc,
-        output_sha, (uint32_t)error);
+        mailbox, &request, output_snapshot, output_snapshot_length,
+        output_crc, output_sha, (uint32_t)error);
     goto failed;
   }
   if (!p7_digest_matches_words(output_sha, request.expected_sha256)) {
     error = P7_ERROR_OBJECT_SHA256;
     (void)p7_publish_integrity_failure_snapshot(
-        mailbox, &request, output_snapshot, output_snapshot_length, output_crc,
-        output_sha, (uint32_t)error);
+        mailbox, &request, output_snapshot, output_snapshot_length,
+        output_crc, output_sha, (uint32_t)error);
     goto failed;
   }
   object_end = p7_get_ticks();
@@ -1465,6 +1963,14 @@ int p7_app_service_run(const ir_mmio_t *io,
          P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
   p7_flush((const void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR,
            P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
+  memset((void *)(uintptr_t)P7_INPUT_REFERENCE_BASEADDR, 0,
+         P7_LOCAL_PAYLOAD_BYTES);
+  memset((void *)(uintptr_t)P7_P6_TX_READBACK_BASEADDR, 0,
+         P7_LOCAL_PAYLOAD_BYTES);
+  p7_flush((const void *)(uintptr_t)P7_INPUT_REFERENCE_BASEADDR,
+           P7_LOCAL_PAYLOAD_BYTES);
+  p7_flush((const void *)(uintptr_t)P7_P6_TX_READBACK_BASEADDR,
+           P7_LOCAL_PAYLOAD_BYTES);
   for (uint32_t index = 0U; index < P7_DESCRIPTOR_QUEUE_DEPTH; ++index) {
     memset((void *)&descriptors[index], 0, sizeof(descriptors[index]));
     p7_flush(&descriptors[index], sizeof(descriptors[index]));

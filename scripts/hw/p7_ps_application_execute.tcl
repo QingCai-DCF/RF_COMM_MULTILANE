@@ -140,6 +140,14 @@ proc p7_read32 {address} {
   return [expr {$value & 0xFFFFFFFF}]
 }
 
+proc p7_sha_words_hex {address} {
+  set digest ""
+  for {set index 0} {$index < 8} {incr index} {
+    append digest [format %08x [p7_read32 [expr {$address + 4 * $index}]]]
+  }
+  return $digest
+}
+
 set ::p7_last_runtime_elapsed_ticks 0
 set ::p7_runtime_elapsed_request 0
 set ::p7_terminal_unacknowledged_refresh 0
@@ -217,6 +225,47 @@ proc p7_le32 {data offset} {
       (([lindex $octets 1] & 0xFF) << 8) |
       (([lindex $octets 2] & 0xFF) << 16) |
       (([lindex $octets 3] & 0xFF) << 24)}]
+}
+
+proc p7_read_binary_exact {path expected_size} {
+  set handle [open $path rb]
+  fconfigure $handle -translation binary
+  set data [read $handle]
+  close $handle
+  if {[string length $data] != $expected_size} {
+    error "P7 binary evidence length mismatch: $path"
+  }
+  return $data
+}
+
+proc p7_sha_words_hex_data {data offset} {
+  set digest ""
+  for {set index 0} {$index < 8} {incr index} {
+    append digest [format %08x [p7_le32 $data [expr {$offset + 4 * $index}]]]
+  }
+  return $digest
+}
+
+proc p7_require_file_fill_byte {path expected} {
+  if {$expected < 0 || $expected > 255} {
+    error "P7 fill-byte validator expected value is invalid"
+  }
+  set handle [open $path rb]
+  fconfigure $handle -translation binary
+  set offset 0
+  while {1} {
+    set chunk [read $handle 4096]
+    if {[string length $chunk] == 0} { break }
+    binary scan $chunk c* octets
+    foreach octet $octets {
+      if {($octet & 0xFF) != $expected} {
+        close $handle
+        error "P7 output prefill byte mismatch at $path offset=$offset"
+      }
+      incr offset
+    }
+  }
+  close $handle
 }
 
 proc p7_say {handle line} {
@@ -747,6 +796,8 @@ set rc [catch {
         error "P7 queue overflow candidate artifact is missing or has wrong size: $candidate_name"
       }
     }
+    p7_require_file_fill_byte \
+        [file join $bundle_dir queue_overflow_candidate_output_zero.bin] 165
     set candidate_handle [open [file join $bundle_dir queue_overflow_candidate_descriptor_free.bin] rb]
     fconfigure $candidate_handle -translation binary
     set candidate_descriptor [read $candidate_handle]
@@ -777,6 +828,8 @@ set rc [catch {
         error "P7 functional 4KiB checkpoint artifact is missing/invalid: $checkpoint_name"
       }
     }
+    p7_require_file_fill_byte \
+        [file join $bundle_dir functional_checkpoint_4k_output_zero.bin] 165
     set checkpoint_handle [open [file join $bundle_dir functional_checkpoint_4k_descriptor_free.bin] rb]
     fconfigure $checkpoint_handle -translation binary
     set checkpoint_descriptor [read $checkpoint_handle]
@@ -960,6 +1013,7 @@ set rc [catch {
           [file size $trace_file] != $trace_bytes || [file size $free_file] != 256} {
         error "P7 bundle case file size does not match the fixed plan"
       }
+      p7_require_file_fill_byte $output_file 165
       if {$key eq "CASE"} {
         set case_input($slot) $input_address
         set case_output($slot) $output_address
@@ -993,16 +1047,16 @@ set rc [catch {
         error "P7 plan key is duplicate or malformed: $key"
       }
       if {$key ni {MODE MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS \
-          SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
+          SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
         error "unsupported P7 plan key: $key"
       }
       set plan_value($key) [lindex $fields 1]
     }
   }
-  foreach key {MODE MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
+  foreach key {MODE MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
     if {![info exists plan_value($key)]} { error "P7 plan field missing: $key" }
   }
-  foreach key {MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
+  foreach key {MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
     if {![string is integer -strict $plan_value($key)]} {
       error "P7 plan numeric field is invalid: $key"
     }
@@ -1010,6 +1064,7 @@ set rc [catch {
   if {$plan_value(MODE) ne $mode || $plan_value(MAX_RUNTIME_SECONDS) != $max_runtime_sec ||
       $plan_value(IDLE_MARGIN_SECONDS) != $idle_margin_sec ||
       $plan_value(COUNTS_PER_SECOND) != $counts_per_second ||
+      $plan_value(OUTPUT_PREFILL_BYTE) != 165 ||
       $plan_value(CASE_COUNT) != $parsed_cases || $plan_value(BOUNDARY_COUNT) != $parsed_boundaries ||
       $plan_value(CHECKPOINT_COUNT) != [expr {$mode eq "functional" ? 1 : 0}]} {
     error "P7 plan does not match authorized wrapper controls"
@@ -1697,34 +1752,151 @@ set rc [catch {
           p7_atomic_dump $failure_trace $boundary_trace($boundary_index) \
               [expr {$boundary_trace_capacity($boundary_index) * 64}]
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1"
-          if {$error_code == 13 || $error_code == 14} {
+          set first_error_codes {21 22 23 24 25 26 27 28 29 30 31}
+          if {$error_code == 13 || $error_code == 14 ||
+              [lsearch -exact $first_error_codes $error_code] >= 0} {
             set failure_snapshot_address 0x00021000
             set firmware_snapshot_address [p7_read32 0x0002009C]
             set firmware_snapshot_bytes [p7_read32 0x000200A0]
             set firmware_snapshot_status [p7_read32 0x000200A4]
             set firmware_snapshot_magic_readback [p7_read32 0x000200A8]
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=[format 0x%08x $firmware_snapshot_address]"
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=$firmware_snapshot_bytes"
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=$firmware_snapshot_status"
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=[format 0x%08x $firmware_snapshot_magic_readback]"
-            set failure_snapshot [file join $bundle_dir \
-                "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
-            set failure_snapshot_wipe [file join $bundle_dir \
-                "boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin"]
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_ADDRESS=[format 0x%08x $firmware_snapshot_address]"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES=$firmware_snapshot_bytes"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_STATUS=$firmware_snapshot_status"
+            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_MAGIC_READBACK=[format 0x%08x $firmware_snapshot_magic_readback]"
+            set is_first_error [expr {
+                [lsearch -exact $first_error_codes $error_code] >= 0}]
+            if {$is_first_error} {
+              set failure_snapshot [file join $bundle_dir \
+                  "boundary_${boundary_index}_first_error_diagnostic_failure.bin"]
+              set failure_snapshot_wipe [file join $bundle_dir \
+                  "boundary_${boundary_index}_first_error_diagnostic_wipe_verify.bin"]
+              set capture_marker \
+                  "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED=1"
+              set wipe_marker \
+                  "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=1"
+            } else {
+              set failure_snapshot [file join $bundle_dir \
+                  "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
+              set failure_snapshot_wipe [file join $bundle_dir \
+                  "boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin"]
+              set capture_marker \
+                  "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1"
+              set wipe_marker \
+                  "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
+            }
+            # The OCM address and length are immutable host-side constants.
+            # Capture and clear that fixed region before trusting or interpreting
+            # any firmware metadata, marker, identity, length, digest, or geometry.
+            p7_atomic_dump $failure_snapshot $failure_snapshot_address 320
+            p7_say $result_handle $capture_marker
+            p7_zero_words_and_verify $failure_snapshot_address 320
+            p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320
+            p7_say $result_handle $wipe_marker
+            set diagnostic_data [p7_read_binary_exact $failure_snapshot 320]
+            set diagnostic_marker [p7_le32 $diagnostic_data 0]
             if {$firmware_snapshot_status != 1 ||
                 $firmware_snapshot_address != $failure_snapshot_address ||
-                $firmware_snapshot_bytes != 320 ||
-                $firmware_snapshot_magic_readback != 0x53463750} {
-              error "P7 integrity failure snapshot firmware diagnostic rejected publication"
+                $firmware_snapshot_bytes != 320} {
+              error "P7 failure diagnostic firmware rejected publication"
             }
-            if {[p7_read32 $firmware_snapshot_address] != 0x53463750} {
-              error "P7 integrity failure snapshot publication marker missing"
+            if {$is_first_error} {
+              set diagnostic_version [p7_le32 $diagnostic_data 0x04]
+              set diagnostic_stage [p7_le32 $diagnostic_data 0x08]
+              set diagnostic_error [p7_le32 $diagnostic_data 0x0C]
+              set diagnostic_session [p7_le32 $diagnostic_data 0x10]
+              set diagnostic_object [p7_le32 $diagnostic_data 0x14]
+              set diagnostic_fragment [p7_le32 $diagnostic_data 0x18]
+              set diagnostic_lane [p7_le32 $diagnostic_data 0x1C]
+              set diagnostic_expected_length [p7_le32 $diagnostic_data 0x20]
+              set diagnostic_actual_length [p7_le32 $diagnostic_data 0x24]
+              set diagnostic_first_bad [p7_le32 $diagnostic_data 0x28]
+              set diagnostic_expected_byte [p7_le32 $diagnostic_data 0x2C]
+              set diagnostic_actual_byte [p7_le32 $diagnostic_data 0x30]
+              set diagnostic_expected_address [p7_le32 $diagnostic_data 0x34]
+              set diagnostic_actual_address [p7_le32 $diagnostic_data 0x38]
+              set diagnostic_expected_crc [p7_le32 $diagnostic_data 0x3C]
+              set diagnostic_actual_crc [p7_le32 $diagnostic_data 0x40]
+              set diagnostic_snapshot_offset [p7_le32 $diagnostic_data 0x44]
+              set diagnostic_snapshot_length [p7_le32 $diagnostic_data 0x48]
+              set diagnostic_expected_sha [p7_sha_words_hex_data $diagnostic_data 0x50]
+              set diagnostic_actual_sha [p7_sha_words_hex_data $diagnostic_data 0x70]
+              if {$firmware_snapshot_magic_readback != 0x44433750} {
+                error "P7 first-error diagnostic mailbox magic is invalid"
+              }
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION=$diagnostic_version"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE=$diagnostic_stage"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE=$diagnostic_error"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SESSION_EPOCH=[format 0x%08x $diagnostic_session]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_OBJECT_ID=$diagnostic_object"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FRAGMENT_INDEX=$diagnostic_fragment"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_LANE_MASK=[format 0x%x $diagnostic_lane]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_LENGTH=$diagnostic_expected_length"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_LENGTH=$diagnostic_actual_length"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FIRST_BAD_OFFSET=$diagnostic_first_bad"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_BYTE=$diagnostic_expected_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_BYTE=$diagnostic_actual_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS=[format 0x%08x $diagnostic_expected_address]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS=[format 0x%08x $diagnostic_actual_address]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS_LOW6=[expr {$diagnostic_expected_address & 0x3F}]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS_LOW6=[expr {$diagnostic_actual_address & 0x3F}]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_CRC32=[format 0x%08x $diagnostic_expected_crc]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_CRC32=[format 0x%08x $diagnostic_actual_crc]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_SHA256=$diagnostic_expected_sha"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_SHA256=$diagnostic_actual_sha"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET=$diagnostic_snapshot_offset"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH=$diagnostic_snapshot_length"
+              set diagnostic_allowed_error 0
+              switch -- $diagnostic_stage {
+                1 { set diagnostic_allowed_error [expr {$diagnostic_error == 24}] }
+                2 { set diagnostic_allowed_error [expr {$diagnostic_error == 25}] }
+                3 { set diagnostic_allowed_error [expr {$diagnostic_error == 21}] }
+                4 { set diagnostic_allowed_error [expr {$diagnostic_error == 26}] }
+                5 { set diagnostic_allowed_error [expr {$diagnostic_error == 27}] }
+                6 { set diagnostic_allowed_error [expr {$diagnostic_error == 28}] }
+                7 { set diagnostic_allowed_error [expr {$diagnostic_error == 22 || $diagnostic_error == 29}] }
+                8 { set diagnostic_allowed_error [expr {$diagnostic_error == 23 || $diagnostic_error == 30}] }
+                9 { set diagnostic_allowed_error [expr {$diagnostic_error == 31}] }
+                10 { set diagnostic_allowed_error [expr {$diagnostic_error == 13 || $diagnostic_error == 14}] }
+              }
+              set diagnostic_max_length [expr {max($diagnostic_expected_length, $diagnostic_actual_length)}]
+              set diagnostic_fragment_identity_valid [expr {
+                  (($diagnostic_stage == 9 || $diagnostic_stage == 10) &&
+                   $diagnostic_fragment == 0xFFFFFFFF && $diagnostic_lane == 0) ||
+                  ($diagnostic_stage != 9 && $diagnostic_stage != 10 &&
+                   $diagnostic_fragment <
+                   $boundary_trace_capacity($boundary_index) &&
+                   $diagnostic_lane >= 1 && $diagnostic_lane <= 3)}]
+              if {$diagnostic_marker != 0x44433750 ||
+                  $diagnostic_version != 1 || !$diagnostic_allowed_error ||
+                  $diagnostic_error != $error_code ||
+                  $diagnostic_session != $boundary_session($boundary_index) ||
+                  $diagnostic_object != $boundary_object($boundary_index) ||
+                  !$diagnostic_fragment_identity_valid ||
+                  $diagnostic_max_length < 1 || $diagnostic_max_length > 8388608 ||
+                  $diagnostic_first_bad >= $diagnostic_max_length ||
+                  $diagnostic_expected_byte > 256 || $diagnostic_actual_byte > 256 ||
+                  $diagnostic_expected_byte == $diagnostic_actual_byte ||
+                  (($diagnostic_first_bad >= $diagnostic_expected_length) !=
+                   ($diagnostic_expected_byte == 256)) ||
+                  (($diagnostic_first_bad >= $diagnostic_actual_length) !=
+                   ($diagnostic_actual_byte == 256)) ||
+                  $diagnostic_snapshot_length < 1 || $diagnostic_snapshot_length > 64 ||
+                  $diagnostic_snapshot_offset > $diagnostic_first_bad ||
+                  $diagnostic_snapshot_offset + $diagnostic_snapshot_length > $diagnostic_max_length ||
+                  $diagnostic_first_bad >= $diagnostic_snapshot_offset + $diagnostic_snapshot_length} {
+                error "P7 first-error diagnostic identity/geometry validation failed"
+              }
+            } else {
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=[format 0x%08x $firmware_snapshot_address]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=$firmware_snapshot_bytes"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=$firmware_snapshot_status"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=[format 0x%08x $firmware_snapshot_magic_readback]"
+              if {$firmware_snapshot_magic_readback != 0x53463750 ||
+                  $diagnostic_marker != 0x53463750} {
+                error "P7 integrity failure snapshot publication marker missing"
+              }
             }
-            p7_atomic_dump $failure_snapshot $firmware_snapshot_address 320
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1"
-            p7_zero_words_and_verify $firmware_snapshot_address 320
-            p7_atomic_dump $failure_snapshot_wipe $firmware_snapshot_address 320
-            p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
           }
           error "P7 functional boundary case failed: index=$boundary_index length=$boundary_length($boundary_index) status=$status error=$error_code"
         }

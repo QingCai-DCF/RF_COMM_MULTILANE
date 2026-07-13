@@ -33,6 +33,66 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def first_error_diagnostic_image(
+    expected: bytes,
+    actual: bytes,
+    *,
+    session_epoch: int,
+    object_id: int,
+    stage_id: int = 8,
+    error_code: int = 30,
+    fragment_index: int = 0,
+    lane_mask: int = 1,
+    expected_address: int = 0x00022000,
+    actual_address: int = 0x00100000,
+) -> bytes:
+    common = min(len(expected), len(actual))
+    first_bad = next(
+        (index for index in range(common) if expected[index] != actual[index]),
+        common if len(expected) != len(actual) else -1,
+    )
+    if first_bad < 0:
+        raise ValueError("fixture must contain a mismatch")
+    maximum = max(len(expected), len(actual))
+    snapshot_offset = max(0, first_bad - 32)
+    snapshot_length = min(64, maximum - snapshot_offset)
+    expected_snapshot = bytearray(64)
+    actual_snapshot = bytearray(64)
+    expected_slice = expected[snapshot_offset : snapshot_offset + snapshot_length]
+    actual_slice = actual[snapshot_offset : snapshot_offset + snapshot_length]
+    expected_snapshot[: len(expected_slice)] = expected_slice
+    actual_snapshot[: len(actual_slice)] = actual_slice
+    words = [0] * 48
+    words[0:20] = [
+        stage.P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+        1,
+        stage_id,
+        error_code,
+        session_epoch,
+        object_id,
+        fragment_index,
+        lane_mask,
+        len(expected),
+        len(actual),
+        first_bad,
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        actual[first_bad] if first_bad < len(actual) else 0x100,
+        expected_address,
+        actual_address,
+        zlib.crc32(expected) & 0xFFFFFFFF,
+        zlib.crc32(actual) & 0xFFFFFFFF,
+        snapshot_offset,
+        snapshot_length,
+        0,
+    ]
+    words[20:28] = struct.unpack(">8I", hashlib.sha256(expected).digest())
+    words[28:36] = struct.unpack(">8I", hashlib.sha256(actual).digest())
+    raw = struct.pack("<48I", *words) + bytes(expected_snapshot) + bytes(actual_snapshot)
+    if len(raw) != stage.P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
+        raise AssertionError("invalid P7CD fixture length")
+    return raw
+
+
 def tcl_interpreter():
     if tkinter is None:
         raise unittest.SkipTest("Python Tcl runtime is unavailable")
@@ -103,6 +163,11 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 self.assertEqual("PENDING_HW", manifest["HARDWARE_ACCEPTANCE"])
                 self.assertEqual(stage.P7_COUNTS_PER_SECOND, manifest["schedule"]["counts_per_second"])
                 self.assertIn(f"COUNTS_PER_SECOND {stage.P7_COUNTS_PER_SECOND}", bundle.plan_path.read_text(encoding="utf-8"))
+                self.assertEqual(stage.OUTPUT_PREFILL_BYTE, manifest["output_prefill_byte"])
+                self.assertIn(
+                    f"OUTPUT_PREFILL_BYTE {stage.OUTPUT_PREFILL_BYTE}",
+                    bundle.plan_path.read_text(encoding="utf-8"),
+                )
                 descriptors = (bundle.directory / "descriptors.bin").read_bytes()
                 self.assertEqual(8 * 256, len(descriptors))
                 for case in bundle.cases:
@@ -112,6 +177,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                     )[0]
                     self.assertEqual(0, ready)
                     self.assertEqual(0, free)
+                    self.assertEqual(
+                        bytes([stage.OUTPUT_PREFILL_BYTE]) * len(case.request.data),
+                        (bundle.directory / f"output_zero_{case.slot}.bin").read_bytes(),
+                    )
                     publication = manifest["cases"][case.slot]["ready_publication"]
                     self.assertTrue(publication["published_after_body"])
                     self.assertEqual(1, publication["value"])
@@ -130,6 +199,12 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                         bundle.functional_checkpoint.request.object_id,
                     ))
                     self.assertEqual(list(range(1, 49)), [case.request.object_id for case in bundle.boundary_cases])
+                    thirty_byte_cases = [
+                        case for case in bundle.boundary_cases if len(case.request.data) == 30
+                    ]
+                    self.assertEqual(4, len(thirty_byte_cases))
+                    self.assertTrue(all(case.pattern == "nonzero_counter" for case in thirty_byte_cases))
+                    self.assertTrue(all(case.request.data[0] != 0 for case in thirty_byte_cases))
                     for case in bundle.boundary_cases:
                         publication = manifest["boundary_cases"][case.slot]["ready_publication"]
                         self.assertTrue(publication["published_after_body"])
@@ -891,6 +966,123 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "bundle.*integrity"):
                 stage.verify_bundle_integrity(bundle)
 
+    def test_bundle_integrity_rejects_output_canary_tampering(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            input_path = root / "input.bin"
+            input_path.write_bytes(b"canary-integrity")
+            bundle = stage.build_stage_bundle(
+                bundle_dir=root / "bundle",
+                mode="functional",
+                input_path=input_path,
+                max_runtime_sec=900,
+                calibration_sec=0,
+                acceptance_sec=0,
+                sample_interval_sec=10,
+                idle_margin_sec=10,
+                stationary_object_bytes=64 * 1024,
+            )
+            stage.verify_bundle_integrity(bundle)
+            target = bundle.directory / "boundary_8_output_zero.bin"
+            raw = bytearray(target.read_bytes())
+            raw[0] = 0
+            target.write_bytes(raw)
+            with self.assertRaisesRegex(RuntimeError, "output prefill|integrity"):
+                stage.verify_bundle_integrity(bundle)
+
+    def test_first_error_capture_is_identity_geometry_marker_and_wipe_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            input_path = root / "input.bin"
+            input_path.write_bytes(b"first-error-diagnostic")
+            bundle = stage.build_stage_bundle(
+                bundle_dir=root / "bundle",
+                mode="functional",
+                input_path=input_path,
+                max_runtime_sec=900,
+                calibration_sec=0,
+                acceptance_sec=0,
+                sample_interval_sec=10,
+                idle_margin_sec=10,
+                stationary_object_bytes=64 * 1024,
+            )
+            case = bundle.boundary_cases[8]
+            expected = case.request.data
+            self.assertEqual(30, len(expected))
+            self.assertNotEqual(0, expected[0])
+            actual = bytes([0]) + expected[1:]
+            raw_diagnostic = first_error_diagnostic_image(
+                expected,
+                actual,
+                session_epoch=case.request.session_epoch,
+                object_id=case.request.object_id,
+                actual_address=case.request.output_address,
+            )
+            capture = bundle.directory / "boundary_8_first_error_diagnostic_failure.bin"
+            wipe = bundle.directory / "boundary_8_first_error_diagnostic_wipe_verify.bin"
+            capture.write_bytes(raw_diagnostic)
+            wipe.write_bytes(bytes(stage.P7_FIRST_ERROR_DIAGNOSTIC_BYTES))
+            decoded = stage.unpack_first_error_diagnostic(raw_diagnostic)
+            marker_values = {
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": 8,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE": 30,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_ADDRESS": "0x00021000",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES": 320,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_STATUS": 1,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_MAGIC_READBACK": "0x44433750",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION": decoded["version"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE": decoded["stage"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE": decoded["error_code"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SESSION_EPOCH": f"0x{int(decoded['session_epoch']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_OBJECT_ID": decoded["object_id"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FRAGMENT_INDEX": decoded["fragment_index"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_LANE_MASK": f"0x{int(decoded['lane_mask']):x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_LENGTH": decoded["expected_length"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_LENGTH": decoded["actual_length"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FIRST_BAD_OFFSET": decoded["first_bad_offset"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_BYTE": decoded["expected_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_BYTE": decoded["actual_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS": f"0x{int(decoded['expected_address']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS": f"0x{int(decoded['actual_address']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS_LOW6": decoded["expected_address_low6"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS_LOW6": decoded["actual_address_low6"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_CRC32": f"0x{int(decoded['expected_crc32']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_CRC32": f"0x{int(decoded['actual_crc32']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_SHA256": decoded["expected_sha256"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_SHA256": decoded["actual_sha256"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET": decoded["snapshot_offset"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH": decoded["snapshot_length"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED": 1,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED": 1,
+            }
+            raw_text = "\n".join(f"{key}={value}" for key, value in marker_values.items())
+            result = stage.collect_first_error_diagnostic(bundle, raw_text)
+            self.assertTrue(result["passed"], result["failures"])
+            self.assertEqual("DDR_OUTPUT_IMMEDIATE_READBACK", result["decoded"]["stage_name"])
+            tampered = raw_text.replace(
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=1",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=0",
+            )
+            rejected = stage.collect_first_error_diagnostic(bundle, tampered)
+            self.assertFalse(rejected["passed"])
+            self.assertTrue(any("wipe marker" in item for item in rejected["failures"]))
+            foreign_expected = bytes([expected[0] ^ 0x55]) + expected[1:]
+            capture.write_bytes(
+                first_error_diagnostic_image(
+                    foreign_expected,
+                    actual,
+                    session_epoch=case.request.session_epoch,
+                    object_id=case.request.object_id,
+                    actual_address=case.request.output_address,
+                )
+            )
+            unbound = stage.collect_first_error_diagnostic(bundle, raw_text)
+            self.assertFalse(unbound["passed"])
+            self.assertTrue(
+                any("input-reference bound" in item for item in unbound["failures"]),
+                unbound["failures"],
+            )
+
     def test_queue_overflow_candidate_identity_tamper_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -1219,21 +1411,47 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         descriptor_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1")
         output_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED=1")
         trace_capture = tcl.index("P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1")
-        snapshot_capture = tcl.index(
+        first_error_capture = tcl.index(
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED=1"
+        )
+        first_error_wipe = tcl.index(
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=1"
+        )
+        integrity_capture = tcl.index(
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1"
         )
-        snapshot_wipe = tcl.index(
+        integrity_wipe = tcl.index(
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
         )
+        diagnostic_dump = tcl.index(
+            "p7_atomic_dump $failure_snapshot $failure_snapshot_address 320"
+        )
+        diagnostic_wipe = tcl.index(
+            "p7_zero_words_and_verify $failure_snapshot_address 320"
+        )
+        diagnostic_wipe_dump = tcl.index(
+            "p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320"
+        )
+        metadata_validation = tcl.index(
+            "P7 failure diagnostic firmware rejected publication"
+        )
         terminal_error = tcl.index(
-            'error "P7 functional boundary case failed:', snapshot_wipe
+            'error "P7 functional boundary case failed:', integrity_wipe
         )
         self.assertLess(status, descriptor_capture)
         self.assertLess(descriptor_capture, output_capture)
         self.assertLess(output_capture, trace_capture)
-        self.assertLess(trace_capture, snapshot_capture)
-        self.assertLess(snapshot_capture, snapshot_wipe)
-        self.assertLess(snapshot_wipe, terminal_error)
+        self.assertLess(trace_capture, diagnostic_dump)
+        self.assertLess(diagnostic_dump, diagnostic_wipe)
+        self.assertLess(diagnostic_wipe, diagnostic_wipe_dump)
+        self.assertLess(diagnostic_wipe_dump, metadata_validation)
+        self.assertLess(
+            diagnostic_wipe_dump,
+            tcl.index("P7 first-error diagnostic identity/geometry validation failed"),
+        )
+        self.assertLess(diagnostic_wipe_dump, terminal_error)
+        self.assertLess(first_error_capture, first_error_wipe)
+        self.assertLess(integrity_capture, integrity_wipe)
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=$status", tcl)
         self.assertIn("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=$error_code", tcl)
         self.assertIn("boundary_${boundary_index}_descriptor_failure.bin", tcl)
@@ -1241,14 +1459,19 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("boundary_${boundary_index}_trace_failure.bin", tcl)
         self.assertIn("boundary_${boundary_index}_integrity_snapshot_failure.bin", tcl)
         self.assertIn("boundary_${boundary_index}_integrity_snapshot_wipe_verify.bin", tcl)
+        self.assertIn("boundary_${boundary_index}_first_error_diagnostic_failure.bin", tcl)
+        self.assertIn("boundary_${boundary_index}_first_error_diagnostic_wipe_verify.bin", tcl)
         self.assertIn("p7_atomic_dump $failure_descriptor $descriptor_address 256", tcl)
         self.assertIn("p7_atomic_dump $failure_output $boundary_output($boundary_index)", tcl)
         self.assertIn("p7_atomic_dump $failure_trace $boundary_trace($boundary_index)", tcl)
         self.assertIn("$boundary_trace_capacity($boundary_index) * 64", tcl)
-        self.assertIn("p7_atomic_dump $failure_snapshot $firmware_snapshot_address 320", tcl)
-        self.assertIn("p7_zero_words_and_verify $firmware_snapshot_address 320", tcl)
-        self.assertIn("p7_atomic_dump $failure_snapshot_wipe $firmware_snapshot_address 320", tcl)
-        self.assertIn("[p7_read32 $firmware_snapshot_address] != 0x53463750", tcl)
+        self.assertIn("p7_atomic_dump $failure_snapshot $failure_snapshot_address 320", tcl)
+        self.assertIn("p7_zero_words_and_verify $failure_snapshot_address 320", tcl)
+        self.assertIn("p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320", tcl)
+        self.assertIn("set diagnostic_data [p7_read_binary_exact $failure_snapshot 320]", tcl)
+        self.assertIn("set diagnostic_marker [p7_le32 $diagnostic_data 0]", tcl)
+        self.assertIn("$diagnostic_marker != 0x44433750", tcl)
+        self.assertIn("$diagnostic_marker != 0x53463750", tcl)
         self.assertIn("set firmware_snapshot_address [p7_read32 0x0002009C]", tcl)
         self.assertIn("set firmware_snapshot_bytes [p7_read32 0x000200A0]", tcl)
         self.assertIn("set firmware_snapshot_status [p7_read32 0x000200A4]", tcl)
@@ -1257,7 +1480,9 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("$firmware_snapshot_status != 1", tcl)
         self.assertIn("$firmware_snapshot_address != $failure_snapshot_address", tcl)
         self.assertIn("$firmware_snapshot_bytes != 320", tcl)
+        self.assertIn("$firmware_snapshot_magic_readback != 0x44433750", tcl)
         self.assertIn("$firmware_snapshot_magic_readback != 0x53463750", tcl)
+        self.assertIn("$diagnostic_expected_byte == $diagnostic_actual_byte", tcl)
         self.assertNotIn("dow -data $failure_descriptor $descriptor_address", tcl)
         self.assertNotIn("dow -data $failure_output $boundary_output($boundary_index)", tcl)
         self.assertNotIn("dow -data $failure_trace $boundary_trace($boundary_index)", tcl)
@@ -1420,13 +1645,21 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         retained = integrity.index("memcpy(retained_snapshot + offset, snapshot, retained);")
         self.assertLess(snapshot, retained)
         self.assertLess(retained, crc)
-        copy_start = service.index("static int p7_copy_bytes_verified(")
+        copy_start = service.index(
+            "static __attribute__((noinline)) int p7_copy_bytes_verified("
+        )
         copy_end = service.index("static int p7_integrity_checked(", copy_start)
         copy_helpers = service[copy_start:copy_end]
         self.assertIn("volatile uint8_t *destination", copy_helpers)
         self.assertIn("const volatile uint8_t *source", copy_helpers)
         self.assertIn("destination[index] = source[index];", copy_helpers)
-        self.assertIn("if (destination[index] != source[index]) return 0;", copy_helpers)
+        self.assertIn("uint32_t expected_byte = source[index];", copy_helpers)
+        self.assertIn("uint32_t actual_byte = destination[index];", copy_helpers)
+        self.assertIn("if (actual_byte != expected_byte)", copy_helpers)
+        self.assertIn("p7_mismatch_observation_t", copy_helpers)
+        self.assertIn("observation->offset = index;", copy_helpers)
+        self.assertIn("observation->expected_byte = expected_byte;", copy_helpers)
+        self.assertIn("absolute_index == observed_offset", service)
         self.assertIn("dsb();", copy_helpers)
         self.assertIn("p7_bytes_equal_volatile", copy_helpers)
         self.assertIn("encoded + RF_APP_HEADER_BYTES", process)
@@ -1442,6 +1675,34 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_ERROR_FRAGMENT_ENCODE_COPY = 21", header)
         self.assertIn("P7_ERROR_FRAGMENT_TRANSFER_COPY = 22", header)
         self.assertIn("P7_ERROR_OUTPUT_COPY = 23", header)
+        self.assertIn("P7_ERROR_ENCODE_RAW_MISMATCH = 25", header)
+        self.assertIn("P7_ERROR_P6_TX_MMIO_READBACK = 27", header)
+        self.assertIn("P7_ERROR_DDR_OUTPUT_END_TO_END = 31", header)
+        self.assertIn("P7_LOCAL_PAYLOAD_BYTES UINT32_C(256)", header)
+        self.assertIn(
+            "uint8_t tx_payload[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)))",
+            service,
+        )
+        self.assertIn(
+            "uint8_t rx_payload[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)))",
+            service,
+        )
+        self.assertIn("offsetof(p7_p6_backend_context_t, tx_payload)", service)
+        self.assertIn("offsetof(p7_p6_backend_context_t, rx_payload)", service)
+        self.assertIn(
+            "_Alignof(p7_p6_backend_context_t) >= P7_DDR_ALIGNMENT", service
+        )
+        raw_compare = process.index("P7_FIRST_ERROR_STAGE_ENCODE_RAW")
+        repair = process.index("P7_FIRST_ERROR_STAGE_ENCODE_REPAIR")
+        self.assertLess(raw_compare, repair)
+        self.assertIn("P7_INPUT_REFERENCE_BASEADDR", process)
+        self.assertIn("P7_FIRST_ERROR_STAGE_P6_TX_MMIO_READBACK", service)
+        self.assertIn("P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK", process)
+        self.assertIn("P7_FIRST_ERROR_STAGE_DDR_OUTPUT_END_TO_END", process)
+        self.assertLess(
+            process.index("end_to_end_status = p7_compare_object_checked("),
+            process.index("if (descriptor->fragments_completed != fragment_count"),
+        )
         publish = process.index("p7_publish_integrity_failure_snapshot(")
         failed = process.index("failed:")
         wipe = process.index("p7_wipe_partial(", failed)
@@ -1459,10 +1720,30 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_FAILURE_SNAPSHOT_BASEADDR UINT32_C(0x00021000)", header)
         self.assertIn("P7_FAILURE_SNAPSHOT_TOTAL_BYTES", header)
         self.assertIn("failure snapshot must not overlap the descriptor queue", service)
-        self.assertIn("failure snapshot must remain in reserved OCM", service)
+        self.assertIn("diagnostic scratch must remain in reserved OCM", service)
         self.assertIn("memset((void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR, 0,", service)
         self.assertIn("P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes,", service)
         self.assertIn("Xil_In32(address)", service)
+        first_error_start = service.index("static uint32_t p7_publish_first_error_diagnostic(")
+        first_error_end = service.index("static int p7_p6_open(", first_error_start)
+        first_error = service[first_error_start:first_error_end]
+        self.assertLess(
+            first_error.index("if (Xil_In32(address) != 0U)"),
+            first_error.index("memcpy((void *)published, &diagnostic"),
+        )
+        self.assertLess(
+            first_error.index("memcpy((void *)published, &diagnostic"),
+            first_error.index("Xil_Out32(address, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)"),
+        )
+        validation_reject = process[
+            process.index("error = p7_validate_descriptor") :
+            process.index("service->shutdown_attempted = 0U")
+        ]
+        self.assertNotIn("p7_wipe_partial", validation_reject)
+        wipe_start = service.index("static void p7_wipe_partial(")
+        wipe_end = service.index("static int p7_validate_descriptor", wipe_start)
+        wipe_block = service[wipe_start:wipe_end]
+        self.assertIn("memset(output, 0, request->object_length)", wipe_block)
         diagnostic = service.index("p7_publish_failure_snapshot_diagnostic(")
         terminal = process.index("p7_publish_descriptor(", process.index("failed:"))
         self.assertLess(diagnostic, process_start + terminal)
@@ -1470,6 +1751,13 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         submit_end = service.index("static int p7_p6_poll(", submit_start)
         submit = service[submit_start:submit_end]
         self.assertIn("p7_p6_snapshot_and_shutdown(context)", submit)
+        poll_start = service.index("static int p7_p6_poll(")
+        poll_end = service.index("static int p7_p6_read(", poll_start)
+        poll = service[poll_start:poll_end]
+        self.assertLess(
+            poll.index("result->error_code = context->diagnostic_error"),
+            poll.index("result->error_code = context->p6.error_code"),
+        )
         snapshot_start = service.index("static void p7_p6_snapshot_and_shutdown(")
         snapshot = service[snapshot_start:submit_start]
         self.assertLess(

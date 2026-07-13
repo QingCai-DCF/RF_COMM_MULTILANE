@@ -9,7 +9,6 @@ the same tests a second time.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 import re
@@ -19,24 +18,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
-ROOT = Path(__file__).resolve().parents[1]
-BUILD_ROOT = (ROOT / "build").resolve(strict=False)
-SCHEMA = "rf-comm-p7-complete-regression-suites-v1"
-SUITES = (
-    (
-        "top_level_discovery",
-        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test*.py", "-v"],
-    ),
-    (
-        "tests_p7_discovery",
-        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests/p7", "-p", "test_*.py", "-v"],
-    ),
+from p7_regression_evidence import (
+    BUILD_ROOT,
+    REGRESSION_SCHEMA as SCHEMA,
+    required_suite_commands,
+    sha256_file,
 )
 
 
-def sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+ROOT = Path(__file__).resolve().parents[1]
+SUITES = tuple(required_suite_commands().items())
 
 
 def git(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -108,13 +99,29 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"refusing existing regression log directory: {output_dir}")
     output_dir.mkdir(parents=True)
     suites = [run_suite(name, command, output_dir) for name, command in SUITES]
-    passed = all(item["status"] == "PASS" for item in suites)
+    status_after = git(["status", "--short"])
+    head_after = git(["rev-parse", "HEAD"])
+    source_commit = head.stdout.strip().lower()
+    source_commit_after = head_after.stdout.strip().lower()
+    dirty_after = bool(status_after.stdout.strip()) or status_after.returncode != 0
+    commit_unchanged = (
+        head_after.returncode == 0 and source_commit_after == source_commit
+    )
+    passed = (
+        all(item["status"] == "PASS" for item in suites)
+        and not dirty_after
+        and commit_unchanged
+    )
     result = {
         "schema": SCHEMA,
         "status": "PASS" if passed else "FAIL",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="microseconds"),
-        "source_commit": head.stdout.strip().lower(),
+        "source_commit": source_commit,
+        "source_commit_after_suites": source_commit_after,
+        "source_commit_unchanged": commit_unchanged,
         "dirty_worktree_before_suites": False,
+        "dirty_worktree_after_suites": dirty_after,
+        "dirty_files_after_suites": status_after.stdout.splitlines(),
         "NO_HARDWARE_ACTIONS_EXECUTED": True,
         "HARDWARE_ACCEPTANCE": "PENDING_HW",
         "FULL_SUITE_INVOCATION_COUNT": 2,

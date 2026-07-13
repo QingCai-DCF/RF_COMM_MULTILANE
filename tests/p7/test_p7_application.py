@@ -39,6 +39,8 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     P7_DESCRIPTOR_READY,
     P7_DESCRIPTOR_STATUS_OFFSET,
     P7_KNOWN_GOOD_TXD_HIGH_CYCLES,
+    P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
+    P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
     P7_QUEUE_DEPTH,
     P7_SERVICE_BOOTING,
     descriptor_ready_publication,
@@ -49,6 +51,7 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     pack_ready_publication_word,
     sha256_words,
     unpack_descriptor,
+    unpack_first_error_diagnostic,
     unpack_mailbox,
     unpack_stable_terminal_descriptor,
     validate_completed,
@@ -56,6 +59,7 @@ from p7_ps_mailbox_backend import (  # noqa: E402
 
 
 _DESCRIPTOR_WORDS = struct.Struct("<64I")
+_FIRST_ERROR_WORDS = struct.Struct("<48I")
 
 
 def pattern(name: str, length: int) -> bytes:
@@ -120,6 +124,62 @@ def completed_descriptor_image(
         words[55:58] = [fragment_count, fragment_count, fragment_count]
     words[63] = completion_sequence
     return _DESCRIPTOR_WORDS.pack(*words)
+
+
+def first_error_diagnostic_image(
+    expected: bytes,
+    actual: bytes,
+    *,
+    stage: int = 8,
+    error_code: int = 30,
+    fragment_index: int = 0,
+    lane_mask: int = 1,
+) -> bytes:
+    common = min(len(expected), len(actual))
+    first_bad = next(
+        (index for index in range(common) if expected[index] != actual[index]),
+        common if len(expected) != len(actual) else -1,
+    )
+    if first_bad < 0:
+        raise ValueError("fixture must contain a mismatch")
+    max_length = max(len(expected), len(actual))
+    snapshot_offset = max(0, first_bad - 32)
+    snapshot_length = min(64, max_length - snapshot_offset)
+    expected_snapshot = bytearray(64)
+    actual_snapshot = bytearray(64)
+    expected_slice = expected[snapshot_offset : snapshot_offset + snapshot_length]
+    actual_slice = actual[snapshot_offset : snapshot_offset + snapshot_length]
+    expected_snapshot[: len(expected_slice)] = expected_slice
+    actual_snapshot[: len(actual_slice)] = actual_slice
+    words = [0] * 48
+    words[0:20] = [
+        P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+        1,
+        stage,
+        error_code,
+        0x11223344,
+        9,
+        fragment_index,
+        lane_mask,
+        len(expected),
+        len(actual),
+        first_bad,
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        actual[first_bad] if first_bad < len(actual) else 0x100,
+        0x00022000,
+        0x00100000,
+        crc32(expected),
+        crc32(actual),
+        snapshot_offset,
+        snapshot_length,
+        0,
+    ]
+    words[20:28] = sha256_words(expected)
+    words[28:36] = sha256_words(actual)
+    raw = _FIRST_ERROR_WORDS.pack(*words) + bytes(expected_snapshot) + bytes(actual_snapshot)
+    if len(raw) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
+        raise AssertionError("invalid first-error fixture size")
+    return raw
 
 
 class ProtocolTests(unittest.TestCase):
@@ -317,6 +377,61 @@ class TransportTests(unittest.TestCase):
 
 
 class PsMailboxCodecTests(unittest.TestCase):
+    def test_first_error_diagnostic_decodes_nonzero_canary_boundary(self) -> None:
+        expected = bytes(range(1, 31))
+        actual = bytes([0]) + expected[1:]
+        decoded = unpack_first_error_diagnostic(
+            first_error_diagnostic_image(expected, actual)
+        )
+        self.assertEqual("DDR_OUTPUT_IMMEDIATE_READBACK", decoded["stage_name"])
+        self.assertEqual(30, decoded["error_code"])
+        self.assertEqual(0, decoded["first_bad_offset"])
+        self.assertEqual(1, decoded["expected_byte"])
+        self.assertEqual(0, decoded["actual_byte"])
+        self.assertEqual(hashlib.sha256(expected).hexdigest(), decoded["expected_sha256"])
+        self.assertEqual(hashlib.sha256(actual).hexdigest(), decoded["actual_sha256"])
+        self.assertEqual(0, decoded["expected_address_low6"])
+        self.assertEqual(0, decoded["actual_address_low6"])
+
+    def test_first_error_diagnostic_tampering_fails_closed(self) -> None:
+        expected = bytes(range(1, 31))
+        actual = bytes([0]) + expected[1:]
+        valid = first_error_diagnostic_image(expected, actual)
+        mutations = {
+            "magic": lambda raw: struct.pack_into("<I", raw, 0, 0),
+            "stage_error": lambda raw: struct.pack_into("<I", raw, 12, 26),
+            "equal_first_bytes": lambda raw: struct.pack_into("<I", raw, 48, 1),
+            "reserved": lambda raw: struct.pack_into("<I", raw, 144, 1),
+            "snapshot": lambda raw: raw.__setitem__(256, 1),
+            "padding": lambda raw: raw.__setitem__(255, 1),
+        }
+        for name, mutate in mutations.items():
+            with self.subTest(name=name):
+                raw = bytearray(valid)
+                mutate(raw)
+                with self.assertRaises(ValueError):
+                    unpack_first_error_diagnostic(bytes(raw))
+
+    def test_object_level_first_error_requires_explicit_not_applicable_identity(self) -> None:
+        expected = bytes(range(1, 31))
+        actual = bytes([0]) + expected[1:]
+        valid = first_error_diagnostic_image(
+            expected,
+            actual,
+            stage=9,
+            error_code=31,
+            fragment_index=0xFFFFFFFF,
+            lane_mask=0,
+        )
+        self.assertEqual(
+            "DDR_OUTPUT_END_TO_END",
+            unpack_first_error_diagnostic(valid)["stage_name"],
+        )
+        invalid = bytearray(valid)
+        struct.pack_into("<I", invalid, 24, 0)
+        with self.assertRaisesRegex(ValueError, "object-level"):
+            unpack_first_error_diagnostic(bytes(invalid))
+
     def test_descriptor_roundtrip(self) -> None:
         data = pattern("deterministic_random", 4096)
         request = DescriptorRequest(

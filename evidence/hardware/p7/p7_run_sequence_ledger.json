@@ -1,18 +1,18 @@
 {
-  "generated_at_utc": "2026-07-12T16:35:53+00:00",
+  "generated_at_utc": "2026-07-13T02:33:00+00:00",
   "hardware_actions_executed_by_generator": false,
   "offline_checkpoint": {
-    "generated_at_utc": "2026-07-12T16:34:07+00:00",
+    "generated_at_utc": "2026-07-13T02:30:18+00:00",
     "result": "PASS",
-    "source_commit": "7ce64d36a4a9c98c14c639d21cae3740119c5f68",
+    "source_commit": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
     "summary_file": {
       "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
-      "sha256": "096f7833148e39a5b1e2880928c7d8ad935e17de5089e1841cee52b0ce2f536d",
-      "size_bytes": 12431
+      "sha256": "73e2c9db0df532885833a8e2fd2899c95fe180360e105d77e2ba193cfe455748",
+      "size_bytes": 12805
     }
   },
-  "precheckpoint_failed_stage_diagnostic_count": 24,
-  "precheckpoint_historical_failure_count": 26,
+  "precheckpoint_failed_stage_diagnostic_count": 25,
+  "precheckpoint_historical_failure_count": 27,
   "precheckpoint_read_only_diagnostic_count": 2,
   "risk_order": [
     "offline_checkpoint",
@@ -28,7 +28,7 @@
     "queue_backpressure",
     "stationary_qualified_last"
   ],
-  "run_count": 26,
+  "run_count": 27,
   "runs": [
     {
       "argv": [
@@ -13192,6 +13192,473 @@
         "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r29_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_stage_summary.json",
         "sha256": "74437a5f25a9e07097296e79a3b17ebb151b3bb26d0318d235f3379f6ad580c4",
         "size_bytes": 74465
+      },
+      "time_source": "authorized_wrapper_event_utc_boundaries_plus_candidate_child_host_monotonic_elapsed"
+    },
+    {
+      "argv": [
+        "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\scripts\\hw\\p7_ps_application_execute.tcl",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260712_stationary_app_r30_diag_suffix55_062_p7_ps_functional.txt",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_hw_preflight_result.txt",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_187ad735062bf85b04424b0f80b4ae5b6de1aba72fd105b44cd467b509f48f7e.elf",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\bundle",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\bundle\\execution_plan.txt",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_raw_result.log.partial",
+        "localhost:3121",
+        "210512180081",
+        "xc7z010clg400-1",
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "900",
+        "functional",
+        "60",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+        "333333343"
+      ],
+      "argv_available": true,
+      "attempted_coverage_keys": [],
+      "candidate_child_ended_at_utc": "2026-07-12T18:55:27.548670+00:00",
+      "candidate_child_started_at_utc": "2026-07-12T18:52:04.424905+00:00",
+      "checkpoint_relation": "PRECHECKPOINT_OLD_COMMIT_FAILED_STAGE_DIAGNOSTIC",
+      "coverage_keys": [],
+      "diagnostic_only": true,
+      "elapsed_seconds": 203.122885,
+      "eligible_for_checkpoint_coverage": false,
+      "ended_at_utc": "2026-07-12T18:56:16.145397+00:00",
+      "event_log": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_events.json",
+        "sha256": "8ebe03cc9ccb484df8da2f258be561a6f2e9b480e2f552735501d045d7b8dd5b",
+        "size_bytes": 1430
+      },
+      "hardware_execution_lock": {
+        "acquired": true,
+        "owner": {
+          "acquired_at_utc": "2026-07-12T18:50:44.533336+00:00",
+          "evidence_dir": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional",
+          "mode": "functional",
+          "pid": 42944,
+          "schema": "rf-comm-p7-hardware-execution-lock-v1",
+          "stage_name": "p7_ps_functional",
+          "wrapper": "run_p7_ps_application_stage_safe.py"
+        },
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\P7_HARDWARE_EXECUTION.lock",
+        "stale_lock_auto_recovery": false,
+        "token_sha256": "d114caa36ea1f1a2ac6c71a071eb5a1c533589021b67aa8934f0844cc2a44687"
+      },
+      "historical_epoch": {
+        "authorization_missing_no_action_recoveries": [],
+        "candidate_programmed": true,
+        "coverage_keys": [],
+        "effective_shutdown_recovery": {
+          "directory": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z",
+          "ended_at_utc": "2026-07-13T09:54:30.8227175+08:00",
+          "files": [
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\hardware_authorization.json",
+              "sha256": "5609ffd33329d2975c4b5452e44d7d8ec60c6d70d4f69a46b27713b5fdc91211",
+              "size_bytes": 1364
+            },
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\hash_manifest.csv",
+              "sha256": "a6e080be2e870ce952367aba8338f2da5d810f35c26744ebe6bb58cfdbaa4bb9",
+              "size_bytes": 994
+            },
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\hash_manifest.json",
+              "sha256": "fea82638627a878b2cf16a25feb06680d675855ccb7f3b21793ae13827bf006f",
+              "size_bytes": 2291
+            },
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\program_tfdu_shutdown_safe.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            },
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\program_tfdu_shutdown_safe.stdout.log",
+              "sha256": "c62cb232bafb61a4d13f65a046d57910b9c0e6deec1e8f8f50a944b284bd1244",
+              "size_bytes": 5134
+            },
+            {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T015350Z\\program_tfdu_shutdown_safe.summary.txt",
+              "sha256": "524f377392d57c61567d2eb037619252fe910c108c926619b353975f34b19edb",
+              "size_bytes": 2122
+            }
+          ],
+          "observed_raw_exit": 125,
+          "shutdown_exit": 0,
+          "started_at_utc": "2026-07-13T09:53:50.7385893+08:00",
+          "tfdu_shutdown_programmed_seen": true
+        },
+        "ended_at_utc": "2026-07-13T09:54:30.8227175+08:00",
+        "epoch_root": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55",
+        "failed_stage_files": {
+          "p7_hw_preflight_result.txt": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_hw_preflight_result.txt",
+            "sha256": "b9c7b51d551d7f0a98f48b8493aed82542ccd9993966f478228e655b31ebbe84",
+            "size_bytes": 512
+          },
+          "p7_ps_application_events.json": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_events.json",
+            "sha256": "8ebe03cc9ccb484df8da2f258be561a6f2e9b480e2f552735501d045d7b8dd5b",
+            "size_bytes": 1430
+          },
+          "p7_ps_application_raw_result.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_raw_result.log",
+            "sha256": "425475ab6971d77bc6141abe34c5e1086d6ecc65c1d932e6b16e17b45b10b112",
+            "size_bytes": 1876
+          },
+          "p7_ps_application_stage_summary.json": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_stage_summary.json",
+            "sha256": "f33356a7e93da1b2945c215c9a57c8b1598d934c49a61f0a7a798bc8e93e9df1",
+            "size_bytes": 70162
+          },
+          "p7_raw_evidence_sha256_manifest.json": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_raw_evidence_sha256_manifest.json",
+            "sha256": "1f58c0931674b5cf6f3da67f1e40acc0cfc751a9b213801fdc99b985d40bd4f9",
+            "size_bytes": 56384
+          },
+          "preflight.stderr.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\preflight.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size_bytes": 0
+          },
+          "preflight.stdout.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\preflight.stdout.log",
+            "sha256": "8bf9b637b6c84d922cf193099c86075611b1e8bd003b652129ca2d9e3f5191eb",
+            "size_bytes": 9843
+          },
+          "ps_application_stage.stderr.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\ps_application_stage.stderr.log",
+            "sha256": "caa8aa6fa938c2134cf41a5ab4fb5c19b72c3992a8b2165b06757e8ade2c9348",
+            "size_bytes": 117
+          },
+          "ps_application_stage.stdout.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\ps_application_stage.stdout.log",
+            "sha256": "425475ab6971d77bc6141abe34c5e1086d6ecc65c1d932e6b16e17b45b10b112",
+            "size_bytes": 1876
+          },
+          "shutdown_after.stderr.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_after.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size_bytes": 0
+          },
+          "shutdown_after.stdout.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_after.stdout.log",
+            "sha256": "0e0a6544c984678ebd7a5d80549d3bf1c30c5eb0aaff5b783699d80588421574",
+            "size_bytes": 37968
+          },
+          "shutdown_after_result.txt": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_after_result.txt",
+            "sha256": "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+            "size_bytes": 548
+          },
+          "shutdown_before.stderr.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_before.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size_bytes": 0
+          },
+          "shutdown_before.stdout.log": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_before.stdout.log",
+            "sha256": "3f1ea3af9ea93e1a63c76c3a7fd9bc4f7a6b606df2a4b116ad4aa47c031881c7",
+            "size_bytes": 37968
+          },
+          "shutdown_before_result.txt": {
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_before_result.txt",
+            "sha256": "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+            "size_bytes": 548
+          }
+        },
+        "failure_class": "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED",
+        "frozen_inputs_manifest": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\manifest.json",
+          "sha256": "28940bc3ff4de3c264ffa71cee11d3946572626c354b42923f917b5a77fb25b7",
+          "size_bytes": 6626
+        },
+        "historical_source_control_flow": {
+          "historical_target_rejection_proven": true,
+          "numeric_target_id_dedup_present": true,
+          "sources": {
+            "historical_process_support_python": {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\run_p7_jtag_axi_stage_safe_7ce64d36_02a003d11ba4c3b27ca363d6290d95229b684cbb.py",
+              "sha256": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
+              "size_bytes": 145926
+            },
+            "historical_ps_execute_tcl": {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\p7_ps_application_execute_7ce64d36_c49d099ff15ba1bafebd2700e08bcb12b8f8f806.tcl",
+              "sha256": "2fa85cbf1b04e32dc1041a2a7e2eb3c0fa1ce776a69a35759e86deaed14ac42c",
+              "size_bytes": 106275
+            },
+            "historical_ps_mailbox_backend": {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\p7_ps_mailbox_backend_7ce64d36_4183b2c69440adb79263d505047d7f29d6703bae.py",
+              "sha256": "a7df62be68acef5e55b075f615c7136bb79b3de7fad0e171713aedab92ab375b",
+              "size_bytes": 23012
+            },
+            "historical_stage_tcl": {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\p7_jtag_axi_transactions_7ce64d36_e0f529603be23876f4ba9b8fd000e5eeb092aa79.tcl",
+              "sha256": "4d4674d25da3ca6384309d7acbc3212adb89f88346c7749d7218984ce3561ec4",
+              "size_bytes": 34680
+            },
+            "historical_stage_wrapper_python": {
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\historical_preflight_inputs\\run_p7_ps_application_stage_safe_7ce64d36_e68eb6f11ef70c96b6e31042128645cbae49de10.py",
+              "sha256": "a19a9bf6af98caa45c370e27b8f05af8970179055b5bf64fd910b789b33247fe",
+              "size_bytes": 213668
+            }
+          },
+          "target_uniqueness_basis": "FUNCTIONAL_STRIPE_BOUNDARY_30_OCM_FAILURE_SNAPSHOT_CAPTURED_AND_WIPED"
+        },
+        "inner_preflight_process_tree_reaped": true,
+        "mutation_attempted_by_candidate": true,
+        "mutation_attempted_by_wrapper": true,
+        "outer_process_containment": {
+          "containment_assigned": true,
+          "containment_closed": true,
+          "containment_kind": "WINDOWS_JOB_OBJECT_KILL_ON_CLOSE",
+          "descendant_count_after": 0,
+          "process_tree_reaped": true
+        },
+        "outer_sequence_ledger": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\sequence_execution_ledger.json",
+          "sha256": "e63d773e01c5678fd37277ca7effc5bf4d69273df50b378e452b75b7d729eb11",
+          "size_bytes": 198350
+        },
+        "ps_reset_target_uniqueness_rejection": {
+          "candidate_process_marker_passed": false,
+          "candidate_process_returncode": 0,
+          "candidate_programmed": true,
+          "raw_error": "P7 functional boundary case failed at index=10 length=30 status=4 error=13; descriptor expected/input SHA256=f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f but output CRC32=0x1fda9db9 and SHA256=85cc3c9bdc8b6699e216e48c446c9f4f7d861a8bcfef504fcaeb02b3e99ad750; fragment trace records lane0 mask 0x1, attempt=1, result=1 and zero error fields; the OCM snapshot at 0x00021000 captured every 32-bit payload word with its low 16 bits zeroed, matched the descriptor digest, and was independently captured then wiped to 320 zero bytes; post-terminal DDR output is all zero after fail-closed wipe",
+          "shutdown_after_passed": true,
+          "shutdown_before_passed": true,
+          "started_ps_elf": true
+        },
+        "read_only_target_identity": {
+          "P7_HW_PREFLIGHT_AUTHORIZED": "1",
+          "P7_HW_PREFLIGHT_BOARD_ID": "210512180081",
+          "P7_HW_PREFLIGHT_CANONICAL_PART": "xc7z010clg400-1",
+          "P7_HW_PREFLIGHT_DEVICE": "xc7z010_1",
+          "P7_HW_PREFLIGHT_IDCODE": "00010011011100100010000010010011",
+          "P7_HW_PREFLIGHT_LIVE_DEVICE": "xc7z010_1",
+          "P7_HW_PREFLIGHT_LIVE_IDCODE": "00010011011100100010000010010011",
+          "P7_HW_PREFLIGHT_LIVE_PART": "xc7z010",
+          "P7_HW_PREFLIGHT_PART": "xc7z010clg400-1",
+          "P7_HW_PREFLIGHT_READ_ONLY": "1",
+          "P7_HW_PREFLIGHT_RESULT": "PASS",
+          "P7_HW_PREFLIGHT_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+        },
+        "result": "FAIL",
+        "schema": "rf-comm-p7-historical-failed-stage-epoch-v1",
+        "source_commit": "7ce64d36a4a9c98c14c639d21cae3740119c5f68",
+        "started_at_utc": "2026-07-12T17:19:30.328860+00:00",
+        "started_ps_elf": true,
+        "verified_historical_pass_prefix": [
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 1,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_safe_idle",
+            "stage_index": 0,
+            "summary_file": {
+              "bytes": 73305,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\001_p7_safe_idle\\p7_jtag_axi_stage_summary.json",
+              "sha256": "cf8cb4e801d977bee5312cb14ef78371cc8bf56d85be4cea21e00a2787c9e95b"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 2,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_p6_frame_regression_m1",
+            "stage_index": 1,
+            "summary_file": {
+              "bytes": 357109,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\002_p7_p6_frame_regression_m1\\p7_jtag_axi_stage_summary.json",
+              "sha256": "7302797f1b7a16a638594cd2e0bc7f5df1f74368dd4925271cbc379d6ffd9ad8"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 3,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_p6_frame_regression_m2",
+            "stage_index": 2,
+            "summary_file": {
+              "bytes": 357150,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\003_p7_p6_frame_regression_m2\\p7_jtag_axi_stage_summary.json",
+              "sha256": "60ec6e4adb30840eb9246f8953ad9ab15565124b615048c40f044cb507535364"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 4,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_p6_frame_regression_m3",
+            "stage_index": 3,
+            "summary_file": {
+              "bytes": 357185,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\004_p7_p6_frame_regression_m3\\p7_jtag_axi_stage_summary.json",
+              "sha256": "87c82b4780d303436c27624f9ad1933156314569d425d5662e3d8587d05c8554"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 55,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_64k_rr_prbs15",
+            "stage_index": 4,
+            "summary_file": {
+              "bytes": 4500971,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\055_p7_large_jtag_64k_rr_prbs15\\p7_jtag_axi_stage_summary.json",
+              "sha256": "14e6e3f184ae17c7637c13e55ceb6d9e4ca0ea872a97aea83515d8d07e99a9af"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 56,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_64k_rr_random",
+            "stage_index": 5,
+            "summary_file": {
+              "bytes": 4501071,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\056_p7_large_jtag_64k_rr_random\\p7_jtag_axi_stage_summary.json",
+              "sha256": "d4ed1c5f712c415acf1d2f8614b74a1a1b02c446cc5895f72a54ef5357820082"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 57,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_64k_rr_all_bytes",
+            "stage_index": 6,
+            "summary_file": {
+              "bytes": 4500195,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\057_p7_large_jtag_64k_rr_all_bytes\\p7_jtag_axi_stage_summary.json",
+              "sha256": "1377e142ea0a60a3c48d5e3d18f6c554b8ddb137d17c44dbfe9d026b115146f6"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 58,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_1m_l0_random",
+            "stage_index": 7,
+            "summary_file": {
+              "bytes": 70856958,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\058_p7_large_jtag_1m_l0_random\\p7_jtag_axi_stage_summary.json",
+              "sha256": "a81e1c709194aad771e7e08478356e157d3f9b0b3797131dd163120d1d627330"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 59,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_1m_l1_random",
+            "stage_index": 8,
+            "summary_file": {
+              "bytes": 70857015,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\059_p7_large_jtag_1m_l1_random\\p7_jtag_axi_stage_summary.json",
+              "sha256": "3fe866e8dc8cbc522469ac396ed3245a49fc36bf624c1155b83c884a6301492a"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 60,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_1m_rr_random",
+            "stage_index": 9,
+            "summary_file": {
+              "bytes": 70857128,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\060_p7_large_jtag_1m_rr_random\\p7_jtag_axi_stage_summary.json",
+              "sha256": "0ba2c1d03a23c176153df16f69d61ac704bc05b5582250680cbf23b6f79e4188"
+            }
+          },
+          {
+            "coverage_keys": [],
+            "full_stage_ordinal": 61,
+            "result": "PASS_ON_SUPERSEDED_SOURCE_NO_ACTIVE_CHECKPOINT_COVERAGE",
+            "stage_id": "p7_large_jtag_1m_rep3_random",
+            "stage_index": 10,
+            "summary_file": {
+              "bytes": 70857130,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\061_p7_large_jtag_1m_rep3_random\\p7_jtag_axi_stage_summary.json",
+              "sha256": "58c6f61e08e6d151b5cced798506713d3839394478d1ebdbc9979b842d773d4d"
+            }
+          }
+        ]
+      },
+      "kind": "ps",
+      "mode": "functional",
+      "mutation_attempted": true,
+      "raw_log": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_raw_result.log",
+        "sha256": "425475ab6971d77bc6141abe34c5e1086d6ecc65c1d932e6b16e17b45b10b112",
+        "size_bytes": 1876
+      },
+      "result": "FAIL",
+      "returncode": 0,
+      "risk_index": 40,
+      "runner_result": "FAIL_STAGE",
+      "sequence": 27,
+      "shutdown_after": {
+        "attempted": true,
+        "p7_shutdown_result_pass": true,
+        "passed": true,
+        "present": true,
+        "programming_attempted": true,
+        "programming_attempted_marker": true,
+        "result_file": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_after_result.txt",
+          "sha256": "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+          "size_bytes": 548
+        },
+        "result_marker_duplicates": [],
+        "returncode": 0,
+        "shutdown_exit_zero_marker": false,
+        "stdout_file": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_after.stdout.log",
+          "sha256": "0e0a6544c984678ebd7a5d80549d3bf1c30c5eb0aaff5b783699d80588421574",
+          "size_bytes": 37968
+        },
+        "stdout_marker_duplicates": [],
+        "tfdu_shutdown_marker": true,
+        "tfdu_shutdown_path": "C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p7/shutdown/p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+        "tfdu_shutdown_path_matches_authorized": true
+      },
+      "shutdown_before": {
+        "attempted": true,
+        "p7_shutdown_result_pass": true,
+        "passed": true,
+        "present": true,
+        "programming_attempted": true,
+        "programming_attempted_marker": true,
+        "result_file": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_before_result.txt",
+          "sha256": "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+          "size_bytes": 548
+        },
+        "result_marker_duplicates": [],
+        "returncode": 0,
+        "shutdown_exit_zero_marker": false,
+        "stdout_file": {
+          "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\shutdown_before.stdout.log",
+          "sha256": "3f1ea3af9ea93e1a63c76c3a7fd9bc4f7a6b606df2a4b116ad4aa47c031881c7",
+          "size_bytes": 37968
+        },
+        "stdout_marker_duplicates": [],
+        "tfdu_shutdown_marker": true,
+        "tfdu_shutdown_path": "C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/hardware/p7/shutdown/p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+        "tfdu_shutdown_path_matches_authorized": true
+      },
+      "shutdown_required": true,
+      "source_commit": "7ce64d36a4a9c98c14c639d21cae3740119c5f68",
+      "stage": "ps_runtime",
+      "stage_name": "p7_ps_functional",
+      "started_at_utc": "2026-07-12T18:50:44.542082+00:00",
+      "summary_file": {
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260712_stationary_app_r30_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_stage_summary.json",
+        "sha256": "f33356a7e93da1b2945c215c9a57c8b1598d934c49a61f0a7a798bc8e93e9df1",
+        "size_bytes": 70162
       },
       "time_source": "authorized_wrapper_event_utc_boundaries_plus_candidate_child_host_monotonic_elapsed"
     }

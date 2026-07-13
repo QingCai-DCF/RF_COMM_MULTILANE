@@ -82,6 +82,7 @@ int ir_driver_run_transaction(const ir_mmio_t *io, uint32_t max_polls, ir_driver
 int ir_driver_stop(const ir_mmio_t *io);
 int ir_driver_shutdown(const ir_mmio_t *io);
 int ir_driver_p6_write_payload(const ir_mmio_t *io, const uint8_t *payload, uint32_t payload_len);
+int ir_driver_p6_read_tx_payload(const ir_mmio_t *io, uint8_t *payload, uint32_t payload_capacity, uint32_t payload_len);
 int ir_driver_p6_read_rx_payload(const ir_mmio_t *io, uint8_t *payload, uint32_t payload_capacity, uint32_t *payload_len);
 int ir_driver_p6_commit_payload(const ir_mmio_t *io, const ir_p6_payload_config_t *config);
 int ir_driver_p6_start(const ir_mmio_t *io);
