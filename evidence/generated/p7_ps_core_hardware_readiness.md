@@ -12,6 +12,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - failure_cleanup_shutdown_first: PASS
 - failure_wipe_uses_private_validated_range: PASS
 - integrity_crc_sha_immutable_chunk_snapshot: PASS
+- critical_payload_copies_are_volatile_byte_verified: PASS
 - integrity_failure_snapshot_precedes_output_wipe: PASS
 - integrity_failure_snapshot_mailbox_diagnostic: PASS
 - descriptor_ready_published_last: PASS

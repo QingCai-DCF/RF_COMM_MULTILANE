@@ -51,6 +51,7 @@ def main() -> int:
     inspection: dict[str, object] = {}
     end_address = None
     linker_ocm_hard_boundary = False
+    critical_payload_byte_copy_verified = False
     cpu_clock_hz = None
     counts_per_second = None
     if built.exists():
@@ -58,6 +59,7 @@ def main() -> int:
             ("size", size_tool, ["-A", str(built)]),
             ("symbols", nm_tool, ["-n", str(built)]),
             ("sections", objdump_tool, ["-h", str(built)]),
+            ("disassembly", objdump_tool, ["-d", str(built)]),
         ):
             checked = run([str(tool), *args], timeout=120)
             path = OUT / f"p7_runtime_{name}.txt"
@@ -68,6 +70,41 @@ def main() -> int:
                     fields = line.split()
                     if len(fields) >= 3 and fields[-1] == "_end":
                         end_address = int(fields[0], 16)
+            if name == "disassembly" and checked.returncode == 0:
+                copy_match = re.search(
+                    r"<p7_copy_bytes_verified>:(.*?)(?=\n[0-9a-f]+ <)",
+                    checked.stdout,
+                    re.DOTALL,
+                )
+                equal_match = re.search(
+                    r"<p7_bytes_equal_volatile>:(.*?)(?=\n[0-9a-f]+ <)",
+                    checked.stdout,
+                    re.DOTALL,
+                )
+                copy_calls = len(
+                    re.findall(
+                        r"\bbl\s+[0-9a-f]+\s+<p7_copy_bytes_verified>",
+                        checked.stdout,
+                    )
+                )
+                equal_calls = len(
+                    re.findall(
+                        r"\bbl\s+[0-9a-f]+\s+<p7_bytes_equal_volatile>",
+                        checked.stdout,
+                    )
+                )
+                copy_body = "" if copy_match is None else copy_match.group(1)
+                equal_body = "" if equal_match is None else equal_match.group(1)
+                critical_payload_byte_copy_verified = (
+                    "ldrb" in copy_body
+                    and "strb" in copy_body
+                    and "dsb" in copy_body
+                    and "memcpy" not in copy_body
+                    and "ldrb" in equal_body
+                    and "memcmp" not in equal_body
+                    and copy_calls >= 4
+                    and equal_calls >= 1
+                )
     passed = (
         proc.returncode == 0
         and built.exists()
@@ -92,7 +129,12 @@ def main() -> int:
         if clock_match:
             cpu_clock_hz = int(clock_match.group(1))
             counts_per_second = cpu_clock_hz // 2
-    passed = passed and linker_ocm_hard_boundary and counts_per_second is not None
+    passed = (
+        passed
+        and linker_ocm_hard_boundary
+        and critical_payload_byte_copy_verified
+        and counts_per_second is not None
+    )
     artifacts: dict[str, object] = {}
     if built.exists():
         digest = sha(built)
@@ -150,6 +192,7 @@ def main() -> int:
         "ocm_image_end": None if end_address is None else f"0x{end_address:08x}",
         "mailbox_overlap": end_address is None or end_address >= 0x00020000,
         "linker_ocm_hard_boundary_0x20000": linker_ocm_hard_boundary,
+        "critical_payload_byte_copy_verified": critical_payload_byte_copy_verified,
         "max_object_bytes": 8388608,
         "queue_depth": 8,
         "cpu_clock_hz": cpu_clock_hz,
@@ -175,6 +218,7 @@ def main() -> int:
         f"XSA_SHA256: {summary['xsa_sha256']}", f"OCM_IMAGE_END: {summary['ocm_image_end']}",
         f"MAILBOX_OVERLAP: {str(summary['mailbox_overlap']).lower()}",
         f"LINKER_OCM_HARD_BOUNDARY_0X20000: {str(summary['linker_ocm_hard_boundary_0x20000']).lower()}",
+        f"CRITICAL_PAYLOAD_BYTE_COPY_VERIFIED: {str(summary['critical_payload_byte_copy_verified']).lower()}",
         f"COUNTS_PER_SECOND: {summary['counts_per_second']}",
     ]
     if artifacts:

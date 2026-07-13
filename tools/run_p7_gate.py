@@ -243,6 +243,7 @@ def latest_p7_elf() -> tuple[bool, dict[str, Any]]:
         and sha(immutable) == elf_info.get("sha256")
         and summary.get("mailbox_overlap") is False
         and summary.get("linker_ocm_hard_boundary_0x20000") is True
+        and summary.get("critical_payload_byte_copy_verified") is True
     )
     return valid, {"summary": rel(summary_path), "build": summary, "immutable_hash_valid": valid}
 

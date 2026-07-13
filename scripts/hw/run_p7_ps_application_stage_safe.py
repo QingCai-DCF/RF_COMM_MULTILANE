@@ -211,6 +211,7 @@ CORE_READINESS_CHECKS = (
     "failure_cleanup_shutdown_first",
     "failure_wipe_uses_private_validated_range",
     "integrity_crc_sha_immutable_chunk_snapshot",
+    "critical_payload_copies_are_volatile_byte_verified",
     "integrity_failure_snapshot_precedes_output_wipe",
     "integrity_failure_snapshot_mailbox_diagnostic",
     "descriptor_ready_published_last",
@@ -1444,6 +1445,7 @@ def _summary_errors(args: argparse.Namespace) -> list[str]:
                 or summary.get("syntax_only") is not False
                 or summary.get("mailbox_overlap") is not False
                 or summary.get("linker_ocm_hard_boundary_0x20000") is not True
+                or summary.get("critical_payload_byte_copy_verified") is not True
                 or mailbox_base != P7_MAILBOX_BASE
                 or not 0 < ocm_image_end < mailbox_base
                 or summary.get("queue_depth") != P7_QUEUE_DEPTH

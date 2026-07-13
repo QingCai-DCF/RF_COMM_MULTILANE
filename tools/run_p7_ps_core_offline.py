@@ -120,6 +120,19 @@ def main() -> int:
             and "p7_sha256_update(&sha, snapshot, chunk);" in service
             and "crc ^= data[offset + index];" not in service
             and "p7_sha256_update(&sha, data + offset, chunk);" not in service,
+        "critical_payload_copies_are_volatile_byte_verified":
+            "static int p7_copy_bytes_verified(" in service
+            and "static int p7_bytes_equal_volatile(" in service
+            and "destination[index] = source[index];" in service
+            and "if (destination[index] != source[index]) return 0;" in service
+            and "P7_ERROR_FRAGMENT_ENCODE_COPY" in service
+            and "P7_ERROR_FRAGMENT_TRANSFER_COPY" in service
+            and "P7_ERROR_OUTPUT_COPY" in service
+            and "encoded + RF_APP_HEADER_BYTES" in process_descriptor_block
+            and "p7_bytes_equal_volatile(" in process_descriptor_block
+            and "request.output_address +" in process_descriptor_block
+            and "memcmp(received, encoded, encoded_size)" not in process_descriptor_block
+            and "memcpy((void *)(uintptr_t)(request.output_address" not in process_descriptor_block,
         "integrity_failure_snapshot_precedes_output_wipe":
             "P7_FAILURE_SNAPSHOT_MAGIC" in service
             and "p7_publish_integrity_failure_snapshot(" in process_descriptor_block
@@ -298,6 +311,7 @@ def main() -> int:
         and build_summary.get("syntax_only") is False
         and build_summary.get("mailbox_overlap") is False
         and build_summary.get("linker_ocm_hard_boundary_0x20000") is True
+        and build_summary.get("critical_payload_byte_copy_verified") is True
         and set(recorded_sources) == set(required_build_sources)
         and all(recorded_sources.get(source) == digest for source, digest in required_build_hashes.items())
     )

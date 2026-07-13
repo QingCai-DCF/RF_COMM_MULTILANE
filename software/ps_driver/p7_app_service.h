@@ -109,7 +109,10 @@ enum p7_error_code {
   P7_ERROR_TRACE_RANGE = 17,
   P7_ERROR_QUEUE = 18,
   P7_ERROR_OBJECT_ID_COLLISION = 19,
-  P7_ERROR_RUNTIME_LIMIT = 20
+  P7_ERROR_RUNTIME_LIMIT = 20,
+  P7_ERROR_FRAGMENT_ENCODE_COPY = 21,
+  P7_ERROR_FRAGMENT_TRANSFER_COPY = 22,
+  P7_ERROR_OUTPUT_COPY = 23
 };
 
 /* Exactly 256 bytes. Descriptor status is the publication/commit word and is

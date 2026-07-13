@@ -113,6 +113,9 @@ HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED = (
 HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED = (
     "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_FAILURE_SNAPSHOT_MAILBOX_PUBLISHED_MARKER_REJECTED"
 )
+HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED = (
+    "DIAGNOSTIC_SUFFIX_PS_FUNCTIONAL_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED"
+)
 HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
     "DIAGNOSTIC_SUFFIX_AXI4LITE_REJECTED_MULTIWORD_BURST"
 )
@@ -152,6 +155,7 @@ CORE_READINESS_CHECKS = (
     "failure_cleanup_shutdown_first",
     "failure_wipe_uses_private_validated_range",
     "integrity_crc_sha_immutable_chunk_snapshot",
+    "critical_payload_copies_are_volatile_byte_verified",
     "integrity_failure_snapshot_precedes_output_wipe",
     "integrity_failure_snapshot_mailbox_diagnostic",
     "descriptor_ready_published_last",
@@ -3652,6 +3656,49 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
                 and not (candidate.path.parent / "bundle" / "boundary_13_integrity_snapshot_wipe_verify.bin").exists()
             ):
                 return HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED
+            if (
+                candidate.marker == "FAIL_STAGE"
+                and candidate.data.get("stage_name") == "p7_ps_functional"
+                and candidate.data.get("mode") == "functional"
+                and isinstance(preflight, dict)
+                and preflight.get("returncode") == 0
+                and preflight.get("passed") is True
+                and isinstance(shutdown_before, dict)
+                and shutdown_before.get("returncode") == 0
+                and shutdown_before.get("passed") is True
+                and isinstance(shutdown_after, dict)
+                and shutdown_after.get("returncode") == 0
+                and shutdown_after.get("passed") is True
+                and isinstance(ps_process, dict)
+                and ps_process.get("returncode") == 0
+                and ps_process.get("passed") is False
+                and candidate.data.get("programmed_candidate") is True
+                and candidate.data.get("started_ps_elf") is True
+                and raw_lines[-15:]
+                == [
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX=10",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH=30",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS=4",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE=13",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED=1",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED=1",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS=0x00021000",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES=320",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS=1",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=0x53463750",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1",
+                    "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1",
+                    "P7_PS_STAGE_RESULT=FAIL",
+                    "P7_PS_STAGE_ERROR=P7 functional boundary case failed: index=10 length=30 status=4 error=13",
+                ]
+                and (candidate.path.parent / "bundle" / "boundary_10_descriptor_failure.bin").is_file()
+                and (candidate.path.parent / "bundle" / "boundary_10_output_failure.bin").is_file()
+                and (candidate.path.parent / "bundle" / "boundary_10_trace_failure.bin").is_file()
+                and (candidate.path.parent / "bundle" / "boundary_10_integrity_snapshot_failure.bin").is_file()
+                and (candidate.path.parent / "bundle" / "boundary_10_integrity_snapshot_wipe_verify.bin").is_file()
+            ):
+                return HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED
         shutdown_result_path = candidate.path.parent / "p7_shutdown_after_result.txt"
         shutdown_markers, shutdown_duplicates = parse_marker_text(
             marker_text(shutdown_result_path)
@@ -5622,7 +5669,7 @@ def _old_commit_ps_functional_boundary_failure_errors(
     candidate: Candidate,
     evidence: RepositoryEvidence,
 ) -> list[str]:
-    """Validate r23-r29 exact post-program functional boundary rejections."""
+    """Validate r23-r30 exact post-program functional boundary rejections."""
 
     errors: list[str] = []
     variant = _historical_preflight_variant(candidate)
@@ -5632,7 +5679,8 @@ def _old_commit_ps_functional_boundary_failure_errors(
     r27 = variant == HISTORICAL_STAGE_PS_POST_WIPE_CAPTURED_INTEGRITY_REJECTED
     r28 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED
     r29 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED
-    label = "historical r29" if r29 else "historical r28" if r28 else "historical r27" if r27 else "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23"
+    r30 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED
+    label = "historical r30" if r30 else "historical r29" if r29 else "historical r28" if r28 else "historical r27" if r27 else "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23"
     data = candidate.data
     expected_failures = [
         "PS stage marker mismatch: P7_PS_STAGE_RESULT expected=PASS observed=FAIL",
@@ -5659,7 +5707,9 @@ def _old_commit_ps_functional_boundary_failure_errors(
         and safety.get("errors") == []
         and str(safety.get("source_commit_requested", "")).lower()
         == (
-            "cd26d97b036366b901d9c20f0273da38f6042953"
+            "7ce64d36a4a9c98c14c639d21cae3740119c5f68"
+            if r30
+            else "cd26d97b036366b901d9c20f0273da38f6042953"
             if r29
             else "e4c369f380119d527b3238b09fc5fe3d628760d7"
             if r28
@@ -5729,21 +5779,21 @@ def _old_commit_ps_functional_boundary_failure_errors(
         "P7_XSDB_TARGET_SELECTION": "EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
         "P7_PS_CANDIDATE_PROGRAMMED": "1",
         "P7_HOST_TO_PS_INPUT_BYTES": "4456448",
-        "P7_HOST_TO_PS_INPUT_DURATION_MS": "76363" if r29 else "76397" if r28 else "74211" if r27 else "79224" if r26 else "77849" if r25 else "74283" if r24 else "72445",
-        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "58358" if r29 else "58332" if r28 else "60051" if r27 else "56251" if r26 else "57244" if r25 else "59992" if r24 else "61514",
-        "P7_HOST_TO_PS_INPUT_BPS": "466869" if r29 else "466662" if r28 else "480408" if r27 else "450009" if r26 else "457958" if r25 else "479942" if r24 else "492119",
+        "P7_HOST_TO_PS_INPUT_DURATION_MS": "74793" if r30 else "76363" if r29 else "76397" if r28 else "74211" if r27 else "79224" if r26 else "77849" if r25 else "74283" if r24 else "72445",
+        "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": "59583" if r30 else "58358" if r29 else "58332" if r28 else "60051" if r27 else "56251" if r26 else "57244" if r25 else "59992" if r24 else "61514",
+        "P7_HOST_TO_PS_INPUT_BPS": "476670" if r30 else "466869" if r29 else "466662" if r28 else "480408" if r27 else "450009" if r26 else "457958" if r25 else "479942" if r24 else "492119",
         "P7_PS_ELF_DOWNLOADED": "1",
         "P7_PS_SERVICE_READY_POLLS": "3",
         "P7_PS_SERVICE_HEARTBEAT_AND_START_TICKS": "1",
         **(
             {
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": "13" if r29 else "11" if r28 else "8" if r26 or r27 else "6",
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH": "214" if r29 else "30" if r26 or r27 or r28 else "1",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": "10" if r30 else "13" if r29 else "11" if r28 else "8" if r26 or r27 else "6",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_LENGTH": "214" if r29 else "30" if r26 or r27 or r28 or r30 else "1",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_STATUS": "4",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE": "13",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_DESCRIPTOR_CAPTURED": "1",
             }
-            if r25 or r26 or r27 or r28 or r29
+            if r25 or r26 or r27 or r28 or r29 or r30
             else {}
         ),
         **(
@@ -5751,21 +5801,32 @@ def _old_commit_ps_functional_boundary_failure_errors(
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_OUTPUT_CAPTURED": "1",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED": "1",
             }
-            if r27 or r28 or r29
+            if r27 or r28 or r29 or r30
             else {}
         ),
         **(
             {
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS": "0x0b100040",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_ADDRESS": "0x00021000" if r30 else "0x0b100040",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_BYTES": "320",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_STATUS": "1",
+                **(
+                    {
+                        "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK": "0x53463750",
+                        "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED": "1",
+                        "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED": "1",
+                    }
+                    if r30
+                    else {}
+                ),
             }
-            if r29
+            if r29 or r30
             else {}
         ),
         "P7_PS_STAGE_RESULT": "FAIL",
         "P7_PS_STAGE_ERROR": (
-            "P7 integrity failure snapshot publication marker missing"
+            "P7 functional boundary case failed: index=10 length=30 status=4 error=13"
+            if r30
+            else "P7 integrity failure snapshot publication marker missing"
             if r29 or r28
             else "P7 functional boundary case failed: index=8 length=30 status=4 error=13"
             if r26 or r27
@@ -5779,9 +5840,9 @@ def _old_commit_ps_functional_boundary_failure_errors(
         ),
     }
     append_error(errors, not duplicates and raw_markers == expected_markers, f"{label} raw marker set mismatch")
-    failure_index = 13 if r29 else 11 if r28 else 8 if r26 or r27 else 6
+    failure_index = 10 if r30 else 13 if r29 else 11 if r28 else 8 if r26 or r27 else 6
     failure_descriptor = candidate.path.parent / "bundle" / f"boundary_{failure_index}_descriptor_failure.bin"
-    if r25 or r26 or r27 or r28 or r29:
+    if r25 or r26 or r27 or r28 or r29 or r30:
         try:
             descriptor = decode_p7_descriptor(failure_descriptor.read_bytes())
         except (OSError, ValueError, struct.error) as exc:
@@ -5796,15 +5857,15 @@ def _old_commit_ps_functional_boundary_failure_errors(
         expected_sha = hashlib.sha256(input_bytes).hexdigest()
         append_error(
             errors,
-            input_bytes == (bytes(range(214)) if r29 else bytes(range(30)) if r26 or r27 or r28 else b"\x00")
+            input_bytes == (bytes(range(214)) if r29 else bytes(range(30)) if r26 or r27 or r28 or r30 else b"\x00")
             and descriptor.get("magic") == 0x53443750
             and descriptor.get("version") == 1
             and descriptor.get("command") == 1
             and descriptor.get("status") == 4
             and descriptor.get("session_epoch") == 0x50370001
-            and descriptor.get("object_id") == (14 if r29 else 12 if r28 else 9 if r26 or r27 else 7)
-            and descriptor.get("object_length") == (214 if r29 else 30 if r26 or r27 or r28 else 1)
-            and descriptor.get("expected_crc32") == (zlib.crc32(input_bytes) & 0xFFFFFFFF) == (0xF05C083E if r29 else 0xC5665F58 if r26 or r27 or r28 else 0xD202EF8D)
+            and descriptor.get("object_id") == (11 if r30 else 14 if r29 else 12 if r28 else 9 if r26 or r27 else 7)
+            and descriptor.get("object_length") == (214 if r29 else 30 if r26 or r27 or r28 or r30 else 1)
+            and descriptor.get("expected_crc32") == (zlib.crc32(input_bytes) & 0xFFFFFFFF) == (0xF05C083E if r29 else 0xC5665F58 if r26 or r27 or r28 or r30 else 0xD202EF8D)
             and descriptor.get("lane_policy") == (2 if r29 else 4 if r28 else 1 if r26 or r27 else 3)
             and descriptor.get("max_retries") == 3
             and descriptor.get("error_code") == 13
@@ -5812,14 +5873,16 @@ def _old_commit_ps_functional_boundary_failure_errors(
             and descriptor.get("fragments_total") == 1
             and descriptor.get("fragments_completed") == 1
             and descriptor.get("output_crc32") == (
-                0xE56AEFE1 if r29 else 0x0B14A45E if r28 else 0x1FDA9DB9 if r27 else 0x0A703D75 if r26 else (zlib.crc32(b"\x02") & 0xFFFFFFFF)
+                0xE56AEFE1 if r29 else 0x0B14A45E if r28 else 0x1FDA9DB9 if r27 or r30 else 0x0A703D75 if r26 else (zlib.crc32(b"\x02") & 0xFFFFFFFF)
             )
             and descriptor.get("fragment_attempts") == 1
             and descriptor.get("fallback_count") == 0
             and descriptor.get("expected_sha256") == expected_sha
             and descriptor.get("input_sha256") == expected_sha
             and descriptor.get("output_sha256") == (
-                "fa740d204a804cb81d21e7d56bff7091dbc387d59c9e50e2d400a4275f85bcf0"
+                "85cc3c9bdc8b6699e216e48c446c9f4f7d861a8bcfef504fcaeb02b3e99ad750"
+                if r30
+                else "fa740d204a804cb81d21e7d56bff7091dbc387d59c9e50e2d400a4275f85bcf0"
                 if r29
                 else "152b23e36032b5b79a2f47434511a939aa869078ef97c37d757772102af7972c"
                 if r28
@@ -5841,11 +5904,20 @@ def _old_commit_ps_functional_boundary_failure_errors(
             and descriptor.get("replicated_fragments") == (1 if r28 else 0)
             and int(descriptor.get("start_ticks", 0)) > 0
             and int(descriptor.get("end_ticks", 0)) >= int(descriptor.get("start_ticks", 0))
+            and (
+                not r30
+                or (
+                    descriptor.get("start_ticks") == 1621848612
+                    and descriptor.get("end_ticks") == 1622475754
+                )
+            )
             and descriptor.get("restart_count") == 0
-            and descriptor.get("completion_sequence") == (14 if r29 else 12 if r28 else 9 if r26 or r27 else 7)
+            and descriptor.get("completion_sequence") == (11 if r30 else 14 if r29 else 12 if r28 else 9 if r26 or r27 else 7)
             and sha256_file(failure_descriptor)
             == (
-                "8df414a31c8beabb0706ee7c4afa61f87c51d83c4f58340cfc13cc556a989f37"
+                "31bbae84a4619feab7312fe0a7afa683bded879788239c19f25c24f61fade980"
+                if r30
+                else "8df414a31c8beabb0706ee7c4afa61f87c51d83c4f58340cfc13cc556a989f37"
                 if r29
                 else "042c8059fca445532853554af7b4b67acba1a56fb5a32a96c6df557c25fff58e"
                 if r28
@@ -5859,17 +5931,17 @@ def _old_commit_ps_functional_boundary_failure_errors(
             and not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_result.bin").exists()
             and (
                 (candidate.path.parent / "bundle" / f"boundary_{failure_index}_output_failure.bin").is_file()
-                if r27 or r28 or r29
+                if r27 or r28 or r29 or r30
                 else not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_output_failure.bin").exists()
             )
             and (
                 (candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_failure.bin").is_file()
-                if r27 or r28 or r29
+                if r27 or r28 or r29 or r30
                 else not (candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_failure.bin").exists()
             ),
             f"{label} exact CRC/SHA divergence descriptor boundary mismatch",
         )
-        if r27 or r28 or r29:
+        if r27 or r28 or r29 or r30:
             failure_output = candidate.path.parent / "bundle" / f"boundary_{failure_index}_output_failure.bin"
             failure_trace = candidate.path.parent / "bundle" / f"boundary_{failure_index}_trace_failure.bin"
             try:
@@ -5883,20 +5955,67 @@ def _old_commit_ps_functional_boundary_failure_errors(
                 errors,
                 output_bytes == (bytes(100) + b"\x02" + bytes(113) if r29 else bytes(30))
                 and sha256_file(failure_output) == ("c087c4c3d79aa6dabe40b1a5f5d8cc1b7d96be35a2b4795b692171fdf58a3c1b" if r29 else "0679246d6c4216de0daa08e5523fb2674db2b6599c3b72ff946b488a15290b62")
-                and sha256_file(failure_trace) == ("c8fcb94f910b24a4e0da0f5a59eb128343936a8f66ef874e547e5f69a6765883" if r29 else "775a705154de00d454df4390dc4d8cabaa66f00eb17a75333d840eee7b53c608" if r28 else "dd4721823cdd22ae8537c86582eca9ea268e3e9faf4abd824a22fae2bbd71bda")
+                and sha256_file(failure_trace) == ("7e22964c05ee1c45a9d14f04444a52ece17c61296547c1ae716d373efc2ead0d" if r30 else "c8fcb94f910b24a4e0da0f5a59eb128343936a8f66ef874e547e5f69a6765883" if r29 else "775a705154de00d454df4390dc4d8cabaa66f00eb17a75333d840eee7b53c608" if r28 else "dd4721823cdd22ae8537c86582eca9ea268e3e9faf4abd824a22fae2bbd71bda")
                 and trace_words[0] == P7_TRACE_MAGIC
                 and trace_words[1] == 0x50370001
-                and trace_words[2] == (14 if r29 else 12 if r28 else 9)
+                and trace_words[2] == (11 if r30 else 14 if r29 else 12 if r28 else 9)
                 and (trace_words[3] & 0xFFFF) == 0
                 and (trace_words[3] >> 16) == 1
-                and trace_words[4:8] == ((2, 1, 1, 0) if r29 else (3, 1, 1, 0) if r28 else (1, 1, 0, 0))
-                and trace_words[8] == (0x642DF8E6 if r29 else 0x6BEE2989 if r28 else 0x5F982668)
+                and trace_words[4:8] == ((1, 1, 1, 0) if r30 else (2, 1, 1, 0) if r29 else (3, 1, 1, 0) if r28 else (1, 1, 0, 0))
+                and trace_words[8] == (0x60AC6840 if r30 else 0x642DF8E6 if r29 else 0x6BEE2989 if r28 else 0x5F982668)
                 and trace_words[9] == 0
-                and trace_words[10] == (0x643ED1ED if r29 else 0x6BF5C030 if r28 else 0x5F9FBC65)
+                and trace_words[10] == (0x60B3FE1D if r30 else 0x643ED1ED if r29 else 0x6BF5C030 if r28 else 0x5F9FBC65)
                 and trace_words[11:] == (0, 0, 0, 0, 0),
                 f"{label} exact post-terminal wipe/fragment trace capture mismatch",
             )
-            if r28 or r29:
+            if r30:
+                snapshot_path = candidate.path.parent / "bundle" / "boundary_10_integrity_snapshot_failure.bin"
+                wipe_path = candidate.path.parent / "bundle" / "boundary_10_integrity_snapshot_wipe_verify.bin"
+                try:
+                    snapshot_bytes = snapshot_path.read_bytes()
+                    snapshot_words = struct.unpack("<16I", snapshot_bytes[:64])
+                    wiped_bytes = wipe_path.read_bytes()
+                except (OSError, struct.error) as exc:
+                    errors.append(f"{label} integrity snapshot capture invalid: {exc}")
+                    snapshot_bytes = b""
+                    snapshot_words = (0,) * 16
+                    wiped_bytes = b""
+                corrupted_payload = bytes.fromhex(
+                    "000002030000060700000a0b00000e0f"
+                    "000012130000161700001a1b0000"
+                )
+                output_digest_words = struct.unpack(
+                    ">8I",
+                    bytes.fromhex(
+                        "85cc3c9bdc8b6699e216e48c446c9f4f"
+                        "7d861a8bcfef504fcaeb02b3e99ad750"
+                    ),
+                )
+                append_error(
+                    errors,
+                    len(snapshot_bytes) == 320
+                    and snapshot_words[:8]
+                    == (
+                        0x53463750,
+                        1,
+                        0x50370001,
+                        11,
+                        30,
+                        30,
+                        0x1FDA9DB9,
+                        13,
+                    )
+                    and snapshot_words[8:] == output_digest_words
+                    and snapshot_bytes[64:94] == corrupted_payload
+                    and snapshot_bytes[94:] == bytes(226)
+                    and sha256_file(snapshot_path)
+                    == "e99af3fe526f68a64c6bbc42207db7d440008e3a38b2685d2a812ee3e02fd95d"
+                    and wiped_bytes == bytes(320)
+                    and sha256_file(wipe_path)
+                    == "7b6436b0c98f62380866d9432c2af0ee08ce16a171bda6951aecd95ee1307d61",
+                    f"{label} exact OCM failure snapshot/wipe evidence mismatch",
+                )
+            elif r28 or r29:
                 snapshot_index = 13 if r29 else 11
                 append_error(
                     errors,
@@ -5932,6 +6051,7 @@ def _old_commit_ps_functional_boundary_failure_errors(
             HISTORICAL_STAGE_PS_POST_WIPE_CAPTURED_INTEGRITY_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED,
+            HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED,
         },
         f"{label} failure class mismatch",
     )
@@ -8373,9 +8493,10 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     r27 = variant == HISTORICAL_STAGE_PS_POST_WIPE_CAPTURED_INTEGRITY_REJECTED
     r28 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED
     r29 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED
-    label = "historical r29" if r29 else "historical r28" if r28 else "historical r27" if r27 else "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
-    expected_ordinals = [1, 2, 3, 4, *range(55, 66)] if r26 or r28 or r29 else [1, 2, 3, 4, 62, 63, 64, 65]
-    prefix_count = 11 if r26 or r28 or r29 else 4
+    r30 = variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED
+    label = "historical r30" if r30 else "historical r29" if r29 else "historical r28" if r28 else "historical r27" if r27 else "historical r26" if r26 else "historical r25" if r25 else "historical r24" if r24 else "historical r23" if r23 else "historical r22" if r22 else "historical r21" if r21 else "historical r18"
+    expected_ordinals = [1, 2, 3, 4, *range(55, 66)] if r26 or r28 or r29 or r30 else [1, 2, 3, 4, 62, 63, 64, 65]
+    prefix_count = 11 if r26 or r28 or r29 or r30 else 4
     failed_index = prefix_count
     append_error(errors, outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", f"{label} outer schema mismatch")
     append_error(errors, outer.get("status") == "FAIL" and outer.get("hardware_actions_executed") is True, f"{label} outer result boundary mismatch")
@@ -8383,7 +8504,7 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
     append_error(errors, str(outer.get("source_commit", "")).lower() == source, f"{label} outer source mismatch")
     append_error(
         errors,
-        outer.get("plan_mode") == ("DIAGNOSTIC_SUFFIX_55" if r26 or r28 or r29 else "DIAGNOSTIC_ADAPTIVE_SUFFIX")
+        outer.get("plan_mode") == ("DIAGNOSTIC_SUFFIX_55" if r26 or r28 or r29 or r30 else "DIAGNOSTIC_ADAPTIVE_SUFFIX")
         and outer.get("coverage_claimed") is False
         and outer.get("HARDWARE_ACCEPTANCE") == "PENDING_HW"
         and outer.get("full_stage_ordinals") == expected_ordinals,
@@ -8650,9 +8771,23 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             and "$firmware_snapshot_status != 1" in old_ps_tcl
             and "$firmware_snapshot_bytes != 320" in old_ps_tcl
         )
+        failure_snapshot_captured_predicate = (
+            failure_snapshot_mailbox_marker_predicate
+            and "set failure_snapshot_address 0x00021000" in old_ps_tcl
+            and "set firmware_snapshot_magic_readback [p7_read32 0x000200A8]" in old_ps_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_MAGIC_READBACK=[format 0x%08x $firmware_snapshot_magic_readback]" in old_ps_tcl
+            and "$firmware_snapshot_magic_readback != 0x53463750" in old_ps_tcl
+            and "p7_atomic_dump $failure_snapshot $firmware_snapshot_address 320" in old_ps_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1" in old_ps_tcl
+            and "p7_zero_words_and_verify $firmware_snapshot_address 320" in old_ps_tcl
+            and "p7_atomic_dump $failure_snapshot_wipe $firmware_snapshot_address 320" in old_ps_tcl
+            and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1" in old_ps_tcl
+        )
         append_error(
             errors,
-            failure_snapshot_mailbox_marker_predicate
+            failure_snapshot_captured_predicate
+            if r30
+            else failure_snapshot_mailbox_marker_predicate
             if r29
             else failure_snapshot_marker_predicate
             if r28
@@ -8675,7 +8810,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
         )
         historical_source_control_flow = {
             "target_uniqueness_basis": (
-                "FUNCTIONAL_LANE1_BOUNDARY_214_MAILBOX_PUBLISHED_FAILURE_SNAPSHOT_MARKER_MISSING"
+                "FUNCTIONAL_STRIPE_BOUNDARY_30_OCM_FAILURE_SNAPSHOT_CAPTURED_AND_WIPED"
+                if r30
+                else "FUNCTIONAL_LANE1_BOUNDARY_214_MAILBOX_PUBLISHED_FAILURE_SNAPSHOT_MARKER_MISSING"
                 if r29
                 else "FUNCTIONAL_REPLICATE_BOUNDARY_30_FAILURE_SNAPSHOT_MARKER_MISSING"
                 if r28
@@ -8695,9 +8832,11 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
                 if r21
                 else "PROPERTY_ROW_COUNT"
             ),
-            "numeric_target_id_dedup_present": r21 or r22 or r23 or r24 or r25 or r26 or r27 or r28 or r29,
+            "numeric_target_id_dedup_present": r21 or r22 or r23 or r24 or r25 or r26 or r27 or r28 or r29 or r30,
             "historical_target_rejection_proven": (
-                failure_snapshot_mailbox_marker_predicate
+                failure_snapshot_captured_predicate
+                if r30
+                else failure_snapshot_mailbox_marker_predicate
                 if r29
                 else failure_snapshot_marker_predicate
                 if r28
@@ -8849,7 +8988,9 @@ def _historical_ps_reset_target_uniqueness_epoch_record(
             "shutdown_before_passed": candidate.data.get("shutdown_before", {}).get("passed"),
             "shutdown_after_passed": candidate.data.get("shutdown_after", {}).get("passed"),
             "raw_error": (
-                "P7 integrity failure snapshot publication marker missing at boundary index=13 length=214 status=4 error=13; firmware mailbox reported address=0x0b100040 bytes=320 status=PUBLISHED; descriptor output CRC32=0xe56aefe1 and SHA256=fa740d204a804cb81d21e7d56bff7091dbc387d59c9e50e2d400a4275f85bcf0; fragment trace records lane1 mask 0x2, attempt=1, result=1 and zero error fields; post-terminal output contains only byte 0x02 at offset 100 and no integrity snapshot file was captured"
+                "P7 functional boundary case failed at index=10 length=30 status=4 error=13; descriptor expected/input SHA256=f2192584b67da35dfc26f743e5f53bb0376046f899dc6dabd5e7b541ae86c32f but output CRC32=0x1fda9db9 and SHA256=85cc3c9bdc8b6699e216e48c446c9f4f7d861a8bcfef504fcaeb02b3e99ad750; fragment trace records lane0 mask 0x1, attempt=1, result=1 and zero error fields; the OCM snapshot at 0x00021000 captured every 32-bit payload word with its low 16 bits zeroed, matched the descriptor digest, and was independently captured then wiped to 320 zero bytes; post-terminal DDR output is all zero after fail-closed wipe"
+                if r30
+                else "P7 integrity failure snapshot publication marker missing at boundary index=13 length=214 status=4 error=13; firmware mailbox reported address=0x0b100040 bytes=320 status=PUBLISHED; descriptor output CRC32=0xe56aefe1 and SHA256=fa740d204a804cb81d21e7d56bff7091dbc387d59c9e50e2d400a4275f85bcf0; fragment trace records lane1 mask 0x2, attempt=1, result=1 and zero error fields; post-terminal output contains only byte 0x02 at offset 100 and no integrity snapshot file was captured"
                 if r29
                 else "P7 integrity failure snapshot publication marker missing at boundary index=11 length=30 status=4 error=13; descriptor output CRC32=0x0b14a45e and SHA256=152b23e36032b5b79a2f47434511a939aa869078ef97c37d757772102af7972c; fragment trace records replicate lane mask 0x3, attempt=1, result=1 and zero error fields; post-terminal output is all zero and no integrity snapshot file was captured"
                 if r28
@@ -8933,6 +9074,7 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         HISTORICAL_STAGE_PS_POST_WIPE_CAPTURED_INTEGRITY_REJECTED,
         HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED,
         HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED,
+        HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED,
     }:
         return _historical_ps_reset_target_uniqueness_epoch_record(
             candidate,
@@ -11398,6 +11540,9 @@ def _candidate_checkpoint_relation(
     elif historical_variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED:
         errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
+    elif historical_variant == HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED:
+        errors.extend(_old_commit_ps_functional_boundary_failure_errors(candidate, evidence))
+        relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
@@ -11739,6 +11884,7 @@ def _collapse_historical_epoch_candidates(
             HISTORICAL_STAGE_PS_POST_WIPE_CAPTURED_INTEGRITY_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MARKER_REJECTED,
             HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_MAILBOX_MARKER_REJECTED,
+            HISTORICAL_STAGE_PS_FAILURE_SNAPSHOT_CAPTURED_INTEGRITY_REJECTED,
         }:
             terminal_by_epoch[item.path.parent.parent.resolve(strict=False)] = item
     return [

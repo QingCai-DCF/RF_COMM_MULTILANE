@@ -360,6 +360,35 @@ static int p7_active_stop_requested(p7_service_context_t *service) {
          command == P7_CONTROL_SHUTDOWN || p7_runtime_expired(service);
 }
 
+/* The P7 hardware boundary must not depend on an opaque word-copy routine.
+ * r27/r30 captured a deterministic half-word-zeroed payload even though the
+ * P6 fragment compared equal before the DDR output write.  Volatile byte
+ * accesses make each transfer observable, and the second pass fails closed
+ * before the copied bytes can contribute to a successful descriptor. */
+static int p7_copy_bytes_verified(volatile uint8_t *destination,
+                                  const volatile uint8_t *source,
+                                  uint32_t size) {
+  if ((destination == NULL || source == NULL) && size != 0U) return 0;
+  for (uint32_t index = 0U; index < size; ++index) {
+    destination[index] = source[index];
+  }
+  dsb();
+  for (uint32_t index = 0U; index < size; ++index) {
+    if (destination[index] != source[index]) return 0;
+  }
+  return 1;
+}
+
+static int p7_bytes_equal_volatile(const volatile uint8_t *left,
+                                   const volatile uint8_t *right,
+                                   uint32_t size) {
+  if ((left == NULL || right == NULL) && size != 0U) return 0;
+  for (uint32_t index = 0U; index < size; ++index) {
+    if (left[index] != right[index]) return 0;
+  }
+  return 1;
+}
+
 static int p7_integrity_checked(p7_service_context_t *service,
                                 const uint8_t *data, uint32_t size,
                                 uint32_t *crc_out, uint8_t sha_out[32],
@@ -471,7 +500,11 @@ static int p7_p6_submit(rf_transport_backend_t *backend,
       (lane_mask != 1U && lane_mask != 2U && lane_mask != 3U)) {
     return RF_TRANSPORT_ERR_ARGUMENT;
   }
-  memcpy(context->tx_payload, payload, payload_size);
+  if (!p7_copy_bytes_verified(
+          (volatile uint8_t *)context->tx_payload,
+          (const volatile uint8_t *)payload, (uint32_t)payload_size)) {
+    return RF_TRANSPORT_ERR_IO;
+  }
   context->tx_size = payload_size;
   context->rx_size = 0U;
   context->lane_mask = lane_mask;
@@ -640,7 +673,12 @@ static int p7_p6_read(rf_transport_backend_t *backend, uint32_t token,
   if (token != context->token || payload_capacity < context->rx_size) {
     return RF_TRANSPORT_ERR_BUFFER;
   }
-  memcpy(payload, context->rx_payload, context->rx_size);
+  if (!p7_copy_bytes_verified(
+          (volatile uint8_t *)payload,
+          (const volatile uint8_t *)context->rx_payload,
+          (uint32_t)context->rx_size)) {
+    return RF_TRANSPORT_ERR_IO;
+  }
   *payload_size = context->rx_size;
   return RF_TRANSPORT_OK;
 }
@@ -1112,6 +1150,14 @@ static int p7_process_descriptor(
       error = P7_ERROR_FRAGMENT_GEOMETRY;
       goto failed;
     }
+    if (!p7_copy_bytes_verified(
+            (volatile uint8_t *)(encoded + RF_APP_HEADER_BYTES),
+            (const volatile uint8_t *)(uintptr_t)(request.input_address +
+                                                   offset),
+            chunk_length)) {
+      error = P7_ERROR_FRAGMENT_ENCODE_COPY;
+      goto failed;
+    }
     fragment_start = p7_get_ticks();
     memset(&result, 0, sizeof(result));
     descriptor->fragment_attempts += 1U;
@@ -1163,8 +1209,12 @@ static int p7_process_descriptor(
                                    sizeof(received), &received_size) !=
             RF_TRANSPORT_OK ||
         received_size != encoded_size ||
-        memcmp(received, encoded, encoded_size) != 0) {
-      error = P7_ERROR_FRAGMENT_MISMATCH;
+        !p7_bytes_equal_volatile(
+            (const volatile uint8_t *)received,
+            (const volatile uint8_t *)encoded, (uint32_t)encoded_size)) {
+      error = received_size == encoded_size
+                  ? P7_ERROR_FRAGMENT_TRANSFER_COPY
+                  : P7_ERROR_FRAGMENT_MISMATCH;
       result.accepted = 0U;
       result.error_code = (uint32_t)error;
       p7_record_trace(&request, fragment_index, fragment_count, lane,
@@ -1190,8 +1240,18 @@ static int p7_process_descriptor(
         goto failed;
       }
       if (chunk_length != 0U) {
-        memcpy((void *)(uintptr_t)(request.output_address + offset), view.chunk,
-               chunk_length);
+        if (!p7_copy_bytes_verified(
+                (volatile uint8_t *)(uintptr_t)(request.output_address +
+                                                offset),
+                (const volatile uint8_t *)view.chunk, chunk_length)) {
+          error = P7_ERROR_OUTPUT_COPY;
+          result.accepted = 0U;
+          result.error_code = (uint32_t)error;
+          completed_bytes = offset + chunk_length;
+          p7_record_trace(&request, fragment_index, fragment_count, lane,
+                          attempts, &result, fragment_start, fragment_end);
+          goto failed;
+        }
       }
     }
     p7_record_trace(&request, fragment_index, fragment_count, lane,
