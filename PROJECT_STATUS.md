@@ -17,6 +17,14 @@ P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET: PENDING_HW
 HARDWARE_ACCEPTANCE_STATIONARY_2LANE_APPLICATION: PENDING_HW
 P7_OFFLINE_GATE: PASS
 P7_OFFLINE_CACHE_STATUS: BYPASS
+P7_LATEST_FORMAL_RUN: p7_20260715_stationary_app_r34_formal_full
+P7_LATEST_FORMAL_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME
+R34_FORMAL_STAGE_PREFIX_OBSERVED_PASS: 1_THROUGH_61
+R34_ACCEPTANCE_COVERAGE_CLAIMED: false
+R34_STAGE62_ATTEMPTED: false
+R34_STAGE62_EXECUTED: false
+R34_STATIONARY_ATTEMPTS: 0
+STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_OFFLINE_PENDING_CLEAN_CHECKPOINT
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
@@ -57,6 +65,16 @@ coverage and does not cover stages 1--61, a complete stages 1--66 run, or the
 1800-second stationary stage. The specialist package is integrated and the
 fresh clean-source offline checkpoint passes, but hardware acceptance remains
 `PENDING_HW`.
+
+The later full-plan r34 run is immutable `FAIL` and must never be resumed. Its
+outer ledger records exact PASS observations for stages 1--61, followed by a
+stage 62 authorization-contract failure before the candidate bitstream or PS
+ELF started. Both stage-local shutdown barriers and the separate recovery
+passed, but neither changes stage 62 or r34 to PASS. Stage 66 was not attempted.
+The confirmed defect is that the generated PS authorization omitted both
+`P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE` and `P7_RUN_ID=NONE`, while the
+execution Tcl required them; the generator and offline wrapper validator have
+an offline-only repair pending a new clean-source checkpoint.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

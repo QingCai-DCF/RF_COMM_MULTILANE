@@ -963,14 +963,24 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             with mock.patch.object(stage, "parse_authorization_file", return_value=(fields, [], [])):
                 missing = stage._authorization_extension_errors(args)
             self.assertTrue(any("P7_COUNTS_PER_SECOND" in item and "missing" in item for item in missing))
+            self.assertTrue(any("P7_EXECUTION_SCOPE" in item and "missing" in item for item in missing))
+            self.assertTrue(any("P7_RUN_ID" in item and "missing" in item for item in missing))
             fields["P7_COUNTS_PER_SECOND"] = "1"
+            fields["P7_EXECUTION_SCOPE"] = "STAGE62_ONLY"
+            fields["P7_RUN_ID"] = "unexpected-run"
             with mock.patch.object(stage, "parse_authorization_file", return_value=(fields, [], [])):
                 mismatched = stage._authorization_extension_errors(args)
             self.assertTrue(any("P7_COUNTS_PER_SECOND" in item and "mismatch" in item for item in mismatched))
+            self.assertTrue(any("P7_EXECUTION_SCOPE" in item and "mismatch" in item for item in mismatched))
+            self.assertTrue(any("P7_RUN_ID" in item and "mismatch" in item for item in mismatched))
             fields["P7_COUNTS_PER_SECOND"] = str(stage.P7_COUNTS_PER_SECOND)
+            fields["P7_EXECUTION_SCOPE"] = "P7_PS_APPLICATION_STAGE"
+            fields["P7_RUN_ID"] = "NONE"
             with mock.patch.object(stage, "parse_authorization_file", return_value=(fields, [], [])):
                 matched = stage._authorization_extension_errors(args)
             self.assertFalse(any("P7_COUNTS_PER_SECOND" in item for item in matched))
+            self.assertFalse(any("P7_EXECUTION_SCOPE" in item for item in matched))
+            self.assertFalse(any("P7_RUN_ID" in item for item in matched))
 
     def test_default_and_blocked_execute_paths_launch_no_hardware_process(self) -> None:
         for argv, expected_status, expected_rc in (

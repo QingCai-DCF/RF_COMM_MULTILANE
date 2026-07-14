@@ -2400,6 +2400,11 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
         ("P7_INPUT_PATH", args.input_file),
         ("P7_INPUT_SHA256", args.input_sha256),
         ("P7_PS_MODE", args.mode),
+        (
+            "P7_EXECUTION_SCOPE",
+            "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE",
+        ),
+        ("P7_RUN_ID", args.run_id if args.stage62_only else "NONE"),
         ("P7_PS_CORE_READINESS", "PASS"),
         ("P7_PS_CORE_READINESS_PATH", args.core_readiness_attestation),
         ("P7_PS_CORE_READINESS_SHA256", args.core_readiness_attestation_sha256),
@@ -2414,8 +2419,6 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
     if args.stage62_only:
         required.extend(
             (
-                ("P7_RUN_ID", args.run_id),
-                ("P7_EXECUTION_SCOPE", "STAGE62_ONLY"),
                 ("P7_DIAGNOSTIC_ONLY", "true"),
                 ("P7_COVERAGE_CLAIMED", "false"),
             )

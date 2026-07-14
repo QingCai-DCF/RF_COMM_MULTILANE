@@ -519,6 +519,23 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
                 self.assertEqual(66, len(plan["stages"]))
                 self.assertEqual("ps_stationary", plan["stages"][-1]["group"])
                 self.assertEqual(1, sum(stage["group"] == "ps_stationary" for stage in plan["stages"]))
+                ps_stages = [
+                    stage for stage in plan["stages"] if stage["group"].startswith("ps_")
+                ]
+                self.assertEqual(5, len(ps_stages))
+                for stage in ps_stages:
+                    authorization = Path(
+                        option(stage["command"], "--authorization-file")
+                    ).read_text(encoding="utf-8")
+                    self.assertEqual(
+                        1,
+                        authorization.splitlines().count(
+                            "P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE"
+                        ),
+                    )
+                    self.assertEqual(
+                        1, authorization.splitlines().count("P7_RUN_ID=NONE")
+                    )
                 goal_plan_path = str(Path(artifacts["goal_plan"][0]).resolve())
                 for stage in plan["stages"]:
                     self.assertEqual(goal_plan_path, option(stage["command"], "--plan-file"))

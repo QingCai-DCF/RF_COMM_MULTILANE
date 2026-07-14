@@ -892,6 +892,8 @@ def write_stage_authorization(
                 f"P7_INPUT_PATH={ps_input.path}",
                 f"P7_INPUT_SHA256={ps_input.sha256}",
                 f"P7_PS_MODE={spec.mode}",
+                "P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE",
+                "P7_RUN_ID=NONE",
                 "P7_PS_CORE_READINESS=PASS",
                 f"P7_FROZEN_SHUTDOWN_PATH={frozen_shutdown}",
                 f"P7_FROZEN_SHUTDOWN_SHA256={shutdown.sha256}",
