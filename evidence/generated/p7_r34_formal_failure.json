@@ -1,0 +1,81 @@
+{
+  "schema": "rf-comm-p7-formal-failure-package-v1",
+  "run_id": "p7_20260715_stationary_app_r34_formal_full",
+  "run_status": "IMMUTABLE_FAIL_NEVER_RESUME",
+  "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+  "plan_mode": "FULL_ACCEPTANCE",
+  "sequence_plan_sha256": "928005b993e3d299b65feef309609c64032de4b30f4bb8628266e6ab269a2228",
+  "offline_checkpoint_sha256": "8cae72c539f309bd58c59511dafcdf2e0a70525c341bcba265b5e76300803fcd",
+  "ledger": {
+    "path": "evidence/generated/p7_r34_failure_package/sequence_execution_ledger.json",
+    "sha256": "95b9678cee1d2cf4c89e32445f3cd2057487bca5c488f524b38f04f4f4771a27",
+    "attempt_count": 62,
+    "completed_stage_count": 61,
+    "pass_prefix_first_ordinal": 1,
+    "pass_prefix_last_ordinal": 61,
+    "failed_ordinal": 62,
+    "failed_stage_id": "p7_ps_functional"
+  },
+  "stage62": {
+    "result": "FAIL_STAGE",
+    "attempted": false,
+    "executed": false,
+    "completed": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "summary_path": "evidence/generated/p7_r34_failure_package/stage62/p7_ps_application_stage_summary.json",
+    "summary_sha256": "0260a149b3d62126522eac88251ceffd6fedec1859dc4c420678ddb59a148c31",
+    "raw_manifest_sha256": "f62bf8472d191756598fcc7fad7f94bec464769e1ddd7d01fc8b3a5da747f9d7",
+    "raw_result_sha256": "12f402a54842cef9b778993015e93b5e57e7309fff3b363ea7cf0fcf2a069976",
+    "first_terminal_error": "P7 authorization mismatch for P7_EXECUTION_SCOPE expected=P7_PS_APPLICATION_STAGE observed=",
+    "shutdown_before": "PASS",
+    "shutdown_after": "PASS"
+  },
+  "authorization_contract": {
+    "authorization_sha256": "7ea880600d989768c208be8d118ed698896ab474f67473694f17e65b2805696c",
+    "expected_execution_scope": "P7_PS_APPLICATION_STAGE",
+    "observed_execution_scope_field_count": 0,
+    "expected_run_id": "NONE",
+    "observed_run_id_field_count": 0,
+    "failure_root_cause": "CONFIRMED_GENERATOR_AND_OFFLINE_VALIDATOR_AUTHORIZATION_CONTRACT_GAP",
+    "historical_generator_git_blob_sha1": "afd22a5362a4caee0627aec00dae20d4882522ca",
+    "historical_generator_sha256": "f9e5a27c2ac39031e222690bef1c7a51cd7c2812a87d685412d54c255cc22cad"
+  },
+  "independent_recovery": {
+    "separate_from_stage_result": true,
+    "status": "PASS",
+    "summary_path": "evidence/generated/p7_r34_failure_package/recovery/program_tfdu_shutdown_safe.summary.txt",
+    "summary_sha256": "0cddeed3f2afa59792504f65e8a8f7958dd9600bcad747978c6ff222fb8c3469",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "historical_preflight_freeze": {
+    "manifest_path": "evidence/generated/p7_r34_failure_package/historical_preflight_inputs/manifest.json",
+    "manifest_sha256": "9b47d3762580636f831b2110dc8ffdefa7619a6f29e66562e7897ed20fb42152",
+    "file_count": 12
+  },
+  "portable_package": {
+    "path": "evidence/generated/p7_r34_failure_package",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 30,
+    "byte_count": 2781609,
+    "tree_sha256": "b0cac29abbcc155ab71b6376d9dbc268b7fa9d1b8e2fe479a3bfc8364dae1f07"
+  },
+  "original_raw_evidence": {
+    "absolute_path": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r34_formal_full",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF after historical-preflight freeze",
+    "file_count": 1373,
+    "byte_count": 779831422,
+    "partial_file_count": 0,
+    "tree_sha256": "5939caafff8147a5f056046a382c161ec37293d49e3528be27469e459277cd6f"
+  },
+  "stationary": {
+    "attempt_count": 0,
+    "started": false,
+    "result": "NOT_RUN"
+  },
+  "network_used": false,
+  "motion_used": false,
+  "max_lane_mask": "0x3",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

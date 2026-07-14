@@ -1,7 +1,7 @@
 {
   "schema": "rf-comm-p7-formal-preparation-status-v1",
-  "P7_FORMAL_PREPARATION": "DRY_VALIDATED_READY_FOR_SCOPED_EXECUTION",
-  "generated_at_utc": "2026-07-14T16:54:32.394091+00:00",
+  "P7_FORMAL_PREPARATION": "EXECUTED_IMMUTABLE_FAIL_RETIRED",
+  "generated_at_utc": "2026-07-14T21:17:40.5088079Z",
   "run_id": "p7_20260715_stationary_app_r34_formal_full",
   "run_kind": "FORMAL_FULL_ACCEPTANCE",
   "execution_workspace": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE",
@@ -70,6 +70,23 @@
     "invocation_count": 1,
     "validation_error_count": 0
   },
+  "execution_result": {
+    "status": "FAIL",
+    "immutable": true,
+    "resume_allowed": false,
+    "ledger_path": "evidence/generated/p7_r34_failure_package/sequence_execution_ledger.json",
+    "ledger_sha256": "95b9678cee1d2cf4c89e32445f3cd2057487bca5c488f524b38f04f4f4771a27",
+    "attempt_count": 62,
+    "completed_stage_count": 61,
+    "failed_full_stage_ordinal": 62,
+    "failed_stage": "p7_ps_functional",
+    "stage62_attempted": false,
+    "stage62_executed": false,
+    "stage62_completed": false,
+    "stationary_attempt_count": 0,
+    "independent_shutdown_recovery": "PASS",
+    "failure_package": "evidence/generated/p7_r34_formal_failure.json"
+  },
   "predecessor_preparation_failure": {
     "run_id": "p7_20260715_stationary_app_r33_formal_full",
     "path": "evidence/generated/p7_r33_formal_plan_generation_failure.json",
@@ -88,11 +105,12 @@
     "failed_hardware_run_resume_allowed": false,
     "external_hw_server_ownership_changed": false
   },
-  "execution_preconditions_still_required": [
-    "Revalidate the exact source commit, checkpoint hashes, plan hash, stage authorization hashes, process state, abort file, and hardware lock immediately before execution.",
-    "Set the scoped external authorization only for the safe sequence executor invocation.",
-    "Stop at the first failed stage, preserve raw evidence, perform independent shutdown recovery, and use a new run ID; never resume.",
-    "Execute stage 66 only if stages 1-65 in this same formal run all PASS."
+  "next_run_preconditions": [
+    "Never resume, restart, or copy r34; preserve its raw evidence and separate recovery result.",
+    "Commit the authorization-contract repair and r34 failure package accurately.",
+    "On the new clean source, run each required complete suite exactly once and create a fresh cache-bypassed canonical offline checkpoint.",
+    "Use a new run ID, fresh scoped authorization, current immutable hashes, a new plan, and all dry validations.",
+    "A diagnostic suffix may not contain stage 66 and claims zero acceptance coverage; a later formal full run must execute stages 1 through 66 and may start stage 66 only after its own stages 1 through 65 PASS."
   ],
   "HARDWARE_ACCEPTANCE": "PENDING_HW",
   "STATIONARY_30MIN": "NOT_RUN"
