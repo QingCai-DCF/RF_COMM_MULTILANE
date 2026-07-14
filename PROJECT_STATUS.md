@@ -25,9 +25,11 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_OFFLINE_PENDING_CLEAN_CHECKPOINT
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN
-P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 229299db9c6c5098d30ae5922508f4426546e665
-P7_LATEST_CLEAN_SOURCE_REGRESSION: FAIL_PRECONDITION
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_STATIC_REPAIR
+P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 7c6b50ff3450562b95c59029ec225f6d365541f9
+P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_191_PLUS_42
+P7_LATEST_CANONICAL_GATE_SOURCE: 7c6b50ff3450562b95c59029ec225f6d365541f9
+P7_LATEST_CANONICAL_GATE: FAIL_PRECONDITION_PS_CORE_STATIC_SCOPE_LITERAL
 P7_NEW_HARDWARE_RUN_READY: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
@@ -86,6 +88,18 @@ Seven byte-exact r34 package logs had been ignored rather than tracked, and the
 fresh worktree had not yet materialized the generated AX7010 Vivado/Vitis board
 contract inputs. This checkpoint is preserved as non-hardware FAIL evidence and
 must not be rerun at the same source. A new hardware run is not ready.
+
+At the next clean source `7c6b50ff3450562b95c59029ec225f6d365541f9`,
+fresh cache-bypass P6 Vivado and P7 Vitis builds passed, the complete generated
+board contract passed with zero errors, and the once-only complete suites
+passed 191/191 plus 42/42. The canonical gate then accurately failed 12/13:
+only `P7_PS_CORE_HARDWARE_READINESS` was false. The independent core check
+required the explicit Stage62-only authorization tuple literal, while the
+normal-PS repair had generalized both scopes into a conditional tuple. Runtime
+semantics and every complete test passed, but the static gate failed closed.
+The wrapper now keeps explicit tuples for both scopes and tests both branches;
+this offline repair requires a new clean-source checkpoint. No hardware run is
+ready.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

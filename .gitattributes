@@ -11,9 +11,11 @@
 # Preserve byte-exact, content-addressed/vendor-generated P7 artifacts. Their
 # embedded spacing is provenance data and must not be rewritten to satisfy a
 # source whitespace policy.
+evidence/generated/vivado/p6_ps_candidate/* -text -whitespace
 evidence/generated/vitis/p7_ps_runtime/* -text -whitespace
 evidence/generated/p7_* -text -whitespace
 evidence/generated/p7_r34_failure_package/** -text -whitespace
 evidence/generated/p7_r35prep_precondition_failure/** -text -whitespace
+evidence/generated/p7_r35validate_7c6b50f_precondition/** -text -whitespace
 evidence/hardware/p7/artifacts/* -text -whitespace
 evidence/hardware/p7/** -text -whitespace

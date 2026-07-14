@@ -982,6 +982,19 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             self.assertFalse(any("P7_EXECUTION_SCOPE" in item for item in matched))
             self.assertFalse(any("P7_RUN_ID" in item for item in matched))
 
+            args.stage62_only = True
+            args.run_id = "p7_scope_contract_diag"
+            fields["P7_EXECUTION_SCOPE"] = "STAGE62_ONLY"
+            fields["P7_RUN_ID"] = args.run_id
+            fields["P7_DIAGNOSTIC_ONLY"] = "true"
+            fields["P7_COVERAGE_CLAIMED"] = "false"
+            with mock.patch.object(stage, "parse_authorization_file", return_value=(fields, [], [])):
+                stage62_matched = stage._authorization_extension_errors(args)
+            self.assertFalse(any("P7_EXECUTION_SCOPE" in item for item in stage62_matched))
+            self.assertFalse(any("P7_RUN_ID" in item for item in stage62_matched))
+            self.assertFalse(any("P7_DIAGNOSTIC_ONLY" in item for item in stage62_matched))
+            self.assertFalse(any("P7_COVERAGE_CLAIMED" in item for item in stage62_matched))
+
     def test_default_and_blocked_execute_paths_launch_no_hardware_process(self) -> None:
         for argv, expected_status, expected_rc in (
             (["--json-summary"], "DRY_RUN_ONLY", 0),

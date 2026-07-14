@@ -1,0 +1,145 @@
+{
+  "schema": "rf-comm-p7-clean-source-canonical-gate-precondition-failure-v1",
+  "checkpoint_id": "p7_r35validate_7c6b50f",
+  "source_commit": "7c6b50ff3450562b95c59029ec225f6d365541f9",
+  "status": "COMPLETE_SUITES_PASS_CANONICAL_GATE_FAIL",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "coverage_claimed": false,
+  "stationary_started": false,
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_checkpoint_requires_new_source_commit": true,
+  "fresh_cache_bypass_builds": {
+    "p6_ps_candidate": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "board_contract_verified": true,
+      "summary_sha256": "d5c85cb396ed8913449c5a17e4c456225ac9014fb8106278eeb7ee1091f760ef",
+      "bitstream_sha256": "2e1d225ff79bf182a1c13e81672950bc9ca5ac5e5bd3bafc18c89b294104bc8b",
+      "xsa_sha256": "8ecccf761142c853a3c5734b1c520a837e680d85aa183d131aa4f194b3d7ad7c"
+    },
+    "p7_ps_runtime": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "board_contract_verified": true,
+      "summary_sha256": "a78360ac204e97e071c537fa94b7779c355acb9de0cfd5426622b16fc5043d9d",
+      "elf_sha256": "07963f967f6dc4901e7c4ecb2f7d44a1d54976be5c95434299b610369b1e5ffe",
+      "linker_map_sha256": "f40a6b00e807c22eebf06d0397a7d61858582c89735fa9499718c518fb202ed2",
+      "ps7_init_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    }
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "sha256": "3ff59b8655b1490dc5f79767427feabf34195a0f02fcdaced9178ca2f35d6f2b"
+  },
+  "complete_suites": {
+    "status": "PASS",
+    "summary_sha256": "df0ce0d72558bacf97d1b8f01ed35b11cf7f2cbf1e108c79b8a3470ffecdcdad",
+    "source_commit_unchanged": true,
+    "clean_before": true,
+    "clean_after": true,
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 191,
+      "status": "PASS"
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 42,
+      "status": "PASS"
+    },
+    "total_discovered_test_count": 233
+  },
+  "canonical_gate": {
+    "status": "FAIL",
+    "summary_sha256": "c83b66a8e0325286045350647eb2c05e193d278c3122df42645f48065f859ffa",
+    "check_count": 13,
+    "passing_check_count": 12,
+    "failed_checks": [
+      "P7_PS_CORE_HARDWARE_READINESS"
+    ],
+    "complete_suite_invocations_in_gate": 0,
+    "cache_status": "BYPASS"
+  },
+  "ps_core_readiness": {
+    "status": "FAIL",
+    "sha256": "f3d3ded1ae57bac22f2ff9f89cce1513570889d9add6cff3fe1b86e04bf14c61",
+    "failed_checks": [
+      "stage62_only_microtest_bypasses_pl_and_is_disassembly_bound"
+    ],
+    "all_other_checks_passed": true,
+    "complete_suite_invocations_in_core_gate": 0
+  },
+  "confirmed_root_cause": {
+    "classification": "STATIC_AUTHORIZATION_SCOPE_LITERAL_LOST_DURING_GENERALIZED_NORMAL_PS_SCOPE_REPAIR",
+    "description": "The normal-PS authorization repair represented Stage62-only and normal scopes with one conditional tuple. Runtime semantics and the complete suites passed, but the independent core-readiness check deliberately requires the explicit Stage62-only tuple literal and therefore failed closed.",
+    "not_a_payload_or_ddr_failure": true,
+    "repair": "KEEP_EXPLICIT_CONDITIONAL_TUPLES_FOR_STAGE62_ONLY_AND_P7_PS_APPLICATION_STAGE_AND_TEST_BOTH_BRANCHES"
+  },
+  "portable_raw_evidence": {
+    "path": "evidence/generated/p7_r35validate_7c6b50f_precondition",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 11,
+    "byte_count": 110545,
+    "tree_sha256": "4e0b53a7dc9bf0bcde3587ddfbcfb3dc902673f6d65abc5e1d86d479d802419f",
+    "files": [
+      {
+        "path": "canonical_gate_summary.json",
+        "bytes": 16514,
+        "sha256": "c83b66a8e0325286045350647eb2c05e193d278c3122df42645f48065f859ffa"
+      },
+      {
+        "path": "complete_suite_summary.json",
+        "bytes": 2499,
+        "sha256": "df0ce0d72558bacf97d1b8f01ed35b11cf7f2cbf1e108c79b8a3470ffecdcdad"
+      },
+      {
+        "path": "fresh_p6_cache_bypass_build_summary.json",
+        "bytes": 3100,
+        "sha256": "d5c85cb396ed8913449c5a17e4c456225ac9014fb8106278eeb7ee1091f760ef"
+      },
+      {
+        "path": "fresh_p7_cache_bypass_build_summary.json",
+        "bytes": 11793,
+        "sha256": "a78360ac204e97e071c537fa94b7779c355acb9de0cfd5426622b16fc5043d9d"
+      },
+      {
+        "path": "generated_board_contract.json",
+        "bytes": 11575,
+        "sha256": "3ff59b8655b1490dc5f79767427feabf34195a0f02fcdaced9178ca2f35d6f2b"
+      },
+      {
+        "path": "offline_test_run.json",
+        "bytes": 7426,
+        "sha256": "3fcafde296589eb1bb130f3e98ec596bba5373488ed61ddac1fc8aa3b4766507"
+      },
+      {
+        "path": "ps_core_readiness.json",
+        "bytes": 16169,
+        "sha256": "f3d3ded1ae57bac22f2ff9f89cce1513570889d9add6cff3fe1b86e04bf14c61"
+      },
+      {
+        "path": "tests_p7_discovery.stderr.log",
+        "bytes": 5303,
+        "sha256": "e76b06a06a27b7fd707cc403070a4a08e807f22ea37567d2283d58e10c1e00f3"
+      },
+      {
+        "path": "tests_p7_discovery.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "top_level_discovery.stderr.log",
+        "bytes": 35525,
+        "sha256": "324169f0b4750a52a5edba38a604d2063486a825d453b1000412b59ca98e9432"
+      },
+      {
+        "path": "top_level_discovery.stdout.log",
+        "bytes": 641,
+        "sha256": "fdc39e1ff10a27e642196c442851e48a9e1ee74252e9e2b30f0115c8c8cedda0"
+      }
+    ]
+  },
+  "next_step": "COMMIT_THE_EXPLICIT_SCOPE_TUPLE_REPAIR_AND_FRESH_BUILD_ARTIFACTS; THEN USE_THE_NEW_CLEAN_SOURCE_FOR_EACH_REQUIRED_COMPLETE_SUITE_EXACTLY_ONCE_AND_A_CANONICAL_GATE_WITH_ZERO_DUPLICATE_SUITE_INVOCATIONS"
+}
