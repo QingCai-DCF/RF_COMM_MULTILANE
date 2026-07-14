@@ -14,7 +14,12 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - integrity_crc_sha_immutable_chunk_snapshot: PASS
 - critical_payload_copies_are_volatile_byte_verified: PASS
 - first_error_diagnostic_is_atomic_and_first_only: PASS
+- stage62_first_error_prepare_is_first_only: PASS
 - first_error_capture_precedes_validation_and_is_input_bound: PASS
+- stage62_diagnostic_fixed_ocm_section: PASS
+- stage62_copy_four_snapshot_classification: PASS
+- stage62_diagnostic_crc_publish_order: PASS
+- stage62_only_microtest_bypasses_pl_and_is_disassembly_bound: PASS
 - pre_repair_encode_raw_compared_to_fixed_input_reference: PASS
 - p6_tx_mmio_readback_and_rx_boundaries_observed: PASS
 - local_payload_buffers_are_64_byte_aligned: PASS
@@ -35,5 +40,7 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - stationary_identity_ledger_bound: PASS
 - native_shutdown_readback_test: PASS
 - native_payload_alignment_matrix_test: PASS
+- native_stage62_diagnostic_matrix_test: PASS
+- native_stage62_microtest_layout_test: PASS
 - p7_python_and_codec_tests: PASS
 - real_vitis_build_source_bound: PASS

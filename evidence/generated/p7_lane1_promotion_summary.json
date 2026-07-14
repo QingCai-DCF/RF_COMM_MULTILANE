@@ -1,6 +1,6 @@
 {
   "P7_LANE1_RELIABILITY_PROMOTION_GATE": "PASS",
-  "generated_at_utc": "2026-07-13T08:27:17+00:00",
+  "generated_at_utc": "2026-07-14T16:31:19+00:00",
   "source_commit": "ca041d4877b831de84fe7829788ac835b0b46acd",
   "reason": "fresh raw-pulse, frame CRC, ACK-only, session/lane/ACK-mask readback and P6 lane1 physical-frame gates verified",
   "checks": {
@@ -21,19 +21,19 @@
   "sources": {
     "raw": {
       "path": "evidence/hardware/p5/raw_lane_matrix/p5_stage_result.json",
-      "sha256": "86d308b2af633f0055b2fc89a628988a8096ed2d6fb9e11999eab5c70eec4acc"
+      "sha256": "6947268daafbaea31c47ed4b37b24796bce4e8b1a4dda2db143cda7eb619d161"
     },
     "frame": {
       "path": "evidence/hardware/p5/protocol/lane1_frame_crc_100/p5_stage_result.json",
-      "sha256": "406af4a4c701b450aeb8ca03dd61cec6ea57a33ccaa19efb9dfe622d15a90d2a"
+      "sha256": "a864c3e1b0fcb7ee4056371a14a8a3f9ff53a5f39717738dc439486a399041b4"
     },
     "ack": {
       "path": "evidence/hardware/p5/protocol/lane1_ack_retry_100/p5_stage_result.json",
-      "sha256": "ed9838aaca9d502d86e2708dfa165346f0c98e0f8fdcecdb70267ad5c606b295"
+      "sha256": "8959d9734fa314f99163a7010bc7affaf690324cb6d280b742509583da0bd75b"
     },
     "p6": {
       "path": "evidence/hardware/p6/protocol/lane1_dynamic_payload/p6_jtag_axi_matrix_summary.json",
-      "sha256": "06223f36a6fb5d2abc6125f33c42a349c5356d1973796212c5c54735bd99650e"
+      "sha256": "4d6264e9cddbd2471b521a63ef768305865c2165f21dd716913a8f4e9bbea503"
     }
   },
   "hardware_actions_executed": false,

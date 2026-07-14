@@ -1,13 +1,13 @@
 # P7 Protocol Golden Vectors
 
-generated_at_utc: 2026-07-13T08:27:17+00:00
+generated_at_utc: 2026-07-14T16:31:19+00:00
 P7_PROTOCOL_VECTORS: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
 ## Details
 
-- run: {"command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\tools\\run_p7_protocol_vectors.py --json-summary", "returncode": 0}
+- run: {"command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe C:\\Users\\user\\.codex\\worktrees\\mainp7\\RF_COMM_MULTILANE\\tools\\run_p7_protocol_vectors.py --json-summary", "returncode": 0}
 - C_PYTHON_BYTE_FOR_BYTE: PASS
 - HARDWARE_ACCEPTANCE: PENDING_HW
 - INVALID_FIELD_ERROR_MATCH: PASS

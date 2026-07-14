@@ -1,0 +1,209 @@
+{
+  "schema": "rf-comm-p7-campaign-d-main-integration-v1",
+  "generated_at_utc": "2026-07-14T16:31:21+00:00",
+  "main_thread_state": "MAIN_THREAD_RESUME_READY",
+  "specialist": {
+    "status": "READY_FOR_MAIN_INTEGRATION_DIAGNOSTIC_STAGE62_STREAK_PASS",
+    "packaging_baseline": "53571e305846f89bf3da8c146f5a07bdb003f606",
+    "corrected_ax7010_artifact_commit": "a7bc060aa29f15815891af463b1f7ff1d600cb31",
+    "stage62_evidence_harvest_fix_commit": "6e8043716a6797257bbc46c172c287abed93198d",
+    "campaign_d_evidence_commit": "1e6b5185cb1f0bdc2de0f148e715e1c726cb8b5e",
+    "package_head": "73dc23a1ad95cddd06e7693dc1fa4fe3d629d648",
+    "package_head_available": true,
+    "packaging_baseline_is_ancestor": true,
+    "reviewed_commit_count_after_packaging_baseline": 21,
+    "reviewed_commit_count_after_original_main_base": 39
+  },
+  "integration": {
+    "status": "INTEGRATED",
+    "method": "REVIEWED_CURATED_NON_MERGE_CHERRY_PICK",
+    "original_main_base": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+    "preserved_main_handoff_commit": "a473516635b3a138019b4f9d3ebef0e34c4613d2",
+    "curated_specialist_commit_object": "1517079fa2422e75535dfde2fa62d6280d370e7d",
+    "main_integration_commit": "38789d21f5bf3a3ba3b9256aa79562093a5d4018",
+    "curated_paths": 2575,
+    "specialist_tree_mismatches_after_curating": 0,
+    "excluded_paths": {
+      "total": 136,
+      "evidence_generated": {
+        "count": 110,
+        "reason": "REGENERATED_BY_FRESH_CACHE_BYPASS_MAIN_THREAD_BUILDS_AND_CANONICAL_GATE"
+      },
+      "stage62_handoff_current": {
+        "count": 26,
+        "reason": "PRESERVE_MAIN_THREAD_R32_FROZEN_SNAPSHOT"
+      }
+    },
+    "merge_used": false,
+    "conflicts": [],
+    "campaign_d_authorization_reused": false,
+    "campaign_d_rerun": false
+  },
+  "campaign_d": {
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "acceptance_coverage": 0,
+    "hardware_acceptance": "PENDING_HW",
+    "root_cause_classification": "BYTE_WIDE_LARGE_EVIDENCE_HARVEST_EXCEEDED_BOUNDED_OUTER_WINDOW",
+    "closure_path": "ddr_debug/campaign_d/CAMPAIGN_D_CLOSURE.json",
+    "closure_sha256": "704408f18f355684d002bcfa7c198ab45626657c15a724c75823f7fcc6d68cf3",
+    "lane1_harness": {
+      "connector": "J11",
+      "pin": "33",
+      "fpga_pin": "G15",
+      "legacy_d19_used": false
+    },
+    "runs": [
+      {
+        "run_id": "p7_20260714_ddr_external_campaign_d_01",
+        "status": "PASS_DIAGNOSTIC_ONLY",
+        "summary_sha256": "5dd354d263d69cfbd33dfb9e9ef2fa67c0b78dac2945ef5822b88a58c7064f2e",
+        "raw_manifest_sha256": "d6a823d900c41b697ecfef491b51dfcc692c221bb78ebc42cbfe59395501cee2",
+        "safe_shutdown": true
+      },
+      {
+        "run_id": "p7_20260714_ddr_external_campaign_d_02",
+        "status": "PASS_DIAGNOSTIC_ONLY",
+        "summary_sha256": "7cf2cc3e275695101d2840c9649d0c57f9ed5573072fbd31293301ad857e602d",
+        "raw_manifest_sha256": "4d95d8f8b89ae7e0145d018aad2b61aadf993c23536e36f3a69ba43bf3d63e55",
+        "safe_shutdown": true
+      },
+      {
+        "run_id": "p7_20260714_ddr_external_campaign_d_03",
+        "status": "PASS_DIAGNOSTIC_ONLY",
+        "summary_sha256": "9377d387a49865ce63fc575892f12d78004297d2251005d35369a93bb81e81db",
+        "raw_manifest_sha256": "cc71fa80c3a4d5f24d4ef22bc58aaeded850f3f7e4b892463d5e1e70984a447d",
+        "safe_shutdown": true
+      }
+    ],
+    "aggregate": {
+      "stage62_passes": 3,
+      "boundary_passed": 144,
+      "boundary_total": 144,
+      "checkpoint_4k_passed": 3,
+      "checkpoint_4k_total": 3,
+      "cases_64k_passed": 12,
+      "cases_64k_total": 12,
+      "cases_1m_passed": 12,
+      "cases_1m_total": 12,
+      "raw_evidence_hash_exact": 1275,
+      "raw_evidence_total": 1275,
+      "partial_files": 0,
+      "hash_mismatches": 0,
+      "safe_shutdown_complete": true
+    }
+  },
+  "main_thread_validation": {
+    "validation_worktree": "C:\\Users\\user\\.codex\\worktrees\\mainp7\\RF_COMM_MULTILANE",
+    "hardware_actions_executed": false,
+    "cache_bypass_build_commit": "289dff9745f3a3ea09b0c2e3f4da1daf30cf5e53",
+    "focused_changed_path_tests": {
+      "initial": "PASS_94_OF_95_WITH_ONE_MISSING_GENERATED_ARTIFACT_PRECONDITION",
+      "post_build_failed_test_recheck": "PASS_1_OF_1",
+      "campaign_d_evidence_rehash": "PASS_4_OF_4"
+    },
+    "cache_bypass_builds": {
+      "vivado_p6": "PASS",
+      "vitis_p7": "PASS",
+      "cache_bypass": true,
+      "real_build_process_ran": true
+    },
+    "generated_board_contract": {
+      "status": "PASS",
+      "path": "evidence/generated/p7_main_integration_board_contract.json",
+      "sha256": "219dae19fa5052b9ad1addbfef6f05e5bd897484673c758c377b3136ec38117c",
+      "errors": []
+    },
+    "superseded_precondition_regression": {
+      "status": "FAIL",
+      "source_commit": "289dff9745f3a3ea09b0c2e3f4da1daf30cf5e53",
+      "summary_sha256": "b39a2b346048326ec70ee7bfe920c36f1b8157b2c468ecb9fd16848044c8c80c",
+      "reason": "FRESH_WORKTREE_MISSING_FOUR_PRE_EXISTING_GITIGNORED_IMMUTABLE_ARTIFACTS",
+      "repair_commit": "0b14e763a6955d627a14be81f04f0c5dfb3445b7",
+      "record_path": "stage62_handoff/return/MAIN_THREAD_INTEGRATION_PRECONDITION.json",
+      "focused_repair_recheck": "PASS_2_OF_2"
+    },
+    "complete_suites": {
+      "status": "PASS",
+      "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+      "summary_path": "build/p7_regression_main_integration_4bc49b1.json",
+      "summary_sha256": "1b30923cfae5561c85a350c36c076f006452df1fb64d84984e586d7620b49b4a",
+      "top_level_discovery": "PASS_185_OF_185",
+      "tests_p7_discovery": "PASS_42_OF_42",
+      "suite_invocation_count_by_name": {
+        "top_level_discovery": 1,
+        "tests_p7_discovery": 1
+      },
+      "source_commit_unchanged": true,
+      "dirty_worktree_before_suites": false,
+      "dirty_worktree_after_suites": false
+    },
+    "canonical_p7_gate": {
+      "status": "PASS",
+      "checks_passed": 13,
+      "checks_total": 13,
+      "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+      "path": "evidence/generated/p7_offline_gate_summary.json",
+      "sha256": "8cae72c539f309bd58c59511dafcdf2e0a70525c341bcba265b5e76300803fcd",
+      "offline_cache_status": "BYPASS",
+      "offline_real_build_process_ran": true,
+      "dirty_worktree_at_gate": false,
+      "hardware_actions_executed": false,
+      "hardware_acceptance": "PENDING_HW"
+    }
+  },
+  "main_thread_artifacts": {
+    "bitstream": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_c2995ac0b154467fb136fd2cad582da185850544086cf23dd4ec01cd47cda25a.bit",
+      "sha256": "c2995ac0b154467fb136fd2cad582da185850544086cf23dd4ec01cd47cda25a"
+    },
+    "xsa": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_3e7eabda40a9936dd4e0bd3f7e55e4153aac48abdb8356493e13244916cdf57a.xsa",
+      "sha256": "3e7eabda40a9936dd4e0bd3f7e55e4153aac48abdb8356493e13244916cdf57a"
+    },
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_51e1bc8342a88625d830274049dfeb91183e3c6d39dad3ca97a6081bd3e597bd.elf",
+      "sha256": "51e1bc8342a88625d830274049dfeb91183e3c6d39dad3ca97a6081bd3e597bd"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_9aefab06a1b76debea2c2dac95127f9b4579351670f3e456b2775b9f98f8a011.map",
+      "sha256": "9aefab06a1b76debea2c2dac95127f9b4579351670f3e456b2775b9f98f8a011"
+    },
+    "ps7_init_tcl": {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.gen/sources_1/bd/p6_ps_system/ip/p6_ps_system_processing_system7_0_0/ps7_init.tcl",
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    "ps7_init_c": {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.gen/sources_1/bd/p6_ps_system/ip/p6_ps_system_processing_system7_0_0/ps7_init.c",
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    "runner": {
+      "path": "scripts/hw/run_p7_ps_application_stage_safe.py",
+      "sha256": "f07c034ec442c98ee9ef07ab9cf480942ad05639c630a9bc9524470ba31bf2de"
+    },
+    "parser": {
+      "path": "tools/p7_ps_mailbox_backend.py",
+      "sha256": "fcf190204ecd296b378bef8b085dd9146c62ce35bff3881becd668e03a873110"
+    },
+    "execution_tcl": {
+      "path": "scripts/hw/p7_ps_application_execute.tcl",
+      "sha256": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec"
+    },
+    "shutdown_bitstream": {
+      "path": "shutdown_bitstream/tfdu_shutdown_j10_j11.bit",
+      "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+    }
+  },
+  "status_markers": {
+    "STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK": "PASS_3_OF_3",
+    "STAGE62_SPECIALIST_INTEGRATION": "READY",
+    "SAFE_SHUTDOWN_COMPLETE": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "FULL_PROJECT_PASS": false,
+    "FORMAL_STAGES_1_66_PASS": false,
+    "STATIONARY_PASS": false,
+    "PRODUCT_ACCEPTANCE_PASS": false
+  },
+  "stationary_1800_seconds_started": false,
+  "next_goal_step": "PREPARE_A_NEW_FORMAL_RUN_ID_WITH_FRESH_SCOPED_AUTHORIZATION_CURRENT_HASHES_PLAN_AND_ALL_DRY_VALIDATION_FOR_THE_COMPLETE_STAGES_1_THROUGH_66_RUN;_DO_NOT_LAUNCH_HARDWARE_AS_PART_OF_THIS_INTEGRATION_HANDOFF"
+}

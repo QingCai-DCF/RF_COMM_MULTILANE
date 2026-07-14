@@ -3,7 +3,7 @@
 Project: RF_COMM_MULTILANE
 Current branch: codex/p7-stationary-application
 P6 baseline commit: ca041d4877b831de84fe7829788ac835b0b46acd
-P7 offline checkpoint source commit: see `evidence/generated/p7_offline_gate_summary.json`; regenerate it from the final clean P7 source commit before hardware
+P7 offline checkpoint source commit: `4bc49b1684be5eac655d75314f0da95e0bc1ffa8` (see `evidence/generated/p7_offline_gate_summary.json`)
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -15,6 +15,13 @@ P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET: PASS
 HARDWARE_ACCEPTANCE_STATIONARY_2LANE_LOCAL: PASS
 P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET: PENDING_HW
 HARDWARE_ACCEPTANCE_STATIONARY_2LANE_APPLICATION: PENDING_HW
+P7_OFFLINE_GATE: PASS
+P7_OFFLINE_CACHE_STATUS: BYPASS
+STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
+STAGE62_SPECIALIST_INTEGRATION: READY
+CAMPAIGN_D_DIAGNOSTIC_ONLY: true
+CAMPAIGN_D_ACCEPTANCE_COVERAGE: 0
+SAFE_SHUTDOWN_COMPLETE: true
 PS_PL_PHY_PL_PS_APPLICATION_PASS: false
 STATIONARY_30MIN: PENDING_HW
 ETHERNET_ACCEPTANCE: DEFERRED_NO_NETWORK_CABLE
@@ -43,6 +50,13 @@ AXI/PL -> physical TFDU -> PL/AXI -> PS output-memory path. Direct JTAG/AXI is a
 auxiliary ingress and cross-check path; current host ingress is JTAG/AXI plus the
 PS mailbox. The disabled TCP adapter has not been tested over a real Ethernet
 cable and contributes no P7 PASS evidence.
+
+Campaign D supplies three consecutive diagnostic-only Stage 62 functional
+passes and safe shutdown evidence. It contributes zero formal acceptance
+coverage and does not cover stages 1--61, a complete stages 1--66 run, or the
+1800-second stationary stage. The specialist package is integrated and the
+fresh clean-source offline checkpoint passes, but hardware acceptance remains
+`PENDING_HW`.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional
