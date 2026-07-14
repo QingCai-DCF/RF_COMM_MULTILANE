@@ -3,7 +3,7 @@
 Project: RF_COMM_MULTILANE
 Current branch: codex/p7-stationary-application
 P6 baseline commit: ca041d4877b831de84fe7829788ac835b0b46acd
-P7 offline checkpoint source commit: `4bc49b1684be5eac655d75314f0da95e0bc1ffa8` (see `evidence/generated/p7_offline_gate_summary.json`)
+P7 offline checkpoint source commit: `1d0c30fa7988acc0ae345cfec1c1917a56f07592` (see `evidence/generated/p7_offline_gate_summary.json`)
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -24,12 +24,12 @@ R34_ACCEPTANCE_COVERAGE_CLAIMED: false
 R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
-STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_OFFLINE_PENDING_CLEAN_CHECKPOINT
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_STATIC_REPAIR
-P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 7c6b50ff3450562b95c59029ec225f6d365541f9
-P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_191_PLUS_42
-P7_LATEST_CANONICAL_GATE_SOURCE: 7c6b50ff3450562b95c59029ec225f6d365541f9
-P7_LATEST_CANONICAL_GATE: FAIL_PRECONDITION_PS_CORE_STATIC_SCOPE_LITERAL
+STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_CHECKPOINT_EVIDENCE_IMPORT
+P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
+P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_192_PLUS_42
+P7_LATEST_CANONICAL_GATE_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
+P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
 P7_NEW_HARDWARE_RUN_READY: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
@@ -77,10 +77,10 @@ outer ledger records exact PASS observations for stages 1--61, followed by a
 stage 62 authorization-contract failure before the candidate bitstream or PS
 ELF started. Both stage-local shutdown barriers and the separate recovery
 passed, but neither changes stage 62 or r34 to PASS. Stage 66 was not attempted.
-The confirmed defect is that the generated PS authorization omitted both
+The confirmed defect was that the generated PS authorization omitted both
 `P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE` and `P7_RUN_ID=NONE`, while the
 execution Tcl required them; the generator and offline wrapper validator have
-an offline-only repair pending a new clean-source checkpoint. The first clean
+an offline-only repair that now passes a new clean-source checkpoint. The first clean
 validation attempt at source `229299db9c6c5098d30ae5922508f4426546e665`
 accurately failed: top-level discovery was 190 tests with two failures and two
 errors, while `tests/p7` passed 42/42, with each suite invoked exactly once.
@@ -97,9 +97,17 @@ only `P7_PS_CORE_HARDWARE_READINESS` was false. The independent core check
 required the explicit Stage62-only authorization tuple literal, while the
 normal-PS repair had generalized both scopes into a conditional tuple. Runtime
 semantics and every complete test passed, but the static gate failed closed.
-The wrapper now keeps explicit tuples for both scopes and tests both branches;
-this offline repair requires a new clean-source checkpoint. No hardware run is
-ready.
+The wrapper now keeps explicit tuples for both scopes and tests both branches.
+On clean source `1d0c30fa7988acc0ae345cfec1c1917a56f07592`, top-level
+discovery passed 192/192 and `tests/p7` passed 42/42, each invoked exactly once.
+The canonical gate reused the hash-bound suite summary with zero duplicate
+complete-suite invocations and passed 13/13. Exact summary SHA256 values are
+`5bb9560fae3b7439843ef8a788d1bde7621657f73d19880569476f9492d8e34a`
+for the suites, `6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98`
+for the gate, and
+`a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b`
+for PS core readiness. No hardware action occurred and no new hardware run is
+yet planned or authorized.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional
