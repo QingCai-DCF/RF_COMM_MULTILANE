@@ -1,29 +1,60 @@
 {
   "P6_PS_CANDIDATE_BUILD": "PASS",
-  "generated_at_utc": "2026-07-10T12:42:31+00:00",
+  "generated_at_utc": "2026-07-14T16:13:47+00:00",
   "returncode": 0,
   "timing_met": true,
   "drc_clean": true,
+  "cache_bypass": true,
+  "ps7_ddr_configuration_verified": true,
+  "ps7_board_contract_verified": true,
+  "ps7_ddr_configuration": {
+    "P6_PS7_DEVICE": "xc7z010clg400-1",
+    "CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+    "CONFIG.PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+    "CONFIG.PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+    "CONFIG.PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+    "CONFIG.PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+    "CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+    "CONFIG.PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+    "CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+    "CONFIG.PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+    "CONFIG.PCW_UIPARAM_DDR_T_FAW": "40.0",
+    "CONFIG.PCW_UIPARAM_DDR_ECC": "Disabled",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1",
+    "P6_PS7_BOARD_CONFIGURATION": "PASS",
+    "P6_PS7_DDR_CONFIGURATION": "PASS"
+  },
+  "ps7_ddr_configuration_report": {
+    "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_ddr_configuration.txt",
+    "sha256": "17aa72b86cc4c248772b063587baf0eb59304729a24a5462fe06a44457a66476"
+  },
+  "ps7_board_contract_report": {
+    "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_board_contract.json",
+    "sha256": "67e1b82976b607da8d639f2fa12f1d73968dff9f0b6f32580d48855acb03e9d9",
+    "status": "PASS"
+  },
   "artifacts": {
     "bit": {
       "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit",
-      "sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
-      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit"
+      "sha256": "c2995ac0b154467fb136fd2cad582da185850544086cf23dd4ec01cd47cda25a",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_c2995ac0b154467fb136fd2cad582da185850544086cf23dd4ec01cd47cda25a.bit"
     },
     "xsa": {
       "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.xsa",
-      "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
-      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa"
+      "sha256": "3e7eabda40a9936dd4e0bd3f7e55e4153aac48abdb8356493e13244916cdf57a",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_3e7eabda40a9936dd4e0bd3f7e55e4153aac48abdb8356493e13244916cdf57a.xsa"
     }
   },
   "inputs": {
     "active_xdc": {
       "path": "constraints/active/PORT1.generated.xdc",
-      "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990"
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344"
     },
     "pinmap": {
       "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
-      "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a"
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd"
     },
     "active_profile": {
       "path": "board_profiles/ACTIVE_PROFILE.json",

@@ -1,14 +1,14 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-| Date         : Fri Jul 10 20:42:20 2026
+| Date         : Wed Jul 15 00:13:36 2026
 | Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
-| Command      : report_timing_summary -file C:/Users/user/Documents/RF_COMM_MULTILANE/evidence/generated/vivado/p6_ps_candidate/post_route_timing_summary_p6_ps_candidate.rpt
+| Command      : report_timing_summary -file C:/Users/user/.codex/worktrees/mainp7/RF_COMM_MULTILANE/evidence/generated/vivado/p6_ps_candidate/post_route_timing_summary_p6_ps_candidate.rpt
 | Design       : p6_ps_system_wrapper
 | Device       : 7z010-clg400
 | Speed File   : -1  PRODUCTION 1.12 2019-11-22
 | Design State : Routed
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Timing Summary Report
 
@@ -28,11 +28,11 @@ Timing Summary Report
   Borrow Time for Max Delay Exceptions       :  Yes
   Merge Timing Exceptions                    :  Yes
 
-  Corner  Analyze    Analyze
-  Name    Max Paths  Min Paths
-  ------  ---------  ---------
-  Slow    Yes        Yes
-  Fast    Yes        Yes
+  Corner  Analyze    Analyze    
+  Name    Max Paths  Min Paths  
+  ------  ---------  ---------  
+  Slow    Yes        Yes        
+  Fast    Yes        Yes        
 
 
 ------------------------------------------------------------------------------------------------
@@ -40,10 +40,10 @@ Timing Summary Report
 | ------------------
 ------------------------------------------------------------------------------------------------
 
-Rule       Severity  Description                                  Violations
----------  --------  -------------------------------------------  ----------
-TIMING-18  Warning   Missing input or output delay                12
-ULMTCS-1   Warning   Control Sets use limits recommend reduction  1
+Rule       Severity  Description                                  Violations  
+---------  --------  -------------------------------------------  ----------  
+TIMING-18  Warning   Missing input or output delay                12          
+ULMTCS-1   Warning   Control Sets use limits recommend reduction  1           
 
 Note: This report is based on the most recent report_methodology run and may not be up-to-date. Run report_methodology on the current design for the latest report.
 
@@ -140,9 +140,9 @@ Table of Contents
 | ---------------------
 ------------------------------------------------------------------------------------------------
 
-    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
-    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      0.066        0.000                      0                20776        0.051        0.000                      0                20776        6.832        0.000                       0                  7292
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+      0.066        0.000                      0                20776        0.051        0.000                      0                20776        6.832        0.000                       0                  7292  
 
 
 All user specified timing constraints are met.
@@ -155,7 +155,7 @@ All user specified timing constraints are met.
 
 Clock       Waveform(ns)       Period(ns)      Frequency(MHz)
 -----       ------------       ----------      --------------
-clk_fpga_0  {0.000 7.812}      15.625          64.000
+clk_fpga_0  {0.000 7.812}      15.625          64.000          
 
 
 ------------------------------------------------------------------------------------------------
@@ -163,9 +163,9 @@ clk_fpga_0  {0.000 7.812}      15.625          64.000
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
------             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk_fpga_0          0.066        0.000                      0                14051        0.051        0.000                      0                14051        6.832        0.000                       0                  7292
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+-----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+clk_fpga_0          0.066        0.000                      0                14051        0.051        0.000                      0                14051        6.832        0.000                       0                  7292  
 
 
 ------------------------------------------------------------------------------------------------
@@ -173,8 +173,8 @@ clk_fpga_0          0.066        0.000                      0                140
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints
-----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
 
 
 ------------------------------------------------------------------------------------------------
@@ -182,9 +182,9 @@ From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS
 | -----------------------
 ------------------------------------------------------------------------------------------------
 
-Path Group         From Clock         To Clock               WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints
-----------         ----------         --------               -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------
-**async_default**  clk_fpga_0         clk_fpga_0               4.514        0.000                      0                 6725        0.714        0.000                      0                 6725
+Path Group         From Clock         To Clock               WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------         ----------         --------               -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+**async_default**  clk_fpga_0         clk_fpga_0               4.514        0.000                      0                 6725        0.714        0.000                      0                 6725  
 
 
 ------------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ Slack (MET) :             0.066ns  (required time - arrival time)
   Data Path Delay:        15.890ns  (logic 7.121ns (44.814%)  route 8.769ns (55.186%))
   Logic Levels:           31  (CARRY4=17 LUT2=3 LUT3=1 LUT6=8 MUXF7=1 MUXF8=1)
   Clock Path Skew:        0.507ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    3.353ns = ( 18.978 - 15.625 )
+    Destination Clock Delay (DCD):    3.353ns = ( 18.978 - 15.625 ) 
     Source Clock Delay      (SCD):    2.962ns
     Clock Pessimism Removal (CPR):    0.116ns
   Clock Uncertainty:      0.237ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -228,7 +228,7 @@ Slack (MET) :             0.066ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           1.207     1.207    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.101     1.308 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -320,7 +320,7 @@ Slack (MET) :             0.066ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_fpga_0 rise edge)
-                                                     15.625    15.625 r
+                                                     15.625    15.625 r  
     PS7_X0Y0             PS7                          0.000    15.625 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           1.101    16.726    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.091    16.817 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -332,14 +332,14 @@ Slack (MET) :             0.066ns  (required time - arrival time)
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    17.489 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
                          net (fo=7277, routed)        1.489    18.978    p6_ps_system_i/p6_peripheral_0/inst/impl/u_engine/g_phy[1].u_a_phy/clk
     SLICE_X15Y60         FDCE                                         r  p6_ps_system_i/p6_peripheral_0/inst/impl/u_engine/g_phy[1].u_a_phy/tx_high_width_current_reg[29]/C
-                         clock pessimism              0.116    19.094
-                         clock uncertainty           -0.237    18.857
+                         clock pessimism              0.116    19.094    
+                         clock uncertainty           -0.237    18.857    
     SLICE_X15Y60         FDCE (Setup_fdce_C_D)        0.062    18.919    p6_ps_system_i/p6_peripheral_0/inst/impl/u_engine/g_phy[1].u_a_phy/tx_high_width_current_reg[29]
   -------------------------------------------------------------------
-                         required time                         18.919
-                         arrival time                         -18.852
+                         required time                         18.919    
+                         arrival time                         -18.852    
   -------------------------------------------------------------------
-                         slack                                  0.066
+                         slack                                  0.066    
 
 
 
@@ -356,7 +356,7 @@ Slack (MET) :             0.051ns  (arrival time - required time)
   Path Type:              Hold (Min at Fast Process Corner)
   Requirement:            0.000ns  (clk_fpga_0 rise@0.000ns - clk_fpga_0 rise@0.000ns)
   Data Path Delay:        0.360ns  (logic 0.141ns (39.164%)  route 0.219ns (60.836%))
-  Logic Levels:           0
+  Logic Levels:           0  
   Clock Path Skew:        0.309ns (DCD - SCD - CPR)
     Destination Clock Delay (DCD):    1.449ns
     Source Clock Delay      (SCD):    1.093ns
@@ -365,7 +365,7 @@ Slack (MET) :             0.051ns  (arrival time - required time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           0.315     0.315    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.026     0.341 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -384,7 +384,7 @@ Slack (MET) :             0.051ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           0.341     0.341    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.029     0.370 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -396,14 +396,14 @@ Slack (MET) :             0.051ns  (arrival time - required time)
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     0.556 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
                          net (fo=7277, routed)        0.893     1.449    p6_ps_system_i/processing_system7_0/inst/M_AXI_GP0_ACLK
     PS7_X0Y0             PS7                                          r  p6_ps_system_i/processing_system7_0/inst/PS7_i/MAXIGP0ACLK
-                         clock pessimism             -0.047     1.402
+                         clock pessimism             -0.047     1.402    
     PS7_X0Y0             PS7 (Hold_ps7_MAXIGP0ACLK_MAXIGP0BID[6])
                                                       0.000     1.402    p6_ps_system_i/processing_system7_0/inst/PS7_i
   -------------------------------------------------------------------
-                         required time                         -1.402
-                         arrival time                           1.453
+                         required time                         -1.402    
+                         arrival time                           1.453    
   -------------------------------------------------------------------
-                         slack                                  0.051
+                         slack                                  0.051    
 
 
 
@@ -446,7 +446,7 @@ Slack (MET) :             4.514ns  (required time - arrival time)
   Data Path Delay:        10.467ns  (logic 0.580ns (5.541%)  route 9.887ns (94.459%))
   Logic Levels:           1  (LUT1=1)
   Clock Path Skew:        -0.088ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    3.430ns = ( 19.055 - 15.625 )
+    Destination Clock Delay (DCD):    3.430ns = ( 19.055 - 15.625 ) 
     Source Clock Delay      (SCD):    3.716ns
     Clock Pessimism Removal (CPR):    0.199ns
   Clock Uncertainty:      0.237ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -458,7 +458,7 @@ Slack (MET) :             4.514ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           1.207     1.207    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.101     1.308 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -479,7 +479,7 @@ Slack (MET) :             4.514ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_fpga_0 rise edge)
-                                                     15.625    15.625 r
+                                                     15.625    15.625 r  
     PS7_X0Y0             PS7                          0.000    15.625 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           1.101    16.726    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.091    16.817 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -491,14 +491,14 @@ Slack (MET) :             4.514ns  (required time - arrival time)
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    17.489 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
                          net (fo=7277, routed)        1.565    19.054    p6_ps_system_i/p6_peripheral_0/inst/impl/u_regs/clk
     SLICE_X38Y31         FDCE                                         r  p6_ps_system_i/p6_peripheral_0/inst/impl/u_regs/rx_ram_reg[29][5]/C
-                         clock pessimism              0.199    19.253
-                         clock uncertainty           -0.237    19.016
+                         clock pessimism              0.199    19.253    
+                         clock uncertainty           -0.237    19.016    
     SLICE_X38Y31         FDCE (Recov_fdce_C_CLR)     -0.319    18.697    p6_ps_system_i/p6_peripheral_0/inst/impl/u_regs/rx_ram_reg[29][5]
   -------------------------------------------------------------------
-                         required time                         18.697
-                         arrival time                         -14.183
+                         required time                         18.697    
+                         arrival time                         -14.183    
   -------------------------------------------------------------------
-                         slack                                  4.514
+                         slack                                  4.514    
 
 
 
@@ -524,7 +524,7 @@ Slack (MET) :             0.714ns  (arrival time - required time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           0.315     0.315    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.026     0.341 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -545,7 +545,7 @@ Slack (MET) :             0.714ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_fpga_0 rise edge)
-                                                      0.000     0.000 r
+                                                      0.000     0.000 r  
     PS7_X0Y0             PS7                          0.000     0.000 r  p6_ps_system_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
                          net (fo=1, routed)           0.341     0.341    p6_ps_system_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
     BUFGCTRL_X0Y3        BUFG (Prop_bufg_I_O)         0.029     0.370 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG_replica_2/O
@@ -557,10 +557,15 @@ Slack (MET) :             0.714ns  (arrival time - required time)
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     0.556 r  p6_ps_system_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
                          net (fo=7277, routed)        0.821     1.377    p6_ps_system_i/p6_peripheral_0/inst/impl/u_axi_bridge/s_axi_aclk
     SLICE_X10Y27         FDCE                                         r  p6_ps_system_i/p6_peripheral_0/inst/impl/u_axi_bridge/reg_rd_addr_reg[8]/C
-                         clock pessimism             -0.299     1.078
+                         clock pessimism             -0.299     1.078    
     SLICE_X10Y27         FDCE (Remov_fdce_C_CLR)     -0.067     1.011    p6_ps_system_i/p6_peripheral_0/inst/impl/u_axi_bridge/reg_rd_addr_reg[8]
   -------------------------------------------------------------------
-                         required time                         -1.011
-                         arrival time                           1.724
+                         required time                         -1.011    
+                         arrival time                           1.724    
   -------------------------------------------------------------------
-                         slack                                  0.714
+                         slack                                  0.714    
+
+
+
+
+

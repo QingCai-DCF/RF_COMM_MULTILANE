@@ -1,54 +1,56 @@
 
-C:\Users\user\Documents\RF_COMM_MULTILANE\build\p7_ps_vitis_workspace\p7_runtime\Debug\p7_runtime.elf:     file format elf32-littlearm
+C:\Users\user\.codex\worktrees\mainp7\RF_COMM_MULTILANE\build\p7_ps_vitis_workspace\p7_runtime\Debug\p7_runtime.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000b0f0  00000000  00000000  00010000  2**6
+  0 .text         0000deb0  00000000  00000000  00010000  2**6
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .init         0000000c  0000b0f0  0000b0f0  0001b0f0  2**2
+  1 .init         0000000c  0000deb0  0000deb0  0001deb0  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .fini         0000000c  0000b0fc  0000b0fc  0001b0fc  2**2
+  2 .fini         0000000c  0000debc  0000debc  0001debc  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  3 .rodata       0000038c  0000b108  0000b108  0001b108  2**2
+  3 .rodata       00000410  0000dec8  0000dec8  0001dec8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  4 .data         00000470  0000b498  0000b498  0001b498  2**3
+  4 .data         00000470  0000e2d8  0000e2d8  0001e2d8  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  5 .eh_frame     00000004  0000b908  0000b908  0001b908  2**2
+  5 .eh_frame     00000004  0000e748  0000e748  0001e748  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  6 .mmu_tbl      00004000  0000c000  0000c000  0001c000  2**0
+  6 .mmu_tbl      00004000  00010000  00010000  00020000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  7 .init_array   00000004  00010000  00010000  00020000  2**2
+  7 .init_array   00000004  00014000  00014000  00024000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .fini_array   00000004  00010004  00010004  00020004  2**2
+  8 .fini_array   00000004  00014004  00014004  00024004  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .ARM.attributes 00000033  00010008  00010008  00020008  2**0
+  9 .ARM.attributes 00000033  00014008  00014008  00024008  2**0
                   CONTENTS, READONLY
- 10 .bss          00000028  00010008  00010008  00020008  2**2
+ 10 .bss          0000002c  00014008  00014008  00024008  2**2
                   ALLOC
- 11 .heap         00002000  00010030  00010030  00020008  2**0
+ 11 .heap         0000200c  00014034  00014034  00024008  2**0
                   ALLOC
- 12 .stack        00003800  00012030  00012030  00020008  2**0
+ 12 .stack        00003800  00016040  00016040  00024008  2**0
                   ALLOC
- 13 .comment      00000012  00000000  00000000  0002003b  2**0
+ 13 .p7_stage62_diagnostic 00000600  00021000  00021000  00031000  2**6
+                  ALLOC
+ 14 .comment      00000012  00000000  00000000  0002403b  2**0
                   CONTENTS, READONLY
- 14 .debug_info   0000930f  00000000  00000000  0002004d  2**0
+ 15 .debug_info   0000af68  00000000  00000000  0002404d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_abbrev 000012e6  00000000  00000000  0002935c  2**0
+ 16 .debug_abbrev 000016fe  00000000  00000000  0002efb5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_aranges 000001a0  00000000  00000000  0002a648  2**3
+ 17 .debug_aranges 000001e0  00000000  00000000  000306b8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_macro  000036e4  00000000  00000000  0002a7e8  2**0
+ 18 .debug_macro  00003a9b  00000000  00000000  00030898  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_line   00006388  00000000  00000000  0002decc  2**0
+ 19 .debug_line   000079d3  00000000  00000000  00034333  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .debug_str    00011efd  00000000  00000000  00034254  2**0
+ 20 .debug_str    00013604  00000000  00000000  0003bd06  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .debug_frame  000013a4  00000000  00000000  00046154  2**2
+ 21 .debug_frame  00001920  00000000  00000000  0004f30c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_rnglists 000002a5  00000000  00000000  000474f8  2**0
+ 22 .debug_rnglists 000002a5  00000000  00000000  00050c2c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 22 .debug_line_str 000000be  00000000  00000000  0004779d  2**0
+ 23 .debug_line_str 000000cc  00000000  00000000  00050ed1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 23 .debug_loclists 00001d80  00000000  00000000  0004785b  2**0
+ 24 .debug_loclists 00001d80  00000000  00000000  00050f9d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
