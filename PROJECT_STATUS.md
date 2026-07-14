@@ -30,7 +30,14 @@ P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f075
 P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_192_PLUS_42
 P7_LATEST_CANONICAL_GATE_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: false
+P7_NEW_HARDWARE_RUN_READY: true
+P7_NEXT_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r39_diag_suffix55
+P7_NEXT_DIAGNOSTIC_RUN_STATUS: READY_NOT_STARTED
+P7_NEXT_DIAGNOSTIC_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
+P7_NEXT_DIAGNOSTIC_PLAN_SHA256: fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f
+P7_NEXT_DIAGNOSTIC_ORDINALS: 1_2_3_4_55_THROUGH_65
+P7_NEXT_DIAGNOSTIC_DRY_VALIDATION: PASS
+P7_NEXT_DIAGNOSTIC_HARDWARE_LAUNCHED: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
@@ -87,7 +94,8 @@ errors, while `tests/p7` passed 42/42, with each suite invoked exactly once.
 Seven byte-exact r34 package logs had been ignored rather than tracked, and the
 fresh worktree had not yet materialized the generated AX7010 Vivado/Vitis board
 contract inputs. This checkpoint is preserved as non-hardware FAIL evidence and
-must not be rerun at the same source. A new hardware run is not ready.
+must not be rerun at the same source. That historical preparation block was
+later superseded by the clean source checkpoint described below.
 
 At the next clean source `7c6b50ff3450562b95c59029ec225f6d365541f9`,
 fresh cache-bypass P6 Vivado and P7 Vitis builds passed, the complete generated
@@ -106,8 +114,15 @@ complete-suite invocations and passed 13/13. Exact summary SHA256 values are
 for the suites, `6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98`
 for the gate, and
 `a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b`
-for PS core readiness. No hardware action occurred and no new hardware run is
-yet planned or authorized.
+for PS core readiness. No hardware action occurred. A new diagnostic-only plan
+is now prepared as `p7_20260715_stationary_app_r39_diag_suffix55` at that exact
+source. Its immutable plan SHA256 is
+`fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f`;
+the independent executor dry validation and all 15 authorization audits pass.
+It contains only ordinals 1--4 and 55--65, claims zero coverage, remains
+`PENDING_HW`, and contains no stage 66 or stationary launch. No r39 evidence
+root or hardware process has been created; preparation does not itself launch
+or pass hardware.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

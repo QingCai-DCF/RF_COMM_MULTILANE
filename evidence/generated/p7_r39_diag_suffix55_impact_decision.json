@@ -1,0 +1,92 @@
+{
+  "schema": "rf-comm-p7-diagnostic-suffix-selection-v1",
+  "recorded_at_utc": "2026-07-14T22:35:59.0085444Z",
+  "status": "PASS_FAIL_CLOSED_SUFFIX_55_SELECTED",
+  "run_id": "p7_20260715_stationary_app_r39_diag_suffix55",
+  "run_kind": "DIAGNOSTIC_ONLY",
+  "source_commit": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+  "mandatory_prefix_ordinals": [1, 2, 3, 4],
+  "candidate_suffix_start": 62,
+  "selected_suffix_start": 55,
+  "selected_ordinals": [1, 2, 3, 4, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65],
+  "skipped_55_through_61": false,
+  "skip_proof_status": "FAIL_CLOSED_NOT_ELIGIBLE",
+  "decision_basis": "The latest exact r34 observations at ordinals 55 through 61 are PASS, but current stage authorization inputs are not hash-identical to r34. The generic JTAG wrapper authorization closure binds changed XSA, ELF, source commit, and backend-manifest bytes. Therefore the unchanged-transitive-input requirement for selecting suffix 62 is not satisfied; the diagnostic includes 55 through 61.",
+  "prior_run": {
+    "run_id": "p7_20260715_stationary_app_r34_formal_full",
+    "immutable_status": "FAIL",
+    "resume_allowed": false,
+    "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+    "sequence_plan_sha256": "928005b993e3d299b65feef309609c64032de4b30f4bb8628266e6ab269a2228",
+    "execution_ledger_path": "evidence/generated/p7_r34_failure_package/sequence_execution_ledger.json",
+    "execution_ledger_sha256": "95b9678cee1d2cf4c89e32445f3cd2057487bca5c488f524b38f04f4f4771a27",
+    "ordinal_55_through_61_results": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+    "ordinal_62_result": "FAIL"
+  },
+  "changed_bound_inputs": [
+    {
+      "role": "xsa",
+      "prior_sha256": "3e7eabda40a9936dd4e0bd3f7e55e4153aac48abdb8356493e13244916cdf57a",
+      "current_sha256": "8ecccf761142c853a3c5734b1c520a837e680d85aa183d131aa4f194b3d7ad7c",
+      "unchanged": false
+    },
+    {
+      "role": "elf",
+      "prior_sha256": "51e1bc8342a88625d830274049dfeb91183e3c6d39dad3ca97a6081bd3e597bd",
+      "current_sha256": "07963f967f6dc4901e7c4ecb2f7d44a1d54976be5c95434299b610369b1e5ffe",
+      "unchanged": false
+    },
+    {
+      "role": "stage55_backend_manifest",
+      "prior_sha256": "3371acdc31ff9927e13d19c323e61f52ae90d4171c36615953ea151701d80a9d",
+      "current_sha256": "52b3f1c4c9496204e71f919cd73a66f426864e862a6b3b4860ac9ce249c36566",
+      "unchanged": false
+    },
+    {
+      "role": "source_commit",
+      "value_kind": "git_commit_object_id",
+      "prior_value": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+      "current_value": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+      "unchanged": false
+    }
+  ],
+  "unchanged_representative_inputs": [
+    {
+      "role": "jtag_bitstream",
+      "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f"
+    },
+    {
+      "role": "ltx",
+      "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083"
+    },
+    {
+      "role": "stage55_transaction",
+      "sha256": "31dbc2e8d86406f3c0106714e7a849a464d09f2665b7383904af855098c5b8bf"
+    },
+    {
+      "role": "active_xdc",
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344"
+    },
+    {
+      "role": "pinmap",
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd"
+    },
+    {
+      "role": "register_map",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    }
+  ],
+  "diagnostic_plan": {
+    "path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_sequence_plan.txt",
+    "sha256": "fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f",
+    "stage_count": 15,
+    "stage66_present": false,
+    "stationary_stage_count": 0
+  },
+  "coverage_claimed": false,
+  "skipped_stages_contribute_acceptance_coverage": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "hardware_actions_executed": false,
+  "stationary_started": false,
+  "validation_errors": []
+}
