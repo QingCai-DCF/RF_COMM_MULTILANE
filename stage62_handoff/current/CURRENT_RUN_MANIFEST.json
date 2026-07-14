@@ -1,0 +1,507 @@
+﻿{
+    "schema":  "rf-comm-p7-current-run-handoff-manifest-v1",
+    "generated_at_utc":  "2026-07-13T10:55:42.0934062Z",
+    "attachment":  {
+                       "path":  "C:\\Users\\user\\.codex\\attachments\\813a5385-af79-41ae-99a9-1f08bbb25e48\\pasted-text.txt",
+                       "sha256":  "ce3cb46436f79fdbe7616667f8c20be5185a4add39bfa50ffd5712d91a715d49"
+                   },
+    "repository":  {
+                       "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+                       "branch":  "codex/p7-stationary-application",
+                       "head":  "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+                       "merge_base_main":  "ca041d4877b831de84fe7829788ac835b0b46acd",
+                       "working_tree_clean":  false,
+                       "run_source_equals_head":  true,
+                       "tracked_diff_count":  26,
+                       "tracked_diff_files":  [
+                                                  "evidence/generated/p7_2lane_scope_summary.md",
+                                                  "evidence/generated/p7_application_protocol_summary.md",
+                                                  "evidence/generated/p7_artifact_provenance_summary.json",
+                                                  "evidence/generated/p7_artifact_provenance_summary.md",
+                                                  "evidence/generated/p7_backend_conformance_summary.md",
+                                                  "evidence/generated/p7_fault_recovery_summary.md",
+                                                  "evidence/generated/p7_file_integrity_summary.md",
+                                                  "evidence/generated/p7_fragmentation_reassembly_summary.md",
+                                                  "evidence/generated/p7_lane1_promotion_summary.json",
+                                                  "evidence/generated/p7_lane_scheduler_summary.md",
+                                                  "evidence/generated/p7_no_ethernet_summary.md",
+                                                  "evidence/generated/p7_no_motion_summary.md",
+                                                  "evidence/generated/p7_offline_gate_summary.json",
+                                                  "evidence/generated/p7_offline_gate_summary.md",
+                                                  "evidence/generated/p7_offline_test_run.json",
+                                                  "evidence/generated/p7_protocol_vector_summary.md",
+                                                  "evidence/generated/p7_ps_core_hardware_readiness.json",
+                                                  "evidence/generated/p7_ps_core_hardware_readiness.md",
+                                                  "evidence/generated/p7_ps_runtime_build_summary.json",
+                                                  "evidence/generated/p7_ps_runtime_summary.md",
+                                                  "evidence/generated/p7_queue_backpressure_summary.md",
+                                                  "evidence/generated/p7_repo_intake.md",
+                                                  "evidence/generated/p7_repo_intake_summary.json",
+                                                  "evidence/generated/p7_repo_intake_summary.md",
+                                                  "evidence/generated/p7_segmentation_reassembly_summary.md",
+                                                  "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json"
+                                              ],
+                       "pre_handoff_untracked_count":  456,
+                       "pre_handoff_git_status_record_count":  482,
+                       "baseline_patch":  {
+                                              "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\BASELINE.patch",
+                                              "bytes":  118814,
+                                              "sha256":  "221dd5692419e68e5c8ba8717b31957589cd8b1f5f913f843396cd70fd9ea2be"
+                                          },
+                       "untracked_inventory":  {
+                                                   "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\UNTRACKED_FILES.txt",
+                                                   "bytes":  155690,
+                                                   "sha256":  "74c99bf70ccc96a5ad3ffd9b51b80965df0a8623762515c8453bf5921a9c663b",
+                                                   "snapshot_excludes_handoff_artifacts":  true
+                                               }
+                   },
+    "build":  {
+                  "source_commit":  "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+                  "command":  "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat scripts/build_p7_ps_runtime.tcl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+                  "compiler":  {
+                                   "path":  "D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe",
+                                   "version":  "arm-xilinx-eabi-gcc.exe (GCC) 12.2.0"
+                               },
+                  "linker":  {
+                                 "path":  "D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-ld.exe",
+                                 "version":  "GNU ld (GNU Binutils) 2.39.0.20220819"
+                             },
+                  "optimization":  "O0",
+                  "lto":  false,
+                  "offline_cache_status":  "BYPASS",
+                  "firmware_calls_xil_dcache_disable":  true,
+                  "dcache_disable_executed_in_r32":  false,
+                  "mmu_runtime_state":  "UNKNOWN_NOT_MEASURED",
+                  "elf_run_bound":  true,
+                  "elf_downloaded_or_executed":  false,
+                  "offline_gate":  {
+                                       "status":  "PASS_13_OF_13",
+                                       "sha256":  "894160354835811665a51b7594abf936777a935f4eabec3824f82a52bff9a6b9"
+                                   },
+                  "complete_regression":  {
+                                              "status":  "PASS_167_OF_167",
+                                              "sha256":  "2ad76a470e2bb990fa2871bed14466db30f33caa230048a21449283d9758c4a2"
+                                          },
+                  "artifacts":  [
+                                    {
+                                        "kind":  "elf",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_26f93c15b66be63bed6fa469edaed4578eab2cd64b58e9eeb4b447ebf952503c.elf",
+                                        "bytes":  315160,
+                                        "sha256":  "26f93c15b66be63bed6fa469edaed4578eab2cd64b58e9eeb4b447ebf952503c",
+                                        "last_write_utc":  "2026-07-13T08:28:10.8869059Z",
+                                        "git_ignored":  true,
+                                        "git_tracked":  true,
+                                        "copied_to_handoff":  false,
+                                        "run_bound":  true,
+                                        "executed_in_r32":  false
+                                    },
+                                    {
+                                        "kind":  "linker_map",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_76fc4a82a46a5e7b2c52a997eaed7a1ee682e32cca71920cb855d92ca4d64825.map",
+                                        "bytes":  85298,
+                                        "sha256":  "76fc4a82a46a5e7b2c52a997eaed7a1ee682e32cca71920cb855d92ca4d64825",
+                                        "last_write_utc":  "2026-07-13T08:28:10.8869059Z",
+                                        "git_ignored":  false,
+                                        "git_tracked":  true,
+                                        "copied_to_handoff":  false
+                                    },
+                                    {
+                                        "kind":  "disassembly",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_runtime_disassembly.txt",
+                                        "bytes":  498675,
+                                        "sha256":  "ddbcbc17f26e117d75d3abc4c7c9b56fc79eb06cc43588f1e304166b6f59f1f3",
+                                        "last_write_utc":  "2026-07-13T08:28:11.1970249Z",
+                                        "git_ignored":  false,
+                                        "git_tracked":  true,
+                                        "copied_to_handoff":  false
+                                    },
+                                    {
+                                        "kind":  "candidate_bitstream",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+                                        "bytes":  2083856,
+                                        "sha256":  "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+                                        "last_write_utc":  "2026-07-10T12:42:28.4991922Z",
+                                        "git_ignored":  true,
+                                        "git_tracked":  false,
+                                        "copied_to_handoff":  false,
+                                        "programmed_in_r32_stage62":  false
+                                    },
+                                    {
+                                        "kind":  "xsa",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+                                        "bytes":  560408,
+                                        "sha256":  "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+                                        "last_write_utc":  "2026-07-10T12:42:30.9131285Z",
+                                        "git_ignored":  true,
+                                        "git_tracked":  false,
+                                        "copied_to_handoff":  false
+                                    },
+                                    {
+                                        "kind":  "bsp_xparameters",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_bsp_xparameters_eae65eb30388bbd72f40b3699cae81c773d12279f2500b99a09c5b2a37b44c76.h",
+                                        "bytes":  8840,
+                                        "sha256":  "eae65eb30388bbd72f40b3699cae81c773d12279f2500b99a09c5b2a37b44c76",
+                                        "last_write_utc":  "2026-07-13T08:27:52.9572432Z",
+                                        "copied_to_handoff":  false
+                                    },
+                                    {
+                                        "kind":  "platform_xpfm",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\export\\p7_platform\\p7_platform.xpfm",
+                                        "bytes":  660,
+                                        "sha256":  "6f41de6e0861e16fa0d1892e625be505fc33fee924628e0a5f66d7ce1eea6811",
+                                        "last_write_utc":  "2026-07-13T08:28:07.8770247Z",
+                                        "git_ignored":  true,
+                                        "git_tracked":  false,
+                                        "copied_to_handoff":  false
+                                    },
+                                    {
+                                        "kind":  "ps7_init",
+                                        "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+                                        "bytes":  25544,
+                                        "sha256":  "84e478d79c0b7bfe6dfc45a5a99ab850c30c7db11d8fec1dae064133dd64b448",
+                                        "last_write_utc":  "2026-07-13T08:27:44.8329303Z",
+                                        "git_ignored":  true,
+                                        "git_tracked":  false,
+                                        "copied_to_handoff":  false
+                                    }
+                                ]
+              },
+    "run":  {
+                "run_id":  "p7_20260713_stationary_app_r32_diag_suffix55",
+                "plan_mode":  "DIAGNOSTIC_SUFFIX_55",
+                "coverage_claimed":  false,
+                "hardware_acceptance":  "PENDING_HW",
+                "created_at_utc":  "2026-07-13T08:42:35.013574+00:00",
+                "updated_at_utc":  "2026-07-13T10:34:34.329993+00:00",
+                "status":  "FAILED",
+                "ledger_status":  "FAIL",
+                "sequence_runner_exit_code":  1,
+                "attempt_count":  12,
+                "completed_stage_count":  11,
+                "failed_stage_index":  11,
+                "failed_full_stage_ordinal":  62,
+                "planned_ordinals":  [
+                                         1,
+                                         2,
+                                         3,
+                                         4,
+                                         55,
+                                         56,
+                                         57,
+                                         58,
+                                         59,
+                                         60,
+                                         61,
+                                         62,
+                                         63,
+                                         64,
+                                         65
+                                     ],
+                "stage66_present":  false,
+                "sequence_command":  "python -B tools/run_p7_authorized_hardware_sequence.py --sequence-plan C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r32_diag_suffix55_sequence_plan.txt --sequence-plan-sha256 118da778c5620cbbc01d2673699a7b835d8994b125b4af31b1dea498be8f1a68 --execution-ledger C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\sequence_execution_ledger.json --source-commit f002e80aeb575b2b3aea8ce34909dd65584140d9 --max-runtime-sec 1800 --shutdown-on-exit --no-ethernet --no-motion --lane-count 2 --max-lane-mask 0x3 --execute-hardware --json-summary",
+                "scoped_authorization_cleared":  true,
+                "stage62":  {
+                                "wrapper_invoked":  true,
+                                "wrapper_started_at_utc":  "2026-07-13T10:32:50.377743+00:00",
+                                "wrapper_ended_at_utc":  "2026-07-13T10:34:34.188238+00:00",
+                                "wrapper_exit_code":  1,
+                                "timed_out":  false,
+                                "status":  "FAIL_SHUTDOWN_BEFORE",
+                                "shutdown_before_returncode":  125,
+                                "shutdown_before_programming_attempted":  false,
+                                "candidate_programmed":  false,
+                                "elf_downloaded":  false,
+                                "elf_started":  false,
+                                "functional_workload_executed":  false,
+                                "firmware_error_code":  "NOT_AVAILABLE_CANDIDATE_NOT_STARTED",
+                                "descriptor":  "MISSING_NOT_CREATED",
+                                "mailbox":  "MISSING_NOT_CREATED",
+                                "first_error_ocm":  "MISSING_NOT_CREATED",
+                                "application_output":  "MISSING_NOT_CREATED",
+                                "pre_wipe_snapshot":  "MISSING_NOT_CREATED",
+                                "output_wipe":  "NOT_APPLICABLE_NO_APPLICATION_OUTPUT",
+                                "planned_addresses_materialized":  false,
+                                "planned_boundary8":  {
+                                                          "descriptor_ring_base":  "0x00020100",
+                                                          "input_address":  "0x00100000",
+                                                          "output_address":  "0x00900000",
+                                                          "trace_address":  "0x01100000",
+                                                          "object_length":  30,
+                                                          "fragment_length":  30,
+                                                          "lane_policy":  1
+                                                      }
+                            },
+                "evidence_missing":  [
+                                         "executed_descriptor",
+                                         "final_mailbox",
+                                         "first_error_ocm_diagnostic",
+                                         "application_output",
+                                         "pre_wipe_snapshot",
+                                         "firmware_error_code"
+                                     ]
+            },
+    "safety":  {
+                   "ethernet_used":  false,
+                   "motion_used":  false,
+                   "lane_count":  2,
+                   "max_lane_mask":  "0x3",
+                   "stage62_shutdown_after_pass":  true,
+                   "stage62_shutdown_after_sha256":  "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+                   "independent_recovery_pass":  true,
+                   "independent_recovery_sha256":  "8ded9071051f0d9732d7d374954e8b535c3f2df3a9c17868502348f587aea850",
+                   "safe_shutdown_complete":  true,
+                   "active_hardware_run":  false,
+                   "new_run_queued":  false,
+                   "external_legacy_hw_server":  {
+                                                     "pid":  45220,
+                                                     "owned_by_run":  false,
+                                                     "touched":  false
+                                                 }
+               },
+    "original_evidence":  [
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r32_diag_suffix55_sequence_plan.txt",
+                                  "bytes":  88725,
+                                  "sha256":  "118da778c5620cbbc01d2673699a7b835d8994b125b4af31b1dea498be8f1a68",
+                                  "last_write_utc":  "2026-07-13T08:41:13.1322212Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\sequence_execution_ledger.json",
+                                  "bytes":  199091,
+                                  "sha256":  "18d2c870058b086fbe6765f602ace2608bf34a2f8cbadf7524bf6ae044efa800",
+                                  "last_write_utc":  "2026-07-13T10:34:34.3311032Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\062_p7_ps_functional\\p7_ps_application_stage_summary.json",
+                                  "bytes":  63570,
+                                  "sha256":  "a8792667cbc5740c350cef9a08796c2d635cfb76055139fa214bf33b99c77f21",
+                                  "last_write_utc":  "2026-07-13T10:34:34.0711821Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\.sequence_execution_ledger_wrapper_logs\\062_p7_ps_functional.stdout.log",
+                                  "bytes":  65074,
+                                  "sha256":  "260dd9d56a38970e7a3f8628dbfe99fd2bb37160420b2b9fdffe738d2ee0a6ce",
+                                  "last_write_utc":  "2026-07-13T10:34:34.0823410Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\062_p7_ps_functional\\p7_raw_evidence_sha256_manifest.json",
+                                  "bytes":  48792,
+                                  "sha256":  "795780364252752ed29c65e7a6309f457b68e2b0d4aacef2408985066ca383cf",
+                                  "last_write_utc":  "2026-07-13T10:34:34.0615401Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\062_p7_ps_functional\\shutdown_before_result.txt",
+                                  "bytes":  193,
+                                  "sha256":  "11f9d86a465d1a91fa72c982044c65c46f0a9b4c932f82fae622c77ad4d1642f",
+                                  "last_write_utc":  "2026-07-13T10:33:40.3175514Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\062_p7_ps_functional\\shutdown_after_result.txt",
+                                  "bytes":  548,
+                                  "sha256":  "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+                                  "last_write_utc":  "2026-07-13T10:34:12.5658675Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r32_diag_suffix55\\recovery_shutdown_after_failed_stage062_20260713T103550Z\\program_tfdu_shutdown_safe.summary.txt",
+                                  "bytes":  2122,
+                                  "sha256":  "8ded9071051f0d9732d7d374954e8b535c3f2df3a9c17868502348f587aea850",
+                                  "last_write_utc":  "2026-07-13T10:36:19.9769414Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+                                  "bytes":  14427,
+                                  "sha256":  "894160354835811665a51b7594abf936777a935f4eabec3824f82a52bff9a6b9",
+                                  "last_write_utc":  "2026-07-13T08:28:12.8461318Z"
+                              },
+                              {
+                                  "path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32.json",
+                                  "bytes":  2383,
+                                  "sha256":  "2ad76a470e2bb990fa2871bed14466db30f33caa230048a21449283d9758c4a2",
+                                  "last_write_utc":  "2026-07-13T07:16:08.6494589Z"
+                              }
+                          ],
+    "handoff_file_count":  25,
+    "handoff_files":  [
+                          {
+                              "relative_path":  "BASELINE.patch",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\BASELINE.patch",
+                              "role":  "tracked_worktree_binary_diff",
+                              "bytes":  118814,
+                              "sha256":  "221dd5692419e68e5c8ba8717b31957589cd8b1f5f913f843396cd70fd9ea2be"
+                          },
+                          {
+                              "relative_path":  "CURRENT_RUN_HANDOFF.md",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\CURRENT_RUN_HANDOFF.md",
+                              "role":  "handoff_document",
+                              "bytes":  16988,
+                              "sha256":  "e538cfcd0c8e18d1adf530af54e1d8e67b3f12a4e21553bf9d17280fd485872b"
+                          },
+                          {
+                              "relative_path":  "evidence/git_status_short_pre_handoff.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\git_status_short_pre_handoff.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  68959,
+                              "sha256":  "90b78240e220bdec5350d481bf89c80e34db2e73554ed6a87a3c1638504f9c2d"
+                          },
+                          {
+                              "relative_path":  "evidence/r31_error23_descriptor_decode.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r31_error23_descriptor_decode.json",
+                              "role":  "archived_evidence",
+                              "bytes":  1933,
+                              "sha256":  "b6ddae758cc6bc50f86ddb3dad3032ff65af641b179606d1b19e63a8f9465cd4"
+                          },
+                          {
+                              "relative_path":  "evidence/r31_error23_fact_summary.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r31_error23_fact_summary.json",
+                              "role":  "archived_evidence",
+                              "bytes":  1966,
+                              "sha256":  "5a06ce5c1cee993dc43c3b2ce4ec5eebf129165ea630bb00ad94a3308e815a18"
+                          },
+                          {
+                              "relative_path":  "evidence/r31_error23_raw_result.log",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r31_error23_raw_result.log",
+                              "role":  "archived_evidence",
+                              "bytes":  1486,
+                              "sha256":  "677cae86de2b463b509529bbd42ab766a4fa90e59bbdf7e34bf74c2cf59fe355"
+                          },
+                          {
+                              "relative_path":  "evidence/r31_error23_trace_decode.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r31_error23_trace_decode.json",
+                              "role":  "archived_evidence",
+                              "bytes":  803,
+                              "sha256":  "67272f676d1133b740c9675c9e7622d0c81015d096903e839c1dde0288ea8dd3"
+                          },
+                          {
+                              "relative_path":  "evidence/r31_p7_copy_bytes_verified_disassembly.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r31_p7_copy_bytes_verified_disassembly.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  3071,
+                              "sha256":  "f0228b3621c2c1c0d33cbaf1384c7d522ae97f6b14f6ea012a17ee8665fd4b2a"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_raw_evidence_manifest.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_raw_evidence_manifest.json",
+                              "role":  "archived_evidence",
+                              "bytes":  48792,
+                              "sha256":  "795780364252752ed29c65e7a6309f457b68e2b0d4aacef2408985066ca383cf"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_recovery_summary.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_recovery_summary.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  2122,
+                              "sha256":  "8ded9071051f0d9732d7d374954e8b535c3f2df3a9c17868502348f587aea850"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_runtime_size.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_runtime_size.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  988,
+                              "sha256":  "bed9bdf974124e79f4d0d3acaa468b4197c807156bd2594628ef5dbdf8274000"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_runtime_stack_usage.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_runtime_stack_usage.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  7644,
+                              "sha256":  "7d3331e832966dd0937142149c74108214facd8aa95316e66e909bcc7ef3957a"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_runtime_symbols.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_runtime_symbols.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  9990,
+                              "sha256":  "ad4bb749173cdfae437c787e89a3fd3fc70005941eb0a0bccd09a6758251610a"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_sequence_execution_ledger.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_sequence_execution_ledger.json",
+                              "role":  "archived_evidence",
+                              "bytes":  199091,
+                              "sha256":  "18d2c870058b086fbe6765f602ace2608bf34a2f8cbadf7524bf6ae044efa800"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_sequence_generation_manifest.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_sequence_generation_manifest.json",
+                              "role":  "archived_evidence",
+                              "bytes":  53888,
+                              "sha256":  "b8457950b8b6cbcf63518cbe0f7f05324ba636ecfaa24ce5560a50a4ea7308c1"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_shutdown_after_result.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_shutdown_after_result.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  548,
+                              "sha256":  "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_shutdown_before_result.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_shutdown_before_result.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  193,
+                              "sha256":  "11f9d86a465d1a91fa72c982044c65c46f0a9b4c932f82fae622c77ad4d1642f"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_stage62_diagnostic_absence.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_stage62_diagnostic_absence.json",
+                              "role":  "archived_evidence",
+                              "bytes":  1483,
+                              "sha256":  "43928d0cb152e1868cb92ba533278557d41f7238a0b9c6576d3e5655bf7340df"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_stage62_execution_plan.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_stage62_execution_plan.txt",
+                              "role":  "archived_evidence",
+                              "bytes":  4462,
+                              "sha256":  "73a80276a92563a89bf2152e953f334942d48acdfa0988f42951c48a593df4dd"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_stage62_summary.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_stage62_summary.json",
+                              "role":  "archived_evidence",
+                              "bytes":  63570,
+                              "sha256":  "a8792667cbc5740c350cef9a08796c2d635cfb76055139fa214bf33b99c77f21"
+                          },
+                          {
+                              "relative_path":  "evidence/r32_stage62_wrapper_tail.log",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\evidence\\r32_stage62_wrapper_tail.log",
+                              "role":  "archived_evidence",
+                              "bytes":  4756,
+                              "sha256":  "174a777537ac131c23fc6f96c5f37a5336fb7b2091e35398582ec86dbb5a1448"
+                          },
+                          {
+                              "relative_path":  "MAINLINE_FROZEN.json",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\MAINLINE_FROZEN.json",
+                              "role":  "freeze_marker",
+                              "bytes":  970,
+                              "sha256":  "f17944795f2ccc9deba3f5f6a8e31e55c871a28e0e8053d2c081c7aaee6f5211"
+                          },
+                          {
+                              "relative_path":  "NEXT_THREAD_SCOPE.md",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\NEXT_THREAD_SCOPE.md",
+                              "role":  "handoff_document",
+                              "bytes":  2248,
+                              "sha256":  "2acca122d64de2097200519de60e0dc8353a188ccc944822caeea183c650d544"
+                          },
+                          {
+                              "relative_path":  "RUN_RESULT.md",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\RUN_RESULT.md",
+                              "role":  "handoff_document",
+                              "bytes":  1542,
+                              "sha256":  "e3c492893ceb00d816439b49c86a7ce23b272a525c27aa7edce93fb63c327082"
+                          },
+                          {
+                              "relative_path":  "UNTRACKED_FILES.txt",
+                              "absolute_path":  "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\stage62_handoff\\current\\UNTRACKED_FILES.txt",
+                              "role":  "pre_handoff_untracked_inventory",
+                              "bytes":  155690,
+                              "sha256":  "74c99bf70ccc96a5ad3ffd9b51b80965df0a8623762515c8453bf5921a9c663b"
+                          }
+                      ],
+    "self_hash_omitted_reason":  "A file cannot contain a stable hash of itself.",
+    "freeze":  {
+                   "state":  "MAIN_THREAD_BLOCKED",
+                   "handoff_ready":  true,
+                   "unlock_phrase":  "恢复主线程：读取 stage62_handoff/return/STAGE62_RETURN_TO_MAIN.md"
+               }
+}

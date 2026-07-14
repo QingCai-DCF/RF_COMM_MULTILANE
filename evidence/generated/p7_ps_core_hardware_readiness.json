@@ -1,7 +1,7 @@
 {
   "schema": "rf-comm-p7-ps-core-hardware-readiness-v1",
-  "P7_PS_CORE_HARDWARE_READINESS": "FAIL",
-  "generated_at_utc": "2026-07-13T07:02:12+00:00",
+  "P7_PS_CORE_HARDWARE_READINESS": "PASS",
+  "generated_at_utc": "2026-07-13T08:28:12+00:00",
   "hardware_actions_executed": false,
   "HARDWARE_ACCEPTANCE": "PENDING_HW",
   "checks": {
@@ -36,7 +36,7 @@
     "stationary_identity_ledger_bound": true,
     "native_shutdown_readback_test": true,
     "native_payload_alignment_matrix_test": true,
-    "p7_python_and_codec_tests": false,
+    "p7_python_and_codec_tests": true,
     "real_vitis_build_source_bound": true
   },
   "sources": {
@@ -91,40 +91,44 @@
   },
   "unit_tests": {
     "command": "VALIDATED_COMPLETE_SUITE:tests_p7_discovery",
-    "returncode": 1,
+    "returncode": 0,
     "stdout": "",
-    "stderr": "validated regression summary source commit mismatch; validated regression post-suite source commit mismatch; validated regression suites did not leave source clean; validated regression source commit changed during suites",
+    "stderr": "",
     "evidence_mode": "VALIDATED_REUSE_NO_TEST_INVOCATION",
     "invocation_count_in_core_gate": 0,
     "original_suite": {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
-      "discovered_test_count": 39,
+      "discovered_test_count": 42,
       "invocation_count": 1,
       "name": "tests_p7_discovery",
       "returncode": 0,
       "status": "PASS",
       "stderr": {
-        "bytes": 4790,
-        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
-        "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+        "bytes": 5303,
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "6798244825ecb3b7a69e80cff52457243fec751ea4f1afbcfa94c9b5399196fe"
       },
       "stdout": {
         "bytes": 0,
-        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+        "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stdout.log",
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     },
     "validated_complete_regression_summary": {
-      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31.json",
-      "sha256": "c2a71a9d7097e7f6172b229352f0bd855d762ee93d15e2e4c7985ef81ccd4d67",
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32.json",
+      "sha256": "2ad76a470e2bb990fa2871bed14466db30f33caa230048a21449283d9758c4a2",
       "payload": {
         "FULL_SUITE_INVOCATION_COUNT": 2,
         "HARDWARE_ACCEPTANCE": "PENDING_HW",
         "NO_HARDWARE_ACTIONS_EXECUTED": true,
+        "dirty_files_after_suites": [],
+        "dirty_worktree_after_suites": false,
         "dirty_worktree_before_suites": false,
-        "generated_at_utc": "2026-07-13T02:29:16.629381+00:00",
+        "generated_at_utc": "2026-07-13T07:16:08.649837+00:00",
         "schema": "rf-comm-p7-complete-regression-suites-v1",
-        "source_commit": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
+        "source_commit": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+        "source_commit_after_suites": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+        "source_commit_unchanged": true,
         "status": "PASS",
         "suite_invocation_count_by_name": {
           "tests_p7_discovery": 1,
@@ -133,62 +137,61 @@
         "suites": [
           {
             "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
-            "discovered_test_count": 122,
+            "discovered_test_count": 125,
             "invocation_count": 1,
             "name": "top_level_discovery",
             "returncode": 0,
             "status": "PASS",
             "stderr": {
-              "bytes": 23779,
-              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stderr.log",
-              "sha256": "a6366d45dc21b52594a9805c36e8359324f5ba193d94caf82363ec030315bbbd"
+              "bytes": 24348,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\top_level_discovery.stderr.log",
+              "sha256": "d7bb34a3ddcc0aacbff906a3b1d9dd6ecd0d1ad0925e13097d6d92629f111ca6"
             },
             "stdout": {
               "bytes": 641,
-              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stdout.log",
-              "sha256": "c891449d4efc9c7dd523b7cc741c78f08d6ed0519e047614e7e033cb3b7415f8"
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\top_level_discovery.stdout.log",
+              "sha256": "d7e35999301d7ead73b55a702caa781981c91294709f9bc0517466427d124b26"
             }
           },
           {
             "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
-            "discovered_test_count": 39,
+            "discovered_test_count": 42,
             "invocation_count": 1,
             "name": "tests_p7_discovery",
             "returncode": 0,
             "status": "PASS",
             "stderr": {
-              "bytes": 4790,
-              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
-              "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+              "bytes": 5303,
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stderr.log",
+              "sha256": "6798244825ecb3b7a69e80cff52457243fec751ea4f1afbcfa94c9b5399196fe"
             },
             "stdout": {
               "bytes": 0,
-              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+              "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stdout.log",
               "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
             }
           }
         ],
-        "total_discovered_test_count": 161
+        "total_discovered_test_count": 167
       },
-      "errors": [
-        "validated regression summary source commit mismatch",
-        "validated regression post-suite source commit mismatch",
-        "validated regression suites did not leave source clean",
-        "validated regression source commit changed during suites"
-      ]
+      "errors": []
     }
   },
   "validated_complete_regression_summary": {
-    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31.json",
-    "sha256": "c2a71a9d7097e7f6172b229352f0bd855d762ee93d15e2e4c7985ef81ccd4d67",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32.json",
+    "sha256": "2ad76a470e2bb990fa2871bed14466db30f33caa230048a21449283d9758c4a2",
     "payload": {
       "FULL_SUITE_INVOCATION_COUNT": 2,
       "HARDWARE_ACCEPTANCE": "PENDING_HW",
       "NO_HARDWARE_ACTIONS_EXECUTED": true,
+      "dirty_files_after_suites": [],
+      "dirty_worktree_after_suites": false,
       "dirty_worktree_before_suites": false,
-      "generated_at_utc": "2026-07-13T02:29:16.629381+00:00",
+      "generated_at_utc": "2026-07-13T07:16:08.649837+00:00",
       "schema": "rf-comm-p7-complete-regression-suites-v1",
-      "source_commit": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
+      "source_commit": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+      "source_commit_after_suites": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+      "source_commit_unchanged": true,
       "status": "PASS",
       "suite_invocation_count_by_name": {
         "tests_p7_discovery": 1,
@@ -197,50 +200,45 @@
       "suites": [
         {
           "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
-          "discovered_test_count": 122,
+          "discovered_test_count": 125,
           "invocation_count": 1,
           "name": "top_level_discovery",
           "returncode": 0,
           "status": "PASS",
           "stderr": {
-            "bytes": 23779,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stderr.log",
-            "sha256": "a6366d45dc21b52594a9805c36e8359324f5ba193d94caf82363ec030315bbbd"
+            "bytes": 24348,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\top_level_discovery.stderr.log",
+            "sha256": "d7bb34a3ddcc0aacbff906a3b1d9dd6ecd0d1ad0925e13097d6d92629f111ca6"
           },
           "stdout": {
             "bytes": 641,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\top_level_discovery.stdout.log",
-            "sha256": "c891449d4efc9c7dd523b7cc741c78f08d6ed0519e047614e7e033cb3b7415f8"
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\top_level_discovery.stdout.log",
+            "sha256": "d7e35999301d7ead73b55a702caa781981c91294709f9bc0517466427d124b26"
           }
         },
         {
           "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
-          "discovered_test_count": 39,
+          "discovered_test_count": 42,
           "invocation_count": 1,
           "name": "tests_p7_discovery",
           "returncode": 0,
           "status": "PASS",
           "stderr": {
-            "bytes": 4790,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stderr.log",
-            "sha256": "6edf10a3852d8472f9f89755af79ceff3f4aede4f299d6c2700690eb509bd678"
+            "bytes": 5303,
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stderr.log",
+            "sha256": "6798244825ecb3b7a69e80cff52457243fec751ea4f1afbcfa94c9b5399196fe"
           },
           "stdout": {
             "bytes": 0,
-            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_0539667_r31_logs\\tests_p7_discovery.stdout.log",
+            "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_regression_f002e80_r32_logs\\tests_p7_discovery.stdout.log",
             "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
           }
         }
       ],
-      "total_discovered_test_count": 161
+      "total_discovered_test_count": 167
     },
-    "errors": [
-      "validated regression summary source commit mismatch",
-      "validated regression post-suite source commit mismatch",
-      "validated regression suites did not leave source clean",
-      "validated regression source commit changed during suites"
-    ]
+    "errors": []
   },
-  "source_commit": "ab357ff8a787a9e4e253ef10e9e773c5f70cb025",
+  "source_commit": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
   "build_summary": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json"
 }

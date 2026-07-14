@@ -1,0 +1,73 @@
+﻿source_commit=0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4
+source_git_path=evidence/generated/vitis/p7_ps_runtime/p7_runtime_disassembly.txt
+source_blob=e6794ad41b6d8ea1911fa8ac1e3755c20b9cf57e
+selection=function p7_copy_bytes_verified through line before next symbol
+
+00002f90 <p7_copy_bytes_verified>:
+    2f90:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    2f94:	e28db000 	add	fp, sp, #0
+    2f98:	e24dd01c 	sub	sp, sp, #28
+    2f9c:	e50b0010 	str	r0, [fp, #-16]
+    2fa0:	e50b1014 	str	r1, [fp, #-20]	; 0xffffffec
+    2fa4:	e50b2018 	str	r2, [fp, #-24]	; 0xffffffe8
+    2fa8:	e51b3010 	ldr	r3, [fp, #-16]
+    2fac:	e3530000 	cmp	r3, #0
+    2fb0:	0a000002 	beq	2fc0 <p7_copy_bytes_verified+0x30>
+    2fb4:	e51b3014 	ldr	r3, [fp, #-20]	; 0xffffffec
+    2fb8:	e3530000 	cmp	r3, #0
+    2fbc:	1a000004 	bne	2fd4 <p7_copy_bytes_verified+0x44>
+    2fc0:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+    2fc4:	e3530000 	cmp	r3, #0
+    2fc8:	0a000001 	beq	2fd4 <p7_copy_bytes_verified+0x44>
+    2fcc:	e3a03000 	mov	r3, #0
+    2fd0:	ea00002c 	b	3088 <p7_copy_bytes_verified+0xf8>
+    2fd4:	e3a03000 	mov	r3, #0
+    2fd8:	e50b3008 	str	r3, [fp, #-8]
+    2fdc:	ea00000b 	b	3010 <p7_copy_bytes_verified+0x80>
+    2fe0:	e51b2014 	ldr	r2, [fp, #-20]	; 0xffffffec
+    2fe4:	e51b3008 	ldr	r3, [fp, #-8]
+    2fe8:	e0822003 	add	r2, r2, r3
+    2fec:	e51b1010 	ldr	r1, [fp, #-16]
+    2ff0:	e51b3008 	ldr	r3, [fp, #-8]
+    2ff4:	e0813003 	add	r3, r1, r3
+    2ff8:	e5d22000 	ldrb	r2, [r2]
+    2ffc:	e6ef2072 	uxtb	r2, r2
+    3000:	e5c32000 	strb	r2, [r3]
+    3004:	e51b3008 	ldr	r3, [fp, #-8]
+    3008:	e2833001 	add	r3, r3, #1
+    300c:	e50b3008 	str	r3, [fp, #-8]
+    3010:	e51b2008 	ldr	r2, [fp, #-8]
+    3014:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+    3018:	e1520003 	cmp	r2, r3
+    301c:	3affffef 	bcc	2fe0 <p7_copy_bytes_verified+0x50>
+    3020:	f57ff04f 	dsb	sy
+    3024:	e3a03000 	mov	r3, #0
+    3028:	e50b300c 	str	r3, [fp, #-12]
+    302c:	ea000010 	b	3074 <p7_copy_bytes_verified+0xe4>
+    3030:	e51b2010 	ldr	r2, [fp, #-16]
+    3034:	e51b300c 	ldr	r3, [fp, #-12]
+    3038:	e0823003 	add	r3, r2, r3
+    303c:	e5d33000 	ldrb	r3, [r3]
+    3040:	e6ef2073 	uxtb	r2, r3
+    3044:	e51b1014 	ldr	r1, [fp, #-20]	; 0xffffffec
+    3048:	e51b300c 	ldr	r3, [fp, #-12]
+    304c:	e0813003 	add	r3, r1, r3
+    3050:	e5d33000 	ldrb	r3, [r3]
+    3054:	e6ef3073 	uxtb	r3, r3
+    3058:	e1520003 	cmp	r2, r3
+    305c:	0a000001 	beq	3068 <p7_copy_bytes_verified+0xd8>
+    3060:	e3a03000 	mov	r3, #0
+    3064:	ea000007 	b	3088 <p7_copy_bytes_verified+0xf8>
+    3068:	e51b300c 	ldr	r3, [fp, #-12]
+    306c:	e2833001 	add	r3, r3, #1
+    3070:	e50b300c 	str	r3, [fp, #-12]
+    3074:	e51b200c 	ldr	r2, [fp, #-12]
+    3078:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+    307c:	e1520003 	cmp	r2, r3
+    3080:	3affffea 	bcc	3030 <p7_copy_bytes_verified+0xa0>
+    3084:	e3a03001 	mov	r3, #1
+    3088:	e1a00003 	mov	r0, r3
+    308c:	e28bd000 	add	sp, fp, #0
+    3090:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    3094:	e12fff1e 	bx	lr
+
