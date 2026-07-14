@@ -1,0 +1,52 @@
+{
+  "schema": "rf-comm-p7-formal-plan-preparation-failure-v1",
+  "P7_FORMAL_PLAN_PREPARATION": "BLOCKED",
+  "run_id": "p7_20260715_stationary_app_r33_formal_full",
+  "attempt_kind": "OFFLINE_PLAN_GENERATION_ONLY",
+  "generated_at_utc": "2026-07-14T16:52:09.859862+00:00",
+  "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "8cae72c539f309bd58c59511dafcdf2e0a70525c341bcba265b5e76300803fcd"
+  },
+  "failure": {
+    "exception": "RuntimeError",
+    "reason": "child safe-wrapper offline validation failed for p7_ps_functional: PS7 init platform directory does not contain the authorized XSA content",
+    "failed_full_stage_ordinal": 62,
+    "failed_stage_id": "p7_ps_functional"
+  },
+  "partial_outputs": {
+    "workspace": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE",
+    "stage_authorization_tree": {
+      "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+      "count": 62,
+      "bytes": 218837,
+      "sha256": "ab13b65be854b863c72f8cb2d01f2047acb70831b60fa9e0baea4b0a2bcdbe8a"
+    },
+    "partial_bundle_tree": {
+      "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+      "count": 182,
+      "bytes": 155728034,
+      "sha256": "9bfc15dc92f443893e67407a61f9bd18bd89ced506d7f0ad9a96cb24bb0b78a4"
+    },
+    "sequence_plan_exists": false,
+    "hardware_evidence_root_exists": false
+  },
+  "safety_observations": {
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false,
+    "stationary_started": false
+  },
+  "disposition": {
+    "r33_must_not_be_executed_or_resumed": true,
+    "remediation": "Materialize the content-bound authorized XSA beside the generated PS7 init file and generate a fresh plan under a new run ID.",
+    "next_run_id": "p7_20260715_stationary_app_r34_formal_full"
+  },
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "NOT_RUN"
+}

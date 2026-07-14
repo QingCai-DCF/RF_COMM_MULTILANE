@@ -1,0 +1,32 @@
+{
+  "schema": "rf-comm-p7-formal-executor-dry-validation-v1",
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED",
+  "generated_at_utc": "2026-07-14T16:54:32.394091+00:00",
+  "invocation_count": 1,
+  "hardware_actions_executed": false,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "plan_mode": "FULL_ACCEPTANCE",
+  "acceptance_coverage_contributed": false,
+  "sequence_plan": {
+    "path": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE/.hardware_authorization/p7_20260715_stationary_app_r34_formal_full_sequence_plan.txt",
+    "sha256": "928005b993e3d299b65feef309609c64032de4b30f4bb8628266e6ab269a2228",
+    "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+    "stage_count": 66,
+    "full_stage_ordinals": "1-66"
+  },
+  "offline_checkpoint": {
+    "path": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE/evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "8cae72c539f309bd58c59511dafcdf2e0a70525c341bcba265b5e76300803fcd"
+  },
+  "validation_errors": [],
+  "reason": "all 66 planned wrapper argv vectors and immutable inputs validated; no process was launched",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "NOT_RUN"
+}

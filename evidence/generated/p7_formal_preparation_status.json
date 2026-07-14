@@ -1,0 +1,99 @@
+{
+  "schema": "rf-comm-p7-formal-preparation-status-v1",
+  "P7_FORMAL_PREPARATION": "DRY_VALIDATED_READY_FOR_SCOPED_EXECUTION",
+  "generated_at_utc": "2026-07-14T16:54:32.394091+00:00",
+  "run_id": "p7_20260715_stationary_app_r34_formal_full",
+  "run_kind": "FORMAL_FULL_ACCEPTANCE",
+  "execution_workspace": "C:/Users/user/.codex/worktrees/formalr33/RF_COMM_MULTILANE",
+  "source_commit": "4bc49b1684be5eac655d75314f0da95e0bc1ffa8",
+  "source_tree": "0fa5f105045544bb5423794a6d520379ceabfe50",
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "8cae72c539f309bd58c59511dafcdf2e0a70525c341bcba265b5e76300803fcd",
+    "checkpoint_input_count": 85,
+    "checkpoint_input_mismatch_count": 0,
+    "cache_bypassed_canonical_gate": true,
+    "gate_pass_count": 13,
+    "gate_fail_count": 0
+  },
+  "required_complete_suites": {
+    "top_level": {
+      "passed": 185,
+      "total": 185,
+      "invocation_count": 1
+    },
+    "tests_p7": {
+      "passed": 42,
+      "total": 42,
+      "invocation_count": 1
+    },
+    "regression_summary": {
+      "path": "build/p7_regression_main_integration_4bc49b1.json",
+      "sha256": "1b30923cfae5561c85a350c36c076f006452df1fb64d84984e586d7620b49b4a"
+    }
+  },
+  "formal_plan": {
+    "path": ".hardware_authorization/p7_20260715_stationary_app_r34_formal_full_sequence_plan.txt",
+    "sha256": "928005b993e3d299b65feef309609c64032de4b30f4bb8628266e6ab269a2228",
+    "plan_mode": "FULL_ACCEPTANCE",
+    "stage_count": 66,
+    "first_stage": "p7_safe_idle",
+    "last_stage": "p7_ps_stationary",
+    "stationary_stage_count": 1,
+    "stationary_max_runtime_sec": 1800,
+    "stationary_started": false
+  },
+  "stage_authorizations": {
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "count": 66,
+    "bytes": 236851,
+    "sha256": "37a181f93d2d4867419d905c78ff13ce78884e7219379b9627ea46dc80072501"
+  },
+  "generation": {
+    "manifest_path": "evidence/generated/p7_r34_formal_plan_generation_manifest.json",
+    "manifest_sha256": "ced1f3cdd7aed17b6dde073b858c096f7b5eb63a4ac04b59b07225bcbe11e33e",
+    "generator_status": "PASS",
+    "authorization_count": 66,
+    "child_wrapper_dry_validation_count": 66,
+    "child_wrapper_error_count": 0,
+    "bundle_tree": {
+      "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+      "count": 183,
+      "bytes": 156003838,
+      "sha256": "c137373acd23fc4229c2d02a87ffab75847544ce490396c4918af54887bf70cb"
+    }
+  },
+  "independent_executor_dry_validation": {
+    "path": "evidence/generated/p7_r34_formal_executor_dry_validation.json",
+    "sha256": "87772734ca8b48345912a3de64ecb27138a44a061e1865e2e5ef75a023992de6",
+    "status": "DRY_RUN_VALIDATED",
+    "invocation_count": 1,
+    "validation_error_count": 0
+  },
+  "predecessor_preparation_failure": {
+    "run_id": "p7_20260715_stationary_app_r33_formal_full",
+    "path": "evidence/generated/p7_r33_formal_plan_generation_failure.json",
+    "sha256": "38db6cc804e8b3d647d1372e20a861d19661262547288adf81bd64e67ad80d48",
+    "hardware_executed": false,
+    "resume_forbidden": true
+  },
+  "safety": {
+    "hardware_actions_executed_during_preparation": false,
+    "authorization_environment_modified_during_preparation": false,
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "shutdown_on_exit_required": true,
+    "failed_hardware_run_resume_allowed": false,
+    "external_hw_server_ownership_changed": false
+  },
+  "execution_preconditions_still_required": [
+    "Revalidate the exact source commit, checkpoint hashes, plan hash, stage authorization hashes, process state, abort file, and hardware lock immediately before execution.",
+    "Set the scoped external authorization only for the safe sequence executor invocation.",
+    "Stop at the first failed stage, preserve raw evidence, perform independent shutdown recovery, and use a new run ID; never resume.",
+    "Execute stage 66 only if stages 1-65 in this same formal run all PASS."
+  ],
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "NOT_RUN"
+}
