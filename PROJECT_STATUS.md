@@ -25,6 +25,10 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_OFFLINE_PENDING_CLEAN_CHECKPOINT
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN
+P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 229299db9c6c5098d30ae5922508f4426546e665
+P7_LATEST_CLEAN_SOURCE_REGRESSION: FAIL_PRECONDITION
+P7_NEW_HARDWARE_RUN_READY: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
@@ -74,7 +78,14 @@ passed, but neither changes stage 62 or r34 to PASS. Stage 66 was not attempted.
 The confirmed defect is that the generated PS authorization omitted both
 `P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE` and `P7_RUN_ID=NONE`, while the
 execution Tcl required them; the generator and offline wrapper validator have
-an offline-only repair pending a new clean-source checkpoint.
+an offline-only repair pending a new clean-source checkpoint. The first clean
+validation attempt at source `229299db9c6c5098d30ae5922508f4426546e665`
+accurately failed: top-level discovery was 190 tests with two failures and two
+errors, while `tests/p7` passed 42/42, with each suite invoked exactly once.
+Seven byte-exact r34 package logs had been ignored rather than tracked, and the
+fresh worktree had not yet materialized the generated AX7010 Vivado/Vitis board
+contract inputs. This checkpoint is preserved as non-hardware FAIL evidence and
+must not be rerun at the same source. A new hardware run is not ready.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional
