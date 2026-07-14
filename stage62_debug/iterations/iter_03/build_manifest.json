@@ -1,0 +1,32 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "bitstream_sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+  "cache_bypassed": true,
+  "complete_regression": {
+    "path": "build/p7_regression_stage62_microtest_16d621d.json",
+    "sha256": "d717601080dd37fa197a9b038835df364e73d1c036789f57f27fc496ef51a431",
+    "status": "PASS",
+    "tests": 180
+  },
+  "elf_sha256": "9f13ce1e340897fc159f40ac45a66099a70717411a587f922a424f217f0b0570",
+  "hardware_actions_executed_by_build": false,
+  "hardware_source_commit": "16d621d4b2fe5720e33a56adb1b19ad262feac25",
+  "iteration": "iter_03",
+  "linker_map_sha256": "1c384c9520879150e255769f623fbd5e92ffb9db27be09d75ead698d7d1f07e1",
+  "offline_gate": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "f7906bff7b1c1a62472f80a84b9febadc0589479c653a1e8a29a57c80dc25bda",
+    "status": "PASS"
+  },
+  "real_build_process_ran": true,
+  "run_id": "p7_20260714_stage62_microtest_r36_diag_only",
+  "schema": "rf-comm-stage62-iteration-build-manifest-v1",
+  "stage62_microtest_copy_disassembly": {
+    "dsb_count": 1,
+    "forbidden_memcpy_or_memmove": false,
+    "ldrb_count": 2,
+    "strb_count": 2
+  },
+  "stage62_microtest_stack_bytes": 112,
+  "xsa_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9"
+}

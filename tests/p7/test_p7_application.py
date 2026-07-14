@@ -7,6 +7,7 @@ import struct
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,7 +60,7 @@ from p7_ps_mailbox_backend import (  # noqa: E402
 
 
 _DESCRIPTOR_WORDS = struct.Struct("<64I")
-_FIRST_ERROR_WORDS = struct.Struct("<48I")
+_FIRST_ERROR_WORDS = struct.Struct("<128I")
 
 
 def pattern(name: str, length: int) -> bytes:
@@ -143,40 +144,86 @@ def first_error_diagnostic_image(
     if first_bad < 0:
         raise ValueError("fixture must contain a mismatch")
     max_length = max(len(expected), len(actual))
-    snapshot_offset = max(0, first_bad - 32)
-    snapshot_length = min(64, max_length - snapshot_offset)
-    expected_snapshot = bytearray(64)
-    actual_snapshot = bytearray(64)
-    expected_slice = expected[snapshot_offset : snapshot_offset + snapshot_length]
-    actual_slice = actual[snapshot_offset : snapshot_offset + snapshot_length]
-    expected_snapshot[: len(expected_slice)] = expected_slice
-    actual_snapshot[: len(actual_slice)] = actual_slice
-    words = [0] * 48
-    words[0:20] = [
-        P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+    snapshot_offset = max(0, first_bad - 128)
+    snapshot_length = min(256, max_length - snapshot_offset)
+    canary = bytes([0xA5]) * len(actual)
+
+    def snapshot(data: bytes) -> bytes:
+        captured = bytearray(256)
+        part = data[snapshot_offset : snapshot_offset + snapshot_length]
+        captured[: len(part)] = part
+        return bytes(captured)
+
+    source_before = snapshot(expected)
+    source_after = snapshot(expected)
+    destination_before = snapshot(canary)
+    destination_after = snapshot(actual)
+    words = [0] * 128
+    words[0:18] = [
+        0,
+        2,
+        P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
         1,
+        0,
+        3,
         stage,
         error_code,
         0x11223344,
         9,
         fragment_index,
         lane_mask,
+        max_length,
         len(expected),
         len(actual),
         first_bad,
         expected[first_bad] if first_bad < len(expected) else 0x100,
         actual[first_bad] if first_bad < len(actual) else 0x100,
-        0x00022000,
-        0x00100000,
-        crc32(expected),
-        crc32(actual),
-        snapshot_offset,
-        snapshot_length,
+    ]
+    words[18:22] = [
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        canary[first_bad] if first_bad < len(canary) else 0x100,
+        actual[first_bad] if first_bad < len(actual) else 0x100,
+    ]
+    words[22:28] = [0x00022000, 0x00100000, 0, 0, 0, 0]
+    words[28:47] = [
+        0x0001FFF0,
+        0x00C5187D,
+        0x00000041,
+        0x00004000,
+        0x00008000,
+        0,
+        0x55555555,
+        0x00004100,
+        0x00000C02,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0x00004100,
+        0x00000C02,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0,
+        0,
+        0,
         0,
     ]
-    words[20:28] = sha256_words(expected)
-    words[28:36] = sha256_words(actual)
-    raw = _FIRST_ERROR_WORDS.pack(*words) + bytes(expected_snapshot) + bytes(actual_snapshot)
+    words[47:50] = [snapshot_offset, snapshot_length, 0x1FF]
+    observations = (expected, expected, canary, actual)
+    words[50:54] = [zlib.crc32(item) & 0xFFFFFFFF for item in observations]
+    for index, item in enumerate(observations):
+        words[54 + index * 8 : 62 + index * 8] = sha256_words(item)
+    words[86:94] = [512, 768, 1024, 1280, 0xA5, 1, 1, 1]
+    image = bytearray(
+        _FIRST_ERROR_WORDS.pack(*words)
+        + source_before
+        + source_after
+        + destination_before
+        + destination_after
+    )
+    record_crc32 = zlib.crc32(image) & 0xFFFFFFFF
+    struct.pack_into("<I", image, 16, record_crc32)
+    struct.pack_into("<I", image, 0, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)
+    raw = bytes(image)
     if len(raw) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
         raise AssertionError("invalid first-error fixture size")
     return raw
@@ -399,11 +446,11 @@ class PsMailboxCodecTests(unittest.TestCase):
         valid = first_error_diagnostic_image(expected, actual)
         mutations = {
             "magic": lambda raw: struct.pack_into("<I", raw, 0, 0),
-            "stage_error": lambda raw: struct.pack_into("<I", raw, 12, 26),
-            "equal_first_bytes": lambda raw: struct.pack_into("<I", raw, 48, 1),
-            "reserved": lambda raw: struct.pack_into("<I", raw, 144, 1),
-            "snapshot": lambda raw: raw.__setitem__(256, 1),
-            "padding": lambda raw: raw.__setitem__(255, 1),
+            "stage_error": lambda raw: struct.pack_into("<I", raw, 28, 26),
+            "equal_first_bytes": lambda raw: struct.pack_into("<I", raw, 68, 1),
+            "reserved": lambda raw: struct.pack_into("<I", raw, 376, 1),
+            "snapshot": lambda raw: raw.__setitem__(1280, 1),
+            "padding": lambda raw: raw.__setitem__(767, 1),
         }
         for name, mutate in mutations.items():
             with self.subTest(name=name):
@@ -428,7 +475,11 @@ class PsMailboxCodecTests(unittest.TestCase):
             unpack_first_error_diagnostic(valid)["stage_name"],
         )
         invalid = bytearray(valid)
-        struct.pack_into("<I", invalid, 24, 0)
+        struct.pack_into("<I", invalid, 40, 0)
+        struct.pack_into("<I", invalid, 0, 0)
+        struct.pack_into("<I", invalid, 16, 0)
+        struct.pack_into("<I", invalid, 16, zlib.crc32(invalid) & 0xFFFFFFFF)
+        struct.pack_into("<I", invalid, 0, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)
         with self.assertRaisesRegex(ValueError, "object-level"):
             unpack_first_error_diagnostic(bytes(invalid))
 

@@ -1,0 +1,197 @@
+{
+  "schema": "rf-comm-ddr-campaign-c2-stage62-partial-evidence-audit-v1",
+  "generated_at_utc": "2026-07-14T13:04:02.6287794Z",
+  "source_commit": "a7bc060aa29f15815891af463b1f7ff1d600cb31",
+  "run_id": "p7_20260714_ddr_external_campaign_c2_08",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "diagnostic_only": true,
+  "coverage_claimed": false,
+  "hardware_reexecuted_for_audit": false,
+  "formal_stage": {
+    "ordinal": 62,
+    "name": "ps_functional",
+    "execution_scope": "STAGE62_ONLY",
+    "attempted": true,
+    "completed": false,
+    "acceptance_credit": false,
+    "scope_interpretation": "STAGE62_ONLY selects formal sequence ordinal 62. The boundary48, 4KiB, four 64KiB, and four 1MiB phases are the required internal vectors of that one formal stage; they are not formal stages 1 through 61."
+  },
+  "immutable_sources": [
+    {
+      "path": "evidence/hardware/p7/stage62_functional/p7_20260714_ddr_external_campaign_c2_08/bundle/bundle_manifest.json",
+      "size_bytes": 108653,
+      "sha256": "7be88e1282a826c380fbb0ebbbf93e771340d7cceb489350a0ee4d78ec40ec16"
+    },
+    {
+      "path": "evidence/hardware/p7/stage62_functional/p7_20260714_ddr_external_campaign_c2_08/p7_ps_application_raw_result.log.partial.write_partial",
+      "size_bytes": 1171,
+      "sha256": "04172663ab2a8c772d8672aa8c2d16bf3300621a695dbf2a8562deeffda8e0a1"
+    },
+    {
+      "path": "evidence/hardware/p7/stage62_functional/p7_20260714_ddr_external_campaign_c2_08/p7_ps_application_stage_summary.json",
+      "size_bytes": 78965,
+      "sha256": "b9be0922fc47609df71caf413af2feff10cd7b5522fc87bb5dc4f161482abc33"
+    },
+    {
+      "path": "evidence/hardware/p7/stage62_functional/p7_20260714_ddr_external_campaign_c2_08/p7_raw_evidence_sha256_manifest.json",
+      "size_bytes": 81686,
+      "sha256": "60ce2ae8bdf6ba77af836eb4cdb4e3dc1ad82769e4ad39385547680e03b622dc"
+    }
+  ],
+  "raw_attempt_markers": {
+    "P7_PS_MODE": "functional",
+    "P7_EXECUTION_SCOPE": "STAGE62_ONLY",
+    "P7_RUN_ID": "p7_20260714_ddr_external_campaign_c2_08",
+    "P7_PS_CANDIDATE_PROGRAMMED": "1",
+    "P7_PS_ELF_DOWNLOADED": "1",
+    "P7_PS_SERVICE_HEARTBEAT_AND_START_TICKS": "1",
+    "P7_FUNCTIONAL_CHECKPOINT_4K_COMPLETE": "1",
+    "P7_HOST_TO_PS_INPUT_BYTES": 4456448,
+    "P7_HOST_TO_PS_INPUT_DURATION_MS": 72502,
+    "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC": 61466
+  },
+  "completed_internal_evidence": {
+    "boundary_matrix": {
+      "case_count": 48,
+      "all_descriptor_status": 3,
+      "all_descriptor_error_code": 0,
+      "all_outputs_byte_equal_to_inputs": true,
+      "all_traces_present": true,
+      "completion_sequence_first": 1,
+      "completion_sequence_last": 48,
+      "first_descriptor_mtime_utc": "2026-07-14T12:13:26.260713+00:00",
+      "last_trace_mtime_utc": "2026-07-14T12:13:59.189270+00:00"
+    },
+    "checkpoint_4k": {
+      "descriptor_status": 3,
+      "descriptor_error_code": 0,
+      "object_length": 4096,
+      "fragments_completed": 20,
+      "completion_sequence": 49,
+      "output_byte_equal_to_input": true,
+      "descriptor_sha256": "a9106639db6da884c0e766ae5d216bf74d7f6518e94e21eb73bf371a98af9731",
+      "output_sha256": "173513c02767dc2e327cfc82388d56d78f2238841b236358b07b8106d83e3a71",
+      "trace_bytes": 1280,
+      "trace_mtime_utc": "2026-07-14T12:14:02.738320+00:00"
+    },
+    "four_64k_cases": [
+      {
+        "slot": 4,
+        "descriptor_status": 3,
+        "descriptor_error_code": 0,
+        "object_length": 65536,
+        "fragments_completed": 305,
+        "completion_sequence": 50,
+        "output_byte_equal_to_input": true,
+        "descriptor_to_output_seconds": 32.896637,
+        "output_to_trace_seconds": 9.83995
+      },
+      {
+        "slot": 5,
+        "descriptor_status": 3,
+        "descriptor_error_code": 0,
+        "object_length": 65536,
+        "fragments_completed": 305,
+        "completion_sequence": 51,
+        "output_byte_equal_to_input": true,
+        "descriptor_to_output_seconds": 32.837472,
+        "output_to_trace_seconds": 10.150886
+      },
+      {
+        "slot": 6,
+        "descriptor_status": 3,
+        "descriptor_error_code": 0,
+        "object_length": 65536,
+        "fragments_completed": 305,
+        "completion_sequence": 52,
+        "output_byte_equal_to_input": true,
+        "descriptor_to_output_seconds": 32.975116,
+        "output_to_trace_seconds": 9.926184
+      },
+      {
+        "slot": 7,
+        "descriptor_status": 3,
+        "descriptor_error_code": 0,
+        "object_length": 65536,
+        "fragments_completed": 305,
+        "completion_sequence": 53,
+        "output_byte_equal_to_input": true,
+        "descriptor_to_output_seconds": 33.036583,
+        "output_to_trace_seconds": 9.678979
+      }
+    ],
+    "first_1m_case": {
+      "slot": 0,
+      "descriptor_status": 3,
+      "descriptor_error_code": 0,
+      "object_length": 1048576,
+      "fragments_completed": 4878,
+      "completion_sequence": 54,
+      "descriptor_sha256": "c6940ecd4e70315041cf46c233c778293cec9247e3734a255875c0c0cc4f464a",
+      "input_sha256": "3828c85478fce6587aceb4e6aca4b6c512771f32723e3a5d195d18936f852b5b",
+      "descriptor_output_sha256": "3828c85478fce6587aceb4e6aca4b6c512771f32723e3a5d195d18936f852b5b",
+      "object_latency_ticks": 14250015258,
+      "counts_per_second": 333333343,
+      "object_latency_seconds": 42.750044,
+      "descriptor_mtime_utc": "2026-07-14T12:20:38.5791111Z",
+      "host_output_dump_present": false,
+      "host_output_partial_present": false,
+      "seconds_from_descriptor_to_parent_timeout": 391.50335
+    }
+  },
+  "timeout": {
+    "candidate_returncode": 124,
+    "candidate_timed_out": true,
+    "candidate_started_at_utc": "2026-07-14T12:10:10.036382+00:00",
+    "candidate_ended_at_utc": "2026-07-14T12:27:10.082461+00:00",
+    "candidate_elapsed_seconds": 1020.045474,
+    "service_runtime_limit_seconds": 900,
+    "candidate_process_bound_seconds": 1020,
+    "atomic_final_raw_result_present": false,
+    "partial_raw_result_present": true
+  },
+  "root_cause": {
+    "classification": "BYTE_WIDE_LARGE_EVIDENCE_HARVEST_EXCEEDED_BOUNDED_OUTER_WINDOW",
+    "confidence": "HIGH",
+    "firmware_transport_was_terminal_before_timeout": true,
+    "first_1m_descriptor_was_complete": true,
+    "host_was_harvesting_output_when_terminated": true,
+    "old_read_command": "mrd -size b -bin -file <path> <address> <byte_count>",
+    "old_1m_value_count": 1048576,
+    "measured_64k_output_read_bytes_per_second": 1989.77,
+    "measured_64k_trace_read_bytes_per_second": 1971.92,
+    "projected_old_1m_output_read_seconds": 526.98,
+    "projected_old_1m_trace_read_seconds": 158.32,
+    "projected_old_one_case_evidence_seconds": 685.30,
+    "xsdb_reference": "https://docs.amd.com/r/2022.2-English/ug1400-vitis-embedded/mrd",
+    "xsdb_contract": "The mrd num argument counts data values; -size d reads double-word values, and unsupported native double-word targets use two word accesses."
+  },
+  "minimal_fix_design": {
+    "preserve_complete_formal_stage62_internal_matrix": true,
+    "skip_formal_stages_1_through_61": true,
+    "defer_functional_case_preload_to_each_internal_phase": true,
+    "redundant_initial_functional_preload_bytes_removed": 10239744,
+    "large_evidence_access_size": "DOUBLEWORD",
+    "large_evidence_value_count_reduction_factor": 8,
+    "pre_execution_correctness_probe": "4096-byte immutable input must round-trip byte-exact through doubleword mrd before the 4KiB descriptor is published",
+    "shutdown_service_before_final_1m_evidence_harvest": true,
+    "parser_requires_new_markers": true,
+    "authorization_validator_modified": false,
+    "service_runtime_limit_changed": false,
+    "candidate_process_bound_changed": false,
+    "expected_payload_or_acceptance_semantics_changed": false,
+    "estimated_candidate_seconds_from_c2_measurements": 783,
+    "candidate_process_bound_seconds": 1020,
+    "estimated_margin_seconds": 237,
+    "estimate_is_acceptance_evidence": false
+  },
+  "safety_closure": {
+    "primary_shutdown_after_passed": false,
+    "primary_shutdown_after_returncode": 125,
+    "bounded_recovery_only_performed": true,
+    "recovery_shutdown_exit": 0,
+    "recovery_tfdu_shutdown_programmed": true,
+    "safe_shutdown_complete": true
+  },
+  "conclusion": "C2-08 attempted formal Stage 62 and completed boundary48, 4KiB, four 64KiB cases, and the first 1MiB firmware descriptor. It did not complete immutable host evidence collection or Stage 62 postprocessing, so it earns no acceptance credit. The timeout mechanism is the byte-valued XSDB evidence read, not a bypassable pre-Stage62 phase and not a proven firmware transport failure."
+}

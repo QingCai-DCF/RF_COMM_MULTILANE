@@ -1966,6 +1966,115 @@ class SyntheticEvidence:
 
 
 class SummarizeP7HardwareTests(unittest.TestCase):
+    def test_absolute_references_remap_only_across_equivalent_registered_worktrees(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            main = root / "main"
+            linked = root / "linked"
+            outside = root / "outside"
+            relative = Path("evidence/hardware/p7/run/raw.log")
+            for checkout in (main, linked):
+                target = checkout / relative
+                target.parent.mkdir(parents=True)
+                target.write_bytes(b"immutable-historical-evidence\n")
+            outside.mkdir()
+            outside_file = outside / "raw.log"
+            outside_file.write_bytes(b"immutable-historical-evidence\n")
+            document = linked / "evidence/hardware/p7/run/summary.json"
+            with mock.patch.object(
+                subject,
+                "_registered_worktree_roots",
+                return_value=(main.resolve(), linked.resolve()),
+            ):
+                self.assertEqual(
+                    (linked / relative).resolve(),
+                    subject.resolve_reference(
+                        main / relative, document=document, repo_root=linked
+                    ),
+                )
+                self.assertEqual(
+                    (linked / ".codex/p7_hardware.lock").resolve(strict=False),
+                    subject.resolve_reference(
+                        main / ".codex/p7_hardware.lock",
+                        document=document,
+                        repo_root=linked,
+                    ),
+                )
+                self.assertTrue(
+                    subject._same_registered_worktree_location(
+                        main / ".hardware_authorization/ignored.txt",
+                        linked / ".hardware_authorization/ignored.txt",
+                        linked,
+                    )
+                )
+                self.assertFalse(
+                    subject._same_registered_worktree_location(
+                        main / ".hardware_authorization/ignored.txt",
+                        linked / ".hardware_authorization/different.txt",
+                        linked,
+                    )
+                )
+                self.assertEqual(
+                    outside_file.resolve(),
+                    subject.resolve_reference(
+                        outside_file, document=document, repo_root=linked
+                    ),
+                )
+                (linked / relative).write_bytes(b"tampered\n")
+                subject._same_regular_file_contents.cache_clear()
+                self.assertEqual(
+                    (main / relative).resolve(),
+                    subject.resolve_reference(
+                        main / relative, document=document, repo_root=linked
+                    ),
+                )
+
+    def test_historical_hash_accepts_only_same_blob_checkout_materialization(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            main = root / "main"
+            linked = root / "linked"
+            relative = Path("constraints/active/example.xdc")
+            main_file = main / relative
+            linked_file = linked / relative
+            main_file.parent.mkdir(parents=True)
+            linked_file.parent.mkdir(parents=True)
+            main_file.write_bytes(b"line1\r\nline2\r\n")
+            linked_file.write_bytes(b"line1\nline2\n")
+            expected = hashlib.sha256(main_file.read_bytes()).hexdigest()
+            with mock.patch.object(
+                subject,
+                "_registered_worktree_roots",
+                return_value=(main.resolve(), linked.resolve()),
+            ), mock.patch.object(
+                subject,
+                "_git_filtered_blob_id",
+                side_effect=lambda _root, _relative, path: (
+                    "a" * 40 if Path(path) in {main_file, linked_file} else None
+                ),
+            ):
+                self.assertTrue(
+                    subject._sha256_matches_registered_materialization(
+                        linked_file, expected, linked
+                    )
+                )
+            with mock.patch.object(
+                subject,
+                "_registered_worktree_roots",
+                return_value=(main.resolve(), linked.resolve()),
+            ), mock.patch.object(
+                subject,
+                "_git_filtered_blob_id",
+                side_effect=lambda _root, _relative, path: (
+                    "a" * 40 if Path(path) == linked_file else "b" * 40
+                ),
+            ):
+                self.assertFalse(
+                    subject._sha256_matches_registered_materialization(
+                        linked_file, expected, linked
+                    )
+                )
+
     @staticmethod
     def _git(root: Path, *args: str) -> str:
         return subprocess.run(

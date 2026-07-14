@@ -1,0 +1,41 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "bitstream": {
+    "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+    "sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit"
+  },
+  "elf": {
+    "immutable": "evidence/hardware/p7/artifacts/p7_runtime_d6e477be67b9fc137435471bc2bac273ac36f4e1297582d466003a690b6b2bef.elf",
+    "sha256": "d6e477be67b9fc137435471bc2bac273ac36f4e1297582d466003a690b6b2bef",
+    "source": "build/p7_ps_vitis_workspace/p7_runtime/Debug/p7_runtime.elf"
+  },
+  "generated_at_utc": "2026-07-13T18:22:52.422127+00:00",
+  "hardware_actions_executed_by_build": false,
+  "hardware_source_commit": "5fe5b67e9961d910ebd26914a6bf5acccec17a1f",
+  "iteration": "iter_02",
+  "linker_map": {
+    "generated_copy": "evidence/generated/vitis/p7_ps_runtime/p7_runtime.map",
+    "immutable": "evidence/hardware/p7/artifacts/p7_runtime_0cf7f283de184976952b73e4fa3f6c4ca9fe66381c33415e87eb863037ebf85e.map",
+    "sha256": "0cf7f283de184976952b73e4fa3f6c4ca9fe66381c33415e87eb863037ebf85e",
+    "source": "build/p7_ps_vitis_workspace/p7_runtime/Debug/p7_runtime.map"
+  },
+  "offline_gate": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+    "sha256": "106459fd615898b569a8ecc28eafd2d2f9b686735e2eb0fdcefec9c0ae1367fe",
+    "source_commit": "5fe5b67e9961d910ebd26914a6bf5acccec17a1f",
+    "status": "PASS"
+  },
+  "post_failure_fix_head": "84669e68d45f9da82dbb7770f3a7750d8e21d7bb",
+  "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+  "schema": "rf-comm-stage62-iteration-build-manifest-v1",
+  "stage62_microtest_copy_disassembly": {
+    "dsb_count": 1,
+    "forbidden_memcpy_or_memmove": false,
+    "ldrb_count": 2,
+    "strb_count": 2
+  },
+  "stage62_microtest_disassembly_verified": true,
+  "stage62_microtest_stack_bytes": 112,
+  "stage62_microtest_stack_verified": true
+}

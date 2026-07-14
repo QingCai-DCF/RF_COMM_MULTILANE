@@ -1,0 +1,30 @@
+{
+  "actual": {
+    "path": "bundle/stage62_microtest_destination_prestart.bin",
+    "sha256": "3198a52a7e09dde9d05a82db251f6497845399c4d749c8441fa39866ca92f3bb",
+    "size_bytes": 256
+  },
+  "destination_fixture_address": "0x00900000",
+  "destination_target_address": "0x00900040",
+  "expected": {
+    "path": "bundle/stage62_microtest_destination_fixture.bin",
+    "sha256": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+    "size_bytes": 256
+  },
+  "first_mismatch": {
+    "absolute_address": "0x00900009",
+    "actual": 0,
+    "expected": 195,
+    "offset": 9
+  },
+  "interpretation": "The external prestart DDR write/readback failed before the firmware microtest copy. The lower-level mechanism is unresolved and may involve the DAP/XSDB path, PS interconnect, DDR controller or initialization/training, or board-level DDR.",
+  "mismatch_count": 1,
+  "mismatch_is_before_copy_target": true,
+  "ocm_control_readback_exact": true,
+  "ocm_source_readback_exact": true,
+  "run_id": "p7_20260714_stage62_microtest_r37_diag_only",
+  "schema": "rf-comm-stage62-ddr-prestart-diff-v1",
+  "stage62_executed": false,
+  "stage62_microtest_firmware_executed": false,
+  "status": "FAIL_DDR_PRESTART_READBACK"
+}

@@ -16,6 +16,11 @@
   ((uint64_t)COUNTS_PER_SECOND / UINT64_C(2))
 #define P7_SHUTDOWN_GUARD_TICKS \
   ((uint64_t)COUNTS_PER_SECOND / UINT64_C(10))
+#define P7_PL310_BASEADDR UINT32_C(0xf8f02000)
+#define P7_PL310_CACHE_TYPE_OFFSET UINT32_C(0x004)
+#define P7_PL310_CONTROL_OFFSET UINT32_C(0x100)
+#define P7_PL310_AUX_CONTROL_OFFSET UINT32_C(0x104)
+#define P7_PL310_RAW_INTERRUPT_STATUS_OFFSET UINT32_C(0x21c)
 
 enum {
   P7_P6_STATUS_READY = 1u << 1,
@@ -34,8 +39,21 @@ _Static_assert(sizeof(p7_fragment_trace_t) == 64U,
                "P7 fragment trace must be 64 bytes");
 _Static_assert(sizeof(p7_failure_snapshot_header_t) == 64U,
                "P7 failure snapshot header must be 64 bytes");
-_Static_assert(sizeof(p7_first_error_diagnostic_t) == 320U,
-               "P7 first-error diagnostic must be 320 bytes");
+_Static_assert(sizeof(p7_first_error_diagnostic_t) ==
+                   P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES,
+               "P7 first-error diagnostic must be 1536 bytes");
+_Static_assert(offsetof(p7_first_error_diagnostic_t, source_before) ==
+                   P7_FIRST_ERROR_DIAGNOSTIC_HEADER_BYTES,
+               "P7 source-before snapshot must follow the 512-byte header");
+_Static_assert((offsetof(p7_first_error_diagnostic_t, source_before) & 63U) ==
+                   0U &&
+                   (offsetof(p7_first_error_diagnostic_t, source_after) & 63U) ==
+                       0U &&
+                   (offsetof(p7_first_error_diagnostic_t, destination_before) &
+                    63U) == 0U &&
+                   (offsetof(p7_first_error_diagnostic_t, destination_after) &
+                    63U) == 0U,
+               "P7 diagnostic snapshots must be independently 64-byte aligned");
 _Static_assert(RF_APP_P6_MAX_PAYLOAD_BYTES <= P7_LOCAL_PAYLOAD_BYTES,
                "P7 local payload storage must contain the protocol maximum");
 _Static_assert(RF_TRANSPORT_MAX_PAYLOAD_BYTES ==
@@ -47,9 +65,10 @@ _Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR >=
                    P7_DESCRIPTOR_BASEADDR +
                        P7_DESCRIPTOR_QUEUE_DEPTH * P7_DESCRIPTOR_BYTES,
                "P7 failure snapshot must not overlap the descriptor queue");
-_Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR + P7_FAILURE_SNAPSHOT_TOTAL_BYTES <=
+_Static_assert(P7_FAILURE_SNAPSHOT_BASEADDR +
+                       P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES <=
                    P7_INPUT_REFERENCE_BASEADDR,
-               "P7 failure snapshot must precede fixed input reference");
+               "P7 first-error diagnostic must precede fixed input reference");
 _Static_assert((P7_INPUT_REFERENCE_BASEADDR & (P7_DDR_ALIGNMENT - 1U)) == 0U,
                "P7 input reference must be 64-byte aligned");
 _Static_assert(P7_INPUT_REFERENCE_BASEADDR + P7_LOCAL_PAYLOAD_BYTES <=
@@ -106,6 +125,17 @@ typedef struct p7_p6_backend_context {
   ir_p6_payload_result_t p6;
   rf_transport_metrics_t metrics;
 } p7_p6_backend_context_t;
+
+/* The linker fixes this NOLOAD section at P7_FAILURE_SNAPSHOT_BASEADDR.  It is
+ * deliberately not a function-local object: the four observations must not
+ * perturb the stack layout at the copy boundary that they diagnose. */
+static volatile p7_first_error_diagnostic_t g_p7_first_error_diagnostic
+    __attribute__((section(".p7_stage62_diagnostic"), aligned(64), used));
+static uint32_t g_p7_first_error_sequence;
+
+volatile uint8_t *p7_stage62_diagnostic_storage(void) {
+  return (volatile uint8_t *)&g_p7_first_error_diagnostic;
+}
 
 _Static_assert(_Alignof(p7_p6_backend_context_t) >= P7_DDR_ALIGNMENT,
                "P7 backend context must preserve 64-byte member alignment");
@@ -261,7 +291,7 @@ static void p7_sha256_final(p7_sha256_context_t *context, uint8_t output[32]) {
   }
 }
 
-static void p7_sha256(const uint8_t *data, size_t size, uint8_t output[32]) {
+void p7_sha256_bytes(const uint8_t *data, size_t size, uint8_t output[32]) {
   p7_sha256_context_t context;
   p7_sha256_init(&context);
   p7_sha256_update(&context, data, size);
@@ -518,7 +548,7 @@ static int p7_integrity_checked(p7_service_context_t *service,
 }
 
 static void p7_hash_volatile_bytes(const volatile uint8_t *data,
-                                   uint32_t size, uint32_t *crc_out,
+                                   uint32_t size, volatile uint32_t *crc_out,
                                    uint8_t sha_out[32],
                                    uint32_t observed_offset,
                                    uint32_t observed_byte) {
@@ -593,6 +623,264 @@ static int p7_compare_object_checked(
   return 1;
 }
 
+static uint32_t p7_read_stack_pointer(void) {
+  uint32_t value;
+  __asm__ volatile("mov %0, sp" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_sctlr(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c1, c0, 0" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_actlr(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c1, c0, 1" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_ttbr0(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c2, c0, 0" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_ttbr1(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c2, c0, 1" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_ttbcr(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c2, c0, 2" : "=r"(value));
+  return value;
+}
+
+static uint32_t p7_read_dacr(void) {
+  uint32_t value;
+  __asm__ volatile("mrc p15, 0, %0, c3, c0, 0" : "=r"(value));
+  return value;
+}
+
+static void p7_zero_diagnostic_record(void) {
+  volatile uint8_t *bytes =
+      (volatile uint8_t *)&g_p7_first_error_diagnostic;
+  for (uint32_t index = 0U;
+       index < P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES; ++index) {
+    bytes[index] = 0U;
+  }
+  dsb();
+}
+
+static void p7_capture_window(volatile uint8_t *snapshot,
+                              const volatile uint8_t *source,
+                              uint32_t source_length,
+                              uint32_t snapshot_offset,
+                              uint32_t snapshot_length) {
+  for (uint32_t index = 0U; index < P7_FIRST_ERROR_SNAPSHOT_BYTES; ++index) {
+    snapshot[index] = 0U;
+  }
+  for (uint32_t index = 0U; index < snapshot_length; ++index) {
+    uint32_t source_index = snapshot_offset + index;
+    if (source_index < source_length) snapshot[index] = source[source_index];
+  }
+  dsb();
+}
+
+static uint32_t p7_first_snapshot_mismatch(
+    const volatile uint8_t *left, const volatile uint8_t *right,
+    uint32_t size) {
+  for (uint32_t index = 0U; index < size; ++index) {
+    if (left[index] != right[index]) return index;
+  }
+  return UINT32_MAX;
+}
+
+static void p7_capture_translation_descriptor(
+    uint32_t virtual_address, uint32_t sctlr, uint32_t ttbr0,
+    uint32_t ttbr1, uint32_t ttbcr, volatile uint32_t *l1_address,
+    volatile uint32_t *l1_value, volatile uint32_t *l2_address,
+    volatile uint32_t *l2_value) {
+  uint32_t n = ttbcr & 7U;
+  uint32_t use_ttbr1 =
+      n != 0U && (virtual_address >> (32U - n)) != 0U;
+  uint32_t base;
+  uint32_t index;
+  *l1_address = P7_DIAGNOSTIC_NOT_APPLICABLE;
+  *l1_value = P7_DIAGNOSTIC_NOT_APPLICABLE;
+  *l2_address = P7_DIAGNOSTIC_NOT_APPLICABLE;
+  *l2_value = P7_DIAGNOSTIC_NOT_APPLICABLE;
+  if ((sctlr & 1U) == 0U) return;
+  if (use_ttbr1 != 0U) {
+    base = ttbr1 & UINT32_C(0xffffc000);
+    index = (virtual_address >> 20) & UINT32_C(0x0fff);
+  } else {
+    uint32_t alignment_bits = 14U - n;
+    uint32_t index_bits = 12U - n;
+    uint32_t base_mask = ~((UINT32_C(1) << alignment_bits) - 1U);
+    uint32_t index_mask = (UINT32_C(1) << index_bits) - 1U;
+    base = ttbr0 & base_mask;
+    index = (virtual_address >> 20) & index_mask;
+  }
+  *l1_address = base + index * 4U;
+  *l1_value = Xil_In32(*l1_address);
+  if ((*l1_value & 3U) == 1U) {
+    *l2_address = (*l1_value & UINT32_C(0xfffffc00)) +
+                  ((virtual_address >> 12) & UINT32_C(0x00ff)) * 4U;
+    *l2_value = Xil_In32(*l2_address);
+  }
+}
+
+static void p7_capture_runtime_diagnostic(
+    volatile p7_first_error_diagnostic_t *diagnostic,
+    uint32_t source_address, uint32_t destination_address) {
+  diagnostic->stack_pointer = p7_read_stack_pointer();
+  diagnostic->sctlr = p7_read_sctlr();
+  diagnostic->actlr = p7_read_actlr();
+  diagnostic->ttbr0 = p7_read_ttbr0();
+  diagnostic->ttbr1 = p7_read_ttbr1();
+  diagnostic->ttbcr = p7_read_ttbcr();
+  diagnostic->dacr = p7_read_dacr();
+  p7_capture_translation_descriptor(
+      source_address, diagnostic->sctlr, diagnostic->ttbr0,
+      diagnostic->ttbr1, diagnostic->ttbcr,
+      &diagnostic->source_l1_descriptor_address,
+      &diagnostic->source_l1_descriptor,
+      &diagnostic->source_l2_descriptor_address,
+      &diagnostic->source_l2_descriptor);
+  p7_capture_translation_descriptor(
+      destination_address, diagnostic->sctlr, diagnostic->ttbr0,
+      diagnostic->ttbr1, diagnostic->ttbcr,
+      &diagnostic->destination_l1_descriptor_address,
+      &diagnostic->destination_l1_descriptor,
+      &diagnostic->destination_l2_descriptor_address,
+      &diagnostic->destination_l2_descriptor);
+  diagnostic->pl310_control =
+      Xil_In32(P7_PL310_BASEADDR + P7_PL310_CONTROL_OFFSET);
+  diagnostic->pl310_aux_control =
+      Xil_In32(P7_PL310_BASEADDR + P7_PL310_AUX_CONTROL_OFFSET);
+  diagnostic->pl310_cache_type =
+      Xil_In32(P7_PL310_BASEADDR + P7_PL310_CACHE_TYPE_OFFSET);
+  diagnostic->pl310_raw_interrupt_status =
+      Xil_In32(P7_PL310_BASEADDR + P7_PL310_RAW_INTERRUPT_STATUS_OFFSET);
+  diagnostic->mmu_enabled = diagnostic->sctlr & 1U;
+  diagnostic->dcache_enabled = (diagnostic->sctlr >> 2) & 1U;
+  diagnostic->icache_enabled = (diagnostic->sctlr >> 12) & 1U;
+  diagnostic->capture_flags |=
+      P7_COPY_DIAGNOSTIC_CAPTURE_RUNTIME_REGISTERS |
+      P7_COPY_DIAGNOSTIC_CAPTURE_PAGE_TABLES |
+      P7_COPY_DIAGNOSTIC_CAPTURE_PL310;
+}
+
+static int p7_prepare_diagnostic_common(
+    const p7_object_descriptor_t *request, uint32_t stage,
+    uint32_t error_code, uint32_t fragment_index, uint32_t lane_mask,
+    uint32_t source_address, uint32_t destination_address) {
+  volatile p7_first_error_diagnostic_t *diagnostic =
+      &g_p7_first_error_diagnostic;
+  if (Xil_In32(P7_FAILURE_SNAPSHOT_BASEADDR) != 0U) return 0;
+  p7_zero_diagnostic_record();
+  diagnostic->version = P7_FIRST_ERROR_DIAGNOSTIC_VERSION;
+  diagnostic->record_length = P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES;
+  diagnostic->stage = stage;
+  diagnostic->error_code = error_code;
+  diagnostic->session_epoch = request->session_epoch;
+  diagnostic->object_id = request->object_id;
+  diagnostic->fragment_index = fragment_index;
+  diagnostic->lane_mask = lane_mask;
+  diagnostic->source_address = source_address;
+  diagnostic->destination_address = destination_address;
+  diagnostic->source_alignment_mod4 = source_address & 3U;
+  diagnostic->source_alignment_mod64 = source_address & 63U;
+  diagnostic->destination_alignment_mod4 = destination_address & 3U;
+  diagnostic->destination_alignment_mod64 = destination_address & 63U;
+  diagnostic->source_before_snapshot_offset =
+      (uint32_t)offsetof(p7_first_error_diagnostic_t, source_before);
+  diagnostic->source_after_snapshot_offset =
+      (uint32_t)offsetof(p7_first_error_diagnostic_t, source_after);
+  diagnostic->destination_before_snapshot_offset =
+      (uint32_t)offsetof(p7_first_error_diagnostic_t, destination_before);
+  diagnostic->destination_after_snapshot_offset =
+      (uint32_t)offsetof(p7_first_error_diagnostic_t, destination_after);
+  diagnostic->output_canary_byte = P7_OUTPUT_CANARY_BYTE;
+  p7_capture_runtime_diagnostic(diagnostic, source_address,
+                                destination_address);
+  return 1;
+}
+
+static void p7_hash_diagnostic_snapshots(uint32_t snapshot_length) {
+  volatile p7_first_error_diagnostic_t *diagnostic =
+      &g_p7_first_error_diagnostic;
+  uint8_t sha[32];
+  p7_hash_volatile_bytes(diagnostic->source_before, snapshot_length,
+                         &diagnostic->source_before_crc32, sha,
+                         UINT32_MAX, P7_DIAGNOSTIC_MISSING_BYTE);
+  p7_copy_digest_words(diagnostic->source_before_sha256, sha);
+  p7_hash_volatile_bytes(diagnostic->source_after, snapshot_length,
+                         &diagnostic->source_after_crc32, sha,
+                         UINT32_MAX, P7_DIAGNOSTIC_MISSING_BYTE);
+  p7_copy_digest_words(diagnostic->source_after_sha256, sha);
+  p7_hash_volatile_bytes(diagnostic->destination_before, snapshot_length,
+                         &diagnostic->destination_before_crc32,
+                         sha, UINT32_MAX, P7_DIAGNOSTIC_MISSING_BYTE);
+  p7_copy_digest_words(diagnostic->destination_before_sha256, sha);
+  p7_hash_volatile_bytes(diagnostic->destination_after, snapshot_length,
+                         &diagnostic->destination_after_crc32, sha,
+                         UINT32_MAX, P7_DIAGNOSTIC_MISSING_BYTE);
+  p7_copy_digest_words(diagnostic->destination_after_sha256, sha);
+}
+
+static uint32_t p7_publish_prepared_diagnostic(
+    volatile p7_mailbox_control_t *mailbox) {
+  const uint32_t address = P7_FAILURE_SNAPSHOT_BASEADDR;
+  volatile p7_first_error_diagnostic_t *diagnostic =
+      &g_p7_first_error_diagnostic;
+  uint32_t magic_readback;
+  if (mailbox == NULL) return P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT;
+  if ((uint32_t)(uintptr_t)diagnostic != address) {
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_RANGE_INVALID,
+        (uint32_t)(uintptr_t)diagnostic,
+        P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES, 0U);
+  }
+  if (Xil_In32(address) != 0U) return mailbox->failure_snapshot_status;
+  if (diagnostic->classification == P7_COPY_DIAGNOSTIC_COPY_OK ||
+      diagnostic->classification > P7_COPY_DIAGNOSTIC_RECORD_INVALID ||
+      diagnostic->version != P7_FIRST_ERROR_DIAGNOSTIC_VERSION ||
+      diagnostic->record_length != P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES ||
+      diagnostic->snapshot_length == 0U ||
+      diagnostic->snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES) {
+    diagnostic->classification = P7_COPY_DIAGNOSTIC_RECORD_INVALID;
+  }
+  g_p7_first_error_sequence += 1U;
+  if (g_p7_first_error_sequence == 0U) g_p7_first_error_sequence = 1U;
+  diagnostic->sequence = g_p7_first_error_sequence;
+  diagnostic->record_crc32 = 0U;
+  diagnostic->magic = 0U;
+  p7_flush(diagnostic, P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES);
+  dsb();
+  diagnostic->record_crc32 = p7_stage62_record_crc32(
+      (const volatile uint8_t *)diagnostic,
+      P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES);
+  p7_flush(&diagnostic->record_crc32, sizeof(diagnostic->record_crc32));
+  dsb();
+  diagnostic->magic = P7_FIRST_ERROR_DIAGNOSTIC_MAGIC;
+  p7_flush(&diagnostic->magic, sizeof(diagnostic->magic));
+  dsb();
+  magic_readback = Xil_In32(address);
+  if (magic_readback != P7_FIRST_ERROR_DIAGNOSTIC_MAGIC) {
+    return p7_publish_failure_snapshot_diagnostic(
+        mailbox, P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED, address,
+        P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES, magic_readback);
+  }
+  return p7_publish_failure_snapshot_diagnostic(
+      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address,
+      P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES, magic_readback);
+}
+
 static uint32_t p7_publish_first_error_diagnostic(
     volatile p7_mailbox_control_t *mailbox,
     const p7_object_descriptor_t *request, uint32_t stage,
@@ -600,18 +888,13 @@ static uint32_t p7_publish_first_error_diagnostic(
     const volatile uint8_t *expected, uint32_t expected_length,
     const volatile uint8_t *actual, uint32_t actual_length,
     const p7_mismatch_observation_t *observation) {
-  const uint32_t address = P7_FAILURE_SNAPSHOT_BASEADDR;
-  const uint32_t total_bytes = P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES;
-  p7_first_error_diagnostic_t diagnostic;
-  volatile p7_first_error_diagnostic_t *published;
-  uint8_t expected_sha[32];
-  uint8_t actual_sha[32];
+  volatile p7_first_error_diagnostic_t *diagnostic =
+      &g_p7_first_error_diagnostic;
+  uint8_t sha[32];
   uint32_t mismatch;
   uint32_t max_length;
-  uint32_t magic_readback;
-  uint32_t observed_expected_byte = P7_DIAGNOSTIC_MISSING_BYTE;
-  uint32_t observed_actual_byte = P7_DIAGNOSTIC_MISSING_BYTE;
-
+  uint32_t expected_byte = P7_DIAGNOSTIC_MISSING_BYTE;
+  uint32_t observed_byte = P7_DIAGNOSTIC_MISSING_BYTE;
   if (mailbox == NULL || request == NULL ||
       (expected == NULL && expected_length != 0U) ||
       (actual == NULL && actual_length != 0U)) {
@@ -619,97 +902,202 @@ static uint32_t p7_publish_first_error_diagnostic(
     return p7_publish_failure_snapshot_diagnostic(
         mailbox, P7_FAILURE_SNAPSHOT_STATUS_NULL_SNAPSHOT, 0U, 0U, 0U);
   }
-  /* A nonzero marker belongs to the first already-published observation.
-   * Never overwrite it with a later consequence of the same failure. */
-  if (Xil_In32(address) != 0U) return mailbox->failure_snapshot_status;
+  if (Xil_In32(P7_FAILURE_SNAPSHOT_BASEADDR) != 0U) {
+    return mailbox->failure_snapshot_status;
+  }
   max_length = expected_length > actual_length ? expected_length
                                                 : actual_length;
   mismatch = observation != NULL ? observation->offset : UINT32_MAX;
   if (mismatch < max_length &&
       observation->expected_byte <= P7_DIAGNOSTIC_MISSING_BYTE &&
       observation->actual_byte <= P7_DIAGNOSTIC_MISSING_BYTE &&
-      observation->expected_byte != observation->actual_byte &&
-      ((mismatch >= expected_length) ==
-       (observation->expected_byte == P7_DIAGNOSTIC_MISSING_BYTE)) &&
-      ((mismatch >= actual_length) ==
-       (observation->actual_byte == P7_DIAGNOSTIC_MISSING_BYTE))) {
-    observed_expected_byte = observation->expected_byte;
-    observed_actual_byte = observation->actual_byte;
+      observation->expected_byte != observation->actual_byte) {
+    expected_byte = observation->expected_byte;
+    observed_byte = observation->actual_byte;
   } else {
     mismatch = p7_first_mismatch_offset(expected, expected_length, actual,
                                         actual_length);
     if (mismatch < max_length) {
-      observed_expected_byte = mismatch < expected_length
-                                   ? expected[mismatch]
-                                   : P7_DIAGNOSTIC_MISSING_BYTE;
-      observed_actual_byte = mismatch < actual_length
-                                 ? actual[mismatch]
-                                 : P7_DIAGNOSTIC_MISSING_BYTE;
+      expected_byte = mismatch < expected_length
+                          ? expected[mismatch]
+                          : P7_DIAGNOSTIC_MISSING_BYTE;
+      observed_byte = mismatch < actual_length
+                          ? actual[mismatch]
+                          : P7_DIAGNOSTIC_MISSING_BYTE;
     }
   }
-  if (mismatch == UINT32_MAX) {
+  if (mismatch == UINT32_MAX || max_length == 0U) {
     return p7_publish_failure_snapshot_diagnostic(
         mailbox, P7_FAILURE_SNAPSHOT_STATUS_ZERO_LENGTH, 0U, 0U, 0U);
   }
-  memset(&diagnostic, 0, sizeof(diagnostic));
-  diagnostic.version = P7_RUNTIME_VERSION;
-  diagnostic.stage = stage;
-  diagnostic.error_code = error_code;
-  diagnostic.session_epoch = request->session_epoch;
-  diagnostic.object_id = request->object_id;
-  diagnostic.fragment_index = fragment_index;
-  diagnostic.lane_mask = lane_mask;
-  diagnostic.expected_length = expected_length;
-  diagnostic.actual_length = actual_length;
-  diagnostic.first_bad_offset = mismatch;
-  diagnostic.expected_byte = observed_expected_byte;
-  diagnostic.actual_byte = observed_actual_byte;
-  diagnostic.expected_address = (uint32_t)(uintptr_t)expected;
-  diagnostic.actual_address = (uint32_t)(uintptr_t)actual;
+  if (!p7_prepare_diagnostic_common(
+          request, stage, error_code, fragment_index, lane_mask,
+          (uint32_t)(uintptr_t)expected, (uint32_t)(uintptr_t)actual)) {
+    return mailbox->failure_snapshot_status;
+  }
+  diagnostic->classification = P7_COPY_DIAGNOSTIC_DEST_WRONG_VALUE;
+  diagnostic->length = max_length;
+  diagnostic->expected_length = expected_length;
+  diagnostic->actual_length = actual_length;
+  diagnostic->first_bad_index = mismatch;
+  diagnostic->expected_byte = expected_byte;
+  diagnostic->observed_byte = observed_byte;
+  diagnostic->snapshot_offset =
+      mismatch > P7_FIRST_ERROR_SNAPSHOT_BYTES / 2U
+          ? mismatch - P7_FIRST_ERROR_SNAPSHOT_BYTES / 2U
+          : 0U;
+  diagnostic->snapshot_length = max_length - diagnostic->snapshot_offset;
+  if (diagnostic->snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES) {
+    diagnostic->snapshot_length = P7_FIRST_ERROR_SNAPSHOT_BYTES;
+  }
+  p7_capture_window(diagnostic->source_before, expected, expected_length,
+                    diagnostic->snapshot_offset,
+                    diagnostic->snapshot_length);
+  p7_capture_window(diagnostic->source_after, expected, expected_length,
+                    diagnostic->snapshot_offset,
+                    diagnostic->snapshot_length);
+  p7_capture_window(diagnostic->destination_before, actual, actual_length,
+                    diagnostic->snapshot_offset,
+                    diagnostic->snapshot_length);
+  p7_capture_window(diagnostic->destination_after, actual, actual_length,
+                    diagnostic->snapshot_offset,
+                    diagnostic->snapshot_length);
+  diagnostic->source_before_byte = expected_byte;
+  diagnostic->source_after_byte = expected_byte;
+  diagnostic->destination_before_byte = observed_byte;
+  diagnostic->destination_after_byte = observed_byte;
+  diagnostic->capture_flags |=
+      P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_BEFORE |
+      P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_AFTER |
+      P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_AFTER |
+      P7_COPY_DIAGNOSTIC_CAPTURE_GENERIC_PAIR;
   p7_hash_volatile_bytes(expected, expected_length,
-                         &diagnostic.expected_crc32, expected_sha, mismatch,
-                         observed_expected_byte);
-  p7_hash_volatile_bytes(actual, actual_length, &diagnostic.actual_crc32,
-                         actual_sha, mismatch, observed_actual_byte);
-  p7_copy_digest_words(diagnostic.expected_sha256, expected_sha);
-  p7_copy_digest_words(diagnostic.actual_sha256, actual_sha);
-  diagnostic.snapshot_offset = mismatch > 32U ? mismatch - 32U : 0U;
-  diagnostic.snapshot_length = max_length - diagnostic.snapshot_offset;
-  if (diagnostic.snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES) {
-    diagnostic.snapshot_length = P7_FIRST_ERROR_SNAPSHOT_BYTES;
+                         &diagnostic->source_before_crc32, sha,
+                         mismatch, expected_byte);
+  p7_copy_digest_words(diagnostic->source_before_sha256, sha);
+  diagnostic->source_after_crc32 = diagnostic->source_before_crc32;
+  for (uint32_t index = 0U; index < 8U; ++index) {
+    diagnostic->source_after_sha256[index] =
+        diagnostic->source_before_sha256[index];
   }
-  for (uint32_t index = 0U; index < diagnostic.snapshot_length; ++index) {
-    uint32_t source_index = diagnostic.snapshot_offset + index;
-    if (source_index < expected_length) {
-      diagnostic.expected_snapshot[index] =
-          source_index == mismatch && observed_expected_byte <= UINT8_MAX
-              ? (uint8_t)observed_expected_byte
-              : expected[source_index];
-    }
-    if (source_index < actual_length) {
-      diagnostic.actual_snapshot[index] =
-          source_index == mismatch && observed_actual_byte <= UINT8_MAX
-              ? (uint8_t)observed_actual_byte
-              : actual[source_index];
-    }
+  p7_hash_volatile_bytes(actual, actual_length,
+                         &diagnostic->destination_after_crc32,
+                         sha, mismatch, observed_byte);
+  p7_copy_digest_words(diagnostic->destination_after_sha256, sha);
+  diagnostic->destination_before_crc32 =
+      diagnostic->destination_after_crc32;
+  for (uint32_t index = 0U; index < 8U; ++index) {
+    diagnostic->destination_before_sha256[index] =
+        diagnostic->destination_after_sha256[index];
   }
-  published =
-      (volatile p7_first_error_diagnostic_t *)(uintptr_t)address;
-  memcpy((void *)published, &diagnostic, sizeof(diagnostic));
-  p7_flush((const void *)(uintptr_t)address, total_bytes);
-  Xil_Out32(address, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC);
+  return p7_publish_prepared_diagnostic(mailbox);
+}
+
+static int p7_copy_output_with_diagnostic(
+    volatile p7_mailbox_control_t *mailbox,
+    const p7_object_descriptor_t *request, uint32_t fragment_index,
+    uint32_t lane_mask, volatile uint8_t *destination,
+    const volatile uint8_t *source, uint32_t size, int *error_out) {
+  volatile p7_first_error_diagnostic_t *diagnostic =
+      &g_p7_first_error_diagnostic;
+  uint32_t classification;
+  uint32_t first_bad = UINT32_MAX;
+  if (error_out == NULL || request == NULL || mailbox == NULL ||
+      ((destination == NULL || source == NULL) && size != 0U) ||
+      size > P7_FIRST_ERROR_SNAPSHOT_BYTES) {
+    if (error_out != NULL) *error_out = P7_ERROR_OUTPUT_COPY;
+    return 0;
+  }
+  *error_out = P7_ERROR_NONE;
+  if (size == 0U) return 1;
+  if (Xil_In32(P7_FAILURE_SNAPSHOT_BASEADDR) != 0U) {
+    *error_out = P7_ERROR_OUTPUT_COPY;
+    return 0;
+  }
+  if (!p7_prepare_diagnostic_common(
+          request, P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK,
+          P7_ERROR_OUTPUT_COPY, fragment_index, lane_mask,
+          (uint32_t)(uintptr_t)source,
+          (uint32_t)(uintptr_t)destination)) {
+    *error_out = P7_ERROR_OUTPUT_COPY;
+    return 0;
+  }
+  diagnostic->length = size;
+  diagnostic->expected_length = size;
+  diagnostic->actual_length = size;
+  diagnostic->snapshot_offset = 0U;
+  diagnostic->snapshot_length = size;
+  p7_capture_window(diagnostic->source_before, source, size, 0U, size);
+  p7_capture_window(diagnostic->destination_before, destination, size, 0U,
+                    size);
+  diagnostic->capture_flags |=
+      P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_BEFORE |
+      P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_BEFORE;
+  if (!p7_stage62_snapshot_matches_byte(
+          diagnostic->destination_before, size,
+          (uint8_t)P7_OUTPUT_CANARY_BYTE, &first_bad)) {
+    p7_capture_window(diagnostic->source_after, source, size, 0U, size);
+    p7_capture_window(diagnostic->destination_after, destination, size, 0U,
+                      size);
+    diagnostic->capture_flags |=
+        P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_AFTER |
+        P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_AFTER;
+    diagnostic->classification =
+        P7_COPY_DIAGNOSTIC_CANARY_PRECHECK_FAILED;
+    diagnostic->error_code = P7_ERROR_OUTPUT_CANARY_PRECHECK;
+    diagnostic->first_bad_index = first_bad;
+    diagnostic->expected_byte = P7_OUTPUT_CANARY_BYTE;
+    diagnostic->observed_byte = diagnostic->destination_before[first_bad];
+    diagnostic->source_before_byte = diagnostic->source_before[first_bad];
+    diagnostic->source_after_byte = diagnostic->source_after[first_bad];
+    diagnostic->destination_before_byte =
+        diagnostic->destination_before[first_bad];
+    diagnostic->destination_after_byte =
+        diagnostic->destination_after[first_bad];
+    p7_hash_diagnostic_snapshots(size);
+    (void)p7_publish_prepared_diagnostic(mailbox);
+    *error_out = P7_ERROR_OUTPUT_CANARY_PRECHECK;
+    return 0;
+  }
+  diagnostic->capture_flags |=
+      P7_COPY_DIAGNOSTIC_CAPTURE_CANARY_VERIFIED;
+  for (uint32_t index = 0U; index < size; ++index) {
+    destination[index] = source[index];
+  }
   dsb();
-  p7_flush(&published->magic, sizeof(published->magic));
-  dsb();
-  magic_readback = Xil_In32(address);
-  if (magic_readback != P7_FIRST_ERROR_DIAGNOSTIC_MAGIC) {
-    return p7_publish_failure_snapshot_diagnostic(
-        mailbox, P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED, address,
-        total_bytes, magic_readback);
+  diagnostic->capture_flags |= P7_COPY_DIAGNOSTIC_CAPTURE_COPY_EXECUTED;
+  p7_capture_window(diagnostic->source_after, source, size, 0U, size);
+  p7_capture_window(diagnostic->destination_after, destination, size, 0U,
+                    size);
+  diagnostic->capture_flags |=
+      P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_AFTER |
+      P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_AFTER;
+  classification = p7_stage62_classify_copy_observation(
+      diagnostic->source_before, diagnostic->source_after,
+      diagnostic->destination_before, diagnostic->destination_after, size);
+  diagnostic->classification = classification;
+  if (classification == P7_COPY_DIAGNOSTIC_COPY_OK) return 1;
+  if (classification == P7_COPY_DIAGNOSTIC_SOURCE_CHANGED) {
+    first_bad = p7_first_snapshot_mismatch(
+        diagnostic->source_before, diagnostic->source_after, size);
+    diagnostic->expected_byte = diagnostic->source_before[first_bad];
+    diagnostic->observed_byte = diagnostic->source_after[first_bad];
+  } else {
+    first_bad = p7_first_snapshot_mismatch(
+        diagnostic->source_before, diagnostic->destination_after, size);
+    diagnostic->expected_byte = diagnostic->source_before[first_bad];
+    diagnostic->observed_byte = diagnostic->destination_after[first_bad];
   }
-  return p7_publish_failure_snapshot_diagnostic(
-      mailbox, P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes,
-      magic_readback);
+  diagnostic->first_bad_index = first_bad;
+  diagnostic->source_before_byte = diagnostic->source_before[first_bad];
+  diagnostic->source_after_byte = diagnostic->source_after[first_bad];
+  diagnostic->destination_before_byte =
+      diagnostic->destination_before[first_bad];
+  diagnostic->destination_after_byte = diagnostic->destination_after[first_bad];
+  p7_hash_diagnostic_snapshots(size);
+  (void)p7_publish_prepared_diagnostic(mailbox);
+  *error_out = P7_ERROR_OUTPUT_COPY;
+  return 0;
 }
 
 static int p7_p6_open(rf_transport_backend_t *backend) {
@@ -1381,6 +1769,13 @@ static int p7_process_descriptor(
     p7_publish_mailbox(mailbox);
     return error;
   }
+  p7_zero_diagnostic_record();
+  p7_flush(&g_p7_first_error_diagnostic,
+           P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES);
+  mailbox->failure_snapshot_address = 0U;
+  mailbox->failure_snapshot_bytes = 0U;
+  mailbox->failure_snapshot_status = P7_FAILURE_SNAPSHOT_STATUS_NONE;
+  mailbox->failure_snapshot_magic_readback = 0U;
   service->shutdown_attempted = 0U;
   service->shutdown_status = -1;
   descriptor->fragments_total = fragment_count;
@@ -1687,20 +2082,11 @@ static int p7_process_descriptor(
         goto failed;
       }
       if (chunk_length != 0U) {
-        if (!p7_copy_bytes_verified(
+        if (!p7_copy_output_with_diagnostic(
+                mailbox, &request, fragment_index, lane,
                 (volatile uint8_t *)(uintptr_t)(request.output_address +
                                                 offset),
-                (const volatile uint8_t *)view.chunk, chunk_length,
-                &mismatch)) {
-          error = P7_ERROR_OUTPUT_COPY;
-          (void)p7_publish_first_error_diagnostic(
-              mailbox, &request,
-              P7_FIRST_ERROR_STAGE_DDR_OUTPUT_IMMEDIATE_READBACK,
-              (uint32_t)error, fragment_index, lane, input_reference,
-              chunk_length,
-              (const volatile uint8_t *)(uintptr_t)(request.output_address +
-                                                     offset),
-              chunk_length, &mismatch);
+                (const volatile uint8_t *)view.chunk, chunk_length, &error)) {
           result.accepted = 0U;
           result.error_code = (uint32_t)error;
           completed_bytes = offset + chunk_length;
@@ -1960,9 +2346,9 @@ int p7_app_service_run(const ir_mmio_t *io,
   mailbox->failure_snapshot_status = P7_FAILURE_SNAPSHOT_STATUS_NONE;
   mailbox->failure_snapshot_magic_readback = 0U;
   memset((void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR, 0,
-         P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
+         P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES);
   p7_flush((const void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR,
-           P7_FAILURE_SNAPSHOT_TOTAL_BYTES);
+           P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES);
   memset((void *)(uintptr_t)P7_INPUT_REFERENCE_BASEADDR, 0,
          P7_LOCAL_PAYLOAD_BYTES);
   memset((void *)(uintptr_t)P7_P6_TX_READBACK_BASEADDR, 0,

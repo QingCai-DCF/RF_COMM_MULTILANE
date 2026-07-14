@@ -1,0 +1,55 @@
+{
+  "events": [
+    {
+      "event": "authorized_execution_begin",
+      "mode": "ddr-external-master",
+      "timestamp_utc": "2026-07-14T04:27:51.603818+00:00"
+    },
+    {
+      "event": "preflight_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T04:28:23.020620+00:00"
+    },
+    {
+      "event": "shutdown_before_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T04:29:11.402766+00:00"
+    },
+    {
+      "event": "candidate_started",
+      "mode": "ddr-external-master",
+      "timestamp_utc": "2026-07-14T04:29:11.417815+00:00"
+    },
+    {
+      "candidate_returncode": 0,
+      "event": "candidate_child_reaped",
+      "process_tree_reaped": true,
+      "timestamp_utc": "2026-07-14T04:29:37.524742+00:00"
+    },
+    {
+      "event": "ps_stage_finished",
+      "passed": false,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T04:29:37.529864+00:00"
+    },
+    {
+      "candidate_child_reaped": true,
+      "candidate_returncode": 0,
+      "event": "shutdown_after_started",
+      "timestamp_utc": "2026-07-14T04:29:37.529906+00:00"
+    },
+    {
+      "event": "shutdown_after_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T04:30:25.990603+00:00"
+    },
+    {
+      "event": "authorized_execution_end",
+      "status": "FAIL_STAGE",
+      "timestamp_utc": "2026-07-14T04:30:25.998103+00:00"
+    }
+  ]
+}

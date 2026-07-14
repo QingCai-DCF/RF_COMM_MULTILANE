@@ -23,6 +23,42 @@ set linker_text [string map [list \
 if {[string first "ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x20000" $linker_text] < 0} {
   error "P7 linker OCM hard boundary was not applied"
 }
+set diagnostic_memory \
+    "   p7_stage62_diag : ORIGIN = 0x21000, LENGTH = 0x1000\n"
+if {[string first "p7_stage62_diag : ORIGIN = 0x21000, LENGTH = 0x1000" \
+        $linker_text] < 0} {
+  set linker_text [string map [list \
+      "   ps7_ram_1 : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00" \
+      "$diagnostic_memory   ps7_ram_1 : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00"] \
+      $linker_text]
+}
+set diagnostic_section {
+.p7_stage62_diagnostic (NOLOAD) : {
+   . = ALIGN(64);
+   __p7_stage62_diagnostic_start = .;
+   KEEP (*(.p7_stage62_diagnostic))
+   . = ALIGN(64);
+   __p7_stage62_diagnostic_end = .;
+} > p7_stage62_diag
+ASSERT(ADDR(.p7_stage62_diagnostic) == 0x21000,
+       "P7 Stage62 diagnostic address mismatch")
+ASSERT(SIZEOF(.p7_stage62_diagnostic) == 1536,
+       "P7 Stage62 diagnostic size mismatch")
+ASSERT(__p7_stage62_diagnostic_end <= 0x22000,
+       "P7 Stage62 diagnostic overlaps fixed input reference")
+}
+if {[string first ".p7_stage62_diagnostic (NOLOAD)" $linker_text] < 0} {
+  set linker_tail [format "\n_end = .;\n%c" 125]
+  set linker_replacement [format "\n_end = .;\n%s\n%c" \
+      $diagnostic_section 125]
+  set linker_text [string map [list \
+      $linker_tail $linker_replacement] $linker_text]
+}
+if {[string first "p7_stage62_diag : ORIGIN = 0x21000, LENGTH = 0x1000" \
+        $linker_text] < 0 ||
+    [string first ".p7_stage62_diagnostic (NOLOAD)" $linker_text] < 0} {
+  error "P7 fixed Stage62 diagnostic linker section was not applied"
+}
 set linker_handle [open $linker_file w]
 puts -nonewline $linker_handle $linker_text
 close $linker_handle
@@ -31,6 +67,10 @@ foreach source_path [list \
     software/ps_driver/p7_runtime_main.c \
     software/ps_driver/p7_app_service.c \
     software/ps_driver/p7_app_service.h \
+    software/ps_driver/p7_stage62_diagnostic.c \
+    software/ps_driver/p7_stage62_diagnostic.h \
+    software/ps_driver/p7_stage62_microtest.c \
+    software/ps_driver/p7_stage62_microtest.h \
     software/ps_driver/p7_admission_contract.h \
     software/ps_driver/ir_driver.c \
     software/ps_driver/ir_driver.h \

@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "ir_driver.h"
+#include "p7_stage62_diagnostic.h"
 #include "rf_app_protocol.h"
 #include "rf_transport_backend.h"
 
@@ -51,12 +52,18 @@ extern "C" {
 #define P7_FAILURE_SNAPSHOT_STATUS_OUTPUT_OVERLAP UINT32_C(9)
 #define P7_FAILURE_SNAPSHOT_STATUS_TRACE_OVERLAP UINT32_C(10)
 #define P7_FAILURE_SNAPSHOT_STATUS_MARKER_READBACK_FAILED UINT32_C(11)
-#define P7_FIRST_ERROR_SNAPSHOT_BYTES UINT32_C(64)
-#define P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES UINT32_C(320)
+#define P7_FIRST_ERROR_DIAGNOSTIC_VERSION UINT32_C(2)
+#define P7_FIRST_ERROR_DIAGNOSTIC_HEADER_BYTES UINT32_C(512)
+#define P7_FIRST_ERROR_SNAPSHOT_BYTES UINT32_C(256)
+#define P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES UINT32_C(1536)
 #define P7_LOCAL_PAYLOAD_BYTES UINT32_C(256)
+#define P7_OUTPUT_CANARY_BYTE UINT32_C(0xa5)
 #define P7_DIAGNOSTIC_MISSING_BYTE UINT32_C(0x100)
 #define P7_DIAGNOSTIC_NOT_APPLICABLE UINT32_MAX
 #define P7_RUNTIME_VERSION UINT32_C(1)
+
+volatile uint8_t *p7_stage62_diagnostic_storage(void);
+void p7_sha256_bytes(const uint8_t *data, size_t size, uint8_t output[32]);
 
 enum p7_first_error_stage {
   P7_FIRST_ERROR_STAGE_INPUT_REF = 1,
@@ -141,7 +148,8 @@ enum p7_error_code {
   P7_ERROR_P6_RX_LOCAL_MISMATCH = 28,
   P7_ERROR_RECEIVED_INPUT_MISMATCH = 29,
   P7_ERROR_DDR_OUTPUT_IMMEDIATE_READBACK = 30,
-  P7_ERROR_DDR_OUTPUT_END_TO_END = 31
+  P7_ERROR_DDR_OUTPUT_END_TO_END = 31,
+  P7_ERROR_OUTPUT_CANARY_PRECHECK = 32
 };
 
 /* Exactly 256 bytes. Descriptor status is the publication/commit word and is
@@ -289,36 +297,89 @@ typedef struct __attribute__((aligned(64))) p7_failure_snapshot_header {
   uint32_t output_sha256[8];
 } p7_failure_snapshot_header_t;
 
-/* Exactly 320 bytes in the fixed OCM diagnostic region.  The first mismatch
- * is published once, with magic written and read back last.  SHA256 arrays
- * contain standard digest words in big-endian word order.  A byte value of
- * P7_DIAGNOSTIC_MISSING_BYTE means that side ended before first_bad_offset. */
+/* Exactly 1536 bytes in the fixed .p7_stage62_diagnostic OCM linker section.
+ * The body and four immutable 256-byte observations are written first, the
+ * record CRC32 is written second, and magic is the final publication word.
+ * CRC32 is computed over the whole record with the magic and record_crc32
+ * words treated as zero.  SHA256 arrays contain standard digest words in
+ * big-endian word order.  A byte value of P7_DIAGNOSTIC_MISSING_BYTE means
+ * that the corresponding observation ended before first_bad_index. */
 typedef struct __attribute__((aligned(64))) p7_first_error_diagnostic {
   volatile uint32_t magic;
   uint32_t version;
+  uint32_t record_length;
+  uint32_t sequence;
+  volatile uint32_t record_crc32;
+  uint32_t classification;
   uint32_t stage;
   uint32_t error_code;
   uint32_t session_epoch;
   uint32_t object_id;
   uint32_t fragment_index;
   uint32_t lane_mask;
+  uint32_t length;
   uint32_t expected_length;
   uint32_t actual_length;
-  uint32_t first_bad_offset;
+  uint32_t first_bad_index;
   uint32_t expected_byte;
-  uint32_t actual_byte;
-  uint32_t expected_address;
-  uint32_t actual_address;
-  uint32_t expected_crc32;
-  uint32_t actual_crc32;
+  uint32_t observed_byte;
+  uint32_t source_before_byte;
+  uint32_t source_after_byte;
+  uint32_t destination_before_byte;
+  uint32_t destination_after_byte;
+  uint32_t source_address;
+  uint32_t destination_address;
+  uint32_t source_alignment_mod4;
+  uint32_t source_alignment_mod64;
+  uint32_t destination_alignment_mod4;
+  uint32_t destination_alignment_mod64;
+  uint32_t stack_pointer;
+  uint32_t sctlr;
+  uint32_t actlr;
+  uint32_t ttbr0;
+  uint32_t ttbr1;
+  uint32_t ttbcr;
+  uint32_t dacr;
+  uint32_t source_l1_descriptor_address;
+  uint32_t source_l1_descriptor;
+  uint32_t source_l2_descriptor_address;
+  uint32_t source_l2_descriptor;
+  uint32_t destination_l1_descriptor_address;
+  uint32_t destination_l1_descriptor;
+  uint32_t destination_l2_descriptor_address;
+  uint32_t destination_l2_descriptor;
+  uint32_t pl310_control;
+  uint32_t pl310_aux_control;
+  uint32_t pl310_cache_type;
+  uint32_t pl310_raw_interrupt_status;
   uint32_t snapshot_offset;
   uint32_t snapshot_length;
-  uint32_t reserved_metadata;
-  uint32_t expected_sha256[8];
-  uint32_t actual_sha256[8];
-  uint32_t reserved_header[12];
-  uint8_t expected_snapshot[P7_FIRST_ERROR_SNAPSHOT_BYTES];
-  uint8_t actual_snapshot[P7_FIRST_ERROR_SNAPSHOT_BYTES];
+  uint32_t capture_flags;
+  uint32_t source_before_crc32;
+  uint32_t source_after_crc32;
+  uint32_t destination_before_crc32;
+  uint32_t destination_after_crc32;
+  uint32_t source_before_sha256[8];
+  uint32_t source_after_sha256[8];
+  uint32_t destination_before_sha256[8];
+  uint32_t destination_after_sha256[8];
+  uint32_t source_before_snapshot_offset;
+  uint32_t source_after_snapshot_offset;
+  uint32_t destination_before_snapshot_offset;
+  uint32_t destination_after_snapshot_offset;
+  uint32_t output_canary_byte;
+  uint32_t mmu_enabled;
+  uint32_t dcache_enabled;
+  uint32_t icache_enabled;
+  uint32_t reserved_header[34];
+  uint8_t source_before[P7_FIRST_ERROR_SNAPSHOT_BYTES]
+      __attribute__((aligned(64)));
+  uint8_t source_after[P7_FIRST_ERROR_SNAPSHOT_BYTES]
+      __attribute__((aligned(64)));
+  uint8_t destination_before[P7_FIRST_ERROR_SNAPSHOT_BYTES]
+      __attribute__((aligned(64)));
+  uint8_t destination_after[P7_FIRST_ERROR_SNAPSHOT_BYTES]
+      __attribute__((aligned(64)));
 } p7_first_error_diagnostic_t;
 
 int p7_app_service_run(const ir_mmio_t *io,

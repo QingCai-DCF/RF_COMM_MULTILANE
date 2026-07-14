@@ -138,11 +138,21 @@ def main(argv: list[str] | None = None) -> int:
     runner = load_runner()
     service = (ROOT / "software/ps_driver/p7_app_service.c").read_text(encoding="utf-8")
     service_header = (ROOT / "software/ps_driver/p7_app_service.h").read_text(encoding="utf-8")
+    stage62_diagnostic = (
+        ROOT / "software/ps_driver/p7_stage62_diagnostic.c"
+    ).read_text(encoding="utf-8")
+    stage62_microtest = (
+        ROOT / "software/ps_driver/p7_stage62_microtest.c"
+    ).read_text(encoding="utf-8")
+    stage62_microtest_header = (
+        ROOT / "software/ps_driver/p7_stage62_microtest.h"
+    ).read_text(encoding="utf-8")
     runtime = (ROOT / "software/ps_driver/p7_runtime_main.c").read_text(encoding="utf-8")
     driver = (ROOT / "software/ps_driver/ir_driver.c").read_text(encoding="utf-8")
     codec = (ROOT / "tools/p7_ps_mailbox_backend.py").read_text(encoding="utf-8")
     runner_text = RUNNER.read_text(encoding="utf-8")
     execute_tcl = (ROOT / "scripts/hw/p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+    build_tcl = (ROOT / "scripts/build_p7_ps_runtime.tcl").read_text(encoding="utf-8")
     jtag_wrapper = (ROOT / "scripts/hw/run_p7_jtag_axi_stage_safe.py").read_text(encoding="utf-8")
     contained_launcher = (ROOT / "tools/p7_contained_launcher.py").read_text(encoding="utf-8")
     failed_block = between(service, "failed:", "static uint32_t p7_queue_occupancy")
@@ -153,12 +163,32 @@ def main(argv: list[str] | None = None) -> int:
     process_descriptor_block = between(
         service, "static int p7_process_descriptor", "static uint32_t p7_queue_occupancy"
     )
+    publish_prepared_block = between(
+        service,
+        "static uint32_t p7_publish_prepared_diagnostic(",
+        "static uint32_t p7_publish_first_error_diagnostic(",
+    )
+    copy_diagnostic_block = between(
+        service,
+        "static int p7_copy_output_with_diagnostic(",
+        "static int p7_p6_open(",
+    )
+    prepare_diagnostic_block = between(
+        service,
+        "static int p7_prepare_diagnostic_common(",
+        "static void p7_hash_diagnostic_snapshots(",
+    )
     validation_reject_block = between(
         process_descriptor_block,
         "error = p7_validate_descriptor",
         "service->shutdown_attempted = 0U",
     )
     final_release_block = service[service.rfind("final_runtime_request =") :]
+    microtest_execute_block = between(
+        execute_tcl[execute_tcl.find("rst -processor") :],
+        'if {$mode eq "stage62-microtest"} {',
+        '} else {\n  set host_input_start_ms',
+    )
     static_checks = {
         "host_command_cache_disabled_or_isolated":
             "Xil_DCacheDisable();" in runtime
@@ -217,7 +247,8 @@ def main(argv: list[str] | None = None) -> int:
             and "p7_mismatch_observation_t" in service
             and "observation->offset = index;" in service
             and "observation->expected_byte = expected_byte;" in service
-            and "observed_expected_byte" in service
+            and "uint32_t expected_byte = P7_DIAGNOSTIC_MISSING_BYTE" in service
+            and "diagnostic->expected_byte = expected_byte;" in service
             and "absolute_index == observed_offset" in service
             and "P7_ERROR_FRAGMENT_ENCODE_COPY" in service
             and "P7_ERROR_FRAGMENT_TRANSFER_COPY" in service
@@ -229,25 +260,106 @@ def main(argv: list[str] | None = None) -> int:
             and "memcpy((void *)(uintptr_t)(request.output_address" not in process_descriptor_block,
         "first_error_diagnostic_is_atomic_and_first_only":
             "P7_FIRST_ERROR_DIAGNOSTIC_MAGIC" in service_header
-            and "sizeof(p7_first_error_diagnostic_t) == 320U" in service
+            and "sizeof(p7_first_error_diagnostic_t) ==" in service
+            and "P7_FIRST_ERROR_DIAGNOSTIC_TOTAL_BYTES" in service
             and "if (Xil_In32(address) != 0U)" in service
-            and service.find("memcpy((void *)published, &diagnostic")
-            < service.find("Xil_Out32(address, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)")
-            < service.find("magic_readback = Xil_In32(address)")
+            and publish_prepared_block.find("p7_flush(diagnostic")
+            < publish_prepared_block.find(
+                "diagnostic->record_crc32 = p7_stage62_record_crc32("
+            )
+            < publish_prepared_block.find(
+                "diagnostic->magic = P7_FIRST_ERROR_DIAGNOSTIC_MAGIC"
+            )
+            < publish_prepared_block.find("magic_readback = Xil_In32(address)")
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED=1" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=1" in execute_tcl,
+        "stage62_first_error_prepare_is_first_only":
+            prepare_diagnostic_block.find(
+                "if (Xil_In32(P7_FAILURE_SNAPSHOT_BASEADDR) != 0U) return 0;"
+            )
+            < prepare_diagnostic_block.find("p7_zero_diagnostic_record();")
+            and prepare_diagnostic_block.find(
+                "if (Xil_In32(P7_FAILURE_SNAPSHOT_BASEADDR) != 0U) return 0;"
+            )
+            >= 0,
         "first_error_capture_precedes_validation_and_is_input_bound":
-            "p7_atomic_dump $failure_snapshot $failure_snapshot_address 320" in execute_tcl
-            and "p7_zero_words_and_verify $failure_snapshot_address 320" in execute_tcl
-            and execute_tcl.find("p7_atomic_dump $failure_snapshot $failure_snapshot_address 320")
-            < execute_tcl.find("p7_zero_words_and_verify $failure_snapshot_address 320")
+            "set diagnostic_capture_bytes 1536" in execute_tcl
+            and "p7_atomic_dump $failure_snapshot $failure_snapshot_address" in execute_tcl
+            and "p7_zero_words_and_verify $failure_snapshot_address" in execute_tcl
+            and execute_tcl.find("p7_atomic_dump $failure_snapshot $failure_snapshot_address")
+            < execute_tcl.find("p7_zero_words_and_verify $failure_snapshot_address")
             < execute_tcl.find("P7 failure diagnostic firmware rejected publication")
             < execute_tcl.find("P7 first-error diagnostic identity/geometry validation failed")
-            and "set diagnostic_data [p7_read_binary_exact $failure_snapshot 320]" in execute_tcl
+            and "set diagnostic_data [p7_read_binary_exact $failure_snapshot" in execute_tcl
             and "set diagnostic_marker [p7_le32 $diagnostic_data 0]" in execute_tcl
             and "from p7_app_protocol import segment_object" in runner_text
             and "first-error diagnostic expected SHA256 is not input-reference bound" in runner_text
             and "first-error diagnostic expected snapshot is not input-reference bound" in runner_text,
+        "stage62_diagnostic_fixed_ocm_section":
+            'section(".p7_stage62_diagnostic")' in service
+            and "offsetof(p7_first_error_diagnostic_t, source_before)" in service
+            and "p7_stage62_diag : ORIGIN = 0x21000, LENGTH = 0x1000" in build_tcl
+            and ".p7_stage62_diagnostic (NOLOAD)" in build_tcl
+            and "SIZEOF(.p7_stage62_diagnostic) == 1536" in build_tcl,
+        "stage62_copy_four_snapshot_classification":
+            "p7_copy_output_with_diagnostic(" in process_descriptor_block
+            and all(
+                token in copy_diagnostic_block
+                for token in (
+                    "diagnostic->source_before",
+                    "diagnostic->source_after",
+                    "diagnostic->destination_before",
+                    "diagnostic->destination_after",
+                    "p7_stage62_classify_copy_observation(",
+                    "P7_COPY_DIAGNOSTIC_CANARY_PRECHECK_FAILED",
+                    "P7_ERROR_OUTPUT_CANARY_PRECHECK",
+                )
+            )
+            and "P7_COPY_DIAGNOSTIC_DEST_PARTIAL_WRITE"
+            in stage62_diagnostic
+            and "P7_COPY_DIAGNOSTIC_READBACK_VISIBILITY_SUSPECT"
+            in stage62_diagnostic,
+        "stage62_diagnostic_crc_publish_order":
+            "p7_stage62_record_crc32(" in publish_prepared_block
+            and publish_prepared_block.find("p7_flush(diagnostic")
+            < publish_prepared_block.find("p7_stage62_record_crc32(")
+            < publish_prepared_block.find(
+                "diagnostic->magic = P7_FIRST_ERROR_DIAGNOSTIC_MAGIC"
+            )
+            and "record CRC32 is invalid" in codec,
+        "stage62_only_microtest_bypasses_pl_and_is_disassembly_bound":
+            runtime.find("Xil_DCacheDisable();")
+            < runtime.find("p7_stage62_microtest_try_run()")
+            < runtime.find("p7_mmio_context_t context")
+            < runtime.find("p7_app_service_run(")
+            and "void __attribute__((noinline)) p7_stage62_microtest_copy_bytes("
+            in stage62_microtest
+            and "volatile uint8_t *destination" in stage62_microtest
+            and "const volatile uint8_t *source" in stage62_microtest
+            and "destination[index] = value;" in stage62_microtest
+            and "dsb();" in stage62_microtest
+            and "p7_publish_record(record)" in stage62_microtest
+            and stage62_microtest.find("p7_publish_record(record)")
+            < stage62_microtest.find("p7_zero_volatile(destination_target")
+            and "valid_control != 0U && destination_target != NULL"
+            in stage62_microtest
+            and "P7_STAGE62_MICROTEST_CONTROL_ADDRESS UINT32_C(0x00022300)"
+            in stage62_microtest_header
+            and "P7_STAGE62_MICROTEST_DDR_DESTINATION_ADDRESS UINT32_C(0x00900000)"
+            in stage62_microtest_header
+            and "software/ps_driver/p7_stage62_microtest.c" in build_tcl
+            and "software/ps_driver/p7_stage62_microtest.h" in build_tcl
+            and "stage62_microtest_record_zero.bin" in microtest_execute_block
+            and "P7_STAGE62_MICROTEST_PRESTART_READBACK=PASS"
+            in microtest_execute_block
+            and "stage62_microtest_record_result.bin" in microtest_execute_block
+            and "P7_STAGE62_MICROTEST_STAGE62_EXECUTED=0"
+            in microtest_execute_block
+            and "p7_wait_service_ready" not in microtest_execute_block
+            and "mwr 0x0002000C" not in microtest_execute_block
+            and "0x43C00000" not in microtest_execute_block
+            and "--stage62-only" in runner_text
+            and '("P7_EXECUTION_SCOPE", "STAGE62_ONLY")' in runner_text,
         "pre_repair_encode_raw_compared_to_fixed_input_reference":
             "P7_INPUT_REFERENCE_BASEADDR" in service_header
             and "P7_FIRST_ERROR_STAGE_INPUT_REF" in process_descriptor_block
@@ -291,7 +403,7 @@ def main(argv: list[str] | None = None) -> int:
             < process_descriptor_block.find("failed:")
             < process_descriptor_block.find("p7_wipe_partial(")
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1" in execute_tcl
-            and "p7_zero_words_and_verify $failure_snapshot_address 320" in execute_tcl
+            and "set diagnostic_capture_bytes 320" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1" in execute_tcl,
         "integrity_failure_snapshot_mailbox_diagnostic":
             "failure_snapshot_address" in service
@@ -388,6 +500,11 @@ def main(argv: list[str] | None = None) -> int:
     native = {"returncode": 127, "reason": "SKIP_WITH_REASON:gcc_not_found"}
     admission_native = {"returncode": 127, "reason": "SKIP_WITH_REASON:gcc_not_found"}
     payload_native = {"returncode": 127, "reason": "SKIP_WITH_REASON:gcc_not_found"}
+    stage62_native = {"returncode": 127, "reason": "SKIP_WITH_REASON:gcc_not_found"}
+    stage62_microtest_native = {
+        "returncode": 127,
+        "reason": "SKIP_WITH_REASON:gcc_not_found",
+    }
     if gcc is not None:
         build_dir = ROOT / "build/p7_ps_core_native"
         build_dir.mkdir(parents=True, exist_ok=True)
@@ -451,6 +568,63 @@ def main(argv: list[str] | None = None) -> int:
             "stdout": "" if payload_executed is None else payload_executed.stdout,
             "stderr": "" if payload_executed is None else payload_executed.stderr,
         }
+        stage62_executable = build_dir / "p7_stage62_diagnostic_test.exe"
+        stage62_compiled = subprocess.run(
+            [str(gcc), "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+             "-Isoftware/ps_driver", "-Isoftware/common",
+             "tests/p7/p7_stage62_diagnostic_test.c",
+             "software/ps_driver/p7_stage62_diagnostic.c",
+             "-o", str(stage62_executable)],
+            cwd=ROOT, text=True, capture_output=True, timeout=120, env=env,
+        )
+        stage62_executed = subprocess.run(
+            [str(stage62_executable)], cwd=ROOT, text=True, capture_output=True,
+            timeout=30, env=env,
+        ) if stage62_compiled.returncode == 0 else None
+        stage62_native = {
+            "compiler": str(gcc),
+            "compile_returncode": stage62_compiled.returncode,
+            "compile_stdout": stage62_compiled.stdout,
+            "compile_stderr": stage62_compiled.stderr,
+            "returncode": None if stage62_executed is None else stage62_executed.returncode,
+            "stdout": "" if stage62_executed is None else stage62_executed.stdout,
+            "stderr": "" if stage62_executed is None else stage62_executed.stderr,
+        }
+        stage62_microtest_executable = (
+            build_dir / "p7_stage62_microtest_layout_test.exe"
+        )
+        stage62_microtest_compiled = subprocess.run(
+            [str(gcc), "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+             "-Isoftware/ps_driver",
+             "tests/p7/p7_stage62_microtest_layout_test.c",
+             "-o", str(stage62_microtest_executable)],
+            cwd=ROOT, text=True, capture_output=True, timeout=120, env=env,
+        )
+        stage62_microtest_executed = subprocess.run(
+            [str(stage62_microtest_executable)], cwd=ROOT, text=True,
+            capture_output=True, timeout=30, env=env,
+        ) if stage62_microtest_compiled.returncode == 0 else None
+        stage62_microtest_native = {
+            "compiler": str(gcc),
+            "compile_returncode": stage62_microtest_compiled.returncode,
+            "compile_stdout": stage62_microtest_compiled.stdout,
+            "compile_stderr": stage62_microtest_compiled.stderr,
+            "returncode": (
+                None
+                if stage62_microtest_executed is None
+                else stage62_microtest_executed.returncode
+            ),
+            "stdout": (
+                ""
+                if stage62_microtest_executed is None
+                else stage62_microtest_executed.stdout
+            ),
+            "stderr": (
+                ""
+                if stage62_microtest_executed is None
+                else stage62_microtest_executed.stderr
+            ),
+        }
     native_ok = native.get("returncode") == 0
     checks["native_shutdown_readback_test"] = native_ok
     checks["native_payload_alignment_matrix_test"] = bool(
@@ -463,6 +637,37 @@ def main(argv: list[str] | None = None) -> int:
         and "P7_PAYLOAD_ALIGNMENT_MATRIX_ARGUMENT_LIMITS=PASS" in payload_native.get("stdout", "")
         and "P7_PAYLOAD_ALIGNMENT_MATRIX_BUFFER_BASE_ALIGNMENT=64" in payload_native.get("stdout", "")
         and "P7_PAYLOAD_ALIGNMENT_MATRIX_CANARY=0xA5" in payload_native.get("stdout", "")
+    )
+    checks["native_stage62_diagnostic_matrix_test"] = bool(
+        stage62_native.get("returncode") == 0
+        and "P7_STAGE62_DIAGNOSTIC_LAYOUT=PASS" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_CLASSIFICATIONS=PASS" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_CANARY=PASS" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_INDEPENDENT_READBACK=PASS" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_LENGTH_RANGE=1..247" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_SOURCE_MOD64_COUNT=64" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_DESTINATION_MOD64_COUNT=64" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_SOURCE_DESTINATION_MOD4_PAIRS=16" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_MATRIX_CASES=1011712" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_RECORD_CRC32=PASS" in stage62_native.get("stdout", "")
+        and "P7_STAGE62_DIAGNOSTIC_RECORD_BYTES=1536" in stage62_native.get("stdout", "")
+    )
+    checks["native_stage62_microtest_layout_test"] = bool(
+        stage62_microtest_native.get("returncode") == 0
+        and "P7_STAGE62_MICROTEST_LAYOUT=PASS"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_CONTROL_BYTES=64"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_RECORD_BYTES=1536"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_CASES=A,B,C,D"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_LENGTH_RANGE=29..32"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_ALIGNMENT_RANGE=0..3"
+        in stage62_microtest_native.get("stdout", "")
+        and "P7_STAGE62_MICROTEST_CANARY=0xA5"
+        in stage62_microtest_native.get("stdout", "")
     )
     checks["firmware_stationary_admission_cutoff"] = bool(
         checks.get("firmware_stationary_admission_cutoff")
@@ -482,6 +687,10 @@ def main(argv: list[str] | None = None) -> int:
         "software/ps_driver/p7_runtime_main.c",
         "software/ps_driver/p7_app_service.c",
         "software/ps_driver/p7_app_service.h",
+        "software/ps_driver/p7_stage62_diagnostic.c",
+        "software/ps_driver/p7_stage62_diagnostic.h",
+        "software/ps_driver/p7_stage62_microtest.c",
+        "software/ps_driver/p7_stage62_microtest.h",
         "software/ps_driver/p7_admission_contract.h",
         "software/ps_driver/ir_driver.c",
         "software/ps_driver/ir_driver.h",
@@ -490,6 +699,8 @@ def main(argv: list[str] | None = None) -> int:
         "software/common/rf_app_protocol.h",
         "software/common/rf_transport_backend.c",
         "software/common/rf_transport_backend.h",
+        "scripts/build_p7_ps_runtime.tcl",
+        "scripts/build_p7_ps_runtime.py",
     )
     required_build_hashes = {source: sha256(ROOT / source) for source in required_build_sources}
     build_fresh = (
@@ -497,9 +708,17 @@ def main(argv: list[str] | None = None) -> int:
         and build_summary.get("syntax_only") is False
         and build_summary.get("mailbox_overlap") is False
         and build_summary.get("linker_ocm_hard_boundary_0x20000") is True
+        and build_summary.get("stage62_diagnostic_section_verified") is True
         and build_summary.get("critical_payload_byte_copy_verified") is True
         and build_summary.get("first_error_diagnostic_disassembly_verified") is True
+        and build_summary.get("stage62_copy_diagnostic_disassembly_verified") is True
+        and build_summary.get("stage62_microtest_disassembly_verified") is True
         and build_summary.get("stack_usage_verified") is True
+        and build_summary.get("stage62_microtest_stack_verified") is True
+        and isinstance(build_summary.get("stage62_microtest_stack_bytes"), int)
+        and not isinstance(build_summary.get("stage62_microtest_stack_bytes"), bool)
+        and build_summary["stage62_microtest_stack_bytes"]
+        <= build_summary.get("stage62_microtest_stack_limit_bytes", -1)
         and isinstance(build_summary.get("p7_process_descriptor_stack_bytes"), int)
         and not isinstance(build_summary.get("p7_process_descriptor_stack_bytes"), bool)
         and build_summary["p7_process_descriptor_stack_bytes"]
@@ -516,6 +735,19 @@ def main(argv: list[str] | None = None) -> int:
             "copy_strb_count", 0
         )
         >= 1
+        and isinstance(build_summary.get("stage62_microtest_copy_disassembly"), dict)
+        and build_summary.get("stage62_microtest_copy_disassembly", {}).get(
+            "ldrb_count", 0
+        ) >= 1
+        and build_summary.get("stage62_microtest_copy_disassembly", {}).get(
+            "strb_count", 0
+        ) >= 1
+        and build_summary.get("stage62_microtest_copy_disassembly", {}).get(
+            "dsb_count", 0
+        ) >= 1
+        and build_summary.get("stage62_microtest_copy_disassembly", {}).get(
+            "forbidden_memcpy_or_memmove"
+        ) is False
         and build_summary.get("critical_payload_copy_disassembly", {}).get(
             "copy_dsb_count", 0
         )
@@ -524,6 +756,11 @@ def main(argv: list[str] | None = None) -> int:
         and all(recorded_sources.get(source) == digest for source, digest in required_build_hashes.items())
     )
     checks["real_vitis_build_source_bound"] = build_fresh
+    checks["stage62_only_microtest_bypasses_pl_and_is_disassembly_bound"] = bool(
+        checks.get("stage62_only_microtest_bypasses_pl_and_is_disassembly_bound")
+        and build_summary.get("stage62_microtest_disassembly_verified") is True
+        and build_summary.get("stage62_microtest_stack_verified") is True
+    )
     passed = all(checks.values())
     payload = {
         "schema": "rf-comm-p7-ps-core-hardware-readiness-v1",
@@ -536,6 +773,8 @@ def main(argv: list[str] | None = None) -> int:
         "native_shutdown_test": native,
         "native_stationary_admission_test": admission_native,
         "native_payload_alignment_matrix_test": payload_native,
+        "native_stage62_diagnostic_matrix_test": stage62_native,
+        "native_stage62_microtest_layout_test": stage62_microtest_native,
         "unit_tests": unit,
         "validated_complete_regression_summary": regression_record,
         "source_commit": source_commit,

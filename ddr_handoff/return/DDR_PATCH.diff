@@ -1,0 +1,32 @@
+# DDR specialist patch transport record
+
+# Minimal Stage 62 evidence-harvest fix:
+#   6e8043716a6797257bbc46c172c287abed93198d
+# Parent with corrected AX7010 artifacts:
+#   a7bc060aa29f15815891af463b1f7ff1d600cb31
+
+# Campaign D raw evidence and machine-verifiable closure:
+#   1e6b5185cb1f0bdc2de0f148e715e1c726cb8b5e
+# Parent:
+#   6e8043716a6797257bbc46c172c287abed93198d
+
+# Reproduce or inspect the exact binary-preserving changes without embedding
+# the immutable hardware evidence a second time in this transport record:
+#   git show --binary --format=fuller 6e8043716a6797257bbc46c172c287abed93198d
+#   git show --binary --format=fuller 1e6b5185cb1f0bdc2de0f148e715e1c726cb8b5e
+#   git diff --binary a7bc060aa29f15815891af463b1f7ff1d600cb31 1e6b5185cb1f0bdc2de0f148e715e1c726cb8b5e
+
+# Changed execution inputs in the minimal fix:
+#   scripts/hw/p7_ps_application_execute.tcl
+#     SHA256 9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec
+#   scripts/hw/run_p7_ps_application_stage_safe.py
+#     SHA256 f07c034ec442c98ee9ef07ab9cf480942ad05639c630a9bc9524470ba31bf2de
+
+# Campaign D evidence closure:
+#   ddr_debug/campaign_d/CAMPAIGN_D_CLOSURE.json
+#     SHA256 704408f18f355684d002bcfa7c198ab45626657c15a724c75823f7fcc6d68cf3
+
+# No authorization validator, firmware, RTL, expected payload, CRC, SHA,
+# memcmp, trace, descriptor, guard, wipe, or runtime bound was weakened.
+# Hardware acceptance remains PENDING_HW because Campaign D was explicitly
+# diagnostic-only and skipped all forbidden formal coverage.

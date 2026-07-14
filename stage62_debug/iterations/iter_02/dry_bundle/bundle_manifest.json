@@ -1,0 +1,96 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "atomic_files": true,
+  "boundary_case_count": 0,
+  "boundary_cases": [],
+  "boundary_descriptor_batches": [],
+  "case_count": 0,
+  "cases": [],
+  "coverage_claimed": false,
+  "descriptors": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\descriptors.bin",
+    "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+    "size_bytes": 2048
+  },
+  "diagnostic_only": true,
+  "execution_plan": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\execution_plan.txt",
+    "sha256": "2a27579fd151ec1fb80d3b2c3d77d336a052e9736135fdc125cf91f84bd672d6",
+    "size_bytes": 513
+  },
+  "execution_scope": "STAGE62_ONLY",
+  "functional_checkpoint": null,
+  "generated_at_utc": "2026-07-13T18:14:02.500189+00:00",
+  "hardware_actions_executed": false,
+  "input_source": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_input_seed_4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5.bin",
+    "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+    "size_bytes": 247
+  },
+  "mailbox": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\mailbox.bin",
+    "sha256": "e15dcc379856e182f5e6fa5a35fa24f82a9c352f19c5bf2a7f6f263af7a1ea53",
+    "size_bytes": 256
+  },
+  "mode": "stage62-microtest",
+  "output_prefill_byte": 165,
+  "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
+  "queue_overflow_candidate": null,
+  "queue_phase_mailboxes": {},
+  "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+  "schedule": {
+    "acceptance_sec": 0,
+    "calibration_plus_acceptance": 0,
+    "calibration_sec": 0,
+    "counts_per_second": 333333343,
+    "idle_margin_sec": 60,
+    "max_runtime_sec": 60,
+    "scheduling_cutoff_sec": 0
+  },
+  "schema": "rf-comm-p7-ps-hardware-bundle-v1",
+  "stage62_microtest": {
+    "case": "A",
+    "case_id": 1,
+    "control": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\stage62_microtest_control.bin",
+      "sha256": "b79b4ed36c97349a9c81afb976183102ee8c9f5bdc08221f36a70ee23b014588",
+      "size_bytes": 64
+    },
+    "control_address": "0x00022300",
+    "destination_alignment": 0,
+    "destination_fixture": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\stage62_microtest_destination_fixture.bin",
+      "sha256": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+      "size_bytes": 256
+    },
+    "destination_fixture_address": 140544,
+    "destination_space": 1,
+    "destination_target_offset": 64,
+    "immutable_crc32": 129072598,
+    "pattern_base": 17,
+    "record_address": "0x00021000",
+    "record_bytes": 1536,
+    "record_zero": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\stage62_microtest_record_zero.bin",
+      "sha256": "80422bc3d307b4a25bdafcc84ac7fb01cb55a09810e8b0f37bb12e0edb5c48ca",
+      "size_bytes": 1536
+    },
+    "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+    "run_id_crc32": 3228872105,
+    "source_alignment": 0,
+    "source_fixture": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\stage62_microtest_source_fixture.bin",
+      "sha256": "fc8fcbaeab72345f71a6bb1e84072df0fcb4972fef5545431eedf8acd1866dfe",
+      "size_bytes": 256
+    },
+    "source_fixture_address": 140288,
+    "source_space": 1,
+    "source_target_offset": 64,
+    "transfer_length": 30
+  },
+  "stage62_microtest_control": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE\\stage62_debug\\iterations\\iter_02\\dry_bundle\\stage62_microtest_control.bin",
+    "sha256": "b79b4ed36c97349a9c81afb976183102ee8c9f5bdc08221f36a70ee23b014588",
+    "size_bytes": 64
+  }
+}

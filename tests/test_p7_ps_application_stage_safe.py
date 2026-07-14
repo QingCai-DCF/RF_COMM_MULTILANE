@@ -33,6 +33,77 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def synthetic_elf32_with_stage62_diagnostic(
+    *,
+    diagnostic_name: str = ".p7_stage62_diagnostic",
+    diagnostic_type: int = 8,
+    diagnostic_flags: int = 0x3,
+    diagnostic_address: int = 0x00021000,
+    diagnostic_size: int = 1536,
+    duplicate: bool = False,
+) -> bytes:
+    names = b"\0.text\0.p7_stage62_diagnostic\0.not_stage62\0.shstrtab\0"
+    name_offsets = {
+        name: names.index(name.encode("ascii"))
+        for name in (".text", ".p7_stage62_diagnostic", ".not_stage62", ".shstrtab")
+    }
+    diagnostic_header = (
+        name_offsets[diagnostic_name],
+        diagnostic_type,
+        diagnostic_flags,
+        diagnostic_address,
+        0,
+        diagnostic_size,
+        0,
+        0,
+        64,
+        0,
+    )
+    sections = [
+        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        (name_offsets[".text"], 1, 0x2, 0x1000, 0, 0x100, 0, 0, 16, 0),
+        diagnostic_header,
+    ]
+    if duplicate:
+        sections.append(diagnostic_header)
+    section_name_table_index = len(sections)
+    section_count = len(sections) + 1
+    section_offset = 52
+    names_offset = section_offset + 40 * section_count
+    sections.append(
+        (
+            name_offsets[".shstrtab"],
+            3,
+            0,
+            0,
+            names_offset,
+            len(names),
+            0,
+            0,
+            1,
+            0,
+        )
+    )
+    header = struct.pack(
+        "<16sHHIIIIIHHHHHH",
+        b"\x7fELF\x01\x01\x01" + bytes(9),
+        2,
+        40,
+        1,
+        0,
+        0,
+        section_offset,
+        0,
+        52,
+        0,
+        0,
+        40,
+        section_count,
+        section_name_table_index,
+    )
+    return header + b"".join(struct.pack("<IIIIIIIIII", *item) for item in sections) + names
+
+
 def first_error_diagnostic_image(
     expected: bytes,
     actual: bytes,
@@ -54,40 +125,90 @@ def first_error_diagnostic_image(
     if first_bad < 0:
         raise ValueError("fixture must contain a mismatch")
     maximum = max(len(expected), len(actual))
-    snapshot_offset = max(0, first_bad - 32)
-    snapshot_length = min(64, maximum - snapshot_offset)
-    expected_snapshot = bytearray(64)
-    actual_snapshot = bytearray(64)
-    expected_slice = expected[snapshot_offset : snapshot_offset + snapshot_length]
-    actual_slice = actual[snapshot_offset : snapshot_offset + snapshot_length]
-    expected_snapshot[: len(expected_slice)] = expected_slice
-    actual_snapshot[: len(actual_slice)] = actual_slice
-    words = [0] * 48
-    words[0:20] = [
-        stage.P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
+    snapshot_offset = max(0, first_bad - 128)
+    snapshot_length = min(256, maximum - snapshot_offset)
+    canary = bytes([0xA5]) * len(actual)
+
+    def snapshot(data: bytes) -> bytes:
+        captured = bytearray(256)
+        part = data[snapshot_offset : snapshot_offset + snapshot_length]
+        captured[: len(part)] = part
+        return bytes(captured)
+
+    observations = (expected, expected, canary, actual)
+    words = [0] * 128
+    words[0:18] = [
+        0,
+        2,
+        stage.P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
         1,
+        0,
+        3,
         stage_id,
         error_code,
         session_epoch,
         object_id,
         fragment_index,
         lane_mask,
+        maximum,
         len(expected),
         len(actual),
         first_bad,
         expected[first_bad] if first_bad < len(expected) else 0x100,
         actual[first_bad] if first_bad < len(actual) else 0x100,
+    ]
+    words[18:22] = [
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        expected[first_bad] if first_bad < len(expected) else 0x100,
+        canary[first_bad] if first_bad < len(canary) else 0x100,
+        actual[first_bad] if first_bad < len(actual) else 0x100,
+    ]
+    words[22:28] = [
         expected_address,
         actual_address,
-        zlib.crc32(expected) & 0xFFFFFFFF,
-        zlib.crc32(actual) & 0xFFFFFFFF,
-        snapshot_offset,
-        snapshot_length,
+        expected_address % 4,
+        expected_address % 64,
+        actual_address % 4,
+        actual_address % 64,
+    ]
+    words[28:47] = [
+        0x0001FFF0,
+        0x00C5187D,
+        0x00000041,
+        0x00004000,
+        0x00008000,
+        0,
+        0x55555555,
+        0x00004100,
+        0x00000C02,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0x00004100,
+        0x00000C02,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0,
+        0,
+        0,
         0,
     ]
-    words[20:28] = struct.unpack(">8I", hashlib.sha256(expected).digest())
-    words[28:36] = struct.unpack(">8I", hashlib.sha256(actual).digest())
-    raw = struct.pack("<48I", *words) + bytes(expected_snapshot) + bytes(actual_snapshot)
+    words[47:50] = [snapshot_offset, snapshot_length, 0x1FF]
+    words[50:54] = [zlib.crc32(item) & 0xFFFFFFFF for item in observations]
+    for index, item in enumerate(observations):
+        words[54 + index * 8 : 62 + index * 8] = struct.unpack(
+            ">8I", hashlib.sha256(item).digest()
+        )
+    words[86:94] = [512, 768, 1024, 1280, 0xA5, 1, 1, 1]
+    image = bytearray(
+        struct.pack("<128I", *words)
+        + snapshot(expected)
+        + snapshot(expected)
+        + snapshot(canary)
+        + snapshot(actual)
+    )
+    struct.pack_into("<I", image, 16, zlib.crc32(image) & 0xFFFFFFFF)
+    struct.pack_into("<I", image, 0, stage.P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)
+    raw = bytes(image)
     if len(raw) != stage.P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
         raise AssertionError("invalid P7CD fixture length")
     return raw
@@ -112,6 +233,26 @@ def install_captured_tcl_exit(interp) -> None:
 
 
 class P7PsApplicationSafeStageTests(unittest.TestCase):
+    def test_elf_ocm_boundary_excludes_only_the_exact_stage62_nobits_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            elf = Path(tmp) / "runtime.elf"
+            elf.write_bytes(synthetic_elf32_with_stage62_diagnostic())
+            self.assertEqual(0x1100, stage._elf_alloc_image_end(elf))
+
+            invalid_variants = (
+                {"diagnostic_name": ".not_stage62"},
+                {"diagnostic_type": 1},
+                {"diagnostic_flags": 0x2},
+                {"diagnostic_address": 0x00021040},
+                {"diagnostic_size": 1535},
+                {"duplicate": True},
+            )
+            for variant in invalid_variants:
+                with self.subTest(variant=variant):
+                    elf.write_bytes(synthetic_elf32_with_stage62_diagnostic(**variant))
+                    with self.assertRaises(ValueError):
+                        stage._elf_alloc_image_end(elf)
+
     def test_shutdown_command_matches_the_17_argument_jtag_tcl_contract(self) -> None:
         args = stage.build_parser().parse_args([])
         args.vivado_path = str(ROOT / "synthetic-vivado.bat")
@@ -496,6 +637,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 trace_words[10] = index * 10 + 2
                 struct.pack_into("<16I", checkpoint_trace, index * 64, *trace_words)
             (bundle.directory / f"{checkpoint_prefix}_trace_result.bin").write_bytes(checkpoint_trace)
+            (
+                bundle.directory
+                / "functional_checkpoint_4k_input_doubleword_readback.bin"
+            ).write_bytes(checkpoint.request.data)
             mailbox = bytearray(
                 stage.pack_mailbox(
                     control_command=stage.P7_CONTROL_SHUTDOWN,
@@ -524,9 +669,15 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 "P7_FUNCTIONAL_BOUNDARY_BATCHES=6\n"
                 "P7_FUNCTIONAL_BOUNDARY_CASES=48\n"
                 "P7_FUNCTIONAL_CHECKPOINT_4K_COMPLETE=1\n"
+                "P7_FUNCTIONAL_PHASE_LOCAL_PRELOAD=1\n"
+                "P7_HOST_TO_PS_INPUT_BYTES=0\n"
+                "P7_FUNCTIONAL_DOUBLEWORD_READBACK_PROBE=PASS\n"
+                "P7_FUNCTIONAL_SERVICE_SHUTDOWN_BEFORE_FINAL_EVIDENCE=1\n"
+                "P7_FUNCTIONAL_FINAL_EVIDENCE_READ_MODE=ALIGNED_DOUBLEWORD\n"
                 "P7_FUNCTIONAL_EXECUTION_ORDER=BOUNDARY48_THEN_4K_THEN_64K4_THEN_1M4\n",
             )
         self.assertTrue(result["passed"], result["failures"])
+        self.assertTrue(result["functional_evidence_readback_probe"]["passed"])
 
     def test_nonzero_raw_exit_can_never_be_promoted_by_pass_markers(self) -> None:
         raw = "\n".join(
@@ -550,6 +701,31 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertFalse(passed)
         self.assertTrue(any("nonzero exit code" in item for item in failures))
 
+    def test_partial_stdout_attempt_markers_are_retained_but_are_not_acceptance(
+        self,
+    ) -> None:
+        observation = stage.candidate_attempt_observation(
+            "",
+            "P7_PS_CANDIDATE_PROGRAMMED=1\nP7_PS_ELF_DOWNLOADED=1\n",
+            mode="functional",
+        )
+        self.assertEqual("STDOUT_PARTIAL_ONLY", observation["source"])
+        self.assertTrue(observation["programmed_candidate_observed"])
+        self.assertTrue(observation["elf_downloaded_observed"])
+        self.assertTrue(observation["formal_stage62_attempted"])
+        self.assertTrue(observation["non_acceptance_evidence"])
+        self.assertEqual([], observation["marker_conflicts"])
+
+        conflict = stage.candidate_attempt_observation(
+            "P7_PS_CANDIDATE_PROGRAMMED=0\n",
+            "P7_PS_CANDIDATE_PROGRAMMED=1\n",
+            mode="functional",
+        )
+        self.assertTrue(conflict["programmed_candidate_observed"])
+        self.assertEqual(
+            ["P7_PS_CANDIDATE_PROGRAMMED"], conflict["marker_conflicts"]
+        )
+
     def test_ps_result_binds_canonical_part_vivado_identity_and_xsdb_idcode(self) -> None:
         raw_lines = [
             "P7_PS_STAGE_RESULT=PASS",
@@ -568,6 +744,8 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             f"P7_XSDB_LIVE_IDCODE=0x{stage.CANONICAL_LIVE_IDCODE_HEX}",
             f"P7_XSDB_PREFLIGHT_IDCODE={stage.CANONICAL_LIVE_IDCODE_BINARY}",
             "P7_XSDB_TARGET_SELECTION=EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
+            "P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE",
+            "P7_RUN_ID=NONE",
         ]
         passed, failures = stage.evaluate_ps_process(
             0,
@@ -756,8 +934,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             args.mode = "functional"
             args.idle_deadline_margin_sec = 10
             command = stage.build_ps_command(args, bundle, root / "preflight.txt", root / "raw.log")
-            self.assertEqual(20, len(command))
-            self.assertEqual(str(stage.P7_COUNTS_PER_SECOND), command[-1])
+            self.assertEqual(22, len(command))
+            self.assertEqual(str(stage.P7_COUNTS_PER_SECOND), command[-3])
+            self.assertEqual("P7_PS_APPLICATION_STAGE", command[-2])
+            self.assertEqual("NONE", command[-1])
 
             Path(args.authorization_file).write_text("placeholder\n", encoding="utf-8")
             fields = {
@@ -1027,10 +1207,14 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX": 8,
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE": 30,
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_ADDRESS": "0x00021000",
-                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES": 320,
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES": stage.P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_STATUS": 1,
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_MAGIC_READBACK": "0x44433750",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION": decoded["version"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_LENGTH": decoded["record_length"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SEQUENCE": decoded["sequence"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_CRC32": f"0x{int(decoded['record_crc32']):08x}",
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CLASSIFICATION": decoded["classification"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE": decoded["stage"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE": decoded["error_code"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SESSION_EPOCH": f"0x{int(decoded['session_epoch']):08x}",
@@ -1042,6 +1226,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FIRST_BAD_OFFSET": decoded["first_bad_offset"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_BYTE": decoded["expected_byte"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_BYTE": decoded["actual_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_BEFORE_BYTE": decoded["source_before_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_AFTER_BYTE": decoded["source_after_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_BEFORE_BYTE": decoded["destination_before_byte"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_AFTER_BYTE": decoded["destination_after_byte"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS": f"0x{int(decoded['expected_address']):08x}",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS": f"0x{int(decoded['actual_address']):08x}",
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS_LOW6": decoded["expected_address_low6"],
@@ -1052,6 +1240,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_SHA256": decoded["actual_sha256"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET": decoded["snapshot_offset"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH": decoded["snapshot_length"],
+                "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CAPTURE_FLAGS": decoded["capture_flags"],
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_CAPTURED": 1,
                 "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED": 1,
             }
@@ -1279,6 +1468,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("mwr [expr {$descriptor_address + 0x0C}] 1", tcl)
         self.assertIn("status changed across terminal snapshot", tcl)
         self.assertIn("mrd -size b -bin -file", tcl)
+        self.assertIn("mrd -size d -bin -file", tcl)
         self.assertIn("address does not match fixed slot geometry", tcl)
         self.assertIn("bundle case file size does not match", tcl)
         self.assertIn("P7_XSDB_LIVE_DEVICE_MATCH=1", tcl)
@@ -1354,6 +1544,146 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual(2, wrapper.count('"result_file": str(before_final)'))
         self.assertEqual(3, wrapper.count('"result_file": str(after_final)'))
 
+    def test_functional_large_evidence_is_doubleword_wide_and_shutdown_precedes_final_dump(
+        self,
+    ) -> None:
+        tcl = (
+            ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl"
+        ).read_text(encoding="utf-8")
+        word_start = tcl.index("proc p7_atomic_dump_doublewords")
+        word_end = tcl.index("proc p7_atomic_dump_evidence", word_start)
+        word_block = tcl[word_start:word_end]
+        self.assertIn("($address & 7) != 0", word_block)
+        self.assertIn("($byte_count & 7) != 0", word_block)
+        self.assertIn(
+            "set doubleword_count [expr {$byte_count / 8}]", word_block
+        )
+        self.assertIn(
+            "mrd -size d -bin -file $partial $address $doubleword_count",
+            word_block,
+        )
+        self.assertIn("[file size $partial] != $byte_count", word_block)
+
+        dispatch_start = word_end
+        dispatch_end = tcl.index("proc p7_ddr_external_scalar_write", dispatch_start)
+        dispatch = tcl[dispatch_start:dispatch_end]
+        self.assertIn("$byte_count >= 4096", dispatch)
+        self.assertIn(
+            "p7_atomic_dump_doublewords $path $address $byte_count", dispatch
+        )
+        self.assertIn("p7_atomic_dump $path $address $byte_count", dispatch)
+
+        preload_start = tcl.index("set host_input_start_ms [clock milliseconds]")
+        preload_end = tcl.index("set initial_mailbox", preload_start)
+        preload = tcl[preload_start:preload_end]
+        self.assertIn('if {$mode ne "functional"}', preload)
+        self.assertIn('if {$mode eq "functional"}', preload)
+        self.assertIn("P7_FUNCTIONAL_PHASE_LOCAL_PRELOAD=1", preload)
+
+        dump_start = tcl.index("proc p7_dump_case")
+        dump_end = tcl.index("proc p7_prepare_stationary_slot", dump_start)
+        dump_block = tcl[dump_start:dump_end]
+        self.assertEqual(2, dump_block.count("p7_atomic_dump_evidence"))
+
+        checkpoint = tcl.index(
+            "dow -data [file join $bundle_dir functional_checkpoint_4k_input.bin]"
+        )
+        probe = tcl.index(
+            "p7_atomic_dump_doublewords $functional_doubleword_probe 0x00100000 4096",
+            checkpoint,
+        )
+        compare = tcl.index(
+            '"P7 functional doubleword-wide input readback probe"', probe
+        )
+        probe_marker = tcl.index(
+            "P7_FUNCTIONAL_DOUBLEWORD_READBACK_PROBE=PASS", compare
+        )
+        checkpoint_publish = tcl.index("mwr 0x0002010C 1", probe_marker)
+        self.assertLess(checkpoint, probe)
+        self.assertLess(probe, compare)
+        self.assertLess(compare, probe_marker)
+        self.assertLess(probe_marker, checkpoint_publish)
+
+        final_phase = tcl.index("foreach source_slot {0 1 2 3} {", checkpoint)
+        publish_loop = tcl.index(
+            "foreach source_slot {0 1 2 3} target_slot {5 6 7 0} {",
+            final_phase,
+        )
+        wait_loop = tcl.index(
+            "foreach source_slot {0 1 2 3} target_slot {5 6 7 0} {",
+            publish_loop + 1,
+        )
+        shutdown = tcl.index("mwr 0x0002000C 5", wait_loop)
+        shutdown_marker = tcl.index(
+            "P7_FUNCTIONAL_SERVICE_SHUTDOWN_BEFORE_FINAL_EVIDENCE=1", shutdown
+        )
+        dump_loop = tcl.index(
+            "foreach source_slot {0 1 2 3} target_slot {5 6 7 0} {",
+            shutdown_marker,
+        )
+        final_dump = tcl.index("p7_dump_case $bundle_dir $source_slot", dump_loop)
+        mode_marker = tcl.index(
+            "P7_FUNCTIONAL_FINAL_EVIDENCE_READ_MODE=ALIGNED_DOUBLEWORD",
+            final_dump,
+        )
+        self.assertNotIn("p7_dump_case", tcl[wait_loop:shutdown])
+        self.assertLess(wait_loop, shutdown)
+        self.assertLess(shutdown, shutdown_marker)
+        self.assertLess(shutdown_marker, dump_loop)
+        self.assertLess(dump_loop, final_dump)
+        self.assertLess(final_dump, mode_marker)
+
+        wrapper = MODULE_PATH.read_text(encoding="utf-8")
+        bundle_recheck = wrapper.index("if bundle_integrity_failures:")
+        diagnostic_recheck = wrapper.index(
+            'if not summary["first_error_diagnostic"]["passed"]:',
+            bundle_recheck,
+        )
+        completed_assignment = wrapper.index(
+            'summary["stage62_completed"] = bool(', diagnostic_recheck
+        )
+        self.assertLess(bundle_recheck, completed_assignment)
+        self.assertLess(diagnostic_recheck, completed_assignment)
+
+    def test_doubleword_dump_passes_value_count_and_enforces_exact_binary_size(
+        self,
+    ) -> None:
+        tcl = (
+            ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl"
+        ).read_text(encoding="utf-8")
+        prefix = tcl[: tcl.index("proc p7_ddr_external_scalar_write")]
+        interp = tcl_interpreter()
+        interp.eval(prefix)
+        interp.eval(
+            "proc mrd {args} {\n"
+            "  set size_index [lsearch -exact $args -size]\n"
+            "  set file_index [lsearch -exact $args -file]\n"
+            "  set access_size [lindex $args [expr {$size_index + 1}]]\n"
+            "  set path [lindex $args [expr {$file_index + 1}]]\n"
+            "  set count [lindex $args end]\n"
+            "  array set width {b 1 h 2 w 4 d 8}\n"
+            "  set bytes [expr {$count * $width($access_size)}]\n"
+            "  set handle [open $path w]\n"
+            "  fconfigure $handle -translation binary\n"
+            "  puts -nonewline $handle [binary format \"a${bytes}\" \"\"]\n"
+            "  close $handle\n"
+            "  set ::captured_access_size $access_size\n"
+            "  set ::captured_value_count $count\n"
+            "}"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            output = (Path(temp) / "doubleword.bin").as_posix()
+            interp.call("p7_atomic_dump_doublewords", output, 0x1000, 4096)
+            self.assertEqual("d", str(interp.getvar("captured_access_size")))
+            self.assertEqual(512, int(interp.getvar("captured_value_count")))
+            self.assertEqual(4096, Path(output).stat().st_size)
+
+            fallback = (Path(temp) / "fallback.bin").as_posix()
+            interp.call("p7_atomic_dump_evidence", fallback, 0x1001, 3)
+            self.assertEqual("b", str(interp.getvar("captured_access_size")))
+            self.assertEqual(3, int(interp.getvar("captured_value_count")))
+            self.assertEqual(3, Path(fallback).stat().st_size)
+
     def test_xsdb_tcl_path_mapping_and_error_sanitizer_execute_in_tcl(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
         interp = tcl_interpreter()
@@ -1424,13 +1754,13 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1"
         )
         diagnostic_dump = tcl.index(
-            "p7_atomic_dump $failure_snapshot $failure_snapshot_address 320"
+            "p7_atomic_dump $failure_snapshot $failure_snapshot_address"
         )
         diagnostic_wipe = tcl.index(
-            "p7_zero_words_and_verify $failure_snapshot_address 320"
+            "p7_zero_words_and_verify $failure_snapshot_address"
         )
         diagnostic_wipe_dump = tcl.index(
-            "p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320"
+            "p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address"
         )
         metadata_validation = tcl.index(
             "P7 failure diagnostic firmware rejected publication"
@@ -1465,10 +1795,12 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("p7_atomic_dump $failure_output $boundary_output($boundary_index)", tcl)
         self.assertIn("p7_atomic_dump $failure_trace $boundary_trace($boundary_index)", tcl)
         self.assertIn("$boundary_trace_capacity($boundary_index) * 64", tcl)
-        self.assertIn("p7_atomic_dump $failure_snapshot $failure_snapshot_address 320", tcl)
-        self.assertIn("p7_zero_words_and_verify $failure_snapshot_address 320", tcl)
-        self.assertIn("p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320", tcl)
-        self.assertIn("set diagnostic_data [p7_read_binary_exact $failure_snapshot 320]", tcl)
+        self.assertIn("set diagnostic_capture_bytes 1536", tcl)
+        self.assertIn("set diagnostic_capture_bytes 320", tcl)
+        self.assertIn("p7_atomic_dump $failure_snapshot $failure_snapshot_address", tcl)
+        self.assertIn("p7_zero_words_and_verify $failure_snapshot_address", tcl)
+        self.assertIn("p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address", tcl)
+        self.assertIn("set diagnostic_data [p7_read_binary_exact $failure_snapshot", tcl)
         self.assertIn("set diagnostic_marker [p7_le32 $diagnostic_data 0]", tcl)
         self.assertIn("$diagnostic_marker != 0x44433750", tcl)
         self.assertIn("$diagnostic_marker != 0x53463750", tcl)
@@ -1479,7 +1811,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("set failure_snapshot_address 0x00021000", tcl)
         self.assertIn("$firmware_snapshot_status != 1", tcl)
         self.assertIn("$firmware_snapshot_address != $failure_snapshot_address", tcl)
-        self.assertIn("$firmware_snapshot_bytes != 320", tcl)
+        self.assertIn("$firmware_snapshot_bytes != $diagnostic_capture_bytes", tcl)
         self.assertIn("$firmware_snapshot_magic_readback != 0x44433750", tcl)
         self.assertIn("$firmware_snapshot_magic_readback != 0x53463750", tcl)
         self.assertIn("$diagnostic_expected_byte == $diagnostic_actual_byte", tcl)
@@ -1516,6 +1848,8 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                     "10",
                     str(root / "missing-shutdown.bit"),
                     "333333343",
+                    "P7_PS_APPLICATION_STAGE",
+                    "NONE",
                 ),
             )
             with self.assertRaises(tkinter.TclError) as raised:
@@ -1529,8 +1863,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
 
     def test_stationary_sampling_and_requeue_cutoff_use_fresh_ps_ticks(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
-        self.assertIn('if {[llength $argv] != 18}', tcl)
+        self.assertIn('if {[llength $argv] != 20}', tcl)
         self.assertIn('set counts_per_second [lindex $argv 17]', tcl)
+        self.assertIn('set execution_scope [lindex $argv 18]', tcl)
+        self.assertIn('set run_id [lindex $argv 19]', tcl)
         self.assertIn('$counts_per_second != 333333343', tcl)
         self.assertIn('p7_require_value $auth_text P7_COUNTS_PER_SECOND $counts_per_second', tcl)
         self.assertIn('$plan_value(COUNTS_PER_SECOND) != $counts_per_second', tcl)
@@ -1615,6 +1951,17 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
     def test_ps_service_retry_budget_latency_and_failure_snapshot_are_unambiguous(self) -> None:
         service = (ROOT / "software" / "ps_driver" / "p7_app_service.c").read_text(encoding="utf-8")
         runtime = (ROOT / "software" / "ps_driver" / "p7_runtime_main.c").read_text(encoding="utf-8")
+        core_gate = (ROOT / "tools" / "run_p7_ps_core_offline.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            '"diagnostic->record_crc32 = p7_stage62_record_crc32("',
+            core_gate,
+        )
+        self.assertNotIn(
+            'publish_prepared_block.find("diagnostic->record_crc32 =")',
+            core_gate,
+        )
         self.assertLess(
             runtime.index("Xil_DCacheDisable();"),
             runtime.index("volatile p7_mailbox_control_t *mailbox"),
@@ -1665,7 +2012,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("encoded + RF_APP_HEADER_BYTES", process)
         self.assertIn("P7_ERROR_FRAGMENT_ENCODE_COPY", process)
         self.assertIn("P7_ERROR_FRAGMENT_TRANSFER_COPY", process)
-        self.assertIn("P7_ERROR_OUTPUT_COPY", process)
+        self.assertIn("p7_copy_output_with_diagnostic(", process)
         self.assertIn("p7_bytes_equal_volatile(", process)
         self.assertNotIn("memcmp(received, encoded, encoded_size)", process)
         self.assertNotIn(
@@ -1678,6 +2025,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_ERROR_ENCODE_RAW_MISMATCH = 25", header)
         self.assertIn("P7_ERROR_P6_TX_MMIO_READBACK = 27", header)
         self.assertIn("P7_ERROR_DDR_OUTPUT_END_TO_END = 31", header)
+        self.assertIn("P7_ERROR_OUTPUT_CANARY_PRECHECK = 32", header)
         self.assertIn("P7_LOCAL_PAYLOAD_BYTES UINT32_C(256)", header)
         self.assertIn(
             "uint8_t tx_payload[P7_LOCAL_PAYLOAD_BYTES] __attribute__((aligned(64)))",
@@ -1724,16 +2072,24 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("memset((void *)(uintptr_t)P7_FAILURE_SNAPSHOT_BASEADDR, 0,", service)
         self.assertIn("P7_FAILURE_SNAPSHOT_STATUS_PUBLISHED, address, total_bytes,", service)
         self.assertIn("Xil_In32(address)", service)
-        first_error_start = service.index("static uint32_t p7_publish_first_error_diagnostic(")
-        first_error_end = service.index("static int p7_p6_open(", first_error_start)
+        first_error_start = service.index("static uint32_t p7_publish_prepared_diagnostic(")
+        first_error_end = service.index(
+            "static uint32_t p7_publish_first_error_diagnostic(", first_error_start
+        )
         first_error = service[first_error_start:first_error_end]
         self.assertLess(
             first_error.index("if (Xil_In32(address) != 0U)"),
-            first_error.index("memcpy((void *)published, &diagnostic"),
+            first_error.index("p7_flush(diagnostic"),
         )
         self.assertLess(
-            first_error.index("memcpy((void *)published, &diagnostic"),
-            first_error.index("Xil_Out32(address, P7_FIRST_ERROR_DIAGNOSTIC_MAGIC)"),
+            first_error.index("p7_flush(diagnostic"),
+            first_error.index("diagnostic->record_crc32 = p7_stage62_record_crc32("),
+        )
+        self.assertLess(
+            first_error.index("diagnostic->record_crc32 = p7_stage62_record_crc32("),
+            first_error.index(
+                "diagnostic->magic = P7_FIRST_ERROR_DIAGNOSTIC_MAGIC"
+            ),
         )
         validation_reject = process[
             process.index("error = p7_validate_descriptor") :

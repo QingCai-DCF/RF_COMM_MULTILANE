@@ -1,0 +1,70 @@
+{
+  "schema": "rf-comm-p7-stage62-specialist-preflight-v1",
+  "generated_at_utc": "2026-07-13T16:10:47.7103733Z",
+  "status": "PASS",
+  "location": "LINKED_WORKTREE",
+  "current_worktree": "C:\\Users\\user\\.codex\\worktrees\\ad3e\\RF_COMM_MULTILANE",
+  "main_checkout": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+  "git_dir": "C:/Users/user/Documents/RF_COMM_MULTILANE/.git/worktrees/RF_COMM_MULTILANE",
+  "git_common_dir": "C:/Users/user/Documents/RF_COMM_MULTILANE/.git",
+  "base_head": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+  "current_head": "f002e80aeb575b2b3aea8ce34909dd65584140d9",
+  "specialist_branch": "diag/stage62-p7_20260713_stationary_app_r32_diag_suffix55-f002e80",
+  "branch_name_fallback_reason": "primary specialist branch already existed and contained independent prior commits",
+  "base_run_id": "p7_20260713_stationary_app_r32_diag_suffix55",
+  "handoff": {
+    "source_checkout": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE",
+    "state": "MAIN_THREAD_BLOCKED",
+    "active_hardware_run": false,
+    "safe_shutdown_complete": true,
+    "mainline_frozen_sha256": "f17944795f2ccc9deba3f5f6a8e31e55c871a28e0e8053d2c081c7aaee6f5211",
+    "current_run_manifest_sha256": "405e75b6f6016aa826bf92740becc42d45736318e40ce7498c6a9a4ef40dcc56",
+    "current_run_handoff_sha256": "e538cfcd0c8e18d1adf530af54e1d8e67b3f12a4e21553bf9d17280fd485872b",
+    "baseline_patch_sha256": "221dd5692419e68e5c8ba8717b31957589cd8b1f5f913f843396cd70fd9ea2be",
+    "all_imported_file_hashes_match_source": true,
+    "all_json_files_parse": true
+  },
+  "baseline": {
+    "head_matches_manifest_and_build_source": true,
+    "tracked_worktree_clean": true,
+    "baseline_patch_applies_cleanly": true,
+    "baseline_patch_paths_are_generated_evidence_only": true,
+    "all_build_artifacts_exist_and_match_size_and_sha256": true,
+    "elf_sha256": "26f93c15b66be63bed6fa469edaed4578eab2cd64b58e9eeb4b447ebf952503c",
+    "map_sha256": "76fc4a82a46a5e7b2c52a997eaed7a1ee682e32cca71920cb855d92ca4d64825",
+    "disassembly_sha256": "ddbcbc17f26e117d75d3abc4c7c9b56fc79eb06cc43588f1e304166b6f59f1f3",
+    "bitstream_sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "xsa_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9"
+  },
+  "hardware_mutex": {
+    "hardware_available": true,
+    "rf_comm_hw_auth_set": false,
+    "current_worktree_lock_exists": false,
+    "main_checkout_lock_exists": false,
+    "project_lock_like_markers_present": false,
+    "stage62_or_sequence_runner_present": false,
+    "xsdb_or_xsct_present": false,
+    "vivado_or_vivado_lab_present": false,
+    "cs_server_present": false,
+    "external_legacy_hw_server": {
+      "pid": 45220,
+      "endpoint": "tcp::3121",
+      "owner_log": "C:\\Users\\user\\Documents\\RF_COMM\\reports\\hw_server_debug_20260629_153936.log",
+      "treated_as_board_busy": false,
+      "touched": false
+    },
+    "r32_shutdown_after_sha256": "a01660d60b018a350eca153636b1e5926be82b5723b49226fdcaa50ee23abce2",
+    "r32_shutdown_after_pass_marker_present": true,
+    "r32_independent_recovery_sha256": "8ded9071051f0d9732d7d374954e8b535c3f2df3a9c17868502348f587aea850",
+    "r32_independent_recovery_pass_marker_present": true
+  },
+  "constraints": {
+    "build_executed_during_preflight": false,
+    "hardware_executed_during_preflight": false,
+    "source_modified_during_preflight": false,
+    "main_checkout_modified": false,
+    "stage66_allowed": false,
+    "hardware_acceptance": "PENDING_HW",
+    "coverage_claimed": false
+  }
+}

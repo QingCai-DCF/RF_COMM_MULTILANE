@@ -312,6 +312,8 @@ python scripts/hw/run_p7_ps_application_stage_safe.py @Common @PsExtra --execute
 
 The functional stage must retain all eight 1 MiB/64 KiB policy-pattern cases and all `12 lengths x 4 policies = 48` boundary cases. Fault evidence must be labeled `SOFTWARE_INJECTED_SCHEDULER_FAULT`; it is not evidence of a real optical obstruction. Abort/restart must prove partial-output wipe, shutdown, new epoch, successful recovery, and duplicate replay rejection. Queue evidence must prove depth 1, depth 8 FIFO, producer backpressure, overflow rejection before DDR write, STOP, and ABORT while queued.
 
+`--stage62-only` selects formal sequence ordinal 62 (`ps_functional`); it does not remove the boundary48, 4 KiB, four 64 KiB, or four 1 MiB vectors inside that stage. Functional main-case data is loaded at its actual internal phase, not redundantly before service start. Aligned evidence blocks of at least 4 KiB use XSDB double-word binary reads only after an immutable 4 KiB byte-exact probe proves the read representation. After all final 1 MiB descriptors are terminal, the service must publish clean driver shutdown before the host harvests the final output and trace files. The postprocessor requires the phase-local-preload, double-word-probe, pre-evidence-shutdown, and final-read-mode markers; a partial stdout marker is conservative action evidence only and can never replace the atomic final result or satisfy acceptance.
+
 ### 3.6 The single final 1800-second run
 
 This is the last transmitting hardware stage. Exactly one stationary launch

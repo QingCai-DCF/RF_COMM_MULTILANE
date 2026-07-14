@@ -1,0 +1,45 @@
+{
+  "acceptance_valid": false,
+  "diagnostic_valid": false,
+  "generated_at_utc": "2026-07-13T18:20:07.478132+00:00",
+  "hardware_pass_claimed": false,
+  "offline_replay_only": true,
+  "parser_source_commit": "5fe5b67e9961d910ebd26914a6bf5acccec17a1f",
+  "replay_error": "",
+  "replay_result": {
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "case": "A",
+    "control": {
+      "case_id": 1,
+      "coverage_claimed": 0,
+      "destination_alignment": 0,
+      "diagnostic_only": 1,
+      "immutable_crc32": 129072598,
+      "magic": 1129133904,
+      "record_address": 135168,
+      "record_bytes": 1536,
+      "record_magic_readback": 1414346576,
+      "result": 0,
+      "run_id_crc32": 3228872105,
+      "source_alignment": 0,
+      "state": 3,
+      "transfer_length": 30,
+      "version": 1,
+      "wipe_verified": 1
+    },
+    "coverage_claimed": false,
+    "destination_prewipe_independent_readback_claimed": false,
+    "diagnostic_only": true,
+    "failures": [
+      "Stage62 microtest record rejected: Stage62 microtest COPY_OK terminal metadata mismatch"
+    ],
+    "independent_readback_classification": "READBACK_VISIBILITY_SUSPECT",
+    "output_wipe_verified": true,
+    "passed": false,
+    "record": {},
+    "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+    "stage62_executed": false
+  },
+  "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+  "schema": "rf-comm-p7-stage62-posthoc-parser-replay-v1"
+}

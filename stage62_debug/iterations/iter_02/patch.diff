@@ -1,0 +1,196 @@
+diff --git a/scripts/hw/run_p7_ps_application_stage_safe.py b/scripts/hw/run_p7_ps_application_stage_safe.py
+index 8e4043e0..80e4bad7 100644
+--- a/scripts/hw/run_p7_ps_application_stage_safe.py
++++ b/scripts/hw/run_p7_ps_application_stage_safe.py
+@@ -66,6 +66,7 @@ from p7_ps_mailbox_backend import (  # noqa: E402
+     P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
+     P7_STAGE62_MICROTEST_CONTROL_MAGIC,
+     P7_STAGE62_MICROTEST_RECORD_BYTES,
++    P7_STAGE62_MICROTEST_RECORD_MAGIC,
+     P7_STAGE62_MICROTEST_VERSION,
+     build_stage62_microtest_fixtures,
+     pack_mailbox,
+diff --git a/software/ps_driver/p7_stage62_microtest.c b/software/ps_driver/p7_stage62_microtest.c
+index b6b78eee..147befc5 100644
+--- a/software/ps_driver/p7_stage62_microtest.c
++++ b/software/ps_driver/p7_stage62_microtest.c
+@@ -304,6 +304,10 @@ int p7_stage62_microtest_try_run(void) {
+   record->terminal_status = P7_STAGE62_MICROTEST_FAILED;
+   record->classification = P7_COPY_DIAGNOSTIC_RECORD_INVALID;
+   record->error_code = P7_STAGE62_MICROTEST_ERROR_CONTROL;
++  record->first_bad_domain = P7_STAGE62_MICROTEST_BAD_NONE;
++  record->first_bad_index = UINT32_MAX;
++  record->expected_byte = UINT32_C(0x100);
++  record->observed_byte = UINT32_C(0x100);
+   record->case_id = control->case_id;
+   record->transfer_length = control->transfer_length;
+   record->source_alignment = control->source_alignment;
+@@ -334,6 +338,7 @@ int p7_stage62_microtest_try_run(void) {
+       control->diagnostic_only == 1U && control->coverage_claimed == 0U;
+ 
+   if (valid_control != 0U) {
++    record->error_code = P7_STAGE62_MICROTEST_ERROR_NONE;
+     source_fixture = (volatile uint8_t *)(uintptr_t)(
+         control->case_id <= P7_STAGE62_MICROTEST_OCM_TO_DDR
+             ? P7_STAGE62_MICROTEST_OCM_SOURCE_ADDRESS
+@@ -488,10 +493,6 @@ int p7_stage62_microtest_try_run(void) {
+             ? P7_STAGE62_MICROTEST_COMPLETE
+             : P7_STAGE62_MICROTEST_FAILED;
+   } else {
+-    record->first_bad_domain = P7_STAGE62_MICROTEST_BAD_NONE;
+-    record->first_bad_index = UINT32_MAX;
+-    record->expected_byte = UINT32_C(0x100);
+-    record->observed_byte = UINT32_C(0x100);
+     p7_capture_runtime(record);
+   }
+ 
+diff --git a/tests/test_p7_stage62_microtest.py b/tests/test_p7_stage62_microtest.py
+index 83110d47..eab60111 100644
+--- a/tests/test_p7_stage62_microtest.py
++++ b/tests/test_p7_stage62_microtest.py
+@@ -40,6 +40,8 @@ def build_valid_record(
+     transfer_length: int = 30,
+     source_alignment: int = 0,
+     destination_alignment: int = 0,
++    run_id_crc32: int = 0xA1B2C3D4,
++    control_crc32: int = 0x11223344,
+ ) -> bytes:
+     geometry = stage62_microtest_case_geometry(case_id)
+     source_before, destination_before = build_stage62_microtest_fixtures(
+@@ -90,8 +92,8 @@ def build_valid_record(
+     words[43] = int(geometry["pattern_base"])
+     words[45] = 0x1FF00
+     words[52:60] = [0xFFFFFFFF] * 8
+-    words[67] = 0xA1B2C3D4
+-    words[68] = 0x11223344
++    words[67] = run_id_crc32
++    words[68] = control_crc32
+     words[69] = 1
+     words[70] = 1
+     words[71] = 0
+@@ -196,6 +198,125 @@ class P7Stage62MicrotestTest(unittest.TestCase):
+             with self.assertRaisesRegex(RuntimeError, "microtest control|integrity"):
+                 safe_wrapper.verify_bundle_integrity(last_bundle)
+ 
++    def test_complete_host_postprocess_accepts_valid_copy_and_wipe_evidence(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root = Path(temp)
++            input_path = root / "unused_input.bin"
++            input_path.write_bytes(b"stage62-only")
++            bundle = safe_wrapper.build_stage_bundle(
++                bundle_dir=root / "bundle_A",
++                mode="stage62-microtest",
++                input_path=input_path,
++                max_runtime_sec=60,
++                calibration_sec=0,
++                acceptance_sec=0,
++                sample_interval_sec=10,
++                idle_margin_sec=10,
++                stationary_object_bytes=64 * 1024,
++                run_id="p7_stage62_microtest_postprocess",
++                execution_scope="STAGE62_ONLY",
++                diagnostic_only=True,
++                stage62_microtest_case="A",
++                microtest_length=30,
++                microtest_source_alignment=0,
++                microtest_destination_alignment=0,
++            )
++            micro = bundle.stage62_microtest
++            self.assertIsInstance(micro, dict)
++            assert micro is not None
++
++            control_input = (
++                bundle.directory / "stage62_microtest_control.bin"
++            ).read_bytes()
++            source_input = (
++                bundle.directory / "stage62_microtest_source_fixture.bin"
++            ).read_bytes()
++            destination_input = (
++                bundle.directory / "stage62_microtest_destination_fixture.bin"
++            ).read_bytes()
++            (bundle.directory / "stage62_microtest_control_prestart.bin").write_bytes(
++                control_input
++            )
++            (bundle.directory / "stage62_microtest_source_prestart.bin").write_bytes(
++                source_input
++            )
++            (
++                bundle.directory / "stage62_microtest_destination_prestart.bin"
++            ).write_bytes(destination_input)
++
++            control_final = bytearray(control_input)
++            struct.pack_into(
++                "<8I",
++                control_final,
++                8 * 4,
++                3,
++                0,
++                safe_wrapper.P7_STAGE62_DIAGNOSTIC_ADDRESS,
++                P7_STAGE62_MICROTEST_RECORD_BYTES,
++                P7_STAGE62_MICROTEST_RECORD_MAGIC,
++                1,
++                1,
++                0,
++            )
++            (bundle.directory / "stage62_microtest_control_final.bin").write_bytes(
++                control_final
++            )
++            (bundle.directory / "stage62_microtest_record_result.bin").write_bytes(
++                build_valid_record(
++                    case_id=1,
++                    run_id_crc32=int(micro["run_id_crc32"]),
++                    control_crc32=int(micro["immutable_crc32"]),
++                )
++            )
++            (bundle.directory / "stage62_microtest_source_final.bin").write_bytes(
++                source_input
++            )
++            destination_final = bytearray(destination_input)
++            destination_offset = int(micro["destination_target_offset"])
++            destination_final[destination_offset : destination_offset + 30] = (
++                b"\x00" * 30
++            )
++            (
++                bundle.directory / "stage62_microtest_destination_final.bin"
++            ).write_bytes(destination_final)
++
++            result = safe_wrapper.postprocess_stage62_microtest(
++                bundle,
++                "\n".join(
++                    (
++                        "P7_STAGE62_MICROTEST=1",
++                        "P7_STAGE62_MICROTEST_CASE=A",
++                        "P7_STAGE62_MICROTEST_DIAGNOSTIC_ONLY=1",
++                        "P7_STAGE62_MICROTEST_COVERAGE_CLAIMED=0",
++                        "P7_STAGE62_MICROTEST_STAGE62_EXECUTED=0",
++                    )
++                ),
++            )
++            self.assertTrue(result["passed"], result["failures"])
++            self.assertEqual(result["independent_readback_classification"], "COPY_OK")
++            self.assertTrue(result["output_wipe_verified"])
++            self.assertFalse(result["stage62_executed"])
++
++    def test_firmware_initializes_copy_ok_terminal_metadata(self):
++        source = (
++            ROOT / "software/ps_driver/p7_stage62_microtest.c"
++        ).read_text(encoding="utf-8")
++        validation = source.index("if (valid_control != 0U) {")
++        self.assertLess(
++            source.index("record->first_bad_index = UINT32_MAX;"), validation
++        )
++        self.assertLess(
++            source.index("record->expected_byte = UINT32_C(0x100);"), validation
++        )
++        self.assertLess(
++            source.index("record->observed_byte = UINT32_C(0x100);"), validation
++        )
++        error_clear = source.index(
++            "record->error_code = P7_STAGE62_MICROTEST_ERROR_NONE;",
++            validation,
++        )
++        self.assertLess(error_clear, source.index("source_fixture =", validation))
++
+     def test_tcl_microtest_branch_is_isolated_and_dumps_before_failure(self):
+         tcl = (ROOT / "scripts/hw/p7_ps_application_execute.tcl").read_text(
+             encoding="utf-8"

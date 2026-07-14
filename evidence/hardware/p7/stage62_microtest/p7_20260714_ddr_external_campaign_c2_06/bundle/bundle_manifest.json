@@ -1,0 +1,97 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "atomic_files": true,
+  "boundary_case_count": 0,
+  "boundary_cases": [],
+  "boundary_descriptor_batches": [],
+  "case_count": 0,
+  "cases": [],
+  "coverage_claimed": false,
+  "ddr_external_master": null,
+  "descriptors": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\descriptors.bin",
+    "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+    "size_bytes": 2048
+  },
+  "diagnostic_only": true,
+  "execution_plan": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\execution_plan.txt",
+    "sha256": "0a373c2e679a01a3e4df699252eee3e88c29c62fb8581e946730e2c137650793",
+    "size_bytes": 708
+  },
+  "execution_scope": "STAGE62_ONLY",
+  "functional_checkpoint": null,
+  "generated_at_utc": "2026-07-14T12:01:53.704063+00:00",
+  "hardware_actions_executed": false,
+  "input_source": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_input_seed_4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5.bin",
+    "sha256": "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+    "size_bytes": 247
+  },
+  "mailbox": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\mailbox.bin",
+    "sha256": "e15dcc379856e182f5e6fa5a35fa24f82a9c352f19c5bf2a7f6f263af7a1ea53",
+    "size_bytes": 256
+  },
+  "mode": "stage62-microtest",
+  "output_prefill_byte": 165,
+  "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
+  "queue_overflow_candidate": null,
+  "queue_phase_mailboxes": {},
+  "run_id": "p7_20260714_ddr_external_campaign_c2_06",
+  "schedule": {
+    "acceptance_sec": 0,
+    "calibration_plus_acceptance": 0,
+    "calibration_sec": 0,
+    "counts_per_second": 333333343,
+    "idle_margin_sec": 60,
+    "max_runtime_sec": 60,
+    "scheduling_cutoff_sec": 0
+  },
+  "schema": "rf-comm-p7-ps-hardware-bundle-v1",
+  "stage62_microtest": {
+    "case": "D",
+    "case_id": 4,
+    "control": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\stage62_microtest_control.bin",
+      "sha256": "7e50f7bc0e95b7202a3401c638f8482e17e413d20c677133bf5d3fcc6d036b8c",
+      "size_bytes": 64
+    },
+    "control_address": "0x00022300",
+    "destination_alignment": 0,
+    "destination_fixture": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\stage62_microtest_destination_fixture.bin",
+      "sha256": "bdce8716a799749316af3dcb9c9f9798b6f93da67875abcae6d5cf306d1a8e7f",
+      "size_bytes": 256
+    },
+    "destination_fixture_address": 9437184,
+    "destination_space": 2,
+    "destination_target_offset": 64,
+    "immutable_crc32": 1585599287,
+    "pattern_base": 209,
+    "record_address": "0x00021000",
+    "record_bytes": 1536,
+    "record_zero": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\stage62_microtest_record_zero.bin",
+      "sha256": "80422bc3d307b4a25bdafcc84ac7fb01cb55a09810e8b0f37bb12e0edb5c48ca",
+      "size_bytes": 1536
+    },
+    "run_id": "p7_20260714_ddr_external_campaign_c2_06",
+    "run_id_crc32": 1709974704,
+    "source_alignment": 0,
+    "source_fixture": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\stage62_microtest_source_fixture.bin",
+      "sha256": "644b55780fd8321914632eccb01b318740c7cfbe5edf40050e1f3cba9150382a",
+      "size_bytes": 256
+    },
+    "source_fixture_address": 1048576,
+    "source_space": 2,
+    "source_target_offset": 64,
+    "transfer_length": 31
+  },
+  "stage62_microtest_control": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage62_microtest\\p7_20260714_ddr_external_campaign_c2_06\\bundle\\stage62_microtest_control.bin",
+    "sha256": "7e50f7bc0e95b7202a3401c638f8482e17e413d20c677133bf5d3fcc6d036b8c",
+    "size_bytes": 64
+  }
+}

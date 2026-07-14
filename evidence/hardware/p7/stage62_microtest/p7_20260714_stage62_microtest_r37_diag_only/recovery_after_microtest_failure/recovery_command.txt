@@ -1,0 +1,6 @@
+recovery_only=true
+candidate_programmed=false
+functional_stage_executed=false
+command=powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\hw\program_tfdu_shutdown_safe.ps1 -AllowHardware -MaxRuntimeSec 60 -ShutdownOnExit -BoardId 210512180081 -Bitstream shutdown_bitstream/tfdu_shutdown_j10_j11.bit -BitstreamSha256 bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810 -ProfilePath config/profiles/G1_LANE0_BASELINE.json -ProfileSha256 dc89e18e3c4f4d8a14cba63d8c6c5970aa632e8f6837a3e0e6e86345ea2f80e1 -ActivePinmapHash 583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd -ActiveXdcHash f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344 -AuthorizationFile C:\Users\user\Documents\RF_COMM_MULTILANE\.hardware_authorization\P4_APPROVED.txt -EvidenceDir evidence/hardware/p7/stage62_microtest/p7_20260714_stage62_microtest_r37_diag_only/recovery_after_microtest_failure -VivadoPath D:\Xilinx\Vivado\2023.1\bin\vivado.bat -ShutdownTcl scripts/legacy_safe_tools/program_tfdu_shutdown.tcl -TimeoutSeconds 180
+environment=RF_COMM_HW_AUTH=I_ACCEPT_TFDU6102_RISK_AND_AUTHORIZE_HW
+returncode=0

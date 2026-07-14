@@ -1,0 +1,100 @@
+{
+  "schema": "rf-comm-ddr-external-master-campaign-result-v1",
+  "campaign_id": "p7_20260714_ddr_external_campaign_a",
+  "source_commit": "516a92435eb0aa2608bc3e31860573c44b7722f2",
+  "status": "FIX_REQUIRED",
+  "diagnostic_only": true,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "hardware_runs": 9,
+  "max_hardware_runs": 10,
+  "safe_shutdown_complete": true,
+  "fixed_artifact_sha256": {
+    "elf": "dff32f8b4c465e25fa9d99981321523732aacf3a022a6bc083661d985351d9ce",
+    "bitstream": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "shutdown_bitstream": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "fixture": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776"
+  },
+  "runs": [
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_01",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "5a9e5644983ffced1e52bc968bb92308bb7dbbdc589a45ac8b484dd038ea0b1c",
+      "raw_evidence_manifest_sha256": "2d33503bb0b29ee1b34a21cfbc50aefd976698ce656c222c1dbbbc5635740e2a",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_02",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "3b430aa423a610ef28049aac033aecb12cf998d56015d9486f2c340c5c1c9d50",
+      "raw_evidence_manifest_sha256": "29a51e2ff10a8aa6b9c886369f46138aaead301a0d8ba8debcd176aca58eafd7",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_03",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "53be024b60a5edc5fc4696980d37fdab0674ef241de5e84c4b7f92891bd06d74",
+      "raw_evidence_manifest_sha256": "eda4abb2ef94d81697a257ad64538e7a25140793105383f8680784e1a2ca1e7a",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_04",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "547e413917ac37bc59c7a4daf2622b9b87a6ad1a8d92a362cc76dae14165e3d5",
+      "raw_evidence_manifest_sha256": "df91b728c360b90f216d0aba21d8116f20b7c0c5bfbb2843aa270425b340559f",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_05",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "fa5b2c5ce573825364b1c56f7d7b67dccc99aecb79388f5ac438f2ac6c4a4440",
+      "raw_evidence_manifest_sha256": "604a3e35d5a8fa86f8e870ee3469070b0f542f66890404eb60ebb9834f57a0ba",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_06",
+      "executed": true,
+      "result": "PASS",
+      "summary_sha256": "df717fc03ebd1cfecc80e0ddc5c2dbe15651668acdbbd2bee9e2226c0fad3ecb",
+      "raw_evidence_manifest_sha256": "3b1d714192f478cbb7efbf1146af6defda89f04f44935779997dd8b3db7d7644",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_07",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "c32ce751f476c19d5fb4bb8ee06dd0f5bebef03a4a162614b39cad6203204cb0",
+      "raw_evidence_manifest_sha256": "c447fbdf90eb442f2bf0b46918f125eca07af4f96d484fc4357dd8b3577a68ed",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_08",
+      "executed": true,
+      "result": "FAIL_STAGE",
+      "summary_sha256": "44ee67f306f54ed395c3a03413916e2c4d7941725a7cc3cfcfbfc160a397317c",
+      "raw_evidence_manifest_sha256": "8b304fb6095041774d7984c71b77b911e238be73abe0fca1a1f1bf412aee74c5",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_09",
+      "executed": true,
+      "result": "FIX_REQUIRED",
+      "summary_sha256": "23cb7e11268ade89be1ceff888b43b5cc0d586f0b1be84dbe120a182b64445ea",
+      "raw_evidence_manifest_sha256": "e928dadbf462f3548f7f391de4675045f7d208733a94bc54ce59d7a15c8cf931",
+      "shutdown_after_passed": true
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_10",
+      "executed": false,
+      "result": "INVALIDATED_BY_RUNNER_SOURCE_CHANGE"
+    }
+  ],
+  "campaign_stop_reason": "XSDB rejected the runner's unsupported plural -unaligned-accesses option",
+  "required_fix": "Use the supported singular -unaligned-access option, add an offline regression, and prepare new source-hash-bound Campaign B authorizations",
+  "underlying_ddr_root_cause": "UNRESOLVED"
+}

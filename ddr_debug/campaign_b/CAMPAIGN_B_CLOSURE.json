@@ -1,0 +1,105 @@
+{
+  "schema": "rf-comm-ddr-external-campaign-closure-v1",
+  "campaign_id": "p7_20260714_ddr_external_campaign_b",
+  "source_commit": "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+  "runner_fix_commit": "6d69289bea046f9f2890e19ebe489c8f5c9df67b",
+  "generated_at_utc": "2026-07-14T06:12:55Z",
+  "status": "FIX_REQUIRED",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "diagnostic_only": true,
+  "coverage_claimed": false,
+  "authorization_mode": "PREGENERATED_SINGLE_RUN_FILES",
+  "authorization_files_present": 10,
+  "authorizations_consumed": 10,
+  "hardware_runs_executed": 10,
+  "functional_pass_runs": 1,
+  "functional_fail_runs": 9,
+  "total_mismatched_bytes": 24,
+  "runner_fix_result": {
+    "status": "PASS",
+    "run_id": "p7_20260714_ddr_external_campaign_b_06",
+    "supported_xsdb_option_reached": "-unaligned-access",
+    "old_plural_option_error_present": false,
+    "write_attempted": true,
+    "readback_captured": true,
+    "meaning": "The runner correction is effective, but it is not the root fix for DDR corruption."
+  },
+  "safety": {
+    "shutdown_before_passed_runs": 10,
+    "shutdown_after_passed_runs": 10,
+    "shutdown_after_returncode_zero_runs": 10,
+    "shutdown_bitstream_programmed_after_runs": 10,
+    "process_tree_reaped_runs": 10,
+    "active_runner_after_campaign": false,
+    "active_xsdb_transaction_after_campaign": false,
+    "active_vivado_transaction_after_campaign": false,
+    "runner_lock_free_after_campaign": true,
+    "abort_file_present_after_campaign": false,
+    "safe_shutdown_complete": true
+  },
+  "root_cause": {
+    "classification": "PS7_DDR_DEVICE_TOPOLOGY_MISMATCH",
+    "diagnosis_confidence": "HIGH",
+    "configuration_defect_proven": true,
+    "causal_fix_hardware_verification_pending": true,
+    "current_build_behavior": "scripts/build_p6_ps_candidate.tcl disables board-preset application and does not set a DDR device part, so Vivado 2023.1 emits its default PS7 DDR topology.",
+    "current_generated_ddr": {
+      "part": "MT41J128M8 JP-125",
+      "dram_width": "8 Bits",
+      "device_capacity": "1024 MBits",
+      "bus_width": "32 Bit",
+      "t_faw": "30.0",
+      "parameter_source": "build/p7_ps_vitis_workspace/p7_platform/zynq_fsbl/ps7_parameters.xml",
+      "parameter_source_sha256": "97e2aa5b2ba8d346fed2641ba1c3e544dc7c5aa59277014bd81ccbfcaeac5de1",
+      "ps7_init_sha256": "84e478d79c0b7bfe6dfc45a5a99ab850c30c7db11d8fec1dae064133dd64b448"
+    },
+    "ax7010_required_ddr": {
+      "physical_devices": "2 x SKHynix H5TQ2G63FFR-RDC",
+      "compatible_vivado_part": "MT41J128M16 HA-125",
+      "dram_width": "16 Bits",
+      "device_capacity": "2048 MBits",
+      "aggregate_bus_width": "32 Bit",
+      "aggregate_capacity": "4 Gbit / 512 MiB",
+      "t_faw": "40.0",
+      "manufacturer_manual": "https://alinx.com/public/upload/file/AX7010_User_Manual.pdf",
+      "legacy_reference": "legacy/RF_COMM/TFDU_VFIR_Client_Array/TFDU_VFIR_Client.srcs/sources_1/bd/design_shiboqi/ip/design_shiboqi_processing_system7_0_0/design_shiboqi_processing_system7_0_0.xci",
+      "legacy_reference_sha256": "b83e025ff4287c4b39db9723665de3c07fb990f1134fb5185cd14b29170fa7c1"
+    },
+    "parameter_differences": [
+      {"name": "PCW_UIPARAM_DDR_PARTNO", "current": "MT41J128M8 JP-125", "required": "MT41J128M16 HA-125"},
+      {"name": "PCW_UIPARAM_DDR_DRAM_WIDTH", "current": "8 Bits", "required": "16 Bits"},
+      {"name": "PCW_UIPARAM_DDR_DEVICE_CAPACITY", "current": "1024 MBits", "required": "2048 MBits"},
+      {"name": "PCW_UIPARAM_DDR_T_FAW", "current": "30.0", "required": "40.0"}
+    ],
+    "matrix_exclusions": [
+      "not a fixed physical address: B03 moved the window and corruption followed",
+      "not a single data value: B04 corrupted both 0x5A and 0xA5",
+      "not a single byte lane: failures occurred on lanes 0 and 1",
+      "not a single host API: download, block, byte, halfword, and word methods all failed",
+      "not the old unaligned option spelling: B06 performed the write and captured readback",
+      "not deterministic fixture generation: every bundle fixture hash matched its authorization"
+    ],
+    "observed_signature": "Sparse, run-varying DDR byte corruption across addresses, values, widths, and host APIs, consistent with a PS DDR initialization topology/timing mismatch.",
+    "minimal_fix": "Explicitly select MT41J128M16 HA-125 in the canonical P6 PS7 construction and fail the build unless Vivado derives 16-bit devices, 2048-Mbit capacity, and tFAW 40.0."
+  },
+  "runs": [
+    {"ordinal": 1, "run_id": "p7_20260714_ddr_external_campaign_b_01", "pattern": "stage62_fixture", "address": "0x00900000", "access": "download", "result": "FAIL", "mismatch_count": 3, "mismatches": ["0x00900084:C3->02", "0x009000AD:C3->00", "0x009000EC:C3->00"], "authorization_sha256": "48c14c22bcf552c1a25e93cadb1500398dd8c8e3be0583cf6913bb47a60c60af", "summary_sha256": "b5dc497aec0987dda2fcd58ee09a8111b41f09b7728aebac5712eccb4dbd2e41", "readback_sha256": "64cf107113fb7d71e6748b80585c1c9b51586b0827ee3ea1f5a16288b370900e", "raw_manifest_sha256": "fddc2ba6fbfa0fe83f90c01752fadb11572b6ae5dee31595bdbac2a2ffa6a7cf"},
+    {"ordinal": 2, "run_id": "p7_20260714_ddr_external_campaign_b_02", "pattern": "stage62_fixture", "address": "0x00900000", "access": "download", "result": "FAIL", "mismatch_count": 4, "mismatches": ["0x0090002D:C3->00", "0x00900045:A5->00", "0x00900095:C3->00", "0x009000B0:C3->00"], "authorization_sha256": "4b7e8c324e0576075db299afa550ac95abb0f9666da1ebe45f428d0eae42fff6", "summary_sha256": "37bfed6fb6533933dd25865a4d4989ceebb91c7155b71e0d8460e386d3f8507c", "readback_sha256": "d96220983ee8bf188d451d556a4571146ba49feaa7e45ea54d15b5265427a5f7", "raw_manifest_sha256": "f4b7a02ac1aa42d8c2026a02d6fc3f0f8bc635ff7a926fa59ad2d6231d75b81e"},
+    {"ordinal": 3, "run_id": "p7_20260714_ddr_external_campaign_b_03", "pattern": "stage62_fixture", "address": "0x00900100", "access": "download", "result": "FAIL", "mismatch_count": 2, "mismatches": ["0x0090010C:C3->00", "0x009001D9:C3->00"], "authorization_sha256": "1cecf30ce2faa8e87ce19578f66added78267d065548412a0516d441cb09c985", "summary_sha256": "6ff123c21933d8a177b135810fee5426050912c9553f68a64b4a946b0e63775e", "readback_sha256": "3f12c900a273d6f60a2bfecd88d4154fed6e4e9d79920940e976ab1d37ef24fe", "raw_manifest_sha256": "cc8789dbcc9112b4b341b3b618e0d402d3c5a7fdeada45f251a9f7b70a0e8471"},
+    {"ordinal": 4, "run_id": "p7_20260714_ddr_external_campaign_b_04", "pattern": "a5_5a_3c_c3", "address": "0x00900000", "access": "download", "result": "FAIL", "mismatch_count": 2, "mismatches": ["0x009000AD:5A->00", "0x009000C0:A5->00"], "authorization_sha256": "268f5ca1d5d3577b577a82339350463b99c7a7691254471fae6c041d4d980427", "summary_sha256": "df5c6feb02c3554ef941a071d0483b503ef71733049d4be9ec90d12758eb3a12", "readback_sha256": "4a552fb407696e29e2ba4aaa62bd0fe8321ca4037e8c7da183ab16f061d7ccbe", "raw_manifest_sha256": "6d7dd0d747de661a262f3f7a19e1fb32058b19377649ba5f22c3d73dd53b8c3e"},
+    {"ordinal": 5, "run_id": "p7_20260714_ddr_external_campaign_b_05", "pattern": "nonzero_counter", "address": "0x00900000", "access": "download", "result": "PASS", "mismatch_count": 0, "mismatches": [], "authorization_sha256": "aa6c21695ae4e373e584a015ecaf9c56a3ce9db5a4e786fae262c1ed08c2cae9", "summary_sha256": "1c0395bfde02f9783ff2a27a55d3ca7e1e423adecf5c099c8f78193656339300", "readback_sha256": "57e8933aa050bb258fd38b989928f64197eee15064ff6d9a47485c49f77c3397", "raw_manifest_sha256": "b51b4bb18291ae83aa53db0ee03173a818a699236875ec69cfdee8c9d494b8d5"},
+    {"ordinal": 6, "run_id": "p7_20260714_ddr_external_campaign_b_06", "pattern": "stage62_fixture", "address": "0x00900001", "access": "halfword_unaligned", "result": "FAIL", "mismatch_count": 3, "mismatches": ["0x00900025:C3->00", "0x0090005D:A5->00", "0x00900085:C3->86"], "authorization_sha256": "e42683bd98e3421727ed17ed269229d6705e870b5b98f94737e68fcb7c573498", "summary_sha256": "5cb81867c102d13d7812e153f6b272b9edd94021e9a05f84c56491da7ca651dc", "readback_sha256": "8deec240ce77ee61d918308d3c49f774bd0c6dad8a599034ce178d46aed75561", "raw_manifest_sha256": "767d853fba3fb4b8c19b5bdc2644ec77613f24ccad978f76c2eb46fb49aaad25"},
+    {"ordinal": 7, "run_id": "p7_20260714_ddr_external_campaign_b_07", "pattern": "stage62_fixture", "address": "0x00900000", "access": "word", "result": "FAIL", "mismatch_count": 2, "mismatches": ["0x00900004:C3->02", "0x00900034:C3->02"], "authorization_sha256": "ef4cb9e5b4782b4552c941af23b0158eaa476d4012e9b661d7b0aa7053ab5f24", "summary_sha256": "cc418ab4e969e4bb93e8101bf56440ac79975df6a601ff610816f57816c05bf7", "readback_sha256": "b02581a1085921d09c8ab425fca4071168893312d0be57423632653e1f52943a", "raw_manifest_sha256": "9ca40c85b8a52362e1b5d449dfb8d3f6ac4fcbcd6f146f0e2ab5b3c3a2aef9f0"},
+    {"ordinal": 8, "run_id": "p7_20260714_ddr_external_campaign_b_08", "pattern": "stage62_fixture", "address": "0x00900000", "access": "block", "result": "FAIL", "mismatch_count": 1, "mismatches": ["0x00900009:C3->00"], "authorization_sha256": "b4e6d24f5a05cdfd6bb3103534e25d3234799e19fc8c25a50d49548fcef05a8f", "summary_sha256": "37b84239ed77fe8f2f0cfc5e92103df59f7279bd2b42ad6c4d3deafa3cf21fa5", "readback_sha256": "3198a52a7e09dde9d05a82db251f6497845399c4d749c8441fa39866ca92f3bb", "raw_manifest_sha256": "c69ff761e6fe6f492b593e447a6e1189f6770288d44ac200cfae5020560e6a06"},
+    {"ordinal": 9, "run_id": "p7_20260714_ddr_external_campaign_b_09", "pattern": "stage62_fixture", "address": "0x00900000", "access": "byte", "result": "FAIL", "mismatch_count": 4, "mismatches": ["0x00900075:C3->00", "0x00900081:C3->00", "0x009000A1:C3->00", "0x009000E0:C3->00"], "authorization_sha256": "08615a8dd465ab87609813517650f4fa9da15b344e3a142ff9a21befa95f54e8", "summary_sha256": "01069a9f6cf3fdd837d706bbb37547ad9d88906053df12747dc1916a41fcd70a", "readback_sha256": "3c8230ec3ac71ae703a533641f553f95291ac1364885bfc16c108d8a6e54c4fe", "raw_manifest_sha256": "cca9557a7ce70fadf71e5988cc5bd08f74c007d20b9372195e520c3b086be212"},
+    {"ordinal": 10, "run_id": "p7_20260714_ddr_external_campaign_b_10", "pattern": "stage62_fixture", "address": "0x00900001", "access": "word_unaligned", "result": "FAIL", "mismatch_count": 3, "mismatches": ["0x00900025:C3->00", "0x00900044:A5->02", "0x00900089:C3->00"], "authorization_sha256": "b255c38c9fbbdf8e8ea6f3db7149ae71ff99bdf8c4c28d2e33e2e1cdfa61ec2f", "summary_sha256": "77572e86938e0e25d62f69a4f33b7a253c562ce5640f327fced8b13bd999bf04", "readback_sha256": "e9a3b51f46bdfca50b8e4cde4d8111536271d4ca042efeacf4ddb968c466bc4b", "raw_manifest_sha256": "5d726ede334c655cc36e1b07b132b52c9ead61642f835f19d2dc9aec27fbec1c"}
+  ],
+  "package_bindings": {
+    "campaign_envelope_sha256": "3a4d8d5bc7ba845e14e1940bfbc418876724f2884d50db9ca9fd7f62db8b0cb3",
+    "artifact_manifest_sha256": "5c7c35aa2e3283095a4560f83fce8042c0ce86c743dc7511090a57c3a799503b",
+    "offline_validation_summary_sha256": "7a16bafa27e8d23a5286a27bf212f719aa347e0289abd8e9015feaacb6f873f3",
+    "pre_fix_build_script_sha256": "268f5d89b483a3450a91d83ca6dd8ebaef1e28604f53e1cb1361f592851e8de5",
+    "pre_fix_core_readiness_sha256": "31debe19bb9398787b471ed268a7910b23303fdbb499c25e6d3aecf166aa4be7"
+  },
+  "next_action": "Apply the explicit AX7010 DDR-part fix, rebuild offline artifacts, rerun offline tests, freeze new hashes, and require a new authorization before any hardware verification."
+}

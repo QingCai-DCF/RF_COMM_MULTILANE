@@ -36,6 +36,7 @@ for item in (TOOLS, HW_DIR):
         sys.path.insert(0, str(item))
 
 from p7_hardware_safety import (  # noqa: E402
+    COMMIT_RE,
     DEFAULT_ABORT_FILE,
     HardwareExecutionLock,
     SHA256_RE,
@@ -64,13 +65,29 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     P7_RUNTIME_DEADLINE_REACHED,
     P7_FIRST_ERROR_DIAGNOSTIC_MAGIC,
     P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
+    P7_STAGE62_MICROTEST_CONTROL_MAGIC,
+    P7_STAGE62_MICROTEST_RECORD_BYTES,
+    P7_STAGE62_MICROTEST_RECORD_MAGIC,
+    P7_STAGE62_MICROTEST_VERSION,
+    build_stage62_microtest_fixtures,
     pack_mailbox,
+    stage62_microtest_case_geometry,
     unpack_first_error_diagnostic,
+    unpack_stage62_microtest_record,
     unpack_descriptor,
     unpack_mailbox,
     validate_completed,
 )
 from p7_app_protocol import segment_object  # noqa: E402
+from ddr_external_master_diagnostic import (  # noqa: E402
+    ACCESS_METHODS as DDR_EXTERNAL_ACCESS_METHODS,
+    DEFAULT_TRANSFER_BYTES as DDR_EXTERNAL_LENGTH,
+    PATTERN_NAMES as DDR_EXTERNAL_PATTERN_NAMES,
+    build_pattern as build_ddr_external_pattern,
+    compare_payloads as compare_ddr_external_payloads,
+    parse_hex32 as parse_ddr_external_hex32,
+    validate_scratch_range as validate_ddr_external_scratch_range,
+)
 from run_p7_authorized_hardware_sequence import (  # noqa: E402
     CANONICAL_FULL_PART,
     CANONICAL_LIVE_DEVICE,
@@ -107,6 +124,10 @@ MIN_IDLE_MARGIN_SEC = 5
 MAX_IDLE_MARGIN_SEC = 60
 P7_COUNTS_PER_SECOND = 333_333_343
 OUTPUT_PREFILL_BYTE = 0xA5
+P7_STAGE62_DIAGNOSTIC_ADDRESS = 0x00021000
+P7_STAGE62_DIAGNOSTIC_SECTION = ".p7_stage62_diagnostic"
+ELF_SHT_NOBITS = 8
+ELF_SHF_WRITE_ALLOC = 0x3
 XSDB_PROCESS_GRACE_SEC = 120
 STATIONARY_ACTIVE_WATCHDOG_TOLERANCE_SEC = 1.5
 STATIONARY_SETUP_WATCHDOG_SEC = 300
@@ -124,7 +145,34 @@ SLOT_OUTPUT_OFFSET = 0x00800000
 SLOT_TRACE_OFFSET = 0x01000000
 SLOT_BASE = 0x00100000
 
-MODE_NAMES = ("functional", "fault-fallback", "queue", "abort-restart", "stationary")
+MODE_NAMES = (
+    "functional",
+    "fault-fallback",
+    "queue",
+    "abort-restart",
+    "stationary",
+    "stage62-microtest",
+    "ddr-external-master",
+)
+DDR_RESUME_ARTIFACT_SCHEMA = "rf-comm-ddr-resume-artifact-manifest-v1"
+DDR_RUN_CONFIGURATION_SCHEMA = "rf-comm-ddr-external-master-run-configuration-v1"
+DDR_REQUIRED_ARTIFACT_ROLES = frozenset(
+    {
+        "elf",
+        "linker_map",
+        "disassembly",
+        "bitstream",
+        "xsa",
+        "platform_ps7_init",
+        "shutdown_bitstream",
+        "fixture",
+        "microtest_image",
+        "runner_python",
+        "runner_tcl",
+        "parser",
+        "run_configuration",
+    }
+)
 P7_DESCRIPTOR_FAILED = 4
 
 
@@ -207,6 +255,8 @@ EXPECTED_PROFILE_STAGE = {
     "queue": "P7_PS_APPLICATION_FUNCTIONAL",
     "abort-restart": "P7_PS_APPLICATION_FUNCTIONAL",
     "stationary": "P7_STATIONARY_APP_30MIN",
+    "stage62-microtest": "P7_PS_APPLICATION_FUNCTIONAL",
+    "ddr-external-master": "P7_PS_APPLICATION_FUNCTIONAL",
 }
 CORE_READINESS_CHECKS = (
     "host_command_cache_disabled_or_isolated",
@@ -219,7 +269,12 @@ CORE_READINESS_CHECKS = (
     "integrity_crc_sha_immutable_chunk_snapshot",
     "critical_payload_copies_are_volatile_byte_verified",
     "first_error_diagnostic_is_atomic_and_first_only",
+    "stage62_first_error_prepare_is_first_only",
     "first_error_capture_precedes_validation_and_is_input_bound",
+    "stage62_diagnostic_fixed_ocm_section",
+    "stage62_copy_four_snapshot_classification",
+    "stage62_diagnostic_crc_publish_order",
+    "stage62_only_microtest_bypasses_pl_and_is_disassembly_bound",
     "pre_repair_encode_raw_compared_to_fixed_input_reference",
     "p6_tx_mmio_readback_and_rx_boundaries_observed",
     "local_payload_buffers_are_64_byte_aligned",
@@ -240,18 +295,26 @@ CORE_READINESS_CHECKS = (
     "stationary_identity_ledger_bound",
     "native_shutdown_readback_test",
     "native_payload_alignment_matrix_test",
+    "native_stage62_diagnostic_matrix_test",
+    "native_stage62_microtest_layout_test",
     "p7_python_and_codec_tests",
     "real_vitis_build_source_bound",
 )
 KNOWN_UNSAFE_CORE_FINGERPRINT = "6f17835efdcb8ed22b80d7568f7e55413c60058182e4cd22a2be724d2b9dc63e"
 CORE_DENYLIST_FINGERPRINT_SOURCES = (
     "software/ps_driver/p7_app_service.h",
+    "software/ps_driver/p7_stage62_diagnostic.h",
+    "software/ps_driver/p7_stage62_diagnostic.c",
+    "software/ps_driver/p7_stage62_microtest.h",
+    "software/ps_driver/p7_stage62_microtest.c",
     "software/ps_driver/p7_admission_contract.h",
     "software/ps_driver/p7_app_service.c",
     "software/ps_driver/p7_runtime_main.c",
     "software/ps_driver/ir_driver.h",
     "software/ps_driver/ir_driver.c",
     "tools/p7_ps_mailbox_backend.py",
+    "tools/ddr_external_master_diagnostic.py",
+    "tools/prepare_ddr_resume_gate.py",
     "scripts/hw/run_p7_ps_application_stage_safe.py",
     "scripts/hw/p7_ps_application_execute.tcl",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py",
@@ -267,9 +330,18 @@ CORE_READINESS_SOURCES = CORE_DENYLIST_FINGERPRINT_SOURCES + (
     "scripts/build_p7_ps_runtime.tcl",
     "tests/p7/test_p7_application.py",
     "tests/p7/ir_driver_payload_alignment_test.c",
+    "tests/p7/p7_stage62_diagnostic_test.c",
+    "tests/p7/p7_stage62_microtest_layout_test.c",
+    "tests/test_p7_stage62_microtest.py",
+    "tests/test_ddr_external_master_stage_safe.py",
     "tests/test_p7_regression_dedup.py",
 )
 STAGE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,63}$")
+RUN_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,126}$")
+STAGE62_MICROTEST_CASE_NAMES = ("A", "B", "C", "D")
+P7_STAGE62_MICROTEST_CONTROL_ADDRESS = 0x00022300
+P7_STAGE62_MICROTEST_OCM_SOURCE_ADDRESS = 0x00022400
+P7_STAGE62_MICROTEST_OCM_DESTINATION_ADDRESS = 0x00022500
 
 
 @dataclass
@@ -295,6 +367,75 @@ class StageBundle:
     functional_checkpoint: StageCase | None
     queue_overflow_candidate: StageCase | None
     scheduling_cutoff_sec: int
+    stage62_microtest: dict[str, Any] | None = None
+    ddr_external_master: dict[str, Any] | None = None
+
+
+def build_ddr_external_fixture(pattern: str) -> bytes:
+    """Return one exact 256-byte payload for the external-master boundary."""
+
+    _, stage62_destination = build_stage62_microtest_fixtures(2, 30, 0, 0)
+    return build_ddr_external_pattern(
+        pattern,
+        length=DDR_EXTERNAL_LENGTH,
+        stage62_fixture=stage62_destination,
+    )
+
+
+def ddr_external_identity(
+    *,
+    run_id: str,
+    pattern: str,
+    address_text: str,
+    access_method: str,
+    repetition: int,
+    unaligned_accesses: bool,
+    fixture_sha256: str,
+) -> tuple[dict[str, Any], bytes]:
+    """Validate and bind one run-specific DDR external-master diagnostic."""
+
+    if not RUN_ID_RE.fullmatch(run_id):
+        raise ValueError("DDR external-master run ID is missing or malformed")
+    if pattern not in DDR_EXTERNAL_PATTERN_NAMES:
+        raise ValueError("DDR external-master pattern is invalid")
+    if access_method not in DDR_EXTERNAL_ACCESS_METHODS:
+        raise ValueError("DDR external-master access method is invalid")
+    if repetition not in range(1, 4):
+        raise ValueError("DDR external-master repetition must be 1, 2, or 3")
+    address = parse_ddr_external_hex32(address_text)
+    validate_ddr_external_scratch_range(address, DDR_EXTERNAL_LENGTH)
+    if unaligned_accesses and access_method not in {"halfword", "word"}:
+        raise ValueError(
+            "DDR unaligned-accesses is accepted only for halfword or word mode"
+        )
+    width = {"halfword": 2, "word": 4}.get(access_method, 1)
+    if not unaligned_accesses and address % width:
+        raise ValueError("DDR external-master scalar address is not aligned")
+    payload = build_ddr_external_fixture(pattern)
+    actual_sha256 = hashlib.sha256(payload).hexdigest()
+    if not SHA256_RE.fullmatch(fixture_sha256 or ""):
+        raise ValueError("DDR external-master fixture SHA256 is missing or invalid")
+    if actual_sha256 != fixture_sha256.lower():
+        raise ValueError(
+            "DDR external-master generated fixture SHA256 does not match the authorized value"
+        )
+    return (
+        {
+            "run_id": run_id,
+            "pattern": pattern,
+            "address": f"0x{address:08x}",
+            "address_value": address,
+            "access_method": access_method,
+            "length": DDR_EXTERNAL_LENGTH,
+            "repetition": repetition,
+            "unaligned_accesses": bool(unaligned_accesses),
+            "fixture_sha256": actual_sha256,
+            "diagnostic_only": True,
+            "coverage_claimed": False,
+            "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        },
+        payload,
+    )
 
 
 def now_utc() -> str:
@@ -328,6 +469,61 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
 
 def file_record(path: Path) -> dict[str, Any]:
     return {"path": str(path), "size_bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def build_stage62_microtest_control(
+    *,
+    run_id: str,
+    case_name: str,
+    transfer_length: int,
+    source_alignment: int,
+    destination_alignment: int,
+) -> tuple[bytes, dict[str, int | str]]:
+    if not RUN_ID_RE.fullmatch(run_id):
+        raise ValueError("Stage62 microtest run ID is missing or malformed")
+    if case_name not in STAGE62_MICROTEST_CASE_NAMES:
+        raise ValueError("Stage62 microtest case must be A, B, C, or D")
+    if transfer_length not in range(29, 33):
+        raise ValueError("Stage62 microtest transfer length must be in 29..32")
+    if source_alignment not in range(4) or destination_alignment not in range(4):
+        raise ValueError("Stage62 microtest alignments must be in 0..3")
+    case_id = STAGE62_MICROTEST_CASE_NAMES.index(case_name) + 1
+    run_id_crc32 = zlib.crc32(run_id.encode("ascii")) & 0xFFFFFFFF
+    immutable_words = (
+        P7_STAGE62_MICROTEST_CONTROL_MAGIC,
+        P7_STAGE62_MICROTEST_VERSION,
+        case_id,
+        transfer_length,
+        source_alignment,
+        destination_alignment,
+        run_id_crc32,
+    )
+    immutable_crc32 = zlib.crc32(struct.pack("<7I", *immutable_words)) & 0xFFFFFFFF
+    control = struct.pack(
+        "<16I",
+        *immutable_words,
+        immutable_crc32,
+        1,
+        0,
+        P7_STAGE62_DIAGNOSTIC_ADDRESS,
+        P7_STAGE62_MICROTEST_RECORD_BYTES,
+        0,
+        0,
+        1,
+        0,
+    )
+    geometry = stage62_microtest_case_geometry(case_id)
+    return control, {
+        **geometry,
+        "run_id": run_id,
+        "run_id_crc32": run_id_crc32,
+        "immutable_crc32": immutable_crc32,
+        "transfer_length": transfer_length,
+        "source_alignment": source_alignment,
+        "destination_alignment": destination_alignment,
+        "source_target_offset": 64 + source_alignment,
+        "destination_target_offset": 64 + destination_alignment,
+    }
 
 
 def deterministic_data(seed: bytes, size: int, salt: int) -> bytes:
@@ -622,10 +818,97 @@ def build_stage_bundle(
     sample_interval_sec: int,
     idle_margin_sec: int,
     stationary_object_bytes: int,
+    run_id: str = "",
+    execution_scope: str = "P7_PS_APPLICATION_STAGE",
+    diagnostic_only: bool = False,
+    stage62_microtest_case: str = "",
+    microtest_length: int = 30,
+    microtest_source_alignment: int = 0,
+    microtest_destination_alignment: int = 0,
+    ddr_pattern: str = "",
+    ddr_address: str = "",
+    ddr_access_method: str = "",
+    ddr_repetition: int = 0,
+    ddr_unaligned_accesses: bool = False,
+    ddr_fixture_sha256: str = "",
+    ddr_fixture_file: Path | None = None,
 ) -> StageBundle:
     input_data = input_path.read_bytes()
-    cases = build_cases(mode, input_data, stationary_object_bytes)
+    cases = (
+        []
+        if mode in {"stage62-microtest", "ddr-external-master"}
+        else build_cases(mode, input_data, stationary_object_bytes)
+    )
     bundle_dir.mkdir(parents=True, exist_ok=True)
+    microtest_control_path = bundle_dir / "stage62_microtest_control.bin"
+    microtest_record: dict[str, Any] | None = None
+    if mode == "stage62-microtest":
+        control, microtest_identity = build_stage62_microtest_control(
+            run_id=run_id,
+            case_name=stage62_microtest_case,
+            transfer_length=microtest_length,
+            source_alignment=microtest_source_alignment,
+            destination_alignment=microtest_destination_alignment,
+        )
+        source_fixture, destination_fixture = build_stage62_microtest_fixtures(
+            int(microtest_identity["case_id"]),
+            microtest_length,
+            microtest_source_alignment,
+            microtest_destination_alignment,
+        )
+        source_fixture_path = bundle_dir / "stage62_microtest_source_fixture.bin"
+        destination_fixture_path = (
+            bundle_dir / "stage62_microtest_destination_fixture.bin"
+        )
+        record_zero_path = bundle_dir / "stage62_microtest_record_zero.bin"
+        atomic_write_bytes(microtest_control_path, control)
+        atomic_write_bytes(source_fixture_path, source_fixture)
+        atomic_write_bytes(destination_fixture_path, destination_fixture)
+        atomic_write_bytes(
+            record_zero_path, b"\x00" * P7_STAGE62_MICROTEST_RECORD_BYTES
+        )
+        microtest_record = {
+            **microtest_identity,
+            "control_address": f"0x{P7_STAGE62_MICROTEST_CONTROL_ADDRESS:08x}",
+            "record_address": f"0x{P7_STAGE62_DIAGNOSTIC_ADDRESS:08x}",
+            "record_bytes": P7_STAGE62_MICROTEST_RECORD_BYTES,
+            "control": file_record(microtest_control_path),
+            "source_fixture": file_record(source_fixture_path),
+            "destination_fixture": file_record(destination_fixture_path),
+            "record_zero": file_record(record_zero_path),
+        }
+    else:
+        atomic_write_bytes(microtest_control_path, b"\x00" * 64)
+    ddr_external_record: dict[str, Any] | None = None
+    if mode == "ddr-external-master":
+        ddr_identity, ddr_payload = ddr_external_identity(
+            run_id=run_id,
+            pattern=ddr_pattern,
+            address_text=ddr_address,
+            access_method=ddr_access_method,
+            repetition=ddr_repetition,
+            unaligned_accesses=ddr_unaligned_accesses,
+            fixture_sha256=ddr_fixture_sha256,
+        )
+        source_fixture_record: dict[str, Any] | None = None
+        if ddr_fixture_file is not None:
+            source_fixture = ddr_fixture_file.resolve(strict=True)
+            if source_fixture.is_symlink() or not source_fixture.is_file():
+                raise ValueError("DDR external-master source fixture must be a regular file")
+            source_payload = source_fixture.read_bytes()
+            if source_payload != ddr_payload:
+                raise ValueError(
+                    "DDR external-master source fixture differs from the authorized deterministic bytes"
+                )
+            source_fixture_record = file_record(source_fixture)
+        fixture_path = bundle_dir / "ddr_external_master_fixture.bin"
+        atomic_write_bytes(fixture_path, ddr_payload)
+        ddr_external_record = {
+            **ddr_identity,
+            "source_fixture": source_fixture_record,
+            "fixture": file_record(fixture_path),
+            "planned_readback_filename": "ddr_external_master_readback.bin",
+        }
     descriptors = bytearray(P7_DESCRIPTOR_BYTES * P7_QUEUE_DEPTH)
     records: list[dict[str, Any]] = []
     for case in cases:
@@ -836,6 +1119,21 @@ def build_stage_bundle(
     plan_lines = [
         PLAN_MAGIC,
         f"MODE {mode}",
+        f"EXECUTION_SCOPE {execution_scope}",
+        f"RUN_ID {run_id or 'NONE'}",
+        f"DIAGNOSTIC_ONLY {1 if diagnostic_only else 0}",
+        f"COVERAGE_CLAIMED {0 if diagnostic_only else 1}",
+        f"MICROTEST_CASE {stage62_microtest_case or 'NONE'}",
+        f"MICROTEST_LENGTH {microtest_length if mode == 'stage62-microtest' else 0}",
+        f"MICROTEST_SOURCE_ALIGNMENT {microtest_source_alignment if mode == 'stage62-microtest' else 0}",
+        f"MICROTEST_DESTINATION_ALIGNMENT {microtest_destination_alignment if mode == 'stage62-microtest' else 0}",
+        f"DDR_EXTERNAL_PATTERN {ddr_pattern if mode == 'ddr-external-master' else 'NONE'}",
+        f"DDR_EXTERNAL_ADDRESS {ddr_address if mode == 'ddr-external-master' else 'NONE'}",
+        f"DDR_EXTERNAL_ACCESS_METHOD {ddr_access_method if mode == 'ddr-external-master' else 'NONE'}",
+        f"DDR_EXTERNAL_LENGTH {DDR_EXTERNAL_LENGTH if mode == 'ddr-external-master' else 0}",
+        f"DDR_EXTERNAL_REPETITION {ddr_repetition if mode == 'ddr-external-master' else 0}",
+        f"DDR_EXTERNAL_UNALIGNED_ACCESSES {1 if mode == 'ddr-external-master' and ddr_unaligned_accesses else 0}",
+        f"DDR_EXTERNAL_FIXTURE_SHA256 {ddr_fixture_sha256.lower() if mode == 'ddr-external-master' else 'NONE'}",
         f"MAX_RUNTIME_SECONDS {max_runtime_sec}",
         f"CALIBRATION_SECONDS {calibration_sec}",
         f"ACCEPTANCE_SECONDS {acceptance_sec}",
@@ -898,12 +1196,19 @@ def build_stage_bundle(
         "schema": "rf-comm-p7-ps-hardware-bundle-v1",
         "generated_at_utc": now_utc(),
         "mode": mode,
+        "run_id": run_id or None,
+        "execution_scope": execution_scope,
+        "diagnostic_only": diagnostic_only,
+        "coverage_claimed": not diagnostic_only,
         "hardware_actions_executed": False,
         "HARDWARE_ACCEPTANCE": "PENDING_HW",
         "input_source": file_record(input_path),
         "mailbox": file_record(mailbox_file),
         "descriptors": file_record(descriptor_file),
         "execution_plan": file_record(plan_path),
+        "stage62_microtest_control": file_record(microtest_control_path),
+        "stage62_microtest": microtest_record,
+        "ddr_external_master": ddr_external_record,
         "output_prefill_byte": OUTPUT_PREFILL_BYTE,
         "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
         "queue_phase_mailboxes": queue_phase_mailboxes,
@@ -927,16 +1232,18 @@ def build_stage_bundle(
     }
     atomic_write_json(manifest_path, manifest)
     return StageBundle(
-        bundle_dir,
-        plan_path,
-        sha256_file(plan_path),
-        manifest_path,
-        sha256_file(manifest_path),
-        cases,
-        boundary_cases,
-        functional_checkpoint,
-        queue_overflow_candidate,
-        scheduling_cutoff,
+        directory=bundle_dir,
+        plan_path=plan_path,
+        plan_sha256=sha256_file(plan_path),
+        manifest_path=manifest_path,
+        manifest_sha256=sha256_file(manifest_path),
+        cases=cases,
+        boundary_cases=boundary_cases,
+        functional_checkpoint=functional_checkpoint,
+        queue_overflow_candidate=queue_overflow_candidate,
+        scheduling_cutoff_sec=scheduling_cutoff,
+        stage62_microtest=microtest_record,
+        ddr_external_master=ddr_external_record,
     )
 
 
@@ -995,6 +1302,153 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
         )
     )
     errors.extend(_verify_manifest_record(manifest.get("execution_plan"), bundle.plan_path, bundle.plan_path.stat().st_size, "plan"))
+    control_path = bundle.directory / "stage62_microtest_control.bin"
+    errors.extend(
+        _verify_manifest_record(
+            manifest.get("stage62_microtest_control"),
+            control_path,
+            64,
+            "Stage62 microtest control",
+        )
+    )
+    if manifest.get("mode") == "stage62-microtest":
+        micro = manifest.get("stage62_microtest")
+        if not isinstance(micro, dict) or micro != bundle.stage62_microtest:
+            errors.append("Stage62 microtest manifest identity mismatch")
+        else:
+            try:
+                expected_control, expected_identity = build_stage62_microtest_control(
+                    run_id=str(micro.get("run_id", "")),
+                    case_name=str(micro.get("case", "")),
+                    transfer_length=int(micro.get("transfer_length", -1)),
+                    source_alignment=int(micro.get("source_alignment", -1)),
+                    destination_alignment=int(
+                        micro.get("destination_alignment", -1)
+                    ),
+                )
+                expected_source, expected_destination = (
+                    build_stage62_microtest_fixtures(
+                        int(expected_identity["case_id"]),
+                        int(expected_identity["transfer_length"]),
+                        int(expected_identity["source_alignment"]),
+                        int(expected_identity["destination_alignment"]),
+                    )
+                )
+                if control_path.read_bytes() != expected_control:
+                    errors.append("Stage62 microtest control content mismatch")
+                for key, filename, expected in (
+                    (
+                        "source_fixture",
+                        "stage62_microtest_source_fixture.bin",
+                        expected_source,
+                    ),
+                    (
+                        "destination_fixture",
+                        "stage62_microtest_destination_fixture.bin",
+                        expected_destination,
+                    ),
+                    (
+                        "record_zero",
+                        "stage62_microtest_record_zero.bin",
+                        b"\x00" * P7_STAGE62_MICROTEST_RECORD_BYTES,
+                    ),
+                ):
+                    path = bundle.directory / filename
+                    errors.extend(
+                        _verify_manifest_record(
+                            micro.get(key), path, len(expected), f"microtest {key}"
+                        )
+                    )
+                    if path.is_file() and path.read_bytes() != expected:
+                        errors.append(f"Stage62 microtest {key} content mismatch")
+            except (KeyError, TypeError, ValueError, OSError) as exc:
+                errors.append(f"Stage62 microtest semantic verification failed: {exc}")
+        if (
+            manifest.get("execution_scope") != "STAGE62_ONLY"
+            or manifest.get("diagnostic_only") is not True
+            or manifest.get("coverage_claimed") is not False
+            or manifest.get("case_count") != 0
+        ):
+            errors.append("Stage62 microtest scope/coverage contract mismatch")
+    else:
+        if bundle.stage62_microtest is not None or manifest.get("stage62_microtest") is not None:
+            errors.append("non-microtest bundle unexpectedly carries microtest identity")
+        if control_path.is_file() and control_path.read_bytes() != b"\x00" * 64:
+            errors.append("non-microtest bundle control block is not all-zero")
+    ddr_fixture_path = bundle.directory / "ddr_external_master_fixture.bin"
+    if manifest.get("mode") == "ddr-external-master":
+        ddr = manifest.get("ddr_external_master")
+        if not isinstance(ddr, dict) or ddr != bundle.ddr_external_master:
+            errors.append("DDR external-master manifest identity mismatch")
+        else:
+            try:
+                expected_identity, expected_payload = ddr_external_identity(
+                    run_id=str(ddr.get("run_id", "")),
+                    pattern=str(ddr.get("pattern", "")),
+                    address_text=str(ddr.get("address", "")),
+                    access_method=str(ddr.get("access_method", "")),
+                    repetition=int(ddr.get("repetition", 0)),
+                    unaligned_accesses=bool(ddr.get("unaligned_accesses", False)),
+                    fixture_sha256=str(ddr.get("fixture_sha256", "")),
+                )
+                for key, value in expected_identity.items():
+                    if ddr.get(key) != value:
+                        errors.append(
+                            f"DDR external-master identity mismatch: {key}"
+                        )
+                errors.extend(
+                    _verify_manifest_record(
+                        ddr.get("fixture"),
+                        ddr_fixture_path,
+                        DDR_EXTERNAL_LENGTH,
+                        "DDR external-master fixture",
+                    )
+                )
+                if (
+                    ddr_fixture_path.is_file()
+                    and ddr_fixture_path.read_bytes() != expected_payload
+                ):
+                    errors.append("DDR external-master fixture content mismatch")
+                source_record = ddr.get("source_fixture")
+                if source_record is not None:
+                    if not isinstance(source_record, dict):
+                        errors.append("DDR external-master source fixture record is malformed")
+                    else:
+                        source_path = resolve_path(str(source_record.get("path", "")))
+                        errors.extend(
+                            _verify_manifest_record(
+                                source_record,
+                                source_path,
+                                DDR_EXTERNAL_LENGTH,
+                                "DDR external-master source fixture",
+                            )
+                        )
+                        if source_path.is_file() and source_path.read_bytes() != expected_payload:
+                            errors.append(
+                                "DDR external-master source fixture content mismatch"
+                            )
+            except (TypeError, ValueError, OSError) as exc:
+                errors.append(
+                    f"DDR external-master semantic verification failed: {exc}"
+                )
+        if (
+            manifest.get("execution_scope") != "STAGE62_ONLY"
+            or manifest.get("diagnostic_only") is not True
+            or manifest.get("coverage_claimed") is not False
+            or manifest.get("case_count") != 0
+            or manifest.get("boundary_case_count") != 0
+        ):
+            errors.append("DDR external-master scope/coverage contract mismatch")
+    else:
+        if (
+            bundle.ddr_external_master is not None
+            or manifest.get("ddr_external_master") is not None
+        ):
+            errors.append(
+                "non-DDR bundle unexpectedly carries external-master identity"
+            )
+        if ddr_fixture_path.exists():
+            errors.append("non-DDR bundle unexpectedly contains DDR fixture")
     if manifest.get("mode") == "queue":
         queue_mailboxes = manifest.get("queue_phase_mailboxes")
         if not isinstance(queue_mailboxes, dict):
@@ -1235,7 +1689,7 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
     markers = parse_markers(raw_text)
     index_text = markers.get("P7_FUNCTIONAL_BOUNDARY_FAILURE_INDEX")
     error_text = markers.get("P7_FUNCTIONAL_BOUNDARY_FAILURE_ERROR_CODE")
-    required_errors = frozenset(range(21, 32))
+    required_errors = frozenset(range(21, 33))
     try:
         failure_index = int(index_text) if index_text is not None else None
         failure_error = int(error_text) if error_text is not None else None
@@ -1291,7 +1745,10 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
     if wipe_path.is_file() and not wipe_path.is_symlink():
         wiped = wipe_path.read_bytes()
         if len(wiped) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES or any(wiped):
-            failures.append("first-error diagnostic wipe verification is not exactly 320 zero bytes")
+            failures.append(
+                "first-error diagnostic wipe verification is not exactly "
+                f"{P7_FIRST_ERROR_DIAGNOSTIC_BYTES} zero bytes"
+            )
     if decoded is not None:
         if decoded["session_epoch"] != case.request.session_epoch:
             failures.append("first-error diagnostic session does not match boundary request")
@@ -1341,12 +1798,13 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
             29: {chunk_length, encoded_length},
             30: {chunk_length},
             31: {len(case.request.data)},
+            32: {chunk_length},
             13: {len(case.request.data)},
             14: {len(case.request.data)},
         }.get(diagnostic_error, set())
         if int(decoded["expected_length"]) not in expected_lengths:
             failures.append("first-error diagnostic expected length contradicts failure boundary")
-        if diagnostic_error in {21, 23, 24, 25, 26, 29, 30, 31} and (
+        if diagnostic_error in {21, 23, 24, 25, 26, 29, 30, 31, 32} and (
             int(decoded["actual_length"]) != int(decoded["expected_length"])
         ):
             failures.append("first-error diagnostic equal-geometry stage has unequal lengths")
@@ -1364,7 +1822,7 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
             independent_expected = case.request.data
         elif 0 <= diagnostic_fragment < len(fragments):
             fragment = fragments[diagnostic_fragment]
-            if diagnostic_error in {21, 23, 24, 25, 30}:
+            if diagnostic_error in {21, 23, 24, 25, 30, 32}:
                 independent_expected = fragment.chunk
             elif diagnostic_error in {22, 26, 27, 28}:
                 independent_expected = fragment.encode()
@@ -1397,8 +1855,26 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
             ]
             if observed_slice != expected_slice:
                 failures.append("first-error diagnostic expected snapshot is not input-reference bound")
+            if diagnostic_stage == 8 and diagnostic_error in {23, 32}:
+                destination_before = bytes.fromhex(
+                    str(decoded["destination_before"])
+                )
+                if destination_before != bytes([0xA5]) * len(destination_before):
+                    if decoded["classification_name"] != "CANARY_PRECHECK_FAILED":
+                        failures.append(
+                            "first-error destination-before snapshot is not the bound canary"
+                        )
+                if decoded["classification_name"] != "SOURCE_CHANGED" and (
+                    decoded["source_before"] != decoded["source_after"]
+                ):
+                    failures.append(
+                        "first-error source changed without SOURCE_CHANGED classification"
+                    )
         marker_fields = {
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION": decoded["version"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_LENGTH": decoded["record_length"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SEQUENCE": decoded["sequence"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CLASSIFICATION": decoded["classification"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE": decoded["stage"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE": decoded["error_code"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FRAGMENT_INDEX": decoded["fragment_index"],
@@ -1411,6 +1887,7 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS_LOW6": decoded["actual_address_low6"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET": decoded["snapshot_offset"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH": decoded["snapshot_length"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CAPTURE_FLAGS": decoded["capture_flags"],
         }
         for key, expected in marker_fields.items():
             if markers.get(key) != str(expected):
@@ -1423,6 +1900,11 @@ def collect_first_error_diagnostic(bundle: StageBundle, raw_text: str) -> dict[s
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS": decoded["actual_address"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_CRC32": decoded["expected_crc32"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_CRC32": decoded["actual_crc32"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_CRC32": decoded["record_crc32"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_BEFORE_BYTE": decoded["source_before_byte"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_AFTER_BYTE": decoded["source_after_byte"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_BEFORE_BYTE": decoded["destination_before_byte"],
+            "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_AFTER_BYTE": decoded["destination_after_byte"],
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_ADDRESS": 0x00021000,
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_BYTES": P7_FIRST_ERROR_DIAGNOSTIC_BYTES,
             "P7_FUNCTIONAL_BOUNDARY_FAILURE_DIAGNOSTIC_STATUS": 1,
@@ -1658,7 +2140,7 @@ def _immutable_errors(args: argparse.Namespace) -> list[str]:
 
 
 def _elf_alloc_image_end(path: Path) -> int:
-    """Return the highest end-exclusive address of an ELF32 little-endian SHF_ALLOC section."""
+    """Return the normal OCM image end after validating the fixed diagnostic section."""
 
     raw = path.read_bytes()
     if len(raw) < 52 or raw[:4] != b"\x7fELF" or raw[4] != 1 or raw[5] != 1:
@@ -1667,25 +2149,67 @@ def _elf_alloc_image_end(path: Path) -> int:
     section_offset = header[6]
     section_entry_size = header[11]
     section_count = header[12]
+    section_name_table_index = header[13]
     if section_entry_size < 40 or section_count < 1:
         raise ValueError("P7 ELF section table is missing")
+    if section_name_table_index >= section_count:
+        raise ValueError("P7 ELF section-name table index is invalid")
     table_end = section_offset + section_entry_size * section_count
     if section_offset < 52 or table_end > len(raw) or table_end < section_offset:
         raise ValueError("P7 ELF section table is out of bounds")
+
+    name_table_offset = section_offset + section_name_table_index * section_entry_size
+    name_table = struct.unpack_from("<IIIIIIIIII", raw, name_table_offset)
+    if name_table[1] != 3:
+        raise ValueError("P7 ELF section-name table is not SHT_STRTAB")
+    names_offset = name_table[4]
+    names_size = name_table[5]
+    names_end = names_offset + names_size
+    if names_end < names_offset or names_end > len(raw):
+        raise ValueError("P7 ELF section-name table is out of bounds")
+    names = raw[names_offset:names_end]
+
+    def section_name(name_offset: int) -> str:
+        if name_offset >= len(names):
+            raise ValueError("P7 ELF section name offset is out of bounds")
+        name_end = names.find(b"\0", name_offset)
+        if name_end < 0:
+            raise ValueError("P7 ELF section name is unterminated")
+        return names[name_offset:name_end].decode("ascii", errors="strict")
+
     image_end = 0
+    diagnostic_seen = False
     for index in range(section_count):
         offset = section_offset + index * section_entry_size
         section = struct.unpack_from("<IIIIIIIIII", raw, offset)
+        name = section_name(section[0])
+        section_type = section[1]
         flags = section[2]
         address = section[3]
         size = section[5]
         if flags & 0x2:
             end = address + size
-            if end < address:
+            if end < address or end > 0x1_0000_0000:
                 raise ValueError("P7 ELF allocated section address overflow")
-            image_end = max(image_end, end)
+            if name == P7_STAGE62_DIAGNOSTIC_SECTION:
+                if diagnostic_seen:
+                    raise ValueError("P7 ELF contains duplicate Stage 62 diagnostic sections")
+                diagnostic_seen = True
+                if (
+                    section_type != ELF_SHT_NOBITS
+                    or flags != ELF_SHF_WRITE_ALLOC
+                    or address != P7_STAGE62_DIAGNOSTIC_ADDRESS
+                    or size != P7_FIRST_ERROR_DIAGNOSTIC_BYTES
+                ):
+                    raise ValueError(
+                        "P7 ELF Stage 62 diagnostic section type/flags/address/size mismatch"
+                    )
+            else:
+                image_end = max(image_end, end)
     if image_end == 0:
         raise ValueError("P7 ELF contains no allocated sections")
+    if not diagnostic_seen:
+        raise ValueError("P7 ELF fixed Stage 62 diagnostic section is missing")
     return image_end
 
 
@@ -1741,16 +2265,33 @@ def _summary_errors(args: argparse.Namespace) -> list[str]:
             try:
                 mailbox_base = int(str(summary.get("mailbox_base", "")), 0)
                 ocm_image_end = int(str(summary.get("ocm_image_end", "")), 0)
+                diagnostic_address = int(
+                    str(summary.get("stage62_diagnostic_section_address", "")), 0
+                )
+                diagnostic_size = int(
+                    str(summary.get("stage62_diagnostic_section_size", "")), 0
+                )
             except ValueError:
                 mailbox_base = -1
                 ocm_image_end = -1
+                diagnostic_address = -1
+                diagnostic_size = -1
             if (
                 summary.get("P7_PS_RUNTIME_BUILD") != "PASS"
                 or summary.get("returncode") != 0
                 or summary.get("syntax_only") is not False
                 or summary.get("mailbox_overlap") is not False
                 or summary.get("linker_ocm_hard_boundary_0x20000") is not True
+                or summary.get("stage62_diagnostic_section_verified") is not True
+                or diagnostic_address != P7_STAGE62_DIAGNOSTIC_ADDRESS
+                or diagnostic_size != P7_FIRST_ERROR_DIAGNOSTIC_BYTES
                 or summary.get("critical_payload_byte_copy_verified") is not True
+                or summary.get("stage62_microtest_disassembly_verified") is not True
+                or summary.get("stage62_microtest_stack_verified") is not True
+                or not isinstance(summary.get("stage62_microtest_stack_bytes"), int)
+                or isinstance(summary.get("stage62_microtest_stack_bytes"), bool)
+                or summary.get("stage62_microtest_stack_bytes", 1025)
+                > summary.get("stage62_microtest_stack_limit_bytes", -1)
                 or mailbox_base != P7_MAILBOX_BASE
                 or not 0 < ocm_image_end < mailbox_base
                 or summary.get("queue_depth") != P7_QUEUE_DEPTH
@@ -1815,8 +2356,16 @@ def _summary_errors(args: argparse.Namespace) -> list[str]:
             elf_path = resolve_path(args.elf)
             if not elf_path.is_file():
                 errors.append("authorized P7 ELF is missing for direct OCM-boundary inspection")
-            elif _elf_alloc_image_end(elf_path) != ocm_image_end:
-                errors.append("P7 ELF allocated image end does not match the build summary OCM boundary")
+            else:
+                try:
+                    allocated_image_end = _elf_alloc_image_end(elf_path)
+                except (UnicodeError, ValueError) as exc:
+                    errors.append(f"P7 ELF allocated-section layout is invalid: {exc}")
+                else:
+                    if allocated_image_end != ocm_image_end:
+                        errors.append(
+                            "P7 ELF normal allocated image end does not match the build summary OCM boundary"
+                        )
             for source, expected in summary["sources"].items():
                 source_path = resolve_path(source)
                 if not source_path.is_file() or sha256_file(source_path) != str(expected).lower():
@@ -1841,7 +2390,7 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
     except (OSError, UnicodeError):
         return []
     errors: list[str] = []
-    required = (
+    required: list[tuple[str, str]] = [
         ("PS7_INIT_PATH", args.ps7_init),
         ("PS7_INIT_SHA256", args.ps7_init_sha256),
         ("P6_PS_BUILD_SUMMARY_PATH", args.p6_build_summary),
@@ -1861,7 +2410,66 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
         ("P7_FROZEN_SHUTDOWN_PATH", str(frozen_shutdown_path(args))),
         ("P7_FROZEN_SHUTDOWN_SHA256", args.shutdown_bitstream_sha256),
         ("P7_COUNTS_PER_SECOND", str(P7_COUNTS_PER_SECOND)),
-    )
+    ]
+    if args.stage62_only:
+        required.extend(
+            (
+                ("P7_RUN_ID", args.run_id),
+                ("P7_EXECUTION_SCOPE", "STAGE62_ONLY"),
+                ("P7_DIAGNOSTIC_ONLY", "true"),
+                ("P7_COVERAGE_CLAIMED", "false"),
+            )
+        )
+    if args.mode == "stage62-microtest":
+        required.extend(
+            (
+                ("P7_STAGE62_MICROTEST_CASE", args.stage62_microtest_case),
+                ("P7_STAGE62_MICROTEST_LENGTH", str(args.microtest_length)),
+                (
+                    "P7_STAGE62_MICROTEST_SOURCE_ALIGNMENT",
+                    str(args.microtest_source_alignment),
+                ),
+                (
+                    "P7_STAGE62_MICROTEST_DESTINATION_ALIGNMENT",
+                    str(args.microtest_destination_alignment),
+                ),
+            )
+        )
+    if args.mode == "ddr-external-master":
+        required.extend(
+            (
+                ("P7_DDR_EXTERNAL_FIXTURE_PATH", args.ddr_fixture_file),
+                ("P7_DDR_EXTERNAL_PATTERN", args.ddr_pattern),
+                ("P7_DDR_EXTERNAL_ADDRESS", args.ddr_address),
+                ("P7_DDR_EXTERNAL_ACCESS_METHOD", args.ddr_access_method),
+                ("P7_DDR_EXTERNAL_LENGTH", str(DDR_EXTERNAL_LENGTH)),
+                ("P7_DDR_EXTERNAL_REPETITION", str(args.ddr_repetition)),
+                (
+                    "P7_DDR_EXTERNAL_UNALIGNED_ACCESSES",
+                    "true" if args.ddr_unaligned_accesses else "false",
+                ),
+                (
+                    "P7_DDR_EXTERNAL_FIXTURE_SHA256",
+                    args.ddr_fixture_sha256.lower(),
+                ),
+                (
+                    "P7_DDR_RUN_CONFIGURATION_PATH",
+                    args.ddr_run_configuration,
+                ),
+                (
+                    "P7_DDR_RUN_CONFIGURATION_SHA256",
+                    args.ddr_run_configuration_sha256.lower(),
+                ),
+                (
+                    "P7_DDR_ARTIFACT_MANIFEST_PATH",
+                    args.ddr_artifact_manifest,
+                ),
+                (
+                    "P7_DDR_ARTIFACT_MANIFEST_SHA256",
+                    args.ddr_artifact_manifest_sha256.lower(),
+                ),
+            )
+        )
     for key, expected in required:
         observed = fields.get(key)
         if observed is None:
@@ -1871,6 +2479,220 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
                 errors.append(f"authorization extension path mismatch: {key}")
         elif observed.casefold() != str(expected).casefold():
             errors.append(f"authorization extension field mismatch: {key}")
+    return errors
+
+
+def _ddr_resume_artifact_errors(args: argparse.Namespace) -> list[str]:
+    """Validate the frozen one-run DDR package before any hardware preflight."""
+
+    errors: list[str] = []
+    authorization_root = (ROOT / ".hardware_authorization").resolve(strict=False)
+
+    def verified_path(path_value: str, expected_sha256: str, label: str) -> Path | None:
+        if not path_value:
+            errors.append(f"missing DDR resume artifact path: {label}")
+            return None
+        if not SHA256_RE.fullmatch(expected_sha256 or ""):
+            errors.append(f"missing/invalid DDR resume artifact SHA256: {label}")
+            return None
+        path = resolve_path(path_value)
+        try:
+            path.relative_to(authorization_root)
+        except ValueError:
+            errors.append(
+                f"DDR resume artifact must be under {authorization_root}: {label}={path}"
+            )
+        if not path.is_file() or path.is_symlink():
+            errors.append(f"DDR resume artifact is missing/not regular: {label}={path}")
+            return None
+        actual = sha256_file(path)
+        if actual != expected_sha256.lower():
+            errors.append(
+                f"DDR resume artifact SHA256 mismatch: {label} "
+                f"expected={expected_sha256.lower()} actual={actual}"
+            )
+        return path
+
+    fixture_path = verified_path(
+        args.ddr_fixture_file,
+        args.ddr_fixture_sha256,
+        "fixture",
+    )
+    configuration_path = verified_path(
+        args.ddr_run_configuration,
+        args.ddr_run_configuration_sha256,
+        "run_configuration",
+    )
+    manifest_path = verified_path(
+        args.ddr_artifact_manifest,
+        args.ddr_artifact_manifest_sha256,
+        "artifact_manifest",
+    )
+
+    try:
+        identity, expected_payload = ddr_external_identity(
+            run_id=args.run_id,
+            pattern=args.ddr_pattern,
+            address_text=args.ddr_address,
+            access_method=args.ddr_access_method,
+            repetition=args.ddr_repetition,
+            unaligned_accesses=args.ddr_unaligned_accesses,
+            fixture_sha256=args.ddr_fixture_sha256,
+        )
+    except ValueError as exc:
+        errors.append(str(exc))
+        identity, expected_payload = {}, b""
+    if fixture_path is not None and fixture_path.read_bytes() != expected_payload:
+        errors.append("DDR frozen fixture differs from the deterministic authorized payload")
+
+    configuration: dict[str, Any] = {}
+    if configuration_path is not None:
+        try:
+            value = json.loads(configuration_path.read_text(encoding="utf-8", errors="strict"))
+            if not isinstance(value, dict):
+                raise ValueError("top level is not an object")
+            configuration = value
+        except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"unable to parse DDR run configuration: {exc}")
+    expected_configuration = {
+        "schema": DDR_RUN_CONFIGURATION_SCHEMA,
+        "run_id": args.run_id,
+        "source_commit": args.source_commit.lower(),
+        "mode": "ddr-external-master",
+        "execution_scope": "STAGE62_ONLY",
+        "stage62_only": True,
+        "diagnostic_only": True,
+        "coverage_claimed": False,
+        "functional_stages_1_61_executed": False,
+        "stage62_executed": False,
+        "stationary_executed": False,
+        "historical_run_reused": False,
+        "pattern": args.ddr_pattern,
+        "address": identity.get("address"),
+        "access_method": args.ddr_access_method,
+        "length": DDR_EXTERNAL_LENGTH,
+        "repetition": args.ddr_repetition,
+        "unaligned_accesses": bool(args.ddr_unaligned_accesses),
+        "max_runtime_sec": args.max_runtime_sec,
+        "fixture_path": str(fixture_path) if fixture_path is not None else "MISSING",
+        "fixture_sha256": args.ddr_fixture_sha256.lower(),
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    }
+    for key, expected in expected_configuration.items():
+        observed = configuration.get(key)
+        if key.endswith("_path"):
+            if normalized_path(str(observed or "")) != normalized_path(str(expected)):
+                errors.append(f"DDR run configuration mismatch: {key}")
+        elif observed != expected:
+            errors.append(
+                f"DDR run configuration mismatch: {key} "
+                f"expected={expected!r} observed={observed!r}"
+            )
+
+    manifest: dict[str, Any] = {}
+    if manifest_path is not None:
+        try:
+            value = json.loads(manifest_path.read_text(encoding="utf-8", errors="strict"))
+            if not isinstance(value, dict):
+                raise ValueError("top level is not an object")
+            manifest = value
+        except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"unable to parse DDR artifact manifest: {exc}")
+    for key, expected in (
+        ("schema", DDR_RESUME_ARTIFACT_SCHEMA),
+        ("run_id", args.run_id),
+        ("source_commit", args.source_commit.lower()),
+        ("status", "READY_FOR_HUMAN_AUTHORIZATION"),
+        ("hardware_actions_executed", False),
+        ("human_authorization_required", True),
+        ("HARDWARE_ACCEPTANCE", "PENDING_HW"),
+    ):
+        if manifest.get(key) != expected:
+            errors.append(
+                f"DDR artifact manifest mismatch: {key} "
+                f"expected={expected!r} observed={manifest.get(key)!r}"
+            )
+
+    records_value = manifest.get("artifacts")
+    records: dict[str, dict[str, Any]] = {}
+    if not isinstance(records_value, list):
+        errors.append("DDR artifact manifest artifacts must be a list")
+    else:
+        for index, record in enumerate(records_value):
+            if not isinstance(record, dict):
+                errors.append(f"DDR artifact manifest record {index} is not an object")
+                continue
+            role = str(record.get("role", ""))
+            if not role or role in records:
+                errors.append(f"DDR artifact manifest role is missing/duplicate: {role or index}")
+                continue
+            records[role] = record
+            raw_path = str(record.get("absolute_path", ""))
+            path = Path(raw_path)
+            expected_sha = str(record.get("sha256", "")).lower()
+            expected_size = record.get("size_bytes")
+            git_commit = str(record.get("git_commit", ""))
+            if not path.is_absolute() or not path.is_file() or path.is_symlink():
+                errors.append(f"DDR artifact manifest path is missing/not regular: {role}")
+                continue
+            if (
+                isinstance(expected_size, bool)
+                or not isinstance(expected_size, int)
+                or expected_size != path.stat().st_size
+            ):
+                errors.append(f"DDR artifact manifest size mismatch: {role}")
+            if not SHA256_RE.fullmatch(expected_sha) or sha256_file(path) != expected_sha:
+                errors.append(f"DDR artifact manifest SHA256 mismatch: {role}")
+            if not COMMIT_RE.fullmatch(git_commit):
+                errors.append(f"DDR artifact manifest Git commit is invalid: {role}")
+            if not isinstance(record.get("actual_run_input"), bool):
+                errors.append(f"DDR artifact manifest actual-run flag is invalid: {role}")
+        missing_roles = sorted(DDR_REQUIRED_ARTIFACT_ROLES - set(records))
+        if missing_roles:
+            errors.append(
+                "DDR artifact manifest required roles missing: " + ", ".join(missing_roles)
+            )
+
+    expected_records: dict[str, tuple[str, str, bool]] = {
+        "elf": (args.elf, args.elf_sha256, True),
+        "bitstream": (args.bitstream, args.bitstream_sha256, True),
+        "xsa": (args.xsa, args.xsa_sha256, True),
+        "platform_ps7_init": (args.ps7_init, args.ps7_init_sha256, True),
+        "shutdown_bitstream": (
+            args.shutdown_bitstream,
+            args.shutdown_bitstream_sha256,
+            True,
+        ),
+        "fixture": (args.ddr_fixture_file, args.ddr_fixture_sha256, True),
+        "microtest_image": (args.ddr_fixture_file, args.ddr_fixture_sha256, True),
+        "runner_python": (str(Path(__file__).resolve()), sha256_file(Path(__file__)), True),
+        "runner_tcl": (str(PS_EXECUTE_TCL), sha256_file(PS_EXECUTE_TCL), True),
+        "parser": (
+            str((TOOLS / "ddr_external_master_diagnostic.py").resolve()),
+            sha256_file(TOOLS / "ddr_external_master_diagnostic.py"),
+            True,
+        ),
+        "run_configuration": (
+            args.ddr_run_configuration,
+            args.ddr_run_configuration_sha256,
+            True,
+        ),
+    }
+    for role, (path_value, expected_sha, actual_input) in expected_records.items():
+        record = records.get(role)
+        if record is None:
+            continue
+        if normalized_path(str(record.get("absolute_path", ""))) != normalized_path(path_value):
+            errors.append(f"DDR artifact manifest bound path mismatch: {role}")
+        if str(record.get("sha256", "")).lower() != expected_sha.lower():
+            errors.append(f"DDR artifact manifest bound SHA256 mismatch: {role}")
+        if record.get("actual_run_input") is not actual_input:
+            errors.append(f"DDR artifact manifest actual-run flag mismatch: {role}")
+    for role in ("linker_map", "disassembly"):
+        record = records.get(role)
+        if record is not None and record.get("actual_run_input") is not False:
+            errors.append(f"DDR artifact manifest offline evidence flag mismatch: {role}")
+
     return errors
 
 
@@ -1960,6 +2782,76 @@ def _stage_validation(args: argparse.Namespace, core_readiness: dict[str, Any]) 
     errors.extend(core_readiness["errors"])
     if not STAGE_NAME_RE.fullmatch(args.stage_name or ""):
         errors.append("stage name contains unsupported characters")
+    if args.stage62_only:
+        if not RUN_ID_RE.fullmatch(args.run_id or ""):
+            errors.append("Stage62-only run ID is missing or malformed")
+        if args.run_id == "p7_20260713_stationary_app_r34_diag_suffix55":
+            errors.append("R34 is immutable and must never be resumed or copied")
+        if args.mode == "stationary":
+            errors.append("Stage62-only diagnostic execution cannot run stationary mode")
+        if args.execute_hardware:
+            if not args.evidence_dir:
+                errors.append("Stage62-only hardware execution requires an explicit evidence directory")
+            elif resolve_path(args.evidence_dir).name != args.run_id:
+                errors.append("Stage62-only evidence directory basename must equal the new run ID")
+    elif args.run_id:
+        errors.append("run ID is only accepted with --stage62-only")
+    if args.mode == "stage62-microtest":
+        if not args.stage62_only:
+            errors.append("Stage62 microtest requires --stage62-only")
+        if args.stage62_microtest_case not in STAGE62_MICROTEST_CASE_NAMES:
+            errors.append("Stage62 microtest case must be A, B, C, or D")
+        if args.microtest_length not in range(29, 33):
+            errors.append("Stage62 microtest length must be in 29..32")
+        if args.microtest_source_alignment not in range(4):
+            errors.append("Stage62 microtest source alignment must be in 0..3")
+        if args.microtest_destination_alignment not in range(4):
+            errors.append("Stage62 microtest destination alignment must be in 0..3")
+        if args.stationary_object_bytes != 64 * 1024:
+            errors.append("Stage62 microtest cannot alter stationary object controls")
+    elif (
+        args.stage62_microtest_case
+        or args.microtest_length != 30
+        or args.microtest_source_alignment != 0
+        or args.microtest_destination_alignment != 0
+    ):
+        errors.append("microtest controls are only accepted in stage62-microtest mode")
+    if args.mode == "ddr-external-master":
+        if not args.stage62_only:
+            errors.append("DDR external-master diagnostic requires --stage62-only")
+        if args.stationary_object_bytes != 64 * 1024:
+            errors.append(
+                "DDR external-master diagnostic cannot alter stationary object controls"
+            )
+        try:
+            ddr_external_identity(
+                run_id=args.run_id,
+                pattern=args.ddr_pattern,
+                address_text=args.ddr_address,
+                access_method=args.ddr_access_method,
+                repetition=args.ddr_repetition,
+                unaligned_accesses=args.ddr_unaligned_accesses,
+                fixture_sha256=args.ddr_fixture_sha256,
+            )
+        except ValueError as exc:
+            errors.append(str(exc))
+        errors.extend(_ddr_resume_artifact_errors(args))
+    elif (
+        args.ddr_pattern
+        or args.ddr_address
+        or args.ddr_access_method
+        or args.ddr_repetition != 0
+        or args.ddr_unaligned_accesses
+        or args.ddr_fixture_sha256
+        or args.ddr_fixture_file
+        or args.ddr_run_configuration
+        or args.ddr_run_configuration_sha256
+        or args.ddr_artifact_manifest
+        or args.ddr_artifact_manifest_sha256
+    ):
+        errors.append(
+            "DDR external-master controls are only accepted in ddr-external-master mode"
+        )
     if args.mode == "stationary":
         if args.max_runtime_sec != MAX_SERVICE_RUNTIME_SEC:
             errors.append("stationary max runtime must be exactly 1800 seconds")
@@ -2346,6 +3238,51 @@ def _promote_result(partial: Path, final: Path) -> None:
         os.replace(partial, final)
 
 
+def candidate_attempt_observation(
+    raw_text: str, stdout_text: str, *, mode: str
+) -> dict[str, Any]:
+    """Conservatively retain attempt markers without using them for PASS.
+
+    XSDB writes the atomic result through ``.partial.write_partial``.  If the
+    bounded parent terminates XSDB during a long evidence read, the final raw
+    file intentionally remains absent even though the same already-flushed
+    markers are retained in stdout.  Treat either source as proof that a risky
+    action happened, while leaving exact rc/final-result acceptance unchanged.
+    """
+
+    raw_markers = parse_markers(raw_text)
+    stdout_markers = parse_markers(stdout_text)
+
+    def observed(marker: str) -> bool:
+        return raw_markers.get(marker) == "1" or stdout_markers.get(marker) == "1"
+
+    conflicts = [
+        marker
+        for marker in ("P7_PS_CANDIDATE_PROGRAMMED", "P7_PS_ELF_DOWNLOADED")
+        if marker in raw_markers
+        and marker in stdout_markers
+        and raw_markers[marker] != stdout_markers[marker]
+    ]
+    if raw_text and stdout_text:
+        source = "ATOMIC_FINAL_AND_STDOUT"
+    elif raw_text:
+        source = "ATOMIC_FINAL_ONLY"
+    elif stdout_text:
+        source = "STDOUT_PARTIAL_ONLY"
+    else:
+        source = "NONE"
+    programmed = observed("P7_PS_CANDIDATE_PROGRAMMED")
+    elf_downloaded = observed("P7_PS_ELF_DOWNLOADED")
+    return {
+        "source": source,
+        "programmed_candidate_observed": programmed,
+        "elf_downloaded_observed": elf_downloaded,
+        "formal_stage62_attempted": mode == "functional" and elf_downloaded,
+        "marker_conflicts": conflicts,
+        "non_acceptance_evidence": True,
+    }
+
+
 def frozen_shutdown_path(args: argparse.Namespace) -> Path:
     digest = args.shutdown_bitstream_sha256.lower() if SHA256_RE.fullmatch(args.shutdown_bitstream_sha256 or "") else "INVALID"
     return FROZEN_SHUTDOWN_DIR / f"p7_frozen_shutdown_{digest}.bit"
@@ -2433,6 +3370,8 @@ def build_ps_command(
         str(args.idle_deadline_margin_sec),
         str(resolve_path(args.shutdown_bitstream)),
         str(P7_COUNTS_PER_SECOND),
+        "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE",
+        args.run_id or "NONE",
     ]
 
 
@@ -2445,6 +3384,8 @@ def evaluate_ps_process(
     target: str,
     part: str,
     board_id: str = "",
+    execution_scope: str = "P7_PS_APPLICATION_STAGE",
+    run_id: str = "NONE",
 ) -> tuple[bool, list[str]]:
     failures: list[str] = []
     if returncode != 0:
@@ -2453,16 +3394,47 @@ def evaluate_ps_process(
     expected = {
         "P7_PS_STAGE_RESULT": "PASS",
         "P7_PS_CANDIDATE_PROGRAMMED": "1",
-        "P7_PS_ELF_DOWNLOADED": "1",
         "P7_PS_MODE": mode,
         "P7_HW_TARGET": target,
         "P7_HW_PART": part,
         "P7_XSDB_LIVE_DEVICE_MATCH": "1",
         "P7_XSDB_TARGET_SELECTION": "EXACT_CABLE_DEVICE_IDCODE_AND_UNIQUE_NODE_IDS",
+        "P7_EXECUTION_SCOPE": execution_scope,
+        "P7_RUN_ID": run_id,
     }
+    if mode != "ddr-external-master":
+        expected["P7_PS_ELF_DOWNLOADED"] = "1"
+    if mode == "stage62-microtest":
+        expected.update(
+            {
+                "P7_STAGE62_MICROTEST": "1",
+                "P7_STAGE62_MICROTEST_DIAGNOSTIC_ONLY": "1",
+                "P7_STAGE62_MICROTEST_COVERAGE_CLAIMED": "0",
+                "P7_STAGE62_MICROTEST_STAGE62_EXECUTED": "0",
+                "P7_REQUEUE_AFTER_CUTOFF": "0",
+            }
+        )
+    if mode == "ddr-external-master":
+        expected.update(
+            {
+                "P7_DDR_EXTERNAL_MASTER": "1",
+                "P7_DDR_EXTERNAL_DIAGNOSTIC_ONLY": "1",
+                "P7_DDR_EXTERNAL_COVERAGE_CLAIMED": "0",
+                "P7_DDR_EXTERNAL_CPU_RELEASED": "0",
+                "P7_DDR_EXTERNAL_STAGE62_EXECUTED": "0",
+                "P7_DDR_EXTERNAL_WRITE_ATTEMPTED": "1",
+                "P7_DDR_EXTERNAL_READBACK_CAPTURED": "1",
+                "P7_DDR_EXTERNAL_READBACK": "PASS",
+                "P7_REQUEUE_AFTER_CUTOFF": "0",
+            }
+        )
     for key, value in expected.items():
         if markers.get(key) != value:
             failures.append(f"PS stage marker mismatch: {key} expected={value} observed={markers.get(key, 'MISSING')}")
+    if mode == "ddr-external-master" and "P7_PS_ELF_DOWNLOADED" in markers:
+        failures.append(
+            "DDR external-master diagnostic must not download or start the PS ELF"
+        )
     if board_id and markers.get("P7_XSDB_LIVE_BOARD_ID") != board_id:
         failures.append("PS stage live board/cable serial marker mismatch")
     failures.extend(
@@ -3208,12 +4180,266 @@ def _stationary_application_metrics(
     return metrics, failures
 
 
+def postprocess_stage62_microtest(
+    bundle: StageBundle, raw_text: str
+) -> dict[str, Any]:
+    failures: list[str] = []
+    micro = bundle.stage62_microtest
+    if not isinstance(micro, dict):
+        return {
+            "passed": False,
+            "failures": ["Stage62 microtest bundle identity is missing"],
+            "diagnostic_only": True,
+            "coverage_claimed": False,
+            "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        }
+    paths = {
+        "control_prestart": bundle.directory
+        / "stage62_microtest_control_prestart.bin",
+        "source_prestart": bundle.directory
+        / "stage62_microtest_source_prestart.bin",
+        "destination_prestart": bundle.directory
+        / "stage62_microtest_destination_prestart.bin",
+        "control_final": bundle.directory / "stage62_microtest_control_final.bin",
+        "record": bundle.directory / "stage62_microtest_record_result.bin",
+        "source_final": bundle.directory / "stage62_microtest_source_final.bin",
+        "destination_final": bundle.directory
+        / "stage62_microtest_destination_final.bin",
+    }
+    expected_sizes = {
+        "control_prestart": 64,
+        "source_prestart": 256,
+        "destination_prestart": 256,
+        "control_final": 64,
+        "record": P7_STAGE62_MICROTEST_RECORD_BYTES,
+        "source_final": 256,
+        "destination_final": 256,
+    }
+    payloads: dict[str, bytes] = {}
+    for key, path in paths.items():
+        if not path.is_file() or path.stat().st_size != expected_sizes[key]:
+            failures.append(f"Stage62 microtest evidence missing/invalid: {key}")
+        else:
+            payloads[key] = path.read_bytes()
+    control_input = (bundle.directory / "stage62_microtest_control.bin").read_bytes()
+    source_input = (
+        bundle.directory / "stage62_microtest_source_fixture.bin"
+    ).read_bytes()
+    destination_input = (
+        bundle.directory / "stage62_microtest_destination_fixture.bin"
+    ).read_bytes()
+    if payloads.get("control_prestart") != control_input:
+        failures.append("Stage62 microtest DAP control prestart readback mismatch")
+    if payloads.get("source_prestart") != source_input:
+        failures.append("Stage62 microtest DAP source prestart readback mismatch")
+    if payloads.get("destination_prestart") != destination_input:
+        failures.append("Stage62 microtest DAP destination prestart readback mismatch")
+
+    control: dict[str, int] = {}
+    if "control_final" in payloads:
+        words = struct.unpack("<16I", payloads["control_final"])
+        control = {
+            "magic": words[0],
+            "version": words[1],
+            "case_id": words[2],
+            "transfer_length": words[3],
+            "source_alignment": words[4],
+            "destination_alignment": words[5],
+            "run_id_crc32": words[6],
+            "immutable_crc32": words[7],
+            "state": words[8],
+            "result": words[9],
+            "record_address": words[10],
+            "record_bytes": words[11],
+            "record_magic_readback": words[12],
+            "wipe_verified": words[13],
+            "diagnostic_only": words[14],
+            "coverage_claimed": words[15],
+        }
+        if payloads["control_final"][:32] != control_input[:32]:
+            failures.append("Stage62 microtest immutable control words changed")
+        expected_control = {
+            "state": 3,
+            "result": 0,
+            "record_address": P7_STAGE62_DIAGNOSTIC_ADDRESS,
+            "record_bytes": P7_STAGE62_MICROTEST_RECORD_BYTES,
+            "record_magic_readback": P7_STAGE62_MICROTEST_RECORD_MAGIC,
+            "wipe_verified": 1,
+            "diagnostic_only": 1,
+            "coverage_claimed": 0,
+        }
+        for key, expected in expected_control.items():
+            if control[key] != expected:
+                failures.append(
+                    f"Stage62 microtest control mismatch: {key} "
+                    f"expected={expected} observed={control[key]}"
+                )
+
+    parsed_record: dict[str, Any] = {}
+    if "record" in payloads:
+        try:
+            parsed_record = unpack_stage62_microtest_record(payloads["record"])
+        except ValueError as exc:
+            failures.append(f"Stage62 microtest record rejected: {exc}")
+    if parsed_record:
+        if parsed_record.get("run_id_crc32") != int(micro["run_id_crc32"]):
+            failures.append("Stage62 microtest record run-ID binding mismatch")
+        if parsed_record.get("control_crc32") != int(micro["immutable_crc32"]):
+            failures.append("Stage62 microtest record control CRC binding mismatch")
+        if parsed_record.get("classification") != 0:
+            failures.append("Stage62 microtest CPU copy classification is not COPY_OK")
+        if payloads.get("source_final") != parsed_record.get("source_after"):
+            failures.append(
+                "Stage62 microtest independent DAP source readback differs from CPU snapshot"
+            )
+
+    if "destination_final" in payloads:
+        expected_wiped = bytearray(destination_input)
+        destination_offset = int(micro["destination_target_offset"])
+        transfer_length = int(micro["transfer_length"])
+        expected_wiped[
+            destination_offset : destination_offset + transfer_length
+        ] = b"\x00" * transfer_length
+        if payloads["destination_final"] != bytes(expected_wiped):
+            failures.append("Stage62 microtest destination wipe DAP readback mismatch")
+
+    markers = parse_markers(raw_text)
+    for key, expected in {
+        "P7_STAGE62_MICROTEST": "1",
+        "P7_STAGE62_MICROTEST_CASE": str(micro["case"]),
+        "P7_STAGE62_MICROTEST_DIAGNOSTIC_ONLY": "1",
+        "P7_STAGE62_MICROTEST_COVERAGE_CLAIMED": "0",
+        "P7_STAGE62_MICROTEST_STAGE62_EXECUTED": "0",
+    }.items():
+        if markers.get(key) != expected:
+            failures.append(
+                f"Stage62 microtest marker mismatch: {key} "
+                f"expected={expected} observed={markers.get(key, 'MISSING')}"
+            )
+    record_summary = {
+        key: value
+        for key, value in parsed_record.items()
+        if key
+        not in {
+            "source_before",
+            "source_after",
+            "destination_before",
+            "destination_after",
+        }
+    }
+    return {
+        "passed": not failures,
+        "failures": failures,
+        "run_id": micro["run_id"],
+        "case": micro["case"],
+        "control": control,
+        "record": record_summary,
+        "independent_readback_classification": (
+            "COPY_OK" if not failures else "READBACK_VISIBILITY_SUSPECT"
+        ),
+        "destination_prewipe_independent_readback_claimed": False,
+        "output_wipe_verified": not any("wipe" in item.lower() for item in failures),
+        "diagnostic_only": True,
+        "coverage_claimed": False,
+        "stage62_executed": False,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    }
+
+
+def postprocess_ddr_external_master(
+    bundle: StageBundle, raw_text: str
+) -> dict[str, Any]:
+    failures: list[str] = []
+    identity = bundle.ddr_external_master
+    if not isinstance(identity, dict):
+        return {
+            "passed": False,
+            "failures": ["DDR external-master bundle identity is missing"],
+            "diagnostic_only": True,
+            "coverage_claimed": False,
+            "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        }
+    fixture_path = bundle.directory / "ddr_external_master_fixture.bin"
+    readback_path = bundle.directory / "ddr_external_master_readback.bin"
+    fixture = fixture_path.read_bytes() if fixture_path.is_file() else b""
+    readback = readback_path.read_bytes() if readback_path.is_file() else b""
+    if len(fixture) != DDR_EXTERNAL_LENGTH:
+        failures.append("DDR external-master fixture is missing or malformed")
+    if len(readback) != DDR_EXTERNAL_LENGTH:
+        failures.append("DDR external-master raw readback is missing or malformed")
+    comparison = (
+        compare_ddr_external_payloads(
+            fixture,
+            readback,
+            address=int(identity["address_value"]),
+        )
+        if len(fixture) == DDR_EXTERNAL_LENGTH
+        else {
+            "passed": False,
+            "mismatch_count": None,
+            "first_mismatch": None,
+            "expected_size_bytes": len(fixture),
+            "observed_size_bytes": len(readback),
+        }
+    )
+    if not comparison["passed"]:
+        failures.append(
+            "DDR external-master raw readback differs from the immutable fixture"
+        )
+    markers = parse_markers(raw_text)
+    expected_markers = {
+        "P7_DDR_EXTERNAL_MASTER": "1",
+        "P7_DDR_EXTERNAL_PATTERN": str(identity["pattern"]),
+        "P7_DDR_EXTERNAL_ADDRESS": str(identity["address"]),
+        "P7_DDR_EXTERNAL_ACCESS_METHOD": str(identity["access_method"]),
+        "P7_DDR_EXTERNAL_LENGTH": str(identity["length"]),
+        "P7_DDR_EXTERNAL_REPETITION": str(identity["repetition"]),
+        "P7_DDR_EXTERNAL_UNALIGNED_ACCESSES": (
+            "1" if identity["unaligned_accesses"] else "0"
+        ),
+        "P7_DDR_EXTERNAL_FIXTURE_SHA256": str(identity["fixture_sha256"]),
+        "P7_DDR_EXTERNAL_DIAGNOSTIC_ONLY": "1",
+        "P7_DDR_EXTERNAL_COVERAGE_CLAIMED": "0",
+        "P7_DDR_EXTERNAL_CPU_RELEASED": "0",
+        "P7_DDR_EXTERNAL_STAGE62_EXECUTED": "0",
+        "P7_DDR_EXTERNAL_WRITE_ATTEMPTED": "1",
+        "P7_DDR_EXTERNAL_READBACK_CAPTURED": "1",
+        "P7_DDR_EXTERNAL_READBACK": "PASS",
+    }
+    for key, expected in expected_markers.items():
+        if markers.get(key) != expected:
+            failures.append(
+                f"DDR external-master marker mismatch: {key} "
+                f"expected={expected} observed={markers.get(key, 'MISSING')}"
+            )
+    return {
+        "passed": not failures,
+        "failures": failures,
+        "run_id": identity["run_id"],
+        "pattern": identity["pattern"],
+        "address": identity["address"],
+        "access_method": identity["access_method"],
+        "length": identity["length"],
+        "repetition": identity["repetition"],
+        "unaligned_accesses": identity["unaligned_accesses"],
+        "fixture": file_record(fixture_path) if fixture_path.is_file() else None,
+        "readback": file_record(readback_path) if readback_path.is_file() else None,
+        "comparison": comparison,
+        "cpu_released": False,
+        "stage62_executed": False,
+        "diagnostic_only": True,
+        "coverage_claimed": False,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    }
+
+
 def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[str, Any]:
     failures: list[str] = []
     markers = parse_markers(raw_text)
     case_results: list[dict[str, Any]] = []
     boundary_results: list[dict[str, Any]] = []
     functional_checkpoint_result: dict[str, Any] = {}
+    functional_evidence_readback_probe: dict[str, Any] = {}
     stationary_objects: list[dict[str, Any]] = (
         list(_parse_stationary_objects(raw_text)) if mode == "stationary" else []
     )
@@ -3594,10 +4820,27 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
             failures.append("functional large-policy/boundary phase marker missing")
         if (
             functional_markers.get("P7_FUNCTIONAL_CHECKPOINT_4K_COMPLETE") != "1"
+            or functional_markers.get("P7_FUNCTIONAL_PHASE_LOCAL_PRELOAD")
+            != "1"
+            or functional_markers.get("P7_HOST_TO_PS_INPUT_BYTES") != "0"
+            or functional_markers.get(
+                "P7_FUNCTIONAL_DOUBLEWORD_READBACK_PROBE"
+            )
+            != "PASS"
+            or functional_markers.get(
+                "P7_FUNCTIONAL_SERVICE_SHUTDOWN_BEFORE_FINAL_EVIDENCE"
+            )
+            != "1"
+            or functional_markers.get("P7_FUNCTIONAL_FINAL_EVIDENCE_READ_MODE")
+            != "ALIGNED_DOUBLEWORD"
             or functional_markers.get("P7_FUNCTIONAL_EXECUTION_ORDER")
             != "BOUNDARY48_THEN_4K_THEN_64K4_THEN_1M4"
         ):
-            failures.append("functional risk-increasing execution order/4KiB checkpoint marker missing")
+            failures.append(
+                "functional risk-increasing execution order, phase-local preload, "
+                "doubleword-readback probe, pre-evidence shutdown, or 4KiB "
+                "checkpoint marker missing"
+            )
         required_sizes = [0, 1, 30, 214, 215, 216, 247, 248, 430, 431, 432, 1024]
         if (
             functional_markers.get("P7_FUNCTIONAL_BOUNDARY_BATCHES") != "6"
@@ -3695,6 +4938,31 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
             expected_checkpoint_masks = [1 if index % 2 == 0 else 2 for index in range(len(checkpoint_traces))]
             if [int(trace["lane_mask"]) for trace in checkpoint_traces] != expected_checkpoint_masks:
                 checkpoint_local.append("trace is not exact stripe round-robin")
+            probe_path = (
+                bundle.directory
+                / "functional_checkpoint_4k_input_doubleword_readback.bin"
+            )
+            probe_failures: list[str] = []
+            if not probe_path.is_file():
+                probe_failures.append("doubleword readback probe file is missing")
+                probe_bytes = b""
+            else:
+                probe_bytes = probe_path.read_bytes()
+                if probe_bytes != checkpoint.request.data:
+                    probe_failures.append(
+                        "doubleword readback probe is not byte-exact"
+                    )
+            failures.extend(
+                f"functional doubleword readback probe: {item}"
+                for item in probe_failures
+            )
+            functional_evidence_readback_probe = {
+                "passed": not probe_failures,
+                "failures": probe_failures,
+                "path": str(probe_path),
+                "size_bytes": len(probe_bytes),
+                "sha256": hashlib.sha256(probe_bytes).hexdigest(),
+            }
         failures.extend(f"functional 4KiB checkpoint: {item}" for item in checkpoint_local)
         functional_checkpoint_result = {
             "passed": not checkpoint_local,
@@ -4081,6 +5349,7 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
         "cases": case_results,
         "boundary_cases": boundary_results,
         "functional_checkpoint": functional_checkpoint_result,
+        "functional_evidence_readback_probe": functional_evidence_readback_probe,
         "stationary_objects": stationary_objects,
         "stationary_samples": samples,
         "stationary_trace_validation": stationary_trace_validation,
@@ -4093,6 +5362,33 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_arguments(parser)
     parser.add_argument("--mode", choices=MODE_NAMES, default="functional")
     parser.add_argument("--stage-name", default="p7_ps_application")
+    parser.add_argument("--stage62-only", action="store_true")
+    parser.add_argument("--run-id", default="")
+    parser.add_argument(
+        "--stage62-microtest-case",
+        choices=("", *STAGE62_MICROTEST_CASE_NAMES),
+        default="",
+    )
+    parser.add_argument("--microtest-length", type=int, default=30)
+    parser.add_argument("--microtest-source-alignment", type=int, default=0)
+    parser.add_argument("--microtest-destination-alignment", type=int, default=0)
+    parser.add_argument(
+        "--ddr-pattern", choices=("", *DDR_EXTERNAL_PATTERN_NAMES), default=""
+    )
+    parser.add_argument("--ddr-address", default="")
+    parser.add_argument(
+        "--ddr-access-method",
+        choices=("", *DDR_EXTERNAL_ACCESS_METHODS),
+        default="",
+    )
+    parser.add_argument("--ddr-repetition", type=int, default=0)
+    parser.add_argument("--ddr-unaligned-accesses", action="store_true")
+    parser.add_argument("--ddr-fixture-file", default="")
+    parser.add_argument("--ddr-fixture-sha256", default="")
+    parser.add_argument("--ddr-run-configuration", default="")
+    parser.add_argument("--ddr-run-configuration-sha256", default="")
+    parser.add_argument("--ddr-artifact-manifest", default="")
+    parser.add_argument("--ddr-artifact-manifest-sha256", default="")
     parser.add_argument("--input-file", default="")
     parser.add_argument("--input-sha256", default="")
     parser.add_argument("--ps7-init", default="")
@@ -4131,12 +5427,40 @@ def _base_summary(
         "P7_PS_APPLICATION_SAFE_STAGE": "DRY_RUN_ONLY",
         "generated_at_utc": now_utc(),
         "mode": args.mode,
+        "run_id": args.run_id or None,
+        "execution_scope": "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE",
+        "diagnostic_only": bool(args.stage62_only),
+        "coverage_claimed": False if args.stage62_only else None,
+        "functional_stages_1_61_executed": False if args.stage62_only else None,
+        "stage62_attempted": False,
+        "stage62_completed": False,
+        "stage62_executed": False,
         "stage_name": args.stage_name,
+        "ddr_resume_gate": (
+            {
+                "fixture_file": args.ddr_fixture_file,
+                "fixture_sha256": args.ddr_fixture_sha256,
+                "run_configuration": args.ddr_run_configuration,
+                "run_configuration_sha256": args.ddr_run_configuration_sha256,
+                "artifact_manifest": args.ddr_artifact_manifest,
+                "artifact_manifest_sha256": args.ddr_artifact_manifest_sha256,
+            }
+            if args.mode == "ddr-external-master"
+            else None
+        ),
         "requested_execute_hardware": bool(args.execute_hardware),
         "hardware_actions_executed": False,
         "programmed_fpga": False,
         "programmed_candidate": False,
         "started_ps_elf": False,
+        "candidate_attempt_observation": {
+            "source": "NONE",
+            "programmed_candidate_observed": False,
+            "elf_downloaded_observed": False,
+            "formal_stage62_attempted": False,
+            "marker_conflicts": [],
+            "non_acceptance_evidence": True,
+        },
         "programmed_shutdown_before": False,
         "programmed_shutdown_after": False,
         "drove_tfdu_txd": False,
@@ -4173,7 +5497,13 @@ def _emit(summary: dict[str, Any], args: argparse.Namespace, evidence_dir: Path 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.max_runtime_sec is None:
-        args.max_runtime_sec = MAX_SERVICE_RUNTIME_SEC if args.mode == "stationary" else 900
+        args.max_runtime_sec = (
+            MAX_SERVICE_RUNTIME_SEC
+            if args.mode == "stationary"
+            else 60
+            if args.mode in {"stage62-microtest", "ddr-external-master"}
+            else 900
+        )
     if args.mode == "stationary":
         if args.calibration_sec == 0:
             args.calibration_sec = CALIBRATION_SEC
@@ -4229,6 +5559,24 @@ def main(argv: list[str] | None = None) -> int:
         sample_interval_sec=args.sample_interval_sec,
         idle_margin_sec=args.idle_deadline_margin_sec,
         stationary_object_bytes=args.stationary_object_bytes,
+        run_id=args.run_id,
+        execution_scope=(
+            "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE"
+        ),
+        diagnostic_only=bool(args.stage62_only),
+        stage62_microtest_case=args.stage62_microtest_case,
+        microtest_length=args.microtest_length,
+        microtest_source_alignment=args.microtest_source_alignment,
+        microtest_destination_alignment=args.microtest_destination_alignment,
+        ddr_pattern=args.ddr_pattern,
+        ddr_address=args.ddr_address,
+        ddr_access_method=args.ddr_access_method,
+        ddr_repetition=args.ddr_repetition,
+        ddr_unaligned_accesses=args.ddr_unaligned_accesses,
+        ddr_fixture_sha256=args.ddr_fixture_sha256,
+        ddr_fixture_file=(
+            resolve_path(args.ddr_fixture_file) if args.ddr_fixture_file else None
+        ),
     )
     summary["evidence_dir"] = str(evidence_dir)
     summary["bundle_manifest"] = file_record(bundle.manifest_path)
@@ -4362,7 +5710,7 @@ def main(argv: list[str] | None = None) -> int:
             raise RuntimeError("shutdown-before requires rc=0 plus TFDU_SHUTDOWN_PROGRAMMED")
         if abort_file.exists():
             raise RuntimeError("operator abort file appeared before PS candidate stage")
-        for value, expected, label in (
+        candidate_inputs = [
             (args.authorization_file, args.authorization_sha256, "authorization file"),
             (args.bitstream, args.bitstream_sha256, "P6 PS bitstream"),
             (args.xsa, args.xsa_sha256, "P6 PS XSA"),
@@ -4377,16 +5725,36 @@ def main(argv: list[str] | None = None) -> int:
             (args.core_readiness_attestation, args.core_readiness_attestation_sha256, "core-readiness attestation"),
             (str(frozen_shutdown), args.shutdown_bitstream_sha256, "frozen shutdown bitstream"),
             (str(preflight_final), preflight_sha256, "fresh preflight attestation"),
-        ):
+        ]
+        if args.mode == "ddr-external-master":
+            candidate_inputs.extend(
+                (
+                    (args.ddr_fixture_file, args.ddr_fixture_sha256, "DDR frozen fixture"),
+                    (
+                        args.ddr_run_configuration,
+                        args.ddr_run_configuration_sha256,
+                        "DDR run configuration",
+                    ),
+                    (
+                        args.ddr_artifact_manifest,
+                        args.ddr_artifact_manifest_sha256,
+                        "DDR artifact manifest",
+                    ),
+                )
+            )
+        for value, expected, label in candidate_inputs:
             error = _verify_hash(value, expected, label)
             if error:
                 raise RuntimeError(error)
         verify_bundle_integrity(bundle)
         raw_partial = _atomic_result_path(raw_final)
-        summary["drove_tfdu_txd"] = True
-        summary["enabled_tfdu_receiver"] = True
+        isolated_no_pl_modes = {"stage62-microtest", "ddr-external-master"}
+        summary["drove_tfdu_txd"] = args.mode not in isolated_no_pl_modes
+        summary["enabled_tfdu_receiver"] = args.mode not in isolated_no_pl_modes
         summary["tfdu_activity_semantics"] = (
-            "conservative_true_once_PS_candidate_ELF_command_is_launched"
+            "isolated_diagnostic_branches_before_PL_MMIO"
+            if args.mode in isolated_no_pl_modes
+            else "conservative_true_once_PS_candidate_ELF_command_is_launched"
         )
         event("candidate_started", mode=args.mode)
         ps_proc = _atomic_process(
@@ -4416,14 +5784,28 @@ def main(argv: list[str] | None = None) -> int:
             target=args.expected_target,
             part=args.expected_part,
             board_id=args.board_id,
+            execution_scope=(
+                "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE"
+            ),
+            run_id=args.run_id or "NONE",
         )
         summary["ps_process"] = {**_process_record(ps_proc), "passed": ps_process_ok, "failures": ps_failures}
-        markers = parse_markers(raw_text)
-        summary["programmed_candidate"] = markers.get("P7_PS_CANDIDATE_PROGRAMMED") == "1"
+        attempt_observation = candidate_attempt_observation(
+            raw_text, ps_stdout, mode=args.mode
+        )
+        summary["candidate_attempt_observation"] = attempt_observation
+        summary["programmed_candidate"] = bool(
+            attempt_observation["programmed_candidate_observed"]
+        )
         summary["programmed_fpga"] = bool(
             summary["programmed_fpga"] or summary["programmed_candidate"]
         )
-        summary["started_ps_elf"] = markers.get("P7_PS_ELF_DOWNLOADED") == "1"
+        summary["started_ps_elf"] = bool(
+            attempt_observation["elf_downloaded_observed"]
+        )
+        summary["stage62_attempted"] = bool(
+            attempt_observation["formal_stage62_attempted"]
+        )
         event("ps_stage_finished", returncode=ps_proc.returncode, passed=ps_process_ok)
     except Exception as exc:
         internal_error = f"{type(exc).__name__}: {exc}"
@@ -4494,15 +5876,38 @@ def main(argv: list[str] | None = None) -> int:
         "post_shutdown_file_count": len(bundle_post_snapshot),
     }
     raw_text = raw_final.read_text(encoding="utf-8", errors="replace") if raw_final.is_file() else ""
-    summary["first_error_diagnostic"] = collect_first_error_diagnostic(
-        bundle, raw_text
+    summary["first_error_diagnostic"] = (
+        {
+            "passed": True,
+            "not_applicable": True,
+            "reason": (
+                "isolated Stage62 microtest uses its dedicated fixed OCM record"
+                if args.mode == "stage62-microtest"
+                else "DDR external-master diagnostic does not release the CPU or execute firmware"
+            ),
+        }
+        if args.mode in {"stage62-microtest", "ddr-external-master"}
+        else collect_first_error_diagnostic(bundle, raw_text)
     )
-    postprocess = postprocess_bundle(bundle, args.mode, raw_text) if ps_process_ok else {
+    postprocess = (
+        postprocess_stage62_microtest(bundle, raw_text)
+        if ps_process_ok and args.mode == "stage62-microtest"
+        else postprocess_ddr_external_master(bundle, raw_text)
+        if ps_process_ok and args.mode == "ddr-external-master"
+        else postprocess_bundle(bundle, args.mode, raw_text)
+        if ps_process_ok
+        else {
         "passed": False,
         "failures": ["PS process did not pass exact rc/marker policy"],
         "mailbox": {},
         "cases": [],
-    }
+        }
+    )
+    if args.mode == "stage62-microtest":
+        summary["stage62_microtest"] = postprocess
+    elif args.mode == "ddr-external-master":
+        summary["ddr_external_master"] = postprocess
+        summary["stage62_executed"] = False
     if bundle_integrity_failures:
         postprocess["passed"] = False
         postprocess.setdefault("failures", []).extend(bundle_integrity_failures)
@@ -4512,6 +5917,14 @@ def main(argv: list[str] | None = None) -> int:
             f"first-error diagnostic: {failure}"
             for failure in summary["first_error_diagnostic"]["failures"]
         )
+    if args.mode == "functional":
+        # Completion is an end-to-end property.  Assign it only after the
+        # post-shutdown immutable-bundle and first-error checks have had their
+        # chance to fail the postprocessor.
+        summary["stage62_completed"] = bool(
+            ps_process_ok and postprocess.get("passed")
+        )
+        summary["stage62_executed"] = summary["stage62_completed"]
     summary["postprocess"] = postprocess
     summary["internal_error"] = internal_error
     summary["ps_failures"] = ps_failures

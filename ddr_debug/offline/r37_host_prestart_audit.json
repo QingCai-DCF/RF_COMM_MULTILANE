@@ -1,0 +1,71 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "audited_tcl": {
+    "git_commit": "16d621d4b2fe5720e33a56adb1b19ad262feac25",
+    "path": "git:16d621d4b2fe5720e33a56adb1b19ad262feac25:scripts/hw/p7_ps_application_execute.tcl",
+    "sha256": "7bff43ee1605c2885d7c2dd4e1557de3bc03803a6be68e1ffe7929899fb7e967",
+    "size_bytes": 130094
+  },
+  "comparison": {
+    "expected_sha256": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+    "expected_size_bytes": 256,
+    "first_mismatch": {
+      "absolute_address": "0x00900009",
+      "expected": 195,
+      "observed": 0,
+      "offset": 9
+    },
+    "mismatch_count": 1,
+    "observed_sha256": "3198a52a7e09dde9d05a82db251f6497845399c4d749c8441fa39866ca92f3bb",
+    "observed_size_bytes": 256,
+    "passed": false
+  },
+  "current_tcl": {
+    "path": "scripts/hw/p7_ps_application_execute.tcl",
+    "sha256": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec",
+    "size_bytes": 140716
+  },
+  "destination_address": "0x00900000",
+  "execution_plan": {
+    "path": "bundle/execution_plan.txt",
+    "sha256": "30a7be95c0ce5c5ca188e86c694e4e51d6063821573e721a2997bdd1a2067b53",
+    "size_bytes": 513
+  },
+  "failures": [],
+  "fixture": {
+    "path": "bundle/stage62_microtest_destination_fixture.bin",
+    "sha256": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+    "size_bytes": 256
+  },
+  "hardware_actions_executed_now": false,
+  "host_path_findings": {
+    "address_is_fixed_tcl_hex_literal": true,
+    "fixture_is_raw_binary": true,
+    "fixture_offset_9_is_0xc3": true,
+    "parser_normalization_observed": false,
+    "readback_is_raw_binary": true,
+    "readback_precedes_cpu_release": true,
+    "tcl_writes_the_manifest_bound_fixture_filename": true,
+    "text_conversion_observed": false
+  },
+  "intended_firmware_target": "0x00900040",
+  "offline_audit_only": true,
+  "passed": true,
+  "raw_readback": {
+    "path": "bundle/stage62_microtest_destination_prestart.bin",
+    "sha256": "3198a52a7e09dde9d05a82db251f6497845399c4d749c8441fa39866ca92f3bb",
+    "size_bytes": 256
+  },
+  "raw_result": {
+    "path": "p7_ps_application_raw_result.log",
+    "sha256": "c3ad57d1d08b447c4a724e46599c1a86a63c9ac02fb76e9192a7d4db21fd06f5",
+    "size_bytes": 1065
+  },
+  "recorded_host_command": {
+    "path": "stage62_debug/iterations/iter_04/run_command.txt",
+    "sha256": "15f045392ce5e21923801985dcb6b7255fa0eb9966eef92f469f3f398814513c",
+    "size_bytes": 5394
+  },
+  "run_id": "p7_20260714_stage62_microtest_r37_diag_only",
+  "schema": "rf-comm-ddr-r37-host-prestart-audit-v1"
+}

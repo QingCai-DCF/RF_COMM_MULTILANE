@@ -177,6 +177,12 @@ def latest_p7_elf() -> tuple[bool, dict[str, Any]]:
         and summary.get("mailbox_overlap") is False
         and summary.get("linker_ocm_hard_boundary_0x20000") is True
         and summary.get("critical_payload_byte_copy_verified") is True
+        and summary.get("stage62_microtest_disassembly_verified") is True
+        and summary.get("stage62_microtest_stack_verified") is True
+        and isinstance(summary.get("stage62_microtest_stack_bytes"), int)
+        and not isinstance(summary.get("stage62_microtest_stack_bytes"), bool)
+        and summary["stage62_microtest_stack_bytes"]
+        <= summary.get("stage62_microtest_stack_limit_bytes", -1)
     )
     return valid, {"summary": rel(summary_path), "build": summary, "immutable_hash_valid": valid}
 
@@ -390,9 +396,16 @@ def main() -> int:
             "software/ps_driver/ir_driver.h",
             "software/ps_driver/ir_driver.c",
             "software/ps_driver/p7_app_service.h",
+            "software/ps_driver/p7_stage62_diagnostic.h",
+            "software/ps_driver/p7_stage62_diagnostic.c",
+            "software/ps_driver/p7_stage62_microtest.h",
+            "software/ps_driver/p7_stage62_microtest.c",
             "software/ps_driver/p7_admission_contract.h",
             "software/ps_driver/p7_app_service.c",
             "software/ps_driver/p7_runtime_main.c",
+            "tests/p7/p7_stage62_diagnostic_test.c",
+            "tests/p7/p7_stage62_microtest_layout_test.c",
+            "tests/test_p7_stage62_microtest.py",
         )
     }
     artifact_dir = ROOT / "evidence/hardware/p7/artifacts"

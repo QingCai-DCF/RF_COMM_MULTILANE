@@ -1,0 +1,47 @@
+{
+  "schema": "rf-comm-p7-stage62-offline-attempt-v1",
+  "attempt": 2,
+  "status": "FAIL",
+  "classification": "STALE_DIRECT_CONSUMER_TEST_EXPECTATIONS",
+  "source_commit": "2aa32fccddc2b54900e5d028a50770409a2432ca",
+  "generated_at_utc": "2026-07-13T17:58:40.787104+00:00",
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "complete_suite_invocation_count": 2,
+  "suite_invocation_count_by_name": {
+    "top_level_discovery": 1,
+    "tests_p7_discovery": 1
+  },
+  "suite_results": {
+    "top_level_discovery": {
+      "discovered_test_count": 136,
+      "returncode": 1,
+      "status": "FAIL",
+      "stdout_sha256": "86eb706f7a25e098bbb638c407c2fd29fda6ce35a3f6ea717fde8fdbd1e27250",
+      "stderr_sha256": "431ff670d2dfdf9e70109c6ac7c4c97c17dcc8853e37afa94f60f8199262f101"
+    },
+    "tests_p7_discovery": {
+      "discovered_test_count": 42,
+      "returncode": 0,
+      "status": "PASS",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "06c0f267c42a649dc0b4f319e72ad7e61e6cb02b25568ab60f12cb831dd92616"
+    }
+  },
+  "regression_summary": {
+    "path": "build/p7_regression_stage62_microtest_2aa32fc.json",
+    "sha256": "7d06e071ac66738ce6ebda47e579537b71ad0e86a1b77c9a3fa3daabc2c1e68d"
+  },
+  "failures": [
+    "test_xsdb_tcl_failure_result_preserves_original_error_before_hardware: fixture supplied 18 arguments after executor contract became 20, so validation stopped before result_file initialization",
+    "test_ps_result_binds_canonical_part_vivado_identity_and_xsdb_idcode: success fixture omitted P7_EXECUTION_SCOPE and P7_RUN_ID",
+    "test_ps_timer_frequency_is_bound_in_argv_and_authorization: expected 20 command elements instead of executable+script+20 Tcl arguments",
+    "test_stationary_sampling_and_requeue_cutoff_use_fresh_ps_ticks: static assertion still expected the old 18-argument Tcl contract"
+  ],
+  "source_commit_unchanged": true,
+  "dirty_worktree_before_suites": false,
+  "dirty_worktree_after_suites": false,
+  "diagnostic_valid": false,
+  "acceptance_valid": false,
+  "next_action": "UPDATE_DIRECT_CONSUMER_TESTS_THEN_RUN_NEW_COMPLETE_SUITES_ON_A_NEW_CLEAN_COMMIT"
+}

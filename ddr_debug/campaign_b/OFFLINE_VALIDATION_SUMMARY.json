@@ -1,0 +1,93 @@
+{
+  "schema": "rf-comm-ddr-external-campaign-b-offline-validation-v1",
+  "campaign_id": "p7_20260714_ddr_external_campaign_b",
+  "source_commit": "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+  "runner_fix_commit": "6d69289bea046f9f2890e19ebe489c8f5c9df67b",
+  "status": "PASS",
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "campaign_a_closure": {
+    "status": "CAMPAIGN_A_CLOSED_FIX_REQUIRED",
+    "path": "ddr_debug/iterations/CAMPAIGN_A_CLOSURE.json",
+    "sha256": "a8cba7a38447d847bf28473030ae4021ebb437aa717de5e423afa6dedcd1cb42",
+    "consumed_authorizations": 9,
+    "retired_due_to_artifact_change": 1,
+    "safe_shutdown_complete": true
+  },
+  "xsdb_option_audit": {
+    "source_occurrence_count": 1,
+    "current_option": "-unaligned-access",
+    "historical_rejected_option": "-unaligned-accesses",
+    "historical_failure_log": "evidence/hardware/p7/ddr_external_master/p7_20260714_ddr_external_campaign_a_09/ps_application_stage.stderr.log",
+    "historical_failure_exactly_lists_supported_singular_option": true,
+    "offline_plural_probe_rejected_as_bad_option": true,
+    "offline_singular_probe_passed_option_parsing_and_stopped_at_no_target": true,
+    "xsdb_connected_to_hardware": false
+  },
+  "complete_regression": {
+    "path": "build/p7_regression_ddr_campaign_b_c93b85e.json",
+    "sha256": "70466b40e470b1a7418f0ff9388419a45c220cc7e7141fa9c38c9a57ca8151fd",
+    "status": "PASS",
+    "FULL_SUITE_INVOCATION_COUNT": 2,
+    "top_level_discovery_invocations": 1,
+    "tests_p7_discovery_invocations": 1,
+    "top_level_test_count": 153,
+    "tests_p7_test_count": 42,
+    "total_test_count": 195,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "logs": [
+      "build/p7_regression_ddr_campaign_b_c93b85e_logs/top_level_discovery.stdout.log",
+      "build/p7_regression_ddr_campaign_b_c93b85e_logs/top_level_discovery.stderr.log",
+      "build/p7_regression_ddr_campaign_b_c93b85e_logs/tests_p7_discovery.stdout.log",
+      "build/p7_regression_ddr_campaign_b_c93b85e_logs/tests_p7_discovery.stderr.log"
+    ],
+    "required_regressions_observed": {
+      "actual_tcl_command_generation": true,
+      "aligned_mode_has_no_unaligned_option": true,
+      "unaligned_mode_has_one_singular_option": true,
+      "plural_option_forbidden": true,
+      "parameter_order_checked": true,
+      "run_configuration_plan_tcl_consistency_checked": true,
+      "parser_binary_path_checked": true,
+      "historical_r37_audit_checked": true
+    }
+  },
+  "runner_dry_run": {
+    "run_id": "p7_20260714_ddr_external_campaign_b_06",
+    "source_command_template": ".hardware_authorization/p7_20260714_ddr_external_campaign_b.request/p7_20260714_ddr_external_campaign_b_06.request/run_command_after_human_approval.txt",
+    "stage_summary_path": "ddr_debug/campaign_b/B06_DRY_RUN_STAGE_SUMMARY.json",
+    "stage_summary_sha256": "5d36e90eec34c70aeea99c646b5dd23180ae1cc47155221fd36a0a4c10a2b9ce",
+    "stage_summary_relocated_from_run_evidence_dir": true,
+    "execute_hardware_flag_removed_before_invocation": true,
+    "returncode": 0,
+    "stdout": "P7_PS_APPLICATION_SAFE_STAGE: DRY_RUN_ONLY",
+    "stderr": "",
+    "hardware_actions_executed": false
+  },
+  "minimal_offline_gate": {
+    "path": "evidence/generated/p7_ps_core_hardware_readiness.json",
+    "sha256": "31debe19bb9398787b471ed268a7910b23303fdbb499c25e6d3aecf166aa4be7",
+    "P7_PS_CORE_HARDWARE_READINESS": "PASS",
+    "validated_regression_sha256": "70466b40e470b1a7418f0ff9388419a45c220cc7e7141fa9c38c9a57ca8151fd",
+    "hardware_actions_executed": false
+  },
+  "campaign_b_requests_validation": {
+    "mode": "RequestsOnly",
+    "status": "PASS",
+    "authorization_count": 10,
+    "validator_combinations_passed": 10,
+    "authorization_consumed": false,
+    "existing_validator_used": true,
+    "validator_modified": false,
+    "hardware_action_taken": false
+  },
+  "artifact_reverification": {
+    "manifest": "ddr_debug/campaign_b/CAMPAIGN_B_ARTIFACT_MANIFEST.json",
+    "manifest_sha256": "5c7c35aa2e3283095a4560f83fce8042c0ce86c743dc7511090a57c3a799503b",
+    "records_reverified": 85,
+    "status": "PASS",
+    "fixed_artifacts_verified": true
+  },
+  "creation_script_executed": false,
+  "safe_shutdown_complete": true
+}

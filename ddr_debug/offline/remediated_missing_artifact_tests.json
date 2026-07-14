@@ -1,0 +1,21 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "command": "python -B -m unittest tests.test_summarize_p7_hardware.SummarizeP7HardwareTests.test_p6_jtag_candidate_binds_axi4_bursts_through_axi4lite_converter tests.test_summarize_p7_hardware.SummarizeP7HardwareTests.test_real_r1_through_r31_hardware_epochs_validate_and_failed_stage_tamper_fails_closed -v",
+  "complete_suites_reinvoked": false,
+  "elapsed_seconds": 194.9,
+  "hardware_actions_executed": false,
+  "returncode": 0,
+  "schema": "rf-comm-ddr-missing-artifact-focused-recheck-v1",
+  "source_commit": "a068d299131037a442aa4c3b9af0af3188493063",
+  "status": "PASS",
+  "tests": [
+    {
+      "name": "tests.test_summarize_p7_hardware.SummarizeP7HardwareTests.test_p6_jtag_candidate_binds_axi4_bursts_through_axi4lite_converter",
+      "result": "PASS"
+    },
+    {
+      "name": "tests.test_summarize_p7_hardware.SummarizeP7HardwareTests.test_real_r1_through_r31_hardware_epochs_validate_and_failed_stage_tamper_fails_closed",
+      "result": "PASS"
+    }
+  ]
+}

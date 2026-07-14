@@ -1,0 +1,57 @@
+{
+  "FULL_SUITE_INVOCATION_COUNT": 2,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "dirty_files_after_suites": [],
+  "dirty_worktree_after_suites": false,
+  "dirty_worktree_before_suites": false,
+  "generated_at_utc": "2026-07-14T13:28:02.298688+00:00",
+  "schema": "rf-comm-p7-complete-regression-suites-v1",
+  "source_commit": "6e8043716a6797257bbc46c172c287abed93198d",
+  "source_commit_after_suites": "6e8043716a6797257bbc46c172c287abed93198d",
+  "source_commit_unchanged": true,
+  "status": "PASS",
+  "suite_invocation_count_by_name": {
+    "tests_p7_discovery": 1,
+    "top_level_discovery": 1
+  },
+  "suites": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+      "discovered_test_count": 181,
+      "invocation_count": 1,
+      "name": "top_level_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 33887,
+        "path": "build/p7_regression_stage62_evidence_fix_6e804371_logs/top_level_discovery.stderr.log",
+        "sha256": "f3b94a8aa147c8bf349b631a9ed2d6477c0b73cfc6745d6f928ebd24a83ac3a0"
+      },
+      "stdout": {
+        "bytes": 641,
+        "path": "build/p7_regression_stage62_evidence_fix_6e804371_logs/top_level_discovery.stdout.log",
+        "sha256": "ec37559fd2a7c7b260fc4393d94e4be29a767a527aeb219225961f077efb6008"
+      }
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 42,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 5303,
+        "path": "build/p7_regression_stage62_evidence_fix_6e804371_logs/tests_p7_discovery.stderr.log",
+        "sha256": "be74b6b75d10c2b5472e1c2ef79457c66df666c85399ffa6df8898c243bf0e91"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "build/p7_regression_stage62_evidence_fix_6e804371_logs/tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "total_discovered_test_count": 223
+}

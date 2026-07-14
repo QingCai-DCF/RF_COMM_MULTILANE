@@ -1,4 +1,5 @@
 #include "p7_app_service.h"
+#include "p7_stage62_microtest.h"
 
 #include "xil_cache.h"
 #include "xil_io.h"
@@ -28,6 +29,12 @@ int main(void) {
    * Disable the Cortex-A9 data cache before touching shared memory so host
    * commands cannot be overwritten by dirty cache-line writeback. */
   Xil_DCacheDisable();
+  int microtest_status = p7_stage62_microtest_try_run();
+  if (microtest_status != 0) {
+    /* The isolated Stage62 microtest never constructs an MMIO context and
+     * therefore cannot touch PL registers or drive a functional stage. */
+    return microtest_status > 0 ? 0 : 1;
+  }
   p7_mmio_context_t context = {
       .base = (UINTPTR)IR_PL_BASEADDR,
   };

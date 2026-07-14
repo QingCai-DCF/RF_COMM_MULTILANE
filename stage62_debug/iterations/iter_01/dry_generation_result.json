@@ -1,0 +1,16 @@
+{
+  "schema": "rf-comm-stage62-plan-generation-result-v1",
+  "run_id": "p7_20260713_stationary_app_r33_diag_suffix55",
+  "status": "BLOCKED",
+  "generated_at_utc": "2026-07-13T15:18:22.991079+00:00",
+  "hardware_actions_executed": false,
+  "safe_wrapper_processes_launched": false,
+  "vivado_invoked": false,
+  "xsdb_invoked": false,
+  "authorization_environment_modified": false,
+  "network_used": false,
+  "motion_used": false,
+  "sequence_plan_created": false,
+  "execution_ledger_created": false,
+  "reason": "RuntimeError: child safe-wrapper offline validation failed for p7_ps_functional: P7 ELF allocated image end does not match the build summary OCM boundary"
+}

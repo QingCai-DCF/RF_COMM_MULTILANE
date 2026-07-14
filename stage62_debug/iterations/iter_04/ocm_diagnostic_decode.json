@@ -1,0 +1,16 @@
+{
+  "acceptance_valid": false,
+  "ddr_prestart_diff": "evidence/hardware/p7/stage62_microtest/p7_20260714_stage62_microtest_r37_diag_only/ddr_prestart_diff.json",
+  "diagnostic_valid": true,
+  "firmware_record_created": false,
+  "first_bad_absolute_address": "0x00900009",
+  "first_bad_actual": 0,
+  "first_bad_expected": 195,
+  "first_bad_offset": 9,
+  "mismatch_count": 1,
+  "reason": "DDR destination prestart readback failed before CPU release",
+  "run_id": "p7_20260714_stage62_microtest_r37_diag_only",
+  "schema": "rf-comm-stage62-microtest-ocm-decode-v1",
+  "stage62_executed": false,
+  "status": "NOT_PUBLISHED_DDR_PRESTART_FAIL"
+}

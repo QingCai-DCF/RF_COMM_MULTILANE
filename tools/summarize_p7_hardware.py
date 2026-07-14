@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import ctypes
 import csv
+import functools
 import hashlib
 import json
 import os
@@ -159,6 +160,18 @@ CORE_READINESS_CHECKS = (
     "failure_wipe_uses_private_validated_range",
     "integrity_crc_sha_immutable_chunk_snapshot",
     "critical_payload_copies_are_volatile_byte_verified",
+    "first_error_diagnostic_is_atomic_and_first_only",
+    "stage62_first_error_prepare_is_first_only",
+    "first_error_capture_precedes_validation_and_is_input_bound",
+    "stage62_diagnostic_fixed_ocm_section",
+    "stage62_copy_four_snapshot_classification",
+    "stage62_diagnostic_crc_publish_order",
+    "stage62_only_microtest_bypasses_pl_and_is_disassembly_bound",
+    "pre_repair_encode_raw_compared_to_fixed_input_reference",
+    "p6_tx_mmio_readback_and_rx_boundaries_observed",
+    "local_payload_buffers_are_64_byte_aligned",
+    "end_to_end_output_compare_is_independent",
+    "nonzero_output_canary_is_manifest_bound",
     "integrity_failure_snapshot_precedes_output_wipe",
     "integrity_failure_snapshot_mailbox_diagnostic",
     "descriptor_ready_published_last",
@@ -166,14 +179,26 @@ CORE_READINESS_CHECKS = (
     "phy_reenabled_and_startup_ready_waited",
     "runtime_terminal_after_exact_deadline",
     "runtime_elapsed_seqlock_and_monotonic_reader",
+    "runtime_elapsed_causal_request_release",
+    "object_latency_start_precedes_input_integrity",
+    "firmware_stationary_admission_cutoff",
+    "contained_child_tree_reaped_before_shutdown",
     "strict_ring_host_publication_supported",
     "stationary_identity_ledger_bound",
     "native_shutdown_readback_test",
+    "native_payload_alignment_matrix_test",
+    "native_stage62_diagnostic_matrix_test",
+    "native_stage62_microtest_layout_test",
     "p7_python_and_codec_tests",
     "real_vitis_build_source_bound",
 )
 CORE_READINESS_SOURCES = (
     "software/ps_driver/p7_app_service.h",
+    "software/ps_driver/p7_stage62_diagnostic.h",
+    "software/ps_driver/p7_stage62_diagnostic.c",
+    "software/ps_driver/p7_stage62_microtest.h",
+    "software/ps_driver/p7_stage62_microtest.c",
+    "software/ps_driver/p7_admission_contract.h",
     "software/ps_driver/p7_app_service.c",
     "software/ps_driver/p7_runtime_main.c",
     "software/ps_driver/ir_driver.h",
@@ -181,6 +206,21 @@ CORE_READINESS_SOURCES = (
     "tools/p7_ps_mailbox_backend.py",
     "scripts/hw/run_p7_ps_application_stage_safe.py",
     "scripts/hw/p7_ps_application_execute.tcl",
+    "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+    "tools/p7_contained_launcher.py",
+    "software/ps_driver/ir_regs.h",
+    "tools/p7_app_protocol.py",
+    "tools/run_p7_ps_core_offline.py",
+    "tools/p7_regression_evidence.py",
+    "tools/run_p7_regression_suites.py",
+    "scripts/build_p7_ps_runtime.py",
+    "scripts/build_p7_ps_runtime.tcl",
+    "tests/p7/test_p7_application.py",
+    "tests/p7/ir_driver_payload_alignment_test.c",
+    "tests/p7/p7_stage62_diagnostic_test.c",
+    "tests/p7/p7_stage62_microtest_layout_test.c",
+    "tests/test_p7_stage62_microtest.py",
+    "tests/test_p7_regression_dedup.py",
 )
 AUTH_ARTIFACT_KEYS = {
     "plan": ("P7_PLAN_PATH", "P7_PLAN_SHA256"),
@@ -214,6 +254,8 @@ OFFLINE_CRITICAL_SOURCES = (
     "software/ps_driver/p7_app_service.h",
     "software/ps_driver/p7_app_service.c",
     "software/ps_driver/p7_runtime_main.c",
+    "software/ps_driver/p7_stage62_microtest.h",
+    "software/ps_driver/p7_stage62_microtest.c",
     "scripts/hw/p7_ps_application_execute.tcl",
     "scripts/hw/run_p7_ps_application_stage_safe.py",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py",
@@ -491,12 +533,237 @@ def rel(path: Path, root: Path) -> str:
         return str(path.resolve(strict=False)).replace("\\", "/")
 
 
+@functools.lru_cache(maxsize=16)
+def _registered_worktree_roots(repo_root_text: str) -> tuple[Path, ...]:
+    """Return only worktree roots registered by this repository.
+
+    Historical hardware records intentionally preserve the absolute checkout
+    paths used at execution time.  A linked worktree must be able to validate
+    those immutable records without treating an arbitrary absolute path as
+    equivalent to its own checkout.  Git's registered worktree list is the
+    fail-closed authority for that narrow relocation.
+    """
+
+    current = Path(repo_root_text).resolve(strict=False)
+    try:
+        completed = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=current,
+            text=True,
+            capture_output=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return (current,)
+    if completed.returncode != 0:
+        return (current,)
+    roots: dict[str, Path] = {}
+    for line in completed.stdout.splitlines():
+        if not line.startswith("worktree "):
+            continue
+        value = line[len("worktree ") :].strip()
+        if not value:
+            continue
+        candidate = Path(value).resolve(strict=False)
+        roots[os.path.normcase(str(candidate))] = candidate
+    current_key = os.path.normcase(str(current))
+    if current_key not in roots:
+        return (current,)
+    return tuple(sorted(roots.values(), key=lambda item: len(str(item)), reverse=True))
+
+
+@functools.lru_cache(maxsize=4096)
+def _same_regular_file_contents(left_text: str, right_text: str) -> bool:
+    left = Path(left_text)
+    right = Path(right_text)
+    try:
+        if (
+            left.is_symlink()
+            or right.is_symlink()
+            or not left.is_file()
+            or not right.is_file()
+            or left.stat().st_size != right.stat().st_size
+        ):
+            return False
+        return sha256_file(left) == sha256_file(right)
+    except OSError:
+        return False
+
+
+def _remap_registered_worktree_reference(raw: Path, repo_root: Path) -> Path:
+    """Map an absolute reference only across equivalent registered worktrees."""
+
+    recorded = raw.resolve(strict=False)
+    current = repo_root.resolve(strict=False)
+    try:
+        recorded.relative_to(current)
+        return recorded
+    except ValueError:
+        pass
+    roots = _registered_worktree_roots(str(current))
+    if not any(os.path.normcase(str(item)) == os.path.normcase(str(current)) for item in roots):
+        return recorded
+    for source_root in roots:
+        if os.path.normcase(str(source_root)) == os.path.normcase(str(current)):
+            continue
+        try:
+            relative = recorded.relative_to(source_root)
+        except ValueError:
+            continue
+        remapped = (current / relative).resolve(strict=False)
+        try:
+            remapped.relative_to(current)
+        except ValueError:
+            return recorded
+        if recorded.is_symlink() or remapped.is_symlink():
+            return recorded
+        recorded_exists = recorded.exists()
+        remapped_exists = remapped.exists()
+        if recorded_exists != remapped_exists:
+            return recorded
+        if recorded_exists:
+            if recorded.is_file() != remapped.is_file() or recorded.is_dir() != remapped.is_dir():
+                return recorded
+            if recorded.is_file() and not _same_regular_file_contents(
+                str(recorded), str(remapped)
+            ):
+                return recorded
+            if not recorded.is_file() and not recorded.is_dir():
+                return recorded
+        return remapped
+    return recorded
+
+
+def _same_registered_worktree_location(
+    left: Path | None, right: Path | None, repo_root: Path
+) -> bool:
+    """Compare provenance locations without requiring ignored originals.
+
+    Content is deliberately not inferred here.  Callers use this only after
+    frozen-file hashes have been validated; this helper proves that both path
+    claims name the same repository-relative location in Git-registered
+    worktrees.
+    """
+
+    if left is None or right is None:
+        return False
+    left_resolved = left.resolve(strict=False)
+    right_resolved = right.resolve(strict=False)
+    if left_resolved == right_resolved:
+        return True
+    current = repo_root.resolve(strict=False)
+    roots = _registered_worktree_roots(str(current))
+    if not any(os.path.normcase(str(item)) == os.path.normcase(str(current)) for item in roots):
+        return False
+
+    def relative_location(path: Path) -> Path | None:
+        for root in roots:
+            try:
+                return path.relative_to(root)
+            except ValueError:
+                continue
+        return None
+
+    left_relative = relative_location(left_resolved)
+    right_relative = relative_location(right_resolved)
+    return (
+        left_relative is not None
+        and right_relative is not None
+        and os.path.normcase(str(left_relative))
+        == os.path.normcase(str(right_relative))
+    )
+
+
+def _argv_matches_with_registered_worktree_paths(
+    observed: Any,
+    expected: Sequence[str],
+    repo_root: Path,
+    *,
+    path_indices: set[int],
+) -> bool:
+    if (
+        not isinstance(observed, list)
+        or len(observed) != len(expected)
+        or not all(isinstance(item, str) for item in observed)
+    ):
+        return False
+    for index, expected_value in enumerate(expected):
+        observed_value = observed[index]
+        if index in path_indices:
+            if (
+                not observed_value
+                or not expected_value
+                or not _same_registered_worktree_location(
+                    Path(observed_value), Path(expected_value), repo_root
+                )
+            ):
+                return False
+        elif observed_value != expected_value:
+            return False
+    return True
+
+
+@functools.lru_cache(maxsize=4096)
+def _git_filtered_blob_id(repo_root_text: str, relative_text: str, path_text: str) -> str | None:
+    try:
+        completed = subprocess.run(
+            ["git", "hash-object", f"--path={relative_text}", path_text],
+            cwd=Path(repo_root_text),
+            text=True,
+            capture_output=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    value = completed.stdout.strip().lower()
+    return value if completed.returncode == 0 and re.fullmatch(r"[0-9a-f]{40}", value) else None
+
+
+def _sha256_matches_registered_materialization(
+    path: Path, expected_sha256: str, repo_root: Path
+) -> bool:
+    """Accept CRLF/LF checkout materialization only with one identical Git blob."""
+
+    canonical = path.resolve(strict=False)
+    current = repo_root.resolve(strict=False)
+    if canonical.is_symlink() or not canonical.is_file():
+        return False
+    if sha256_file(canonical) == expected_sha256:
+        return True
+    try:
+        relative = canonical.relative_to(current)
+    except ValueError:
+        return False
+    relative_text = relative.as_posix()
+    current_blob = _git_filtered_blob_id(str(current), relative_text, str(canonical))
+    if current_blob is None:
+        return False
+    for worktree in _registered_worktree_roots(str(current)):
+        if os.path.normcase(str(worktree)) == os.path.normcase(str(current)):
+            continue
+        alternate = (worktree / relative).resolve(strict=False)
+        if (
+            alternate.is_symlink()
+            or not alternate.is_file()
+            or sha256_file(alternate) != expected_sha256
+        ):
+            continue
+        alternate_blob = _git_filtered_blob_id(
+            str(current), relative_text, str(alternate)
+        )
+        if alternate_blob == current_blob:
+            return True
+    return False
+
+
 def resolve_reference(value: Any, *, document: Path, repo_root: Path) -> Path | None:
     if not isinstance(value, (str, os.PathLike)) or not str(value).strip():
         return None
     raw = Path(str(value))
     if raw.is_absolute():
-        return raw.resolve(strict=False)
+        return _remap_registered_worktree_reference(raw, repo_root)
     options = ((document.parent / raw), (repo_root / raw))
     for option in options:
         if option.exists():
@@ -3795,8 +4062,15 @@ def _historical_preflight_variant(candidate: Candidate) -> str:
             )
             and not shutdown_duplicates
             and shutdown_markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") == "1"
-            and shutdown_markers.get("TFDU_SHUTDOWN_PROGRAMMED")
-            == (candidate.path.parents[6] / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit").as_posix()
+            and resolve_reference(
+                shutdown_markers.get("TFDU_SHUTDOWN_PROGRAMMED"),
+                document=shutdown_result_path,
+                repo_root=candidate.path.parents[6],
+            )
+            == (
+                candidate.path.parents[6]
+                / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit"
+            ).resolve(strict=False)
             and shutdown_markers.get("P7_SHUTDOWN_RESULT") == "PASS"
         ):
             return HISTORICAL_STAGE_SHUTDOWN_HELPER_EXIT_RACE_REJECTED
@@ -4077,26 +4351,37 @@ def _historical_identity_pass_containment_errors(
     authorization = safety.get("authorization") if isinstance(safety, dict) else None
     auth_fields = safety.get("authorization_fields") if isinstance(safety, dict) else None
     result_path = candidate.path.parent / "p7_preflight_result.txt"
-    expected_tail = [
-        "-mode",
-        "batch",
-        "-source",
-        str((evidence.repo_root / "scripts/hw/p7_hw_preflight.tcl").resolve(strict=False)),
-        "-tclargs",
-        str(evidence.repo_root.resolve(strict=False)),
-        str(authorization.get("path", "")) if isinstance(authorization, dict) else "",
-        "210512180081",
-        CANONICAL_FULL_PART,
-        "localhost:3121/xilinx_tcf/Digilent/210512180081",
-        "localhost:3121",
-        str(result_path.resolve(strict=False)),
-    ]
     argv_exact = (
         isinstance(argv, list)
         and len(argv) == 13
-        and isinstance(argv[0], str)
+        and all(isinstance(item, str) for item in argv)
         and str(argv[0]).replace("/", "\\").casefold().endswith("\\vivado\\2023.1\\bin\\vivado.bat")
-        and argv[1:] == expected_tail
+        and argv[1:4] == ["-mode", "batch", "-source"]
+        and _same_registered_worktree_location(
+            Path(argv[4]),
+            evidence.repo_root / "scripts/hw/p7_hw_preflight.tcl",
+            evidence.repo_root,
+        )
+        and argv[5] == "-tclargs"
+        and _same_registered_worktree_location(
+            Path(argv[6]), evidence.repo_root, evidence.repo_root
+        )
+        and isinstance(authorization, dict)
+        and _same_registered_worktree_location(
+            Path(argv[7]),
+            Path(str(authorization.get("path", ""))),
+            evidence.repo_root,
+        )
+        and argv[8:12]
+        == [
+            "210512180081",
+            CANONICAL_FULL_PART,
+            "localhost:3121/xilinx_tcf/Digilent/210512180081",
+            "localhost:3121",
+        ]
+        and _same_registered_worktree_location(
+            Path(argv[12]), result_path, evidence.repo_root
+        )
     )
     append_error(errors, argv_exact, "historical r2 inner preflight argv does not bind exact identity inputs")
     append_error(
@@ -4381,7 +4666,12 @@ def _historical_failed_shutdown_process_errors(
         errors,
         bool(vivado)
         and Path(vivado).name.casefold() == "vivado.bat"
-        and block.get("argv") == expected_argv,
+        and _argv_matches_with_registered_worktree_paths(
+            block.get("argv"),
+            expected_argv,
+            evidence.repo_root,
+            path_indices={4, 6, 8, 14, 17, 22},
+        ),
         f"{label} argv mismatch",
     )
     return errors
@@ -4496,7 +4786,12 @@ def _old_commit_shutdown_tcl_failure_errors(candidate: Candidate, evidence: Repo
     append_error(
         errors,
         Path(str(expected_preflight_argv[0])).name.casefold() == "vivado.bat"
-        and preflight.get("argv") == expected_preflight_argv,
+        and _argv_matches_with_registered_worktree_paths(
+            preflight.get("argv"),
+            expected_preflight_argv,
+            evidence.repo_root,
+            path_indices={4, 6, 7, 12},
+        ),
         "historical r3 preflight argv does not bind exact identity inputs",
     )
     preflight_stdout = candidate.path.parent / "p7_preflight.stdout.log"
@@ -6834,12 +7129,19 @@ def _old_commit_shutdown_helper_exit_race_failure_errors(
     )
     shutdown_result = candidate.path.parent / "p7_shutdown_after_result.txt"
     shutdown_markers, shutdown_duplicates = parse_marker_text(marker_text(shutdown_result))
-    canonical_shutdown = (evidence.repo_root / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit").as_posix()
+    canonical_shutdown = (
+        evidence.repo_root / "shutdown_bitstream/tfdu_shutdown_j10_j11.bit"
+    ).resolve(strict=False)
     append_error(
         errors,
         not shutdown_duplicates
         and shutdown_markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") == "1"
-        and shutdown_markers.get("TFDU_SHUTDOWN_PROGRAMMED") == canonical_shutdown
+        and resolve_reference(
+            shutdown_markers.get("TFDU_SHUTDOWN_PROGRAMMED"),
+            document=shutdown_result,
+            repo_root=evidence.repo_root,
+        )
+        == canonical_shutdown
         and shutdown_markers.get("P7_SHUTDOWN_RESULT") == "PASS",
         f"{label} shutdown-after result does not prove the programmed shutdown image",
     )
@@ -8248,6 +8550,12 @@ def _historical_ps_shutdown_arg_count_epoch_record(
     for key in ("stdout_file", "stderr_file"):
         errors.extend(_verify_historical_hash_file(process.get(key), label=f"{label} outer {key}", document=outer_path, repo_root=evidence.repo_root))
     outer_shutdown = attempt.get("shutdown_after")
+    outer_shutdown_result = (
+        outer_shutdown.get("result_file")
+        if isinstance(outer_shutdown, dict)
+        and isinstance(outer_shutdown.get("result_file"), dict)
+        else {}
+    )
     append_error(
         errors,
         isinstance(outer_shutdown, dict)
@@ -8258,10 +8566,16 @@ def _historical_ps_shutdown_arg_count_epoch_record(
         and outer_shutdown.get("programming_attempted") is None
         and outer_shutdown.get("process_tree_reaped") is True
         and outer_shutdown.get("process_tree_terminated") is False
-        and outer_shutdown.get("result_file") == {
-            "path": str(candidate.path.parent / "shutdown_after_result.txt"),
-            "missing": True,
-        },
+        and outer_shutdown_result.get("missing") is True
+        and _same_registered_worktree_location(
+            resolve_reference(
+                outer_shutdown_result.get("path"),
+                document=outer_path,
+                repo_root=evidence.repo_root,
+            ),
+            candidate.path.parent / "shutdown_after_result.txt",
+            evidence.repo_root,
+        ),
         f"{label} outer shutdown-after facts mismatch",
     )
 
@@ -9753,7 +10067,13 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             role = str(item.get("role", ""))
             append_error(errors, role in expected_roles and role not in frozen_records, f"historical preflight input role invalid/duplicate: {role}")
             original_raw = Path(str(item.get("original_path", "")))
-            original_resolved = original_raw.resolve(strict=False) if original_raw.is_absolute() else (evidence.repo_root / original_raw).resolve(strict=False)
+            original_resolved = (
+                _remap_registered_worktree_reference(
+                    original_raw, evidence.repo_root
+                )
+                if original_raw.is_absolute()
+                else (evidence.repo_root / original_raw).resolve(strict=False)
+            )
             append_error(errors, bool(str(item.get("original_path", ""))) and (original_raw.is_absolute() or ".." not in original_raw.parts), f"historical preflight input original path missing/unsafe: {role}")
             frozen_path = resolve_reference(item.get("frozen_path"), document=frozen_manifest_path, repo_root=evidence.repo_root)
             expected_sha = str(item.get("sha256", "")).lower()
@@ -9853,8 +10173,11 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         for role, expected_original in expected_original_paths.items():
             append_error(
                 errors,
-                expected_original is not None
-                and Path(frozen_records[role]["original_resolved_path"]) == expected_original,
+                _same_registered_worktree_location(
+                    Path(frozen_records[role]["original_resolved_path"]),
+                    expected_original,
+                    evidence.repo_root,
+                ),
                 f"historical frozen input original_path does not bind recorded {role} path",
             )
         generation_original = Path(frozen_records["generation_manifest"]["original_resolved_path"])
@@ -10591,14 +10914,20 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 append_error(errors, argv_value("--max-runtime-sec") == "960", f"{queue_label} failed stage max runtime mismatch")
             append_error(
                 errors,
-                resolve_reference(argv_value("--authorization-file"), document=role_paths["sequence_plan"], repo_root=evidence.repo_root)
-                == Path(frozen_records["stage_authorization"]["original_resolved_path"]),
+                _same_registered_worktree_location(
+                    resolve_reference(argv_value("--authorization-file"), document=role_paths["sequence_plan"], repo_root=evidence.repo_root),
+                    Path(frozen_records["stage_authorization"]["original_resolved_path"]),
+                    evidence.repo_root,
+                ),
                 "historical frozen sequence plan command authorization path mismatch",
             )
             append_error(
                 errors,
-                resolve_reference(argv_value("--transaction-file"), document=role_paths["sequence_plan"], repo_root=evidence.repo_root)
-                == Path(frozen_records["stage_transactions"]["original_resolved_path"]),
+                _same_registered_worktree_location(
+                    resolve_reference(argv_value("--transaction-file"), document=role_paths["sequence_plan"], repo_root=evidence.repo_root),
+                    Path(frozen_records["stage_transactions"]["original_resolved_path"]),
+                    evidence.repo_root,
+                ),
                 "historical frozen sequence plan command transaction path mismatch",
             )
             append_error(
@@ -10636,8 +10965,11 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 append_error(errors, str(stage_authorizations[0].get("sha256", "")).lower() == frozen_records["stage_authorization"]["frozen_file"]["sha256"], "historical frozen generation manifest failed-stage authorization SHA mismatch")
                 append_error(
                     errors,
-                    resolve_reference(stage_authorizations[0].get("path"), document=role_paths["generation_manifest"], repo_root=evidence.repo_root)
-                    == Path(frozen_records["stage_authorization"]["original_resolved_path"]),
+                    _same_registered_worktree_location(
+                        resolve_reference(stage_authorizations[0].get("path"), document=role_paths["generation_manifest"], repo_root=evidence.repo_root),
+                        Path(frozen_records["stage_authorization"]["original_resolved_path"]),
+                        evidence.repo_root,
+                    ),
                     "historical frozen generation manifest failed-stage authorization path mismatch",
                 )
         try:
@@ -10825,10 +11157,25 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
         append_error(errors, str(recovery_authorization.get("AUTHORIZATION_FILE_SHA256", "")).lower() == recovery_p4_sha, "historical recovery authorization does not bind frozen P4 authorization")
         append_error(errors, recovery_authorization.get("AUTHORIZATION_FILE_EXISTS") is True, "historical recovery authorization file-exists fact is not true")
         append_error(errors, recovery_authorization.get("AUTHORIZATION_FIELDS") == recovery_p4_fields, "historical recovery authorization fields do not match frozen P4 authorization")
+        recovery_authorization_file_raw = Path(
+            str(recovery_authorization.get("AUTHORIZATION_FILE", ""))
+        )
+        recovery_authorization_file = (
+            _remap_registered_worktree_reference(
+                recovery_authorization_file_raw, evidence.repo_root
+            )
+            if recovery_authorization_file_raw.is_absolute()
+            else (evidence.repo_root / recovery_authorization_file_raw).resolve(
+                strict=False
+            )
+        )
         append_error(
             errors,
-            resolve_reference(recovery_authorization.get("AUTHORIZATION_FILE"), document=authorization_path, repo_root=evidence.repo_root)
-            == Path(frozen_records.get("recovery_p4_authorization", {}).get("original_resolved_path", "")),
+            _same_registered_worktree_location(
+                recovery_authorization_file,
+                Path(frozen_records.get("recovery_p4_authorization", {}).get("original_resolved_path", "")),
+                evidence.repo_root,
+            ),
             "historical recovery authorization original path does not bind frozen P4 authorization",
         )
         append_error(errors, resolve_reference(recovery_authorization.get("PROFILE"), document=authorization_path, repo_root=evidence.repo_root) == canonical_profile, "historical recovery authorization profile path mismatch")
@@ -10852,7 +11199,13 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                     append_error(errors, path.is_file() and SHA256_RE.fullmatch(expected) is not None, f"historical r4 no-action recovery {key} actual hash missing/malformed")
                     append_error(errors, expected_copy in {"missing", "not_provided"}, f"historical r4 no-action recovery {key} expected field mismatch")
                     if path.is_file() and SHA256_RE.fullmatch(expected):
-                        append_error(errors, sha256_file(path) == expected, f"historical r4 no-action recovery {key} actual hash does not bind canonical file")
+                        append_error(
+                            errors,
+                            _sha256_matches_registered_materialization(
+                                path, expected, evidence.repo_root
+                            ),
+                            f"historical r4 no-action recovery {key} actual hash does not bind canonical file",
+                        )
             else:
                 append_error(errors, path.is_file() and SHA256_RE.fullmatch(expected) is not None, f"historical recovery authorization {key} missing/malformed")
                 if r7_profile_mismatch_no_action and key == "PROFILE_SHA256":
@@ -10860,7 +11213,13 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
                 else:
                     append_error(errors, expected == expected_copy, f"historical recovery authorization {key} expected/actual mismatch")
                 if path.is_file() and SHA256_RE.fullmatch(expected):
-                    append_error(errors, sha256_file(path) == expected, f"historical recovery authorization {key} does not bind canonical file")
+                    append_error(
+                        errors,
+                        _sha256_matches_registered_materialization(
+                            path, expected, evidence.repo_root
+                        ),
+                        f"historical recovery authorization {key} does not bind canonical file",
+                    )
         record = {
             "directory": str(recovery_dir),
             "started_at_utc": begin_match.group(1).strip() if begin_match else None,
@@ -10913,11 +11272,24 @@ def _historical_epoch_record(candidate: Candidate, evidence: RepositoryEvidence)
             append_error(errors, resolve_reference(recovery_markers.get("SHUTDOWN_STDOUT_LOG"), document=summary, repo_root=evidence.repo_root) == stdout.resolve(strict=False), "historical effective recovery summary stdout path mismatch")
             append_error(errors, resolve_reference(recovery_markers.get("SHUTDOWN_STDERR_LOG"), document=summary, repo_root=evidence.repo_root) == (recovery_dir / "program_tfdu_shutdown_safe.stderr.log").resolve(strict=False), "historical effective recovery summary stderr path mismatch")
             stdout_text = marker_text(stdout)
-            expected_shutdown_marker = f"TFDU_SHUTDOWN_PROGRAMMED {canonical_shutdown_bit.as_posix()}"
+            shutdown_marker_paths = [
+                resolve_reference(
+                    line[len("TFDU_SHUTDOWN_PROGRAMMED ") :],
+                    document=stdout,
+                    repo_root=evidence.repo_root,
+                )
+                for line in stdout_text.splitlines()
+                if line.startswith("TFDU_SHUTDOWN_PROGRAMMED ")
+            ]
             append_error(errors, stdout_text.count("HW_TARGET localhost:3121/xilinx_tcf/Digilent/210512180081") == 1, "historical effective recovery stdout target identity missing/duplicated")
             append_error(errors, stdout_text.count("HW_JTAG_FREQUENCY_HZ 1000000") == 1, "historical effective recovery stdout JTAG frequency missing/duplicated")
             append_error(errors, stdout_text.count("HW_DEVICE xc7z010_1") == 1, "historical effective recovery stdout device identity missing/duplicated")
-            append_error(errors, stdout_text.count(expected_shutdown_marker) == 1, "historical effective recovery stdout canonical shutdown marker missing/duplicated")
+            append_error(
+                errors,
+                shutdown_marker_paths
+                == [canonical_shutdown_bit.resolve(strict=False)],
+                "historical effective recovery stdout canonical shutdown marker missing/duplicated",
+            )
             stderr = recovery_dir / "program_tfdu_shutdown_safe.stderr.log"
             append_error(errors, stderr.is_file() and stderr.stat().st_size == 0, "historical effective recovery stderr is missing/nonempty")
             record["classification"] = "EFFECTIVE_TFDU_SHUTDOWN"

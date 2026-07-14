@@ -1,0 +1,55 @@
+{
+  "events": [
+    {
+      "event": "authorized_execution_begin",
+      "mode": "stage62-microtest",
+      "timestamp_utc": "2026-07-14T11:52:11.644053+00:00"
+    },
+    {
+      "event": "preflight_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T11:52:42.953752+00:00"
+    },
+    {
+      "event": "shutdown_before_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T11:53:31.341901+00:00"
+    },
+    {
+      "event": "candidate_started",
+      "mode": "stage62-microtest",
+      "timestamp_utc": "2026-07-14T11:53:31.356927+00:00"
+    },
+    {
+      "candidate_returncode": 0,
+      "event": "candidate_child_reaped",
+      "process_tree_reaped": true,
+      "timestamp_utc": "2026-07-14T11:54:00.462717+00:00"
+    },
+    {
+      "event": "ps_stage_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T11:54:00.467873+00:00"
+    },
+    {
+      "candidate_child_reaped": true,
+      "candidate_returncode": 0,
+      "event": "shutdown_after_started",
+      "timestamp_utc": "2026-07-14T11:54:00.467929+00:00"
+    },
+    {
+      "event": "shutdown_after_finished",
+      "passed": true,
+      "returncode": 0,
+      "timestamp_utc": "2026-07-14T11:54:49.008100+00:00"
+    },
+    {
+      "event": "authorized_execution_end",
+      "status": "PASS",
+      "timestamp_utc": "2026-07-14T11:54:49.019832+00:00"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "rf-comm-ddr-external-master-campaign-closure-v1",
+  "campaign_id": "p7_20260714_ddr_external_campaign_a",
+  "status": "CAMPAIGN_A_CLOSED_FIX_REQUIRED",
+  "campaign_source_commit": "516a92435eb0aa2608bc3e31860573c44b7722f2",
+  "runner_fix_commit": "6d69289bea046f9f2890e19ebe489c8f5c9df67b",
+  "safe_shutdown_complete": true,
+  "hardware_runs": 9,
+  "old_runner_sha256": "eb4c88f98832fa8c1d8159f41545364b50ad59b3e2c9f894335de780282d1dfb",
+  "current_runner_sha256": "9741edc8041086c103e78923364e3ad7fc37242ebbf824dc04704db2d10e83f5",
+  "parser_sha256": "ff250817a33e923c8d7a962a92c0c3f9eb19d706f353d6676d8098bbaf80e4c7",
+  "authorization_reuse_permitted": false,
+  "runs": [
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_01",
+      "authorization_state": "consumed",
+      "authorization_sha256": "35aa189d87fb2f77ceba2c21e640f957479fa57684c7f995de3534feb1774708",
+      "raw_evidence_manifest_sha256": "2d33503bb0b29ee1b34a21cfbc50aefd976698ce656c222c1dbbbc5635740e2a"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_02",
+      "authorization_state": "consumed",
+      "authorization_sha256": "ba1f7d59567280eb83f68507d1408789c7e29254e610d1e524b67522f8d4e0fe",
+      "raw_evidence_manifest_sha256": "29a51e2ff10a8aa6b9c886369f46138aaead301a0d8ba8debcd176aca58eafd7"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_03",
+      "authorization_state": "consumed",
+      "authorization_sha256": "d9f5b8d4c784864e3f30fdff417242beb3e5fa87e252a850321ee01dd5e7e0bd",
+      "raw_evidence_manifest_sha256": "eda4abb2ef94d81697a257ad64538e7a25140793105383f8680784e1a2ca1e7a"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_04",
+      "authorization_state": "consumed",
+      "authorization_sha256": "c894e416699dbd3f4fbceec769a904f0838ea8946fa94a8b81541fec3fa04e73",
+      "raw_evidence_manifest_sha256": "df91b728c360b90f216d0aba21d8116f20b7c0c5bfbb2843aa270425b340559f"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_05",
+      "authorization_state": "consumed",
+      "authorization_sha256": "312ac6ae897772f24534bfaf98a4d1a1f56d6bf103d1509d47b6b807f497a77e",
+      "raw_evidence_manifest_sha256": "604a3e35d5a8fa86f8e870ee3469070b0f542f66890404eb60ebb9834f57a0ba"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_06",
+      "authorization_state": "consumed",
+      "authorization_sha256": "39127bb0d13e35efe2c5002fd7a3ae0b0181d6275e558ee6179fcb7143d52c2c",
+      "raw_evidence_manifest_sha256": "3b1d714192f478cbb7efbf1146af6defda89f04f44935779997dd8b3db7d7644"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_07",
+      "authorization_state": "consumed",
+      "authorization_sha256": "6cb39a7174910169554b23e502cc088098f1775685488d0eeefc361d1ff941c5",
+      "raw_evidence_manifest_sha256": "c447fbdf90eb442f2bf0b46918f125eca07af4f96d484fc4357dd8b3577a68ed"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_08",
+      "authorization_state": "consumed",
+      "authorization_sha256": "f1de2be3df74476638e347cfdfbe02b99e55960be559e41dceea63f266c2b026",
+      "raw_evidence_manifest_sha256": "8b304fb6095041774d7984c71b77b911e238be73abe0fca1a1f1bf412aee74c5"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_09",
+      "authorization_state": "consumed",
+      "authorization_sha256": "489534b73d64cee2c8eddb30effe2384de9ad21d3a65b2368396cc7336775cb6",
+      "raw_evidence_manifest_sha256": "e928dadbf462f3548f7f391de4675045f7d208733a94bc54ce59d7a15c8cf931"
+    },
+    {
+      "run_id": "p7_20260714_ddr_external_campaign_a_10",
+      "authorization_state": "retired_due_to_artifact_change",
+      "authorization_sha256": "02e7865d6c71ed95a572b18b8b32471c4f0a31655eba3ed1c2c58f0242fe6b4a",
+      "evidence_directory_exists": false,
+      "retirement_reason": "runner SHA256 changed after the required XSDB option fix"
+    }
+  ],
+  "original_aligned_sparse_corruption_root_cause": "UNRESOLVED",
+  "runner_fix_scope": "TEST_INFRASTRUCTURE_ONLY"
+}

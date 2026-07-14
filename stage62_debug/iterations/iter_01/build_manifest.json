@@ -1,0 +1,64 @@
+{
+  "schema": "rf-comm-stage62-specialist-build-manifest-v1",
+  "iteration": 1,
+  "run_id": "p7_20260713_stationary_app_r33_diag_suffix55",
+  "source_commit": "624f856120d05c71fba7b3507596cc7c711e6832",
+  "hardware_launch": false,
+  "hardware_actions_executed": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "stage66_in_plan": false,
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "5994b6574c714dbf6cd42cb4ffb4ae0e98a32f54bf24562cc7963d4fb271020c",
+    "status": "PASS",
+    "cache_status": "BYPASS",
+    "real_build_process_ran": true
+  },
+  "complete_regression_summary": {
+    "path": "build/p7_regression_suites_624f856.json",
+    "sha256": "1f12087de5f6ff5d1805c6dcd5e8b61938a8549476ca651bf0bf05ba718c2998",
+    "status": "PASS",
+    "test_count": 169,
+    "required_suite_invocation_count": 2
+  },
+  "elf": {
+    "path": "evidence/hardware/p7/artifacts/p7_runtime_2effbb1d207a2fbbc5940047d8d844a68dd8d82e70709aa9d120c00c4159596f.elf",
+    "sha256": "2effbb1d207a2fbbc5940047d8d844a68dd8d82e70709aa9d120c00c4159596f",
+    "regular_ocm_image_end": "0x00019840",
+    "highest_shf_alloc_end_including_diagnostic_noload": "0x00021600"
+  },
+  "linker_map": {
+    "path": "evidence/hardware/p7/artifacts/p7_runtime_7926234309f84d37bcf7fdcb0bf49f71d95d8a67c38257688d9d70a608c54a2a.map",
+    "sha256": "7926234309f84d37bcf7fdcb0bf49f71d95d8a67c38257688d9d70a608c54a2a"
+  },
+  "disassembly": {
+    "path": "evidence/generated/vitis/p7_ps_runtime/p7_runtime_disassembly.txt",
+    "sha256": "75df29490407fe651009b152fef6b415204f64aaa07093a92af74d541704ad58",
+    "critical_copy_ldrb_strb_dsb_verified": true,
+    "first_error_publish_verified": true
+  },
+  "ps_bitstream": {
+    "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+    "sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249"
+  },
+  "xsa": {
+    "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9"
+  },
+  "stage62_diagnostic_section": {
+    "name": ".p7_stage62_diagnostic",
+    "address": "0x00021000",
+    "size_bytes": 1536,
+    "elf_type": "SHT_NOBITS",
+    "elf_flags": ["SHF_ALLOC"]
+  },
+  "plan_generation": {
+    "status": "BLOCKED",
+    "partial_authorization_file_count": 12,
+    "partial_bundle_file_count": 32,
+    "sequence_plan_created": false,
+    "execution_ledger_created": false,
+    "reason": "P7 ELF allocated image end does not match the build summary OCM boundary"
+  }
+}

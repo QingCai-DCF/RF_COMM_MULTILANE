@@ -28,10 +28,48 @@ P7_UINT32_MAX = 0xFFFFFFFF
 P7_KNOWN_GOOD_TXD_HIGH_CYCLES = 8
 P7_FAILURE_SNAPSHOT_BASE = 0x00021000
 P7_FIRST_ERROR_DIAGNOSTIC_MAGIC = 0x44433750
-P7_FIRST_ERROR_DIAGNOSTIC_BYTES = 320
-P7_FIRST_ERROR_SNAPSHOT_BYTES = 64
+P7_FIRST_ERROR_DIAGNOSTIC_VERSION = 2
+P7_FIRST_ERROR_DIAGNOSTIC_BYTES = 1536
+P7_FIRST_ERROR_HEADER_BYTES = 512
+P7_FIRST_ERROR_SNAPSHOT_BYTES = 256
+P7_STAGE62_MICROTEST_CONTROL_MAGIC = 0x434D3750
+P7_STAGE62_MICROTEST_RECORD_MAGIC = 0x544D3750
+P7_STAGE62_MICROTEST_VERSION = 1
+P7_STAGE62_MICROTEST_RECORD_BYTES = 1536
+P7_STAGE62_MICROTEST_HEADER_BYTES = 512
+P7_STAGE62_MICROTEST_FIXTURE_BYTES = 256
+P7_STAGE62_MICROTEST_TARGET_OFFSET = 64
+P7_STAGE62_MICROTEST_OCM_SOURCE_ADDRESS = 0x00022400
+P7_STAGE62_MICROTEST_OCM_DESTINATION_ADDRESS = 0x00022500
+P7_STAGE62_MICROTEST_DDR_SOURCE_ADDRESS = 0x00100000
+P7_STAGE62_MICROTEST_DDR_DESTINATION_ADDRESS = 0x00900000
+P7_STAGE62_MICROTEST_SOURCE_GUARD = 0x3C
+P7_STAGE62_MICROTEST_DESTINATION_GUARD = 0xC3
+P7_STAGE62_MICROTEST_DESTINATION_CANARY = 0xA5
+P7_OUTPUT_CANARY_BYTE = 0xA5
 P7_DIAGNOSTIC_MISSING_BYTE = 0x100
 P7_DIAGNOSTIC_NOT_APPLICABLE = P7_UINT32_MAX
+
+P7_COPY_DIAGNOSTIC_CLASSIFICATION_NAMES = {
+    0: "COPY_OK",
+    1: "SOURCE_CHANGED",
+    2: "DEST_UNCHANGED",
+    3: "DEST_WRONG_VALUE",
+    4: "DEST_PARTIAL_WRITE",
+    5: "READBACK_VISIBILITY_SUSPECT",
+    6: "CANARY_PRECHECK_FAILED",
+    7: "DIAGNOSTIC_RECORD_INVALID",
+}
+P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_BEFORE = 1 << 0
+P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_AFTER = 1 << 1
+P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_BEFORE = 1 << 2
+P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_AFTER = 1 << 3
+P7_COPY_DIAGNOSTIC_CAPTURE_CANARY_VERIFIED = 1 << 4
+P7_COPY_DIAGNOSTIC_CAPTURE_COPY_EXECUTED = 1 << 5
+P7_COPY_DIAGNOSTIC_CAPTURE_RUNTIME_REGISTERS = 1 << 6
+P7_COPY_DIAGNOSTIC_CAPTURE_PAGE_TABLES = 1 << 7
+P7_COPY_DIAGNOSTIC_CAPTURE_PL310 = 1 << 8
+P7_COPY_DIAGNOSTIC_CAPTURE_GENERIC_PAIR = 1 << 9
 
 P7_FIRST_ERROR_STAGE_NAMES = {
     1: "INPUT_REF",
@@ -53,7 +91,7 @@ _P7_FIRST_ERROR_ALLOWED_ERRORS = {
     5: frozenset({27}),
     6: frozenset({28}),
     7: frozenset({22, 29}),
-    8: frozenset({23, 30}),
+    8: frozenset({23, 30, 32}),
     9: frozenset({31}),
     10: frozenset({13, 14}),
 }
@@ -110,7 +148,8 @@ _TERMINAL_DESCRIPTOR_STATUSES = frozenset(
 )
 _WORDS = struct.Struct("<64I")
 _STATUS_WORD = struct.Struct("<I")
-_FIRST_ERROR_HEADER_WORDS = struct.Struct("<48I")
+_FIRST_ERROR_HEADER_WORDS = struct.Struct("<128I")
+_STAGE62_MICROTEST_HEADER_WORDS = struct.Struct("<128I")
 
 
 def _require_u32(name: str, value: int) -> int:
@@ -212,23 +251,39 @@ def words_sha256(words: tuple[int, ...] | list[int]) -> str:
 def unpack_first_error_diagnostic(raw: bytes) -> dict[str, object]:
     """Decode and fail-closed validate one committed P7CD first-error image."""
     if len(raw) != P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
-        raise ValueError("first-error diagnostic must contain exactly 320 bytes")
-    words = list(_FIRST_ERROR_HEADER_WORDS.unpack(raw[:192]))
+        raise ValueError("first-error diagnostic must contain exactly 1536 bytes")
+    words = list(_FIRST_ERROR_HEADER_WORDS.unpack(raw[:P7_FIRST_ERROR_HEADER_BYTES]))
     if words[0] != P7_FIRST_ERROR_DIAGNOSTIC_MAGIC:
         raise ValueError("first-error diagnostic commit magic is missing")
-    if words[1] != P7_RUNTIME_VERSION:
+    if words[1] != P7_FIRST_ERROR_DIAGNOSTIC_VERSION:
         raise ValueError("first-error diagnostic version is unsupported")
-    stage = words[2]
-    error_code = words[3]
+    if words[2] != P7_FIRST_ERROR_DIAGNOSTIC_BYTES:
+        raise ValueError("first-error diagnostic record length is invalid")
+    if words[3] == 0:
+        raise ValueError("first-error diagnostic sequence is zero")
+    crc_image = bytearray(raw)
+    struct.pack_into("<I", crc_image, 0, 0)
+    struct.pack_into("<I", crc_image, 16, 0)
+    computed_record_crc32 = zlib.crc32(crc_image) & P7_UINT32_MAX
+    if computed_record_crc32 != words[4]:
+        raise ValueError("first-error diagnostic record CRC32 is invalid")
+    classification = words[5]
+    if classification not in P7_COPY_DIAGNOSTIC_CLASSIFICATION_NAMES:
+        raise ValueError("first-error diagnostic classification is invalid")
+    if classification == 0:
+        raise ValueError("published first-error diagnostic cannot classify COPY_OK")
+    stage = words[6]
+    error_code = words[7]
     if stage not in P7_FIRST_ERROR_STAGE_NAMES:
         raise ValueError("first-error diagnostic stage is invalid")
     if error_code not in _P7_FIRST_ERROR_ALLOWED_ERRORS[stage]:
         raise ValueError("first-error diagnostic stage/error pair is invalid")
-    expected_length = words[8]
-    actual_length = words[9]
-    first_bad_offset = words[10]
-    expected_byte = words[11]
-    actual_byte = words[12]
+    length = words[12]
+    expected_length = words[13]
+    actual_length = words[14]
+    first_bad_offset = words[15]
+    expected_byte = words[16]
+    actual_byte = words[17]
     if expected_length > P7_MAX_OBJECT_BYTES or actual_length > P7_MAX_OBJECT_BYTES:
         raise ValueError("first-error diagnostic length exceeds the P7 object limit")
     max_length = max(expected_length, actual_length)
@@ -246,15 +301,15 @@ def unpack_first_error_diagnostic(raw: bytes) -> dict[str, object]:
         raise ValueError("first-error actual-byte sentinel contradicts length")
     if expected_byte == actual_byte:
         raise ValueError("first-error diagnostic bytes do not describe a mismatch")
-    fragment_index = words[6]
-    lane_mask = words[7]
+    fragment_index = words[10]
+    lane_mask = words[11]
     if stage in (9, 10):
         if fragment_index != P7_DIAGNOSTIC_NOT_APPLICABLE or lane_mask != 0:
             raise ValueError("object-level first-error identity is invalid")
     elif fragment_index == P7_DIAGNOSTIC_NOT_APPLICABLE or lane_mask not in (1, 2, 3):
         raise ValueError("fragment-level first-error identity is invalid")
-    snapshot_offset = words[17]
-    snapshot_length = words[18]
+    snapshot_offset = words[47]
+    snapshot_length = words[48]
     if (
         snapshot_length == 0
         or snapshot_length > P7_FIRST_ERROR_SNAPSHOT_BYTES
@@ -263,63 +318,438 @@ def unpack_first_error_diagnostic(raw: bytes) -> dict[str, object]:
         or not snapshot_offset <= first_bad_offset < snapshot_offset + snapshot_length
     ):
         raise ValueError("first-error diagnostic snapshot geometry is invalid")
-    if words[19] != 0 or any(words[36:48]):
+    capture_flags = words[49]
+    known_capture_flags = (1 << 10) - 1
+    if capture_flags & ~known_capture_flags:
+        raise ValueError("first-error diagnostic capture flags are invalid")
+    if any(words[94:128]):
         raise ValueError("first-error diagnostic reserved words are nonzero")
-    expected_snapshot = raw[192:256]
-    actual_snapshot = raw[256:320]
+    snapshot_offsets = tuple(words[86:90])
+    if snapshot_offsets != (512, 768, 1024, 1280):
+        raise ValueError("first-error diagnostic snapshot offsets are invalid")
+    source_before = raw[512:768]
+    source_after = raw[768:1024]
+    destination_before = raw[1024:1280]
+    destination_after = raw[1280:1536]
+    snapshots = {
+        "source_before": source_before,
+        "source_after": source_after,
+        "destination_before": destination_before,
+        "destination_after": destination_after,
+    }
     for index in range(P7_FIRST_ERROR_SNAPSHOT_BYTES):
         source_index = snapshot_offset + index
-        if (index >= snapshot_length or source_index >= expected_length) and expected_snapshot[index] != 0:
-            raise ValueError("first-error expected snapshot padding is nonzero")
-        if (index >= snapshot_length or source_index >= actual_length) and actual_snapshot[index] != 0:
-            raise ValueError("first-error actual snapshot padding is nonzero")
+        if (index >= snapshot_length or source_index >= expected_length):
+            if source_before[index] != 0 or source_after[index] != 0:
+                raise ValueError("first-error source snapshot padding is nonzero")
+        if (index >= snapshot_length or source_index >= actual_length):
+            if destination_before[index] != 0 or destination_after[index] != 0:
+                raise ValueError("first-error destination snapshot padding is nonzero")
     relative_bad = first_bad_offset - snapshot_offset
-    if first_bad_offset < expected_length and expected_snapshot[relative_bad] != expected_byte:
-        raise ValueError("first-error expected byte disagrees with snapshot")
-    if first_bad_offset < actual_length and actual_snapshot[relative_bad] != actual_byte:
-        raise ValueError("first-error actual byte disagrees with snapshot")
-    expected_sha256 = words_sha256(words[20:28])
-    actual_sha256 = words_sha256(words[28:36])
-    if snapshot_offset == 0 and snapshot_length >= expected_length:
-        expected_full = expected_snapshot[:expected_length]
-        if zlib.crc32(expected_full) & P7_UINT32_MAX != words[15]:
-            raise ValueError("first-error expected CRC32 disagrees with full snapshot")
-        if hashlib.sha256(expected_full).hexdigest() != expected_sha256:
-            raise ValueError("first-error expected SHA256 disagrees with full snapshot")
-    if snapshot_offset == 0 and snapshot_length >= actual_length:
-        actual_full = actual_snapshot[:actual_length]
-        if zlib.crc32(actual_full) & P7_UINT32_MAX != words[16]:
-            raise ValueError("first-error actual CRC32 disagrees with full snapshot")
-        if hashlib.sha256(actual_full).hexdigest() != actual_sha256:
-            raise ValueError("first-error actual SHA256 disagrees with full snapshot")
+    byte_fields = {
+        "source_before": words[18],
+        "source_after": words[19],
+        "destination_before": words[20],
+        "destination_after": words[21],
+    }
+    for name, value in byte_fields.items():
+        if value > P7_DIAGNOSTIC_MISSING_BYTE:
+            raise ValueError(f"first-error {name} byte is invalid")
+        observation_length = expected_length if name.startswith("source") else actual_length
+        if first_bad_offset < observation_length:
+            if snapshots[name][relative_bad] != value:
+                raise ValueError(f"first-error {name} byte disagrees with snapshot")
+        elif value != P7_DIAGNOSTIC_MISSING_BYTE:
+            raise ValueError(f"first-error {name} missing-byte sentinel is invalid")
+    if classification == 1:
+        if expected_byte != words[18] or actual_byte != words[19]:
+            raise ValueError("SOURCE_CHANGED classification byte pair is inconsistent")
+    elif classification == 6:
+        if expected_byte != words[90] or actual_byte != words[20]:
+            raise ValueError("CANARY_PRECHECK_FAILED byte pair is inconsistent")
+    elif classification in {2, 3, 4, 5}:
+        if expected_byte != words[18] or actual_byte != words[21]:
+            raise ValueError("destination classification byte pair is inconsistent")
+    crc_fields = words[50:54]
+    sha_fields = (
+        words_sha256(words[54:62]),
+        words_sha256(words[62:70]),
+        words_sha256(words[70:78]),
+        words_sha256(words[78:86]),
+    )
+    observation_lengths = (
+        expected_length,
+        expected_length,
+        actual_length,
+        actual_length,
+    )
+    for index, (name, snapshot) in enumerate(snapshots.items()):
+        observation_length = observation_lengths[index]
+        if snapshot_offset == 0 and snapshot_length >= observation_length:
+            full = snapshot[:observation_length]
+            if zlib.crc32(full) & P7_UINT32_MAX != crc_fields[index]:
+                raise ValueError(f"first-error {name} CRC32 disagrees with snapshot")
+            if hashlib.sha256(full).hexdigest() != sha_fields[index]:
+                raise ValueError(f"first-error {name} SHA256 disagrees with snapshot")
+    required_runtime_flags = (
+        P7_COPY_DIAGNOSTIC_CAPTURE_RUNTIME_REGISTERS
+        | P7_COPY_DIAGNOSTIC_CAPTURE_PAGE_TABLES
+        | P7_COPY_DIAGNOSTIC_CAPTURE_PL310
+    )
+    if capture_flags & required_runtime_flags != required_runtime_flags:
+        raise ValueError("first-error diagnostic runtime-state capture is incomplete")
+    if stage == 8 and error_code in {23, 32}:
+        required_copy_flags = (
+            P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_BEFORE
+            | P7_COPY_DIAGNOSTIC_CAPTURE_SOURCE_AFTER
+            | P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_BEFORE
+            | P7_COPY_DIAGNOSTIC_CAPTURE_DESTINATION_AFTER
+        )
+        if capture_flags & required_copy_flags != required_copy_flags:
+            raise ValueError("OCM-to-DDR copy diagnostic snapshots are incomplete")
+        if length != expected_length or length != actual_length or length > 256:
+            raise ValueError("OCM-to-DDR copy diagnostic length is invalid")
+    if words[24] != words[22] % 4 or words[25] != words[22] % 64:
+        raise ValueError("first-error source alignment metadata is inconsistent")
+    if words[26] != words[23] % 4 or words[27] != words[23] % 64:
+        raise ValueError("first-error destination alignment metadata is inconsistent")
+    expected_sha256 = sha_fields[0]
+    actual_sha256 = sha_fields[3]
     return {
         "magic": words[0],
         "version": words[1],
+        "record_length": words[2],
+        "sequence": words[3],
+        "record_crc32": words[4],
+        "record_crc32_computed": computed_record_crc32,
+        "classification": classification,
+        "classification_name": P7_COPY_DIAGNOSTIC_CLASSIFICATION_NAMES[classification],
         "stage": stage,
         "stage_name": P7_FIRST_ERROR_STAGE_NAMES[stage],
         "error_code": error_code,
-        "session_epoch": words[4],
-        "object_id": words[5],
+        "session_epoch": words[8],
+        "object_id": words[9],
         "fragment_index": fragment_index,
         "lane_mask": lane_mask,
+        "length": length,
         "expected_length": expected_length,
         "actual_length": actual_length,
         "first_bad_offset": first_bad_offset,
+        "first_bad_index": first_bad_offset,
         "expected_byte": expected_byte,
         "actual_byte": actual_byte,
-        "expected_address": words[13],
-        "actual_address": words[14],
-        "expected_address_low6": words[13] & 0x3F,
-        "actual_address_low6": words[14] & 0x3F,
-        "expected_crc32": words[15],
-        "actual_crc32": words[16],
+        "observed_byte": actual_byte,
+        "source_before_byte": words[18],
+        "source_after_byte": words[19],
+        "destination_before_byte": words[20],
+        "destination_after_byte": words[21],
+        "source_address": words[22],
+        "destination_address": words[23],
+        "expected_address": words[22],
+        "actual_address": words[23],
+        "expected_address_low6": words[25],
+        "actual_address_low6": words[27],
+        "source_alignment_mod4": words[24],
+        "source_alignment_mod64": words[25],
+        "destination_alignment_mod4": words[26],
+        "destination_alignment_mod64": words[27],
+        "stack_pointer": words[28],
+        "sctlr": words[29],
+        "actlr": words[30],
+        "ttbr0": words[31],
+        "ttbr1": words[32],
+        "ttbcr": words[33],
+        "dacr": words[34],
+        "source_l1_descriptor_address": words[35],
+        "source_l1_descriptor": words[36],
+        "source_l2_descriptor_address": words[37],
+        "source_l2_descriptor": words[38],
+        "destination_l1_descriptor_address": words[39],
+        "destination_l1_descriptor": words[40],
+        "destination_l2_descriptor_address": words[41],
+        "destination_l2_descriptor": words[42],
+        "pl310_control": words[43],
+        "pl310_aux_control": words[44],
+        "pl310_cache_type": words[45],
+        "pl310_raw_interrupt_status": words[46],
         "snapshot_offset": snapshot_offset,
         "snapshot_length": snapshot_length,
+        "capture_flags": capture_flags,
+        "output_canary_byte": words[90],
+        "mmu_enabled": bool(words[91]),
+        "dcache_enabled": bool(words[92]),
+        "icache_enabled": bool(words[93]),
+        "source_before_crc32": words[50],
+        "source_after_crc32": words[51],
+        "destination_before_crc32": words[52],
+        "destination_after_crc32": words[53],
+        "expected_crc32": words[50],
+        "actual_crc32": words[53],
+        "source_before_sha256": sha_fields[0],
+        "source_after_sha256": sha_fields[1],
+        "destination_before_sha256": sha_fields[2],
+        "destination_after_sha256": sha_fields[3],
         "expected_sha256": expected_sha256,
         "actual_sha256": actual_sha256,
-        "expected_snapshot": expected_snapshot[:snapshot_length].hex(),
-        "actual_snapshot": actual_snapshot[:snapshot_length].hex(),
+        "source_before": source_before[:snapshot_length].hex(),
+        "source_after": source_after[:snapshot_length].hex(),
+        "destination_before": destination_before[:snapshot_length].hex(),
+        "destination_after": destination_after[:snapshot_length].hex(),
+        "expected_snapshot": source_before[:snapshot_length].hex(),
+        "actual_snapshot": destination_after[:snapshot_length].hex(),
         "words": words,
+    }
+
+
+def stage62_microtest_case_geometry(case_id: int) -> dict[str, int | str]:
+    cases = {
+        1: (
+            "A",
+            P7_STAGE62_MICROTEST_OCM_SOURCE_ADDRESS,
+            P7_STAGE62_MICROTEST_OCM_DESTINATION_ADDRESS,
+            1,
+            1,
+            0x11,
+        ),
+        2: (
+            "B",
+            P7_STAGE62_MICROTEST_OCM_SOURCE_ADDRESS,
+            P7_STAGE62_MICROTEST_DDR_DESTINATION_ADDRESS,
+            1,
+            2,
+            0x41,
+        ),
+        3: (
+            "C",
+            P7_STAGE62_MICROTEST_DDR_SOURCE_ADDRESS,
+            P7_STAGE62_MICROTEST_OCM_DESTINATION_ADDRESS,
+            2,
+            1,
+            0x71,
+        ),
+        4: (
+            "D",
+            P7_STAGE62_MICROTEST_DDR_SOURCE_ADDRESS,
+            P7_STAGE62_MICROTEST_DDR_DESTINATION_ADDRESS,
+            2,
+            2,
+            0xD1,
+        ),
+    }
+    if case_id not in cases:
+        raise ValueError(f"unsupported Stage62 microtest case: {case_id}")
+    name, source, destination, source_space, destination_space, pattern_base = cases[case_id]
+    return {
+        "case": name,
+        "case_id": case_id,
+        "source_fixture_address": source,
+        "destination_fixture_address": destination,
+        "source_space": source_space,
+        "destination_space": destination_space,
+        "pattern_base": pattern_base,
+    }
+
+
+def build_stage62_microtest_fixtures(
+    case_id: int,
+    transfer_length: int,
+    source_alignment: int,
+    destination_alignment: int,
+) -> tuple[bytes, bytes]:
+    geometry = stage62_microtest_case_geometry(case_id)
+    if transfer_length not in range(29, 33):
+        raise ValueError("Stage62 microtest transfer length must be in 29..32")
+    if source_alignment not in range(4) or destination_alignment not in range(4):
+        raise ValueError("Stage62 microtest alignments must be in 0..3")
+    source = bytearray([P7_STAGE62_MICROTEST_SOURCE_GUARD] * P7_STAGE62_MICROTEST_FIXTURE_BYTES)
+    destination = bytearray(
+        [P7_STAGE62_MICROTEST_DESTINATION_GUARD]
+        * P7_STAGE62_MICROTEST_FIXTURE_BYTES
+    )
+    source_offset = P7_STAGE62_MICROTEST_TARGET_OFFSET + source_alignment
+    destination_offset = P7_STAGE62_MICROTEST_TARGET_OFFSET + destination_alignment
+    pattern_base = int(geometry["pattern_base"])
+    for index in range(transfer_length):
+        source[source_offset + index] = (pattern_base + index) & 0xFF
+        destination[destination_offset + index] = P7_STAGE62_MICROTEST_DESTINATION_CANARY
+    return bytes(source), bytes(destination)
+
+
+def unpack_stage62_microtest_record(raw: bytes) -> dict[str, object]:
+    if len(raw) != P7_STAGE62_MICROTEST_RECORD_BYTES:
+        raise ValueError(
+            f"Stage62 microtest record must be exactly {P7_STAGE62_MICROTEST_RECORD_BYTES} bytes"
+        )
+    words = list(
+        _STAGE62_MICROTEST_HEADER_WORDS.unpack(
+            raw[:P7_STAGE62_MICROTEST_HEADER_BYTES]
+        )
+    )
+    if words[0] != P7_STAGE62_MICROTEST_RECORD_MAGIC:
+        raise ValueError("Stage62 microtest record magic mismatch")
+    if words[1] != P7_STAGE62_MICROTEST_VERSION:
+        raise ValueError("Stage62 microtest record version mismatch")
+    if words[2] != P7_STAGE62_MICROTEST_RECORD_BYTES:
+        raise ValueError("Stage62 microtest record length mismatch")
+    crc_image = bytearray(raw)
+    crc_image[0:4] = b"\x00" * 4
+    crc_image[16:20] = b"\x00" * 4
+    computed_record_crc32 = zlib.crc32(crc_image) & P7_UINT32_MAX
+    if words[4] != computed_record_crc32:
+        raise ValueError("Stage62 microtest record CRC32 mismatch")
+    case_id = words[8]
+    geometry = stage62_microtest_case_geometry(case_id)
+    transfer_length = words[9]
+    source_alignment = words[14]
+    destination_alignment = words[15]
+    if transfer_length not in range(29, 33):
+        raise ValueError("Stage62 microtest record transfer length is outside 29..32")
+    if source_alignment not in range(4) or destination_alignment not in range(4):
+        raise ValueError("Stage62 microtest record alignment is outside 0..3")
+    source_offset = P7_STAGE62_MICROTEST_TARGET_OFFSET + source_alignment
+    destination_offset = P7_STAGE62_MICROTEST_TARGET_OFFSET + destination_alignment
+    expected_geometry = {
+        10: int(geometry["source_fixture_address"]),
+        11: int(geometry["destination_fixture_address"]),
+        12: int(geometry["source_fixture_address"]) + source_offset,
+        13: int(geometry["destination_fixture_address"]) + destination_offset,
+        16: (int(geometry["source_fixture_address"]) + source_offset) & 3,
+        17: (int(geometry["destination_fixture_address"]) + destination_offset) & 3,
+        18: (int(geometry["source_fixture_address"]) + source_offset) & 63,
+        19: (int(geometry["destination_fixture_address"]) + destination_offset) & 63,
+        20: int(geometry["source_space"]),
+        21: int(geometry["destination_space"]),
+        43: int(geometry["pattern_base"]),
+        76: 0x00021000,
+        77: P7_STAGE62_MICROTEST_RECORD_BYTES,
+        78: source_offset,
+        79: destination_offset,
+    }
+    for index, expected in expected_geometry.items():
+        if words[index] != expected:
+            raise ValueError(
+                f"Stage62 microtest record geometry mismatch word={index} "
+                f"expected={expected} observed={words[index]}"
+            )
+    if words[38] != 1 or words[39] != 0:
+        raise ValueError("Stage62 microtest output wipe contract mismatch")
+    if words[40:43] != [
+        P7_STAGE62_MICROTEST_SOURCE_GUARD,
+        P7_STAGE62_MICROTEST_DESTINATION_GUARD,
+        P7_STAGE62_MICROTEST_DESTINATION_CANARY,
+    ]:
+        raise ValueError("Stage62 microtest guard/canary identity mismatch")
+    if words[69] != 1 or words[70] != 1 or words[71] != 0:
+        raise ValueError("Stage62 microtest control/diagnostic/coverage contract mismatch")
+    if any(words[112:128]):
+        raise ValueError("Stage62 microtest reserved header words are nonzero")
+
+    digest_offset = 80 * 4
+    digests = [
+        raw[digest_offset + index * 32 : digest_offset + (index + 1) * 32]
+        for index in range(4)
+    ]
+    snapshots = [
+        raw[P7_STAGE62_MICROTEST_HEADER_BYTES + index * P7_STAGE62_MICROTEST_FIXTURE_BYTES :
+            P7_STAGE62_MICROTEST_HEADER_BYTES + (index + 1) * P7_STAGE62_MICROTEST_FIXTURE_BYTES]
+        for index in range(4)
+    ]
+    for index, snapshot in enumerate(snapshots):
+        if zlib.crc32(snapshot) & P7_UINT32_MAX != words[72 + index]:
+            raise ValueError(f"Stage62 microtest snapshot CRC32 mismatch index={index}")
+        if hashlib.sha256(snapshot).digest() != digests[index]:
+            raise ValueError(f"Stage62 microtest snapshot SHA256 mismatch index={index}")
+
+    expected_source, expected_destination = build_stage62_microtest_fixtures(
+        case_id,
+        transfer_length,
+        source_alignment,
+        destination_alignment,
+    )
+    source_before, source_after, destination_before, destination_after = snapshots
+    if source_before != expected_source:
+        raise ValueError("Stage62 microtest source-before fixture mismatch")
+    if destination_before != expected_destination:
+        raise ValueError("Stage62 microtest destination-before fixture mismatch")
+    expected_after = bytearray(expected_destination)
+    expected_after[destination_offset : destination_offset + transfer_length] = (
+        expected_source[source_offset : source_offset + transfer_length]
+    )
+    classification = words[6]
+    if classification == 0:
+        if source_after != expected_source:
+            raise ValueError("Stage62 microtest COPY_OK source changed")
+        if destination_after != bytes(expected_after):
+            raise ValueError("Stage62 microtest COPY_OK destination mismatch")
+        if words[5] != 3 or words[7] != 0 or words[37] != 1:
+            raise ValueError("Stage62 microtest COPY_OK terminal metadata mismatch")
+        if any(words[index] != 1 for index in (30, 31, 32, 33, 34, 35, 36)):
+            raise ValueError("Stage62 microtest COPY_OK guard/precheck flag mismatch")
+        if words[22] != 0 or words[23] != P7_UINT32_MAX:
+            raise ValueError("Stage62 microtest COPY_OK unexpectedly reports a first mismatch")
+    elif words[5] != 4 or classification not in range(1, 8):
+        raise ValueError("Stage62 microtest failure classification/terminal state mismatch")
+
+    return {
+        "magic": words[0],
+        "version": words[1],
+        "record_length": words[2],
+        "sequence": words[3],
+        "record_crc32": words[4],
+        "record_crc32_computed": computed_record_crc32,
+        "terminal_status": words[5],
+        "classification": classification,
+        "error_code": words[7],
+        **geometry,
+        "transfer_length": transfer_length,
+        "source_alignment": source_alignment,
+        "destination_alignment": destination_alignment,
+        "source_target_address": words[12],
+        "destination_target_address": words[13],
+        "first_bad_domain": words[22],
+        "first_bad_index": words[23],
+        "expected_byte": words[24],
+        "observed_byte": words[25],
+        "copy_executed": words[37],
+        "output_wipe_required": words[38],
+        "stack_pointer": words[45],
+        "sctlr": words[46],
+        "actlr": words[47],
+        "ttbr0": words[48],
+        "ttbr1": words[49],
+        "ttbcr": words[50],
+        "dacr": words[51],
+        "source_l1_descriptor_address": words[52],
+        "source_l1_descriptor": words[53],
+        "source_l2_descriptor_address": words[54],
+        "source_l2_descriptor": words[55],
+        "destination_l1_descriptor_address": words[56],
+        "destination_l1_descriptor": words[57],
+        "destination_l2_descriptor_address": words[58],
+        "destination_l2_descriptor": words[59],
+        "pl310_control": words[60],
+        "pl310_aux_control": words[61],
+        "pl310_cache_type": words[62],
+        "pl310_raw_interrupt_status": words[63],
+        "mmu_enabled": words[64],
+        "dcache_enabled": words[65],
+        "icache_enabled": words[66],
+        "run_id_crc32": words[67],
+        "control_crc32": words[68],
+        "diagnostic_only": bool(words[70]),
+        "coverage_claimed": bool(words[71]),
+        "source_before_crc32": words[72],
+        "source_after_crc32": words[73],
+        "destination_before_crc32": words[74],
+        "destination_after_crc32": words[75],
+        "source_before_sha256": digests[0].hex(),
+        "source_after_sha256": digests[1].hex(),
+        "destination_before_sha256": digests[2].hex(),
+        "destination_after_sha256": digests[3].hex(),
+        "source_before": source_before,
+        "source_after": source_after,
+        "destination_before": destination_before,
+        "destination_after": destination_after,
     }
 
 

@@ -1,0 +1,854 @@
+{
+    "schema":  "rf-comm-ddr-external-campaign-artifact-manifest-v1",
+    "campaign_id":  "p7_20260714_ddr_external_campaign_b",
+    "source_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+    "runner_fix_commit":  "6d69289bea046f9f2890e19ebe489c8f5c9df67b",
+    "generated_at_utc":  "2026-07-14T05:20:03.6361723Z",
+    "status":  "READY_FOR_HUMAN_AUTHORIZATION",
+    "hardware_actions_executed":  false,
+    "HARDWARE_ACCEPTANCE":  "PENDING_HW",
+    "artifact_record_required_fields":  [
+                                            "absolute_path",
+                                            "size_bytes",
+                                            "sha256",
+                                            "git_commit",
+                                            "actual_run_input"
+                                        ],
+    "complete_regression_summary":  {
+                                        "role":  "complete_regression_summary",
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\build\\p7_regression_ddr_campaign_b_c93b85e.json",
+                                        "size_bytes":  2483,
+                                        "sha256":  "70466b40e470b1a7418f0ff9388419a45c220cc7e7141fa9c38c9a57ca8151fd",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "actual_run_input":  false
+                                    },
+    "core_readiness":  {
+                           "role":  "core_readiness",
+                           "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json",
+                           "size_bytes":  16120,
+                           "sha256":  "31debe19bb9398787b471ed268a7910b23303fdbb499c25e6d3aecf166aa4be7",
+                           "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                           "actual_run_input":  true
+                       },
+    "shared_artifacts":  [
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_dff32f8b4c465e25fa9d99981321523732aacf3a022a6bc083661d985351d9ce.elf",
+                                 "actual_run_input":  true,
+                                 "consumption":  "authorization_and_layout_validation_only; DDR mode does not download/start ELF",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "rebuilt_from_source_commit",
+                                 "role":  "elf",
+                                 "sha256":  "dff32f8b4c465e25fa9d99981321523732aacf3a022a6bc083661d985351d9ce",
+                                 "size_bytes":  355800
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_f7d974c7127ad1b159634b986b8c9e781560a419c1a6d955285dca00cb698b02.map",
+                                 "actual_run_input":  false,
+                                 "consumption":  "offline linker evidence",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "tracked_source_commit",
+                                 "role":  "linker_map",
+                                 "sha256":  "f7d974c7127ad1b159634b986b8c9e781560a419c1a6d955285dca00cb698b02",
+                                 "size_bytes":  97723
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_runtime_disassembly.txt",
+                                 "actual_run_input":  false,
+                                 "consumption":  "offline instruction/layout evidence",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "tracked_source_commit",
+                                 "role":  "disassembly",
+                                 "sha256":  "b142ef777d267f5bf958bf9d3e3d5fc0850f6f9e1efda73fa760ba591036d41a",
+                                 "size_bytes":  624754
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+                                 "actual_run_input":  true,
+                                 "consumption":  "candidate FPGA image",
+                                 "git_commit":  "53571e305846f89bf3da8c146f5a07bdb003f606",
+                                 "provenance_kind":  "exact_hash_reused_from_stage62",
+                                 "role":  "bitstream",
+                                 "sha256":  "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+                                 "size_bytes":  2083856
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+                                 "actual_run_input":  true,
+                                 "consumption":  "authorization/platform provenance validation",
+                                 "git_commit":  "53571e305846f89bf3da8c146f5a07bdb003f606",
+                                 "provenance_kind":  "exact_hash_reused_from_stage62",
+                                 "role":  "xsa",
+                                 "sha256":  "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+                                 "size_bytes":  560408
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+                                 "actual_run_input":  true,
+                                 "consumption":  "PS7 platform-directory XSA identity",
+                                 "git_commit":  "53571e305846f89bf3da8c146f5a07bdb003f606",
+                                 "provenance_kind":  "exact_hash_reused_from_stage62",
+                                 "role":  "platform_xsa",
+                                 "sha256":  "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+                                 "size_bytes":  560408
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+                                 "actual_run_input":  true,
+                                 "consumption":  "PS DDR/platform initialization",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "rebuilt_platform_from_source_commit",
+                                 "role":  "platform_ps7_init",
+                                 "sha256":  "84e478d79c0b7bfe6dfc45a5a99ab850c30c7db11d8fec1dae064133dd64b448",
+                                 "size_bytes":  25544
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+                                 "actual_run_input":  true,
+                                 "consumption":  "shutdown-before/after source image",
+                                 "git_commit":  "53571e305846f89bf3da8c146f5a07bdb003f606",
+                                 "provenance_kind":  "exact_hash_reused_from_stage62",
+                                 "role":  "shutdown_bitstream",
+                                 "sha256":  "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+                                 "size_bytes":  2083853
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\shutdown\\p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+                                 "actual_run_input":  true,
+                                 "consumption":  "content-addressed shutdown-before/after image",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "generated_exact_copy_from_source_commit",
+                                 "role":  "frozen_shutdown_bitstream",
+                                 "sha256":  "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+                                 "size_bytes":  2083853
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\scripts\\hw\\run_p7_ps_application_stage_safe.py",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe orchestration, validation, raw postprocess",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "tracked_source_commit",
+                                 "role":  "runner_python",
+                                 "sha256":  "95287d0d0907b822b00d89c356497ce231f23c083b32dc24ff75b5a7bfd59032",
+                                 "size_bytes":  289120
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\scripts\\hw\\p7_ps_application_execute.tcl",
+                                 "actual_run_input":  true,
+                                 "consumption":  "XSDB DDR external-master transaction executor",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "tracked_source_commit",
+                                 "role":  "runner_tcl",
+                                 "sha256":  "9741edc8041086c103e78923364e3ad7fc37242ebbf824dc04704db2d10e83f5",
+                                 "size_bytes":  137843
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\tools\\ddr_external_master_diagnostic.py",
+                                 "actual_run_input":  true,
+                                 "consumption":  "raw fixture/readback comparison and deterministic pattern contract",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "tracked_source_commit",
+                                 "role":  "parser",
+                                 "sha256":  "ff250817a33e923c8d7a962a92c0c3f9eb19d706f353d6676d8098bbaf80e4c7",
+                                 "size_bytes":  28002
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "goal_plan",
+                                 "sha256":  "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+                                 "size_bytes":  34806
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\profiles\\p7\\p7_ps_application_functional.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "profile",
+                                 "sha256":  "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0",
+                                 "size_bytes":  528
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "active_xdc",
+                                 "sha256":  "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+                                 "size_bytes":  2018
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "pinmap",
+                                 "sha256":  "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+                                 "size_bytes":  1412
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "register_map",
+                                 "sha256":  "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+                                 "size_bytes":  7692
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_input_seed_4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5.bin",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "input_seed",
+                                 "sha256":  "4b96ec3b91e9f764ac0227ca7df451bd8294cd46298047b43b960ae1c0b0afc5",
+                                 "size_bytes":  247
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate_build_summary.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "p6_build_summary",
+                                 "sha256":  "096bb806dc401b3c3b4b3671d52d25afa617a5f1c3dbc07732144fec9e45f054",
+                                 "size_bytes":  1597
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_ps_runtime_build_summary.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "p7_build_summary",
+                                 "sha256":  "1f8c608a14df72ff90e4698759c58205a109fc8109d0bc1c55cc777259c4a1e9",
+                                 "size_bytes":  11493
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "core_readiness",
+                                 "sha256":  "31debe19bb9398787b471ed268a7910b23303fdbb499c25e6d3aecf166aa4be7",
+                                 "size_bytes":  16120
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\board_profiles\\ACTIVE_PROFILE.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "active_profile",
+                                 "sha256":  "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
+                                 "size_bytes":  899
+                             },
+                             {
+                                 "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\evidence\\generated\\p7_lane1_promotion_summary.json",
+                                 "actual_run_input":  true,
+                                 "consumption":  "safe-wrapper authorization/readiness input",
+                                 "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                 "provenance_kind":  "verified_at_source_commit",
+                                 "role":  "lane1_promotion_summary",
+                                 "sha256":  "bd7f16766e65b15cbe34bb7cbd5e3f4b37a5773175474e451754c8e29506f5b6",
+                                 "size_bytes":  1795
+                             }
+                         ],
+    "per_run":  [
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_01",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "7576facab9faf89bfe004f49688514171ebd60d811cd8698c20992d9181f2293",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "7833c35be16838f56612ced4ea6bca4ada6989d8e06814065ec2cdba2141b3cb",
+                                                  "size_bytes":  1352
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6279,
+                                                      "sha256":  "6bbee66ca19970e4374b5451010440859b6294b91c10043389decbe5c409b6e1",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_01.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6107,
+                                                     "sha256":  "0395f3c7bf061fb81bfd81b31d97b957031b4bd61e1d8e0ea476ab131509d8a2",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_02",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "4db6f7ed574a42e23deb64f1f22145ccf538176f070683374e34ad686d08a7b8",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "fb350349031f064b891ae3386dc28d883e256608fc7a15621550f67f62781cd0",
+                                                  "size_bytes":  1352
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6279,
+                                                      "sha256":  "f2636b02f221dabb7058fdbc15c2da0bc4f427f38e302983dcba0e8fde62a8db",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_02.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6107,
+                                                     "sha256":  "9e768c72480e50527ec246e5953882fed92cf19386f7b10f2465e2bd52578f24",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_03",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "d8f2aa056560baa06a95ff5716812c5854ad059b9244ef0e91470b2f0ca76684",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "9dd86454d8d669b470d768a5dede5c41b0002186069c38f0ffc95fac930bd210",
+                                                  "size_bytes":  1352
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6279,
+                                                      "sha256":  "c9b6abfa523d2a018062fd402e3996dacc48ffe35647b3b51f0bae6734b5fa5e",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_03.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6107,
+                                                     "sha256":  "cd1c63c49a6d26eddd7db7e7fb657238ad2a5f5abf8f7e14bd25a2af63156eab",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_04",
+                        "pattern":  "a5_5a_3c_c3",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "6a1777d74616ccf239372ca5cc5b07f27c54ad6ea9ef5f8d0ec4acc4b4fc402f",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "37329f9c97d454d510fd9ca61b9b2dd57cbeff10e942a83b7434de8c16d1319b",
+                                                  "size_bytes":  1348
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "e2843c831ce6bb2e5225d74f54e91dc46d244c82130626583c257217c0c5f160",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "e2843c831ce6bb2e5225d74f54e91dc46d244c82130626583c257217c0c5f160",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6275,
+                                                      "sha256":  "30de2c88938742a7a019e7a3fe0be02f122792c297891ac581b6fc54985b76e3",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_04.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6103,
+                                                     "sha256":  "d945687460867cda0c31797dff1df5b6f0504483217a7e72766ed8c5ce440bca",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_05",
+                        "pattern":  "nonzero_counter",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "9b0076503800b519198ceaa3a36c7b465c0e44c1ebeaf7fd2b04ab320b247ea8",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "9053efc2acc6fee60edb413403b93cef73956dc077d428e7ec2501868fc9df26",
+                                                  "size_bytes":  1352
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "57e8933aa050bb258fd38b989928f64197eee15064ff6d9a47485c49f77c3397",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "57e8933aa050bb258fd38b989928f64197eee15064ff6d9a47485c49f77c3397",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6279,
+                                                      "sha256":  "c9cfedf55f001b352797afca055a5a39b644e27317f8ca8e23b7a348864a5c97",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_05.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6107,
+                                                     "sha256":  "eb7efe0eecb286a5e4f4004a68b86661fccd2f8ee76bbe668298556385f6d243",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_06",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "cc1f8a44072e387dd304d76a0d1045c5b85ad71ab433c4d0185d56d9e3283f2c",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "f9cac253817e4ff53359f02b4d4a10253e72e816b94c1e2ee8b12a1c712c138b",
+                                                  "size_bytes":  1351
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6278,
+                                                      "sha256":  "e783f93bdb6d2d61140fc63ee2c5c7aa9d3e3e06fd226424dcc0c4053911951d",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_06.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6132,
+                                                     "sha256":  "5fda3ea375c2961b0e3dd82ba995edcf047600fd2aa33d5882e2f8fab6e88a22",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_07",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "fc18006d91f0b644d4c15b1a11efd3eda961798fac805c007c5a2abadac13e87",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "2b07714daad5b3325f16ee79b7884b45b25401d62d49b84161b7474f49a90745",
+                                                  "size_bytes":  1348
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6275,
+                                                      "sha256":  "2c92c925503f286aa903b5e7a96ea4d719f333f23c3401600e3e2faebeed7323",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_07.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6103,
+                                                     "sha256":  "b33b85e92177842bb317af303e12045dcaba75b3ae008aa36ee4ee2bb66cde57",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_08",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "f7a488a26629606013d922fab1008ce6c778fbb279e83b1b1876ca805c1e5918",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "0e8123145d4d025255bf21a76268efb03ceca0bc52fef778e1383c0747528177",
+                                                  "size_bytes":  1349
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6276,
+                                                      "sha256":  "b73e5aa07a8608359840b64947c63963b2c814d8752961a2f77d5e30f5e06203",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_08.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6104,
+                                                     "sha256":  "4c68036d9737b4c4ee9586dcaf7c93f841276aae80e3fd40882b2d1869cdd6fd",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_09",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "dbe222d1fd9b7cb1887dcfcf8c12577f3b45d4ab7f1f19f15f6f44297e78368d",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "4b9dacdcc4a4e7e6d11de296453d3155a62636516ff638a0e933d86a837af2fb",
+                                                  "size_bytes":  1348
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6275,
+                                                      "sha256":  "7ebb01ee98bbcf9f9b5fe5a472940d6d8a014d911e6451e99e9b65f8fe6cf17f",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_09.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6103,
+                                                     "sha256":  "608664eb9198308cc3add80da9bba47b11a94f3eca59da3e7e8cc1bd7f60ecf3",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    },
+                    {
+                        "run_id":  "p7_20260714_ddr_external_campaign_b_10",
+                        "pattern":  "stage62_fixture",
+                        "artifact_manifest":  {
+                                                  "role":  "artifact_manifest",
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\artifact_manifest.json",
+                                                  "size_bytes":  14561,
+                                                  "sha256":  "5fc0395c123483649a19f4e001a26eb72ca5efb051f2c0abce60f9c73844987e",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "actual_run_input":  true
+                                              },
+                        "run_configuration":  {
+                                                  "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\run_configuration.json",
+                                                  "actual_run_input":  true,
+                                                  "consumption":  "authorization-bound one-run configuration",
+                                                  "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                  "provenance_kind":  "generated_from_source_commit",
+                                                  "role":  "run_configuration",
+                                                  "sha256":  "39604088826e57c7b91598d01eec6bbd053fda8593af02c3b47a4317302aa0ef",
+                                                  "size_bytes":  1347
+                                              },
+                        "fixture":  {
+                                        "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\ddr_external_master_fixture.bin",
+                                        "actual_run_input":  true,
+                                        "consumption":  "external-master write payload",
+                                        "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                        "provenance_kind":  "generated_from_source_commit",
+                                        "role":  "fixture",
+                                        "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                        "size_bytes":  256
+                                    },
+                        "microtest_image":  {
+                                                "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\ddr_external_master_fixture.bin",
+                                                "actual_run_input":  true,
+                                                "consumption":  "DDR boundary microtest image; same immutable fixture bytes",
+                                                "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                "provenance_kind":  "generated_from_source_commit",
+                                                "role":  "microtest_image",
+                                                "sha256":  "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+                                                "size_bytes":  256
+                                            },
+                        "authorization_request":  {
+                                                      "role":  "authorization_request",
+                                                      "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\hardware_authorization.HUMAN_REVIEW_REQUIRED.txt.template",
+                                                      "size_bytes":  6274,
+                                                      "sha256":  "b5e4fc411334f63e12fd8c3c8fa1f6536b9a3f491a54d4db943d20ab8de7a53f",
+                                                      "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                      "actual_run_input":  false
+                                                  },
+                        "run_command_template":  {
+                                                     "role":  "run_command_template",
+                                                     "absolute_path":  "C:\\Users\\user\\.codex\\worktrees\\c9ed\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260714_ddr_external_campaign_b.request\\p7_20260714_ddr_external_campaign_b_10.request\\run_command_after_human_approval.txt",
+                                                     "size_bytes":  6128,
+                                                     "sha256":  "db44881c122ca03e280a9f45b66156fe6381f8b5e176db29cc1a085bd0a3873f",
+                                                     "git_commit":  "c93b85ea9b5184c2f504880e28778abfd55d11cf",
+                                                     "actual_run_input":  false
+                                                 }
+                    }
+                ],
+    "all_declared_files_rehashed":  true,
+    "fixed_artifacts_verified":  true,
+    "notes":  [
+                  "ELF, map, disassembly, bitstream, XSA/platform, shutdown images, runners, parser, profile, register map and safety inputs are recorded in shared_artifacts.",
+                  "Fixtures vary only for the fixed B04 and B05 patterns and are bound per run.",
+                  "This manifest is offline metadata and does not grant authorization."
+              ]
+}

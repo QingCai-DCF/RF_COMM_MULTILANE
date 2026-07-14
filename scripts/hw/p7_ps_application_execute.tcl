@@ -268,6 +268,14 @@ proc p7_require_file_fill_byte {path expected} {
   close $handle
 }
 
+proc p7_require_files_equal {expected_path observed_path label} {
+  set expected [p7_read_binary_exact $expected_path [file size $expected_path]]
+  set observed [p7_read_binary_exact $observed_path [file size $expected_path]]
+  if {$expected ne $observed} {
+    error "$label binary readback differs from the immutable bundle input"
+  }
+}
+
 proc p7_say {handle line} {
   puts $handle $line
   flush $handle
@@ -335,6 +343,75 @@ proc p7_atomic_dump {path address byte_count} {
     mrd -size b -bin -file $partial $address $byte_count
   }
   file rename -force $partial $path
+}
+
+proc p7_atomic_dump_doublewords {path address byte_count} {
+  set partial "${path}.write_partial"
+  catch {file delete -force $partial}
+  if {$byte_count < 0 || ($address & 7) != 0 || ($byte_count & 7) != 0} {
+    error "P7 doubleword-wide evidence dump requires aligned address and byte count"
+  }
+  if {$byte_count == 0} {
+    set handle [open $partial w]
+    fconfigure $handle -translation binary
+    close $handle
+  } else {
+    # XSDB's count is in values.  A byte-wide count made the 1 MiB Stage 62
+    # evidence harvest take longer than the bounded functional window even
+    # after the firmware had completed the object.  Doubleword binary reads
+    # preserve the exact little-endian bytes while reducing the value count by
+    # eight.  XSDB documents that targets without native doubleword access use
+    # two word accesses.  The caller and the postprocessor still verify length,
+    # CRC32, SHA256, payload equality, trace geometry, and guard semantics.
+    set doubleword_count [expr {$byte_count / 8}]
+    mrd -size d -bin -file $partial $address $doubleword_count
+  }
+  if {![file isfile $partial] || [file size $partial] != $byte_count} {
+    catch {file delete -force $partial}
+    error "P7 doubleword-wide evidence dump returned the wrong byte count"
+  }
+  file rename -force $partial $path
+}
+
+proc p7_atomic_dump_evidence {path address byte_count} {
+  # Keep byte-exact reads for small or unaligned diagnostics.  Only aligned
+  # evidence blocks large enough to dominate the bounded runtime use the
+  # doubleword-wide path.
+  if {$byte_count >= 4096 && ($address & 7) == 0 && ($byte_count & 7) == 0} {
+    p7_atomic_dump_doublewords $path $address $byte_count
+  } else {
+    p7_atomic_dump $path $address $byte_count
+  }
+}
+
+proc p7_ddr_external_scalar_write {fixture_path address size_name unaligned_accesses} {
+  set width 0
+  set digits 0
+  switch -- $size_name {
+    b { set width 1; set digits 2 }
+    h { set width 2; set digits 4 }
+    w { set width 4; set digits 8 }
+    default { error "P7 DDR external-master scalar width is invalid" }
+  }
+  if {$unaligned_accesses ni {0 1}} {
+    error "P7 DDR external-master unaligned flag is invalid"
+  }
+  if {$unaligned_accesses && $size_name ni {h w}} {
+    error "P7 DDR external-master unaligned accesses require halfword or word width"
+  }
+  set data [p7_read_binary_exact $fixture_path 256]
+  binary scan $data c* octets
+  for {set offset 0} {$offset < 256} {incr offset $width} {
+    set value 0
+    for {set byte_index 0} {$byte_index < $width} {incr byte_index} {
+      set octet [expr {[lindex $octets [expr {$offset + $byte_index}]] & 0xFF}]
+      set value [expr {$value | ($octet << (8 * $byte_index))}]
+    }
+    set command [list mwr -size $size_name]
+    if {$unaligned_accesses} { lappend command -unaligned-access }
+    lappend command [expr {$address + $offset}] [format "0x%0*X" $digits $value] 1
+    {*}$command
+  }
 }
 
 proc p7_zero_words_and_verify {address byte_count} {
@@ -494,8 +571,8 @@ proc p7_dump_case {bundle_dir slot input_address output_address object_length tr
     error "P7 descriptor status changed across terminal snapshot slot=$slot before=$status_before after=$status_after"
   }
   if {$stationary_result_handle eq ""} {
-    p7_atomic_dump [file join $bundle_dir $output_name] $output_address $object_length
-    p7_atomic_dump [file join $bundle_dir $trace_name] $trace_address [expr {$trace_capacity * 64}]
+    p7_atomic_dump_evidence [file join $bundle_dir $output_name] $output_address $object_length
+    p7_atomic_dump_evidence [file join $bundle_dir $trace_name] $trace_address [expr {$trace_capacity * 64}]
   } else {
     p7_stationary_chunked_dump $stationary_result_handle $abort_file \
         [file join $bundle_dir $output_name] $output_address $object_length
@@ -701,9 +778,11 @@ set connected 0
 set candidate_programmed 0
 set processor_started 0
 set mode UNKNOWN
+set execution_scope UNKNOWN
+set run_id UNKNOWN
 
 set rc [catch {
-  if {[llength $argv] != 18} { error "P7 PS executor requires exactly 18 arguments" }
+  if {[llength $argv] != 20} { error "P7 PS executor requires exactly 20 arguments" }
   set root_dir [file normalize [lindex $argv 0]]
   set authorization_file [file normalize [lindex $argv 1]]
   set preflight_file [file normalize [lindex $argv 2]]
@@ -722,6 +801,8 @@ set rc [catch {
   set idle_margin_sec [lindex $argv 15]
   set shutdown_bit [file normalize [lindex $argv 16]]
   set counts_per_second [lindex $argv 17]
+  set execution_scope [lindex $argv 18]
+  set run_id [lindex $argv 19]
   set p7_canonical_part "xc7z010clg400-1"
   set p7_live_part "xc7z010"
   set p7_live_device "xc7z010_1"
@@ -732,8 +813,18 @@ set rc [catch {
       $::env(RF_COMM_HW_AUTH) ne "P7_STATIONARY_APP_LAYER_APPROVED"} {
     error "RF_COMM_HW_AUTH=P7_STATIONARY_APP_LAYER_APPROVED required"
   }
-  if {$mode ni {functional fault-fallback queue abort-restart stationary}} {
+  if {$mode ni {functional fault-fallback queue abort-restart stationary stage62-microtest ddr-external-master}} {
     error "unsupported P7 PS mode: $mode"
+  }
+  if {$execution_scope ni {P7_PS_APPLICATION_STAGE STAGE62_ONLY}} {
+    error "unsupported P7 execution scope: $execution_scope"
+  }
+  if {![regexp {^[a-z0-9][a-z0-9_.-]{0,126}$|^NONE$} $run_id]} {
+    error "P7 run ID is malformed"
+  }
+  if {$mode in {stage62-microtest ddr-external-master} &&
+      ($execution_scope ne "STAGE62_ONLY" || $run_id eq "NONE")} {
+    error "isolated DDR/Stage62 diagnostic requires a new Stage62-only run ID"
   }
   if {![string equal -nocase $expected_part $p7_canonical_part]} {
     error "P7 PS executor supports only canonical part $p7_canonical_part"
@@ -768,7 +859,8 @@ set rc [catch {
   if {[file exists $abort_file]} { error "P7 abort file is present" }
   foreach required [list $authorization_file $preflight_file $bit_file $elf_file \
       $ps7_init_file $plan_file $shutdown_bit \
-      [file join $bundle_dir mailbox.bin] [file join $bundle_dir descriptors.bin]] {
+      [file join $bundle_dir mailbox.bin] [file join $bundle_dir descriptors.bin] \
+      [file join $bundle_dir stage62_microtest_control.bin]] {
     if {![file isfile $required]} { error "P7 PS required file missing: $required" }
   }
   if {![file isdirectory [file dirname $result_file]]} { error "P7 result directory missing" }
@@ -778,6 +870,33 @@ set rc [catch {
   }
   if {[file size [file join $bundle_dir descriptors.bin]] != 2048} {
     error "P7 descriptor table must contain exactly 2048 bytes"
+  }
+  if {[file size [file join $bundle_dir stage62_microtest_control.bin]] != 64} {
+    error "P7 Stage62 microtest control must contain exactly 64 bytes"
+  }
+  if {$mode eq "stage62-microtest"} {
+    foreach {micro_name micro_size} [list \
+        stage62_microtest_source_fixture.bin 256 \
+        stage62_microtest_destination_fixture.bin 256 \
+        stage62_microtest_record_zero.bin 1536] {
+      set micro_path [file join $bundle_dir $micro_name]
+      if {![file isfile $micro_path] || [file size $micro_path] != $micro_size} {
+        error "P7 Stage62 microtest bundle artifact missing/invalid: $micro_name"
+      }
+    }
+    p7_require_file_fill_byte \
+        [file join $bundle_dir stage62_microtest_record_zero.bin] 0
+  } else {
+    p7_require_file_fill_byte \
+        [file join $bundle_dir stage62_microtest_control.bin] 0
+  }
+  set ddr_fixture_path [file join $bundle_dir ddr_external_master_fixture.bin]
+  if {$mode eq "ddr-external-master"} {
+    if {![file isfile $ddr_fixture_path] || [file size $ddr_fixture_path] != 256} {
+      error "P7 DDR external-master fixture is missing or not exactly 256 bytes"
+    }
+  } elseif {[file exists $ddr_fixture_path]} {
+    error "non-DDR P7 bundle unexpectedly contains a DDR external-master fixture"
   }
   if {$mode eq "queue"} {
     foreach queue_mailbox [list [file join $bundle_dir mailbox_queue_depth_1.bin] \
@@ -865,6 +984,12 @@ set rc [catch {
   p7_require_value $auth_text LANE_COUNT 2
   p7_require_value $auth_text MAX_LANE_MASK 0x3
   p7_require_value $auth_text P7_PS_MODE $mode
+  p7_require_value $auth_text P7_EXECUTION_SCOPE $execution_scope
+  p7_require_value $auth_text P7_RUN_ID $run_id
+  if {$execution_scope eq "STAGE62_ONLY"} {
+    p7_require_value $auth_text P7_DIAGNOSTIC_ONLY true
+    p7_require_value $auth_text P7_COVERAGE_CLAIMED false
+  }
   p7_require_value $auth_text P7_PS_CORE_READINESS PASS
   p7_require_value $auth_text P7_COUNTS_PER_SECOND $counts_per_second
   p7_require_path $auth_text BITSTREAM_PATH $bit_file
@@ -1046,22 +1171,47 @@ set rc [catch {
       if {[llength $fields] != 2 || [info exists plan_value($key)]} {
         error "P7 plan key is duplicate or malformed: $key"
       }
-      if {$key ni {MODE MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS \
-          SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
+      if {$key ni {MODE EXECUTION_SCOPE RUN_ID DIAGNOSTIC_ONLY COVERAGE_CLAIMED \
+          MICROTEST_CASE MICROTEST_LENGTH MICROTEST_SOURCE_ALIGNMENT \
+          MICROTEST_DESTINATION_ALIGNMENT DDR_EXTERNAL_PATTERN \
+          DDR_EXTERNAL_ADDRESS DDR_EXTERNAL_ACCESS_METHOD DDR_EXTERNAL_LENGTH \
+          DDR_EXTERNAL_REPETITION DDR_EXTERNAL_UNALIGNED_ACCESSES \
+          DDR_EXTERNAL_FIXTURE_SHA256 MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
+          ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
+          SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
+          CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
         error "unsupported P7 plan key: $key"
       }
       set plan_value($key) [lindex $fields 1]
     }
   }
-  foreach key {MODE MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
+  foreach key {MODE EXECUTION_SCOPE RUN_ID DIAGNOSTIC_ONLY COVERAGE_CLAIMED \
+      MICROTEST_CASE MICROTEST_LENGTH MICROTEST_SOURCE_ALIGNMENT \
+      MICROTEST_DESTINATION_ALIGNMENT DDR_EXTERNAL_PATTERN DDR_EXTERNAL_ADDRESS \
+      DDR_EXTERNAL_ACCESS_METHOD DDR_EXTERNAL_LENGTH DDR_EXTERNAL_REPETITION \
+      DDR_EXTERNAL_UNALIGNED_ACCESSES DDR_EXTERNAL_FIXTURE_SHA256 \
+      MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
+      ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
+      SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT \
+      BOUNDARY_COUNT CHECKPOINT_COUNT} {
     if {![info exists plan_value($key)]} { error "P7 plan field missing: $key" }
   }
-  foreach key {MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT} {
+  foreach key {DIAGNOSTIC_ONLY COVERAGE_CLAIMED MICROTEST_LENGTH \
+      MICROTEST_SOURCE_ALIGNMENT MICROTEST_DESTINATION_ALIGNMENT \
+      DDR_EXTERNAL_LENGTH DDR_EXTERNAL_REPETITION \
+      DDR_EXTERNAL_UNALIGNED_ACCESSES \
+      MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS \
+      SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS \
+      COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT \
+      CHECKPOINT_COUNT} {
     if {![string is integer -strict $plan_value($key)]} {
       error "P7 plan numeric field is invalid: $key"
     }
   }
-  if {$plan_value(MODE) ne $mode || $plan_value(MAX_RUNTIME_SECONDS) != $max_runtime_sec ||
+  if {$plan_value(MODE) ne $mode ||
+      $plan_value(EXECUTION_SCOPE) ne $execution_scope ||
+      $plan_value(RUN_ID) ne $run_id ||
+      $plan_value(MAX_RUNTIME_SECONDS) != $max_runtime_sec ||
       $plan_value(IDLE_MARGIN_SECONDS) != $idle_margin_sec ||
       $plan_value(COUNTS_PER_SECOND) != $counts_per_second ||
       $plan_value(OUTPUT_PREFILL_BYTE) != 165 ||
@@ -1069,7 +1219,105 @@ set rc [catch {
       $plan_value(CHECKPOINT_COUNT) != [expr {$mode eq "functional" ? 1 : 0}]} {
     error "P7 plan does not match authorized wrapper controls"
   }
-  if {$parsed_cases < 1 || $parsed_cases > 8} { error "P7 plan case count must be in 1..8" }
+  if {$execution_scope eq "STAGE62_ONLY"} {
+    if {$plan_value(DIAGNOSTIC_ONLY) != 1 ||
+        $plan_value(COVERAGE_CLAIMED) != 0} {
+      error "Stage62-only plan must be diagnostic-only with zero coverage"
+    }
+  } elseif {$plan_value(DIAGNOSTIC_ONLY) != 0 ||
+            $plan_value(COVERAGE_CLAIMED) != 1} {
+    error "normal P7 plan diagnostic/coverage flags are invalid"
+  }
+  if {$mode ne "stage62-microtest" &&
+      ($plan_value(MICROTEST_CASE) ne "NONE" ||
+       $plan_value(MICROTEST_LENGTH) != 0 ||
+       $plan_value(MICROTEST_SOURCE_ALIGNMENT) != 0 ||
+       $plan_value(MICROTEST_DESTINATION_ALIGNMENT) != 0)} {
+    error "non-microtest plan contains active microtest controls"
+  }
+  if {$mode ne "ddr-external-master" &&
+      ($plan_value(DDR_EXTERNAL_PATTERN) ne "NONE" ||
+       $plan_value(DDR_EXTERNAL_ADDRESS) ne "NONE" ||
+       $plan_value(DDR_EXTERNAL_ACCESS_METHOD) ne "NONE" ||
+       $plan_value(DDR_EXTERNAL_LENGTH) != 0 ||
+       $plan_value(DDR_EXTERNAL_REPETITION) != 0 ||
+       $plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES) != 0 ||
+       $plan_value(DDR_EXTERNAL_FIXTURE_SHA256) ne "NONE")} {
+    error "non-DDR plan contains active DDR external-master controls"
+  }
+  if {$mode eq "stage62-microtest"} {
+    if {$parsed_cases != 0 || $parsed_boundaries != 0 ||
+        $plan_value(CHECKPOINT_COUNT) != 0 ||
+        $plan_value(DIAGNOSTIC_ONLY) != 1 ||
+        $plan_value(COVERAGE_CLAIMED) != 0 ||
+        $plan_value(MICROTEST_CASE) ni {A B C D} ||
+        $plan_value(MICROTEST_LENGTH) < 29 ||
+        $plan_value(MICROTEST_LENGTH) > 32 ||
+        $plan_value(MICROTEST_SOURCE_ALIGNMENT) < 0 ||
+        $plan_value(MICROTEST_SOURCE_ALIGNMENT) > 3 ||
+        $plan_value(MICROTEST_DESTINATION_ALIGNMENT) < 0 ||
+        $plan_value(MICROTEST_DESTINATION_ALIGNMENT) > 3} {
+      error "P7 Stage62 microtest plan contract is invalid"
+    }
+    p7_require_value $auth_text P7_STAGE62_MICROTEST_CASE \
+        $plan_value(MICROTEST_CASE)
+    p7_require_value $auth_text P7_STAGE62_MICROTEST_LENGTH \
+        $plan_value(MICROTEST_LENGTH)
+    p7_require_value $auth_text P7_STAGE62_MICROTEST_SOURCE_ALIGNMENT \
+        $plan_value(MICROTEST_SOURCE_ALIGNMENT)
+    p7_require_value $auth_text P7_STAGE62_MICROTEST_DESTINATION_ALIGNMENT \
+        $plan_value(MICROTEST_DESTINATION_ALIGNMENT)
+  } elseif {$mode eq "ddr-external-master"} {
+    set ddr_address [p7_parse_hex32 $plan_value(DDR_EXTERNAL_ADDRESS) \
+        DDR_EXTERNAL_ADDRESS]
+    if {$parsed_cases != 0 || $parsed_boundaries != 0 ||
+        $plan_value(CHECKPOINT_COUNT) != 0 ||
+        $plan_value(DIAGNOSTIC_ONLY) != 1 ||
+        $plan_value(COVERAGE_CLAIMED) != 0 ||
+        $plan_value(DDR_EXTERNAL_PATTERN) ni \
+            {stage62_fixture a5_5a_3c_c3 nonzero_counter prbs15} ||
+        $plan_value(DDR_EXTERNAL_ACCESS_METHOD) ni \
+            {download block byte halfword word} ||
+        $plan_value(DDR_EXTERNAL_LENGTH) != 256 ||
+        $plan_value(DDR_EXTERNAL_REPETITION) < 1 ||
+        $plan_value(DDR_EXTERNAL_REPETITION) > 3 ||
+        $plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES) ni {0 1} ||
+        ![regexp -nocase {^[0-9a-f]{64}$} \
+            $plan_value(DDR_EXTERNAL_FIXTURE_SHA256)] ||
+        $ddr_address < 0x00900000 ||
+        $ddr_address + $plan_value(DDR_EXTERNAL_LENGTH) > 0x01100000} {
+      error "P7 DDR external-master plan contract is invalid"
+    }
+    set ddr_width 1
+    if {$plan_value(DDR_EXTERNAL_ACCESS_METHOD) eq "halfword"} { set ddr_width 2 }
+    if {$plan_value(DDR_EXTERNAL_ACCESS_METHOD) eq "word"} { set ddr_width 4 }
+    if {!$plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES) &&
+        ($ddr_address % $ddr_width) != 0} {
+      error "P7 DDR external-master scalar address is not aligned"
+    }
+    if {$plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES) &&
+        $plan_value(DDR_EXTERNAL_ACCESS_METHOD) ni {halfword word}} {
+      error "P7 DDR external-master unaligned flag requires halfword or word mode"
+    }
+    p7_require_value $auth_text P7_DDR_EXTERNAL_PATTERN \
+        $plan_value(DDR_EXTERNAL_PATTERN)
+    p7_require_value $auth_text P7_DDR_EXTERNAL_ADDRESS \
+        $plan_value(DDR_EXTERNAL_ADDRESS)
+    p7_require_value $auth_text P7_DDR_EXTERNAL_ACCESS_METHOD \
+        $plan_value(DDR_EXTERNAL_ACCESS_METHOD)
+    p7_require_value $auth_text P7_DDR_EXTERNAL_LENGTH \
+        $plan_value(DDR_EXTERNAL_LENGTH)
+    p7_require_value $auth_text P7_DDR_EXTERNAL_REPETITION \
+        $plan_value(DDR_EXTERNAL_REPETITION)
+    set ddr_unaligned_auth \
+        [expr {$plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES) ? "true" : "false"}]
+    p7_require_value $auth_text P7_DDR_EXTERNAL_UNALIGNED_ACCESSES \
+        $ddr_unaligned_auth
+    p7_require_value $auth_text P7_DDR_EXTERNAL_FIXTURE_SHA256 \
+        $plan_value(DDR_EXTERNAL_FIXTURE_SHA256)
+  } elseif {$parsed_cases < 1 || $parsed_cases > 8} {
+    error "P7 plan case count must be in 1..8"
+  }
   if {$mode eq "stationary"} {
     if {$max_runtime_sec != 1800 || $plan_value(CALIBRATION_SECONDS) != 300 ||
         $plan_value(ACCEPTANCE_SECONDS) != 1500 ||
@@ -1166,6 +1414,8 @@ set rc [catch {
   catch {file delete -force $result_partial}
   set result_handle [open $result_partial w]
   p7_say $result_handle "P7_PS_MODE=$mode"
+  p7_say $result_handle "P7_EXECUTION_SCOPE=$execution_scope"
+  p7_say $result_handle "P7_RUN_ID=$run_id"
   if {$mode eq "fault-fallback"} {
     p7_say $result_handle "P7_FAULT_MODEL=SOFTWARE_INJECTED_SCHEDULER_FAULT"
   }
@@ -1286,13 +1536,198 @@ set rc [catch {
   ps7_post_config
   rst -processor
 
+  if {$mode eq "ddr-external-master"} {
+    p7_say $result_handle "P7_DDR_EXTERNAL_MASTER=1"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_PATTERN=$plan_value(DDR_EXTERNAL_PATTERN)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_ADDRESS=$plan_value(DDR_EXTERNAL_ADDRESS)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_ACCESS_METHOD=$plan_value(DDR_EXTERNAL_ACCESS_METHOD)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_LENGTH=$plan_value(DDR_EXTERNAL_LENGTH)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_REPETITION=$plan_value(DDR_EXTERNAL_REPETITION)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_UNALIGNED_ACCESSES=$plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES)"
+    p7_say $result_handle \
+        "P7_DDR_EXTERNAL_FIXTURE_SHA256=$plan_value(DDR_EXTERNAL_FIXTURE_SHA256)"
+    p7_say $result_handle "P7_DDR_EXTERNAL_DIAGNOSTIC_ONLY=1"
+    p7_say $result_handle "P7_DDR_EXTERNAL_COVERAGE_CLAIMED=0"
+    p7_say $result_handle "P7_DDR_EXTERNAL_CPU_RELEASED=0"
+    p7_say $result_handle "P7_DDR_EXTERNAL_STAGE62_EXECUTED=0"
+    p7_say $result_handle "P7_DDR_EXTERNAL_WRITE_ATTEMPTED=1"
+
+    switch -- $plan_value(DDR_EXTERNAL_ACCESS_METHOD) {
+      download {
+        dow -data $ddr_fixture_path $ddr_address
+      }
+      block {
+        mwr -size b -bin -file $ddr_fixture_path $ddr_address 256
+      }
+      byte {
+        p7_ddr_external_scalar_write $ddr_fixture_path $ddr_address b 0
+      }
+      halfword {
+        p7_ddr_external_scalar_write $ddr_fixture_path $ddr_address h \
+            $plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES)
+      }
+      word {
+        p7_ddr_external_scalar_write $ddr_fixture_path $ddr_address w \
+            $plan_value(DDR_EXTERNAL_UNALIGNED_ACCESSES)
+      }
+      default { error "P7 DDR external-master access method is unreachable" }
+    }
+
+    set ddr_completion_address \
+        [expr {$ddr_address + $plan_value(DDR_EXTERNAL_LENGTH) - 4}]
+    set ddr_completion_address \
+        [expr {$ddr_completion_address - ($ddr_completion_address % 4)}]
+    set ddr_completion_word \
+        [mrd -value -size w $ddr_completion_address 1]
+    if {[llength $ddr_completion_word] != 1} {
+      error "P7 DDR external-master completion read failed"
+    }
+    set ddr_readback_path \
+        [file join $bundle_dir ddr_external_master_readback.bin]
+    p7_atomic_dump $ddr_readback_path $ddr_address 256
+    p7_say $result_handle "P7_DDR_EXTERNAL_READBACK_CAPTURED=1"
+    p7_require_files_equal $ddr_fixture_path $ddr_readback_path \
+        "P7 DDR external-master"
+    p7_say $result_handle "P7_DDR_EXTERNAL_READBACK=PASS"
+    set requeue_after_cutoff 0
+  } elseif {$mode eq "stage62-microtest"} {
+    switch -- $plan_value(MICROTEST_CASE) {
+      A {
+        set micro_source_address 0x00022400
+        set micro_destination_address 0x00022500
+      }
+      B {
+        set micro_source_address 0x00022400
+        set micro_destination_address 0x00900000
+      }
+      C {
+        set micro_source_address 0x00100000
+        set micro_destination_address 0x00022500
+      }
+      D {
+        set micro_source_address 0x00100000
+        set micro_destination_address 0x00900000
+      }
+      default { error "P7 Stage62 microtest case has no fixed geometry" }
+    }
+
+    # Downloading the ELF cannot start the processor.  Do it before loading
+    # the immutable diagnostic fixtures so the prestart readbacks represent
+    # the exact bytes that the CPU will consume.
+    dow $elf_file
+    p7_say $result_handle "P7_PS_ELF_DOWNLOADED=1"
+    dow -data [file join $bundle_dir stage62_microtest_record_zero.bin] 0x00021000
+    dow -data [file join $bundle_dir stage62_microtest_control.bin] 0x00022300
+    dow -data [file join $bundle_dir stage62_microtest_source_fixture.bin] \
+        $micro_source_address
+    dow -data [file join $bundle_dir stage62_microtest_destination_fixture.bin] \
+        $micro_destination_address
+
+    set micro_control_prestart \
+        [file join $bundle_dir stage62_microtest_control_prestart.bin]
+    set micro_source_prestart \
+        [file join $bundle_dir stage62_microtest_source_prestart.bin]
+    set micro_destination_prestart \
+        [file join $bundle_dir stage62_microtest_destination_prestart.bin]
+    p7_atomic_dump $micro_control_prestart 0x00022300 64
+    p7_atomic_dump $micro_source_prestart $micro_source_address 256
+    p7_atomic_dump $micro_destination_prestart $micro_destination_address 256
+    p7_require_files_equal [file join $bundle_dir stage62_microtest_control.bin] \
+        $micro_control_prestart "P7 Stage62 microtest control prestart"
+    p7_require_files_equal [file join $bundle_dir stage62_microtest_source_fixture.bin] \
+        $micro_source_prestart "P7 Stage62 microtest source prestart"
+    p7_require_files_equal \
+        [file join $bundle_dir stage62_microtest_destination_fixture.bin] \
+        $micro_destination_prestart "P7 Stage62 microtest destination prestart"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_PRESTART_READBACK=PASS"
+
+    con
+    set processor_started 1
+    set micro_deadline_ms [expr {[clock milliseconds] + 1000 * $max_runtime_sec}]
+    set micro_terminal_seen 0
+    set micro_operator_abort 0
+    set micro_timed_out 0
+    set micro_state 0
+    while {!$micro_terminal_seen} {
+      if {[file exists $abort_file]} {
+        set micro_operator_abort 1
+        break
+      }
+      set micro_state [p7_read32 0x00022320]
+      if {$micro_state == 3 || $micro_state == 4} {
+        set micro_terminal_seen 1
+        break
+      }
+      if {[clock milliseconds] >= $micro_deadline_ms} {
+        set micro_timed_out 1
+        break
+      }
+      after 5
+    }
+    catch {stop}
+
+    p7_atomic_dump [file join $bundle_dir stage62_microtest_control_final.bin] \
+        0x00022300 64
+    p7_atomic_dump [file join $bundle_dir stage62_microtest_record_result.bin] \
+        0x00021000 1536
+    p7_atomic_dump [file join $bundle_dir stage62_microtest_source_final.bin] \
+        $micro_source_address 256
+    p7_atomic_dump [file join $bundle_dir stage62_microtest_destination_final.bin] \
+        $micro_destination_address 256
+
+    set micro_result [p7_read32 0x00022324]
+    set micro_record_magic [p7_read32 0x00021000]
+    set micro_record_magic_readback [p7_read32 0x00022330]
+    set micro_wipe_verified [p7_read32 0x00022334]
+    p7_say $result_handle "P7_STAGE62_MICROTEST=1"
+    p7_say $result_handle \
+        "P7_STAGE62_MICROTEST_CASE=$plan_value(MICROTEST_CASE)"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_DIAGNOSTIC_ONLY=1"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_COVERAGE_CLAIMED=0"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_STAGE62_EXECUTED=0"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_STATE=$micro_state"
+    p7_say $result_handle "P7_STAGE62_MICROTEST_RESULT=$micro_result"
+    p7_say $result_handle \
+        [format "P7_STAGE62_MICROTEST_RECORD_MAGIC=0x%08X" $micro_record_magic]
+    p7_say $result_handle \
+        [format "P7_STAGE62_MICROTEST_RECORD_MAGIC_READBACK=0x%08X" \
+            $micro_record_magic_readback]
+    p7_say $result_handle \
+        "P7_STAGE62_MICROTEST_WIPE_VERIFIED=$micro_wipe_verified"
+
+    if {$micro_operator_abort} {
+      error "P7 operator abort file appeared during isolated Stage62 microtest"
+    }
+    if {$micro_timed_out || !$micro_terminal_seen} {
+      error "P7 isolated Stage62 microtest runtime exceeded"
+    }
+    if {$micro_state != 3 || $micro_result != 0} {
+      error "P7 isolated Stage62 microtest reported a copy diagnostic failure"
+    }
+    if {$micro_record_magic != 0x544D3750 ||
+        $micro_record_magic_readback != 0x544D3750} {
+      error "P7 isolated Stage62 microtest record publication failed"
+    }
+    if {$micro_wipe_verified != 1} {
+      error "P7 isolated Stage62 microtest destination wipe failed"
+    }
+    set requeue_after_cutoff 0
+  } else {
   set host_input_start_ms [clock milliseconds]
   set host_input_bytes 0
-  foreach slot [lsort -integer [array names case_input]] {
-    set input_file [file join $bundle_dir "input_${slot}.bin"]
-    if {$case_length($slot) > 0} {
-      dow -data $input_file $case_input($slot)
-      set host_input_bytes [expr {$host_input_bytes + $case_length($slot)}]
+  if {$mode ne "functional"} {
+    foreach slot [lsort -integer [array names case_input]] {
+      set input_file [file join $bundle_dir "input_${slot}.bin"]
+      if {$case_length($slot) > 0} {
+        dow -data $input_file $case_input($slot)
+        set host_input_bytes [expr {$host_input_bytes + $case_length($slot)}]
+      }
     }
   }
   set host_input_duration_ms [expr {[clock milliseconds] - $host_input_start_ms}]
@@ -1303,11 +1738,18 @@ set rc [catch {
   p7_say $result_handle "P7_HOST_TO_PS_INPUT_DURATION_MS=$host_input_duration_ms"
   p7_say $result_handle "P7_HOST_TO_PS_INPUT_BYTES_PER_SEC=$host_input_bytes_per_sec"
   p7_say $result_handle "P7_HOST_TO_PS_INPUT_BPS=$host_input_bps"
-  foreach slot [lsort -integer [array names case_input]] {
-    if {$case_length($slot) > 0} {
-      dow -data [file join $bundle_dir "output_zero_${slot}.bin"] $case_output($slot)
+  if {$mode eq "functional"} {
+    # Functional cases reuse the same four DDR slots after the boundary phase.
+    # Loading all eight cases here and then loading each phase again consumed a
+    # large part of the bounded outer window without adding evidence.
+    p7_say $result_handle "P7_FUNCTIONAL_PHASE_LOCAL_PRELOAD=1"
+  } else {
+    foreach slot [lsort -integer [array names case_input]] {
+      if {$case_length($slot) > 0} {
+        dow -data [file join $bundle_dir "output_zero_${slot}.bin"] $case_output($slot)
+      }
+      dow -data [file join $bundle_dir "trace_zero_${slot}.bin"] $case_trace($slot)
     }
-    dow -data [file join $bundle_dir "trace_zero_${slot}.bin"] $case_trace($slot)
   }
   set initial_mailbox [file join $bundle_dir mailbox.bin]
   if {$mode eq "queue"} { set initial_mailbox [file join $bundle_dir mailbox_queue_depth_1.bin] }
@@ -1752,7 +2194,7 @@ set rc [catch {
           p7_atomic_dump $failure_trace $boundary_trace($boundary_index) \
               [expr {$boundary_trace_capacity($boundary_index) * 64}]
           p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_TRACE_CAPTURED=1"
-          set first_error_codes {21 22 23 24 25 26 27 28 29 30 31}
+          set first_error_codes {21 22 23 24 25 26 27 28 29 30 31 32}
           if {$error_code == 13 || $error_code == 14 ||
               [lsearch -exact $first_error_codes $error_code] >= 0} {
             set failure_snapshot_address 0x00021000
@@ -1767,6 +2209,7 @@ set rc [catch {
             set is_first_error [expr {
                 [lsearch -exact $first_error_codes $error_code] >= 0}]
             if {$is_first_error} {
+              set diagnostic_capture_bytes 1536
               set failure_snapshot [file join $bundle_dir \
                   "boundary_${boundary_index}_first_error_diagnostic_failure.bin"]
               set failure_snapshot_wipe [file join $bundle_dir \
@@ -1776,6 +2219,7 @@ set rc [catch {
               set wipe_marker \
                   "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DIAGNOSTIC_WIPED=1"
             } else {
+              set diagnostic_capture_bytes 320
               set failure_snapshot [file join $bundle_dir \
                   "boundary_${boundary_index}_integrity_snapshot_failure.bin"]
               set failure_snapshot_wipe [file join $bundle_dir \
@@ -1788,43 +2232,61 @@ set rc [catch {
             # The OCM address and length are immutable host-side constants.
             # Capture and clear that fixed region before trusting or interpreting
             # any firmware metadata, marker, identity, length, digest, or geometry.
-            p7_atomic_dump $failure_snapshot $failure_snapshot_address 320
+            p7_atomic_dump $failure_snapshot $failure_snapshot_address \
+                $diagnostic_capture_bytes
             p7_say $result_handle $capture_marker
-            p7_zero_words_and_verify $failure_snapshot_address 320
-            p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address 320
+            p7_zero_words_and_verify $failure_snapshot_address \
+                $diagnostic_capture_bytes
+            p7_atomic_dump $failure_snapshot_wipe $failure_snapshot_address \
+                $diagnostic_capture_bytes
             p7_say $result_handle $wipe_marker
-            set diagnostic_data [p7_read_binary_exact $failure_snapshot 320]
+            set diagnostic_data [p7_read_binary_exact $failure_snapshot \
+                $diagnostic_capture_bytes]
             set diagnostic_marker [p7_le32 $diagnostic_data 0]
             if {$firmware_snapshot_status != 1 ||
                 $firmware_snapshot_address != $failure_snapshot_address ||
-                $firmware_snapshot_bytes != 320} {
+                $firmware_snapshot_bytes != $diagnostic_capture_bytes} {
               error "P7 failure diagnostic firmware rejected publication"
             }
             if {$is_first_error} {
               set diagnostic_version [p7_le32 $diagnostic_data 0x04]
-              set diagnostic_stage [p7_le32 $diagnostic_data 0x08]
-              set diagnostic_error [p7_le32 $diagnostic_data 0x0C]
-              set diagnostic_session [p7_le32 $diagnostic_data 0x10]
-              set diagnostic_object [p7_le32 $diagnostic_data 0x14]
-              set diagnostic_fragment [p7_le32 $diagnostic_data 0x18]
-              set diagnostic_lane [p7_le32 $diagnostic_data 0x1C]
-              set diagnostic_expected_length [p7_le32 $diagnostic_data 0x20]
-              set diagnostic_actual_length [p7_le32 $diagnostic_data 0x24]
-              set diagnostic_first_bad [p7_le32 $diagnostic_data 0x28]
-              set diagnostic_expected_byte [p7_le32 $diagnostic_data 0x2C]
-              set diagnostic_actual_byte [p7_le32 $diagnostic_data 0x30]
-              set diagnostic_expected_address [p7_le32 $diagnostic_data 0x34]
-              set diagnostic_actual_address [p7_le32 $diagnostic_data 0x38]
-              set diagnostic_expected_crc [p7_le32 $diagnostic_data 0x3C]
-              set diagnostic_actual_crc [p7_le32 $diagnostic_data 0x40]
-              set diagnostic_snapshot_offset [p7_le32 $diagnostic_data 0x44]
-              set diagnostic_snapshot_length [p7_le32 $diagnostic_data 0x48]
-              set diagnostic_expected_sha [p7_sha_words_hex_data $diagnostic_data 0x50]
-              set diagnostic_actual_sha [p7_sha_words_hex_data $diagnostic_data 0x70]
+              set diagnostic_record_length [p7_le32 $diagnostic_data 0x08]
+              set diagnostic_sequence [p7_le32 $diagnostic_data 0x0C]
+              set diagnostic_record_crc [p7_le32 $diagnostic_data 0x10]
+              set diagnostic_classification [p7_le32 $diagnostic_data 0x14]
+              set diagnostic_stage [p7_le32 $diagnostic_data 0x18]
+              set diagnostic_error [p7_le32 $diagnostic_data 0x1C]
+              set diagnostic_session [p7_le32 $diagnostic_data 0x20]
+              set diagnostic_object [p7_le32 $diagnostic_data 0x24]
+              set diagnostic_fragment [p7_le32 $diagnostic_data 0x28]
+              set diagnostic_lane [p7_le32 $diagnostic_data 0x2C]
+              set diagnostic_length [p7_le32 $diagnostic_data 0x30]
+              set diagnostic_expected_length [p7_le32 $diagnostic_data 0x34]
+              set diagnostic_actual_length [p7_le32 $diagnostic_data 0x38]
+              set diagnostic_first_bad [p7_le32 $diagnostic_data 0x3C]
+              set diagnostic_expected_byte [p7_le32 $diagnostic_data 0x40]
+              set diagnostic_actual_byte [p7_le32 $diagnostic_data 0x44]
+              set diagnostic_source_before_byte [p7_le32 $diagnostic_data 0x48]
+              set diagnostic_source_after_byte [p7_le32 $diagnostic_data 0x4C]
+              set diagnostic_destination_before_byte [p7_le32 $diagnostic_data 0x50]
+              set diagnostic_destination_after_byte [p7_le32 $diagnostic_data 0x54]
+              set diagnostic_expected_address [p7_le32 $diagnostic_data 0x58]
+              set diagnostic_actual_address [p7_le32 $diagnostic_data 0x5C]
+              set diagnostic_expected_crc [p7_le32 $diagnostic_data 0xC8]
+              set diagnostic_actual_crc [p7_le32 $diagnostic_data 0xD4]
+              set diagnostic_snapshot_offset [p7_le32 $diagnostic_data 0xBC]
+              set diagnostic_snapshot_length [p7_le32 $diagnostic_data 0xC0]
+              set diagnostic_capture_flags [p7_le32 $diagnostic_data 0xC4]
+              set diagnostic_expected_sha [p7_sha_words_hex_data $diagnostic_data 0xD8]
+              set diagnostic_actual_sha [p7_sha_words_hex_data $diagnostic_data 0x138]
               if {$firmware_snapshot_magic_readback != 0x44433750} {
                 error "P7 first-error diagnostic mailbox magic is invalid"
               }
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_VERSION=$diagnostic_version"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_LENGTH=$diagnostic_record_length"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SEQUENCE=$diagnostic_sequence"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_RECORD_CRC32=[format 0x%08x $diagnostic_record_crc]"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CLASSIFICATION=$diagnostic_classification"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_STAGE=$diagnostic_stage"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ERROR_CODE=$diagnostic_error"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SESSION_EPOCH=[format 0x%08x $diagnostic_session]"
@@ -1836,6 +2298,10 @@ set rc [catch {
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_FIRST_BAD_OFFSET=$diagnostic_first_bad"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_BYTE=$diagnostic_expected_byte"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_BYTE=$diagnostic_actual_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_BEFORE_BYTE=$diagnostic_source_before_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SOURCE_AFTER_BYTE=$diagnostic_source_after_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_BEFORE_BYTE=$diagnostic_destination_before_byte"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_DESTINATION_AFTER_BYTE=$diagnostic_destination_after_byte"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS=[format 0x%08x $diagnostic_expected_address]"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_ADDRESS=[format 0x%08x $diagnostic_actual_address]"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_EXPECTED_ADDRESS_LOW6=[expr {$diagnostic_expected_address & 0x3F}]"
@@ -1846,6 +2312,7 @@ set rc [catch {
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_ACTUAL_SHA256=$diagnostic_actual_sha"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_OFFSET=$diagnostic_snapshot_offset"
               p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_SNAPSHOT_LENGTH=$diagnostic_snapshot_length"
+              p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_FAILURE_FIRST_ERROR_CAPTURE_FLAGS=$diagnostic_capture_flags"
               set diagnostic_allowed_error 0
               switch -- $diagnostic_stage {
                 1 { set diagnostic_allowed_error [expr {$diagnostic_error == 24}] }
@@ -1855,7 +2322,7 @@ set rc [catch {
                 5 { set diagnostic_allowed_error [expr {$diagnostic_error == 27}] }
                 6 { set diagnostic_allowed_error [expr {$diagnostic_error == 28}] }
                 7 { set diagnostic_allowed_error [expr {$diagnostic_error == 22 || $diagnostic_error == 29}] }
-                8 { set diagnostic_allowed_error [expr {$diagnostic_error == 23 || $diagnostic_error == 30}] }
+                8 { set diagnostic_allowed_error [expr {$diagnostic_error == 23 || $diagnostic_error == 30 || $diagnostic_error == 32}] }
                 9 { set diagnostic_allowed_error [expr {$diagnostic_error == 31}] }
                 10 { set diagnostic_allowed_error [expr {$diagnostic_error == 13 || $diagnostic_error == 14}] }
               }
@@ -1868,7 +2335,20 @@ set rc [catch {
                    $boundary_trace_capacity($boundary_index) &&
                    $diagnostic_lane >= 1 && $diagnostic_lane <= 3)}]
               if {$diagnostic_marker != 0x44433750 ||
-                  $diagnostic_version != 1 || !$diagnostic_allowed_error ||
+                  $diagnostic_version != 2 ||
+                  $diagnostic_record_length != 1536 ||
+                  $diagnostic_sequence < 1 ||
+                  $diagnostic_record_crc == 0 ||
+                  $diagnostic_classification < 1 ||
+                  $diagnostic_classification > 7 ||
+                  ($diagnostic_capture_flags & 0x1C0) != 0x1C0 ||
+                  (($diagnostic_stage == 8 &&
+                    ($diagnostic_error == 23 || $diagnostic_error == 32)) &&
+                   (($diagnostic_capture_flags & 0xF) != 0xF ||
+                    $diagnostic_length != $diagnostic_expected_length ||
+                    $diagnostic_length != $diagnostic_actual_length ||
+                    $diagnostic_length > 256)) ||
+                  !$diagnostic_allowed_error ||
                   $diagnostic_error != $error_code ||
                   $diagnostic_session != $boundary_session($boundary_index) ||
                   $diagnostic_object != $boundary_object($boundary_index) ||
@@ -1881,7 +2361,7 @@ set rc [catch {
                    ($diagnostic_expected_byte == 256)) ||
                   (($diagnostic_first_bad >= $diagnostic_actual_length) !=
                    ($diagnostic_actual_byte == 256)) ||
-                  $diagnostic_snapshot_length < 1 || $diagnostic_snapshot_length > 64 ||
+                  $diagnostic_snapshot_length < 1 || $diagnostic_snapshot_length > 256 ||
                   $diagnostic_snapshot_offset > $diagnostic_first_bad ||
                   $diagnostic_snapshot_offset + $diagnostic_snapshot_length > $diagnostic_max_length ||
                   $diagnostic_first_bad >= $diagnostic_snapshot_offset + $diagnostic_snapshot_length} {
@@ -1911,6 +2391,14 @@ set rc [catch {
     dow -data [file join $bundle_dir functional_checkpoint_4k_output_zero.bin] 0x00900000
     dow -data [file join $bundle_dir functional_checkpoint_4k_trace_zero.bin] 0x01100000
     dow -data [file join $bundle_dir functional_checkpoint_4k_descriptor_free.bin] 0x00020100
+    set functional_doubleword_probe \
+        [file join $bundle_dir functional_checkpoint_4k_input_doubleword_readback.bin]
+    p7_atomic_dump_doublewords $functional_doubleword_probe 0x00100000 4096
+    p7_require_files_equal \
+        [file join $bundle_dir functional_checkpoint_4k_input.bin] \
+        $functional_doubleword_probe \
+        "P7 functional doubleword-wide input readback probe"
+    p7_say $result_handle "P7_FUNCTIONAL_DOUBLEWORD_READBACK_PROBE=PASS"
     mwr 0x0002010C 1
     lassign [p7_wait_descriptor_terminal $abort_file 0x00020100 $phase_deadline \
         P7_FUNCTIONAL_CHECKPOINT_4K] checkpoint_status checkpoint_error
@@ -1955,14 +2443,18 @@ set rc [catch {
       if {$status != 3 || $error_code != 0} {
         error "P7 functional 1MiB lane-policy case failed: source_slot=$source_slot"
       }
-      p7_dump_case $bundle_dir $source_slot $case_input($source_slot) $case_output($source_slot) \
-          $case_length($source_slot) $case_trace($source_slot) $case_trace_capacity($source_slot) "" $target_slot
     }
     mwr 0x0002000C 5
     if {[p7_wait_service_terminal $abort_file $phase_deadline P7_FUNCTIONAL_EXIT] != 4 ||
         [p7_read32 0x00020048] != 0} {
       error "P7 functional large/boundary phases did not shutdown cleanly"
     }
+    p7_say $result_handle "P7_FUNCTIONAL_SERVICE_SHUTDOWN_BEFORE_FINAL_EVIDENCE=1"
+    foreach source_slot {0 1 2 3} target_slot {5 6 7 0} {
+      p7_dump_case $bundle_dir $source_slot $case_input($source_slot) $case_output($source_slot) \
+          $case_length($source_slot) $case_trace($source_slot) $case_trace_capacity($source_slot) "" $target_slot
+    }
+    p7_say $result_handle "P7_FUNCTIONAL_FINAL_EVIDENCE_READ_MODE=ALIGNED_DOUBLEWORD"
     p7_say $result_handle "P7_FUNCTIONAL_LARGE_POLICY_MATRIX_COMPLETE=1"
     p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_MATRIX_COMPLETE=1"
     p7_say $result_handle "P7_FUNCTIONAL_BOUNDARY_BATCHES=6"
@@ -2294,6 +2786,7 @@ set rc [catch {
           "" -1 $result_handle $abort_file
     }
   }
+  }
   p7_say $result_handle "P7_REQUEUE_AFTER_CUTOFF=$requeue_after_cutoff"
   p7_say $result_handle "P7_PS_STAGE_RESULT=PASS"
   close $result_handle
@@ -2306,9 +2799,11 @@ set rc [catch {
 
 if {$rc != 0} {
   if {$processor_started} {
-    catch {mwr 0x0002000C 3}
-    after 10
-    catch {mwr 0x0002000C 5}
+    if {$mode ne "stage62-microtest"} {
+      catch {mwr 0x0002000C 3}
+      after 10
+      catch {mwr 0x0002000C 5}
+    }
     catch {stop}
   }
   if {$result_handle ne ""} {

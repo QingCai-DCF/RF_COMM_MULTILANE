@@ -1,0 +1,130 @@
+{
+  "generated_at_utc": "2026-07-14T04:25:54.950351+00:00",
+  "hardware_acceptance": "PENDING_HW",
+  "partial_file_count": 0,
+  "partial_files": [],
+  "record_count": 20,
+  "records": [
+    {
+      "committed": true,
+      "path": "bundle/bundle_manifest.json",
+      "sha256": "890431387f15d799759a7313b617474e00db7682fb9d1a62e81cc5a5018cedf7",
+      "size_bytes": 3868
+    },
+    {
+      "committed": true,
+      "path": "bundle/ddr_external_master_fixture.bin",
+      "sha256": "b7ef71102905bfadd7b60c7ff310f2a9adf2a31f327c18c2c9c1411119ea7776",
+      "size_bytes": 256
+    },
+    {
+      "committed": true,
+      "path": "bundle/ddr_external_master_readback.bin",
+      "sha256": "c9bc00c92ee06fe211f3925d300d6dc0436905e8ad8f782e1402b25cc88564af",
+      "size_bytes": 256
+    },
+    {
+      "committed": true,
+      "path": "bundle/descriptors.bin",
+      "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+      "size_bytes": 2048
+    },
+    {
+      "committed": true,
+      "path": "bundle/execution_plan.txt",
+      "sha256": "3e972350d2732adc6208762be7e91764c85e0b6eb7bf2053e09049525ac70ca7",
+      "size_bytes": 794
+    },
+    {
+      "committed": true,
+      "path": "bundle/mailbox.bin",
+      "sha256": "e15dcc379856e182f5e6fa5a35fa24f82a9c352f19c5bf2a7f6f263af7a1ea53",
+      "size_bytes": 256
+    },
+    {
+      "committed": true,
+      "path": "bundle/stage62_microtest_control.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "size_bytes": 64
+    },
+    {
+      "committed": true,
+      "path": "p7_hw_preflight_result.txt",
+      "sha256": "b9c7b51d551d7f0a98f48b8493aed82542ccd9993966f478228e655b31ebbe84",
+      "size_bytes": 512
+    },
+    {
+      "committed": true,
+      "path": "p7_ps_application_events.json",
+      "sha256": "ae45c47ad99767e737b49084fdf64e68b234f66b2c7532e4c84a0e718f26c417",
+      "size_bytes": 1448
+    },
+    {
+      "committed": true,
+      "path": "p7_ps_application_raw_result.log",
+      "sha256": "41e78225137f618206df89ccd99e150a1d2af09faf5ea86ac39a1a36e965a985",
+      "size_bytes": 1566
+    },
+    {
+      "committed": true,
+      "path": "preflight.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "committed": true,
+      "path": "preflight.stdout.log",
+      "sha256": "da4e8869d4962439d7686f08d9d3e73f771ff35957b70d49a10e4879ecbb996b",
+      "size_bytes": 9967
+    },
+    {
+      "committed": true,
+      "path": "ps_application_stage.stderr.log",
+      "sha256": "ed744d2cc04cad03aa99ce53df26eb7260245ff2477b1a0a88b2cd5ebff1a6cd",
+      "size_bytes": 123
+    },
+    {
+      "committed": true,
+      "path": "ps_application_stage.stdout.log",
+      "sha256": "41e78225137f618206df89ccd99e150a1d2af09faf5ea86ac39a1a36e965a985",
+      "size_bytes": 1566
+    },
+    {
+      "committed": true,
+      "path": "shutdown_after.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "committed": true,
+      "path": "shutdown_after.stdout.log",
+      "sha256": "b813549a90beeef1b48037d466971f3ff2f8af5a46d65d8b3c6836c941fee8b7",
+      "size_bytes": 37992
+    },
+    {
+      "committed": true,
+      "path": "shutdown_after_result.txt",
+      "sha256": "d2dbd09c22dd96c9afbfd5f56ce7fba7d811142148f91870e610dd5ff9711bd3",
+      "size_bytes": 560
+    },
+    {
+      "committed": true,
+      "path": "shutdown_before.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "committed": true,
+      "path": "shutdown_before.stdout.log",
+      "sha256": "023cf457389691a1d013e13251ca84ee2a2817aea326a3135b862ed35910885e",
+      "size_bytes": 37992
+    },
+    {
+      "committed": true,
+      "path": "shutdown_before_result.txt",
+      "sha256": "d2dbd09c22dd96c9afbfd5f56ce7fba7d811142148f91870e610dd5ff9711bd3",
+      "size_bytes": 560
+    }
+  ],
+  "schema": "rf-comm-p7-raw-evidence-sha256-v1"
+}

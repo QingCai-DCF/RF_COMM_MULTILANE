@@ -25,6 +25,63 @@ set_property -dict [list \
 ] $ps
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "0" Master "Disable" Slave "Disable"} $ps
 
+# AX7010 powers PS MIO Bank 0 at 3.3 V and PS MIO Bank 1 at 1.8 V.  It also
+# populates two x16 2-Gbit DDR3 devices on the 32-bit PS DDR bus.  Lock every
+# user-settable board-contract value after generic PS7 automation so neither a
+# Vivado default nor a board-preset change can silently alter generated XCI,
+# HWH, ps7_parameters.xml, or ps7_init results.
+set_property -dict [list \
+  CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ {33.333333} \
+  CONFIG.PCW_APU_PERIPHERAL_FREQMHZ {666.666666} \
+  CONFIG.PCW_PRESET_BANK0_VOLTAGE {LVCMOS 3.3V} \
+  CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V} \
+  CONFIG.PCW_UIPARAM_DDR_PARTNO {MT41J128M16 HA-125} \
+  CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH {16 Bits} \
+  CONFIG.PCW_UIPARAM_DDR_DEVICE_CAPACITY {2048 MBits} \
+  CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH {32 Bit} \
+  CONFIG.PCW_UIPARAM_DDR_FREQ_MHZ {533.333333} \
+  CONFIG.PCW_UIPARAM_DDR_T_FAW {40.0} \
+  CONFIG.PCW_UIPARAM_DDR_ECC {Disabled} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE {1} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE {1} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL {1} \
+] $ps
+
+set board_contract [list \
+  CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ {33.333333} \
+  CONFIG.PCW_APU_PERIPHERAL_FREQMHZ {666.666666} \
+  CONFIG.PCW_PRESET_BANK0_VOLTAGE {LVCMOS 3.3V} \
+  CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V} \
+  CONFIG.PCW_UIPARAM_DDR_PARTNO {MT41J128M16 HA-125} \
+  CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH {16 Bits} \
+  CONFIG.PCW_UIPARAM_DDR_DEVICE_CAPACITY {2048 MBits} \
+  CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH {32 Bit} \
+  CONFIG.PCW_UIPARAM_DDR_FREQ_MHZ {533.333333} \
+  CONFIG.PCW_UIPARAM_DDR_T_FAW {40.0} \
+  CONFIG.PCW_UIPARAM_DDR_ECC {Disabled} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE {1} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE {1} \
+  CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL {1} \
+]
+set ddr_report [open "$out_dir/p6_ps7_ddr_configuration.txt" w]
+set observed_device [get_property PART [current_project]]
+if {$observed_device ne {xc7z010clg400-1}} {
+  close $ddr_report
+  error "P6 PS7 device mismatch: expected 'xc7z010clg400-1' observed '$observed_device'"
+}
+puts $ddr_report "P6_PS7_DEVICE=$observed_device"
+foreach {property expected} $board_contract {
+  set observed [get_property $property $ps]
+  if {$observed ne $expected} {
+    close $ddr_report
+    error "P6 PS7 board configuration mismatch: $property expected '$expected' observed '$observed'"
+  }
+  puts $ddr_report "$property=$observed"
+}
+puts $ddr_report "P6_PS7_BOARD_CONFIGURATION=PASS"
+puts $ddr_report "P6_PS7_DDR_CONFIGURATION=PASS"
+close $ddr_report
+
 update_compile_order -fileset sources_1
 set p6 [create_bd_cell -type module -reference p6_axi_peripheral_bd p6_peripheral_0]
 apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config [list \
@@ -70,6 +127,20 @@ puts $markers "P6_PS_CANDIDATE_BUILD=PASS"
 puts $markers "P6_PS_AXI_BASE=0x43C00000"
 puts $markers "P6_PS_XSA=$out_dir/p6_ps_candidate.xsa"
 puts $markers "P6_PS_BITSTREAM=$out_dir/p6_ps_candidate.bit"
+puts $markers "P6_PS7_DDR_PARTNO=MT41J128M16 HA-125"
+puts $markers "P6_PS7_DDR_DRAM_WIDTH=16 Bits"
+puts $markers "P6_PS7_DDR_DEVICE_CAPACITY=2048 MBits"
+puts $markers "P6_PS7_DDR_BUS_WIDTH=32 Bit"
+puts $markers "P6_PS7_DDR_FREQ_MHZ=533.333333"
+puts $markers "P6_PS7_DDR_T_FAW=40.0"
+puts $markers "P6_PS7_DDR_ECC=Disabled"
+puts $markers "P6_PS7_DDR_TRAIN_READ_GATE=1"
+puts $markers "P6_PS7_DDR_TRAIN_DATA_EYE=1"
+puts $markers "P6_PS7_DDR_TRAIN_WRITE_LEVEL=1"
+puts $markers "P6_PS7_MIO_BANK0_VOLTAGE=LVCMOS 3.3V"
+puts $markers "P6_PS7_MIO_BANK1_VOLTAGE=LVCMOS 1.8V"
+puts $markers "P6_PS7_BOARD_CONFIGURATION=PASS"
+puts $markers "P6_PS7_DDR_CONFIGURATION=PASS"
 puts $markers "P6_ETHERNET_USED=0"
 puts $markers "P6_MOTION_USED=0"
 close $markers
