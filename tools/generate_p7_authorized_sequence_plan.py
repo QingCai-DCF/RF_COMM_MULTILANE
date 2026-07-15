@@ -424,8 +424,12 @@ def git_state() -> tuple[str | None, list[str], str | None]:
     return value, dirty, None
 
 
-def classify_dirty_entries(entries: list[str]) -> tuple[list[str], list[str]]:
-    """Allow only reproducible post-gate summaries; reject source/raw hardware paths."""
+def classify_dirty_entries(
+    entries: list[str],
+    *,
+    additional_exact_untracked: frozenset[str] = frozenset(),
+) -> tuple[list[str], list[str]]:
+    """Allow reproducible summaries and explicitly validated untracked state only."""
 
     allowed: list[str] = []
     rejected: list[str] = []
@@ -445,7 +449,7 @@ def classify_dirty_entries(entries: list[str]) -> tuple[list[str], list[str]]:
                 ambiguous = True
                 break
             normalized.append(value.replace("\\", "/"))
-        if (
+        generated_allowed = (
             not ambiguous
             and normalized
             and all(
@@ -453,7 +457,14 @@ def classify_dirty_entries(entries: list[str]) -> tuple[list[str], list[str]]:
                 or path in POST_GATE_GENERATED_DIRTY_EXACT
                 for path in normalized
             )
-        ):
+        )
+        exact_untracked_allowed = (
+            not ambiguous
+            and entry.startswith("?? ")
+            and len(normalized) == 1
+            and normalized[0] in additional_exact_untracked
+        )
+        if generated_allowed or exact_untracked_allowed:
             allowed.append(entry)
         else:
             rejected.append(entry)
@@ -688,15 +699,54 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     if not sequence.COMMIT_RE.fullmatch(source_commit):
         raise ValueError("--source-commit must be exactly 40 lowercase hex characters")
     validate_canonical_identity(args)
+    campaign_ledger_dirty_paths: frozenset[str] = frozenset()
+    if stage66_campaign_mode:
+        dirty_policy_path = sequence.resolve_path(args.stage66_campaign_policy)
+        dirty_policy_sha = args.stage66_campaign_policy_sha256.lower()
+        dirty_policy, dirty_policy_errors = stage66_campaign.validate_policy(
+            dirty_policy_path, dirty_policy_sha
+        )
+        if dirty_policy_errors or dirty_policy is None:
+            raise ValueError(
+                "Stage66 campaign policy validation failed before source-state classification: "
+                + "; ".join(dirty_policy_errors)
+            )
+        dirty_ledger_path = stage66_campaign.campaign_ledger_path(dirty_policy)
+        _dirty_ledger, dirty_ledger_errors = stage66_campaign.validate_ledger(
+            dirty_policy, dirty_ledger_path, allow_absent=True
+        )
+        if dirty_ledger_errors:
+            raise ValueError(
+                "Stage66 campaign ledger validation failed before source-state classification: "
+                + "; ".join(dirty_ledger_errors)
+            )
+        try:
+            dirty_ledger_relative = dirty_ledger_path.relative_to(ROOT).as_posix()
+        except ValueError as exc:
+            raise ValueError("Stage66 campaign ledger escapes the repository") from exc
+        campaign_ledger_dirty_paths = frozenset({dirty_ledger_relative})
     head, dirty, git_error = git_state()
     if git_error:
         raise ValueError(f"unable to establish clean repository state: {git_error}")
     if head != source_commit:
         raise ValueError(f"source commit mismatch: requested={source_commit} current={head}")
-    allowed_generated_dirty, rejected_dirty = classify_dirty_entries(dirty)
+    allowed_dirty, rejected_dirty = classify_dirty_entries(
+        dirty,
+        additional_exact_untracked=campaign_ledger_dirty_paths,
+    )
+    allowed_campaign_ledger_dirty = [
+        entry
+        for entry in allowed_dirty
+        if entry.startswith("?? ")
+        and entry[3:].strip().replace("\\", "/") in campaign_ledger_dirty_paths
+    ]
+    allowed_generated_dirty = [
+        entry for entry in allowed_dirty if entry not in allowed_campaign_ledger_dirty
+    ]
     if rejected_dirty:
         raise ValueError(
-            "generator permits only post-gate reproducible summary changes; rejected dirty entries: "
+            "generator permits only post-gate reproducible summary changes and the validated exact "
+            "Stage66 campaign ledger; rejected dirty entries: "
             f"{rejected_dirty}"
         )
     checkpoint = sequence.resolve_path(args.offline_checkpoint)
@@ -838,6 +888,7 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         "full_specs": full_specs,
         "full_stage_ordinals": [spec.index for spec in specs],
         "allowed_post_gate_generated_dirty": allowed_generated_dirty,
+        "allowed_stage66_campaign_ledger_dirty": allowed_campaign_ledger_dirty,
     }
 
 
@@ -1927,6 +1978,9 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "stage66_diagnostic_campaign": context["stage66_diagnostic_campaign"],
         "source_commit": context["source_commit"],
         "allowed_post_gate_generated_dirty": context["allowed_post_gate_generated_dirty"],
+        "allowed_stage66_campaign_ledger_dirty": context[
+            "allowed_stage66_campaign_ledger_dirty"
+        ],
         "offline_checkpoint": {
             "path": str(context["checkpoint_path"]),
             "sha256": context["checkpoint_sha256"],

@@ -213,6 +213,28 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
         self.assertEqual(3, len(allowed))
         self.assertEqual(3, len(rejected))
 
+    def test_campaign_runtime_ledger_allowance_is_exact_validated_and_untracked_only(self) -> None:
+        ledger = (
+            "evidence/hardware/p7/stage66_diagnostic_campaign/"
+            "p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json"
+        )
+        entries = [
+            f"?? {ledger}",
+            f"A  {ledger}",
+            "?? evidence/hardware/p7/stage66_diagnostic_campaign/"
+            "p7_stage66_stationary_diagnostic_20260715/campaign_execution.lock",
+            "?? evidence/hardware/p7/stage66_diagnostic_campaign/arbitrary.json",
+        ]
+        allowed, rejected = subject.classify_dirty_entries(
+            entries,
+            additional_exact_untracked=frozenset({ledger}),
+        )
+        self.assertEqual([f"?? {ledger}"], allowed)
+        self.assertEqual(entries[1:], rejected)
+        ordinary_allowed, ordinary_rejected = subject.classify_dirty_entries(entries)
+        self.assertEqual([], ordinary_allowed)
+        self.assertEqual(entries, ordinary_rejected)
+
     def test_noncanonical_live_identity_is_rejected_before_git_or_outputs(self) -> None:
         args = argparse.Namespace(
             board_id="wrong-board",

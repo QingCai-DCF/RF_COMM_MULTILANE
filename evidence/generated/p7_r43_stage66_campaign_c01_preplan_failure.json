@@ -1,0 +1,94 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-15T14:48:59.8793006Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260715_stationary_app_r43_diag_stage66_c01",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+  "source_tree": "1270297820ddbd946d69aeff0fcf7aad69ff8e98",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 1,
+  "actual_hardware_attempt_count_before": 0,
+  "actual_hardware_attempt_count_after": 0,
+  "diagnostic_hardware_attempt_consumed": false,
+  "preplan_read_only_validation": {
+    "status": "BLOCKED_FAIL_CLOSED",
+    "phase": "SOURCE_DIRTY_CLASSIFICATION_BEFORE_PLAN_GENERATOR_INVOCATION",
+    "run_id_name_collision_count": 0,
+    "allowed_post_gate_generated_dirty_count": 28,
+    "rejected_dirty_entries": [
+      "?? evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json"
+    ],
+    "campaign_ledger_required_by_policy": true,
+    "campaign_ledger_validated_ready": true,
+    "campaign_ledger_sha256_before": "a19cf0f0d5f9e49ab0098d4e26400268424a6bac9c93774352755725a7a9abc1",
+    "actual_hardware_attempt_count": 0,
+    "retired_pre_hardware_run_id_count_before": 1
+  },
+  "generator": {
+    "invoked": false,
+    "exit_code": "NOT_INVOKED",
+    "P7_AUTHORIZED_SEQUENCE_GENERATOR": "NOT_INVOKED_PREFLIGHT_BLOCK",
+    "reason": "The campaign policy requires the validated runtime ledger, but the generator source-dirty classifier rejects that exact untracked ledger path before it can validate the campaign ledger.",
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "phase": "PREPLAN_SOURCE_DIRTY_PREFLIGHT",
+    "hardware_execution_entered": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "execution_evidence_root_created": false,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "bundle_output_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "confirmed_cause": {
+    "classification": "PREPLAN_RUNTIME_LEDGER_DIRTY_ALLOWLIST_OMISSION",
+    "observable_conflict": "A valid non-ABSENT campaign ledger is mandatory after a pre-hardware retirement, while the current generator allows only evidence/generated post-gate changes and rejects the exact policy-bound runtime ledger under evidence/hardware.",
+    "safety_conclusion": "The block is fail-closed. Only the already policy-validated exact runtime ledger file may be admitted; campaign locks, other hardware evidence, source files, and arbitrary paths must remain rejected."
+  },
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "5a13158f59985231e73c40f518e2015912950245379bc8ccf8295af08819e188",
+    "source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+    "status": "PASS",
+    "offline_cache_status": "BYPASS",
+    "hardware_actions_executed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "partial_outputs": {
+    "sequence_plan_count": 0,
+    "stage_authorization_count": 0,
+    "bundle_file_count": 0,
+    "execution_evidence_root_count": 0,
+    "source_paths_left_in_place": true
+  },
+  "hardware_boundary": {
+    "external_hw_server_pid": 45220,
+    "external_hw_server_unchanged": true,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No plan generator, hardware-capable wrapper, Vivado, XSDB, or candidate programming process was started.",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "retirement_recording": {
+    "status": "PASS_RECORDED",
+    "campaign_ledger_sha256_before": "a19cf0f0d5f9e49ab0098d4e26400268424a6bac9c93774352755725a7a9abc1",
+    "campaign_ledger_sha256_after": "12413f07cd34635e2102b738742713a725dfac2fea15afd5f5e18a8e542d3b24",
+    "actual_hardware_attempt_count_after": 0,
+    "retired_pre_hardware_run_id_count_after": 2
+  },
+  "required_next_run_id": "p7_20260715_stationary_app_r44_diag_stage66_c01",
+  "next_run_must_not_start_before": "MINIMAL_SOURCE_FIX_PLUS_FOCUSED_TESTS_PLUS_ACCURATE_COMMIT_PLUS_NEW_CLEAN_SOURCE_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_CANONICAL_GATE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}
