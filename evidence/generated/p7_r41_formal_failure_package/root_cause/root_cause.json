@@ -1,0 +1,69 @@
+{
+  "schema": "rf-comm-p7-r41-stage66-root-cause-v1",
+  "status": "CONFIRMED_HOST_TCL_SIGNED_32_BIT_LATENCY_SORT_OVERFLOW",
+  "failure_stage_ordinal": 66,
+  "stationary_attempt_count": 1,
+  "stationary_completed": false,
+  "raw_error": "integer value too large to represent",
+  "first_failing_sample_sequence": 2,
+  "r41_runtime_start_ticks": 80953,
+  "sample_2_previous_threshold_ticks": 10000000290,
+  "sample_2_threshold_ticks": 20000000580,
+  "terminal_tick_pairs": [
+    {
+      "start_ticks": 90863268,
+      "end_ticks": 17966539615,
+      "latency_ticks": 17875676347
+    },
+    {
+      "start_ticks": 17966624031,
+      "end_ticks": 44924346787,
+      "latency_ticks": 26957722756
+    },
+    {
+      "start_ticks": 44924431177,
+      "end_ticks": 96245599869,
+      "latency_ticks": 51321168692
+    },
+    {
+      "start_ticks": 96245684200,
+      "end_ticks": 141392918989,
+      "latency_ticks": 45147234789
+    }
+  ],
+  "first_sample_2_latency_ticks": 17875676347,
+  "signed_32_bit_max": 2147483647,
+  "historical_source_sha256": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec",
+  "fixed_source_sha256": "e7e8167513b80aa8aa7ecf2fb38ca7aae937cdb76bde748178803fc78c1224eb",
+  "xsct_2023_1_old_path_reproduced_exact_error": true,
+  "xsct_2023_1_fixed_comparator_passed": true,
+  "hardware_rerun_performed": false,
+  "acceptance_claimed": false,
+  "files": {
+    "failing_tcl": {
+      "path": "root_cause/failing_tcl.tcl",
+      "bytes": 140716,
+      "sha256": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec"
+    },
+    "fixed_tcl": {
+      "path": "root_cause/fixed_tcl.tcl",
+      "bytes": 141020,
+      "sha256": "e7e8167513b80aa8aa7ecf2fb38ca7aae937cdb76bde748178803fc78c1224eb"
+    },
+    "reproducer": {
+      "path": "root_cause/reproducer.tcl",
+      "bytes": 1130,
+      "sha256": "f7650a748ef8cc5eb211daeaab9123630481f4c99d05b3ff631e97008a3dc91c"
+    },
+    "xsct_stdout": {
+      "path": "root_cause/xsct_stdout.stdout.log",
+      "bytes": 217,
+      "sha256": "f6449cf0675e66b22bda14256aa1d914f2ae465d11a2c58aa07e5067d173490e"
+    },
+    "xsct_stderr": {
+      "path": "root_cause/xsct_stderr.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

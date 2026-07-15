@@ -1,0 +1,695 @@
+{
+  "HEAD": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+  "SHUTDOWN_EXIT": 0,
+  "artifact_provenance": {
+    "active_xdc": [
+      {
+        "actual_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+        "expected_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+        "label": "artifact:active_xdc",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc"
+      }
+    ],
+    "bitstream": [
+      {
+        "actual_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+        "expected_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+        "label": "artifact:bitstream",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit"
+      }
+    ],
+    "elf": [
+      {
+        "actual_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+        "expected_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+        "label": "artifact:elf",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf"
+      }
+    ],
+    "ltx": [],
+    "pinmap": [
+      {
+        "actual_sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+        "expected_sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+        "label": "artifact:pinmap",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv"
+      }
+    ],
+    "plan": [
+      {
+        "actual_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+        "expected_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+        "label": "artifact:plan",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md"
+      }
+    ],
+    "profile": [
+      {
+        "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+        "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+        "label": "artifact:profile",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json"
+      }
+    ],
+    "register_map": [
+      {
+        "actual_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+        "expected_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+        "label": "artifact:register_map",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml"
+      }
+    ],
+    "shutdown_bitstream": [
+      {
+        "actual_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "expected_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "label": "artifact:shutdown_bitstream",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit"
+      }
+    ],
+    "xsa": [
+      {
+        "actual_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+        "expected_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+        "label": "artifact:xsa",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa"
+      }
+    ]
+  },
+  "authorization": [
+    {
+      "actual_sha256": "8cdc0e988bb0132e1c262851d1ae043079b014d6be8f652edf66ee17030a80b2",
+      "expected_sha256": "8cdc0e988bb0132e1c262851d1ae043079b014d6be8f652edf66ee17030a80b2",
+      "label": "authorization",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260715_stationary_app_r41_formal_full_066_p7_ps_stationary.txt"
+    }
+  ],
+  "available_lanes": 2,
+  "bitstream": [
+    {
+      "actual_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+      "expected_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+      "label": "artifact:bitstream",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit"
+    }
+  ],
+  "checks": {},
+  "drove_tfdu_txd": true,
+  "elf": [
+    {
+      "actual_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+      "expected_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+      "label": "artifact:elf",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf"
+    }
+  ],
+  "enabled_tfdu_receiver": true,
+  "errors": [
+    "runner status is FAIL_STAGE, not PASS",
+    "hardware stage process passed is not true",
+    "raw PS PASS marker missing",
+    "PS postprocess is not PASS",
+    "PS postprocess failures are nonempty",
+    "PS mailbox shutdown_result is nonzero/missing",
+    "PS mailbox service state is not SHUTDOWN",
+    "stationary firmware runtime is not exactly 1800 seconds",
+    "stationary calibration window is not exactly 300 seconds",
+    "stationary mailbox sample interval is not exactly 30 seconds",
+    "stationary mailbox deadline-reached flag is missing",
+    "stationary host wall duration is outside 1800.0..1801.5 seconds",
+    "stationary per-object ledger is missing/too short",
+    "stationary mailbox runtime_start_ticks is missing/invalid",
+    "stationary final case slots are not exactly 0..7",
+    "stationary bundle slot 0 input hash does not bind final descriptor",
+    "stationary bundle slot 1 input hash does not bind final descriptor",
+    "stationary bundle slot 2 input hash does not bind final descriptor",
+    "stationary bundle slot 3 input hash does not bind final descriptor",
+    "stationary bundle slot 4 input hash does not bind final descriptor",
+    "stationary bundle slot 5 input hash does not bind final descriptor",
+    "stationary bundle slot 6 input hash does not bind final descriptor",
+    "stationary bundle slot 7 input hash does not bind final descriptor",
+    "stationary ledger does not cover 4 KiB, 64 KiB, and 1 MiB",
+    "stationary ledger does not cover lane0, lane1, stripe, and replicate policies",
+    "stationary mailbox does not exactly reconcile to terminal ledger: objects_requested",
+    "stationary mailbox does not exactly reconcile to terminal ledger: objects_completed",
+    "stationary mailbox does not exactly reconcile to terminal ledger: objects_failed",
+    "stationary mailbox does not exactly reconcile to terminal ledger: bytes_completed",
+    "stationary mailbox does not exactly reconcile to terminal ledger: fragments_completed",
+    "stationary mailbox does not exactly reconcile to terminal ledger: lane0_fragments",
+    "stationary mailbox does not exactly reconcile to terminal ledger: lane1_fragments",
+    "stationary mailbox does not exactly reconcile to terminal ledger: fallback_count",
+    "stationary mailbox does not exactly reconcile to terminal ledger: p6_retry_count",
+    "stationary mailbox does not exactly reconcile to terminal ledger: p6_retry_exhausted",
+    "stationary mailbox does not exactly reconcile to terminal ledger: p6_tx_fail",
+    "stationary mailbox does not exactly reconcile to terminal ledger: p6_crc_bad",
+    "stationary mailbox does not exactly reconcile to terminal ledger: p6_payload_mismatch",
+    "stationary mailbox does not exactly reconcile to terminal ledger: max_txd_high_cycles",
+    "stationary mailbox does not exactly reconcile to terminal ledger: duty_violation_count",
+    "stationary calibration sample count is not exactly 10",
+    "stationary acceptance sample count is not exactly 50",
+    "stationary 30-second sample series is not exactly 60 samples",
+    "stationary sample elapsed times are not strictly increasing",
+    "stationary final PS-timer sample is outside 1800.0..1801.5 seconds",
+    "stationary rolling-goodput medians are not positive",
+    "acceptance goodput median is below 80% of calibration",
+    "stationary samples do not prove controlled fallback",
+    "stationary runtime-start marker/mailbox mismatch",
+    "stationary calibration completion marker missing",
+    "stationary acceptance completion marker missing",
+    "stationary requeue-after-cutoff marker is missing/nonzero",
+    "stationary cutoff-violation marker is missing/nonzero",
+    "stationary cutoff tick marker mismatch",
+    "stationary drain completion is outside 1740..1790 seconds",
+    "stationary drain completion ticks are outside cutoff..1790",
+    "stationary drain elapsed/ticks mismatch",
+    "stationary host wall marker/mailbox mismatch",
+    "stationary independent host watchdog marker missing",
+    "stationary terminal descriptor marker count mismatch",
+    "stationary PS elapsed marker/mailbox mismatch",
+    "terminal runtime-refresh fallback marker is not strict 0/1",
+    "terminal runtime-refresh marker tuple differs from final mailbox tuple",
+    "terminal runtime-refresh postprocess flag mismatch",
+    "stationary safe terminal sample marker missing",
+    "stationary sample writer provenance marker missing",
+    "stationary terminal queue-observation lower bound does not bind the final mailbox runtime",
+    "stationary canonical final sample does not contain every terminal object",
+    "stationary_trace_validation object missing",
+    "application_metrics object missing",
+    "stationary trace binary record list missing",
+    "application metric missing: objects_requested",
+    "application metric missing: objects_completed",
+    "application metric missing: objects_failed",
+    "application metric missing: fragments_generated",
+    "application metric missing: fragments_submitted",
+    "application metric missing: fragments_completed",
+    "application metric missing: fragments_retried",
+    "application metric missing: fragments_duplicated",
+    "application metric missing: fragments_rejected",
+    "application metric missing: fragments_out_of_order",
+    "application metric missing: bytes_requested",
+    "application metric missing: bytes_completed",
+    "application metric missing: whole_object_crc_failures",
+    "application metric missing: sha256_mismatches",
+    "application metric missing: lane0_fragments",
+    "application metric missing: lane1_fragments",
+    "application metric missing: replicated_fragments",
+    "application metric missing: fallback_lane0_to_lane1",
+    "application metric missing: fallback_lane1_to_lane0",
+    "application metric missing: queue_high_watermark",
+    "application metric missing: backpressure_events",
+    "application metric missing: host_to_ps_bytes_per_sec",
+    "application metric missing: application_goodput_bps",
+    "application metric missing: fragment_latency_min_us",
+    "application metric missing: fragment_latency_mean_us",
+    "application metric missing: fragment_latency_p50_us",
+    "application metric missing: fragment_latency_p95_us",
+    "application metric missing: fragment_latency_p99_us",
+    "application metric missing: fragment_latency_max_us",
+    "application metric missing: object_latency_min_ms",
+    "application metric missing: object_latency_mean_ms",
+    "application metric missing: object_latency_p95_ms",
+    "application metric missing: object_latency_max_ms",
+    "application metric missing: p6_retry_count",
+    "application metric missing: p6_retry_exhausted",
+    "application metric missing: p6_tx_fail",
+    "application metric missing: p6_crc_bad",
+    "application metric missing: p6_payload_mismatch",
+    "application metric missing: max_txd_high_cycles",
+    "application metric missing: duty_violation_count",
+    "application metric missing: shutdown_result",
+    "application metrics validated flag is not true",
+    "application metrics failures are nonempty",
+    "stationary trace validation is not clean PASS",
+    "trace expected terminal bundle count mismatch",
+    "trace terminal bundle marker count mismatch",
+    "trace validated terminal bundle count mismatch",
+    "trace expected artifact file count mismatch",
+    "trace observed artifact file count mismatch",
+    "trace entries do not reconcile to application metrics",
+    "trace latency samples do not reconcile to metrics",
+    "stationary trace record list count mismatch",
+    "application metric must be zero: objects_failed",
+    "application metric must be zero: fragments_duplicated",
+    "application metric must be zero: fragments_rejected",
+    "application metric must be zero: fragments_out_of_order",
+    "application metric must be zero: whole_object_crc_failures",
+    "application metric must be zero: sha256_mismatches",
+    "application metric must be zero: p6_retry_exhausted",
+    "application metric must be zero: p6_tx_fail",
+    "application metric must be zero: p6_crc_bad",
+    "application metric must be zero: p6_payload_mismatch",
+    "application metric must be zero: duty_violation_count",
+    "application metric must be zero: shutdown_result",
+    "application object counters do not reconcile",
+    "generated/completed fragment counts differ",
+    "submitted fragment count is below generated",
+    "fragment retry metric does not reconcile",
+    "application byte metrics do not reconcile to ledger",
+    "application metric does not exactly reconcile to terminal/raw aggregate: objects_requested",
+    "application metric does not exactly reconcile to terminal/raw aggregate: objects_completed",
+    "application metric does not exactly reconcile to terminal/raw aggregate: objects_failed",
+    "application metric does not exactly reconcile to terminal/raw aggregate: fragments_generated",
+    "application metric does not exactly reconcile to terminal/raw aggregate: fragments_submitted",
+    "application metric does not exactly reconcile to terminal/raw aggregate: fragments_completed",
+    "application metric does not exactly reconcile to terminal/raw aggregate: fragments_retried",
+    "application metric does not exactly reconcile to terminal/raw aggregate: lane0_fragments",
+    "application metric does not exactly reconcile to terminal/raw aggregate: lane1_fragments",
+    "application metric does not exactly reconcile to terminal/raw aggregate: replicated_fragments",
+    "application metric does not exactly reconcile to terminal/raw aggregate: p6_retry_count",
+    "application metric does not exactly reconcile to terminal/raw aggregate: p6_retry_exhausted",
+    "application metric does not exactly reconcile to terminal/raw aggregate: p6_tx_fail",
+    "application metric does not exactly reconcile to terminal/raw aggregate: p6_crc_bad",
+    "application metric does not exactly reconcile to terminal/raw aggregate: p6_payload_mismatch",
+    "application metric does not exactly reconcile to terminal/raw aggregate: max_txd_high_cycles",
+    "application metric does not exactly reconcile to terminal/raw aggregate: duty_violation_count",
+    "application lane/replication metrics are incomplete",
+    "application metrics do not prove both controlled fallback directions",
+    "application queue high-water mark is not 8",
+    "application backpressure metric is invalid",
+    "host-to-PS bytes/sec is not positive",
+    "cumulative application goodput is not positive",
+    "PS global-timer counts-per-second constant mismatch",
+    "application metrics runtime ticks differ from mailbox",
+    "PS runtime ticks do not prove the bounded full 1800-second window",
+    "host preload metric/raw marker mismatch: host_to_ps_input_bytes",
+    "host preload metric/raw marker mismatch: host_to_ps_input_duration_ms",
+    "host preload metric/raw marker mismatch: host_to_ps_bytes_per_sec",
+    "host preload metric/raw marker mismatch: host_to_ps_bits_per_sec",
+    "fragment latency metric ordering is invalid",
+    "object latency metric ordering is invalid",
+    "fragment latency sample count mismatch",
+    "object latency sample count mismatch",
+    "application max TXD-high metric is outside 1..8",
+    "application metric time_sources object missing",
+    "mailbox metric time-source boundary mismatch",
+    "no executed stationary attempt is a qualified full-duration PASS"
+  ],
+  "evidence": [
+    "evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r41_formal_full/066_p7_ps_stationary/p7_ps_application_stage_summary.json"
+  ],
+  "generated_at_utc": "2026-07-15T11:52:06+00:00",
+  "hardware_acceptance": "FAIL",
+  "hardware_actions_executed": true,
+  "input_file_hashes": [
+    {
+      "authorization_sha256_key": "ACTIVE_PROFILE_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ACTIVE_PROFILE.json",
+      "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
+      "size_bytes": 899
+    },
+    {
+      "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+      "size_bytes": 2018
+    },
+    {
+      "authorization_sha256_key": "BITSTREAM_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit",
+      "sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+      "size_bytes": 2083856
+    },
+    {
+      "authorization_sha256_key": "ELF_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf",
+      "sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+      "size_bytes": 355948
+    },
+    {
+      "authorization_sha256_key": "P6_PS_BUILD_SUMMARY_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate_build_summary.json",
+      "sha256": "c5bf3519be09a1e51f0b40b612e501aa9361224c767b8095fc16c88739d969fa",
+      "size_bytes": 3100
+    },
+    {
+      "authorization_sha256_key": "P7_FROZEN_SHUTDOWN_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\shutdown\\p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+      "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+      "size_bytes": 2083853
+    },
+    {
+      "authorization_sha256_key": "P7_INPUT_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\inputs\\p7_ps_seed_247.bin",
+      "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+      "size_bytes": 247
+    },
+    {
+      "authorization_sha256_key": "P7_LANE1_PROMOTION_SUMMARY_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\p7_lane1_promotion_summary.json",
+      "sha256": "ef159b9e20bc6c5bf1dce7d42b79b53285c2fcb464f470d737792a7fbfa1668f",
+      "size_bytes": 1795
+    },
+    {
+      "authorization_sha256_key": "P7_PLAN_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+      "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+      "size_bytes": 34806
+    },
+    {
+      "authorization_sha256_key": "P7_PS_BUILD_SUMMARY_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_ps_runtime_build_summary.json",
+      "sha256": "64c6bc23cb321688101b8a901f3214a5b8fba46cae50fd509269648a9d6a739c",
+      "size_bytes": 11809
+    },
+    {
+      "authorization_sha256_key": "P7_PS_CORE_READINESS_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json",
+      "sha256": "a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6",
+      "size_bytes": 16240
+    },
+    {
+      "authorization_sha256_key": "PINMAP_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+      "size_bytes": 1412
+    },
+    {
+      "authorization_sha256_key": "PROFILE_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+      "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+      "size_bytes": 751
+    },
+    {
+      "authorization_sha256_key": "PS7_INIT_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+      "size_bytes": 25544
+    },
+    {
+      "authorization_sha256_key": "REGISTER_MAP_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+      "size_bytes": 7692
+    },
+    {
+      "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+      "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+      "size_bytes": 2083853
+    },
+    {
+      "authorization_sha256_key": "XSA_SHA256",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa",
+      "sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+      "size_bytes": 560423
+    }
+  ],
+  "ltx": [],
+  "max_lane_mask": "0x3",
+  "metrics": {
+    "object_latency_definition": "full PS object-processing interval from valid descriptor RUNNING through output CRC32/SHA256 completion; excludes host descriptor publication and JTAG terminal observation"
+  },
+  "motion_used": false,
+  "network_used": false,
+  "notes": [
+    "object_latency_* fields cover PS processing only; host publication and JTAG observation timing are excluded and reported separately"
+  ],
+  "output_file_hashes": [],
+  "product_final_acceptance": "PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT",
+  "profile": [
+    {
+      "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+      "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+      "label": "artifact:profile",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json"
+    }
+  ],
+  "programmed_fpga": true,
+  "reason": "no unique qualified stationary run can own metrics",
+  "repo": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE",
+  "result": "FAIL",
+  "runner_provenance": [
+    {
+      "SHUTDOWN_EXIT": 0,
+      "artifacts": {
+        "active_xdc": {
+          "actual_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+          "expected_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+          "label": "artifact:active_xdc",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc"
+        },
+        "bitstream": {
+          "actual_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+          "expected_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+          "label": "artifact:bitstream",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit"
+        },
+        "elf": {
+          "actual_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+          "expected_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+          "label": "artifact:elf",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf"
+        },
+        "pinmap": {
+          "actual_sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+          "expected_sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+          "label": "artifact:pinmap",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv"
+        },
+        "plan": {
+          "actual_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "expected_sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "label": "artifact:plan",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md"
+        },
+        "profile": {
+          "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "label": "artifact:profile",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json"
+        },
+        "register_map": {
+          "actual_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "expected_sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "label": "artifact:register_map",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml"
+        },
+        "shutdown_bitstream": {
+          "actual_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "expected_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "label": "artifact:shutdown_bitstream",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit"
+        },
+        "xsa": {
+          "actual_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+          "expected_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+          "label": "artifact:xsa",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa"
+        }
+      },
+      "authorization": {
+        "actual_sha256": "8cdc0e988bb0132e1c262851d1ae043079b014d6be8f652edf66ee17030a80b2",
+        "expected_sha256": "8cdc0e988bb0132e1c262851d1ae043079b014d6be8f652edf66ee17030a80b2",
+        "label": "authorization",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260715_stationary_app_r41_formal_full_066_p7_ps_stationary.txt"
+      },
+      "authorization_extensions": {
+        "ACTIVE_PROFILE_PATH": {
+          "authorization_sha256_key": "ACTIVE_PROFILE_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ACTIVE_PROFILE.json",
+          "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
+          "size_bytes": 899
+        },
+        "ACTIVE_XDC_PATH": {
+          "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+          "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+          "size_bytes": 2018
+        },
+        "BITSTREAM_PATH": {
+          "authorization_sha256_key": "BITSTREAM_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit",
+          "sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+          "size_bytes": 2083856
+        },
+        "ELF_PATH": {
+          "authorization_sha256_key": "ELF_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf",
+          "sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+          "size_bytes": 355948
+        },
+        "P6_PS_BUILD_SUMMARY_PATH": {
+          "authorization_sha256_key": "P6_PS_BUILD_SUMMARY_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate_build_summary.json",
+          "sha256": "c5bf3519be09a1e51f0b40b612e501aa9361224c767b8095fc16c88739d969fa",
+          "size_bytes": 3100
+        },
+        "P7_FROZEN_SHUTDOWN_PATH": {
+          "authorization_sha256_key": "P7_FROZEN_SHUTDOWN_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\shutdown\\p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+          "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "size_bytes": 2083853
+        },
+        "P7_INPUT_PATH": {
+          "authorization_sha256_key": "P7_INPUT_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\inputs\\p7_ps_seed_247.bin",
+          "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+          "size_bytes": 247
+        },
+        "P7_LANE1_PROMOTION_SUMMARY_PATH": {
+          "authorization_sha256_key": "P7_LANE1_PROMOTION_SUMMARY_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\p7_lane1_promotion_summary.json",
+          "sha256": "ef159b9e20bc6c5bf1dce7d42b79b53285c2fcb464f470d737792a7fbfa1668f",
+          "size_bytes": 1795
+        },
+        "P7_PLAN_PATH": {
+          "authorization_sha256_key": "P7_PLAN_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+          "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+          "size_bytes": 34806
+        },
+        "P7_PS_BUILD_SUMMARY_PATH": {
+          "authorization_sha256_key": "P7_PS_BUILD_SUMMARY_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_ps_runtime_build_summary.json",
+          "sha256": "64c6bc23cb321688101b8a901f3214a5b8fba46cae50fd509269648a9d6a739c",
+          "size_bytes": 11809
+        },
+        "P7_PS_CORE_READINESS_PATH": {
+          "authorization_sha256_key": "P7_PS_CORE_READINESS_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json",
+          "sha256": "a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6",
+          "size_bytes": 16240
+        },
+        "PINMAP_PATH": {
+          "authorization_sha256_key": "PINMAP_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+          "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+          "size_bytes": 1412
+        },
+        "PROFILE_PATH": {
+          "authorization_sha256_key": "PROFILE_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+          "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+          "size_bytes": 751
+        },
+        "PS7_INIT_PATH": {
+          "authorization_sha256_key": "PS7_INIT_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+          "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+          "size_bytes": 25544
+        },
+        "REGISTER_MAP_PATH": {
+          "authorization_sha256_key": "REGISTER_MAP_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+          "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+          "size_bytes": 7692
+        },
+        "SHUTDOWN_BITSTREAM_PATH": {
+          "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+          "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+          "size_bytes": 2083853
+        },
+        "XSA_PATH": {
+          "authorization_sha256_key": "XSA_SHA256",
+          "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa",
+          "sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+          "size_bytes": 560423
+        }
+      },
+      "board_id": "210512180081",
+      "bundle_manifest": {
+        "actual_sha256": "c857a93ae1c7a59e927a16f1df5914dd38cd272e89d521008621eaa9bb3772c9",
+        "expected_sha256": "c857a93ae1c7a59e927a16f1df5914dd38cd272e89d521008621eaa9bb3772c9",
+        "label": "PS bundle_manifest",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\bundle\\bundle_manifest.json"
+      },
+      "core_readiness": {
+        "actual_sha256": "a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6",
+        "expected_sha256": "a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6",
+        "label": "PS core readiness",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json"
+      },
+      "drove_tfdu_txd": true,
+      "enabled_tfdu_receiver": true,
+      "execution_plan": {
+        "actual_sha256": "f772fbf5284e26c6c915ac287cc18a2c0ff652c923e70c60c2b8ae37fe48cd4b",
+        "expected_sha256": "f772fbf5284e26c6c915ac287cc18a2c0ff652c923e70c60c2b8ae37fe48cd4b",
+        "label": "PS execution_plan",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\bundle\\execution_plan.txt"
+      },
+      "expected_part": "xc7z010clg400-1",
+      "expected_target": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "frozen_shutdown": {
+        "actual_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "expected_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+        "label": "PS frozen_shutdown",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\shutdown\\p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit"
+      },
+      "generated_at_utc": "2026-07-15T11:19:08.611945+00:00",
+      "hardware_actions_executed": true,
+      "hardware_execution_lock": {
+        "acquired": true,
+        "owner": {
+          "acquired_at_utc": "2026-07-15T11:19:09.076724+00:00",
+          "evidence_dir": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary",
+          "mode": "stationary",
+          "pid": 37812,
+          "schema": "rf-comm-p7-hardware-execution-lock-v1",
+          "stage_name": "p7_ps_stationary",
+          "wrapper": "run_p7_ps_application_stage_safe.py"
+        },
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\.hardware_authorization\\P7_HARDWARE_EXECUTION.lock",
+        "stale_lock_auto_recovery": false,
+        "token_sha256": "4bdaccbd02104d16700bd1abc42e310b55be634cb55c5482bb285fa5059c4944"
+      },
+      "kind": "ps",
+      "motion_used": false,
+      "network_used": false,
+      "output_file_hashes": [],
+      "programmed_fpga": true,
+      "raw_evidence_sha256_manifest": {
+        "actual_sha256": "c6e989f0fd19c20f0e7d65896f67abc057d9b0841e8280307a3c86cd0c972aee",
+        "expected_sha256": "c6e989f0fd19c20f0e7d65896f67abc057d9b0841e8280307a3c86cd0c972aee",
+        "label": "PS raw evidence SHA256 manifest",
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\p7_raw_evidence_sha256_manifest.json"
+      },
+      "shutdown_after": {
+        "attempted": true,
+        "passed": true,
+        "programming_attempted": true,
+        "result_file": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\shutdown_after_result.txt",
+        "returncode": 0
+      },
+      "shutdown_before": {
+        "attempted": true,
+        "passed": true,
+        "programming_attempted": true,
+        "result_file": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\shutdown_before_result.txt",
+        "returncode": 0
+      },
+      "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+      "stage": "stationary",
+      "summary": "evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r41_formal_full/066_p7_ps_stationary/p7_ps_application_stage_summary.json",
+      "uart_access": false
+    }
+  ],
+  "shutdown_after": [
+    {
+      "attempted": true,
+      "passed": true,
+      "programming_attempted": true,
+      "result_file": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\shutdown_after_result.txt",
+      "returncode": 0
+    }
+  ],
+  "shutdown_before": [
+    {
+      "attempted": true,
+      "passed": true,
+      "programming_attempted": true,
+      "result_file": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r41_formal_full\\066_p7_ps_stationary\\shutdown_before_result.txt",
+      "returncode": 0
+    }
+  ],
+  "stage": "application_metrics",
+  "uart_access": false,
+  "xsa": [
+    {
+      "actual_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+      "expected_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+      "label": "artifact:xsa",
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r41formal_946ccba\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa"
+    }
+  ]
+}

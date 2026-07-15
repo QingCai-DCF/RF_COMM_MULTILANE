@@ -1,0 +1,21 @@
+{
+  "project": "RF_COMM_REBUILD",
+  "source_project": "RF_COMM",
+  "hardware_target": "Zynq-7010 / AX7010 class board",
+  "tfdu_part": "TFDU6102",
+  "vivado_version_reference": "2023.1",
+  "default_no_hardware": true,
+  "canonical_xdc": "constraints/active/PORT1.generated.xdc",
+  "canonical_pinmap": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+  "baseline_profile": "config/profiles/G1_LANE0_BASELINE.json",
+  "legacy_known_bad_raw_direction": "AB_L1",
+  "known_bad_raw_direction": null,
+  "lane1_reliable_enabled": true,
+  "lane1_reliability_promotion": {
+    "status": "PASS",
+    "source_commit": "ca041d4877b831de84fe7829788ac835b0b46acd",
+    "evidence": "evidence/generated/p7_lane1_promotion_summary.json",
+    "scope": "fresh raw-pulse, frame CRC, ACK-only, session/lane/ACK-mask readback and P6 dynamic-payload gates",
+    "requires_fresh_p7_regression_before_acceptance": true
+  }
+}

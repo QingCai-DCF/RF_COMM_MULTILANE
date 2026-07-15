@@ -17,21 +17,33 @@ P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET: PENDING_HW
 HARDWARE_ACCEPTANCE_STATIONARY_2LANE_APPLICATION: PENDING_HW
 P7_OFFLINE_GATE: PASS
 P7_OFFLINE_CACHE_STATUS: BYPASS
-P7_LATEST_FORMAL_RUN: p7_20260715_stationary_app_r34_formal_full
-P7_LATEST_FORMAL_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME
-R34_FORMAL_STAGE_PREFIX_OBSERVED_PASS: 1_THROUGH_61
-R34_ACCEPTANCE_COVERAGE_CLAIMED: false
-R34_STAGE62_ATTEMPTED: false
-R34_STAGE62_EXECUTED: false
-R34_STATIONARY_ATTEMPTS: 0
-STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_PREPARATION_COMMIT_IS_NOT_EXECUTION_SOURCE
+P7_LATEST_FORMAL_RUN: p7_20260715_stationary_app_r41_formal_full
+P7_LATEST_FORMAL_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME_RESTART_COPY_OR_REUSE
+P7_LATEST_FORMAL_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
+P7_LATEST_FORMAL_PLAN_SHA256: a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794
+P7_LATEST_FORMAL_LEDGER_SHA256: a86ec2a8e326a5354e9e79abed71ca938a3aa7a54b6936bc961beaf668ddba64
+R41_FORMAL_STAGE_PREFIX_OBSERVED_PASS: 1_THROUGH_65
+R41_FORMAL_FAILED_ORDINAL: 66
+R41_FORMAL_STAGE66_RESULT: FAIL_STAGE
+R41_ACCEPTANCE_COVERAGE_CLAIMED: false
+R41_STATIONARY_AUTHORIZED_ATTEMPTS: 1
+R41_STATIONARY_ATTEMPT_CONSUMED: true
+R41_STATIONARY_SAMPLE_COUNT: 1
+R41_STATIONARY_TERMINAL_OBJECT_COUNT: 4
+R41_STATIONARY_COMPLETED_1800_SECONDS: false
+R41_STATIONARY_RERUN_PERMITTED_UNDER_CURRENT_CONSTRAINT: false
+R41_STAGE66_SHUTDOWN_BEFORE: PASS
+R41_STAGE66_SHUTDOWN_AFTER: PASS
+R41_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_FAILED_STAGE
+R41_HOST_TCL_ROOT_CAUSE: CONFIRMED_SIGNED_32_BIT_LATENCY_SORT_OVERFLOW
+R41_HOST_TCL_FIX: IMPLEMENTED_AND_OFFLINE_VALIDATED_NO_HARDWARE_RERUN
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_POSTFAILURE_HOST_FIX_IS_NOT_HARDWARE_ACCEPTANCE_SOURCE
 P7_BOUND_EXECUTION_SOURCE_OFFLINE_GATE: PASS_13_OF_13
 P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
 P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_210_PLUS_42
 P7_LATEST_CANONICAL_GATE_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: true
+P7_NEW_HARDWARE_RUN_READY: false
 P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
 P7_LATEST_DIAGNOSTIC_RUN_STATUS: COMPLETED_DIAGNOSTIC_PASS_NEVER_REUSE_OR_RESUME
 P7_LATEST_DIAGNOSTIC_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
@@ -51,24 +63,20 @@ R39_STAGE62_TERMINAL_RESULT: PASS_DIAGNOSTIC_ZERO_COVERAGE
 R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
 R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
 R39_SOURCE_REPAIR: IMPLEMENTED_AND_CLEAN_CHECKPOINT_PASS
-P7_NEXT_FORMAL_RUN_ID: p7_20260715_stationary_app_r41_formal_full
-P7_NEXT_FORMAL_RUN_STATUS: READY_NO_HARDWARE_LAUNCH
-P7_NEXT_FORMAL_PLAN_MODE: FORMAL_FULL_1_THROUGH_66
-P7_NEXT_FORMAL_PLAN_CREATED: true
-P7_NEXT_FORMAL_PLAN_SHA256: a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794
-P7_NEXT_FORMAL_STAGE_COUNT: 66
-P7_NEXT_FORMAL_AUTHORIZATION_CREATED: true
-P7_NEXT_FORMAL_AUTHORIZATION_COUNT: 66
+P7_NEXT_FORMAL_RUN_ID: NONE_UNDER_CURRENT_SINGLE_STATIONARY_ATTEMPT_CONSTRAINT
+P7_NEXT_FORMAL_RUN_STATUS: NOT_AUTHORIZED
+P7_NEXT_FORMAL_PLAN_CREATED: false
+P7_NEXT_FORMAL_AUTHORIZATION_CREATED: false
 P7_NEXT_FORMAL_HARDWARE_LAUNCHED: false
-P7_NEXT_FORMAL_STATIONARY_ATTEMPT_COUNT: 0
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
-MAIN_THREAD_RESUME_READY: true
+MAIN_THREAD_RESUME_READY: false
+MAIN_THREAD_TERMINAL_STATE: FROZEN_R41_FORMAL_FAIL
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
 CAMPAIGN_D_ACCEPTANCE_COVERAGE: 0
 SAFE_SHUTDOWN_COMPLETE: true
 PS_PL_PHY_PL_PS_APPLICATION_PASS: false
-STATIONARY_30MIN: PENDING_HW
+STATIONARY_30MIN: FAIL_INCOMPLETE
 ETHERNET_ACCEPTANCE: DEFERRED_NO_NETWORK_CABLE
 ROTATION_ACCEPTANCE: DEFERRED_NO_HARDWARE_MOVEMENT
 EIGHT_LANE_ACCEPTANCE: DEFERRED_ONLY_2_LANES_AVAILABLE
@@ -89,8 +97,8 @@ P6 is not product-final acceptance.
 
 Current P6 result is PASS. Acceptance is derived from the dynamic payload physical RTL simulation, immutable JTAG/AXI and PS candidates, authorized stationary two-lane hardware matrices, host file round-trip, PS mailbox execution, fallback negatives, and the bounded 2-hour soak evidence. Existing P5 evidence remains P5-only context.
 
-P7 implementation/pre-hardware status is PENDING_HW. P7 hardware acceptance may
-advance only through the real PS input-memory -> P7 PS ELF/application service ->
+P7 implementation/hardware-acceptance status remains PENDING_HW. P7 hardware
+acceptance may advance only through the real PS input-memory -> P7 PS ELF/application service ->
 AXI/PL -> physical TFDU -> PL/AXI -> PS output-memory path. Direct JTAG/AXI is an
 auxiliary ingress and cross-check path; current host ingress is JTAG/AXI plus the
 PS mailbox. The disabled TCP adapter has not been tested over a real Ethernet
@@ -300,17 +308,35 @@ The final preparation status is
 `evidence/generated/p7_r41_formal_preparation_status.json`; selfcheck SHA256 is
 `6bbfd30cdff1d0ab911d4c9bd62d5ea1d678f158035a6886c0ae8f868d0dd4e3`.
 
-This is readiness evidence only. r41 has not launched, its evidence root and
-selected new ledger do not exist, `RF_COMM_HW_AUTH` is absent, no project
-hardware process is active, and external `hw_server` PID 45220 remains the sole
-listen-only port-3121 owner and was not touched. Stage 66 and the unique
-stationary attempt remain unstarted; `HARDWARE_ACCEPTANCE=PENDING_HW`.
-Campaign D, r39, and r40 authorization must not be reused.
+At the dry-preparation checkpoint described above, r41 had not yet launched,
+its evidence root and ledger did not yet exist, and the stationary attempt was
+unstarted. That paragraph is a historical preparation record and is superseded
+by the terminal r41 result below. Campaign D, r39, and r40 authorization must
+not be reused.
 
-The final P7 stationary test is a single 1800-second run containing 300 seconds
-of embedded calibration and 1500 seconds of acceptance. It is not an additional
-two-hour soak. Available scope is two physical lanes, no Ethernet, and no hardware
-motion. Striping alternates single-lane fragments, while replication uses mask
-0x3; they are different semantics. Software-injected lane unavailability proves
-only scheduler fallback and is not a real optical-path fault. Product-final
-acceptance remains pending Ethernet, rotation, and target lane-count validation.
+The final P7 stationary test was admitted once in r41 after the same run's stages
+1--65 reached exact terminal PASS. Stage 66 then failed after one sample and four
+terminal objects with `integer value too large to represent`; the required 1800
+seconds did not complete. The run and stage remain FAIL, contribute no acceptance
+coverage, and must never be resumed, restarted, copied, or reused. The single
+authorized stationary attempt is consumed, so no further Stage 66 run is permitted
+under the current constraint.
+
+The confirmed failure mechanism is host-side XSCT Tcl `lsort -integer` applying a
+signed 32-bit conversion to observed latency tick values between 17,875,676,347
+and 51,321,168,692. Production Tcl now uses an explicit wide-integer comparator.
+XSCT reproduces the historical error and validates the replacement, and 70 focused
+package/history/tamper/wrapper/summarizer tests pass. These are offline-only results;
+no hardware or stationary rerun occurred, and `HARDWARE_ACCEPTANCE` remains
+`PENDING_HW`. Stage 66 shutdown-before/after and the independent shutdown recovery
+all passed, but recovery does not change the failed stage result.
+
+Exact machine records are `evidence/generated/p7_r41_formal_failure.json`,
+`evidence/generated/p7_r41_postfailure_validation.json`, and
+`evidence/generated/p7_r41_summarizer_replay_result.json`. The portable failure
+package tree SHA256 is
+`bf710e4207146ceb27476ab86b91d9e31bc61ef63716bc48ce41ea96f1095cb7`;
+the original 834,613,170-byte raw tree remains inventoried as SHA256
+`3501544a5fcd13458cbeb280e3e0a617430e8d8671ef8be5d90f5b6e7ebefa91`.
+No Ethernet or motion was used, the maximum lane mask was `0x3`, and external
+`hw_server` PID 45220 was not touched. Product-final acceptance remains pending.

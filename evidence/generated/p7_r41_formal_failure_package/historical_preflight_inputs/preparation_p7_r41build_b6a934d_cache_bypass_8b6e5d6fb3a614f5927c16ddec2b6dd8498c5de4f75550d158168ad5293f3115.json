@@ -1,0 +1,100 @@
+{
+  "schema": "rf-comm-p7-formal-preparation-cache-bypass-build-v1",
+  "generated_at_utc": "2026-07-15T06:02:03.9748143Z",
+  "build_input_source_commit": "b6a934de6660d18d3a37358010847872f5fd05b1",
+  "worktree": "C:\\Users\\user\\.codex\\worktrees\\r41build_b6a934d\\RF_COMM_MULTILANE",
+  "status": "PASS",
+  "offline_cache_status": "BYPASS",
+  "offline_real_build_process_ran": true,
+  "commands": [
+    "python scripts/build_p6_ps_candidate.py --cache-bypass",
+    "python scripts/build_p7_ps_runtime.py --cache-bypass",
+    "python tools/ax7010_ps7_board_contract.py --include-vitis"
+  ],
+  "tool_identity": {
+    "vivado_version": "2023.1",
+    "vivado_sw_build": "3865809",
+    "vitis_version": "2023.1",
+    "scripts/build_p6_ps_candidate.py": "5b401e2be3de66d66cf1a3c4e9c15b938a3eb389137f1b8338ee0cc4b85ff456",
+    "scripts/build_p6_ps_candidate.tcl": "6232ae8baa4223176ef05be91e58c115191c8d870b6758decb25d21513e2cfd2",
+    "scripts/build_p7_ps_runtime.py": "bb9d6a19da42885781842093e6baa7168f1b7b760c1cd70734afb37a45ecb8e3",
+    "scripts/build_p7_ps_runtime.tcl": "950edaa554fdfc207186eed10baccdaca0241d8bb79753bb926a83a3536560be"
+  },
+  "vivado": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "timing_met": true,
+    "drc_clean": true,
+    "ps7_ddr_configuration_verified": true,
+    "ps7_board_contract_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build.log",
+      "bytes": 93970,
+      "sha256": "6fd8baf6dbcbd2b77ec05621c8905662be2ddbb5c8ea1d3602ed7448349cb004"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_board_contract.json",
+      "bytes": 3184,
+      "sha256": "d63f7c2225294280c94ea0b861ee9eb5a635e7f4fa66d5dd2b6c21cdacd697f2"
+    },
+    "bitstream": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit",
+      "bytes": 2083856,
+      "sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0"
+    },
+    "xsa": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa",
+      "bytes": 560423,
+      "sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1"
+    },
+    "ps7_init_tcl_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "ps7_init_c_sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+  },
+  "vitis": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "mailbox_overlap": false,
+    "linker_ocm_hard_boundary_0x20000": true,
+    "critical_payload_byte_copy_verified": true,
+    "first_error_diagnostic_disassembly_verified": true,
+    "stage62_copy_diagnostic_disassembly_verified": true,
+    "stage62_microtest_disassembly_verified": true,
+    "stack_usage_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build.log",
+      "bytes": 66677,
+      "sha256": "210e8a6c852ae47cf47382ad30b85a956fdc26c6056f60f3c7001c26389b4818"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps7_board_contract.json",
+      "bytes": 3109,
+      "sha256": "53390ae5c92a9023a024f839567f66079e2f0d8f23db097f64d0946ae678e7d5"
+    },
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644.elf",
+      "bytes": 355948,
+      "sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_0ec32b6d5828ab9f1061a6a1157962a4c74f1e0a3f25c679560e7fa0730a096b.map",
+      "bytes": 99235,
+      "sha256": "0ec32b6d5828ab9f1061a6a1157962a4c74f1e0a3f25c679560e7fa0730a096b"
+    }
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "include_vitis": true
+  },
+  "scope": {
+    "no_hardware": true,
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "ethernet_used": false,
+    "motion_used": false,
+    "project_process_count_after_build": 0,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  }
+}

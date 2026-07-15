@@ -1,0 +1,52 @@
+{
+  "schema": "rf-comm-p7-r41-summarizer-replay-v1",
+  "run_id": "p7_20260715_stationary_app_r41_formal_full",
+  "invocation_count": 1,
+  "summarizer_sha256": "b0426d803693b6fabc285f0f1e8821e17aa55bf17c793dd3ff7cf30699582f83",
+  "summarizer_exit_code_observed": true,
+  "summarizer_exit_code": 1,
+  "hardware_actions_executed_by_summarizer": false,
+  "interpretation": "FORMAL_RUN_FAILED_AT_STAGE66_AND_STATIONARY_DID_NOT_COMPLETE",
+  "output_tree": {
+    "file_count": 72,
+    "byte_count": 23945443,
+    "partial_file_count": 0,
+    "tree_sha256": "1099e3bd7014657a25cacf50fab457f286dcab968c1ddfe76ed42d1f78027831",
+    "canonicalization": "relative_path TAB byte_count TAB sha256 LF; POSIX paths sorted ascending"
+  },
+  "final_summary": {
+    "path": "evidence/generated/p7_r41_summarizer_replay/p7_final_summary.json",
+    "bytes": 1317241,
+    "sha256": "a02efe32caa1115be754520a9b5cd55be6a072f495660771704d546bb3caa347",
+    "result": "FAIL",
+    "error_count": 477
+  },
+  "evidence_consistency": {
+    "path": "evidence/generated/p7_r41_summarizer_replay/p7_evidence_consistency_summary.json",
+    "bytes": 1254180,
+    "sha256": "83031cab67f6afe62d453fb7a171c76a840fecb6507bf0c2f2b3e8beb46e8cf6",
+    "result": "FAIL",
+    "error_count": 7
+  },
+  "shutdown_evidence": {
+    "path": "evidence/generated/p7_r41_summarizer_replay/p7_shutdown_evidence_summary.json",
+    "bytes": 1253837,
+    "sha256": "f8c60312b6308d160611fae7667548a6052d6dd92c3ca9fc6f5d819a4d4b7c52",
+    "result": "PASS",
+    "error_count": 0
+  },
+  "authorization_summary": {
+    "path": "evidence/generated/p7_r41_summarizer_replay/p7_hardware_authorization_summary.json",
+    "bytes": 381768,
+    "sha256": "d45b6fd9fe7689da90c3462c551211eadd168ffec91be9e30ed36942fa222d16",
+    "result": "FAIL",
+    "error_count": 0
+  },
+  "stationary_summary": {
+    "path": "evidence/generated/p7_r41_summarizer_replay/p7_stationary_30min_summary.json",
+    "bytes": 34873,
+    "sha256": "bbe9dcdec2ed02b6ea3f9bf26503402bf5a7faf1ea4c3126c4e740d7026bcc5c",
+    "result": "FAIL",
+    "error_count": 69
+  }
+}

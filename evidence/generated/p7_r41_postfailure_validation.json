@@ -1,0 +1,86 @@
+{
+  "schema": "rf-comm-p7-r41-postfailure-validation-v1",
+  "run_id": "p7_20260715_stationary_app_r41_formal_full",
+  "run_status": "IMMUTABLE_FORMAL_FAIL_NEVER_RESUME_RESTART_COPY_OR_REUSE",
+  "source_commit_executed": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+  "hardware_actions_executed_by_validation": false,
+  "hardware_rerun_performed": false,
+  "stationary_rerun_performed": false,
+  "acceptance_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "FAIL_INCOMPLETE",
+  "production_fix": {
+    "path": "scripts/hw/p7_ps_application_execute.tcl",
+    "sha256": "e7e8167513b80aa8aa7ecf2fb38ca7aae937cdb76bde748178803fc78c1224eb",
+    "change": "REPLACE_XSCT_SIGNED_32_BIT_LSORT_INTEGER_WITH_WIDE_INTEGER_COMPARATOR"
+  },
+  "xsct_2023_1_reproducer": {
+    "invocation_count": 1,
+    "result": "PASS",
+    "historical_sort_return_code": 1,
+    "historical_sort_error": "integer value too large to represent",
+    "fixed_sort_return_code": 0,
+    "fixed_sorted_values": [
+      17875676347,
+      26957722756,
+      45147234789,
+      51321168692
+    ],
+    "stdout": {
+      "path": "evidence/generated/p7_r41_wide_latency_xsct.stdout.log",
+      "bytes": 217,
+      "sha256": "f6449cf0675e66b22bda14256aa1d914f2ae465d11a2c58aa07e5067d173490e"
+    },
+    "stderr": {
+      "path": "evidence/generated/p7_r41_wide_latency_xsct.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "focused_non_hardware_tests": {
+    "invocation_count": 1,
+    "result": "PASS",
+    "test_count": 70,
+    "elapsed_seconds": 342.528,
+    "modules": [
+      "tests.test_p7_r41_formal_failure_package",
+      "tests.test_p7_stationary_wide_latency",
+      "tests.test_p7_ps_application_stage_safe",
+      "tests.test_summarize_p7_hardware"
+    ],
+    "stdout": {
+      "path": "evidence/generated/p7_r41_postfailure_focused_tests.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "evidence/generated/p7_r41_postfailure_focused_tests.stderr.log",
+      "bytes": 14605,
+      "sha256": "bcf7cccbf905d682ca9ab3d2faae0cbce51012d42ae74a178beda84c6c5364be"
+    },
+    "complete_checkpoint_suite_invocations": 0,
+    "canonical_offline_gate_invocations": 0
+  },
+  "failure_classification": {
+    "path": "evidence/generated/p7_r41_formal_failure.json",
+    "bytes": 5422,
+    "sha256": "32bddfebc13630ab4261d4ab7b83851fb89800b84afdbb393f3983620d8a61a8"
+  },
+  "portable_failure_package": {
+    "path": "evidence/generated/p7_r41_formal_failure_package",
+    "file_count": 220,
+    "byte_count": 76154254,
+    "partial_file_count": 0,
+    "tree_sha256": "bf710e4207146ceb27476ab86b91d9e31bc61ef63716bc48ce41ea96f1095cb7"
+  },
+  "summarizer_replay": {
+    "invocation_count": 1,
+    "exit_code": 1,
+    "formal_result": "FAIL",
+    "stationary_result": "FAIL",
+    "shutdown_result": "PASS",
+    "result_path": "evidence/generated/p7_r41_summarizer_replay_result.json",
+    "result_sha256": "0460b3494670903b8fa89c3d8acf7af078d7ea1d1d6eb784494487303961fa2b"
+  },
+  "interpretation": "HOST_TCL_FIX_IS_OFFLINE_VALIDATED_ONLY; R41_AND_STAGE66_REMAIN_FAILED; THE_UNIQUE_STATIONARY_ATTEMPT_IS_CONSUMED"
+}
