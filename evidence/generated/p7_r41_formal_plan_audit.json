@@ -1,0 +1,101 @@
+{
+  "schema": "rf-comm-p7-r41-formal-plan-audit-v1",
+  "recorded_at_utc": "2026-07-15T06:34:15.7314352Z",
+  "status": "PASS",
+  "run_id": "p7_20260715_stationary_app_r41_formal_full",
+  "run_id_status": "NEW_UNUSED_NOT_STARTED",
+  "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+  "source_tree": "d05bb9d85868b380800e37c94388a43dc6092347",
+  "plan_mode": "FULL_ACCEPTANCE",
+  "plan_path": ".hardware_authorization/p7_20260715_stationary_app_r41_formal_full_sequence_plan.txt",
+  "plan_sha256": "a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794",
+  "plan_bytes": 408935,
+  "stage_count": 66,
+  "full_stage_ordinals_contiguous_1_through_66": true,
+  "stage_groups": {
+    "safe_idle": 1,
+    "p6_frame_regression": 3,
+    "fragment_boundary": 48,
+    "large_object_jtag": 9,
+    "ps_functional": 1,
+    "ps_fault": 1,
+    "ps_abort": 1,
+    "ps_queue": 1,
+    "ps_stationary": 1
+  },
+  "formal_contract": {
+    "diagnostic_plan_fields_absent": true,
+    "resume_argument_count": 0,
+    "stationary_stage_count": 1,
+    "stationary_stage_ordinal": 66,
+    "stationary_stage_id": "p7_ps_stationary",
+    "stationary_is_final": true,
+    "stationary_max_runtime_sec": 1800,
+    "stationary_calibration_sec": 300,
+    "stationary_acceptance_sec": 1500,
+    "stationary_sample_interval_sec": 30,
+    "stationary_object_bytes": 65536
+  },
+  "stage_authorizations": {
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "count": 66,
+    "byte_count": 243669,
+    "tree_sha256": "0d6406a772e5705fde96e9fd61f377c36f4c4c8422f0d7a170766be45f15bb60",
+    "all_unique": true,
+    "all_command_hash_bindings_exact": true,
+    "all_source_commits_exact": true,
+    "all_no_ethernet": true,
+    "all_no_motion": true,
+    "all_lane_count_two": true,
+    "all_max_lane_mask_0x3": true,
+    "all_shutdown_on_exit_required": true,
+    "ps_authorization_count": 5,
+    "ps_execution_scope_exact_count": 5,
+    "ps_execution_scope": "P7_PS_APPLICATION_STAGE",
+    "ps_run_id_none_exact_count": 5
+  },
+  "generation": {
+    "manifest_path": "evidence/generated/p7_r41_formal_plan_generation_manifest.json",
+    "manifest_sha256": "ea77c8d55ba6e52130c95beeffa0004b508aa40022d3f7c002a1629668119aa6",
+    "manifest_bytes": 276765,
+    "generator_status": "PASS",
+    "authorization_count": 66,
+    "child_wrapper_dry_validation_count": 66,
+    "child_wrapper_error_count": 0,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked": false,
+    "xsdb_invoked": false,
+    "bundle_tree": {
+      "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+      "file_count": 183,
+      "byte_count": 156005279,
+      "tree_sha256": "a7064bb0a33d9b973adcdf0f6c7f2024da73f551bd368793d19fa729316a0195"
+    }
+  },
+  "source_materialization": {
+    "path": "evidence/generated/p7_r41_formal_source_materialization.json",
+    "sha256": "9737e5dcfc4fecc0fca57afde88de5ca122474d440a42d20e0196aefcee4ee33",
+    "status": "PASS"
+  },
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "85358dd1d4069f4953b2c205bcbb87680b7a45bdda3203f22f0e835a28cd946a",
+    "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+    "gate_pass_count": 13,
+    "gate_fail_count": 0,
+    "offline_cache_status": "BYPASS"
+  },
+  "execution_state": {
+    "hardware_capable_stage_argv_count": 66,
+    "hardware_launch_performed": false,
+    "hardware_actions_executed": false,
+    "evidence_root_exists": false,
+    "execution_ledger_exists": false,
+    "authorization_environment_present": false,
+    "stationary_attempt_count": 0,
+    "stationary_started": false
+  },
+  "acceptance_coverage_claimed_by_preparation": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "validation_errors": []
+}

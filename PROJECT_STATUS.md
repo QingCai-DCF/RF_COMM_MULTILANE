@@ -25,13 +25,13 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: PASS_13_OF_13_AT_EXACT_SOURCE_CHECKPOINT
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_PREPARATION_COMMIT_IS_NOT_EXECUTION_SOURCE
 P7_BOUND_EXECUTION_SOURCE_OFFLINE_GATE: PASS_13_OF_13
 P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
 P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_210_PLUS_42
 P7_LATEST_CANONICAL_GATE_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: false
+P7_NEW_HARDWARE_RUN_READY: true
 P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
 P7_LATEST_DIAGNOSTIC_RUN_STATUS: COMPLETED_DIAGNOSTIC_PASS_NEVER_REUSE_OR_RESUME
 P7_LATEST_DIAGNOSTIC_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
@@ -51,14 +51,19 @@ R39_STAGE62_TERMINAL_RESULT: PASS_DIAGNOSTIC_ZERO_COVERAGE
 R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
 R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
 R39_SOURCE_REPAIR: IMPLEMENTED_AND_CLEAN_CHECKPOINT_PASS
-P7_NEXT_FORMAL_RUN_ID: NOT_YET_ASSIGNED
-P7_NEXT_FORMAL_RUN_STATUS: READY_FOR_PLAN_AND_DRY_VALIDATION_NOT_AUTHORIZED_FOR_HARDWARE
+P7_NEXT_FORMAL_RUN_ID: p7_20260715_stationary_app_r41_formal_full
+P7_NEXT_FORMAL_RUN_STATUS: READY_NO_HARDWARE_LAUNCH
 P7_NEXT_FORMAL_PLAN_MODE: FORMAL_FULL_1_THROUGH_66
-P7_NEXT_FORMAL_PLAN_CREATED: false
-P7_NEXT_FORMAL_AUTHORIZATION_CREATED: false
+P7_NEXT_FORMAL_PLAN_CREATED: true
+P7_NEXT_FORMAL_PLAN_SHA256: a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794
+P7_NEXT_FORMAL_STAGE_COUNT: 66
+P7_NEXT_FORMAL_AUTHORIZATION_CREATED: true
+P7_NEXT_FORMAL_AUTHORIZATION_COUNT: 66
 P7_NEXT_FORMAL_HARDWARE_LAUNCHED: false
+P7_NEXT_FORMAL_STATIONARY_ATTEMPT_COUNT: 0
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
+MAIN_THREAD_RESUME_READY: true
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
 CAMPAIGN_D_ACCEPTANCE_COVERAGE: 0
 SAFE_SHUTDOWN_COMPLETE: true
@@ -266,13 +271,41 @@ its machine classification is
 `evidence/generated/p7_r41validate_946ccba_checkpoint.json`. No hardware action
 occurred and `HARDWARE_ACCEPTANCE=PENDING_HW`.
 
-No new hardware run is ready yet. The next allowed step is to prepare a new
-formal full-run ID at exact source `946ccbad...`, generate the complete stages
-1--66 plan and fresh scoped authorization, bind the current immutable hashes,
-and pass every dry validator. Hardware must not launch merely because this
-offline checkpoint passed. Only that formal run may start the unique stationary
-stage, and only after its own stages 1--65 pass. Campaign D, r39, and r40
-authorization must not be reused.
+The collision-free formal run ID
+`p7_20260715_stationary_app_r41_formal_full` is now dry-prepared at exact source
+`946ccbad66d64d715ad6745449b95f6c261ddf76` in the isolated execution
+worktree. The 25 post-gate generated outputs and nine ignored board-contract
+prerequisites were materialized hash-exactly before generation; source
+materialization record SHA256 is
+`9737e5dcfc4fecc0fca57afde88de5ca122474d440a42d20e0196aefcee4ee33`.
+No non-generated tracked source is dirty.
+
+The generated formal plan contains every ordinal 1--66 exactly once. Plan
+SHA256 is `a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794`.
+It has 66 unique scoped authorizations with canonical tree SHA256
+`0d6406a772e5705fde96e9fd61f377c36f4c4c8422f0d7a170766be45f15bb60`,
+no `--resume`, and exactly one stationary stage at ordinal 66. That stage binds
+1800 seconds as 300 seconds calibration plus 1500 seconds acceptance and may be
+admitted only after the same run's stages 1--65 pass.
+
+The generator passed all 66 child-wrapper dry validations with zero errors;
+manifest SHA256 is
+`ea77c8d55ba6e52130c95beeffa0004b508aa40022d3f7c002a1629668119aa6`.
+The independent plan audit passed with SHA256
+`030ffa7973c0e8771dbda2c873e2017513481f7a286e93f1a3052980fb408010`,
+and the separately invoked executor dry validation passed all 66 argv vectors
+with SHA256
+`70a984533384eb82eb146203620aeb9e583a92525d3e1d052de98e920da7bc28`.
+The final preparation status is
+`evidence/generated/p7_r41_formal_preparation_status.json`; selfcheck SHA256 is
+`6bbfd30cdff1d0ab911d4c9bd62d5ea1d678f158035a6886c0ae8f868d0dd4e3`.
+
+This is readiness evidence only. r41 has not launched, its evidence root and
+selected new ledger do not exist, `RF_COMM_HW_AUTH` is absent, no project
+hardware process is active, and external `hw_server` PID 45220 remains the sole
+listen-only port-3121 owner and was not touched. Stage 66 and the unique
+stationary attempt remain unstarted; `HARDWARE_ACCEPTANCE=PENDING_HW`.
+Campaign D, r39, and r40 authorization must not be reused.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

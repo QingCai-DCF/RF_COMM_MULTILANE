@@ -1,0 +1,151 @@
+{
+  "schema": "rf-comm-p7-formal-preparation-status-v1",
+  "P7_FORMAL_PREPARATION": "READY_NO_HARDWARE_LAUNCH",
+  "generated_at_utc": "2026-07-15T06:37:40.9321137Z",
+  "run_id": "p7_20260715_stationary_app_r41_formal_full",
+  "run_id_status": "NEW_UNUSED_NOT_STARTED",
+  "run_kind": "FORMAL_FULL_ACCEPTANCE_CANDIDATE",
+  "execution_workspace": "C:/Users/user/.codex/worktrees/r41formal_946ccba/RF_COMM_MULTILANE",
+  "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+  "source_tree": "d05bb9d85868b380800e37c94388a43dc6092347",
+  "source_state": {
+    "non_generated_tracked_dirty_count": 0,
+    "allowed_post_gate_generated_dirty_count": 25,
+    "ignored_new_run_authorization_plus_plan_count": 67,
+    "visible_untracked_count": 0,
+    "authorization_environment_present": false
+  },
+  "offline_checkpoint": {
+    "classification_path": "evidence/generated/p7_r41validate_946ccba_checkpoint.json",
+    "classification_path_scope": "MAIN_PORTABLE_EVIDENCE",
+    "classification_sha256": "308e6215272df86b2c9a3a382f00b37e221449ed39bf83af80f089dd0c50830d",
+    "gate_path": "evidence/generated/p7_offline_gate_summary.json",
+    "gate_path_scope": "EXECUTION_WORKSPACE",
+    "gate_sha256": "85358dd1d4069f4953b2c205bcbb87680b7a45bdda3203f22f0e835a28cd946a",
+    "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+    "gate_pass_count": 13,
+    "gate_fail_count": 0,
+    "ps_core_readiness_pass_count": 40,
+    "ps_core_readiness_fail_count": 0,
+    "offline_cache_status": "BYPASS",
+    "offline_real_build_process_ran": true,
+    "hardware_actions_executed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "required_complete_suites": {
+    "top_level": {"passed": 210, "total": 210, "invocation_count": 1},
+    "tests_p7": {"passed": 42, "total": 42, "invocation_count": 1},
+    "summary_sha256": "83f878f3f374cf59504b4b9d87d7d2b512c0ea7e45316ef7ce480347662ee3d8"
+  },
+  "immutable_artifacts": {
+    "jtag_bitstream_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "jtag_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "ps_bitstream_sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+    "xsa_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+    "elf_sha256": "3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644",
+    "linker_map_sha256": "0ec32b6d5828ab9f1061a6a1157962a4c74f1e0a3f25c679560e7fa0730a096b",
+    "ps7_init_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "shutdown_bitstream_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "active_profile_sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b"
+  },
+  "source_materialization": {
+    "path": "evidence/generated/p7_r41_formal_source_materialization.json",
+    "sha256": "9737e5dcfc4fecc0fca57afde88de5ca122474d440a42d20e0196aefcee4ee33",
+    "status": "PASS"
+  },
+  "sequence_plan": {
+    "path": ".hardware_authorization/p7_20260715_stationary_app_r41_formal_full_sequence_plan.txt",
+    "path_scope": "EXECUTION_WORKSPACE_WITH_BYTE_EXACT_MAIN_COPY",
+    "sha256": "a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794",
+    "plan_mode": "FULL_ACCEPTANCE",
+    "stage_count": 66,
+    "full_stage_range": "1-66",
+    "resume_argument_count": 0,
+    "stage66_present": true,
+    "stationary_stage_count": 1,
+    "stationary_is_final": true
+  },
+  "stage_authorizations": {
+    "path_scope": "EXECUTION_WORKSPACE_WITH_BYTE_EXACT_MAIN_COPIES",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "count": 66,
+    "byte_count": 243669,
+    "tree_sha256": "0d6406a772e5705fde96e9fd61f377c36f4c4c8422f0d7a170766be45f15bb60",
+    "validation_error_count": 0
+  },
+  "generation": {
+    "manifest_path": "evidence/generated/p7_r41_formal_plan_generation_manifest.json",
+    "manifest_sha256": "ea77c8d55ba6e52130c95beeffa0004b508aa40022d3f7c002a1629668119aa6",
+    "generator_status": "PASS",
+    "authorization_count": 66,
+    "child_wrapper_dry_validation_count": 66,
+    "child_wrapper_error_count": 0,
+    "bundle_file_count": 183,
+    "bundle_bytes": 156005279,
+    "bundle_tree_sha256": "a7064bb0a33d9b973adcdf0f6c7f2024da73f551bd368793d19fa729316a0195"
+  },
+  "independent_plan_audit": {
+    "path": "evidence/generated/p7_r41_formal_plan_audit.json",
+    "sha256": "030ffa7973c0e8771dbda2c873e2017513481f7a286e93f1a3052980fb408010",
+    "status": "PASS",
+    "authorization_error_count": 0
+  },
+  "independent_executor_dry_validation": {
+    "path": "evidence/generated/p7_r41_formal_executor_dry_validation.json",
+    "sha256": "70a984533384eb82eb146203620aeb9e583a92525d3e1d052de98e920da7bc28",
+    "status": "DRY_RUN_VALIDATED",
+    "invocation_count": 1,
+    "validation_error_count": 0
+  },
+  "execution_command_contract": {
+    "executor": "tools/run_p7_authorized_hardware_sequence.py",
+    "execute_hardware_required": true,
+    "external_authorization": "RF_COMM_HW_AUTH=P7_STATIONARY_APP_LAYER_APPROVED",
+    "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+    "max_runtime_sec": 1800,
+    "shutdown_on_exit": true,
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "sequence_plan_sha256": "a37d652de98239b8e654a9467b21bdcb660c3d896ad40e1415de7c8e1ed5f794",
+    "execution_ledger": "evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r41_formal_full/sequence_execution_ledger.json",
+    "execution_ledger_exists": false,
+    "resume_allowed": false
+  },
+  "prior_runs": {
+    "r34_formal": "IMMUTABLE_FAIL_NEVER_RESUME",
+    "r39_diagnostic": "IMMUTABLE_FAIL_NEVER_RESUME",
+    "r40_diagnostic": "COMPLETED_DIAGNOSTIC_PASS_NEVER_REUSE_OR_RESUME",
+    "campaign_d_contributes_acceptance_coverage": false
+  },
+  "execution_state": {
+    "hardware_launch_performed": false,
+    "evidence_root_created": false,
+    "project_hardware_process_count": 0,
+    "external_hw_server_pid": 45220,
+    "external_hw_server_touched": false,
+    "stationary_attempt_count": 0,
+    "stationary_started": false
+  },
+  "safety": {
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "shutdown_on_exit_required": true,
+    "acceptance_coverage_claimed_by_preparation": false
+  },
+  "selfcheck": {
+    "status": "PASS",
+    "record_path": "evidence/generated/p7_r41_formal_preparation_selfcheck.json",
+    "record_sha256": "6bbfd30cdff1d0ab911d4c9bd62d5ea1d678f158035a6886c0ae8f868d0dd4e3",
+    "reference_hashes_checked": 5,
+    "authorization_plus_plan_copies_checked": 67,
+    "copy_hash_mismatch_count": 0,
+    "validation_errors": []
+  },
+  "next_action": "COMMIT_THIS_PREPARATION_WITHOUT_LAUNCH; A LATER EXPLICIT EXECUTION ENTRY MUST USE ONLY THIS EXACT NEW RUN ID AND PLAN WITHOUT RESUME, STOP ON FIRST FAILURE, AND ADMIT STAGE66 ONLY AFTER SAME-RUN STAGES1-65 PASS",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "NOT_RUN"
+}

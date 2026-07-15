@@ -1,0 +1,52 @@
+{
+  "schema": "rf-comm-p7-formal-execution-source-materialization-v1",
+  "recorded_at_utc": "2026-07-15T06:34:15.7314352Z",
+  "status": "PASS",
+  "run_id": "p7_20260715_stationary_app_r41_formal_full",
+  "execution_workspace": "C:/Users/user/.codex/worktrees/r41formal_946ccba/RF_COMM_MULTILANE",
+  "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+  "source_tree": "d05bb9d85868b380800e37c94388a43dc6092347",
+  "source_commit_is_exact_checkpoint_source": true,
+  "materialization_completed_before_generator_invocation": true,
+  "post_gate_generated_outputs": {
+    "source_workspace": "C:/Users/user/.codex/worktrees/r41validate_946ccba/RF_COMM_MULTILANE",
+    "destination_workspace": "C:/Users/user/.codex/worktrees/r41formal_946ccba/RF_COMM_MULTILANE",
+    "canonicalization": "sorted repository-relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 25,
+    "byte_count": 121135,
+    "tree_sha256": "51e3fcfa430a6bd138e041228b15944ff717ac94c24444e5cca073ccfa9001a3",
+    "all_paths_under_evidence_generated": true,
+    "all_destination_hashes_equal_validation_checkpoint_outputs": true,
+    "offline_checkpoint_sha256": "85358dd1d4069f4953b2c205bcbb87680b7a45bdda3203f22f0e835a28cd946a",
+    "core_readiness_sha256": "a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6",
+    "lane1_promotion_sha256": "ef159b9e20bc6c5bf1dce7d42b79b53285c2fcb464f470d737792a7fbfa1668f"
+  },
+  "ignored_generated_board_contract_prerequisites": {
+    "proof_path": "evidence/generated/p7_r41validate_946ccba_checkpoint/build_input_reuse_proof.json",
+    "proof_sha256": "0dc8fd72ae71087954c8c52f691c3fb2ab8d9352b0e7529861b40d7d15ca7338",
+    "canonicalization": "sorted repository-relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 9,
+    "byte_count": 1783076,
+    "tree_sha256": "a66e113d0dd69639f36e612a7dc0bf08a2af92a9cc1d8e663bc1e4271743508e",
+    "hash_mismatch_count": 0,
+    "ps7_init_tcl_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "xsa_sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+    "canonical_offline_cache_hit_claimed": false
+  },
+  "git_state_before_plan_generation": {
+    "head_matches_source_commit": true,
+    "allowed_post_gate_generated_dirty_count": 25,
+    "non_generated_tracked_dirty_count": 0,
+    "visible_untracked_count": 0
+  },
+  "safety": {
+    "NO_HARDWARE": true,
+    "hardware_actions_executed": false,
+    "programmed_fpga": false,
+    "started_ps_elf": false,
+    "jtag_axi_access": false,
+    "network_used": false,
+    "motion_used": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  }
+}
