@@ -471,6 +471,126 @@ def classify_dirty_entries(
     return allowed, rejected
 
 
+def validate_post_gate_p7_content_addressed_outputs(
+    args: argparse.Namespace,
+) -> dict[str, str]:
+    """Validate the exact immutable P7 outputs named by the current build summary.
+
+    A canonical offline gate can materialize a new linker map whose bytes include
+    the clean worktree path.  Such a map is intentionally content-addressed but
+    therefore cannot be committed before that gate runs.  This validator derives
+    the only eligible untracked paths from the hash-bound canonical build summary;
+    it never accepts a caller-supplied path or a directory-wide pattern.
+    """
+
+    raw_summary_path = Path(str(args.p7_build_summary))
+    summary_path = (
+        raw_summary_path.resolve(strict=False)
+        if raw_summary_path.is_absolute()
+        else (ROOT / raw_summary_path).resolve(strict=False)
+    )
+    canonical_summary_path = (
+        ROOT
+        / "evidence"
+        / "generated"
+        / "vitis"
+        / "p7_ps_runtime"
+        / "p7_ps_runtime_build_summary.json"
+    ).resolve(strict=False)
+    if summary_path != canonical_summary_path:
+        raise ValueError(
+            "post-gate P7 output allowance requires the canonical P7 build summary: "
+            f"{canonical_summary_path}"
+        )
+    summary_sha = str(args.p7_build_summary_sha256).lower()
+    if not sequence.SHA256_RE.fullmatch(summary_sha):
+        raise ValueError("P7 build summary SHA256 is malformed")
+    if not summary_path.is_file() or summary_path.is_symlink():
+        raise ValueError("canonical P7 build summary must be a regular non-symlink file")
+    actual_summary_sha = sha256_file(summary_path)
+    if actual_summary_sha != summary_sha:
+        raise ValueError(
+            "P7 build summary SHA256 mismatch before dirty-state allowance: "
+            f"expected={summary_sha} actual={actual_summary_sha}"
+        )
+    payload = load_json(summary_path, "P7 build summary")
+    if (
+        payload.get("P7_PS_RUNTIME_BUILD") != "PASS"
+        or payload.get("hardware_actions_executed") is not False
+    ):
+        raise ValueError(
+            "post-gate P7 output allowance requires an offline PASS build summary"
+        )
+    artifact_payload = payload.get("artifacts")
+    if not isinstance(artifact_payload, dict):
+        raise ValueError("P7 build summary artifacts are missing")
+
+    artifact_root = (ROOT / "evidence" / "hardware" / "p7" / "artifacts").resolve(
+        strict=False
+    )
+    specifications = {
+        "elf": ("p7_runtime_", ".elf"),
+        "linker_map": ("p7_runtime_", ".map"),
+        "bsp_xparameters": ("p7_bsp_xparameters_", ".h"),
+    }
+    validated: dict[str, str] = {}
+    for kind, (prefix, suffix) in specifications.items():
+        record = artifact_payload.get(kind)
+        if not isinstance(record, dict):
+            raise ValueError(f"P7 build summary lacks exact {kind} artifact metadata")
+        digest_value = record.get("sha256")
+        if not isinstance(digest_value, str):
+            raise ValueError(f"P7 build summary {kind} SHA256 is missing")
+        digest = digest_value.lower()
+        if not sequence.SHA256_RE.fullmatch(digest):
+            raise ValueError(f"P7 build summary {kind} SHA256 is malformed")
+        immutable = record.get("immutable")
+        if not isinstance(immutable, str) or not immutable:
+            raise ValueError(f"P7 build summary {kind} immutable path is missing")
+        expected_path = (artifact_root / f"{prefix}{digest}{suffix}").resolve(strict=False)
+        expected_relative = expected_path.relative_to(ROOT.resolve(strict=False)).as_posix()
+        if immutable != expected_relative:
+            raise ValueError(
+                f"P7 build summary {kind} immutable path is not exact: "
+                f"expected={expected_relative} actual={immutable}"
+            )
+        immutable_path = (ROOT / immutable).resolve(strict=False)
+        if immutable_path != expected_path or not path_inside(immutable_path, artifact_root):
+            raise ValueError(f"P7 build summary {kind} immutable path escapes its canonical root")
+        if not immutable_path.is_file() or immutable_path.is_symlink():
+            raise ValueError(
+                f"P7 build summary {kind} immutable output must be a regular non-symlink file"
+            )
+        actual_digest = sha256_file(immutable_path)
+        if actual_digest != digest:
+            raise ValueError(
+                f"P7 build summary {kind} immutable output SHA256 mismatch: "
+                f"expected={digest} actual={actual_digest}"
+            )
+        validated[expected_relative] = digest
+    return validated
+
+
+def validate_post_gate_p7_checkpoint_bindings(
+    outputs: Mapping[str, str], checkpoint_payload: Mapping[str, Any]
+) -> None:
+    """Require the current checkpoint to bind every specially allowed output."""
+
+    checkpoint_hashes = checkpoint_payload.get("checkpoint_input_hashes")
+    if not isinstance(checkpoint_hashes, dict):
+        raise ValueError("offline checkpoint input hash map is unavailable")
+    errors = [
+        f"{path}: expected={digest} checkpoint={checkpoint_hashes.get(path)!r}"
+        for path, digest in sorted(outputs.items())
+        if checkpoint_hashes.get(path) != digest
+    ]
+    if errors:
+        raise ValueError(
+            "post-gate P7 content-addressed outputs are not exactly bound by the offline "
+            "checkpoint: " + "; ".join(errors)
+        )
+
+
 def artifact_from_args(args: argparse.Namespace, name: str) -> Artifact:
     path = sequence.resolve_path(str(getattr(args, name)))
     expected = str(getattr(args, f"{name}_sha256")).lower()
@@ -730,9 +850,17 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"unable to establish clean repository state: {git_error}")
     if head != source_commit:
         raise ValueError(f"source commit mismatch: requested={source_commit} current={head}")
+    untracked_p7_artifact_prefix = "?? evidence/hardware/p7/artifacts/"
+    post_gate_p7_outputs: dict[str, str] = {}
+    if any(
+        entry.replace("\\", "/").startswith(untracked_p7_artifact_prefix)
+        for entry in dirty
+    ):
+        post_gate_p7_outputs = validate_post_gate_p7_content_addressed_outputs(args)
+    exact_untracked_paths = campaign_ledger_dirty_paths | frozenset(post_gate_p7_outputs)
     allowed_dirty, rejected_dirty = classify_dirty_entries(
         dirty,
-        additional_exact_untracked=campaign_ledger_dirty_paths,
+        additional_exact_untracked=exact_untracked_paths,
     )
     allowed_campaign_ledger_dirty = [
         entry
@@ -740,13 +868,23 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         if entry.startswith("?? ")
         and entry[3:].strip().replace("\\", "/") in campaign_ledger_dirty_paths
     ]
+    allowed_post_gate_p7_output_dirty = [
+        entry
+        for entry in allowed_dirty
+        if entry.startswith("?? ")
+        and entry[3:].strip().replace("\\", "/") in post_gate_p7_outputs
+    ]
     allowed_generated_dirty = [
-        entry for entry in allowed_dirty if entry not in allowed_campaign_ledger_dirty
+        entry
+        for entry in allowed_dirty
+        if entry not in allowed_campaign_ledger_dirty
+        and entry not in allowed_post_gate_p7_output_dirty
     ]
     if rejected_dirty:
         raise ValueError(
-            "generator permits only post-gate reproducible summary changes and the validated exact "
-            "Stage66 campaign ledger; rejected dirty entries: "
+            "generator permits only post-gate reproducible summary changes, the validated exact "
+            "Stage66 campaign ledger, and exact checkpoint-bound content-addressed P7 outputs; "
+            "rejected dirty entries: "
             f"{rejected_dirty}"
         )
     checkpoint = sequence.resolve_path(args.offline_checkpoint)
@@ -756,6 +894,9 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     )
     if checkpoint_errors:
         raise ValueError("offline checkpoint validation failed: " + "; ".join(checkpoint_errors))
+    if checkpoint_payload is None:
+        raise ValueError("offline checkpoint validation returned no payload")
+    validate_post_gate_p7_checkpoint_bindings(post_gate_p7_outputs, checkpoint_payload)
     artifacts = {name: artifact_from_args(args, name) for name in ARTIFACT_ARGUMENTS}
     validate_bound_metadata(artifacts)
     bundle_dir, authorization_dir, plan_path, evidence_root = resolve_output_paths(args)
@@ -888,6 +1029,13 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         "full_specs": full_specs,
         "full_stage_ordinals": [spec.index for spec in specs],
         "allowed_post_gate_generated_dirty": allowed_generated_dirty,
+        "allowed_post_gate_p7_content_addressed_output_dirty": (
+            allowed_post_gate_p7_output_dirty
+        ),
+        "validated_post_gate_p7_content_addressed_outputs": [
+            {"path": path, "sha256": digest}
+            for path, digest in sorted(post_gate_p7_outputs.items())
+        ],
         "allowed_stage66_campaign_ledger_dirty": allowed_campaign_ledger_dirty,
     }
 
@@ -1978,6 +2126,12 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
         "stage66_diagnostic_campaign": context["stage66_diagnostic_campaign"],
         "source_commit": context["source_commit"],
         "allowed_post_gate_generated_dirty": context["allowed_post_gate_generated_dirty"],
+        "allowed_post_gate_p7_content_addressed_output_dirty": context[
+            "allowed_post_gate_p7_content_addressed_output_dirty"
+        ],
+        "validated_post_gate_p7_content_addressed_outputs": context[
+            "validated_post_gate_p7_content_addressed_outputs"
+        ],
         "allowed_stage66_campaign_ledger_dirty": context[
             "allowed_stage66_campaign_ledger_dirty"
         ],

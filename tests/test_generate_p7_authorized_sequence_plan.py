@@ -235,6 +235,87 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
         self.assertEqual([], ordinary_allowed)
         self.assertEqual(entries, ordinary_rejected)
 
+    def test_post_gate_p7_content_addressed_allowance_is_exact_untracked_only(self) -> None:
+        digest = "a" * 64
+        exact_map = f"evidence/hardware/p7/artifacts/p7_runtime_{digest}.map"
+        entries = [
+            f"?? {exact_map}",
+            f"A  {exact_map}",
+            "?? evidence/hardware/p7/artifacts/arbitrary.map",
+            f"?? evidence/hardware/p7/artifacts/p7_runtime_{'b' * 64}.map",
+        ]
+        allowed, rejected = subject.classify_dirty_entries(
+            entries,
+            additional_exact_untracked=frozenset({exact_map}),
+        )
+        self.assertEqual([f"?? {exact_map}"], allowed)
+        self.assertEqual(entries[1:], rejected)
+
+    def test_post_gate_p7_outputs_are_summary_hash_and_checkpoint_exact(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            artifact_root = root / "evidence" / "hardware" / "p7" / "artifacts"
+            artifact_records: dict[str, dict[str, str]] = {}
+            for kind, prefix, suffix, payload in (
+                ("elf", "p7_runtime_", ".elf", b"elf\n"),
+                ("linker_map", "p7_runtime_", ".map", b"map\n"),
+                ("bsp_xparameters", "p7_bsp_xparameters_", ".h", b"header\n"),
+            ):
+                digest = hashlib.sha256(payload).hexdigest()
+                relative = f"evidence/hardware/p7/artifacts/{prefix}{digest}{suffix}"
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(payload)
+                artifact_records[kind] = {"sha256": digest, "immutable": relative}
+            summary_path = (
+                root
+                / "evidence"
+                / "generated"
+                / "vitis"
+                / "p7_ps_runtime"
+                / "p7_ps_runtime_build_summary.json"
+            )
+            _summary_name, summary_digest = write_json(
+                summary_path,
+                {
+                    "P7_PS_RUNTIME_BUILD": "PASS",
+                    "hardware_actions_executed": False,
+                    "artifacts": artifact_records,
+                },
+            )
+            args = argparse.Namespace(
+                p7_build_summary=str(summary_path),
+                p7_build_summary_sha256=summary_digest,
+            )
+            with mock.patch.object(subject, "ROOT", root):
+                outputs = subject.validate_post_gate_p7_content_addressed_outputs(args)
+                expected = {
+                    record["immutable"]: record["sha256"]
+                    for record in artifact_records.values()
+                }
+                self.assertEqual(expected, outputs)
+                subject.validate_post_gate_p7_checkpoint_bindings(
+                    outputs, {"checkpoint_input_hashes": dict(outputs)}
+                )
+                missing_map = dict(outputs)
+                missing_map.pop(artifact_records["linker_map"]["immutable"])
+                with self.assertRaisesRegex(ValueError, "not exactly bound"):
+                    subject.validate_post_gate_p7_checkpoint_bindings(
+                        outputs, {"checkpoint_input_hashes": missing_map}
+                    )
+                map_path = root / artifact_records["linker_map"]["immutable"]
+                map_path.write_bytes(b"tampered\n")
+                with self.assertRaisesRegex(ValueError, "immutable output SHA256 mismatch"):
+                    subject.validate_post_gate_p7_content_addressed_outputs(args)
+
+    def test_post_gate_p7_output_rejects_noncanonical_summary_path(self) -> None:
+        args = argparse.Namespace(
+            p7_build_summary="evidence/generated/not_canonical.json",
+            p7_build_summary_sha256="a" * 64,
+        )
+        with self.assertRaisesRegex(ValueError, "canonical P7 build summary"):
+            subject.validate_post_gate_p7_content_addressed_outputs(args)
+
     def test_noncanonical_live_identity_is_rejected_before_git_or_outputs(self) -> None:
         args = argparse.Namespace(
             board_id="wrong-board",

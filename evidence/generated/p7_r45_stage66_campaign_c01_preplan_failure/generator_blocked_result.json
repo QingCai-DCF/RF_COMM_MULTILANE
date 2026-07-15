@@ -1,0 +1,13 @@
+{
+  "schema": "rf-comm-p7-authorized-sequence-generator-v1",
+  "P7_AUTHORIZED_SEQUENCE_GENERATOR": "BLOCKED",
+  "generated_at_utc": "2026-07-15T15:43:48.371548+00:00",
+  "hardware_actions_executed": false,
+  "safe_wrapper_processes_launched": false,
+  "vivado_invoked": false,
+  "xsdb_invoked": false,
+  "authorization_environment_modified": false,
+  "network_used": false,
+  "motion_used": false,
+  "reason": "ValueError: generator permits only post-gate reproducible summary changes and the validated exact Stage66 campaign ledger; rejected dirty entries: ['?? evidence/hardware/p7/artifacts/p7_runtime_aa75cd10798b74f3e57c10087ac3b380224b3bc5dbcbc57bbce65ad7dcd9bfe3.map']"
+}

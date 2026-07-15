@@ -1,0 +1,46 @@
+{
+  "schema": "rf-comm-p7-stage66-diagnostic-campaign-ledger-v1",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+  "created_at_utc": "2026-07-15T14:43:33.838181+00:00",
+  "updated_at_utc": "2026-07-15T15:13:14.089644+00:00",
+  "status": "READY",
+  "maximum_actual_hardware_attempts": 10,
+  "actual_hardware_attempt_count": 0,
+  "hardware_attempts": [],
+  "retired_pre_hardware_run_ids": [
+    {
+      "run_id": "p7_20260715_stationary_app_r42_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+      "retired_at_utc": "2026-07-15T14:43:33.838910+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PLAN_GENERATOR_CHILD_WRAPPER_DRY_VALIDATION_FAIL",
+      "evidence_path": "evidence/generated/p7_r42_stage66_campaign_c01_prelaunch_failure.json",
+      "evidence_sha256": "a0c53228a9bda5931f265e134f88fea4ed3c4d257d4ed8d072a20f5f87b3de31",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r43_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+      "retired_at_utc": "2026-07-15T14:49:57.724033+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PREPLAN_RUNTIME_LEDGER_DIRTY_ALLOWLIST_OMISSION",
+      "evidence_path": "evidence/generated/p7_r43_stage66_campaign_c01_preplan_failure.json",
+      "evidence_sha256": "771fd09e62f662e7a153c120ae300c466020e14b26c6f2dd4ae7bb75df97f844",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r44_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "82184bf17137363e65772295f24acb87c1d7b6da",
+      "retired_at_utc": "2026-07-15T15:13:14.089644+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "IMMUTABLE_RETIREMENT_EVIDENCE_HASH_MISMATCH",
+      "evidence_path": "evidence/generated/p7_r44_stage66_campaign_c01_checkpoint_precondition_failure.json",
+      "evidence_sha256": "b52b7a10571d523f380f268c045f4e7229385239530d6941d24eb4600ecaf34d",
+      "hardware_attempt_consumed": false
+    }
+  ]
+}

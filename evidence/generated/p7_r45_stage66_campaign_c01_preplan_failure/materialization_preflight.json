@@ -1,0 +1,70 @@
+{
+  "schema": "rf-comm-p7-hash-exact-build-materialization-preflight-v1",
+  "generated_at_utc": "2026-07-15T15:32:16.7659273Z",
+  "status": "PASS",
+  "source_commit": "237b87e4c4f3d2ac7e6c7986641e123e2c63ee17",
+  "source_tree": "faff2db4c88a261c81f04514f736685465f55992",
+  "source_worktree": "D:/CodexWorktrees/r44validate_137b6d8/RF_COMM_MULTILANE",
+  "target_worktree": "D:/CodexWorktrees/r45validate_237b87e/RF_COMM_MULTILANE",
+  "source_build_commit": "137b6d844f0b5952fc895a23fcea347a8ec5575d",
+  "source_artifact_commit": "82184bf17137363e65772295f24acb87c1d7b6da",
+  "offline_cache_hit_claimed": false,
+  "copy_only_no_build_process": true,
+  "materializations": {
+    "build/p6_ps_candidate": {
+      "source_file_count": 305,
+      "target_file_count": 305,
+      "source_byte_count": 96630479,
+      "target_byte_count": 96630479,
+      "source_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+      "target_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+      "hash_exact": true
+    },
+    "build/p7_ps_vitis_workspace": {
+      "source_file_count": 1832,
+      "target_file_count": 1832,
+      "source_byte_count": 39404325,
+      "target_byte_count": 39404325,
+      "source_tree_sha256": "87634d42cb64f631d3f6b2f6997f699016aee1f0834a0a9ab63c79b23f723919",
+      "target_tree_sha256": "87634d42cb64f631d3f6b2f6997f699016aee1f0834a0a9ab63c79b23f723919",
+      "hash_exact": true
+    }
+  },
+  "baseline_records": {
+    "cache_bypass_build_record": {
+      "path": "evidence/generated/p7_r44validate_82184bf_checkpoint/cache_bypass_build_record.json",
+      "sha256": "a481ec8e735c141c884fa9e003967b5868787f8199fdcd1573f18f9fc3aee9dd",
+      "status": "PASS",
+      "offline_cache_status": "BYPASS",
+      "real_build_process_ran": true
+    },
+    "p6_cache_bypass_summary": {
+      "path": "evidence/generated/p7_r44validate_82184bf_checkpoint/fresh_p6_cache_bypass_build_summary.json",
+      "sha256": "73c7ef399fbd7925f9e0c538f660118b09eda9aa4893c305111c978d6ddfd46c",
+      "cache_bypass": true
+    },
+    "p7_cache_bypass_summary": {
+      "path": "evidence/generated/p7_r44validate_82184bf_checkpoint/fresh_p7_cache_bypass_build_summary.json",
+      "sha256": "29b4df8a8783f387d252faf5d0c5f99dec8e35c22b82305cd2ddb31e0191ed78",
+      "cache_bypass": true,
+      "declared_source_mismatch_count": 0
+    }
+  },
+  "tool_identity_observed": {
+    "vivado_version": "2023.1",
+    "vivado_bat_sha256": "ebc3c5285bce0cf5dd13ad0e96f628ef34734435801c8f0c73d57981a2bfc7e1",
+    "xsct_version": "2023.1",
+    "xsct_bat_sha256": "75600c0aae297bb492be82442830cd6a67d0020d4d4af0f95b76a57276fa1d2a"
+  },
+  "focused_test": {
+    "command": "python -B -m unittest tests.test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract -v",
+    "returncode": 0,
+    "discovered_test_count": 1,
+    "status": "PASS"
+  },
+  "git_clean_after_materialization": true,
+  "hardware_actions_executed": false,
+  "RF_COMM_HW_AUTH": "UNSET",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false
+}
