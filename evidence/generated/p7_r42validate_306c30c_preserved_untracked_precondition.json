@@ -1,0 +1,28 @@
+{
+  "schema": "rf-comm-p7-clean-source-suite-precondition-v1",
+  "generated_at_utc": "2026-07-15T13:37:27.5482841Z",
+  "source_commit": "306c30ccb38e7aa85094f0d9e2ed069497be1d35",
+  "source_tree": "c8d9f88f1defe63bd953ca282c689897e9a5c6ba",
+  "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_306c30c_stage66_campaign_c01prep.json --json-summary",
+  "status": "BLOCKED_DIRTY_SOURCE",
+  "reason": "The in-place handoff worktree contains two preserved untracked evidence/reference roots, so the clean-source suite runner stopped before invoking either required suite.",
+  "dirty_files": [
+    "?? evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r32_diag_suffix55/",
+    "?? legacy/RF_COMM/docs/"
+  ],
+  "preservation_required": true,
+  "files_deleted_or_rewritten": false,
+  "reset_checkout_clean_stash_used": false,
+  "required_complete_suite_invocation_count": 0,
+  "top_level_discovery_invoked": false,
+  "tests_p7_discovery_invoked": false,
+  "output_summary_created": false,
+  "hardware_run_id_assigned": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "next_action": "Commit this precondition evidence, then run the required complete suites exactly once from a new clean detached worktree at the resulting source commit.",
+  "inputs": {
+    "tools/run_p7_regression_suites.py": "27260813e5e45e1793f47deec4eea746a6a9fdb43d7f2cae845fb2ee07359489"
+  }
+}
