@@ -1,0 +1,122 @@
+{
+  "schema": "rf-comm-p7-clean-checkout-focused-precondition-failure-v1",
+  "observed_at_utc": "2026-07-15T05:38:38.1306313Z",
+  "source_commit": "680f0c7e31a9ae62cbfb7ac01a04e917eafb874a",
+  "validation_worktree": "C:\\Users\\user\\.codex\\worktrees\\r41validate_680f0c7\\RF_COMM_MULTILANE",
+  "command": "python -B -m unittest tests.test_p7_r40_diagnostic_pass_package -v",
+  "invocation_count": 1,
+  "returncode": 1,
+  "status": "FAIL_CLEAN_CHECKOUT_PACKAGING_PRECONDITION",
+  "tests": {
+    "ran": 9,
+    "passed": 6,
+    "failures": 2,
+    "errors": 1,
+    "elapsed_seconds_observed": 3.961,
+    "failed": [
+      {
+        "name": "test_historical_inputs_and_immutable_artifacts_are_frozen",
+        "classification": "FAIL",
+        "first_missing_path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/offline_checkpoint_tests_p7_discovery_stderr_log_2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae.stderr.log"
+      },
+      {
+        "name": "test_portable_package_and_payload_manifest_are_hash_exact",
+        "classification": "FAIL",
+        "expected_package_file_count": 129,
+        "clean_checkout_package_file_count": 117
+      },
+      {
+        "name": "test_outer_exit_code_observation_is_not_fabricated",
+        "classification": "ERROR",
+        "first_missing_path": "evidence/generated/p7_r40_diagnostic_pass_package/executor/sequence_executor.stdout.log"
+      }
+    ]
+  },
+  "input_hashes": {
+    "tests/test_p7_r40_diagnostic_pass_package.py": "a16b9603e5117e8fc13d6cd5d1c1e8c285935a2dc451c04b528f31d8c5cbc1c2",
+    "evidence/generated/p7_r40_diagnostic_pass_package/package_manifest.json": "ff417849afc9331501af055cd75457eb2e7860f9e8c72dd9632bf43f51603bfc",
+    "evidence/generated/p7_r40_diagnostic_pass.json": "28aa31bcc122e65e3269dc6030f815a542190fee252434fc8bd8d08585371d9e"
+  },
+  "root_cause": {
+    "classification": "MANIFESTED_PACKAGE_OBJECTS_IGNORED_AND_ABSENT_FROM_GIT_TREE",
+    "manifest_entry_count_excluding_manifest": 128,
+    "git_tree_file_count_including_manifest": 117,
+    "missing_git_object_count": 12,
+    "missing_git_object_bytes": 7245404,
+    "main_worktree_files_present_and_manifest_hash_exact": true,
+    "clean_checkout_reproduced": true,
+    "masked_by_preexisting_main_worktree_ignored_files": true
+  },
+  "missing_git_objects": [
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/executor/sequence_executor.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/executor/sequence_executor.stdout.log",
+      "bytes": 1790,
+      "sha256": "c27cb3182008d7a983504de15fd1ed50467b2bcb80a23847b2b132fb71cb8c44"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/elf_d47f28ff987b2f719a5497c92539afc4f8734db756df2eb80adc5651fea996da.elf",
+      "bytes": 355944,
+      "sha256": "d47f28ff987b2f719a5497c92539afc4f8734db756df2eb80adc5651fea996da"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/jtag_bitstream_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+      "bytes": 2083847,
+      "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/jtag_ltx_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+      "bytes": 32384,
+      "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/offline_checkpoint_tests_p7_discovery_stderr_log_2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae.stderr.log",
+      "bytes": 5303,
+      "sha256": "2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/offline_checkpoint_tests_p7_discovery_stdout_log_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/offline_checkpoint_top_level_discovery_stderr_log_a3e9f2dfd0b88cff2f0ce8bee8933ce1b3e3e08637e58376a3e6bbb69868cc30.stderr.log",
+      "bytes": 37362,
+      "sha256": "a3e9f2dfd0b88cff2f0ce8bee8933ce1b3e3e08637e58376a3e6bbb69868cc30"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/offline_checkpoint_top_level_discovery_stdout_log_536154ef02394e7f8b8a65dddd71d851827f0d54dafe9b6dae58f9601aa4dac3.stdout.log",
+      "bytes": 641,
+      "sha256": "536154ef02394e7f8b8a65dddd71d851827f0d54dafe9b6dae58f9601aa4dac3"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/ps_bitstream_bd9bce92e5966e811e10873a960909851922789d8242726869b9726b58aaa868.bit",
+      "bytes": 2083856,
+      "sha256": "bd9bce92e5966e811e10873a960909851922789d8242726869b9726b58aaa868"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/shutdown_bitstream_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+      "bytes": 2083853,
+      "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+    },
+    {
+      "path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/xsa_3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8.xsa",
+      "bytes": 560424,
+      "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+    }
+  ],
+  "evidence_limits": {
+    "raw_unittest_output_persisted": false,
+    "raw_unittest_output_note": "The first clean-checkout focused invocation was observed through the Codex tool result but was not redirected to a workspace file; this record preserves only the exact observed result fields and the independently reproduced Git-tree audit.",
+    "complete_suite_started": false,
+    "canonical_gate_started": false,
+    "hardware_actions_executed": false
+  },
+  "source_checkpoint_disposition": "RETIRED_BEFORE_COMPLETE_SUITES",
+  "planned_repair": "ADD_THE_EXACT_12_ALREADY_MANIFESTED_HASH_EXACT_OBJECTS_TO_GIT_WITHOUT_REPACKAGING_OR_MUTATING_R40_THEN_USE_A_NEW_CLEAN_SOURCE_COMMIT",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

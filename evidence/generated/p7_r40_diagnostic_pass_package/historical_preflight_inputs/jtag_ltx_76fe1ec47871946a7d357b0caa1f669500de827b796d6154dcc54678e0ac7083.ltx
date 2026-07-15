@@ -1,0 +1,549 @@
+{
+    "ltx_root": {
+        "version": 4,
+        "minor": 0,
+        "ltx_data": [
+            {
+                "name": "EDA_PROBESET",
+                "active": true,
+                "debug_cores": [
+                    {
+                        "type": "XSDB_V3",
+                        "name": "dbg_hub",
+                        "spec": "labtools_xsdbm_v3",
+                        "clk_input_freq_hz": "64000000"
+                    },
+                    {
+                        "type": "XSDBS_V2",
+                        "name": "u_jtag_axi",
+                        "spec": "labtools_xsdbslavelib_v2",
+                        "ipName": "jtag_axi",
+                        "core_location": {
+                            "user_chain": 1,
+                            "slave_index": 0,
+                            "bscan_switch_index": 0
+                        },
+                        "uuid": "A3ADA461E7BB50529175584161BC11CE"
+                    },
+                    {
+                        "type": "ILA_V3",
+                        "name": "p6_local_transport_ila",
+                        "spec": "labtools_ila_v6",
+                        "core_location": {
+                            "user_chain": 1,
+                            "slave_index": 1,
+                            "bscan_switch_index": 0
+                        },
+                        "uuid": "2cf2b8b8c3d5526e8dc53cdb133679b0",
+                        "pins": [
+                            {
+                                "name": "probe0",
+                                "id": 0,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/engine_debug_status",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[31]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[30]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[29]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[28]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[27]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[26]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[25]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[24]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[23]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[22]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[21]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[20]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[19]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[18]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[17]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[16]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[15]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[14]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[13]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[12]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[11]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[10]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[9]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[8]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[7]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[6]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[5]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[4]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[3]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[2]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_debug_status[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe0",
+                                "id": 1,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 32,
+                                "rightIndex": 63,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/engine_error_code",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[31]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[30]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[29]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[28]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[27]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[26]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[25]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[24]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[23]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[22]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[21]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[20]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[19]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[18]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[17]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[16]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[15]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[14]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[13]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[12]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[11]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[10]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[9]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[8]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[7]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[6]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[5]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[4]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[3]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[2]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_error_code[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe0",
+                                "id": 2,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 64,
+                                "rightIndex": 65,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/engine_rx_good_mask",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/engine_rx_good_mask[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/engine_rx_good_mask[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe0",
+                                "id": 3,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 66,
+                                "rightIndex": 97,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/regs_debug_status",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[31]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[30]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[29]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[28]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[27]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[26]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[25]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[24]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[23]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[22]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[21]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[20]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[19]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[18]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[17]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[16]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[15]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[14]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[13]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[12]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[11]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[10]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[9]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[8]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[7]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[6]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[5]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[4]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[3]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[2]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/regs_debug_status[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe0",
+                                "id": 4,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 98,
+                                "rightIndex": 129,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/u_regs/engine_error_code",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[31]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[30]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[29]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[28]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[27]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[26]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[25]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[24]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[23]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[22]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[21]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[20]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[19]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[18]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[17]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[16]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[15]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[14]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[13]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[12]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[11]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[10]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[9]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[8]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[7]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[6]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[5]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[4]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[3]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[2]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_error_code[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe0",
+                                "id": 5,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 130,
+                                "rightIndex": 131,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "u_p6_peripheral/u_regs/engine_rx_good_mask",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_rx_good_mask[1]"
+                                            },
+                                            {
+                                                "name": "u_p6_peripheral/u_regs/engine_rx_good_mask[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
