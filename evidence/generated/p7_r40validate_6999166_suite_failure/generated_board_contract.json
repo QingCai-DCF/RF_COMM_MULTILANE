@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "phase": "all",
+  "generated_at_utc": "2026-07-15T02:13:14+00:00",
+  "expected_device": "xc7z010clg400-1",
+  "expected_ps7_parameters": {
+    "PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+    "PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+    "PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+    "PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+    "PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+    "PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+    "PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+    "PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+    "PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+    "PCW_UIPARAM_DDR_T_FAW": "40.0",
+    "PCW_UIPARAM_DDR_ECC": "Disabled",
+    "PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1"
+  },
+  "errors": [],
+  "artifacts": {
+    "vivado.build_tcl": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\scripts\\build_p6_ps_candidate.tcl",
+      "exists": true,
+      "size": 6619,
+      "sha256": "6232ae8baa4223176ef05be91e58c115191c8d870b6758decb25d21513e2cfd2"
+    },
+    "vivado.vivado_xci": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.srcs\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\p6_ps_system_processing_system7_0_0.xci",
+      "exists": true,
+      "size": 139460,
+      "sha256": "bb094610064dea3aaefa27cffc5dd3d3f8ff3d6cf2e278e344b6cee4865fa056"
+    },
+    "vivado.vivado_block_design": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.srcs\\sources_1\\bd\\p6_ps_system\\p6_ps_system.bd",
+      "exists": true,
+      "size": 34411,
+      "sha256": "4d766bff0d5191f19f29e6d488225b97432935a4f8f372fb8c28b1a39298b516"
+    },
+    "vivado.vivado_xsa": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate.xsa",
+      "exists": true,
+      "size": 560424,
+      "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+    },
+    "vivado.vivado_ps7_init_tcl": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.gen\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\ps7_init.tcl",
+      "exists": true,
+      "size": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    "vivado.vivado_ps7_init_c": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.gen\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\ps7_init.c",
+      "exists": true,
+      "size": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    "vitis.vivado_xsa": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate.xsa",
+      "exists": true,
+      "size": 560424,
+      "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+    },
+    "vitis.vitis_platform_xsa": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\p6_ps_dynamic_transport_3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8.xsa",
+      "exists": true,
+      "size": 560424,
+      "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+    },
+    "vitis.vitis_ps7_parameters": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_parameters.xml",
+      "exists": true,
+      "size": 39425,
+      "sha256": "04b944be2c9e55d6bb440a1a1db4aeb86ebd4b5b50c8eaccc3109f4004ce7867"
+    },
+    "vitis.vitis_platform_ps7_init_tcl": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+      "exists": true,
+      "size": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    "vitis.vitis_platform_ps7_init_c": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.c",
+      "exists": true,
+      "size": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    "vitis.vitis_fsbl_ps7_init_c": {
+      "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_init.c",
+      "exists": true,
+      "size": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    }
+  },
+  "hardware_action_taken": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "vivado": {
+    "schema_version": 1,
+    "phase": "vivado",
+    "generated_at_utc": "2026-07-15T02:13:14+00:00",
+    "expected_device": "xc7z010clg400-1",
+    "expected_ps7_parameters": {
+      "PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+      "PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+      "PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+      "PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+      "PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+      "PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+      "PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+      "PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+      "PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+      "PCW_UIPARAM_DDR_T_FAW": "40.0",
+      "PCW_UIPARAM_DDR_ECC": "Disabled",
+      "PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+      "PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+      "PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1"
+    },
+    "errors": [],
+    "artifacts": {
+      "build_tcl": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\scripts\\build_p6_ps_candidate.tcl",
+        "exists": true,
+        "size": 6619,
+        "sha256": "6232ae8baa4223176ef05be91e58c115191c8d870b6758decb25d21513e2cfd2"
+      },
+      "vivado_xci": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.srcs\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\p6_ps_system_processing_system7_0_0.xci",
+        "exists": true,
+        "size": 139460,
+        "sha256": "bb094610064dea3aaefa27cffc5dd3d3f8ff3d6cf2e278e344b6cee4865fa056"
+      },
+      "vivado_block_design": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.srcs\\sources_1\\bd\\p6_ps_system\\p6_ps_system.bd",
+        "exists": true,
+        "size": 34411,
+        "sha256": "4d766bff0d5191f19f29e6d488225b97432935a4f8f372fb8c28b1a39298b516"
+      },
+      "vivado_xsa": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate.xsa",
+        "exists": true,
+        "size": 560424,
+        "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+      },
+      "vivado_ps7_init_tcl": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.gen\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\ps7_init.tcl",
+        "exists": true,
+        "size": 25544,
+        "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+      },
+      "vivado_ps7_init_c": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p6_ps_candidate\\project\\p6_ps_candidate.gen\\sources_1\\bd\\p6_ps_system\\ip\\p6_ps_system_processing_system7_0_0\\ps7_init.c",
+        "exists": true,
+        "size": 319423,
+        "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+      }
+    },
+    "hardware_action_taken": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "status": "PASS"
+  },
+  "vitis": {
+    "schema_version": 1,
+    "phase": "vitis",
+    "generated_at_utc": "2026-07-15T02:13:14+00:00",
+    "expected_device": "xc7z010clg400-1",
+    "expected_ps7_parameters": {
+      "PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+      "PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+      "PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+      "PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+      "PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+      "PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+      "PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+      "PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+      "PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+      "PCW_UIPARAM_DDR_T_FAW": "40.0",
+      "PCW_UIPARAM_DDR_ECC": "Disabled",
+      "PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+      "PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+      "PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1"
+    },
+    "errors": [],
+    "artifacts": {
+      "vivado_xsa": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate.xsa",
+        "exists": true,
+        "size": 560424,
+        "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+      },
+      "vitis_platform_xsa": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\p6_ps_dynamic_transport_3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8.xsa",
+        "exists": true,
+        "size": 560424,
+        "sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+      },
+      "vitis_ps7_parameters": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_parameters.xml",
+        "exists": true,
+        "size": 39425,
+        "sha256": "04b944be2c9e55d6bb440a1a1db4aeb86ebd4b5b50c8eaccc3109f4004ce7867"
+      },
+      "vitis_platform_ps7_init_tcl": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+        "exists": true,
+        "size": 25544,
+        "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+      },
+      "vitis_platform_ps7_init_c": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.c",
+        "exists": true,
+        "size": 319423,
+        "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+      },
+      "vitis_fsbl_ps7_init_c": {
+        "absolute_path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_6999166\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_init.c",
+        "exists": true,
+        "size": 319423,
+        "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+      }
+    },
+    "hardware_action_taken": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "status": "PASS"
+  },
+  "status": "PASS"
+}

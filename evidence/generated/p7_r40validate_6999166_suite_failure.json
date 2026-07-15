@@ -1,0 +1,119 @@
+{
+  "schema": "rf-comm-p7-clean-source-regression-precondition-failure-v1",
+  "checkpoint_id": "p7_r40validate_6999166_complete_suites_once",
+  "source_commit": "6999166b89fdf57a79b291992eebb47e09762cf4",
+  "source_commit_after_suites": "6999166b89fdf57a79b291992eebb47e09762cf4",
+  "source_commit_unchanged": true,
+  "clean_worktree_before_suites": true,
+  "clean_worktree_after_suites": true,
+  "status": "FAIL_PRECONDITION",
+  "scope": "NON_HARDWARE_CLEAN_SOURCE_COMPLETE_SUITES",
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_checkpoint_requires_new_source_commit": true,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "coverage_claimed": false,
+  "stationary_started": false,
+  "build_materialization": {
+    "status": "PASS",
+    "proof_sha256": "c720c4549494e654d0e43a3c9ce968f1ceb88e1094f9e07a5ff6ac979e372d08",
+    "build_source_commit": "6d56b312b35da539ca38d848455b8cbc2adb2014",
+    "build_artifact_commit": "5a99b98c7cbe91d76ad22721c057b6edfb31e1c1",
+    "consumed_input_overlap_count": 0,
+    "p6_tree_exact": true,
+    "p7_tree_exact": true,
+    "canonical_offline_cache_hit_claimed": false
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "sha256": "5e8310b773bf0a6e882d9c3b6f2b1b327884fadfebf3342501a3680c02b53007"
+  },
+  "suite_invocation": {
+    "driver_invocation_count": 1,
+    "summary_sha256": "d9b89de78fdfbcff4347c5ef2be4916f501f814ff81b275703e392c39252ea7d",
+    "suite_invocation_count_total": 2,
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 201,
+      "returncode": 1,
+      "status": "FAIL"
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 42,
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "total_discovered_test_count": 243
+  },
+  "failure_causes": [
+    {
+      "classification": "R39_DIAGNOSTIC_CLASSIFICATION_OFFLINE_CHECKER_HASH_STALE_AFTER_FAIL_CLOSED_GATE_PATH_SCOPING_REPAIR",
+      "affected_test_module": "tests.test_p7_r39_failure_package",
+      "affected_test": "test_historical_source_confirms_the_validation_reject_wipe_gap",
+      "record_path": "evidence/generated/p7_r39_diagnostic_failure.json",
+      "bound_path": "tools/run_p7_ps_core_offline.py",
+      "recorded_sha256": "8f7875aee4de3032cd7e1ede7a62046461d6b000fea71a3c40e7459d103e74d8",
+      "observed_sha256": "a9d1191f26608d512c96dcfe67a792c82e953576b1da7257a7aacba250793d71",
+      "repair": "UPDATE_CURRENT_OFFLINE_CHECKER_SHA_BINDING_WITHOUT_CHANGING_IMMUTABLE_R39_RAW_PACKAGE_OR_HARDWARE_CONCLUSIONS",
+      "not_a_hardware_failure": true,
+      "not_a_payload_or_ddr_failure": true
+    }
+  ],
+  "portable_raw_evidence": {
+    "path": "evidence/generated/p7_r40validate_6999166_suite_failure",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 9,
+    "byte_count": 106359,
+    "tree_sha256": "0eb20ae5a628d4558f4fa26ac94d69020a7328ebea1ca2cb429aa435cc44413d",
+    "files": [
+      {
+        "path": "build_input_reuse_proof.json",
+        "bytes": 32620,
+        "sha256": "c720c4549494e654d0e43a3c9ce968f1ceb88e1094f9e07a5ff6ac979e372d08"
+      },
+      {
+        "path": "complete_suite_summary.json",
+        "bytes": 2499,
+        "sha256": "d9b89de78fdfbcff4347c5ef2be4916f501f814ff81b275703e392c39252ea7d"
+      },
+      {
+        "path": "fresh_p6_cache_bypass_build_summary.json",
+        "bytes": 3100,
+        "sha256": "57cbc82ef207e464392ebe3a5bc4e7ce931259585729eec178d29eb49e3542b5"
+      },
+      {
+        "path": "fresh_p7_cache_bypass_build_summary.json",
+        "bytes": 11807,
+        "sha256": "3950c34f033b66413f2f481b40cbca2fe1542bfa2065941a5c180570773917c3"
+      },
+      {
+        "path": "generated_board_contract.json",
+        "bytes": 11913,
+        "sha256": "5e8310b773bf0a6e882d9c3b6f2b1b327884fadfebf3342501a3680c02b53007"
+      },
+      {
+        "path": "tests_p7_discovery.stderr.log",
+        "bytes": 5303,
+        "sha256": "0adc987530654948b1ff412de6a793b7adb214de4b0389751ba1e69002920e4d"
+      },
+      {
+        "path": "tests_p7_discovery.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "top_level_discovery.stderr.log",
+        "bytes": 38476,
+        "sha256": "e7f8cdea21d17826944aa067c0d7c1394133b9f43119683f9fbad7d21bee0a9a"
+      },
+      {
+        "path": "top_level_discovery.stdout.log",
+        "bytes": 641,
+        "sha256": "378413d406e8cd08676aab349aa4c432ca421a5a0e6de22ffcd80ed32cada477"
+      }
+    ]
+  },
+  "next_step": "COMMIT_THE_R39_CURRENT_CHECKER_HASH_REBIND_AND_THIS_FAILURE_EVIDENCE; THEN_USE_A_NEW_CLEAN_SOURCE_FOR_EACH_REQUIRED_COMPLETE_SUITE_EXACTLY_ONCE_AND_A_CANONICAL_GATE_WITH_ZERO_DUPLICATE_SUITE_INVOCATIONS"
+}
