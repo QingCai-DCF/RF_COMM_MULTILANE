@@ -1,0 +1,213 @@
+{
+  "schema": "rf-comm-p7-diagnostic-failure-package-v1",
+  "run_id": "p7_20260715_stationary_app_r39_diag_suffix55",
+  "run_status": "IMMUTABLE_FAIL_NEVER_RESUME",
+  "source_commit": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+  "plan_mode": "DIAGNOSTIC_SUFFIX_55",
+  "sequence_plan_sha256": "fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f",
+  "offline_checkpoint_sha256": "6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98",
+  "diagnostic_contract": {
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "formal_acceptance_coverage_contributed": false,
+    "mandatory_safety_prefix": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "diagnostic_suffix": [
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "stationary_allowed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "ledger": {
+    "path": "evidence/generated/p7_r39_failure_package/sequence_execution_ledger.json",
+    "sha256": "f77a32c84f39a11bcf3b2e63738b7d491c8d2e823b2068bd979072c6a991e4f5",
+    "attempt_count": 14,
+    "completed_stage_count": 13,
+    "full_stage_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "terminal_pass_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "failed_ordinal": 64,
+    "failed_stage_id": "p7_ps_abort_restart",
+    "not_run_ordinals": [
+      65
+    ]
+  },
+  "stage62": {
+    "terminal_result": "PASS",
+    "summary_sha256": "6f0fe5d2bd83b60f1883a1ea3e518d981bad1e6fe7f25dac9b2b54a0719416fe",
+    "boundary_cases_passed": 48,
+    "large_policy_matrix_complete": true,
+    "functional_boundary_matrix_complete": true,
+    "shutdown_after": "PASS",
+    "diagnostic_only": true,
+    "acceptance_coverage_contributed": false
+  },
+  "stage64": {
+    "outer_result": "FAIL_STAGE",
+    "outer_wrapper_returncode": 1,
+    "summary_path": "evidence/generated/p7_r39_failure_package/stage64/p7_ps_application_stage_summary.json",
+    "summary_sha256": "8749cac8523752abc7b59c5b611258ff5abfcad3d15252a0576bb0057e381102",
+    "raw_result_path": "evidence/generated/p7_r39_failure_package/stage64/p7_ps_application_raw_result.log",
+    "raw_result_sha256": "6336017290886869d4bcc36395b6de7849d088b5d899bb1925bc8517b4bc80a8",
+    "raw_manifest_path": "evidence/generated/p7_r39_failure_package/stage64/p7_raw_evidence_sha256_manifest.json",
+    "raw_manifest_sha256": "e98b65280f7e13d7041898fa348bef9d8cac8047ac759cb003d29e0029213b64",
+    "raw_ps_process_returncode": 0,
+    "raw_ps_stage_result": "PASS",
+    "raw_ps_pass_is_not_stage_pass": true,
+    "postprocess_passed": false,
+    "postprocess_failures": [
+      "slot 2: failed/aborted output was not atomically wiped"
+    ],
+    "duplicate_replay_case": {
+      "slot": 2,
+      "name": "duplicate_replay_rejected",
+      "descriptor_status": 6,
+      "descriptor_error_code": 19,
+      "bytes_completed": 0,
+      "output_bytes": 1048576,
+      "observed_output_sha256": "16c7f1d8a38b4b84560e558ab03b13c82e2ff374d87eaacb4df22f03604e7a4f",
+      "expected_wiped_output_sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58",
+      "passed": false
+    },
+    "raw_abort_restart_markers": {
+      "abort_count": 1,
+      "abort_shutdown_result": 0,
+      "interphase_shutdown_programmed": true,
+      "restart_candidate_reprogrammed": true,
+      "restart_new_epoch": true,
+      "restart_replay_rejected": true,
+      "requeue_after_cutoff": 0
+    },
+    "shutdown_before": "PASS",
+    "shutdown_after": "PASS",
+    "candidate_child_reaped_before_shutdown_after": true
+  },
+  "failure_classification": {
+    "status": "CONFIRMED_VALIDATION_REJECT_OUTPUT_WIPE_GAP",
+    "confirmed_observation": "duplicate object-id replay is rejected after its private output range has been structurally validated, but the historical validation-reject path did not wipe the nonzero output canary before publishing REJECTED",
+    "historical_source_sha256": "d1ed23121305f657e44faa02548b16bafca92d973e793c43dbd8d3071277295a",
+    "historical_source_git_blob_sha1": "d7f0e23e4c0f6731f283962e7d45fb53a7276fcd",
+    "payload_or_ddr_corruption_claimed": false,
+    "recovery_promotes_failed_stage": false
+  },
+  "source_repair": {
+    "status": "IMPLEMENTED_FOCUSED_VALIDATED_NOT_CHECKPOINTED",
+    "service_path": "software/ps_driver/p7_app_service.c",
+    "service_sha256": "84b1b127c581326bd0d2c89b7714adcb70f1d415eb33b4517c02f82bab19099f",
+    "offline_checker_path": "tools/run_p7_ps_core_offline.py",
+    "offline_checker_sha256": "8f7875aee4de3032cd7e1ede7a62046461d6b000fea71a3c40e7459d103e74d8",
+    "focused_static_test_path": "tests/test_p7_ps_application_stage_safe.py",
+    "focused_static_test_sha256": "7eb932932e79e10c15e268c07e6b072f75d353f93083b3181704203aaf4e38d4",
+    "focused_static_test_result": "PASS_41_OF_41",
+    "failure_package_test_result": "PASS_7_OF_7",
+    "summarizer_history_tamper_test_result": "PASS_16_OF_16",
+    "complete_checkpoint_suites": "NOT_RUN",
+    "canonical_offline_gate": "NOT_RUN",
+    "hardware_validation": "NOT_RUN"
+  },
+  "authorization_gate_recovery_attempt": {
+    "separate_from_stage_result": true,
+    "status": "AUTHORIZATION_MISSING_NO_HARDWARE_ACTION",
+    "summary_path": "evidence/generated/p7_r39_failure_package/recovery_authorization_gate_failure/program_tfdu_shutdown_safe.summary.txt",
+    "summary_sha256": "c5b9b85ac403894a3d3422ce609e125d8fdaa00354e5a2d38d7b45b1e5b3aa58",
+    "authorized": false,
+    "no_hardware_actions_executed": true,
+    "missing": [
+      "RF_COMM_HW_AUTH=I_ACCEPT_TFDU6102_RISK_AND_AUTHORIZE_HW"
+    ],
+    "original_tree_file_count": 4,
+    "original_tree_byte_count": 6755,
+    "original_tree_sha256": "a8509b07548839d9de07799bc8589401a5b4f8041c4599919786eed0042bf737"
+  },
+  "independent_recovery": {
+    "separate_from_stage_result": true,
+    "status": "PASS",
+    "summary_path": "evidence/generated/p7_r39_failure_package/recovery/program_tfdu_shutdown_safe.summary.txt",
+    "summary_sha256": "6cb1901ab573b106cdcd33656fc80d094ffe7b6fe0004851f21837c0208a2707",
+    "authorized": true,
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true,
+    "original_tree_file_count": 6,
+    "original_tree_byte_count": 12355,
+    "original_tree_sha256": "8c8ef1845a47eff9c334b82cdc83916af9d9d81aaa0bf87b115a0ec738460ab6"
+  },
+  "historical_preflight_freeze": {
+    "manifest_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/manifest.json",
+    "manifest_sha256": "e827d9a8a793c6a4f9e5333458322efd16319b39d98bc70fa774b6677087e910",
+    "file_count": 44
+  },
+  "portable_package": {
+    "path": "evidence/generated/p7_r39_failure_package",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; summary itself is outside this tree",
+    "file_count": 73,
+    "byte_count": 7638319,
+    "partial_file_count": 0,
+    "tree_sha256": "dbb1974da49b7be1efcc0c68f073a4ccf00fff024a9b3f7b44e92c0fc7056ef3"
+  },
+  "original_raw_evidence": {
+    "absolute_path": "C:/Users/user/.codex/worktrees/r35validate_1d0c30f/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r39_diag_suffix55",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 743,
+    "byte_count": 796712508,
+    "partial_file_count": 0,
+    "tree_sha256": "d8e77dde31fa229c08b84fb779e7a805e18e53f20522f7256824f4e9f32bd69f"
+  },
+  "stage65": {
+    "attempted": false,
+    "result": "NOT_RUN"
+  },
+  "stationary": {
+    "full_stage_ordinal": 66,
+    "attempt_count": 0,
+    "started": false,
+    "result": "NOT_RUN"
+  },
+  "network_used": false,
+  "motion_used": false,
+  "lane_count": 2,
+  "max_lane_mask": "0x3",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "rf-comm-p7-r39-summarizer-replay-v1",
+  "source_commit": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+  "hardware_root": "C:/Users/user/.codex/worktrees/r35validate_1d0c30f/RF_COMM_MULTILANE/evidence/hardware/p7",
+  "output_directory": "evidence/generated/p7_r39_summarizer_replay",
+  "invocation_count": 1,
+  "outer_wait_timed_out": true,
+  "summarizer_exit_code_observed": false,
+  "summarizer_child_completion_observed": true,
+  "summarizer_child_remaining_after_completion": false,
+  "hardware_actions_executed_by_summarizer": false,
+  "output_tree": {
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 72,
+    "byte_count": 9093293,
+    "partial_file_count": 0,
+    "tree_sha256": "75dec379a9a97a1db5b4464a9ea2fab18fc166d5a0ec1cff105f00dab57dd4d8"
+  },
+  "final_summary": {
+    "path": "evidence/generated/p7_r39_summarizer_replay/p7_final_summary.json",
+    "sha256": "2b42eeee083873be176714158d479338da76304d1a8b49e0149aebcb678ffa7b",
+    "result": "FAIL",
+    "hardware_acceptance": "FAIL",
+    "error_count": 85,
+    "reason": "one or more mandatory real-hardware gates failed"
+  },
+  "evidence_consistency": {
+    "path": "evidence/generated/p7_r39_summarizer_replay/p7_evidence_consistency_summary.json",
+    "sha256": "742f94276f0b692e79e2e6fa05f353903316ae80ab5660f91e63eaacc66bd332",
+    "result": "FAIL",
+    "error_count": 39,
+    "reason": "evidence consistency failed closed"
+  },
+  "shutdown_evidence": {
+    "path": "evidence/generated/p7_r39_summarizer_replay/p7_shutdown_evidence_summary.json",
+    "sha256": "67747ef33dab8d9229f27b6e17347fb1a4a67103b1d16ec114dbdf7abd9c6d2d",
+    "result": "PASS",
+    "recovery_pass_promotes_failed_stage": false
+  },
+  "authorization_summary": {
+    "path": "evidence/generated/p7_r39_summarizer_replay/p7_hardware_authorization_summary.json",
+    "sha256": "a2f05f79c55eb774dd4cee8e1f56340152304956e316d436e2b5281a82335993",
+    "result": "FAIL",
+    "record_count": 12,
+    "hardware_actions_executed_by_summarizer": false
+  },
+  "stationary_summary": {
+    "path": "evidence/generated/p7_r39_summarizer_replay/p7_stationary_30min_summary.json",
+    "sha256": "506f7a7f9c3a93fb369e11528ac19e2f8fa3169aafb6bbaa10bc65e64203fa03",
+    "result": "PENDING_HW",
+    "hardware_actions_executed": false,
+    "reason": "the unique 1800-second real-PS stationary run is missing"
+  },
+  "r39_interpretation": {
+    "run_status": "IMMUTABLE_FAIL_NEVER_RESUME",
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "stage66_attempt_count": 0
+  }
+}

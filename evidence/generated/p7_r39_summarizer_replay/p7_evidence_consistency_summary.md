@@ -1,0 +1,1213 @@
+# consistency
+
+RESULT: FAIL
+REASON: evidence consistency failed closed
+GENERATED_AT_UTC: 2026-07-15T01:13:23+00:00
+REPO: C:\Users\user\.codex\worktrees\r35validate_1d0c30f\RF_COMM_MULTILANE
+HEAD: 0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4
+HARDWARE_ACTIONS_EXECUTED_BY_SUMMARIZER: false
+HARDWARE_ACTIONS_EXECUTED: true
+PROGRAMMED_FPGA: True
+DROVE_TFDU_TXD: True
+ENABLED_TFDU_RECEIVER: True
+SHUTDOWN_EXIT: 0
+NETWORK_USED: false
+MOTION_USED: false
+AVAILABLE_LANES: 2
+MAX_LANE_MASK: 0x3
+PRODUCT_FINAL_ACCEPTANCE: PENDING
+PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
+
+## Evidence
+
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/001_p7_safe_idle/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/004_p7_p6_frame_regression_m3/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/055_p7_large_jtag_64k_rr_prbs15/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/056_p7_large_jtag_64k_rr_random/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/057_p7_large_jtag_64k_rr_all_bytes/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/058_p7_large_jtag_1m_l0_random/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/059_p7_large_jtag_1m_l1_random/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/060_p7_large_jtag_1m_rr_random/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/061_p7_large_jtag_1m_rep3_random/p7_jtag_axi_stage_summary.json`
+- `evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/062_p7_ps_functional/p7_ps_application_stage_summary.json`
+- `evidence/hardware/p7/p7_run_sequence_ledger.json`
+
+## Checks
+
+- No additional checks recorded.
+
+## Metrics
+
+- `inventory_files`: `11078`
+- `selected_provenance_rows`: `12`
+- `stationary_attempts`: `0`
+- `full_duration_stationary_attempts`: `0`
+- `qualified_stationary_passes`: `0`
+- `run_count`: `27`
+- `listed_executed_summaries`: `27`
+- `passed_coverage_keys`: `[]`
+- `ledger_sha256`: `f047c05818d831a937dbe2a6bc4505d187e20d47972334266b3a26978745f6bc`
+
+## Errors
+
+- uncommitted/partial hardware evidence files remain: ['evidence/hardware/p7/stage62_functional/p7_20260714_ddr_external_campaign_c2_08/p7_ps_application_raw_result.log.partial.write_partial']
+- mandatory stage evidence is internally inconsistent: safe_idle
+- mandatory stage evidence is internally inconsistent: p6_frame_regression
+- mandatory stage evidence is internally inconsistent: ps_runtime
+- mandatory stage evidence is internally inconsistent: large_object_jtag
+- hardware footprint has no parseable final safe-wrapper summary: evidence/hardware/p7/stage62_microtest/p7_20260714_stage62_microtest_r35_diag_only/p7_ps_application_raw_result.log
+- hardware footprint has no parseable final safe-wrapper summary: evidence/hardware/p7/stage62_microtest/p7_20260714_stage62_microtest_r35_diag_only/shutdown_after_result.txt
+- hardware footprint has no parseable final safe-wrapper summary: evidence/hardware/p7/stage62_microtest/p7_20260714_stage62_microtest_r35_diag_only/shutdown_before_result.txt
+- run sequence offline checkpoint SHA256 mismatch
+- run sequence offline checkpoint recorded actual SHA256 mismatch
+- offline checkpoint source_commit does not match the frozen ledger commit
+- run sequence entry 0 historical epoch binding mismatch
+- run sequence entry 1 historical epoch binding mismatch
+- run sequence entry 2 historical epoch binding mismatch
+- run sequence entry 3 historical epoch binding mismatch
+- run sequence entry 4 historical epoch binding mismatch
+- run sequence entry 5 historical epoch binding mismatch
+- run sequence entry 6 historical epoch binding mismatch
+- run sequence entry 7 historical epoch binding mismatch
+- run sequence entry 8 historical epoch binding mismatch
+- run sequence entry 9 historical epoch binding mismatch
+- run sequence entry 10 historical epoch binding mismatch
+- run sequence entry 11 historical epoch binding mismatch
+- run sequence entry 12 historical epoch binding mismatch
+- run sequence entry 13 historical epoch binding mismatch
+- run sequence entry 14 historical epoch binding mismatch
+- run sequence entry 15 historical epoch binding mismatch
+- run sequence entry 16 historical epoch binding mismatch
+- run sequence entry 17 historical epoch binding mismatch
+- run sequence entry 18 historical epoch binding mismatch
+- run sequence entry 19 historical epoch binding mismatch
+- run sequence entry 20 historical epoch binding mismatch
+- run sequence entry 21 historical epoch binding mismatch
+- run sequence entry 22 historical epoch binding mismatch
+- run sequence entry 23 historical epoch binding mismatch
+- run sequence entry 24 historical epoch binding mismatch
+- run sequence entry 25 historical epoch binding mismatch
+- run sequence entry 26 historical epoch binding mismatch
+- run sequence ledger does not list every executed hardware summary exactly once
+
+## Hardware evidence envelope
+
+### profile
+
+```json
+[
+  {
+    "actual_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "expected_sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "label": "artifact:profile",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json"
+  },
+  {
+    "actual_sha256": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0",
+    "expected_sha256": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0",
+    "label": "artifact:profile",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_ps_application_functional.json"
+  }
+]
+```
+
+### bitstream
+
+```json
+[
+  {
+    "actual_sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "expected_sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "label": "artifact:bitstream",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit"
+  },
+  {
+    "actual_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "expected_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "label": "artifact:bitstream",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit"
+  }
+]
+```
+
+### ltx
+
+```json
+[
+  {
+    "actual_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "expected_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "label": "artifact:ltx",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx"
+  }
+]
+```
+
+### xsa
+
+```json
+[
+  {
+    "actual_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "expected_sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "label": "artifact:xsa",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa"
+  }
+]
+```
+
+### elf
+
+```json
+[
+  {
+    "actual_sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "expected_sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "label": "artifact:elf",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf"
+  }
+]
+```
+
+### authorization
+
+```json
+[
+  {
+    "actual_sha256": "862ee42172f5c974d7c50b8d874bce67ccc2ea8f33e898aa7c6d05ef24d53849",
+    "expected_sha256": "862ee42172f5c974d7c50b8d874bce67ccc2ea8f33e898aa7c6d05ef24d53849",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_001_p7_safe_idle.txt"
+  },
+  {
+    "actual_sha256": "7d4de99026a331812c704bb130bdbbfc7b25315d77558a47960dbcde682c916c",
+    "expected_sha256": "7d4de99026a331812c704bb130bdbbfc7b25315d77558a47960dbcde682c916c",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_004_p7_p6_frame_regression_m3.txt"
+  },
+  {
+    "actual_sha256": "dd19d34bbf282aef38620733d9de5762e1744f0fb889b47465853f58b6361fe8",
+    "expected_sha256": "dd19d34bbf282aef38620733d9de5762e1744f0fb889b47465853f58b6361fe8",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_055_p7_large_jtag_64k_rr_prbs15.txt"
+  },
+  {
+    "actual_sha256": "0c0511fdf30869adde0dfcada2ce3adf828d513dd0616df779fd5cd9ca04523e",
+    "expected_sha256": "0c0511fdf30869adde0dfcada2ce3adf828d513dd0616df779fd5cd9ca04523e",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_056_p7_large_jtag_64k_rr_random.txt"
+  },
+  {
+    "actual_sha256": "f8e2fb5b29d214d75ee2024a74622163e54ba8e631442e4f4a88592d745d1338",
+    "expected_sha256": "f8e2fb5b29d214d75ee2024a74622163e54ba8e631442e4f4a88592d745d1338",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_057_p7_large_jtag_64k_rr_all_bytes.txt"
+  },
+  {
+    "actual_sha256": "e3bb74e28da1d3e6259f427870daa75eba55a1c6f10cdd5f4cc539af50002875",
+    "expected_sha256": "e3bb74e28da1d3e6259f427870daa75eba55a1c6f10cdd5f4cc539af50002875",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_058_p7_large_jtag_1m_l0_random.txt"
+  },
+  {
+    "actual_sha256": "75c31487c561b1e063a0a1eb15651ab8d3cfc75fd6ef56f9265f5d7b694a8c23",
+    "expected_sha256": "75c31487c561b1e063a0a1eb15651ab8d3cfc75fd6ef56f9265f5d7b694a8c23",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_059_p7_large_jtag_1m_l1_random.txt"
+  },
+  {
+    "actual_sha256": "73cd4cca60b5943fe8500fada5ea87c29a7449f491fb4a3c144dfdf2750af002",
+    "expected_sha256": "73cd4cca60b5943fe8500fada5ea87c29a7449f491fb4a3c144dfdf2750af002",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_060_p7_large_jtag_1m_rr_random.txt"
+  },
+  {
+    "actual_sha256": "e0aa45f6a23785fb22407452dedf92b33b7a37945df20501a7e2c4d11f83c892",
+    "expected_sha256": "e0aa45f6a23785fb22407452dedf92b33b7a37945df20501a7e2c4d11f83c892",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_061_p7_large_jtag_1m_rep3_random.txt"
+  },
+  {
+    "actual_sha256": "743511690b72a83ff61f90b672d62107e3f1e4412c7235e90d98aa9a9d11b7f1",
+    "expected_sha256": "743511690b72a83ff61f90b672d62107e3f1e4412c7235e90d98aa9a9d11b7f1",
+    "label": "authorization",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260713_stationary_app_r31_diag_suffix55_062_p7_ps_functional.txt"
+  }
+]
+```
+
+### input_file_hashes
+
+```json
+[
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\001_p7_safe_idle.transactions.txt",
+    "sha256": "c164be9bf94510474c01711914bb37bdc800f28b9f5a3134e59f344e912c391d",
+    "size_bytes": 790
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\004_p7_p6_frame_regression_m3.transactions.txt",
+    "sha256": "152fefaac51ab25feebddb5349b85d53e43da6dfa969c20b2cc089f212cf3b1e",
+    "size_bytes": 130273
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\004_p7_p6_frame_regression_m3.manifest.json",
+    "sha256": "6fce525fa8cb1a3a0d876a4095757055307d80eee233855ae5d8d180e8014ca6",
+    "size_bytes": 14349
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\055_p7_large_jtag_64k_rr_prbs15.transactions.txt",
+    "sha256": "31dbc2e8d86406f3c0106714e7a849a464d09f2665b7383904af855098c5b8bf",
+    "size_bytes": 2039317
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\055_p7_large_jtag_64k_rr_prbs15.manifest.json",
+    "sha256": "f3bf95b52ea6cb1a6585769ab946306d6e21bf9db573f2baae275dcabe247e0c",
+    "size_bytes": 167551
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\056_p7_large_jtag_64k_rr_random.transactions.txt",
+    "sha256": "e20df7ea6c20c1da0e56054b96fe95f6df13341de23e66c863900359ca4826c6",
+    "size_bytes": 2039317
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\056_p7_large_jtag_64k_rr_random.manifest.json",
+    "sha256": "d97a4fc5ad123c9bd81904844a4236db912905fd267e91321c99979576814382",
+    "size_bytes": 167265
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\057_p7_large_jtag_64k_rr_all_bytes.transactions.txt",
+    "sha256": "679db96746011c61bf36094e86a2deb4046a919d1a108ca16ea49f00c9833228",
+    "size_bytes": 2039317
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\057_p7_large_jtag_64k_rr_all_bytes.manifest.json",
+    "sha256": "1b789f29f793a73ba421e096b9ebb8f493fdd0ab5bf6c0756f337c9f810b28da",
+    "size_bytes": 167584
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\058_p7_large_jtag_1m_l0_random.transactions.txt",
+    "sha256": "7a4018b7c0b3d7ef82a79c26f3727851f3a62220189dbb7f2fc029e3838418c5",
+    "size_bytes": 32614920
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\058_p7_large_jtag_1m_l0_random.manifest.json",
+    "sha256": "8437362e6502d508f00c6b3c3b67c776c8115dd5d5d9f43166081ff62b980cf4",
+    "size_bytes": 2649066
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\059_p7_large_jtag_1m_l1_random.transactions.txt",
+    "sha256": "f327c67b8b478269a96c2a1dc9e512b263634848f27dae503a9926807b53f1df",
+    "size_bytes": 32614920
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\059_p7_large_jtag_1m_l1_random.manifest.json",
+    "sha256": "44d49f0b91a5ce15a3694f265479971ae63cd4bd3180f705343a38cef068f4c6",
+    "size_bytes": 2649048
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\060_p7_large_jtag_1m_rr_random.transactions.txt",
+    "sha256": "39e63ac1a4d10e53e8e3a796b95bdb9c3f0f764de16c74022d543a58a182a50b",
+    "size_bytes": 32614928
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\060_p7_large_jtag_1m_rr_random.manifest.json",
+    "sha256": "43aa1914cd19fdff3c672ca2ef5945e50be8e839f56e9e1646499da19ce19292",
+    "size_bytes": 2649071
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f.bit",
+    "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "size_bytes": 2083847
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_stationary_app_30min.json",
+    "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
+    "size_bytes": 751
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "LTX_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_jtag_dynamic_transport_76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083.ltx",
+    "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "size_bytes": 32384
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_TRANSACTION_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\transactions\\061_p7_large_jtag_1m_rep3_random.transactions.txt",
+    "sha256": "dfcdb193344109aa17bc601c3953003c91435b5772c3439abdabe2d161711817",
+    "size_bytes": 32614923
+  },
+  {
+    "authorization_sha256_key": "P7_JTAG_BACKEND_MANIFEST_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\manifests\\061_p7_large_jtag_1m_rep3_random.manifest.json",
+    "sha256": "58d15397f1bdd9fa03e356f71eb4ca16bf41d45993009d9b752d06ea3ce012b1",
+    "size_bytes": 2649018
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\board_profiles\\ACTIVE_PROFILE.json",
+    "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b",
+    "size_bytes": 899
+  },
+  {
+    "authorization_sha256_key": "ACTIVE_XDC_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\constraints\\active\\PORT1.generated.xdc",
+    "sha256": "cf23a0d34a2fa76521faf4c91f3858cff2117fa6020d302d1a6109f10254f990",
+    "size_bytes": 2052
+  },
+  {
+    "authorization_sha256_key": "BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249.bit",
+    "sha256": "34cdf1c1f7c36595760cc56ae6636209fa64f9b0eebad4d145a4ed5763f23249",
+    "size_bytes": 2083856
+  },
+  {
+    "authorization_sha256_key": "ELF_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_runtime_47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b.elf",
+    "sha256": "47257305c56b99641421a716c4530d28ea2d22901f4a27c79f0a2beb77d9eb0b",
+    "size_bytes": 309096
+  },
+  {
+    "authorization_sha256_key": "P6_PS_BUILD_SUMMARY_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\generated\\vivado\\p6_ps_candidate\\p6_ps_candidate_build_summary.json",
+    "sha256": "d5c85cb396ed8913449c5a17e4c456225ac9014fb8106278eeb7ee1091f760ef",
+    "size_bytes": 3100
+  },
+  {
+    "authorization_sha256_key": "P7_FROZEN_SHUTDOWN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\shutdown\\p7_frozen_shutdown_bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "P7_INPUT_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\inputs\\p7_ps_seed_247.bin",
+    "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+    "size_bytes": 247
+  },
+  {
+    "authorization_sha256_key": "P7_LANE1_PROMOTION_SUMMARY_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\generated\\p7_lane1_promotion_summary.json",
+    "sha256": "b2e836c9440c29e23702ea76612315a92eb7fb802b529b309bd3bc2e3a4a4cdb",
+    "size_bytes": 1795
+  },
+  {
+    "authorization_sha256_key": "P7_PLAN_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\artifacts\\p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+    "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd",
+    "size_bytes": 34806
+  },
+  {
+    "authorization_sha256_key": "P7_PS_BUILD_SUMMARY_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\generated\\vitis\\p7_ps_runtime\\p7_ps_runtime_build_summary.json",
+    "sha256": "a78360ac204e97e071c537fa94b7779c355acb9de0cfd5426622b16fc5043d9d",
+    "size_bytes": 11793
+  },
+  {
+    "authorization_sha256_key": "P7_PS_CORE_READINESS_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\generated\\p7_ps_core_hardware_readiness.json",
+    "sha256": "a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b",
+    "size_bytes": 16264
+  },
+  {
+    "authorization_sha256_key": "PINMAP_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\board_profiles\\ax7010_tfdu_j10_j11_pinmap.csv",
+    "sha256": "4c7d5f0836a2ab48df7672e00f99455e582fbf477b04ed2b3b44ef38506a8a6a",
+    "size_bytes": 1429
+  },
+  {
+    "authorization_sha256_key": "PROFILE_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\profiles\\p7\\p7_ps_application_functional.json",
+    "sha256": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0",
+    "size_bytes": 528
+  },
+  {
+    "authorization_sha256_key": "PS7_INIT_SHA256",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+    "sha256": "84e478d79c0b7bfe6dfc45a5a99ab850c30c7db11d8fec1dae064133dd64b448",
+    "size_bytes": 25544
+  },
+  {
+    "authorization_sha256_key": "REGISTER_MAP_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\config\\register_map\\ir_axi_regs.yaml",
+    "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d",
+    "size_bytes": 7692
+  },
+  {
+    "authorization_sha256_key": "SHUTDOWN_BITSTREAM_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\shutdown_bitstream\\tfdu_shutdown_j10_j11.bit",
+    "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "size_bytes": 2083853
+  },
+  {
+    "authorization_sha256_key": "XSA_SHA256",
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9.xsa",
+    "sha256": "b5d1174eb46d12eb395ceabbbea3c132c5771ca6777194138e68c2eacb2e4fc9",
+    "size_bytes": 560408
+  }
+]
+```
+
+### output_file_hashes
+
+```json
+[
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\004_p7_p6_frame_regression_m3\\p7_jtag_reassembled_output.bin",
+    "sha256": "43812ad6447f6d7cbd02439ca869aff553eda792fa799ab066242fdccebefa30",
+    "size_bytes": 4096
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\055_p7_large_jtag_64k_rr_prbs15\\p7_jtag_reassembled_output.bin",
+    "sha256": "ca45ccdf9f0c2be72656e6414cd71ae407b860df22830092d92fb0dbf1a0f1eb",
+    "size_bytes": 65536
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\056_p7_large_jtag_64k_rr_random\\p7_jtag_reassembled_output.bin",
+    "sha256": "ca1a191acfd778bc9609a3d9c88d7ff52b710af06ce7cbf8ff98999680deead7",
+    "size_bytes": 65536
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\057_p7_large_jtag_64k_rr_all_bytes\\p7_jtag_reassembled_output.bin",
+    "sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+    "size_bytes": 65536
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\058_p7_large_jtag_1m_l0_random\\p7_jtag_reassembled_output.bin",
+    "sha256": "de7e28fb7ae8b57b4280dc13d61316442d564631d71caa52b28284929b0a8549",
+    "size_bytes": 1048576
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\059_p7_large_jtag_1m_l1_random\\p7_jtag_reassembled_output.bin",
+    "sha256": "92981a26065607345aece3ce7a4bf428997814425a847a5f374d564a955ef822",
+    "size_bytes": 1048576
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\060_p7_large_jtag_1m_rr_random\\p7_jtag_reassembled_output.bin",
+    "sha256": "847ff69ec3010814fe5af6530d426b620fae9988a6ea18fed1260b8f74ef4774",
+    "size_bytes": 1048576
+  },
+  {
+    "name": "jtag_reassembled_output",
+    "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\061_p7_large_jtag_1m_rep3_random\\p7_jtag_reassembled_output.bin",
+    "sha256": "70a2712e321d4cdafa35830e852c0f0187d629050093fa246a7244bf7d799034",
+    "size_bytes": 1048576
+  }
+]
+```
+
+### shutdown_before
+
+```json
+[
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\001_p7_safe_idle\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\004_p7_p6_frame_regression_m3\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\055_p7_large_jtag_64k_rr_prbs15\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\056_p7_large_jtag_64k_rr_random\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\057_p7_large_jtag_64k_rr_all_bytes\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\058_p7_large_jtag_1m_l0_random\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\059_p7_large_jtag_1m_l1_random\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\060_p7_large_jtag_1m_rr_random\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\061_p7_large_jtag_1m_rep3_random\\p7_shutdown_before_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\062_p7_ps_functional\\shutdown_before_result.txt",
+    "returncode": 0
+  }
+]
+```
+
+### shutdown_after
+
+```json
+[
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\001_p7_safe_idle\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\004_p7_p6_frame_regression_m3\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\055_p7_large_jtag_64k_rr_prbs15\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\056_p7_large_jtag_64k_rr_random\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\057_p7_large_jtag_64k_rr_all_bytes\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\058_p7_large_jtag_1m_l0_random\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\059_p7_large_jtag_1m_l1_random\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\060_p7_large_jtag_1m_rr_random\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\061_p7_large_jtag_1m_rep3_random\\p7_shutdown_after_result.txt",
+    "returncode": 0
+  },
+  {
+    "attempted": true,
+    "passed": true,
+    "programming_attempted": true,
+    "result_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260713_stationary_app_r31_diag_suffix55\\062_p7_ps_functional\\shutdown_after_result.txt",
+    "returncode": 0
+  }
+]
+```
+
+### envelope_status
+
+```json
+{
+  "HEAD": "0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4",
+  "SHUTDOWN_EXIT": 0,
+  "drove_tfdu_txd": true,
+  "enabled_tfdu_receiver": true,
+  "hardware_actions_executed": true,
+  "programmed_fpga": true,
+  "repo": "C:\\Users\\user\\.codex\\worktrees\\r35validate_1d0c30f\\RF_COMM_MULTILANE",
+  "uart_access": false
+}
+```
+

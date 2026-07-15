@@ -157,6 +157,9 @@ def main(argv: list[str] | None = None) -> int:
     contained_launcher = (ROOT / "tools/p7_contained_launcher.py").read_text(encoding="utf-8")
     failed_block = between(service, "failed:", "static uint32_t p7_queue_occupancy")
     wipe_block = between(service, "static void p7_wipe_partial", "static int p7_validate_descriptor")
+    validate_descriptor_block = between(
+        service, "static int p7_validate_descriptor", "static void p7_record_trace"
+    )
     runtime_expired_block = between(
         service, "static int p7_runtime_expired", "static int p7_runtime_has_budget"
     )
@@ -228,7 +231,17 @@ def main(argv: list[str] | None = None) -> int:
             and "request->output_address" in wipe_block
             and "descriptor->output_address" not in wipe_block
             and "memset(output, 0, request->object_length)" in wipe_block
-            and "p7_wipe_partial" not in validation_reject_block,
+            and "uint32_t *private_output_validated" in validate_descriptor_block
+            and "*private_output_validated = 0U;" in validate_descriptor_block
+            and validate_descriptor_block.rfind("return P7_ERROR_TRACE_RANGE;")
+            < validate_descriptor_block.find("*private_output_validated = 1U;")
+            < validate_descriptor_block.find("return P7_ERROR_STALE_SESSION;")
+            and "&private_output_validated" in validation_reject_block
+            and "if (private_output_validated != 0U)" in validation_reject_block
+            and "p7_wipe_partial(&request, 0U, descriptor)" in validation_reject_block
+            and validation_reject_block.find("p7_stop_and_shutdown(service)")
+            < validation_reject_block.find("p7_wipe_partial(&request, 0U, descriptor)")
+            < validation_reject_block.find("p7_publish_descriptor("),
         "integrity_crc_sha_immutable_chunk_snapshot":
             "uint8_t snapshot[256] __attribute__((aligned(64)))" in service
             and "p7_invalidate(data + offset, chunk);" in service

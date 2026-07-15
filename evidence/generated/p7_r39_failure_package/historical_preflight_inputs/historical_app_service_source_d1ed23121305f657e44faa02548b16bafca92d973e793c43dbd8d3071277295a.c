@@ -1630,10 +1630,8 @@ static void p7_wipe_partial(const p7_object_descriptor_t *request,
 
 static int p7_validate_descriptor(
     const p7_object_descriptor_t *request,
-    const p7_service_context_t *service, uint16_t *fragment_count,
-    uint32_t *private_output_validated) {
+    const p7_service_context_t *service, uint16_t *fragment_count) {
   uint32_t trace_bytes;
-  *private_output_validated = 0U;
   if (request->magic != P7_DESCRIPTOR_MAGIC ||
       request->version != P7_RUNTIME_VERSION ||
       request->command != P7_DESCRIPTOR_COMMAND_TRANSFER ||
@@ -1676,11 +1674,6 @@ static int p7_validate_descriptor(
       return P7_ERROR_TRACE_RANGE;
     }
   }
-  /* All descriptor-controlled ranges are now bounded and mutually private.
-   * A later identity-policy rejection may therefore erase the output canary
-   * without following an untrusted address.  Structural rejection paths
-   * above deliberately leave this flag clear and must never write output. */
-  *private_output_validated = 1U;
   if (service->identity_valid != 0U &&
       request->session_epoch < service->current_epoch) {
     return P7_ERROR_STALE_SESSION;
@@ -1750,7 +1743,6 @@ static int p7_process_descriptor(
   uint32_t input_crc;
   uint32_t output_crc;
   uint32_t completed_bytes = 0U;
-  uint32_t private_output_validated = 0U;
   uint32_t sticky_unavailable = 0U;
   uint32_t fallback_reported_mask = 0U;
   p7_mismatch_observation_t end_to_end_mismatch;
@@ -1761,18 +1753,12 @@ static int p7_process_descriptor(
 
   p7_invalidate(descriptor, sizeof(*descriptor));
   memcpy(&request, (const void *)descriptor, sizeof(request));
-  error = p7_validate_descriptor(&request, service, &fragment_count,
-                                 &private_output_validated);
+  error = p7_validate_descriptor(&request, service, &fragment_count);
   p7_reset_descriptor_results(descriptor);
   if (error != P7_ERROR_NONE) {
     (void)p7_stop_and_shutdown(service);
-    /* Structural rejection has no trusted output range and must remain
-     * write-free.  Identity-policy rejection occurs only after every
-     * descriptor-controlled range is bounded and nonoverlapping, so erase
-     * its private output canary before publishing REJECTED. */
-    if (private_output_validated != 0U) {
-      p7_wipe_partial(&request, 0U, descriptor);
-    }
+    /* The rejected descriptor has not established a private, nonoverlapping
+     * output range.  Never write through an unvalidated output address. */
     descriptor->error_code = (uint32_t)error;
     mailbox->objects_failed += 1U;
     mailbox->last_error_code = (uint32_t)error;

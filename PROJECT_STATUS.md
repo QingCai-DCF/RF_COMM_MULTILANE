@@ -25,18 +25,27 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_CHECKPOINT_EVIDENCE_IMPORT
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_R39_STAGE64_SOURCE_REPAIR
 P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
 P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_192_PLUS_42
 P7_LATEST_CANONICAL_GATE_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: true
-P7_NEXT_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r39_diag_suffix55
-P7_NEXT_DIAGNOSTIC_RUN_STATUS: READY_NOT_STARTED
-P7_NEXT_DIAGNOSTIC_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
-P7_NEXT_DIAGNOSTIC_PLAN_SHA256: fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f
-P7_NEXT_DIAGNOSTIC_ORDINALS: 1_2_3_4_55_THROUGH_65
-P7_NEXT_DIAGNOSTIC_DRY_VALIDATION: PASS
+P7_NEW_HARDWARE_RUN_READY: false
+P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r39_diag_suffix55
+P7_LATEST_DIAGNOSTIC_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME
+P7_LATEST_DIAGNOSTIC_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
+P7_LATEST_DIAGNOSTIC_PLAN_SHA256: fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f
+P7_LATEST_DIAGNOSTIC_LEDGER_SHA256: f77a32c84f39a11bcf3b2e63738b7d491c8d2e823b2068bd979072c6a991e4f5
+R39_DIAGNOSTIC_TERMINAL_PASS_ORDINALS: 1_2_3_4_55_THROUGH_63
+R39_DIAGNOSTIC_FAILED_ORDINAL: 64
+R39_DIAGNOSTIC_STAGE65: NOT_RUN
+R39_ACCEPTANCE_COVERAGE_CLAIMED: false
+R39_STAGE62_TERMINAL_RESULT: PASS_DIAGNOSTIC_ZERO_COVERAGE
+R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
+R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
+R39_SOURCE_REPAIR: IMPLEMENTED_FOCUSED_VALIDATED_NOT_CHECKPOINTED
+P7_NEXT_DIAGNOSTIC_RUN: NOT_PREPARED
+P7_NEXT_DIAGNOSTIC_RUN_STATUS: BLOCKED_PENDING_CLEAN_CHECKPOINT_AND_DRY_VALIDATION
 P7_NEXT_DIAGNOSTIC_HARDWARE_LAUNCHED: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
@@ -114,15 +123,51 @@ complete-suite invocations and passed 13/13. Exact summary SHA256 values are
 for the suites, `6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98`
 for the gate, and
 `a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b`
-for PS core readiness. No hardware action occurred. A new diagnostic-only plan
-is now prepared as `p7_20260715_stationary_app_r39_diag_suffix55` at that exact
+for PS core readiness. No hardware action occurred. The diagnostic-only plan
+`p7_20260715_stationary_app_r39_diag_suffix55` was then generated at that exact
 source. Its immutable plan SHA256 is
 `fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f`;
 the independent executor dry validation and all 15 authorization audits pass.
 It contains only ordinals 1--4 and 55--65, claims zero coverage, remains
-`PENDING_HW`, and contains no stage 66 or stationary launch. No r39 evidence
-root or hardware process has been created; preparation does not itself launch
-or pass hardware.
+`PENDING_HW`, and contains no stage 66 or stationary launch.
+
+r39 was launched once without `--resume` and is now immutable `FAIL`. Its
+ledger SHA256 is
+`f77a32c84f39a11bcf3b2e63738b7d491c8d2e823b2068bd979072c6a991e4f5`.
+Ordinals 1--4 and 55--63 reached terminal diagnostic PASS with shutdown-after
+PASS, but contribute zero acceptance coverage. Stage 64 ended `FAIL_STAGE`
+because the duplicate-replay descriptor was correctly rejected while its
+1 MiB nonzero output canary remained unwiped; stage 65 did not run. The raw PS
+child returned zero and emitted its abort/restart PASS markers, but the outer
+wrapper correctly rejected the result with `slot 2: failed/aborted output was
+not atomically wiped`. Stage-summary SHA256 is
+`8749cac8523752abc7b59c5b611258ff5abfcad3d15252a0576bb0057e381102`.
+The confirmed historical source gap is limited to the validation-reject path:
+after all descriptor-controlled ranges were structurally validated, an
+identity-policy rejection published `REJECTED` without erasing the private
+output range. This is not a payload or DDR-corruption finding.
+
+The source repair now carries an explicit `private_output_validated` bit from
+descriptor validation and wipes only a structurally trusted private output
+after shutdown and before publishing the rejection. Structurally invalid
+descriptors remain write-free. Focused stage-wrapper checks pass 41/41, the
+r39 package/history/tamper checks pass 7/7, and the full focused summarizer
+history/tamper module passes 16/16. These are non-hardware results; no new
+clean-source complete suite, build, canonical gate, authorization, plan, or
+hardware run exists yet.
+
+The first independent recovery invocation failed closed at authorization with
+`NO_HARDWARE_ACTIONS_EXECUTED=1`. A second, separately authorized recovery then
+recorded `TFDU_SHUTDOWN_PROGRAMMED_SEEN=1`, `SHUTDOWN_EXIT=0`, and PASS. It is
+separate from the r39 stage result. Raw r39 evidence remains a 743-file,
+796,712,508-byte immutable tree with SHA256
+`d8e77dde31fa229c08b84fb779e7a805e18e53f20522f7256824f4e9f32bd69f`;
+the portable failure package tree SHA256 is
+`dbb1974da49b7be1efcc0c68f073a4ccf00fff024a9b3f7b44e92c0fc7056ef3`.
+No r40 plan is prepared or authorized. Before any further hardware, commit the
+r39 package and repair, create a new clean-source cache-bypassed build, run each
+required complete suite exactly once, pass the canonical offline gate, prove
+the adaptive start from transitive inputs, and pass every new-ID dry validator.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

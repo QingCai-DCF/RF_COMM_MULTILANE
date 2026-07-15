@@ -2118,7 +2118,24 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             process.index("error = p7_validate_descriptor") :
             process.index("service->shutdown_attempted = 0U")
         ]
-        self.assertNotIn("p7_wipe_partial", validation_reject)
+        validate_start = service.index("static int p7_validate_descriptor(")
+        validate_end = service.index("static void p7_record_trace", validate_start)
+        validate = service[validate_start:validate_end]
+        private_output = validate.index("*private_output_validated = 1U;")
+        self.assertIn("*private_output_validated = 0U;", validate)
+        self.assertLess(validate.rindex("return P7_ERROR_TRACE_RANGE;"), private_output)
+        self.assertLess(private_output, validate.index("return P7_ERROR_STALE_SESSION;"))
+        self.assertIn("&private_output_validated", validation_reject)
+        self.assertIn("if (private_output_validated != 0U)", validation_reject)
+        self.assertIn("p7_wipe_partial(&request, 0U, descriptor)", validation_reject)
+        self.assertLess(
+            validation_reject.index("p7_stop_and_shutdown(service)"),
+            validation_reject.index("p7_wipe_partial(&request, 0U, descriptor)"),
+        )
+        self.assertLess(
+            validation_reject.index("p7_wipe_partial(&request, 0U, descriptor)"),
+            validation_reject.index("p7_publish_descriptor("),
+        )
         wipe_start = service.index("static void p7_wipe_partial(")
         wipe_end = service.index("static int p7_validate_descriptor", wipe_start)
         wipe_block = service[wipe_start:wipe_end]

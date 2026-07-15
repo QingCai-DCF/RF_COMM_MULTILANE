@@ -1,0 +1,352 @@
+{
+  "schema": "rf-comm-p7-historical-failed-stage-inputs-v1",
+  "run_id": "p7_20260715_stationary_app_r39_diag_suffix55",
+  "source_commit": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+  "stage_index": 13,
+  "full_stage_ordinal": 64,
+  "stage_id": "p7_ps_abort_restart",
+  "result": "FAIL_STAGE",
+  "mutation_attempted": true,
+  "candidate_mutation_attempted": true,
+  "coverage_claimed": false,
+  "recovery_directories": [
+    "evidence/hardware/p7/recovery/p7_20260715_stationary_app_r39_diag_suffix55_independent_shutdown_recovery_20260715T0052Z",
+    "evidence/hardware/p7/recovery/p7_20260715_stationary_app_r39_diag_suffix55_independent_shutdown_recovery_20260715T0054Z"
+  ],
+  "files": [
+    {
+      "role": "active_profile",
+      "original_path": "board_profiles/ACTIVE_PROFILE.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/active_profile_f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b.json",
+      "bytes": 899,
+      "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b"
+    },
+    {
+      "role": "core_readiness",
+      "original_path": "evidence/generated/p7_ps_core_hardware_readiness.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/core_readiness_a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b.json",
+      "bytes": 16264,
+      "sha256": "a5a796191553354b54fd8dc1785a76847b02bbc79a45b5bb3229107470a2d40b"
+    },
+    {
+      "role": "historical_app_service_header",
+      "original_path": "software/ps_driver/p7_app_service.h",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_app_service_header_bcfdcea6975a46ea6cc414ab3b967d9b3d7939762baab517fd0cf8cd1d2ea64c.h",
+      "bytes": 13659,
+      "sha256": "bcfdcea6975a46ea6cc414ab3b967d9b3d7939762baab517fd0cf8cd1d2ea64c",
+      "git_blob_sha1": "27b6b21ff8e9646b2c16ad27e09724a965b76982"
+    },
+    {
+      "role": "historical_app_service_source",
+      "original_path": "software/ps_driver/p7_app_service.c",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_app_service_source_d1ed23121305f657e44faa02548b16bafca92d973e793c43dbd8d3071277295a.c",
+      "bytes": 104541,
+      "sha256": "d1ed23121305f657e44faa02548b16bafca92d973e793c43dbd8d3071277295a",
+      "git_blob_sha1": "d7f0e23e4c0f6731f283962e7d45fb53a7276fcd"
+    },
+    {
+      "role": "historical_p4_authorizer",
+      "original_path": "tools/p4_hw_authorization.py",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_p4_authorizer_445037f932946c1515899850153b273f79f1a6368995b83676275d5cd6b82083.py",
+      "bytes": 12114,
+      "sha256": "445037f932946c1515899850153b273f79f1a6368995b83676275d5cd6b82083",
+      "git_blob_sha1": "3cfbe6528503895db749cd3bf2b0366b695b80ee"
+    },
+    {
+      "role": "historical_ps_execute_tcl",
+      "original_path": "scripts/hw/p7_ps_application_execute.tcl",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_ps_execute_tcl_9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec.tcl",
+      "bytes": 140716,
+      "sha256": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec",
+      "git_blob_sha1": "81e9a4c38c0a1a93b7ab2d91815179b29021e2c9"
+    },
+    {
+      "role": "historical_ps_mailbox_backend",
+      "original_path": "tools/p7_ps_mailbox_backend.py",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_ps_mailbox_backend_fcf190204ecd296b378bef8b085dd9146c62ce35bff3881becd668e03a873110.py",
+      "bytes": 48633,
+      "sha256": "fcf190204ecd296b378bef8b085dd9146c62ce35bff3881becd668e03a873110",
+      "git_blob_sha1": "c62c48d04340ba9eb8fc93e9fb9bb070847eabb8"
+    },
+    {
+      "role": "historical_sequence_executor",
+      "original_path": "tools/run_p7_authorized_hardware_sequence.py",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_sequence_executor_002a8c4d675f22569fa56165a5737aeff5c32cb0da3871d1cf893d50092a2b7c.py",
+      "bytes": 95508,
+      "sha256": "002a8c4d675f22569fa56165a5737aeff5c32cb0da3871d1cf893d50092a2b7c",
+      "git_blob_sha1": "5f2942ff7f34e3b0313de96b0f7185485e5ac1fb"
+    },
+    {
+      "role": "historical_shutdown_tcl",
+      "original_path": "scripts/legacy_safe_tools/program_tfdu_shutdown.tcl",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_shutdown_tcl_aa279e41e7cf6e8e27dea4e979dd9c10a08e543f03c2a64bf256326a495abbba.tcl",
+      "bytes": 659,
+      "sha256": "aa279e41e7cf6e8e27dea4e979dd9c10a08e543f03c2a64bf256326a495abbba",
+      "git_blob_sha1": "437b100b5807a5eae957d49b3e36e7abd086beff"
+    },
+    {
+      "role": "historical_shutdown_wrapper",
+      "original_path": "scripts/hw/program_tfdu_shutdown_safe.ps1",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_shutdown_wrapper_8f7192540d4d1d85728e1356ba36a9b406214645383189379f9608f1cfce6ab8.ps1",
+      "bytes": 9058,
+      "sha256": "8f7192540d4d1d85728e1356ba36a9b406214645383189379f9608f1cfce6ab8",
+      "git_blob_sha1": "2866b0881de1c84d6a8523792c5c3f87e869e811"
+    },
+    {
+      "role": "historical_stage_wrapper",
+      "original_path": "scripts/hw/run_p7_ps_application_stage_safe.py",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_stage_wrapper_5c608fe221cc62dcef46900b9d7d76fa277064dfc65db327d388772b37e1eac6.py",
+      "bytes": 293923,
+      "sha256": "5c608fe221cc62dcef46900b9d7d76fa277064dfc65db327d388772b37e1eac6",
+      "git_blob_sha1": "47fcbf11be6e61b13be8681439abb616ac96f6b2"
+    },
+    {
+      "role": "historical_summarizer",
+      "original_path": "tools/summarize_p7_hardware.py",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/historical_summarizer_b0426d803693b6fabc285f0f1e8821e17aa55bf17c793dd3ff7cf30699582f83.py",
+      "bytes": 850232,
+      "sha256": "b0426d803693b6fabc285f0f1e8821e17aa55bf17c793dd3ff7cf30699582f83",
+      "git_blob_sha1": "cb90cc250dcf746930fea7adb87fef20d8d2067b"
+    },
+    {
+      "role": "lane1_promotion_summary",
+      "original_path": "evidence/generated/p7_lane1_promotion_summary.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/lane1_promotion_summary_b2e836c9440c29e23702ea76612315a92eb7fb802b529b309bd3bc2e3a4a4cdb.json",
+      "bytes": 1795,
+      "sha256": "b2e836c9440c29e23702ea76612315a92eb7fb802b529b309bd3bc2e3a4a4cdb"
+    },
+    {
+      "role": "offline_checkpoint",
+      "original_path": "evidence/generated/p7_offline_gate_summary.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/offline_checkpoint_6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98.json",
+      "bytes": 16927,
+      "sha256": "6a4c530c89668c98bf3d320e483928180816336bb109eab68752c93bd632bb98"
+    },
+    {
+      "role": "p6_build_summary",
+      "original_path": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build_summary.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/p6_build_summary_d5c85cb396ed8913449c5a17e4c456225ac9014fb8106278eeb7ee1091f760ef.json",
+      "bytes": 3100,
+      "sha256": "d5c85cb396ed8913449c5a17e4c456225ac9014fb8106278eeb7ee1091f760ef"
+    },
+    {
+      "role": "p7_build_summary",
+      "original_path": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/p7_build_summary_a78360ac204e97e071c537fa94b7779c355acb9de0cfd5426622b16fc5043d9d.json",
+      "bytes": 11793,
+      "sha256": "a78360ac204e97e071c537fa94b7779c355acb9de0cfd5426622b16fc5043d9d"
+    },
+    {
+      "role": "plan_artifact",
+      "original_path": "evidence/hardware/p7/artifacts/p7_plan_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/plan_artifact_c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd.md",
+      "bytes": 34806,
+      "sha256": "c6db9d8348c3bc518fa5985595adfcdada1a08f11c9246c6103ec378b43b58dd"
+    },
+    {
+      "role": "preparation_executor_dry_validation",
+      "original_path": "evidence/generated/p7_r39_diag_suffix55_executor_dry_validation.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/preparation_p7_r39_diag_suffix55_executor_dry_validation_a9be4eca1cd5c029abf37733677292d5e6f4f3ffec5879a96318d7e245ff27d9.json",
+      "bytes": 1494,
+      "sha256": "a9be4eca1cd5c029abf37733677292d5e6f4f3ffec5879a96318d7e245ff27d9"
+    },
+    {
+      "role": "preparation_impact_decision",
+      "original_path": "evidence/generated/p7_r39_diag_suffix55_impact_decision.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/preparation_p7_r39_diag_suffix55_impact_decision_b0ad56af015756d959283f732771c74dc182372b89afbc4cd73c232927adac40.json",
+      "bytes": 3971,
+      "sha256": "b0ad56af015756d959283f732771c74dc182372b89afbc4cd73c232927adac40"
+    },
+    {
+      "role": "preparation_plan_audit",
+      "original_path": "evidence/generated/p7_r39_diag_suffix55_plan_audit.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/preparation_p7_r39_diag_suffix55_plan_audit_ab5828880e503450b75be4f3d22360312346d13fe4edbbdd2bc35bc0bddf8b12.json",
+      "bytes": 3755,
+      "sha256": "ab5828880e503450b75be4f3d22360312346d13fe4edbbdd2bc35bc0bddf8b12"
+    },
+    {
+      "role": "preparation_plan_generation_manifest",
+      "original_path": "evidence/generated/p7_r39_diag_suffix55_plan_generation_manifest.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/preparation_p7_r39_diag_suffix55_plan_generation_manifest_68f1081410df6f9513112cf1a3a59e690effda4837205acaa072234855943d6b.json",
+      "bytes": 54613,
+      "sha256": "68f1081410df6f9513112cf1a3a59e690effda4837205acaa072234855943d6b"
+    },
+    {
+      "role": "preparation_status",
+      "original_path": "evidence/generated/p7_r39_diag_suffix55_preparation_status.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/preparation_p7_r39_diag_suffix55_preparation_status_1f5620a0b281a44ea98af5b1b81616e2a0a27661fc2d234253cf6c66553ac431.json",
+      "bytes": 4962,
+      "sha256": "1f5620a0b281a44ea98af5b1b81616e2a0a27661fc2d234253cf6c66553ac431"
+    },
+    {
+      "role": "ps7_init",
+      "original_path": "build/p7_ps_vitis_workspace/p7_platform/hw/ps7_init.tcl",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/ps7_init_86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d.tcl",
+      "bytes": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    {
+      "role": "recovery_p4_authorization",
+      "original_path": ".hardware_authorization/P4_APPROVED.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/recovery_p4_authorization_61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476.txt",
+      "bytes": 201,
+      "sha256": "61f676760e875ce2772e2c460e9b3241ebcd013ebacfea715ee79b232316f476"
+    },
+    {
+      "role": "sequence_plan",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_sequence_plan.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/sequence_plan_fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f.txt",
+      "bytes": 96584,
+      "sha256": "fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f"
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_001_p7_safe_idle.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_001_4b5900ad0c3a4b848cb6d48ab5dc3510477385f8df8b7f1491a851b3cae6eff7.txt",
+      "bytes": 3407,
+      "sha256": "4b5900ad0c3a4b848cb6d48ab5dc3510477385f8df8b7f1491a851b3cae6eff7",
+      "full_stage_ordinal": 1
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_002_p7_p6_frame_regression_m1.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_002_a9d59e540fdf307c3d79aeed1b879f78d80703ddf07ceaef7d491aef8fb4f832.txt",
+      "bytes": 3752,
+      "sha256": "a9d59e540fdf307c3d79aeed1b879f78d80703ddf07ceaef7d491aef8fb4f832",
+      "full_stage_ordinal": 2
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_003_p7_p6_frame_regression_m2.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_003_1fcb2cd5a5a09b8a6cecb7ab4f850ea039612b2b1016147645e00615ed0cc721.txt",
+      "bytes": 3752,
+      "sha256": "1fcb2cd5a5a09b8a6cecb7ab4f850ea039612b2b1016147645e00615ed0cc721",
+      "full_stage_ordinal": 3
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_004_p7_p6_frame_regression_m3.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_004_a39458ebfec02fff94770b30fcdba4f181f8cb2e50b8323aad00a3e098157b48.txt",
+      "bytes": 3752,
+      "sha256": "a39458ebfec02fff94770b30fcdba4f181f8cb2e50b8323aad00a3e098157b48",
+      "full_stage_ordinal": 4
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_055_p7_large_jtag_64k_rr_prbs15.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_055_a7db67032901f9fd856a4d01148f2b252b1c9c495727a20cb088d0885e5499c6.txt",
+      "bytes": 3759,
+      "sha256": "a7db67032901f9fd856a4d01148f2b252b1c9c495727a20cb088d0885e5499c6",
+      "full_stage_ordinal": 55
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_056_p7_large_jtag_64k_rr_random.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_056_575b673d9c1469dd9817903d103bf615f241292266a346f44c45f6b6544774d3.txt",
+      "bytes": 3759,
+      "sha256": "575b673d9c1469dd9817903d103bf615f241292266a346f44c45f6b6544774d3",
+      "full_stage_ordinal": 56
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_057_p7_large_jtag_64k_rr_all_bytes.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_057_271d6411b362935da31b0b3f1fda3583aba9df4c2144f07c8c7a75ba9775ec9f.txt",
+      "bytes": 3768,
+      "sha256": "271d6411b362935da31b0b3f1fda3583aba9df4c2144f07c8c7a75ba9775ec9f",
+      "full_stage_ordinal": 57
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_058_p7_large_jtag_1m_l0_random.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_058_f9a48372ec473ba61d298e209fc7c61921ef09f660e655349a56e0b619779744.txt",
+      "bytes": 3757,
+      "sha256": "f9a48372ec473ba61d298e209fc7c61921ef09f660e655349a56e0b619779744",
+      "full_stage_ordinal": 58
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_059_p7_large_jtag_1m_l1_random.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_059_69906a843cbd7d11fbdeecb1046075349db62fcae5ac5a3fbef131b52411c166.txt",
+      "bytes": 3757,
+      "sha256": "69906a843cbd7d11fbdeecb1046075349db62fcae5ac5a3fbef131b52411c166",
+      "full_stage_ordinal": 59
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_060_p7_large_jtag_1m_rr_random.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_060_6df3d39e8bdc5dcaf4ec83403bc80e7b260b4afc145f665e8e1b038f593b65dc.txt",
+      "bytes": 3757,
+      "sha256": "6df3d39e8bdc5dcaf4ec83403bc80e7b260b4afc145f665e8e1b038f593b65dc",
+      "full_stage_ordinal": 60
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_061_p7_large_jtag_1m_rep3_random.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_061_5a1a7333412a83217f4cafb7d399194e50e123dd68d91db7c31ef58e4ebb57ee.txt",
+      "bytes": 3763,
+      "sha256": "5a1a7333412a83217f4cafb7d399194e50e123dd68d91db7c31ef58e4ebb57ee",
+      "full_stage_ordinal": 61
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_062_p7_ps_functional.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_062_03b3226c79485e5e3ceab6c22ebb1a5837c3449de7f6e39afc6561e0cd089aac.txt",
+      "bytes": 4850,
+      "sha256": "03b3226c79485e5e3ceab6c22ebb1a5837c3449de7f6e39afc6561e0cd089aac",
+      "full_stage_ordinal": 62
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_063_p7_ps_fault_fallback.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_063_b213b6e6bfeef0b156fc61836bd9e796bb94d5d6cd21166a49be533798d3e6dd.txt",
+      "bytes": 4854,
+      "sha256": "b213b6e6bfeef0b156fc61836bd9e796bb94d5d6cd21166a49be533798d3e6dd",
+      "full_stage_ordinal": 63
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_064_p7_ps_abort_restart.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_064_92601ed24bef33b816554e3f2e00dcb5e1c939f144b7d5b6e7ab7a31e7d52016.txt",
+      "bytes": 4853,
+      "sha256": "92601ed24bef33b816554e3f2e00dcb5e1c939f144b7d5b6e7ab7a31e7d52016",
+      "full_stage_ordinal": 64
+    },
+    {
+      "role": "stage_authorization",
+      "original_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_065_p7_ps_queue.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_authorization_065_86bdb7fe3c9726781ddcb614d55ac634fc5fde38d248a28a485b5309dfcce9f0.txt",
+      "bytes": 4845,
+      "sha256": "86bdb7fe3c9726781ddcb614d55ac634fc5fde38d248a28a485b5309dfcce9f0",
+      "full_stage_ordinal": 65
+    },
+    {
+      "role": "stage_bundle_manifest",
+      "original_path": "evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r39_diag_suffix55/064_p7_ps_abort_restart/bundle/bundle_manifest.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_bundle_manifest_d494e9d1aaba6c4d42a46b6ea93076810d5b7fd5468ce3da970639e3508dfc1b.json",
+      "bytes": 9458,
+      "sha256": "d494e9d1aaba6c4d42a46b6ea93076810d5b7fd5468ce3da970639e3508dfc1b"
+    },
+    {
+      "role": "stage_execution_plan",
+      "original_path": "evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r39_diag_suffix55/064_p7_ps_abort_restart/bundle/execution_plan.txt",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_execution_plan_4f5e5fe6de8866c76b5618a5969c9e7ea67bed31c13523c516dc26d80b77e031.txt",
+      "bytes": 915,
+      "sha256": "4f5e5fe6de8866c76b5618a5969c9e7ea67bed31c13523c516dc26d80b77e031"
+    },
+    {
+      "role": "stage_input",
+      "original_path": "build/p7_authorized_sequence/p7_20260715_stationary_app_r39_diag_suffix55/inputs/p7_ps_seed_247.bin",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_input_49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093.bin",
+      "bytes": 247,
+      "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093"
+    },
+    {
+      "role": "stage_profile",
+      "original_path": "profiles/p7/p7_ps_application_functional.json",
+      "frozen_path": "evidence/generated/p7_r39_failure_package/historical_preflight_inputs/stage_profile_eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0.json",
+      "bytes": 528,
+      "sha256": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0"
+    }
+  ]
+}
+
