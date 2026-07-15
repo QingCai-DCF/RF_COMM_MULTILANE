@@ -1,0 +1,31 @@
+{
+  "schema": "rf-comm-p7-r47-repair-focused-validation-v1",
+  "generated_at_utc": "2026-07-15T16:57:15.0261640Z",
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "python_compile": "PASS",
+  "focused_module": {
+    "command": "python -m unittest -v tests.test_p7_stage66_campaign",
+    "discovered": 14,
+    "passed": 14,
+    "failed": 0,
+    "errors": 0
+  },
+  "cross_layer_focused_tests": {
+    "status": "PASS",
+    "covered": [
+      "generator emits Stage66 campaign controls",
+      "PS wrapper preserves P7_STAGE66_DIAGNOSTIC_STAGE in the XSDB argv",
+      "XSDB Tcl accepts only the exact diagnostic scope and preserves zero coverage",
+      "recovery recorder accepts both exact canonical marker forms and rejects wrong or duplicate markers"
+    ]
+  },
+  "actual_r47_recovery_directory_dry_validation": {
+    "status": "PASS",
+    "errors": [],
+    "record_performed": false,
+    "hardware_actions_executed": false,
+    "recovery_directory": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r47_diag_stage66_c01/recovery_shutdown_after_failed_stage_066_20260715T1647Z"
+  }
+}

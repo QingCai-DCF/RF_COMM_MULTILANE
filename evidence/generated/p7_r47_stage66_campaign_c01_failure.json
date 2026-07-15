@@ -1,0 +1,125 @@
+{
+  "schema": "rf-comm-p7-stage66-diagnostic-campaign-failure-v1",
+  "generated_at_utc": "2026-07-15T16:57:15.0261640Z",
+  "status": "IMMUTABLE_FAIL_RECOVERY_VALIDATED_PENDING_LEDGER_RECORD",
+  "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+  "run_id_immutable_fail": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "1a88b40e76453c8fa53c9c6e0c79f8ef4a4d5d17",
+  "source_tree": "e971db71e33f98aea8073b44dd6e1724a1ebc584",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "campaign_hardware_attempt_number": 1,
+  "actual_hardware_attempt_count_after": 1,
+  "maximum_actual_hardware_attempts": 10,
+  "diagnostic_hardware_attempt_consumed": true,
+  "diagnostic_only": true,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "preconditions": {
+    "materialization_preflight": "PASS",
+    "focused_board_contract_test": "PASS",
+    "required_complete_suites": "PASS_285_OF_285_EXACTLY_ONCE",
+    "required_complete_suite_summary_sha256": "983868a3aa849fc845f59b47c12e3762759d17b1a8b752702d756d7a24631349",
+    "canonical_gate": "PASS_13_OF_13_CACHE_BYPASS",
+    "canonical_gate_summary_sha256": "c6d8cc0186405d447fb100144d833e38b6680aa8024d2d8ffa572b729e2ba31a",
+    "p7_build_summary_sha256": "9c0c5da82635d50db2b3b391d6e295c96f7e42edc31573499d41121d84e1019a",
+    "plan_generation_manifest_sha256": "4bc904fbba292f8b9e7b72e272b05302d9139d922e829103a0af076335622d82",
+    "outer_dry_validation": "PASS",
+    "outer_dry_validation_sha256": "a93f0aad546b7ca046b87a5ff2cd2de3c494f431c5a92bfb3af1fc864d8af232",
+    "prelaunch_snapshot_sha256": "feb174e495157e9223eec0c835b2be93211a5dee59028d62e1b8944e7a900429"
+  },
+  "authorization": {
+    "sequence_plan_sha256": "ed4141129865372267e3967a3488542d107266175708f9f21d6fcd3dc93cffc2",
+    "stage66_authorization_sha256": "49889bdaa7164447e45dade9d7c516237a6a95feefc1ed1a4ee70a18f8a37208",
+    "selected_full_stage_ordinals": [1, 2, 3, 4, 66],
+    "stage66_execution_scope": "P7_STAGE66_DIAGNOSTIC_STAGE"
+  },
+  "execution": {
+    "status": "FAIL",
+    "sequence_execution_ledger_sha256": "bc32b2b0edd330dc6121a5154001a1b8be9884293ebbea0523b708acf9f50d23",
+    "attempt_count": 5,
+    "completed_stage_count": 4,
+    "failed_stage_index_zero_based": 4,
+    "stages": [
+      {
+        "full_stage_ordinal": 1,
+        "stage_id": "p7_safe_idle",
+        "result": "PASS",
+        "summary_sha256": "d063b0c349610cab33c58542c5bad2e425a05c620db2c1dd72589b8af69c34da"
+      },
+      {
+        "full_stage_ordinal": 2,
+        "stage_id": "p7_p6_frame_regression_m1",
+        "result": "PASS",
+        "summary_sha256": "cc35b790c7933a54a38e200978ba6659b2088713aee3f796380928f8f3b2a49d"
+      },
+      {
+        "full_stage_ordinal": 3,
+        "stage_id": "p7_p6_frame_regression_m2",
+        "result": "PASS",
+        "summary_sha256": "b51bb745dc45488d4b229af6c72270e510e74a5573940957e1c32ef13e48cb07"
+      },
+      {
+        "full_stage_ordinal": 4,
+        "stage_id": "p7_p6_frame_regression_m3",
+        "result": "PASS",
+        "summary_sha256": "33dac303ee31498fb265631c45825206b93c4914ca402817364d551e2d3b3f71"
+      },
+      {
+        "full_stage_ordinal": 66,
+        "stage_id": "p7_ps_stationary",
+        "result": "FAIL_STAGE",
+        "launched_once": true,
+        "complete_1800_second_pass": false,
+        "application_stationary_window_entered": false,
+        "candidate_bitstream_programmed": false,
+        "ps_child_elapsed_seconds": 3.655966,
+        "summary_sha256": "e7db462cde59d33478107779be990d724a7ef2a52f679901f069603a5adc7f3f",
+        "raw_result_sha256": "817249657554496e1218f6e075d27163409cbcda32389bb9f27f8ace6d51fe7d",
+        "first_terminal_error": "P7 authorization mismatch for P7_EXECUTION_SCOPE expected=P7_PS_APPLICATION_STAGE observed=P7_STAGE66_DIAGNOSTIC_STAGE",
+        "shutdown_before": "PASS",
+        "shutdown_after": "PASS",
+        "shutdown_before_result_sha256": "9d79c18d64d9dfb8e0a016791f25446501bba32d71d659f4f4d36dab6f442480",
+        "shutdown_after_result_sha256": "9d79c18d64d9dfb8e0a016791f25446501bba32d71d659f4f4d36dab6f442480"
+      }
+    ]
+  },
+  "confirmed_root_cause": {
+    "classification": "PS_WRAPPER_TO_XSDB_EXECUTION_SCOPE_PROPAGATION_GAP",
+    "generator_campaign_flag_present": true,
+    "stage66_authorization_special_scope_present": true,
+    "safe_wrapper_campaign_mode_present": true,
+    "xsdb_argv_before_fix": "P7_PS_APPLICATION_STAGE",
+    "cause": "run_p7_ps_application_stage_safe.py build_ps_command hard-coded the ordinary execution scope in the XSDB Tcl argv even when the wrapper was in Stage66 campaign mode.",
+    "not_a_stationary_payload_failure": true
+  },
+  "repair": {
+    "xsdb_scope_propagation": "The wrapper now selects the exact Stage66 diagnostic scope for the XSDB argv.",
+    "tcl_fail_closed_contract": "The Tcl executor accepts that scope only for stationary mode with a non-NONE run ID and revalidates diagnostic-only, zero-coverage, PENDING_HW, ordinal 66, campaign, and run-ID authorization fields.",
+    "recovery_recorder": "The recorder accepts only exact full-line equals or whitespace marker forms, rejects duplicates and wrong paths, and binds the marker, summary, manifest, canonical path, and canonical bitstream SHA256.",
+    "focused_validation_sha256": "5b754bf90818235fb73e16eb81e944246c2ff2a83df3e4dc5d70e5bafa8a0d61",
+    "focused_validation": "PASS"
+  },
+  "independent_shutdown_recovery": {
+    "status": "PASS",
+    "recovery_changes_failed_stage_result": false,
+    "summary_sha256": "ec1ee69299aac771717577dd6566567cab73da2a9cb722863d2323681a8e2dc5",
+    "authorization_sha256": "3804731b103ea547b0b50ebbd378c16b3ae2bc51fbd3af31873e299df5b4ec91",
+    "tree_sha256": "87ea5c520330db160ba1cdedb33ee962d140c8fc76d64237c3edd6c200d4be8c",
+    "campaign_ledger_status_before_record": "RECOVERY_REQUIRED",
+    "campaign_ledger_sha256_before_record": "152f6039cafd3f2526437159ec1612e3517acfc07b1a1d3040fef38d70c053cf",
+    "initial_recorder_block_sha256": "2d08fb9a48876a95b706662d0b5c4c2c37c3ad594e31ad262a794de2866be4aa",
+    "fixed_recorder_actual_evidence_dry_validation": "PASS",
+    "ledger_record_pending_at_this_commit": true
+  },
+  "preserved_evidence": {
+    "path": "evidence/generated/p7_r47_stage66_campaign_c01_failure_package",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this failure record is outside the tree",
+    "file_count": 99,
+    "byte_count": 2486435,
+    "tree_sha256": "c6f1cca3836cedd51c6b8f57b485b5fd9dd92c939187cb9a94aed5215b2d2f06",
+    "source_worktree": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true
+  },
+  "next_required_action": "COMMIT_THIS_REPAIR_AND_FAILURE_EVIDENCE_THEN_RECORD_THE_ALREADY_COMPLETED_INDEPENDENT_RECOVERY_WITH_THE_COMMITTED_FIXED_RECORDER; DO_NOT START R48 UNTIL THE READY LEDGER IS FROZEN IN A FOLLOWUP COMMIT AND ALL NEW CLEAN_SOURCE GATES PASS"
+}

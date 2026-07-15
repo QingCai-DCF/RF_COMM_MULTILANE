@@ -1,0 +1,37 @@
+{
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED",
+  "generated_at_utc": "2026-07-15T16:27:43.524886+00:00",
+  "hardware_actions_executed": false,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "full_stage_ordinals": [1, 2, 3, 4, 66],
+  "sequence_plan": {
+    "path": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/.hardware_authorization/p7_20260715_stationary_app_r47_diag_stage66_c01_sequence_plan.txt",
+    "sha256": "ed4141129865372267e3967a3488542d107266175708f9f21d6fcd3dc93cffc2",
+    "source_commit": "1a88b40e76453c8fa53c9c6e0c79f8ef4a4d5d17",
+    "stage_count": 5
+  },
+  "offline_checkpoint": {
+    "path": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "c6d8cc0186405d447fb100144d833e38b6680aa8024d2d8ffa572b729e2ba31a"
+  },
+  "stage66_diagnostic_campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+    "hardware_attempt_number": 1,
+    "maximum_actual_hardware_attempts": 10,
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "prior_campaign_ledger_sha256": "d7b7226ac9ab09bc5a898cb01e3511414377e9102899fbf96e43a63afd9d4cea"
+  },
+  "validation_errors": [],
+  "reason": "all 5 planned wrapper argv vectors and immutable inputs validated; no process was launched"
+}

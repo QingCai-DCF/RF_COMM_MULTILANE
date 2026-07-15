@@ -824,7 +824,7 @@ set rc [catch {
   if {$mode ni {functional fault-fallback queue abort-restart stationary stage62-microtest ddr-external-master}} {
     error "unsupported P7 PS mode: $mode"
   }
-  if {$execution_scope ni {P7_PS_APPLICATION_STAGE STAGE62_ONLY}} {
+  if {$execution_scope ni {P7_PS_APPLICATION_STAGE STAGE62_ONLY P7_STAGE66_DIAGNOSTIC_STAGE}} {
     error "unsupported P7 execution scope: $execution_scope"
   }
   if {![regexp {^[a-z0-9][a-z0-9_.-]{0,126}$|^NONE$} $run_id]} {
@@ -833,6 +833,10 @@ set rc [catch {
   if {$mode in {stage62-microtest ddr-external-master} &&
       ($execution_scope ne "STAGE62_ONLY" || $run_id eq "NONE")} {
     error "isolated DDR/Stage62 diagnostic requires a new Stage62-only run ID"
+  }
+  if {$execution_scope eq "P7_STAGE66_DIAGNOSTIC_STAGE" &&
+      ($mode ne "stationary" || $run_id eq "NONE")} {
+    error "Stage66 diagnostic scope requires stationary mode and a new run ID"
   }
   if {![string equal -nocase $expected_part $p7_canonical_part]} {
     error "P7 PS executor supports only canonical part $p7_canonical_part"
@@ -997,6 +1001,13 @@ set rc [catch {
   if {$execution_scope eq "STAGE62_ONLY"} {
     p7_require_value $auth_text P7_DIAGNOSTIC_ONLY true
     p7_require_value $auth_text P7_COVERAGE_CLAIMED false
+  } elseif {$execution_scope eq "P7_STAGE66_DIAGNOSTIC_STAGE"} {
+    p7_require_value $auth_text P7_EXECUTION_MODE DIAGNOSTIC_ONLY
+    p7_require_value $auth_text P7_COVERAGE_CLAIMED false
+    p7_require_value $auth_text HARDWARE_ACCEPTANCE PENDING_HW
+    p7_require_value $auth_text P7_FULL_STAGE_ORDINAL 66
+    p7_require_value $auth_text P7_STAGE66_DIAGNOSTIC_CAMPAIGN true
+    p7_require_value $auth_text P7_STAGE66_CAMPAIGN_RUN_ID $run_id
   }
   p7_require_value $auth_text P7_PS_CORE_READINESS PASS
   p7_require_value $auth_text P7_COUNTS_PER_SECOND $counts_per_second
@@ -1227,10 +1238,10 @@ set rc [catch {
       $plan_value(CHECKPOINT_COUNT) != [expr {$mode eq "functional" ? 1 : 0}]} {
     error "P7 plan does not match authorized wrapper controls"
   }
-  if {$execution_scope eq "STAGE62_ONLY"} {
+  if {$execution_scope in {STAGE62_ONLY P7_STAGE66_DIAGNOSTIC_STAGE}} {
     if {$plan_value(DIAGNOSTIC_ONLY) != 1 ||
         $plan_value(COVERAGE_CLAIMED) != 0} {
-      error "Stage62-only plan must be diagnostic-only with zero coverage"
+      error "diagnostic plan must be diagnostic-only with zero coverage"
     }
   } elseif {$plan_value(DIAGNOSTIC_ONLY) != 0 ||
             $plan_value(COVERAGE_CLAIMED) != 1} {

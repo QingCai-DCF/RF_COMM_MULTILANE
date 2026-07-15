@@ -1,0 +1,67 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prelaunch-snapshot-v1",
+  "generated_at_utc": "2026-07-15T16:29:41.6443247+00:00",
+  "status": "PASS",
+  "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+  "source_commit": "1a88b40e76453c8fa53c9c6e0c79f8ef4a4d5d17",
+  "source_status_non_generated_count": 0,
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "full_stage_ordinals": [1, 2, 3, 4, 66],
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "materialization_preflight": "PASS",
+  "focused_board_contract_test": "PASS",
+  "required_complete_suites": {
+    "status": "PASS",
+    "summary_sha256": "983868a3aa849fc845f59b47c12e3762759d17b1a8b752702d756d7a24631349",
+    "discovered_test_count": 285,
+    "complete_suite_invocation_count": 1
+  },
+  "canonical_gate": {
+    "status": "PASS",
+    "summary_sha256": "c6d8cc0186405d447fb100144d833e38b6680aa8024d2d8ffa572b729e2ba31a",
+    "check_count": 13,
+    "passing_check_count": 13,
+    "OFFLINE_CACHE_STATUS": "BYPASS",
+    "OFFLINE_REAL_BUILD_PROCESS_RAN": true,
+    "hardware_actions_executed": false
+  },
+  "authorization": {
+    "sequence_plan_sha256": "ed4141129865372267e3967a3488542d107266175708f9f21d6fcd3dc93cffc2",
+    "generation_manifest_sha256": "4bc904fbba292f8b9e7b72e272b05302d9139d922e829103a0af076335622d82",
+    "authorization_count": 5,
+    "child_wrapper_dry_validation_count": 5,
+    "outer_dry_validation": "DRY_RUN_VALIDATED",
+    "outer_dry_validation_sha256": "a93f0aad546b7ca046b87a5ff2cd2de3c494f431c5a92bfb3af1fc864d8af232",
+    "validation_errors": []
+  },
+  "campaign": {
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_sha256": "d7b7226ac9ab09bc5a898cb01e3511414377e9102899fbf96e43a63afd9d4cea",
+    "status": "READY",
+    "requested_hardware_attempt_number": 1,
+    "actual_hardware_attempt_count": 0,
+    "hardware_attempt_count": 0,
+    "retired_pre_hardware_run_id_count": 5,
+    "campaign_lock_exists": false
+  },
+  "execution_output_collision_check": {
+    "execution_root_exists": false,
+    "execution_ledger_exists": false,
+    "abort_file_exists": false
+  },
+  "hardware_boundary": {
+    "RF_COMM_HW_AUTH_before_launch": "UNSET",
+    "external_hw_server_pid": 45220,
+    "external_hw_server_port": 3121,
+    "external_hw_server_ownership": "EXTERNAL_PREEXISTING",
+    "external_hw_server_unchanged": true,
+    "other_relevant_hardware_process_count": 0,
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "shutdown_on_exit": true,
+    "resume": false
+  }
+}

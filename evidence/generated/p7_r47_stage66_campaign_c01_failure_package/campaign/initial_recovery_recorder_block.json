@@ -1,0 +1,18 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-recovery-recorder-block-v1",
+  "generated_at_utc": "2026-07-15T16:57:15.0261640Z",
+  "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+  "status": "BLOCKED_WITHOUT_LEDGER_MUTATION",
+  "campaign_ledger_sha256_before": "152f6039cafd3f2526437159ec1612e3517acfc07b1a1d3040fef38d70c053cf",
+  "campaign_ledger_sha256_after": "152f6039cafd3f2526437159ec1612e3517acfc07b1a1d3040fef38d70c053cf",
+  "record_requested": true,
+  "record_performed": false,
+  "hardware_actions_executed": false,
+  "recovery_evidence_status_except_marker_parser": "PASS",
+  "errors": [
+    "independent recovery must emit exactly one TFDU_SHUTDOWN_PROGRAMMED marker"
+  ],
+  "observed_canonical_stdout_marker": "TFDU_SHUTDOWN_PROGRAMMED D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/shutdown_bitstream/tfdu_shutdown_j10_j11.bit",
+  "confirmed_recorder_gap": "The recorder accepted only the equals-sign form even though the canonical shutdown Tcl emits a space-delimited full-line marker.",
+  "recovery_pass_changes_failed_stage_result": false
+}

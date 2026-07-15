@@ -11,7 +11,13 @@ from pathlib import Path
 from typing import Any
 
 import p7_stage66_campaign as campaign
-from p7_hardware_safety import ROOT, SHA256_RE, resolve_path, sha256_file
+from p7_hardware_safety import (
+    ROOT,
+    SHA256_RE,
+    normalized_path,
+    resolve_path,
+    sha256_file,
+)
 
 
 REQUIRED_FILES = {
@@ -22,6 +28,9 @@ REQUIRED_FILES = {
     "program_tfdu_shutdown_safe.stdout.log",
     "program_tfdu_shutdown_safe.summary.txt",
 }
+SHUTDOWN_MARKER_RE = re.compile(
+    r"^TFDU_SHUTDOWN_PROGRAMMED(?:=|[ \t]+)(?P<path>.+)$"
+)
 
 
 def marker_map(text: str) -> tuple[dict[str, str], list[str]]:
@@ -88,12 +97,62 @@ def validate_recovery(
         else ""
     )
     emitted = [
-        line
+        line.strip()
         for line in stdout.splitlines()
-        if line.strip().startswith("TFDU_SHUTDOWN_PROGRAMMED=")
+        if line.strip().startswith("TFDU_SHUTDOWN_PROGRAMMED")
     ]
-    if len(emitted) != 1:
+    marker_match = SHUTDOWN_MARKER_RE.fullmatch(emitted[0]) if len(emitted) == 1 else None
+    if marker_match is None:
         errors.append("independent recovery must emit exactly one TFDU_SHUTDOWN_PROGRAMMED marker")
+    canonical_shutdown = (
+        ROOT / "shutdown_bitstream" / "tfdu_shutdown_j10_j11.bit"
+    ).resolve(strict=False)
+    if marker_match is not None:
+        emitted_shutdown = resolve_path(marker_match.group("path").strip())
+        if normalized_path(emitted_shutdown) != normalized_path(canonical_shutdown):
+            errors.append(
+                "independent recovery TFDU_SHUTDOWN_PROGRAMMED path is not canonical"
+            )
+    summary_shutdown = markers.get("SHUTDOWN_BITSTREAM", "")
+    if not summary_shutdown or normalized_path(summary_shutdown) != normalized_path(
+        canonical_shutdown
+    ):
+        errors.append("independent recovery summary shutdown bitstream path is not canonical")
+    summary_shutdown_sha = markers.get("SHUTDOWN_BITSTREAM_SHA256", "")
+    if not canonical_shutdown.is_file() or canonical_shutdown.is_symlink():
+        errors.append("canonical independent recovery shutdown bitstream is missing/not regular")
+        canonical_shutdown_sha = ""
+    else:
+        canonical_shutdown_sha = sha256_file(canonical_shutdown)
+    if (
+        not SHA256_RE.fullmatch(summary_shutdown_sha)
+        or summary_shutdown_sha.lower() != canonical_shutdown_sha
+    ):
+        errors.append("independent recovery summary shutdown bitstream SHA256 mismatch")
+    manifest_path = directory / "hash_manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8", errors="strict"))
+        manifest_files = manifest.get("files") if isinstance(manifest, dict) else None
+        if not isinstance(manifest_files, list):
+            raise ValueError("files is not a list")
+        shutdown_records = [
+            record
+            for record in manifest_files
+            if isinstance(record, dict)
+            and normalized_path(str(record.get("path", "")))
+            == normalized_path(canonical_shutdown)
+        ]
+        if len(shutdown_records) != 1:
+            raise ValueError("canonical shutdown bitstream record count is not one")
+        shutdown_record = shutdown_records[0]
+        record_sha = str(shutdown_record.get("sha256", ""))
+        if shutdown_record.get("exists") is not True or (
+            not SHA256_RE.fullmatch(record_sha)
+            or record_sha.lower() != canonical_shutdown_sha
+        ):
+            raise ValueError("canonical shutdown bitstream record is not hash exact")
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        errors.append(f"independent recovery hash manifest shutdown binding is invalid: {exc}")
     auth_path = directory / "hardware_authorization.json"
     try:
         authorization = json.loads(auth_path.read_text(encoding="utf-8", errors="strict"))

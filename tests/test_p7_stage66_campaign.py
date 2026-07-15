@@ -451,6 +451,10 @@ class P7Stage66CampaignTests(unittest.TestCase):
     def test_independent_recovery_record_requires_exact_shutdown_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            shutdown_bit = root / "shutdown_bitstream" / "tfdu_shutdown_j10_j11.bit"
+            shutdown_bit.parent.mkdir(parents=True)
+            shutdown_bit.write_bytes(b"canonical shutdown bitstream\n")
+            shutdown_sha = hashlib.sha256(shutdown_bit.read_bytes()).hexdigest()
             run_id = "p7_20260715_stationary_app_r42_diag_stage66_c01"
             directory = (
                 root
@@ -470,15 +474,31 @@ class P7Stage66CampaignTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (directory / "hash_manifest.csv").write_text("path,sha256\n", encoding="utf-8")
-            (directory / "hash_manifest.json").write_text("{}\n", encoding="utf-8")
+            (directory / "hash_manifest.json").write_text(
+                json.dumps(
+                    {
+                        "files": [
+                            {
+                                "path": str(shutdown_bit),
+                                "exists": True,
+                                "sha256": shutdown_sha,
+                            }
+                        ]
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
             (directory / "program_tfdu_shutdown_safe.stderr.log").write_bytes(b"")
             (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
-                "TFDU_SHUTDOWN_PROGRAMMED=C:/synthetic/tfdu_shutdown.bit\n",
+                f"TFDU_SHUTDOWN_PROGRAMMED={shutdown_bit}\n",
                 encoding="utf-8",
             )
             summary_path = directory / "program_tfdu_shutdown_safe.summary.txt"
             summary_path.write_text(
                 "PROGRAM_TFDU_SHUTDOWN_SAFE_BEGIN 2026-07-15T01:00:00+00:00\n"
+                f"SHUTDOWN_BITSTREAM={shutdown_bit}\n"
+                f"SHUTDOWN_BITSTREAM_SHA256={shutdown_sha}\n"
                 "HARDWARE_AUTHORIZATION_EXIT=0\n"
                 "ALLOW_HARDWARE=1\n"
                 "NO_HARDWARE_ACTIONS_EXECUTED=0\n"
@@ -496,6 +516,43 @@ class P7Stage66CampaignTests(unittest.TestCase):
                 )
                 self.assertEqual([], errors)
                 self.assertEqual("PASS", record["status"])
+                (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
+                    "# puts \"TFDU_SHUTDOWN_PROGRAMMED $bit_file\"\n"
+                    f"TFDU_SHUTDOWN_PROGRAMMED {shutdown_bit}\n",
+                    encoding="utf-8",
+                )
+                _record, errors = recovery.validate_recovery(
+                    directory,
+                    run_id=run_id,
+                    failure_ended_at_utc="2026-07-15T00:59:00+00:00",
+                )
+                self.assertEqual([], errors)
+                wrong_bit = root / "shutdown_bitstream" / "wrong.bit"
+                (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
+                    f"TFDU_SHUTDOWN_PROGRAMMED {wrong_bit}\n",
+                    encoding="utf-8",
+                )
+                _record, errors = recovery.validate_recovery(
+                    directory,
+                    run_id=run_id,
+                    failure_ended_at_utc="2026-07-15T00:59:00+00:00",
+                )
+                self.assertTrue(any("path is not canonical" in item for item in errors))
+                (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
+                    f"TFDU_SHUTDOWN_PROGRAMMED {shutdown_bit}\n"
+                    f"TFDU_SHUTDOWN_PROGRAMMED={shutdown_bit}\n",
+                    encoding="utf-8",
+                )
+                _record, errors = recovery.validate_recovery(
+                    directory,
+                    run_id=run_id,
+                    failure_ended_at_utc="2026-07-15T00:59:00+00:00",
+                )
+                self.assertTrue(any("exactly one" in item for item in errors))
+                (directory / "program_tfdu_shutdown_safe.stdout.log").write_text(
+                    f"TFDU_SHUTDOWN_PROGRAMMED {shutdown_bit}\n",
+                    encoding="utf-8",
+                )
                 summary_path.write_text(
                     summary_path.read_text(encoding="utf-8") + "SHUTDOWN_EXIT=0\n",
                     encoding="utf-8",
@@ -546,6 +603,108 @@ class P7Stage66CampaignTests(unittest.TestCase):
         self.assertEqual("PENDING_HW", summary["HARDWARE_ACCEPTANCE"])
         self.assertEqual("P7_STAGE66_DIAGNOSTIC_STAGE", summary["execution_scope"])
         self.assertEqual(1, summary["stage66_diagnostic_campaign"]["hardware_attempt_number"])
+
+    def test_stage66_campaign_scope_reaches_the_xsdb_executor_exactly(self) -> None:
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        run_id = "p7_20260715_stationary_app_r48_diag_stage66_c02"
+        campaign_record = {
+            "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+            "run_id": run_id,
+            "hardware_attempt_number": 2,
+            "maximum_actual_hardware_attempts": 10,
+            "policy": {"path": str(campaign.POLICY_PATH), "sha256": policy_sha},
+        }
+        artifact = generator.Artifact(Path("synthetic"), "a" * 64)
+        artifacts = {
+            key: artifact
+            for key in (
+                "goal_plan",
+                "xsa",
+                "elf",
+                "active_xdc",
+                "pinmap",
+                "register_map",
+                "shutdown_bitstream",
+                "ps_stationary_profile",
+                "ps_bitstream",
+                "ps7_init",
+                "p6_build_summary",
+                "p7_build_summary",
+                "core_readiness_attestation",
+                "active_profile",
+                "lane1_promotion_summary",
+            )
+        }
+        args = type(
+            "Args",
+            (),
+            {
+                "board_id": generator.CANONICAL_BOARD_ID,
+                "expected_part": generator.CANONICAL_PART,
+                "expected_target": generator.CANONICAL_TARGET,
+                "hw_server_url": generator.CANONICAL_HW_SERVER_URL,
+                "jtag_frequency_hz": generator.CANONICAL_JTAG_FREQUENCY_HZ,
+            },
+        )()
+        context = {
+            "source_commit": "a" * 40,
+            "artifacts": artifacts,
+            "abort_file": Path("abort.txt"),
+            "vivado": Path("vivado.bat"),
+            "xsdb": Path("xsdb.bat"),
+            "stage66_diagnostic_campaign": campaign_record,
+        }
+        spec = generator.build_stage_specs()[-1]
+        command = generator.build_ps_command(
+            args,
+            context,
+            spec,
+            artifact,
+            artifact,
+            Path("evidence"),
+        )
+        self.assertIn("--stage66-diagnostic-campaign", command)
+        wrapper = generator.ps_safe_wrapper
+        parsed = wrapper.build_parser().parse_args(command[2:])
+        self.assertTrue(parsed.stage66_diagnostic_campaign)
+        self.assertEqual(run_id, parsed.run_id)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            input_path = root / "input.bin"
+            input_path.write_bytes(b"campaign-scope")
+            bundle = wrapper.build_stage_bundle(
+                bundle_dir=root / "bundle",
+                mode="stationary",
+                input_path=input_path,
+                max_runtime_sec=1800,
+                calibration_sec=300,
+                acceptance_sec=1500,
+                sample_interval_sec=30,
+                idle_margin_sec=60,
+                stationary_object_bytes=64 * 1024,
+                run_id=run_id,
+                execution_scope="P7_STAGE66_DIAGNOSTIC_STAGE",
+                diagnostic_only=True,
+            )
+            xsdb_command = wrapper.build_ps_command(
+                parsed, bundle, root / "preflight.txt", root / "raw.log"
+            )
+        self.assertEqual("P7_STAGE66_DIAGNOSTIC_STAGE", xsdb_command[-2])
+        self.assertEqual(run_id, xsdb_command[-1])
+        tcl = (generator.ROOT / "scripts/hw/p7_ps_application_execute.tcl").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "{P7_PS_APPLICATION_STAGE STAGE62_ONLY P7_STAGE66_DIAGNOSTIC_STAGE}",
+            tcl,
+        )
+        self.assertIn(
+            'if {$execution_scope in {STAGE62_ONLY P7_STAGE66_DIAGNOSTIC_STAGE}}',
+            tcl,
+        )
+        self.assertIn(
+            "p7_require_value $auth_text P7_STAGE66_CAMPAIGN_RUN_ID $run_id", tcl
+        )
 
     def test_campaign_ledger_tamper_and_unresolved_recovery_fail_closed(self) -> None:
         policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()

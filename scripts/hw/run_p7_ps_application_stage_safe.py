@@ -3494,7 +3494,11 @@ def build_ps_command(
         str(args.idle_deadline_margin_sec),
         str(resolve_path(args.shutdown_bitstream)),
         str(P7_COUNTS_PER_SECOND),
-        "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE",
+        "STAGE62_ONLY"
+        if args.stage62_only
+        else "P7_STAGE66_DIAGNOSTIC_STAGE"
+        if args.stage66_diagnostic_campaign
+        else "P7_PS_APPLICATION_STAGE",
         args.run_id or "NONE",
     ]
 
