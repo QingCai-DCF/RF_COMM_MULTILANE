@@ -110,6 +110,41 @@ class P7RegressionDedupTests(unittest.TestCase):
             self.assertEqual(0, unit["invocation_count_in_core_gate"])
             self.assertEqual("tests_p7_discovery", unit["original_suite"]["name"])
 
+    def test_core_failure_path_order_ignores_an_earlier_unrelated_wipe(self) -> None:
+        process = " ".join(
+            (
+                "p7_wipe_partial(validation_reject);",
+                "p7_publish_integrity_failure_snapshot(mailbox);",
+                "failed:",
+                "p7_wipe_partial(integrity_failure);",
+            )
+        )
+        self.assertTrue(
+            core_subject.tokens_appear_in_order(
+                process,
+                "p7_publish_integrity_failure_snapshot(",
+                "failed:",
+                "p7_wipe_partial(",
+            )
+        )
+
+    def test_core_failure_path_order_requires_a_wipe_after_failed_label(self) -> None:
+        process = " ".join(
+            (
+                "p7_wipe_partial(validation_reject);",
+                "p7_publish_integrity_failure_snapshot(mailbox);",
+                "failed:",
+            )
+        )
+        self.assertFalse(
+            core_subject.tokens_appear_in_order(
+                process,
+                "p7_publish_integrity_failure_snapshot(",
+                "failed:",
+                "p7_wipe_partial(",
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -61,6 +61,17 @@ def between(text: str, start: str, end: str) -> str:
     return "" if left < 0 or right < 0 else text[left:right]
 
 
+def tokens_appear_in_order(text: str, *tokens: str) -> bool:
+    """Return true only when each token occurs after the preceding token."""
+    cursor = 0
+    for token in tokens:
+        index = text.find(token, cursor)
+        if index < 0:
+            return False
+        cursor = index + len(token)
+    return True
+
+
 def resolve_unit_test_evidence(
     args: argparse.Namespace, source_commit: str
 ) -> tuple[dict[str, Any], bool, dict[str, Any] | None]:
@@ -412,9 +423,12 @@ def main(argv: list[str] | None = None) -> int:
         "integrity_failure_snapshot_precedes_output_wipe":
             "P7_FAILURE_SNAPSHOT_MAGIC" in service
             and "p7_publish_integrity_failure_snapshot(" in process_descriptor_block
-            and process_descriptor_block.find("p7_publish_integrity_failure_snapshot(")
-            < process_descriptor_block.find("failed:")
-            < process_descriptor_block.find("p7_wipe_partial(")
+            and tokens_appear_in_order(
+                process_descriptor_block,
+                "p7_publish_integrity_failure_snapshot(",
+                "failed:",
+                "p7_wipe_partial(",
+            )
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_CAPTURED=1" in execute_tcl
             and "set diagnostic_capture_bytes 320" in execute_tcl
             and "P7_FUNCTIONAL_BOUNDARY_FAILURE_INTEGRITY_SNAPSHOT_WIPED=1" in execute_tcl,

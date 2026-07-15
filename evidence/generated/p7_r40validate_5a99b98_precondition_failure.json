@@ -1,0 +1,168 @@
+{
+  "schema": "rf-comm-p7-clean-source-canonical-gate-precondition-failure-v1",
+  "checkpoint_id": "p7_r40validate_5a99b98",
+  "source_commit": "5a99b98c7cbe91d76ad22721c057b6edfb31e1c1",
+  "status": "COMPLETE_SUITES_PASS_CANONICAL_GATE_FAIL",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "coverage_claimed": false,
+  "stationary_started": false,
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_checkpoint_requires_new_source_commit": true,
+  "fresh_cache_bypass_builds": {
+    "build_source_commit": "6d56b312b35da539ca38d848455b8cbc2adb2014",
+    "validation_source_commit": "5a99b98c7cbe91d76ad22721c057b6edfb31e1c1",
+    "materialization_proof": {
+      "status": "PASS",
+      "sha256": "18960d10c6bec73e2ee6c8fad27dd1c0076d2763a594f30104ab1dee3f70e846",
+      "consumed_input_overlap_count": 0,
+      "p6_tree_exact": true,
+      "p7_tree_exact": true,
+      "canonical_offline_cache_hit_claimed": false
+    },
+    "p6_ps_candidate": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "board_contract_verified": true,
+      "summary_sha256": "57cbc82ef207e464392ebe3a5bc4e7ce931259585729eec178d29eb49e3542b5",
+      "bitstream_sha256": "bd9bce92e5966e811e10873a960909851922789d8242726869b9726b58aaa868",
+      "xsa_sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8"
+    },
+    "p7_ps_runtime": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "board_contract_verified": true,
+      "summary_sha256": "3950c34f033b66413f2f481b40cbca2fe1542bfa2065941a5c180570773917c3",
+      "elf_sha256": "d47f28ff987b2f719a5497c92539afc4f8734db756df2eb80adc5651fea996da",
+      "linker_map_sha256": "a282a162efff2d7d1fdef7abf32774659cb1b2448050cc95887e0aea3fa5ebde",
+      "ps7_init_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    }
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "sha256": "6d2640b5032026a344d3098b43e0025ad2e6181c90b8a5bcf2863ac92f83866b"
+  },
+  "complete_suites": {
+    "status": "PASS",
+    "summary_sha256": "0d25dd788ff4a01e968023de159092b8b04545f74d4e60ffb0ec94fdeeb0edf7",
+    "source_commit_unchanged": true,
+    "clean_before": true,
+    "clean_after": true,
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 199,
+      "status": "PASS"
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 42,
+      "status": "PASS"
+    },
+    "total_discovered_test_count": 241
+  },
+  "canonical_gate": {
+    "status": "FAIL",
+    "summary_sha256": "5f6cb59646220f9548b983db1020eea4223c398302babbd5c4ef0dfefe0df2e8",
+    "check_count": 13,
+    "passing_check_count": 12,
+    "failed_checks": [
+      "P7_PS_CORE_HARDWARE_READINESS"
+    ],
+    "complete_suite_invocations_in_gate": 0,
+    "cache_status": "BYPASS"
+  },
+  "ps_core_readiness": {
+    "status": "FAIL",
+    "sha256": "7819edbdfb2e8ef215ae01e3ecb867a13c56628c2df089e49d335693f800417a",
+    "failed_checks": [
+      "integrity_failure_snapshot_precedes_output_wipe"
+    ],
+    "all_other_checks_passed": true,
+    "complete_suite_invocations_in_core_gate": 0
+  },
+  "confirmed_root_cause": {
+    "classification": "STATIC_GATE_FIRST_WIPE_SEARCH_SHADOWED_BY_EARLIER_VALIDATION_REJECT_WIPE",
+    "description": "The r39 output-wipe repair correctly added a validation-reject wipe before the process descriptor's failed label. The core-readiness expression still compared the failed label with the first p7_wipe_partial occurrence in the whole function, so it selected that earlier and semantically different wipe and failed closed. The integrity-failure path itself remains ordered as snapshot publication, failed label, then the wipe reached from that label.",
+    "observed_indices_in_process_descriptor_block": {
+      "integrity_snapshot_publish": 19940,
+      "failed_label": 21006,
+      "first_wipe_any_path": 1713,
+      "failed_path_wipe": 21055,
+      "actual_integrity_path_order_valid": true
+    },
+    "not_a_payload_or_ddr_failure": true,
+    "not_a_hardware_failure": true,
+    "repair": "SEARCH_FOR_THE_FAILURE_PATH_WIPE_STARTING_AT_THE_FAILED_LABEL_AND_ADD_A_FOCUSED_REGRESSION_WITH_AN_EARLIER_UNRELATED_WIPE"
+  },
+  "portable_raw_evidence": {
+    "path": "evidence/generated/p7_r40validate_5a99b98_precondition_failure",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 12,
+    "byte_count": 142811,
+    "tree_sha256": "65209b5b7484e639a95cee900c4684aa445dcf2f8b555535bc482c343a67f32a",
+    "files": [
+      {
+        "path": "build_input_reuse_proof.json",
+        "bytes": 29697,
+        "sha256": "18960d10c6bec73e2ee6c8fad27dd1c0076d2763a594f30104ab1dee3f70e846"
+      },
+      {
+        "path": "canonical_gate_summary.json",
+        "bytes": 17262,
+        "sha256": "5f6cb59646220f9548b983db1020eea4223c398302babbd5c4ef0dfefe0df2e8"
+      },
+      {
+        "path": "complete_suite_summary.json",
+        "bytes": 2499,
+        "sha256": "0d25dd788ff4a01e968023de159092b8b04545f74d4e60ffb0ec94fdeeb0edf7"
+      },
+      {
+        "path": "fresh_p6_cache_bypass_build_summary.json",
+        "bytes": 3100,
+        "sha256": "57cbc82ef207e464392ebe3a5bc4e7ce931259585729eec178d29eb49e3542b5"
+      },
+      {
+        "path": "fresh_p7_cache_bypass_build_summary.json",
+        "bytes": 11807,
+        "sha256": "3950c34f033b66413f2f481b40cbca2fe1542bfa2065941a5c180570773917c3"
+      },
+      {
+        "path": "generated_board_contract.json",
+        "bytes": 11913,
+        "sha256": "6d2640b5032026a344d3098b43e0025ad2e6181c90b8a5bcf2863ac92f83866b"
+      },
+      {
+        "path": "offline_test_run.json",
+        "bytes": 7426,
+        "sha256": "71967c38493fed0de8e35cc34ece90c8bbcf2e6b7adf0966aa77a048b9da3421"
+      },
+      {
+        "path": "ps_core_readiness.json",
+        "bytes": 16169,
+        "sha256": "7819edbdfb2e8ef215ae01e3ecb867a13c56628c2df089e49d335693f800417a"
+      },
+      {
+        "path": "tests_p7_discovery.stderr.log",
+        "bytes": 5303,
+        "sha256": "38b9e72096c360165cee06469aec86ff6ceddfa70f6b810f4392775bc67445ac"
+      },
+      {
+        "path": "tests_p7_discovery.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "top_level_discovery.stderr.log",
+        "bytes": 36994,
+        "sha256": "844048cf0f4d5cf9422d43799882242076c5c2b823dc3335f0a7bacbdfc912cb"
+      },
+      {
+        "path": "top_level_discovery.stdout.log",
+        "bytes": 641,
+        "sha256": "6fd556de483bf1560c9cfc3a1b1dc7aa4e0917576605666c2c9bfb4a7f434614"
+      }
+    ]
+  },
+  "next_step": "COMMIT_THE_FAILURE_EVIDENCE_AND_MINIMAL_CORE_GATE_PATH_SCOPING_REPAIR; THEN_USE_THE_NEW_CLEAN_SOURCE_FOR_EACH_REQUIRED_COMPLETE_SUITE_EXACTLY_ONCE_AND_A_CANONICAL_GATE_WITH_ZERO_DUPLICATE_SUITE_INVOCATIONS"
+}
