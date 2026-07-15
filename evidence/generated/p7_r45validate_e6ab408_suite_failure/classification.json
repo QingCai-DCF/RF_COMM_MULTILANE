@@ -1,0 +1,87 @@
+{
+  "schema": "rf-comm-p7-complete-suite-failure-classification-v1",
+  "generated_at_utc": "2026-07-15T15:26:23.7849158Z",
+  "source_commit": "e6ab408d5fe5fb8c94528481e0ac9ffe23f09bcb",
+  "source_tree": "397941f3afb54f718141ff88de8194147c3f17dc",
+  "validation_worktree": "D:/CodexWorktrees/r45validate_e6ab408/RF_COMM_MULTILANE",
+  "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_e6ab408_stage66_campaign_r45prep.json --json-summary",
+  "status": "COMPLETE_SUITES_FAIL_CANONICAL_GATE_NOT_RUN",
+  "required_suite_invocation_count": 2,
+  "suite_invocation_count_by_name": {
+    "top_level_discovery": 1,
+    "tests_p7_discovery": 1
+  },
+  "source_commit_unchanged": true,
+  "clean_before": true,
+  "clean_after": true,
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_run_identity_generated": false,
+  "campaign_run_id_retired": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "total_discovered_test_count": 282,
+  "top_level_discovery": {
+    "discovered_test_count": 240,
+    "returncode": 1,
+    "status": "FAIL",
+    "failure_count": 1,
+    "error_count": 0
+  },
+  "tests_p7_discovery": {
+    "discovered_test_count": 42,
+    "returncode": 0,
+    "status": "PASS"
+  },
+  "failure": {
+    "test": "test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract",
+    "classification": "CLEAN_WORKTREE_BUILD_MATERIALIZATION_PRECONDITION",
+    "observed": "The new detached worktree contained the committed content-addressed summaries and immutable outputs but not the ignored Vivado/Vitis XCI, block-design, ps7_init, platform XSA, BSP parameter, or generated initialization files required by the real-artifact contract test.",
+    "missing_artifact_labels": [
+      "vivado_xci",
+      "vivado_block_design",
+      "vivado_ps7_init.tcl",
+      "vivado_ps7_init.c",
+      "vitis_platform_xsa",
+      "vitis_ps7_parameters",
+      "vitis_platform_ps7_init.tcl",
+      "vitis_platform_ps7_init.c",
+      "vitis_fsbl_ps7_init.c"
+    ],
+    "repair": "Materialize the exact r44 cache-bypassed P6/Vitis build trees in a new clean-source worktree, verify their content-addressed outputs and focused board-contract test, then run each required complete suite exactly once on the new source commit.",
+    "not_a_source_code_failure": true,
+    "not_a_hardware_failure": true,
+    "not_a_ddr_runtime_failure": true
+  },
+  "canonical_gate_started": false,
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_checkpoint_requires_new_source_commit": true,
+  "frozen_files": [
+    {
+      "path": "complete_suite_summary.json",
+      "bytes": 2519,
+      "sha256": "e3aad0cda2c38733ff8d88de7596611a779ba019ad84164c98b20216472fc13f"
+    },
+    {
+      "path": "tests_p7_discovery.stderr.log",
+      "bytes": 5303,
+      "sha256": "be74b6b75d10c2b5472e1c2ef79457c66df666c85399ffa6df8898c243bf0e91"
+    },
+    {
+      "path": "tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "top_level_discovery.stderr.log",
+      "bytes": 46959,
+      "sha256": "2f77595f058047bed4c419d42056328d4b55d42317f501a0b596a08ed5d0544d"
+    },
+    {
+      "path": "top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "7353484ee17a78420e3020b40895170c2c27504351073db83b26827e521c66c2"
+    }
+  ],
+  "required_next_step": "COMMIT_THIS_FAILURE_EVIDENCE; MATERIALIZE_THE_HASH_EXACT_R44_BUILD_TREES_IN_A_NEW_CLEAN_WORKTREE; RUN_THE_FOCUSED_REAL_ARTIFACT_CONTRACT; THEN_RUN_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_AND_ONLY_THEN_THE_CANONICAL_GATE"
+}

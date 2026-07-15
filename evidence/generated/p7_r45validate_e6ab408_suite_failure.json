@@ -1,0 +1,84 @@
+{
+  "schema": "rf-comm-p7-clean-source-regression-precondition-failure-v1",
+  "generated_at_utc": "2026-07-15T15:26:23.7849158Z",
+  "checkpoint_id": "p7_r45validate_e6ab408_complete_suites_once",
+  "source_commit": "e6ab408d5fe5fb8c94528481e0ac9ffe23f09bcb",
+  "source_tree": "397941f3afb54f718141ff88de8194147c3f17dc",
+  "source_commit_unchanged": true,
+  "clean_worktree_before_suites": true,
+  "clean_worktree_after_suites": true,
+  "status": "FAIL_PRECONDITION",
+  "scope": "NON_HARDWARE_CLEAN_SOURCE_COMPLETE_SUITES",
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_checkpoint_requires_new_source_commit": true,
+  "canonical_gate_started": false,
+  "hardware_run_identity_generated": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "coverage_claimed": false,
+  "stationary_started": false,
+  "classification": {
+    "path": "evidence/generated/p7_r45validate_e6ab408_suite_failure/classification.json",
+    "bytes": 3692,
+    "sha256": "15f57ce0d1b62312cf8c04e4a640c9de952008692675609ccc2aae10a3f11242",
+    "cause": "CLEAN_WORKTREE_BUILD_MATERIALIZATION_PRECONDITION"
+  },
+  "suite_invocation": {
+    "summary_sha256": "e3aad0cda2c38733ff8d88de7596611a779ba019ad84164c98b20216472fc13f",
+    "suite_invocation_count_total": 2,
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 240,
+      "returncode": 1,
+      "status": "FAIL"
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 42,
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "total_discovered_test_count": 282
+  },
+  "portable_raw_evidence": {
+    "path": "evidence/generated/p7_r45validate_e6ab408_suite_failure",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 6,
+    "byte_count": 59114,
+    "tree_sha256": "de628db8560a57c7c8e00bc190725cd0ff2065de881eda543ca6813d7c90bb23",
+    "files": [
+      {
+        "path": "classification.json",
+        "bytes": 3692,
+        "sha256": "15f57ce0d1b62312cf8c04e4a640c9de952008692675609ccc2aae10a3f11242"
+      },
+      {
+        "path": "complete_suite_summary.json",
+        "bytes": 2519,
+        "sha256": "e3aad0cda2c38733ff8d88de7596611a779ba019ad84164c98b20216472fc13f"
+      },
+      {
+        "path": "tests_p7_discovery.stderr.log",
+        "bytes": 5303,
+        "sha256": "be74b6b75d10c2b5472e1c2ef79457c66df666c85399ffa6df8898c243bf0e91"
+      },
+      {
+        "path": "tests_p7_discovery.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "top_level_discovery.stderr.log",
+        "bytes": 46959,
+        "sha256": "2f77595f058047bed4c419d42056328d4b55d42317f501a0b596a08ed5d0544d"
+      },
+      {
+        "path": "top_level_discovery.stdout.log",
+        "bytes": 641,
+        "sha256": "7353484ee17a78420e3020b40895170c2c27504351073db83b26827e521c66c2"
+      }
+    ]
+  },
+  "next_step": "COMMIT_THIS_FAILURE_EVIDENCE; THEN_USE_A_NEW_CLEAN_SOURCE_WITH_HASH_EXACT_R44_BUILD_MATERIALIZATION_FOR_ONE_FOCUSED_BOARD_CONTRACT_TEST, EACH_REQUIRED_COMPLETE_SUITE_EXACTLY_ONCE, AND_ONE_CANONICAL_GATE"
+}
