@@ -1,0 +1,27 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-recovery-record-v1",
+  "P7_STAGE66_CAMPAIGN_RECOVERY_RECORD": "PASS_RECORDED",
+  "hardware_actions_executed": false,
+  "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+  "record_requested": true,
+  "errors": [],
+  "recorder_source_commit": "12ad5aaf864673fee9a10c7370e5ee1c40a958cd",
+  "recorder_sha256": "7cc28bd0d8d9ef470f26880f58160172db0f9197ab50320cde5d2825cb06e0ad",
+  "campaign_ledger_sha256_before": "152f6039cafd3f2526437159ec1612e3517acfc07b1a1d3040fef38d70c053cf",
+  "campaign_ledger_sha256_after": "41d500bd025858900d5a1b168f9ef1cbcce7e747832809b3a93e0720f0f8a502",
+  "campaign_ledger_status_after": "READY",
+  "actual_hardware_attempt_count_after": 1,
+  "terminal_attempt_status_after": "FAIL_RECOVERED",
+  "complete_1800_second_stage66_pass": false,
+  "recovery": {
+    "directory": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/evidence/hardware/p7/authorized_sequence/p7_20260715_stationary_app_r47_diag_stage66_c01/recovery_shutdown_after_failed_stage_066_20260715T1647Z",
+    "started_at": "2026-07-16T00:47:18.2780240+08:00",
+    "ended_at": "2026-07-16T00:47:50.5856068+08:00",
+    "shutdown_exit": 0,
+    "status": "PASS",
+    "recovery_changes_failed_stage_result": false,
+    "tree_sha256": "87ea5c520330db160ba1cdedb33ee962d140c8fc76d64237c3edd6c200d4be8c"
+  },
+  "RF_COMM_HW_AUTH_after": "UNSET",
+  "campaign_execution_lock_after": "ABSENT"
+}

@@ -1,7 +1,8 @@
 {
   "schema": "rf-comm-p7-stage66-diagnostic-campaign-failure-v1",
   "generated_at_utc": "2026-07-15T16:57:15.0261640Z",
-  "status": "IMMUTABLE_FAIL_RECOVERY_VALIDATED_PENDING_LEDGER_RECORD",
+  "updated_at_utc": "2026-07-15T16:59:27.856856+00:00",
+  "status": "IMMUTABLE_FAIL_RECOVERED_LEDGER_READY",
   "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
   "run_id_immutable_fail": true,
   "resume_restart_copy_reuse_permitted": false,
@@ -110,16 +111,20 @@
     "campaign_ledger_sha256_before_record": "152f6039cafd3f2526437159ec1612e3517acfc07b1a1d3040fef38d70c053cf",
     "initial_recorder_block_sha256": "2d08fb9a48876a95b706662d0b5c4c2c37c3ad594e31ad262a794de2866be4aa",
     "fixed_recorder_actual_evidence_dry_validation": "PASS",
-    "ledger_record_pending_at_this_commit": true
+    "ledger_record_pending_at_this_commit": false,
+    "campaign_ledger_status_after_record": "READY",
+    "campaign_ledger_sha256_after_record": "41d500bd025858900d5a1b168f9ef1cbcce7e747832809b3a93e0720f0f8a502",
+    "terminal_attempt_status_after_record": "FAIL_RECOVERED",
+    "recovery_record_result_sha256": "e9826a64b7aebd32119c1ffc9014ad35718ef4719549ad996cc0dc5d3a527cab"
   },
   "preserved_evidence": {
     "path": "evidence/generated/p7_r47_stage66_campaign_c01_failure_package",
     "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this failure record is outside the tree",
-    "file_count": 99,
-    "byte_count": 2486435,
-    "tree_sha256": "c6f1cca3836cedd51c6b8f57b485b5fd9dd92c939187cb9a94aed5215b2d2f06",
+    "file_count": 101,
+    "byte_count": 2495774,
+    "tree_sha256": "ee4866d398cdfff3c00a65310d42f7c1e5cfd83264b439ac7d5a2036222dfcba",
     "source_worktree": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE",
     "source_worktree_preserved_in_place": true
   },
-  "next_required_action": "COMMIT_THIS_REPAIR_AND_FAILURE_EVIDENCE_THEN_RECORD_THE_ALREADY_COMPLETED_INDEPENDENT_RECOVERY_WITH_THE_COMMITTED_FIXED_RECORDER; DO_NOT START R48 UNTIL THE READY LEDGER IS FROZEN IN A FOLLOWUP COMMIT AND ALL NEW CLEAN_SOURCE GATES PASS"
+  "next_required_action": "COMMIT_THE_READY_LEDGER_RECORD; THEN USE A NEW CLEAN SOURCE FOR R48 HASH_EXACT_MATERIALIZATION, FOCUSED TEST, REQUIRED COMPLETE SUITES EXACTLY ONCE, CACHE_BYPASSED CANONICAL GATE, NEW SCOPED AUTHORIZATION, AND ALL DRY VALIDATION BEFORE ANY HARDWARE LAUNCH"
 }
