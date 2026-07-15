@@ -1,0 +1,32 @@
+{
+  "schema": "rf-comm-p7-diagnostic-executor-dry-validation-v1",
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED",
+  "generated_at_utc": "2026-07-15T02:52:21.137497+00:00",
+  "invocation_count": 1,
+  "hardware_actions_executed": false,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "plan_mode": "DIAGNOSTIC_SUFFIX_55",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "full_stage_ordinals": [1, 2, 3, 4, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65],
+  "sequence_plan": {
+    "path": "C:/Users/user/.codex/worktrees/r40validate_3718276/RF_COMM_MULTILANE/.hardware_authorization/p7_20260715_stationary_app_r40_diag_suffix55_sequence_plan.txt",
+    "sha256": "27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e",
+    "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+    "stage_count": 15
+  },
+  "offline_checkpoint": {
+    "path": "C:/Users/user/.codex/worktrees/r40validate_3718276/RF_COMM_MULTILANE/evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5"
+  },
+  "validation_errors": [],
+  "reason": "all 15 planned wrapper argv vectors and immutable inputs validated; no process was launched",
+  "STATIONARY_30MIN": "NOT_RUN"
+}

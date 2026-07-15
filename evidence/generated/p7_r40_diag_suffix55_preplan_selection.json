@@ -1,0 +1,110 @@
+{
+  "schema": "rf-comm-p7-diagnostic-suffix-selection-v1",
+  "recorded_at_utc": "2026-07-15T02:49:57.2744623Z",
+  "status": "PASS_FAIL_CLOSED_SUFFIX_55_SELECTED_PREPLAN",
+  "run_id": "p7_20260715_stationary_app_r40_diag_suffix55",
+  "run_id_status": "NEW_UNUSED_NOT_STARTED",
+  "run_kind": "DIAGNOSTIC_ONLY",
+  "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+  "mandatory_prefix_ordinals": [1, 2, 3, 4],
+  "candidate_suffix_start": 64,
+  "selected_suffix_start": 55,
+  "selected_ordinals": [1, 2, 3, 4, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65],
+  "skipped_55_through_63": false,
+  "skip_proof_status": "FAIL_CLOSED_NOT_ELIGIBLE_CHANGED_BOUND_INPUTS",
+  "decision_basis": "The latest exact r39 observations passed ordinals 55 through 63 and failed ordinal 64, but the current stage-55 authorization closure is not hash-identical to r39. The source commit, XSA, and ELF passed to and bound by the generic JTAG safe wrapper changed. Therefore the unchanged-transitive-input requirement for selecting suffix 64 is not satisfied, and the diagnostic must include ordinals 55 through 63.",
+  "prior_run": {
+    "run_id": "p7_20260715_stationary_app_r39_diag_suffix55",
+    "immutable_status": "FAIL",
+    "resume_allowed": false,
+    "restart_allowed": false,
+    "copy_allowed": false,
+    "source_commit": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+    "sequence_plan_path": ".hardware_authorization/p7_20260715_stationary_app_r39_diag_suffix55_sequence_plan.txt",
+    "sequence_plan_sha256": "fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f",
+    "execution_ledger_path": "evidence/generated/p7_r39_failure_package/sequence_execution_ledger.json",
+    "execution_ledger_sha256": "f77a32c84f39a11bcf3b2e63738b7d491c8d2e823b2068bd979072c6a991e4f5",
+    "ordinal_55_through_63_results": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+    "ordinal_64_result": "FAIL",
+    "ordinal_65_result": "NOT_RUN"
+  },
+  "changed_bound_inputs": [
+    {
+      "role": "source_commit",
+      "value_kind": "git_commit_object_id",
+      "prior_value": "1d0c30fa7988acc0ae345cfec1c1917a56f07592",
+      "current_value": "37182768047dc4afdc18699a1142852418b382b5",
+      "unchanged": false
+    },
+    {
+      "role": "xsa",
+      "prior_sha256": "8ecccf761142c853a3c5734b1c520a837e680d85aa183d131aa4f194b3d7ad7c",
+      "current_sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8",
+      "unchanged": false
+    },
+    {
+      "role": "elf",
+      "prior_sha256": "07963f967f6dc4901e7c4ecb2f7d44a1d54976be5c95434299b610369b1e5ffe",
+      "current_sha256": "d47f28ff987b2f719a5497c92539afc4f8734db756df2eb80adc5651fea996da",
+      "unchanged": false
+    },
+    {
+      "role": "ps_bitstream",
+      "prior_sha256": "2e1d225ff79bf182a1c13e81672950bc9ca5ac5e5bd3bafc18c89b294104bc8b",
+      "current_sha256": "bd9bce92e5966e811e10873a960909851922789d8242726869b9726b58aaa868",
+      "unchanged": false
+    }
+  ],
+  "unchanged_representative_inputs": [
+    {
+      "role": "jtag_bitstream",
+      "sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f"
+    },
+    {
+      "role": "jtag_ltx",
+      "sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083"
+    },
+    {
+      "role": "jtag_profile",
+      "sha256": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94"
+    },
+    {
+      "role": "active_xdc",
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344"
+    },
+    {
+      "role": "pinmap",
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd"
+    },
+    {
+      "role": "register_map",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    },
+    {
+      "role": "shutdown_bitstream",
+      "sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+    }
+  ],
+  "offline_checkpoint": {
+    "path": "evidence/generated/p7_r40validate_3718276_checkpoint.json",
+    "sha256": "6859a119a3569e82388dc92129db950baab59d75377e01bece2b75bb54e7f6e4",
+    "status": "PASS",
+    "canonical_gate_sha256": "cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5",
+    "complete_suite_summary_sha256": "1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85",
+    "hardware_actions_executed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "diagnostic_plan": {
+    "status": "NOT_GENERATED_AT_SELECTION_TIME",
+    "expected_plan_mode": "DIAGNOSTIC_SUFFIX_55",
+    "expected_stage_count": 15,
+    "stage66_allowed": false,
+    "stationary_stage_count": 0
+  },
+  "coverage_claimed": false,
+  "skipped_stages_contribute_acceptance_coverage": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "hardware_actions_executed": false,
+  "stationary_started": false,
+  "validation_errors": []
+}

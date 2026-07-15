@@ -3,7 +3,7 @@
 Project: RF_COMM_MULTILANE
 Current branch: codex/p7-stationary-application
 P6 baseline commit: ca041d4877b831de84fe7829788ac835b0b46acd
-P7 offline checkpoint source commit: `1d0c30fa7988acc0ae345cfec1c1917a56f07592` (see `evidence/generated/p7_offline_gate_summary.json`)
+P7 offline checkpoint source commit: `37182768047dc4afdc18699a1142852418b382b5` (see `evidence/generated/p7_r40validate_3718276_checkpoint.json`)
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -25,12 +25,13 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_AFTER_R39_STAGE64_SOURCE_REPAIR
-P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
-P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_192_PLUS_42
-P7_LATEST_CANONICAL_GATE_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_PREPARATION_COMMIT_BINDS_VALIDATED_SOURCE_3718276
+P7_BOUND_EXECUTION_SOURCE_OFFLINE_GATE: PASS_13_OF_13
+P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
+P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_201_PLUS_42
+P7_LATEST_CANONICAL_GATE_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: false
+P7_NEW_HARDWARE_RUN_READY: true
 P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r39_diag_suffix55
 P7_LATEST_DIAGNOSTIC_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME
 P7_LATEST_DIAGNOSTIC_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
@@ -43,9 +44,14 @@ R39_ACCEPTANCE_COVERAGE_CLAIMED: false
 R39_STAGE62_TERMINAL_RESULT: PASS_DIAGNOSTIC_ZERO_COVERAGE
 R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
 R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
-R39_SOURCE_REPAIR: IMPLEMENTED_FOCUSED_VALIDATED_NOT_CHECKPOINTED
-P7_NEXT_DIAGNOSTIC_RUN: NOT_PREPARED
-P7_NEXT_DIAGNOSTIC_RUN_STATUS: BLOCKED_PENDING_CLEAN_CHECKPOINT_AND_DRY_VALIDATION
+R39_SOURCE_REPAIR: IMPLEMENTED_AND_CLEAN_CHECKPOINT_PASS
+P7_NEXT_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
+P7_NEXT_DIAGNOSTIC_RUN_STATUS: READY_NO_HARDWARE_LAUNCH
+P7_NEXT_DIAGNOSTIC_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
+P7_NEXT_DIAGNOSTIC_PLAN_SHA256: 27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e
+P7_NEXT_DIAGNOSTIC_PLAN_MODE: DIAGNOSTIC_SUFFIX_55
+P7_NEXT_DIAGNOSTIC_STAGE66_PRESENT: false
+P7_NEXT_DIAGNOSTIC_ACCEPTANCE_COVERAGE_CLAIMED: false
 P7_NEXT_DIAGNOSTIC_HARDWARE_LAUNCHED: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
@@ -170,15 +176,26 @@ separate from the r39 stage result. Raw r39 evidence remains a 743-file,
 `d8e77dde31fa229c08b84fb779e7a805e18e53f20522f7256824f4e9f32bd69f`;
 the portable failure package tree SHA256 is
 `dbb1974da49b7be1efcc0c68f073a4ccf00fff024a9b3f7b44e92c0fc7056ef3`.
-No r40 plan is prepared or authorized. The final build-materialization proof
-SHA256 is `349f20dcf6d2bacae028fba49893f6d2f435268483350e2cade03084e920505b`;
+The new, unused diagnostic ID
+`p7_20260715_stationary_app_r40_diag_suffix55` is prepared but not launched.
+Its fail-closed impact decision starts at ordinal 55 because the source, XSA,
+ELF, and PS bitstream changed from r39, so r39's PASS observations at 55--63
+cannot support a skip to 64. The exact r40 plan SHA256 is
+`27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e`.
+It contains only ordinals 1--4 and 55--65, has zero stage 66/stationary entries,
+claims zero acceptance coverage, and remains `PENDING_HW`. All 15 child dry
+validations, the independent plan audit, and the separately invoked executor
+dry validation pass with no hardware process launched. The final
+build-materialization proof SHA256 is
+`349f20dcf6d2bacae028fba49893f6d2f435268483350e2cade03084e920505b`;
 the suite summary is `1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85`,
 the canonical gate is `cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5`,
 and PS core readiness is `c3961b381bb7f9276064f7220908640b7969bdbd02dfb877ad5453095b616d5d`.
 The 12-file portable checkpoint tree is `cf6fc3176e2801ae56e8cb40bd769bf9a7910219aacef17d42dec0c6a86a8955`.
-Before any further hardware, prepare a new run ID, prove the adaptive start
-from transitive inputs, generate fresh scoped authorization, and pass every
-new-ID dry validator. No Campaign D or r39 authorization may be reused.
+If hardware execution is entered, use only this exact r40 plan from its bound
+source workspace, never use `--resume`, stop on the first failure, preserve raw
+evidence, and perform independent recovery before retiring the ID. No Campaign
+D or r39 authorization may be reused.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional
