@@ -1,0 +1,50 @@
+{
+  "schema": "rf-comm-p7-required-suite-interruption-v1",
+  "observed_at_utc": "2026-07-15T05:42:05.9962513Z",
+  "source_commit": "1daa8920919617a3b5e5e118f0ee0ab84868baaf",
+  "validation_worktree": "C:\\Users\\user\\.codex\\worktrees\\r41validate_1daa892\\RF_COMM_MULTILANE",
+  "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_1daa892_r41formal.json --json-summary",
+  "required_suite_driver_invocation_count": 1,
+  "status": "INTERRUPTED_BY_OUTER_EXECUTION_TIMEOUT",
+  "outer_execution": {
+    "requested_tool_timeout_ms": 1000,
+    "observed_timeout_message_ms": 5039,
+    "outer_returncode": 124,
+    "driver_returncode_observed": false,
+    "driver_stdout_observed": "",
+    "driver_stderr_observed": "command timed out after 5039 milliseconds"
+  },
+  "driver_state_after_timeout": {
+    "process_remaining": false,
+    "matching_descendant_process_count": 0,
+    "summary_exists": false,
+    "partial_summary_exists": false,
+    "log_directory_exists": true,
+    "log_directory_item_count": 0,
+    "complete_suite_result_available": false,
+    "at_least_one_suite_process_may_have_started": true,
+    "worktree_dirty": false
+  },
+  "precondition_focused_test": {
+    "status": "PASS_9_OF_9",
+    "invocation_count": 1,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 1897,
+    "stderr_sha256": "491c4e9b8bb7095f7d26d159e034f4f1eff1f7193861967e1a4f25f4f108c845"
+  },
+  "input_hashes": {
+    "tools/run_p7_regression_suites.py": "27260813e5e45e1793f47deec4eea746a6a9fdb43d7f2cae845fb2ee07359489",
+    "tools/p7_regression_evidence.py": "3e1e7110d27d670417117987270a3184dc450c92b30fc88537da746b2bec51cd"
+  },
+  "checkpoint_disposition": {
+    "source_retired": true,
+    "rerun_same_source_allowed": false,
+    "complete_suite_pass_claimed": false,
+    "canonical_gate_started": false,
+    "offline_checkpoint_pass_claimed": false
+  },
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "next_action": "COMMIT_THIS_INTERRUPTION_RECORD_AND_USE_A_NEW_CLEAN_SOURCE_COMMIT_WITH_A_SUFFICIENT_OUTER_TIMEOUT; DO_NOT_RERUN_THE_DRIVER_AT_1daa8920"
+}
