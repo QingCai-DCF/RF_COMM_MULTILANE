@@ -306,6 +306,61 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
         self.assertNotIn("ps_safe_wrapper.main(", source)
         self.assertIn("sequence.is_exact_vivado_batch_launcher(vivado)", source)
 
+    def test_campaign_child_dry_validation_defers_only_runtime_ledger_state(self) -> None:
+        spec = subject.build_stage_specs()[-1]
+        parsed = argparse.Namespace(
+            stage66_diagnostic_campaign=True,
+            execute_hardware=True,
+            mode="stationary",
+        )
+        parser = mock.Mock()
+        parser.parse_args.return_value = parsed
+        external_auth_error = (
+            f"external environment authorization required: "
+            f"{subject.safety.AUTH_ENV}={subject.safety.AUTH_ENV_VALUE}"
+        )
+
+        def validate_offline_view(
+            args: argparse.Namespace, _readiness: dict[str, object]
+        ) -> list[str]:
+            self.assertIsNot(args, parsed)
+            self.assertFalse(args.execute_hardware)
+            self.assertTrue(args.stage66_diagnostic_campaign)
+            return []
+
+        with mock.patch.object(
+            subject.ps_safe_wrapper, "build_parser", return_value=parser
+        ), mock.patch.object(
+            subject.ps_safe_wrapper,
+            "validate_core_readiness",
+            return_value={"status": "PASS", "errors": []},
+        ), mock.patch.object(
+            subject.ps_safe_wrapper,
+            "_stage_validation",
+            side_effect=validate_offline_view,
+        ), mock.patch.object(
+            subject.safety,
+            "validate_request",
+            side_effect=lambda args: (
+                self.assertIs(args, parsed) or {"errors": [external_auth_error]}
+            ),
+        ):
+            report = subject.validate_child_wrapper_dry(
+                spec,
+                ["python", "wrapper.py", "--execute-hardware"],
+            )
+
+        self.assertTrue(parsed.execute_hardware)
+        self.assertTrue(report["emitted_execute_hardware"])
+        self.assertEqual(
+            "DEFERRED_TO_OUTER_EXECUTOR_LOCKED_LAUNCH",
+            report["campaign_runtime_ledger_validation"],
+        )
+        self.assertEqual(
+            "PASS_OFFLINE_WITH_EXTERNAL_EXECUTION_ENVIRONMENT_INTENTIONALLY_ABSENT",
+            report["common_safety_validation"],
+        )
+
     def test_full_offline_generation_has_unique_auth_hashes_and_valid_exact_plan(self) -> None:
         source_commit = "a" * 40
         tree_sha = "b" * 64

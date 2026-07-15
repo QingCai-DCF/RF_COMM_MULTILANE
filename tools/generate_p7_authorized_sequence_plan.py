@@ -1282,12 +1282,30 @@ def validate_child_wrapper_dry(spec: StageSpec, command: list[str]) -> dict[str,
         }
     else:
         parsed = ps_safe_wrapper.build_parser().parse_args(command[2:])
-        core_readiness = ps_safe_wrapper.validate_core_readiness(parsed)
-        errors = ps_safe_wrapper._stage_validation(parsed, core_readiness)
+        # The emitted command intentionally carries --execute-hardware, but
+        # plan generation happens before the outer executor creates the
+        # campaign's ACTIVE ledger entry.  Validate the child's static control
+        # surface through an isolated offline view; never mutate the emitted
+        # command or weaken the runtime wrapper's ACTIVE-ledger requirement.
+        offline_parsed = argparse.Namespace(**vars(parsed))
+        campaign_runtime_validation_deferred = bool(
+            getattr(parsed, "stage66_diagnostic_campaign", False)
+            and getattr(parsed, "execute_hardware", False)
+        )
+        if campaign_runtime_validation_deferred:
+            offline_parsed.execute_hardware = False
+        core_readiness = ps_safe_wrapper.validate_core_readiness(offline_parsed)
+        errors = ps_safe_wrapper._stage_validation(offline_parsed, core_readiness)
         report = {
             "kind": "ps",
             "mode": parsed.mode,
             "core_readiness": core_readiness.get("status"),
+            "emitted_execute_hardware": bool(parsed.execute_hardware),
+            "campaign_runtime_ledger_validation": (
+                "DEFERRED_TO_OUTER_EXECUTOR_LOCKED_LAUNCH"
+                if campaign_runtime_validation_deferred
+                else "NOT_APPLICABLE"
+            ),
             "errors": errors,
         }
     common = safety.validate_request(parsed)

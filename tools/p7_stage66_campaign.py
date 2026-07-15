@@ -48,6 +48,17 @@ ATTEMPT_KEYS = {
     "execution_ledger_sha256",
     "independent_shutdown_recovery",
 }
+RETIREMENT_KEYS = {
+    "run_id",
+    "requested_hardware_attempt_number",
+    "source_commit",
+    "retired_at_utc",
+    "status",
+    "reason",
+    "evidence_path",
+    "evidence_sha256",
+    "hardware_attempt_consumed",
+}
 
 
 def now_utc() -> str:
@@ -336,8 +347,6 @@ def validate_ledger(
         prior_sha = attempt.get("prior_campaign_ledger_sha256")
         if prior_sha != ABSENT_LEDGER_SHA256 and not SHA256_RE.fullmatch(str(prior_sha)):
             errors.append(f"campaign attempt {index} prior-ledger SHA256 is malformed")
-        if index == 1 and prior_sha != ABSENT_LEDGER_SHA256:
-            errors.append("campaign first attempt does not bind an absent prior ledger")
         if index > 1 and not SHA256_RE.fullmatch(str(prior_sha)):
             errors.append(f"campaign attempt {index} does not hash-bind the prior ledger")
         launch_time = _aware_datetime(
@@ -421,15 +430,76 @@ def validate_ledger(
     if unresolved_count > 1:
         errors.append("campaign ledger contains multiple unresolved attempts")
     retired = ledger.get("retired_pre_hardware_run_ids")
-    if not isinstance(retired, list) or any(
-        not isinstance(item, dict) or not RUN_ID_RE.fullmatch(str(item.get("run_id", "")))
-        for item in retired
-    ):
+    retired_ids: list[str] = []
+    if not isinstance(retired, list):
         errors.append("campaign ledger retired pre-hardware run ID list is malformed")
     else:
-        retired_ids = [str(item["run_id"]) for item in retired]
+        for index, item in enumerate(retired, 1):
+            label = f"campaign pre-hardware retirement {index}"
+            if not isinstance(item, dict):
+                errors.append(f"{label} is not an object")
+                continue
+            _exact_keys(item, RETIREMENT_KEYS, label, errors)
+            run_id = str(item.get("run_id", ""))
+            retired_ids.append(run_id)
+            requested_number = item.get("requested_hardware_attempt_number")
+            if not RUN_ID_RE.fullmatch(run_id):
+                errors.append(f"{label} run ID is malformed")
+            elif isinstance(requested_number, bool) or not isinstance(requested_number, int):
+                errors.append(f"{label} requested hardware attempt number is malformed")
+            elif not 1 <= requested_number <= MAX_HARDWARE_ATTEMPTS:
+                errors.append(f"{label} requested hardware attempt number is out of range")
+            elif f"diag_stage66_c{requested_number:02d}" not in run_id:
+                errors.append(f"{label} run ID/attempt suffix mismatch")
+            if run_id == policy.get("immutable_failed_baseline", {}).get("run_id"):
+                errors.append(f"{label} illegally reuses immutable r41")
+            if not COMMIT_RE.fullmatch(str(item.get("source_commit", ""))):
+                errors.append(f"{label} source commit is malformed")
+            retired_at = _aware_datetime(
+                item.get("retired_at_utc"), f"{label} retired_at_utc", errors
+            )
+            if created_at is not None and retired_at is not None and retired_at < created_at:
+                errors.append(f"{label} predates campaign ledger creation")
+            if updated_at is not None and retired_at is not None and retired_at > updated_at:
+                errors.append(f"{label} is later than campaign ledger updated_at_utc")
+            if item.get("status") != "RETIRED_PRE_HARDWARE":
+                errors.append(f"{label} status is not RETIRED_PRE_HARDWARE")
+            if not isinstance(item.get("reason"), str) or not item.get("reason"):
+                errors.append(f"{label} reason is missing")
+            evidence_name = item.get("evidence_path")
+            if (
+                not isinstance(evidence_name, str)
+                or not evidence_name
+                or Path(evidence_name).is_absolute()
+                or ".." in Path(evidence_name).parts
+            ):
+                errors.append(f"{label} evidence path is not repository-relative")
+            else:
+                evidence_path = resolve_path(evidence_name)
+                generated_root = (ROOT / "evidence" / "generated").resolve(strict=False)
+                if (
+                    not _inside(evidence_path, generated_root)
+                    or not evidence_path.is_file()
+                    or evidence_path.is_symlink()
+                ):
+                    errors.append(f"{label} evidence is missing/outside generated evidence")
+                elif not SHA256_RE.fullmatch(str(item.get("evidence_sha256", ""))):
+                    errors.append(f"{label} evidence SHA256 is malformed")
+                elif sha256_file(evidence_path) != str(item["evidence_sha256"]).lower():
+                    errors.append(f"{label} evidence SHA256 mismatch")
+            if item.get("hardware_attempt_consumed") is not False:
+                errors.append(f"{label} must prove hardware_attempt_consumed=false")
         if len(retired_ids) != len(set(retired_ids)) or set(retired_ids) & seen_ids:
             errors.append("campaign ledger reuses a retired or launched run ID")
+    if attempts:
+        first_prior = attempts[0].get("prior_campaign_ledger_sha256")
+        if retired_ids:
+            if not SHA256_RE.fullmatch(str(first_prior)):
+                errors.append(
+                    "campaign first hardware attempt does not hash-bind the pre-hardware retirement ledger"
+                )
+        elif first_prior != ABSENT_LEDGER_SHA256:
+            errors.append("campaign first attempt does not bind an absent prior ledger")
     expected_status = (
         "PASSED"
         if pass_count
@@ -540,6 +610,81 @@ def new_ledger(policy: Mapping[str, Any], policy_sha256: str) -> dict[str, Any]:
         "hardware_attempts": [],
         "retired_pre_hardware_run_ids": [],
     }
+
+
+def retire_pre_hardware_run_id(
+    ledger: dict[str, Any],
+    *,
+    run_id: str,
+    requested_hardware_attempt_number: int,
+    source_commit: str,
+    reason: str,
+    evidence_path: str,
+    evidence_sha256: str,
+) -> None:
+    """Retire a blocked preparation ID without consuming hardware quota."""
+
+    if ledger.get("status") != "READY":
+        raise RuntimeError(f"campaign ledger is not READY: {ledger.get('status')}")
+    if isinstance(requested_hardware_attempt_number, bool) or not isinstance(
+        requested_hardware_attempt_number, int
+    ):
+        raise RuntimeError("requested hardware attempt number must be an integer")
+    expected_number = len(ledger.get("hardware_attempts", [])) + 1
+    if requested_hardware_attempt_number != expected_number:
+        raise RuntimeError(
+            f"pre-hardware retirement must target next attempt number {expected_number}"
+        )
+    if not RUN_ID_RE.fullmatch(run_id) or (
+        f"diag_stage66_c{requested_hardware_attempt_number:02d}" not in run_id
+    ):
+        raise RuntimeError("pre-hardware retirement run ID/attempt number is malformed")
+    used = {
+        str(item.get("run_id"))
+        for item in ledger.get("hardware_attempts", [])
+        if isinstance(item, dict)
+    }
+    used.update(
+        str(item.get("run_id"))
+        for item in ledger.get("retired_pre_hardware_run_ids", [])
+        if isinstance(item, dict)
+    )
+    if run_id in used:
+        raise RuntimeError("pre-hardware run ID is already launched or retired")
+    if not COMMIT_RE.fullmatch(source_commit):
+        raise RuntimeError("pre-hardware retirement source commit is malformed")
+    if not isinstance(reason, str) or not reason.strip():
+        raise RuntimeError("pre-hardware retirement reason is missing")
+    relative = Path(evidence_path)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError("pre-hardware retirement evidence path is not repository-relative")
+    resolved_evidence = resolve_path(evidence_path)
+    generated_root = (ROOT / "evidence" / "generated").resolve(strict=False)
+    if (
+        not _inside(resolved_evidence, generated_root)
+        or not resolved_evidence.is_file()
+        or resolved_evidence.is_symlink()
+    ):
+        raise RuntimeError("pre-hardware retirement evidence is missing/outside generated evidence")
+    if not SHA256_RE.fullmatch(evidence_sha256) or sha256_file(
+        resolved_evidence
+    ) != evidence_sha256.lower():
+        raise RuntimeError("pre-hardware retirement evidence SHA256 mismatch")
+    stamp = now_utc()
+    ledger["retired_pre_hardware_run_ids"].append(
+        {
+            "run_id": run_id,
+            "requested_hardware_attempt_number": requested_hardware_attempt_number,
+            "source_commit": source_commit,
+            "retired_at_utc": stamp,
+            "status": "RETIRED_PRE_HARDWARE",
+            "reason": reason.strip(),
+            "evidence_path": evidence_path.replace("\\", "/"),
+            "evidence_sha256": evidence_sha256.lower(),
+            "hardware_attempt_consumed": False,
+        }
+    )
+    ledger["updated_at_utc"] = stamp
 
 
 def atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:

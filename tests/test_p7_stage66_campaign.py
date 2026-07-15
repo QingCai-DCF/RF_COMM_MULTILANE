@@ -16,6 +16,7 @@ if str(TOOLS) not in sys.path:
 
 import generate_p7_authorized_sequence_plan as generator  # noqa: E402
 import p7_stage66_campaign as campaign  # noqa: E402
+import record_p7_stage66_campaign_prelaunch_retirement as prelaunch_retirement  # noqa: E402
 import record_p7_stage66_campaign_recovery as recovery  # noqa: E402
 import run_p7_authorized_hardware_sequence as sequence  # noqa: E402
 
@@ -216,6 +217,92 @@ class P7Stage66CampaignTests(unittest.TestCase):
             hardware_attempt_number=2,
         )
         self.assertTrue(any("not ready" in item for item in errors))
+
+    def test_prehardware_retirement_is_hash_bound_unique_and_consumes_zero_quota(self) -> None:
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        evidence = (
+            ROOT
+            / "evidence"
+            / "generated"
+            / "p7_r42_stage66_campaign_c01_prelaunch_failure.json"
+        )
+        evidence_sha = hashlib.sha256(evidence.read_bytes()).hexdigest()
+        run_id = "p7_20260715_stationary_app_r42_diag_stage66_c01"
+        next_run_id = "p7_20260715_stationary_app_r43_diag_stage66_c01"
+        payload, evidence_errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            evidence_sha,
+            run_id=run_id,
+            source_commit="5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+            requested_hardware_attempt_number=1,
+        )
+        self.assertEqual([], evidence_errors)
+        self.assertIsNotNone(payload)
+        ledger = campaign.new_ledger(policy, policy_sha)
+        campaign.retire_pre_hardware_run_id(
+            ledger,
+            run_id=run_id,
+            requested_hardware_attempt_number=1,
+            source_commit="5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+            reason="PLAN_GENERATOR_CHILD_WRAPPER_DRY_VALIDATION_FAIL",
+            evidence_path=str(evidence.relative_to(ROOT)).replace("\\", "/"),
+            evidence_sha256=evidence_sha,
+        )
+        self.assertEqual(0, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        self.assertFalse(
+            ledger["retired_pre_hardware_run_ids"][0]["hardware_attempt_consumed"]
+        )
+        self.assertTrue(
+            campaign.validate_next_attempt(
+                policy,
+                ledger,
+                run_id=run_id,
+                hardware_attempt_number=1,
+            )
+        )
+        self.assertEqual(
+            [],
+            campaign.validate_next_attempt(
+                policy,
+                ledger,
+                run_id=next_run_id,
+                hardware_attempt_number=1,
+            ),
+        )
+        with self.assertRaisesRegex(RuntimeError, "already launched or retired"):
+            campaign.retire_pre_hardware_run_id(
+                ledger,
+                run_id=run_id,
+                requested_hardware_attempt_number=1,
+                source_commit="5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+                reason="DUPLICATE",
+                evidence_path=str(evidence.relative_to(ROOT)).replace("\\", "/"),
+                evidence_sha256=evidence_sha,
+            )
+        campaign.begin_attempt(
+            ledger,
+            run_id=next_run_id,
+            hardware_attempt_number=1,
+            source_commit="a" * 40,
+            sequence_plan_path="plan.json",
+            sequence_plan_sha256="b" * 64,
+            execution_ledger_path="execution-ledger.json",
+            prior_campaign_ledger_sha256="c" * 64,
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            ledger_path = Path(temp) / "campaign_ledger.json"
+            ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
+            with mock.patch.object(
+                campaign, "campaign_ledger_path", return_value=ledger_path.resolve()
+            ):
+                _loaded, validation_errors = campaign.validate_ledger(
+                    policy, ledger_path, allow_absent=False
+                )
+            self.assertEqual([], validation_errors)
 
     def test_ten_failures_are_a_hard_upper_bound_and_no_eleventh_suffix_is_valid(self) -> None:
         policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
