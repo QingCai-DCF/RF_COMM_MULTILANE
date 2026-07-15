@@ -152,9 +152,15 @@ descriptor validation and wipes only a structurally trusted private output
 after shutdown and before publishing the rejection. Structurally invalid
 descriptors remain write-free. Focused stage-wrapper checks pass 41/41, the
 r39 package/history/tamper checks pass 7/7, and the full focused summarizer
-history/tamper module passes 16/16. These are non-hardware results; no new
-clean-source complete suite, build, canonical gate, authorization, plan, or
-hardware run exists yet.
+history/tamper module passes 16/16. The subsequent clean-checkpoint chain is
+now fully preserved: source `5a99b98c...` passed 199+42 complete tests but
+failed the canonical gate 12/13 on a stale first-wipe static search; source
+`6999166b...` then failed one of 201 top-level tests because the r39 current
+checker SHA binding was stale, while `tests/p7` passed 42/42. Neither source
+was rerun. After the scoped checker and binding repairs, clean source
+`37182768047dc4afdc18699a1142852418b382b5` passed 201/201 plus 42/42,
+each suite invoked exactly once, and the canonical gate passed 13/13 with zero
+duplicate complete-suite invocations. All of these are non-hardware results.
 
 The first independent recovery invocation failed closed at authorization with
 `NO_HARDWARE_ACTIONS_EXECUTED=1`. A second, separately authorized recovery then
@@ -164,10 +170,15 @@ separate from the r39 stage result. Raw r39 evidence remains a 743-file,
 `d8e77dde31fa229c08b84fb779e7a805e18e53f20522f7256824f4e9f32bd69f`;
 the portable failure package tree SHA256 is
 `dbb1974da49b7be1efcc0c68f073a4ccf00fff024a9b3f7b44e92c0fc7056ef3`.
-No r40 plan is prepared or authorized. Before any further hardware, commit the
-r39 package and repair, create a new clean-source cache-bypassed build, run each
-required complete suite exactly once, pass the canonical offline gate, prove
-the adaptive start from transitive inputs, and pass every new-ID dry validator.
+No r40 plan is prepared or authorized. The final build-materialization proof
+SHA256 is `349f20dcf6d2bacae028fba49893f6d2f435268483350e2cade03084e920505b`;
+the suite summary is `1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85`,
+the canonical gate is `cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5`,
+and PS core readiness is `c3961b381bb7f9276064f7220908640b7969bdbd02dfb877ad5453095b616d5d`.
+The 12-file portable checkpoint tree is `cf6fc3176e2801ae56e8cb40bd769bf9a7910219aacef17d42dec0c6a86a8955`.
+Before any further hardware, prepare a new run ID, prove the adaptive start
+from transitive inputs, generate fresh scoped authorization, and pass every
+new-ID dry validator. No Campaign D or r39 authorization may be reused.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional
