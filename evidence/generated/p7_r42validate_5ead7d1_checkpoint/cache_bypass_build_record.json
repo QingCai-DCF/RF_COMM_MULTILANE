@@ -1,0 +1,108 @@
+{
+  "schema": "rf-comm-p7-formal-preparation-cache-bypass-build-v1",
+  "generated_at_utc": "2026-07-15T13:56:14.8579144Z",
+  "build_input_source_commit": "5893e0638e99402eebe5842327cd2ad975a941bf",
+  "worktree": "D:/CodexWorktrees/r42build_5893e06/RF_COMM_MULTILANE",
+  "status": "PASS",
+  "offline_cache_status": "BYPASS",
+  "offline_real_build_process_ran": true,
+  "commands": [
+    "python -B scripts/build_p6_ps_candidate.py --cache-bypass",
+    "python -B scripts/build_p7_ps_runtime.py --cache-bypass",
+    "python -B tools/ax7010_ps7_board_contract.py --include-vitis"
+  ],
+  "worktree_allocation_precondition": {
+    "initial_c_drive_checkout_status": "FAIL_NO_SPACE_BEFORE_BUILD",
+    "initial_c_drive_hardware_actions_executed": false,
+    "initial_c_drive_build_process_started": false,
+    "failed_partial_target_removed_after_exact_empty_path_check": true,
+    "retry_volume": "D:",
+    "retry_started_from_new_clean_detached_worktree": true
+  },
+  "tool_identity": {
+    "vivado_version": "2023.1",
+    "vivado_sw_build": "3865809",
+    "vitis_version": "2023.1",
+    "scripts/build_p6_ps_candidate.py": "5b401e2be3de66d66cf1a3c4e9c15b938a3eb389137f1b8338ee0cc4b85ff456",
+    "scripts/build_p6_ps_candidate.tcl": "6232ae8baa4223176ef05be91e58c115191c8d870b6758decb25d21513e2cfd2",
+    "scripts/build_p7_ps_runtime.py": "bb9d6a19da42885781842093e6baa7168f1b7b760c1cd70734afb37a45ecb8e3",
+    "scripts/build_p7_ps_runtime.tcl": "950edaa554fdfc207186eed10baccdaca0241d8bb79753bb926a83a3536560be"
+  },
+  "vivado": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "timing_met": true,
+    "drc_clean": true,
+    "ps7_ddr_configuration_verified": true,
+    "ps7_board_contract_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build.log",
+      "bytes": 93452,
+      "sha256": "8af1d83b711b91236740de4176e9d770d79d7b3d3f18f48cd5d632c5bca81984"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_board_contract.json",
+      "bytes": 3088,
+      "sha256": "0c9568da07713fa1a25c939ff08c6eb41ef1b0c78d610721503dc0ae29cad16f"
+    },
+    "bitstream": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_97cfb87b8f495dfcb016216570d0c977554bd652b0bfc566bfc6c4f8bf0575c5.bit",
+      "bytes": 2083856,
+      "sha256": "97cfb87b8f495dfcb016216570d0c977554bd652b0bfc566bfc6c4f8bf0575c5"
+    },
+    "xsa": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_039d6647837eed353c19a436012f00927fe68d266f4d250eed783c1e7c64f0be.xsa",
+      "bytes": 560423,
+      "sha256": "039d6647837eed353c19a436012f00927fe68d266f4d250eed783c1e7c64f0be"
+    },
+    "ps7_init_tcl_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "ps7_init_c_sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+  },
+  "vitis": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "mailbox_overlap": false,
+    "linker_ocm_hard_boundary_0x20000": true,
+    "critical_payload_byte_copy_verified": true,
+    "first_error_diagnostic_disassembly_verified": true,
+    "stage62_copy_diagnostic_disassembly_verified": true,
+    "stage62_microtest_disassembly_verified": true,
+    "stack_usage_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build.log",
+      "bytes": 66456,
+      "sha256": "d7804072586c11a0ce3068cb41070d6b047725cce7bcee6c6194defe171ee2f3"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps7_board_contract.json",
+      "bytes": 3013,
+      "sha256": "c1bc4978fe2a9363e9842ec736a33c00d3daef301bcd076ca7f5494fd0e61d4f"
+    },
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_63b974715e5f1bb7d3b62c0e4ae27cee2ad4de6b2ff301f1a1b6ed6b30eaa369.elf",
+      "bytes": 355872,
+      "sha256": "63b974715e5f1bb7d3b62c0e4ae27cee2ad4de6b2ff301f1a1b6ed6b30eaa369"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_81c0add57c2d5607b2789dbdb8930d3cfcbeeb8e08768adeec5c45f68f490799.map",
+      "bytes": 97597,
+      "sha256": "81c0add57c2d5607b2789dbdb8930d3cfcbeeb8e08768adeec5c45f68f490799"
+    }
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "include_vitis": true
+  },
+  "scope": {
+    "no_hardware": true,
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "ethernet_used": false,
+    "motion_used": false,
+    "project_process_count_after_build": 0,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  }
+}
