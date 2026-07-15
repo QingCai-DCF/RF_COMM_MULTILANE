@@ -1,0 +1,52 @@
+{
+  "schema": "rf-comm-p7-complete-suite-failure-classification-v1",
+  "generated_at_utc": "2026-07-15T17:15:16.8176470Z",
+  "source_commit": "483d23acf552e5d2ce74a68c47988c9ffb9fc461",
+  "source_tree": "e3cd2a14be12dae144149322e75c8e67e485104d",
+  "validation_worktree": "D:/CodexWorktrees/r48validate_483d23a/RF_COMM_MULTILANE",
+  "run_id": "p7_20260715_stationary_app_r48_diag_stage66_c02",
+  "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_483d23a_stage66_campaign_r48prep.json --json-summary",
+  "status": "COMPLETE_SUITES_FAIL_CANONICAL_GATE_NOT_RUN",
+  "required_suite_invocation_count": 2,
+  "suite_invocation_count_by_name": {
+    "top_level_discovery": 1,
+    "tests_p7_discovery": 1
+  },
+  "source_commit_unchanged": true,
+  "clean_before": true,
+  "clean_after": true,
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "total_discovered_test_count": 286,
+  "top_level_discovery": {
+    "discovered_test_count": 244,
+    "status": "FAIL",
+    "failure_count": 1,
+    "error_count": 0
+  },
+  "tests_p7_discovery": {
+    "discovered_test_count": 42,
+    "status": "PASS"
+  },
+  "failures": [
+    {
+      "test": "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+      "classification": "STALE_DERIVED_OFFLINE_AUDIT_RECORD",
+      "observed": "The checked audit bound the pre-Stage66-scope-fix current Tcl byte count/hash (141020, e7e81675...), while source 483d23a has (141714, 9e914571...).",
+      "repair": "Revalidate and update only current_tcl size_bytes and sha256; immutable r37 fixture, raw readback, first mismatch, historical audited Tcl, and hardware conclusion remain unchanged."
+    }
+  ],
+  "repair_applied_in_main": {
+    "path": "ddr_debug/offline/r37_host_prestart_audit.json",
+    "current_tcl_size_bytes": 141714,
+    "current_tcl_sha256": "9e9145712aaa0c205aeb5f70db8ebf5e5fe30f32575c04a0ef522499b0d5424f",
+    "focused_test": "PASS_1_OF_1",
+    "focused_test_command": "python -B -m unittest tests.test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback -v"
+  },
+  "canonical_gate_started": false,
+  "authorization_created": false,
+  "hardware_execution_entered": false,
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_source_requires_new_commit": true
+}
