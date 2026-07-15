@@ -1,0 +1,205 @@
+{
+  "schema": "rf-comm-p7-clean-source-canonical-checkpoint-v1",
+  "generated_at_utc": "2026-07-15T14:39:49.3969906Z",
+  "checkpoint_id": "p7_r43validate_c26c3ac",
+  "source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+  "source_tree": "1270297820ddbd946d69aeff0fcf7aad69ff8e98",
+  "source_tree_listing_sha256": "c07ee6ac8052642178a33e5da4999d7ffd6d55978724bb5b267afee9e08cec7c",
+  "diagnostic_execution_source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+  "status": "PASS",
+  "P7_OFFLINE_GATE": "PASS",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "hardware_actions_executed": false,
+  "coverage_claimed": false,
+  "dirty_worktree_before_complete_suites": false,
+  "dirty_worktree_after_complete_suites": false,
+  "dirty_worktree_before_canonical_gate": false,
+  "stage66_diagnostic_campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "policy_path": "config/p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "maximum_actual_hardware_attempts": 10,
+    "actual_hardware_attempt_count": 0,
+    "remaining_hardware_attempt_count": 10,
+    "next_actual_hardware_attempt_number": 1,
+    "campaign_ledger_exists": false,
+    "stationary_started": false,
+    "first_complete_stage66_pass_observed": false,
+    "selected_full_stage_ordinals": [1, 2, 3, 4, 66],
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "prehardware_retired_run": {
+      "run_id": "p7_20260715_stationary_app_r42_diag_stage66_c01",
+      "requested_attempt_number": 1,
+      "permanently_retired": true,
+      "actual_hardware_attempt_consumed": false,
+      "retirement_record_path": "evidence/generated/p7_r42_stage66_campaign_c01_prelaunch_failure.json",
+      "retirement_record_sha256": "a0c53228a9bda5931f265e134f88fea4ed3c4d257d4ed8d072a20f5f87b3de31",
+      "retirement_recorded_in_runtime_ledger": false,
+      "runtime_ledger_recording_next_step": true
+    }
+  },
+  "immutable_failed_baseline": {
+    "run_id": "p7_20260715_stationary_app_r41_formal_full",
+    "status": "FAIL",
+    "resume_restart_copy_reuse_permitted": false,
+    "completed_stage_count": 65,
+    "failed_full_stage_ordinal": 66
+  },
+  "build_materialization": {
+    "status": "PASS",
+    "cache_bypass_build_input_commit": "f3d7cbbb75a04f55976e1a5109806addd0b011a1",
+    "cache_bypass_build_evidence_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+    "validation_source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+    "build_input_tree": "e14331166d524058bb97f745848751fcf1335f16",
+    "validation_source_tree": "1270297820ddbd946d69aeff0fcf7aad69ff8e98",
+    "build_input_to_validation_total_changed_path_count": 25,
+    "materialized_build_output_or_artifact_changed_path_count": 24,
+    "non_materialized_build_evidence_changed_paths": [
+      "evidence/generated/p7_r43build_f3d7cbb_cache_bypass.json"
+    ],
+    "transitive_build_input_changed_path_count": 0,
+    "build_outputs_materialized_in_validation_worktree": true,
+    "all_bound_artifact_hashes_revalidated": true,
+    "tool_identity_bound": true,
+    "vivado_version": "2023.1",
+    "vivado_sw_build": "3865809",
+    "vitis_version": "2023.1",
+    "canonical_offline_cache_hit_claimed": false
+  },
+  "fresh_cache_bypass_builds": {
+    "record_path": "evidence/generated/p7_r43build_f3d7cbb_cache_bypass.json",
+    "record_sha256": "65d8d0a463f958973fae763a84bdbbcf813e39915c56c48f95067ac2a9484640",
+    "record_status": "PASS",
+    "offline_cache_status": "BYPASS",
+    "offline_real_build_process_ran": true,
+    "p6_ps_candidate": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "timing_met": true,
+      "drc_clean": true,
+      "board_contract_verified": true,
+      "summary_sha256": "15d23a532e4e087e14e0fb7a7214320c37c71b74129dcba39b2ada548be090bc",
+      "bitstream_sha256": "2f1f6e03aadcb0681525ca7f5c9209b73324b87784192d2c8ac24c810037f789",
+      "xsa_sha256": "ba4c4655399007dd9ba8b10e5c778243429edb8974fb9120f8542426bf49432e"
+    },
+    "p7_ps_runtime": {
+      "status": "PASS",
+      "cache_bypass": true,
+      "board_contract_verified": true,
+      "summary_sha256": "973de955bd749b7b564f6e9c18f9f5bc13e11d1ed909ae68d86ebccc70831a66",
+      "elf_sha256": "a7b6b3a2f93a7182b686eeee498fd009382f2e10683ce5890f5c67c647b17275",
+      "linker_map_sha256": "fba5d734ee5b53231df8844ee760d6906ac44fc74a04e072fbe4aa776e35aec9",
+      "disassembly_sha256": "cc8fdb055a5102a57ca6b6178a88ea66e548316a84b26d17a5cc7fe84ca44c4d",
+      "ps7_init_tcl_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+      "ps7_init_c_sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34",
+      "critical_payload_byte_copy_verified": true,
+      "first_error_diagnostic_disassembly_verified": true,
+      "stack_usage_verified": true
+    }
+  },
+  "generated_board_contracts": {
+    "fresh_cache_bypass_status": "PASS",
+    "fresh_cache_bypass_sha256": "6f5b04a303bf4274aff0de3f9f19cac830d5bd6aab7142558010df0802bc07f5",
+    "canonical_gate_status": "PASS",
+    "canonical_gate_sha256": "2cc15d3c3b35e9ec8e5ad66438007e016adf48bf3504f9a1abb7f9bb2d290ae7"
+  },
+  "complete_suites": {
+    "status": "PASS",
+    "summary_sha256": "350c26f9e054473387bbb863dc50ffc1271df7a958c221d802be9f87d7a4ebe7",
+    "source_commit_unchanged": true,
+    "clean_before": true,
+    "clean_after": true,
+    "exactly_once_per_required_suite": true,
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 239,
+      "status": "PASS"
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "discovered_test_count": 42,
+      "status": "PASS"
+    },
+    "complete_suite_process_invocation_count": 2,
+    "total_discovered_test_count": 281
+  },
+  "canonical_gate": {
+    "status": "PASS",
+    "summary_sha256": "5a13158f59985231e73c40f518e2015912950245379bc8ccf8295af08819e188",
+    "check_count": 13,
+    "passing_check_count": 13,
+    "failed_checks": [],
+    "validated_complete_suite_summary_sha256": "350c26f9e054473387bbb863dc50ffc1271df7a958c221d802be9f87d7a4ebe7",
+    "additional_complete_suite_invocations_in_gate": 0,
+    "offline_cache_status": "BYPASS",
+    "offline_real_build_process_ran": true,
+    "canonical_gate_p7_runtime_substep_cache_bypass_flag": false,
+    "hardware_actions_executed": false
+  },
+  "ps_core_readiness": {
+    "status": "PASS",
+    "sha256": "c80de173dadba5583f2410d20ed6b95c24e44763353317eeda1a5e4721481fa4",
+    "check_count": 40,
+    "passing_check_count": 40,
+    "failed_checks": [],
+    "additional_complete_suite_invocations_in_core_gate": 0,
+    "hardware_actions_executed": false
+  },
+  "offline_test_run": {
+    "status": "PASS",
+    "sha256": "bb08ff1438ac06f3e1877e3fc3b023bafa792dea4cd2bbcf716174cba58a7192",
+    "component_returncodes": {
+      "vectors": 0,
+      "unittest_validated_summary_reuse": 0,
+      "hardware_safety_validated_summary_reuse": 0,
+      "ps_core_readiness": 0
+    }
+  },
+  "precondition_events_preserved": [
+    {
+      "run_id": "p7_20260715_stationary_app_r42_diag_stage66_c01",
+      "status": "PLAN_GENERATOR_CHILD_WRAPPER_DRY_VALIDATION_FAIL",
+      "source_commit": "5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+      "permanently_retired": true,
+      "actual_hardware_attempt_consumed": false,
+      "hardware_actions_executed": false,
+      "evidence_path": "evidence/generated/p7_r42_stage66_campaign_c01_prelaunch_failure.json",
+      "evidence_sha256": "a0c53228a9bda5931f265e134f88fea4ed3c4d257d4ed8d072a20f5f87b3de31",
+      "repair_commit": "f3d7cbbb75a04f55976e1a5109806addd0b011a1"
+    },
+    {
+      "source_commit": "f3d7cbbb75a04f55976e1a5109806addd0b011a1",
+      "status": "FOCUSED_FIX_VALIDATION_PASS",
+      "focused_test_count": 24,
+      "hardware_actions_executed": false,
+      "cache_bypass_build_evidence_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f"
+    }
+  ],
+  "portable_raw_evidence": {
+    "path": "evidence/generated/p7_r43validate_c26c3ac_checkpoint",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; manifest itself is outside this tree",
+    "file_count": 14,
+    "byte_count": 132557,
+    "tree_sha256": "046b3902ca45e87950a191dd907ba01a72057d25d38844306ba1fbb21f7364c7",
+    "files": [
+      {"path": "cache_bypass_build_record.json", "bytes": 4525, "sha256": "65d8d0a463f958973fae763a84bdbbcf813e39915c56c48f95067ac2a9484640"},
+      {"path": "canonical_gate_board_contract.json", "bytes": 3031, "sha256": "2cc15d3c3b35e9ec8e5ad66438007e016adf48bf3504f9a1abb7f9bb2d290ae7"},
+      {"path": "canonical_gate_p7_build_summary.json", "bytes": 11784, "sha256": "6aec556e7032cb311a15044506f69e7055c754ee014fbc222fb547c41cfb1fa0"},
+      {"path": "canonical_gate_summary.json", "bytes": 18408, "sha256": "5a13158f59985231e73c40f518e2015912950245379bc8ccf8295af08819e188"},
+      {"path": "complete_suite_summary.json", "bytes": 2519, "sha256": "350c26f9e054473387bbb863dc50ffc1271df7a958c221d802be9f87d7a4ebe7"},
+      {"path": "fresh_generated_board_contract.json", "bytes": 3031, "sha256": "6f5b04a303bf4274aff0de3f9f19cac830d5bd6aab7142558010df0802bc07f5"},
+      {"path": "fresh_p6_cache_bypass_build_summary.json", "bytes": 3100, "sha256": "15d23a532e4e087e14e0fb7a7214320c37c71b74129dcba39b2ada548be090bc"},
+      {"path": "fresh_p7_cache_bypass_build_summary.json", "bytes": 11783, "sha256": "973de955bd749b7b564f6e9c18f9f5bc13e11d1ed909ae68d86ebccc70831a66"},
+      {"path": "offline_test_run.json", "bytes": 7455, "sha256": "bb08ff1438ac06f3e1877e3fc3b023bafa792dea4cd2bbcf716174cba58a7192"},
+      {"path": "ps_core_readiness.json", "bytes": 16228, "sha256": "c80de173dadba5583f2410d20ed6b95c24e44763353317eeda1a5e4721481fa4"},
+      {"path": "tests_p7_discovery.stderr.log", "bytes": 5303, "sha256": "f854d0e421b0f0f711ba70f94e9b6f5973fad2b18363cdf990c80bbb05508469"},
+      {"path": "tests_p7_discovery.stdout.log", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      {"path": "top_level_discovery.stderr.log", "bytes": 44749, "sha256": "ce8780e26e55cb585d4497ba377ceb875d212e9fdd6db4a2249437a67536ac03"},
+      {"path": "top_level_discovery.stdout.log", "bytes": 641, "sha256": "0376a777ba04d74b41775836a8b76d1ccb735ba9fad44f3bc4e6c8c77058fc93"}
+    ]
+  },
+  "next_step": "RECORD_THE_PERMANENT_PREHARDWARE_RETIREMENT_OF_P7_20260715_STATIONARY_APP_R42_DIAG_STAGE66_C01_IN_THE_RUNTIME_CAMPAIGN_LEDGER_WITH_ZERO_ACTUAL_HARDWARE_ATTEMPTS; THEN_PREPARE_A_COLLISION_FREE_NEW_R43_STAGE66_DIAGNOSTIC_RUN_ID_AT_EXACT_EXECUTION_SOURCE_C26C3ACA_WITH_FULL_STAGE_ORDINALS_1_2_3_4_66_FRESH_SCOPED_AUTHORIZATION_IMMUTABLE_HASHES_AND_ALL_DRY_VALIDATORS_PASS_BEFORE_ANY_HARDWARE_LAUNCH; DO_NOT_REUSE_R41_OR_R42_C01"
+}

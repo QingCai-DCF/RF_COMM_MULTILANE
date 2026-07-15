@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "phase": "vitis",
+  "generated_at_utc": "2026-07-15T14:27:03+00:00",
+  "expected_device": "xc7z010clg400-1",
+  "expected_ps7_parameters": {
+    "PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+    "PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+    "PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+    "PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+    "PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+    "PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+    "PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+    "PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+    "PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+    "PCW_UIPARAM_DDR_T_FAW": "40.0",
+    "PCW_UIPARAM_DDR_ECC": "Disabled",
+    "PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1"
+  },
+  "errors": [],
+  "artifacts": {
+    "vivado_xsa": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_ba4c4655399007dd9ba8b10e5c778243429edb8974fb9120f8542426bf49432e.xsa",
+      "exists": true,
+      "size": 560425,
+      "sha256": "ba4c4655399007dd9ba8b10e5c778243429edb8974fb9120f8542426bf49432e"
+    },
+    "vitis_platform_xsa": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\p6_ps_dynamic_transport_ba4c4655399007dd9ba8b10e5c778243429edb8974fb9120f8542426bf49432e.xsa",
+      "exists": true,
+      "size": 560425,
+      "sha256": "ba4c4655399007dd9ba8b10e5c778243429edb8974fb9120f8542426bf49432e"
+    },
+    "vitis_ps7_parameters": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_parameters.xml",
+      "exists": true,
+      "size": 39425,
+      "sha256": "04b944be2c9e55d6bb440a1a1db4aeb86ebd4b5b50c8eaccc3109f4004ce7867"
+    },
+    "vitis_platform_ps7_init_tcl": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.tcl",
+      "exists": true,
+      "size": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    "vitis_platform_ps7_init_c": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\hw\\ps7_init.c",
+      "exists": true,
+      "size": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    "vitis_fsbl_ps7_init_c": {
+      "absolute_path": "D:\\CodexWorktrees\\r43validate_f3d7cbb\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace\\p7_platform\\zynq_fsbl\\ps7_init.c",
+      "exists": true,
+      "size": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    }
+  },
+  "hardware_action_taken": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "status": "PASS"
+}
