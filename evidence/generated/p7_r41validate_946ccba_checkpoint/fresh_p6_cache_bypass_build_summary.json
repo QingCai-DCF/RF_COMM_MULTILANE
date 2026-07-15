@@ -1,0 +1,71 @@
+{
+  "P6_PS_CANDIDATE_BUILD": "PASS",
+  "generated_at_utc": "2026-07-15T05:59:19+00:00",
+  "returncode": 0,
+  "timing_met": true,
+  "drc_clean": true,
+  "cache_bypass": true,
+  "ps7_ddr_configuration_verified": true,
+  "ps7_board_contract_verified": true,
+  "ps7_ddr_configuration": {
+    "P6_PS7_DEVICE": "xc7z010clg400-1",
+    "CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+    "CONFIG.PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+    "CONFIG.PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+    "CONFIG.PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+    "CONFIG.PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+    "CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+    "CONFIG.PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+    "CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+    "CONFIG.PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+    "CONFIG.PCW_UIPARAM_DDR_T_FAW": "40.0",
+    "CONFIG.PCW_UIPARAM_DDR_ECC": "Disabled",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+    "CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1",
+    "P6_PS7_BOARD_CONFIGURATION": "PASS",
+    "P6_PS7_DDR_CONFIGURATION": "PASS"
+  },
+  "ps7_ddr_configuration_report": {
+    "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_ddr_configuration.txt",
+    "sha256": "17aa72b86cc4c248772b063587baf0eb59304729a24a5462fe06a44457a66476"
+  },
+  "ps7_board_contract_report": {
+    "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_board_contract.json",
+    "sha256": "d63f7c2225294280c94ea0b861ee9eb5a635e7f4fa66d5dd2b6c21cdacd697f2",
+    "status": "PASS"
+  },
+  "artifacts": {
+    "bit": {
+      "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.bit",
+      "sha256": "532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0.bit"
+    },
+    "xsa": {
+      "source": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate.xsa",
+      "sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1",
+      "immutable": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa"
+    }
+  },
+  "inputs": {
+    "active_xdc": {
+      "path": "constraints/active/PORT1.generated.xdc",
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344"
+    },
+    "pinmap": {
+      "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd"
+    },
+    "active_profile": {
+      "path": "board_profiles/ACTIVE_PROFILE.json",
+      "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b"
+    },
+    "register_map": {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "d5b0bf1476d815a3ed69988c72097827356d4eade48813c8913fc1b2d448983d"
+    }
+  },
+  "axi_base": "0x43c00000",
+  "ethernet_used": false,
+  "motion_used": false
+}

@@ -3,7 +3,7 @@
 Project: RF_COMM_MULTILANE
 Current branch: codex/p7-stationary-application
 P6 baseline commit: ca041d4877b831de84fe7829788ac835b0b46acd
-P7 offline checkpoint source commit: `37182768047dc4afdc18699a1142852418b382b5` (see `evidence/generated/p7_r40validate_3718276_checkpoint.json`)
+P7 offline checkpoint source commit: `946ccbad66d64d715ad6745449b95f6c261ddf76` (see `evidence/generated/p7_r41validate_946ccba_checkpoint.json`)
 
 P0_BOOTSTRAP: PASS
 P1_OFFLINE_HARDENING: PASS
@@ -25,11 +25,11 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_R40_EVIDENCE_COMMIT_REQUIRES_NEW_FORMAL_CHECKPOINT
+P7_CURRENT_HEAD_OFFLINE_GATE: PASS_13_OF_13_AT_EXACT_SOURCE_CHECKPOINT
 P7_BOUND_EXECUTION_SOURCE_OFFLINE_GATE: PASS_13_OF_13
-P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
-P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_201_PLUS_42
-P7_LATEST_CANONICAL_GATE_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
+P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
+P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_210_PLUS_42
+P7_LATEST_CANONICAL_GATE_SOURCE: 946ccbad66d64d715ad6745449b95f6c261ddf76
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
 P7_NEW_HARDWARE_RUN_READY: false
 P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
@@ -52,7 +52,7 @@ R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
 R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
 R39_SOURCE_REPAIR: IMPLEMENTED_AND_CLEAN_CHECKPOINT_PASS
 P7_NEXT_FORMAL_RUN_ID: NOT_YET_ASSIGNED
-P7_NEXT_FORMAL_RUN_STATUS: BLOCKED_ON_R40_EVIDENCE_COMMIT_AND_NEW_CLEAN_FORMAL_CHECKPOINT
+P7_NEXT_FORMAL_RUN_STATUS: READY_FOR_PLAN_AND_DRY_VALIDATION_NOT_AUTHORIZED_FOR_HARDWARE
 P7_NEXT_FORMAL_PLAN_MODE: FORMAL_FULL_1_THROUGH_66
 P7_NEXT_FORMAL_PLAN_CREATED: false
 P7_NEXT_FORMAL_AUTHORIZATION_CREATED: false
@@ -225,13 +225,54 @@ the focused r40 package/history/tamper/summarizer tests pass 9/9. Their
 machine record SHA256 is
 `eebed533fb20df4f214f2e198dbc277512c340702ced1bbf9fb09c875418dcf8`.
 
-No new hardware run is ready. First commit the r40 evidence and documentation,
-then create a new clean-source formal checkpoint, run each required complete
-suite exactly once, perform a cache-bypassed canonical offline gate, and create
-a new formal run ID with a complete stages 1--66 plan and fresh authorization.
-Only that new formal run may start the unique stationary stage, and only after
-its own stages 1--65 pass. No Campaign D, r39, or r40 authorization may be
-reused.
+The first fresh checkout after the r40 evidence freeze exposed twelve already
+manifested `.log`, bitstream, LTX, XSA, and ELF objects that were present and
+hash-exact in the original package but ignored and absent from the Git tree.
+The focused package test at source `680f0c7e...` therefore failed 6/9; those
+exact bytes were force-tracked without repackaging in `1daa8920...`. The first
+required-suite attempt at that new source was interrupted by an accidentally
+short outer tool timeout before any complete result existed. That source was
+retired and was not rerun. At source `9cbea83c...`, the once-only complete
+suites naturally finished with 209/210 plus 42/42 because nine ignored
+generated AX7010 board-contract prerequisites had not yet been materialized;
+the canonical gate was not run and that source was also retired. All three
+precondition events are preserved and claim no hardware result.
+
+Fresh cache-bypassed Vivado and Vitis builds then ran from source
+`b6a934de...` and were frozen into main commit
+`946ccbad66d64d715ad6745449b95f6c261ddf76`. The P6 PS bitstream SHA256 is
+`532b60778cea34f1ec12c8961b5ad34a0a632cd00d5c13c6c2d81f2dcab576b0`,
+XSA is `e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1`,
+P7 ELF is `3a7c63a9918bf53e6232cda98bda5597298a215aa0e860fcc439a5f627ee1644`,
+and linker map is
+`0ec32b6d5828ab9f1061a6a1157962a4c74f1e0a3f25c679560e7fa0730a096b`.
+The build and integrated commit trees are identical. Materialization proof
+SHA256 `0dc8fd72ae71087954c8c52f691c3fb2ab8d9352b0e7529861b40d7d15ca7338`
+binds the nine ignored prerequisites and tool identities without claiming a
+canonical cache hit.
+
+On exact clean source `946ccbad...`, the required complete-suite driver ran
+once and passed 210/210 plus 42/42, each suite invoked exactly once. Summary
+SHA256 is `83f878f3f374cf59504b4b9d87d7d2b512c0ea7e45316ef7ce480347662ee3d8`.
+The canonical gate consumed that exact summary without duplicate suite
+invocation and passed 13/13; gate SHA256 is
+`85358dd1d4069f4953b2c205bcbb87680b7a45bdda3203f22f0e835a28cd946a`
+and PS-core readiness passed 40/40 with SHA256
+`a55f0e7d4c62c82403c117cbddf2c5686d86e47bade0b8ca4193ecb5178524d6`.
+The exact 12-file checkpoint package is
+`evidence/generated/p7_r41validate_946ccba_checkpoint`, canonical tree SHA256
+`944366420fba2f8fffc63ca59c8ab0bad827c30e828e3b7808ae5464f181a8fe`;
+its machine classification is
+`evidence/generated/p7_r41validate_946ccba_checkpoint.json`. No hardware action
+occurred and `HARDWARE_ACCEPTANCE=PENDING_HW`.
+
+No new hardware run is ready yet. The next allowed step is to prepare a new
+formal full-run ID at exact source `946ccbad...`, generate the complete stages
+1--66 plan and fresh scoped authorization, bind the current immutable hashes,
+and pass every dry validator. Hardware must not launch merely because this
+offline checkpoint passed. Only that formal run may start the unique stationary
+stage, and only after its own stages 1--65 pass. Campaign D, r39, and r40
+authorization must not be reused.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

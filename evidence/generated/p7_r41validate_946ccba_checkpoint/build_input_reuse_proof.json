@@ -1,0 +1,82 @@
+{
+  "schema": "rf-comm-p7-board-contract-precondition-materialization-v1",
+  "generated_at_utc": "2026-07-15T06:05:25.8856863Z",
+  "status": "PASS",
+  "purpose": "MATERIALIZE_IGNORED_GENERATED_BOARD_CONTRACT_INPUTS_BEFORE_REQUIRED_COMPLETE_SUITES",
+  "not_an_offline_gate_cache_hit": true,
+  "acceptance_coverage_claimed": false,
+  "source": {
+    "cache_bypass_build_input_commit": "b6a934de6660d18d3a37358010847872f5fd05b1",
+    "cache_bypass_build_commit": "18661fc24bdb580e7ff2c645aa674bf7c2dc2e4a",
+    "worktree": "C:\\Users\\user\\.codex\\worktrees\\r41build_b6a934d\\RF_COMM_MULTILANE",
+    "tree": "d05bb9d85868b380800e37c94388a43dc6092347",
+    "cache_bypass_record": "evidence/generated/p7_r41build_b6a934d_cache_bypass.json"
+  },
+  "destination": {
+    "commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+    "worktree": "C:\\Users\\user\\.codex\\worktrees\\r41validate_946ccba\\RF_COMM_MULTILANE",
+    "tree": "d05bb9d85868b380800e37c94388a43dc6092347",
+    "tracked_worktree_clean_after_materialization": true
+  },
+  "equivalence_proof": {
+    "source_build_commit_tree_equals_destination_commit_tree": true,
+    "source_to_destination_changed_paths_are_build_outputs_only": true,
+    "changed_path_count_from_build_input_to_destination": 25,
+    "non_output_changed_path_count": 0,
+    "build_tool_and_transitive_source_hashes_revalidated_by_build_summaries": true,
+    "vivado_version": "2023.1",
+    "vivado_sw_build": "3865809",
+    "vitis_version": "2023.1"
+  },
+  "files": [
+    {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.srcs/sources_1/bd/p6_ps_system/ip/p6_ps_system_processing_system7_0_0/p6_ps_system_processing_system7_0_0.xci",
+      "bytes": 139460,
+      "sha256": "bb094610064dea3aaefa27cffc5dd3d3f8ff3d6cf2e278e344b6cee4865fa056"
+    },
+    {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.srcs/sources_1/bd/p6_ps_system/p6_ps_system.bd",
+      "bytes": 34411,
+      "sha256": "4d766bff0d5191f19f29e6d488225b97432935a4f8f372fb8c28b1a39298b516"
+    },
+    {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.gen/sources_1/bd/p6_ps_system/ip/p6_ps_system_processing_system7_0_0/ps7_init.tcl",
+      "bytes": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    {
+      "path": "build/p6_ps_candidate/project/p6_ps_candidate.gen/sources_1/bd/p6_ps_system/ip/p6_ps_system_processing_system7_0_0/ps7_init.c",
+      "bytes": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    {
+      "path": "build/p7_ps_vitis_workspace/p7_platform/hw/p6_ps_dynamic_transport_e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1.xsa",
+      "bytes": 560423,
+      "sha256": "e796b4ae0832e081c34497354262f3e17e71c9ed6162a02fa4150a06103b2df1"
+    },
+    {
+      "path": "build/p7_ps_vitis_workspace/p7_platform/zynq_fsbl/ps7_parameters.xml",
+      "bytes": 39425,
+      "sha256": "04b944be2c9e55d6bb440a1a1db4aeb86ebd4b5b50c8eaccc3109f4004ce7867"
+    },
+    {
+      "path": "build/p7_ps_vitis_workspace/p7_platform/hw/ps7_init.tcl",
+      "bytes": 25544,
+      "sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d"
+    },
+    {
+      "path": "build/p7_ps_vitis_workspace/p7_platform/hw/ps7_init.c",
+      "bytes": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    },
+    {
+      "path": "build/p7_ps_vitis_workspace/p7_platform/zynq_fsbl/ps7_init.c",
+      "bytes": 319423,
+      "sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+    }
+  ],
+  "file_count": 9,
+  "hash_mismatch_count": 0,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}
