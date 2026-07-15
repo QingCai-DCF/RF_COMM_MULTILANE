@@ -1,0 +1,61 @@
+{
+  "schema": "rf-comm-p7-r40-summarizer-replay-v1",
+  "run_id": "p7_20260715_stationary_app_r40_diag_suffix55",
+  "invocation_count": 1,
+  "summarizer_sha256": "b0426d803693b6fabc285f0f1e8821e17aa55bf17c793dd3ff7cf30699582f83",
+  "summarizer_exit_code_observed": true,
+  "summarizer_exit_code": 1,
+  "hardware_actions_executed_by_summarizer": false,
+  "interpretation": "EXPECTED_FAIL_CLOSED_FORMAL_ACCEPTANCE_SUMMARY_OVER_DIAGNOSTIC_ONLY_SUFFIX",
+  "diagnostic_hardware_result_is_taken_from": "portable ledger and exact stage summaries, not from formal acceptance summarizer",
+  "output_tree": {
+    "file_count": 72,
+    "byte_count": 6129000,
+    "partial_file_count": 0,
+    "tree_sha256": "d8d69008655da29dbdfd74a178cd8ee65724ac68a8678ec60f1f8785b649f5c8",
+    "canonicalization": "relative_path TAB byte_count TAB sha256 LF; POSIX paths sorted ascending"
+  },
+  "final_summary": {
+    "path": "evidence/generated/p7_r40_summarizer_replay/p7_final_summary.json",
+    "bytes": 324302,
+    "sha256": "e811756dba4dc5b3ac182eacb4fe7c3634f0e401fe466df0c2d6ac7abaf7896c",
+    "result": "FAIL",
+    "error_count": 160
+  },
+  "evidence_consistency": {
+    "path": "evidence/generated/p7_r40_summarizer_replay/p7_evidence_consistency_summary.json",
+    "bytes": 295383,
+    "sha256": "a3ae0d8f56263e3bae707537efdb536e714b6877d4ca6cffed970567f709388a",
+    "result": "FAIL",
+    "error_count": 5
+  },
+  "shutdown_evidence": {
+    "path": "evidence/generated/p7_r40_summarizer_replay/p7_shutdown_evidence_summary.json",
+    "bytes": 295190,
+    "sha256": "d4e4b35f6de324b42c0a10e6f7101b1508d3cf1bdb32942ae9abf3486ab115b8",
+    "result": "PASS",
+    "error_count": 0
+  },
+  "authorization_summary": {
+    "path": "evidence/generated/p7_r40_summarizer_replay/p7_hardware_authorization_summary.json",
+    "bytes": 92166,
+    "sha256": "5b927b4bb9943a8259c23b98d20ab4195ab77b00475ea7b4c53969610ccb04f3",
+    "result": "FAIL",
+    "error_count": 0
+  },
+  "stationary_summary": {
+    "path": "evidence/generated/p7_r40_summarizer_replay/p7_stationary_30min_summary.json",
+    "bytes": 1231,
+    "sha256": "11d7e3a919d2a7e700a11dba792f5d0e0570574e8bf93cf55ec36fff1cb7617b",
+    "result": "PENDING_HW",
+    "error_count": 0
+  },
+  "r40_interpretation": {
+    "diagnostic_status": "DIAGNOSTIC_PASS",
+    "coverage_claimed": false,
+    "formal_acceptance_coverage_contributed": false,
+    "stage66_attempt_count": 0,
+    "stationary_started": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  }
+}

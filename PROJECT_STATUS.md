@@ -25,18 +25,24 @@ R34_STAGE62_ATTEMPTED: false
 R34_STAGE62_EXECUTED: false
 R34_STATIONARY_ATTEMPTS: 0
 STAGE62_AUTHORIZATION_CONTRACT_REPAIR: IMPLEMENTED_AND_OFFLINE_VALIDATED
-P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_PREPARATION_COMMIT_BINDS_VALIDATED_SOURCE_3718276
+P7_CURRENT_HEAD_OFFLINE_GATE: NOT_RUN_R40_EVIDENCE_COMMIT_REQUIRES_NEW_FORMAL_CHECKPOINT
 P7_BOUND_EXECUTION_SOURCE_OFFLINE_GATE: PASS_13_OF_13
 P7_LATEST_CLEAN_SOURCE_REGRESSION_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
 P7_LATEST_CLEAN_SOURCE_REGRESSION: PASS_201_PLUS_42
 P7_LATEST_CANONICAL_GATE_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
 P7_LATEST_CANONICAL_GATE: PASS_13_OF_13
-P7_NEW_HARDWARE_RUN_READY: true
-P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r39_diag_suffix55
-P7_LATEST_DIAGNOSTIC_RUN_STATUS: IMMUTABLE_FAIL_NEVER_RESUME
-P7_LATEST_DIAGNOSTIC_SOURCE: 1d0c30fa7988acc0ae345cfec1c1917a56f07592
-P7_LATEST_DIAGNOSTIC_PLAN_SHA256: fb44c68f2a740d43a143eff024a80450b3e803cfe2be7282f362f85aaa1fbc0f
-P7_LATEST_DIAGNOSTIC_LEDGER_SHA256: f77a32c84f39a11bcf3b2e63738b7d491c8d2e823b2068bd979072c6a991e4f5
+P7_NEW_HARDWARE_RUN_READY: false
+P7_LATEST_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
+P7_LATEST_DIAGNOSTIC_RUN_STATUS: COMPLETED_DIAGNOSTIC_PASS_NEVER_REUSE_OR_RESUME
+P7_LATEST_DIAGNOSTIC_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
+P7_LATEST_DIAGNOSTIC_PLAN_SHA256: 27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e
+P7_LATEST_DIAGNOSTIC_LEDGER_SHA256: 756c83030a6224b0381b7a90f0bf9085e3fe59eebe09957a9b68008ae9ca77a5
+R40_DIAGNOSTIC_TERMINAL_PASS_ORDINALS: 1_2_3_4_55_THROUGH_65
+R40_DIAGNOSTIC_FAILED_ORDINAL: NONE
+R40_ACCEPTANCE_COVERAGE_CLAIMED: false
+R40_STAGE66_ATTEMPT_COUNT: 0
+R40_STATIONARY_STARTED: false
+R40_SAFE_SHUTDOWN_COMPLETE: true
 R39_DIAGNOSTIC_TERMINAL_PASS_ORDINALS: 1_2_3_4_55_THROUGH_63
 R39_DIAGNOSTIC_FAILED_ORDINAL: 64
 R39_DIAGNOSTIC_STAGE65: NOT_RUN
@@ -45,14 +51,12 @@ R39_STAGE62_TERMINAL_RESULT: PASS_DIAGNOSTIC_ZERO_COVERAGE
 R39_STAGE64_TERMINAL_RESULT: FAIL_STAGE
 R39_INDEPENDENT_SHUTDOWN_RECOVERY: PASS_SEPARATE_FROM_STAGE_RESULT
 R39_SOURCE_REPAIR: IMPLEMENTED_AND_CLEAN_CHECKPOINT_PASS
-P7_NEXT_DIAGNOSTIC_RUN: p7_20260715_stationary_app_r40_diag_suffix55
-P7_NEXT_DIAGNOSTIC_RUN_STATUS: READY_NO_HARDWARE_LAUNCH
-P7_NEXT_DIAGNOSTIC_SOURCE: 37182768047dc4afdc18699a1142852418b382b5
-P7_NEXT_DIAGNOSTIC_PLAN_SHA256: 27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e
-P7_NEXT_DIAGNOSTIC_PLAN_MODE: DIAGNOSTIC_SUFFIX_55
-P7_NEXT_DIAGNOSTIC_STAGE66_PRESENT: false
-P7_NEXT_DIAGNOSTIC_ACCEPTANCE_COVERAGE_CLAIMED: false
-P7_NEXT_DIAGNOSTIC_HARDWARE_LAUNCHED: false
+P7_NEXT_FORMAL_RUN_ID: NOT_YET_ASSIGNED
+P7_NEXT_FORMAL_RUN_STATUS: BLOCKED_ON_R40_EVIDENCE_COMMIT_AND_NEW_CLEAN_FORMAL_CHECKPOINT
+P7_NEXT_FORMAL_PLAN_MODE: FORMAL_FULL_1_THROUGH_66
+P7_NEXT_FORMAL_PLAN_CREATED: false
+P7_NEXT_FORMAL_AUTHORIZATION_CREATED: false
+P7_NEXT_FORMAL_HARDWARE_LAUNCHED: false
 STAGE62_DIAGNOSTIC_FUNCTIONAL_STREAK: PASS_3_OF_3
 STAGE62_SPECIALIST_INTEGRATION: READY
 CAMPAIGN_D_DIAGNOSTIC_ONLY: true
@@ -176,26 +180,58 @@ separate from the r39 stage result. Raw r39 evidence remains a 743-file,
 `d8e77dde31fa229c08b84fb779e7a805e18e53f20522f7256824f4e9f32bd69f`;
 the portable failure package tree SHA256 is
 `dbb1974da49b7be1efcc0c68f073a4ccf00fff024a9b3f7b44e92c0fc7056ef3`.
-The new, unused diagnostic ID
-`p7_20260715_stationary_app_r40_diag_suffix55` is prepared but not launched.
-Its fail-closed impact decision starts at ordinal 55 because the source, XSA,
-ELF, and PS bitstream changed from r39, so r39's PASS observations at 55--63
-cannot support a skip to 64. The exact r40 plan SHA256 is
-`27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e`.
-It contains only ordinals 1--4 and 55--65, has zero stage 66/stationary entries,
-claims zero acceptance coverage, and remains `PENDING_HW`. All 15 child dry
-validations, the independent plan audit, and the separately invoked executor
-dry validation pass with no hardware process launched. The final
-build-materialization proof SHA256 is
-`349f20dcf6d2bacae028fba49893f6d2f435268483350e2cade03084e920505b`;
-the suite summary is `1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85`,
-the canonical gate is `cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5`,
-and PS core readiness is `c3961b381bb7f9276064f7220908640b7969bdbd02dfb877ad5453095b616d5d`.
-The 12-file portable checkpoint tree is `cf6fc3176e2801ae56e8cb40bd769bf9a7910219aacef17d42dec0c6a86a8955`.
-If hardware execution is entered, use only this exact r40 plan from its bound
-source workspace, never use `--resume`, stop on the first failure, preserve raw
-evidence, and perform independent recovery before retiring the ID. No Campaign
-D or r39 authorization may be reused.
+The diagnostic ID `p7_20260715_stationary_app_r40_diag_suffix55` was launched
+exactly once from clean source
+`37182768047dc4afdc18699a1142852418b382b5`, using plan SHA256
+`27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e`
+and without `--resume`. The exact terminal ledger SHA256 is
+`756c83030a6224b0381b7a90f0bf9085e3fe59eebe09957a9b68008ae9ca77a5`.
+All 15 planned ordinals `1,2,3,4,55,56,57,58,59,60,61,62,63,64,65`
+reached terminal diagnostic PASS, every child return code was zero, and every
+stage recorded both shutdown-before and shutdown-after PASS with closed
+containment and no remaining descendants. No independent recovery was needed
+or run. The external `hw_server` PID 45220 remained untouched, no Ethernet or
+motion was used, and the maximum lane mask remained `0x3`.
+
+r40 is a completed diagnostic-only run and must never be reused or resumed. It
+contributes zero formal acceptance coverage, remains
+`HARDWARE_ACCEPTANCE=PENDING_HW`, contains no stage 66, and did not start the
+1800-second stationary stage. The monitor observed tool-cell exit code zero but
+its separate `Start-Process` exit-code field was blank; no executor process exit
+code is invented. The executor's exact stdout records `DIAGNOSTIC_PASS`, all
+ledger child return codes are zero, and the exact stderr is empty.
+
+The immutable original r40 evidence remains in the validation worktree as an
+836-file, 797,132,623-byte tree with zero partial files and canonical SHA256
+`2702bb0019ddb5899a82c6aa8d6eea775612168a8e0d4d962f0c5fee0db270a2`.
+The portable 129-file package under
+`evidence/generated/p7_r40_diagnostic_pass_package` is 60,394,279 bytes with
+zero partial files and canonical SHA256
+`c66d889d6d6e46a22a83b897284b689c064500a218962b1ab3e1d34a9c0e2570`.
+It losslessly archives all 15 exact stage summaries and raw result logs,
+directly preserves all shutdown/preflight/raw-manifest records, and freezes 69
+authorization, checkpoint, source, tool, configuration, and immutable artifact
+inputs. The machine classification SHA256 is
+`28aa31bcc122e65e3269dc6030f815a542190fee252434fc8bd8d08585371d9e`.
+
+The formal-acceptance summarizer was invoked offline once against only this
+diagnostic suffix. It exited one and failed closed, as required for a run that
+lacks the full formal prefix and stationary stage; its shutdown summary is
+PASS and its stationary summary is `PENDING_HW`. This aggregate FAIL is not a
+diagnostic stage failure and does not override the exact r40 ledger. The
+72-file replay tree SHA256 is
+`d8d69008655da29dbdfd74a178cd8ee65724ac68a8678ec60f1f8785b649f5c8`;
+the focused r40 package/history/tamper/summarizer tests pass 9/9. Their
+machine record SHA256 is
+`eebed533fb20df4f214f2e198dbc277512c340702ced1bbf9fb09c875418dcf8`.
+
+No new hardware run is ready. First commit the r40 evidence and documentation,
+then create a new clean-source formal checkpoint, run each required complete
+suite exactly once, perform a cache-bypassed canonical offline gate, and create
+a new formal run ID with a complete stages 1--66 plan and fresh authorization.
+Only that new formal run may start the unique stationary stage, and only after
+its own stages 1--65 pass. No Campaign D, r39, or r40 authorization may be
+reused.
 
 The final P7 stationary test is a single 1800-second run containing 300 seconds
 of embedded calibration and 1500 seconds of acceptance. It is not an additional

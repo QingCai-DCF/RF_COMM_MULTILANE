@@ -1,0 +1,172 @@
+{
+  "schema": "rf-comm-p7-diagnostic-pass-package-v1",
+  "generated_at_utc": "2026-07-15T05:21:38.296057+00:00",
+  "run_id": "p7_20260715_stationary_app_r40_diag_suffix55",
+  "run_status": "COMPLETED_DIAGNOSTIC_PASS_NEVER_REUSE_OR_RESUME",
+  "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+  "plan_mode": "DIAGNOSTIC_SUFFIX_55",
+  "sequence_plan_sha256": "27de005c49a34c2d663b596ab94ef415c6cdbe5a4e5086c79d6c19a127803b0e",
+  "offline_checkpoint_sha256": "cf6a6d6c839f1e0251279964f5b73b56967f5440e3687253fb78b149ea0886a5",
+  "execution": {
+    "hardware_launch_count": 1,
+    "resume_argument_count": 0,
+    "semantic_status": "DIAGNOSTIC_PASS",
+    "ledger_status": "DIAGNOSTIC_PASS",
+    "outer_tool_cell_exit_code_observed": true,
+    "outer_tool_cell_exit_code": 0,
+    "executor_process_exit_code_observed": false,
+    "executor_process_exit_code": null,
+    "executor_process_exit_code_note": "monitor field was blank; no process exit code is inferred",
+    "child_returncodes_all_zero": true,
+    "launch_at_utc": "2026-07-15T03:05:08.9001250Z",
+    "end_at_utc": "2026-07-15T05:04:18.1653301Z"
+  },
+  "diagnostic_contract": {
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "formal_acceptance_coverage_contributed": false,
+    "mandatory_safety_prefix": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "diagnostic_suffix": [
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "stationary_allowed": false,
+    "stage66_attempt_count": 0,
+    "stationary_started": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "ledger": {
+    "path": "evidence/generated/p7_r40_diagnostic_pass_package/sequence_execution_ledger.json",
+    "bytes": 269734,
+    "sha256": "756c83030a6224b0381b7a90f0bf9085e3fe59eebe09957a9b68008ae9ca77a5",
+    "attempt_count": 15,
+    "completed_stage_count": 15,
+    "full_stage_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "terminal_pass_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "failed_ordinal": null
+  },
+  "stages": {
+    "manifest_path": "evidence/generated/p7_r40_diagnostic_pass_package/stage_evidence_manifest.json",
+    "manifest_sha256": "067732b5b80d407f789da152392c6c66ec6f7a02be51744205f4ff0944cd80c9",
+    "stage_count": 15,
+    "pass_count": 15,
+    "fail_count": 0,
+    "validation_error_count": 0,
+    "ps_failure_count": 0
+  },
+  "safety": {
+    "network_used": false,
+    "ethernet_used": false,
+    "motion_used": false,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "external_hw_server_pid": 45220,
+    "external_hw_server_touched": false,
+    "authorization_environment_present_after_run": false,
+    "authorization_lock_present_after_run": false,
+    "project_hardware_process_count_after_run": 0
+  },
+  "shutdown": {
+    "shutdown_before_pass_count": 15,
+    "shutdown_after_pass_count": 15,
+    "shutdown_artifact_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810",
+    "all_programming_attempted": true,
+    "all_returncodes_zero": true,
+    "all_process_trees_reaped": true,
+    "all_containment_closed": true,
+    "independent_recovery_required": false,
+    "independent_recovery_run": false,
+    "safe_shutdown_complete": true
+  },
+  "raw_evidence": {
+    "original_root": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r40_diag_suffix55",
+    "manifest_path": "evidence/generated/p7_r40_diagnostic_pass_package/original_raw_tree_manifest.json",
+    "manifest_sha256": "a9e3e27755f0b69637c25c40d02de4a37b0e39c65c24c148073555291ba0f237",
+    "file_count": 836,
+    "byte_count": 797132623,
+    "partial_file_count": 0,
+    "tree_sha256": "2702bb0019ddb5899a82c6aa8d6eea775612168a8e0d4d962f0c5fee0db270a2",
+    "portable_package_embeds_entire_raw_tree": false
+  },
+  "immutable_artifacts": {
+    "jtag_bitstream_sha256": "798b0194029638fa27a254dd58db5d6fd28b65d91c5cf2c9e32c0f9076ee3c0f",
+    "jtag_ltx_sha256": "76fe1ec47871946a7d357b0caa1f669500de827b796d6154dcc54678e0ac7083",
+    "ps_bitstream_sha256": "bd9bce92e5966e811e10873a960909851922789d8242726869b9726b58aaa868",
+    "xsa_sha256": "3e9e338241759c900629bb27f3e10982a4b5f9b4a9bea7c49f35e6759467aff8",
+    "elf_sha256": "d47f28ff987b2f719a5497c92539afc4f8734db756df2eb80adc5651fea996da",
+    "linker_map_sha256": "a282a162efff2d7d1fdef7abf32774659cb1b2448050cc95887e0aea3fa5ebde",
+    "ps7_init_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "shutdown_bitstream_sha256": "bac60b58912f0acd771dc830a6761535ec8f6a92befb1ae4cb7d928745af5810"
+  },
+  "historical_preflight_freeze": {
+    "manifest_path": "evidence/generated/p7_r40_diagnostic_pass_package/historical_preflight_inputs/manifest.json",
+    "manifest_sha256": "c275df97fe28e42d54b2f2274f545234bc634344d9b63693b9d6457a2866f99a",
+    "file_count": 69
+  },
+  "summarizer_replay": {
+    "result_path": "evidence/generated/p7_r40_summarizer_replay_result.json",
+    "result_sha256": "38a9d08e67b4c0bb6b2fd2d3a2a2dc81cfc7e88427ec97decc65847c86f75078",
+    "exit_code": 1,
+    "formal_acceptance_result": "FAIL",
+    "shutdown_result": "PASS",
+    "stationary_result": "PENDING_HW",
+    "interpretation": "FAIL_CLOSED_AS_EXPECTED_FOR_DIAGNOSTIC_ONLY_INPUT; not a diagnostic stage failure"
+  },
+  "portable_package": {
+    "path": "evidence/generated/p7_r40_diagnostic_pass_package",
+    "file_count": 129,
+    "byte_count": 60394279,
+    "partial_file_count": 0,
+    "tree_sha256": "c66d889d6d6e46a22a83b897284b689c064500a218962b1ab3e1d34a9c0e2570",
+    "canonicalization": "relative_path TAB byte_count TAB sha256 LF; POSIX paths sorted ascending"
+  },
+  "next_required_step": "COMMIT_R40_DIAGNOSTIC_EVIDENCE_THEN_PREPARE_A_NEW_CLEAN_FORMAL_FULL_1_TO_66_CHECKPOINT; R40 contributes zero acceptance coverage",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "STATIONARY_30MIN": "NOT_RUN"
+}

@@ -1,0 +1,279 @@
+{
+  "schema": "rf-comm-p7-ps-core-hardware-readiness-v1",
+  "P7_PS_CORE_HARDWARE_READINESS": "PASS",
+  "generated_at_utc": "2026-07-15T02:33:33+00:00",
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "checks": {
+    "host_command_cache_disabled_or_isolated": true,
+    "deadline_frozen_in_private_context": true,
+    "active_transfer_obeys_absolute_deadline": true,
+    "stop_abort_shutdown_observed_during_active_object": true,
+    "shutdown_readback_verified": true,
+    "failure_cleanup_shutdown_first": true,
+    "failure_wipe_uses_private_validated_range": true,
+    "integrity_crc_sha_immutable_chunk_snapshot": true,
+    "critical_payload_copies_are_volatile_byte_verified": true,
+    "first_error_diagnostic_is_atomic_and_first_only": true,
+    "stage62_first_error_prepare_is_first_only": true,
+    "first_error_capture_precedes_validation_and_is_input_bound": true,
+    "stage62_diagnostic_fixed_ocm_section": true,
+    "stage62_copy_four_snapshot_classification": true,
+    "stage62_diagnostic_crc_publish_order": true,
+    "stage62_only_microtest_bypasses_pl_and_is_disassembly_bound": true,
+    "pre_repair_encode_raw_compared_to_fixed_input_reference": true,
+    "p6_tx_mmio_readback_and_rx_boundaries_observed": true,
+    "local_payload_buffers_are_64_byte_aligned": true,
+    "end_to_end_output_compare_is_independent": true,
+    "nonzero_output_canary_is_manifest_bound": true,
+    "integrity_failure_snapshot_precedes_output_wipe": true,
+    "integrity_failure_snapshot_mailbox_diagnostic": true,
+    "descriptor_ready_published_last": true,
+    "terminal_descriptor_stable_snapshot": true,
+    "phy_reenabled_and_startup_ready_waited": true,
+    "runtime_terminal_after_exact_deadline": true,
+    "runtime_elapsed_seqlock_and_monotonic_reader": true,
+    "runtime_elapsed_causal_request_release": true,
+    "object_latency_start_precedes_input_integrity": true,
+    "firmware_stationary_admission_cutoff": true,
+    "contained_child_tree_reaped_before_shutdown": true,
+    "strict_ring_host_publication_supported": true,
+    "stationary_identity_ledger_bound": true,
+    "native_shutdown_readback_test": true,
+    "native_payload_alignment_matrix_test": true,
+    "native_stage62_diagnostic_matrix_test": true,
+    "native_stage62_microtest_layout_test": true,
+    "p7_python_and_codec_tests": true,
+    "real_vitis_build_source_bound": true
+  },
+  "sources": {
+    "software/ps_driver/p7_app_service.h": "bcfdcea6975a46ea6cc414ab3b967d9b3d7939762baab517fd0cf8cd1d2ea64c",
+    "software/ps_driver/p7_stage62_diagnostic.h": "e1a41a675916bcbb7998b417fa2fea13e31a72c6ff5cb93a07773c79ee5cc234",
+    "software/ps_driver/p7_stage62_diagnostic.c": "ab4c817d428af9769be41de95e4ffd12cf1f75444a283c21cebd7647f1bcde69",
+    "software/ps_driver/p7_stage62_microtest.h": "f415883c323f9e7d3b69e28a96ba5ac358b5c42aaab0ec705af47cb00ec4d48e",
+    "software/ps_driver/p7_stage62_microtest.c": "28c814430d8bc0dfeff11ea3ea92f16db5b5d8e0631da147c92d83b5eddee47f",
+    "software/ps_driver/p7_admission_contract.h": "12f38347e8cb15857342d9c70a61a6e92a1eeddb40224637a0280c5400ce5d41",
+    "software/ps_driver/p7_app_service.c": "84b1b127c581326bd0d2c89b7714adcb70f1d415eb33b4517c02f82bab19099f",
+    "software/ps_driver/p7_runtime_main.c": "1beede1f1f594fcf20e061c4f03d3e38327c2316cb4013a9aa5127e53bede7d5",
+    "software/ps_driver/ir_driver.h": "88cfaccb8692af31489287251495500fad42780034fe822c69fa22b589240e9c",
+    "software/ps_driver/ir_driver.c": "c69bdccaa0cab491b8415e2e43b513570e2c3c94298f3055e220abd43c27940f",
+    "tools/p7_ps_mailbox_backend.py": "fcf190204ecd296b378bef8b085dd9146c62ce35bff3881becd668e03a873110",
+    "tools/ddr_external_master_diagnostic.py": "ff250817a33e923c8d7a962a92c0c3f9eb19d706f353d6676d8098bbaf80e4c7",
+    "tools/prepare_ddr_resume_gate.py": "d32b91e7e044d6ae3c5934e0b1b5c12bb0f5526215b43b086de4d121531369ed",
+    "scripts/hw/run_p7_ps_application_stage_safe.py": "5c608fe221cc62dcef46900b9d7d76fa277064dfc65db327d388772b37e1eac6",
+    "scripts/hw/p7_ps_application_execute.tcl": "9c0251d30b723c015b87e7fc399212d719c75f70a7f6fb57da2d2888868fd5ec",
+    "scripts/hw/run_p7_jtag_axi_stage_safe.py": "8472cda8e66dc14ef856f7541139bb63400b7aebe9d19d30d37dd00260447dd2",
+    "tools/p7_contained_launcher.py": "fe7ab681732b2ce2cb30c9233a1f58e3235d5f7b0da570a924af4a89f2fc7ca1",
+    "software/ps_driver/ir_regs.h": "a7c6a33471570f281e1d3568c6f1be49d6f2cc44a13375116c6379d5c292cd04",
+    "tools/p7_app_protocol.py": "51ccba4529ac2e5b2a3fefbee6b3a0b128ba59f03bb561096754811a8919298e",
+    "tools/run_p7_ps_core_offline.py": "a9d1191f26608d512c96dcfe67a792c82e953576b1da7257a7aacba250793d71",
+    "tools/p7_regression_evidence.py": "3e1e7110d27d670417117987270a3184dc450c92b30fc88537da746b2bec51cd",
+    "tools/run_p7_regression_suites.py": "27260813e5e45e1793f47deec4eea746a6a9fdb43d7f2cae845fb2ee07359489",
+    "scripts/build_p7_ps_runtime.py": "bb9d6a19da42885781842093e6baa7168f1b7b760c1cd70734afb37a45ecb8e3",
+    "scripts/build_p7_ps_runtime.tcl": "950edaa554fdfc207186eed10baccdaca0241d8bb79753bb926a83a3536560be",
+    "tests/p7/test_p7_application.py": "54e2a7c36e4c4548ff13fa1f5e35082d20ccbf88a4ea325b247cf7758d109c45",
+    "tests/p7/ir_driver_payload_alignment_test.c": "07450b204a424489c7f702348f01d3d754ea3f5093435a650a666ef978e22a01",
+    "tests/p7/p7_stage62_diagnostic_test.c": "e7539d73f648d735e0c4979ec9588b87444a192a4e3dbb9324fe468bc654e472",
+    "tests/p7/p7_stage62_microtest_layout_test.c": "b3a2e31cf4b02a4779efad5aa099028c4ae04e22e8125bea3124b60cdfe3d6cb",
+    "tests/test_p7_stage62_microtest.py": "14ab74d1cb33f53c7eb9f446bdce27184b3abff2633eec08117f19310ef486b3",
+    "tests/test_ddr_external_master_stage_safe.py": "b516fa218f6cc9241860768b5c808b3a78c0f1f58c65f9b49fe034ffb0c04ac4",
+    "tests/test_p7_regression_dedup.py": "2fdcd1c9f53766de04e889f9235e3c2575ce3affeda73526543f1a5532604a28"
+  },
+  "native_shutdown_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "native_stationary_admission_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "native_payload_alignment_matrix_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
+    "returncode": 0,
+    "stdout": "P7_PAYLOAD_ALIGNMENT_MATRIX_CASES=1000\nP7_PAYLOAD_ALIGNMENT_MATRIX_LENGTH_RANGE=1..247\nP7_PAYLOAD_ALIGNMENT_MATRIX_SOURCE_MOD64_COUNT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_DESTINATION_MOD64_COUNT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_SOURCE_DESTINATION_MOD4_PAIRS=16\nP7_PAYLOAD_ALIGNMENT_MATRIX_ARGUMENT_LIMITS=PASS\nP7_PAYLOAD_ALIGNMENT_MATRIX_BUFFER_BASE_ALIGNMENT=64\nP7_PAYLOAD_ALIGNMENT_MATRIX_CANARY=0xA5\n",
+    "stderr": ""
+  },
+  "native_stage62_diagnostic_matrix_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
+    "returncode": 0,
+    "stdout": "P7_STAGE62_DIAGNOSTIC_LAYOUT=PASS\nP7_STAGE62_DIAGNOSTIC_CLASSIFICATIONS=PASS\nP7_STAGE62_DIAGNOSTIC_CANARY=PASS\nP7_STAGE62_DIAGNOSTIC_INDEPENDENT_READBACK=PASS\nP7_STAGE62_DIAGNOSTIC_LENGTH_RANGE=1..247\nP7_STAGE62_DIAGNOSTIC_SOURCE_MOD64_COUNT=64\nP7_STAGE62_DIAGNOSTIC_DESTINATION_MOD64_COUNT=64\nP7_STAGE62_DIAGNOSTIC_SOURCE_DESTINATION_MOD4_PAIRS=16\nP7_STAGE62_DIAGNOSTIC_MATRIX_CASES=1011712\nP7_STAGE62_DIAGNOSTIC_RECORD_CRC32=PASS\nP7_STAGE62_DIAGNOSTIC_RECORD_BYTES=1536\n",
+    "stderr": ""
+  },
+  "native_stage62_microtest_layout_test": {
+    "compiler": "D:\\Xilinx\\Vitis_HLS\\2023.1\\tps\\mingw\\8.3.0\\win64.o\\nt\\bin\\gcc.exe",
+    "compile_returncode": 0,
+    "compile_stdout": "",
+    "compile_stderr": "",
+    "returncode": 0,
+    "stdout": "P7_STAGE62_MICROTEST_LAYOUT=PASS\nP7_STAGE62_MICROTEST_CONTROL_BYTES=64\nP7_STAGE62_MICROTEST_RECORD_BYTES=1536\nP7_STAGE62_MICROTEST_CASES=A,B,C,D\nP7_STAGE62_MICROTEST_LENGTH_RANGE=29..32\nP7_STAGE62_MICROTEST_ALIGNMENT_RANGE=0..3\nP7_STAGE62_MICROTEST_CANARY=0xA5\n",
+    "stderr": ""
+  },
+  "unit_tests": {
+    "command": "VALIDATED_COMPLETE_SUITE:tests_p7_discovery",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "evidence_mode": "VALIDATED_REUSE_NO_TEST_INVOCATION",
+    "invocation_count_in_core_gate": 0,
+    "original_suite": {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 42,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 5303,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "validated_complete_regression_summary": {
+      "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40.json",
+      "sha256": "1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85",
+      "payload": {
+        "FULL_SUITE_INVOCATION_COUNT": 2,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        "NO_HARDWARE_ACTIONS_EXECUTED": true,
+        "dirty_files_after_suites": [],
+        "dirty_worktree_after_suites": false,
+        "dirty_worktree_before_suites": false,
+        "generated_at_utc": "2026-07-15T02:33:23.343177+00:00",
+        "schema": "rf-comm-p7-complete-regression-suites-v1",
+        "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+        "source_commit_after_suites": "37182768047dc4afdc18699a1142852418b382b5",
+        "source_commit_unchanged": true,
+        "status": "PASS",
+        "suite_invocation_count_by_name": {
+          "tests_p7_discovery": 1,
+          "top_level_discovery": 1
+        },
+        "suites": [
+          {
+            "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+            "discovered_test_count": 201,
+            "invocation_count": 1,
+            "name": "top_level_discovery",
+            "returncode": 0,
+            "status": "PASS",
+            "stderr": {
+              "bytes": 37362,
+              "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\top_level_discovery.stderr.log",
+              "sha256": "a3e9f2dfd0b88cff2f0ce8bee8933ce1b3e3e08637e58376a3e6bbb69868cc30"
+            },
+            "stdout": {
+              "bytes": 641,
+              "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\top_level_discovery.stdout.log",
+              "sha256": "536154ef02394e7f8b8a65dddd71d851827f0d54dafe9b6dae58f9601aa4dac3"
+            }
+          },
+          {
+            "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+            "discovered_test_count": 42,
+            "invocation_count": 1,
+            "name": "tests_p7_discovery",
+            "returncode": 0,
+            "status": "PASS",
+            "stderr": {
+              "bytes": 5303,
+              "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stderr.log",
+              "sha256": "2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae"
+            },
+            "stdout": {
+              "bytes": 0,
+              "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stdout.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ],
+        "total_discovered_test_count": 243
+      },
+      "errors": []
+    }
+  },
+  "validated_complete_regression_summary": {
+    "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40.json",
+    "sha256": "1f397f78c5325271015d19b623090fe56c432ed62329a7501e1b67beae4cbb85",
+    "payload": {
+      "FULL_SUITE_INVOCATION_COUNT": 2,
+      "HARDWARE_ACCEPTANCE": "PENDING_HW",
+      "NO_HARDWARE_ACTIONS_EXECUTED": true,
+      "dirty_files_after_suites": [],
+      "dirty_worktree_after_suites": false,
+      "dirty_worktree_before_suites": false,
+      "generated_at_utc": "2026-07-15T02:33:23.343177+00:00",
+      "schema": "rf-comm-p7-complete-regression-suites-v1",
+      "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+      "source_commit_after_suites": "37182768047dc4afdc18699a1142852418b382b5",
+      "source_commit_unchanged": true,
+      "status": "PASS",
+      "suite_invocation_count_by_name": {
+        "tests_p7_discovery": 1,
+        "top_level_discovery": 1
+      },
+      "suites": [
+        {
+          "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+          "discovered_test_count": 201,
+          "invocation_count": 1,
+          "name": "top_level_discovery",
+          "returncode": 0,
+          "status": "PASS",
+          "stderr": {
+            "bytes": 37362,
+            "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\top_level_discovery.stderr.log",
+            "sha256": "a3e9f2dfd0b88cff2f0ce8bee8933ce1b3e3e08637e58376a3e6bbb69868cc30"
+          },
+          "stdout": {
+            "bytes": 641,
+            "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\top_level_discovery.stdout.log",
+            "sha256": "536154ef02394e7f8b8a65dddd71d851827f0d54dafe9b6dae58f9601aa4dac3"
+          }
+        },
+        {
+          "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+          "discovered_test_count": 42,
+          "invocation_count": 1,
+          "name": "tests_p7_discovery",
+          "returncode": 0,
+          "status": "PASS",
+          "stderr": {
+            "bytes": 5303,
+            "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stderr.log",
+            "sha256": "2bcf6df72a13b2d76198d0381fe63b58c9c2d66dfdc75cd4f9570e3dbf6f02ae"
+          },
+          "stdout": {
+            "bytes": 0,
+            "path": "C:\\Users\\user\\.codex\\worktrees\\r40validate_3718276\\RF_COMM_MULTILANE\\build\\p7_regression_3718276_r40_logs\\tests_p7_discovery.stdout.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "total_discovered_test_count": 243
+    },
+    "errors": []
+  },
+  "source_commit": "37182768047dc4afdc18699a1142852418b382b5",
+  "build_summary": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json"
+}
