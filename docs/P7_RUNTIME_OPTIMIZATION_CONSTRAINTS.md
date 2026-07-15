@@ -15,9 +15,15 @@ overrides it.
 - Diagnostic runs always record `DIAGNOSTIC_ONLY`, `coverage_claimed=false`,
   and `HARDWARE_ACCEPTANCE=PENDING_HW`.  A skipped or historical stage never
   contributes formal acceptance coverage.
-- Diagnostic runs never include the final stationary stage.  Only a later new
-  formal run that executes the complete immutable acceptance sequence from its
-  first stage may launch the single stationary stage.
+- Ordinary diagnostic runs never include the final stationary stage.  The only
+  exception is the explicitly authorized, machine-counted Stage 66 diagnostic
+  campaign in `config/p7_stage66_diagnostic_campaign_policy.json`.  A campaign
+  run is exactly formal ordinals 1--4 followed by standalone ordinal 66, uses a
+  collision-checked new run ID, remains `DIAGNOSTIC_ONLY` with zero coverage and
+  `HARDWARE_ACCEPTANCE=PENDING_HW`, and may run the exact 1800-second stationary
+  window.  The campaign stops at its first complete Stage 66 PASS or after ten
+  actually launched hardware run IDs, whichever comes first.  This exception
+  neither changes nor contributes coverage to the later formal 1--66 run.
 - No optimization may add Ethernet, motion, a lane mask above `0x3`, modify the
   legacy RF_COMM project, or alter/replace the external existing `hw_server`.
 
@@ -89,3 +95,32 @@ grouping cases across required shutdown barriers, weakening containment or
 shutdown checks, changing the formal acceptance sequence, or substituting PS,
 offline, simulation, proxy, or historical evidence for a required hardware
 stage.
+
+## Bounded Stage 66 diagnostic campaign exception
+
+The active user authorization dated 2026-07-15 narrowly overrides the ordinary
+diagnostic stationary prohibition and the earlier project-wide single-attempt
+stationary limit.  It does not override any other safety or evidence rule.
+
+- The immutable r41 formal run remains `FAIL` and can never be resumed,
+  restarted, copied, or reused.  Its frozen ledger identity is bound by the
+  campaign policy.
+- At most ten diagnostic hardware run IDs may actually launch.  A preparation
+  blocked before hardware does not consume the numerical allowance, but its run
+  ID remains retired under the normal fail-closed collision rules.
+- Each launched campaign run executes only the mandatory prefix ordinals 1--4
+  and standalone ordinal 66.  It may execute ordinal 66 for exactly 1800
+  seconds, but remains diagnostic-only and claims no acceptance coverage.
+- The persistent campaign ledger is updated before the first child hardware
+  wrapper can launch.  It enforces the next attempt number, unique run ID,
+  maximum count, unresolved-recovery barrier, and stop-after-first-PASS rule.
+- A failure, timeout, exception, or orphaned launch intent permanently retires
+  that run ID and requires separately authorized independent shutdown recovery
+  before another campaign plan can validate.
+- After the first complete 1800-second diagnostic PASS, no additional campaign
+  run may launch.  The final repair is then committed and a new clean source
+  must pass the required complete suites exactly once, a cache-bypassed
+  canonical offline gate, new scoped authorization, immutable hashes, and dry
+  validation before a different formal run ID executes the full ordinals
+  1--66.  Only that formal run contributes acceptance coverage, and its Stage
+  66 may launch once.

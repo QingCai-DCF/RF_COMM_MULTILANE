@@ -30,6 +30,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+import p7_stage66_campaign as stage66_campaign
+
 
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -147,8 +149,15 @@ HARDWARE_EXECUTION_LOCK_RELATIVE = Path(".hardware_authorization") / "P7_HARDWAR
 CHECKPOINT_RELATION_BOUND = "BOUND_TO_ACTIVE_OFFLINE_CHECKPOINT"
 CHECKPOINT_RELATION_OLD_DIAGNOSTIC = "PRECHECKPOINT_OLD_COMMIT_READ_ONLY_DIAGNOSTIC"
 CHECKPOINT_RELATION_OLD_FAILED_STAGE = "PRECHECKPOINT_OLD_COMMIT_FAILED_STAGE_DIAGNOSTIC"
+CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN = (
+    "PRECHECKPOINT_OLD_COMMIT_STAGE66_ZERO_COVERAGE_DIAGNOSTIC"
+)
 CHECKPOINT_RELATIONS_HISTORICAL = frozenset(
-    {CHECKPOINT_RELATION_OLD_DIAGNOSTIC, CHECKPOINT_RELATION_OLD_FAILED_STAGE}
+    {
+        CHECKPOINT_RELATION_OLD_DIAGNOSTIC,
+        CHECKPOINT_RELATION_OLD_FAILED_STAGE,
+        CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN,
+    }
 )
 CORE_READINESS_CHECKS = (
     "host_command_cache_disabled_or_isolated",
@@ -251,6 +260,7 @@ SAFE_IDLE_REQUIRED_KEYS = frozenset(
     }
 )
 OFFLINE_CRITICAL_SOURCES = (
+    "config/p7_stage66_diagnostic_campaign_policy.json",
     "software/ps_driver/p7_app_service.h",
     "software/ps_driver/p7_app_service.c",
     "software/ps_driver/p7_runtime_main.c",
@@ -261,7 +271,11 @@ OFFLINE_CRITICAL_SOURCES = (
     "scripts/hw/run_p7_jtag_axi_stage_safe.py",
     "tools/p7_contained_launcher.py",
     "tools/p7_ps_mailbox_backend.py",
+    "tools/p7_stage66_campaign.py",
+    "tools/record_p7_stage66_campaign_recovery.py",
+    "tools/generate_p7_authorized_sequence_plan.py",
     "tools/run_p7_gate.py",
+    "tools/run_p7_authorized_hardware_sequence.py",
     "tools/run_p7_ps_core_offline.py",
     "tools/summarize_p7_hardware.py",
 )
@@ -1899,6 +1913,12 @@ def common_runner_errors(
     for path_key, path_value in auth_fields.items():
         if not path_key.endswith("_PATH"):
             continue
+        if path_key == "P7_STAGE66_CAMPAIGN_LEDGER_PATH":
+            # The campaign ledger is intentionally mutable runtime evidence.
+            # Its pre-launch snapshot is bound by
+            # P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256 and the outer sequence
+            # validator; it must never be treated as an immutable child input.
+            continue
         sha_key = path_key[:-5] + "_SHA256"
         expected_sha = str(auth_fields.get(sha_key, "")).lower()
         bound_path = resolve_reference(path_value, document=candidate.path, repo_root=evidence.repo_root)
@@ -1912,6 +1932,79 @@ def common_runner_errors(
                 "sha256": sha256_file(bound_path),
                 "authorization_sha256_key": sha_key,
             }
+    if auth_fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") == "true":
+        append_error(errors, auth_fields.get("P7_EXECUTION_MODE") == "DIAGNOSTIC_ONLY", "Stage66 campaign authorization is not DIAGNOSTIC_ONLY")
+        append_error(errors, auth_fields.get("P7_COVERAGE_CLAIMED") == "false", "Stage66 campaign authorization claims coverage")
+        append_error(errors, auth_fields.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "Stage66 campaign authorization promotes hardware acceptance")
+        append_error(errors, auth_fields.get("P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS") == "10", "Stage66 campaign authorization maximum is not 10")
+        try:
+            campaign_attempt = int(auth_fields.get("P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER", ""))
+            campaign_ordinal = int(auth_fields.get("P7_FULL_STAGE_ORDINAL", ""))
+        except (TypeError, ValueError):
+            campaign_attempt = campaign_ordinal = 0
+        append_error(errors, 1 <= campaign_attempt <= 10, "Stage66 campaign authorization attempt number is outside 1..10")
+        append_error(errors, campaign_ordinal in {1, 2, 3, 4, 66}, "Stage66 campaign authorization ordinal is outside exact 1--4,66")
+        campaign_run_id = str(auth_fields.get("P7_STAGE66_CAMPAIGN_RUN_ID", ""))
+        append_error(errors, f"diag_stage66_c{campaign_attempt:02d}" in campaign_run_id, "Stage66 campaign authorization run ID/attempt mismatch")
+        prior_ledger_sha = str(auth_fields.get("P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256", ""))
+        append_error(errors, prior_ledger_sha == "ABSENT" or SHA256_RE.fullmatch(prior_ledger_sha) is not None, "Stage66 campaign prior-ledger SHA256 is malformed")
+        append_error(errors, data.get("diagnostic_only") is True, "Stage66 campaign wrapper summary omits diagnostic_only=true")
+        append_error(errors, data.get("coverage_claimed") is False, "Stage66 campaign wrapper summary claims coverage")
+        append_error(errors, data.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "Stage66 campaign wrapper summary promotes hardware acceptance")
+        campaign_summary = data.get("stage66_diagnostic_campaign")
+        append_error(errors, isinstance(campaign_summary, dict), "Stage66 campaign wrapper summary metadata is missing")
+        if isinstance(campaign_summary, dict):
+            append_error(errors, campaign_summary.get("campaign_id") == auth_fields.get("P7_STAGE66_CAMPAIGN_ID"), "Stage66 campaign summary campaign ID mismatch")
+            append_error(errors, campaign_summary.get("hardware_attempt_number") == campaign_attempt, "Stage66 campaign summary attempt number mismatch")
+            append_error(errors, campaign_summary.get("maximum_actual_hardware_attempts") == 10, "Stage66 campaign summary maximum attempt count mismatch")
+            append_error(errors, campaign_summary.get("formal_acceptance_coverage") is False, "Stage66 campaign summary claims formal coverage")
+        policy_path = resolve_reference(
+            auth_fields.get("P7_STAGE66_CAMPAIGN_POLICY_PATH"),
+            document=candidate.path,
+            repo_root=evidence.repo_root,
+        )
+        campaign_policy: dict[str, Any] | None = None
+        if policy_path is None:
+            errors.append("Stage66 campaign policy path cannot be resolved")
+        else:
+            campaign_policy, policy_errors = stage66_campaign.validate_policy(
+                policy_path,
+                str(auth_fields.get("P7_STAGE66_CAMPAIGN_POLICY_SHA256", "")).lower(),
+            )
+            errors.extend(f"Stage66 campaign policy: {item}" for item in policy_errors)
+        campaign_ledger_path = resolve_reference(
+            auth_fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH"),
+            document=candidate.path,
+            repo_root=evidence.repo_root,
+        )
+        if campaign_policy is not None and campaign_ledger_path is not None:
+            append_error(
+                errors,
+                campaign_ledger_path == stage66_campaign.campaign_ledger_path(campaign_policy),
+                "Stage66 campaign ledger path differs from policy",
+            )
+            campaign_ledger, ledger_errors = stage66_campaign.validate_ledger(
+                campaign_policy, campaign_ledger_path, allow_absent=False
+            )
+            errors.extend(f"Stage66 campaign ledger: {item}" for item in ledger_errors)
+            attempts = (
+                campaign_ledger.get("hardware_attempts")
+                if isinstance(campaign_ledger, dict)
+                else None
+            )
+            bound_attempt = (
+                attempts[campaign_attempt - 1]
+                if isinstance(attempts, list)
+                and 1 <= campaign_attempt <= len(attempts)
+                and isinstance(attempts[campaign_attempt - 1], dict)
+                else None
+            )
+            append_error(errors, isinstance(bound_attempt, dict), "Stage66 campaign summary has no ledger attempt binding")
+            if isinstance(bound_attempt, dict):
+                append_error(errors, bound_attempt.get("hardware_attempt_number") == campaign_attempt, "Stage66 campaign ledger attempt number mismatch")
+                append_error(errors, bound_attempt.get("run_id") == campaign_run_id, "Stage66 campaign ledger run ID mismatch")
+                append_error(errors, bound_attempt.get("source_commit") == _candidate_source_commit(candidate), "Stage66 campaign ledger source commit mismatch")
+                append_error(errors, bound_attempt.get("prior_campaign_ledger_sha256") == prior_ledger_sha, "Stage66 campaign ledger prior snapshot mismatch")
     if candidate.kind == "ps":
         append_error(errors, str(auth_fields.get("P7_PS_MODE", "")) == str(data.get("mode", "")), "authorization P7_PS_MODE mismatch")
         append_error(errors, str(auth_fields.get("P7_PS_CORE_READINESS", "")) == "PASS", "authorization does not bind P7_PS_CORE_READINESS=PASS")
@@ -11880,6 +11973,242 @@ def _historical_epoch_order_errors(
     return errors
 
 
+def _stage66_campaign_authorization_fields(
+    candidate: Candidate,
+) -> dict[str, Any] | None:
+    safety = candidate.data.get("safety_validation")
+    fields = safety.get("authorization_fields") if isinstance(safety, dict) else None
+    if not isinstance(fields, dict) or fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") != "true":
+        return None
+    return fields
+
+
+def _historical_stage66_campaign_epoch(
+    candidate: Candidate, evidence: RepositoryEvidence
+) -> tuple[dict[str, Any], list[str]]:
+    """Validate one superseded Stage66 campaign epoch as zero coverage.
+
+    The persistent campaign ledger and immutable per-run outer execution ledger
+    are the authority.  Prefix summaries are hash-bound observations only; they
+    can never become active-checkpoint acceptance coverage.
+    """
+    errors: list[str] = []
+    fields = _stage66_campaign_authorization_fields(candidate) or {}
+    source = _candidate_source_commit(candidate)
+    run_id = str(fields.get("P7_STAGE66_CAMPAIGN_RUN_ID", ""))
+    try:
+        campaign_attempt_number = int(
+            fields.get("P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER", "0")
+        )
+    except (TypeError, ValueError):
+        campaign_attempt_number = 0
+    run_root = candidate.path.parent.parent.resolve(strict=False)
+    expected_root = (
+        evidence.hardware_root / "authorized_sequence" / run_id
+    ).resolve(strict=False)
+    append_error(errors, run_root == expected_root, "historical Stage66 campaign run root/run ID mismatch")
+
+    policy_path = resolve_reference(
+        fields.get("P7_STAGE66_CAMPAIGN_POLICY_PATH"),
+        document=candidate.path,
+        repo_root=evidence.repo_root,
+    )
+    policy: dict[str, Any] | None = None
+    if policy_path is None:
+        errors.append("historical Stage66 campaign policy path cannot be resolved")
+    else:
+        policy, policy_errors = stage66_campaign.validate_policy(
+            policy_path,
+            str(fields.get("P7_STAGE66_CAMPAIGN_POLICY_SHA256", "")).lower(),
+        )
+        errors.extend(f"historical Stage66 campaign policy: {item}" for item in policy_errors)
+    campaign_ledger_path = resolve_reference(
+        fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH"),
+        document=candidate.path,
+        repo_root=evidence.repo_root,
+    )
+    campaign_ledger: dict[str, Any] | None = None
+    if policy is not None and campaign_ledger_path is not None:
+        append_error(
+            errors,
+            campaign_ledger_path == stage66_campaign.campaign_ledger_path(policy),
+            "historical Stage66 campaign ledger path differs from policy",
+        )
+        campaign_ledger, ledger_errors = stage66_campaign.validate_ledger(
+            policy, campaign_ledger_path, allow_absent=False
+        )
+        errors.extend(
+            f"historical Stage66 campaign ledger: {item}" for item in ledger_errors
+        )
+    campaign_attempt: dict[str, Any] | None = None
+    campaign_attempts = (
+        campaign_ledger.get("hardware_attempts")
+        if isinstance(campaign_ledger, dict)
+        else None
+    )
+    if (
+        isinstance(campaign_attempts, list)
+        and 1 <= campaign_attempt_number <= len(campaign_attempts)
+        and isinstance(campaign_attempts[campaign_attempt_number - 1], dict)
+    ):
+        campaign_attempt = campaign_attempts[campaign_attempt_number - 1]
+    append_error(errors, isinstance(campaign_attempt, dict), "historical Stage66 campaign attempt is absent from the campaign ledger")
+    if isinstance(campaign_attempt, dict):
+        append_error(errors, campaign_attempt.get("run_id") == run_id, "historical Stage66 campaign ledger run ID mismatch")
+        append_error(errors, campaign_attempt.get("source_commit") == source, "historical Stage66 campaign ledger source mismatch")
+        append_error(
+            errors,
+            campaign_attempt.get("prior_campaign_ledger_sha256")
+            == fields.get("P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256"),
+            "historical Stage66 campaign prior-ledger snapshot mismatch",
+        )
+
+    outer_path = run_root / "sequence_execution_ledger.json"
+    try:
+        outer = json.loads(outer_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        outer = {}
+        errors.append(f"historical Stage66 outer execution ledger is invalid: {exc}")
+    append_error(errors, isinstance(outer, dict) and outer.get("schema") == "rf-comm-p7-sequence-execution-ledger-v1", "historical Stage66 outer execution ledger schema mismatch")
+    append_error(errors, outer.get("plan_mode") == stage66_campaign.PLAN_MODE, "historical Stage66 outer plan mode mismatch")
+    append_error(errors, outer.get("coverage_claimed") is False, "historical Stage66 outer ledger claims coverage")
+    append_error(errors, outer.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "historical Stage66 outer ledger promotes acceptance")
+    append_error(errors, outer.get("full_stage_ordinals") == list(stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS), "historical Stage66 outer ordinal matrix mismatch")
+    append_error(errors, outer.get("source_commit") == source, "historical Stage66 outer source mismatch")
+    append_error(errors, outer.get("network_used") is False and outer.get("motion_used") is False, "historical Stage66 outer safety scope mismatch")
+    outer_campaign = outer.get("stage66_diagnostic_campaign")
+    if not isinstance(outer_campaign, dict):
+        errors.append("historical Stage66 outer campaign binding is missing")
+    else:
+        append_error(errors, outer_campaign.get("run_id") == run_id, "historical Stage66 outer campaign run ID mismatch")
+        append_error(errors, outer_campaign.get("hardware_attempt_number") == campaign_attempt_number, "historical Stage66 outer campaign attempt mismatch")
+
+    if isinstance(campaign_attempt, dict):
+        bound_outer_path = resolve_reference(
+            campaign_attempt.get("execution_ledger_path"),
+            document=outer_path,
+            repo_root=evidence.repo_root,
+        )
+        append_error(errors, bound_outer_path == outer_path, "campaign attempt does not bind the historical outer ledger path")
+        append_error(
+            errors,
+            outer_path.is_file()
+            and sha256_file(outer_path)
+            == str(campaign_attempt.get("execution_ledger_sha256", "")).lower(),
+            "campaign attempt does not hash-bind the historical outer ledger",
+        )
+
+    sequence_plan = outer.get("sequence_plan")
+    append_error(errors, isinstance(sequence_plan, dict), "historical Stage66 sequence-plan binding is missing")
+    if isinstance(sequence_plan, dict) and isinstance(campaign_attempt, dict):
+        plan_path = resolve_reference(
+            sequence_plan.get("path"), document=outer_path, repo_root=evidence.repo_root
+        )
+        plan_sha = str(sequence_plan.get("sha256", "")).lower()
+        append_error(errors, plan_path is not None and plan_path.is_file(), "historical Stage66 sequence plan is missing")
+        append_error(errors, plan_sha == campaign_attempt.get("sequence_plan_sha256"), "historical Stage66 sequence plan/campaign hash mismatch")
+        if plan_path is not None and plan_path.is_file():
+            append_error(errors, sha256_file(plan_path) == plan_sha, "historical Stage66 sequence plan was modified")
+
+    attempts = outer.get("attempts")
+    if not isinstance(attempts, list) or not 1 <= len(attempts) <= 5:
+        attempts = []
+        errors.append("historical Stage66 outer attempts are missing/outside 1..5")
+    expected_ordinals = list(stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS)[: len(attempts)]
+    append_error(
+        errors,
+        [item.get("full_stage_ordinal") for item in attempts if isinstance(item, dict)]
+        == expected_ordinals,
+        "historical Stage66 outer attempts are not the exact ordinal prefix",
+    )
+    candidates_by_path = {
+        item.path.resolve(strict=False): item for item in evidence.candidates
+    }
+    observed_summary_paths: set[Path] = set()
+    terminal_child: Candidate | None = None
+    for index, attempt in enumerate(attempts):
+        if not isinstance(attempt, dict):
+            errors.append(f"historical Stage66 outer attempt {index + 1} is malformed")
+            continue
+        append_error(errors, attempt.get("attempt") == index + 1 and attempt.get("stage_index") == index, f"historical Stage66 outer attempt {index + 1} index mismatch")
+        append_error(errors, attempt.get("state") == "TERMINAL", f"historical Stage66 outer attempt {index + 1} is not terminal")
+        summary_errors, summary_record = verify_hash_record(
+            f"historical Stage66 outer attempt {index + 1} summary",
+            attempt.get("summary_file"),
+            document=outer_path,
+            repo_root=evidence.repo_root,
+            expected_required=False,
+        )
+        errors.extend(summary_errors)
+        child = (
+            candidates_by_path.get(Path(summary_record["path"]).resolve(strict=False))
+            if summary_record
+            else None
+        )
+        append_error(errors, child is not None, f"historical Stage66 outer attempt {index + 1} has no candidate summary")
+        if child is None:
+            continue
+        terminal_child = child
+        append_error(errors, child.path not in observed_summary_paths, f"historical Stage66 outer attempt {index + 1} reuses a summary")
+        observed_summary_paths.add(child.path)
+        child_fields = _stage66_campaign_authorization_fields(child) or {}
+        append_error(errors, _candidate_source_commit(child) == source, f"historical Stage66 outer attempt {index + 1} source mismatch")
+        append_error(errors, child_fields.get("P7_STAGE66_CAMPAIGN_RUN_ID") == run_id, f"historical Stage66 outer attempt {index + 1} run ID mismatch")
+        append_error(errors, child_fields.get("P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER") == str(campaign_attempt_number), f"historical Stage66 outer attempt {index + 1} campaign number mismatch")
+        append_error(errors, child_fields.get("P7_FULL_STAGE_ORDINAL") == str(expected_ordinals[index]), f"historical Stage66 outer attempt {index + 1} ordinal mismatch")
+        append_error(errors, child.data.get("diagnostic_only") is True and child.data.get("coverage_claimed") is False and child.data.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"historical Stage66 outer attempt {index + 1} diagnostic boundary mismatch")
+        append_error(errors, child.executed, f"historical Stage66 outer attempt {index + 1} omits hardware execution")
+        append_error(errors, child.data.get("ethernet_used") is False and child.data.get("motion_used") is False, f"historical Stage66 outer attempt {index + 1} safety scope mismatch")
+        if attempt.get("result") == "PASS":
+            append_error(errors, child.marker == "PASS", f"historical Stage66 outer attempt {index + 1} PASS/runner mismatch")
+            append_error(errors, child.data.get("programmed_shutdown_after") is True, f"historical Stage66 outer attempt {index + 1} PASS lacks shutdown-after")
+
+    outer_status = outer.get("status")
+    diagnostic_result = "PASS" if outer_status == "DIAGNOSTIC_PASS" else "FAIL"
+    if diagnostic_result == "PASS":
+        append_error(errors, len(attempts) == 5 and all(isinstance(item, dict) and item.get("result") == "PASS" for item in attempts), "historical Stage66 campaign PASS does not contain five PASS stages")
+        append_error(errors, isinstance(campaign_attempt, dict) and campaign_attempt.get("status") == "PASS" and campaign_attempt.get("complete_1800_second_stage66_pass") is True, "historical Stage66 campaign PASS is not terminal in the campaign ledger")
+        epoch_end_text = attempts[-1].get("ended_at_utc") if attempts else None
+    else:
+        append_error(errors, outer_status == "FAIL", "historical Stage66 campaign outer status is neither FAIL nor DIAGNOSTIC_PASS")
+        append_error(errors, bool(attempts) and all(isinstance(item, dict) and item.get("result") == "PASS" for item in attempts[:-1]) and isinstance(attempts[-1], dict) and attempts[-1].get("result") == "FAIL", "historical Stage66 campaign failure is not first-failure terminal")
+        append_error(errors, isinstance(campaign_attempt, dict) and campaign_attempt.get("status") == "FAIL_RECOVERED", "historical Stage66 campaign failure lacks independent recovery")
+        recovery = campaign_attempt.get("independent_shutdown_recovery") if isinstance(campaign_attempt, dict) else None
+        append_error(errors, isinstance(recovery, dict) and recovery.get("status") == "PASS" and recovery.get("recovery_changes_failed_stage_result") is False, "historical Stage66 campaign recovery is missing or relabels the failure")
+        epoch_end_text = recovery.get("ended_at") if isinstance(recovery, dict) else None
+    append_error(errors, outer.get("attempt_count") == len(attempts), "historical Stage66 outer attempt_count mismatch")
+    append_error(
+        errors,
+        terminal_child is not None
+        and terminal_child.path.resolve(strict=False) == candidate.path.resolve(strict=False),
+        "historical Stage66 terminal candidate is not the final outer attempt",
+    )
+    epoch_start_text = attempts[0].get("launch_intent_at_utc") if attempts else None
+    epoch_end = parse_time(epoch_end_text, float("nan"))
+    record = {
+        "schema": "rf-comm-p7-historical-stage66-campaign-epoch-v1",
+        "campaign_id": fields.get("P7_STAGE66_CAMPAIGN_ID"),
+        "run_id": run_id,
+        "hardware_attempt_number": campaign_attempt_number,
+        "source_commit": source,
+        "diagnostic_result": diagnostic_result,
+        "coverage_keys": [],
+        "outer_execution_ledger": _hash_record(outer_path) if outer_path.is_file() else None,
+        "campaign_attempt": campaign_attempt,
+        "verified_stage_count": len(attempts),
+        "verified_full_stage_ordinals": expected_ordinals,
+        "inner_preflight_process_tree_reaped": (
+            (candidate.data.get("preflight") or candidate.data.get("preflight_process") or {}).get("process_tree_reaped")
+            if isinstance(candidate.data, dict)
+            else None
+        ),
+        "started_at_utc": epoch_start_text,
+        "ended_at_utc": epoch_end_text,
+        "ended_at_epoch_seconds": epoch_end,
+    }
+    return record, errors
+
+
 def _candidate_checkpoint_relation(
     candidate: Candidate,
     evidence: RepositoryEvidence,
@@ -11896,7 +12225,10 @@ def _candidate_checkpoint_relation(
         append_error(errors, start == start and offline_time == offline_time and start >= offline_time, "checkpoint-bound run started before the active offline checkpoint")
         return CHECKPOINT_RELATION_BOUND, errors, None
     historical_variant = _historical_preflight_variant(candidate)
-    if historical_variant == HISTORICAL_STAGE_SHUTDOWN_TCL_CHAR_MAP_REJECTED:
+    stage66_campaign_historical = _stage66_campaign_authorization_fields(candidate) is not None
+    if stage66_campaign_historical:
+        relation = CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+    elif historical_variant == HISTORICAL_STAGE_SHUTDOWN_TCL_CHAR_MAP_REJECTED:
         errors.extend(_old_commit_shutdown_tcl_failure_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_FAILED_STAGE
     elif historical_variant == HISTORICAL_STAGE_WRITE_ALLOWLIST_REJECTED:
@@ -11977,7 +12309,12 @@ def _candidate_checkpoint_relation(
     else:
         errors.extend(_old_commit_read_only_preflight_errors(candidate, evidence))
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
-    historical_epoch, historical_errors = _historical_epoch_record(candidate, evidence)
+    if stage66_campaign_historical:
+        historical_epoch, historical_errors = _historical_stage66_campaign_epoch(
+            candidate, evidence
+        )
+    else:
+        historical_epoch, historical_errors = _historical_epoch_record(candidate, evidence)
     errors.extend(historical_errors)
     append_error(errors, COMMIT_RE.fullmatch(source) is not None and source != offline_commit, "superseded diagnostic source commit is missing or matches the active checkpoint")
     if COMMIT_RE.fullmatch(source) and COMMIT_RE.fullmatch(offline_commit) and source != offline_commit:
@@ -12061,6 +12398,28 @@ def _candidate_raw_path(candidate: Candidate) -> Path:
 
 def _candidate_event_path(candidate: Candidate) -> Path:
     return candidate.path.parent / ("p7_ps_application_events.json" if candidate.kind == "ps" else "p7_jtag_axi_stage_events.jsonl")
+
+
+def _candidate_declares_zero_coverage_diagnostic(candidate: Candidate) -> bool:
+    """Fail closed when either the authorization or summary declares diagnostics.
+
+    Active-checkpoint diagnostics are valid hardware observations, but they can
+    never supply formal acceptance coverage.  Treating any one of the redundant
+    declarations as authoritative prevents a partially malformed summary from
+    being promoted merely because another declaration was omitted.
+    """
+    safety = candidate.data.get("safety_validation")
+    fields = safety.get("authorization_fields") if isinstance(safety, dict) else {}
+    fields = fields if isinstance(fields, dict) else {}
+    return any(
+        (
+            fields.get("P7_EXECUTION_MODE") == "DIAGNOSTIC_ONLY",
+            fields.get("P7_COVERAGE_CLAIMED") == "false",
+            fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") == "true",
+            candidate.data.get("diagnostic_only") is True,
+            candidate.data.get("coverage_claimed") is False,
+        )
+    )
 
 
 def _candidate_attempted_coverage(candidate: Candidate, evidence: RepositoryEvidence) -> list[str]:
@@ -12290,7 +12649,25 @@ def _collapse_historical_epoch_candidates(
     for item in candidates:
         if _candidate_source_commit(item) == offline_commit.lower():
             continue
-        if _historical_preflight_variant(item) in {
+        campaign_fields = _stage66_campaign_authorization_fields(item)
+        if campaign_fields is not None:
+            epoch_root = item.path.parent.parent.resolve(strict=False)
+            current = terminal_by_epoch.get(epoch_root)
+            try:
+                ordinal = int(campaign_fields.get("P7_FULL_STAGE_ORDINAL", "0"))
+                current_fields = (
+                    _stage66_campaign_authorization_fields(current)
+                    if current is not None
+                    else None
+                )
+                current_ordinal = int(
+                    current_fields.get("P7_FULL_STAGE_ORDINAL", "0")
+                ) if current_fields is not None else -1
+            except (TypeError, ValueError):
+                ordinal = current_ordinal = -1
+            if current is None or ordinal > current_ordinal:
+                terminal_by_epoch[epoch_root] = item
+        elif _historical_preflight_variant(item) in {
             HISTORICAL_STAGE_SHUTDOWN_TCL_CHAR_MAP_REJECTED,
             HISTORICAL_STAGE_WRITE_ALLOWLIST_REJECTED,
             HISTORICAL_STAGE_BACKEND_RAW_PULSE_SEMANTICS_REJECTED,
@@ -12383,6 +12760,7 @@ def generate_sequence_ledger(
     runs: list[dict[str, Any]] = []
     read_only_diagnostic_count = 0
     failed_stage_diagnostic_count = 0
+    stage66_campaign_diagnostic_count = 0
     historical_epochs: list[dict[str, Any]] = []
     for sequence, candidate in enumerate(executed, 1):
         process = _candidate_process(candidate)
@@ -12402,11 +12780,31 @@ def generate_sequence_ledger(
                 f"run {rel(candidate.path, evidence.repo_root)} has invalid checkpoint relationship: "
                 + "; ".join(relation_errors)
             )
-        diagnostic_only = checkpoint_relation in CHECKPOINT_RELATIONS_HISTORICAL
+        if (
+            checkpoint_relation == CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+            and isinstance(historical_epoch, dict)
+        ):
+            basic_pass = historical_epoch.get("diagnostic_result") == "PASS"
+        historical_diagnostic = checkpoint_relation in CHECKPOINT_RELATIONS_HISTORICAL
+        active_zero_coverage_diagnostic = (
+            checkpoint_relation == CHECKPOINT_RELATION_BOUND
+            and _candidate_declares_zero_coverage_diagnostic(candidate)
+        )
+        diagnostic_only = historical_diagnostic or active_zero_coverage_diagnostic
+        diagnostic_source = (
+            "HISTORICAL"
+            if historical_diagnostic
+            else "ACTIVE_ZERO_COVERAGE"
+            if active_zero_coverage_diagnostic
+            else None
+        )
         read_only_diagnostic_count += int(checkpoint_relation == CHECKPOINT_RELATION_OLD_DIAGNOSTIC)
         failed_stage_diagnostic_count += int(checkpoint_relation == CHECKPOINT_RELATION_OLD_FAILED_STAGE)
+        stage66_campaign_diagnostic_count += int(
+            checkpoint_relation == CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+        )
         attempted = [] if diagnostic_only else (_candidate_attempted_coverage(candidate, evidence) if mutation_attempted else [])
-        if diagnostic_only and isinstance(historical_epoch, dict):
+        if historical_diagnostic and isinstance(historical_epoch, dict):
             historical_epochs.append(historical_epoch)
         wrapper_start, wrapper_end = authorized_execution_boundaries(candidate)
         runs.append(
@@ -12424,8 +12822,13 @@ def generate_sequence_ledger(
                 "source_commit": str(source).lower(),
                 "checkpoint_relation": checkpoint_relation,
                 "diagnostic_only": diagnostic_only,
+                "diagnostic_source": diagnostic_source,
                 "mutation_attempted": mutation_attempted,
-                "eligible_for_checkpoint_coverage": checkpoint_relation == CHECKPOINT_RELATION_BOUND and mutation_attempted,
+                "eligible_for_checkpoint_coverage": (
+                    checkpoint_relation == CHECKPOINT_RELATION_BOUND
+                    and mutation_attempted
+                    and not diagnostic_only
+                ),
                 "historical_epoch": historical_epoch,
                 "started_at_utc": wrapper_start,
                 "ended_at_utc": wrapper_end,
@@ -12475,8 +12878,11 @@ def generate_sequence_ledger(
         "run_count": len(runs),
         "precheckpoint_read_only_diagnostic_count": read_only_diagnostic_count,
         "precheckpoint_failed_stage_diagnostic_count": failed_stage_diagnostic_count,
+        "precheckpoint_stage66_campaign_diagnostic_count": stage66_campaign_diagnostic_count,
         "precheckpoint_historical_failure_count": (
-            read_only_diagnostic_count + failed_stage_diagnostic_count
+            read_only_diagnostic_count
+            + failed_stage_diagnostic_count
+            + stage66_campaign_diagnostic_count
         ),
         "runs": runs,
     }
@@ -12558,6 +12964,18 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
     )
     append_error(
         errors,
+        payload.get("precheckpoint_stage66_campaign_diagnostic_count", 0)
+        == sum(
+            1
+            for item in runs
+            if isinstance(item, dict)
+            and item.get("checkpoint_relation")
+            == CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+        ),
+        "run sequence historical Stage66 campaign diagnostic count mismatch",
+    )
+    append_error(
+        errors,
         payload.get("precheckpoint_historical_failure_count")
         == sum(
             1
@@ -12598,11 +13016,31 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             offline_time=offline_time,
         )
         errors.extend(f"run sequence entry {index}: {item}" for item in relation_errors)
-        diagnostic_only = expected_relation in CHECKPOINT_RELATIONS_HISTORICAL
+        if (
+            expected_relation == CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+            and isinstance(historical_epoch, dict)
+        ):
+            expected_pass = historical_epoch.get("diagnostic_result") == "PASS"
+        historical_diagnostic = expected_relation in CHECKPOINT_RELATIONS_HISTORICAL
+        active_zero_coverage_diagnostic = (
+            expected_relation == CHECKPOINT_RELATION_BOUND
+            and _candidate_declares_zero_coverage_diagnostic(candidate)
+        )
+        diagnostic_only = historical_diagnostic or active_zero_coverage_diagnostic
+        expected_diagnostic_source = (
+            "HISTORICAL"
+            if historical_diagnostic
+            else "ACTIVE_ZERO_COVERAGE"
+            if active_zero_coverage_diagnostic
+            else None
+        )
         failed_stage_diagnostic = expected_relation == CHECKPOINT_RELATION_OLD_FAILED_STAGE
+        historical_stage66_campaign = (
+            expected_relation == CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN
+        )
         expected_attempted = [] if diagnostic_only else (_candidate_attempted_coverage(candidate, evidence) if mutation_attempted else [])
         recorded_historical_epoch = run.get("historical_epoch") if isinstance(run.get("historical_epoch"), dict) else {}
-        if diagnostic_only and isinstance(historical_epoch, dict):
+        if historical_diagnostic and isinstance(historical_epoch, dict):
             historical_epochs.append(historical_epoch)
         append_error(errors, run.get("stage") == candidate.stage and run.get("kind") == candidate.kind, f"run sequence entry {index} stage/kind mismatch")
         append_error(errors, run.get("risk_index") == _candidate_risk(candidate, evidence), f"run sequence entry {index} risk index mismatch")
@@ -12612,14 +13050,22 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         append_error(errors, run.get("runner_result") == candidate.marker, f"run sequence entry {index} runner result mismatch")
         append_error(errors, run.get("checkpoint_relation") == expected_relation, f"run sequence entry {index} checkpoint relation mismatch")
         append_error(errors, run.get("diagnostic_only") is diagnostic_only, f"run sequence entry {index} diagnostic-only classification mismatch")
+        append_error(errors, run.get("diagnostic_source") == expected_diagnostic_source, f"run sequence entry {index} diagnostic source mismatch")
         append_error(errors, run.get("mutation_attempted") is mutation_attempted, f"run sequence entry {index} mutation-attempted classification mismatch")
         append_error(
             errors,
-            run.get("eligible_for_checkpoint_coverage") is (expected_relation == CHECKPOINT_RELATION_BOUND and mutation_attempted),
+            run.get("eligible_for_checkpoint_coverage")
+            is (
+                expected_relation == CHECKPOINT_RELATION_BOUND
+                and mutation_attempted
+                and not diagnostic_only
+            ),
             f"run sequence entry {index} checkpoint coverage eligibility mismatch",
         )
         append_error(errors, run.get("historical_epoch") == historical_epoch, f"run sequence entry {index} historical epoch binding mismatch")
-        if diagnostic_only:
+        if historical_stage66_campaign:
+            append_error(errors, run.get("attempted_coverage_keys") == [] and run.get("coverage_keys") == [], f"run sequence entry {index} historical Stage66 campaign claims coverage")
+        elif historical_diagnostic:
             append_error(errors, run.get("result") == "FAIL", f"run sequence entry {index} historical diagnostic is not FAIL")
             append_error(errors, run.get("attempted_coverage_keys") == [] and run.get("coverage_keys") == [], f"run sequence entry {index} historical diagnostic claims coverage")
             if failed_stage_diagnostic:
@@ -12627,6 +13073,8 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             else:
                 append_error(errors, run.get("risk_index") == 5, f"run sequence entry {index} historical diagnostic risk is not 5")
                 append_error(errors, run.get("mutation_attempted") is False and run.get("shutdown_required") is False, f"run sequence entry {index} historical diagnostic claims mutation/shutdown requirement")
+        elif active_zero_coverage_diagnostic:
+            append_error(errors, run.get("attempted_coverage_keys") == [] and run.get("coverage_keys") == [], f"run sequence entry {index} active diagnostic claims coverage")
         append_error(errors, run.get("returncode") == process.get("returncode"), f"run sequence entry {index} returncode mismatch")
         append_error(errors, run.get("argv_available") is True and isinstance(run.get("argv"), list) and run.get("argv") == process.get("argv") and bool(run.get("argv")), f"run sequence entry {index} exact argv missing/mismatch")
         append_error(errors, run.get("started_at_utc") == wrapper_start and run.get("ended_at_utc") == wrapper_end, f"run sequence entry {index} wrapper UTC boundaries missing/mismatch")
@@ -12654,7 +13102,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         for block_key, label in child_keys:
             block = candidate.data.get(block_key)
             if isinstance(block, dict):
-                if diagnostic_only:
+                if historical_diagnostic:
                     # Historical variants preserve their exact failed child
                     # topology in the hash-bound epoch validator.  Recovery is
                     # audited separately and must never rewrite that fact.
@@ -12672,7 +13120,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             errors.extend(f"run sequence entry {index}: {item}" for item in authorized_event_errors(candidate, evidence))
         source = str(candidate.data.get("safety_validation", {}).get("source_commit_requested", "")).lower()
         append_error(errors, run.get("source_commit") == source, f"run sequence entry {index} source commit mismatch")
-        if diagnostic_only:
+        if historical_diagnostic:
             append_error(errors, source != offline_commit, f"run sequence entry {index} historical source was relabeled as active checkpoint")
         else:
             append_error(errors, source == offline_commit, f"run sequence entry {index} source/offline commit mismatch")
@@ -12692,6 +13140,9 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
                 continue
             require_clean = (
                 not failed_stage_diagnostic
+                and not (
+                    historical_stage66_campaign and run.get("result") == "FAIL"
+                )
                 and (which == "after" or _candidate_programmed(candidate) or expected_pass)
             )
             if require_clean:
@@ -12741,6 +13192,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         for index, run in enumerate(runs)
         if isinstance(run, dict)
         and run.get("checkpoint_relation") == CHECKPOINT_RELATION_BOUND
+        and run.get("diagnostic_only") is not True
         and "ps_stationary_qualified" in run.get("coverage_keys", [])
     ]
     append_error(errors, len(stationary_pass_indices) <= 1, "run sequence contains more than one qualified stationary PASS")
@@ -12749,6 +13201,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         for index, run in enumerate(runs)
         if isinstance(run, dict)
         and run.get("checkpoint_relation") == CHECKPOINT_RELATION_BOUND
+        and run.get("diagnostic_only") is not True
         and run.get("stage") == "stationary"
     ]
     append_error(errors, len(stationary_launch_indices) <= 1, "run sequence contains more than one final stationary launch intent")
@@ -13336,10 +13789,20 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
         else ""
     )
     checkpoint_scoped = COMMIT_RE.fullmatch(active_commit) is not None
-    active_candidates = [
+    checkpoint_candidates = [
         candidate
         for candidate in evidence.candidates
         if not checkpoint_scoped or _candidate_source_commit(candidate) == active_commit
+    ]
+    diagnostic_candidates = [
+        candidate
+        for candidate in checkpoint_candidates
+        if _candidate_declares_zero_coverage_diagnostic(candidate)
+    ]
+    active_candidates = [
+        candidate
+        for candidate in checkpoint_candidates
+        if not _candidate_declares_zero_coverage_diagnostic(candidate)
     ]
     by_stage: dict[str, list[Candidate]] = {}
     for candidate in active_candidates:
@@ -13435,7 +13898,7 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
         results["calibration"] = missing_stage(evidence, "calibration", "embedded 300-second calibration window is missing")
         results["application_metrics"] = missing_stage(evidence, "application_metrics", "stationary application metrics are missing")
 
-    results["shutdown"] = audit_all_shutdowns(evidence, active_candidates)
+    results["shutdown"] = audit_all_shutdowns(evidence, checkpoint_candidates)
     consistency_errors = list(evidence.parse_errors)
     partial_files = [row["path"] for row in evidence.inventory if str(row.get("path", "")).casefold().endswith((".write_partial", ".partial", ".tmp"))]
     if partial_files:
@@ -13452,7 +13915,7 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
             consistency_errors.append(f"mandatory stage evidence is internally inconsistent: {stage_name}")
     ledger_status, ledger_errors, ledger_metrics = validate_sequence_ledger(evidence)
     consistency_errors.extend(ledger_errors)
-    unclassified_executed = [item for item in active_candidates if item.executed and item.stage.startswith("unclassified")]
+    unclassified_executed = [item for item in checkpoint_candidates if item.executed and item.stage.startswith("unclassified")]
     if unclassified_executed:
         consistency_errors.append(
             "executed hardware summaries are unclassified: "
@@ -13474,6 +13937,7 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
             "inventory_files": len(evidence.inventory),
             "selected_provenance_rows": len(active_provenance_rows),
             "stationary_attempts": len(stationary_candidates),
+            "zero_coverage_diagnostic_runs": len(diagnostic_candidates),
             "full_duration_stationary_attempts": len(full_stationary_candidates),
             "qualified_stationary_passes": len(qualified_stationary_candidates),
             **ledger_metrics,

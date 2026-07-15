@@ -5,8 +5,9 @@ This generator never launches Vivado, XSDB, a P7 safe wrapper, or any hardware
 process.  It does not read or set ``RF_COMM_HW_AUTH``.  It only validates a
 clean frozen offline checkpoint, writes deterministic inputs/transaction
 bundles and user-authorized stage binding files, assembles either the exact
-66-stage formal plan or the explicitly zero-coverage diagnostic suffix plan,
-and calls ``validate_sequence_plan`` locally.
+66-stage formal plan, an ordinary zero-coverage diagnostic suffix, or the
+separately authorized bounded Stage66 campaign plan, and calls
+``validate_sequence_plan`` locally.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ if str(TOOLS_DIR) not in sys.path:
 import p7_hardware_safety as safety  # noqa: E402
 import p7_diagnostic_impact as diagnostic_impact  # noqa: E402
 import p7_jtag_backend as jtag_backend  # noqa: E402
+import p7_stage66_campaign as stage66_campaign  # noqa: E402
 import run_p7_authorized_hardware_sequence as sequence  # noqa: E402
 
 HW_DIR = (sequence.ROOT / "scripts" / "hw").resolve(strict=False)
@@ -319,14 +321,20 @@ def validate_stage_specs(specs: list[StageSpec]) -> None:
 
 
 def select_stage_specs(
-    specs: list[StageSpec], *, diagnostic_suffix55: bool, diagnostic_first_ordinal: int | None = None
+    specs: list[StageSpec],
+    *,
+    diagnostic_suffix55: bool,
+    diagnostic_first_ordinal: int | None = None,
+    stage66_campaign_mode: bool = False,
 ) -> list[StageSpec]:
-    if not diagnostic_suffix55 and diagnostic_first_ordinal is None:
+    if not diagnostic_suffix55 and diagnostic_first_ordinal is None and not stage66_campaign_mode:
         return list(specs)
-    if diagnostic_suffix55 and diagnostic_first_ordinal is not None:
-        raise ValueError("legacy --diagnostic-suffix55 and adaptive diagnostic selection are mutually exclusive")
+    if sum((bool(diagnostic_suffix55), diagnostic_first_ordinal is not None, stage66_campaign_mode)) != 1:
+        raise ValueError("formal, suffix, adaptive, and Stage66 campaign selection modes are mutually exclusive")
     wanted_ordinals = (
-        list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS)
+        list(stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS)
+        if stage66_campaign_mode
+        else list(sequence.DIAGNOSTIC_FULL_STAGE_ORDINALS)
         if diagnostic_suffix55
         else diagnostic_impact.expected_selected_ordinals(int(diagnostic_first_ordinal))
     )
@@ -334,7 +342,10 @@ def select_stage_specs(
     selected = [spec for spec in specs if spec.index in wanted]
     if [spec.index for spec in selected] != wanted_ordinals:
         raise ValueError(f"diagnostic suffix selection mismatch: expected {wanted_ordinals}")
-    if any(spec.group == "ps_stationary" for spec in selected):
+    if stage66_campaign_mode:
+        if [spec.index for spec in selected] != [1, 2, 3, 4, 66]:
+            raise ValueError("Stage66 campaign selection must be exact ordinals 1--4,66")
+    elif any(spec.group == "ps_stationary" for spec in selected):
         raise ValueError("diagnostic suffix must exclude stationary")
     return selected
 
@@ -642,12 +653,17 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
     diagnostic_suffix55 = bool(getattr(args, "diagnostic_suffix55", False))
     diagnostic_first_ordinal = getattr(args, "diagnostic_first_ordinal", None)
     adaptive_diagnostic = diagnostic_first_ordinal is not None
+    stage66_campaign_mode = bool(getattr(args, "stage66_diagnostic_campaign", False))
+    if sum((diagnostic_suffix55, adaptive_diagnostic, stage66_campaign_mode)) > 1:
+        raise ValueError("diagnostic suffix, adaptive suffix, and Stage66 campaign modes are mutually exclusive")
     if diagnostic_suffix55 and "diag_suffix55" not in args.run_id:
         raise ValueError("diagnostic suffix run-id must contain diag_suffix55")
     if adaptive_diagnostic and f"diag_suffix{diagnostic_first_ordinal}" not in args.run_id:
         raise ValueError("adaptive diagnostic run-id must contain its diag_suffix ordinal")
-    if not diagnostic_suffix55 and not adaptive_diagnostic and "diag" in args.run_id:
-        raise ValueError("run-id containing diag requires the explicit diagnostic suffix mode")
+    if stage66_campaign_mode and "diag_stage66" not in args.run_id:
+        raise ValueError("Stage66 campaign run-id must contain diag_stage66")
+    if not diagnostic_suffix55 and not adaptive_diagnostic and not stage66_campaign_mode and "diag" in args.run_id:
+        raise ValueError("run-id containing diag requires an explicit diagnostic mode")
     prior_arguments = (
         getattr(args, "prior_run_id", ""),
         getattr(args, "prior_sequence_plan", ""),
@@ -659,6 +675,15 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("adaptive diagnostic selection requires the complete prior-run plan/ledger binding")
     if not adaptive_diagnostic and any(prior_arguments):
         raise ValueError("prior-run impact-proof arguments are valid only for adaptive diagnostics")
+    campaign_arguments = (
+        getattr(args, "stage66_campaign_policy", ""),
+        getattr(args, "stage66_campaign_policy_sha256", ""),
+        getattr(args, "stage66_campaign_attempt_number", None),
+    )
+    if stage66_campaign_mode and not all(value not in ("", None) for value in campaign_arguments):
+        raise ValueError("Stage66 campaign mode requires policy, policy SHA256, and attempt number")
+    if not stage66_campaign_mode and any(value not in ("", None) for value in campaign_arguments):
+        raise ValueError("Stage66 campaign arguments are valid only in explicit campaign mode")
     source_commit = args.source_commit.lower()
     if not sequence.COMMIT_RE.fullmatch(source_commit):
         raise ValueError("--source-commit must be exactly 40 lowercase hex characters")
@@ -722,7 +747,58 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         full_specs,
         diagnostic_suffix55=diagnostic_suffix55,
         diagnostic_first_ordinal=diagnostic_first_ordinal,
+        stage66_campaign_mode=stage66_campaign_mode,
     )
+    campaign_record: dict[str, Any] | None = None
+    if stage66_campaign_mode:
+        policy_path = sequence.resolve_path(args.stage66_campaign_policy)
+        policy_sha = args.stage66_campaign_policy_sha256.lower()
+        policy, policy_errors = stage66_campaign.validate_policy(policy_path, policy_sha)
+        if policy_errors or policy is None:
+            raise ValueError("Stage66 campaign policy validation failed: " + "; ".join(policy_errors))
+        campaign_ledger_path = stage66_campaign.campaign_ledger_path(policy)
+        campaign_ledger, ledger_errors = stage66_campaign.validate_ledger(
+            policy, campaign_ledger_path, allow_absent=True
+        )
+        if ledger_errors:
+            raise ValueError("Stage66 campaign ledger validation failed: " + "; ".join(ledger_errors))
+        attempt_number = int(args.stage66_campaign_attempt_number)
+        next_errors = stage66_campaign.validate_next_attempt(
+            policy,
+            campaign_ledger,
+            run_id=args.run_id,
+            hardware_attempt_number=attempt_number,
+        )
+        if next_errors:
+            raise ValueError("Stage66 campaign next-attempt validation failed: " + "; ".join(next_errors))
+        collision_roots = (
+            AUTH_ROOT,
+            BUILD_ROOT / "p7_authorized_sequence",
+            HARDWARE_ROOT / "authorized_sequence",
+            ROOT / "evidence" / "generated",
+        )
+        collisions: list[str] = []
+        for collision_root in collision_roots:
+            if collision_root.is_dir():
+                collisions.extend(
+                    str(path.resolve(strict=False))
+                    for path in collision_root.rglob(f"*{args.run_id}*")
+                )
+        if collisions:
+            raise ValueError(f"Stage66 campaign run-id collision detected: {sorted(set(collisions))}")
+        campaign_record = {
+            "campaign_id": policy["campaign_id"],
+            "run_id": args.run_id,
+            "hardware_attempt_number": attempt_number,
+            "maximum_actual_hardware_attempts": stage66_campaign.MAX_HARDWARE_ATTEMPTS,
+            "selected_full_stage_ordinals": list(stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS),
+            "formal_full_run_excluded_from_limit": True,
+            "policy": {"path": str(policy_path), "sha256": policy_sha},
+            "runtime_campaign_ledger": str(campaign_ledger_path),
+            "prior_campaign_ledger_sha256": stage66_campaign.current_ledger_sha256(
+                campaign_ledger_path
+            ),
+        }
     for spec in specs:
         auth_path = authorization_dir / f"{args.run_id}_{spec.index:03d}_{spec.stage_id}.txt"
         if auth_path.exists() or auth_path.with_name(auth_path.name + ".partial").exists():
@@ -747,13 +823,17 @@ def validate_preconditions(args: argparse.Namespace) -> dict[str, Any]:
         "xsdb": xsdb,
         "specs": specs,
         "plan_mode": (
-            sequence.ADAPTIVE_DIAGNOSTIC_PLAN_MODE
+            sequence.STAGE66_CAMPAIGN_PLAN_MODE
+            if stage66_campaign_mode
+            else sequence.ADAPTIVE_DIAGNOSTIC_PLAN_MODE
             if adaptive_diagnostic
             else sequence.DIAGNOSTIC_PLAN_MODE
             if diagnostic_suffix55
             else sequence.FULL_PLAN_MODE
         ),
         "adaptive_diagnostic": adaptive_diagnostic,
+        "stage66_campaign_mode": stage66_campaign_mode,
+        "stage66_diagnostic_campaign": campaign_record,
         "diagnostic_first_ordinal": diagnostic_first_ordinal,
         "full_specs": full_specs,
         "full_stage_ordinals": [spec.index for spec in specs],
@@ -806,6 +886,21 @@ def common_authorization_lines(
                 f"P7_FULL_STAGE_ORDINAL={spec.index}",
             ]
         )
+    campaign = context.get("stage66_diagnostic_campaign")
+    if isinstance(campaign, dict):
+        lines.extend(
+            [
+                "P7_STAGE66_DIAGNOSTIC_CAMPAIGN=true",
+                f"P7_STAGE66_CAMPAIGN_ID={campaign['campaign_id']}",
+                f"P7_STAGE66_CAMPAIGN_RUN_ID={campaign['run_id']}",
+                f"P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER={campaign['hardware_attempt_number']}",
+                f"P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS={campaign['maximum_actual_hardware_attempts']}",
+                f"P7_STAGE66_CAMPAIGN_POLICY_PATH={campaign['policy']['path']}",
+                f"P7_STAGE66_CAMPAIGN_POLICY_SHA256={campaign['policy']['sha256']}",
+                f"P7_STAGE66_CAMPAIGN_LEDGER_PATH={campaign['runtime_campaign_ledger']}",
+                f"P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256={campaign['prior_campaign_ledger_sha256']}",
+            ]
+        )
     for prefix, artifact in bindings:
         path_key = "P7_PLAN_PATH" if prefix == "P7_PLAN" else f"{prefix}_PATH"
         sha_key = "P7_PLAN_SHA256" if prefix == "P7_PLAN" else f"{prefix}_SHA256"
@@ -845,6 +940,8 @@ def write_stage_authorization(
         profile=profile,
         include_ltx=spec.kind == "jtag",
     )
+    campaign = context.get("stage66_diagnostic_campaign")
+    campaign_ps = isinstance(campaign, dict) and spec.group == "ps_stationary"
     if spec.kind == "jtag":
         if transaction is None:
             raise RuntimeError("JTAG authorization requires a transaction binding")
@@ -892,8 +989,9 @@ def write_stage_authorization(
                 f"P7_INPUT_PATH={ps_input.path}",
                 f"P7_INPUT_SHA256={ps_input.sha256}",
                 f"P7_PS_MODE={spec.mode}",
-                "P7_EXECUTION_SCOPE=P7_PS_APPLICATION_STAGE",
-                "P7_RUN_ID=NONE",
+                "P7_EXECUTION_SCOPE="
+                + ("P7_STAGE66_DIAGNOSTIC_STAGE" if campaign_ps else "P7_PS_APPLICATION_STAGE"),
+                "P7_RUN_ID=" + (str(campaign["run_id"]) if campaign_ps else "NONE"),
                 "P7_PS_CORE_READINESS=PASS",
                 f"P7_FROZEN_SHUTDOWN_PATH={frozen_shutdown}",
                 f"P7_FROZEN_SHUTDOWN_SHA256={shutdown.sha256}",
@@ -1137,6 +1235,25 @@ def build_ps_command(
                 str(64 * 1024),
             ]
         )
+        campaign = context.get("stage66_diagnostic_campaign")
+        if isinstance(campaign, dict):
+            command.extend(
+                [
+                    "--stage66-diagnostic-campaign",
+                    "--run-id",
+                    str(campaign["run_id"]),
+                    "--stage66-campaign-id",
+                    str(campaign["campaign_id"]),
+                    "--stage66-campaign-attempt-number",
+                    str(campaign["hardware_attempt_number"]),
+                    "--stage66-campaign-max-attempts",
+                    str(campaign["maximum_actual_hardware_attempts"]),
+                    "--stage66-campaign-policy",
+                    str(campaign["policy"]["path"]),
+                    "--stage66-campaign-policy-sha256",
+                    str(campaign["policy"]["sha256"]),
+                ]
+            )
     command.extend(["--evidence-dir", str(evidence_dir), "--json-summary"])
     return command
 
@@ -1708,6 +1825,11 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
     plan = {
         "schema": sequence.SEQUENCE_SCHEMA,
         "description": (
+            "DIAGNOSTIC_ONLY bounded Stage66 campaign; exact mandatory safety prefix ordinals 1--4 then standalone "
+            "1800-second ordinal 66; no Ethernet, no motion, two lanes; zero acceptance coverage and "
+            "HARDWARE_ACCEPTANCE=PENDING_HW."
+            if context["stage66_campaign_mode"]
+            else
             "DIAGNOSTIC_ONLY deterministic zero-coverage P7 adaptive suffix; no Ethernet, no motion, two lanes; "
             f"formal ordinals {context['full_stage_ordinals']} only; stationary is forbidden and skipped stages claim zero coverage."
             if diagnostic
@@ -1726,6 +1848,15 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
                 "full_stage_ordinals": context["full_stage_ordinals"],
                 "coverage_claimed": False,
                 "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                **(
+                    {
+                        "stage66_diagnostic_campaign": context[
+                            "stage66_diagnostic_campaign"
+                        ]
+                    }
+                    if context["stage66_campaign_mode"]
+                    else {}
+                ),
                 **(
                     {
                         "diagnostic_impact_proof": {
@@ -1775,6 +1906,7 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             if impact_proof is not None
             else None
         ),
+        "stage66_diagnostic_campaign": context["stage66_diagnostic_campaign"],
         "source_commit": context["source_commit"],
         "allowed_post_gate_generated_dirty": context["allowed_post_gate_generated_dirty"],
         "offline_checkpoint": {
@@ -1852,6 +1984,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Generate adaptive DIAGNOSTIC_ONLY prefix plus this unresolved ordinal through 65; requires an exact prior-run impact proof.",
     )
+    parser.add_argument(
+        "--stage66-diagnostic-campaign",
+        action="store_true",
+        help="Generate only exact ordinals 1--4,66 under the bounded ten-attempt Stage66 campaign policy.",
+    )
+    parser.add_argument("--stage66-campaign-policy", default="")
+    parser.add_argument("--stage66-campaign-policy-sha256", default="")
+    parser.add_argument("--stage66-campaign-attempt-number", type=int, default=None)
     parser.add_argument("--prior-run-id", default="")
     parser.add_argument("--prior-sequence-plan", default="")
     parser.add_argument("--prior-sequence-plan-sha256", default="")

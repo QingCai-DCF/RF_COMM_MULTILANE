@@ -25,7 +25,7 @@ import zlib
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -79,6 +79,7 @@ from p7_ps_mailbox_backend import (  # noqa: E402
     validate_completed,
 )
 from p7_app_protocol import segment_object  # noqa: E402
+import p7_stage66_campaign as stage66_campaign  # noqa: E402
 from ddr_external_master_diagnostic import (  # noqa: E402
     ACCESS_METHODS as DDR_EXTERNAL_ACCESS_METHODS,
     DEFAULT_TRANSFER_BYTES as DDR_EXTERNAL_LENGTH,
@@ -2420,6 +2421,33 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
                 ("P7_COVERAGE_CLAIMED", "false"),
             )
         )
+    elif args.stage66_diagnostic_campaign:
+        required.extend(
+            (
+                ("P7_EXECUTION_SCOPE", "P7_STAGE66_DIAGNOSTIC_STAGE"),
+                ("P7_RUN_ID", args.run_id),
+                ("P7_EXECUTION_MODE", "DIAGNOSTIC_ONLY"),
+                ("P7_COVERAGE_CLAIMED", "false"),
+                ("HARDWARE_ACCEPTANCE", "PENDING_HW"),
+                ("P7_FULL_STAGE_ORDINAL", "66"),
+                ("P7_STAGE66_DIAGNOSTIC_CAMPAIGN", "true"),
+                ("P7_STAGE66_CAMPAIGN_ID", args.stage66_campaign_id),
+                ("P7_STAGE66_CAMPAIGN_RUN_ID", args.run_id),
+                (
+                    "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER",
+                    str(args.stage66_campaign_attempt_number),
+                ),
+                (
+                    "P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS",
+                    str(args.stage66_campaign_max_attempts),
+                ),
+                ("P7_STAGE66_CAMPAIGN_POLICY_PATH", args.stage66_campaign_policy),
+                (
+                    "P7_STAGE66_CAMPAIGN_POLICY_SHA256",
+                    args.stage66_campaign_policy_sha256,
+                ),
+            )
+        )
     else:
         required.extend(
             (
@@ -2486,6 +2514,29 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
                 errors.append(f"authorization extension path mismatch: {key}")
         elif observed.casefold() != str(expected).casefold():
             errors.append(f"authorization extension field mismatch: {key}")
+    if args.stage66_diagnostic_campaign:
+        ledger_path = fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH", "")
+        expected_ledger = ""
+        try:
+            policy = json.loads(
+                resolve_path(args.stage66_campaign_policy).read_text(
+                    encoding="utf-8", errors="strict"
+                )
+            )
+            expected_ledger = str(
+                resolve_path(str(policy.get("runtime_campaign_ledger", "")))
+            )
+        except (OSError, UnicodeError, json.JSONDecodeError, AttributeError):
+            pass
+        if not expected_ledger or normalized_path(ledger_path) != normalized_path(expected_ledger):
+            errors.append("authorization extension path mismatch: P7_STAGE66_CAMPAIGN_LEDGER_PATH")
+        prior_sha = fields.get("P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256", "")
+        if prior_sha != stage66_campaign.ABSENT_LEDGER_SHA256 and not SHA256_RE.fullmatch(
+            prior_sha
+        ):
+            errors.append(
+                "authorization extension field mismatch: P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256"
+            )
     return errors
 
 
@@ -2787,6 +2838,8 @@ def _stage_validation(args: argparse.Namespace, core_readiness: dict[str, Any]) 
     errors.extend(_summary_errors(args))
     errors.extend(_authorization_extension_errors(args))
     errors.extend(core_readiness["errors"])
+    if args.stage62_only and args.stage66_diagnostic_campaign:
+        errors.append("Stage62-only and Stage66 campaign controls are mutually exclusive")
     if not STAGE_NAME_RE.fullmatch(args.stage_name or ""):
         errors.append("stage name contains unsupported characters")
     if args.stage62_only:
@@ -2801,8 +2854,69 @@ def _stage_validation(args: argparse.Namespace, core_readiness: dict[str, Any]) 
                 errors.append("Stage62-only hardware execution requires an explicit evidence directory")
             elif resolve_path(args.evidence_dir).name != args.run_id:
                 errors.append("Stage62-only evidence directory basename must equal the new run ID")
-    elif args.run_id:
-        errors.append("run ID is only accepted with --stage62-only")
+    elif args.stage66_diagnostic_campaign:
+        if not RUN_ID_RE.fullmatch(args.run_id or ""):
+            errors.append("Stage66 campaign run ID is missing or malformed")
+        if args.run_id == "p7_20260715_stationary_app_r41_formal_full":
+            errors.append("r41 is immutable FAIL and can never be resumed, restarted, or copied")
+        if args.mode != "stationary":
+            errors.append("Stage66 campaign control is accepted only in stationary mode")
+        if args.stage66_campaign_max_attempts != stage66_campaign.MAX_HARDWARE_ATTEMPTS:
+            errors.append("Stage66 campaign maximum hardware attempts must be exactly 10")
+        if not 1 <= args.stage66_campaign_attempt_number <= stage66_campaign.MAX_HARDWARE_ATTEMPTS:
+            errors.append("Stage66 campaign attempt number must be in 1..10")
+        expected_suffix = f"diag_stage66_c{args.stage66_campaign_attempt_number:02d}"
+        if expected_suffix not in args.run_id:
+            errors.append(f"Stage66 campaign run ID must contain {expected_suffix}")
+        policy, policy_errors = stage66_campaign.validate_policy(
+            resolve_path(args.stage66_campaign_policy),
+            args.stage66_campaign_policy_sha256.lower(),
+        )
+        errors.extend(f"Stage66 campaign policy: {item}" for item in policy_errors)
+        if policy is not None and args.stage66_campaign_id != policy.get("campaign_id"):
+            errors.append("Stage66 campaign ID differs from the authorized policy")
+        if args.execute_hardware and policy is not None:
+            try:
+                auth_fields, _auth_markers, _auth_duplicates = parse_authorization_file(
+                    resolve_path(args.authorization_file)
+                )
+            except (OSError, UnicodeError) as exc:
+                auth_fields = {}
+                errors.append(f"Stage66 campaign authorization cannot be parsed: {exc}")
+            ledger_path = stage66_campaign.campaign_ledger_path(policy)
+            ledger, ledger_errors = stage66_campaign.validate_ledger(
+                policy, ledger_path, allow_absent=False
+            )
+            errors.extend(f"Stage66 campaign ledger: {item}" for item in ledger_errors)
+            if ledger is not None:
+                errors.extend(
+                    f"Stage66 campaign active attempt: {item}"
+                    for item in stage66_campaign.validate_active_attempt(
+                        ledger,
+                        run_id=args.run_id,
+                        hardware_attempt_number=args.stage66_campaign_attempt_number,
+                        source_commit=args.source_commit.lower(),
+                        prior_campaign_ledger_sha256=auth_fields.get(
+                            "P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256", ""
+                        ),
+                    )
+                )
+        if args.execute_hardware:
+            if not args.evidence_dir:
+                errors.append("Stage66 campaign hardware execution requires an explicit evidence directory")
+            elif resolve_path(args.evidence_dir).parent.name != args.run_id:
+                errors.append("Stage66 campaign evidence parent directory must equal the new run ID")
+    else:
+        if args.run_id:
+            errors.append("run ID is accepted only with Stage62-only or Stage66 campaign mode")
+        if (
+            args.stage66_campaign_id
+            or args.stage66_campaign_attempt_number != 0
+            or args.stage66_campaign_max_attempts != 0
+            or args.stage66_campaign_policy
+            or args.stage66_campaign_policy_sha256
+        ):
+            errors.append("Stage66 campaign controls require --stage66-diagnostic-campaign")
     if args.mode == "stage62-microtest":
         if not args.stage62_only:
             errors.append("Stage62 microtest requires --stage62-only")
@@ -5370,7 +5484,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--mode", choices=MODE_NAMES, default="functional")
     parser.add_argument("--stage-name", default="p7_ps_application")
     parser.add_argument("--stage62-only", action="store_true")
+    parser.add_argument("--stage66-diagnostic-campaign", action="store_true")
     parser.add_argument("--run-id", default="")
+    parser.add_argument("--stage66-campaign-id", default="")
+    parser.add_argument("--stage66-campaign-attempt-number", type=int, default=0)
+    parser.add_argument("--stage66-campaign-max-attempts", type=int, default=0)
+    parser.add_argument("--stage66-campaign-policy", default="")
+    parser.add_argument("--stage66-campaign-policy-sha256", default="")
     parser.add_argument(
         "--stage62-microtest-case",
         choices=("", *STAGE62_MICROTEST_CASE_NAMES),
@@ -5424,21 +5544,50 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _authorization_is_diagnostic(safety: Mapping[str, Any]) -> bool:
+    fields = safety.get("authorization_fields")
+    return isinstance(fields, dict) and fields.get("P7_EXECUTION_MODE") == "DIAGNOSTIC_ONLY"
+
+
 def _base_summary(
     args: argparse.Namespace,
     safety: dict[str, Any],
     stage_errors: list[str],
     core_readiness: dict[str, Any],
 ) -> dict[str, Any]:
+    diagnostic_only = bool(
+        args.stage62_only
+        or args.stage66_diagnostic_campaign
+        or _authorization_is_diagnostic(safety)
+    )
+    execution_scope = (
+        "STAGE62_ONLY"
+        if args.stage62_only
+        else "P7_STAGE66_DIAGNOSTIC_STAGE"
+        if args.stage66_diagnostic_campaign
+        else "P7_PS_APPLICATION_STAGE"
+    )
     return {
         "P7_PS_APPLICATION_SAFE_STAGE": "DRY_RUN_ONLY",
         "generated_at_utc": now_utc(),
         "mode": args.mode,
         "run_id": args.run_id or None,
-        "execution_scope": "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE",
-        "diagnostic_only": bool(args.stage62_only),
-        "coverage_claimed": False if args.stage62_only else None,
-        "functional_stages_1_61_executed": False if args.stage62_only else None,
+        "execution_scope": execution_scope,
+        "diagnostic_only": diagnostic_only,
+        "coverage_claimed": False if diagnostic_only else None,
+        "functional_stages_1_61_executed": False if diagnostic_only else None,
+        "stage66_diagnostic_campaign": (
+            {
+                "campaign_id": args.stage66_campaign_id,
+                "hardware_attempt_number": args.stage66_campaign_attempt_number,
+                "maximum_actual_hardware_attempts": args.stage66_campaign_max_attempts,
+                "policy_path": args.stage66_campaign_policy,
+                "policy_sha256": args.stage66_campaign_policy_sha256,
+                "formal_acceptance_coverage": False,
+            }
+            if args.stage66_diagnostic_campaign
+            else None
+        ),
         "stage62_attempted": False,
         "stage62_completed": False,
         "stage62_executed": False,
@@ -5568,9 +5717,13 @@ def main(argv: list[str] | None = None) -> int:
         stationary_object_bytes=args.stationary_object_bytes,
         run_id=args.run_id,
         execution_scope=(
-            "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE"
+            "STAGE62_ONLY"
+            if args.stage62_only
+            else "P7_STAGE66_DIAGNOSTIC_STAGE"
+            if args.stage66_diagnostic_campaign
+            else "P7_PS_APPLICATION_STAGE"
         ),
-        diagnostic_only=bool(args.stage62_only),
+        diagnostic_only=bool(summary["diagnostic_only"]),
         stage62_microtest_case=args.stage62_microtest_case,
         microtest_length=args.microtest_length,
         microtest_source_alignment=args.microtest_source_alignment,
@@ -5792,7 +5945,11 @@ def main(argv: list[str] | None = None) -> int:
             part=args.expected_part,
             board_id=args.board_id,
             execution_scope=(
-                "STAGE62_ONLY" if args.stage62_only else "P7_PS_APPLICATION_STAGE"
+                "STAGE62_ONLY"
+                if args.stage62_only
+                else "P7_STAGE66_DIAGNOSTIC_STAGE"
+                if args.stage66_diagnostic_campaign
+                else "P7_PS_APPLICATION_STAGE"
             ),
             run_id=args.run_id or "NONE",
         )

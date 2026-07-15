@@ -276,6 +276,7 @@ def main() -> int:
                 "tests.test_p7_authorized_hardware_sequence",
                 "tests.test_generate_p7_authorized_sequence_plan",
                 "tests.test_p7_diagnostic_impact",
+                "tests.test_p7_stage66_campaign",
                 "tests.test_summarize_p7_hardware",
                 "-v",
             ],

@@ -2572,6 +2572,328 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertEqual(payload["stages"]["consistency"]["result"], "PASS")
             self.assertEqual(payload["final"]["SOURCE_COMMIT"], active_commit)
 
+    def test_active_stage66_campaign_pass_is_zero_coverage_and_pending(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = SyntheticEvidence(Path(temporary))
+            fixture.full_pass()
+            stationary_path = next(
+                fixture.hardware.rglob("stationary/**/p7_ps_application_stage_summary.json")
+            )
+            summary = json.loads(stationary_path.read_text(encoding="utf-8"))
+            safety = summary["safety_validation"]
+            fields = safety["authorization_fields"]
+            run_id = "p7_20260715_stationary_app_r42_diag_stage66_c01"
+            campaign_id = "p7_stage66_stationary_diagnostic_20260715"
+            policy_path = subject.stage66_campaign.POLICY_PATH
+            campaign_ledger_path = subject.stage66_campaign.campaign_ledger_path(
+                json.loads(policy_path.read_text(encoding="utf-8"))
+            )
+            fields.update(
+                {
+                    "P7_EXECUTION_MODE": "DIAGNOSTIC_ONLY",
+                    "P7_COVERAGE_CLAIMED": "false",
+                    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                    "P7_STAGE66_DIAGNOSTIC_CAMPAIGN": "true",
+                    "P7_STAGE66_CAMPAIGN_ID": campaign_id,
+                    "P7_STAGE66_CAMPAIGN_RUN_ID": run_id,
+                    "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER": "1",
+                    "P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS": "10",
+                    "P7_FULL_STAGE_ORDINAL": "66",
+                    "P7_STAGE66_CAMPAIGN_POLICY_PATH": str(policy_path),
+                    "P7_STAGE66_CAMPAIGN_POLICY_SHA256": digest(policy_path),
+                    "P7_STAGE66_CAMPAIGN_LEDGER_PATH": str(campaign_ledger_path),
+                    "P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256": "ABSENT",
+                }
+            )
+            authorization_path = Path(safety["authorization"]["path"])
+            authorization_path.write_text(
+                "P7_STATIONARY_APP_LAYER_APPROVED\n"
+                + "\n".join(f"{key}={value}" for key, value in fields.items())
+                + "\n",
+                encoding="utf-8",
+            )
+            safety["authorization"] = fixture._record(authorization_path)
+            summary.update(
+                {
+                    "diagnostic_only": True,
+                    "coverage_claimed": False,
+                    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                    "stage66_diagnostic_campaign": {
+                        "campaign_id": campaign_id,
+                        "run_id": run_id,
+                        "hardware_attempt_number": 1,
+                        "maximum_actual_hardware_attempts": 10,
+                        "full_stage_ordinal": 66,
+                        "formal_acceptance_coverage": False,
+                    },
+                }
+            )
+            stationary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+            offline = fixture.output / "p7_offline_gate_summary.json"
+            campaign_runtime_ledger = {
+                "hardware_attempts": [
+                    {
+                        "hardware_attempt_number": 1,
+                        "run_id": run_id,
+                        "source_commit": fixture.commit,
+                        "prior_campaign_ledger_sha256": "ABSENT",
+                    }
+                ]
+            }
+            with mock.patch.object(
+                subject.stage66_campaign,
+                "validate_ledger",
+                return_value=(campaign_runtime_ledger, []),
+            ):
+                evidence = subject.RepositoryEvidence(fixture.root, fixture.hardware, fixture.output)
+                subject.discover(evidence)
+                ledger = subject.generate_sequence_ledger(
+                    evidence,
+                    ledger_path=fixture.hardware / "p7_run_sequence_ledger.json",
+                    offline_checkpoint_summary=offline,
+                    offline_checkpoint_sha256=digest(offline),
+                    offline_checkpoint_commit=fixture.commit,
+                )
+                diagnostic = next(
+                    item
+                    for item in ledger["runs"]
+                    if Path(item["summary_file"]["path"]).resolve()
+                    == stationary_path.resolve()
+                )
+                self.assertTrue(diagnostic["diagnostic_only"])
+                self.assertEqual(
+                    diagnostic["diagnostic_source"], "ACTIVE_ZERO_COVERAGE"
+                )
+                self.assertFalse(diagnostic["eligible_for_checkpoint_coverage"])
+                self.assertEqual(diagnostic["attempted_coverage_keys"], [])
+                self.assertEqual(diagnostic["coverage_keys"], [])
+                self.assertEqual(diagnostic["result"], "PASS")
+
+                status, errors, _metrics = self._validate_ledger(fixture)
+                self.assertEqual(status, "PASS", "\n".join(errors))
+                payload, returncode = subject.summarize(
+                    fixture.root, fixture.hardware, fixture.output
+                )
+            self.assertEqual(returncode, 2, json.dumps(payload["stages"]["consistency"], indent=2))
+            self.assertEqual(payload["stages"]["stationary"]["result"], "PENDING_HW")
+            self.assertEqual(payload["final"]["result"], "PENDING_HW")
+            self.assertEqual(
+                payload["stages"]["consistency"]["metrics"]["zero_coverage_diagnostic_runs"],
+                1,
+            )
+            self.assertEqual(payload["stages"]["consistency"]["result"], "PENDING_HW")
+            self.assertEqual(payload["final"]["SOURCE_COMMIT"], fixture.commit)
+
+    def test_historical_stage66_campaign_pass_and_failure_remain_zero_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            hardware = root / "evidence/hardware/p7"
+            output = root / "evidence/generated"
+            run_id = "p7_20260715_stationary_app_r42_diag_stage66_c01"
+            run_root = hardware / "authorized_sequence" / run_id
+            run_root.mkdir(parents=True)
+            policy_path = root / "policy.json"
+            policy_path.write_text("{}\n", encoding="utf-8")
+            campaign_ledger_path = root / "campaign_ledger.json"
+            campaign_ledger_path.write_text("{}\n", encoding="utf-8")
+            source = "a" * 40
+            ordinals = [1, 2, 3, 4, 66]
+            candidates: list[subject.Candidate] = []
+            outer_attempts: list[dict[str, object]] = []
+            for index, ordinal in enumerate(ordinals):
+                kind = "ps" if ordinal == 66 else "jtag"
+                stage_dir = run_root / f"{ordinal:03d}_stage_{ordinal}"
+                stage_dir.mkdir()
+                summary_path = stage_dir / (
+                    "p7_ps_application_stage_summary.json"
+                    if kind == "ps"
+                    else "p7_jtag_axi_stage_summary.json"
+                )
+                fields = {
+                    "P7_STAGE66_DIAGNOSTIC_CAMPAIGN": "true",
+                    "P7_STAGE66_CAMPAIGN_ID": "p7_stage66_stationary_diagnostic_20260715",
+                    "P7_STAGE66_CAMPAIGN_RUN_ID": run_id,
+                    "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER": "1",
+                    "P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS": "10",
+                    "P7_STAGE66_CAMPAIGN_POLICY_PATH": str(policy_path),
+                    "P7_STAGE66_CAMPAIGN_POLICY_SHA256": digest(policy_path),
+                    "P7_STAGE66_CAMPAIGN_LEDGER_PATH": str(campaign_ledger_path),
+                    "P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256": "ABSENT",
+                    "P7_FULL_STAGE_ORDINAL": str(ordinal),
+                }
+                data = {
+                    subject.PS_MARKER if kind == "ps" else subject.JTAG_MARKER: "PASS",
+                    "hardware_actions_executed": True,
+                    "diagnostic_only": True,
+                    "coverage_claimed": False,
+                    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                    "ethernet_used": False,
+                    "motion_used": False,
+                    "programmed_shutdown_after": True,
+                    "safety_validation": {
+                        "source_commit_requested": source,
+                        "source_commit_current": source,
+                        "authorization_fields": fields,
+                    },
+                    "preflight": {"process_tree_reaped": True},
+                    "preflight_process": {"process_tree_reaped": True},
+                }
+                summary_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+                candidates.append(
+                    subject.Candidate(summary_path, data, kind, "stationary" if kind == "ps" else "p6_frame_regression", float(index))
+                )
+                outer_attempts.append(
+                    {
+                        "attempt": index + 1,
+                        "stage_index": index,
+                        "full_stage_ordinal": ordinal,
+                        "state": "TERMINAL",
+                        "result": "PASS",
+                        "launch_intent_at_utc": f"2026-07-15T0{index}:00:00+00:00",
+                        "ended_at_utc": f"2026-07-15T0{index}:01:00+00:00",
+                        "summary_file": {
+                            "path": str(summary_path),
+                            "sha256": digest(summary_path),
+                            "bytes": summary_path.stat().st_size,
+                        },
+                    }
+                )
+            plan_path = root / "sequence_plan.json"
+            plan_path.write_text("{}\n", encoding="utf-8")
+            outer_path = run_root / "sequence_execution_ledger.json"
+            outer = {
+                "schema": "rf-comm-p7-sequence-execution-ledger-v1",
+                "plan_mode": subject.stage66_campaign.PLAN_MODE,
+                "coverage_claimed": False,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                "full_stage_ordinals": ordinals,
+                "source_commit": source,
+                "network_used": False,
+                "motion_used": False,
+                "status": "DIAGNOSTIC_PASS",
+                "attempt_count": 5,
+                "attempts": outer_attempts,
+                "sequence_plan": {
+                    "path": str(plan_path),
+                    "sha256": digest(plan_path),
+                },
+                "stage66_diagnostic_campaign": {
+                    "run_id": run_id,
+                    "hardware_attempt_number": 1,
+                },
+            }
+            outer_path.write_text(json.dumps(outer, indent=2) + "\n", encoding="utf-8")
+            campaign_attempt = {
+                "run_id": run_id,
+                "source_commit": source,
+                "prior_campaign_ledger_sha256": "ABSENT",
+                "sequence_plan_sha256": digest(plan_path),
+                "execution_ledger_path": str(outer_path),
+                "execution_ledger_sha256": digest(outer_path),
+                "status": "PASS",
+                "complete_1800_second_stage66_pass": True,
+                "independent_shutdown_recovery": None,
+            }
+            evidence = subject.RepositoryEvidence(root, hardware, output)
+            evidence.candidates = candidates
+            with mock.patch.object(
+                subject.stage66_campaign,
+                "validate_policy",
+                return_value=({"campaign_id": "p7_stage66_stationary_diagnostic_20260715"}, []),
+            ), mock.patch.object(
+                subject.stage66_campaign,
+                "campaign_ledger_path",
+                return_value=campaign_ledger_path.resolve(),
+            ), mock.patch.object(
+                subject.stage66_campaign,
+                "validate_ledger",
+                return_value=({"hardware_attempts": [campaign_attempt]}, []),
+            ):
+                epoch, errors = subject._historical_stage66_campaign_epoch(
+                    candidates[-1], evidence
+                )
+            self.assertEqual([], errors)
+            self.assertEqual("PASS", epoch["diagnostic_result"])
+            self.assertEqual([], epoch["coverage_keys"])
+            collapsed = subject._collapse_historical_epoch_candidates(
+                candidates, "b" * 40
+            )
+            self.assertEqual([candidates[-1].path], [item.path for item in collapsed])
+            with mock.patch.object(
+                subject,
+                "_historical_stage66_campaign_epoch",
+                return_value=(dict(epoch), []),
+            ), mock.patch.object(
+                subject,
+                "authorized_execution_boundaries",
+                return_value=(
+                    "2026-07-15T04:00:00+00:00",
+                    "2026-07-15T04:01:00+00:00",
+                ),
+            ), mock.patch.object(
+                subject, "_git_source_ancestry_errors", return_value=[]
+            ):
+                relation, relation_errors, historical_epoch = (
+                    subject._candidate_checkpoint_relation(
+                        candidates[-1],
+                        evidence,
+                        offline_commit="b" * 40,
+                        offline_time=subject.parse_time(
+                            "2026-07-15T06:00:00+00:00", float("nan")
+                        ),
+                    )
+                )
+            self.assertEqual(
+                subject.CHECKPOINT_RELATION_OLD_STAGE66_CAMPAIGN, relation
+            )
+            self.assertEqual([], relation_errors)
+            self.assertEqual("PASS", historical_epoch["diagnostic_result"])
+
+            candidates[-1].data[subject.PS_MARKER] = "FAIL"
+            candidates[-1].path.write_text(
+                json.dumps(candidates[-1].data, indent=2) + "\n", encoding="utf-8"
+            )
+            outer_attempts[-1]["result"] = "FAIL"
+            outer_attempts[-1]["summary_file"] = {
+                "path": str(candidates[-1].path),
+                "sha256": digest(candidates[-1].path),
+                "bytes": candidates[-1].path.stat().st_size,
+            }
+            outer["status"] = "FAIL"
+            outer_path.write_text(json.dumps(outer, indent=2) + "\n", encoding="utf-8")
+            campaign_attempt.update(
+                {
+                    "execution_ledger_sha256": digest(outer_path),
+                    "status": "FAIL_RECOVERED",
+                    "complete_1800_second_stage66_pass": False,
+                    "independent_shutdown_recovery": {
+                        "status": "PASS",
+                        "ended_at": "2026-07-15T05:00:00+00:00",
+                        "recovery_changes_failed_stage_result": False,
+                    },
+                }
+            )
+            with mock.patch.object(
+                subject.stage66_campaign,
+                "validate_policy",
+                return_value=({"campaign_id": "p7_stage66_stationary_diagnostic_20260715"}, []),
+            ), mock.patch.object(
+                subject.stage66_campaign,
+                "campaign_ledger_path",
+                return_value=campaign_ledger_path.resolve(),
+            ), mock.patch.object(
+                subject.stage66_campaign,
+                "validate_ledger",
+                return_value=({"hardware_attempts": [campaign_attempt]}, []),
+            ):
+                epoch, errors = subject._historical_stage66_campaign_epoch(
+                    candidates[-1], evidence
+                )
+            self.assertEqual([], errors)
+            self.assertEqual("FAIL", epoch["diagnostic_result"])
+            self.assertEqual([], epoch["coverage_keys"])
+
     def test_p6_jtag_candidate_binds_axi4_bursts_through_axi4lite_converter(self) -> None:
         build_tcl = (ROOT / "scripts/build_p6_jtag_candidate.tcl").read_text(encoding="utf-8")
         inspect_tcl = (ROOT / "scripts/vivado_inspect_p6_ip.tcl").read_text(encoding="utf-8")

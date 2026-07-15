@@ -8,8 +8,9 @@ vectors for one of the two P7 safe wrappers.  Formal acceptance remains the
 rigid 66-stage matrix ending in one 1800-second stationary run.  Diagnostic
 plans are separately marked, zero-coverage epochs: the legacy suffix55 matrix
 is fixed, while an adaptive matrix requires a machine-revalidated transitive
-impact proof.  Both start with ordinals 1--4, exclude stationary, and can never
-promote acceptance.
+impact proof.  Those ordinary diagnostics start with ordinals 1--4 and exclude
+stationary.  The separately authorized, machine-counted Stage66 campaign is a
+narrow exact 1--4,66 diagnostic exception and can never promote acceptance.
 
 The old read-only preflight entry point and its public helper functions remain
 available when no sequence plan is supplied.
@@ -33,6 +34,7 @@ from typing import Any, Mapping, Sequence
 
 import p7_jtag_backend as jtag_backend
 import p7_diagnostic_impact as diagnostic_impact
+import p7_stage66_campaign as stage66_campaign
 
 from p7_hardware_safety import (
     AUTH_ENV,
@@ -54,6 +56,7 @@ LEDGER_SCHEMA = "rf-comm-p7-sequence-execution-ledger-v1"
 FULL_PLAN_MODE = "FULL_ACCEPTANCE"
 DIAGNOSTIC_PLAN_MODE = "DIAGNOSTIC_SUFFIX_55"
 ADAPTIVE_DIAGNOSTIC_PLAN_MODE = "DIAGNOSTIC_ADAPTIVE_SUFFIX"
+STAGE66_CAMPAIGN_PLAN_MODE = stage66_campaign.PLAN_MODE
 DIAGNOSTIC_FULL_STAGE_ORDINALS = tuple(range(1, 5)) + tuple(range(55, 66))
 HARDWARE_ROOT = (ROOT / "evidence" / "hardware" / "p7").resolve(strict=False)
 JTAG_WRAPPER = (ROOT / "scripts" / "hw" / "run_p7_jtag_axi_stage_safe.py").resolve(strict=False)
@@ -91,7 +94,15 @@ PS_MAX_FORCED_CLEANUP_EVENTS = 2
 
 
 def is_diagnostic_plan_mode(value: str) -> bool:
-    return value in {DIAGNOSTIC_PLAN_MODE, ADAPTIVE_DIAGNOSTIC_PLAN_MODE}
+    return value in {
+        DIAGNOSTIC_PLAN_MODE,
+        ADAPTIVE_DIAGNOSTIC_PLAN_MODE,
+        STAGE66_CAMPAIGN_PLAN_MODE,
+    }
+
+
+def is_stage66_campaign_mode(value: str) -> bool:
+    return value == STAGE66_CAMPAIGN_PLAN_MODE
 
 # Vivado reports the package/speed-grade-qualified build part and the live
 # silicon identity through different properties.  Keep the mapping explicit:
@@ -116,6 +127,7 @@ COMMON_BOOLEAN_OPTIONS = {
     "--no-motion",
     "--json-summary",
 }
+PS_BOOLEAN_OPTIONS = {"--stage66-diagnostic-campaign"}
 COMMON_VALUE_OPTIONS = {
     "--authorization-file",
     "--authorization-sha256",
@@ -186,6 +198,12 @@ PS_VALUE_OPTIONS = {
     "--sample-interval-sec",
     "--idle-deadline-margin-sec",
     "--stationary-object-bytes",
+    "--run-id",
+    "--stage66-campaign-id",
+    "--stage66-campaign-attempt-number",
+    "--stage66-campaign-max-attempts",
+    "--stage66-campaign-policy",
+    "--stage66-campaign-policy-sha256",
 }
 PATH_HASH_PAIRS = (
     ("--authorization-file", "--authorization-sha256"),
@@ -208,6 +226,7 @@ PATH_HASH_PAIRS = (
     ("--core-readiness-attestation", "--core-readiness-attestation-sha256"),
     ("--active-profile", "--active-profile-sha256"),
     ("--lane1-promotion-summary", "--lane1-promotion-summary-sha256"),
+    ("--stage66-campaign-policy", "--stage66-campaign-policy-sha256"),
 )
 REQUIRED_COMMON_OPTIONS = {
     "--execute-hardware",
@@ -455,6 +474,12 @@ def validate_stage_matrix(
             errors.append(
                 "adaptive diagnostic ordinals must be exact mandatory prefix 1--4 plus one contiguous unresolved suffix through 65"
             )
+    elif plan_mode == STAGE66_CAMPAIGN_PLAN_MODE:
+        expected_ordinals = stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS
+        if full_stage_ordinals != list(expected_ordinals):
+            errors.append(
+                "Stage66 diagnostic campaign ordinals must be exactly mandatory prefix 1--4 plus standalone 66"
+            )
     else:
         return [f"unsupported sequence plan mode: {plan_mode}"]
     expected = [full_expected[ordinal - 1] for ordinal in expected_ordinals]
@@ -485,6 +510,17 @@ def validate_stage_matrix(
             errors.append("sequence must contain exactly one stationary stage")
         if groups and groups[-1] != "ps_stationary":
             errors.append("stationary stage must be the final planned hardware stage")
+    elif plan_mode == STAGE66_CAMPAIGN_PLAN_MODE:
+        if groups != [
+            "safe_idle",
+            "p6_frame_regression",
+            "p6_frame_regression",
+            "p6_frame_regression",
+            "ps_stationary",
+        ]:
+            errors.append("Stage66 campaign group matrix must be exact safety prefix plus stationary")
+        if groups.count("ps_stationary") != 1 or groups[-1:] != ["ps_stationary"]:
+            errors.append("Stage66 campaign must contain one final standalone stationary stage")
     else:
         if "ps_stationary" in groups:
             errors.append("diagnostic suffix must not contain stationary")
@@ -517,9 +553,11 @@ def _parse_exact_wrapper_command(
     value_options = set(COMMON_VALUE_OPTIONS)
     if _path_equal(wrapper, JTAG_WRAPPER):
         value_options.update(JTAG_VALUE_OPTIONS)
+        boolean_options = set(COMMON_BOOLEAN_OPTIONS)
     else:
         value_options.update(PS_VALUE_OPTIONS)
-    allowed = value_options | COMMON_BOOLEAN_OPTIONS
+        boolean_options = set(COMMON_BOOLEAN_OPTIONS) | PS_BOOLEAN_OPTIONS
+    allowed = value_options | boolean_options
     parsed: dict[str, str | bool] = {}
     index = 2
     while index < len(command):
@@ -530,7 +568,7 @@ def _parse_exact_wrapper_command(
             continue
         if token in parsed:
             errors.append(f"duplicate wrapper option is forbidden: {token}")
-        if token in COMMON_BOOLEAN_OPTIONS:
+        if token in boolean_options:
             parsed[token] = True
             index += 1
             continue
@@ -971,6 +1009,91 @@ def _validate_offline_checkpoint(
     return payload, errors
 
 
+def _validate_stage66_campaign_record(
+    record: Any, *, source_commit: str, selected_ordinals: Any
+) -> tuple[dict[str, Any] | None, list[str]]:
+    errors: list[str] = []
+    if not isinstance(record, dict):
+        return None, ["Stage66 campaign plan record must be an object"]
+    expected_keys = {
+        "campaign_id",
+        "run_id",
+        "hardware_attempt_number",
+        "maximum_actual_hardware_attempts",
+        "selected_full_stage_ordinals",
+        "formal_full_run_excluded_from_limit",
+        "policy",
+        "runtime_campaign_ledger",
+        "prior_campaign_ledger_sha256",
+    }
+    if set(record) != expected_keys:
+        errors.append(
+            "Stage66 campaign plan record keys are not exact: "
+            f"missing={sorted(expected_keys - set(record))} unknown={sorted(set(record) - expected_keys)}"
+        )
+    policy_record = record.get("policy")
+    policy: dict[str, Any] | None = None
+    policy_path = ROOT
+    policy_sha = ""
+    if not isinstance(policy_record, dict) or set(policy_record) != {"path", "sha256"}:
+        errors.append("Stage66 campaign policy binding must contain exactly path and sha256")
+    else:
+        policy_path = resolve_path(str(policy_record.get("path", "")))
+        policy_sha = str(policy_record.get("sha256", "")).lower()
+        policy, policy_errors = stage66_campaign.validate_policy(policy_path, policy_sha)
+        errors.extend(policy_errors)
+    ledger_path = resolve_path(str(record.get("runtime_campaign_ledger", "")))
+    prior_sha = str(record.get("prior_campaign_ledger_sha256", ""))
+    ledger: dict[str, Any] | None = None
+    if policy is not None:
+        if ledger_path != stage66_campaign.campaign_ledger_path(policy):
+            errors.append("Stage66 campaign runtime ledger path differs from policy")
+        actual_prior = stage66_campaign.current_ledger_sha256(ledger_path)
+        if prior_sha != actual_prior:
+            errors.append(
+                "Stage66 campaign prior ledger snapshot changed: "
+                f"expected={prior_sha} actual={actual_prior}"
+            )
+        ledger, ledger_errors = stage66_campaign.validate_ledger(
+            policy, ledger_path, allow_absent=True
+        )
+        errors.extend(ledger_errors)
+        errors.extend(
+            stage66_campaign.validate_next_attempt(
+                policy,
+                ledger,
+                run_id=str(record.get("run_id", "")),
+                hardware_attempt_number=record.get("hardware_attempt_number"),
+            )
+        )
+        if record.get("campaign_id") != policy.get("campaign_id"):
+            errors.append("Stage66 campaign ID differs from policy")
+    if record.get("maximum_actual_hardware_attempts") != stage66_campaign.MAX_HARDWARE_ATTEMPTS:
+        errors.append("Stage66 campaign maximum attempt count must be exactly 10")
+    if record.get("selected_full_stage_ordinals") != list(
+        stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS
+    ) or selected_ordinals != list(stage66_campaign.CAMPAIGN_FULL_STAGE_ORDINALS):
+        errors.append("Stage66 campaign selected ordinal binding is not exact 1--4,66")
+    if record.get("formal_full_run_excluded_from_limit") is not True:
+        errors.append("Stage66 campaign must exclude the later formal full run from its count")
+    return (
+        {
+            "campaign_id": record.get("campaign_id"),
+            "run_id": record.get("run_id"),
+            "hardware_attempt_number": record.get("hardware_attempt_number"),
+            "maximum_actual_hardware_attempts": record.get("maximum_actual_hardware_attempts"),
+            "policy": policy,
+            "policy_path": str(policy_path),
+            "policy_sha256": policy_sha,
+            "runtime_campaign_ledger": str(ledger_path),
+            "prior_campaign_ledger_sha256": prior_sha,
+            "prior_campaign_ledger": ledger,
+            "source_commit": source_commit,
+        },
+        errors,
+    )
+
+
 def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
     errors: list[str] = []
     plan_path = path.resolve(strict=False)
@@ -998,6 +1121,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "coverage_claimed",
         "HARDWARE_ACCEPTANCE",
         "diagnostic_impact_proof",
+        "stage66_diagnostic_campaign",
     }
     unknown_top = sorted(set(plan) - allowed_top)
     if unknown_top:
@@ -1045,6 +1169,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         )
     )
     impact_proof_payload: dict[str, Any] | None = None
+    stage66_campaign_payload: dict[str, Any] | None = None
     if plan_mode == ADAPTIVE_DIAGNOSTIC_PLAN_MODE:
         proof_record = plan.get("diagnostic_impact_proof")
         if not isinstance(proof_record, dict) or set(proof_record) != {"path", "sha256"}:
@@ -1062,6 +1187,15 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             errors.extend(f"diagnostic impact proof: {item}" for item in proof_errors)
     elif "diagnostic_impact_proof" in plan:
         errors.append("only adaptive diagnostics may bind a diagnostic impact proof")
+    if plan_mode == STAGE66_CAMPAIGN_PLAN_MODE:
+        stage66_campaign_payload, campaign_errors = _validate_stage66_campaign_record(
+            plan.get("stage66_diagnostic_campaign"),
+            source_commit=source_commit,
+            selected_ordinals=full_stage_ordinals,
+        )
+        errors.extend(campaign_errors)
+    elif "stage66_diagnostic_campaign" in plan:
+        errors.append("only the bounded Stage66 campaign mode may bind a campaign record")
     normalized_stages: list[dict[str, Any]] = []
     ids: set[str] = set()
     evidence_dirs: set[str] = set()
@@ -1094,6 +1228,59 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             errors.extend(f"stage {index + 1} ({stage_id}): {item}" for item in stage_errors)
             if normalized is None:
                 continue
+            campaign_cli_keys = {
+                "--stage66-diagnostic-campaign",
+                "--run-id",
+                "--stage66-campaign-id",
+                "--stage66-campaign-attempt-number",
+                "--stage66-campaign-max-attempts",
+                "--stage66-campaign-policy",
+                "--stage66-campaign-policy-sha256",
+            }
+            observed_campaign_cli = campaign_cli_keys & set(normalized["options"])
+            if plan_mode == STAGE66_CAMPAIGN_PLAN_MODE:
+                if stage66_campaign_payload is not None:
+                    expected_run_root = (
+                        HARDWARE_ROOT
+                        / "authorized_sequence"
+                        / str(stage66_campaign_payload["run_id"])
+                    ).resolve(strict=False)
+                    if Path(normalized["evidence_dir"]).parent.resolve(strict=False) != expected_run_root:
+                        errors.append(
+                            f"stage {index + 1} Stage66 campaign evidence directory is outside its exact run ID root"
+                        )
+                expected_ordinal = (
+                    full_stage_ordinals[index]
+                    if isinstance(full_stage_ordinals, list) and index < len(full_stage_ordinals)
+                    else None
+                )
+                if expected_ordinal == 66 and stage66_campaign_payload is not None:
+                    expected_cli: dict[str, str | bool] = {
+                        "--stage66-diagnostic-campaign": True,
+                        "--run-id": str(stage66_campaign_payload["run_id"]),
+                        "--stage66-campaign-id": str(stage66_campaign_payload["campaign_id"]),
+                        "--stage66-campaign-attempt-number": str(
+                            stage66_campaign_payload["hardware_attempt_number"]
+                        ),
+                        "--stage66-campaign-max-attempts": "10",
+                        "--stage66-campaign-policy": str(stage66_campaign_payload["policy_path"]),
+                        "--stage66-campaign-policy-sha256": str(
+                            stage66_campaign_payload["policy_sha256"]
+                        ),
+                    }
+                    for key, expected in expected_cli.items():
+                        if normalized["options"].get(key) != expected:
+                            errors.append(
+                                f"stage {index + 1} Stage66 campaign wrapper option mismatch: {key}"
+                            )
+                elif observed_campaign_cli:
+                    errors.append(
+                        f"stage {index + 1} campaign CLI controls are only valid on standalone ordinal 66"
+                    )
+            elif observed_campaign_cli:
+                errors.append(
+                    f"stage {index + 1} uses Stage66 campaign CLI controls outside campaign mode"
+                )
             if is_diagnostic_plan_mode(plan_mode):
                 auth = resolve_path(str(normalized["options"].get("--authorization-file", "")))
                 try:
@@ -1116,6 +1303,42 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
                         errors.append(f"stage {index + 1} diagnostic authorization acceptance mismatch")
                     if expected_ordinal is None or auth_fields.get("P7_FULL_STAGE_ORDINAL") != str(expected_ordinal):
                         errors.append(f"stage {index + 1} diagnostic authorization full ordinal mismatch")
+                    if plan_mode == STAGE66_CAMPAIGN_PLAN_MODE and stage66_campaign_payload is not None:
+                        expected_campaign = {
+                            "P7_STAGE66_DIAGNOSTIC_CAMPAIGN": "true",
+                            "P7_STAGE66_CAMPAIGN_ID": str(stage66_campaign_payload["campaign_id"]),
+                            "P7_STAGE66_CAMPAIGN_RUN_ID": str(stage66_campaign_payload["run_id"]),
+                            "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER": str(
+                                stage66_campaign_payload["hardware_attempt_number"]
+                            ),
+                            "P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS": "10",
+                            "P7_STAGE66_CAMPAIGN_POLICY_SHA256": str(
+                                stage66_campaign_payload["policy_sha256"]
+                            ),
+                            "P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256": str(
+                                stage66_campaign_payload["prior_campaign_ledger_sha256"]
+                            ),
+                        }
+                        for key, expected in expected_campaign.items():
+                            if auth_fields.get(key) != expected:
+                                errors.append(
+                                    f"stage {index + 1} Stage66 campaign authorization mismatch: {key}"
+                                )
+                        for key, expected_path in (
+                            (
+                                "P7_STAGE66_CAMPAIGN_POLICY_PATH",
+                                stage66_campaign_payload["policy_path"],
+                            ),
+                            (
+                                "P7_STAGE66_CAMPAIGN_LEDGER_PATH",
+                                stage66_campaign_payload["runtime_campaign_ledger"],
+                            ),
+                        ):
+                            observed_path = auth_fields.get(key, "")
+                            if not _path_equal(resolve_path(observed_path), Path(str(expected_path))):
+                                errors.append(
+                                    f"stage {index + 1} Stage66 campaign authorization path mismatch: {key}"
+                                )
             normalized_stages.append(normalized)
             evidence_key = os.path.normcase(normalized["evidence_dir"])
             summary_key = os.path.normcase(normalized["summary_path"])
@@ -1145,6 +1368,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "coverage_claimed": False if is_diagnostic_plan_mode(plan_mode) else None,
         "HARDWARE_ACCEPTANCE": "PENDING_HW" if is_diagnostic_plan_mode(plan_mode) else None,
         "diagnostic_impact_proof": impact_proof_payload,
+        "stage66_diagnostic_campaign": stage66_campaign_payload,
         "offline_checkpoint": {
             "path": str(checkpoint_path),
             "sha256": checkpoint_sha,
@@ -1294,6 +1518,37 @@ def validate_wrapper_summary(
         stage["options"].get("--source-commit", "")
     ).lower():
         errors.append("wrapper summary source commit is missing or mismatched")
+    authorization_fields = (
+        safety.get("authorization_fields") if isinstance(safety, dict) else None
+    )
+    if isinstance(authorization_fields, dict) and authorization_fields.get(
+        "P7_EXECUTION_MODE"
+    ) == "DIAGNOSTIC_ONLY":
+        if (
+            summary.get("diagnostic_only") is not True
+            or summary.get("coverage_claimed") is not False
+            or summary.get("HARDWARE_ACCEPTANCE") != "PENDING_HW"
+        ):
+            errors.append("diagnostic wrapper summary zero-coverage boundary mismatch")
+        if authorization_fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") == "true":
+            campaign_summary = summary.get("stage66_diagnostic_campaign")
+            try:
+                expected_campaign_attempt = int(
+                    authorization_fields.get(
+                        "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER", "0"
+                    )
+                )
+            except (TypeError, ValueError):
+                expected_campaign_attempt = 0
+            if not isinstance(campaign_summary, dict) or not (
+                campaign_summary.get("campaign_id")
+                == authorization_fields.get("P7_STAGE66_CAMPAIGN_ID")
+                and campaign_summary.get("hardware_attempt_number")
+                == expected_campaign_attempt
+                and campaign_summary.get("maximum_actual_hardware_attempts") == 10
+                and campaign_summary.get("formal_acceptance_coverage") is False
+            ):
+                errors.append("Stage66 campaign wrapper summary metadata mismatch")
     raw_options = stage.get("options")
     options = raw_options if isinstance(raw_options, Mapping) else {}
     expected_shutdown_bit: Path | None = None
@@ -1373,6 +1628,30 @@ def validate_wrapper_summary(
         if stage.get("group") == "ps_stationary":
             if summary.get("mode") != "stationary" or summary.get("service_runtime_limit_sec") != 1800:
                 errors.append("stationary wrapper summary is not the exact 1800-second mode")
+            if options.get("--stage66-diagnostic-campaign") is True:
+                if (
+                    summary.get("diagnostic_only") is not True
+                    or summary.get("coverage_claimed") is not False
+                    or summary.get("HARDWARE_ACCEPTANCE") != "PENDING_HW"
+                    or summary.get("execution_scope") != "P7_STAGE66_DIAGNOSTIC_STAGE"
+                    or summary.get("run_id") != options.get("--run-id")
+                ):
+                    errors.append("Stage66 campaign wrapper summary diagnostic boundary mismatch")
+                campaign_summary = summary.get("stage66_diagnostic_campaign")
+                expected_campaign_summary = {
+                    "campaign_id": options.get("--stage66-campaign-id"),
+                    "hardware_attempt_number": int(
+                        str(options.get("--stage66-campaign-attempt-number", 0))
+                    ),
+                    "maximum_actual_hardware_attempts": int(
+                        str(options.get("--stage66-campaign-max-attempts", 0))
+                    ),
+                    "policy_path": options.get("--stage66-campaign-policy"),
+                    "policy_sha256": options.get("--stage66-campaign-policy-sha256"),
+                    "formal_acceptance_coverage": False,
+                }
+                if campaign_summary != expected_campaign_summary:
+                    errors.append("Stage66 campaign wrapper summary metadata mismatch")
     return summary, errors, shutdown_record
 
 
@@ -1435,6 +1714,24 @@ def _new_ledger(plan: Mapping[str, Any]) -> dict[str, Any]:
         "completed_stage_count": 0,
         "next_stage_index": 0,
         "attempts": [],
+        "stage66_diagnostic_campaign": (
+            {
+                key: plan["stage66_diagnostic_campaign"].get(key)
+                for key in (
+                    "campaign_id",
+                    "run_id",
+                    "hardware_attempt_number",
+                    "maximum_actual_hardware_attempts",
+                    "policy_path",
+                    "policy_sha256",
+                    "runtime_campaign_ledger",
+                    "prior_campaign_ledger_sha256",
+                )
+            }
+            if is_stage66_campaign_mode(str(plan.get("plan_mode")))
+            and isinstance(plan.get("stage66_diagnostic_campaign"), dict)
+            else None
+        ),
     }
 
 
@@ -1584,6 +1881,23 @@ def _outer_sequence_errors(args: argparse.Namespace, plan: Mapping[str, Any]) ->
             errors.append(f"execution ledger must be a file under {HARDWARE_ROOT}")
         if any(_path_equal(ledger_path, Path(stage["summary_path"])) for stage in plan["stages"]):
             errors.append("execution ledger must not alias a wrapper summary path")
+        if is_stage66_campaign_mode(str(plan.get("plan_mode"))):
+            campaign_record = plan.get("stage66_diagnostic_campaign")
+            run_id = (
+                str(campaign_record.get("run_id", ""))
+                if isinstance(campaign_record, dict)
+                else ""
+            )
+            expected_ledger = (
+                HARDWARE_ROOT
+                / "authorized_sequence"
+                / run_id
+                / "sequence_execution_ledger.json"
+            ).resolve(strict=False)
+            if not _path_equal(ledger_path, expected_ledger):
+                errors.append(
+                    f"Stage66 campaign execution ledger must be exact run-root path {expected_ledger}"
+                )
     return errors
 
 
@@ -1614,6 +1928,23 @@ def _sequence_manifest(plan: Mapping[str, Any]) -> dict[str, Any]:
             "path": plan.get("offline_checkpoint", {}).get("path"),
             "sha256": plan.get("offline_checkpoint", {}).get("sha256"),
         },
+        "stage66_diagnostic_campaign": (
+            {
+                key: plan["stage66_diagnostic_campaign"].get(key)
+                for key in (
+                    "campaign_id",
+                    "run_id",
+                    "hardware_attempt_number",
+                    "maximum_actual_hardware_attempts",
+                    "policy_path",
+                    "policy_sha256",
+                    "runtime_campaign_ledger",
+                    "prior_campaign_ledger_sha256",
+                )
+            }
+            if isinstance(plan.get("stage66_diagnostic_campaign"), dict)
+            else None
+        ),
         "validation_errors": list(plan.get("errors", [])),
     }
 
@@ -1652,6 +1983,101 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         ledger = _new_ledger(plan)
         next_index = 0
         _atomic_write_json(ledger_path, ledger)
+
+    campaign_mode = is_stage66_campaign_mode(str(plan.get("plan_mode")))
+    campaign_context = plan.get("stage66_diagnostic_campaign")
+    campaign_lock: stage66_campaign.CampaignLock | None = None
+    campaign_runtime_ledger: dict[str, Any] | None = None
+    campaign_ledger_path = ROOT
+    campaign_started = False
+
+    def begin_campaign_attempt() -> None:
+        nonlocal campaign_lock, campaign_runtime_ledger, campaign_ledger_path, campaign_started
+        if not campaign_mode or campaign_started:
+            return
+        if not isinstance(campaign_context, dict) or not isinstance(
+            campaign_context.get("policy"), dict
+        ):
+            raise RuntimeError("validated Stage66 campaign context is missing at launch")
+        campaign_ledger_path = Path(
+            str(campaign_context["runtime_campaign_ledger"])
+        ).resolve(strict=False)
+        campaign_lock = stage66_campaign.CampaignLock.acquire(
+            campaign_ledger_path,
+            {
+                "run_id": campaign_context["run_id"],
+                "hardware_attempt_number": campaign_context["hardware_attempt_number"],
+                "source_commit": plan["source_commit"],
+                "sequence_plan_sha256": plan["sha256"],
+                "execution_ledger": str(ledger_path),
+            },
+        )
+        actual_prior = stage66_campaign.current_ledger_sha256(campaign_ledger_path)
+        if actual_prior != campaign_context["prior_campaign_ledger_sha256"]:
+            raise RuntimeError(
+                "Stage66 campaign ledger changed after plan validation: "
+                f"expected={campaign_context['prior_campaign_ledger_sha256']} actual={actual_prior}"
+            )
+        policy = campaign_context["policy"]
+        existing, campaign_errors = stage66_campaign.validate_ledger(
+            policy, campaign_ledger_path, allow_absent=True
+        )
+        if campaign_errors:
+            raise RuntimeError(
+                "Stage66 campaign ledger failed locked launch validation: "
+                + "; ".join(campaign_errors)
+            )
+        next_errors = stage66_campaign.validate_next_attempt(
+            policy,
+            existing,
+            run_id=str(campaign_context["run_id"]),
+            hardware_attempt_number=int(campaign_context["hardware_attempt_number"]),
+        )
+        if next_errors:
+            raise RuntimeError(
+                "Stage66 campaign next attempt failed locked launch validation: "
+                + "; ".join(next_errors)
+            )
+        campaign_runtime_ledger = (
+            existing
+            if existing is not None
+            else stage66_campaign.new_ledger(policy, str(campaign_context["policy_sha256"]))
+        )
+        stage66_campaign.begin_attempt(
+            campaign_runtime_ledger,
+            run_id=str(campaign_context["run_id"]),
+            hardware_attempt_number=int(campaign_context["hardware_attempt_number"]),
+            source_commit=plan["source_commit"],
+            sequence_plan_path=plan["path"],
+            sequence_plan_sha256=plan["sha256"],
+            execution_ledger_path=str(ledger_path),
+            prior_campaign_ledger_sha256=str(
+                campaign_context["prior_campaign_ledger_sha256"]
+            ),
+        )
+        stage66_campaign.atomic_write_json(campaign_ledger_path, campaign_runtime_ledger)
+        campaign_started = True
+
+    def finish_campaign_attempt(*, passed: bool, failed_ordinal: int | None) -> None:
+        nonlocal campaign_lock
+        if not campaign_started:
+            return
+        if campaign_runtime_ledger is None or campaign_lock is None:
+            raise RuntimeError("Stage66 campaign launch state is internally inconsistent")
+        stationary_launched = any(
+            isinstance(item, dict) and item.get("group") == "ps_stationary"
+            for item in ledger.get("attempts", [])
+        )
+        stage66_campaign.finish_attempt(
+            campaign_runtime_ledger,
+            passed=passed,
+            failed_full_stage_ordinal=failed_ordinal,
+            stationary_launched=stationary_launched,
+            execution_ledger_sha256=sha256_file(ledger_path),
+        )
+        stage66_campaign.atomic_write_json(campaign_ledger_path, campaign_runtime_ledger)
+        campaign_lock.release()
+        campaign_lock = None
     if next_index == len(plan["stages"]):
         diagnostic = is_diagnostic_plan_mode(str(plan.get("plan_mode")))
         manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
@@ -1682,6 +2108,7 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             ledger["updated_at_utc"] = now_utc()
             ledger["blocked_stage_index"] = stage_index
             _atomic_write_json(ledger_path, ledger)
+            finish_campaign_attempt(passed=False, failed_ordinal=full_stage_ordinal)
             manifest["execution_ledger"] = _file_record(ledger_path)
             return 2, manifest
         if stage["group"] == "ps_stationary" and any(
@@ -1689,7 +2116,9 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         ):
             manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "BLOCKED"
             manifest["reason"] = "one-time stationary invariant forbids launching a second stationary attempt"
+            finish_campaign_attempt(passed=False, failed_ordinal=full_stage_ordinal)
             return 2, manifest
+        begin_campaign_attempt()
         stdout_path = log_dir / f"{full_stage_ordinal:03d}_{stage['id']}.stdout.log"
         stderr_path = log_dir / f"{full_stage_ordinal:03d}_{stage['id']}.stderr.log"
         # Persist the exact launch intent before the wrapper can possibly be
@@ -1797,6 +2226,7 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
             }
             manifest["execution_ledger"] = _file_record(ledger_path)
             manifest["hardware_actions_executed"] = True
+            finish_campaign_attempt(passed=False, failed_ordinal=full_stage_ordinal)
             return 1, manifest
     diagnostic = is_diagnostic_plan_mode(str(plan.get("plan_mode")))
     manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "DIAGNOSTIC_PASS" if diagnostic else "PASS"
@@ -1807,6 +2237,12 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
     )
     manifest["hardware_actions_executed"] = True
     manifest["execution_ledger"] = _file_record(ledger_path)
+    finish_campaign_attempt(passed=True, failed_ordinal=None)
+    if campaign_mode:
+        manifest["reason"] = (
+            "all five Stage66 campaign stages passed, including one complete 1800-second stationary run; "
+            "campaign is stopped at first PASS and claims zero acceptance coverage"
+        )
     return 0, manifest
 
 

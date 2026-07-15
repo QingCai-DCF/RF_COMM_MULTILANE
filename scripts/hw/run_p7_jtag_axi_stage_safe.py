@@ -23,7 +23,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 if os.name == "nt":
     from ctypes import wintypes
@@ -46,6 +46,7 @@ from p7_hardware_safety import (  # noqa: E402
     sha256_file,
     validate_request,
 )
+import p7_stage66_campaign as stage66_campaign  # noqa: E402
 from p7_jtag_backend import (  # noqa: E402
     CONTAINMENT_FORCED_CLEANUP_WAIT_SECONDS,
     CONTAINMENT_FAILURE_BOUND_SECONDS,
@@ -2672,6 +2673,125 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _diagnostic_authorization_errors(
+    args: argparse.Namespace, safety: Mapping[str, Any]
+) -> list[str]:
+    fields = safety.get("authorization_fields")
+    if not isinstance(fields, dict):
+        return []
+    diagnostic_declared = any(
+        key in fields
+        for key in (
+            "P7_EXECUTION_MODE",
+            "P7_COVERAGE_CLAIMED",
+            "HARDWARE_ACCEPTANCE",
+            "P7_STAGE66_DIAGNOSTIC_CAMPAIGN",
+        )
+    )
+    if not diagnostic_declared:
+        return []
+    errors: list[str] = []
+    expected = {
+        "P7_EXECUTION_MODE": "DIAGNOSTIC_ONLY",
+        "P7_COVERAGE_CLAIMED": "false",
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    }
+    for key, value in expected.items():
+        if fields.get(key) != value:
+            errors.append(f"diagnostic authorization boundary mismatch: {key}")
+    campaign_declared = fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") == "true"
+    if not campaign_declared:
+        return errors
+    try:
+        attempt_number = int(fields.get("P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER", ""))
+        full_ordinal = int(fields.get("P7_FULL_STAGE_ORDINAL", ""))
+        maximum = int(fields.get("P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS", ""))
+    except ValueError:
+        attempt_number = full_ordinal = maximum = 0
+        errors.append("Stage66 campaign numeric authorization fields are malformed")
+    if maximum != stage66_campaign.MAX_HARDWARE_ATTEMPTS:
+        errors.append("Stage66 campaign maximum hardware attempts must be exactly 10")
+    if not 1 <= attempt_number <= stage66_campaign.MAX_HARDWARE_ATTEMPTS:
+        errors.append("Stage66 campaign attempt number must be in 1..10")
+    if full_ordinal not in {1, 2, 3, 4}:
+        errors.append("JTAG Stage66 campaign prefix ordinal must be in 1..4")
+    run_id = fields.get("P7_STAGE66_CAMPAIGN_RUN_ID", "")
+    if f"diag_stage66_c{attempt_number:02d}" not in run_id:
+        errors.append("Stage66 campaign run ID does not bind its attempt number")
+    policy, policy_errors = stage66_campaign.validate_policy(
+        resolve_path(fields.get("P7_STAGE66_CAMPAIGN_POLICY_PATH", "")),
+        fields.get("P7_STAGE66_CAMPAIGN_POLICY_SHA256", "").lower(),
+    )
+    errors.extend(f"Stage66 campaign policy: {item}" for item in policy_errors)
+    if policy is not None:
+        if fields.get("P7_STAGE66_CAMPAIGN_ID") != policy.get("campaign_id"):
+            errors.append("Stage66 campaign ID differs from policy")
+        expected_ledger = stage66_campaign.campaign_ledger_path(policy)
+        if normalized_path(fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH", "")) != normalized_path(
+            str(expected_ledger)
+        ):
+            errors.append("Stage66 campaign runtime ledger path differs from policy")
+    prior = fields.get("P7_STAGE66_CAMPAIGN_PRIOR_LEDGER_SHA256", "")
+    if prior != stage66_campaign.ABSENT_LEDGER_SHA256 and not SHA256_RE.fullmatch(prior):
+        errors.append("Stage66 campaign prior ledger SHA256 is malformed")
+    if args.execute_hardware and policy is not None:
+        ledger_path = stage66_campaign.campaign_ledger_path(policy)
+        ledger, ledger_errors = stage66_campaign.validate_ledger(
+            policy, ledger_path, allow_absent=False
+        )
+        errors.extend(f"Stage66 campaign ledger: {item}" for item in ledger_errors)
+        if ledger is not None:
+            errors.extend(
+                f"Stage66 campaign active attempt: {item}"
+                for item in stage66_campaign.validate_active_attempt(
+                    ledger,
+                    run_id=run_id,
+                    hardware_attempt_number=attempt_number,
+                    source_commit=str(safety.get("source_commit_requested", "")),
+                    prior_campaign_ledger_sha256=prior,
+                )
+            )
+    if args.execute_hardware and args.evidence_dir:
+        if resolve_path(args.evidence_dir).parent.name != run_id:
+            errors.append("Stage66 campaign JTAG evidence parent does not equal the run ID")
+    return errors
+
+
+def _diagnostic_summary_metadata(safety: Mapping[str, Any]) -> dict[str, Any]:
+    fields = safety.get("authorization_fields")
+    fields = fields if isinstance(fields, dict) else {}
+    diagnostic = fields.get("P7_EXECUTION_MODE") == "DIAGNOSTIC_ONLY"
+    campaign = fields.get("P7_STAGE66_DIAGNOSTIC_CAMPAIGN") == "true"
+
+    def integer_field(key: str) -> int | None:
+        try:
+            return int(fields.get(key, ""))
+        except (TypeError, ValueError):
+            return None
+
+    return {
+        "diagnostic_only": diagnostic,
+        "coverage_claimed": False if diagnostic else None,
+        "HARDWARE_ACCEPTANCE": "PENDING_HW",
+        "stage66_diagnostic_campaign": (
+            {
+                "campaign_id": fields.get("P7_STAGE66_CAMPAIGN_ID"),
+                "run_id": fields.get("P7_STAGE66_CAMPAIGN_RUN_ID"),
+                "hardware_attempt_number": integer_field(
+                    "P7_STAGE66_CAMPAIGN_ATTEMPT_NUMBER"
+                ),
+                "maximum_actual_hardware_attempts": integer_field(
+                    "P7_STAGE66_CAMPAIGN_MAX_HARDWARE_ATTEMPTS"
+                ),
+                "full_stage_ordinal": integer_field("P7_FULL_STAGE_ORDINAL"),
+                "formal_acceptance_coverage": False,
+            }
+            if campaign
+            else None
+        ),
+    }
+
+
 def _base_manifest(
     args: argparse.Namespace,
     safety: dict[str, Any],
@@ -2696,6 +2816,7 @@ def _base_manifest(
         "ethernet_used": False,
         "motion_used": False,
         "hardware_acceptance": "PENDING_HW",
+        **_diagnostic_summary_metadata(safety),
         "safety_validation": safety,
         "stage_validation_errors": stage_errors,
         "transaction_validation": transaction,
@@ -2717,6 +2838,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     safety = validate_request(args)
     stage_errors, transaction = _stage_control_errors(args)
+    stage_errors.extend(_diagnostic_authorization_errors(args, safety))
     all_errors = list(safety["errors"]) + stage_errors
     manifest = _base_manifest(args, safety, stage_errors, transaction)
 
