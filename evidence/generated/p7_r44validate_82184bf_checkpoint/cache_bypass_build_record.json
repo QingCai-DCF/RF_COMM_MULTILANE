@@ -1,0 +1,109 @@
+{
+  "schema": "rf-comm-p7-formal-preparation-cache-bypass-build-v1",
+  "generated_at_utc": "2026-07-15T14:58:45.7582592Z",
+  "build_input_source_commit": "137b6d844f0b5952fc895a23fcea347a8ec5575d",
+  "worktree": "D:/CodexWorktrees/r44validate_137b6d8/RF_COMM_MULTILANE",
+  "status": "PASS",
+  "offline_cache_status": "BYPASS",
+  "offline_real_build_process_ran": true,
+  "commands": [
+    "python -B scripts/build_p6_ps_candidate.py --cache-bypass",
+    "python -B scripts/build_p7_ps_runtime.py --cache-bypass",
+    "python -B tools/ax7010_ps7_board_contract.py --include-vitis"
+  ],
+  "tool_identity": {
+    "vivado_version": "2023.1",
+    "vivado_sw_build": "3865809",
+    "vitis_version": "2023.1",
+    "scripts/build_p6_ps_candidate.py": "5b401e2be3de66d66cf1a3c4e9c15b938a3eb389137f1b8338ee0cc4b85ff456",
+    "scripts/build_p6_ps_candidate.tcl": "6232ae8baa4223176ef05be91e58c115191c8d870b6758decb25d21513e2cfd2",
+    "scripts/build_p7_ps_runtime.py": "bb9d6a19da42885781842093e6baa7168f1b7b760c1cd70734afb37a45ecb8e3",
+    "scripts/build_p7_ps_runtime.tcl": "950edaa554fdfc207186eed10baccdaca0241d8bb79753bb926a83a3536560be"
+  },
+  "vivado": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "timing_met": true,
+    "drc_clean": true,
+    "ps7_ddr_configuration_verified": true,
+    "ps7_board_contract_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build.log",
+      "bytes": 93560,
+      "sha256": "9fada10c075bece049860a02a132c1feab4516658e1ab859855809cc3f743325"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vivado/p6_ps_candidate/p6_ps7_board_contract.json",
+      "bytes": 3106,
+      "sha256": "015e3c94a29ad8e2fabaa6253198c8bd0f598679659d788a655dc4ae7d2502ef",
+      "status": "PASS"
+    },
+    "bitstream": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a.bit",
+      "bytes": 2083856,
+      "sha256": "756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a"
+    },
+    "xsa": {
+      "path": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0.xsa",
+      "bytes": 560425,
+      "sha256": "45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0"
+    },
+    "ps7_init_tcl_sha256": "86d8d72f45bc942af5c790c8c74f86dbe85fb9a561fccbc8b9b4190be835552d",
+    "ps7_init_c_sha256": "6196821e87f973e6b2aaca7ff96187c49a78fa2e43020c69e1a16a2c8d9bea34"
+  },
+  "vitis": {
+    "status": "PASS",
+    "returncode": 0,
+    "cache_bypass": true,
+    "mailbox_overlap": false,
+    "linker_ocm_hard_boundary_0x20000": true,
+    "critical_payload_byte_copy_verified": true,
+    "first_error_diagnostic_disassembly_verified": true,
+    "stage62_copy_diagnostic_disassembly_verified": true,
+    "stage62_microtest_disassembly_verified": true,
+    "stack_usage_verified": true,
+    "build_log": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build.log",
+      "bytes": 66507,
+      "sha256": "a173329f930f729fef5725f4b7a662856ab11b00b6b92aafd2f13cce6c105ee1"
+    },
+    "board_contract": {
+      "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps7_board_contract.json",
+      "bytes": 3031,
+      "sha256": "101d3f6ea447c3c6ee05caae9e6be44082011aab6827761508b1067ffb4bc9e5",
+      "status": "PASS"
+    },
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_4611f63d5c00f05ce22f80599fe8d85deb147c2926aed3ca7625c16cdad0356a.elf",
+      "bytes": 355892,
+      "sha256": "4611f63d5c00f05ce22f80599fe8d85deb147c2926aed3ca7625c16cdad0356a"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_0c91d96788b7e03e997a409cb530f65859f40141ff43b53c6140fd3e5cada74c.map",
+      "bytes": 97975,
+      "sha256": "0c91d96788b7e03e997a409cb530f65859f40141ff43b53c6140fd3e5cada74c"
+    }
+  },
+  "generated_board_contract": {
+    "status": "PASS",
+    "error_count": 0,
+    "include_vitis": true
+  },
+  "scope": {
+    "no_hardware": true,
+    "hardware_actions_executed": false,
+    "stage66_diagnostic_hardware_attempts_started": 0,
+    "network_used": false,
+    "ethernet_used": false,
+    "motion_used": false,
+    "project_process_count_after_build": 0,
+    "external_hw_server": {
+      "pid": 45220,
+      "path": "D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/hw_server.exe",
+      "touched": false
+    },
+    "RF_COMM_HW_AUTH": "UNSET",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  }
+}

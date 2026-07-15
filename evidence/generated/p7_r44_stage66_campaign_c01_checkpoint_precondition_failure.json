@@ -1,0 +1,83 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-15T15:09:38.3509537Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260715_stationary_app_r44_diag_stage66_c01",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "82184bf17137363e65772295f24acb87c1d7b6da",
+  "source_tree": "9a4effd605743fc67b4816502e8937cdbbfa5357",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 1,
+  "actual_hardware_attempt_count_before": 0,
+  "actual_hardware_attempt_count_after": 0,
+  "diagnostic_hardware_attempt_consumed": false,
+  "checkpoint_precondition": {
+    "status": "BLOCKED_FAIL_CLOSED",
+    "phase": "PORTABLE_CHECKPOINT_CAMPAIGN_LEDGER_VALIDATION",
+    "required_complete_suite_status": "PASS",
+    "required_complete_suite_summary_sha256": "0bc197a01aed946584272eb84953158a0494613ad68fd8ea3d5e4a1a69eeea66",
+    "canonical_gate_status": "PASS",
+    "canonical_gate_summary_sha256": "8aaf045b4f1100d5c77757699471d152a1590804f888bcbc1f5dfd68284b4d5f",
+    "canonical_gate_check_count": 13,
+    "canonical_gate_passing_check_count": 13,
+    "offline_cache_status": "BYPASS",
+    "campaign_ledger_sha256": "12413f07cd34635e2102b738742713a725dfac2fea15afd5f5e18a8e542d3b24",
+    "campaign_ledger_actual_hardware_attempt_count": 0,
+    "campaign_ledger_retired_pre_hardware_run_id_count": 2,
+    "mismatched_retirement_run_id": "p7_20260715_stationary_app_r43_diag_stage66_c01",
+    "ledger_bound_evidence_sha256": "771fd09e62f662e7a153c120ae300c466020e14b26c6f2dd4ae7bb75df97f844",
+    "source_tree_evidence_sha256": "c4efecd16bf01f3a1a3df583e26e04cc627cfddf30529d67cf55735d7b6f0ede",
+    "hashes_match": false
+  },
+  "generator": {
+    "invoked": false,
+    "exit_code": "NOT_INVOKED",
+    "P7_AUTHORIZED_SEQUENCE_GENERATOR": "NOT_INVOKED_CHECKPOINT_PRECONDITION_BLOCK",
+    "reason": "The authoritative campaign ledger binds the immutable original r43 retirement evidence SHA, but the current source tree had appended ledger recording metadata to that same evidence file and changed its hash.",
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "phase": "PORTABLE_CHECKPOINT_PREPLAN_VALIDATION",
+    "hardware_execution_entered": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "confirmed_cause": {
+    "classification": "IMMUTABLE_RETIREMENT_EVIDENCE_MUTATED_AFTER_LEDGER_BINDING",
+    "repair": "Restore the ledger-bound original r43 retirement evidence bytes and move the later ledger-recording metadata into a separate immutable file.",
+    "ledger_history_mutated": false,
+    "acceptance_or_hardware_claim_changed": false
+  },
+  "preserved_partial_checkpoint_package": {
+    "path": "evidence/generated/p7_r44validate_82184bf_checkpoint",
+    "top_level_pass_manifest_created": false,
+    "file_count": 15,
+    "byte_count": 134849,
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this failure record is outside the tree",
+    "tree_sha256": "964320441b8f39108f9443202395410be1ea8802af3d6d16f5c5cae32e37a0fa"
+  },
+  "hardware_boundary": {
+    "external_hw_server_pid": 45220,
+    "external_hw_server_unchanged": true,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No plan generator, hardware-capable wrapper, Vivado hardware process, XSDB hardware process, or candidate programming process was started after the precondition failure.",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260715_stationary_app_r45_diag_stage66_c01",
+  "next_run_must_not_start_before": "EVIDENCE_IMMUTABILITY_REPAIR_PLUS_ACCURATE_COMMIT_PLUS_NEW_CLEAN_SOURCE_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_CANONICAL_GATE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}
