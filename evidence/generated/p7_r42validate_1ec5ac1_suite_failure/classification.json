@@ -1,0 +1,81 @@
+{
+  "schema": "rf-comm-p7-complete-suite-failure-classification-v1",
+  "generated_at_utc": "2026-07-15T13:47:23.2990771Z",
+  "source_commit": "1ec5ac12540bf13769896207defd0e06543c38ac",
+  "source_tree": "1586c52a14163c4740e9768946cde30a97d6218d",
+  "validation_worktree": "C:/Users/user/.codex/worktrees/r42validate_1ec5ac1/RF_COMM_MULTILANE",
+  "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_1ec5ac1_stage66_campaign_c01prep.json --json-summary",
+  "status": "COMPLETE_SUITES_FAIL_CANONICAL_GATE_NOT_RUN",
+  "required_suite_invocation_count": 2,
+  "suite_invocation_count_by_name": {
+    "top_level_discovery": 1,
+    "tests_p7_discovery": 1
+  },
+  "source_commit_unchanged": true,
+  "clean_before": true,
+  "clean_after": true,
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "total_discovered_test_count": 279,
+  "top_level_discovery": {
+    "discovered_test_count": 237,
+    "status": "FAIL",
+    "failure_count": 2,
+    "error_count": 1
+  },
+  "tests_p7_discovery": {
+    "discovered_test_count": 42,
+    "status": "PASS"
+  },
+  "failures": [
+    {
+      "test": "test_ddr_external_master_stage_safe.DdrExternalMasterStageSafeTests.test_authorization_extension_binds_run_and_fixture_identity",
+      "classification": "AUTOMATICALLY_FIXABLE_BACKWARD_COMPATIBILITY_ERROR",
+      "observed": "AttributeError: Namespace has no stage66_diagnostic_campaign",
+      "repair": "Read the new optional campaign flag with getattr(..., false) in the authorization-extension helper."
+    },
+    {
+      "test": "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+      "classification": "STALE_DERIVED_OFFLINE_AUDIT_RECORD",
+      "observed": "The checked audit still bound the pre-r41-fix Tcl byte count/hash (140716, 9c0251d3...), while the current tracked Tcl is (141020, e7e81675...).",
+      "repair": "Revalidate and update only the derived current_tcl size/hash; immutable r37 fixture/readback conclusions remain unchanged."
+    },
+    {
+      "test": "test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract",
+      "classification": "CLEAN_WORKTREE_BUILD_MATERIALIZATION_PRECONDITION",
+      "observed": "The detached clean worktree did not yet contain ignored generated Vivado/Vitis XCI, block-design, ps7_init, XSA, or BSP parameter files.",
+      "repair": "Perform one fresh cache-bypassed canonical P6/P7 materialization on the repaired source before the next source commit's exactly-once complete suites."
+    }
+  ],
+  "canonical_gate_started": false,
+  "same_source_complete_suite_rerun_permitted": false,
+  "next_source_requires_new_commit": true,
+  "frozen_files": [
+    {
+      "path": "complete_suite_summary.json",
+      "bytes": 2583,
+      "sha256": "1fc233262d8c48e14e6df2e7c05114a5bd6cec7a7179bef7718a24dfd076f433"
+    },
+    {
+      "path": "tests_p7_discovery.stderr.log",
+      "bytes": 5303,
+      "sha256": "b5fd69053c03b0e37ee2cf2e929da3b901923d1293af83889b22ef2e38b24070"
+    },
+    {
+      "path": "tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "top_level_discovery.stderr.log",
+      "bytes": 48231,
+      "sha256": "6a7f9ee699423476ca0409281be542394349a535b28cdf60e65c005def6da5b1"
+    },
+    {
+      "path": "top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "06f2b846ac2339017b6d315350728657ee62b63a6263e271f9cefdb65b11fd0e"
+    }
+  ]
+}

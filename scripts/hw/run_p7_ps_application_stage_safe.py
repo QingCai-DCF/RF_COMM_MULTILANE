@@ -2391,6 +2391,9 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
     except (OSError, UnicodeError):
         return []
     errors: list[str] = []
+    stage66_campaign_mode = bool(
+        getattr(args, "stage66_diagnostic_campaign", False)
+    )
     required: list[tuple[str, str]] = [
         ("PS7_INIT_PATH", args.ps7_init),
         ("PS7_INIT_SHA256", args.ps7_init_sha256),
@@ -2421,7 +2424,7 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
                 ("P7_COVERAGE_CLAIMED", "false"),
             )
         )
-    elif args.stage66_diagnostic_campaign:
+    elif stage66_campaign_mode:
         required.extend(
             (
                 ("P7_EXECUTION_SCOPE", "P7_STAGE66_DIAGNOSTIC_STAGE"),
@@ -2514,7 +2517,7 @@ def _authorization_extension_errors(args: argparse.Namespace) -> list[str]:
                 errors.append(f"authorization extension path mismatch: {key}")
         elif observed.casefold() != str(expected).casefold():
             errors.append(f"authorization extension field mismatch: {key}")
-    if args.stage66_diagnostic_campaign:
+    if stage66_campaign_mode:
         ledger_path = fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH", "")
         expected_ledger = ""
         try:
