@@ -1,0 +1,97 @@
+{
+  "schema": "rf-comm-p7-required-suite-failure-v1",
+  "observed_at_utc": "2026-07-15T05:51:18.1869993Z",
+  "source_commit": "9cbea83c7881b668e35c28250dada7501ef49706",
+  "validation_worktree": "C:\\Users\\user\\.codex\\worktrees\\r41validate_9cbea83\\RF_COMM_MULTILANE",
+  "status": "FAIL",
+  "complete_suite_driver": {
+    "command": "python -B tools/run_p7_regression_suites.py --output build/p7_regression_9cbea83_r41formal.json --json-summary",
+    "invocation_count": 1,
+    "summary_path": "evidence/generated/p7_r41validate_9cbea83_suite_failure/complete_suite_summary.json",
+    "summary_bytes": 2523,
+    "summary_sha256": "4012753ac5744d9786917a710ef00de292f80826af2887e71bbde3d0ad2320d6",
+    "source_commit_unchanged": true,
+    "dirty_worktree_before_suites": false,
+    "dirty_worktree_after_suites": false
+  },
+  "suites": {
+    "top_level_discovery": {
+      "invocation_count": 1,
+      "status": "FAIL",
+      "returncode": 1,
+      "discovered_test_count": 210,
+      "passed_test_count": 209,
+      "failure_count": 1,
+      "error_count": 0,
+      "stdout": {
+        "path": "evidence/generated/p7_r41validate_9cbea83_suite_failure/top_level_discovery.stdout.log",
+        "bytes": 641,
+        "sha256": "cf89da6292e5f0d472f3d205b95b4bc0a9c671c20b995debbbcfd0e7f22c07a0"
+      },
+      "stderr": {
+        "path": "evidence/generated/p7_r41validate_9cbea83_suite_failure/top_level_discovery.stderr.log",
+        "bytes": 41073,
+        "sha256": "2a2ec8ed61c19e1616ef258ce8e0e154c48790d6745069877dab394eb88b1eb3"
+      }
+    },
+    "tests_p7_discovery": {
+      "invocation_count": 1,
+      "status": "PASS",
+      "returncode": 0,
+      "discovered_test_count": 42,
+      "passed_test_count": 42,
+      "failure_count": 0,
+      "error_count": 0,
+      "stdout": {
+        "path": "evidence/generated/p7_r41validate_9cbea83_suite_failure/tests_p7_discovery.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "evidence/generated/p7_r41validate_9cbea83_suite_failure/tests_p7_discovery.stderr.log",
+        "bytes": 5303,
+        "sha256": "fbe509b23b3171fbbf41a206355c10e2e237f0cc28fa2b30af4da63b13058a0e"
+      }
+    }
+  },
+  "failure": {
+    "test": "test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract",
+    "classification": "MISSING_EPHEMERAL_GENERATED_BOARD_CONTRACT_INPUTS_BEFORE_COMPLETE_SUITES",
+    "contract_report_status": "FAIL",
+    "missing_artifact_count": 9,
+    "missing_artifacts": [
+      "vivado_xci:file",
+      "vivado_block_design:file",
+      "vivado_ps7_init:ps7_init.tcl",
+      "vivado_ps7_init:ps7_init.c",
+      "vitis_platform_xsa:file",
+      "vitis_ps7_parameters:file",
+      "vitis_platform_ps7_init:ps7_init.tcl",
+      "vitis_platform_ps7_init:ps7_init.c",
+      "vitis_fsbl_ps7_init:ps7_init.c"
+    ],
+    "hardware_source_or_logic_failure_proven": false,
+    "clean_checkout_precondition_gap_proven": true
+  },
+  "safety": {
+    "hardware_actions_executed": false,
+    "top_level_stdout_contains_offline_stub_hardware_markers": true,
+    "stub_markers_are_hardware_pass_evidence": false,
+    "post_suite_project_process_count": 0,
+    "external_hw_server_pid": 45220,
+    "external_hw_server_present": true,
+    "external_hw_server_connections": "LISTEN_ONLY",
+    "external_hw_server_touched": false,
+    "ethernet_used": false,
+    "motion_used": false
+  },
+  "checkpoint_disposition": {
+    "source_retired": true,
+    "rerun_same_source_allowed": false,
+    "canonical_gate_started": false,
+    "complete_suite_pass_claimed": false,
+    "offline_checkpoint_pass_claimed": false,
+    "hardware_acceptance": "PENDING_HW"
+  },
+  "next_action": "COMMIT_EXACT_FAILURE_EVIDENCE; ON_A_NEW_SOURCE_MATERIALIZE_CACHE_BYPASSED_VIVADO_AND_VITIS_GENERATED_BOARD_CONTRACT_INPUTS_BEFORE_INVOKING_THE_REQUIRED_COMPLETE_SUITES"
+}

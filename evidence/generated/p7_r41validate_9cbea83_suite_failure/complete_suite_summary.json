@@ -1,0 +1,57 @@
+{
+  "FULL_SUITE_INVOCATION_COUNT": 2,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "dirty_files_after_suites": [],
+  "dirty_worktree_after_suites": false,
+  "dirty_worktree_before_suites": false,
+  "generated_at_utc": "2026-07-15T05:49:56.226446+00:00",
+  "schema": "rf-comm-p7-complete-regression-suites-v1",
+  "source_commit": "9cbea83c7881b668e35c28250dada7501ef49706",
+  "source_commit_after_suites": "9cbea83c7881b668e35c28250dada7501ef49706",
+  "source_commit_unchanged": true,
+  "status": "FAIL",
+  "suite_invocation_count_by_name": {
+    "tests_p7_discovery": 1,
+    "top_level_discovery": 1
+  },
+  "suites": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+      "discovered_test_count": 210,
+      "invocation_count": 1,
+      "name": "top_level_discovery",
+      "returncode": 1,
+      "status": "FAIL",
+      "stderr": {
+        "bytes": 41073,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41validate_9cbea83\\RF_COMM_MULTILANE\\build\\p7_regression_9cbea83_r41formal_logs\\top_level_discovery.stderr.log",
+        "sha256": "2a2ec8ed61c19e1616ef258ce8e0e154c48790d6745069877dab394eb88b1eb3"
+      },
+      "stdout": {
+        "bytes": 641,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41validate_9cbea83\\RF_COMM_MULTILANE\\build\\p7_regression_9cbea83_r41formal_logs\\top_level_discovery.stdout.log",
+        "sha256": "cf89da6292e5f0d472f3d205b95b4bc0a9c671c20b995debbbcfd0e7f22c07a0"
+      }
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 42,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 5303,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41validate_9cbea83\\RF_COMM_MULTILANE\\build\\p7_regression_9cbea83_r41formal_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "fbe509b23b3171fbbf41a206355c10e2e237f0cc28fa2b30af4da63b13058a0e"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "C:\\Users\\user\\.codex\\worktrees\\r41validate_9cbea83\\RF_COMM_MULTILANE\\build\\p7_regression_9cbea83_r41formal_logs\\tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "total_discovered_test_count": 252
+}
