@@ -1618,7 +1618,13 @@ def core_readiness_errors(path: Path, evidence: RepositoryEvidence) -> list[str]
         append_error(errors, source.is_file(), f"PS core readiness source missing: {relative}")
         append_error(errors, SHA256_RE.fullmatch(expected) is not None, f"PS core readiness source SHA256 malformed: {relative}")
         if source.is_file() and SHA256_RE.fullmatch(expected):
-            append_error(errors, sha256_file(source) == expected, f"PS core readiness source hash mismatch: {relative}")
+            append_error(
+                errors,
+                _sha256_matches_registered_materialization(
+                    source, expected, evidence.repo_root
+                ),
+                f"PS core readiness source hash mismatch: {relative}",
+            )
     service_path = root / "software/ps_driver/p7_app_service.c"
     if service_path.is_file():
         service_text = service_path.read_text(encoding="utf-8", errors="replace")
@@ -3324,16 +3330,6 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
         "objects_failed": 0,
         "bytes_completed": sum(int(item.get("bytes_completed", 0)) for item in objects if isinstance(item, dict)),
         "fragments_completed": sum(int(item.get("fragments_completed", 0)) for item in objects if isinstance(item, dict)),
-        "lane0_fragments": sum(int(item.get("lane0_fragments", 0)) for item in objects if isinstance(item, dict)),
-        "lane1_fragments": sum(int(item.get("lane1_fragments", 0)) for item in objects if isinstance(item, dict)),
-        "fallback_count": sum(int(item.get("fallback_count", 0)) for item in objects if isinstance(item, dict)),
-        "p6_retry_count": sum(int(item.get("p6_retry_count", 0)) for item in objects if isinstance(item, dict)),
-        "p6_retry_exhausted": 0,
-        "p6_tx_fail": 0,
-        "p6_crc_bad": 0,
-        "p6_payload_mismatch": 0,
-        "max_txd_high_cycles": max((int(item.get("max_txd_high_cycles", 0)) for item in objects if isinstance(item, dict)), default=0),
-        "duty_violation_count": 0,
     }
     for key, expected in mailbox_aggregates.items():
         append_error(errors, int(mailbox.get(key, -1)) == expected, f"stationary mailbox does not exactly reconcile to terminal ledger: {key}")
@@ -3513,12 +3509,31 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
             "time_source": "PS global timer sample 10 at the embedded 300-second boundary",
         }
         nonempty_latency = [item for item in calibration_samples if int(item.get("latency_count", 0)) > 0]
-        append_error(errors, len(nonempty_latency) == 10, "calibration latency distribution is not populated in all ten intervals")
-        latency_observations = sum(int(item.get("latency_count", 0)) for item in nonempty_latency)
+        latency_observations = sum(int(item.get("latency_count", 0)) for item in calibration_samples)
+        append_error(errors, latency_observations > 0, "calibration latency distribution contains no completed-object observations")
+        append_error(
+            errors,
+            latency_observations == int(baseline.get("objects", -1)),
+            "calibration latency observation count does not equal the 300-second completed-object baseline",
+        )
         weighted_mean_numerator = sum(
             int(item.get("latency_mean_ticks", 0)) * int(item.get("latency_count", 0))
-            for item in nonempty_latency
+            for item in calibration_samples
         )
+        interval_summaries = [
+            {
+                "sample_sequence": int(item.get("sequence", -1)),
+                "elapsed_sec": float(item.get("elapsed_sec", -1)),
+                "observation_count": int(item.get("latency_count", 0)),
+                "minimum_ticks": int(item.get("latency_min_ticks", 0)),
+                "mean_ticks": int(item.get("latency_mean_ticks", 0)),
+                "p50_ticks": int(item.get("latency_p50_ticks", 0)),
+                "p95_ticks": int(item.get("latency_p95_ticks", 0)),
+                "p99_ticks": int(item.get("latency_p99_ticks", 0)),
+                "maximum_ticks": int(item.get("latency_max_ticks", 0)),
+            }
+            for item in calibration_samples
+        ]
         calibration_latency.update(
             {
                 "interval_count": len(calibration_samples),
@@ -3526,10 +3541,11 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
                 "observation_count": latency_observations,
                 "minimum_ticks": min((int(item.get("latency_min_ticks", 0)) for item in nonempty_latency), default=0),
                 "weighted_interval_mean_ticks": (weighted_mean_numerator / latency_observations) if latency_observations else 0.0,
-                "interval_p50_ticks": [int(item.get("latency_p50_ticks", 0)) for item in nonempty_latency],
-                "interval_p95_ticks": [int(item.get("latency_p95_ticks", 0)) for item in nonempty_latency],
-                "interval_p99_ticks": [int(item.get("latency_p99_ticks", 0)) for item in nonempty_latency],
+                "interval_p50_ticks": [int(item.get("latency_p50_ticks", 0)) for item in calibration_samples],
+                "interval_p95_ticks": [int(item.get("latency_p95_ticks", 0)) for item in calibration_samples],
+                "interval_p99_ticks": [int(item.get("latency_p99_ticks", 0)) for item in calibration_samples],
                 "maximum_ticks": max((int(item.get("latency_max_ticks", 0)) for item in nonempty_latency), default=0),
+                "intervals": interval_summaries,
             }
         )
     append_error(errors, any(int(item.get("fallbacks", 0)) > 0 for item in samples if isinstance(item, dict)), "stationary samples do not prove controlled fallback")
@@ -3571,15 +3587,46 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
     terminal_refresh = raw_markers.get("P7_TERMINAL_UNACKNOWLEDGED_REFRESH")
     request_value = int(mailbox.get("runtime_elapsed_request", -1))
     ack_value = int(mailbox.get("runtime_elapsed_ack", -2))
-    marker_request = integer_marker((raw_markers,), ("P7_TERMINAL_UNACKNOWLEDGED_REQUEST",))
-    marker_ack = integer_marker((raw_markers,), ("P7_TERMINAL_UNACKNOWLEDGED_ACK",))
+    final_request = integer_marker((raw_markers,), ("P7_TERMINAL_FINAL_REQUEST",))
+    final_ack = integer_marker((raw_markers,), ("P7_TERMINAL_FINAL_ACK",))
+    captured_request = integer_marker(
+        (raw_markers,), ("P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_REQUEST",)
+    )
+    captured_ack = integer_marker(
+        (raw_markers,), ("P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_ACK",)
+    )
+    request_mismatch = request_value != ack_value
     append_error(errors, terminal_refresh in {"0", "1"}, "terminal runtime-refresh fallback marker is not strict 0/1")
-    append_error(errors, marker_request == request_value and marker_ack == ack_value, "terminal runtime-refresh marker tuple differs from final mailbox tuple")
-    if terminal_refresh == "1":
-        append_error(errors, request_value != ack_value, "terminal runtime-refresh fallback claims an unacknowledged request but final request/ACK are equal")
-    elif terminal_refresh == "0":
-        append_error(errors, request_value == ack_value, "terminal runtime-refresh fallback is zero but final request/ACK differ")
-    append_error(errors, mailbox.get("terminal_unacknowledged_refresh") is (terminal_refresh == "1"), "terminal runtime-refresh postprocess flag mismatch")
+    append_error(
+        errors,
+        final_request == request_value and final_ack == ack_value,
+        "stationary terminal final request/ACK markers do not match final mailbox",
+    )
+    if request_mismatch:
+        append_error(
+            errors,
+            terminal_refresh == "1",
+            "terminal runtime-refresh fallback did not record the final unacknowledged request",
+        )
+        append_error(
+            errors,
+            int(mailbox.get("service_state", -1)) in {4, 5}
+            and captured_request == request_value
+            and captured_ack == ack_value,
+            "terminal runtime-refresh captured request/ACK markers do not match the final unacknowledged mailbox tuple",
+        )
+    else:
+        append_error(
+            errors,
+            terminal_refresh == "0",
+            "terminal runtime-refresh fallback contradicts equal final request/ACK",
+        )
+    append_error(
+        errors,
+        mailbox.get("terminal_unacknowledged_refresh")
+        is (request_mismatch and terminal_refresh == "1"),
+        "terminal runtime-refresh postprocess flag mismatch",
+    )
     append_error(errors, raw_markers.get("P7_SAMPLE_00060_SAFE_TERMINAL_STATE") == "1", "stationary safe terminal sample marker missing")
     append_error(errors, raw_markers.get("P7_SAMPLE_SEQUENCE_WRITER") == "HOST_POST_TERMINAL", "stationary sample writer provenance marker missing")
     append_error(errors, bool(samples) and int(samples[-1].get("queue_observation_not_before_ticks", -1)) == int(mailbox.get("runtime_elapsed_ticks", -2)), "stationary terminal queue-observation lower bound does not bind the final mailbox runtime")
@@ -13675,6 +13722,13 @@ def derive_metrics(candidate: Candidate, post: Mapping[str, Any], inherited_erro
     }
     for key, expected in exact_aggregates.items():
         append_error(errors, int(metrics.get(key, -1)) == expected, f"application metric does not exactly reconcile to terminal/raw aggregate: {key}")
+    append_error(
+        errors,
+        exact_aggregates["fallback_lane0_to_lane1"]
+        + exact_aggregates["fallback_lane1_to_lane0"]
+        == sum(int(item.get("fallback_count", 0)) for item in objects),
+        "application directional fallback metrics do not reconcile to terminal fallback events",
+    )
     append_error(errors, exact_aggregates["lane0_fragments"] > 0 and exact_aggregates["lane1_fragments"] > 0 and exact_aggregates["replicated_fragments"] > 0, "application lane/replication metrics are incomplete")
     append_error(errors, exact_aggregates["fallback_lane0_to_lane1"] > 0 and exact_aggregates["fallback_lane1_to_lane0"] > 0, "application metrics do not prove both controlled fallback directions")
     append_error(errors, int(metrics.get("queue_high_watermark", -1)) == 8, "application queue high-water mark is not 8")

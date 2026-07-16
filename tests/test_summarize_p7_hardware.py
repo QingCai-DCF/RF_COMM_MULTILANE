@@ -1667,7 +1667,7 @@ class SyntheticEvidence:
             descriptor = case["descriptor"]
             length = int(descriptor["object_length"])
             fallback = int(descriptor["fallback_count"])
-            end_elapsed_ticks = sequence * 19 * subject.PS_COUNTS_PER_SECOND
+            end_elapsed_ticks = (45 + (sequence - 1) * 19) * subject.PS_COUNTS_PER_SECOND
             object_latency_ticks = int(descriptor["fragments_total"]) * 2 + 10
             generation = slot_generations[slot]
             slot_generations[slot] += 1
@@ -1768,7 +1768,10 @@ class SyntheticEvidence:
                     "p6_tx_fail": 0,
                     "p6_crc_bad": 0,
                     "p6_payload_mismatch": 0,
-                    "max_txd_high": 8,
+                    "max_txd_high": max(
+                        (int(item["max_txd_high_cycles"]) for item in prefix),
+                        default=0,
+                    ),
                     "duty_violations": 0,
                     "queue_occupancy": 0,
                     "queue_high": 8,
@@ -1803,18 +1806,8 @@ class SyntheticEvidence:
             "objects_failed": 0,
             "bytes_completed": sum(item["bytes_completed"] for item in objects),
             "fragments_completed": sum(item["fragments_completed"] for item in objects),
-            "lane0_fragments": sum(item["lane0_fragments"] for item in objects),
-            "lane1_fragments": sum(item["lane1_fragments"] for item in objects),
-            "fallback_count": sum(item["fallback_count"] for item in objects),
             "queue_high_watermark": 8,
             "backpressure_events": 1,
-            "p6_retry_count": 0,
-            "p6_retry_exhausted": 0,
-            "p6_tx_fail": 0,
-            "p6_crc_bad": 0,
-            "p6_payload_mismatch": 0,
-            "max_txd_high_cycles": 8,
-            "duty_violation_count": 0,
             "metrics_time_sources": "ps_global_timer_for_scheduler_samples_goodput_fragment_and_object_latency;host_wall_clock_for_preload_and_independent_duration_watchdog",
         }
         fragments_completed = sum(item["fragments_completed"] for item in objects)
@@ -1926,8 +1919,10 @@ class SyntheticEvidence:
                 f"P7_STATIONARY_TERMINAL_DESCRIPTORS={len(objects)}",
                 f"P7_STATIONARY_PS_ELAPSED_TICKS={runtime_ticks}",
                 "P7_TERMINAL_UNACKNOWLEDGED_REFRESH=0",
-                "P7_TERMINAL_UNACKNOWLEDGED_REQUEST=7",
-                "P7_TERMINAL_UNACKNOWLEDGED_ACK=7",
+                "P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_REQUEST=0",
+                "P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_ACK=0",
+                "P7_TERMINAL_FINAL_REQUEST=7",
+                "P7_TERMINAL_FINAL_ACK=7",
                 "P7_SAMPLE_00060_SAFE_TERMINAL_STATE=1",
                 "P7_SAMPLE_SEQUENCE_WRITER=HOST_POST_TERMINAL",
                 f"P7_HOST_TO_PS_INPUT_BYTES={host_input_bytes}",
@@ -2564,6 +2559,18 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertIn("evidence/generated/p7_performance_summary.md", payload["final"]["GENERATED_SUMMARIES"])
             self.assertEqual(payload["stages"]["stationary"]["metrics"]["calibration_samples"], 10)
             self.assertEqual(payload["stages"]["stationary"]["metrics"]["acceptance_samples"], 50)
+            calibration_latency = payload["stages"]["calibration"]["metrics"][
+                "transport_interval_latency"
+            ]
+            self.assertEqual(calibration_latency["interval_count"], 10)
+            self.assertEqual(calibration_latency["nonempty_interval_count"], 9)
+            self.assertEqual(len(calibration_latency["intervals"]), 10)
+            self.assertEqual(calibration_latency["intervals"][0]["observation_count"], 0)
+            self.assertEqual(
+                calibration_latency["observation_count"],
+                payload["stages"]["calibration"]["metrics"]
+                ["baseline_cumulative_at_300_seconds"]["objects_completed"],
+            )
             self.assertEqual(
                 payload["stages"]["stationary"]["metrics"][
                     "rolling_goodput_window_seconds"
@@ -2636,6 +2643,94 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             stationary.data["postprocess"]["mailbox"][
                 "rolling_goodput_window_seconds"
             ] = 300
+
+            canonical_markers = subject.markers(stationary)
+            bad_final_markers = dict(canonical_markers)
+            bad_final_markers["P7_TERMINAL_FINAL_REQUEST"] = "8"
+            with mock.patch.object(subject, "markers", return_value=bad_final_markers), mock.patch.object(
+                subject,
+                "derive_metrics",
+                return_value=subject.StageResult(
+                    "application_metrics", "PASS", "isolated marker test"
+                ),
+            ):
+                stationary_result, _calibration_result, _metrics_result = (
+                    subject.stationary_results(stationary, evidence)
+                )
+            self.assertEqual("FAIL", stationary_result.status)
+            self.assertIn(
+                "stationary terminal final request/ACK markers do not match final mailbox",
+                stationary_result.errors,
+            )
+
+            mailbox = stationary.data["postprocess"]["mailbox"]
+            mailbox["runtime_elapsed_request"] = 8
+            mailbox["terminal_unacknowledged_refresh"] = True
+            bad_capture_markers = dict(canonical_markers)
+            bad_capture_markers.update(
+                {
+                    "P7_TERMINAL_UNACKNOWLEDGED_REFRESH": "1",
+                    "P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_REQUEST": "9",
+                    "P7_TERMINAL_UNACKNOWLEDGED_CAPTURED_ACK": "7",
+                    "P7_TERMINAL_FINAL_REQUEST": "8",
+                    "P7_TERMINAL_FINAL_ACK": "7",
+                }
+            )
+            with mock.patch.object(subject, "markers", return_value=bad_capture_markers), mock.patch.object(
+                subject,
+                "derive_metrics",
+                return_value=subject.StageResult(
+                    "application_metrics", "PASS", "isolated marker test"
+                ),
+            ):
+                stationary_result, _calibration_result, _metrics_result = (
+                    subject.stationary_results(stationary, evidence)
+                )
+            self.assertEqual("FAIL", stationary_result.status)
+            self.assertIn(
+                "terminal runtime-refresh captured request/ACK markers do not match the final unacknowledged mailbox tuple",
+                stationary_result.errors,
+            )
+            mailbox["runtime_elapsed_request"] = 7
+            mailbox["terminal_unacknowledged_refresh"] = False
+
+            first_calibration_sample = stationary.data["postprocess"][
+                "stationary_samples"
+            ][0]
+            first_calibration_sample["latency_count"] = 1
+            with mock.patch.object(
+                subject,
+                "derive_metrics",
+                return_value=subject.StageResult(
+                    "application_metrics", "PASS", "isolated calibration test"
+                ),
+            ):
+                stationary_result, _calibration_result, _metrics_result = (
+                    subject.stationary_results(stationary, evidence)
+                )
+            self.assertEqual("FAIL", stationary_result.status)
+            self.assertIn(
+                "calibration latency observation count does not equal the 300-second completed-object baseline",
+                stationary_result.errors,
+            )
+            first_calibration_sample["latency_count"] = 0
+
+            application_metrics = stationary.data["postprocess"]["application_metrics"]
+            lane0_fragments = application_metrics.pop("lane0_fragments")
+            with mock.patch.object(
+                subject,
+                "validate_stationary_trace_binaries",
+                return_value=([], [1]),
+            ):
+                metrics_result = subject.derive_metrics(
+                    stationary, stationary.data["postprocess"], []
+                )
+            self.assertEqual("FAIL", metrics_result.status)
+            self.assertIn(
+                "application metric missing: lane0_fragments", metrics_result.errors
+            )
+            application_metrics["lane0_fragments"] = lane0_fragments
+
             trace = stationary.data["postprocess"]["stationary_trace_validation"]
             trace_path = Path(trace["records"][0]["trace_file"]["path"])
             trace_bytes = bytearray(trace_path.read_bytes())
@@ -2647,6 +2742,124 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 trace,
             )
             self.assertTrue(any("fragment count mismatch" in item or "magic mismatch" in item for item in trace_errors))
+
+    def test_frozen_r73_stage66_payload_replays_without_semantic_errors(self) -> None:
+        summary_path = (
+            ROOT
+            / "evidence"
+            / "hardware"
+            / "p7"
+            / "authorized_sequence"
+            / "p7_20260717_stationary_app_r73_diag_stage66_c07"
+            / "066_p7_ps_stationary"
+            / "p7_ps_application_stage_summary.json"
+        )
+        self.assertTrue(summary_path.is_file())
+        data = json.loads(summary_path.read_text(encoding="utf-8"))
+        candidate = subject.Candidate(
+            summary_path,
+            data,
+            "ps",
+            "stationary",
+            subject.parse_time(
+                data.get("generated_at_utc"), summary_path.stat().st_mtime
+            ),
+        )
+        evidence = subject.RepositoryEvidence(
+            ROOT,
+            ROOT / "evidence" / "hardware" / "p7",
+            ROOT / "evidence" / "generated",
+        )
+
+        raw_errors, raw_record = subject.validate_raw_evidence_manifest(
+            candidate, evidence
+        )
+        self.assertIsNotNone(raw_record)
+        self.assertEqual([], raw_errors, "\n".join(raw_errors))
+        self.assertTrue(data["diagnostic_only"])
+        self.assertFalse(data["coverage_claimed"])
+        self.assertEqual(data["HARDWARE_ACCEPTANCE"], "PENDING_HW")
+
+        common_errors, _provenance = subject.common_runner_errors(
+            candidate, evidence
+        )
+        self.assertEqual(
+            ["hardware source commit does not match current repository HEAD"],
+            common_errors,
+        )
+
+        outer_path = summary_path.parent.parent / "sequence_execution_ledger.json"
+        outer = json.loads(outer_path.read_text(encoding="utf-8"))
+        for attempt in outer["attempts"]:
+            child_path = subject.resolve_reference(
+                attempt["summary_file"]["path"],
+                document=outer_path,
+                repo_root=ROOT,
+            )
+            self.assertIsNotNone(child_path)
+            self.assertTrue(child_path.is_file())
+            child_data = json.loads(child_path.read_text(encoding="utf-8"))
+            kind = "ps" if subject.PS_MARKER in child_data else "jtag"
+            stage = (
+                subject.classify_ps_stage(child_data)
+                if kind == "ps"
+                else subject.classify_jtag_stage(child_data)
+            )
+            evidence.candidates.append(
+                subject.Candidate(
+                    child_path,
+                    child_data,
+                    kind,
+                    stage,
+                    subject.parse_time(
+                        child_data.get("generated_at_utc"),
+                        child_path.stat().st_mtime,
+                    ),
+                )
+            )
+        historical_record, historical_errors = (
+            subject._historical_stage66_campaign_epoch(candidate, evidence)
+        )
+        self.assertEqual([], historical_errors, "\n".join(historical_errors))
+        self.assertEqual(historical_record["diagnostic_result"], "PASS")
+        self.assertEqual(historical_record["coverage_keys"], [])
+        self.assertEqual(
+            historical_record["verified_full_stage_ordinals"], [1, 2, 3, 4, 66]
+        )
+
+        with mock.patch.object(
+            subject,
+            "common_runner_errors",
+            return_value=(
+                [],
+                {
+                    "source_commit": data["safety_validation"][
+                        "source_commit_current"
+                    ]
+                },
+            ),
+        ):
+            stationary, calibration, metrics = subject.stationary_results(
+                candidate, evidence
+            )
+        for result in (stationary, calibration, metrics):
+            self.assertEqual(
+                "PASS",
+                result.status,
+                json.dumps(result.errors, indent=2),
+            )
+        self.assertEqual(stationary.metrics["objects"], 60)
+        self.assertEqual(stationary.metrics["samples"], 60)
+        self.assertEqual(
+            calibration.metrics["transport_interval_latency"]["interval_count"],
+            10,
+        )
+        self.assertEqual(
+            calibration.metrics["transport_interval_latency"]["observation_count"],
+            calibration.metrics["baseline_cumulative_at_300_seconds"][
+                "objects_completed"
+            ],
+        )
 
     def test_old_commit_read_only_preflight_is_a_hash_bound_zero_coverage_epoch(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
