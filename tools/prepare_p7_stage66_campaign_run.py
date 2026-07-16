@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -32,6 +33,13 @@ PLACEHOLDER_TOKEN = "P7_UNALLOCATED_STAGE66_PLACEHOLDER"
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 FORBIDDEN_SHELL_FRAGMENTS = ("Join-Path", "Test-Path", "Resolve-Path", "$(", "`", "\r", "\n", "\x00")
+BUILD_MATERIALIZATION_NAMES = ("p6_ps_candidate", "p7_ps_vitis_workspace")
+COLLISION_ROOTS_RELATIVE = (
+    Path(".hardware_authorization"),
+    Path("build/p7_authorized_sequence"),
+    Path("evidence/hardware/p7/authorized_sequence"),
+    Path("evidence/generated"),
+)
 
 
 def now_utc() -> str:
@@ -44,6 +52,11 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _is_link_or_junction(path: Path) -> bool:
+    is_junction = getattr(os.path, "isjunction", lambda _path: False)
+    return path.is_symlink() or bool(is_junction(path))
 
 
 def atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -282,6 +295,432 @@ def _git_head() -> str:
     return value
 
 
+def canonical_tree_record(root: Path) -> dict[str, Any]:
+    """Hash a regular-file tree using the canonical P7 materialization format."""
+
+    root = root.resolve(strict=False)
+    errors: list[str] = []
+    records: list[tuple[str, int, str]] = []
+    if not os.path.lexists(root):
+        errors.append(f"tree is absent: {root}")
+    elif _is_link_or_junction(root) or not root.is_dir():
+        errors.append(f"tree root is not a regular directory: {root}")
+    else:
+        try:
+            for directory, directory_names, file_names in os.walk(
+                root, topdown=True, followlinks=False
+            ):
+                directory_names.sort()
+                file_names.sort()
+                directory_path = Path(directory)
+                for name in directory_names:
+                    candidate = directory_path / name
+                    if _is_link_or_junction(candidate):
+                        errors.append(f"tree contains a directory link/junction: {candidate}")
+                for name in file_names:
+                    candidate = directory_path / name
+                    relative = candidate.relative_to(root).as_posix()
+                    if _is_link_or_junction(candidate) or not candidate.is_file():
+                        errors.append(f"tree contains a non-regular file: {candidate}")
+                        continue
+                    size = candidate.stat().st_size
+                    records.append((relative, size, sha256_file(candidate)))
+        except OSError as exc:
+            errors.append(f"tree enumeration/hash failed: {exc}")
+    # Match the established Windows PowerShell `Sort-Object path` evidence:
+    # path ordering is case-insensitive while the serialized path keeps case.
+    records.sort(key=lambda item: item[0].casefold())
+    canonical = "".join(
+        f"{relative}\t{size}\t{digest}\n" for relative, size, digest in records
+    ).encode("utf-8")
+    return {
+        "path": str(root),
+        "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+        "file_count": len(records),
+        "byte_count": sum(item[1] for item in records),
+        "tree_sha256": hashlib.sha256(canonical).hexdigest() if not errors else "",
+        "errors": errors,
+    }
+
+
+def _git_worktree_identity(root: Path) -> dict[str, Any]:
+    root = root.resolve(strict=False)
+    result: dict[str, Any] = {
+        "path": str(root),
+        "head": "",
+        "tracked_clean": False,
+        "errors": [],
+    }
+    for label, argv in (
+        ("head", ["git", "-C", str(root), "rev-parse", "HEAD"]),
+        (
+            "status",
+            [
+                "git",
+                "-C",
+                str(root),
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+            ],
+        ),
+    ):
+        try:
+            completed = subprocess.run(
+                argv,
+                text=True,
+                encoding="utf-8",
+                errors="strict",
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            result["errors"].append(f"git {label} failed: {exc}")
+            continue
+        if completed.returncode != 0:
+            result["errors"].append(
+                f"git {label} returned {completed.returncode}: {completed.stderr.strip()}"
+            )
+            continue
+        if label == "head":
+            result["head"] = completed.stdout.strip().lower()
+            if COMMIT_RE.fullmatch(result["head"]) is None:
+                result["errors"].append("git HEAD is not an exact 40-hex commit")
+        else:
+            result["tracked_clean"] = completed.stdout == ""
+            result["tracked_status"] = completed.stdout.splitlines()
+            if not result["tracked_clean"]:
+                result["errors"].append("worktree has tracked changes")
+    result["status"] = "PASS" if not result["errors"] else "FAIL"
+    return result
+
+
+def inspect_build_materialization(
+    *,
+    source_root: Path,
+    source_commit: str,
+    expected_tree_sha256_by_name: Mapping[str, str],
+) -> dict[str, Any]:
+    """Validate every predictable build-tree input without copying anything."""
+
+    source_root_input = source_root
+    source_root = source_root.resolve(strict=False)
+    destination_root = (ROOT / "build").resolve(strict=False)
+    report: dict[str, Any] = {
+        "status": "FAIL",
+        "source_root": str(source_root),
+        "destination_root": str(destination_root),
+        "source_commit_expected": source_commit.lower(),
+        "trees": {},
+        "destination_paths_absent": False,
+        "copy_started": False,
+        "errors": [],
+    }
+    if COMMIT_RE.fullmatch(source_commit.lower()) is None:
+        report["errors"].append(
+            {"error_code": "BUILD_SOURCE_COMMIT_MALFORMED", "detail": source_commit}
+        )
+    if not source_root_input.is_absolute():
+        report["errors"].append(
+            {
+                "error_code": "BUILD_SOURCE_ROOT_NOT_ABSOLUTE",
+                "detail": str(source_root_input),
+            }
+        )
+    source_identity = _git_worktree_identity(source_root)
+    destination_identity = _git_worktree_identity(ROOT)
+    report["source_worktree"] = source_identity
+    report["destination_worktree"] = destination_identity
+    for label, identity in (
+        ("SOURCE", source_identity),
+        ("DESTINATION", destination_identity),
+    ):
+        for detail in identity.get("errors", []):
+            report["errors"].append(
+                {"error_code": f"BUILD_{label}_WORKTREE_INVALID", "detail": detail}
+            )
+    if source_identity.get("head") != source_commit.lower():
+        report["errors"].append(
+            {
+                "error_code": "BUILD_SOURCE_COMMIT_MISMATCH",
+                "detail": str(source_identity.get("head")),
+            }
+        )
+    destinations_absent = True
+    for name in BUILD_MATERIALIZATION_NAMES:
+        expected = str(expected_tree_sha256_by_name.get(name, "")).lower()
+        source = source_root / "build" / name
+        destination = destination_root / name
+        source_record = canonical_tree_record(source)
+        tree = {
+            "source": source_record,
+            "destination": str(destination),
+            "destination_lexists": os.path.lexists(destination),
+            "expected_tree_sha256": expected,
+        }
+        report["trees"][name] = tree
+        if SHA256_RE.fullmatch(expected) is None:
+            report["errors"].append(
+                {"error_code": "BUILD_TREE_SHA256_MALFORMED", "detail": name}
+            )
+        for detail in source_record["errors"]:
+            report["errors"].append(
+                {"error_code": "BUILD_SOURCE_TREE_INVALID", "detail": f"{name}: {detail}"}
+            )
+        if source_record["tree_sha256"] != expected:
+            report["errors"].append(
+                {
+                    "error_code": "BUILD_SOURCE_TREE_SHA256_MISMATCH",
+                    "detail": f"{name}: {source_record['tree_sha256']}",
+                }
+            )
+        if tree["destination_lexists"]:
+            destinations_absent = False
+            report["errors"].append(
+                {"error_code": "BUILD_DESTINATION_COLLISION", "detail": str(destination)}
+            )
+    report["destination_paths_absent"] = destinations_absent
+    if not report["errors"]:
+        report["status"] = "PASS"
+    return report
+
+
+def _registered_worktree_roots() -> tuple[list[Path], list[str]]:
+    try:
+        completed = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="strict",
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return [], [f"git worktree list failed: {exc}"]
+    if completed.returncode != 0:
+        return [], [
+            f"git worktree list returned {completed.returncode}: {completed.stderr.strip()}"
+        ]
+    roots = [
+        Path(line.removeprefix("worktree ")).resolve(strict=False)
+        for line in completed.stdout.splitlines()
+        if line.startswith("worktree ")
+    ]
+    return roots, []
+
+
+def _collision_workspace_roots() -> tuple[list[Path], list[str]]:
+    registered, errors = _registered_worktree_roots()
+    roots = {root.resolve(strict=False) for root in registered}
+    pools: set[Path] = set()
+    for root in registered:
+        if (
+            root.name.casefold() == "rf_comm_multilane"
+            and root.parent.parent.name.casefold() in {"codexworktrees", "worktrees"}
+        ):
+            pools.add(root.parent.parent.resolve(strict=False))
+    for pool in sorted(pools, key=lambda path: str(path).casefold()):
+        try:
+            for child in pool.iterdir():
+                candidate = child / "RF_COMM_MULTILANE"
+                if candidate.is_dir() and not _is_link_or_junction(candidate):
+                    roots.add(candidate.resolve(strict=False))
+        except OSError as exc:
+            errors.append(f"worktree pool scan failed at {pool}: {exc}")
+    return sorted(roots, key=lambda path: str(path).casefold()), errors
+
+
+def run_id_filename_collision_report(run_id: str) -> dict[str, Any]:
+    roots, errors = _collision_workspace_roots()
+    collisions: set[str] = set()
+    for root in roots:
+        for relative in COLLISION_ROOTS_RELATIVE:
+            collision_root = root / relative
+            if not collision_root.is_dir() or _is_link_or_junction(collision_root):
+                continue
+            try:
+                for directory, directory_names, file_names in os.walk(
+                    collision_root, topdown=True, followlinks=False
+                ):
+                    for name in (*directory_names, *file_names):
+                        if run_id.casefold() in name.casefold():
+                            collisions.add(str((Path(directory) / name).resolve(strict=False)))
+            except OSError as exc:
+                errors.append(f"collision scan failed below {collision_root}: {exc}")
+    return {
+        "status": "PASS" if not errors and not collisions else "FAIL",
+        "run_id": run_id,
+        "workspace_root_count": len(roots),
+        "collision_roots_relative": [path.as_posix() for path in COLLISION_ROOTS_RELATIVE],
+        "collisions": sorted(collisions),
+        "errors": errors,
+    }
+
+
+def _campaign_candidate_validation(run_id: str, attempt_number: int) -> dict[str, Any]:
+    policy_sha = sha256_file(campaign.POLICY_PATH)
+    policy, policy_errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+    if policy is None:
+        return {
+            "status": "FAIL",
+            "policy_sha256": policy_sha,
+            "errors": policy_errors,
+        }
+    ledger_path = campaign.campaign_ledger_path(policy)
+    ledger, ledger_errors = campaign.validate_ledger(policy, ledger_path, allow_absent=False)
+    next_errors = (
+        campaign.validate_next_attempt(
+            policy,
+            ledger,
+            run_id=run_id,
+            hardware_attempt_number=attempt_number,
+        )
+        if isinstance(ledger, dict)
+        else ["campaign ledger is unavailable"]
+    )
+    errors = [*policy_errors, *ledger_errors, *next_errors]
+    return {
+        "status": "PASS" if not errors else "FAIL",
+        "policy_sha256": policy_sha,
+        "ledger_path": str(ledger_path),
+        "ledger_sha256": campaign.current_ledger_sha256(ledger_path),
+        "actual_hardware_attempt_count": (
+            ledger.get("actual_hardware_attempt_count") if isinstance(ledger, dict) else None
+        ),
+        "campaign_status": ledger.get("status") if isinstance(ledger, dict) else None,
+        "run_id": run_id,
+        "requested_hardware_attempt_number": attempt_number,
+        "errors": errors,
+    }
+
+
+def materialize_build_trees(
+    *,
+    source_root: Path,
+    source_commit: str,
+    expected_tree_sha256_by_name: Mapping[str, str],
+    run_id: str,
+    attempt_number: int,
+) -> dict[str, Any]:
+    """Copy both immutable build trees only after one shared fail-closed preflight."""
+
+    report = _base_report("MATERIALIZE_BUILD_TREES")
+    report["phase"] = "BUILD_TREE_MATERIALIZATION_PREFLIGHT"
+    report["run_id"] = run_id
+    report["requested_hardware_attempt_number"] = attempt_number
+    environment = _environment_validation(require_authorized=False)
+    report["environment_validation"] = environment
+    for item in environment["errors"]:
+        _append_error(report, item["error_code"], item["detail"])
+    before = _campaign_snapshot()
+    report["campaign_before"] = before
+    if before.get("status") != "PASS" or before.get("campaign_lock_exists"):
+        _append_error(report, "CAMPAIGN_SNAPSHOT_INVALID", json.dumps(before, sort_keys=True))
+    candidate = _campaign_candidate_validation(run_id, attempt_number)
+    report["campaign_candidate_validation"] = candidate
+    for detail in candidate.get("errors", []):
+        _append_error(report, "CAMPAIGN_CANDIDATE_INVALID", str(detail))
+    collisions = run_id_filename_collision_report(run_id)
+    report["run_id_filename_collision_validation"] = collisions
+    for detail in collisions.get("errors", []):
+        _append_error(report, "RUN_ID_COLLISION_SCAN_FAILED", detail)
+    for detail in collisions.get("collisions", []):
+        _append_error(report, "RUN_ID_FILENAME_COLLISION", detail)
+    inspection = inspect_build_materialization(
+        source_root=source_root,
+        source_commit=source_commit,
+        expected_tree_sha256_by_name=expected_tree_sha256_by_name,
+    )
+    report["build_materialization_preflight"] = inspection
+    for item in inspection["errors"]:
+        _append_error(report, item["error_code"], item["detail"])
+
+    materializations: dict[str, Any] = {}
+    report["materializations"] = materializations
+    if not report["errors"]:
+        report["phase"] = "BUILD_TREE_MATERIALIZATION"
+        inspection["copy_started"] = True
+        for name in BUILD_MATERIALIZATION_NAMES:
+            source = source_root.resolve(strict=False) / "build" / name
+            destination = (ROOT / "build" / name).resolve(strict=False)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            staging = Path(
+                tempfile.mkdtemp(
+                    prefix=f".{name}.materializing.", dir=destination.parent
+                )
+            ).resolve(strict=False)
+            item: dict[str, Any] = {
+                "source": str(source),
+                "destination": str(destination),
+                "staging": str(staging),
+                "copy_started": True,
+                "materialized": False,
+            }
+            materializations[name] = item
+            try:
+                shutil.copytree(
+                    source,
+                    staging,
+                    dirs_exist_ok=True,
+                    symlinks=False,
+                    copy_function=shutil.copy2,
+                )
+                staged_record = canonical_tree_record(staging)
+                item["staging_tree"] = staged_record
+                expected = expected_tree_sha256_by_name[name].lower()
+                if staged_record["errors"] or staged_record["tree_sha256"] != expected:
+                    _append_error(
+                        report,
+                        "BUILD_STAGING_TREE_MISMATCH",
+                        f"{name}: {staged_record}",
+                    )
+                    break
+                if os.path.lexists(destination):
+                    _append_error(
+                        report,
+                        "BUILD_DESTINATION_RACE_COLLISION",
+                        str(destination),
+                    )
+                    break
+                os.rename(staging, destination)
+                destination_record = canonical_tree_record(destination)
+                item["destination_tree"] = destination_record
+                if (
+                    destination_record["errors"]
+                    or destination_record["tree_sha256"] != expected
+                ):
+                    _append_error(
+                        report,
+                        "BUILD_DESTINATION_TREE_MISMATCH",
+                        f"{name}: {destination_record}",
+                    )
+                    break
+                item["materialized"] = True
+            except OSError as exc:
+                _append_error(report, "BUILD_MATERIALIZATION_IO_ERROR", f"{name}: {exc}")
+                break
+
+    after = _campaign_snapshot()
+    report["campaign_after"] = after
+    if after != before:
+        _append_error(report, "BUILD_MATERIALIZATION_MUTATED_CAMPAIGN", "campaign changed")
+    report["campaign_lock_created"] = bool(
+        after.get("campaign_lock_exists") and not before.get("campaign_lock_exists")
+    )
+    report["campaign_attempt_created"] = False
+    report["build_materialization_completed"] = bool(materializations) and all(
+        item.get("materialized") is True for item in materializations.values()
+    ) and len(materializations) == len(BUILD_MATERIALIZATION_NAMES)
+    if not report["errors"] and report["build_materialization_completed"]:
+        report["P7_STAGE66_PREPARATION_DRIVER"] = "PASS"
+        report["error_code"] = "NONE"
+        report["phase"] = "BUILD_TREE_MATERIALIZATION_COMPLETE"
+    return report
+
+
 def _environment_validation(*, require_authorized: bool) -> dict[str, Any]:
     errors: list[dict[str, str]] = []
     auth_value = os.environ.get(sequence.AUTH_ENV)
@@ -397,7 +836,13 @@ def _append_error(report: dict[str, Any], code: str, detail: str) -> None:
         report["error_code"] = code
 
 
-def placeholder_rehearsal(vivado_path: Path) -> dict[str, Any]:
+def placeholder_rehearsal(
+    vivado_path: Path,
+    *,
+    build_source_root: Path,
+    build_source_commit: str,
+    expected_build_tree_sha256_by_name: Mapping[str, str],
+) -> dict[str, Any]:
     report = _base_report("PLACEHOLDER_REHEARSAL")
     report["phase"] = "PLACEHOLDER_EXACT_ARGV_REHEARSAL"
     environment = _environment_validation(require_authorized=False)
@@ -415,6 +860,15 @@ def placeholder_rehearsal(vivado_path: Path) -> dict[str, Any]:
     report["vivado_helper_identity_validation"] = identity
     if identity.get("status") != "PASS":
         _append_error(report, str(identity.get("error_code")), "current helper identity validation failed")
+
+    build_preflight = inspect_build_materialization(
+        source_root=build_source_root,
+        source_commit=build_source_commit,
+        expected_tree_sha256_by_name=expected_build_tree_sha256_by_name,
+    )
+    report["build_materialization_rehearsal"] = build_preflight
+    for item in build_preflight["errors"]:
+        _append_error(report, item["error_code"], item["detail"])
 
     plan = ROOT / ".hardware_authorization" / f"{PLACEHOLDER_TOKEN}_sequence_plan.txt"
     ledger = (
@@ -478,6 +932,11 @@ def placeholder_rehearsal(vivado_path: Path) -> dict[str, Any]:
         ),
         "r57_unknown_helper_hash_rejected": (
             helper_identity.approved_vivado_helper_hash_profile_id(unknown_hashes) is None
+        ),
+        "r58_repository_build_materialization_preflight_pass": (
+            build_preflight.get("status") == "PASS"
+            and build_preflight.get("copy_started") is False
+            and build_preflight.get("destination_paths_absent") is True
         ),
         "failed_run_resume_rejected": rejected(resume),
     }
@@ -618,6 +1077,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=(
             "materialize-ledger",
             "placeholder-rehearsal",
+            "materialize-builds",
             "validate-only",
             "launch",
         ),
@@ -630,6 +1090,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--campaign-ledger-source", default="")
     parser.add_argument("--campaign-ledger-source-sha256", default="")
     parser.add_argument("--expected-campaign-attempt-count", type=int, default=None)
+    parser.add_argument("--build-materialization-source-root", default="")
+    parser.add_argument("--build-materialization-source-commit", default="")
+    parser.add_argument("--p6-build-tree-sha256", default="")
+    parser.add_argument("--p7-build-tree-sha256", default="")
+    parser.add_argument("--run-id", default="")
+    parser.add_argument("--stage66-campaign-attempt-number", type=int, default=None)
     parser.add_argument("--output", required=True)
     parser.add_argument("--execute-hardware", action="store_true")
     parser.add_argument("--confirm-stage66-campaign-launch", action="store_true")
@@ -640,6 +1106,17 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     output = Path(args.output).resolve(strict=False)
+    build_inputs = (
+        args.build_materialization_source_root,
+        args.build_materialization_source_commit,
+        args.p6_build_tree_sha256,
+        args.p7_build_tree_sha256,
+    )
+    run_identity_present = bool(args.run_id) or args.stage66_campaign_attempt_number is not None
+    expected_build_hashes = {
+        "p6_ps_candidate": args.p6_build_tree_sha256,
+        "p7_ps_vitis_workspace": args.p7_build_tree_sha256,
+    }
     if args.mode == "materialize-ledger":
         if args.execute_hardware or args.confirm_stage66_campaign_launch:
             raise SystemExit("ledger materialization forbids hardware launch controls")
@@ -651,8 +1128,17 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(
                 "ledger materialization requires source path, SHA256, and expected attempt count"
             )
-        if any((args.vivado_path, args.sequence_plan, args.sequence_plan_sha256, args.execution_ledger)):
-            raise SystemExit("ledger materialization forbids Vivado/real run inputs")
+        if any(
+            (
+                args.vivado_path,
+                args.sequence_plan,
+                args.sequence_plan_sha256,
+                args.execution_ledger,
+                *build_inputs,
+                run_identity_present,
+            )
+        ):
+            raise SystemExit("ledger materialization forbids Vivado/build/real run inputs")
         report = materialize_campaign_ledger(
             Path(args.campaign_ledger_source),
             args.campaign_ledger_source_sha256,
@@ -671,7 +1157,36 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("placeholder rehearsal forbids ledger materialization inputs")
         if args.expected_campaign_attempt_count is not None:
             raise SystemExit("placeholder rehearsal forbids ledger attempt-count input")
-        report = placeholder_rehearsal(Path(args.vivado_path))
+        if not all(build_inputs):
+            raise SystemExit("placeholder rehearsal requires every exact build materialization input")
+        if run_identity_present:
+            raise SystemExit("placeholder rehearsal forbids allocation of a real run identity")
+        report = placeholder_rehearsal(
+            Path(args.vivado_path),
+            build_source_root=Path(args.build_materialization_source_root),
+            build_source_commit=args.build_materialization_source_commit,
+            expected_build_tree_sha256_by_name=expected_build_hashes,
+        )
+        atomic_write_json(output, report)
+        launch_argv = None
+    elif args.mode == "materialize-builds":
+        if args.execute_hardware or args.confirm_stage66_campaign_launch:
+            raise SystemExit("build materialization forbids hardware launch controls")
+        if any((args.vivado_path, args.sequence_plan, args.sequence_plan_sha256, args.execution_ledger)):
+            raise SystemExit("build materialization forbids Vivado/real plan inputs")
+        if args.campaign_ledger_source or args.campaign_ledger_source_sha256:
+            raise SystemExit("build materialization forbids ledger materialization inputs")
+        if args.expected_campaign_attempt_count is not None:
+            raise SystemExit("build materialization forbids ledger attempt-count input")
+        if not all(build_inputs) or not args.run_id or args.stage66_campaign_attempt_number is None:
+            raise SystemExit("build materialization requires exact build inputs and real run identity")
+        report = materialize_build_trees(
+            source_root=Path(args.build_materialization_source_root),
+            source_commit=args.build_materialization_source_commit,
+            expected_tree_sha256_by_name=expected_build_hashes,
+            run_id=args.run_id,
+            attempt_number=args.stage66_campaign_attempt_number,
+        )
         atomic_write_json(output, report)
         launch_argv = None
     else:
@@ -683,6 +1198,8 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("real validation forbids ledger materialization inputs")
         if args.expected_campaign_attempt_count is not None:
             raise SystemExit("real validation forbids ledger attempt-count input")
+        if any(build_inputs) or run_identity_present:
+            raise SystemExit("real validation derives run identity from the plan and forbids build inputs")
         if args.mode == "launch" and not (
             args.execute_hardware and args.confirm_stage66_campaign_launch
         ):

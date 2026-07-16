@@ -24,6 +24,59 @@ import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r58_prehardware_retirement_is_hash_bound_and_consumes_zero_attempts(self) -> None:
+        run_id = "p7_20260716_stationary_app_r58_diag_stage66_c03"
+        evidence = (
+            ROOT
+            / "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure.json"
+        )
+        evidence_sha = hashlib.sha256(evidence.read_bytes()).hexdigest()
+        payload, errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            evidence_sha,
+            run_id=run_id,
+            source_commit="05d7968df27eeb54a88176d96d774aec8c3db260",
+            requested_hardware_attempt_number=3,
+        )
+        self.assertEqual([], errors)
+        self.assertIsNotNone(payload)
+        assert payload is not None
+        self.assertFalse(payload["diagnostic_hardware_attempt_consumed"])
+        self.assertFalse(payload["failure_boundary"]["hardware_execution_entered"])
+
+        snapshot = (
+            ROOT
+            / "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure/campaign_ledger_after_retirement.json"
+        )
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        with mock.patch.object(campaign, "campaign_ledger_path", return_value=snapshot):
+            ledger, errors = campaign.validate_ledger(policy, snapshot, allow_absent=False)
+        self.assertEqual([], errors)
+        assert ledger is not None
+        self.assertEqual(2, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        self.assertEqual(run_id, ledger["retired_pre_hardware_run_ids"][-1]["run_id"])
+        self.assertFalse(
+            ledger["retired_pre_hardware_run_ids"][-1]["hardware_attempt_consumed"]
+        )
+        manifest = json.loads(
+            (
+                ROOT
+                / "evidence/generated/p7_r58_stage66_campaign_c03_retirement_package_manifest.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(7, manifest["file_count"])
+        self.assertFalse(manifest["diagnostic_hardware_attempt_consumed"])
+        for record in manifest["files"]:
+            path = ROOT / record["path"]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(
+                record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
     def test_r57_failure_package_and_tamper_boundary(self) -> None:
         package = (
             ROOT

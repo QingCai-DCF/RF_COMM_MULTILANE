@@ -1,0 +1,53 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-retirement-package-v1",
+  "generated_at_utc": "2026-07-16T08:19:10.977899+00:00",
+  "run_id": "p7_20260716_stationary_app_r58_diag_stage66_c03",
+  "source_commit": "05d7968df27eeb54a88176d96d774aec8c3db260",
+  "campaign_ledger_sha256_before": "c3306cff090a6d23c8ee45124b80d42b2958652d97c78899c8432b2882a45059",
+  "campaign_ledger_sha256_after": "a83264491a46560122fdb51ef640153360dcf88e9eccffac034082429d1b8fdf",
+  "actual_hardware_attempt_count_after": 2,
+  "campaign_status_after": "READY",
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "files": [
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure.json",
+      "bytes": 4501,
+      "sha256": "e4c31f2d9f06ed657cd675366fea13227b7ed01153070683e004462c373976bf"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_driver_repair_validation.json",
+      "bytes": 2929,
+      "sha256": "39ca557ffc0f0a8ad868e1c1e5ddccfd57a7a156a82c2fe2f13d3bae4a3a3827"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_retirement_recording.json",
+      "bytes": 1352,
+      "sha256": "75f49cc0853d8ca49d392d42a1ef3f855e3bd8c8707b6acfc7568b69ebec5c0c"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure/campaign_ledger_after_retirement.json",
+      "bytes": 18438,
+      "sha256": "a83264491a46560122fdb51ef640153360dcf88e9eccffac034082429d1b8fdf"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure/collision_preflight.json",
+      "bytes": 1006,
+      "sha256": "b357bdcfb89262bafa53784cd438ec0ee269e7860bfb5a281faab548010ba085"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure/ledger_materialization.json",
+      "bytes": 1800,
+      "sha256": "8e95a8093983410608c443f0358330d41471e175dd430b565d69d9a9ab2ba229"
+    },
+    {
+      "path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure/placeholder_rehearsal.json",
+      "bytes": 12538,
+      "sha256": "8c6f4f74653bed353e49635fdb88155f7c2e6be26bd11532933d4a6b30a58cd0"
+    }
+  ],
+  "file_count": 7,
+  "result": "PASS_RECORDED"
+}

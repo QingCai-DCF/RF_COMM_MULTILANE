@@ -51,6 +51,18 @@ class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
             ):
                 self.assertEqual(1, argv.count(flag))
 
+    def test_tree_hash_matches_established_case_insensitive_windows_sort(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "Z.txt").write_bytes(b"z")
+            (root / "a.txt").write_bytes(b"a")
+            record = subject.canonical_tree_record(root)
+        self.assertEqual([], record["errors"])
+        self.assertEqual(
+            "be0a26ae6f2ad503f0e2c1fa77d5a81ed6476166f183f9570bcb4388ef6c275b",
+            record["tree_sha256"],
+        )
+
     def test_r54_r57_regression_mutations_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             plan, ledger, commit, digest, argv = self.fixture(Path(temp))
@@ -99,13 +111,27 @@ class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
             "error_code": "NONE",
             "errors": [],
         }
+        build_preflight = {
+            "status": "PASS",
+            "copy_started": False,
+            "destination_paths_absent": True,
+            "errors": [],
+        }
         with mock.patch.object(subject, "_campaign_snapshot", return_value=snapshot), mock.patch.object(
             subject.helper_identity, "validate_vivado_helper_identity", return_value=identity
         ), mock.patch.object(subject, "_environment_validation", return_value=environment), mock.patch.object(
             subject, "_git_head", return_value="d" * 40
+        ), mock.patch.object(
+            subject, "inspect_build_materialization", return_value=build_preflight
         ):
             report = subject.placeholder_rehearsal(
-                Path(r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat")
+                Path(r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat"),
+                build_source_root=Path(r"D:\CodexWorktrees\source\RF_COMM_MULTILANE"),
+                build_source_commit="e" * 40,
+                expected_build_tree_sha256_by_name={
+                    "p6_ps_candidate": "1" * 64,
+                    "p7_ps_vitis_workspace": "2" * 64,
+                },
             )
         self.assertEqual("PASS", report["P7_STAGE66_PREPARATION_DRIVER"])
         self.assertTrue(all(report["fixed_regression_matrix"].values()))
@@ -113,6 +139,177 @@ class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
         self.assertFalse(report["campaign_attempt_created"])
         self.assertEqual(snapshot, report["campaign_before"])
         self.assertEqual(snapshot, report["campaign_after"])
+
+    def test_build_tree_materialization_is_atomic_hash_exact_and_never_overwrites(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            source_root = temp_root / "source"
+            destination_root = temp_root / "destination"
+            for name, content in (
+                ("p6_ps_candidate", b"p6\n"),
+                ("p7_ps_vitis_workspace", b"p7\n"),
+            ):
+                tree = source_root / "build" / name
+                (tree / "nested").mkdir(parents=True)
+                (tree / "root.bin").write_bytes(content)
+                (tree / "nested" / "empty.bin").write_bytes(b"")
+            expected = {
+                name: subject.canonical_tree_record(source_root / "build" / name)[
+                    "tree_sha256"
+                ]
+                for name in subject.BUILD_MATERIALIZATION_NAMES
+            }
+            source_commit = "a" * 40
+            snapshot = {
+                "status": "PASS",
+                "errors": [],
+                "ledger_sha256": "b" * 64,
+                "actual_hardware_attempt_count": 2,
+                "campaign_status": "READY",
+                "campaign_lock_exists": False,
+            }
+            environment = {"status": "PASS", "error_code": "NONE", "errors": []}
+
+            def identity(path: Path):
+                return {
+                    "status": "PASS",
+                    "path": str(path),
+                    "head": source_commit if Path(path).resolve() == source_root.resolve() else "c" * 40,
+                    "tracked_clean": True,
+                    "tracked_status": [],
+                    "errors": [],
+                }
+
+            candidate = {"status": "PASS", "errors": []}
+            collisions = {"status": "PASS", "errors": [], "collisions": []}
+            with mock.patch.object(subject, "ROOT", destination_root), mock.patch.object(
+                subject, "_git_worktree_identity", side_effect=identity
+            ), mock.patch.object(
+                subject, "_environment_validation", return_value=environment
+            ), mock.patch.object(
+                subject, "_campaign_snapshot", return_value=snapshot
+            ), mock.patch.object(
+                subject, "_campaign_candidate_validation", return_value=candidate
+            ), mock.patch.object(
+                subject, "run_id_filename_collision_report", return_value=collisions
+            ):
+                report = subject.materialize_build_trees(
+                    source_root=source_root,
+                    source_commit=source_commit,
+                    expected_tree_sha256_by_name=expected,
+                    run_id="p7_20260716_stationary_app_r59_diag_stage66_c03",
+                    attempt_number=3,
+                )
+                collision = subject.materialize_build_trees(
+                    source_root=source_root,
+                    source_commit=source_commit,
+                    expected_tree_sha256_by_name=expected,
+                    run_id="p7_20260716_stationary_app_r60_diag_stage66_c03",
+                    attempt_number=3,
+                )
+            self.assertEqual("PASS", report["P7_STAGE66_PREPARATION_DRIVER"])
+            self.assertTrue(report["build_materialization_completed"])
+            self.assertFalse(report["hardware_actions_executed"])
+            for name in subject.BUILD_MATERIALIZATION_NAMES:
+                destination = destination_root / "build" / name
+                self.assertEqual(expected[name], subject.canonical_tree_record(destination)["tree_sha256"])
+            self.assertEqual("FAIL", collision["P7_STAGE66_PREPARATION_DRIVER"])
+            self.assertIn(
+                "BUILD_DESTINATION_COLLISION",
+                {item["error_code"] for item in collision["errors"]},
+            )
+
+    def test_build_preflight_rejects_commit_hash_and_destination_mismatches(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            source_root = temp_root / "source"
+            destination_root = temp_root / "destination"
+            for name in subject.BUILD_MATERIALIZATION_NAMES:
+                tree = source_root / "build" / name
+                tree.mkdir(parents=True)
+                (tree / "payload.bin").write_bytes(name.encode("ascii"))
+            (destination_root / "build" / "p6_ps_candidate").mkdir(parents=True)
+            identity = {
+                "status": "PASS",
+                "path": str(source_root),
+                "head": "b" * 40,
+                "tracked_clean": True,
+                "tracked_status": [],
+                "errors": [],
+            }
+            with mock.patch.object(subject, "ROOT", destination_root), mock.patch.object(
+                subject, "_git_worktree_identity", return_value=identity
+            ):
+                report = subject.inspect_build_materialization(
+                    source_root=source_root,
+                    source_commit="a" * 40,
+                    expected_tree_sha256_by_name={
+                        "p6_ps_candidate": "0" * 64,
+                        "p7_ps_vitis_workspace": "1" * 64,
+                    },
+                )
+            codes = {item["error_code"] for item in report["errors"]}
+            self.assertEqual("FAIL", report["status"])
+            self.assertIn("BUILD_SOURCE_COMMIT_MISMATCH", codes)
+            self.assertIn("BUILD_SOURCE_TREE_SHA256_MISMATCH", codes)
+            self.assertIn("BUILD_DESTINATION_COLLISION", codes)
+            self.assertFalse(report["copy_started"])
+
+    def test_build_preflight_rejects_relative_source_root(self) -> None:
+        identity = {
+            "status": "PASS",
+            "path": "relative-source",
+            "head": "a" * 40,
+            "tracked_clean": True,
+            "tracked_status": [],
+            "errors": [],
+        }
+        with mock.patch.object(subject, "_git_worktree_identity", return_value=identity):
+            report = subject.inspect_build_materialization(
+                source_root=Path("relative-source"),
+                source_commit="a" * 40,
+                expected_tree_sha256_by_name={
+                    "p6_ps_candidate": "0" * 64,
+                    "p7_ps_vitis_workspace": "1" * 64,
+                },
+            )
+        self.assertIn(
+            "BUILD_SOURCE_ROOT_NOT_ABSOLUTE",
+            {item["error_code"] for item in report["errors"]},
+        )
+
+    def test_run_id_collision_scan_covers_registered_worktree_evidence_names(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            run_id = "p7_20260716_stationary_app_r59_diag_stage66_c03"
+            collision = root / "evidence" / "generated" / f"{run_id}_prior.json"
+            collision.parent.mkdir(parents=True)
+            collision.write_text("{}\n", encoding="utf-8")
+            with mock.patch.object(
+                subject, "_registered_worktree_roots", return_value=([root], [])
+            ):
+                report = subject.run_id_filename_collision_report(run_id)
+            self.assertEqual("FAIL", report["status"])
+            self.assertEqual([str(collision.resolve())], report["collisions"])
+
+    def test_run_id_collision_scan_covers_unregistered_sibling_worktrees(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            pool = Path(temp) / "CodexWorktrees"
+            registered = pool / "registered" / "RF_COMM_MULTILANE"
+            orphan = pool / "orphan" / "RF_COMM_MULTILANE"
+            registered.mkdir(parents=True)
+            run_id = "p7_20260716_stationary_app_r59_diag_stage66_c03"
+            collision = orphan / "evidence" / "generated" / f"{run_id}_orphan.json"
+            collision.parent.mkdir(parents=True)
+            collision.write_text("{}\n", encoding="utf-8")
+            with mock.patch.object(
+                subject,
+                "_registered_worktree_roots",
+                return_value=([registered], []),
+            ):
+                report = subject.run_id_filename_collision_report(run_id)
+            self.assertEqual("FAIL", report["status"])
+            self.assertEqual([str(collision.resolve())], report["collisions"])
 
     def test_driver_source_has_no_campaign_or_hardware_lock_acquire(self) -> None:
         source = Path(subject.__file__).read_text(encoding="utf-8")
