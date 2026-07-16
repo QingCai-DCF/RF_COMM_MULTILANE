@@ -597,13 +597,74 @@ def _campaign_candidate_validation(run_id: str, attempt_number: int) -> dict[str
     }
 
 
+def _formal_post_campaign_validation() -> dict[str, Any]:
+    """Prove that diagnostic Stage66 has passed before formal preparation."""
+
+    policy_sha = sha256_file(campaign.POLICY_PATH)
+    policy, policy_errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+    ledger_path = (
+        campaign.campaign_ledger_path(policy)
+        if isinstance(policy, dict)
+        else campaign.LEDGER_ROOT / campaign.CAMPAIGN_ID / "campaign_ledger.json"
+    )
+    ledger, ledger_errors = (
+        campaign.validate_ledger(policy, ledger_path, allow_absent=False)
+        if isinstance(policy, dict)
+        else (None, ["campaign policy is unavailable"])
+    )
+    attempts = (
+        ledger.get("hardware_attempts") if isinstance(ledger, dict) else None
+    )
+    terminal_attempt = (
+        attempts[-1]
+        if isinstance(attempts, list)
+        and attempts
+        and isinstance(attempts[-1], dict)
+        else None
+    )
+    errors = [*policy_errors, *ledger_errors]
+    if not (
+        isinstance(ledger, dict)
+        and ledger.get("status") == "PASSED"
+        and isinstance(terminal_attempt, dict)
+        and terminal_attempt.get("status") == "PASS"
+        and terminal_attempt.get("stationary_launched") is True
+        and terminal_attempt.get("complete_1800_second_stage66_pass") is True
+        and terminal_attempt.get("failed_full_stage_ordinal") is None
+        and terminal_attempt.get("independent_shutdown_recovery") is None
+    ):
+        errors.append(
+            "campaign ledger does not prove the first complete diagnostic Stage66 PASS"
+        )
+    lock_path = ledger_path.with_name("campaign_execution.lock")
+    if lock_path.exists():
+        errors.append("campaign execution lock remains present after diagnostic PASS")
+    return {
+        "status": "PASS" if not errors else "FAIL",
+        "policy_sha256": policy_sha,
+        "ledger_path": str(ledger_path),
+        "ledger_sha256": campaign.current_ledger_sha256(ledger_path),
+        "campaign_status": ledger.get("status") if isinstance(ledger, dict) else None,
+        "actual_hardware_attempt_count": (
+            ledger.get("actual_hardware_attempt_count")
+            if isinstance(ledger, dict)
+            else None
+        ),
+        "terminal_attempt": terminal_attempt,
+        "campaign_lock_path": str(lock_path),
+        "campaign_lock_exists": lock_path.exists(),
+        "errors": errors,
+    }
+
+
 def materialize_build_trees(
     *,
     source_root: Path,
     source_commit: str,
     expected_tree_sha256_by_name: Mapping[str, str],
-    run_id: str,
-    attempt_number: int,
+    run_id: str | None = None,
+    attempt_number: int | None = None,
+    formal_post_campaign: bool = False,
 ) -> dict[str, Any]:
     """Copy both immutable build trees only after one shared fail-closed preflight."""
 
@@ -611,6 +672,7 @@ def materialize_build_trees(
     report["phase"] = "BUILD_TREE_MATERIALIZATION_PREFLIGHT"
     report["run_id"] = run_id
     report["requested_hardware_attempt_number"] = attempt_number
+    report["formal_post_campaign"] = formal_post_campaign
     environment = _environment_validation(require_authorized=False)
     report["environment_validation"] = environment
     for item in environment["errors"]:
@@ -619,16 +681,42 @@ def materialize_build_trees(
     report["campaign_before"] = before
     if before.get("status") != "PASS" or before.get("campaign_lock_exists"):
         _append_error(report, "CAMPAIGN_SNAPSHOT_INVALID", json.dumps(before, sort_keys=True))
-    candidate = _campaign_candidate_validation(run_id, attempt_number)
-    report["campaign_candidate_validation"] = candidate
-    for detail in candidate.get("errors", []):
-        _append_error(report, "CAMPAIGN_CANDIDATE_INVALID", str(detail))
-    collisions = run_id_filename_collision_report(run_id)
-    report["run_id_filename_collision_validation"] = collisions
-    for detail in collisions.get("errors", []):
-        _append_error(report, "RUN_ID_COLLISION_SCAN_FAILED", detail)
-    for detail in collisions.get("collisions", []):
-        _append_error(report, "RUN_ID_FILENAME_COLLISION", detail)
+    if formal_post_campaign:
+        if run_id is not None or attempt_number is not None:
+            _append_error(
+                report,
+                "FORMAL_POST_CAMPAIGN_RUN_ID_FORBIDDEN",
+                "formal post-campaign build materialization must precede run-ID allocation",
+            )
+        terminal = _formal_post_campaign_validation()
+        report["formal_post_campaign_validation"] = terminal
+        for detail in terminal.get("errors", []):
+            _append_error(report, "FORMAL_POST_CAMPAIGN_INVALID", str(detail))
+    else:
+        if not run_id or attempt_number is None:
+            _append_error(
+                report,
+                "CAMPAIGN_RUN_ID_REQUIRED",
+                "diagnostic build materialization requires one real campaign run identity",
+            )
+            candidate = {"status": "FAIL", "errors": ["run identity is missing"]}
+            collisions = {
+                "status": "FAIL",
+                "run_id": run_id,
+                "collisions": [],
+                "errors": ["run identity is missing"],
+            }
+        else:
+            candidate = _campaign_candidate_validation(run_id, attempt_number)
+            collisions = run_id_filename_collision_report(run_id)
+        report["campaign_candidate_validation"] = candidate
+        for detail in candidate.get("errors", []):
+            _append_error(report, "CAMPAIGN_CANDIDATE_INVALID", str(detail))
+        report["run_id_filename_collision_validation"] = collisions
+        for detail in collisions.get("errors", []):
+            _append_error(report, "RUN_ID_COLLISION_SCAN_FAILED", detail)
+        for detail in collisions.get("collisions", []):
+            _append_error(report, "RUN_ID_FILENAME_COLLISION", detail)
     inspection = inspect_build_materialization(
         source_root=source_root,
         source_commit=source_commit,
@@ -1096,6 +1184,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--p7-build-tree-sha256", default="")
     parser.add_argument("--run-id", default="")
     parser.add_argument("--stage66-campaign-attempt-number", type=int, default=None)
+    parser.add_argument(
+        "--formal-post-campaign",
+        action="store_true",
+        help=(
+            "materialize exact offline build trees only after the terminal "
+            "diagnostic PASS and before allocating the formal run ID"
+        ),
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--execute-hardware", action="store_true")
     parser.add_argument("--confirm-stage66-campaign-launch", action="store_true")
@@ -1113,6 +1209,10 @@ def main(argv: list[str] | None = None) -> int:
         args.p7_build_tree_sha256,
     )
     run_identity_present = bool(args.run_id) or args.stage66_campaign_attempt_number is not None
+    if args.formal_post_campaign and args.mode != "materialize-builds":
+        raise SystemExit(
+            "--formal-post-campaign is valid only for build materialization"
+        )
     expected_build_hashes = {
         "p6_ps_candidate": args.p6_build_tree_sha256,
         "p7_ps_vitis_workspace": args.p7_build_tree_sha256,
@@ -1178,14 +1278,24 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("build materialization forbids ledger materialization inputs")
         if args.expected_campaign_attempt_count is not None:
             raise SystemExit("build materialization forbids ledger attempt-count input")
-        if not all(build_inputs) or not args.run_id or args.stage66_campaign_attempt_number is None:
-            raise SystemExit("build materialization requires exact build inputs and real run identity")
+        if not all(build_inputs):
+            raise SystemExit("build materialization requires every exact build input")
+        if args.formal_post_campaign:
+            if run_identity_present:
+                raise SystemExit(
+                    "formal post-campaign materialization forbids run-ID allocation"
+                )
+        elif not args.run_id or args.stage66_campaign_attempt_number is None:
+            raise SystemExit(
+                "diagnostic build materialization requires one real run identity"
+            )
         report = materialize_build_trees(
             source_root=Path(args.build_materialization_source_root),
             source_commit=args.build_materialization_source_commit,
             expected_tree_sha256_by_name=expected_build_hashes,
-            run_id=args.run_id,
+            run_id=args.run_id or None,
             attempt_number=args.stage66_campaign_attempt_number,
+            formal_post_campaign=args.formal_post_campaign,
         )
         atomic_write_json(output, report)
         launch_argv = None

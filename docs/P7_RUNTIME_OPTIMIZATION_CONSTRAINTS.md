@@ -124,3 +124,10 @@ stationary limit.  It does not override any other safety or evidence rule.
   validation before a different formal run ID executes the full ordinals
   1--66.  Only that formal run contributes acceptance coverage, and its Stage
   66 may launch once.
+- If the final clean worktree needs ignored Vivado/Vitis trees before its
+  complete suites, use only the preparation driver's fail-closed
+  `--formal-post-campaign` materialization mode.  It must prove the terminal
+  campaign ledger is `PASSED`, the first complete diagnostic Stage 66 PASS is
+  final, and no campaign lock exists; bind the clean source worktree, exact
+  source commit, both canonical tree hashes, absent destinations, zero scoped
+  authorization, zero run-ID allocation, and zero hardware actions.

@@ -14,9 +14,11 @@ import prepare_p7_stage66_campaign_run as subject  # noqa: E402
 
 
 class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
-    def test_only_exact_stage66_ephemeral_evidence_paths_are_ignored(self) -> None:
+    def test_ephemeral_paths_are_ignored_and_terminal_campaign_ledger_is_tracked(self) -> None:
         ignored = (
             "evidence/generated/p7_stage66_campaign_next_preparation/probe.json",
+        )
+        tracked = (
             "evidence/hardware/p7/stage66_diagnostic_campaign/"
             "p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json",
         )
@@ -33,6 +35,21 @@ class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
                     check=False,
                 )
                 self.assertEqual(0, result.returncode)
+        for path in tracked:
+            with self.subTest(path=path):
+                tracked_result = subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", "--", path],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                )
+                ignored_result = subprocess.run(
+                    ["git", "check-ignore", "-q", "--", path],
+                    cwd=ROOT,
+                    check=False,
+                )
+                self.assertEqual(0, tracked_result.returncode)
+                self.assertEqual(1, ignored_result.returncode)
         for path in visible:
             with self.subTest(path=path):
                 result = subprocess.run(
@@ -247,6 +264,188 @@ class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
                 "BUILD_DESTINATION_COLLISION",
                 {item["error_code"] for item in collision["errors"]},
             )
+
+    def test_formal_materialization_requires_terminal_pass_and_precedes_run_id(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            source_root = temp_root / "source"
+            destination_root = temp_root / "destination"
+            for name, content in (
+                ("p6_ps_candidate", b"formal-p6\n"),
+                ("p7_ps_vitis_workspace", b"formal-p7\n"),
+            ):
+                tree = source_root / "build" / name
+                tree.mkdir(parents=True)
+                (tree / "payload.bin").write_bytes(content)
+            expected = {
+                name: subject.canonical_tree_record(source_root / "build" / name)[
+                    "tree_sha256"
+                ]
+                for name in subject.BUILD_MATERIALIZATION_NAMES
+            }
+            source_commit = "a" * 40
+            snapshot = {
+                "status": "PASS",
+                "errors": [],
+                "ledger_sha256": "b" * 64,
+                "actual_hardware_attempt_count": 7,
+                "campaign_status": "PASSED",
+                "campaign_lock_exists": False,
+            }
+            environment = {"status": "PASS", "error_code": "NONE", "errors": []}
+            terminal = {
+                "status": "PASS",
+                "campaign_status": "PASSED",
+                "actual_hardware_attempt_count": 7,
+                "campaign_lock_exists": False,
+                "errors": [],
+            }
+
+            def identity(path: Path):
+                return {
+                    "status": "PASS",
+                    "path": str(path),
+                    "head": (
+                        source_commit
+                        if Path(path).resolve() == source_root.resolve()
+                        else "c" * 40
+                    ),
+                    "tracked_clean": True,
+                    "tracked_status": [],
+                    "errors": [],
+                }
+
+            with mock.patch.object(subject, "ROOT", destination_root), mock.patch.object(
+                subject, "_git_worktree_identity", side_effect=identity
+            ), mock.patch.object(
+                subject, "_environment_validation", return_value=environment
+            ), mock.patch.object(
+                subject, "_campaign_snapshot", return_value=snapshot
+            ), mock.patch.object(
+                subject, "_formal_post_campaign_validation", return_value=terminal
+            ), mock.patch.object(
+                subject, "_campaign_candidate_validation"
+            ) as candidate_validation, mock.patch.object(
+                subject, "run_id_filename_collision_report"
+            ) as collision_scan:
+                report = subject.materialize_build_trees(
+                    source_root=source_root,
+                    source_commit=source_commit,
+                    expected_tree_sha256_by_name=expected,
+                    formal_post_campaign=True,
+                )
+
+            self.assertEqual("PASS", report["P7_STAGE66_PREPARATION_DRIVER"])
+            self.assertTrue(report["formal_post_campaign"])
+            self.assertIsNone(report["run_id"])
+            self.assertIsNone(report["requested_hardware_attempt_number"])
+            self.assertTrue(report["build_materialization_completed"])
+            self.assertFalse(report["campaign_attempt_created"])
+            candidate_validation.assert_not_called()
+            collision_scan.assert_not_called()
+            for name in subject.BUILD_MATERIALIZATION_NAMES:
+                destination = destination_root / "build" / name
+                self.assertEqual(
+                    expected[name],
+                    subject.canonical_tree_record(destination)["tree_sha256"],
+                )
+
+    def test_formal_materialization_fails_closed_without_terminal_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            source_root = temp_root / "source"
+            destination_root = temp_root / "destination"
+            for name in subject.BUILD_MATERIALIZATION_NAMES:
+                tree = source_root / "build" / name
+                tree.mkdir(parents=True)
+                (tree / "payload.bin").write_bytes(name.encode("ascii"))
+            expected = {
+                name: subject.canonical_tree_record(source_root / "build" / name)[
+                    "tree_sha256"
+                ]
+                for name in subject.BUILD_MATERIALIZATION_NAMES
+            }
+            source_commit = "a" * 40
+            snapshot = {
+                "status": "PASS",
+                "errors": [],
+                "campaign_status": "READY",
+                "campaign_lock_exists": False,
+            }
+            terminal = {
+                "status": "FAIL",
+                "campaign_status": "READY",
+                "errors": ["diagnostic Stage66 has not passed"],
+            }
+
+            def identity(path: Path):
+                return {
+                    "status": "PASS",
+                    "path": str(path),
+                    "head": (
+                        source_commit
+                        if Path(path).resolve() == source_root.resolve()
+                        else "c" * 40
+                    ),
+                    "tracked_clean": True,
+                    "tracked_status": [],
+                    "errors": [],
+                }
+
+            with mock.patch.object(subject, "ROOT", destination_root), mock.patch.object(
+                subject, "_git_worktree_identity", side_effect=identity
+            ), mock.patch.object(
+                subject,
+                "_environment_validation",
+                return_value={"status": "PASS", "error_code": "NONE", "errors": []},
+            ), mock.patch.object(
+                subject, "_campaign_snapshot", return_value=snapshot
+            ), mock.patch.object(
+                subject, "_formal_post_campaign_validation", return_value=terminal
+            ):
+                report = subject.materialize_build_trees(
+                    source_root=source_root,
+                    source_commit=source_commit,
+                    expected_tree_sha256_by_name=expected,
+                    formal_post_campaign=True,
+                )
+
+            self.assertEqual("FAIL", report["P7_STAGE66_PREPARATION_DRIVER"])
+            self.assertIn(
+                "FORMAL_POST_CAMPAIGN_INVALID",
+                {item["error_code"] for item in report["errors"]},
+            )
+            self.assertFalse(report["build_materialization_completed"])
+            for name in subject.BUILD_MATERIALIZATION_NAMES:
+                self.assertFalse((destination_root / "build" / name).exists())
+
+    def test_formal_materialization_cli_forbids_run_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "must-not-exist.json"
+            with self.assertRaisesRegex(
+                SystemExit,
+                "formal post-campaign materialization forbids run-ID allocation",
+            ):
+                subject.main(
+                    [
+                        "--mode",
+                        "materialize-builds",
+                        "--formal-post-campaign",
+                        "--build-materialization-source-root",
+                        str(Path(temp).resolve()),
+                        "--build-materialization-source-commit",
+                        "a" * 40,
+                        "--p6-build-tree-sha256",
+                        "b" * 64,
+                        "--p7-build-tree-sha256",
+                        "c" * 64,
+                        "--run-id",
+                        "p7_20260716_stationary_app_r99_formal",
+                        "--output",
+                        str(output),
+                    ]
+                )
+            self.assertFalse(output.exists())
 
     def test_build_preflight_rejects_commit_hash_and_destination_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
