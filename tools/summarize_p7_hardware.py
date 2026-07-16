@@ -49,6 +49,7 @@ JTAG_MARKER = "P7_JTAG_AXI_SAFE_STAGE"
 BACKEND_PARSE_MARKER = "P7_JTAG_BACKEND_PARSE"
 JTAG_MANIFEST_SCHEMA = "rfap-p7-jtag-axi-dry-run-v1"
 PS_COUNTS_PER_SECOND = 333_333_343
+STATIONARY_ROLLING_GOODPUT_WINDOW_SEC = 300
 CANONICAL_FULL_PART = "xc7z010clg400-1"
 CANONICAL_LIVE_PART = "xc7z010"
 CANONICAL_LIVE_DEVICE = "xc7z010_1"
@@ -3163,9 +3164,21 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
     objects = post.get("stationary_objects", []) if isinstance(post, dict) else []
     samples = post.get("stationary_samples", []) if isinstance(post, dict) else []
     append_error(errors, candidate.data.get("service_runtime_limit_sec") == 1800, "stationary configured runtime is not exactly 1800 seconds")
+    append_error(
+        errors,
+        candidate.data.get("rolling_goodput_window_sec")
+        == STATIONARY_ROLLING_GOODPUT_WINDOW_SEC,
+        "stationary runner rolling-goodput window is not exactly 300 seconds",
+    )
     append_error(errors, int(mailbox.get("max_runtime_seconds", -1)) == 1800, "stationary firmware runtime is not exactly 1800 seconds")
     append_error(errors, int(mailbox.get("calibration_window_seconds", -1)) == 300, "stationary calibration window is not exactly 300 seconds")
     append_error(errors, int(mailbox.get("sample_interval_seconds", -1)) == 30, "stationary mailbox sample interval is not exactly 30 seconds")
+    append_error(
+        errors,
+        int(mailbox.get("rolling_goodput_window_seconds", -1))
+        == STATIONARY_ROLLING_GOODPUT_WINDOW_SEC,
+        "stationary rolling-goodput window is not exactly 300 seconds",
+    )
     append_error(errors, int(mailbox.get("runtime_flags", 0)) & 0x2 == 0x2, "stationary mailbox deadline-reached flag is missing")
     append_error(errors, candidate.data.get("scheduling_cutoff_sec") == 1740, "stationary scheduling cutoff is not the authorized 1740 seconds")
     try:
@@ -3187,6 +3200,23 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
         if not isinstance(final_case, dict):
             continue
         descriptor = final_case.get("descriptor", {})
+        completion_sequence = int(descriptor.get("completion_sequence", -1))
+        artifact_provenance = final_case.get("artifact_provenance")
+        expected_prefix = f"stationary_{completion_sequence:08d}"
+        append_error(
+            errors,
+            isinstance(artifact_provenance, dict)
+            and artifact_provenance.get("generation")
+            == "STATIONARY_SEQUENCE_SPECIFIC"
+            and artifact_provenance.get("completion_sequence") == completion_sequence
+            and artifact_provenance.get("descriptor_filename")
+            == f"{expected_prefix}_descriptor_result.bin"
+            and artifact_provenance.get("output_filename")
+            == f"{expected_prefix}_output_result.bin"
+            and artifact_provenance.get("trace_filename")
+            == f"{expected_prefix}_trace_result.bin",
+            f"stationary slot {slot} final artifacts are not bound to one exact terminal sequence",
+        )
         append_error(errors, str(final_case.get("name", "")) == contract[0], f"stationary slot {slot} deterministic name/pattern mismatch")
         observed_geometry = (
             int(descriptor.get("object_length", -1)),
@@ -3316,7 +3346,6 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
     append_error(errors, bool(elapsed) and all(b > a for a, b in zip(elapsed, elapsed[1:])), "stationary sample elapsed times are not strictly increasing")
     append_error(errors, bool(elapsed) and 1800.0 <= elapsed[-1] <= 1801.5, "stationary final PS-timer sample is outside 1800.0..1801.5 seconds")
     previous_sample_ticks = 0
-    previous_sample_bytes = 0
     previous_queue_observation_not_before_ticks = 0
     for index, item in enumerate(samples if isinstance(samples, list) else []):
         if not isinstance(item, dict):
@@ -3371,10 +3400,30 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
             for key, expected in snapshot.items():
                 append_error(errors, int(item.get(key, -1)) == expected, f"stationary sample {index} does not reconcile to ledger: {key}")
             expected_current_bps = (snapshot["bytes"] * 8 * PS_COUNTS_PER_SECOND) // sample_ticks
-            sample_delta_ticks = sample_ticks - previous_sample_ticks
-            expected_rolling_bps = ((snapshot["bytes"] - previous_sample_bytes) * 8 * PS_COUNTS_PER_SECOND) // sample_delta_ticks
+            rolling_start_ticks = max(
+                0,
+                sample_ticks
+                - STATIONARY_ROLLING_GOODPUT_WINDOW_SEC * PS_COUNTS_PER_SECOND,
+            )
+            rolling_start_bytes = sum(
+                int(row.get("bytes_completed", 0))
+                for row in objects
+                if isinstance(row, dict)
+                and int(row.get("end_ticks", -1)) - runtime_start_ticks
+                <= rolling_start_ticks
+            )
+            rolling_ticks = sample_ticks - rolling_start_ticks
+            expected_rolling_bps = (
+                (snapshot["bytes"] - rolling_start_bytes)
+                * 8
+                * PS_COUNTS_PER_SECOND
+            ) // rolling_ticks
             append_error(errors, int(item.get("current_bps", -1)) == expected_current_bps, f"stationary sample {index} cumulative goodput formula mismatch")
-            append_error(errors, int(item.get("rolling_bps", -1)) == expected_rolling_bps, f"stationary sample {index} rolling goodput is not bound to the causal 30-second object window")
+            append_error(
+                errors,
+                int(item.get("rolling_bps", -1)) == expected_rolling_bps,
+                f"stationary sample {index} rolling goodput is not bound to the causal trailing-300-second object window",
+            )
             interval_rows = [
                 row
                 for row in prefix
@@ -3407,7 +3456,6 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
                 }
             for key, expected in expected_latency.items():
                 append_error(errors, int(item.get(key, -1)) == expected, f"stationary sample {index} causal interval latency mismatch: {key}")
-            previous_sample_bytes = snapshot["bytes"]
             previous_sample_ticks = sample_ticks
         latency = [
             int(item.get("latency_min_ticks", 0)),
@@ -3489,6 +3537,15 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
     append_error(errors, raw_markers.get("P7_STATIONARY_PRIMARY_TIME_SOURCE") == "PS_RUNTIME_ELAPSED_TICKS", "stationary primary PS time-source marker missing")
     append_error(errors, raw_markers.get("P7_STATIONARY_HOST_TIME_ROLE") == "INDEPENDENT_WATCHDOG_AND_INPUT_PRELOAD", "stationary host time-role marker missing")
     append_error(errors, raw_markers.get("P7_STATIONARY_SAMPLE_SEMANTICS") == "FIXED_PS_THRESHOLDS_FROM_IMMUTABLE_TERMINAL_END_TICKS", "stationary canonical sample semantics marker missing")
+    append_error(
+        errors,
+        integer_marker(
+            (raw_markers,),
+            ("P7_STATIONARY_ROLLING_GOODPUT_WINDOW_SECONDS",),
+        )
+        == STATIONARY_ROLLING_GOODPUT_WINDOW_SEC,
+        "stationary rolling-goodput window marker missing/mismatched",
+    )
     append_error(errors, integer_marker((raw_markers,), ("P7_STATIONARY_RUNTIME_START_TICKS",)) == runtime_start_ticks, "stationary runtime-start marker/mailbox mismatch")
     append_error(errors, raw_markers.get("P7_CALIBRATION_WINDOW_COMPLETE") == "1", "stationary calibration completion marker missing")
     append_error(errors, raw_markers.get("P7_ACCEPTANCE_WINDOW_COMPLETE") == "1", "stationary acceptance completion marker missing")
@@ -3534,7 +3591,7 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
         "PASS" if not errors else "FAIL",
         "the unique real-PS stationary run completed the exact 1800-second 300+1500 contract" if not errors else "stationary evidence failed closed",
         source,
-        metrics={"observed_wall_seconds": wall, "objects": len(objects), "samples": len(samples), "calibration_samples": len(calibration_samples), "acceptance_samples": len(acceptance_samples), "calibration_median_bps": cal_median, "acceptance_median_bps": acc_median},
+        metrics={"observed_wall_seconds": wall, "objects": len(objects), "samples": len(samples), "calibration_samples": len(calibration_samples), "acceptance_samples": len(acceptance_samples), "rolling_goodput_window_seconds": STATIONARY_ROLLING_GOODPUT_WINDOW_SEC, "calibration_median_bps": cal_median, "acceptance_median_bps": acc_median},
         errors=list(errors),
         notes=["sample object latency covers PS object processing from descriptor RUNNING through output integrity completion, but excludes host publication and JTAG observation"],
     )
@@ -3546,6 +3603,7 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
         source,
         metrics={
             "window_seconds": 300,
+            "rolling_goodput_window_seconds": STATIONARY_ROLLING_GOODPUT_WINDOW_SEC,
             "samples": len(calibration_samples),
             "median_bps": cal_median,
             "acceptance_median_bps": acc_median,
@@ -3555,7 +3613,7 @@ def stationary_results(candidate: Candidate, evidence: RepositoryEvidence) -> tu
             "transport_interval_latency": calibration_latency,
         },
         errors=list(errors),
-        notes=["latency percentiles remain per-30-second interval; the summarizer does not manufacture a global percentile from interval summaries"],
+        notes=["goodput uses a causal trailing-300-second completed-byte window sampled every 30 seconds; latency percentiles remain per-30-second interval and are not merged into a synthetic global percentile"],
     )
     metrics = derive_metrics(candidate, post, errors)
     return stationary, calibration, metrics

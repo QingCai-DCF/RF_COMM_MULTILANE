@@ -1473,6 +1473,7 @@ class SyntheticEvidence:
             ),
             "service_runtime_limit_sec": runtime,
             "scheduling_cutoff_sec": 1740 if mode == "stationary" else None,
+            "rolling_goodput_window_sec": 300 if mode == "stationary" else 0,
             "safety_validation": safety,
             "core_hardware_readiness": readiness_record,
             "bundle_manifest": file_record(bundle_manifest_path),
@@ -1699,6 +1700,19 @@ class SyntheticEvidence:
                     "end_ticks": runtime_start_ticks + end_elapsed_ticks,
                 }
             )
+        for slot, case in enumerate(stationary_cases):
+            terminal = [item for item in objects if int(item["slot"]) == slot][-1]
+            completion_sequence = int(terminal["sequence"])
+            case["descriptor"]["object_id"] = int(terminal["object_id"])
+            case["descriptor"]["completion_sequence"] = completion_sequence
+            prefix = f"stationary_{completion_sequence:08d}"
+            case["artifact_provenance"] = {
+                "generation": "STATIONARY_SEQUENCE_SPECIFIC",
+                "completion_sequence": completion_sequence,
+                "descriptor_filename": f"{prefix}_descriptor_result.bin",
+                "output_filename": f"{prefix}_output_result.bin",
+                "trace_filename": f"{prefix}_trace_result.bin",
+            }
         samples = []
         for index in range(1, 61):
             elapsed_sec = 30.0 * index
@@ -1714,18 +1728,26 @@ class SyntheticEvidence:
                 item for item in prefix
                 if int(item["end_ticks"]) - runtime_start_ticks > previous_elapsed_ticks
             ]
-            previous_prefix = [
+            rolling_start_ticks = max(
+                0,
+                elapsed_ticks
+                - subject.STATIONARY_ROLLING_GOODPUT_WINDOW_SEC
+                * subject.PS_COUNTS_PER_SECOND,
+            )
+            rolling_start_prefix = [
                 item for item in objects
-                if int(item["end_ticks"]) - runtime_start_ticks <= previous_elapsed_ticks
+                if int(item["end_ticks"]) - runtime_start_ticks <= rolling_start_ticks
             ]
             latency_count = len(interval)
             interval_latencies = sorted(int(item["end_ticks"]) - int(item["start_ticks"]) for item in interval)
             def interval_rank(numerator: int, denominator: int) -> int:
                 rank = max(0, ((numerator * len(interval_latencies) + denominator - 1) // denominator) - 1)
                 return interval_latencies[min(rank, len(interval_latencies) - 1)]
-            delta_ticks = elapsed_ticks - previous_elapsed_ticks
             completed_bytes = sum(item["bytes_completed"] for item in prefix)
-            previous_bytes = sum(item["bytes_completed"] for item in previous_prefix)
+            rolling_start_bytes = sum(
+                item["bytes_completed"] for item in rolling_start_prefix
+            )
+            rolling_ticks = elapsed_ticks - rolling_start_ticks
             samples.append(
                 {
                     "sequence": index,
@@ -1752,7 +1774,7 @@ class SyntheticEvidence:
                     "queue_high": 8,
                     "backpressure": 1,
                     "current_bps": (completed_bytes * 8 * subject.PS_COUNTS_PER_SECOND) // elapsed_ticks,
-                    "rolling_bps": ((completed_bytes - previous_bytes) * 8 * subject.PS_COUNTS_PER_SECOND) // delta_ticks,
+                    "rolling_bps": ((completed_bytes - rolling_start_bytes) * 8 * subject.PS_COUNTS_PER_SECOND) // rolling_ticks,
                     "latency_count": latency_count,
                     "latency_min_ticks": interval_latencies[0] if latency_count else 0,
                     "latency_mean_ticks": sum(interval_latencies) // latency_count if latency_count else 0,
@@ -1769,6 +1791,7 @@ class SyntheticEvidence:
             "max_runtime_seconds": 1800,
             "calibration_window_seconds": 300,
             "sample_interval_seconds": 30,
+            "rolling_goodput_window_seconds": 300,
             "runtime_flags": 0x2,
             "runtime_elapsed_request": 7,
             "runtime_elapsed_ack": 7,
@@ -1889,6 +1912,7 @@ class SyntheticEvidence:
                 "P7_STATIONARY_PRIMARY_TIME_SOURCE=PS_RUNTIME_ELAPSED_TICKS",
                 "P7_STATIONARY_HOST_TIME_ROLE=INDEPENDENT_WATCHDOG_AND_INPUT_PRELOAD",
                 "P7_STATIONARY_SAMPLE_SEMANTICS=FIXED_PS_THRESHOLDS_FROM_IMMUTABLE_TERMINAL_END_TICKS",
+                "P7_STATIONARY_ROLLING_GOODPUT_WINDOW_SECONDS=300",
                 f"P7_STATIONARY_RUNTIME_START_TICKS={runtime_start_ticks}",
                 "P7_CALIBRATION_WINDOW_COMPLETE=1",
                 "P7_ACCEPTANCE_WINDOW_COMPLETE=1",
@@ -2540,6 +2564,12 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertIn("evidence/generated/p7_performance_summary.md", payload["final"]["GENERATED_SUMMARIES"])
             self.assertEqual(payload["stages"]["stationary"]["metrics"]["calibration_samples"], 10)
             self.assertEqual(payload["stages"]["stationary"]["metrics"]["acceptance_samples"], 50)
+            self.assertEqual(
+                payload["stages"]["stationary"]["metrics"][
+                    "rolling_goodput_window_seconds"
+                ],
+                300,
+            )
             self.assertEqual(payload["stages"]["large_object_jtag"]["metrics"]["observed_required_cases"], 9)
             self.assertEqual(len(payload["stages"]["large_object_jtag"]["metrics"]["cases"]), 9)
             self.assertEqual(payload["stages"]["safe_idle"]["drove_tfdu_txd"], False)
@@ -2572,6 +2602,40 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             functional.data["postprocess"]["cases"][0]["descriptor"]["status"] = 6
             self.assertFalse(subject._candidate_basic_pass(functional, evidence))
             stationary = next(item for item in evidence.candidates if item.kind == "ps" and item.data.get("mode") == "stationary")
+            final_case = stationary.data["postprocess"]["cases"][0]
+            original_output_filename = final_case["artifact_provenance"][
+                "output_filename"
+            ]
+            final_case["artifact_provenance"]["output_filename"] = "output_result_0.bin"
+            stationary_result, _calibration_result, _metrics_result = (
+                subject.stationary_results(stationary, evidence)
+            )
+            self.assertEqual("FAIL", stationary_result.status)
+            self.assertTrue(
+                any(
+                    "not bound to one exact terminal sequence" in item
+                    for item in stationary_result.errors
+                )
+            )
+            final_case["artifact_provenance"][
+                "output_filename"
+            ] = original_output_filename
+            stationary.data["postprocess"]["mailbox"][
+                "rolling_goodput_window_seconds"
+            ] = 30
+            stationary_result, _calibration_result, _metrics_result = (
+                subject.stationary_results(stationary, evidence)
+            )
+            self.assertEqual("FAIL", stationary_result.status)
+            self.assertTrue(
+                any(
+                    "rolling-goodput window is not exactly 300 seconds" in item
+                    for item in stationary_result.errors
+                )
+            )
+            stationary.data["postprocess"]["mailbox"][
+                "rolling_goodput_window_seconds"
+            ] = 300
             trace = stationary.data["postprocess"]["stationary_trace_validation"]
             trace_path = Path(trace["records"][0]["trace_file"]["path"])
             trace_bytes = bytearray(trace_path.read_bytes())

@@ -7,6 +7,7 @@ import io
 import json
 import os
 import re
+import statistics
 import struct
 import sys
 import tempfile
@@ -305,6 +306,11 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 self.assertEqual("PENDING_HW", manifest["HARDWARE_ACCEPTANCE"])
                 self.assertEqual(stage.P7_COUNTS_PER_SECOND, manifest["schedule"]["counts_per_second"])
                 self.assertIn(f"COUNTS_PER_SECOND {stage.P7_COUNTS_PER_SECOND}", bundle.plan_path.read_text(encoding="utf-8"))
+                self.assertEqual(0, manifest["schedule"]["rolling_goodput_window_sec"])
+                self.assertIn(
+                    "ROLLING_GOODPUT_WINDOW_SECONDS 0",
+                    bundle.plan_path.read_text(encoding="utf-8"),
+                )
                 self.assertEqual(stage.OUTPUT_PREFILL_BYTE, manifest["output_prefill_byte"])
                 self.assertIn(
                     f"OUTPUT_PREFILL_BYTE {stage.OUTPUT_PREFILL_BYTE}",
@@ -397,8 +403,10 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual(1800, manifest["schedule"]["calibration_plus_acceptance"])
         self.assertEqual(1740, manifest["schedule"]["scheduling_cutoff_sec"])
         self.assertEqual(300, manifest["schedule"]["ready_drain_guard_sec"])
+        self.assertEqual(300, manifest["schedule"]["rolling_goodput_window_sec"])
         self.assertEqual(300, bundle.ready_drain_guard_sec)
         self.assertIn("READY_DRAIN_GUARD_SECONDS 300\n", plan_text)
+        self.assertIn("ROLLING_GOODPUT_WINDOW_SECONDS 300\n", plan_text)
         self.assertLess(manifest["schedule"]["scheduling_cutoff_sec"], 1800)
 
     def test_r69_stationary_ready_guard_covers_observed_full_ring_drain(self) -> None:
@@ -493,6 +501,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual([2, 4], [item["objects"] for item in samples])
         self.assertEqual([3, 10], [item["bytes"] for item in samples])
         self.assertEqual([2, 2], [item["latency_count"] for item in samples])
+        self.assertEqual([0, 1], [item["rolling_bps"] for item in samples])
         # Harvest order/time is irrelevant: immutable end_ticks place the
         # 29.9/30.0 completions in the first exact threshold.
         delayed, delayed_failures = stage._canonical_stationary_samples(
@@ -504,6 +513,168 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         )
         self.assertEqual([], delayed_failures)
         self.assertEqual(samples, delayed)
+
+    def test_r72_trailing_window_replay_is_diagnostic_only_and_preserves_failure(self) -> None:
+        summary_path = (
+            ROOT
+            / "evidence"
+            / "hardware"
+            / "p7"
+            / "authorized_sequence"
+            / "p7_20260716_stationary_app_r72_diag_stage66_c06"
+            / "066_p7_ps_stationary"
+            / "p7_ps_application_stage_summary.json"
+        )
+        frozen = json.loads(summary_path.read_text(encoding="utf-8"))
+        postprocess = frozen["postprocess"]
+        samples, failures = stage._canonical_stationary_samples(
+            postprocess["stationary_objects"],
+            runtime_start_ticks=int(postprocess["mailbox"]["runtime_start_ticks"]),
+        )
+        calibration = statistics.median(
+            int(item["rolling_bps"]) for item in samples[:10]
+        )
+        acceptance = statistics.median(
+            int(item["rolling_bps"]) for item in samples[10:]
+        )
+        self.assertEqual([], failures)
+        self.assertEqual(95_253, calibration)
+        self.assertEqual(96_337, acceptance)
+        self.assertGreaterEqual(acceptance, 0.8 * calibration)
+        self.assertEqual("FAIL_STAGE", frozen["P7_PS_APPLICATION_SAFE_STAGE"])
+        self.assertFalse(postprocess["passed"])
+
+    def test_stationary_result_artifacts_are_bound_to_terminal_sequence(self) -> None:
+        data = bytes(range(251))
+        case = stage._make_case(
+            slot=0,
+            name="stationary_sequence_artifact_fixture",
+            data=data,
+            session_epoch=0x50370001,
+            object_id=17,
+            lane_policy=1,
+        )
+        completion_sequence = 17
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            generic_output = root / "output_result_0.bin"
+            generic_trace = root / "trace_result_0.bin"
+            generic_output.write_bytes(
+                bytes([stage.OUTPUT_PREFILL_BYTE]) * len(data)
+            )
+            generic_trace.write_bytes(b"\x00" * (case.trace_capacity * 64))
+
+            descriptor_words = list(struct.unpack("<64I", case.request.pack()))
+            descriptor_words[3] = stage.P7_DESCRIPTOR_COMPLETE
+            descriptor_words[17] = 0
+            descriptor_words[18] = len(data)
+            descriptor_words[19] = case.trace_capacity
+            descriptor_words[20] = case.trace_capacity
+            descriptor_words[21] = zlib.crc32(data) & 0xFFFFFFFF
+            descriptor_words[22] = case.trace_capacity
+            descriptor_words[32:40] = descriptor_words[24:32]
+            descriptor_words[40:48] = descriptor_words[24:32]
+            descriptor_words[55] = case.trace_capacity
+            descriptor_words[58] = 100
+            descriptor_words[60] = 200
+            descriptor_words[63] = completion_sequence
+            descriptor_raw = struct.pack("<64I", *descriptor_words)
+
+            trace_raw = bytearray(case.trace_capacity * 64)
+            for index in range(case.trace_capacity):
+                trace_words = [0] * 16
+                trace_words[0] = stage.P7_TRACE_MAGIC
+                trace_words[1] = case.request.session_epoch
+                trace_words[2] = case.request.object_id
+                trace_words[3] = (case.trace_capacity << 16) | index
+                trace_words[4] = 1
+                trace_words[5] = 1
+                trace_words[6] = 1
+                trace_words[8] = 10 * index + 1
+                trace_words[10] = 10 * index + 2
+                struct.pack_into("<16I", trace_raw, index * 64, *trace_words)
+
+            prefix = f"stationary_{completion_sequence:08d}"
+            (root / f"{prefix}_descriptor_result.bin").write_bytes(descriptor_raw)
+            (root / f"{prefix}_output_result.bin").write_bytes(data)
+            (root / f"{prefix}_trace_result.bin").write_bytes(trace_raw)
+            paths = stage._result_artifact_paths(
+                root, case.slot, "stationary", completion_sequence
+            )
+            descriptor_path, output_path, trace_path, provenance = paths
+            self.assertEqual(f"{prefix}_descriptor_result.bin", descriptor_path.name)
+            self.assertEqual(f"{prefix}_output_result.bin", output_path.name)
+            self.assertEqual(f"{prefix}_trace_result.bin", trace_path.name)
+            self.assertEqual("STATIONARY_SEQUENCE_SPECIFIC", provenance["generation"])
+            self.assertEqual(completion_sequence, provenance["completion_sequence"])
+            self.assertEqual(data, output_path.read_bytes())
+            self.assertNotEqual(generic_output.read_bytes(), output_path.read_bytes())
+            self.assertNotEqual(generic_trace.read_bytes(), trace_path.read_bytes())
+            self.assertEqual(
+                [],
+                stage.validate_completed(
+                    case.request,
+                    descriptor_path.read_bytes(),
+                    output_path.read_bytes(),
+                    expected_completion_sequence=completion_sequence,
+                )["failures"],
+            )
+            self.assertEqual([], stage._parse_trace(trace_path, case)[1])
+
+            bundle = stage.StageBundle(
+                directory=root,
+                plan_path=root / "unused-plan.txt",
+                plan_sha256="0" * 64,
+                manifest_path=root / "unused-manifest.json",
+                manifest_sha256="1" * 64,
+                cases=[case],
+                boundary_cases=[],
+                functional_checkpoint=None,
+                queue_overflow_candidate=None,
+                scheduling_cutoff_sec=1740,
+                ready_drain_guard_sec=300,
+            )
+            raw_object = (
+                f"P7_STATIONARY_OBJECT_{completion_sequence:08d}=SLOT_0,GEN_0,"
+                f"SESSION_{case.request.session_epoch:08X},OBJECT_{case.request.object_id},"
+                f"STATUS_{stage.P7_DESCRIPTOR_COMPLETE},ERROR_0,BYTES_{len(data)},"
+                f"FRAGMENTS_{case.trace_capacity}/{case.trace_capacity},"
+                f"ATTEMPTS_{case.trace_capacity},FALLBACKS_0,"
+                f"OUTSHA_{hashlib.sha256(data).hexdigest()},P6_RETRY_COUNT_0,"
+                "P6_RETRY_EXHAUSTED_0,P6_TX_FAIL_0,P6_CRC_BAD_0,"
+                "P6_PAYLOAD_MISMATCH_0,MAX_TXD_HIGH_CYCLES_8,DUTY_VIOLATIONS_0,"
+                f"LANE0_{case.trace_capacity},LANE1_0,REPLICATED_0,"
+                "START_TICKS_100,END_TICKS_200,"
+                f"COMPLETION_SEQUENCE_{completion_sequence}"
+            )
+            postprocess = stage.postprocess_bundle(bundle, "stationary", raw_object)
+            self.assertEqual(1, len(postprocess["cases"]))
+            self.assertTrue(postprocess["cases"][0]["passed"])
+            self.assertEqual(
+                f"stationary_{completion_sequence:08d}_output_result.bin",
+                postprocess["cases"][0]["artifact_provenance"]["output_filename"],
+            )
+            self.assertEqual(
+                hashlib.sha256(data).hexdigest(),
+                postprocess["cases"][0]["output_sha256"],
+            )
+
+            output_path.write_bytes(bytes([stage.OUTPUT_PREFILL_BYTE]) * len(data))
+            self.assertTrue(
+                stage.validate_completed(
+                    case.request,
+                    descriptor_path.read_bytes(),
+                    output_path.read_bytes(),
+                    expected_completion_sequence=completion_sequence,
+                )["failures"]
+            )
+            postprocess = stage.postprocess_bundle(bundle, "stationary", raw_object)
+            self.assertFalse(postprocess["cases"][0]["passed"])
+            trace_path.write_bytes(b"\x00" * (case.trace_capacity * 64))
+            self.assertTrue(stage._parse_trace(trace_path, case)[1])
+
+            missing = stage._result_artifact_paths(root, 0, "stationary", None)
+            self.assertNotIn("descriptor_result_0.bin", {path.name for path in missing[:3]})
 
     def test_mailbox_binds_firmware_stationary_admission_cutoff(self) -> None:
         raw = stage.pack_mailbox(
@@ -2136,6 +2307,19 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn('p7_require_value $auth_text P7_COUNTS_PER_SECOND $counts_per_second', tcl)
         self.assertIn('$plan_value(COUNTS_PER_SECOND) != $counts_per_second', tcl)
         self.assertIn('$plan_value(READY_DRAIN_GUARD_SECONDS) != 300', tcl)
+        self.assertIn('$plan_value(ROLLING_GOODPUT_WINDOW_SECONDS) != 300', tcl)
+        self.assertIn(
+            'P7_STATIONARY_ROLLING_GOODPUT_WINDOW_SECONDS=$plan_value(ROLLING_GOODPUT_WINDOW_SECONDS)',
+            tcl,
+        )
+        self.assertIn(
+            'set rolling_start_ticks [expr {max(0, $threshold_ticks - $rolling_window_ticks)}]',
+            tcl,
+        )
+        self.assertIn(
+            '(($bytes - $rolling_start_bytes) * 8 * $counts_per_second) / $rolling_ticks',
+            tcl,
+        )
         self.assertIn("proc p7_read_runtime_elapsed_ticks", tcl)
         reader = tcl[tcl.index("proc p7_read_runtime_elapsed_ticks") : tcl.index("proc p7_le32")]
         sequence_before = reader.index("set sequence_before [p7_read32 0x00020088]")
@@ -2198,6 +2382,40 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION=0", tcl)
         self.assertIn("p7_descriptor_admission_allowed", (ROOT / "software" / "ps_driver" / "p7_app_service.c").read_text(encoding="utf-8"))
         self.assertNotIn("if {$elapsed_sec < $plan_value(SCHEDULING_CUTOFF_SECONDS)}", tcl)
+
+    def test_tcl_trailing_rolling_window_excludes_its_closed_start_boundary(self) -> None:
+        tcl = (
+            ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl"
+        ).read_text(encoding="utf-8")
+        interp = tcl_interpreter()
+        interp.eval(tcl[: tcl.index("set result_file")])
+        runtime_start = 10_000
+        record_script = ["set records {}"]
+        for object_id, relative_end, completed_bytes in (
+            (1, 60_000, 1_000),
+            (2, 61_000, 2_000),
+            (3, 331_000, 4_000),
+        ):
+            record_script.append(
+                "lappend records [dict create "
+                f"end_ticks {runtime_start + relative_end} "
+                f"start_ticks {runtime_start + relative_end - 100} "
+                f"bytes_completed {completed_bytes} fragments_completed 1 "
+                "lane0_fragments 1 lane1_fragments 0 replicated_fragments 0 "
+                "fallback_count 0 p6_retry_count 0 p6_retry_exhausted 0 "
+                "p6_tx_fail 0 p6_crc_bad 0 p6_payload_mismatch 0 "
+                "duty_violations 0 max_txd_high_cycles 8 "
+                f"object_id {object_id}]"
+            )
+        record_script.append(
+            "set canonical [p7_stationary_sample_from_ledger "
+            f"$records {runtime_start} 360000 330000 300000 1000]"
+        )
+        interp.eval("\n".join(record_script))
+        self.assertEqual(160, int(interp.eval("dict get $canonical rolling_bps")))
+        self.assertEqual(155, int(interp.eval("dict get $canonical current_bps")))
+        self.assertEqual(1, int(interp.eval("dict get $canonical latency count")))
+        self.assertEqual(3, int(interp.eval("dict get $canonical last_object")))
 
     def test_stationary_requeue_restores_manifest_bound_buffers_before_descriptor(self) -> None:
         tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")

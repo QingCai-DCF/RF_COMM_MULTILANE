@@ -696,7 +696,7 @@ proc p7_latency_summary {values} {
 }
 
 proc p7_stationary_sample_from_ledger {records runtime_start_ticks threshold_ticks \
-    previous_threshold_ticks counts_per_second} {
+    previous_threshold_ticks rolling_window_ticks counts_per_second} {
   set objects 0
   set bytes 0
   set fragments 0
@@ -741,16 +741,17 @@ proc p7_stationary_sample_from_ledger {records runtime_start_ticks threshold_tic
       }
     }
   }
-  set previous_bytes 0
+  set rolling_start_ticks [expr {max(0, $threshold_ticks - $rolling_window_ticks)}]
+  set rolling_start_bytes 0
   foreach terminal $records {
     set relative_end [expr {[dict get $terminal end_ticks] - $runtime_start_ticks}]
-    if {$relative_end <= $previous_threshold_ticks} {
-      set previous_bytes [expr {$previous_bytes + [dict get $terminal bytes_completed]}]
+    if {$relative_end <= $rolling_start_ticks} {
+      set rolling_start_bytes [expr {$rolling_start_bytes + [dict get $terminal bytes_completed]}]
     }
   }
-  set interval_ticks [expr {$threshold_ticks - $previous_threshold_ticks}]
-  if {$interval_ticks <= 0} { error "P7 stationary canonical sample interval is not positive" }
-  set rolling_bps [expr {(($bytes - $previous_bytes) * 8 * $counts_per_second) / $interval_ticks}]
+  set rolling_ticks [expr {$threshold_ticks - $rolling_start_ticks}]
+  if {$rolling_ticks <= 0} { error "P7 stationary rolling-goodput window is not positive" }
+  set rolling_bps [expr {(($bytes - $rolling_start_bytes) * 8 * $counts_per_second) / $rolling_ticks}]
   set current_bps [expr {$threshold_ticks > 0 ? ($bytes * 8 * $counts_per_second) / $threshold_ticks : 0}]
   return [dict create objects $objects bytes $bytes fragments $fragments lane0 $lane0 lane1 $lane1 \
       replicated $replicated fallbacks $fallbacks p6_retries $p6_retries \
@@ -761,10 +762,11 @@ proc p7_stationary_sample_from_ledger {records runtime_start_ticks threshold_tic
 }
 
 proc p7_emit_stationary_sample {result_handle sequence records runtime_start_ticks \
-    threshold_ticks observation_not_before_ticks interval_ticks counts_per_second calibration_ticks} {
+    threshold_ticks observation_not_before_ticks interval_ticks rolling_window_ticks \
+    counts_per_second calibration_ticks} {
   set previous_threshold_ticks [expr {$threshold_ticks - $interval_ticks}]
   set canonical [p7_stationary_sample_from_ledger $records $runtime_start_ticks \
-      $threshold_ticks $previous_threshold_ticks $counts_per_second]
+      $threshold_ticks $previous_threshold_ticks $rolling_window_ticks $counts_per_second]
   set sample_elapsed_sec [expr {double($threshold_ticks) / double($counts_per_second)}]
   set bytes_completed [dict get $canonical bytes]
   set bytes_low [expr {$bytes_completed & 0xFFFFFFFF}]
@@ -1217,7 +1219,8 @@ set rc [catch {
           DDR_EXTERNAL_ADDRESS DDR_EXTERNAL_ACCESS_METHOD DDR_EXTERNAL_LENGTH \
           DDR_EXTERNAL_REPETITION DDR_EXTERNAL_UNALIGNED_ACCESSES \
           DDR_EXTERNAL_FIXTURE_SHA256 MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
-          ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
+          ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS ROLLING_GOODPUT_WINDOW_SECONDS \
+          IDLE_MARGIN_SECONDS \
           SCHEDULING_CUTOFF_SECONDS READY_DRAIN_GUARD_SECONDS \
           COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
           CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
@@ -1232,7 +1235,8 @@ set rc [catch {
       DDR_EXTERNAL_ACCESS_METHOD DDR_EXTERNAL_LENGTH DDR_EXTERNAL_REPETITION \
       DDR_EXTERNAL_UNALIGNED_ACCESSES DDR_EXTERNAL_FIXTURE_SHA256 \
       MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
-      ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
+      ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS ROLLING_GOODPUT_WINDOW_SECONDS \
+      IDLE_MARGIN_SECONDS \
       SCHEDULING_CUTOFF_SECONDS READY_DRAIN_GUARD_SECONDS COUNTS_PER_SECOND \
       OUTPUT_PREFILL_BYTE CASE_COUNT \
       BOUNDARY_COUNT CHECKPOINT_COUNT} {
@@ -1243,7 +1247,8 @@ set rc [catch {
       DDR_EXTERNAL_LENGTH DDR_EXTERNAL_REPETITION \
       DDR_EXTERNAL_UNALIGNED_ACCESSES \
       MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS \
-      SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS \
+      SAMPLE_INTERVAL_SECONDS ROLLING_GOODPUT_WINDOW_SECONDS IDLE_MARGIN_SECONDS \
+      SCHEDULING_CUTOFF_SECONDS \
       READY_DRAIN_GUARD_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
       CASE_COUNT BOUNDARY_COUNT \
       CHECKPOINT_COUNT} {
@@ -1365,6 +1370,7 @@ set rc [catch {
     if {$max_runtime_sec != 1800 || $plan_value(CALIBRATION_SECONDS) != 300 ||
         $plan_value(ACCEPTANCE_SECONDS) != 1500 ||
         $plan_value(SAMPLE_INTERVAL_SECONDS) != 30 ||
+        $plan_value(ROLLING_GOODPUT_WINDOW_SECONDS) != 300 ||
         $idle_margin_sec != 60 ||
         $plan_value(CALIBRATION_SECONDS) + $plan_value(ACCEPTANCE_SECONDS) != 1800 ||
         $plan_value(SCHEDULING_CUTOFF_SECONDS) != 1800 - $idle_margin_sec ||
@@ -1392,6 +1398,7 @@ set rc [catch {
     }
   } elseif {$plan_value(CALIBRATION_SECONDS) != 0 ||
             $plan_value(ACCEPTANCE_SECONDS) != 0 ||
+            $plan_value(ROLLING_GOODPUT_WINDOW_SECONDS) != 0 ||
             $plan_value(READY_DRAIN_GUARD_SECONDS) != 0} {
     error "non-stationary plan cannot claim calibration/acceptance windows"
   }
@@ -1851,6 +1858,7 @@ set rc [catch {
     set stationary_terminal_records {}
     set sample_index 0
     set sample_interval_ticks [expr {$plan_value(SAMPLE_INTERVAL_SECONDS) * $counts_per_second}]
+    set rolling_goodput_window_ticks [expr {$plan_value(ROLLING_GOODPUT_WINDOW_SECONDS) * $counts_per_second}]
     set next_sample_ticks $sample_interval_ticks
     set scheduling_cutoff_ticks [expr {$plan_value(SCHEDULING_CUTOFF_SECONDS) * $counts_per_second}]
     set ready_publish_guard_ticks [expr {$plan_value(READY_DRAIN_GUARD_SECONDS) * $counts_per_second}]
@@ -1871,6 +1879,7 @@ set rc [catch {
     p7_say $result_handle "P7_STATIONARY_READY_PUBLISH_GUARD_TICKS=$ready_publish_guard_ticks"
     p7_say $result_handle "P7_STATIONARY_READY_PUBLISH_CUTOFF_TICKS=$ready_publish_cutoff_ticks"
     p7_say $result_handle "P7_STATIONARY_SAMPLE_SEMANTICS=FIXED_PS_THRESHOLDS_FROM_IMMUTABLE_TERMINAL_END_TICKS"
+    p7_say $result_handle "P7_STATIONARY_ROLLING_GOODPUT_WINDOW_SECONDS=$plan_value(ROLLING_GOODPUT_WINDOW_SECONDS)"
     set wall_deadline_ms [expr {$service_start_ms + 1000 * $max_runtime_sec + 2000}]
     while {1} {
       p7_check_abort $abort_file
@@ -2029,7 +2038,7 @@ set rc [catch {
         incr sample_index
         p7_emit_stationary_sample $result_handle $sample_index $stationary_terminal_records \
             $runtime_start_ticks $sample_threshold_ticks $elapsed_ticks $sample_interval_ticks \
-            $counts_per_second $calibration_ticks
+            $rolling_goodput_window_ticks $counts_per_second $calibration_ticks
         set next_sample_ticks [expr {$next_sample_ticks + $sample_interval_ticks}]
       }
       if {!$calibration_complete && $elapsed_ticks >= $calibration_ticks} {
@@ -2177,7 +2186,7 @@ set rc [catch {
       incr sample_index
       p7_emit_stationary_sample $result_handle $sample_index $stationary_terminal_records \
           $runtime_start_ticks $next_sample_ticks $final_elapsed_ticks $sample_interval_ticks \
-          $counts_per_second $calibration_ticks
+          $rolling_goodput_window_ticks $counts_per_second $calibration_ticks
       set next_sample_ticks [expr {$next_sample_ticks + $sample_interval_ticks}]
       incr post_terminal_reconstructed_samples
     }
@@ -2185,7 +2194,7 @@ set rc [catch {
     incr sample_index
     p7_emit_stationary_sample $result_handle $sample_index $stationary_terminal_records \
         $runtime_start_ticks $required_runtime_ticks $final_elapsed_ticks $sample_interval_ticks \
-        $counts_per_second $calibration_ticks
+        $rolling_goodput_window_ticks $counts_per_second $calibration_ticks
     p7_say $result_handle "P7_SAMPLE_00060_SAFE_TERMINAL_STATE=1"
     mwr 0x00020084 $sample_index
     if {[p7_read32 0x00020084] != 60} { error "P7 final sample sequence mailbox readback failed" }

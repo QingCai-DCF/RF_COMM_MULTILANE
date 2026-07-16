@@ -127,6 +127,7 @@ MAX_IDLE_MARGIN_SEC = 60
 # A 300-second host guard leaves more than 83 seconds of measured margin while
 # the firmware's independent one-second late-admission guard remains unchanged.
 STATIONARY_READY_DRAIN_GUARD_SEC = 300
+STATIONARY_ROLLING_GOODPUT_WINDOW_SEC = 300
 P7_COUNTS_PER_SECOND = 333_333_343
 OUTPUT_PREFILL_BYTE = 0xA5
 P7_STAGE62_DIAGNOSTIC_ADDRESS = 0x00021000
@@ -1091,6 +1092,9 @@ def build_stage_bundle(
     ready_drain_guard = (
         STATIONARY_READY_DRAIN_GUARD_SEC if mode == "stationary" else 0
     )
+    rolling_goodput_window = (
+        STATIONARY_ROLLING_GOODPUT_WINDOW_SEC if mode == "stationary" else 0
+    )
     if mode == "stationary" and not 0 < ready_drain_guard < scheduling_cutoff:
         raise ValueError("stationary READY drain guard must be inside the scheduling window")
     firmware_cutoff = scheduling_cutoff if mode == "stationary" else 0
@@ -1151,6 +1155,7 @@ def build_stage_bundle(
         f"CALIBRATION_SECONDS {calibration_sec}",
         f"ACCEPTANCE_SECONDS {acceptance_sec}",
         f"SAMPLE_INTERVAL_SECONDS {sample_interval_sec}",
+        f"ROLLING_GOODPUT_WINDOW_SECONDS {rolling_goodput_window}",
         f"IDLE_MARGIN_SECONDS {idle_margin_sec}",
         f"SCHEDULING_CUTOFF_SECONDS {scheduling_cutoff}",
         f"READY_DRAIN_GUARD_SECONDS {ready_drain_guard}",
@@ -1237,6 +1242,7 @@ def build_stage_bundle(
             "max_runtime_sec": max_runtime_sec,
             "calibration_sec": calibration_sec,
             "acceptance_sec": acceptance_sec,
+            "rolling_goodput_window_sec": rolling_goodput_window,
             "idle_margin_sec": idle_margin_sec,
             "scheduling_cutoff_sec": scheduling_cutoff,
             "ready_drain_guard_sec": ready_drain_guard,
@@ -1321,6 +1327,19 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
         or bundle.ready_drain_guard_sec != expected_ready_drain_guard
     ):
         errors.append("bundle manifest stationary READY drain guard is missing or mismatched")
+    expected_rolling_goodput_window = (
+        STATIONARY_ROLLING_GOODPUT_WINDOW_SEC
+        if manifest.get("mode") == "stationary"
+        else 0
+    )
+    if (
+        not isinstance(schedule, dict)
+        or schedule.get("rolling_goodput_window_sec")
+        != expected_rolling_goodput_window
+    ):
+        errors.append(
+            "bundle manifest rolling-goodput window is missing or mismatched"
+        )
     if sha256_file(bundle.plan_path) != bundle.plan_sha256:
         errors.append("execution plan hash changed after construction")
     errors.extend(_verify_manifest_record(manifest.get("mailbox"), bundle.directory / "mailbox.bin", 256, "mailbox"))
@@ -4059,16 +4078,26 @@ def _canonical_stationary_samples(
     counts_per_second: int = P7_COUNTS_PER_SECOND,
     sample_interval_seconds: int = 30,
     runtime_seconds: int = MAX_SERVICE_RUNTIME_SEC,
+    rolling_goodput_window_seconds: int = STATIONARY_ROLLING_GOODPUT_WINDOW_SEC,
 ) -> tuple[list[dict[str, Any]], list[str]]:
     """Reconstruct fixed PS-time windows from immutable terminal end ticks."""
 
     failures: list[str] = []
     if runtime_start_ticks <= 0:
         return [], ["stationary runtime start tick is missing"]
-    if counts_per_second <= 0 or sample_interval_seconds <= 0 or runtime_seconds <= 0:
+    if (
+        counts_per_second <= 0
+        or sample_interval_seconds <= 0
+        or runtime_seconds <= 0
+        or rolling_goodput_window_seconds <= 0
+    ):
         return [], ["stationary canonical sample configuration is invalid"]
     if runtime_seconds % sample_interval_seconds:
         return [], ["stationary runtime is not divisible by its sample interval"]
+    if rolling_goodput_window_seconds % sample_interval_seconds:
+        return [], [
+            "stationary rolling-goodput window is not divisible by its sample interval"
+        ]
 
     ordered = sorted(stationary_objects, key=lambda item: int(item["sequence"]))
     sequences = [int(item["sequence"]) for item in ordered]
@@ -4118,12 +4147,17 @@ def _canonical_stationary_samples(
             if previous_threshold < relative_end <= threshold_ticks
         ]
         bytes_completed = sum(int(item["bytes_completed"]) for item in included)
-        previous_bytes = sum(
+        rolling_start_threshold = max(
+            0,
+            threshold_ticks
+            - rolling_goodput_window_seconds * counts_per_second,
+        )
+        rolling_start_bytes = sum(
             int(item["bytes_completed"])
             for item, relative_end in prepared
-            if relative_end <= previous_threshold
+            if relative_end <= rolling_start_threshold
         )
-        interval_ticks = threshold_ticks - previous_threshold
+        rolling_ticks = threshold_ticks - rolling_start_threshold
         latencies = [int(item["end_ticks"]) - int(item["start_ticks"]) for item in interval]
         latency_summary = {
             "latency_count": len(latencies),
@@ -4159,9 +4193,11 @@ def _canonical_stationary_samples(
                 "duty_violations": sum(int(item["duty_violations"]) for item in included),
                 "current_bps": (bytes_completed * 8 * counts_per_second) // threshold_ticks,
                 "rolling_bps": (
-                    (bytes_completed - previous_bytes) * 8 * counts_per_second
+                    (bytes_completed - rolling_start_bytes)
+                    * 8
+                    * counts_per_second
                 )
-                // interval_ticks,
+                // rolling_ticks,
                 "last_object": int(included[-1]["object_id"]) if included else 0,
                 **latency_summary,
             }
@@ -4631,6 +4667,39 @@ def _stationary_ready_drain_guard_failures(
     return []
 
 
+def _result_artifact_paths(
+    bundle_dir: Path,
+    slot: int,
+    mode: str,
+    completion_sequence: int | None,
+) -> tuple[Path, Path, Path, dict[str, Any]]:
+    """Select one exact result generation without stationary alias fallback."""
+
+    if mode == "stationary":
+        if completion_sequence is None or completion_sequence < 1:
+            prefix = f"stationary_missing_terminal_sequence_slot_{slot}"
+            generation = "STATIONARY_TERMINAL_SEQUENCE_MISSING"
+        else:
+            prefix = f"stationary_{completion_sequence:08d}"
+            generation = "STATIONARY_SEQUENCE_SPECIFIC"
+        descriptor_path = bundle_dir / f"{prefix}_descriptor_result.bin"
+        output_path = bundle_dir / f"{prefix}_output_result.bin"
+        trace_path = bundle_dir / f"{prefix}_trace_result.bin"
+    else:
+        generation = "GENERIC_SLOT"
+        descriptor_path = bundle_dir / f"descriptor_result_{slot}.bin"
+        output_path = bundle_dir / f"output_result_{slot}.bin"
+        trace_path = bundle_dir / f"trace_result_{slot}.bin"
+    provenance = {
+        "generation": generation,
+        "completion_sequence": completion_sequence,
+        "descriptor_filename": descriptor_path.name,
+        "output_filename": output_path.name,
+        "trace_filename": trace_path.name,
+    }
+    return descriptor_path, output_path, trace_path, provenance
+
+
 def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[str, Any]:
     failures: list[str] = []
     markers = parse_markers(raw_text)
@@ -4663,9 +4732,14 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
             expected_completion_sequence = int(final_identity["sequence"])
         elif mode == "functional":
             expected_completion_sequence = (54 + case.slot) if case.slot < 4 else (50 + case.slot - 4)
-        descriptor_path = bundle.directory / f"descriptor_result_{case.slot}.bin"
-        output_path = bundle.directory / f"output_result_{case.slot}.bin"
-        trace_path = bundle.directory / f"trace_result_{case.slot}.bin"
+        descriptor_path, output_path, trace_path, artifact_provenance = (
+            _result_artifact_paths(
+                bundle.directory,
+                case.slot,
+                mode,
+                expected_completion_sequence,
+            )
+        )
         if not descriptor_path.is_file() or descriptor_path.stat().st_size != P7_DESCRIPTOR_BYTES:
             failures.append(f"descriptor result missing/invalid for slot {case.slot}")
             continue
@@ -4745,6 +4819,7 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
                 "output_sha256": hashlib.sha256(output).hexdigest(),
                 "output_bytes": len(output),
                 "object_latency_ticks": max(0, int(descriptor["end_ticks"]) - int(descriptor["start_ticks"])),
+                "artifact_provenance": artifact_provenance,
             }
         )
     mailbox_path = bundle.directory / "mailbox_final.bin"
@@ -5191,6 +5266,16 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
             failures.append("stationary calibration completion marker missing")
         if markers.get("P7_ACCEPTANCE_WINDOW_COMPLETE") != "1":
             failures.append("stationary acceptance completion marker missing")
+        if (
+            markers.get("P7_STATIONARY_ROLLING_GOODPUT_WINDOW_SECONDS")
+            != str(STATIONARY_ROLLING_GOODPUT_WINDOW_SEC)
+        ):
+            failures.append(
+                "stationary rolling-goodput window marker is missing or mismatched"
+            )
+        mailbox["rolling_goodput_window_seconds"] = (
+            STATIONARY_ROLLING_GOODPUT_WINDOW_SEC
+        )
         if markers.get("P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION") != "0":
             failures.append("stationary scheduler requeued work after the idle cutoff")
         failures.extend(_stationary_ready_drain_guard_failures(bundle, markers))
@@ -5821,6 +5906,11 @@ def main(argv: list[str] | None = None) -> int:
     summary["execution_plan"] = file_record(bundle.plan_path)
     summary["scheduling_cutoff_sec"] = bundle.scheduling_cutoff_sec
     summary["ready_drain_guard_sec"] = bundle.ready_drain_guard_sec
+    summary["rolling_goodput_window_sec"] = (
+        STATIONARY_ROLLING_GOODPUT_WINDOW_SEC
+        if args.mode == "stationary"
+        else 0
+    )
     abort_file = DEFAULT_ABORT_FILE.resolve(strict=False)
     try:
         frozen_shutdown, frozen_shutdown_payload = freeze_shutdown_bit(args)
