@@ -1,0 +1,26 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-ledger-record-v1",
+  "recorded_at_utc": "2026-07-16T09:02:31.0118853Z",
+  "status": "PASS_RECORDED",
+  "run_id": "p7_20260716_stationary_app_r61_diag_stage66_c03",
+  "requested_hardware_attempt_number": 3,
+  "reason": "COMPLETE_SUITE_OUTER_TIMEOUT_BEFORE_TERMINAL_RESULT",
+  "retirement_evidence_path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block.json",
+  "retirement_evidence_sha256": "cdfecc486b88adb9d3bf1c240d014dcca621bfb49ba1e4161480080c20322283",
+  "campaign_ledger_sha256_before": "2346011709247b84bd6484b1bc2362a9c424df70e5b4007b18342d7ffe5394ad",
+  "campaign_ledger_sha256_after": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676",
+  "campaign_ledger_status_after": "READY",
+  "actual_hardware_attempt_count_after": 2,
+  "retired_pre_hardware_run_id_count_after": 18,
+  "recorder_source_commit": "35e4a4af0ae1f7848eabf6784b7b222c1c6140e0",
+  "recorder_result": {
+    "P7_STAGE66_CAMPAIGN_PREHARDWARE_RETIREMENT": "PASS_RECORDED",
+    "errors": [],
+    "record_requested": true
+  },
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "required_next_run_id": "p7_20260716_stationary_app_r62_diag_stage66_c03"
+}

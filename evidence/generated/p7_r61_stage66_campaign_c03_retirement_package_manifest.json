@@ -1,0 +1,58 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-retirement-package-v1",
+  "generated_at_utc": "2026-07-16T09:04:12.6033714Z",
+  "run_id": "p7_20260716_stationary_app_r61_diag_stage66_c03",
+  "source_commit": "35e4a4af0ae1f7848eabf6784b7b222c1c6140e0",
+  "campaign_ledger_sha256_before": "2346011709247b84bd6484b1bc2362a9c424df70e5b4007b18342d7ffe5394ad",
+  "campaign_ledger_sha256_after": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676",
+  "actual_hardware_attempt_count_after": 2,
+  "campaign_status_after": "READY",
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "files": [
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block.json",
+      "bytes": 5881,
+      "sha256": "cdfecc486b88adb9d3bf1c240d014dcca621bfb49ba1e4161480080c20322283"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_retirement_recording.json",
+      "bytes": 1347,
+      "sha256": "4fba0a048617b687398895f91d23017671b3df9635b97a6fded21e4f39d806c4"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_timeout_boundary_validation.json",
+      "bytes": 1593,
+      "sha256": "58f3f6b6a8618efb961b82369d3bb86e170c89f1212e3b85669703648f5976eb"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block/build_materialization.json",
+      "bytes": 9153,
+      "sha256": "5bdc50e5b4c60d9bb31455c14e88319c67391dae7f2020abde17e86e0c3c0aa2"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block/campaign_ledger_after_retirement.json",
+      "bytes": 20269,
+      "sha256": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block/focused_board_contract.json",
+      "bytes": 599,
+      "sha256": "8520288641a8a62e18499fb47bac3cfdc0f589d7730a559fda143a9d81f49a7e"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block/ledger_materialization.json",
+      "bytes": 1796,
+      "sha256": "d2a9a4c8a1aeeee7f24fc56a4d6f664ac4cbde6422d442b3f0072584a487d938"
+    },
+    {
+      "path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block/placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "e577daf2e203958e15de11e4960ec86dae9cbc432429255a30a03fbb70cb8906"
+    }
+  ],
+  "file_count": 8,
+  "result": "PASS_RECORDED"
+}

@@ -24,6 +24,59 @@ import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r61_prehardware_retirement_preserves_timeout_and_zero_attempt_boundary(self) -> None:
+        run_id = "p7_20260716_stationary_app_r61_diag_stage66_c03"
+        evidence = (
+            ROOT
+            / "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block.json"
+        )
+        payload, errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            hashlib.sha256(evidence.read_bytes()).hexdigest(),
+            run_id=run_id,
+            source_commit="35e4a4af0ae1f7848eabf6784b7b222c1c6140e0",
+            requested_hardware_attempt_number=3,
+        )
+        self.assertEqual([], errors)
+        assert payload is not None
+        self.assertFalse(payload["diagnostic_hardware_attempt_consumed"])
+        self.assertEqual("FAIL_OUTER_TIMEOUT", payload["complete_suites"]["status"])
+        self.assertFalse(payload["complete_suites"]["summary_exists"])
+        self.assertEqual(0, payload["complete_suites"]["log_file_count"])
+        self.assertFalse(payload["failure_boundary"]["p7_canonical_gate_invoked"])
+        self.assertFalse(payload["failure_boundary"]["campaign_lock_created"])
+
+        package = (
+            ROOT
+            / "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block"
+        )
+        snapshot = package / "campaign_ledger_after_retirement.json"
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        with mock.patch.object(campaign, "campaign_ledger_path", return_value=snapshot):
+            ledger, errors = campaign.validate_ledger(policy, snapshot, allow_absent=False)
+        self.assertEqual([], errors)
+        assert ledger is not None
+        self.assertEqual(2, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        self.assertEqual(run_id, ledger["retired_pre_hardware_run_ids"][-1]["run_id"])
+
+        manifest = json.loads(
+            (
+                ROOT
+                / "evidence/generated/p7_r61_stage66_campaign_c03_retirement_package_manifest.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(8, manifest["file_count"])
+        for record in manifest["files"]:
+            path = ROOT / record["path"]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(
+                record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
     def test_r60_retirement_preserves_complete_suite_pass_and_offline_timeout_boundary(self) -> None:
         run_id = "p7_20260716_stationary_app_r60_diag_stage66_c03"
         evidence = (

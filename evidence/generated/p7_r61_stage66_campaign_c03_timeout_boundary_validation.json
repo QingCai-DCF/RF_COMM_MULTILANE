@@ -1,0 +1,39 @@
+{
+  "schema": "rf-comm-p7-complete-suite-timeout-boundary-validation-v1",
+  "generated_at_utc": "2026-07-16T09:03:29.9200046Z",
+  "retired_run_id": "p7_20260716_stationary_app_r61_diag_stage66_c03",
+  "retired_source_commit": "35e4a4af0ae1f7848eabf6784b7b222c1c6140e0",
+  "campaign_ledger_sha256_after_retirement": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676",
+  "actual_hardware_attempt_count": 2,
+  "campaign_status": "READY",
+  "failure_boundary": {
+    "suite_wrapper_timeout_milliseconds": 300000,
+    "prior_measured_top_level_suite_duration_seconds": 418.260,
+    "summary_created": false,
+    "suite_terminal_log_created": false,
+    "hardware_actions_executed": false
+  },
+  "scheduling_fix": {
+    "next_run_uses_new_run_id": true,
+    "r61_suite_is_never_resumed_or_reinvoked": true,
+    "next_complete_suite_outer_timeout_minimum_milliseconds": 900000,
+    "required_suite_coverage_changed": false,
+    "suite_invocation_count_requirement_changed": false
+  },
+  "focused_validation": {
+    "command": "python -B -m unittest tests.test_p7_stage66_campaign.P7Stage66CampaignTests.test_r61_prehardware_retirement_preserves_timeout_and_zero_attempt_boundary -v",
+    "test_count": 1,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "diagnostic_hardware_attempt_consumed": false,
+  "authorization_environment": "UNSET",
+  "hardware_actions_executed": false,
+  "campaign_attempt_created": false,
+  "campaign_lock_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "PASS"
+}
