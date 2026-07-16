@@ -133,6 +133,8 @@ XSDB_PROCESS_GRACE_SEC = 120
 STATIONARY_ACTIVE_WATCHDOG_TOLERANCE_SEC = 1.5
 STATIONARY_SETUP_WATCHDOG_SEC = 300
 POST_SAFE_REAP_GRACE_SEC = 120
+PROCESS_LOG_PUBLISH_RETRY_SEC = 2.0
+PROCESS_LOG_PUBLISH_POLL_SEC = 0.05
 PS_VIVADO_PROCESS_COUNT = 3
 PS_XSDB_PROCESS_COUNT = 1
 PS_MAX_FORCED_CLEANUP_EVENTS = 2
@@ -3039,6 +3041,27 @@ def _verify_hash(path_value: str, expected: str, label: str) -> str | None:
     return None if actual == expected.lower() else f"{label} hash changed: expected={expected.lower()} actual={actual}"
 
 
+def _publish_reaped_process_log(partial: Path, final: Path) -> int:
+    """Atomically publish a closed process log despite transient Windows handle release."""
+
+    deadline = time.monotonic() + PROCESS_LOG_PUBLISH_RETRY_SEC
+    retries = 0
+    while True:
+        try:
+            os.replace(partial, final)
+            return retries
+        except PermissionError as exc:
+            if getattr(exc, "winerror", None) not in (32, 33) or time.monotonic() >= deadline:
+                raise
+            retries += 1
+            time.sleep(
+                min(
+                    PROCESS_LOG_PUBLISH_POLL_SEC,
+                    max(0.0, deadline - time.monotonic()),
+                )
+            )
+
+
 def _atomic_process(
     *,
     name: str,
@@ -3077,11 +3100,11 @@ def _atomic_process(
             watch_abort=watch_abort,
         )
     if stdout_partial.exists():
-        os.replace(stdout_partial, stdout_final)
+        _publish_reaped_process_log(stdout_partial, stdout_final)
     else:
         atomic_write_text(stdout_final, "")
     if stderr_partial.exists():
-        os.replace(stderr_partial, stderr_final)
+        _publish_reaped_process_log(stderr_partial, stderr_final)
     else:
         atomic_write_text(stderr_final, "")
     result.stdout_path = str(stdout_final)

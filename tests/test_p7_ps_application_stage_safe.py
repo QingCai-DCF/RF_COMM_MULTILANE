@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import re
 import struct
 import sys
@@ -1112,6 +1113,49 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
             stage.atomic_write_json(path, {"value": 2})
             self.assertEqual({"value": 2}, json.loads(path.read_text(encoding="utf-8")))
             self.assertFalse(list(path.parent.glob("*.partial")))
+
+    def test_reaped_process_log_publish_retries_only_windows_sharing_violation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            partial = root / "process.stdout.log.partial"
+            final = root / "process.stdout.log"
+            partial.write_text("complete evidence\n", encoding="utf-8")
+            real_replace = os.replace
+            sharing_violation = PermissionError(13, "sharing violation")
+            sharing_violation.winerror = 32
+            calls = 0
+
+            def replace_after_release(source, destination):
+                nonlocal calls
+                calls += 1
+                if calls == 1:
+                    raise sharing_violation
+                real_replace(source, destination)
+
+            with mock.patch.object(stage.os, "replace", side_effect=replace_after_release), mock.patch.object(
+                stage.time, "sleep", return_value=None
+            ):
+                retries = stage._publish_reaped_process_log(partial, final)
+
+            self.assertEqual(1, retries)
+            self.assertEqual(2, calls)
+            self.assertEqual("complete evidence\n", final.read_text(encoding="utf-8"))
+            self.assertFalse(partial.exists())
+
+    def test_reaped_process_log_publish_rejects_unrelated_permission_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            partial = root / "process.stderr.log.partial"
+            final = root / "process.stderr.log"
+            partial.write_text("evidence\n", encoding="utf-8")
+            denied = PermissionError(13, "access denied")
+            denied.winerror = 5
+            with mock.patch.object(stage.os, "replace", side_effect=denied) as replace_call:
+                with self.assertRaises(PermissionError):
+                    stage._publish_reaped_process_log(partial, final)
+            replace_call.assert_called_once_with(partial, final)
+            self.assertTrue(partial.is_file())
+            self.assertFalse(final.exists())
 
     def test_post_shutdown_raw_evidence_manifest_hashes_every_committed_file(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
