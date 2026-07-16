@@ -1,0 +1,57 @@
+{
+  "FULL_SUITE_INVOCATION_COUNT": 2,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "dirty_files_after_suites": [],
+  "dirty_worktree_after_suites": false,
+  "dirty_worktree_before_suites": false,
+  "generated_at_utc": "2026-07-16T13:30:38.036625+00:00",
+  "schema": "rf-comm-p7-complete-regression-suites-v1",
+  "source_commit": "8414b5b607b65d2d9547626b950bc34f56fd55a5",
+  "source_commit_after_suites": "8414b5b607b65d2d9547626b950bc34f56fd55a5",
+  "source_commit_unchanged": true,
+  "status": "PASS",
+  "suite_invocation_count_by_name": {
+    "tests_p7_discovery": 1,
+    "top_level_discovery": 1
+  },
+  "suites": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+      "discovered_test_count": 277,
+      "invocation_count": 1,
+      "name": "top_level_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 52531,
+        "path": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\build\\p7_r69_stage66_c05_complete_suite_summary_logs\\top_level_discovery.stderr.log",
+        "sha256": "21c4c30719db2a8ea586a9b0f202867b6a6dc37d58030044b7b84f3516b6da5f"
+      },
+      "stdout": {
+        "bytes": 641,
+        "path": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\build\\p7_r69_stage66_c05_complete_suite_summary_logs\\top_level_discovery.stdout.log",
+        "sha256": "93ae052ce4296d66cbf8b801ec72216b26e6000c71facf71b32704a170cb17a3"
+      }
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 43,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 5472,
+        "path": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\build\\p7_r69_stage66_c05_complete_suite_summary_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "2543e2739a73663fc742c3a664e5b461fd985835aad5538cdfa50ab94e621b3e"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\build\\p7_r69_stage66_c05_complete_suite_summary_logs\\tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "total_discovered_test_count": 320
+}

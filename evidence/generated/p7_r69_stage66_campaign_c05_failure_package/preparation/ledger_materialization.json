@@ -1,0 +1,45 @@
+{
+  "schema": "rf-comm-p7-stage66-preparation-driver-v1",
+  "P7_STAGE66_PREPARATION_DRIVER": "PASS",
+  "mode": "MATERIALIZE_CAMPAIGN_LEDGER",
+  "phase": "CAMPAIGN_LEDGER_MATERIALIZATION_COMPLETE",
+  "error_code": "NONE",
+  "generated_at_utc": "2026-07-16T13:22:57.976951+00:00",
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "tfdu_touched": false,
+  "network_used": false,
+  "motion_used": false,
+  "wrapper_process_launched": false,
+  "execution_ledger_created": false,
+  "campaign_lock_created": false,
+  "campaign_attempt_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "errors": [],
+  "environment_validation": {
+    "status": "PASS",
+    "error_code": "NONE",
+    "required_authorization_state": "ABSENT",
+    "authorization_env_present": false,
+    "authorization_env_exact": false,
+    "NO_HARDWARE": null,
+    "COMSPEC": "C:\\Windows\\System32\\cmd.exe",
+    "PYTHONHOME_present": false,
+    "PYTHONPATH_present": false,
+    "all_launched_executables_are_absolute": true,
+    "errors": []
+  },
+  "source": {
+    "path": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\evidence\\generated\\p7_r68_stage66_campaign_c05_complete_suite_failure\\campaign_ledger_after_retirement.json",
+    "sha256": "6536e527ff70d2cfebe7c73fc90cd62fdd9c2ee97b7d345edac83eeb4411e5ee",
+    "bytes": 32313
+  },
+  "target": "D:\\CodexWorktrees\\stage66prep_8414b5b\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+  "materialized_ledger": {
+    "sha256": "6536e527ff70d2cfebe7c73fc90cd62fdd9c2ee97b7d345edac83eeb4411e5ee",
+    "actual_hardware_attempt_count": 4,
+    "status": "READY"
+  },
+  "campaign_ledger_materialized": true
+}

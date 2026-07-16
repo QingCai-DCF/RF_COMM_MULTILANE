@@ -1,0 +1,203 @@
+{
+  "schema": "rf-comm-p7-r69-stage66-campaign-failure-v1",
+  "generated_at_utc": "2026-07-16T14:36:00Z",
+  "status": "IMMUTABLE_FAIL_RECOVERED",
+  "run_id": "p7_20260716_stationary_app_r69_diag_stage66_c05",
+  "run_id_immutable_fail": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "8414b5b607b65d2d9547626b950bc34f56fd55a5",
+  "source_tree": "1ad8fb693846d29f56d8c629711d11c637ca48fa",
+  "campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "hardware_attempt_number": 5,
+    "actual_hardware_attempt_count_after": 5,
+    "maximum_actual_hardware_attempts": 10,
+    "remaining_actual_hardware_attempts": 5,
+    "status_after_recovery_record": "READY",
+    "campaign_policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign_ledger_sha256_after_recovery_record": "2381b39d9c991c2844a5497d0e5e6faf437e2ac1d0d7292db372ef3eed7c64a1",
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "preconditions": {
+    "ledger_materialization": "PASS_ZERO_HARDWARE",
+    "ledger_materialization_sha256": "f9db7f81cee13158181cf76e8c53166c4644f0d52d23a207a379ae292af6cae1",
+    "placeholder_exact_argv_rehearsal": "PASS_ZERO_HARDWARE",
+    "placeholder_rehearsal_sha256": "f9ae97c7646d4d65be8e5717dd0e4c735b65700626590bbcf2d519d41940fdc7",
+    "build_materialization": "PASS_ZERO_HARDWARE",
+    "build_materialization_sha256": "e6903486f68e7407964e72d5c8a1637a97f16618d7eaa99a68449aab0062f6cd",
+    "required_complete_suites": "PASS_320_TESTS_EACH_REQUIRED_SUITE_EXACTLY_ONCE",
+    "required_complete_suite_invocations": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "required_complete_suite_summary_sha256": "9934441a765bbc00ed9acb05a4a8645636c22f54eb81510a2a572419b9f5948f",
+    "canonical_gate": "PASS_13_OF_13_CACHE_BYPASS",
+    "canonical_gate_summary_sha256": "6ebd07a4fc376848bf4955b85783abb1bc2f79b3914f105e51752ec5699b14de",
+    "real_prelaunch_validate_only": "PASS_ZERO_HARDWARE",
+    "real_prelaunch_validate_only_sha256": "8b926efb041e151bf80be765887491637e0727634bfd16ed0941aaac685df903",
+    "sequence_generation_manifest_sha256": "b7f483db937c2a10f0767affa6f76d80c5e31adcd4ce2b64fed3e40c40acc34f",
+    "sequence_plan_sha256": "e39bf01684fdf5987f844a0b0ab30af7a6f7c585caebc11054e0fd4a13824030"
+  },
+  "execution": {
+    "status": "FAIL",
+    "sequence_execution_ledger_sha256": "6093a7f3c6cce37bfac6b8d8f3344b41c299a17a0361b8c6316d67a9a80b6b09",
+    "attempt_count": 5,
+    "completed_stage_count": 4,
+    "selected_full_stage_ordinals": [1, 2, 3, 4, 66],
+    "network_used": false,
+    "motion_used": false,
+    "max_lane_mask": "0x3",
+    "stages": [
+      {
+        "full_stage_ordinal": 1,
+        "stage_id": "p7_safe_idle",
+        "result": "PASS",
+        "summary_sha256": "27c9f82c610b33b093f49dbd167dd294c20fa2a996678a93a429ba8c9a0d4074"
+      },
+      {
+        "full_stage_ordinal": 2,
+        "stage_id": "p7_p6_frame_regression_m1",
+        "result": "PASS",
+        "summary_sha256": "c9399e76621fd0db3f07315c190325afb423d274e4ea3e28032e79c5e960b371"
+      },
+      {
+        "full_stage_ordinal": 3,
+        "stage_id": "p7_p6_frame_regression_m2",
+        "result": "PASS",
+        "summary_sha256": "97b0b8a13e2b7320042cb10554f867b0ae18630bdd19ea89152f2cb7064cc17e"
+      },
+      {
+        "full_stage_ordinal": 4,
+        "stage_id": "p7_p6_frame_regression_m3",
+        "result": "PASS",
+        "summary_sha256": "ccf0782955ccd930bdb84bfe6236e09cbc8259b90f9332f75dd9a48e98c71e6f"
+      },
+      {
+        "full_stage_ordinal": 66,
+        "stage_id": "p7_ps_stationary",
+        "result": "FAIL_STAGE",
+        "launched_once": true,
+        "service_runtime_reached_terminal_after_1800_seconds": true,
+        "complete_1800_second_pass": false,
+        "clean_completed_object_count_before_failure": 65,
+        "fixed_sample_count": 59,
+        "highest_emitted_fixed_sample_elapsed_seconds": 1770.0,
+        "last_fixed_sample": {
+          "objects": 64,
+          "failed": 0,
+          "bytes_hex": "0x01288000",
+          "fragments": 90408,
+          "lane0": 83008,
+          "lane1": 46424,
+          "replicated": 39024,
+          "fallbacks": 16,
+          "p6_retries": 0,
+          "p6_retry_exhausted": 0,
+          "p6_tx_fail": 0,
+          "p6_crc_bad": 0,
+          "p6_payload_mismatch": 0,
+          "duty_violations": 0,
+          "queue_occupancy": 8,
+          "queue_high": 8,
+          "backpressure": 1
+        },
+        "first_terminal_error": "P7 stationary descriptor failed slot=1 status=6 error=20",
+        "decoded_terminal_error": {
+          "descriptor_status": "P7_DESCRIPTOR_REJECTED",
+          "descriptor_status_value": 6,
+          "error": "P7_ERROR_RUNTIME_LIMIT",
+          "error_value": 20,
+          "failed_slot": 1
+        },
+        "stage_summary_sha256": "68d1e7187678da0a353403a0ff86bbb91f52cbcad8ecf2e84edb04031bc025c9",
+        "raw_result_sha256": "fb8ed5d8b02e21f89b8f4bf4fa582aa17ecc4483e90c598a48a0bc949a00f737",
+        "raw_manifest_sha256": "d92544e15294166f5db60106dc42e48c7b815427a1542b32f758de4bc9b068e2",
+        "shutdown_before": "PASS",
+        "shutdown_after": "PASS",
+        "shutdown_after_result_sha256": "a8957125614e62158564a4c73f57c30cc4fcb9b2fe7c9cac6148750f36db5ab6"
+      }
+    ]
+  },
+  "confirmed_failure_boundary": {
+    "classification": "HOST_READY_REQUEUE_GUARD_SHORTER_THAN_OBSERVED_FULL_RING_DRAIN",
+    "firmware_rejection_is_fail_closed_and_must_remain_failure": true,
+    "host_ready_publish_guard_seconds": 1,
+    "firmware_scheduling_cutoff_seconds": 1740,
+    "last_complete_eight_slot_ring_duration_seconds": 216.978084,
+    "last_clean_large_object": {
+      "completion_sequence": 65,
+      "slot": 0,
+      "object_id": 1057,
+      "start_elapsed_seconds": 1696.43547,
+      "end_elapsed_seconds": 1789.686333,
+      "remaining_runtime_seconds_at_end": 10.313667,
+      "status": 3,
+      "error": 0
+    },
+    "observations": [
+      "The immutable execution plan used a 1-second host READY-publication guard and a 1740-second firmware scheduling cutoff.",
+      "The latest complete eight-slot ring required 216.978084 seconds from the start of completion sequence 57 through the end of completion sequence 64.",
+      "The 1770-second fixed sample still reported queue occupancy 8, while all payload, CRC, retry, TX-fail, and duty-violation counters remained zero.",
+      "Completion sequence 65 finished cleanly at 1789.686333 seconds; the next READY descriptor in slot 1 was then rejected with status 6/error 20 at the runtime boundary.",
+      "The failure is not evidence of payload, CRC, SHA, memcmp, guard, wipe, lane-safety, Ethernet, or motion mismatch."
+    ],
+    "source_change_required": "Stop host requeue early enough to drain the entire bounded ring before the firmware cutoff, retain the firmware late-admission rejection, retain exact terminal-ledger reconciliation, and retain every payload/integrity/safety acceptance check.",
+    "repair_applied_in_this_record": false,
+    "acceptance_or_integrity_criteria_relaxed": false
+  },
+  "independent_shutdown_recovery": {
+    "status": "PASS_SEPARATE_FROM_FAILED_STAGE",
+    "summary_sha256": "8dd6c760069f9ccab1ab95046492dce580433b17973d09421f21b9932d14ae83",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed_seen": true,
+    "recovery_changes_failed_stage_result": false,
+    "external_hw_server_pid_before_and_after": 26332,
+    "external_hw_server_managed_or_replaced": false
+  },
+  "historical_summarizer": {
+    "terminal_invocation_exit_code": 1,
+    "result": "FAIL",
+    "final_summary_sha256": "534ab5387d298b167f4cff305d1f81db12788ec72a45787503aca5bcc771dea6",
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "motion_used": false,
+    "acceptance_promotion_permitted": false,
+    "boundary": "The global historical summarizer remains fail-closed; r69 contributes no acceptance coverage."
+  },
+  "preserved_raw_evidence": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r69_diag_stage66_c05",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 327,
+    "byte_count": 36092293,
+    "tree_sha256": "fe918acd34a295824d6ed4fab1cbfa69f502f1d6f8dae6720c97064442af686b",
+    "source_worktree": "D:/CodexWorktrees/stage66prep_8414b5b/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true
+  },
+  "package_bindings": {
+    "campaign/campaign_policy.json": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign/campaign_ledger_after_recovery_record.json": "2381b39d9c991c2844a5497d0e5e6faf437e2ac1d0d7292db372ef3eed7c64a1",
+    "sequence_execution_ledger.json": "6093a7f3c6cce37bfac6b8d8f3344b41c299a17a0361b8c6316d67a9a80b6b09",
+    "preparation/ledger_materialization.json": "f9db7f81cee13158181cf76e8c53166c4644f0d52d23a207a379ae292af6cae1",
+    "preparation/placeholder_rehearsal.json": "f9ae97c7646d4d65be8e5717dd0e4c735b65700626590bbcf2d519d41940fdc7",
+    "preparation/build_materialization.json": "e6903486f68e7407964e72d5c8a1637a97f16618d7eaa99a68449aab0062f6cd",
+    "preparation/complete_suite_summary.json": "9934441a765bbc00ed9acb05a4a8645636c22f54eb81510a2a572419b9f5948f",
+    "preparation/real_prelaunch_validate_only.json": "8b926efb041e151bf80be765887491637e0727634bfd16ed0941aaac685df903",
+    "preparation/sequence_generation_manifest.json": "b7f483db937c2a10f0767affa6f76d80c5e31adcd4ce2b64fed3e40c40acc34f",
+    "preparation/outer_launch.json": "a97b09ad9909e8805e4465ac5b10e6e456e09506d585523b31d95729123b0a48"
+  },
+  "preserved_build_artifacts": {
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_289512659f5eb0f8a3e5c99676e8b2d517bce0febd82c77dfff6b2f865622519.elf",
+      "bytes": 355892,
+      "sha256": "289512659f5eb0f8a3e5c99676e8b2d517bce0febd82c77dfff6b2f865622519"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_655e8207650a96999f869c2c1e7ae70cc4f1afce2a3e4aa53e2e9b9e3e69654a.map",
+      "bytes": 97975,
+      "sha256": "655e8207650a96999f869c2c1e7ae70cc4f1afce2a3e4aa53e2e9b9e3e69654a"
+    }
+  },
+  "next_required_action": "COMMIT_R69_FAIL_RECOVERED_EVIDENCE; THEN ADD A DETERMINISTIC FULL-RING DRAIN GUARD WITHOUT RELAXING FIRMWARE REJECTION OR ACCEPTANCE CHECKS, RUN FOCUSED TESTS, COMMIT THE REPAIR, AND PREPARE ONLY A NEW COLLISION-CHECKED RUN ID FOR HARDWARE ATTEMPT 6"
+}
