@@ -1,0 +1,22 @@
+{
+  "schema": "rf-comm-p7-r62-stage66-failure-package-validation-v1",
+  "generated_at_utc": "2026-07-16T10:19:22.807853+00:00",
+  "result": "PASS",
+  "hardware_actions_executed": false,
+  "network_used": false,
+  "motion_used": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "checks": {
+    "package_manifest_hashes": true,
+    "raw_run_tree_hash": true,
+    "sequence_result_vector_exact": true,
+    "campaign_fail_recovered_exact": true,
+    "independent_recovery_separate": true,
+    "eight_clean_objects_then_error32": true,
+    "no_false_stage66_pass_or_sample60": true,
+    "stage_summary_fail_pending_hw": true,
+    "in_memory_raw_tamper_rejected": true
+  },
+  "errors": []
+}

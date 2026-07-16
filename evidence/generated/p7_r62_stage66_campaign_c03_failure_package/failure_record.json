@@ -1,0 +1,154 @@
+{
+  "schema": "rf-comm-p7-r62-stage66-campaign-failure-v1",
+  "generated_at_utc": "2026-07-16T10:18:49.424653+00:00",
+  "status": "IMMUTABLE_FAIL_RECOVERED",
+  "run_id": "p7_20260716_stationary_app_r62_diag_stage66_c03",
+  "run_id_immutable_fail": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "dd768f5c1165fbb98c232beef678ad39f6d8d717",
+  "source_tree": "b9c85b75defce596eae0e634ec81030bce382abe",
+  "campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "hardware_attempt_number": 3,
+    "actual_hardware_attempt_count_after": 3,
+    "maximum_actual_hardware_attempts": 10,
+    "status_after_recovery_record": "READY",
+    "campaign_ledger_sha256_after_recovery_record": "2e7eccc3aae195807e6c8b3ed33c9a16b486891053d162fce6b024b0ec9f56f1",
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "preconditions": {
+    "ledger_materialization": "PASS",
+    "ledger_materialization_sha256": "0d82729eab43637c7a73900e03ce5b23301f36cab50999413d14c540616d7541",
+    "placeholder_exact_argv_rehearsal": "PASS",
+    "placeholder_rehearsal_sha256": "ecae87aa013006310a9a6e9b32ec6021beaff561aeb16478f8513942e8d1062d",
+    "build_materialization": "PASS",
+    "build_materialization_sha256": "e0fce442481bd8d62116721ba7b068270d3e0e611e4e531102c9c130bba227b4",
+    "required_complete_suites": "PASS_315_OF_315_EXACTLY_ONCE",
+    "required_complete_suite_summary_sha256": "a8340b29e50414c8c9ec9b52ebc5a716f67f984a4822ccc6297c84827059a03e",
+    "canonical_gate": "PASS_13_OF_13_CACHE_BYPASS",
+    "canonical_gate_summary_sha256": "b29c73d34efec56145848311a86a7eb8e54f221d13ecfabd6318a9351f2af447",
+    "p7_build_summary_sha256": "76be90322d5f1b88a14ca8f49f402bef49566acf890dedc2245170e3728d8611",
+    "ps_core_readiness_sha256": "8202795ba6cb33ebd338b760e44a3e8208f0d7990b0f05498f665564a7ca5835",
+    "plan_generation_manifest_sha256": "1474f412f0281fc313ea07cf928f404e24f3beffb4994d37159d63158a506d42",
+    "real_prelaunch_validate_only": "PASS_ZERO_HARDWARE",
+    "real_prelaunch_validate_only_sha256": "10aa4360eaf5ed69ab1e4e4d99ee4eaa4a9c1a51b050d30570ea0d53f094da04",
+    "sequence_plan_sha256": "f86b1c071b179536cfd3b5adf6c3e125e60b6592eb7d43258515e35b70a22293"
+  },
+  "execution": {
+    "status": "FAIL",
+    "sequence_execution_ledger_sha256": "0f6637767d3b4e1f6e1f4c2534943e1fe9b54a3d601625e2fd9602973214f395",
+    "attempt_count": 5,
+    "completed_stage_count": 4,
+    "selected_full_stage_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      66
+    ],
+    "network_used": false,
+    "motion_used": false,
+    "max_lane_mask": "0x3",
+    "stages": [
+      {
+        "full_stage_ordinal": 1,
+        "stage_id": "p7_safe_idle",
+        "result": "PASS",
+        "summary_sha256": "e0a2abd794ed3b2edea1171cb8a35276197723328a3c42a2f2ccd3b12fb7c403"
+      },
+      {
+        "full_stage_ordinal": 2,
+        "stage_id": "p7_p6_frame_regression_m1",
+        "result": "PASS",
+        "summary_sha256": "bdc5b086689941cac629f6426a754a36dc38db6f20ce63f777bab02fe8f33114"
+      },
+      {
+        "full_stage_ordinal": 3,
+        "stage_id": "p7_p6_frame_regression_m2",
+        "result": "PASS",
+        "summary_sha256": "9bb2da9cdead4e87ebee9caf3514353c51a0270268748b0f88d0c07cb0968615"
+      },
+      {
+        "full_stage_ordinal": 4,
+        "stage_id": "p7_p6_frame_regression_m3",
+        "result": "PASS",
+        "summary_sha256": "ca254ccc56d51f1ef18449d01dc65d3d35850587f1e95d2edbb8d53fccd8f71c"
+      },
+      {
+        "full_stage_ordinal": 66,
+        "stage_id": "p7_ps_stationary",
+        "result": "FAIL_STAGE",
+        "launched_once": true,
+        "complete_1800_second_pass": false,
+        "clean_completed_object_count_before_failure": 8,
+        "highest_emitted_fixed_sample_elapsed_seconds": 900.0,
+        "first_terminal_error": "P7 stationary descriptor failed slot=0 status=4 error=32",
+        "stage_summary_sha256": "e12a12b7fd8e2743d657d5302878b7563f89a52ce85b3901867cc04788cf4992",
+        "raw_result_sha256": "e2e4466f38c68f9188dd5c681252601f697da008c9f2da70a0fa90939c58e6d5",
+        "raw_manifest_sha256": "f9cc8a93cd64ba990de394cace0945263aacc83ffb88f8fd032e40a4e46a270e",
+        "shutdown_before": "PASS",
+        "shutdown_after": "PASS",
+        "shutdown_after_result_sha256": "f6520a8da7c7775156ed49e7859a2f074ec52a64ee1fb79fe102137bd2047104"
+      }
+    ]
+  },
+  "confirmed_root_cause": {
+    "classification": "STATIONARY_REQUEUE_OUTPUT_CANARY_PREFILL_OMISSION",
+    "error_enum": "P7_ERROR_OUTPUT_CANARY_PRECHECK",
+    "error_code": 32,
+    "descriptor_status": 4,
+    "output_prefill_byte": 165,
+    "observations": [
+      "The first eight stationary objects each reached COMPLETE with ERROR=0 and byte-exact output SHA256.",
+      "The next terminal error was slot=0 status=4 error=32 after the host requeue path ran.",
+      "At source commit dd768f5, p7_prepare_stationary_slot reloads descriptor_free and object_id only; it does not reload output_zero or trace_zero before READY publication.",
+      "The reused slot therefore still contains the prior completed output instead of the manifest-bound 0xA5 canary, so the unchanged firmware precheck fails closed."
+    ],
+    "not_a_payload_crc_sha_memcmp_or_lane_safety_relaxation": true,
+    "repair_applied_in_this_record": false
+  },
+  "independent_shutdown_recovery": {
+    "status": "PASS_SEPARATE_FROM_FAILED_STAGE",
+    "summary_sha256": "a0b7eb3d23a5fc48e9d09ddaf7e51dac962f96d15483c189ff3874fe76a15d33",
+    "shutdown_exit": 0,
+    "recovery_changes_failed_stage_result": false,
+    "external_hw_server_pid_before_and_after": 26332,
+    "external_hw_server_managed_or_replaced": false
+  },
+  "historical_summarizer": {
+    "terminal_invocation_exit_code": 1,
+    "result": "FAIL",
+    "final_summary_sha256": "9dc36e911c3edb49f80985c676b10427622596f3928dd18d496632309f24716d",
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "motion_used": false,
+    "acceptance_promotion_permitted": false,
+    "boundary": "The global historical ledger remains fail-closed and includes pre-existing incomplete/old-checkpoint mismatches; r62 contributes no acceptance coverage.",
+    "initial_outer_timeout_seconds": 124,
+    "initial_timeout_result_usable": false
+  },
+  "preserved_raw_evidence": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r62_diag_stage66_c03",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 156,
+    "byte_count": 12519400,
+    "tree_sha256": "920444a247c41e9a6b6610843b756d824cffa71cf02ffd52160136f1bfafc207",
+    "source_worktree": "D:/CodexWorktrees/stage66prep_dd768f5/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true
+  },
+  "next_required_action": "COMMIT_R62_FAIL_RECOVERED_EVIDENCE; THEN RELOAD THE MANIFEST-BOUND 0xA5 OUTPUT PREFILL AND ZERO TRACE BEFORE ANY STATIONARY REQUEUE READY PUBLICATION, RUN FOCUSED TESTS, AND USE A NEW CLEAN SOURCE AND NEW RUN ID FOR ANY FURTHER HARDWARE ATTEMPT",
+  "preserved_build_artifacts": {
+    "elf": {
+      "path": "artifacts/p7_runtime_885c59a51a6e8d82991f4d7dd2fcf4f263257696532aa1bb691799cb337d963c.elf",
+      "bytes": 355892,
+      "sha256": "885c59a51a6e8d82991f4d7dd2fcf4f263257696532aa1bb691799cb337d963c"
+    },
+    "linker_map": {
+      "path": "artifacts/p7_runtime_a123a034691219050cdc1220d30ab8e7dce147c6f3383c500dde38097b6ba30a.map",
+      "bytes": 97975,
+      "sha256": "a123a034691219050cdc1220d30ab8e7dce147c6f3383c500dde38097b6ba30a"
+    }
+  }
+}

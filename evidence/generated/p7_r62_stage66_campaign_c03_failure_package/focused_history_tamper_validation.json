@@ -1,0 +1,36 @@
+{
+  "schema": "rf-comm-p7-r62-focused-history-tamper-validation-v1",
+  "generated_at_utc": "2026-07-16T10:31:47.413543+00:00",
+  "result": "PASS",
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "tests.test_p7_stage66_campaign",
+    "tests.test_summarize_p7_hardware",
+    "-v"
+  ],
+  "returncode": 0,
+  "tests_run": 37,
+  "elapsed_seconds": 357.82,
+  "modules": [
+    "tests.test_p7_stage66_campaign",
+    "tests.test_summarize_p7_hardware"
+  ],
+  "coverage": [
+    "campaign ledger tamper and unresolved recovery fail closed",
+    "historical Stage66 diagnostics remain zero coverage",
+    "real r1 through r31 epochs and failed-stage tamper validation",
+    "artifact and process provenance tamper validation"
+  ],
+  "hardware_actions_executed": false,
+  "network_used": false,
+  "motion_used": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "prior_outer_timeout_invocation": {
+    "timeout_seconds": 304,
+    "terminal_result_recovered": false,
+    "claimed_result": "INDETERMINATE"
+  }
+}

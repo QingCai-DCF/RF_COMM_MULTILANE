@@ -1,0 +1,247 @@
+{
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "FAIL",
+  "generated_at_utc": "2026-07-16T09:17:38.401823+00:00",
+  "hardware_actions_executed": true,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "full_stage_ordinals": [
+    1,
+    2,
+    3,
+    4,
+    66
+  ],
+  "sequence_plan": {
+    "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r62_diag_stage66_c03_sequence_plan.txt",
+    "sha256": "f86b1c071b179536cfd3b5adf6c3e125e60b6592eb7d43258515e35b70a22293",
+    "source_commit": "dd768f5c1165fbb98c232beef678ad39f6d8d717",
+    "stage_count": 5
+  },
+  "offline_checkpoint": {
+    "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+    "sha256": "b29c73d34efec56145848311a86a7eb8e54f221d13ecfabd6318a9351f2af447"
+  },
+  "vivado_helper_identity_manifest": {
+    "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\config\\p7_vivado_helper_identity_profiles.json",
+    "sha256": "67645bc53ae6c484204604ae3741bbce2d24fb7dbff6a5e63e8ea1a68972ed94",
+    "profile_id": "vivado_2023_1_windows_26200_8875_system_helpers"
+  },
+  "stage66_diagnostic_campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "run_id": "p7_20260716_stationary_app_r62_diag_stage66_c03",
+    "hardware_attempt_number": 3,
+    "maximum_actual_hardware_attempts": 10,
+    "policy_path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\config\\p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "runtime_campaign_ledger": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+    "prior_campaign_ledger_sha256": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676"
+  },
+  "validation_errors": [],
+  "vivado_helper_identity_prelaunch_validation": {
+    "schema": "rf-comm-p7-vivado-helper-identity-validation-v1",
+    "phase": "VIVADO_HELPER_IDENTITY",
+    "status": "PASS",
+    "error_code": "NONE",
+    "hardware_actions_executed": false,
+    "hardware_connection_attempted": false,
+    "tfdu_touched": false,
+    "ethernet_transport_used": false,
+    "motion_used": false,
+    "campaign_lock_created": false,
+    "campaign_attempt_created": false,
+    "manifest": {
+      "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\config\\p7_vivado_helper_identity_profiles.json",
+      "sha256": "67645bc53ae6c484204604ae3741bbce2d24fb7dbff6a5e63e8ea1a68972ed94",
+      "manifest_id": "p7_vivado_2023_1_helper_identity_20260716"
+    },
+    "runtime_profile_id": "vivado_2023_1_windows_26200_8875_system_helpers",
+    "errors": [],
+    "vivado_launcher": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+    "derived_helper_paths": {
+      "cs_server": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "rdi_xsdb": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "cmd": "C:\\Windows\\System32\\cmd.exe",
+      "conhost": "C:\\Windows\\System32\\conhost.exe"
+    },
+    "observed_file_records": {
+      "cs_server": {
+        "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+        "sha256": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+        "bytes": 12408496
+      },
+      "rdi_xsdb": {
+        "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+        "sha256": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+        "bytes": 29288
+      },
+      "cmd": {
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "sha256": "65ec268add3973b6dca64222985da47caeaee44a340b0ec1466782914fd743d9",
+        "bytes": 344064
+      },
+      "conhost": {
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "sha256": "32e45de7f02912f3907083690043df4abdc4705eea28300719788eaa4a339d0b",
+        "bytes": 1007616
+      }
+    },
+    "observed_sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "65ec268add3973b6dca64222985da47caeaee44a340b0ec1466782914fd743d9",
+      "conhost": "32e45de7f02912f3907083690043df4abdc4705eea28300719788eaa4a339d0b"
+    },
+    "observed_complete_hash_profile_id": "vivado_2023_1_windows_26200_8875_system_helpers",
+    "identity_probe": {
+      "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\scripts\\hw\\p7_helper_identity_probe.ps1",
+      "sha256": "46ae65f7eea40c1cdda5595a69b36acc6d1add7e231b6319674304100385ea25"
+    },
+    "probe_host_file_record": {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "sha256": "7600ffe12da441fe89d035b13801e8e91d064bc544a27b19a5cf49f6ab8b18f5",
+      "bytes": 454656
+    },
+    "probe_exact_argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "-NoLogo",
+      "-NoProfile",
+      "-NonInteractive",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\scripts\\hw\\p7_helper_identity_probe.ps1",
+      "-CsServer",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+      "-RdiXsdb",
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+      "-Cmd",
+      "C:\\Windows\\System32\\cmd.exe",
+      "-Conhost",
+      "C:\\Windows\\System32\\conhost.exe"
+    ],
+    "probe_environment": {
+      "SystemRoot": "C:\\Windows",
+      "WINDIR": "C:\\Windows",
+      "COMSPEC": "C:\\Windows\\System32\\cmd.exe",
+      "PATH": "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0",
+      "TEMP": "C:\\Users\\user\\AppData\\Local\\Temp",
+      "TMP": "C:\\Users\\user\\AppData\\Local\\Temp",
+      "ALLUSERSPROFILE": "C:\\ProgramData",
+      "APPDATA": "C:\\Users\\user\\AppData\\Roaming",
+      "CommonProgramFiles": "C:\\Program Files\\Common Files",
+      "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+      "CommonProgramW6432": "C:\\Program Files\\Common Files",
+      "HOMEDRIVE": "C:",
+      "HOMEPATH": "\\Users\\user",
+      "LOCALAPPDATA": "C:\\Users\\user\\AppData\\Local",
+      "NUMBER_OF_PROCESSORS": "28",
+      "OS": "Windows_NT",
+      "PROCESSOR_ARCHITECTURE": "AMD64",
+      "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "PROCESSOR_LEVEL": "6",
+      "PROCESSOR_REVISION": "b701",
+      "ProgramData": "C:\\ProgramData",
+      "ProgramFiles": "C:\\Program Files",
+      "ProgramFiles(x86)": "C:\\Program Files (x86)",
+      "ProgramW6432": "C:\\Program Files",
+      "PSModulePath": "C:\\Users\\user\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
+      "PUBLIC": "C:\\Users\\Public",
+      "SystemDrive": "C:",
+      "USERDOMAIN": "DESKTOP-PU0AECA",
+      "USERNAME": "user",
+      "USERPROFILE": "C:\\Users\\user"
+    },
+    "probe_returncode": 0,
+    "probe_stderr": "",
+    "probe_payload": {
+      "schema": "rf-comm-p7-vivado-helper-identity-probe-v1",
+      "probe_host": {
+        "role": "probe_host",
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "bytes": 454656,
+        "file_version": "10.0.26100.8875",
+        "product_version": "10.0.26100.8875",
+        "company_name": "Microsoft Corporation",
+        "signature_status": "Valid",
+        "signature_type": "Catalog",
+        "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+        "signer_thumbprint": "DC91E564D5BC1E3A8E02D6A8508682ABEA8A2443"
+      },
+      "records": [
+        {
+          "role": "cs_server",
+          "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+          "bytes": 12408496,
+          "file_version": "0.0.0.0",
+          "product_version": "0.0.0.0",
+          "company_name": "",
+          "signature_status": "Valid",
+          "signature_type": "Authenticode",
+          "signer_subject": "CN=Xilinx Inc., O=Xilinx Inc., S=Colorado, C=US, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, SERIALNUMBER=2221167",
+          "signer_thumbprint": "F5BF7E059AA73C3F69350328C95EF3C0C7B654CB"
+        },
+        {
+          "role": "rdi_xsdb",
+          "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+          "bytes": 29288,
+          "file_version": "0.0.0.0",
+          "product_version": "0.0.0.0",
+          "company_name": "",
+          "signature_status": "Valid",
+          "signature_type": "Authenticode",
+          "signer_subject": "CN=Xilinx Inc., O=Xilinx Inc., S=Colorado, C=US, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, SERIALNUMBER=2221167",
+          "signer_thumbprint": "F5BF7E059AA73C3F69350328C95EF3C0C7B654CB"
+        },
+        {
+          "role": "cmd",
+          "path": "C:\\Windows\\System32\\cmd.exe",
+          "bytes": 344064,
+          "file_version": "10.0.26100.8737",
+          "product_version": "10.0.26100.8737",
+          "company_name": "Microsoft Corporation",
+          "signature_status": "Valid",
+          "signature_type": "Catalog",
+          "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "signer_thumbprint": "DC91E564D5BC1E3A8E02D6A8508682ABEA8A2443"
+        },
+        {
+          "role": "conhost",
+          "path": "C:\\Windows\\System32\\conhost.exe",
+          "bytes": 1007616,
+          "file_version": "10.0.26100.8737",
+          "product_version": "10.0.26100.8737",
+          "company_name": "Microsoft Corporation",
+          "signature_status": "Valid",
+          "signature_type": "Catalog",
+          "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "signer_thumbprint": "85DF8AC9B594E3C055692AE52D3E8E93889D9EC9"
+        }
+      ]
+    }
+  },
+  "reason": "sequence stopped at the first wrapper/summary/shutdown failure",
+  "failed_stage": {
+    "index": 4,
+    "id": "p7_ps_stationary",
+    "failures": [
+      "outer wrapper process containment/return-code policy failed",
+      "wrapper result is not PASS: P7_PS_APPLICATION_SAFE_STAGE=FAIL_STAGE",
+      "wrapper candidate process did not return rc=0 and PASS",
+      "PS wrapper postprocess is missing or not PASS"
+    ]
+  },
+  "execution_ledger": {
+    "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\sequence_execution_ledger.json",
+    "sha256": "0f6637767d3b4e1f6e1f4c2534943e1fe9b54a3d601625e2fd9602973214f395",
+    "bytes": 89002
+  }
+}
