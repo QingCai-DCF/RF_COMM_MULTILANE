@@ -1,0 +1,135 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T15:19:49.0868075Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r71_diag_stage66_c06",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "e8122f8fac959124e7d5161a648cba6c3ea2c854",
+  "source_tree": "d82d8aab110d286b8b76cc1fd8bf0e9e62041fdb",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 6,
+  "actual_hardware_attempt_count_before": 5,
+  "actual_hardware_attempt_count_after": 5,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "36ee86269051c73c783f4fead8ca09d888c904d31d32a55d50db7eb1eac4aab1",
+  "preconditions": {
+    "r69_terminal_status": "IMMUTABLE_FAIL_RECOVERED",
+    "r70_terminal_status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+    "campaign_ledger_hash_exact_materialization": "PASS_ATTEMPT_COUNT_5_READY",
+    "placeholder_exact_argv_and_build_rehearsal": "PASS_ZERO_LOCK_ZERO_ATTEMPT_ZERO_HARDWARE",
+    "run_id_collision_preflight": "PASS_51_WORKSPACE_ROOTS_ZERO_HITS",
+    "hash_exact_build_materialization": "PASS_P6_AND_P7_STAGING_AND_DESTINATION_REHASHED",
+    "focused_tests": "PASS_5_OF_5",
+    "required_complete_suites": "PASS_323_TESTS; TOP_LEVEL_280; TESTS_P7_43; EACH_SUITE_INVOKED_EXACTLY_ONCE",
+    "cache_bypassed_p7_canonical_gate": "PASS_13_OF_13_CACHE_BYPASS_EXACTLY_ONCE",
+    "authorization_generation": "PASS_5_RECORDS_EXACT_STAGES_1_2_3_4_66",
+    "child_and_executor_dry_validation": "PASS",
+    "real_prelaunch_validate_only": "FAIL_SCOPED_AUTH_ENV_MISSING"
+  },
+  "preparation_evidence": {
+    "ledger_materialization": {
+      "path": "build/p7_stage66_c06_after_r70_ledger_materialization.json",
+      "bytes": 1792,
+      "sha256": "ec6b75a2c38f1abe48a265aa338067876312402a7c6ae1a873556bc422ebc05e",
+      "result": "PASS"
+    },
+    "placeholder_rehearsal": {
+      "path": "build/p7_stage66_c06_after_r70_placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "7f5c5cf4f42774d8078b166696dd68479d5de7f11f5cfd3eb5766e99f7da12ed",
+      "result": "PASS"
+    },
+    "build_materialization": {
+      "path": "build/p7_r71_stage66_c06_build_materialization.json",
+      "bytes": 9153,
+      "sha256": "535a52c0a52bb621b26b160d77c2f326c23820d45f6612767a09f868d15bbede",
+      "result": "PASS"
+    },
+    "complete_suite_summary": {
+      "path": "build/p7_r71_stage66_c06_complete_suite_summary.json",
+      "bytes": 2499,
+      "sha256": "7d4e63bcb0180ab2c7f8a16a9857c3dcc1b7219df6e87a1b6cc0010291f83791",
+      "result": "PASS"
+    },
+    "canonical_offline_gate": {
+      "path": "evidence/generated/p7_offline_gate_summary.json",
+      "bytes": 19880,
+      "sha256": "567a4eb320de7ca1c3d2fd4141bdcdeca156cf8b74b56c0c25b66df3e38986e0",
+      "result": "PASS"
+    },
+    "sequence_generation_manifest": {
+      "path": "build/p7_authorized_sequence/p7_20260716_stationary_app_r71_diag_stage66_c06/p7_authorized_sequence_generation_manifest.json",
+      "bytes": 24782,
+      "sha256": "144b0a2798cd65a5c2a901dab290d06bc709129457bb7d7b13dbc26841029106",
+      "result": "PASS"
+    },
+    "sequence_plan": {
+      "path": ".hardware_authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_sequence_plan.txt",
+      "bytes": 32633,
+      "sha256": "4ba6e3d8322442c8f76a4a909219853f433ab3fc4baecd28f34974dc03b0ef08",
+      "result": "PASS_DRY_VALIDATED"
+    },
+    "real_prelaunch_validate_only": {
+      "path": "build/p7_r71_stage66_c06_real_prelaunch_validate_only.json",
+      "bytes": 13240,
+      "sha256": "6ed632754ad979c2db73dd54bb99aea8e362a2aa9bf483b30a50a08b1209c240",
+      "result": "FAIL_SCOPED_AUTH_ENV_MISSING"
+    }
+  },
+  "failure": {
+    "classification": "REAL_PRELAUNCH_VALIDATE_ONLY_SCOPED_AUTH_ENV_MISSING",
+    "error_codes": [
+      "SCOPED_AUTH_ENV_MISSING",
+      "OUTER_LAUNCH_CONTROL_INVALID"
+    ],
+    "cause": "The preparation driver intentionally applies the same scoped-authorization validation to validate-only and runtime paths. The caller removed RF_COMM_HW_AUTH before the real validate-only invocation, so the driver failed closed before creating a campaign lock, campaign attempt, execution ledger, wrapper process, or hardware connection.",
+    "automatic_fix": "For the next new run ID, set RF_COMM_HW_AUTH to the exact P7_STATIONARY_APP_LAYER_APPROVED marker for both real validate-only and launch; keep placeholder rehearsal and build materialization authorization-free.",
+    "same_run_id_retry_permitted": false,
+    "dry_validation_rerun_for_r71_permitted": false
+  },
+  "generator": {
+    "status": "PASS_BEFORE_REAL_PRELAUNCH_FAILURE",
+    "plan_generator_process_started": true,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_present_during_failed_validate_only": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "sequence_executor_process_started": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "jtag_axi_access": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": true,
+    "stage_authorization_created": true,
+    "execution_ledger_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "hardware_boundary": {
+    "external_hw_server_process_count": 1,
+    "external_hw_server_pid": 26332,
+    "external_hw_server_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\hw_server.exe",
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No hardware sequence, stage wrapper, XSDB target, FPGA programming, ELF start, JTAG access, or TFDU mutation occurred.",
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r72_diag_stage66_c06",
+  "next_run_must_not_start_before": "ACCURATE_R71_RETIREMENT_COMMIT_PLUS_FOCUSED_HISTORY_TAMPER_TEST_PLUS_NEW_CLEAN_SOURCE_PLACEHOLDER_REHEARSAL_PLUS_NEW_RUN_ID_COLLISION_AND_HASH_EXACT_MATERIALIZATION_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_P7_CANONICAL_GATE_EXACTLY_ONCE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_REAL_VALIDATE_ONLY_WITH_EXACT_AUTH_PLUS_ALL_DRY_VALIDATION_PASS"
+}

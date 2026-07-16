@@ -1,0 +1,125 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-failure-package-v1",
+  "run_id": "p7_20260716_stationary_app_r71_diag_stage66_c06",
+  "source_commit": "e8122f8fac959124e7d5161a648cba6c3ea2c854",
+  "result": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "failure_code": "SCOPED_AUTH_ENV_MISSING",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "file_count_excluding_manifest": 22,
+  "byte_count_excluding_manifest": 274621,
+  "files": [
+    {
+      "path": "authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_001_p7_safe_idle.txt",
+      "bytes": 4067,
+      "sha256": "a20ea68ea742a91191d12f588f0d0b98334b697a444deddeddbb1d0b98c46733"
+    },
+    {
+      "path": "authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_002_p7_p6_frame_regression_m1.txt",
+      "bytes": 4402,
+      "sha256": "b93f1831c21f7f0aa593b73057caec394c4a7c084d2c6c3186921c5f9d56b5e5"
+    },
+    {
+      "path": "authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_003_p7_p6_frame_regression_m2.txt",
+      "bytes": 4402,
+      "sha256": "f9ecf68757e82f594df38ba2c860ac40b955bc6c134883c02a72fad663c02ad2"
+    },
+    {
+      "path": "authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_004_p7_p6_frame_regression_m3.txt",
+      "bytes": 4402,
+      "sha256": "7fc4214fb7feb8a18b7d6b3cada52db1c1b2255f81bda51a540701cdb6b03abb"
+    },
+    {
+      "path": "authorization/p7_20260716_stationary_app_r71_diag_stage66_c06_066_p7_ps_stationary.txt",
+      "bytes": 5475,
+      "sha256": "0668ee60032178f3e633ae2daefe8a00235938d3f87c67dbafdff66de8d87f53"
+    },
+    {
+      "path": "build_materialization.json",
+      "bytes": 9153,
+      "sha256": "535a52c0a52bb621b26b160d77c2f326c23820d45f6612767a09f868d15bbede"
+    },
+    {
+      "path": "campaign_ledger_after_retirement.json",
+      "bytes": 37994,
+      "sha256": "047e0fd2e0d23c43c59bdbad559ad7c33e6eeaa8cdfe11787b7c3a206563188c"
+    },
+    {
+      "path": "canonical_offline_gate_summary.json",
+      "bytes": 19880,
+      "sha256": "567a4eb320de7ca1c3d2fd4141bdcdeca156cf8b74b56c0c25b66df3e38986e0"
+    },
+    {
+      "path": "complete_suite_summary.json",
+      "bytes": 2499,
+      "sha256": "7d4e63bcb0180ab2c7f8a16a9857c3dcc1b7219df6e87a1b6cc0010291f83791"
+    },
+    {
+      "path": "core_readiness.json",
+      "bytes": 16168,
+      "sha256": "eeac1b9751a8dfc00d30e93264241a10442c6fc95da8f125f1319235f8664879"
+    },
+    {
+      "path": "ledger_materialization.json",
+      "bytes": 1792,
+      "sha256": "ec6b75a2c38f1abe48a265aa338067876312402a7c6ae1a873556bc422ebc05e"
+    },
+    {
+      "path": "p7_build_summary.json",
+      "bytes": 11784,
+      "sha256": "90e176bb551dc06850f60c2618881734b8b33962d138f6c10934779ba637b570"
+    },
+    {
+      "path": "placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "7f5c5cf4f42774d8078b166696dd68479d5de7f11f5cfd3eb5766e99f7da12ed"
+    },
+    {
+      "path": "real_prelaunch_validate_only.json",
+      "bytes": 13240,
+      "sha256": "6ed632754ad979c2db73dd54bb99aea8e362a2aa9bf483b30a50a08b1209c240"
+    },
+    {
+      "path": "retirement_evidence.json",
+      "bytes": 6820,
+      "sha256": "56a9f76d84a4a46c2f4801c4f9872d176b247245676fa1a3b8b78d0a65ca08d3"
+    },
+    {
+      "path": "retirement_record.json",
+      "bytes": 875,
+      "sha256": "fd5ad0b19c84a6a5aa568930501c6388a172d1852fd5c7954495e1c361a912f5"
+    },
+    {
+      "path": "sequence_generation_manifest.json",
+      "bytes": 24782,
+      "sha256": "144b0a2798cd65a5c2a901dab290d06bc709129457bb7d7b13dbc26841029106"
+    },
+    {
+      "path": "sequence_plan.txt",
+      "bytes": 32633,
+      "sha256": "4ba6e3d8322442c8f76a4a909219853f433ab3fc4baecd28f34974dc03b0ef08"
+    },
+    {
+      "path": "suite_logs/tests_p7_discovery.stderr.log",
+      "bytes": 5472,
+      "sha256": "4069631631661baa5f49470cf7eb6547995873ab34034c376e394415fdf320f1"
+    },
+    {
+      "path": "suite_logs/tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "suite_logs/top_level_discovery.stderr.log",
+      "bytes": 53116,
+      "sha256": "b55c99d97ad027ba91379ec9fed4efdc837bdf76f4a613bc8e0444745caa1e1f"
+    },
+    {
+      "path": "suite_logs/top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "31191c9db5ffd63676322757e274ac800d185c3316d32f419d8c9e09f65b45ae"
+    }
+  ]
+}

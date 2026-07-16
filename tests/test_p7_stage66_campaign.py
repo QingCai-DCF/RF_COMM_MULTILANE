@@ -24,6 +24,120 @@ import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r71_prehardware_retirement_preserves_preauth_failure_and_zero_quota(self) -> None:
+        run_id = "p7_20260716_stationary_app_r71_diag_stage66_c06"
+        package = (
+            ROOT
+            / "evidence/generated/p7_r71_stage66_campaign_c06_preauth_validate_failure"
+        )
+        manifest = json.loads(
+            (package / "package_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(22, manifest["file_count_excluding_manifest"])
+        self.assertEqual(274621, manifest["byte_count_excluding_manifest"])
+        for record in manifest["files"]:
+            path = package / record["path"]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(
+                record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
+        evidence = package / "retirement_evidence.json"
+        evidence_sha = hashlib.sha256(evidence.read_bytes()).hexdigest()
+        payload, errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            evidence_sha,
+            run_id=run_id,
+            source_commit="e8122f8fac959124e7d5161a648cba6c3ea2c854",
+            requested_hardware_attempt_number=6,
+        )
+        self.assertEqual([], errors)
+        assert payload is not None
+        self.assertEqual(
+            "REAL_PRELAUNCH_VALIDATE_ONLY_SCOPED_AUTH_ENV_MISSING",
+            payload["failure"]["classification"],
+        )
+        self.assertFalse(payload["diagnostic_hardware_attempt_consumed"])
+        self.assertFalse(payload["failure_boundary"]["hardware_execution_entered"])
+        self.assertFalse(payload["failure_boundary"]["sequence_executor_process_started"])
+        self.assertFalse(payload["failure_boundary"]["campaign_lock_created"])
+        self.assertFalse(payload["failure_boundary"]["execution_ledger_created"])
+        self.assertFalse(payload["generator"]["hardware_actions_executed"])
+
+        suites = json.loads(
+            (package / "complete_suite_summary.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("PASS", suites["status"])
+        self.assertEqual(323, suites["total_discovered_test_count"])
+        self.assertEqual(
+            {"top_level_discovery": 1, "tests_p7_discovery": 1},
+            suites["suite_invocation_count_by_name"],
+        )
+        gate = json.loads(
+            (package / "canonical_offline_gate_summary.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("PASS", gate["P7_OFFLINE_GATE"])
+        self.assertEqual("BYPASS", gate["OFFLINE_CACHE_STATUS"])
+        self.assertEqual(
+            hashlib.sha256((package / "complete_suite_summary.json").read_bytes()).hexdigest(),
+            gate["validated_complete_regression_summary"]["sha256"],
+        )
+        generation = json.loads(
+            (package / "sequence_generation_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("PASS", generation["P7_AUTHORIZED_SEQUENCE_GENERATOR"])
+        self.assertEqual("DIAGNOSTIC_STAGE66_CAMPAIGN", generation["plan_mode"])
+        self.assertEqual([1, 2, 3, 4, 66], generation["full_stage_ordinals"])
+        self.assertEqual(6, generation["stage66_diagnostic_campaign"]["hardware_attempt_number"])
+        self.assertEqual(5, generation["authorization_count"])
+        self.assertEqual(5, generation["child_wrapper_dry_validation_count"])
+
+        prelaunch = json.loads(
+            (package / "real_prelaunch_validate_only.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("FAIL", prelaunch["P7_STAGE66_PREPARATION_DRIVER"])
+        self.assertEqual("SCOPED_AUTH_ENV_MISSING", prelaunch["error_code"])
+        self.assertFalse(prelaunch["hardware_actions_executed"])
+        self.assertFalse(prelaunch["hardware_connection_attempted"])
+        self.assertFalse(prelaunch["wrapper_process_launched"])
+        self.assertFalse(prelaunch["campaign_lock_created"])
+        self.assertFalse(prelaunch["campaign_attempt_created"])
+
+        snapshot = package / "campaign_ledger_after_retirement.json"
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        with mock.patch.object(campaign, "campaign_ledger_path", return_value=snapshot):
+            ledger, errors = campaign.validate_ledger(
+                policy, snapshot, allow_absent=False
+            )
+        self.assertEqual([], errors)
+        assert ledger is not None
+        self.assertEqual(5, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        retirement = ledger["retired_pre_hardware_run_ids"][-1]
+        self.assertEqual(run_id, retirement["run_id"])
+        self.assertFalse(retirement["hardware_attempt_consumed"])
+        self.assertEqual(evidence_sha, retirement["evidence_sha256"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / package.name
+            shutil.copytree(package, copied)
+            prelaunch_copy = copied / "real_prelaunch_validate_only.json"
+            prelaunch_copy.write_bytes(prelaunch_copy.read_bytes() + b"\n")
+            record = next(
+                item
+                for item in manifest["files"]
+                if item["path"] == "real_prelaunch_validate_only.json"
+            )
+            self.assertNotEqual(
+                record["sha256"],
+                hashlib.sha256(prelaunch_copy.read_bytes()).hexdigest(),
+            )
+
     def test_r70_prehardware_retirement_preserves_suite_failure_and_zero_quota(self) -> None:
         run_id = "p7_20260716_stationary_app_r70_diag_stage66_c06"
         package = (
