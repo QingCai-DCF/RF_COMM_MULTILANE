@@ -1,0 +1,30 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-ledger-record-v1",
+  "recorded_at_utc": "2026-07-16T04:17:58.167569+00:00",
+  "status": "PASS_RECORDED",
+  "run_id": "p7_20260715_stationary_app_r49_diag_stage66_c02",
+  "requested_hardware_attempt_number": 2,
+  "reason": "REQUIRED_COMPLETE_SUITES_ABNORMAL_TERMINATION_NO_SUMMARY",
+  "retirement_evidence_path": "evidence/generated/p7_r49_stage66_campaign_c02_suite_abnormal_termination.json",
+  "retirement_evidence_sha256": "1db77435e12a501b7daa3e8a8d06c8db453bce7e6a6b3559171b8f291fe49a7e",
+  "campaign_ledger_sha256_before": "9008ce8de76620a9e23c97236fc70714fdb29d886a4ea93abce41541d0d95184",
+  "campaign_ledger_sha256_after": "18b8723167e0b242fa268ea1ca945492043b084202a125abf4fc8e16b2490ace",
+  "campaign_ledger_status_after": "READY",
+  "actual_hardware_attempt_count_after": 1,
+  "retired_pre_hardware_run_id_count_after": 7,
+  "post_record_package": {
+    "path": "evidence/generated/p7_r49_stage66_campaign_c02_suite_abnormal_termination",
+    "file_count": 6,
+    "byte_count": 15310,
+    "tree_sha256": "18294dd9aeb5bec42864165e84c142a35448b2f7f5bee66b152d2d96d43debf7",
+    "retirement_record_result_sha256": "4896bf0dc6b5e4f2c612bbb4253aef9051f9312bb5b47365cd270624fd991883",
+    "campaign_ledger_copy_sha256": "18b8723167e0b242fa268ea1ca945492043b084202a125abf4fc8e16b2490ace"
+  },
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "RF_COMM_HW_AUTH_after": "UNSET",
+  "campaign_execution_lock_after": "ABSENT",
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "required_next_run_id": "p7_20260716_stationary_app_r50_diag_stage66_c02"
+}

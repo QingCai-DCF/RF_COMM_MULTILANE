@@ -1,0 +1,21 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-record-v1",
+  "P7_STAGE66_CAMPAIGN_PREHARDWARE_RETIREMENT": "BLOCKED",
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "run_id": "p7_20260715_stationary_app_r49_diag_stage66_c02",
+  "requested_hardware_attempt_number": 2,
+  "record_requested": true,
+  "errors": [
+    "pre-hardware retirement evidence field mismatch: status"
+  ],
+  "campaign_ledger": {
+    "path": "D:/CodexWorktrees/r47validate_1a88b40/RF_COMM_MULTILANE/evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json",
+    "sha256_before": "9008ce8de76620a9e23c97236fc70714fdb29d886a4ea93abce41541d0d95184",
+    "actual_hardware_attempt_count": 1,
+    "retired_pre_hardware_run_id_count": 6
+  },
+  "ledger_mutated": false,
+  "RF_COMM_HW_AUTH": "UNSET",
+  "campaign_execution_lock": "ABSENT"
+}
