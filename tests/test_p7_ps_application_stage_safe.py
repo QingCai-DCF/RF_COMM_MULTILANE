@@ -1936,6 +1936,31 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("p7_descriptor_admission_allowed", (ROOT / "software" / "ps_driver" / "p7_app_service.c").read_text(encoding="utf-8"))
         self.assertNotIn("if {$elapsed_sec < $plan_value(SCHEDULING_CUTOFF_SECONDS)}", tcl)
 
+    def test_stationary_requeue_restores_manifest_bound_buffers_before_descriptor(self) -> None:
+        tcl = (ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl").read_text(encoding="utf-8")
+        start = tcl.index("proc p7_prepare_stationary_slot")
+        end = tcl.index("proc p7_commit_stationary_slot", start)
+        prepare = tcl[start:end]
+        output_restore = prepare.index(
+            'dow -data [file join $bundle_dir "output_zero_${slot}.bin"] $output_address'
+        )
+        trace_restore = prepare.index(
+            'dow -data [file join $bundle_dir "trace_zero_${slot}.bin"] $trace_address'
+        )
+        descriptor_restore = prepare.index(
+            'dow -data [file join $bundle_dir "descriptor_free_${slot}.bin"] $descriptor_address'
+        )
+        object_id_write = prepare.index('mwr [expr {$descriptor_address + 0x14}] $object_id')
+        self.assertLess(output_restore, trace_restore)
+        self.assertLess(trace_restore, descriptor_restore)
+        self.assertLess(descriptor_restore, object_id_write)
+        self.assertNotIn('mwr [expr {$descriptor_address + 0x0C}] 1', prepare)
+        self.assertIn(
+            "p7_prepare_stationary_slot $bundle_dir $slot $descriptor_address $proposed_object_id \\\n"
+            "              $case_output($slot) $case_trace($slot)",
+            tcl,
+        )
+
     def test_runtime_elapsed_writer_uses_direct_barriered_seqlock(self) -> None:
         service = (ROOT / "software" / "ps_driver" / "p7_app_service.c").read_text(encoding="utf-8")
         start = service.index("static void p7_publish_runtime_elapsed(")

@@ -581,10 +581,15 @@ proc p7_dump_case {bundle_dir slot input_address output_address object_length tr
   }
 }
 
-proc p7_prepare_stationary_slot {bundle_dir slot descriptor_address object_id} {
-  # Preload the complete body while status remains FREE.  This procedure is
-  # intentionally forbidden from publishing READY; admission happens only
-  # after a fresh causal PS-time snapshot and cutoff guard.
+proc p7_prepare_stationary_slot {bundle_dir slot descriptor_address object_id \
+    output_address trace_address} {
+  # Restore every mutable per-object buffer from its manifest-bound image,
+  # then preload the complete descriptor body while status remains FREE.
+  # This procedure is intentionally forbidden from publishing READY;
+  # admission happens only after a fresh causal PS-time snapshot and cutoff
+  # guard.
+  dow -data [file join $bundle_dir "output_zero_${slot}.bin"] $output_address
+  dow -data [file join $bundle_dir "trace_zero_${slot}.bin"] $trace_address
   dow -data [file join $bundle_dir "descriptor_free_${slot}.bin"] $descriptor_address
   mwr [expr {$descriptor_address + 0x14}] $object_id
   if {[p7_read32 [expr {$descriptor_address + 0x0C}]] != 0} {
@@ -1910,7 +1915,8 @@ set rc [catch {
           if {$object_latency <= 0} { error "P7 stationary object latency is not positive" }
           set last_terminal($slot) 1
           set proposed_object_id [expr {$next_object_id + [llength $prepared_slots] + 1}]
-          p7_prepare_stationary_slot $bundle_dir $slot $descriptor_address $proposed_object_id
+          p7_prepare_stationary_slot $bundle_dir $slot $descriptor_address $proposed_object_id \
+              $case_output($slot) $case_trace($slot)
           lappend prepared_slots [list $slot $descriptor_address $proposed_object_id $terminal_prefix]
         }
 

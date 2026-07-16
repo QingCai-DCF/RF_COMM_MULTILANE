@@ -260,6 +260,98 @@ class P7Stage66CampaignTests(unittest.TestCase):
                 record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
             )
 
+    def test_r62_failure_package_preserves_canary_precheck_and_recovery_boundary(self) -> None:
+        run_id = "p7_20260716_stationary_app_r62_diag_stage66_c03"
+        package = (
+            ROOT
+            / "evidence/generated/p7_r62_stage66_campaign_c03_failure_package"
+        )
+        manifest = json.loads(
+            (package / "package_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            "rf-comm-p7-r62-stage66-campaign-failure-package-manifest-v1",
+            manifest["schema"],
+        )
+        self.assertEqual(run_id, manifest["run_id"])
+        self.assertEqual("FAIL_RECOVERED", manifest["result"])
+        self.assertFalse(manifest["coverage_claimed"])
+        self.assertEqual("PENDING_HW", manifest["HARDWARE_ACCEPTANCE"])
+        self.assertEqual(98, manifest["file_count"])
+        self.assertEqual(manifest["file_count"], len(manifest["files"]))
+        for record in manifest["files"]:
+            path = package / record["path"]
+            self.assertTrue(path.is_file(), record["path"])
+            self.assertEqual(record["bytes"], path.stat().st_size, record["path"])
+            self.assertEqual(
+                record["sha256"],
+                hashlib.sha256(path.read_bytes()).hexdigest(),
+                record["path"],
+            )
+
+        failure = json.loads(
+            (package / "failure_record.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("IMMUTABLE_FAIL_RECOVERED", failure["status"])
+        self.assertEqual(run_id, failure["run_id"])
+        self.assertFalse(failure["resume_restart_copy_reuse_permitted"])
+        self.assertEqual(3, failure["campaign"]["hardware_attempt_number"])
+        stages = failure["execution"]["stages"]
+        self.assertEqual([1, 2, 3, 4, 66], [item["full_stage_ordinal"] for item in stages])
+        self.assertEqual(
+            ["PASS", "PASS", "PASS", "PASS", "FAIL_STAGE"],
+            [item["result"] for item in stages],
+        )
+        stationary = stages[-1]
+        self.assertTrue(stationary["launched_once"])
+        self.assertFalse(stationary["complete_1800_second_pass"])
+        self.assertEqual(8, stationary["clean_completed_object_count_before_failure"])
+        self.assertEqual(
+            "P7 stationary descriptor failed slot=0 status=4 error=32",
+            stationary["first_terminal_error"],
+        )
+        root_cause = failure["confirmed_root_cause"]
+        self.assertEqual("P7_ERROR_OUTPUT_CANARY_PRECHECK", root_cause["error_enum"])
+        self.assertEqual(32, root_cause["error_code"])
+        self.assertFalse(root_cause["repair_applied_in_this_record"])
+        recovery_record = failure["independent_shutdown_recovery"]
+        self.assertEqual("PASS_SEPARATE_FROM_FAILED_STAGE", recovery_record["status"])
+        self.assertFalse(recovery_record["recovery_changes_failed_stage_result"])
+
+        ledger = json.loads(
+            (
+                package
+                / "campaign/campaign_ledger_after_recovery_record.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual("READY", ledger["status"])
+        self.assertEqual(3, ledger["actual_hardware_attempt_count"])
+        attempt = ledger["hardware_attempts"][-1]
+        self.assertEqual(run_id, attempt["run_id"])
+        self.assertEqual("FAIL_RECOVERED", attempt["status"])
+        self.assertFalse(attempt["complete_1800_second_stage66_pass"])
+        self.assertEqual(66, attempt["failed_full_stage_ordinal"])
+        self.assertEqual("PASS", attempt["independent_shutdown_recovery"]["status"])
+        self.assertFalse(
+            attempt["independent_shutdown_recovery"][
+                "recovery_changes_failed_stage_result"
+            ]
+        )
+
+        raw = (
+            ROOT
+            / "evidence/hardware/p7/authorized_sequence"
+            / run_id
+            / "066_p7_ps_stationary/p7_ps_application_raw_result.log"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(8, raw.count("P7_STATIONARY_OBJECT_"))
+        self.assertIn(
+            "P7_PS_STAGE_ERROR=P7 stationary descriptor failed slot=0 status=4 error=32",
+            raw,
+        )
+        self.assertNotIn("P7_PS_STAGE_RESULT=PASS", raw)
+        self.assertNotIn("P7_STATIONARY_SAMPLE_60", raw)
+
     def test_r57_failure_package_and_tamper_boundary(self) -> None:
         package = (
             ROOT
