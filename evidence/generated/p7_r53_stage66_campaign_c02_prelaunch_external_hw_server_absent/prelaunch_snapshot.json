@@ -1,0 +1,98 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prelaunch-snapshot-v1",
+  "generated_at_utc": "2026-07-16T04:58:43.4223931Z",
+  "status": "BLOCKED_EXTERNAL_HW_SERVER_ABSENT",
+  "run_id": "p7_20260716_stationary_app_r53_diag_stage66_c02",
+  "source_commit": "25ed642dbd4eb6adebb8b38ecaee1040dfac8cf4",
+  "source_tree": "9a1ab0870ca90a3acf53407d943c9d53c4ed39cf",
+  "source_status_non_generated_count": 0,
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "full_stage_ordinals": [1, 2, 3, 4, 66],
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "materialization_preflight": {
+    "status": "PASS",
+    "summary_sha256": "2f8e16632ae84c5be66535aad990d92806000bed5aade983c5cbccaf054ade3b",
+    "p6_file_count": 305,
+    "p6_byte_count": 96630479,
+    "p6_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+    "p7_workspace_file_count": 1832,
+    "p7_workspace_byte_count": 39941847,
+    "p7_workspace_tree_sha256": "094a48ee739230b6aabd96a8f62f6c4d40619ee82b07302f744244a1e8b3f8bb"
+  },
+  "focused_board_contract_test": {
+    "status": "PASS",
+    "test_count": 1
+  },
+  "required_complete_suites": {
+    "status": "PASS",
+    "summary_sha256": "33110398d8b405486dfe10d99a6c586fa50a81fadcb02f8c8a54abe3f04c45ba",
+    "total_discovered_test_count": 286,
+    "top_level_discovered_test_count": 244,
+    "p7_discovered_test_count": 42,
+    "authorization_checkpoint_cycle_count": 1,
+    "suite_invocation_count_by_name": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    }
+  },
+  "canonical_gate": {
+    "status": "PASS",
+    "summary_sha256": "91b391592404de3bd5af72e110c3e8163d2a7cffcd197982f85ba508478557a2",
+    "check_count": 13,
+    "passing_check_count": 13,
+    "OFFLINE_CACHE_STATUS": "BYPASS",
+    "OFFLINE_REAL_BUILD_PROCESS_RAN": true,
+    "hardware_actions_executed": false
+  },
+  "authorization": {
+    "sequence_plan_sha256": "9a09d3668956c89ceba6688dc3254decdd5af8bb0982bf05c30c74dae74eeb0a",
+    "generation_manifest_sha256": "bc9c150cb3b16af57c146e2513a7820c01dc668777e8d311e46b18c5386359e6",
+    "authorization_count": 5,
+    "child_wrapper_dry_validation_count": 5,
+    "outer_dry_validation": "DRY_RUN_VALIDATED",
+    "outer_dry_validation_sha256": "3f4f58bdccd96371ca8cb5f1352bd0a71a19a5f1552fb8dbcce052fe42447dc8",
+    "validation_errors": []
+  },
+  "campaign": {
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_sha256": "562f493e251f18b515772aa016bbcefafbad5af90fae285f0f63ff828f4a2597",
+    "status": "READY",
+    "requested_hardware_attempt_number": 2,
+    "actual_hardware_attempt_count": 1,
+    "hardware_attempt_count": 1,
+    "retired_pre_hardware_run_id_count": 10,
+    "campaign_lock_exists": false
+  },
+  "execution_output_collision_check": {
+    "execution_root_exists": false,
+    "execution_ledger_exists": false,
+    "abort_file_exists": false
+  },
+  "hardware_boundary": {
+    "RF_COMM_HW_AUTH_before_launch": "UNSET",
+    "external_hw_server_process_count": 0,
+    "tcp_port_3121_listener_count": 0,
+    "external_hw_server_required_by_plan": true,
+    "external_hw_server_action_taken": false,
+    "safe_wrapper_process_started": false,
+    "sequence_executor_process_started": false,
+    "hardware_execution_entered": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "shutdown_on_exit": true,
+    "resume": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No authorization environment was enabled and no wrapper, executor, hardware connection, programming, PS ELF, JTAG transaction, or stationary execution started."
+  },
+  "decision": {
+    "result": "FAIL_CLOSED_RETIRE_RUN_ID",
+    "same_run_id_launch_permitted": false,
+    "diagnostic_hardware_attempt_consumed": false,
+    "reason": "The plan requires the pre-existing external hw_server at localhost:3121, but no hw_server process and no TCP 3121 listener existed at the final prelaunch boundary. Starting or replacing that external service was outside authorization."
+  }
+}
