@@ -1,0 +1,28 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-ledger-record-v1",
+  "recorded_at_utc": "2026-07-16T04:39:37.935701+00:00",
+  "status": "PASS_RECORDED",
+  "run_id": "p7_20260716_stationary_app_r52_diag_stage66_c02",
+  "requested_hardware_attempt_number": 2,
+  "reason": "RUN_ID_COLLISION_PREFLIGHT_POWERSHELL_JOIN_PATH_ARRAY",
+  "retirement_evidence_path": "evidence/generated/p7_r52_stage66_campaign_c02_collision_preflight_failure.json",
+  "retirement_evidence_sha256": "8832bc749c3b9250b1dbd6d38606c33f0f73dc3136a5d528dd995c9a651a92af",
+  "campaign_ledger_sha256_before": "09b081ebcaaf0a59e090e382caaacc06d086c1dd9eeaa77f4a30beee924f904c",
+  "campaign_ledger_sha256_after": "562f493e251f18b515772aa016bbcefafbad5af90fae285f0f63ff828f4a2597",
+  "campaign_ledger_status_after": "READY",
+  "actual_hardware_attempt_count_after": 1,
+  "retired_pre_hardware_run_id_count_after": 10,
+  "post_record_package": {
+    "path": "evidence/generated/p7_r52_stage66_campaign_c02_collision_preflight_failure",
+    "file_count": 4,
+    "byte_count": 13980,
+    "tree_sha256": "c404873ebd3cceb5654455425e0fa9b4c9f839c9826fc97ed24ebf84c4ef35f0",
+    "retirement_record_result_sha256": "4ded479802b739b23687ef6d9dce2920dc81f83c0609d55d406b9def46ea193b",
+    "campaign_ledger_copy_sha256": "562f493e251f18b515772aa016bbcefafbad5af90fae285f0f63ff828f4a2597"
+  },
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "required_next_run_id": "p7_20260716_stationary_app_r53_diag_stage66_c02"
+}

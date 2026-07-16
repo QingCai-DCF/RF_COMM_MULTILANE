@@ -1,0 +1,74 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T04:38:38.9513309Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r52_diag_stage66_c02",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "4df899b32eaf78d6aa62f76d82be4b5879b147f2",
+  "source_tree": "92b52e8a501c629ce2dfc3cbedd409ac5f2eb50d",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 2,
+  "actual_hardware_attempt_count_before": 1,
+  "actual_hardware_attempt_count_after": 1,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "09b081ebcaaf0a59e090e382caaacc06d086c1dd9eeaa77f4a30beee924f904c",
+  "preconditions": {
+    "run_id_collision_preflight": "FAIL_BEFORE_SEARCH_COMPLETION",
+    "worktree_creation": "NOT_RUN",
+    "materialization_preflight": "NOT_RUN",
+    "focused_board_contract_test": "NOT_RUN",
+    "required_complete_suites": "NOT_RUN",
+    "cache_bypassed_canonical_p7_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "failure": {
+    "classification": "RUN_ID_COLLISION_PREFLIGHT_POWERSHELL_JOIN_PATH_ARRAY",
+    "worktree_created": false,
+    "automatic_fix": "Use an explicit flat collision-root list in a new run ID.",
+    "same_run_id_retry_permitted": false
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_COLLISION_PREFLIGHT_FAILURE",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "preserved_evidence": {
+    "path": "evidence/generated/p7_r52_stage66_campaign_c02_collision_preflight_failure",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this retirement record is outside the tree",
+    "file_count": 2,
+    "byte_count": 1930,
+    "tree_sha256": "7fe28a35c05f9d6f5255a00556a0f891cf4ded51d52c8fc3dfb346c3aec83033"
+  },
+  "hardware_boundary": {
+    "hw_server_process_count_at_postfailure_snapshot": 0,
+    "tcp_port_3121_listener_count_at_postfailure_snapshot": 0,
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "Failure occurred during read-only collision-root construction before worktree creation or any execution action.",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r53_diag_stage66_c02",
+  "next_run_must_not_start_before": "ACCURATE_R52_RETIREMENT_COMMIT_PLUS_RECORDED_READY_CAMPAIGN_LEDGER_PLUS_SUCCESSFUL_COLLISION_PREFLIGHT_PLUS_NEW_CLEAN_SOURCE_HASH_EXACT_MATERIALIZATION_PLUS_FOCUSED_TEST_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_CANONICAL_P7_GATE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "rf-comm-p7-run-id-collision-preflight-failure-v1",
+  "observed_at_utc": "2026-07-16T04:38:38.9513309Z",
+  "run_id": "p7_20260716_stationary_app_r52_diag_stage66_c02",
+  "source_commit": "4df899b32eaf78d6aa62f76d82be4b5879b147f2",
+  "source_tree": "92b52e8a501c629ce2dfc3cbedd409ac5f2eb50d",
+  "classification": "POWERSHELL_JOIN_PATH_ARRAY_PARAMETER_BINDING_FAILURE",
+  "error_id": "CannotConvertArgument,Microsoft.PowerShell.Commands.ForEachObjectCommand",
+  "error_message": "Cannot convert System.Object[] to the System.String required by Join-Path ChildPath.",
+  "collision_search_completed": false,
+  "worktree_created": false,
+  "materialization_started": false,
+  "focused_test_started": false,
+  "required_complete_suites_started": false,
+  "canonical_gate_started": false,
+  "authorization_created": false,
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "automatic_fix": "Use an explicit flat collision-root list in a new run ID.",
+  "same_run_id_retry_permitted": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "FAIL_CLOSED"
+}
