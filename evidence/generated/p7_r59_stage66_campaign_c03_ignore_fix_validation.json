@@ -1,0 +1,38 @@
+{
+  "schema": "rf-comm-p7-stage66-ephemeral-evidence-ignore-fix-v1",
+  "generated_at_utc": "2026-07-16T08:32:49.635889+00:00",
+  "retired_run_id": "p7_20260716_stationary_app_r59_diag_stage66_c03",
+  "retired_source_commit": "71987bd61ea5053ef2050c0f2cef03cc5ea09d6b",
+  "campaign_ledger_sha256_after_retirement": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+  "actual_hardware_attempt_count": 2,
+  "campaign_status": "READY",
+  "fix": {
+    "ignored_exact_paths": [
+      "/evidence/generated/p7_stage66_campaign_next_preparation/",
+      "/evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json"
+    ],
+    "campaign_execution_lock_ignored": false,
+    "tracked_source_cleanliness_weakened": false,
+    "arbitrary_generated_evidence_ignored": false,
+    "runtime_campaign_ledger_still_schema_and_sha_validated": true,
+    "terminal_runtime_ledger_still_requires_immutable_snapshot": true
+  },
+  "focused_validation": {
+    "command": "python -B -m unittest tests.test_prepare_p7_stage66_campaign_run tests.test_p7_stage66_campaign -v",
+    "test_count": 30,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS",
+    "py_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "diagnostic_hardware_attempt_consumed": false,
+  "authorization_environment": "UNSET",
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "campaign_attempt_created": false,
+  "campaign_lock_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "PASS"
+}

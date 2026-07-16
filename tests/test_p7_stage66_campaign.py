@@ -24,6 +24,69 @@ import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r59_prehardware_retirement_preserves_zero_suite_and_attempt_counts(self) -> None:
+        run_id = "p7_20260716_stationary_app_r59_diag_stage66_c03"
+        evidence = (
+            ROOT
+            / "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block.json"
+        )
+        payload, errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            hashlib.sha256(evidence.read_bytes()).hexdigest(),
+            run_id=run_id,
+            source_commit="71987bd61ea5053ef2050c0f2cef03cc5ea09d6b",
+            requested_hardware_attempt_number=3,
+        )
+        self.assertEqual([], errors)
+        assert payload is not None
+        self.assertFalse(payload["diagnostic_hardware_attempt_consumed"])
+        self.assertEqual(
+            0, payload["failure"]["top_level_discovery_invocation_count"]
+        )
+        self.assertEqual(0, payload["failure"]["tests_p7_discovery_invocation_count"])
+
+        package = (
+            ROOT
+            / "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block"
+        )
+        complete_suite = json.loads(
+            (package / "complete_suite_block.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("BLOCKED_DIRTY_SOURCE", complete_suite["status"])
+        self.assertEqual(0, complete_suite["complete_suite_test_count"])
+        materialization = json.loads(
+            (package / "build_materialization.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("PASS", materialization["P7_STAGE66_PREPARATION_DRIVER"])
+        self.assertFalse(materialization["campaign_attempt_created"])
+
+        snapshot = package / "campaign_ledger_after_retirement.json"
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        with mock.patch.object(campaign, "campaign_ledger_path", return_value=snapshot):
+            ledger, errors = campaign.validate_ledger(policy, snapshot, allow_absent=False)
+        self.assertEqual([], errors)
+        assert ledger is not None
+        self.assertEqual(2, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        self.assertEqual(run_id, ledger["retired_pre_hardware_run_ids"][-1]["run_id"])
+
+        manifest = json.loads(
+            (
+                ROOT
+                / "evidence/generated/p7_r59_stage66_campaign_c03_retirement_package_manifest.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(9, manifest["file_count"])
+        for record in manifest["files"]:
+            path = ROOT / record["path"]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(
+                record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
     def test_r58_prehardware_retirement_is_hash_bound_and_consumes_zero_attempts(self) -> None:
         run_id = "p7_20260716_stationary_app_r58_diag_stage66_c03"
         evidence = (

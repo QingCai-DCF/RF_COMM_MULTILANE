@@ -1,0 +1,63 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-retirement-package-v1",
+  "generated_at_utc": "2026-07-16T08:31:16.539377+00:00",
+  "run_id": "p7_20260716_stationary_app_r59_diag_stage66_c03",
+  "source_commit": "71987bd61ea5053ef2050c0f2cef03cc5ea09d6b",
+  "campaign_ledger_sha256_before": "a83264491a46560122fdb51ef640153360dcf88e9eccffac034082429d1b8fdf",
+  "campaign_ledger_sha256_after": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+  "actual_hardware_attempt_count_after": 2,
+  "campaign_status_after": "READY",
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "files": [
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block.json",
+      "bytes": 4467,
+      "sha256": "20dff6978b5e0d19570222bb2e8aba6d336bee7c1043f9c4bb784492f81f4885"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_ignore_fix_validation.json",
+      "bytes": 1587,
+      "sha256": "c2afff1d2b7bc9e7a3b89cc6f815c2fbcf4dff657c828b3624bbbb6e06214f1b"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_retirement_recording.json",
+      "bytes": 1354,
+      "sha256": "6bfe515ba8b53a09ae53e2302482568aa37af2877401ab2d0adbab3656f7c7f4"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/build_materialization.json",
+      "bytes": 9153,
+      "sha256": "1ada4e1733613e48f1ea71b4ffbd16baeca8e9152e6126afdb61dce858af3bf6"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/campaign_ledger_after_retirement.json",
+      "bytes": 19052,
+      "sha256": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/complete_suite_block.json",
+      "bytes": 751,
+      "sha256": "4ac88d44f5e92297ded7109abce99022078a8beeb9930d280bb675d1515e81bc"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/focused_board_contract.json",
+      "bytes": 612,
+      "sha256": "c52244efa4c8020250e0d146a035521309fde0648e8c5607b5faafd0255c6fa5"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/ledger_materialization.json",
+      "bytes": 1803,
+      "sha256": "789095f62a7e19fb5200408a0476449664e8f7339f7ab222acc49be349f100a0"
+    },
+    {
+      "path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block/placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "f641a94806d4dc3c70a6123b2d3e1a5d877c4fda084baffbd2e2c2277989c665"
+    }
+  ],
+  "file_count": 9,
+  "result": "PASS_RECORDED"
+}

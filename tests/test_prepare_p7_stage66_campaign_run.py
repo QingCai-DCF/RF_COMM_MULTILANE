@@ -1,5 +1,6 @@
 import sys
 import hashlib
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +14,34 @@ import prepare_p7_stage66_campaign_run as subject  # noqa: E402
 
 
 class PrepareP7Stage66CampaignRunTests(unittest.TestCase):
+    def test_only_exact_stage66_ephemeral_evidence_paths_are_ignored(self) -> None:
+        ignored = (
+            "evidence/generated/p7_stage66_campaign_next_preparation/probe.json",
+            "evidence/hardware/p7/stage66_diagnostic_campaign/"
+            "p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json",
+        )
+        visible = (
+            "evidence/hardware/p7/stage66_diagnostic_campaign/"
+            "p7_stage66_stationary_diagnostic_20260715/campaign_execution.lock",
+            "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block.json",
+        )
+        for path in ignored:
+            with self.subTest(path=path):
+                result = subprocess.run(
+                    ["git", "check-ignore", "-q", "--", path],
+                    cwd=ROOT,
+                    check=False,
+                )
+                self.assertEqual(0, result.returncode)
+        for path in visible:
+            with self.subTest(path=path):
+                result = subprocess.run(
+                    ["git", "check-ignore", "-q", "--", path],
+                    cwd=ROOT,
+                    check=False,
+                )
+                self.assertEqual(1, result.returncode)
+
     def fixture(self, root: Path):
         plan = root / "plan.json"
         ledger = root / "run" / "sequence_execution_ledger.json"

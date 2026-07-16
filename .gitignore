@@ -27,3 +27,8 @@ evidence/generated/vivado/p6_ip_inspect/project/
 __pycache__/
 *.pyc
 evidence/generated/hw_preflight/
+
+# Ephemeral P7 Stage66 preparation/runtime state. Immutable snapshots are
+# committed separately after each terminal outcome; never ignore the lock.
+/evidence/generated/p7_stage66_campaign_next_preparation/
+/evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json
