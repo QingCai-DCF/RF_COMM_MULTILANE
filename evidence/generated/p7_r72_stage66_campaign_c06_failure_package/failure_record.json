@@ -1,0 +1,131 @@
+{
+  "schema": "rf-comm-p7-r72-stage66-campaign-failure-v1",
+  "generated_at_utc": "2026-07-16T16:38:43Z",
+  "status": "IMMUTABLE_FAIL_RECOVERED",
+  "run_id": "p7_20260716_stationary_app_r72_diag_stage66_c06",
+  "run_id_immutable_fail": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "3f7cd27b02e6e8f3747d285f80db438598159256",
+  "source_tree": "11b68d7c95c1ff3c85da0ede811586e9b82aab15",
+  "campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "hardware_attempt_number": 6,
+    "actual_hardware_attempt_count_after": 6,
+    "maximum_actual_hardware_attempts": 10,
+    "remaining_actual_hardware_attempts": 4,
+    "status_after_recovery_record": "READY",
+    "campaign_policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign_ledger_sha256_after_recovery_record": "abf60e10dd8744edeb161f4c4bfb8bff410137e5e7fa8cbdce577512d951b6d7",
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "preconditions": {
+    "ledger_materialization": "PASS_ZERO_HARDWARE",
+    "ledger_materialization_sha256": "6ec4eb12da4dab70b3bf48daa0e0c66f2e90f22cc02bca7e3f2f3c87881d7470",
+    "placeholder_exact_argv_rehearsal": "PASS_ZERO_HARDWARE",
+    "placeholder_rehearsal_sha256": "46037f6f608106c083af7dc1205bc98b29d12712410c104acb3354baba537319",
+    "build_materialization": "PASS_ZERO_HARDWARE",
+    "build_materialization_sha256": "94cdb4090f961e98190a4b120ea16d188fc88f74034a33973a1afc50762a03fe",
+    "required_complete_suites": "PASS_324_TESTS_EACH_REQUIRED_SUITE_EXACTLY_ONCE",
+    "required_complete_suite_invocations": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "required_complete_suite_summary_sha256": "4c192de151e5f8dc6cc5493a4e74ea21ea3379c0c25ecf0650c5aec42fcd6c4b",
+    "canonical_gate": "PASS_13_OF_13_CACHE_BYPASS",
+    "canonical_gate_summary_sha256": "2608467920e3edc0da33ac907f0c33e2709f57ef565993671098168e3c904fff",
+    "real_prelaunch_validate_only": "PASS_ZERO_HARDWARE",
+    "real_prelaunch_validate_only_sha256": "825bcb51a65bbeb79aa85292e21493ab177b9c653b080e203ee2f7c9894f4e25",
+    "sequence_generation_manifest_sha256": "122cb6f68a103a3709eeb0941b7336ed07e993f4e3d10e3100edda3882164436",
+    "sequence_plan_sha256": "d9c02e118f6974f785fcb9815b3c410249ac71f933230bb76ca4123ef0c84d7a"
+  },
+  "execution": {
+    "status": "FAIL",
+    "sequence_execution_ledger_sha256": "3b8ab3b29526f5dd4e320041e8fbac12dae6c9a4ee1a84c0f589cafd2cb2183c",
+    "attempt_count": 5,
+    "completed_stage_count": 4,
+    "failed_full_stage_ordinal": 66,
+    "selected_full_stage_ordinals": [1, 2, 3, 4, 66],
+    "network_used": false,
+    "motion_used": false,
+    "max_lane_mask": "0x3",
+    "stage66": {
+      "result": "FAIL",
+      "launched_once": true,
+      "raw_ps_process_passed": true,
+      "raw_ps_process_returncode": 0,
+      "raw_runtime_reached_at_least_1800_seconds": true,
+      "authoritative_postprocess_passed": false,
+      "complete_1800_second_stage66_pass": false,
+      "stage_summary_sha256": "c362d900523eb0655cea84fe62de47536d9eaf5976355a54e0ca99541cde13f4",
+      "raw_result_sha256": "871c76a71cedeb7f35cc7d9e68837cc6921e3a49313d72090bd262095348e3b5",
+      "raw_manifest_sha256": "dbcee03ab30ad5cff9e39c9f3872b4ccb5dbc68e9273eea5445f84884843c297",
+      "shutdown_before": "PASS",
+      "shutdown_after": "PASS",
+      "shutdown_after_result_sha256": "fef15898908215d6cb7f3b26583f6c1766c34fb0c895be07dfd419915422be63"
+    }
+  },
+  "confirmed_failure_boundary": {
+    "classification": "HOST_POSTPROCESS_STATIONARY_FINAL_GENERATION_ARTIFACT_ALIAS_AND_BURSTY_30_SECOND_GOODPUT_WINDOW",
+    "postprocess_observation_path": "evidence/generated/p7_r72_stage66_campaign_c06_failure_package/postprocess_observation.json",
+    "postprocess_observation_sha256": "0f9aad4cebb768fcbe2ee59d248f9beed14f2fb958636ea1109f8a5dd6c60c6f",
+    "raw_hardware_result_may_not_replace_authoritative_stage_failure": true,
+    "acceptance_promotion_permitted": false
+  },
+  "independent_shutdown_recovery": {
+    "status": "PASS",
+    "shutdown_exit": 0,
+    "directory": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r72_diag_stage66_c06/recovery_shutdown_after_failed_stage066_20260716T162843Z",
+    "summary_sha256": "405abd897740fe8923dab6a2085706351eca209cfa4d3cb27a5f8758e084d4c9",
+    "stdout_sha256": "99abe89e190d82bbbe0343c73d5b188e20630127f76c826a37b294f0abb36a1e",
+    "recovery_changes_failed_stage_result": false,
+    "earlier_blocked_preparation_only_directory": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r72_diag_stage66_c06/recovery_shutdown_after_failed_stage066_20260716T162804Z",
+    "earlier_blocked_preparation_executed_hardware": false
+  },
+  "historical_summary": {
+    "summarizer_exit_code": 1,
+    "hardware_actions_executed_by_summarizer": false,
+    "acceptance_promotion_permitted": false,
+    "boundary": "The global historical summarizer remains fail-closed; r72 contributes no acceptance coverage."
+  },
+  "preserved_raw_evidence": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r72_diag_stage66_c06",
+    "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+    "file_count": 341,
+    "byte_count": 69848130,
+    "tree_sha256": "afbfc33217c6713fe996e85232b051d7e6f66e711a74aabf66648cb9f75d4385",
+    "source_worktree": "D:/CodexWorktrees/stage66prep_3f7cd27/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true
+  },
+  "package_bindings": {
+    "campaign/campaign_policy.json": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign/campaign_ledger_after_recovery_record.json": "abf60e10dd8744edeb161f4c4bfb8bff410137e5e7fa8cbdce577512d951b6d7",
+    "sequence_execution_ledger.json": "3b8ab3b29526f5dd4e320041e8fbac12dae6c9a4ee1a84c0f589cafd2cb2183c",
+    "preparation/ledger_materialization.json": "6ec4eb12da4dab70b3bf48daa0e0c66f2e90f22cc02bca7e3f2f3c87881d7470",
+    "preparation/placeholder_rehearsal.json": "46037f6f608106c083af7dc1205bc98b29d12712410c104acb3354baba537319",
+    "preparation/build_materialization.json": "94cdb4090f961e98190a4b120ea16d188fc88f74034a33973a1afc50762a03fe",
+    "preparation/complete_suite_summary.json": "4c192de151e5f8dc6cc5493a4e74ea21ea3379c0c25ecf0650c5aec42fcd6c4b",
+    "preparation/canonical_offline_gate_summary.json": "2608467920e3edc0da33ac907f0c33e2709f57ef565993671098168e3c904fff",
+    "preparation/real_prelaunch_validate_only.json": "825bcb51a65bbeb79aa85292e21493ab177b9c653b080e203ee2f7c9894f4e25",
+    "preparation/sequence_generation_manifest.json": "122cb6f68a103a3709eeb0941b7336ed07e993f4e3d10e3100edda3882164436",
+    "preparation/outer_launch.json": "814fd231a34e3443b7f653a819f537b7cb8978023b30870d210e2534c2414c88",
+    "summarizer_terminal/p7_final_summary.json": "f08a169552231733d740c316a93ed36e5945da54cead5cac11f82f67fb2a64a7",
+    "summarizer_terminal/p7_hardware_evidence_summary.json": "1bdc049fbf4721bcfecbb3a3df62ed91df22a8f914d694c2de6bbf109062146c",
+    "summarizer_terminal.stdout.log": "cad501d659d7a4502b1f025cb65fd43e9ca22612b00af7b116d31ef37d7a89ce",
+    "summarizer_terminal.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "preserved_build_artifacts": {
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_d19c9f2d7482b04c5ae4f07b5d86830a886d7dd9492cd28f354fd671223f14c1.elf",
+      "bytes": 355892,
+      "sha256": "d19c9f2d7482b04c5ae4f07b5d86830a886d7dd9492cd28f354fd671223f14c1"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_5eb36f268d1ac746bac4d9c42cabde000890289dbc64677990b4e4baf7cc63f7.map",
+      "bytes": 97975,
+      "sha256": "5eb36f268d1ac746bac4d9c42cabde000890289dbc64677990b4e4baf7cc63f7"
+    }
+  },
+  "next_required_action": "COMMIT_R72_FAIL_RECOVERED_EVIDENCE; THEN FIX THE STATIONARY FINAL-GENERATION ARTIFACT BINDING AND DEFINE A CAUSAL BURST-TOLERANT ROLLING-GOODPUT WINDOW WITHOUT RELAXING THE POSITIVE-MEDIAN OR 80-PERCENT ACCEPTANCE CHECKS; RUN FOCUSED TESTS; COMMIT THE REPAIR; AND PREPARE ONLY A NEW COLLISION-CHECKED RUN ID FOR HARDWARE ATTEMPT 7"
+}

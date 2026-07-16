@@ -1,0 +1,153 @@
+{
+  "schema": "rf-comm-p7-r72-stage66-postprocess-observation-v1",
+  "generated_at_utc": "2026-07-16T16:38:43Z",
+  "run_id": "p7_20260716_stationary_app_r72_diag_stage66_c06",
+  "source_commit": "3f7cd27b02e6e8f3747d285f80db438598159256",
+  "evidence_only": true,
+  "hardware_actions_executed_by_this_observation": false,
+  "authoritative_run_result": "FAIL_RECOVERED",
+  "stage66_result": "FAIL",
+  "diagnostic_only": true,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "raw_service_observation": {
+    "ps_process_passed": true,
+    "ps_process_returncode": 0,
+    "complete_runtime_elapsed_ticks": 600000724933,
+    "required_runtime_elapsed_ticks": 600000017400,
+    "observed_wall_seconds": 1800.172,
+    "objects_completed": 60,
+    "objects_failed": 0,
+    "bytes_completed": 18247680,
+    "fragments_completed": 84900,
+    "p6_retry_count": 0,
+    "p6_retry_exhausted": 0,
+    "p6_tx_fail": 0,
+    "p6_crc_bad": 0,
+    "p6_payload_mismatch": 0,
+    "duty_violation_count": 0,
+    "whole_object_crc_failures": 0,
+    "sha256_mismatches": 0,
+    "stationary_trace_files_expected": 180,
+    "stationary_trace_files_observed": 180,
+    "stationary_terminal_bundles_expected": 60,
+    "stationary_terminal_bundles_validated": 60,
+    "stationary_trace_validation_passed": true
+  },
+  "authoritative_host_postprocess": {
+    "passed": false,
+    "failure_count": 49,
+    "slot_failure_count": 48,
+    "rolling_goodput_failure_count": 1,
+    "calibration_30_second_delta_median_bps": 17476.0,
+    "acceptance_30_second_delta_median_bps": 0.0
+  },
+  "confirmed_slot_artifact_binding_observation": {
+    "classification": "STATIONARY_FINAL_DESCRIPTOR_WAS_PAIRED_WITH_STALE_GENERIC_OUTPUT_AND_ZERO_GENERIC_TRACE",
+    "all_final_descriptors_match_sequence_specific_descriptor": true,
+    "all_generic_outputs_differ_from_sequence_specific_final_output": true,
+    "all_generic_traces_differ_from_sequence_specific_final_trace": true,
+    "all_generic_traces_are_all_zero": true,
+    "all_sequence_specific_final_outputs_match_immutable_slot_input": true,
+    "all_sequence_specific_final_traces_are_nonzero": true,
+    "records": [
+      {
+        "slot": 0,
+        "completion_sequence": 57,
+        "object_id": 1049,
+        "generic_descriptor_sha256": "e6e3dbf9793389321c232e7e6a7019591c3490428c8c34faff4a02a10795e4eb",
+        "sequence_output_sha256": "fcd7923cbb8e709738f05ba8c318a4df5c27c0451a987689fac429a17b292737",
+        "generic_output_sha256": "16c7f1d8a38b4b84560e558ab03b13c82e2ff374d87eaacb4df22f03604e7a4f",
+        "sequence_trace_sha256": "4dcb017f9c662ecd3eb3d5e51d0e512a9491df564902d79d906927e74530d04b",
+        "generic_trace_sha256": "3d8381f0e2711b2f4324add4ad3dc62d9207063a88e7511d368e5523472fc7e7"
+      },
+      {
+        "slot": 1,
+        "completion_sequence": 58,
+        "object_id": 1050,
+        "generic_descriptor_sha256": "78e243bf64954d24ca5f0a1337871d22e9a1596203de776a06cf8cec3c11f831",
+        "sequence_output_sha256": "dd5cdd301adff15138b402ab190a143e8ff5ffed2d5e2fd24c3140fb652f11ff",
+        "generic_output_sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "sequence_trace_sha256": "d2110792ee72a4401cb4f77d38708e8f211abde5e1fefbda46832da1068aaf6b",
+        "generic_trace_sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147"
+      },
+      {
+        "slot": 2,
+        "completion_sequence": 59,
+        "object_id": 1051,
+        "generic_descriptor_sha256": "4ada075f3557494ddf208c0f578e89c9602fd3f58c0d3958d3402cbfc3dbec69",
+        "sequence_output_sha256": "0765b0d1a9f493355595772f5a2ebaaf700d4d2cc7d8a781729a9771a380754f",
+        "generic_output_sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "sequence_trace_sha256": "c17bc8475b753bc40df7449f13d723f0af84cea1e4ac45bab17c2aa520134201",
+        "generic_trace_sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147"
+      },
+      {
+        "slot": 3,
+        "completion_sequence": 60,
+        "object_id": 1052,
+        "generic_descriptor_sha256": "7b50286c609b4475d5136a53f2c203fa95feb6fe063b735726a474609a8de4b0",
+        "sequence_output_sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+        "generic_output_sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "sequence_trace_sha256": "f2ef8255e15fbe9577686b63d45f4d46d71db3b018cf09153eb24da3cf8d32fa",
+        "generic_trace_sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147"
+      },
+      {
+        "slot": 4,
+        "completion_sequence": 53,
+        "object_id": 1045,
+        "generic_descriptor_sha256": "cd3ae0f56919673c0fe2b3e2463c856ca0cc99b32ca506c7602bfba59ba9f33e",
+        "sequence_output_sha256": "95647e4a543fc103ffbd0d4b0cffcbdccb1b304581d7e609cc4d7c909491e259",
+        "generic_output_sha256": "16c7f1d8a38b4b84560e558ab03b13c82e2ff374d87eaacb4df22f03604e7a4f",
+        "sequence_trace_sha256": "c07337894389f22ac9441506d1f4b1570cb1e15e588df53349e58b3049eac4e1",
+        "generic_trace_sha256": "3d8381f0e2711b2f4324add4ad3dc62d9207063a88e7511d368e5523472fc7e7"
+      },
+      {
+        "slot": 5,
+        "completion_sequence": 54,
+        "object_id": 1046,
+        "generic_descriptor_sha256": "28647fb08616b7f8baf98f56f079c9a700cd8653aceff85a126e1fd959dc3987",
+        "sequence_output_sha256": "feb07bd82ee49ad03fa5ad02148220e679c7457a8961cb23d1ceb146ce8d6c77",
+        "generic_output_sha256": "f600eca824e84a43f0691b267bd620e462c50da165c5b80e17aecb7a924f1fa8",
+        "sequence_trace_sha256": "c5a0d75b0ba7047af56f595a5f4aa0d52f4cd549b1c36bfe35a8ec94279b2bbb",
+        "generic_trace_sha256": "bfe492baf731a0dbf6e1e050f5bc3fe8c1b049383194dcdf82f023bfa409f462"
+      },
+      {
+        "slot": 6,
+        "completion_sequence": 55,
+        "object_id": 1047,
+        "generic_descriptor_sha256": "24b1461b39401338c1b7bf48156001a8269ecd42ef163a646ef814337067dcfe",
+        "sequence_output_sha256": "9da06f7da81a794cd2f75205391c6ede1c44a6e14752ab6afa5661982268b7dd",
+        "generic_output_sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "sequence_trace_sha256": "a19c20f887215cc85b33f44d83a24394921f3bda619e81bf4aca321f3519f763",
+        "generic_trace_sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147"
+      },
+      {
+        "slot": 7,
+        "completion_sequence": 56,
+        "object_id": 1048,
+        "generic_descriptor_sha256": "f2323775b3adfa284b07b8f3be1b685198331ab7bb5a0579e35f1b001cd51c33",
+        "sequence_output_sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+        "generic_output_sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "sequence_trace_sha256": "1e0684c2f5683ef143ddba6d68011eec4738b4e27d550af350263b6a5021695c",
+        "generic_trace_sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147"
+      }
+    ]
+  },
+  "counterfactual_metric_replay": {
+    "classification": "OFFLINE_DIAGNOSTIC_ONLY_NOT_HARDWARE_PASS",
+    "definition": "causal trailing 300-second completed-byte window sampled every 30 seconds; before 300 seconds the denominator is elapsed time",
+    "window_seconds": 300,
+    "sample_interval_seconds": 30,
+    "calibration_median_bps": 95253.0,
+    "acceptance_median_bps": 96337.0,
+    "acceptance_over_calibration": 1.0113802189957273,
+    "both_positive": true,
+    "acceptance_at_least_80_percent_of_calibration": true,
+    "acceptance_promotion_permitted": false
+  },
+  "conclusion": {
+    "confirmed": "The host postprocessor selected the final descriptor generation but paired it with stale generic output and all-zero generic trace aliases, and the causal 30-second completed-object delta is too narrow for the observed bursty completion cadence.",
+    "not_claimed": "This observation does not rewrite r72 as PASS and does not prove that a future implementation or hardware run passes.",
+    "required_disposition": "PRESERVE_R72_AS_IMMUTABLE_FAIL_RECOVERED_AND_FIX_THE_POSTPROCESSOR_ON_A_NEW_COMMIT"
+  }
+}

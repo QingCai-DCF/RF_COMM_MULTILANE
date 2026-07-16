@@ -1,0 +1,412 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "atomic_files": true,
+  "boundary_case_count": 0,
+  "boundary_cases": [],
+  "boundary_descriptor_batches": [],
+  "case_count": 8,
+  "cases": [
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_0.bin",
+        "sha256": "8f1171fca969e5a6b68dfa9c1d77caa6c1662596e06b55bb2d2c2721cbcc1e17",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_0.bin",
+        "sha256": "fcd7923cbb8e709738f05ba8c318a4df5c27c0451a987689fac429a17b292737",
+        "size_bytes": 1048576
+      },
+      "input_address": "0x00100000",
+      "lane_policy": 1,
+      "name": "stationary_deterministic_random_1048576_slot_0",
+      "object_id": 1,
+      "object_length": 1048576,
+      "output_address": "0x00900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_0.bin",
+        "sha256": "16c7f1d8a38b4b84560e558ab03b13c82e2ff374d87eaacb4df22f03604e7a4f",
+        "size_bytes": 1048576
+      },
+      "pattern": "deterministic_random",
+      "ready_publication": {
+        "address": "0x0002010c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 0,
+      "trace_address": "0x01100000",
+      "trace_capacity": 4878,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_0.bin",
+        "sha256": "3d8381f0e2711b2f4324add4ad3dc62d9207063a88e7511d368e5523472fc7e7",
+        "size_bytes": 312192
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_1.bin",
+        "sha256": "f9cf71663d39a8c72ddf3cc111611615745680dc5d302883d795690a105eba94",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_1.bin",
+        "sha256": "dd5cdd301adff15138b402ab190a143e8ff5ffed2d5e2fd24c3140fb652f11ff",
+        "size_bytes": 65536
+      },
+      "input_address": "0x02100000",
+      "lane_policy": 3,
+      "name": "stationary_counter_65536_slot_1",
+      "object_id": 2,
+      "object_length": 65536,
+      "output_address": "0x02900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_1.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "counter",
+      "ready_publication": {
+        "address": "0x0002020c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 1,
+      "trace_address": "0x03100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_1.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 2,
+      "unavailable_lane_mask": 1
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_2.bin",
+        "sha256": "2773448b4bfd20d70943e321158661594e988556a3365c41f9020402c3ba5405",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_2.bin",
+        "sha256": "0765b0d1a9f493355595772f5a2ebaaf700d4d2cc7d8a781729a9771a380754f",
+        "size_bytes": 65536
+      },
+      "input_address": "0x04100000",
+      "lane_policy": 3,
+      "name": "stationary_prbs15_65536_slot_2",
+      "object_id": 3,
+      "object_length": 65536,
+      "output_address": "0x04900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_2.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "prbs15",
+      "ready_publication": {
+        "address": "0x0002030c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 2,
+      "trace_address": "0x05100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_2.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 2,
+      "unavailable_lane_mask": 2
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_3.bin",
+        "sha256": "37a78463bb17a69bf9debb6437711336144c056e3bf7a23f5bf89c96330c506a",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_3.bin",
+        "sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+        "size_bytes": 65536
+      },
+      "input_address": "0x06100000",
+      "lane_policy": 2,
+      "name": "stationary_binary_all_byte_values_repeated_65536_slot_3",
+      "object_id": 4,
+      "object_length": 65536,
+      "output_address": "0x06900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_3.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "binary_all_byte_values_repeated",
+      "ready_publication": {
+        "address": "0x0002040c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 3,
+      "trace_address": "0x07100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_3.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_4.bin",
+        "sha256": "0974409b1456c3c2098e20e7ac04371620ef9252a275c2facba018f05f157bd6",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_4.bin",
+        "sha256": "95647e4a543fc103ffbd0d4b0cffcbdccb1b304581d7e609cc4d7c909491e259",
+        "size_bytes": 1048576
+      },
+      "input_address": "0x08100000",
+      "lane_policy": 4,
+      "name": "stationary_deterministic_random_1048576_slot_4",
+      "object_id": 5,
+      "object_length": 1048576,
+      "output_address": "0x08900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_4.bin",
+        "sha256": "16c7f1d8a38b4b84560e558ab03b13c82e2ff374d87eaacb4df22f03604e7a4f",
+        "size_bytes": 1048576
+      },
+      "pattern": "deterministic_random",
+      "ready_publication": {
+        "address": "0x0002050c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 4,
+      "trace_address": "0x09100000",
+      "trace_capacity": 4878,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_4.bin",
+        "sha256": "3d8381f0e2711b2f4324add4ad3dc62d9207063a88e7511d368e5523472fc7e7",
+        "size_bytes": 312192
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_5.bin",
+        "sha256": "a2ba02b5a46c3727cf83d877677525f785b18ef75dfb1df7956399784eb20f98",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_5.bin",
+        "sha256": "feb07bd82ee49ad03fa5ad02148220e679c7457a8961cb23d1ceb146ce8d6c77",
+        "size_bytes": 4096
+      },
+      "input_address": "0x0a100000",
+      "lane_policy": 3,
+      "name": "stationary_counter_4096_slot_5",
+      "object_id": 6,
+      "object_length": 4096,
+      "output_address": "0x0a900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_5.bin",
+        "sha256": "f600eca824e84a43f0691b267bd620e462c50da165c5b80e17aecb7a924f1fa8",
+        "size_bytes": 4096
+      },
+      "pattern": "counter",
+      "ready_publication": {
+        "address": "0x0002060c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 5,
+      "trace_address": "0x0b100000",
+      "trace_capacity": 20,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_5.bin",
+        "sha256": "bfe492baf731a0dbf6e1e050f5bc3fe8c1b049383194dcdf82f023bfa409f462",
+        "size_bytes": 1280
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_6.bin",
+        "sha256": "23478e1090480c2a3a7a49831837eb00c72f6f09e59dea6ab44b1f32d655265a",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_6.bin",
+        "sha256": "9da06f7da81a794cd2f75205391c6ede1c44a6e14752ab6afa5661982268b7dd",
+        "size_bytes": 65536
+      },
+      "input_address": "0x0c100000",
+      "lane_policy": 1,
+      "name": "stationary_prbs15_65536_slot_6",
+      "object_id": 7,
+      "object_length": 65536,
+      "output_address": "0x0c900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_6.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "prbs15",
+      "ready_publication": {
+        "address": "0x0002070c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 6,
+      "trace_address": "0x0d100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_6.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptor_free_7.bin",
+        "sha256": "ac762f285c9658b5e3bb6365e39df7de150e01a57275131047b98ba45afbab6c",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\input_7.bin",
+        "sha256": "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2",
+        "size_bytes": 65536
+      },
+      "input_address": "0x0e100000",
+      "lane_policy": 2,
+      "name": "stationary_binary_all_byte_values_repeated_65536_slot_7",
+      "object_id": 8,
+      "object_length": 65536,
+      "output_address": "0x0e900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\output_zero_7.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "binary_all_byte_values_repeated",
+      "ready_publication": {
+        "address": "0x0002080c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 7,
+      "trace_address": "0x0f100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\trace_zero_7.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 0
+    }
+  ],
+  "coverage_claimed": false,
+  "ddr_external_master": null,
+  "descriptors": {
+    "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\descriptors.bin",
+    "sha256": "221454e1b1bb083fd06159b874b887585d61afab823f1f6cca030746613ae781",
+    "size_bytes": 2048
+  },
+  "diagnostic_only": true,
+  "execution_plan": {
+    "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\execution_plan.txt",
+    "sha256": "ead7466395cb79ee530fdf9d32b7b6ae4edd348c8c47d228a5f6695aa8349d2a",
+    "size_bytes": 1354
+  },
+  "execution_scope": "P7_STAGE66_DIAGNOSTIC_STAGE",
+  "functional_checkpoint": null,
+  "generated_at_utc": "2026-07-16T15:48:21.446534+00:00",
+  "hardware_actions_executed": false,
+  "input_source": {
+    "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\inputs\\p7_ps_seed_247.bin",
+    "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+    "size_bytes": 247
+  },
+  "mailbox": {
+    "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\mailbox.bin",
+    "sha256": "fb83b567756557d2356a5ab89c9c6d91c6e8cb2514465c8a2ca396a7b95cfd0a",
+    "size_bytes": 256
+  },
+  "mode": "stationary",
+  "output_prefill_byte": 165,
+  "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
+  "queue_overflow_candidate": null,
+  "queue_phase_mailboxes": {},
+  "run_id": "p7_20260716_stationary_app_r72_diag_stage66_c06",
+  "schedule": {
+    "acceptance_sec": 1500,
+    "calibration_plus_acceptance": 1800,
+    "calibration_sec": 300,
+    "counts_per_second": 333333343,
+    "idle_margin_sec": 60,
+    "max_runtime_sec": 1800,
+    "ready_drain_guard_sec": 300,
+    "scheduling_cutoff_sec": 1740
+  },
+  "schema": "rf-comm-p7-ps-hardware-bundle-v1",
+  "stage62_microtest": null,
+  "stage62_microtest_control": {
+    "path": "D:\\CodexWorktrees\\stage66prep_3f7cd27\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r72_diag_stage66_c06\\066_p7_ps_stationary\\bundle\\stage62_microtest_control.bin",
+    "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+    "size_bytes": 64
+  }
+}
