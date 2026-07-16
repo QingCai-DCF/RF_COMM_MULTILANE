@@ -24,6 +24,90 @@ import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r70_prehardware_retirement_preserves_suite_failure_and_zero_quota(self) -> None:
+        run_id = "p7_20260716_stationary_app_r70_diag_stage66_c06"
+        package = (
+            ROOT
+            / "evidence/generated/p7_r70_stage66_campaign_c06_complete_suite_failure"
+        )
+        manifest = json.loads(
+            (package / "package_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(11, manifest["file_count_excluding_manifest"])
+        self.assertEqual(133269, manifest["byte_count_excluding_manifest"])
+        for record in manifest["files"]:
+            path = package / record["path"]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(
+                record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
+        evidence = package / "retirement_evidence.json"
+        evidence_sha = hashlib.sha256(evidence.read_bytes()).hexdigest()
+        payload, errors = prelaunch_retirement.validate_retirement_evidence(
+            evidence,
+            evidence_sha,
+            run_id=run_id,
+            source_commit="f224b9362e98e10fc7baa66c16f09af1815fc3c1",
+            requested_hardware_attempt_number=6,
+        )
+        self.assertEqual([], errors)
+        assert payload is not None
+        self.assertFalse(payload["diagnostic_hardware_attempt_consumed"])
+        self.assertFalse(payload["failure_boundary"]["hardware_execution_entered"])
+        self.assertFalse(payload["failure_boundary"]["campaign_lock_created"])
+        self.assertFalse(payload["generator"]["hardware_actions_executed"])
+
+        suites = json.loads(
+            (package / "complete_suite_summary.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("FAIL", suites["status"])
+        self.assertEqual(2, suites["FULL_SUITE_INVOCATION_COUNT"])
+        self.assertEqual(
+            {"top_level_discovery": 1, "tests_p7_discovery": 1},
+            suites["suite_invocation_count_by_name"],
+        )
+        self.assertEqual(279, suites["suites"][0]["discovered_test_count"])
+        self.assertEqual(1, suites["suites"][0]["returncode"])
+        self.assertEqual(43, suites["suites"][1]["discovered_test_count"])
+        self.assertEqual(0, suites["suites"][1]["returncode"])
+        self.assertTrue(suites["source_commit_unchanged"])
+        self.assertFalse(suites["dirty_worktree_before_suites"])
+        self.assertFalse(suites["dirty_worktree_after_suites"])
+        self.assertTrue(suites["NO_HARDWARE_ACTIONS_EXECUTED"])
+
+        snapshot = package / "campaign_ledger_after_retirement.json"
+        policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
+        policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)
+        self.assertEqual([], errors)
+        assert policy is not None
+        with mock.patch.object(campaign, "campaign_ledger_path", return_value=snapshot):
+            ledger, errors = campaign.validate_ledger(
+                policy, snapshot, allow_absent=False
+            )
+        self.assertEqual([], errors)
+        assert ledger is not None
+        self.assertEqual(5, ledger["actual_hardware_attempt_count"])
+        self.assertEqual("READY", ledger["status"])
+        retirement = ledger["retired_pre_hardware_run_ids"][-1]
+        self.assertEqual(run_id, retirement["run_id"])
+        self.assertFalse(retirement["hardware_attempt_consumed"])
+        self.assertEqual(evidence_sha, retirement["evidence_sha256"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / package.name
+            shutil.copytree(package, copied)
+            summary = copied / "complete_suite_summary.json"
+            summary.write_bytes(summary.read_bytes() + b"\n")
+            record = next(
+                item
+                for item in manifest["files"]
+                if item["path"] == "complete_suite_summary.json"
+            )
+            self.assertNotEqual(
+                record["sha256"], hashlib.sha256(summary.read_bytes()).hexdigest()
+            )
+
     def test_r61_prehardware_retirement_preserves_timeout_and_zero_attempt_boundary(self) -> None:
         run_id = "p7_20260716_stationary_app_r61_diag_stage66_c03"
         evidence = (

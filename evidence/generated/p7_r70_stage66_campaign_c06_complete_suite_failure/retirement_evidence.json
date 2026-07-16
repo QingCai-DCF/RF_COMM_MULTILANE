@@ -1,0 +1,136 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T14:59:29.5498707Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r70_diag_stage66_c06",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "f224b9362e98e10fc7baa66c16f09af1815fc3c1",
+  "source_tree": "45e1c992c7f07e4d0abcc1856ea58893a2f11869",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 6,
+  "actual_hardware_attempt_count_before": 5,
+  "actual_hardware_attempt_count_after": 5,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "2381b39d9c991c2844a5497d0e5e6faf437e2ac1d0d7292db372ef3eed7c64a1",
+  "preconditions": {
+    "r69_terminal_status": "IMMUTABLE_FAIL_RECOVERED",
+    "r69_actual_hardware_attempt_count": 5,
+    "clean_worktree_creation": "PASS_F224B9362E98E10FC7BAA66C16F09AF1815FC3C1",
+    "campaign_ledger_hash_exact_materialization": "PASS_ATTEMPT_COUNT_5_READY",
+    "placeholder_exact_argv_and_build_rehearsal": "PASS_ZERO_LOCK_ZERO_ATTEMPT_ZERO_HARDWARE",
+    "run_id_collision_preflight": "PASS_50_WORKSPACE_ROOTS_ZERO_HITS",
+    "hash_exact_build_materialization": "PASS_P6_AND_P7_STAGING_AND_DESTINATION_REHASHED",
+    "required_complete_suites": "FAIL_TOP_LEVEL_1_OF_279_TESTS; TESTS_P7_43_OF_43_PASS; EACH_SUITE_INVOKED_EXACTLY_ONCE",
+    "cache_bypassed_p7_canonical_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "preparation_evidence": {
+    "ledger_materialization": {
+      "path": "build/p7_stage66_c06_ledger_materialization.json",
+      "bytes": 1800,
+      "sha256": "90ee5f3b5e330493e543e0fa42eade5f72f7a07201131902151d322a4ade280a",
+      "result": "PASS"
+    },
+    "placeholder_rehearsal": {
+      "path": "build/p7_stage66_c06_placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "c6ef7f3039f7c74542feb05cf2f3df0d74de076f5e5d6327f286ba3ee14660bd",
+      "result": "PASS"
+    },
+    "build_materialization": {
+      "path": "build/p7_r70_stage66_c06_build_materialization.json",
+      "bytes": 9153,
+      "sha256": "9b58e7d29032280cdd3a26247eabe661554a6b605bc9b08271e92e07a0dbdd39",
+      "result": "PASS"
+    }
+  },
+  "complete_suites": {
+    "runner": "tools/run_p7_regression_suites.py",
+    "summary_path": "build/p7_r70_stage66_c06_complete_suite_summary.json",
+    "summary_bytes": 2499,
+    "summary_sha256": "9cb91d50d509cfcdf8e4d1919f857be558994210d41d48b42f04798ea8188a1f",
+    "full_suite_invocation_count": 2,
+    "suite_invocation_count_by_name": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "total_discovered_test_count": 322,
+    "top_level_discovery": {
+      "status": "FAIL",
+      "returncode": 1,
+      "discovered_test_count": 279,
+      "failure_count": 1,
+      "stdout_sha256": "8bcf454679f1307a84f5d3a1ff3e5bcc1bf3ff8074df6ab38a012614424f67f2",
+      "stderr_sha256": "7c924214a6f08100ce39637862c424e318a49ed97750adaa5b59ef993b059a85"
+    },
+    "tests_p7_discovery": {
+      "status": "PASS",
+      "returncode": 0,
+      "discovered_test_count": 43,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649c934ca495991b7852b855",
+      "stderr_sha256": "83a9c2555dbf0b00da0866ebe3cd80b8c499453e481c1bf4b43ef76f632a65bb"
+    },
+    "source_commit_unchanged": true,
+    "dirty_worktree_before_suites": false,
+    "dirty_worktree_after_suites": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "failure": {
+    "classification": "COMPLETE_SUITE_HISTORICAL_CURRENT_SOURCE_BINDING_REGRESSION",
+    "failures": [
+      {
+        "test": "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+        "cause": "The immutable R37 historical Tcl, fixture, raw prestart readback, and first mismatch remain unchanged. The checked-in offline audit current_tcl record still binds pre-f224 host Tcl SHA256 31d9dac43a887d2de4928297a3e260bd134019c8cd411e73e89577419da853a6 and 142904 bytes, while f224b936 intentionally changes only the current host Tcl to SHA256 c09aa149d939def3989318b403af6cc7e78869b3c27b5d8c7e6209b5a462b2fe and 143580 bytes.",
+        "automatic_fix": "Regenerate only the offline audit current_tcl record and add a focused audit regression; preserve every immutable R37 raw and historical field."
+      }
+    ],
+    "same_run_id_retry_permitted": false,
+    "complete_suite_rerun_for_r70_permitted": false
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_COMPLETE_SUITE_FAILURE",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_present": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "sequence_executor_process_started": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "jtag_axi_access": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "hardware_boundary": {
+    "external_hw_server_process_count": 1,
+    "external_hw_server_pid": 26332,
+    "external_hw_server_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\hw_server.exe",
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No hardware sequence, wrapper, XSDB target, FPGA programming, ELF start, JTAG access, or TFDU mutation occurred.",
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r71_diag_stage66_c06",
+  "next_run_must_not_start_before": "ACCURATE_R70_RETIREMENT_COMMIT_PLUS_FOCUSED_FIX_AND_TESTS_PLUS_NEW_CLEAN_SOURCE_PLACEHOLDER_REHEARSAL_PLUS_NEW_RUN_ID_COLLISION_AND_HASH_EXACT_MATERIALIZATION_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_P7_CANONICAL_GATE_EXACTLY_ONCE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-failure-package-v1",
+  "run_id": "p7_20260716_stationary_app_r70_diag_stage66_c06",
+  "source_commit": "f224b9362e98e10fc7baa66c16f09af1815fc3c1",
+  "result": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "file_count_excluding_manifest": 11,
+  "byte_count_excluding_manifest": 133269,
+  "files": [
+    {
+      "path": "build_materialization.json",
+      "bytes": 9153,
+      "sha256": "9b58e7d29032280cdd3a26247eabe661554a6b605bc9b08271e92e07a0dbdd39"
+    },
+    {
+      "path": "campaign_ledger_after_retirement.json",
+      "bytes": 37392,
+      "sha256": "36ee86269051c73c783f4fead8ca09d888c904d31d32a55d50db7eb1eac4aab1"
+    },
+    {
+      "path": "complete_suite_summary.json",
+      "bytes": 2499,
+      "sha256": "9cb91d50d509cfcdf8e4d1919f857be558994210d41d48b42f04798ea8188a1f"
+    },
+    {
+      "path": "ledger_materialization.json",
+      "bytes": 1800,
+      "sha256": "90ee5f3b5e330493e543e0fa42eade5f72f7a07201131902151d322a4ade280a"
+    },
+    {
+      "path": "placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "c6ef7f3039f7c74542feb05cf2f3df0d74de076f5e5d6327f286ba3ee14660bd"
+    },
+    {
+      "path": "retirement_evidence.json",
+      "bytes": 6635,
+      "sha256": "9b4c97530fb33634d9cc80b05bbc3b47d1dfec90b69bfb423b083f595258b2bc"
+    },
+    {
+      "path": "retirement_record.json",
+      "bytes": 875,
+      "sha256": "5e33f91d5ea02b930a01b9ddb077ef1dc9c803b9660bd347a08cfb10cbf36d29"
+    },
+    {
+      "path": "suite_logs/tests_p7_discovery.stderr.log",
+      "bytes": 5472,
+      "sha256": "83a9c2555dbf0b00da0866ebe3cd80b8c499453e481c1bf4b43ef76f632a65bb"
+    },
+    {
+      "path": "suite_logs/tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "suite_logs/top_level_discovery.stderr.log",
+      "bytes": 53778,
+      "sha256": "7c924214a6f08100ce39637862c424e318a49ed97750adaa5b59ef993b059a85"
+    },
+    {
+      "path": "suite_logs/top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "8bcf454679f1307a84f5d3a1ff3e5bcc1bf3ff8074df6ab38a012614424f67f2"
+    }
+  ]
+}
