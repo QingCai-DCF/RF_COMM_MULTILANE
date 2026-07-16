@@ -385,6 +385,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 stationary_object_bytes=64 * 1024,
             )
             manifest = json.loads(bundle.manifest_path.read_text(encoding="utf-8"))
+            plan_text = bundle.plan_path.read_text(encoding="utf-8")
         self.assertEqual(8, len(bundle.cases))
         self.assertEqual([1024 * 1024, 64 * 1024, 64 * 1024, 64 * 1024, 1024 * 1024, 4096, 64 * 1024, 64 * 1024], [len(case.request.data) for case in bundle.cases])
         self.assertEqual(
@@ -395,7 +396,63 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertEqual({1, 2, 3, 4}, {case.request.lane_policy for case in bundle.cases})
         self.assertEqual(1800, manifest["schedule"]["calibration_plus_acceptance"])
         self.assertEqual(1740, manifest["schedule"]["scheduling_cutoff_sec"])
+        self.assertEqual(300, manifest["schedule"]["ready_drain_guard_sec"])
+        self.assertEqual(300, bundle.ready_drain_guard_sec)
+        self.assertIn("READY_DRAIN_GUARD_SECONDS 300\n", plan_text)
         self.assertLess(manifest["schedule"]["scheduling_cutoff_sec"], 1800)
+
+    def test_r69_stationary_ready_guard_covers_observed_full_ring_drain(self) -> None:
+        observed_full_ring_drain_sec = 216.978084
+        scheduling_cutoff_sec = 1740
+        publish_stop_before_sec = (
+            scheduling_cutoff_sec - stage.STATIONARY_READY_DRAIN_GUARD_SEC
+        )
+        self.assertEqual(300, stage.STATIONARY_READY_DRAIN_GUARD_SEC)
+        self.assertLess(
+            observed_full_ring_drain_sec,
+            stage.STATIONARY_READY_DRAIN_GUARD_SEC,
+        )
+        self.assertLess(
+            publish_stop_before_sec + observed_full_ring_drain_sec,
+            scheduling_cutoff_sec,
+        )
+
+    def test_stationary_ready_guard_marker_binding_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            bundle = stage.StageBundle(
+                directory=root,
+                plan_path=root / "plan.txt",
+                plan_sha256="0" * 64,
+                manifest_path=root / "manifest.json",
+                manifest_sha256="1" * 64,
+                cases=[],
+                boundary_cases=[],
+                functional_checkpoint=None,
+                queue_overflow_candidate=None,
+                scheduling_cutoff_sec=1740,
+                ready_drain_guard_sec=300,
+            )
+        markers = {
+            "P7_STATIONARY_READY_DRAIN_GUARD_SECONDS": "300",
+            "P7_STATIONARY_READY_PUBLISH_GUARD_TICKS": str(
+                300 * stage.P7_COUNTS_PER_SECOND
+            ),
+            "P7_STATIONARY_READY_PUBLISH_CUTOFF_TICKS": str(
+                1440 * stage.P7_COUNTS_PER_SECOND
+            ),
+        }
+        self.assertEqual(
+            [], stage._stationary_ready_drain_guard_failures(bundle, markers)
+        )
+        for key in tuple(markers):
+            tampered = {**markers, key: str(int(markers[key]) + 1)}
+            self.assertEqual(
+                [
+                    "stationary READY drain guard markers do not match the immutable bundle"
+                ],
+                stage._stationary_ready_drain_guard_failures(bundle, tampered),
+            )
 
     def test_canonical_samples_use_fixed_terminal_end_tick_membership(self) -> None:
         cps = 1000
@@ -1422,6 +1479,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
                 functional_checkpoint=None,
                 queue_overflow_candidate=None,
                 scheduling_cutoff_sec=1740,
+                ready_drain_guard_sec=300,
             )
             descriptor_words = list(struct.unpack("<64I", case.request.pack()))
             descriptor_words[3] = stage.P7_DESCRIPTOR_COMPLETE
@@ -2077,6 +2135,7 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn('$counts_per_second != 333333343', tcl)
         self.assertIn('p7_require_value $auth_text P7_COUNTS_PER_SECOND $counts_per_second', tcl)
         self.assertIn('$plan_value(COUNTS_PER_SECOND) != $counts_per_second', tcl)
+        self.assertIn('$plan_value(READY_DRAIN_GUARD_SECONDS) != 300', tcl)
         self.assertIn("proc p7_read_runtime_elapsed_ticks", tcl)
         reader = tcl[tcl.index("proc p7_read_runtime_elapsed_ticks") : tcl.index("proc p7_le32")]
         sequence_before = reader.index("set sequence_before [p7_read32 0x00020088]")
@@ -2105,16 +2164,36 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertIn("completion_sequence", tcl[terminal_dump - 1000 : terminal_dump])
         prepare = tcl.index("p7_prepare_stationary_slot", terminal_dump)
         fresh_read = tcl.index("set elapsed_ticks [p7_read_runtime_elapsed_ticks]", prepare)
+        self.assertIn(
+            "set ready_publish_guard_ticks [expr {$plan_value(READY_DRAIN_GUARD_SECONDS) * $counts_per_second}]",
+            tcl,
+        )
+        self.assertIn(
+            'P7_STATIONARY_READY_DRAIN_GUARD_SECONDS=$plan_value(READY_DRAIN_GUARD_SECONDS)',
+            tcl,
+        )
+        self.assertIn(
+            "set ready_publish_cutoff_ticks [expr {$scheduling_cutoff_ticks - $ready_publish_guard_ticks}]",
+            tcl,
+        )
+        self.assertIn(
+            'P7_STATIONARY_READY_PUBLISH_CUTOFF_TICKS=$ready_publish_cutoff_ticks',
+            tcl,
+        )
         cutoff_check = tcl.index("$elapsed_ticks + $ready_publish_guard_ticks < $scheduling_cutoff_ticks", fresh_read)
         publish = tcl.index("p7_commit_stationary_slot", cutoff_check)
         post_read = tcl.index("set last_requeue_post_ticks [p7_read_runtime_elapsed_ticks]", publish)
-        fatal_check = tcl.index("P7 stationary READY publication crossed the PS-time scheduling cutoff", post_read)
+        post_guard_check = tcl.index(
+            "$last_requeue_post_ticks >= $ready_publish_cutoff_ticks", post_read
+        )
+        fatal_check = tcl.index("P7 stationary READY publication crossed the guarded drain cutoff", post_read)
         self.assertLess(terminal_dump, prepare)
         self.assertLess(prepare, fresh_read)
         self.assertLess(fresh_read, cutoff_check)
         self.assertLess(cutoff_check, publish)
         self.assertLess(publish, post_read)
-        self.assertLess(post_read, fatal_check)
+        self.assertLess(post_read, post_guard_check)
+        self.assertLess(post_guard_check, fatal_check)
         self.assertIn("P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION=1", tcl)
         self.assertIn("P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION=0", tcl)
         self.assertIn("p7_descriptor_admission_allowed", (ROOT / "software" / "ps_driver" / "p7_app_service.c").read_text(encoding="utf-8"))

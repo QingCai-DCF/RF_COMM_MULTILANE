@@ -1218,7 +1218,8 @@ set rc [catch {
           DDR_EXTERNAL_REPETITION DDR_EXTERNAL_UNALIGNED_ACCESSES \
           DDR_EXTERNAL_FIXTURE_SHA256 MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
           ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
-          SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
+          SCHEDULING_CUTOFF_SECONDS READY_DRAIN_GUARD_SECONDS \
+          COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
           CASE_COUNT BOUNDARY_COUNT CHECKPOINT_COUNT}} {
         error "unsupported P7 plan key: $key"
       }
@@ -1232,7 +1233,8 @@ set rc [catch {
       DDR_EXTERNAL_UNALIGNED_ACCESSES DDR_EXTERNAL_FIXTURE_SHA256 \
       MAX_RUNTIME_SECONDS CALIBRATION_SECONDS \
       ACCEPTANCE_SECONDS SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS \
-      SCHEDULING_CUTOFF_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT \
+      SCHEDULING_CUTOFF_SECONDS READY_DRAIN_GUARD_SECONDS COUNTS_PER_SECOND \
+      OUTPUT_PREFILL_BYTE CASE_COUNT \
       BOUNDARY_COUNT CHECKPOINT_COUNT} {
     if {![info exists plan_value($key)]} { error "P7 plan field missing: $key" }
   }
@@ -1242,7 +1244,8 @@ set rc [catch {
       DDR_EXTERNAL_UNALIGNED_ACCESSES \
       MAX_RUNTIME_SECONDS CALIBRATION_SECONDS ACCEPTANCE_SECONDS \
       SAMPLE_INTERVAL_SECONDS IDLE_MARGIN_SECONDS SCHEDULING_CUTOFF_SECONDS \
-      COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE CASE_COUNT BOUNDARY_COUNT \
+      READY_DRAIN_GUARD_SECONDS COUNTS_PER_SECOND OUTPUT_PREFILL_BYTE \
+      CASE_COUNT BOUNDARY_COUNT \
       CHECKPOINT_COUNT} {
     if {![string is integer -strict $plan_value($key)]} {
       error "P7 plan numeric field is invalid: $key"
@@ -1364,7 +1367,9 @@ set rc [catch {
         $plan_value(SAMPLE_INTERVAL_SECONDS) != 30 ||
         $idle_margin_sec != 60 ||
         $plan_value(CALIBRATION_SECONDS) + $plan_value(ACCEPTANCE_SECONDS) != 1800 ||
-        $plan_value(SCHEDULING_CUTOFF_SECONDS) != 1800 - $idle_margin_sec} {
+        $plan_value(SCHEDULING_CUTOFF_SECONDS) != 1800 - $idle_margin_sec ||
+        $plan_value(READY_DRAIN_GUARD_SECONDS) != 300 ||
+        $plan_value(READY_DRAIN_GUARD_SECONDS) >= $plan_value(SCHEDULING_CUTOFF_SECONDS)} {
       error "P7 stationary schedule must be 300+1500 with an idle deadline margin"
     }
     if {$parsed_cases != 8} { error "P7 stationary mode requires exactly eight slots" }
@@ -1385,7 +1390,9 @@ set rc [catch {
         error "P7 stationary unexpected fault-injection slot"
       }
     }
-  } elseif {$plan_value(CALIBRATION_SECONDS) != 0 || $plan_value(ACCEPTANCE_SECONDS) != 0} {
+  } elseif {$plan_value(CALIBRATION_SECONDS) != 0 ||
+            $plan_value(ACCEPTANCE_SECONDS) != 0 ||
+            $plan_value(READY_DRAIN_GUARD_SECONDS) != 0} {
     error "non-stationary plan cannot claim calibration/acceptance windows"
   }
   if {$mode eq "functional"} {
@@ -1846,7 +1853,8 @@ set rc [catch {
     set sample_interval_ticks [expr {$plan_value(SAMPLE_INTERVAL_SECONDS) * $counts_per_second}]
     set next_sample_ticks $sample_interval_ticks
     set scheduling_cutoff_ticks [expr {$plan_value(SCHEDULING_CUTOFF_SECONDS) * $counts_per_second}]
-    set ready_publish_guard_ticks $counts_per_second
+    set ready_publish_guard_ticks [expr {$plan_value(READY_DRAIN_GUARD_SECONDS) * $counts_per_second}]
+    set ready_publish_cutoff_ticks [expr {$scheduling_cutoff_ticks - $ready_publish_guard_ticks}]
     set drain_deadline_ticks [expr {1790 * $counts_per_second}]
     set calibration_ticks [expr {$plan_value(CALIBRATION_SECONDS) * $counts_per_second}]
     set required_runtime_ticks [expr {$max_runtime_sec * $counts_per_second}]
@@ -1859,7 +1867,9 @@ set rc [catch {
     p7_say $result_handle "P7_STATIONARY_PRIMARY_TIME_SOURCE=PS_RUNTIME_ELAPSED_TICKS"
     p7_say $result_handle "P7_STATIONARY_HOST_TIME_ROLE=INDEPENDENT_WATCHDOG_AND_INPUT_PRELOAD"
     p7_say $result_handle "P7_STATIONARY_RUNTIME_START_TICKS=$runtime_start_ticks"
+    p7_say $result_handle "P7_STATIONARY_READY_DRAIN_GUARD_SECONDS=$plan_value(READY_DRAIN_GUARD_SECONDS)"
     p7_say $result_handle "P7_STATIONARY_READY_PUBLISH_GUARD_TICKS=$ready_publish_guard_ticks"
+    p7_say $result_handle "P7_STATIONARY_READY_PUBLISH_CUTOFF_TICKS=$ready_publish_cutoff_ticks"
     p7_say $result_handle "P7_STATIONARY_SAMPLE_SEMANTICS=FIXED_PS_THRESHOLDS_FROM_IMMUTABLE_TERMINAL_END_TICKS"
     set wall_deadline_ms [expr {$service_start_ms + 1000 * $max_runtime_sec + 2000}]
     while {1} {
@@ -1985,12 +1995,12 @@ set rc [catch {
       }
       if {$committed_this_iteration > 0} {
         set last_requeue_post_ticks [p7_read_runtime_elapsed_ticks]
-        if {$last_requeue_post_ticks >= $scheduling_cutoff_ticks} {
+        if {$last_requeue_post_ticks >= $ready_publish_cutoff_ticks} {
           set requeue_after_cutoff 1
           p7_say $result_handle "P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION=1"
           p7_say $result_handle "P7_STATIONARY_REQUEUE_PRE_TICKS=$last_requeue_pre_ticks"
           p7_say $result_handle "P7_STATIONARY_REQUEUE_POST_TICKS=$last_requeue_post_ticks"
-          error "P7 stationary READY publication crossed the PS-time scheduling cutoff"
+          error "P7 stationary READY publication crossed the guarded drain cutoff"
         }
         set elapsed_ticks $last_requeue_post_ticks
       }

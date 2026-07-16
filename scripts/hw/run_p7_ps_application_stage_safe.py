@@ -123,6 +123,10 @@ CALIBRATION_SEC = 300
 ACCEPTANCE_SEC = 1500
 MIN_IDLE_MARGIN_SEC = 5
 MAX_IDLE_MARGIN_SEC = 60
+# r69 needed 216.978084 seconds to retire one complete eight-slot ring.
+# A 300-second host guard leaves more than 83 seconds of measured margin while
+# the firmware's independent one-second late-admission guard remains unchanged.
+STATIONARY_READY_DRAIN_GUARD_SEC = 300
 P7_COUNTS_PER_SECOND = 333_333_343
 OUTPUT_PREFILL_BYTE = 0xA5
 P7_STAGE62_DIAGNOSTIC_ADDRESS = 0x00021000
@@ -370,6 +374,7 @@ class StageBundle:
     functional_checkpoint: StageCase | None
     queue_overflow_candidate: StageCase | None
     scheduling_cutoff_sec: int
+    ready_drain_guard_sec: int
     stage62_microtest: dict[str, Any] | None = None
     ddr_external_master: dict[str, Any] | None = None
 
@@ -1083,6 +1088,11 @@ def build_stage_bundle(
     atomic_write_bytes(descriptor_file, bytes(descriptors))
     initial_command = P7_CONTROL_STOP if mode == "queue" else P7_CONTROL_RUN
     scheduling_cutoff = max_runtime_sec - idle_margin_sec
+    ready_drain_guard = (
+        STATIONARY_READY_DRAIN_GUARD_SEC if mode == "stationary" else 0
+    )
+    if mode == "stationary" and not 0 < ready_drain_guard < scheduling_cutoff:
+        raise ValueError("stationary READY drain guard must be inside the scheduling window")
     firmware_cutoff = scheduling_cutoff if mode == "stationary" else 0
     firmware_admission_guard = 1 if mode == "stationary" else 0
     mailbox_image = bytearray(
@@ -1143,6 +1153,7 @@ def build_stage_bundle(
         f"SAMPLE_INTERVAL_SECONDS {sample_interval_sec}",
         f"IDLE_MARGIN_SECONDS {idle_margin_sec}",
         f"SCHEDULING_CUTOFF_SECONDS {scheduling_cutoff}",
+        f"READY_DRAIN_GUARD_SECONDS {ready_drain_guard}",
         f"COUNTS_PER_SECOND {P7_COUNTS_PER_SECOND}",
         f"OUTPUT_PREFILL_BYTE {OUTPUT_PREFILL_BYTE}",
         f"CASE_COUNT {len(cases)}",
@@ -1228,6 +1239,7 @@ def build_stage_bundle(
             "acceptance_sec": acceptance_sec,
             "idle_margin_sec": idle_margin_sec,
             "scheduling_cutoff_sec": scheduling_cutoff,
+            "ready_drain_guard_sec": ready_drain_guard,
             "counts_per_second": P7_COUNTS_PER_SECOND,
             "calibration_plus_acceptance": calibration_sec + acceptance_sec,
         },
@@ -1245,6 +1257,7 @@ def build_stage_bundle(
         functional_checkpoint=functional_checkpoint,
         queue_overflow_candidate=queue_overflow_candidate,
         scheduling_cutoff_sec=scheduling_cutoff,
+        ready_drain_guard_sec=ready_drain_guard,
         stage62_microtest=microtest_record,
         ddr_external_master=ddr_external_record,
     )
@@ -1296,6 +1309,18 @@ def verify_bundle_integrity(bundle: StageBundle) -> None:
     schedule = manifest.get("schedule")
     if not isinstance(schedule, dict) or schedule.get("counts_per_second") != P7_COUNTS_PER_SECOND:
         errors.append("bundle manifest PS timer frequency is missing or mismatched")
+    expected_ready_drain_guard = (
+        STATIONARY_READY_DRAIN_GUARD_SEC
+        if manifest.get("mode") == "stationary"
+        else 0
+    )
+    if (
+        not isinstance(schedule, dict)
+        or schedule.get("scheduling_cutoff_sec") != bundle.scheduling_cutoff_sec
+        or schedule.get("ready_drain_guard_sec") != bundle.ready_drain_guard_sec
+        or bundle.ready_drain_guard_sec != expected_ready_drain_guard
+    ):
+        errors.append("bundle manifest stationary READY drain guard is missing or mismatched")
     if sha256_file(bundle.plan_path) != bundle.plan_sha256:
         errors.append("execution plan hash changed after construction")
     errors.extend(_verify_manifest_record(manifest.get("mailbox"), bundle.directory / "mailbox.bin", 256, "mailbox"))
@@ -4584,6 +4609,28 @@ def postprocess_ddr_external_master(
     }
 
 
+def _stationary_ready_drain_guard_failures(
+    bundle: StageBundle, markers: Mapping[str, str]
+) -> list[str]:
+    expected_guard_ticks = bundle.ready_drain_guard_sec * P7_COUNTS_PER_SECOND
+    expected_publish_cutoff_ticks = (
+        (bundle.scheduling_cutoff_sec - bundle.ready_drain_guard_sec)
+        * P7_COUNTS_PER_SECOND
+    )
+    if (
+        markers.get("P7_STATIONARY_READY_DRAIN_GUARD_SECONDS")
+        != str(bundle.ready_drain_guard_sec)
+        or markers.get("P7_STATIONARY_READY_PUBLISH_GUARD_TICKS")
+        != str(expected_guard_ticks)
+        or markers.get("P7_STATIONARY_READY_PUBLISH_CUTOFF_TICKS")
+        != str(expected_publish_cutoff_ticks)
+    ):
+        return [
+            "stationary READY drain guard markers do not match the immutable bundle"
+        ]
+    return []
+
+
 def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[str, Any]:
     failures: list[str] = []
     markers = parse_markers(raw_text)
@@ -5146,6 +5193,7 @@ def postprocess_bundle(bundle: StageBundle, mode: str, raw_text: str) -> dict[st
             failures.append("stationary acceptance completion marker missing")
         if markers.get("P7_STATIONARY_REQUEUE_CUTOFF_VIOLATION") != "0":
             failures.append("stationary scheduler requeued work after the idle cutoff")
+        failures.extend(_stationary_ready_drain_guard_failures(bundle, markers))
         try:
             stationary_wall_seconds = float(markers.get("P7_STATIONARY_WALL_SECONDS", "nan"))
         except ValueError:
@@ -5772,6 +5820,7 @@ def main(argv: list[str] | None = None) -> int:
     summary["bundle_manifest"] = file_record(bundle.manifest_path)
     summary["execution_plan"] = file_record(bundle.plan_path)
     summary["scheduling_cutoff_sec"] = bundle.scheduling_cutoff_sec
+    summary["ready_drain_guard_sec"] = bundle.ready_drain_guard_sec
     abort_file = DEFAULT_ABORT_FILE.resolve(strict=False)
     try:
         frozen_shutdown, frozen_shutdown_payload = freeze_shutdown_bit(args)
