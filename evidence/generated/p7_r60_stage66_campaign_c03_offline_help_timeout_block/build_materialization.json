@@ -1,0 +1,185 @@
+{
+  "schema": "rf-comm-p7-stage66-preparation-driver-v1",
+  "P7_STAGE66_PREPARATION_DRIVER": "PASS",
+  "mode": "MATERIALIZE_BUILD_TREES",
+  "phase": "BUILD_TREE_MATERIALIZATION_COMPLETE",
+  "error_code": "NONE",
+  "generated_at_utc": "2026-07-16T08:35:26.144694+00:00",
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "tfdu_touched": false,
+  "network_used": false,
+  "motion_used": false,
+  "wrapper_process_launched": false,
+  "execution_ledger_created": false,
+  "campaign_lock_created": false,
+  "campaign_attempt_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "errors": [],
+  "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+  "requested_hardware_attempt_number": 3,
+  "environment_validation": {
+    "status": "PASS",
+    "error_code": "NONE",
+    "required_authorization_state": "ABSENT",
+    "authorization_env_present": false,
+    "authorization_env_exact": false,
+    "NO_HARDWARE": null,
+    "COMSPEC": "C:\\WINDOWS\\system32\\cmd.exe",
+    "PYTHONHOME_present": false,
+    "PYTHONPATH_present": false,
+    "all_launched_executables_are_absolute": true,
+    "errors": []
+  },
+  "campaign_before": {
+    "status": "PASS",
+    "errors": [],
+    "policy_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\config\\p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+    "ledger_sha256": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+    "actual_hardware_attempt_count": 2,
+    "campaign_status": "READY",
+    "campaign_lock_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_execution.lock",
+    "campaign_lock_exists": false
+  },
+  "campaign_candidate_validation": {
+    "status": "PASS",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+    "ledger_sha256": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+    "actual_hardware_attempt_count": 2,
+    "campaign_status": "READY",
+    "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+    "requested_hardware_attempt_number": 3,
+    "errors": []
+  },
+  "run_id_filename_collision_validation": {
+    "status": "PASS",
+    "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+    "workspace_root_count": 39,
+    "collision_roots_relative": [
+      ".hardware_authorization",
+      "build/p7_authorized_sequence",
+      "evidence/hardware/p7/authorized_sequence",
+      "evidence/generated"
+    ],
+    "collisions": [],
+    "errors": []
+  },
+  "build_materialization_preflight": {
+    "status": "PASS",
+    "source_root": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE",
+    "destination_root": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build",
+    "source_commit_expected": "24fa2d381a81692ebdabf9a46f494a67d0463e03",
+    "trees": {
+      "p6_ps_candidate": {
+        "source": {
+          "path": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE\\build\\p6_ps_candidate",
+          "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+          "file_count": 305,
+          "byte_count": 96630479,
+          "tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+          "errors": []
+        },
+        "destination": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p6_ps_candidate",
+        "destination_lexists": false,
+        "expected_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732"
+      },
+      "p7_ps_vitis_workspace": {
+        "source": {
+          "path": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace",
+          "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+          "file_count": 1832,
+          "byte_count": 39941847,
+          "tree_sha256": "941a100cb81e8db9db6ffccf8d5e5a83e0619ce56cb0e050c9d52b6ed6c85a4c",
+          "errors": []
+        },
+        "destination": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace",
+        "destination_lexists": false,
+        "expected_tree_sha256": "941a100cb81e8db9db6ffccf8d5e5a83e0619ce56cb0e050c9d52b6ed6c85a4c"
+      }
+    },
+    "destination_paths_absent": true,
+    "copy_started": true,
+    "errors": [],
+    "source_worktree": {
+      "path": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE",
+      "head": "24fa2d381a81692ebdabf9a46f494a67d0463e03",
+      "tracked_clean": true,
+      "errors": [],
+      "tracked_status": [],
+      "status": "PASS"
+    },
+    "destination_worktree": {
+      "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE",
+      "head": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+      "tracked_clean": true,
+      "errors": [],
+      "tracked_status": [],
+      "status": "PASS"
+    }
+  },
+  "materializations": {
+    "p6_ps_candidate": {
+      "source": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE\\build\\p6_ps_candidate",
+      "destination": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p6_ps_candidate",
+      "staging": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\.p6_ps_candidate.materializing.59tzduhb",
+      "copy_started": true,
+      "materialized": true,
+      "staging_tree": {
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\.p6_ps_candidate.materializing.59tzduhb",
+        "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+        "file_count": 305,
+        "byte_count": 96630479,
+        "tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+        "errors": []
+      },
+      "destination_tree": {
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p6_ps_candidate",
+        "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+        "file_count": 305,
+        "byte_count": 96630479,
+        "tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+        "errors": []
+      }
+    },
+    "p7_ps_vitis_workspace": {
+      "source": "D:\\CodexWorktrees\\r49validate_24fa2d3\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace",
+      "destination": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace",
+      "staging": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\.p7_ps_vitis_workspace.materializing.10u8c3dw",
+      "copy_started": true,
+      "materialized": true,
+      "staging_tree": {
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\.p7_ps_vitis_workspace.materializing.10u8c3dw",
+        "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+        "file_count": 1832,
+        "byte_count": 39941847,
+        "tree_sha256": "941a100cb81e8db9db6ffccf8d5e5a83e0619ce56cb0e050c9d52b6ed6c85a4c",
+        "errors": []
+      },
+      "destination_tree": {
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_ps_vitis_workspace",
+        "canonicalization": "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+        "file_count": 1832,
+        "byte_count": 39941847,
+        "tree_sha256": "941a100cb81e8db9db6ffccf8d5e5a83e0619ce56cb0e050c9d52b6ed6c85a4c",
+        "errors": []
+      }
+    }
+  },
+  "campaign_after": {
+    "status": "PASS",
+    "errors": [],
+    "policy_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\config\\p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+    "ledger_sha256": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+    "actual_hardware_attempt_count": 2,
+    "campaign_status": "READY",
+    "campaign_lock_path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_execution.lock",
+    "campaign_lock_exists": false
+  },
+  "build_materialization_completed": true
+}

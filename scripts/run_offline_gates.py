@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import json, shutil, subprocess, sys
+import argparse
+import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +15,12 @@ VITIS_CROSS_GCC_CANDIDATES = [
     Path(r"D:\Xilinx\Vitis\2023.1\gnu\aarch64\nt\aarch64-linux\bin\aarch64-linux-gnu-gcc.exe"),
     Path(r"D:\Xilinx\Vitis\2023.1\gnu\armr5\nt\gcc-arm-none-eabi\bin\armr5-none-eabi-gcc.exe"),
 ]
+
+
+def build_parser():
+    return argparse.ArgumentParser(
+        description="Run the canonical no-hardware RF_COMM_MULTILANE offline bootstrap gates."
+    )
 
 def run(name, cmd, status=None):
     p = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
@@ -290,7 +300,8 @@ def write_summary(outdir, results):
     (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8")
     return status
 
-def main():
+def main(argv=None):
+    build_parser().parse_args(argv)
     results = []
     py = sys.executable
     results.append(run("project_integrity", [py, "scripts/check_project_integrity.py"]))

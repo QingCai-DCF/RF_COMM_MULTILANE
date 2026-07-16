@@ -1,0 +1,57 @@
+{
+  "FULL_SUITE_INVOCATION_COUNT": 2,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "dirty_files_after_suites": [],
+  "dirty_worktree_after_suites": false,
+  "dirty_worktree_before_suites": false,
+  "generated_at_utc": "2026-07-16T08:43:22.190338+00:00",
+  "schema": "rf-comm-p7-complete-regression-suites-v1",
+  "source_commit": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+  "source_commit_after_suites": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+  "source_commit_unchanged": true,
+  "status": "PASS",
+  "suite_invocation_count_by_name": {
+    "tests_p7_discovery": 1,
+    "top_level_discovery": 1
+  },
+  "suites": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests -p test*.py -v",
+      "discovered_test_count": 268,
+      "invocation_count": 1,
+      "name": "top_level_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 50688,
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_regression_9227087_stage66_campaign_r60prep_logs\\top_level_discovery.stderr.log",
+        "sha256": "f198fe6a9e93f79fe6f0d50e6899f7e0b3e1773591ea3b6ebb47e1db61e1442b"
+      },
+      "stdout": {
+        "bytes": 641,
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_regression_9227087_stage66_campaign_r60prep_logs\\top_level_discovery.stdout.log",
+        "sha256": "94ea25e3d6c25f1fef75e278815d85d25a382bdf65ba478e95e4ab5edec49c0e"
+      }
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest discover -s tests/p7 -p test_*.py -v",
+      "discovered_test_count": 43,
+      "invocation_count": 1,
+      "name": "tests_p7_discovery",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": {
+        "bytes": 5472,
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_regression_9227087_stage66_campaign_r60prep_logs\\tests_p7_discovery.stderr.log",
+        "sha256": "958818316b739b19cf28880992db12963fddea52edb6e65059ee2e5be170d632"
+      },
+      "stdout": {
+        "bytes": 0,
+        "path": "D:\\CodexWorktrees\\stage66prep_9227087\\RF_COMM_MULTILANE\\build\\p7_regression_9227087_stage66_campaign_r60prep_logs\\tests_p7_discovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "total_discovered_test_count": 311
+}

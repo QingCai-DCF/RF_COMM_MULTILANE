@@ -1,0 +1,35 @@
+{
+  "schema": "rf-comm-p7-offline-bootstrap-help-fix-validation-v1",
+  "generated_at_utc": "2026-07-16T08:49:56.111268+00:00",
+  "retired_run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+  "retired_source_commit": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+  "campaign_ledger_sha256_after_retirement": "2346011709247b84bd6484b1bc2362a9c424df70e5b4007b18342d7ffe5394ad",
+  "actual_hardware_attempt_count": 2,
+  "campaign_status": "READY",
+  "fix": {
+    "entrypoint": "scripts/run_offline_gates.py",
+    "argparse_added": true,
+    "help_exits_before_subprocess": true,
+    "unknown_argument_exits_before_subprocess": true,
+    "normal_no_argument_gate_behavior_preserved": true,
+    "p7_canonical_gate_standard_changed": false
+  },
+  "focused_validation": {
+    "command": "python -B -m unittest tests.test_offline_gate_entrypoint tests.test_p7_stage66_campaign -v",
+    "test_count": 20,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS",
+    "py_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "diagnostic_hardware_attempt_consumed": false,
+  "authorization_environment": "UNSET",
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "campaign_attempt_created": false,
+  "campaign_lock_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "PASS"
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "rf-comm-p7-offline-bootstrap-abnormal-termination-v1",
+  "recorded_at_utc": "2026-07-16T08:47:22.014145+00:00",
+  "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+  "source_commit": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+  "command": "python -B scripts/run_offline_gates.py --help",
+  "command_interpretation": "FULL_BOOTSTRAP_EXECUTED_BECAUSE_HELP_WAS_NOT_PARSED",
+  "tool_exit_code": 124,
+  "tool_timeout_milliseconds": 34039,
+  "generic_offline_vivado_started": true,
+  "p7_canonical_gate_started": false,
+  "orphan_process_tree_roots_terminated": [25412, 9924],
+  "terminated_process_tree_included": [
+    "python.exe scripts/run_offline_gates.py --help",
+    "vivado.exe -mode batch -source scripts/vivado_nonhardware_build.tcl",
+    "xvlog.bat/xelab.bat/xsim.bat offline simulations"
+  ],
+  "scoped_worktree_processes_remaining_after_termination": 0,
+  "dirty_tracked_file_count": 98,
+  "dirty_worktree_preserved_at": "D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE",
+  "dirty_worktree_reset_checkout_clean_performed": false,
+  "external_hw_server_pid": 26332,
+  "external_hw_server_action_taken": false,
+  "hardware_connection_attempted": false,
+  "hardware_actions_executed": false,
+  "campaign_lock_created": false,
+  "campaign_attempt_created": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "result": "FAIL_PRE_HARDWARE_RECOVERED_PROCESS_CONTAINMENT"
+}

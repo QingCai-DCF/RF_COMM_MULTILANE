@@ -1,0 +1,399 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Thu Jul 16 16:43:57 2026
+# Process ID: 12020
+# Current directory: D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE
+# Command line: vivado.exe -mode batch -source scripts/vivado_nonhardware_build.tcl -tclargs D:\CodexWorktrees\stage66prep_9227087\RF_COMM_MULTILANE safe_idle
+# Log file: D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/vivado.log
+# Journal file: D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE\vivado.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source scripts/vivado_nonhardware_build.tcl
+# set root_dir [file normalize [lindex $argv 0]]
+# set stage "safe_idle"
+# if {[llength $argv] > 1} {
+#   set stage [lindex $argv 1]
+# }
+# if {$stage ni {"safe_idle" "tfdu_control_idle" "raw_pulse" "raw_lane_matrix" "protocol_lane0" "protocol_lane0_ack" "protocol_lane1" "protocol_lane1_ack" "protocol_two_lane_minimal" "protocol_lane0_soak" "protocol_two_lane_soak" "p6_local_transport"}} {
+#   error "Unsupported P4_AUTO Vivado build stage: $stage"
+# }
+# set out_dir [file normalize "$root_dir/evidence/generated/vivado"]
+# file mkdir $out_dir
+# set bitstream_file "$out_dir/ir_top_new_${stage}.bit"
+# set debug_ltx_file "$out_dir/p4_auto_${stage}_debug.ltx"
+# set dbg_log_file "$out_dir/p4_auto_${stage}_debug_instrumentation.txt"
+# set ila_name "p4_auto_${stage}_ila"
+# set part_name "xc7z010clg400-1"
+# set log_file [open "$out_dir/nonhardware_build_markers_${stage}.txt" "w"]
+# puts $log_file "VIVADO_NONHARDWARE_BUILD_STARTED=1"
+# puts $log_file "NO_HARDWARE_ACTIONS_EXECUTED=1"
+# puts $log_file "P4_AUTO_BUILD_STAGE=$stage"
+# close $log_file
+# create_project "rf_comm_nonhardware_${stage}" "$out_dir/project_${stage}" -part $part_name -force
+INFO: [ProjectBase 1-489] The host OS only allows 260 characters in a normal path. The project is stored in a path with more than 80 characters. If you experience issues with IP, Block Designs, or files not being found, please consider moving the project to a location with a shorter path. Alternately consider using the OS subst command to map part of the path to a drive letter.
+Current project path is 'D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/evidence/generated/vivado/project_safe_idle'
+create_project: Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 1389.660 ; gain = 159.402
+# set rtl_files [glob -nocomplain "$root_dir/rtl/*.sv"]
+# set rtl_debug_files [glob -nocomplain "$root_dir/rtl/debug/*.sv"]
+# set rtl_files [concat $rtl_files $rtl_debug_files]
+# add_files -fileset sources_1 $rtl_files
+# set_property top ir_top_new [current_fileset]
+# if {$stage eq "tfdu_control_idle"} {
+#   set_property verilog_define {P4_AUTO_TFDU_CONTROL_IDLE} [current_fileset]
+# } elseif {$stage eq "raw_pulse"} {
+#   set_property verilog_define {P4_AUTO_RAW_PULSE_L0} [current_fileset]
+# } elseif {$stage eq "raw_lane_matrix"} {
+#   set_property verilog_define {P4_AUTO_RAW_LANE_MATRIX} [current_fileset]
+# } elseif {$stage eq "protocol_lane0"} {
+#   set_property verilog_define {P4_AUTO_LANE0_FRAME_CRC} [current_fileset]
+# } elseif {$stage eq "protocol_lane0_ack"} {
+#   set_property verilog_define {P4_AUTO_LANE0_ACK_RETRY} [current_fileset]
+# } elseif {$stage eq "protocol_lane1"} {
+#   set_property verilog_define {P4_AUTO_LANE1_FRAME_CRC} [current_fileset]
+# } elseif {$stage eq "protocol_lane1_ack"} {
+#   set_property verilog_define {P4_AUTO_LANE1_ACK_RETRY} [current_fileset]
+# } elseif {$stage eq "protocol_two_lane_minimal"} {
+#   set_property verilog_define {P4_AUTO_TWO_LANE_MINIMAL} [current_fileset]
+# } elseif {$stage eq "protocol_lane0_soak"} {
+#   set_property verilog_define {P4_AUTO_LANE0_300S_SOAK} [current_fileset]
+# } elseif {$stage eq "protocol_two_lane_soak"} {
+#   set_property verilog_define {P4_AUTO_TWO_LANE_300S_SOAK} [current_fileset]
+# } elseif {$stage eq "p6_local_transport"} {
+#   set_property verilog_define {P6_LOCAL_TRANSPORT} [current_fileset]
+# }
+# read_xdc "$root_dir/constraints/active/PORT1.generated.xdc"
+# update_compile_order -fileset sources_1
+# synth_design -top ir_top_new -part $part_name
+Command: synth_design -top ir_top_new -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 14120
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2205.840 ; gain = 408.930
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ir_top_new' [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/ir_top_new.sv:35]
+INFO: [Synth 8-6157] synthesizing module 'STARTUPE2' [D:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:132343]
+	Parameter PROG_USR bound to: FALSE - type: string 
+	Parameter SIM_CCLK_FREQ bound to: 0.000000 - type: double 
+INFO: [Synth 8-6155] done synthesizing module 'STARTUPE2' (0#1) [D:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:132343]
+INFO: [Synth 8-6157] synthesizing module 'tfdu_debug_probe' [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:3]
+	Parameter LANE_COUNT bound to: 32'sb00000000000000000000000000000100 
+	Parameter CLK_HZ bound to: 32'sb00000011110100001001000000000000 
+	Parameter STARTUP_US bound to: 32'sb00000000000000000000000111110100 
+	Parameter TXD_STUCK_HIGH_MAX_NS bound to: 32'sb00000000000000010011100010000000 
+	Parameter STATUS_WORDS bound to: 32'sb00000000000000000000000000011000 
+INFO: [Synth 8-6155] done synthesizing module 'tfdu_debug_probe' (0#1) [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:3]
+INFO: [Synth 8-6155] done synthesizing module 'ir_top_new' (0#1) [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/ir_top_new.sv:35]
+WARNING: [Synth 8-6014] Unused sequential element rxd_rising_edge_count_reg[2] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:70]
+WARNING: [Synth 8-6014] Unused sequential element rxd_rising_edge_count_reg[3] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:70]
+WARNING: [Synth 8-6014] Unused sequential element startup_wait_counter_reg[0] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:75]
+WARNING: [Synth 8-6014] Unused sequential element startup_wait_counter_reg[1] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:75]
+WARNING: [Synth 8-6014] Unused sequential element startup_wait_counter_reg[2] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:75]
+WARNING: [Synth 8-6014] Unused sequential element startup_wait_counter_reg[3] was removed.  [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:75]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'u_p4_auto_startupe2'. This will prevent further optimization [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/ir_top_new.sv:501]
+WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_tx_out_0[1] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port ir_tx_out_0[0] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[1] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[0] driven by constant 0
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2299.461 ; gain = 502.551
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2317.363 ; gain = 520.453
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2317.363 ; gain = 520.453
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2329.391 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 1 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/constraints/active/PORT1.generated.xdc]
+Finished Parsing XDC File [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/constraints/active/PORT1.generated.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/constraints/active/PORT1.generated.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/ir_top_new_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/ir_top_new_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2430.094 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2430.094 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 4     
++---Registers : 
+	               32 Bit    Registers := 4     
+	                4 Bit    Registers := 6     
++---Muxes : 
+	   2 Input  256 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 80 (col length:40)
+BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_mode_out_0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_sd_0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port ir_tx_out_0[1] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port ir_tx_out_0[0] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_mode_b0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[1] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_sd_b0[0] driven by constant 1
+WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[1] driven by constant 0
+WARNING: [Synth 8-3917] design ir_top_new has port loop_tx_b0[0] driven by constant 0
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-5396] Clock pin C has keep related attribute (keep/mark_debug/dont_touch) which could create extra logic on its net [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/rtl/debug/tfdu_debug_probe.sv:63]
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------+------+
+|      |Cell      |Count |
++------+----------+------+
+|1     |CARRY4    |   136|
+|2     |LUT1      |    19|
+|3     |LUT2      |   142|
+|4     |LUT3      |   261|
+|5     |LUT4      |   145|
+|6     |LUT5      |     4|
+|7     |LUT6      |     8|
+|8     |STARTUPE2 |     1|
+|9     |FDCE      |   500|
+|10    |IBUF      |     4|
+|11    |OBUF      |    12|
++------+----------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 14 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:09 ; elapsed = 00:00:14 . Memory (MB): peak = 2430.094 ; gain = 520.453
+Synthesis Optimization Complete : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2430.094 ; gain = 633.184
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 2430.094 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 137 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'ir_top_new' is not ideal for floorplanning, since the cellview 'tfdu_debug_probe' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/constraints/active/PORT1.generated.xdc]
+Finished Parsing XDC File [D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/constraints/active/PORT1.generated.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2430.094 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 93bff665
+INFO: [Common 17-83] Releasing license: Synthesis
+24 Infos, 33 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:16 ; elapsed = 00:00:24 . Memory (MB): peak = 2430.094 ; gain = 1040.434
+# set dbg_log [open $dbg_log_file "w"]
+# puts $dbg_log "P4_AUTO_DEBUG_INSTRUMENTATION_BEGIN=1"
+# puts $dbg_log "NO_HARDWARE_ACTIONS_EXECUTED=1"
+# puts $dbg_log "P4_AUTO_BUILD_STAGE=$stage"
+# set debug_clock_nets [lsort -dictionary [get_nets -hier -quiet *p4_auto_cfgmclk*]]
+# set debug_status_nets [lsort -dictionary [get_nets -hier -quiet *p4_auto_status_words_flat*]]
+# puts $dbg_log "P4_AUTO_DEBUG_CLOCK_NET_COUNT=[llength $debug_clock_nets]"
+# puts $dbg_log "P4_AUTO_DEBUG_STATUS_NET_COUNT=[llength $debug_status_nets]"
+# if {[llength $debug_clock_nets] > 0 && [llength $debug_status_nets] > 0} {
+#   create_debug_core $ila_name ila
+#   set_property C_DATA_DEPTH 1024 [get_debug_cores $ila_name]
+#   set_property C_TRIGIN_EN false [get_debug_cores $ila_name]
+#   set_property C_TRIGOUT_EN false [get_debug_cores $ila_name]
+#   set_property C_ADV_TRIGGER false [get_debug_cores $ila_name]
+#   connect_debug_port ${ila_name}/clk [lindex $debug_clock_nets 0]
+#   if {[llength [get_debug_cores -quiet dbg_hub]] > 0} {
+#     connect_debug_port dbg_hub/clk [lindex $debug_clock_nets 0]
+#     set_property C_CLK_INPUT_FREQ_HZ 64000000 [get_debug_cores dbg_hub]
+#     puts $dbg_log "P4_AUTO_DBG_HUB_CLOCK=PASS"
+#     puts $dbg_log "P4_AUTO_DBG_HUB_CLK_INPUT_FREQ_HZ=64000000"
+#   } else {
+#     puts $dbg_log "P4_AUTO_DBG_HUB_CLOCK=SKIP_WITH_REASON"
+#   }
+#   set_property port_width [llength $debug_status_nets] [get_debug_ports ${ila_name}/probe0]
+#   connect_debug_port ${ila_name}/probe0 $debug_status_nets
+#   puts $dbg_log "P4_AUTO_ILA_CORE_INSERTION=PASS"
+#   puts $dbg_log "P4_AUTO_ILA_CORE_NAME=$ila_name"
+#   puts $dbg_log "P4_AUTO_ILA_PROBE0_WIDTH=[llength $debug_status_nets]"
+# } else {
+#   puts $dbg_log "P4_AUTO_ILA_CORE_INSERTION=SKIP_WITH_REASON"
+#   puts $dbg_log "P4_AUTO_ILA_SKIP_REASON=missing debug clock or status nets"
+# }
+# close $dbg_log
+# if {$stage eq "safe_idle"} {
+#   file copy -force $dbg_log_file "$out_dir/p4_auto_debug_instrumentation.txt"
+# }
+# write_checkpoint -force "$out_dir/post_synth_${stage}.dcp"
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.028 . Memory (MB): peak = 2430.094 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/evidence/generated/vivado/post_synth_safe_idle.dcp' has been generated.
+# report_drc -file "$out_dir/post_synth_drc_${stage}.rpt"
+Command: report_drc -file D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/evidence/generated/vivado/post_synth_drc_safe_idle.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2023.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file D:/CodexWorktrees/stage66prep_9227087/RF_COMM_MULTILANE/evidence/generated/vivado/post_synth_drc_safe_idle.rpt.
+report_drc completed successfully
+# opt_design
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z010'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.369 . Memory (MB): peak = 2430.094 ; gain = 0.000
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 211ea2ae3
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 2617.664 ; gain = 187.570
+
+Starting Logic Optimization Task
+
+Phase 1 Generate And Synthesize Debug Cores
+INFO: [Chipscope 16-329] Generating Script for core instance : dbg_hub 
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:xsdbm:3.0 for cell dbg_hub_CV.
+INFO: [Chipscope 16-329] Generating Script for core instance : p4_auto_safe_idle_ila 
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:ila:6.2 for cell p4_auto_safe_idle_ila_CV.

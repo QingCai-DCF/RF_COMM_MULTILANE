@@ -1,0 +1,93 @@
+{
+  "schema": "rf-comm-p7-stage66-prehardware-retirement-package-v1",
+  "generated_at_utc": "2026-07-16T08:51:40.8225489Z",
+  "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+  "source_commit": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+  "campaign_ledger_sha256_before": "d0bc024dd13ec96fc5d1514abcf77f4194f8de9409db544b7573d4a7025545fd",
+  "campaign_ledger_sha256_after": "2346011709247b84bd6484b1bc2362a9c424df70e5b4007b18342d7ffe5394ad",
+  "actual_hardware_attempt_count_after": 2,
+  "campaign_status_after": "READY",
+  "diagnostic_hardware_attempt_consumed": false,
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "coverage_claimed": false,
+  "files": [
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block.json",
+      "bytes": 5124,
+      "sha256": "7df562d76c4ac1233600585a5eb6847355a434f4356f277aa173c34de93af499"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_fix_validation.json",
+      "bytes": 1348,
+      "sha256": "ce941d943d00c58270fbb004b7a8203b74a5a375044a8a1743b35c07917b6b8d"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_retirement_recording.json",
+      "bytes": 1346,
+      "sha256": "66b73caba267ae725bd8c4c0ff61a02bb10e39b75cd0dc12084454e8796705e1"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/build_materialization.json",
+      "bytes": 9153,
+      "sha256": "acacfbf76da50fa79574a6cfd31afbe57cf990bf95870f7a94e352040d7d32c5"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/campaign_ledger_after_retirement.json",
+      "bytes": 19658,
+      "sha256": "2346011709247b84bd6484b1bc2362a9c424df70e5b4007b18342d7ffe5394ad"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/complete_suite_summary.json",
+      "bytes": 2519,
+      "sha256": "55e09aac2ace93dc9dd33db875bde0e2fc3654578d8d88d88060f301d2bf31bc"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/ledger_materialization.json",
+      "bytes": 1803,
+      "sha256": "a7927d78525ba4ade4419050a11057142a48e2629cd4f9d16e394847178d27bd"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/offline_bootstrap_failure_boundary.json",
+      "bytes": 1435,
+      "sha256": "eee47eb762132d0db43f559f783767e57d2ce71e7ae47f7565735f4f59c8c3c9"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/offline_bootstrap_vivado.jou",
+      "bytes": 934,
+      "sha256": "71fbc742402339495e8ee650a08b8dca28e69d4194763b5195e57a8ffdf6017b"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/offline_bootstrap_vivado.log",
+      "bytes": 28627,
+      "sha256": "f7111034ad054c65a0f8635b84462f81eeccbad6b314bd01e3914a183631f82d"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "7d656b49c7c36b91822aad5b3570b18e2e228e220ba133d9844ddc2e0222b145"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/tests_p7_discovery.stderr.log",
+      "bytes": 5472,
+      "sha256": "958818316b739b19cf28880992db12963fddea52edb6e65059ee2e5be170d632"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/top_level_discovery.stderr.log",
+      "bytes": 50688,
+      "sha256": "f198fe6a9e93f79fe6f0d50e6899f7e0b3e1773591ea3b6ebb47e1db61e1442b"
+    },
+    {
+      "path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block/top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "94ea25e3d6c25f1fef75e278815d85d25a382bdf65ba478e95e4ab5edec49c0e"
+    }
+  ],
+  "file_count": 15,
+  "result": "PASS_RECORDED"
+}
