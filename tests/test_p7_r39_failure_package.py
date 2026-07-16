@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -17,10 +18,31 @@ REPLAY_RESULT = ROOT / "evidence" / "generated" / "p7_r39_summarizer_replay_resu
 SHA256_RE = re.compile(r"[0-9a-f]{64}")
 EXPECTED_ORDINALS = [1, 2, 3, 4, *range(55, 66)]
 EXPECTED_ATTEMPTS = [1, 2, 3, 4, *range(55, 65)]
+R39_REPAIR_BLOB_COMMITS = {
+    "software/ps_driver/p7_app_service.c": "6d56b312b35da539ca38d848455b8cbc2adb2014",
+    "tools/run_p7_ps_core_offline.py": "1eb2ff82da57aa13dc2d0f3aa88fd75de35109e9",
+    "tests/test_p7_ps_application_stage_safe.py": "6d56b312b35da539ca38d848455b8cbc2adb2014",
+}
 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def git_blob_sha256(commit: str, path: str) -> str:
+    completed = subprocess.run(
+        ["git", "show", f"{commit}:{path}"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    if completed.returncode != 0:
+        raise AssertionError(
+            f"historical Git blob unavailable: {commit}:{path}: "
+            + completed.stderr.decode("utf-8", errors="replace")
+        )
+    return hashlib.sha256(completed.stdout).hexdigest()
 
 
 def load_json(path: Path) -> dict[str, object]:
@@ -248,15 +270,25 @@ class P7R39FailurePackageTests(unittest.TestCase):
         self.assertFalse(summary["failure_classification"]["payload_or_ddr_corruption_claimed"])
         repair = summary["source_repair"]
         self.assertEqual(
-            repair["service_sha256"], sha256(ROOT / repair["service_path"])
+            repair["service_sha256"],
+            git_blob_sha256(
+                R39_REPAIR_BLOB_COMMITS[repair["service_path"]],
+                repair["service_path"],
+            ),
         )
         self.assertEqual(
             repair["offline_checker_sha256"],
-            sha256(ROOT / repair["offline_checker_path"]),
+            git_blob_sha256(
+                R39_REPAIR_BLOB_COMMITS[repair["offline_checker_path"]],
+                repair["offline_checker_path"],
+            ),
         )
         self.assertEqual(
             repair["focused_static_test_sha256"],
-            sha256(ROOT / repair["focused_static_test_path"]),
+            git_blob_sha256(
+                R39_REPAIR_BLOB_COMMITS[repair["focused_static_test_path"]],
+                repair["focused_static_test_path"],
+            ),
         )
         self.assertEqual("NOT_RUN", repair["complete_checkpoint_suites"])
         self.assertEqual("NOT_RUN", repair["hardware_validation"])
