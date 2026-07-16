@@ -1,0 +1,36 @@
+{
+  "schema": "rf-comm-p7-required-suite-single-invocation-observation-v1",
+  "run_id": "p7_20260716_stationary_app_r54_diag_stage66_c02",
+  "source_commit": "a98286b550abc671dab47d6574c8d24b73564064",
+  "runner_process_id": 25640,
+  "runner_started_at_utc": "2026-07-16T05:53:00.5962147Z",
+  "outer_tool_wait_timeout_seconds": 124,
+  "runner_alive_after_outer_tool_wait_timeout": true,
+  "second_suite_invocation_started": false,
+  "runner_finished_before_observation_at_utc": "2026-07-16T05:59:47.0281061Z",
+  "summary_generated_at_utc": "2026-07-16T05:59:47.004728+00:00",
+  "summary_path": "build/p7_regression_a98286b_stage66_campaign_r54prep.json",
+  "summary_sha256": "b411c8b32109fad44a7a05e29a07253fdbbac3f7a189ac8a7acd653d0ee1366b",
+  "summary_status": "PASS",
+  "total_discovered_test_count": 286,
+  "suite_invocation_count_by_name": {
+    "top_level_discovery": 1,
+    "tests_p7_discovery": 1
+  },
+  "suite_results": {
+    "top_level_discovery": {
+      "discovered_test_count": 244,
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "tests_p7_discovery": {
+      "discovered_test_count": 42,
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "hardware_actions_executed": false,
+  "diagnostic_hardware_attempt_consumed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "PASS_SINGLE_CONTINUING_INVOCATION"
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "rf-comm-p7-hash-exact-materialization-preflight-v1",
+  "generated_at_utc": "2026-07-16T05:52:27.9273384Z",
+  "source_commit": "a98286b550abc671dab47d6574c8d24b73564064",
+  "source_tree": "52948123cb63cf2a88e163ece485871b4df24314",
+  "run_id": "p7_20260716_stationary_app_r54_diag_stage66_c02",
+  "materialization_source_worktree": "D:/CodexWorktrees/r49validate_24fa2d3/RF_COMM_MULTILANE",
+  "materialization_source_commit": "24fa2d381a81692ebdabf9a46f494a67d0463e03",
+  "destination_worktree": "D:/CodexWorktrees/r54validate_a98286b/RF_COMM_MULTILANE",
+  "canonicalization": "relative POSIX path TAB byte_count TAB sha256 LF; PowerShell Sort-Object path",
+  "materializations": {
+    "build/p6_ps_candidate": {
+      "source_file_count": 305,
+      "source_byte_count": 96630479,
+      "source_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+      "destination_file_count": 305,
+      "destination_byte_count": 96630479,
+      "destination_tree_sha256": "b4f9be85da27b12b46257bc47bede9f04ef9b0c36c00d4f9bea2e07e85a9b732",
+      "copy_exit_code": 1,
+      "hash_exact": true
+    },
+    "build/p7_ps_vitis_workspace": {
+      "source_file_count": 1832,
+      "source_byte_count": 39941847,
+      "source_tree_sha256": "094a48ee739230b6aabd96a8f62f6c4d40619ee82b07302f744244a1e8b3f8bb",
+      "destination_file_count": 1832,
+      "destination_byte_count": 39941847,
+      "destination_tree_sha256": "094a48ee739230b6aabd96a8f62f6c4d40619ee82b07302f744244a1e8b3f8bb",
+      "copy_exit_code": 1,
+      "hash_exact": true
+    }
+  },
+  "focused_test": {
+    "command": "python -B -m unittest tests.test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract -v",
+    "test_count": 1,
+    "returncode": 0,
+    "result": "PASS"
+  },
+  "source_materialization_worktree_clean": true,
+  "destination_source_worktree_clean": true,
+  "external_hw_server_process_count": 1,
+  "external_hw_server_pid": 26332,
+  "tcp_port_3121_listener_count": 1,
+  "external_hw_server_action_taken": false,
+  "RF_COMM_HW_AUTH": "UNSET",
+  "hardware_actions_executed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "result": "PASS"
+}

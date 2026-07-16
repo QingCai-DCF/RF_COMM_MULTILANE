@@ -1,0 +1,69 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prelaunch-snapshot-v1",
+  "generated_at_utc": "2026-07-16T06:05:07.4893243Z",
+  "status": "PASS",
+  "run_id": "p7_20260716_stationary_app_r54_diag_stage66_c02",
+  "source_commit": "a98286b550abc671dab47d6574c8d24b73564064",
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "full_stage_ordinals": [1, 2, 3, 4, 66],
+  "plan_sha256": "56750a59748b3f1d22e75b5dc7830882a7d29a0d24ca78632a747269adca32fd",
+  "generation_manifest_sha256": "1c25e0996cf8b0016597dae57abb0c3df7713a3ebc8f27109839fde479ed0fbd",
+  "outer_dry_validation_sha256": "7376da445da2090a7a91cafcc07fb1cf8406f10c23681114325778b5c14ed2f6",
+  "offline_checkpoint_sha256": "2e0d36a334fe71ca2d71018ed29411042f08933f5ce8e886d4cb4f68f9af940a",
+  "authorization_count": 5,
+  "authorizations": [
+    {
+      "name": "p7_20260716_stationary_app_r54_diag_stage66_c02_001_p7_safe_idle.txt",
+      "sha256": "426f6839d8421d65ef481d7e5caaf518b2c8f0f0f2db0171befd6f4ef3f6a50b"
+    },
+    {
+      "name": "p7_20260716_stationary_app_r54_diag_stage66_c02_002_p7_p6_frame_regression_m1.txt",
+      "sha256": "6f41ae16caaaa4573b7793c8c65ea8cdb056769c51f2df0c1087ae2e8b1025ea"
+    },
+    {
+      "name": "p7_20260716_stationary_app_r54_diag_stage66_c02_003_p7_p6_frame_regression_m2.txt",
+      "sha256": "f3f942998c8c4d514e16e3133b3d8efda472a9e920146cf3a3c5ecf749d3401a"
+    },
+    {
+      "name": "p7_20260716_stationary_app_r54_diag_stage66_c02_004_p7_p6_frame_regression_m3.txt",
+      "sha256": "f7249ebbf231b22bca131465a2478f60783d74507810edd3074d27575a3aec2a"
+    },
+    {
+      "name": "p7_20260716_stationary_app_r54_diag_stage66_c02_066_p7_ps_stationary.txt",
+      "sha256": "dba2ca9e2d019ebdcc991c7b2c7f06abb2b9a226d2fcb9da3e2a9b2e24b521ea"
+    }
+  ],
+  "campaign": {
+    "campaign_ledger_sha256": "82547eee92a25d351681a80537cc78ee07cc5d68e511473e781e7e54899ab8d2",
+    "status": "READY",
+    "requested_hardware_attempt_number": 2,
+    "actual_hardware_attempt_count": 1,
+    "retired_pre_hardware_run_id_count": 11,
+    "run_id_ledger_hit_count": 0,
+    "campaign_lock_exists": false
+  },
+  "execution_output_collision_check": {
+    "execution_evidence_root_exists": false,
+    "execution_ledger_exists": false,
+    "abort_file_exists": false
+  },
+  "hardware_boundary": {
+    "RF_COMM_HW_AUTH": "UNSET",
+    "hw_server_process_count": 1,
+    "hw_server_pid": 26332,
+    "hw_server_path": "D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/hw_server.exe",
+    "hw_server_start_time_utc": "2026-07-16T05:18:29.5165590Z",
+    "tcp_port_3121_listener_count": 1,
+    "tcp_port_3121_owning_pid": 26332,
+    "vivado_process_count": 0,
+    "xsdb_process_count": 0,
+    "external_hw_server_action_taken": false,
+    "hardware_actions_executed": false,
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3"
+  },
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

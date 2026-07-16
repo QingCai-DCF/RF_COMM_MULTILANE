@@ -1,0 +1,39 @@
+{
+  "P7_AUTHORIZED_HARDWARE_SEQUENCE": "DRY_RUN_VALIDATED",
+  "generated_at_utc": "2026-07-16T06:04:27.895898+00:00",
+  "hardware_actions_executed": false,
+  "programmed_fpga": false,
+  "started_ps_elf": false,
+  "jtag_axi_access": false,
+  "drove_tfdu_txd": false,
+  "enabled_tfdu_receiver": false,
+  "uart_access": false,
+  "network_used": false,
+  "motion_used": false,
+  "plan_mode": "DIAGNOSTIC_STAGE66_CAMPAIGN",
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "full_stage_ordinals": [1, 2, 3, 4, 66],
+  "sequence_plan": {
+    "path": "D:/CodexWorktrees/r54validate_a98286b/RF_COMM_MULTILANE/.hardware_authorization/p7_20260716_stationary_app_r54_diag_stage66_c02_sequence_plan.txt",
+    "sha256": "56750a59748b3f1d22e75b5dc7830882a7d29a0d24ca78632a747269adca32fd",
+    "source_commit": "a98286b550abc671dab47d6574c8d24b73564064",
+    "stage_count": 5
+  },
+  "offline_checkpoint": {
+    "path": "D:/CodexWorktrees/r54validate_a98286b/RF_COMM_MULTILANE/evidence/generated/p7_offline_gate_summary.json",
+    "sha256": "2e0d36a334fe71ca2d71018ed29411042f08933f5ce8e886d4cb4f68f9af940a"
+  },
+  "stage66_diagnostic_campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "run_id": "p7_20260716_stationary_app_r54_diag_stage66_c02",
+    "hardware_attempt_number": 2,
+    "maximum_actual_hardware_attempts": 10,
+    "policy_path": "D:/CodexWorktrees/r54validate_a98286b/RF_COMM_MULTILANE/config/p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "runtime_campaign_ledger": "D:/CodexWorktrees/r54validate_a98286b/RF_COMM_MULTILANE/evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json",
+    "prior_campaign_ledger_sha256": "82547eee92a25d351681a80537cc78ee07cc5d68e511473e781e7e54899ab8d2"
+  },
+  "validation_errors": [],
+  "reason": "all 5 planned wrapper argv vectors and immutable inputs validated; no process was launched"
+}
