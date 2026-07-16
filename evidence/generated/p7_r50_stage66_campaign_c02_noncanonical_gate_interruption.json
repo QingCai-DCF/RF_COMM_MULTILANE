@@ -1,0 +1,88 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T04:31:26.4616523Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r50_diag_stage66_c02",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "c2a8c860670df0ab81ea214cac8fd6e5e6539ebf",
+  "source_tree": "2f28743ba2925fe02abe6e5de1aa8c7ce556f2bf",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 2,
+  "actual_hardware_attempt_count_before": 1,
+  "actual_hardware_attempt_count_after": 1,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "18b8723167e0b242fa268ea1ca945492043b084202a125abf4fc8e16b2490ace",
+  "preconditions": {
+    "materialization_preflight": "PASS",
+    "materialization_preflight_sha256": "b71b9de30a34a130360ce063f0f4da5cebe5542faa0a23d38d010afd092645f9",
+    "focused_board_contract_test": "PASS_1_OF_1",
+    "required_complete_suites": "PASS_286_OF_286",
+    "required_complete_suite_summary_sha256": "fbf1513a59efe8944bbc019522eecf2d9079b952cd6d54ff88603427668e42e1",
+    "suite_invocation_count_by_name": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "cache_bypassed_canonical_p7_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "failure": {
+    "classification": "NONCANONICAL_OFFLINE_GATE_STARTED_BY_IGNORED_HELP_ARGUMENT",
+    "noncanonical_command": "python -B scripts/run_offline_gates.py --help",
+    "noncanonical_process_tree_started": true,
+    "noncanonical_process_tree_terminated": true,
+    "canonical_gate_process_started": false,
+    "source_worktree_dirty_file_count_after_termination": 22,
+    "source_test_failure_proven": false,
+    "same_run_or_source_gate_retry_permitted": false,
+    "automatic_action": "Stop only the exact r50-bound offline process tree, preserve its dirty worktree and raw evidence, retire r50, and use a new clean source/run ID."
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_CANONICAL_GATE_NOT_RUN",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "noncanonical_offline_vivado_invoked": true,
+    "vivado_hardware_action_invoked": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "preserved_evidence": {
+    "path": "evidence/generated/p7_r50_stage66_campaign_c02_noncanonical_gate_interruption",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this retirement record is outside the tree",
+    "file_count": 9,
+    "byte_count": 64119,
+    "tree_sha256": "437c49a156ae379c9282dd32997053b2befa2186061ab98e35c01fc176992d47",
+    "noncanonical_gate_interruption_sha256": "e66a9c8b888bb4ccbc9ca207bf587aa0c2d74ec9fdd5a4a258a504db6fbc2cfb",
+    "source_worktree": "D:/CodexWorktrees/r50validate_c2a8c86/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true,
+    "cleanup_or_restore_executed": false
+  },
+  "hardware_boundary": {
+    "hw_server_process_count_at_postfailure_snapshot": 0,
+    "tcp_port_3121_listener_count_at_postfailure_snapshot": 0,
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "Only an offline nonhardware Vivado build was started; no hardware connection, authorization, wrapper, XSDB action, programming, or hardware stage occurred.",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r51_diag_stage66_c02",
+  "next_run_must_not_start_before": "ACCURATE_R50_RETIREMENT_COMMIT_PLUS_RECORDED_READY_CAMPAIGN_LEDGER_PLUS_NEW_CLEAN_SOURCE_HASH_EXACT_MATERIALIZATION_PLUS_FOCUSED_TEST_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_CANONICAL_P7_GATE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}

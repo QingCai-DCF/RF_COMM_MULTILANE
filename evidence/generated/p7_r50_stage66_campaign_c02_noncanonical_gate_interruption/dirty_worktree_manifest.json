@@ -1,0 +1,33 @@
+{
+  "schema": "rf-comm-p7-prehardware-dirty-worktree-manifest-v1",
+  "observed_at_utc": "2026-07-16T04:31:26.4616523Z",
+  "run_id": "p7_20260716_stationary_app_r50_diag_stage66_c02",
+  "source_commit": "c2a8c860670df0ab81ea214cac8fd6e5e6539ebf",
+  "dirty_file_count": 22,
+  "files": [
+    {"path": "config/register_map/generated/ir_regs.h", "bytes": 2561, "sha256": "30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745"},
+    {"path": "config/register_map/generated/ir_regs.md", "bytes": 4148, "sha256": "765e84aec02fb2af2c0c41a226f5f014f356154e2c22898804a20ce0c90cd2b1"},
+    {"path": "config/register_map/generated/ir_regs.py", "bytes": 2159, "sha256": "7b3f6c8cf6804fbcc828a7899169ff63c9237ed72c33ec0fef86790404548d6b"},
+    {"path": "constraints/legacy_conflicts/xdc_conflict_report.md", "bytes": 1866, "sha256": "97a43ed2e44e4fd146e2f6a33cc1f8209e5027b184a580bf2572ff4200ed6269"},
+    {"path": "docs/design/REGISTER_CONTRACT.md", "bytes": 4148, "sha256": "765e84aec02fb2af2c0c41a226f5f014f356154e2c22898804a20ce0c90cd2b1"},
+    {"path": "evidence/generated/m1_tfdu_model_reference.json", "bytes": 734, "sha256": "302506ea937c68207920fa8781165be16d6ebdea598b4cfc92043149a6d97638"},
+    {"path": "evidence/generated/m1_tfdu_model_reference.md", "bytes": 694, "sha256": "18bc67869c109fd5317caaf32f1ccb33f4f80bdcc9ef67abf5d492061b7d11e1"},
+    {"path": "evidence/generated/m2_detect_window_sweep.json", "bytes": 4594, "sha256": "7aa010b5efd2058169fc2c1ad6fecf0d1417b20982ea8e3eb3f6da0bb693924e"},
+    {"path": "evidence/generated/m2_detect_window_sweep.md", "bytes": 807, "sha256": "bb970781ace0f027b098a86d9ec3ff7421a8ce3c1544e02982b4807b3d394387"},
+    {"path": "evidence/generated/m3_crc_bad_ack_reference.json", "bytes": 464, "sha256": "723eef04b5193e2212c26c761d33c1b0120a984b34dc7a0df3c39371bd0465ca"},
+    {"path": "evidence/generated/m3_crc_bad_ack_reference.md", "bytes": 575, "sha256": "4493aef6a33311e5073c1a00c2b17a6141824d1f48bc256b146903fb90791000"},
+    {"path": "evidence/generated/m4_ps_driver_trace.json", "bytes": 6041, "sha256": "48f37182114c2281e588d0fcca528700f8725b3ba615be69ba12903ffc2e1cec"},
+    {"path": "evidence/generated/m4_ps_driver_trace.md", "bytes": 3123, "sha256": "4e0bf721bf654078fbab1f2c3574b7ee1ae14c548d1e3cbe5fcbb99f48766ddf"},
+    {"path": "evidence/generated/m6_refusal_runtime.json", "bytes": 1844, "sha256": "e9da7e66d7499d9fdb67d416bc536ac37745d0778224b7086559194884614fb3"},
+    {"path": "evidence/generated/m6_refusal_runtime.md", "bytes": 1872, "sha256": "bf8bcf0ef62a11ba23114f3f8666ed6a73bec67a71327f176230acc95eef213a"},
+    {"path": "evidence/generated/sv_port_contracts.json", "bytes": 19425, "sha256": "c2243f412613807e92812885e8880c9644f4ce01bef8d84ffb1bb1c39b7f2260"},
+    {"path": "evidence/generated/sv_port_contracts.md", "bytes": 801, "sha256": "d0bd1ca86c109dfbed453af66f04fd07bd87b6dd9912c92468d258635c354e45"},
+    {"path": "evidence/generated/vivado/nonhardware_build_markers_safe_idle.txt", "bytes": 99, "sha256": "576e113eb1a49b14a901007f0f702564755d1846394ff418fd438ba1836fa92e"},
+    {"path": "evidence/generated/vivado/p4_auto_debug_instrumentation.txt", "bytes": 351, "sha256": "e34b96216eb5ef53d4044324425156dc54fa820a2ff3ef120a8664c552c52fe1"},
+    {"path": "evidence/generated/vivado/p4_auto_safe_idle_debug_instrumentation.txt", "bytes": 351, "sha256": "e34b96216eb5ef53d4044324425156dc54fa820a2ff3ef120a8664c552c52fe1"},
+    {"path": "evidence/generated/vivado/post_synth_drc_safe_idle.rpt", "bytes": 1688, "sha256": "3a9c2614c3e5c400bc8bef2cfbd07295d318a12f3c0f695966c0aca196672664"},
+    {"path": "software/ps_driver/ir_regs.h", "bytes": 2561, "sha256": "30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745"}
+  ],
+  "worktree_preserved_in_place": true,
+  "reset_checkout_clean_restore_executed": false
+}
