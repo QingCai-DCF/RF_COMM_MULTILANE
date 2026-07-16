@@ -1,0 +1,75 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T04:36:12.9841697Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r51_diag_stage66_c02",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "5085d7e522912e2bade9ca5b644c36b395b424be",
+  "source_tree": "a391b7914d22aad8c4ec4e54fb0bec71f74e13ad",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 2,
+  "actual_hardware_attempt_count_before": 1,
+  "actual_hardware_attempt_count_after": 1,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "875c3946648c92cca4e17c5b1d12976bbc8ab881140709207fbb7700c40e90ec",
+  "preconditions": {
+    "materialization_preflight": "FAIL_BEFORE_COPY",
+    "focused_board_contract_test": "NOT_RUN",
+    "required_complete_suites": "NOT_RUN",
+    "cache_bypassed_canonical_p7_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "failure": {
+    "classification": "MATERIALIZATION_PREFLIGHT_POWERSHELL_ALIAS_COLLISION",
+    "artifact_copy_started": false,
+    "source_worktree_clean": true,
+    "automatic_fix": "Use the unambiguous Get-TreeRecord helper in a new run ID.",
+    "same_run_id_retry_permitted": false
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_MATERIALIZATION_PREFLIGHT_FAILURE",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "preserved_evidence": {
+    "path": "evidence/generated/p7_r51_stage66_campaign_c02_materialization_preflight_failure",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF; this retirement record is outside the tree",
+    "file_count": 2,
+    "byte_count": 2189,
+    "tree_sha256": "1b06e1b98f862e6891a947b73ecaa57e3eee820a307242d2fff4ae76e22db3ea",
+    "source_worktree": "D:/CodexWorktrees/r51validate_5085d7e/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true
+  },
+  "hardware_boundary": {
+    "hw_server_process_count_at_postfailure_snapshot": 0,
+    "tcp_port_3121_listener_count_at_postfailure_snapshot": 0,
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "Failure occurred before artifact copy, focused tests, suites, gates, authorization, wrappers, or hardware actions.",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r52_diag_stage66_c02",
+  "next_run_must_not_start_before": "ACCURATE_R51_RETIREMENT_COMMIT_PLUS_RECORDED_READY_CAMPAIGN_LEDGER_PLUS_NEW_CLEAN_SOURCE_HASH_EXACT_MATERIALIZATION_PLUS_FOCUSED_TEST_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_CANONICAL_P7_GATE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}
