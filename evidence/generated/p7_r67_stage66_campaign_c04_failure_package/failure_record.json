@@ -1,0 +1,219 @@
+{
+  "schema": "rf-comm-p7-r67-stage66-campaign-failure-v1",
+  "generated_at_utc": "2026-07-16T12:57:19.318991+00:00",
+  "status": "IMMUTABLE_FAIL_RECOVERED",
+  "run_id": "p7_20260716_stationary_app_r67_diag_stage66_c04",
+  "run_id_immutable_fail": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "ed417a345798a2cf118b847ddf8eca0693479a41",
+  "source_tree": "86fbd8a66280b9fbabe5f4406fa65f10c0c6912d",
+  "campaign": {
+    "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+    "hardware_attempt_number": 4,
+    "actual_hardware_attempt_count_after": 4,
+    "maximum_actual_hardware_attempts": 10,
+    "remaining_actual_hardware_attempts": 6,
+    "status_after_recovery_record": "READY",
+    "campaign_policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign_ledger_sha256_after_recovery_record": "abb5a4b0ebfe5ef5123bd044bba078aaa9f0bc3ba6a196bcdc0392a2f3951de1",
+    "diagnostic_only": true,
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "preconditions": {
+    "ledger_materialization": "PASS_ZERO_HARDWARE",
+    "ledger_materialization_sha256": "6e8d36cad1872404ed097e34902ed056107e89253d504e1861e8b381ddf7ac13",
+    "placeholder_exact_argv_rehearsal": "PASS_ZERO_HARDWARE",
+    "placeholder_rehearsal_sha256": "3dc5ad7f4e2e8be42c3f73d1ff20f273b0a7d00cd0de0625624ff46043203d6e",
+    "build_materialization": "PASS_ZERO_HARDWARE",
+    "build_materialization_sha256": "ba6d08fbba40a34096afc8342285cb687a377368a50628ee90a98f5979c2e5af",
+    "required_complete_suites": "PASS_319_TESTS_EACH_REQUIRED_SUITE_EXACTLY_ONCE",
+    "required_complete_suite_invocations": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "required_complete_suite_summary_sha256": "2a76259c0852abb64956762e82cc39fa14489e47870f38883cf1d17d87494293",
+    "canonical_gate": "PASS_13_OF_13_CACHE_BYPASS",
+    "canonical_gate_summary_sha256": "89146569f3b21701b781b390a4d81720f444b36c6868a061235997b9a7065cea",
+    "real_prelaunch_validate_only": "PASS_ZERO_HARDWARE",
+    "real_prelaunch_validate_only_sha256": "776b428a9b49d51fa51b64fa21f28c21727c00b5b64cf1caeea3d36d395d0538",
+    "sequence_plan_sha256": "abe6e38b2cb31cb3b03aa2523bc4c586f0ce7f6f616156f1e652afe57a3dfeca"
+  },
+  "execution": {
+    "status": "FAIL",
+    "sequence_execution_ledger_sha256": "dfb9f7a77653bed31df0d2aaf04917743cba8e4f05a5509ff5116e77d0ef369f",
+    "attempt_count": 5,
+    "completed_stage_count": 4,
+    "selected_full_stage_ordinals": [
+      1,
+      2,
+      3,
+      4,
+      66
+    ],
+    "network_used": false,
+    "motion_used": false,
+    "max_lane_mask": "0x3",
+    "stages": [
+      {
+        "full_stage_ordinal": 1,
+        "stage_id": "p7_safe_idle",
+        "result": "PASS",
+        "summary_sha256": "b50f0e4a5225cdc0b498b3e86444d4eb5079041e0466dbac673754223b0d8956"
+      },
+      {
+        "full_stage_ordinal": 2,
+        "stage_id": "p7_p6_frame_regression_m1",
+        "result": "PASS",
+        "summary_sha256": "4bec9ca26b52e1b005f7d2f4a845ba09fb5275ab0b5335b6f5f965df5f9a91d0"
+      },
+      {
+        "full_stage_ordinal": 3,
+        "stage_id": "p7_p6_frame_regression_m2",
+        "result": "PASS",
+        "summary_sha256": "7ee568a97558713276664565c7f31aed8e9f915ee5a36b8e1d93d8be598dd0e4"
+      },
+      {
+        "full_stage_ordinal": 4,
+        "stage_id": "p7_p6_frame_regression_m3",
+        "result": "PASS",
+        "summary_sha256": "7998a15b324806a8fbca5f8a0986ea38e9a87e1ea5a18ffad5d569345a47f632"
+      },
+      {
+        "full_stage_ordinal": 66,
+        "stage_id": "p7_ps_stationary",
+        "result": "FAIL_STAGE",
+        "launched_once": true,
+        "complete_1800_second_pass": false,
+        "clean_completed_object_count_before_failure": 8,
+        "fixed_sample_count": 59,
+        "highest_emitted_fixed_sample_elapsed_seconds": 1770.0,
+        "last_fixed_sample": {
+          "objects": 8,
+          "failed": 0,
+          "bytes_hex": "0x251000",
+          "fragments": 11301,
+          "lane0": 10376,
+          "lane1": 5803,
+          "replicated": 4878,
+          "fallbacks": 2,
+          "p6_retry_exhausted": 0,
+          "p6_tx_fail": 0,
+          "p6_crc_bad": 0,
+          "p6_payload_mismatch": 0,
+          "duty_violations": 0,
+          "queue_occupancy": 8,
+          "queue_high": 8,
+          "backpressure": 1
+        },
+        "first_terminal_error": "P7 stationary descriptor failed slot=0 status=4 error=20",
+        "stage_summary_sha256": "b80692084b2edc88d8701bf5a5162a23d7336988ed7d869068563944a0aec49f",
+        "raw_result_sha256": "c45b9b1314ad2cda25163c964e969e8980dc1283ce79231e5c7392eae25ed5b8",
+        "raw_manifest_sha256": "3db9de3b019d2bbc7be4bc66ae2681bed1605757a12811848b12c4652ac59e2a",
+        "shutdown_before": "PASS",
+        "shutdown_after": "PASS",
+        "shutdown_after_result_sha256": "8489a2d945543d118d345eaa5c26175c8df59cd361cce4ae014b1de822a3cf31"
+      }
+    ]
+  },
+  "confirmed_failure_mechanism": {
+    "classification": "STATIONARY_RUNTIME_DEADLINE_REJECTION_AFTER_HOST_EVIDENCE_HARVEST_STALL",
+    "error_enum": "P7_ERROR_RUNTIME_LIMIT",
+    "error_code": 20,
+    "descriptor_status": 4,
+    "failed_slot": 0,
+    "observations": [
+      "The firmware completed eight objects with ERROR=0 and byte-exact terminal output evidence before the failure.",
+      "The final descriptor observation was slot 0 status 4 error 20, which is the fail-closed runtime-limit rejection path, not a payload, CRC, SHA, memcmp, guard, wipe, or lane-safety mismatch.",
+      "At source commit ed417a3, p7_stationary_chunked_dump reads every 4096-byte evidence chunk with mrd -size b and a byte value count equal to the byte count.",
+      "The first 1048576-byte output capture occupied wall-clock 12:12:01Z through 12:20:58Z and its 312192-byte trace capture occupied 12:20:58Z through 12:23:38Z; the second 1048576-byte output and trace showed the same approximately 9-minute plus 2.7-minute pattern.",
+      "The service still emitted fixed samples through 1770 seconds with queue occupancy/high-water 8 and no transport integrity or duty-cycle errors, then rejected the republished slot 0 at the immutable runtime deadline."
+    ],
+    "source_change_required": "Use aligned doubleword binary mrd values for stationary 4096-byte chunks, retain byte fallback for unaligned/tail chunks, and preserve abort checks, per-chunk service-state polling, exact byte-count verification, atomic publication, and all existing postprocess integrity checks.",
+    "repair_applied_in_this_record": false,
+    "acceptance_or_integrity_criteria_relaxed": false
+  },
+  "evidence_harvest_wall_observations": [
+    {
+      "object_id": 1,
+      "kind": "output",
+      "bytes": 1048576,
+      "started_at_utc": "2026-07-16T12:12:01Z",
+      "ended_at_utc": "2026-07-16T12:20:58Z"
+    },
+    {
+      "object_id": 1,
+      "kind": "trace",
+      "bytes": 312192,
+      "started_at_utc": "2026-07-16T12:20:58Z",
+      "ended_at_utc": "2026-07-16T12:23:38Z"
+    },
+    {
+      "object_id": 5,
+      "kind": "output",
+      "bytes": 1048576,
+      "started_at_utc": "2026-07-16T12:27:00Z",
+      "ended_at_utc": "2026-07-16T12:35:57Z"
+    },
+    {
+      "object_id": 5,
+      "kind": "trace",
+      "bytes": 312192,
+      "started_at_utc": "2026-07-16T12:35:57Z",
+      "ended_at_utc": "2026-07-16T12:38:37Z"
+    }
+  ],
+  "independent_shutdown_recovery": {
+    "status": "PASS_SEPARATE_FROM_FAILED_STAGE",
+    "summary_sha256": "9ee6c66011e2f260de08697d260a3649f9f5b1174d906fba2e29b0e49fd7650d",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed_seen": true,
+    "recovery_changes_failed_stage_result": false,
+    "external_hw_server_pid_before_and_after": 26332,
+    "external_hw_server_managed_or_replaced": false
+  },
+  "historical_summarizer": {
+    "terminal_invocation_exit_code": 1,
+    "result": "FAIL",
+    "final_summary_sha256": "d829dc67cc86a0ba2f4220a1247a427d71e6e4ce5cf25f68c1fb901851f1b24e",
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "motion_used": false,
+    "acceptance_promotion_permitted": false,
+    "boundary": "The global historical summarizer remains fail-closed for its broader historical ledger; r67 contributes no acceptance coverage."
+  },
+  "preserved_raw_evidence": {
+    "path": "evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r67_diag_stage66_c04",
+    "canonicalization": "sorted relative_path TAB byte_count TAB sha256 LF",
+    "file_count": 169,
+    "byte_count": 13347171,
+    "tree_sha256": "1ac6e790f5cb986fa5c0eda8aca2b66276c99b62f625bf05bab508bcc8fd8f94",
+    "source_worktree": "D:/CodexWorktrees/stage66prep_ed417a3/RF_COMM_MULTILANE",
+    "source_worktree_preserved_in_place": true,
+    "historical_preflight_manifest_sha256": "185e2685aff9881c6088e17ff80572817fc5fbb916f36a0e1a323a08704a40fe"
+  },
+  "package_bindings": {
+    "campaign/campaign_policy.json": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "campaign/campaign_ledger_after_recovery_record.json": "abb5a4b0ebfe5ef5123bd044bba078aaa9f0bc3ba6a196bcdc0392a2f3951de1",
+    "sequence_execution_ledger.json": "dfb9f7a77653bed31df0d2aaf04917743cba8e4f05a5509ff5116e77d0ef369f",
+    "preparation/ledger_materialization.json": "6e8d36cad1872404ed097e34902ed056107e89253d504e1861e8b381ddf7ac13",
+    "preparation/placeholder_rehearsal.json": "3dc5ad7f4e2e8be42c3f73d1ff20f273b0a7d00cd0de0625624ff46043203d6e",
+    "preparation/build_materialization.json": "ba6d08fbba40a34096afc8342285cb687a377368a50628ee90a98f5979c2e5af",
+    "preparation/complete_suite_summary.json": "2a76259c0852abb64956762e82cc39fa14489e47870f38883cf1d17d87494293",
+    "preparation/real_prelaunch_validate_only.json": "776b428a9b49d51fa51b64fa21f28c21727c00b5b64cf1caeea3d36d395d0538",
+    "preparation/outer_launch.json": "878da7e2ea4172314edd3fb7c07675384a8b382a5c5eea55631fd99dc760d121"
+  },
+  "preserved_build_artifacts": {
+    "elf": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_0e77e4ffa1e3b6ded782361fd45c70f52a45332402e1d31edbbd210d28468fc3.elf",
+      "bytes": 355892,
+      "sha256": "0e77e4ffa1e3b6ded782361fd45c70f52a45332402e1d31edbbd210d28468fc3"
+    },
+    "linker_map": {
+      "path": "evidence/hardware/p7/artifacts/p7_runtime_a13bd4bbdb0e7e6d7ea10f5346cf5e56cb22905e263ebd5b28c87c2715d14687.map",
+      "bytes": 97975,
+      "sha256": "a13bd4bbdb0e7e6d7ea10f5346cf5e56cb22905e263ebd5b28c87c2715d14687"
+    }
+  },
+  "next_required_action": "COMMIT_R67_FAIL_RECOVERED_EVIDENCE; THEN REPAIR STATIONARY CHUNKED DUMPS WITHOUT RELAXING EVIDENCE OR ACCEPTANCE CHECKS, RUN FOCUSED TESTS, COMMIT THE REPAIR, AND PREPARE ONLY A NEW COLLISION-CHECKED RUN ID FOR HARDWARE ATTEMPT 5"
+}
