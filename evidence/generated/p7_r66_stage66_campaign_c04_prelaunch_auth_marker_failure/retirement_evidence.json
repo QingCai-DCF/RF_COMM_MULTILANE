@@ -1,0 +1,115 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T11:40:56.3768926Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r66_diag_stage66_c04",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "361c54475b23c5b5b083ee8bd9677f6eb8ccda74",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 4,
+  "actual_hardware_attempt_count_before": 3,
+  "actual_hardware_attempt_count_after": 3,
+  "diagnostic_hardware_attempt_consumed": false,
+  "preconditions": {
+    "campaign_ledger_hash_exact_materialization": "PASS_ATTEMPT_COUNT_3_READY",
+    "placeholder_exact_argv_and_build_rehearsal": "PASS_ZERO_LOCK_ZERO_ATTEMPT_ZERO_HARDWARE",
+    "run_id_collision_preflight": "PASS_46_WORKSPACE_ROOTS_ZERO_HITS",
+    "hash_exact_build_materialization": "PASS_P6_AND_P7_STAGING_AND_DESTINATION_REHASHED",
+    "required_complete_suites": "PASS_276_PLUS_43_EQUALS_319; EACH_SUITE_INVOKED_EXACTLY_ONCE",
+    "cache_bypassed_p7_canonical_gate": "PASS_13_OF_13; OFFLINE_REAL_BUILD_PROCESS_RAN_TRUE",
+    "plan_and_authorization_generation": "PASS_EXACT_ORDINALS_1_2_3_4_66",
+    "outer_dry_validation": "PASS_ZERO_HARDWARE",
+    "real_prelaunch_validate_only": "FAIL_SCOPED_AUTH_ENV_MISSING_ZERO_HARDWARE"
+  },
+  "preparation_evidence": {
+    "ledger_materialization": {
+      "path": "build/p7_stage66_c04_361c544_ledger_materialization.json",
+      "sha256": "703f229f7da16e427049078ebe02e19f45df54d5db883cd5f3708d52e695282c"
+    },
+    "placeholder_rehearsal": {
+      "path": "build/p7_stage66_c04_361c544_placeholder_rehearsal.json",
+      "sha256": "3665810fefedd769676848b2a72f2a07271a28fd55bff9fb3fd42dd44c40128d"
+    },
+    "build_materialization": {
+      "path": "build/p7_r66_stage66_c04_build_materialization.json",
+      "sha256": "1fa5ba1efe7936d2d1f1835e8f053fbe17f5b03d90099f0d7bc834dbc04c08ed"
+    },
+    "complete_suite_summary": {
+      "path": "build/p7_r66_stage66_c04_complete_suite_summary.json",
+      "sha256": "0069db8842532a1f5f44ed030a3494ac541684deadaa9bc50390d602ddacca39",
+      "status": "PASS",
+      "total_discovered_test_count": 319
+    },
+    "canonical_gate_summary": {
+      "path": "evidence/generated/p7_offline_gate_summary.json",
+      "sha256": "5144724bc357cf00435efe1e38b7061ab48131df7803a74530587ce97f078b70",
+      "status": "PASS",
+      "check_count": 13,
+      "OFFLINE_CACHE_STATUS": "BYPASS",
+      "OFFLINE_REAL_BUILD_PROCESS_RAN": true
+    },
+    "sequence_plan": {
+      "path": ".hardware_authorization/p7_20260716_stationary_app_r66_diag_stage66_c04_sequence_plan.txt",
+      "sha256": "26b3e16ba61b078f5215de354de2eb1048333e71f7740556ae33ae28fda20439",
+      "full_stage_ordinals": [1, 2, 3, 4, 66]
+    },
+    "generation_manifest": {
+      "path": "build/p7_authorized_sequence/p7_20260716_stationary_app_r66_diag_stage66_c04/p7_authorized_sequence_generation_manifest.json",
+      "sha256": "3134720d2ac2bdb796c9b766bc2f8422515f190e1fdc86ce9b43002ad4200081"
+    },
+    "validate_only_failure": {
+      "path": "evidence/generated/p7_stage66_campaign_next_preparation/r66_real_prelaunch_validate_only.json",
+      "sha256": "e8f8e8f9f9ff562b5c1b53d1e330bb1b05be42f9941e1e87af735ca38760e731"
+    }
+  },
+  "failure": {
+    "classification": "PRELAUNCH_SCOPED_AUTH_MARKER_MISMATCH",
+    "error_code": "SCOPED_AUTH_ENV_MISSING",
+    "observed_authorization_marker": "I_UNDERSTAND_THIS_WILL_TOUCH_HARDWARE",
+    "required_authorization_marker": "P7_STATIONARY_APP_LAYER_APPROVED",
+    "confirmed_boundary": "The shared validate-only prelaunch gate rejected the non-exact authorization marker before creating an execution ledger, campaign lock, campaign attempt, evidence root, or hardware connection.",
+    "same_run_id_retry_permitted": false
+  },
+  "generator": {
+    "status": "PRELAUNCH_VALIDATE_ONLY_BLOCKED",
+    "plan_generator_process_started": true,
+    "sequence_plan_created": true,
+    "stage_authorization_created": true,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked": false,
+    "xsdb_invoked": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "sequence_executor_process_started": false,
+    "stage_wrapper_process_started": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "jtag_axi_access": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "authorization_environment_present_but_nonexact": true
+  },
+  "hardware_boundary": {
+    "vivado_helper_process_count": 0,
+    "external_hw_server_process_count": 1,
+    "external_hw_server_pid": 26332,
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No sequence executor, stage wrapper, Vivado/XSDB process, FPGA programming, ELF start, JTAG access, or TFDU mutation occurred.",
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r67_diag_stage66_c04"
+}

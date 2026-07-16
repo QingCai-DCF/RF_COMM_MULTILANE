@@ -1,0 +1,197 @@
+{
+    "schema":  "rf-comm-p7-r66-stage66-campaign-prehardware-auth-marker-failure-package-v1",
+    "run_id":  "p7_20260716_stationary_app_r66_diag_stage66_c04",
+    "source_commit":  "361c54475b23c5b5b083ee8bd9677f6eb8ccda74",
+    "result":  "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+    "failure_classification":  "PRELAUNCH_SCOPED_AUTH_MARKER_MISMATCH",
+    "diagnostic_hardware_attempt_consumed":  false,
+    "actual_hardware_attempt_count_after":  3,
+    "coverage_claimed":  false,
+    "HARDWARE_ACCEPTANCE":  "PENDING_HW",
+    "file_count":  36,
+    "byte_count":  720552,
+    "tree_sha256":  "81c4c49be66a96ecf3ab0e79f5b066450178b4889be4305dceb2ac82030a4bab",
+    "canonicalization":  "relative POSIX path TAB byte_count TAB lowercase-sha256 LF; Windows case-insensitive path sort",
+    "files":  [
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_001_p7_safe_idle.txt",
+                      "bytes":  4067,
+                      "sha256":  "ca42bd7a44bbfbbd4bba099cd72b8706ffc5f045fb3663054b334749ca1260fd"
+                  },
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_002_p7_p6_frame_regression_m1.txt",
+                      "bytes":  4402,
+                      "sha256":  "c2da10e69a2213b3c648c2c6b128d89a1cd98eccaa28bc4bb557435941ac36ea"
+                  },
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_003_p7_p6_frame_regression_m2.txt",
+                      "bytes":  4402,
+                      "sha256":  "26e0b68980b97251985d97775dda1734f5b3fdf473934e1780dd3ea06733ea13"
+                  },
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_004_p7_p6_frame_regression_m3.txt",
+                      "bytes":  4402,
+                      "sha256":  "308b2342b0e7d529847ae266707869894693418ec852d4d010e0e5626aa688a7"
+                  },
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_066_p7_ps_stationary.txt",
+                      "bytes":  5475,
+                      "sha256":  "e32a6973e7f3466f04f07c05618c0cdcf8193582f05c61f092307f9885d0245d"
+                  },
+                  {
+                      "path":  "authorizations/p7_20260716_stationary_app_r66_diag_stage66_c04_sequence_plan.txt",
+                      "bytes":  32633,
+                      "sha256":  "26b3e16ba61b078f5215de354de2eb1048333e71f7740556ae33ae28fda20439"
+                  },
+                  {
+                      "path":  "build_materialization.json",
+                      "bytes":  9153,
+                      "sha256":  "1fa5ba1efe7936d2d1f1835e8f053fbe17f5b03d90099f0d7bc834dbc04c08ed"
+                  },
+                  {
+                      "path":  "campaign_ledger_after_retirement.json",
+                      "bytes":  27218,
+                      "sha256":  "4402422c6f36f31c880aec6658bd56cb1af3f9cb485006876cace54f1f3e6e88"
+                  },
+                  {
+                      "path":  "canonical_gate_summary.json",
+                      "bytes":  19131,
+                      "sha256":  "5144724bc357cf00435efe1e38b7061ab48131df7803a74530587ce97f078b70"
+                  },
+                  {
+                      "path":  "complete_suite_logs/tests_p7_discovery.stderr.log",
+                      "bytes":  5472,
+                      "sha256":  "c215b7d3a938f28692429d25b509f81c274712e67d9f4a48229f41cf36be9769"
+                  },
+                  {
+                      "path":  "complete_suite_logs/tests_p7_discovery.stdout.log",
+                      "bytes":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                  },
+                  {
+                      "path":  "complete_suite_logs/top_level_discovery.stderr.log",
+                      "bytes":  52304,
+                      "sha256":  "48ae697f49434565857b27110dbb225bd3d611bf3f84d95776204012311c5133"
+                  },
+                  {
+                      "path":  "complete_suite_logs/top_level_discovery.stdout.log",
+                      "bytes":  641,
+                      "sha256":  "b2f0a154c9c13e7d05f5d7603391c7afa8498ab106b582b965699d8f9b3f2be2"
+                  },
+                  {
+                      "path":  "complete_suite_summary.json",
+                      "bytes":  2499,
+                      "sha256":  "0069db8842532a1f5f44ed030a3494ac541684deadaa9bc50390d602ddacca39"
+                  },
+                  {
+                      "path":  "lane1_promotion_summary.json",
+                      "bytes":  1795,
+                      "sha256":  "0140307cd5229a4eb50c65eee7301a46f1183efde3514c7f6f2bb5264415097f"
+                  },
+                  {
+                      "path":  "ledger_materialization.json",
+                      "bytes":  1797,
+                      "sha256":  "703f229f7da16e427049078ebe02e19f45df54d5db883cd5f3708d52e695282c"
+                  },
+                  {
+                      "path":  "offline_test_run.json",
+                      "bytes":  7486,
+                      "sha256":  "ce5138623527377dac53ddef688186b2f70ab2e2782d377bd86b33a0b5f985ef"
+                  },
+                  {
+                      "path":  "p6_build_summary.json",
+                      "bytes":  3100,
+                      "sha256":  "73c7ef399fbd7925f9e0c538f660118b09eda9aa4893c305111c978d6ddfd46c"
+                  },
+                  {
+                      "path":  "p7_build_summary.json",
+                      "bytes":  11784,
+                      "sha256":  "d574b2123c1275d8fa13b7935cbe5bfa3067669c4c71257b58bb0b2c8fe486ec"
+                  },
+                  {
+                      "path":  "placeholder_rehearsal.json",
+                      "bytes":  15024,
+                      "sha256":  "3665810fefedd769676848b2a72f2a07271a28fd55bff9fb3fd42dd44c40128d"
+                  },
+                  {
+                      "path":  "plan_bundle/inputs/002_p7_p6_frame_regression_m1.bin",
+                      "bytes":  4096,
+                      "sha256":  "d63320acd81e8ea9e08c7932552f04ca8bd45a673c40003ff4f7b6143d91081d"
+                  },
+                  {
+                      "path":  "plan_bundle/inputs/003_p7_p6_frame_regression_m2.bin",
+                      "bytes":  4096,
+                      "sha256":  "a7abce3a5f3164feb667e984f8e38f6e6fc3a7f87e54cc0b2008aa15962a1e7d"
+                  },
+                  {
+                      "path":  "plan_bundle/inputs/004_p7_p6_frame_regression_m3.bin",
+                      "bytes":  4096,
+                      "sha256":  "43812ad6447f6d7cbd02439ca869aff553eda792fa799ab066242fdccebefa30"
+                  },
+                  {
+                      "path":  "plan_bundle/inputs/p7_ps_seed_247.bin",
+                      "bytes":  247,
+                      "sha256":  "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093"
+                  },
+                  {
+                      "path":  "plan_bundle/manifests/002_p7_p6_frame_regression_m1.manifest.json",
+                      "bytes":  14388,
+                      "sha256":  "b3e5f4761485024e2c8fb3b8a5e722c2bc65259acd5e1565c63f7c4814f114c3"
+                  },
+                  {
+                      "path":  "plan_bundle/manifests/003_p7_p6_frame_regression_m2.manifest.json",
+                      "bytes":  14361,
+                      "sha256":  "462aaa85f543e977ae714a31dfbb1955e7d341706b4b032cf7282bece4161478"
+                  },
+                  {
+                      "path":  "plan_bundle/manifests/004_p7_p6_frame_regression_m3.manifest.json",
+                      "bytes":  14365,
+                      "sha256":  "c5d1a66bee077667feb1a4b1787f954631e9dc5de44121f61fc2c5d79d5ac383"
+                  },
+                  {
+                      "path":  "plan_bundle/p7_authorized_sequence_generation_manifest.json",
+                      "bytes":  24782,
+                      "sha256":  "3134720d2ac2bdb796c9b766bc2f8422515f190e1fdc86ce9b43002ad4200081"
+                  },
+                  {
+                      "path":  "plan_bundle/transactions/001_p7_safe_idle.transactions.txt",
+                      "bytes":  790,
+                      "sha256":  "c164be9bf94510474c01711914bb37bdc800f28b9f5a3134e59f344e912c391d"
+                  },
+                  {
+                      "path":  "plan_bundle/transactions/002_p7_p6_frame_regression_m1.transactions.txt",
+                      "bytes":  130270,
+                      "sha256":  "4569a727fa2fc7f64afbdbf9f029b6da1489ca48e84262bd7e9c45d51a909fbd"
+                  },
+                  {
+                      "path":  "plan_bundle/transactions/003_p7_p6_frame_regression_m2.transactions.txt",
+                      "bytes":  130270,
+                      "sha256":  "d2ea6326755678612eb369635fe7670d26fd9db83801f6066c1755d33b674371"
+                  },
+                  {
+                      "path":  "plan_bundle/transactions/004_p7_p6_frame_regression_m3.transactions.txt",
+                      "bytes":  130273,
+                      "sha256":  "152fefaac51ab25feebddb5349b85d53e43da6dfa969c20b2cc089f212cf3b1e"
+                  },
+                  {
+                      "path":  "ps_core_readiness.json",
+                      "bytes":  16168,
+                      "sha256":  "4da44559989ed48e960800392718170f78fa2bd97f152559d822d9030b926a22"
+                  },
+                  {
+                      "path":  "real_prelaunch_validate_only.json",
+                      "bytes":  13239,
+                      "sha256":  "e8f8e8f9f9ff562b5c1b53d1e330bb1b05be42f9941e1e87af735ca38760e731"
+                  },
+                  {
+                      "path":  "retirement_evidence.json",
+                      "bytes":  5451,
+                      "sha256":  "84d8f3c1b6bd58ee4d32b74876f09a862a09d1d935f6d762554f6a1ea12b432c"
+                  },
+                  {
+                      "path":  "retirement_record.json",
+                      "bytes":  875,
+                      "sha256":  "ed1ba62670822a171ebd3bd7e7d9ccc72f69d55eb2a76acfea9a0672aa2399e5"
+                  }
+              ]
+}
