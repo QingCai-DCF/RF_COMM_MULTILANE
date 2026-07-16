@@ -300,6 +300,9 @@ proc p7_stationary_chunked_dump {result_handle abort_file path address byte_coun
   set partial "${path}.write_partial"
   set chunk_path "${partial}.chunk"
   catch {file delete -force $partial $chunk_path}
+  if {$byte_count < 0} {
+    error "P7 stationary chunked dump byte count is negative"
+  }
   set output [open $partial wb]
   fconfigure $output -translation binary
   set chunk_limit 4096
@@ -307,7 +310,20 @@ proc p7_stationary_chunked_dump {result_handle abort_file path address byte_coun
   while {$offset < $byte_count} {
     p7_check_abort $abort_file
     set chunk_size [expr {min($chunk_limit, $byte_count - $offset)}]
-    mrd -size b -bin -file $chunk_path [expr {$address + $offset}] $chunk_size
+    set chunk_address [expr {$address + $offset}]
+    if {($chunk_address & 7) == 0 && ($chunk_size & 7) == 0} {
+      # XSDB's count is in values.  r67 showed that byte-wide live reads of a
+      # 1 MiB output consumed about nine wall-clock minutes and starved the
+      # stationary service until its immutable runtime deadline.  Aligned
+      # doubleword reads preserve the exact little-endian bytes while reducing
+      # the value count by eight.  Keep 4 KiB chunks so abort and terminal-state
+      # observations retain their existing cadence.
+      set chunk_value_count [expr {$chunk_size / 8}]
+      mrd -size d -bin -file $chunk_path $chunk_address $chunk_value_count
+    } else {
+      # Unaligned addresses and non-doubleword tails remain byte exact.
+      mrd -size b -bin -file $chunk_path $chunk_address $chunk_size
+    }
     set chunk [open $chunk_path rb]
     fconfigure $chunk -translation binary
     set payload [read $chunk]

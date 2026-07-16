@@ -1712,6 +1712,146 @@ class P7PsApplicationSafeStageTests(unittest.TestCase):
         self.assertLess(bundle_recheck, completed_assignment)
         self.assertLess(diagnostic_recheck, completed_assignment)
 
+    def test_stationary_chunked_dump_uses_aligned_doublewords_without_losing_polling(
+        self,
+    ) -> None:
+        tcl = (
+            ROOT / "scripts" / "hw" / "p7_ps_application_execute.tcl"
+        ).read_text(encoding="utf-8")
+        dump_start = tcl.index("proc p7_stationary_chunked_dump")
+        dump_end = tcl.index("proc p7_atomic_dump", dump_start)
+        dump_block = tcl[dump_start:dump_end]
+        self.assertIn("set chunk_limit 4096", dump_block)
+        self.assertIn("($chunk_address & 7) == 0", dump_block)
+        self.assertIn("($chunk_size & 7) == 0", dump_block)
+        self.assertIn(
+            "set chunk_value_count [expr {$chunk_size / 8}]", dump_block
+        )
+        self.assertIn(
+            "mrd -size d -bin -file $chunk_path $chunk_address $chunk_value_count",
+            dump_block,
+        )
+        self.assertIn(
+            "mrd -size b -bin -file $chunk_path $chunk_address $chunk_size",
+            dump_block,
+        )
+        self.assertLess(
+            dump_block.index("p7_check_abort"), dump_block.index("mrd -size d")
+        )
+        self.assertGreater(
+            dump_block.index("p7_read32 0x00020008"),
+            dump_block.index("puts -nonewline"),
+        )
+        self.assertIn("[string length $payload] != $chunk_size", dump_block)
+        self.assertIn("file rename -force $partial $path", dump_block)
+
+        interp = tcl_interpreter()
+        interp.eval("set ::p7_stationary_terminal_marker_emitted 0")
+        interp.eval("set ::p7_stationary_terminal_observed_ms 0")
+        interp.eval(tcl[tcl.index("proc p7_mark_stationary_terminal"):dump_end])
+        interp.eval(
+            "proc p7_check_abort {path} { incr ::abort_checks }\n"
+            "proc p7_read32 {address} {\n"
+            "  incr ::service_polls\n"
+            "  if {$::service_polls >= 2} { return 4 }\n"
+            "  return 1\n"
+            "}\n"
+            "proc p7_say {handle text} { lappend ::said $text }\n"
+            "proc mrd {args} {\n"
+            "  set size_index [lsearch -exact $args -size]\n"
+            "  set file_index [lsearch -exact $args -file]\n"
+            "  set access_size [lindex $args [expr {$size_index + 1}]]\n"
+            "  set path [lindex $args [expr {$file_index + 1}]]\n"
+            "  set address [lindex $args end-1]\n"
+            "  set count [lindex $args end]\n"
+            "  array set width {b 1 h 2 w 4 d 8}\n"
+            "  set bytes [expr {$count * $width($access_size)}]\n"
+            "  set stream [open $path w]\n"
+            "  fconfigure $stream -translation binary\n"
+            "  puts -nonewline $stream [binary format \"a${bytes}\" \"\"]\n"
+            "  close $stream\n"
+            "  lappend ::captured_access_sizes $access_size\n"
+            "  lappend ::captured_addresses $address\n"
+            "  lappend ::captured_value_counts $count\n"
+            "}"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            output = (Path(temp) / "stationary-aligned.bin").as_posix()
+            interp.eval(
+                "set ::abort_checks 0; set ::service_polls 0; set ::said {}; "
+                "set ::captured_access_sizes {}; set ::captured_addresses {}; "
+                "set ::captured_value_counts {}"
+            )
+            interp.call(
+                "p7_stationary_chunked_dump",
+                "RESULT",
+                "ABORT",
+                output,
+                0x1000,
+                8195,
+            )
+            self.assertEqual(8195, Path(output).stat().st_size)
+            self.assertEqual(
+                ("d", "d", "b"),
+                tuple(interp.splitlist(interp.eval("set ::captured_access_sizes"))),
+            )
+            self.assertEqual(
+                (512, 512, 3),
+                tuple(
+                    int(item)
+                    for item in interp.splitlist(
+                        interp.eval("set ::captured_value_counts")
+                    )
+                ),
+            )
+            self.assertEqual(
+                (4096, 8192, 12288),
+                tuple(
+                    int(item)
+                    for item in interp.splitlist(
+                        interp.eval("set ::captured_addresses")
+                    )
+                ),
+            )
+            self.assertEqual(3, int(interp.getvar("abort_checks")))
+            self.assertEqual(3, int(interp.getvar("service_polls")))
+            self.assertEqual(
+                ("P7_STATIONARY_SERVICE_TERMINAL_OBSERVED=1",),
+                tuple(interp.splitlist(interp.eval("set ::said"))),
+            )
+
+            fallback = (Path(temp) / "stationary-unaligned.bin").as_posix()
+            interp.eval(
+                "set ::abort_checks 0; set ::service_polls 0; set ::said {}; "
+                "set ::captured_access_sizes {}; set ::captured_addresses {}; "
+                "set ::captured_value_counts {}; "
+                "set ::p7_stationary_terminal_marker_emitted 0"
+            )
+            interp.call(
+                "p7_stationary_chunked_dump",
+                "RESULT",
+                "ABORT",
+                fallback,
+                0x1001,
+                4096,
+            )
+            self.assertEqual(4096, Path(fallback).stat().st_size)
+            self.assertEqual(
+                ("b",),
+                tuple(interp.splitlist(interp.eval("set ::captured_access_sizes"))),
+            )
+            self.assertEqual(
+                (4096,),
+                tuple(
+                    int(item)
+                    for item in interp.splitlist(
+                        interp.eval("set ::captured_value_counts")
+                    )
+                ),
+            )
+            self.assertEqual(1, int(interp.getvar("abort_checks")))
+            self.assertEqual(1, int(interp.getvar("service_polls")))
+
     def test_doubleword_dump_passes_value_count_and_enforces_exact_binary_size(
         self,
     ) -> None:

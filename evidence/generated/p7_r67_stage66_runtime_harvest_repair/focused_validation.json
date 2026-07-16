@@ -1,0 +1,81 @@
+{
+  "schema": "rf-comm-p7-r67-stage66-runtime-harvest-repair-focused-validation-v1",
+  "generated_at_utc": "2026-07-16T13:05:07.209787+00:00",
+  "result": "PASS",
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "campaign_attempt_consumed": false,
+  "network_used": false,
+  "motion_used": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "immutable_failed_run": {
+    "run_id": "p7_20260716_stationary_app_r67_diag_stage66_c04",
+    "status": "IMMUTABLE_FAIL_RECOVERED",
+    "resume_restart_copy_reuse_permitted": false,
+    "hardware_attempt_number": 4,
+    "failure_record": "evidence/generated/p7_r67_stage66_campaign_c04_failure_package/failure_record.json",
+    "failure_record_sha256": "529f5eb084ade76bfc37cac560e33747e942bfb4a20f304d69c161beb13084e8"
+  },
+  "source_parent_commit": "d49b720c972169577ddd62437dffaab701fef78c",
+  "repair": {
+    "classification": "STATIONARY_ALIGNED_CHUNKED_EVIDENCE_DOUBLEWORD_READ",
+    "file": "scripts/hw/p7_ps_application_execute.tcl",
+    "sha256": "31d9dac43a887d2de4928297a3e260bd134019c8cd411e73e89577419da853a6",
+    "test_file": "tests/test_p7_ps_application_stage_safe.py",
+    "test_file_sha256": "f349d3767a12713f28aaa3e0664f2b1c8fcef21c69087f0f57f466b8b12b25ee",
+    "chunk_bytes": 4096,
+    "aligned_read_size": "d",
+    "aligned_value_count_per_full_chunk": 512,
+    "prior_byte_value_count_per_full_chunk": 4096,
+    "value_count_reduction_factor": 8,
+    "unaligned_or_tail_read_size": "b",
+    "exact_byte_count_check_preserved": true,
+    "atomic_final_rename_preserved": true,
+    "abort_check_before_every_chunk_preserved": true,
+    "service_state_poll_after_every_chunk_preserved": true,
+    "payload_crc_sha_memcmp_guard_wipe_or_acceptance_relaxed": false,
+    "hardware_performance_pass_claimed": false
+  },
+  "focused_test_iteration_history": [
+    {
+      "scope": "four directly affected tests",
+      "tests_run": 4,
+      "result": "FAIL_TEST_HARNESS_TCL_LIST_REPRESENTATION",
+      "product_source_failure": false,
+      "correction": "Normalize tkinter Tcl list values with splitlist before comparison."
+    },
+    {
+      "scope": "four directly affected tests after harness correction",
+      "tests_run": 4,
+      "result": "PASS"
+    },
+    {
+      "scope": "affected test module before formatting-only cleanup",
+      "tests_run": 45,
+      "result": "PASS"
+    },
+    {
+      "scope": "new regression after formatting-only cleanup",
+      "tests_run": 1,
+      "result": "PASS"
+    }
+  ],
+  "final_affected_focused_validation": {
+    "command": "python -B -m unittest -v tests.test_p7_ps_application_stage_safe",
+    "tests_run": 45,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "result": "PASS",
+    "source_and_test_hashes_match_this_record": true
+  },
+  "pre_authorization_boundary": {
+    "required_complete_suites_run_after_repair": false,
+    "cache_bypassed_canonical_gate_run_after_repair": false,
+    "new_run_id_allocated_after_repair": false,
+    "new_scoped_authorization_created_after_repair": false,
+    "hardware_launch_permitted_by_this_record": false
+  },
+  "next_required_action": "COMMIT THE REPAIR; THEN ON THAT CLEAN SOURCE RUN PLACEHOLDER EXACT-ARGV REHEARSAL, REQUIRED COMPLETE SUITES EXACTLY ONCE, CACHE-BYPASSED CANONICAL GATE EXACTLY ONCE, COLLISION-CHECK A NEW RUN ID, MATERIALIZE HASH-EXACT ARTIFACTS, CREATE NEW SCOPED AUTHORIZATION, PASS OUTER DRY AND VALIDATE-ONLY PRELAUNCH, AND ONLY THEN LAUNCH HARDWARE ATTEMPT 5"
+}
