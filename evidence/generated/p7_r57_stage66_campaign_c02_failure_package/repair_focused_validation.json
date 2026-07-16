@@ -1,0 +1,84 @@
+{
+  "schema": "rf-comm-p7-r57-helper-prelaunch-repair-focused-validation-v2",
+  "generated_at_utc": "2026-07-16T08:02:20.9360885Z",
+  "result": "PASS",
+  "confirmed_failure_fixed": "VIVADO_HELPER_PRELAUNCH_HASH_BINDING_MISMATCH",
+  "final_affected_focused_tests": {
+    "command": "python -B -m unittest tests.p7.test_p7_jtag_backend tests.test_p7_jtag_axi_stage_safe tests.test_generate_p7_authorized_sequence_plan tests.test_p7_authorized_hardware_sequence tests.test_p7_stage66_campaign tests.test_summarize_p7_hardware tests.test_p7_vivado_helper_identity tests.test_prepare_p7_stage66_campaign_run",
+    "completed_invocation_count": 1,
+    "tests_run": 119,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 344.910,
+    "raw_log": {
+      "path": "repair_focused_tests.log",
+      "bytes": 1475,
+      "sha256": "0efafb3f32f2cbf235c7a8107f435414189d48362dcfd449058c73fd4b3549a7"
+    },
+    "preterminal_interrupted_invocations": [
+      {
+        "reason": "outer_tool_timeout_was_incorrectly_10_seconds",
+        "terminal_test_result_claimed": false,
+        "hardware_actions_executed": false
+      }
+    ]
+  },
+  "source_bound_identity": {
+    "manifest": {
+      "path": "config/p7_vivado_helper_identity_profiles.json",
+      "sha256": "67645bc53ae6c484204604ae3741bbce2d24fb7dbff6a5e63e8ea1a68972ed94"
+    },
+    "probe": {
+      "path": "scripts/hw/p7_helper_identity_probe.ps1",
+      "sha256": "46ae65f7eea40c1cdda5595a69b36acc6d1add7e231b6319674304100385ea25"
+    },
+    "runtime_profile_id": "vivado_2023_1_windows_26200_8875_system_helpers",
+    "legacy_profile_runtime_eligible": false,
+    "per_role_profile_mixing_allowed": false,
+    "unknown_hash_allowed": false,
+    "live_validation": "PASS",
+    "sha256_by_role": {
+      "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+      "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+      "cmd": "65ec268add3973b6dca64222985da47caeaee44a340b0ec1466782914fd743d9",
+      "conhost": "32e45de7f02912f3907083690043df4abdc4705eea28300719788eaa4a339d0b"
+    }
+  },
+  "prelaunch_boundary": {
+    "placeholder_rehearsal_requires_no_authorization": true,
+    "validate_only_precedes_execution_ledger": true,
+    "validate_only_precedes_campaign_lock": true,
+    "validate_only_precedes_campaign_attempt": true,
+    "runtime_wrapper_revalidates_inside_hardware_lock": true,
+    "shared_validator_used": true,
+    "exact_outer_argv_generated_by_python": true,
+    "shell_path_expression_allowed": false,
+    "campaign_attempt_consumed_by_validation": false
+  },
+  "fixed_regression_matrix": {
+    "r54_outer_control_omission_rejected": true,
+    "r55_join_path_test_path_and_alias_rejected": true,
+    "r56_noncanonical_p6_plan_guard_present": true,
+    "r57_unknown_or_mixed_helper_profile_rejected": true,
+    "signature_version_path_tamper_rejected": true,
+    "failed_run_resume_rejected": true
+  },
+  "post_record_validator_test": {
+    "command": "python -B -m unittest tests.test_p7_stage66_campaign.P7Stage66CampaignTests.test_r57_failure_package_and_tamper_boundary -v",
+    "tests_run": 1,
+    "failures": 0,
+    "errors": 0,
+    "canonical_package_validation": "PASS",
+    "tampered_stage_summary_validation": "FAIL_CLOSED"
+  },
+  "failure_package_validation": {
+    "command": "python tools/validate_p7_stage66_failure_package.py --package evidence/generated/p7_r57_stage66_campaign_c02_failure_package --json-summary",
+    "result": "PASS",
+    "tamper_boundary": "FAIL_CLOSED"
+  },
+  "hardware_actions_executed": false,
+  "network_used": false,
+  "motion_used": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW"
+}

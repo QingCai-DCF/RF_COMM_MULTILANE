@@ -1,0 +1,37 @@
+python : .......................................P7_TCL_PROGRAMMING_ATTEMPTED=0
+At line:2 char:1
++ python -B -m unittest tests.p7.test_p7_jtag_backend tests.test_p7_jta ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (..................ING_ATTEMPTED=0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+P7_JTAG_STAGE_RESULT=FAIL
+P7_JTAG_STAGE_ERROR=P7 max runtime must be in 1..1800 seconds
+P7_HW_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_DEVICE=xc7z010_1
+P7_HW_PART=xc7z010clg400-1
+P7_HW_IDCODE=13722093
+P7_HW_CANONICAL_PART=xc7z010clg400-1
+P7_HW_LIVE_PART=xc7z010
+P7_HW_LIVE_DEVICE=xc7z010_1
+P7_HW_LIVE_IDCODE=13722093
+P7_TCL_PROGRAMMING_ATTEMPTED=1
+TFDU_SHUTDOWN_PROGRAMMED=C:/Users/user/AppData/Local/Temp/tmpmhz1_eca/tfdu_shutdown.bit
+P7_SHUTDOWN_RESULT=PASS
+P7_HW_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P7_HW_DEVICE=xc7z010_1
+P7_HW_PART=xc7z010clg400-1
+P7_HW_IDCODE=13722093
+P7_HW_CANONICAL_PART=xc7z010clg400-1
+P7_HW_LIVE_PART=xc7z010
+P7_HW_LIVE_DEVICE=xc7z010_1
+P7_HW_LIVE_IDCODE=13722093
+...P7_TCL_EMERGENCY_SHUTDOWN_FAILED=synthetic_program_failure
+P7_TCL_PROGRAMMING_ATTEMPTED=1
+P7_JTAG_STAGE_RESULT=FAIL
+P7_JTAG_STAGE_ERROR=synthetic_program_failure
+.............................................................................
+----------------------------------------------------------------------
+Ran 119 tests in 344.910s
+
+OK

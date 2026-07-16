@@ -101,6 +101,13 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
         self.assertFalse(subject.is_exact_vivado_batch_launcher(r"D:\Xilinx\Vivado\2023.1\bin\vivado.exe"))
 
     def test_wrapper_summary_rejects_any_inner_forced_cleanup_evidence(self) -> None:
+        identity_patcher = mock.patch.object(
+            subject.helper_identity,
+            "validate_identity_validation_report",
+            return_value=[],
+        )
+        identity_patcher.start()
+        self.addCleanup(identity_patcher.stop)
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             shutdown_bit = root / "shutdown.bit"
@@ -566,6 +573,10 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
             with mock.patch.object(subject, "HARDWARE_ROOT", hardware_root):
                 with mock.patch.dict(os.environ, {safety.AUTH_ENV: safety.AUTH_ENV_VALUE}, clear=False):
                     with mock.patch.object(
+                        subject,
+                        "validate_plan_vivado_helper_identity",
+                        return_value={"status": "PASS", "errors": []},
+                    ), mock.patch.object(
                         subject, "_run_stage_process", side_effect=fail_after_observing_intent
                     ) as run_mock:
                         with mock.patch.object(
@@ -582,6 +593,58 @@ class P7AuthorizedHardwareSequenceTests(unittest.TestCase):
             ledger = json.loads((hardware_root / "ledger.json").read_text(encoding="utf-8"))
             self.assertEqual(1, ledger["attempt_count"])
             self.assertEqual(0, ledger["next_stage_index"])
+
+    def test_helper_prelaunch_failure_creates_no_execution_ledger_or_stage_attempt(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            ledger = root / "sequence_execution_ledger.json"
+            plan = {
+                "path": str(root / "plan.json"),
+                "sha256": "a" * 64,
+                "source_commit": "b" * 40,
+                "stage_count": 1,
+                "stages": [
+                    {
+                        "id": "p7_safe_idle",
+                        "group": "safe_idle",
+                        "options": {"--vivado-path": r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat"},
+                        "summary_path": str(root / "stage" / "p7_jtag_axi_stage_summary.json"),
+                    }
+                ],
+                "offline_checkpoint": {"path": "checkpoint.json", "sha256": "c" * 64},
+                "errors": [],
+            }
+            args = argparse.Namespace(
+                source_commit="b" * 40,
+                max_runtime_sec=1800,
+                shutdown_on_exit=True,
+                no_ethernet=True,
+                no_motion=True,
+                lane_count=2,
+                max_lane_mask="0x3",
+                execution_ledger=str(ledger),
+                resume=False,
+            )
+            failure = {
+                "status": "FAIL",
+                "error_code": "VIVADO_HELPER_RUNTIME_HASH_PROFILE_MISMATCH",
+                "errors": [{"error_code": "VIVADO_HELPER_RUNTIME_HASH_PROFILE_MISMATCH"}],
+                "hardware_actions_executed": False,
+                "campaign_attempt_created": False,
+            }
+            with mock.patch.dict(
+                os.environ, {safety.AUTH_ENV: safety.AUTH_ENV_VALUE}, clear=False
+            ), mock.patch.object(
+                subject, "HARDWARE_ROOT", root
+            ), mock.patch.object(
+                subject, "validate_plan_vivado_helper_identity", return_value=failure
+            ), mock.patch.object(subject, "_run_stage_process") as run_mock:
+                returncode, manifest = subject._execute_sequence(args, plan)
+            self.assertEqual(2, returncode)
+            self.assertEqual("BLOCKED_PRELAUNCH", manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"])
+            self.assertFalse(ledger.exists())
+            self.assertFalse(manifest["hardware_actions_executed"])
+            run_mock.assert_not_called()
 
 
 if __name__ == "__main__":

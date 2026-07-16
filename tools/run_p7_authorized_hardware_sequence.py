@@ -35,6 +35,7 @@ from typing import Any, Mapping, Sequence
 import p7_jtag_backend as jtag_backend
 import p7_diagnostic_impact as diagnostic_impact
 import p7_stage66_campaign as stage66_campaign
+import p7_vivado_helper_identity as helper_identity
 
 from p7_hardware_safety import (
     AUTH_ENV,
@@ -1115,6 +1116,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
         "description",
         "source_commit",
         "offline_checkpoint",
+        "vivado_helper_identity_manifest",
         "stages",
         "plan_mode",
         "full_stage_ordinals",
@@ -1149,6 +1151,35 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             checkpoint_path, checkpoint_sha, source_commit
         )
         errors.extend(checkpoint_errors)
+    helper_manifest_record = plan.get("vivado_helper_identity_manifest")
+    normalized_helper_manifest: dict[str, str] | None = None
+    if not isinstance(helper_manifest_record, dict) or set(helper_manifest_record) != {
+        "path",
+        "sha256",
+        "profile_id",
+    }:
+        errors.append(
+            "vivado_helper_identity_manifest must contain exactly path, sha256, and profile_id"
+        )
+    else:
+        helper_manifest_path = resolve_path(str(helper_manifest_record.get("path", "")))
+        helper_manifest_sha = str(helper_manifest_record.get("sha256", "")).lower()
+        helper_profile_id = str(helper_manifest_record.get("profile_id", ""))
+        if not _path_equal(helper_manifest_path, helper_identity.MANIFEST_PATH):
+            errors.append("Vivado helper identity manifest path is not canonical")
+        if helper_manifest_sha != helper_identity.EXPECTED_MANIFEST_SHA256:
+            errors.append("Vivado helper identity manifest SHA256 is not source-bound")
+        elif not helper_manifest_path.is_file() or helper_manifest_path.is_symlink():
+            errors.append("Vivado helper identity manifest is missing/non-regular")
+        elif sha256_file(helper_manifest_path) != helper_manifest_sha:
+            errors.append("Vivado helper identity manifest SHA256 mismatch")
+        if helper_profile_id != helper_identity.CURRENT_VIVADO_HELPER_HASH_PROFILE_ID:
+            errors.append("Vivado helper identity runtime profile ID mismatch")
+        normalized_helper_manifest = {
+            "path": str(helper_manifest_path),
+            "sha256": helper_manifest_sha,
+            "profile_id": helper_profile_id,
+        }
     plan_mode = str(plan.get("plan_mode", FULL_PLAN_MODE))
     full_stage_ordinals = plan.get("full_stage_ordinals")
     if is_diagnostic_plan_mode(plan_mode):
@@ -1374,6 +1405,7 @@ def validate_sequence_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
             "sha256": checkpoint_sha,
             "payload": checkpoint_payload,
         },
+        "vivado_helper_identity_manifest": normalized_helper_manifest,
         "stage_count": len(normalized_stages),
         "stages": normalized_stages,
         "errors": errors,
@@ -1616,6 +1648,11 @@ def validate_wrapper_summary(
         if process.get("process_tree_terminated") is not False:
             errors.append("wrapper candidate reports process-tree termination")
     if is_jtag:
+        errors.extend(
+            helper_identity.validate_identity_validation_report(
+                summary.get("vivado_helper_identity_validation")
+            )
+        )
         backend = summary.get("backend_parse")
         if not isinstance(backend, dict) or backend.get("passed") is not True or backend.get(
             "raw_log_bound_to_this_hardware_process"
@@ -1928,6 +1965,9 @@ def _sequence_manifest(plan: Mapping[str, Any]) -> dict[str, Any]:
             "path": plan.get("offline_checkpoint", {}).get("path"),
             "sha256": plan.get("offline_checkpoint", {}).get("sha256"),
         },
+        "vivado_helper_identity_manifest": plan.get(
+            "vivado_helper_identity_manifest"
+        ),
         "stage66_diagnostic_campaign": (
             {
                 key: plan["stage66_diagnostic_campaign"].get(key)
@@ -1949,6 +1989,36 @@ def _sequence_manifest(plan: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def validate_plan_vivado_helper_identity(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Run the shared hardware-free helper gate for one exact plan launcher."""
+
+    vivado_paths = {
+        str(stage.get("options", {}).get("--vivado-path", ""))
+        for stage in plan.get("stages", [])
+        if isinstance(stage, dict)
+        and stage.get("group")
+        in {"safe_idle", "p6_frame_regression", "fragment_boundary", "large_object_jtag"}
+    }
+    if len(vivado_paths) != 1 or not next(iter(vivado_paths), ""):
+        return {
+            "schema": helper_identity.VALIDATION_SCHEMA,
+            "phase": "VIVADO_HELPER_IDENTITY",
+            "status": "FAIL",
+            "error_code": "PLAN_VIVADO_PATH_SET_MISMATCH",
+            "hardware_actions_executed": False,
+            "hardware_connection_attempted": False,
+            "campaign_lock_created": False,
+            "campaign_attempt_created": False,
+            "errors": [
+                {
+                    "error_code": "PLAN_VIVADO_PATH_SET_MISMATCH",
+                    "detail": "all JTAG plan stages must use one exact Vivado launcher path",
+                }
+            ],
+        }
+    return helper_identity.validate_vivado_helper_identity(next(iter(vivado_paths)))
+
+
 def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[int, dict[str, Any]]:
     manifest = _sequence_manifest(plan)
     outer_errors = _outer_sequence_errors(args, plan)
@@ -1956,6 +2026,16 @@ def _execute_sequence(args: argparse.Namespace, plan: dict[str, Any]) -> tuple[i
         manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "BLOCKED"
         manifest["reason"] = "outer full-sequence execution controls failed before any wrapper launch"
         manifest["validation_errors"].extend(outer_errors)
+        return 2, manifest
+    helper_prelaunch = validate_plan_vivado_helper_identity(plan)
+    manifest["vivado_helper_identity_prelaunch_validation"] = helper_prelaunch
+    if helper_prelaunch.get("status") != "PASS":
+        manifest["P7_AUTHORIZED_HARDWARE_SEQUENCE"] = "BLOCKED_PRELAUNCH"
+        manifest["reason"] = (
+            "validate-only Vivado helper identity gate failed before execution ledger, "
+            "campaign lock, attempt accounting, or wrapper launch"
+        )
+        manifest["validation_errors"].extend(helper_prelaunch.get("errors", []))
         return 2, manifest
     ledger_path = resolve_path(args.execution_ledger)
     if ledger_path.exists():

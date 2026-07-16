@@ -19,6 +19,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import summarize_p7_hardware as subject  # noqa: E402
+import p7_jtag_backend as jtag_backend  # noqa: E402
 
 
 COMMIT = "a" * 40
@@ -2244,6 +2245,14 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             candidate.data["shutdown_after"]["programming_attempted"] = True
 
     def test_process_record_recomputes_daemon_topology_and_rejects_tampering(self) -> None:
+        self.assertEqual(
+            jtag_backend.APPROVED_VIVADO_HELPER_SHA256_PROFILES,
+            subject.APPROVED_VIVADO_HELPER_SHA256_PROFILES,
+        )
+        self.assertEqual(
+            jtag_backend.CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+            subject.CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+        )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             stdout = root / "stdout.log"
@@ -2336,6 +2345,26 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                 ),
             )
 
+            legacy_hashes = subject.APPROVED_VIVADO_HELPER_SHA256_PROFILES[
+                "vivado_2023_1_windows_system_helpers_legacy"
+            ]
+            legacy_record = json.loads(json.dumps(record))
+            for key in (
+                "expected_tool_daemon_sha256_by_role",
+                "expected_tool_daemon_prelaunch_sha256_by_role",
+                "expected_tool_daemon_postexit_sha256_by_role",
+            ):
+                legacy_record[key] = dict(legacy_hashes)
+            self.assertEqual(
+                [],
+                subject.process_record_errors(
+                    legacy_record,
+                    "legacy process",
+                    document=root / "summary.json",
+                    repo_root=root,
+                ),
+            )
+
             def errors_for(value: dict[str, object]) -> str:
                 return "\n".join(
                     subject.process_record_errors(
@@ -2346,6 +2375,17 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             self.assertIn("process_tree_terminated=true", errors_for({**record, "process_tree_terminated": True}))
             self.assertIn("attempted forced containment cleanup", errors_for({**record, "containment_cleanup_attempted": True}))
             self.assertIn("helper prelaunch hash map mismatch", errors_for({**record, "expected_tool_daemon_prelaunch_sha256_by_role": {**subject.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, "cs_server": "0" * 64}}))
+            self.assertIn(
+                "helper prelaunch/postexit/aggregate profiles differ",
+                errors_for(
+                    {
+                        **record,
+                        "expected_tool_daemon_prelaunch_sha256_by_role": dict(
+                            legacy_hashes
+                        ),
+                    }
+                ),
+            )
             self.assertIn("helper grace is not the fixed 30-second window", errors_for({**record, "expected_tool_daemon_grace_seconds": 10.0}))
             self.assertIn("identity-query retry count exceeds the global bound", errors_for({**record, "process_identity_query_retry_count": 2, "process_identity_query_retried": True}))
             self.assertIn("non-Vivado process records helper paths", errors_for({**record, "argv": [r"D:\Xilinx\Vivado\2023.1\bin\vivado.exe"]}))

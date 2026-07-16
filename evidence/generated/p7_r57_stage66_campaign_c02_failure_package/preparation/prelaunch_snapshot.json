@@ -1,0 +1,161 @@
+{
+  "schema": "rf-comm-p7-r57-prelaunch-snapshot-v1",
+  "generated_at_utc": "2026-07-16T06:52:55.8788901Z",
+  "run_id": "p7_20260716_stationary_app_r57_diag_stage66_c02",
+  "source": {
+    "commit": "f4913949df34d66a5b6a5de3ad9f14ac2cfbac4d",
+    "tree": "954fc22e65452a487ed69c45ed1bfab35501ce27",
+    "expected_commit": "f4913949df34d66a5b6a5de3ad9f14ac2cfbac4d",
+    "expected_tree": "954fc22e65452a487ed69c45ed1bfab35501ce27"
+  },
+  "plan": {
+    "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_sequence_plan.txt",
+    "sha256": "d9681fa708ca11026d81d35e5199eb233b545c77099d8a90c91999008299a571",
+    "expected_sha256": "d9681fa708ca11026d81d35e5199eb233b545c77099d8a90c91999008299a571"
+  },
+  "generation_manifest": {
+    "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\p7_authorized_sequence_generation_manifest.json",
+    "sha256": "7f7645cb92fde6b7145a47731cb3c9889ae1fd232d74ec2ce9afeb95741924fd",
+    "expected_sha256": "7f7645cb92fde6b7145a47731cb3c9889ae1fd232d74ec2ce9afeb95741924fd"
+  },
+  "authorization_records": [
+    {
+      "stage": "p7_safe_idle",
+      "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_001_p7_safe_idle.txt",
+      "expected_sha256": "d1545903f5a116848d3a83fcba75fd127c17bae1ecd3239e45a01f797ae6e49e",
+      "actual_sha256": "d1545903f5a116848d3a83fcba75fd127c17bae1ecd3239e45a01f797ae6e49e",
+      "hash_match": true
+    },
+    {
+      "stage": "p7_p6_frame_regression_m1",
+      "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_002_p7_p6_frame_regression_m1.txt",
+      "expected_sha256": "bc5fe52ab6596a79d89eda71a7e5989488b99775478c87b416d3317e7779a09f",
+      "actual_sha256": "bc5fe52ab6596a79d89eda71a7e5989488b99775478c87b416d3317e7779a09f",
+      "hash_match": true
+    },
+    {
+      "stage": "p7_p6_frame_regression_m2",
+      "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_003_p7_p6_frame_regression_m2.txt",
+      "expected_sha256": "6dd7d198552679b599cde3c44b8d6de91a842eb0914f24950ea50268c8cb8e31",
+      "actual_sha256": "6dd7d198552679b599cde3c44b8d6de91a842eb0914f24950ea50268c8cb8e31",
+      "hash_match": true
+    },
+    {
+      "stage": "p7_p6_frame_regression_m3",
+      "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_004_p7_p6_frame_regression_m3.txt",
+      "expected_sha256": "f3c4211d19797335e6609c71e8ccae1caa02c0ac5bb5861556d0703f813e9a65",
+      "actual_sha256": "f3c4211d19797335e6609c71e8ccae1caa02c0ac5bb5861556d0703f813e9a65",
+      "hash_match": true
+    },
+    {
+      "stage": "p7_ps_stationary",
+      "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_066_p7_ps_stationary.txt",
+      "expected_sha256": "00ff017631507e604d638945f0be9a39f85bc496d4250bfc0416df82e86a5c80",
+      "actual_sha256": "00ff017631507e604d638945f0be9a39f85bc496d4250bfc0416df82e86a5c80",
+      "hash_match": true
+    }
+  ],
+  "offline_checkpoint": {
+    "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\generated\\p7_offline_gate_summary.json",
+    "sha256": "e4331e9776ce0faa3f976e843a399df315e7df7d0cfc0f8c1f99887eef8152e2",
+    "expected_sha256": "e4331e9776ce0faa3f976e843a399df315e7df7d0cfc0f8c1f99887eef8152e2"
+  },
+  "outer_dry_validation": {
+    "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\build\\p7_r57_outer_dry_validation.json",
+    "sha256": "b5c5c05783296edd491cda08abe054e1dc06e19100d32aaf0e313b3d906f766b"
+  },
+  "campaign": {
+    "policy_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\config\\p7_stage66_diagnostic_campaign_policy.json",
+    "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+    "ledger_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.json",
+    "ledger_sha256": "ef839ac08a691e76f3d2991b185029b0ac866cfcb9efe3fad8784b035b8f9ed5",
+    "expected_ledger_sha256": "ef839ac08a691e76f3d2991b185029b0ac866cfcb9efe3fad8784b035b8f9ed5",
+    "status": "READY",
+    "actual_hardware_attempt_count": 1,
+    "retired_pre_hardware_run_count": 14,
+    "r57_hardware_attempt_entries": 0,
+    "r57_retired_entries": 0,
+    "execution_lock_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_execution.lock",
+    "execution_lock_exists": false,
+    "ledger_lock_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\stage66_diagnostic_campaign\\p7_stage66_stationary_diagnostic_20260715\\campaign_ledger.lock",
+    "ledger_lock_exists": false
+  },
+  "planned_evidence": {
+    "root": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02",
+    "root_exists": false,
+    "execution_ledger_exists": false,
+    "abort_marker_exists": false
+  },
+  "external_hw_server": {
+    "pid": 26332,
+    "process_name": "hw_server",
+    "executable": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\hw_server.exe",
+    "started_at_utc": "2026-07-16T05:18:29.5165590Z",
+    "listeners": [
+      {
+        "local_address": "0.0.0.0",
+        "local_port": 3121,
+        "owning_process": 26332
+      }
+    ]
+  },
+  "external_hw_server_expected_pid_present": true,
+  "external_hw_server_port_3121_owned_by_expected_pid": true,
+  "vivado_xsdb_xsct_processes": [],
+  "rf_comm_hw_auth_present_in_prelaunch_shell": false,
+  "git_status_porcelain": [
+    " M evidence/generated/p7_2lane_scope_summary.md",
+    " M evidence/generated/p7_application_protocol_summary.md",
+    " M evidence/generated/p7_artifact_provenance_summary.json",
+    " M evidence/generated/p7_artifact_provenance_summary.md",
+    " M evidence/generated/p7_backend_conformance_summary.md",
+    " M evidence/generated/p7_fault_recovery_summary.md",
+    " M evidence/generated/p7_file_integrity_summary.md",
+    " M evidence/generated/p7_fragmentation_reassembly_summary.md",
+    " M evidence/generated/p7_lane1_promotion_summary.json",
+    " M evidence/generated/p7_lane_scheduler_summary.md",
+    " M evidence/generated/p7_no_ethernet_summary.md",
+    " M evidence/generated/p7_no_motion_summary.md",
+    " M evidence/generated/p7_offline_gate_summary.json",
+    " M evidence/generated/p7_offline_gate_summary.md",
+    " M evidence/generated/p7_offline_test_run.json",
+    " M evidence/generated/p7_protocol_vector_summary.json",
+    " M evidence/generated/p7_protocol_vector_summary.md",
+    " M evidence/generated/p7_ps_core_hardware_readiness.json",
+    " M evidence/generated/p7_ps_core_hardware_readiness.md",
+    " M evidence/generated/p7_ps_runtime_build_summary.json",
+    " M evidence/generated/p7_ps_runtime_build_summary.md",
+    " M evidence/generated/p7_ps_runtime_summary.md",
+    " M evidence/generated/p7_queue_backpressure_summary.md",
+    " M evidence/generated/p7_repo_intake.md",
+    " M evidence/generated/p7_repo_intake_summary.json",
+    " M evidence/generated/p7_repo_intake_summary.md",
+    " M evidence/generated/p7_segmentation_reassembly_summary.md",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_ps7_board_contract.json",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build.log",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.md",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_runtime.map",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_runtime_disassembly.txt",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_runtime_sections.txt",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_runtime_size.txt",
+    " M evidence/generated/vitis/p7_ps_runtime/p7_runtime_stack_usage.txt",
+    "?? evidence/hardware/p7/artifacts/p7_runtime_b8eac18dee09edc9d1a00a559c09d32655f9157a7d1cdb7dbe67926acf226511.map",
+    "?? evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json"
+  ],
+  "assertions": {
+    "all_authorization_hashes_match": true,
+    "plan_hash_matches": true,
+    "manifest_hash_matches": true,
+    "checkpoint_hash_matches": true,
+    "campaign_ledger_hash_matches": true,
+    "campaign_ready": true,
+    "attempt_count_is_one": true,
+    "r57_absent_from_ledger": true,
+    "locks_absent": true,
+    "evidence_absent": true,
+    "external_hw_server_ready": true,
+    "no_vivado_xsdb_xsct_processes": true,
+    "auth_unset_before_launch": true
+  }
+}

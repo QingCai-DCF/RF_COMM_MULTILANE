@@ -31,6 +31,14 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 import p7_stage66_campaign as stage66_campaign
+from p7_vivado_helper_identity import (
+    APPROVED_VIVADO_HELPER_SHA256_PROFILES,
+    CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+    EXPECTED_VIVADO_HELPER_ROLES,
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+    approved_vivado_helper_hash_profile_id,
+    validate_identity_validation_report,
+)
 
 
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -128,13 +136,10 @@ HISTORICAL_STAGE_AXI4LITE_BURST_REJECTED = (
 HISTORICAL_STAGE_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED = (
     "DIAGNOSTIC_SUFFIX_JTAG_AXI_QUEUE_DEPTH_ONE_REJECTED"
 )
-EXPECTED_VIVADO_HELPER_ROLES = ("cs_server", "rdi_xsdb", "cmd", "conhost")
-EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE = {
-    "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
-    "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
-    "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
-    "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911",
-}
+if approved_vivado_helper_hash_profile_id(
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE
+) != CURRENT_VIVADO_HELPER_HASH_PROFILE_ID:
+    raise RuntimeError("current Vivado helper profile is malformed or ambiguous")
 APPROVED_VIVADO_HELPER_INITIAL_CLASSIFICATIONS = frozenset(
     {
         "SINGLE_EXACT_CS_SERVER",
@@ -261,17 +266,22 @@ SAFE_IDLE_REQUIRED_KEYS = frozenset(
 )
 OFFLINE_CRITICAL_SOURCES = (
     "config/p7_stage66_diagnostic_campaign_policy.json",
+    "config/p7_vivado_helper_identity_profiles.json",
     "software/ps_driver/p7_app_service.h",
     "software/ps_driver/p7_app_service.c",
     "software/ps_driver/p7_runtime_main.c",
     "software/ps_driver/p7_stage62_microtest.h",
     "software/ps_driver/p7_stage62_microtest.c",
     "scripts/hw/p7_ps_application_execute.tcl",
+    "scripts/hw/p7_helper_identity_probe.ps1",
     "scripts/hw/run_p7_ps_application_stage_safe.py",
     "scripts/hw/run_p7_jtag_axi_stage_safe.py",
     "tools/p7_contained_launcher.py",
+    "tools/p7_jtag_backend.py",
     "tools/p7_ps_mailbox_backend.py",
     "tools/p7_stage66_campaign.py",
+    "tools/p7_vivado_helper_identity.py",
+    "tools/prepare_p7_stage66_campaign_run.py",
     "tools/record_p7_stage66_campaign_recovery.py",
     "tools/generate_p7_authorized_sequence_plan.py",
     "tools/run_p7_gate.py",
@@ -1106,12 +1116,24 @@ def _v2_process_containment_errors(record: Mapping[str, Any], label: str) -> lis
             else []
         )
         append_error(errors, recorded_normalized == expected_path_list, f"{label} helper paths are not exactly derived from argv[0]")
+        phase_maps: list[dict[str, str]] = []
         for prefix in ("expected_tool_daemon_prelaunch", "expected_tool_daemon_postexit"):
             phase = "prelaunch" if prefix.endswith("prelaunch") else "postexit"
             append_error(errors, record.get(f"{prefix}_hashes_verified") is True, f"{label} helper {phase} hashes were not verified")
-            append_error(errors, record.get(f"{prefix}_sha256_by_role") == EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, f"{label} helper {phase} hash map mismatch")
+            phase_map = record.get(f"{prefix}_sha256_by_role")
+            append_error(errors, approved_vivado_helper_hash_profile_id(phase_map) is not None, f"{label} helper {phase} hash map mismatch")
+            if isinstance(phase_map, dict):
+                phase_maps.append(phase_map)
         append_error(errors, record.get("expected_tool_daemon_hashes_verified") is True, f"{label} aggregate helper hashes were not verified")
-        append_error(errors, record.get("expected_tool_daemon_sha256_by_role") == EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE, f"{label} aggregate helper hash map mismatch")
+        aggregate_map = record.get("expected_tool_daemon_sha256_by_role")
+        append_error(errors, approved_vivado_helper_hash_profile_id(aggregate_map) is not None, f"{label} aggregate helper hash map mismatch")
+        append_error(
+            errors,
+            len(phase_maps) == 2
+            and isinstance(aggregate_map, dict)
+            and phase_maps[0] == phase_maps[1] == aggregate_map,
+            f"{label} helper prelaunch/postexit/aggregate profiles differ",
+        )
     if helper_paths is None:
         for key in (
             "expected_tool_daemon_hashes_verified",
@@ -12465,6 +12487,11 @@ def _candidate_basic_pass(candidate: Candidate, evidence: RepositoryEvidence) ->
     common_errors, _provenance = common_runner_errors(candidate, evidence)
     if common_errors:
         return False
+    if candidate.kind == "jtag" and "vivado_helper_identity_validation" in candidate.data:
+        if validate_identity_validation_report(
+            candidate.data.get("vivado_helper_identity_validation")
+        ):
+            return False
     process = _candidate_process(candidate)
     if process.get("returncode") != 0 or process.get("passed") is not True:
         return False

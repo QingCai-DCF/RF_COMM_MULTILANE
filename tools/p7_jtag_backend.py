@@ -34,6 +34,12 @@ from p7_app_protocol import (  # noqa: E402
     segment_object,
 )
 from p7_app_transport import LanePolicy  # noqa: E402
+from p7_vivado_helper_identity import (  # noqa: E402
+    APPROVED_VIVADO_HELPER_SHA256_PROFILES,
+    CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+    approved_vivado_helper_hash_profile_id,
+)
 
 
 SCHEMA = "rfap-p7-jtag-axi-dry-run-v1"
@@ -90,15 +96,10 @@ JTAG_WRAPPER_OTHER_GUARD_SECONDS = (
 )
 JTAG_OUTER_WRAPPER_GRACE_SECONDS = 120
 
-# Source-bound hashes for the only four executables that may remain in a
-# Vivado Job after the batch parent exits.  A path match alone cannot grant a
-# natural-exit window.
-EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE = {
-    "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
-    "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
-    "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
-    "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911",
-}
+if approved_vivado_helper_hash_profile_id(
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE
+) != CURRENT_VIVADO_HELPER_HASH_PROFILE_ID:
+    raise RuntimeError("current Vivado helper profile is malformed or ambiguous")
 if JTAG_WRAPPER_OTHER_GUARD_SECONDS < JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS:
     raise RuntimeError("P7 JTAG other guard does not reserve every bounded forced cleanup")
 BASELINE_OPERATION_COUNT = 19

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 import tempfile
 import unittest
@@ -19,9 +20,43 @@ import p7_stage66_campaign as campaign  # noqa: E402
 import record_p7_stage66_campaign_prelaunch_retirement as prelaunch_retirement  # noqa: E402
 import record_p7_stage66_campaign_recovery as recovery  # noqa: E402
 import run_p7_authorized_hardware_sequence as sequence  # noqa: E402
+import validate_p7_stage66_failure_package as failure_package  # noqa: E402
 
 
 class P7Stage66CampaignTests(unittest.TestCase):
+    def test_r57_failure_package_and_tamper_boundary(self) -> None:
+        package = (
+            ROOT
+            / "evidence/generated/p7_r57_stage66_campaign_c02_failure_package"
+        )
+        result = failure_package.validate_package(package)
+        self.assertEqual("PASS", result["P7_STAGE66_FAILURE_PACKAGE_VALIDATION"])
+        self.assertEqual([], result["errors"])
+        self.assertEqual("FAIL_RECOVERED", result["result"])
+        self.assertFalse(result["coverage_claimed"])
+        self.assertEqual("PENDING_HW", result["HARDWARE_ACCEPTANCE"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            temp = Path(temporary)
+            copied = temp / package.name
+            shutil.copytree(package, copied)
+            shutil.copy2(
+                ROOT / "evidence/generated/p7_r57_vivado_helper_provenance.json",
+                temp / "p7_r57_vivado_helper_provenance.json",
+            )
+            summary = (
+                copied
+                / "stage_prefix/001_p7_safe_idle/p7_jtag_axi_stage_summary.json"
+            )
+            summary.write_bytes(summary.read_bytes() + b"\n")
+            tampered = failure_package.validate_package(copied)
+        self.assertEqual(
+            "FAIL", tampered["P7_STAGE66_FAILURE_PACKAGE_VALIDATION"]
+        )
+        self.assertTrue(
+            any("SHA256 mismatch" in error for error in tampered["errors"])
+        )
+
     def test_canonical_policy_binds_immutable_r41_fail_and_exact_exception(self) -> None:
         policy_sha = hashlib.sha256(campaign.POLICY_PATH.read_bytes()).hexdigest()
         policy, errors = campaign.validate_policy(campaign.POLICY_PATH, policy_sha)

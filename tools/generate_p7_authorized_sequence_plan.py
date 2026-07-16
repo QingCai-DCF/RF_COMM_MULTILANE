@@ -33,6 +33,7 @@ import p7_hardware_safety as safety  # noqa: E402
 import p7_diagnostic_impact as diagnostic_impact  # noqa: E402
 import p7_jtag_backend as jtag_backend  # noqa: E402
 import p7_stage66_campaign as stage66_campaign  # noqa: E402
+import p7_vivado_helper_identity as helper_identity  # noqa: E402
 import run_p7_authorized_hardware_sequence as sequence  # noqa: E402
 
 HW_DIR = (sequence.ROOT / "scripts" / "hw").resolve(strict=False)
@@ -1666,7 +1667,7 @@ def build_adaptive_impact_proof(
         ):
             raise ValueError(f"prior ordinal {ordinal} summary is not an exact safe JTAG PASS")
         helper_hashes = summary.get("preflight_process", {}).get("expected_tool_daemon_sha256_by_role")
-        if not isinstance(helper_hashes, dict) or helper_hashes != jtag_backend.EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE:
+        if jtag_backend.approved_vivado_helper_hash_profile_id(helper_hashes) is None:
             raise ValueError(f"prior ordinal {ordinal} Vivado helper identity is missing or changed")
         historical_helper_hashes = helper_hashes
         command = stage.get("command")
@@ -2058,6 +2059,11 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             "path": str(context["checkpoint_path"]),
             "sha256": context["checkpoint_sha256"],
         },
+        "vivado_helper_identity_manifest": {
+            "path": str(helper_identity.MANIFEST_PATH),
+            "sha256": helper_identity.EXPECTED_MANIFEST_SHA256,
+            "profile_id": helper_identity.CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+        },
         "stages": plan_stages,
         **(
             {
@@ -2139,6 +2145,7 @@ def generate_sequence(args: argparse.Namespace) -> dict[str, Any]:
             "path": str(context["checkpoint_path"]),
             "sha256": context["checkpoint_sha256"],
         },
+        "vivado_helper_identity_manifest": plan["vivado_helper_identity_manifest"],
         "frozen_goal_plan": {
             "path": str(artifacts["goal_plan"].path),
             "sha256": artifacts["goal_plan"].sha256,

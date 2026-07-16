@@ -53,7 +53,6 @@ from p7_jtag_backend import (  # noqa: E402
     CONTAINMENT_INITIAL_EMPTY_WAIT_SECONDS,
     CONTAINMENT_TOPOLOGY_REVALIDATION_INTERVAL_SECONDS,
     EXPECTED_TOOL_DAEMON_GRACE_SECONDS,
-    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
     JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
     JTAG_WRAPPER_CONTAINMENT_ALLOWANCE_SECONDS,
     JTAG_WRAPPER_FORCED_CLEANUP_RESERVE_SECONDS,
@@ -69,6 +68,11 @@ from p7_jtag_backend import (  # noqa: E402
     parse_raw_result,
     runtime_feasibility,
     validate_manifest_bundle,
+)
+from p7_vivado_helper_identity import (  # noqa: E402
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
+    validate_vivado_helper_identity,
+    verify_runtime_helper_hashes_by_paths,
 )
 from run_p7_authorized_hardware_sequence import (  # noqa: E402
     CANONICAL_FULL_PART,
@@ -1041,28 +1045,8 @@ def verify_expected_tool_daemon_binary_hashes(
     by_role = _approved_helper_paths_by_role(approved_paths)
     if by_role is None:
         return False, {}, "approved helper path contract is malformed"
-    actual: dict[str, str] = {}
-    for role in EXPECTED_HELPER_ROLES:
-        path = Path(by_role[role])
-        try:
-            if not path.is_file() or path.is_symlink():
-                return False, actual, f"expected helper is missing, non-file, or symlink: role={role} path={path}"
-            digest = sha256_file(path)
-        except OSError as exc:
-            return (
-                False,
-                actual,
-                f"expected helper hash read failed: role={role} {type(exc).__name__}: {exc}",
-            )
-        actual[role] = digest
-        expected = EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE[role]
-        if digest != expected:
-            return (
-                False,
-                actual,
-                f"expected helper hash mismatch: role={role} expected={expected} actual={digest}",
-            )
-    return True, actual, ""
+    passed, actual, error, _profile_id = verify_runtime_helper_hashes_by_paths(by_role)
+    return passed, actual, error
 
 
 def _normalized_helper_identities(
@@ -2910,9 +2894,50 @@ def main(argv: list[str] | None = None) -> int:
         "bookkeeping_guard_seconds": JTAG_WRAPPER_BOOKKEEPING_GUARD_SECONDS,
         "other_guard_seconds": JTAG_WRAPPER_OTHER_GUARD_SECONDS,
     }
-    event_log = evidence_dir / "p7_jtag_axi_stage_events.jsonl"
     manifest["evidence_dir"] = str(evidence_dir)
+    event_log = evidence_dir / "p7_jtag_axi_stage_events.jsonl"
     manifest["event_log"] = str(event_log)
+    append_event(event_log, "vivado_helper_identity_validation_started")
+    try:
+        helper_identity = validate_vivado_helper_identity(args.vivado_path)
+    except Exception as exc:
+        helper_identity = {
+            "schema": "rf-comm-p7-vivado-helper-identity-validation-v1",
+            "phase": "VIVADO_HELPER_IDENTITY",
+            "status": "FAIL",
+            "error_code": "VIVADO_HELPER_IDENTITY_INTERNAL_ERROR",
+            "hardware_actions_executed": False,
+            "hardware_connection_attempted": False,
+            "campaign_lock_created": False,
+            "campaign_attempt_created": False,
+            "errors": [
+                {
+                    "error_code": "VIVADO_HELPER_IDENTITY_INTERNAL_ERROR",
+                    "detail": f"{type(exc).__name__}: {exc}",
+                }
+            ],
+        }
+    manifest["vivado_helper_identity_validation"] = helper_identity
+    append_event(
+        event_log,
+        "vivado_helper_identity_validation_finished",
+        status=helper_identity.get("status"),
+        error_code=helper_identity.get("error_code"),
+    )
+    if helper_identity.get("status") != "PASS":
+        manifest["P7_JTAG_AXI_SAFE_STAGE"] = "FAIL_PREFLIGHT"
+        manifest["reason"] = (
+            "source-bound Vivado helper identity validation failed inside the hardware lock "
+            "before any Vivado process or P7_GO"
+        )
+        manifest["all_validation_errors"] = list(helper_identity.get("errors", []))
+        record_global_runtime(
+            manifest, started=execution_started, max_runtime_sec=int(args.max_runtime_sec)
+        )
+        append_event(event_log, "authorized_execution_end", status="FAIL_PREFLIGHT")
+        _emit(manifest, args, evidence_dir)
+        hardware_lock.release()
+        return 1
     append_event(event_log, "authorized_execution_begin", stage=args.stage_name)
 
     abort_file = resolve_path(args.abort_file or str(DEFAULT_ABORT_FILE))

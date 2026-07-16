@@ -11,7 +11,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from p7_app_transport import LanePolicy  # noqa: E402
 from p7_jtag_backend import (  # noqa: E402
+    APPROVED_VIVADO_HELPER_SHA256_PROFILES,
     BackendValidationError,
+    CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+    EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE,
     MAX_TRANSACTION_BYTES,
     MAX_TRANSACTION_OPERATIONS,
     MemoryMockExecutor,
@@ -21,6 +24,7 @@ from p7_jtag_backend import (  # noqa: E402
     runtime_feasibility,
     run_memory_mock_self_test,
     transaction_shape,
+    approved_vivado_helper_hash_profile_id,
 )
 
 
@@ -30,6 +34,41 @@ def data_pattern(size: int, salt: int) -> bytes:
 
 
 class P7JtagBackendTests(unittest.TestCase):
+    def test_vivado_helper_hash_profiles_are_complete_and_never_mix(self) -> None:
+        self.assertEqual(
+            CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+            approved_vivado_helper_hash_profile_id(
+                EXPECTED_VIVADO_HELPER_SHA256_BY_ROLE
+            ),
+        )
+        self.assertEqual(2, len(APPROVED_VIVADO_HELPER_SHA256_PROFILES))
+        for profile_id, hashes in APPROVED_VIVADO_HELPER_SHA256_PROFILES.items():
+            with self.subTest(profile_id=profile_id):
+                self.assertEqual(
+                    profile_id,
+                    approved_vivado_helper_hash_profile_id(dict(hashes)),
+                )
+        legacy = dict(
+            APPROVED_VIVADO_HELPER_SHA256_PROFILES[
+                "vivado_2023_1_windows_system_helpers_legacy"
+            ]
+        )
+        current = dict(
+            APPROVED_VIVADO_HELPER_SHA256_PROFILES[
+                CURRENT_VIVADO_HELPER_HASH_PROFILE_ID
+            ]
+        )
+        mixed = {**legacy, "cmd": current["cmd"]}
+        self.assertIsNone(approved_vivado_helper_hash_profile_id(mixed))
+        self.assertIsNone(
+            approved_vivado_helper_hash_profile_id({**current, "extra": "0" * 64})
+        )
+        self.assertIsNone(
+            approved_vivado_helper_hash_profile_id(
+                {**current, "conhost": current["conhost"].upper()}
+            )
+        )
+
     def test_large_object_operation_formula_and_limits(self) -> None:
         expected = {
             4096: (20, 1189, 4269),

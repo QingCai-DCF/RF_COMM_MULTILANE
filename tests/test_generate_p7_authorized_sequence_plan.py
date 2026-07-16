@@ -674,6 +674,18 @@ class GenerateP7AuthorizedSequencePlanTests(unittest.TestCase):
                 self.assertEqual(66, len(set(auth_paths)))
                 self.assertEqual(66, len(set(auth_hashes)))
                 plan = json.loads(output_plan.read_text(encoding="utf-8"))
+                self.assertEqual(
+                    {
+                        "path": str(subject.helper_identity.MANIFEST_PATH),
+                        "sha256": subject.helper_identity.EXPECTED_MANIFEST_SHA256,
+                        "profile_id": subject.helper_identity.CURRENT_VIVADO_HELPER_HASH_PROFILE_ID,
+                    },
+                    plan["vivado_helper_identity_manifest"],
+                )
+                self.assertEqual(
+                    plan["vivado_helper_identity_manifest"],
+                    result["vivado_helper_identity_manifest"],
+                )
                 self.assertEqual(66, len(plan["stages"]))
                 self.assertEqual("ps_stationary", plan["stages"][-1]["group"])
                 self.assertEqual(1, sum(stage["group"] == "ps_stationary" for stage in plan["stages"]))

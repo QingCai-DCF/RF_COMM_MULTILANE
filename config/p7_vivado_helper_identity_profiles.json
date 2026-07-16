@@ -1,0 +1,87 @@
+{
+  "schema": "rf-comm-p7-vivado-helper-identity-profiles-v1",
+  "manifest_id": "p7_vivado_2023_1_helper_identity_20260716",
+  "current_runtime_profile_id": "vivado_2023_1_windows_26200_8875_system_helpers",
+  "identity_probe": {
+    "path": "scripts/hw/p7_helper_identity_probe.ps1",
+    "sha256": "46ae65f7eea40c1cdda5595a69b36acc6d1add7e231b6319674304100385ea25"
+  },
+  "probe_host": {
+    "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "sha256": "7600ffe12da441fe89d035b13801e8e91d064bc544a27b19a5cf49f6ab8b18f5",
+    "bytes": 454656,
+    "file_version": "10.0.26100.8875",
+    "product_version": "10.0.26100.8875",
+    "company_name": "Microsoft Corporation",
+    "signature_status": "Valid",
+    "signature_type": "Catalog",
+    "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "signer_thumbprint": "DC91E564D5BC1E3A8E02D6A8508682ABEA8A2443"
+  },
+  "profiles": {
+    "vivado_2023_1_windows_system_helpers_legacy": {
+      "runtime_eligible": false,
+      "purpose": "immutable_historical_evidence_only",
+      "sha256_by_role": {
+        "cs_server": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+        "rdi_xsdb": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+        "cmd": "75320a519959cc6d089ea3eba33c38caccb7f138a025ea439bc9686cdb79ded4",
+        "conhost": "a93cbb36b9c02364be6a72817174c46f94b66715549f279c6592ed659d237911"
+      }
+    },
+    "vivado_2023_1_windows_26200_8875_system_helpers": {
+      "runtime_eligible": true,
+      "purpose": "current_runtime_exact_identity",
+      "records": {
+        "cs_server": {
+          "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\cs_server.exe",
+          "sha256": "9bf0e15ffe162a96679c14b8117cf8ebe8a47b8032bee4ab8cb0317c112df536",
+          "bytes": 12408496,
+          "file_version": "0.0.0.0",
+          "product_version": "0.0.0.0",
+          "company_name": "",
+          "signature_status": "Valid",
+          "signature_type": "Authenticode",
+          "signer_subject": "CN=Xilinx Inc., O=Xilinx Inc., S=Colorado, C=US, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, SERIALNUMBER=2221167",
+          "signer_thumbprint": "F5BF7E059AA73C3F69350328C95EF3C0C7B654CB"
+        },
+        "rdi_xsdb": {
+          "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\rdi_xsdb.exe",
+          "sha256": "3193d8c4e7115e82e5b4ea6c2eb1aa8a7566bd5a9f9c78e9d901b9eab9d4ebfc",
+          "bytes": 29288,
+          "file_version": "0.0.0.0",
+          "product_version": "0.0.0.0",
+          "company_name": "",
+          "signature_status": "Valid",
+          "signature_type": "Authenticode",
+          "signer_subject": "CN=Xilinx Inc., O=Xilinx Inc., S=Colorado, C=US, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, SERIALNUMBER=2221167",
+          "signer_thumbprint": "F5BF7E059AA73C3F69350328C95EF3C0C7B654CB"
+        },
+        "cmd": {
+          "path": "C:\\WINDOWS\\System32\\cmd.exe",
+          "sha256": "65ec268add3973b6dca64222985da47caeaee44a340b0ec1466782914fd743d9",
+          "bytes": 344064,
+          "file_version": "10.0.26100.8737",
+          "product_version": "10.0.26100.8737",
+          "company_name": "Microsoft Corporation",
+          "signature_status": "Valid",
+          "signature_type": "Catalog",
+          "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "signer_thumbprint": "DC91E564D5BC1E3A8E02D6A8508682ABEA8A2443"
+        },
+        "conhost": {
+          "path": "C:\\WINDOWS\\System32\\conhost.exe",
+          "sha256": "32e45de7f02912f3907083690043df4abdc4705eea28300719788eaa4a339d0b",
+          "bytes": 1007616,
+          "file_version": "10.0.26100.8737",
+          "product_version": "10.0.26100.8737",
+          "company_name": "Microsoft Corporation",
+          "signature_status": "Valid",
+          "signature_type": "Catalog",
+          "signer_subject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "signer_thumbprint": "85DF8AC9B594E3C055692AE52D3E8E93889D9EC9"
+        }
+      }
+    }
+  }
+}
