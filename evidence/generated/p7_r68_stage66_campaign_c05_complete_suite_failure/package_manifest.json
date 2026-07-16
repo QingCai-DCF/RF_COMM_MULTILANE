@@ -1,0 +1,71 @@
+{
+  "schema": "rf-comm-p7-r68-stage66-campaign-prehardware-suite-failure-package-v1",
+  "run_id": "p7_20260716_stationary_app_r68_diag_stage66_c05",
+  "source_commit": "8c60c111dfb1c97fbf63e16825b7bc963742758b",
+  "result": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "diagnostic_hardware_attempt_consumed": false,
+  "actual_hardware_attempt_count_after": 4,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "file_count": 11,
+  "byte_count": 128370,
+  "tree_sha256": "31265eb0e1cf418480c49be2e6d4ed60bfbfcea8caa2078cde743e537352bfa6",
+  "canonicalization": "sorted relative POSIX path TAB byte_count TAB lowercase-sha256 LF",
+  "files": [
+    {
+      "path": "build_materialization.json",
+      "bytes": 9153,
+      "sha256": "515de5c7d6843bba8d80bbee4b6a51e113c06ee5b12760a40acb206a70e8faa7"
+    },
+    {
+      "path": "campaign_ledger_after_retirement.json",
+      "bytes": 32313,
+      "sha256": "6536e527ff70d2cfebe7c73fc90cd62fdd9c2ee97b7d345edac83eeb4411e5ee"
+    },
+    {
+      "path": "complete_suite_logs/tests_p7_discovery.stderr.log",
+      "bytes": 5472,
+      "sha256": "6934e64262d3c328e29bf826ac872afaf29ea10ed8286e1335cbff6fda79a96c"
+    },
+    {
+      "path": "complete_suite_logs/tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "complete_suite_logs/top_level_discovery.stderr.log",
+      "bytes": 53392,
+      "sha256": "6e393c044078c2b615bcc16e20b60964544841811e65a1e98cfbaeae29a81394"
+    },
+    {
+      "path": "complete_suite_logs/top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "60b557d41179c37581fcf76695429778eb11602d22ea3c5ffdb8f4f43d6ddc8a"
+    },
+    {
+      "path": "complete_suite_summary.json",
+      "bytes": 2499,
+      "sha256": "45909d7924b4844e1c7c5afe9bcdd25199952aef8110e3dc7f0f43179905352f"
+    },
+    {
+      "path": "ledger_materialization.json",
+      "bytes": 1800,
+      "sha256": "ab118744db17e9c10a5e6d9d62435bb62845b36926f8979f242fcb84813485c0"
+    },
+    {
+      "path": "placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "317daaad3281440b3a0264d106f3ac91f4818dd55064f7c68e8712660d234cd5"
+    },
+    {
+      "path": "retirement_evidence.json",
+      "bytes": 7266,
+      "sha256": "2ff7b44605975d6888bf5bcfac0f2742e9185077b0daea9160cc09d4c3e95d6a"
+    },
+    {
+      "path": "retirement_record.json",
+      "bytes": 810,
+      "sha256": "ebc220729434bcaf1d77624b7ca9937027d7bf67451a15f0386c40b986263e59"
+    }
+  ]
+}

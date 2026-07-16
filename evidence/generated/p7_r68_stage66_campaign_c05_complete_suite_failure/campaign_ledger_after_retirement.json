@@ -1,0 +1,515 @@
+{
+  "schema": "rf-comm-p7-stage66-diagnostic-campaign-ledger-v1",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "policy_sha256": "6d151c61f096cdc0be248d9445649c0a6898c84ecb9b5ca1684991505c844e74",
+  "created_at_utc": "2026-07-15T14:43:33.838181+00:00",
+  "updated_at_utc": "2026-07-16T13:20:10.805416+00:00",
+  "status": "READY",
+  "maximum_actual_hardware_attempts": 10,
+  "actual_hardware_attempt_count": 4,
+  "hardware_attempts": [
+    {
+      "hardware_attempt_number": 1,
+      "run_id": "p7_20260715_stationary_app_r47_diag_stage66_c01",
+      "source_commit": "1a88b40e76453c8fa53c9c6e0c79f8ef4a4d5d17",
+      "sequence_plan_path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260715_stationary_app_r47_diag_stage66_c01_sequence_plan.txt",
+      "sequence_plan_sha256": "ed4141129865372267e3967a3488542d107266175708f9f21d6fcd3dc93cffc2",
+      "execution_ledger_path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\sequence_execution_ledger.json",
+      "prior_campaign_ledger_sha256": "d7b7226ac9ab09bc5a898cb01e3511414377e9102899fbf96e43a63afd9d4cea",
+      "launch_intent_at_utc": "2026-07-15T16:30:17.392695+00:00",
+      "ended_at_utc": "2026-07-15T16:46:43.759812+00:00",
+      "status": "FAIL_RECOVERED",
+      "failed_full_stage_ordinal": 66,
+      "stationary_launched": true,
+      "complete_1800_second_stage66_pass": false,
+      "execution_ledger_sha256": "bc32b2b0edd330dc6121a5154001a1b8be9884293ebbea0523b708acf9f50d23",
+      "independent_shutdown_recovery": {
+        "directory": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z",
+        "started_at": "2026-07-16T00:47:18.2780240+08:00",
+        "ended_at": "2026-07-16T00:47:50.5856068+08:00",
+        "files": [
+          {
+            "name": "hardware_authorization.json",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\hardware_authorization.json",
+            "sha256": "3804731b103ea547b0b50ebbd378c16b3ae2bc51fbd3af31873e299df5b4ec91",
+            "bytes": 1406
+          },
+          {
+            "name": "hash_manifest.csv",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\hash_manifest.csv",
+            "sha256": "311806fc832379a2d10bedfecfab11880965e0ece6b351d76f62c265e18967cf",
+            "bytes": 1078
+          },
+          {
+            "name": "hash_manifest.json",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\hash_manifest.json",
+            "sha256": "870ce43ef364704a8cdf628c64b64bbae8c64175e4af062a95f5a987097fdc4a",
+            "bytes": 2382
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stderr.log",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\program_tfdu_shutdown_safe.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stdout.log",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\program_tfdu_shutdown_safe.stdout.log",
+            "sha256": "4159314f239ba24a9f26a0ef3a209c6811d51cabd07165193fc7c393110e47c1",
+            "bytes": 5162
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.summary.txt",
+            "path": "D:\\CodexWorktrees\\r47validate_1a88b40\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260715_stationary_app_r47_diag_stage66_c01\\recovery_shutdown_after_failed_stage_066_20260715T1647Z\\program_tfdu_shutdown_safe.summary.txt",
+            "sha256": "ec1ee69299aac771717577dd6566567cab73da2a9cb722863d2323681a8e2dc5",
+            "bytes": 2134
+          }
+        ],
+        "shutdown_exit": 0,
+        "status": "PASS",
+        "recovery_changes_failed_stage_result": false
+      }
+    },
+    {
+      "hardware_attempt_number": 2,
+      "run_id": "p7_20260716_stationary_app_r57_diag_stage66_c02",
+      "source_commit": "f4913949df34d66a5b6a5de3ad9f14ac2cfbac4d",
+      "sequence_plan_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r57_diag_stage66_c02_sequence_plan.txt",
+      "sequence_plan_sha256": "d9681fa708ca11026d81d35e5199eb233b545c77099d8a90c91999008299a571",
+      "execution_ledger_path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\sequence_execution_ledger.json",
+      "prior_campaign_ledger_sha256": "ef839ac08a691e76f3d2991b185029b0ac866cfcb9efe3fad8784b035b8f9ed5",
+      "launch_intent_at_utc": "2026-07-16T06:54:11.710108+00:00",
+      "ended_at_utc": "2026-07-16T06:54:12.144569+00:00",
+      "status": "FAIL_RECOVERED",
+      "failed_full_stage_ordinal": 1,
+      "stationary_launched": false,
+      "complete_1800_second_stage66_pass": false,
+      "execution_ledger_sha256": "f6572b85d363e97eb6563d93b0ebb1659f996d61124acb0e14e2889f77f0bbf9",
+      "independent_shutdown_recovery": {
+        "directory": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z",
+        "started_at": "2026-07-16T14:56:23.0860057+08:00",
+        "ended_at": "2026-07-16T14:56:58.0714047+08:00",
+        "files": [
+          {
+            "name": "hardware_authorization.json",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\hardware_authorization.json",
+            "sha256": "3804731b103ea547b0b50ebbd378c16b3ae2bc51fbd3af31873e299df5b4ec91",
+            "bytes": 1406
+          },
+          {
+            "name": "hash_manifest.csv",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\hash_manifest.csv",
+            "sha256": "008e269749e506c01e991664910c7217f2e53fd117fb92df10e5ec058a14a08d",
+            "bytes": 1078
+          },
+          {
+            "name": "hash_manifest.json",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\hash_manifest.json",
+            "sha256": "6ed4e647997e26e9de0b2fe4e371de11a9b5964439b39165c9716ddaa19e0cc3",
+            "bytes": 2382
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stderr.log",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\program_tfdu_shutdown_safe.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stdout.log",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\program_tfdu_shutdown_safe.stdout.log",
+            "sha256": "9097b51b38c10f39d5cdd47454c46c2e521ca8c52b9f9ab99d656fc4e128b0da",
+            "bytes": 5162
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.summary.txt",
+            "path": "D:\\CodexWorktrees\\r57validate_f491394\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r57_diag_stage66_c02\\recovery_shutdown_after_failed_stage001_20260716T0655Z\\program_tfdu_shutdown_safe.summary.txt",
+            "sha256": "2396f31988e7c5da12e7fd3e781abe30f0bee803a86e7bf6a3c618939fb9975e",
+            "bytes": 2239
+          }
+        ],
+        "shutdown_exit": 0,
+        "status": "PASS",
+        "recovery_changes_failed_stage_result": false
+      }
+    },
+    {
+      "hardware_attempt_number": 3,
+      "run_id": "p7_20260716_stationary_app_r62_diag_stage66_c03",
+      "source_commit": "dd768f5c1165fbb98c232beef678ad39f6d8d717",
+      "sequence_plan_path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r62_diag_stage66_c03_sequence_plan.txt",
+      "sequence_plan_sha256": "f86b1c071b179536cfd3b5adf6c3e125e60b6592eb7d43258515e35b70a22293",
+      "execution_ledger_path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\sequence_execution_ledger.json",
+      "prior_campaign_ledger_sha256": "2b718928f01b3596072302c2ef7e4dc98023225bd1f52ad04a3b029164c42676",
+      "launch_intent_at_utc": "2026-07-16T09:17:38.715532+00:00",
+      "ended_at_utc": "2026-07-16T10:02:25.781307+00:00",
+      "status": "FAIL_RECOVERED",
+      "failed_full_stage_ordinal": 66,
+      "stationary_launched": true,
+      "complete_1800_second_stage66_pass": false,
+      "execution_ledger_sha256": "0f6637767d3b4e1f6e1f4c2534943e1fe9b54a3d601625e2fd9602973214f395",
+      "independent_shutdown_recovery": {
+        "directory": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z",
+        "started_at": "2026-07-16T18:04:07.6863227+08:00",
+        "ended_at": "2026-07-16T18:04:36.2190817+08:00",
+        "files": [
+          {
+            "name": "hardware_authorization.json",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\hardware_authorization.json",
+            "sha256": "3804731b103ea547b0b50ebbd378c16b3ae2bc51fbd3af31873e299df5b4ec91",
+            "bytes": 1406
+          },
+          {
+            "name": "hash_manifest.csv",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\hash_manifest.csv",
+            "sha256": "27e11095ea4d3789efc70deb942a94c079b914d693a6c9d138436d040f9cad35",
+            "bytes": 1078
+          },
+          {
+            "name": "hash_manifest.json",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\hash_manifest.json",
+            "sha256": "ab2c71fd4071ee11367553de511dc02cad8cb695c1101f71b1068b28f27e7e23",
+            "bytes": 2382
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stderr.log",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\program_tfdu_shutdown_safe.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stdout.log",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\program_tfdu_shutdown_safe.stdout.log",
+            "sha256": "dd60700fa67945c66798806800bd72395d818a5e570288569ea287b6a1a07996",
+            "bytes": 5050
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.summary.txt",
+            "path": "D:\\CodexWorktrees\\stage66prep_dd768f5\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r62_diag_stage66_c03\\recovery_shutdown_after_failed_stage066_20260716T100334Z\\program_tfdu_shutdown_safe.summary.txt",
+            "sha256": "a0b7eb3d23a5fc48e9d09ddaf7e51dac962f96d15483c189ff3874fe76a15d33",
+            "bytes": 2249
+          }
+        ],
+        "shutdown_exit": 0,
+        "status": "PASS",
+        "recovery_changes_failed_stage_result": false
+      }
+    },
+    {
+      "hardware_attempt_number": 4,
+      "run_id": "p7_20260716_stationary_app_r67_diag_stage66_c04",
+      "source_commit": "ed417a345798a2cf118b847ddf8eca0693479a41",
+      "sequence_plan_path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\.hardware_authorization\\p7_20260716_stationary_app_r67_diag_stage66_c04_sequence_plan.txt",
+      "sequence_plan_sha256": "abe6e38b2cb31cb3b03aa2523bc4c586f0ce7f6f616156f1e652afe57a3dfeca",
+      "execution_ledger_path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\sequence_execution_ledger.json",
+      "prior_campaign_ledger_sha256": "4402422c6f36f31c880aec6658bd56cb1af3f9cb485006876cace54f1f3e6e88",
+      "launch_intent_at_utc": "2026-07-16T11:55:48.196651+00:00",
+      "ended_at_utc": "2026-07-16T12:41:54.045385+00:00",
+      "status": "FAIL_RECOVERED",
+      "failed_full_stage_ordinal": 66,
+      "stationary_launched": true,
+      "complete_1800_second_stage66_pass": false,
+      "execution_ledger_sha256": "dfb9f7a77653bed31df0d2aaf04917743cba8e4f05a5509ff5116e77d0ef369f",
+      "independent_shutdown_recovery": {
+        "directory": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z",
+        "started_at": "2026-07-16T20:43:54.7099387+08:00",
+        "ended_at": "2026-07-16T20:44:23.3778076+08:00",
+        "files": [
+          {
+            "name": "hardware_authorization.json",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\hardware_authorization.json",
+            "sha256": "3804731b103ea547b0b50ebbd378c16b3ae2bc51fbd3af31873e299df5b4ec91",
+            "bytes": 1406
+          },
+          {
+            "name": "hash_manifest.csv",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\hash_manifest.csv",
+            "sha256": "20396d6646e38e28369d90cb3124dbf18b0d9dd29b8b1031790a1e49cfd8d8fe",
+            "bytes": 1078
+          },
+          {
+            "name": "hash_manifest.json",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\hash_manifest.json",
+            "sha256": "806f4eeb3df53d69db0067094ee61a5c03289533967d13c91c66cebd95f5141e",
+            "bytes": 2382
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stderr.log",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\program_tfdu_shutdown_safe.stderr.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.stdout.log",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\program_tfdu_shutdown_safe.stdout.log",
+            "sha256": "196d9c5279a26c732d7c4d0e13fb58b86b86c761faff2b717a802dba0b2af8e4",
+            "bytes": 5050
+          },
+          {
+            "name": "program_tfdu_shutdown_safe.summary.txt",
+            "path": "D:\\CodexWorktrees\\stage66prep_ed417a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260716_stationary_app_r67_diag_stage66_c04\\recovery_shutdown_after_failed_stage066_20260716T124354Z\\program_tfdu_shutdown_safe.summary.txt",
+            "sha256": "9ee6c66011e2f260de08697d260a3649f9f5b1174d906fba2e29b0e49fd7650d",
+            "bytes": 2249
+          }
+        ],
+        "shutdown_exit": 0,
+        "status": "PASS",
+        "recovery_changes_failed_stage_result": false
+      }
+    }
+  ],
+  "retired_pre_hardware_run_ids": [
+    {
+      "run_id": "p7_20260715_stationary_app_r42_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "5ead7d1d1bdd0ecb8b41a2980a545f3e7bced9c4",
+      "retired_at_utc": "2026-07-15T14:43:33.838910+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PLAN_GENERATOR_CHILD_WRAPPER_DRY_VALIDATION_FAIL",
+      "evidence_path": "evidence/generated/p7_r42_stage66_campaign_c01_prelaunch_failure.json",
+      "evidence_sha256": "a0c53228a9bda5931f265e134f88fea4ed3c4d257d4ed8d072a20f5f87b3de31",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r43_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "c26c3aca4bef1a188a8b764036f9f2820e325c4f",
+      "retired_at_utc": "2026-07-15T14:49:57.724033+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PREPLAN_RUNTIME_LEDGER_DIRTY_ALLOWLIST_OMISSION",
+      "evidence_path": "evidence/generated/p7_r43_stage66_campaign_c01_preplan_failure.json",
+      "evidence_sha256": "771fd09e62f662e7a153c120ae300c466020e14b26c6f2dd4ae7bb75df97f844",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r44_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "82184bf17137363e65772295f24acb87c1d7b6da",
+      "retired_at_utc": "2026-07-15T15:13:14.089644+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "IMMUTABLE_RETIREMENT_EVIDENCE_HASH_MISMATCH",
+      "evidence_path": "evidence/generated/p7_r44_stage66_campaign_c01_checkpoint_precondition_failure.json",
+      "evidence_sha256": "b52b7a10571d523f380f268c045f4e7229385239530d6941d24eb4600ecaf34d",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r45_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "237b87e4c4f3d2ac7e6c7986641e123e2c63ee17",
+      "retired_at_utc": "2026-07-15T15:46:03.968508+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PREPLAN_UNTRACKED_CONTENT_ADDRESSED_MAP_OMISSION",
+      "evidence_path": "evidence/generated/p7_r45_stage66_campaign_c01_preplan_failure.json",
+      "evidence_sha256": "c3cc52d81ab4bc62333bb46e57eb94d1579723271ed56af910eabaa427594f20",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r46_diag_stage66_c01",
+      "requested_hardware_attempt_number": 1,
+      "source_commit": "56326f5132f5a8b3ad041a8714a9fc97d86948ff",
+      "retired_at_utc": "2026-07-15T16:11:30.197705+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PREPLAN_POWERSHELL_HASH_HELPER_ALIAS_COLLISION",
+      "evidence_path": "evidence/generated/p7_r46_stage66_campaign_c01_preplan_failure.json",
+      "evidence_sha256": "fd4bf2c07f684e78d65d8e7e7f5451764c5e04d9104395aceb35129a9365408b",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r48_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "483d23acf552e5d2ce74a68c47988c9ffb9fc461",
+      "retired_at_utc": "2026-07-15T17:16:48.362248+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "REQUIRED_COMPLETE_SUITES_FAIL_STALE_R37_DERIVED_AUDIT",
+      "evidence_path": "evidence/generated/p7_r48_stage66_campaign_c02_suite_failure.json",
+      "evidence_sha256": "93277abdf536488d33c50d509f6e8e9fb55bd736c0e0256453e5f2f0d974beb9",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260715_stationary_app_r49_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "24fa2d381a81692ebdabf9a46f494a67d0463e03",
+      "retired_at_utc": "2026-07-16T04:17:58.167569+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "REQUIRED_COMPLETE_SUITES_ABNORMAL_TERMINATION_NO_SUMMARY",
+      "evidence_path": "evidence/generated/p7_r49_stage66_campaign_c02_suite_abnormal_termination.json",
+      "evidence_sha256": "1db77435e12a501b7daa3e8a8d06c8db453bce7e6a6b3559171b8f291fe49a7e",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r50_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "c2a8c860670df0ab81ea214cac8fd6e5e6539ebf",
+      "retired_at_utc": "2026-07-16T04:33:43.120941+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "NONCANONICAL_OFFLINE_GATE_STARTED_BY_IGNORED_HELP_ARGUMENT",
+      "evidence_path": "evidence/generated/p7_r50_stage66_campaign_c02_noncanonical_gate_interruption.json",
+      "evidence_sha256": "a9ae342dd1165af78499eaa4879468bac8131bd4653d87eefeae91206967048b",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r51_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "5085d7e522912e2bade9ca5b644c36b395b424be",
+      "retired_at_utc": "2026-07-16T04:37:18.517673+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "MATERIALIZATION_PREFLIGHT_POWERSHELL_ALIAS_COLLISION",
+      "evidence_path": "evidence/generated/p7_r51_stage66_campaign_c02_materialization_preflight_failure.json",
+      "evidence_sha256": "441ebea74c8abf6090b1d8a8cccfbe51e55e0ef3bb6d2f2ed4b3b5c09b8335fe",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r52_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "4df899b32eaf78d6aa62f76d82be4b5879b147f2",
+      "retired_at_utc": "2026-07-16T04:39:37.935701+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "RUN_ID_COLLISION_PREFLIGHT_POWERSHELL_JOIN_PATH_ARRAY",
+      "evidence_path": "evidence/generated/p7_r52_stage66_campaign_c02_collision_preflight_failure.json",
+      "evidence_sha256": "8832bc749c3b9250b1dbd6d38606c33f0f73dc3136a5d528dd995c9a651a92af",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r53_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "25ed642dbd4eb6adebb8b38ecaee1040dfac8cf4",
+      "retired_at_utc": "2026-07-16T05:03:27.750796+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PRELAUNCH_EXTERNAL_HW_SERVER_ABSENT_PORT_3121_NO_LISTENER",
+      "evidence_path": "evidence/generated/p7_r53_stage66_campaign_c02_prelaunch_external_hw_server_absent.json",
+      "evidence_sha256": "00303104b9ef231c73810cd3fbdfed95d416a0ffa0964499eabb59c4790e9b21",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r54_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "a98286b550abc671dab47d6574c8d24b73564064",
+      "retired_at_utc": "2026-07-16T06:09:03.121340+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "OUTER_EXECUTION_CONTROLS_OMITTED_BEFORE_WRAPPER_LAUNCH",
+      "evidence_path": "evidence/generated/p7_r54_stage66_campaign_c02_outer_launch_control_block.json",
+      "evidence_sha256": "4e8f89dd635e16483e543d2bf3be42722b65fc51032d029abbe258f35caecc02",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r55_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "e6aaee9d10158abd8c92d7deadcf3c5263de929d",
+      "retired_at_utc": "2026-07-16T06:13:56.309208+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "POWERSHELL_TEST_PATH_BOOLEAN_EXPRESSION_PARAMETER_BINDING_FAILURE",
+      "evidence_path": "evidence/generated/p7_r55_stage66_campaign_c02_materialization_preflight_failure.json",
+      "evidence_sha256": "8e088a1a637ca87fc253c30b82508023f5f22a52921e5269d698b417fbd1a4be",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r56_diag_stage66_c02",
+      "requested_hardware_attempt_number": 2,
+      "source_commit": "f2dfac64c2b72d5cce593e34fd2189058b7896d7",
+      "retired_at_utc": "2026-07-16T06:35:40.059122+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "NON_CANONICAL_P6_SESSION_PLAN_GENERATOR_INPUT",
+      "evidence_path": "evidence/generated/p7_r56_stage66_campaign_c02_plan_generator_input_block.json",
+      "evidence_sha256": "7a25d9534e4a34fd73fdf79744b5c9af8996f9b8e25953ca127cf9fbd63134be",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r58_diag_stage66_c03",
+      "requested_hardware_attempt_number": 3,
+      "source_commit": "05d7968df27eeb54a88176d96d774aec8c3db260",
+      "retired_at_utc": "2026-07-16T08:12:46.211580+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "TEMPORARY_POWERSHELL_GET_ITEM_PREFLIGHT_PARSE_FAILURE",
+      "evidence_path": "evidence/generated/p7_r58_stage66_campaign_c03_materialization_preflight_failure.json",
+      "evidence_sha256": "e4c31f2d9f06ed657cd675366fea13227b7ed01153070683e004462c373976bf",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r59_diag_stage66_c03",
+      "requested_hardware_attempt_number": 3,
+      "source_commit": "71987bd61ea5053ef2050c0f2cef03cc5ea09d6b",
+      "retired_at_utc": "2026-07-16T08:30:21.528283+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "COMPLETE_SUITE_BLOCKED_DIRTY_PREPARATION_EVIDENCE_PATHS",
+      "evidence_path": "evidence/generated/p7_r59_stage66_campaign_c03_complete_suite_dirty_source_block.json",
+      "evidence_sha256": "20dff6978b5e0d19570222bb2e8aba6d336bee7c1043f9c4bb784492f81f4885",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r60_diag_stage66_c03",
+      "requested_hardware_attempt_number": 3,
+      "source_commit": "9227087ba8119d7f24c2137cd746b31ca36c1a89",
+      "retired_at_utc": "2026-07-16T08:47:22.014145+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "OFFLINE_BOOTSTRAP_HELP_ARGUMENT_EXECUTED_AND_TIMED_OUT",
+      "evidence_path": "evidence/generated/p7_r60_stage66_campaign_c03_offline_help_timeout_block.json",
+      "evidence_sha256": "7df562d76c4ac1233600585a5eb6847355a434f4356f277aa173c34de93af499",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r61_diag_stage66_c03",
+      "requested_hardware_attempt_number": 3,
+      "source_commit": "35e4a4af0ae1f7848eabf6784b7b222c1c6140e0",
+      "retired_at_utc": "2026-07-16T09:02:17.023249+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "COMPLETE_SUITE_OUTER_TIMEOUT_BEFORE_TERMINAL_RESULT",
+      "evidence_path": "evidence/generated/p7_r61_stage66_campaign_c03_complete_suite_outer_timeout_block.json",
+      "evidence_sha256": "cdfecc486b88adb9d3bf1c240d014dcca621bfb49ba1e4161480080c20322283",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r63_diag_stage66_c04",
+      "requested_hardware_attempt_number": 4,
+      "source_commit": "3afb34813d8d7f0f2baac640bf663be2a0c021b1",
+      "retired_at_utc": "2026-07-16T10:52:15.215890+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "COMPLETE_SUITE_FAIL_2_OF_274_TOP_LEVEL_TESTS_ZERO_HARDWARE",
+      "evidence_path": "evidence/generated/p7_r63_stage66_campaign_c04_complete_suite_failure/retirement_evidence.json",
+      "evidence_sha256": "303ca268c0746ce4b581c75616b89146dc1e4b8d740647c5217579f0fffa92dc",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r64_diag_stage66_c04",
+      "requested_hardware_attempt_number": 4,
+      "source_commit": "a63bca8abe52d699aece842c9d2f7e720189a87a",
+      "retired_at_utc": "2026-07-16T11:04:12.404644+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "COMPLETE_SUITE_WINDOWS_PARTIAL_LOG_HANDLE_RACE_ZERO_HARDWARE",
+      "evidence_path": "evidence/generated/p7_r64_stage66_campaign_c04_complete_suite_failure/retirement_evidence.json",
+      "evidence_sha256": "8848a3018f8e7902146e210b89678233fb7677005283d2a132ea5ef60da1d8f9",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r65_diag_stage66_c04",
+      "requested_hardware_attempt_number": 4,
+      "source_commit": "40ac8d2863dcff405e2dfd7af0f71061df1b5d64",
+      "retired_at_utc": "2026-07-16T11:21:23.024322+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PLAN_GENERATOR_PS_FUNCTIONAL_PROFILE_INPUT_MISMATCH",
+      "evidence_path": "evidence/generated/p7_r65_stage66_campaign_c04_generator_preflight_failure/retirement_evidence.json",
+      "evidence_sha256": "da3daa9c282a67ab074ca1490fded196657fd1af48470ac5e88868a23f1466f4",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r66_diag_stage66_c04",
+      "requested_hardware_attempt_number": 4,
+      "source_commit": "361c54475b23c5b5b083ee8bd9677f6eb8ccda74",
+      "retired_at_utc": "2026-07-16T11:41:46.690759+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "PRELAUNCH_SCOPED_AUTH_MARKER_MISMATCH",
+      "evidence_path": "evidence/generated/p7_r66_stage66_campaign_c04_prelaunch_auth_marker_failure/retirement_evidence.json",
+      "evidence_sha256": "84d8f3c1b6bd58ee4d32b74876f09a862a09d1d935f6d762554f6a1ea12b432c",
+      "hardware_attempt_consumed": false
+    },
+    {
+      "run_id": "p7_20260716_stationary_app_r68_diag_stage66_c05",
+      "requested_hardware_attempt_number": 5,
+      "source_commit": "8c60c111dfb1c97fbf63e16825b7bc963742758b",
+      "retired_at_utc": "2026-07-16T13:20:10.805416+00:00",
+      "status": "RETIRED_PRE_HARDWARE",
+      "reason": "REQUIRED_COMPLETE_SUITE_HISTORICAL_CURRENT_SOURCE_BINDING_REGRESSION",
+      "evidence_path": "evidence/generated/p7_r68_stage66_campaign_c05_complete_suite_failure/retirement_evidence.json",
+      "evidence_sha256": "2ff7b44605975d6888bf5bcfac0f2742e9185077b0daea9160cc09d4c3e95d6a",
+      "hardware_attempt_consumed": false
+    }
+  ]
+}

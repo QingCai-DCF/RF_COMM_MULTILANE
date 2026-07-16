@@ -1,0 +1,145 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T13:19:06.6017218Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r68_diag_stage66_c05",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "8c60c111dfb1c97fbf63e16825b7bc963742758b",
+  "source_tree": "92effe9ff405385f39b21911f1f7906f6ea06d05",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 5,
+  "actual_hardware_attempt_count_before": 4,
+  "actual_hardware_attempt_count_after": 4,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "abb5a4b0ebfe5ef5123bd044bba078aaa9f0bc3ba6a196bcdc0392a2f3951de1",
+  "preconditions": {
+    "r67_terminal_status": "IMMUTABLE_FAIL_RECOVERED",
+    "r67_actual_hardware_attempt_count": 4,
+    "clean_worktree_creation": "PASS_8C60C111DFB1C97FBF63E16825B7BC963742758B",
+    "campaign_ledger_hash_exact_materialization": "PASS_ATTEMPT_COUNT_4_READY",
+    "placeholder_exact_argv_and_build_rehearsal": "PASS_ZERO_LOCK_ZERO_ATTEMPT_ZERO_HARDWARE",
+    "run_id_collision_preflight": "PASS_48_WORKSPACE_ROOTS_ZERO_HITS",
+    "hash_exact_build_materialization": "PASS_P6_AND_P7_STAGING_AND_DESTINATION_REHASHED",
+    "post_allocation_focused_test": "PASS_1_OF_1",
+    "required_complete_suites": "FAIL_TOP_LEVEL_1_OF_277_TESTS; TESTS_P7_43_OF_43_PASS; EACH_SUITE_INVOKED_EXACTLY_ONCE",
+    "cache_bypassed_p7_canonical_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "preparation_evidence": {
+    "ledger_materialization": {
+      "path": "evidence/generated/p7_r68_stage66_campaign_c05_complete_suite_failure/ledger_materialization.json",
+      "bytes": 1800,
+      "sha256": "ab118744db17e9c10a5e6d9d62435bb62845b36926f8979f242fcb84813485c0",
+      "result": "PASS"
+    },
+    "placeholder_rehearsal": {
+      "path": "evidence/generated/p7_r68_stage66_campaign_c05_complete_suite_failure/placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "317daaad3281440b3a0264d106f3ac91f4818dd55064f7c68e8712660d234cd5",
+      "result": "PASS"
+    },
+    "build_materialization": {
+      "path": "evidence/generated/p7_r68_stage66_campaign_c05_complete_suite_failure/build_materialization.json",
+      "bytes": 9153,
+      "sha256": "515de5c7d6843bba8d80bbee4b6a51e113c06ee5b12760a40acb206a70e8faa7",
+      "result": "PASS"
+    }
+  },
+  "focused_validation": {
+    "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -B -m unittest -v tests.test_p7_ps_application_stage_safe.P7PsApplicationSafeStageTests.test_stationary_chunked_dump_uses_aligned_doublewords_without_losing_polling",
+    "discovered_test_count": 1,
+    "status": "PASS",
+    "hardware_actions_executed": false
+  },
+  "complete_suites": {
+    "runner": "tools/run_p7_regression_suites.py",
+    "summary_path": "evidence/generated/p7_r68_stage66_campaign_c05_complete_suite_failure/complete_suite_summary.json",
+    "summary_bytes": 2499,
+    "summary_sha256": "45909d7924b4844e1c7c5afe9bcdd25199952aef8110e3dc7f0f43179905352f",
+    "full_suite_invocation_count": 2,
+    "suite_invocation_count_by_name": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "total_discovered_test_count": 320,
+    "top_level_discovery": {
+      "status": "FAIL",
+      "returncode": 1,
+      "discovered_test_count": 277,
+      "failure_count": 1,
+      "stdout_sha256": "60b557d41179c37581fcf76695429778eb11602d22ea3c5ffdb8f4f43d6ddc8a",
+      "stderr_sha256": "6e393c044078c2b615bcc16e20b60964544841811e65a1e98cfbaeae29a81394"
+    },
+    "tests_p7_discovery": {
+      "status": "PASS",
+      "returncode": 0,
+      "discovered_test_count": 43,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6934e64262d3c328e29bf826ac872afaf29ea10ed8286e1335cbff6fda79a96c"
+    },
+    "source_commit_unchanged": true,
+    "dirty_worktree_before_suites": false,
+    "dirty_worktree_after_suites": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "failure": {
+    "classification": "COMPLETE_SUITE_HISTORICAL_CURRENT_SOURCE_BINDING_REGRESSION",
+    "failures": [
+      {
+        "test": "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+        "cause": "The checked-in offline R37 audit current_tcl record binds SHA256 3cc72811ed6a07d8ff1e270f1c2c7e24b6d675cfb31fb3cf9697d494c4e976e8 and size 142052, while source commit 8c60c111 intentionally changes the current Tcl to SHA256 31d9dac43a887d2de4928297a3e260bd134019c8cd411e73e89577419da853a6 and size 142904. All immutable R37 historical Tcl, raw readback, fixture, and first-mismatch fields remain unchanged.",
+        "automatic_fix": "Regenerate only the offline audit current_tcl record; preserve every immutable R37 raw and historical field."
+      }
+    ],
+    "same_run_id_retry_permitted": false,
+    "complete_suite_rerun_for_r68_permitted": false
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_COMPLETE_SUITE_FAILURE",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_present": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "sequence_executor_process_started": false,
+    "stage_wrapper_process_started": false,
+    "p7_canonical_gate_invoked": false,
+    "xsdb_invoked": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "jtag_axi_access": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET"
+  },
+  "hardware_boundary": {
+    "external_hw_server_process_count": 1,
+    "external_hw_server_pid": 26332,
+    "external_hw_server_path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\unwrapped\\win64.o\\hw_server.exe",
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No hardware sequence, wrapper, XSDB target, FPGA programming, ELF start, JTAG access, or TFDU mutation occurred.",
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r69_diag_stage66_c05",
+  "next_run_must_not_start_before": "ACCURATE_R68_RETIREMENT_COMMIT_PLUS_FOCUSED_FIX_AND_TESTS_PLUS_NEW_CLEAN_SOURCE_PLACEHOLDER_REHEARSAL_PLUS_NEW_RUN_ID_COLLISION_AND_HASH_EXACT_MATERIALIZATION_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_P7_CANONICAL_GATE_EXACTLY_ONCE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}
