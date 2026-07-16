@@ -1,0 +1,117 @@
+{
+  "schema": "rf-comm-p7-stage66-preid-complete-suite-failure-v1",
+  "result": "FAIL",
+  "phase": "PRE_RUN_ID_COMPLETE_SUITE_PRECONDITION",
+  "source_commit": "4df34e2ad2e1965e8d400cd83322569b0eff0166",
+  "run_id": null,
+  "run_id_allocated": false,
+  "campaign_attempt_number": null,
+  "hardware_actions_executed": false,
+  "hardware_connection_attempted": false,
+  "campaign_attempt_created": false,
+  "campaign_lock_created": false,
+  "coverage_claimed": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "suite_result": {
+    "status": "FAIL",
+    "generated_at_utc": "2026-07-16T17:09:19.403731+00:00",
+    "source_commit_unchanged": true,
+    "dirty_worktree_before_suites": false,
+    "dirty_worktree_after_suites": false,
+    "required_suite_invocation_count": 2,
+    "total_discovered_test_count": 329,
+    "suites": [
+      {
+        "name": "top_level_discovery",
+        "invocation_count": 1,
+        "discovered_test_count": 286,
+        "returncode": 1,
+        "status": "FAIL"
+      },
+      {
+        "name": "tests_p7_discovery",
+        "invocation_count": 1,
+        "discovered_test_count": 43,
+        "returncode": 0,
+        "status": "PASS"
+      }
+    ]
+  },
+  "failures": [
+    {
+      "test": "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+      "classification": "STALE_CURRENT_TCL_AUDIT_METADATA",
+      "confirmed_difference": {
+        "current_tcl_sha256_expected": "c09aa149d939def3989318b403af6cc7e78869b3c27b5d8c7e6209b5a462b2fe",
+        "current_tcl_sha256_observed": "bb0530306350eb6daa5fb24b1fcd3b655515cfd4ff5fa968446626c125b0a707",
+        "current_tcl_size_expected": 143580,
+        "current_tcl_size_observed": 144303
+      },
+      "hardware_relevance": "NONE_OFFLINE_METADATA_ONLY"
+    },
+    {
+      "test": "test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract",
+      "classification": "BUILD_MATERIALIZATION_PRECONDITION_MISSING",
+      "missing_artifact_count": 9,
+      "confirmed_boundary": "The clean worktree had not yet materialized the hash-exact p6_ps_candidate and p7_ps_vitis_workspace trees.",
+      "hardware_relevance": "NONE_OFFLINE_PRECONDITION_ONLY"
+    }
+  ],
+  "campaign_after_failure": {
+    "ledger_sha256": "abf60e10dd8744edeb161f4c4bfb8bff410137e5e7fa8cbdce577512d951b6d7",
+    "actual_hardware_attempt_count": 6,
+    "status": "READY",
+    "campaign_lock_exists": false
+  },
+  "raw_evidence": [
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_4df34e2_complete_suite_summary.json",
+      "bytes": 2515,
+      "sha256": "9796952ae423798780f14e26c49d2465b9b567a484e93eced8e57518cff3e3c5"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_4df34e2_complete_suite_summary_logs\\top_level_discovery.stdout.log",
+      "bytes": 641,
+      "sha256": "f4640fda0373b5d9de9f75ca63fdc00319f7cbc2bfed372b0ddfff06bf172607"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_4df34e2_complete_suite_summary_logs\\top_level_discovery.stderr.log",
+      "bytes": 57079,
+      "sha256": "9aede28e9fd37881169b55b8e8cfa7546595d86f59a1c7d1d849d5ae8a585fc0"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_4df34e2_complete_suite_summary_logs\\tests_p7_discovery.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_4df34e2_complete_suite_summary_logs\\tests_p7_discovery.stderr.log",
+      "bytes": 5472,
+      "sha256": "4f5bf42abef28a314e835ebc7e0cbf9331524e667da22bef70205455a0d22028"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_placeholder_rehearsal.json",
+      "bytes": 15023,
+      "sha256": "2692c6d3c4cf36190048e85f0a4576b3e64593be7b43d67428162fb4b038031c"
+    },
+    {
+      "path": "D:\\CodexWorktrees\\stage66prep_4df34e2\\RF_COMM_MULTILANE\\build\\p7_stage66_c07_campaign_ledger_materialization.json",
+      "bytes": 1799,
+      "sha256": "d61974f65a67be72bf572e6f0dab3de8b02f70a7a21c445cd581e9811fb52ef8"
+    }
+  ],
+  "disposition": {
+    "run_id_retired": false,
+    "reason": "No run ID was allocated and no hardware/campaign attempt was created.",
+    "next_source_requires_new_clean_worktree": true,
+    "required_order": [
+      "sync current-Tcl audit metadata",
+      "focused validation",
+      "accurate source commit",
+      "fresh placeholder rehearsal",
+      "allocate collision-free new run ID",
+      "hash-exact build materialization",
+      "required complete suites exactly once on that final prepared source"
+    ]
+  }
+}
