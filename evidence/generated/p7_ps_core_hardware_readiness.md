@@ -1,6 +1,6 @@
 # P7 PS Core Hardware Readiness
 
-P7_PS_CORE_HARDWARE_READINESS: FAIL
+P7_PS_CORE_HARDWARE_READINESS: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 
@@ -42,5 +42,5 @@ HARDWARE_ACCEPTANCE: PENDING_HW
 - native_payload_alignment_matrix_test: PASS
 - native_stage62_diagnostic_matrix_test: PASS
 - native_stage62_microtest_layout_test: PASS
-- p7_python_and_codec_tests: FAIL
+- p7_python_and_codec_tests: PASS
 - real_vitis_build_source_bound: PASS
