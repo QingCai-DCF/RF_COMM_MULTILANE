@@ -1,0 +1,48 @@
+{
+  "schema": "rf-comm-p7-stage66-diagnostic-campaign-policy-v1",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "authorization_status": "AUTHORIZED",
+  "maximum_actual_hardware_attempts": 10,
+  "mandatory_prefix_full_stage_ordinals": [1, 2, 3, 4],
+  "standalone_stage_full_ordinal": 66,
+  "selected_full_stage_ordinals": [1, 2, 3, 4, 66],
+  "stage66_exact_runtime_seconds": 1800,
+  "diagnostic_marking": {
+    "P7_EXECUTION_MODE": "DIAGNOSTIC_ONLY",
+    "coverage_claimed": false,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "stop_after_first_complete_stage66_pass": true,
+  "failed_run_id_reuse_forbidden": true,
+  "formal_full_run_excluded_from_diagnostic_limit": true,
+  "runtime_campaign_ledger": "evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json",
+  "safety": {
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "shutdown_before_after_required": true,
+    "independent_shutdown_recovery_after_failure_required": true,
+    "external_hw_server_must_not_be_modified": true,
+    "legacy_rf_comm_must_not_be_modified": true
+  },
+  "immutable_failed_baseline": {
+    "run_id": "p7_20260715_stationary_app_r41_formal_full",
+    "status": "FAIL",
+    "source_commit": "946ccbad66d64d715ad6745449b95f6c261ddf76",
+    "execution_ledger": "evidence/generated/p7_r41_formal_failure_package/sequence_execution_ledger.json",
+    "execution_ledger_sha256": "a86ec2a8e326a5354e9e79abed71ca938a3aa7a54b6936bc961beaf668ddba64",
+    "completed_stage_count": 65,
+    "failed_full_stage_ordinal": 66,
+    "resume_restart_copy_reuse_forbidden": true
+  },
+  "final_formal_requirements": {
+    "new_run_id_required": true,
+    "full_stage_ordinals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66],
+    "stage66_launch_limit": 1,
+    "required_complete_suites_exactly_once": true,
+    "cache_bypassed_canonical_offline_gate_required": true,
+    "new_scoped_authorization_and_dry_validation_required": true,
+    "only_formal_run_contributes_acceptance_coverage": true
+  }
+}
