@@ -1,0 +1,133 @@
+{
+  "schema": "rf-comm-p7-stage66-campaign-prehardware-retirement-v1",
+  "generated_at_utc": "2026-07-16T11:03:33.4779631Z",
+  "status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+  "run_id": "p7_20260716_stationary_app_r64_diag_stage66_c04",
+  "run_id_retired": true,
+  "resume_restart_copy_reuse_permitted": false,
+  "source_commit": "a63bca8abe52d699aece842c9d2f7e720189a87a",
+  "source_tree": "771ba9f43d9198a4b42725b9df932ba91b4bc99d",
+  "campaign_id": "p7_stage66_stationary_diagnostic_20260715",
+  "requested_campaign_hardware_attempt_number": 4,
+  "actual_hardware_attempt_count_before": 3,
+  "actual_hardware_attempt_count_after": 3,
+  "diagnostic_hardware_attempt_consumed": false,
+  "campaign_ledger_sha256_before_retirement_record": "ee8e9fc40e37d90f6ea624434cca7bf391ee9dcd1c10125e65deae19efe23d79",
+  "preconditions": {
+    "r63_status": "RETIRED_PRE_HARDWARE_DRY_VALIDATION_FAIL",
+    "clean_worktree_creation": "PASS_A63BCA8ABE52D699AECE842C9D2F7E720189A87A",
+    "campaign_ledger_hash_exact_materialization": "PASS_ATTEMPT_COUNT_3_READY",
+    "placeholder_exact_argv_and_build_rehearsal": "PASS_ZERO_LOCK_ZERO_ATTEMPT_ZERO_HARDWARE",
+    "run_id_collision_preflight": "PASS_43_WORKSPACE_ROOTS_ZERO_HITS",
+    "hash_exact_build_materialization": "PASS_P6_AND_P7_STAGING_AND_DESTINATION_REHASHED",
+    "required_complete_suites": "FAIL_TOP_LEVEL_1_ERROR_OF_274_TESTS; TESTS_P7_43_OF_43_PASS; EACH_SUITE_INVOKED_EXACTLY_ONCE",
+    "cache_bypassed_p7_canonical_gate": "NOT_RUN",
+    "authorization": "NOT_CREATED",
+    "dry_validation": "NOT_RUN"
+  },
+  "preparation_evidence": {
+    "ledger_materialization": {
+      "path": "evidence/generated/p7_r64_stage66_campaign_c04_complete_suite_failure/ledger_materialization.json",
+      "bytes": 1792,
+      "sha256": "eb5ebf0660a9059c50f39398538589afa988b4b420e031545b5cd923a2689b66",
+      "result": "PASS"
+    },
+    "placeholder_rehearsal": {
+      "path": "evidence/generated/p7_r64_stage66_campaign_c04_complete_suite_failure/placeholder_rehearsal.json",
+      "bytes": 15024,
+      "sha256": "ae3d94fb5ea5ad384e2b3a94a662a985a04564e803a5ef0460128bce9c56bdb1",
+      "result": "PASS"
+    },
+    "build_materialization": {
+      "path": "evidence/generated/p7_r64_stage66_campaign_c04_complete_suite_failure/build_materialization.json",
+      "bytes": 9153,
+      "sha256": "daddefdfa21944f521080b18f1ad17b64629b265cf89fbdaf415007de20b1b9f",
+      "result": "PASS"
+    }
+  },
+  "complete_suites": {
+    "runner": "tools/run_p7_regression_suites.py",
+    "summary_path": "evidence/generated/p7_r64_stage66_campaign_c04_complete_suite_failure/complete_suite_summary.json",
+    "summary_bytes": 2519,
+    "summary_sha256": "ab5576a4488256808630700bfe5478b4e4877ee89dc0359d998c219a25fd510b",
+    "full_suite_invocation_count": 2,
+    "suite_invocation_count_by_name": {
+      "top_level_discovery": 1,
+      "tests_p7_discovery": 1
+    },
+    "total_discovered_test_count": 317,
+    "top_level_discovery": {
+      "status": "FAIL",
+      "returncode": 1,
+      "discovered_test_count": 274,
+      "error_count": 1,
+      "stderr_sha256": "0080928dad4256117d0ecc814ed1268446ffda6395cc1f7eb49d2c409c58fc09"
+    },
+    "tests_p7_discovery": {
+      "status": "PASS",
+      "returncode": 0,
+      "discovered_test_count": 43,
+      "stderr_sha256": "645f0c003256e50af945a77d81cc33066074591fbd5b193027c614a96e3e0f08"
+    },
+    "source_commit_unchanged": true,
+    "dirty_worktree_before_suites": false,
+    "dirty_worktree_after_suites": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "failure": {
+    "classification": "WINDOWS_ATOMIC_PROCESS_PARTIAL_LOG_HANDLE_RACE",
+    "test": "test_stationary_terminal_observation_switches_to_post_safe_reap_grace",
+    "exception": "PermissionError WinError 32 replacing terminal_observed_watchdog_test.stdout.log.partial while the file handle remained open",
+    "confirmed_boundary": "_atomic_process reached os.replace(stdout_partial, stdout_final) before closing the parent stdout/stderr handles on Windows",
+    "same_run_id_retry_permitted": false,
+    "complete_suite_rerun_for_r64_permitted": false,
+    "automatic_fix": "Close both parent partial-log handles after child/process-tree reap and before os.replace, retain atomic publication and all watchdog semantics, then focused-test on a new source commit."
+  },
+  "generator": {
+    "status": "NOT_STARTED_DUE_COMPLETE_SUITE_FAILURE",
+    "plan_generator_process_started": false,
+    "hardware_actions_executed": false,
+    "safe_wrapper_processes_launched": false,
+    "vivado_invoked_for_canonical_gate": false,
+    "xsdb_invoked": false,
+    "authorization_environment_modified": false,
+    "network_used": false,
+    "motion_used": false
+  },
+  "failure_boundary": {
+    "hardware_execution_entered": false,
+    "sequence_executor_process_started": false,
+    "stage_wrapper_process_started": false,
+    "p7_canonical_gate_invoked": false,
+    "xsdb_invoked": false,
+    "candidate_bitstream_programmed": false,
+    "ps_elf_started": false,
+    "jtag_axi_access": false,
+    "stationary_started": false,
+    "stationary_elapsed_seconds": 0,
+    "sequence_plan_created": false,
+    "stage_authorization_created": false,
+    "execution_evidence_root_created": false,
+    "campaign_ledger_hardware_attempt_created": false,
+    "campaign_lock_created": false,
+    "RF_COMM_HW_AUTH": "UNSET",
+    "scoped_worktree_processes_remaining_after_suite": 0
+  },
+  "hardware_boundary": {
+    "vivado_helper_process_count": 0,
+    "external_hw_server_process_count": 1,
+    "external_hw_server_pid": 26332,
+    "external_hw_server_action_taken": false,
+    "independent_shutdown_recovery_required": false,
+    "reason_no_recovery": "No hardware sequence, wrapper, XSDB target, FPGA programming, ELF start, JTAG access, or TFDU mutation occurred.",
+    "no_ethernet": true,
+    "no_motion": true,
+    "lane_count": 2,
+    "max_lane_mask": "0x3",
+    "HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "coverage_claimed": false
+  },
+  "required_next_run_id": "p7_20260716_stationary_app_r65_diag_stage66_c04",
+  "next_run_must_not_start_before": "ACCURATE_R64_RETIREMENT_COMMIT_PLUS_ATOMIC_LOG_HANDLE_FIX_AND_FOCUSED_TESTS_PLUS_NEW_CLEAN_SOURCE_PLACEHOLDER_REHEARSAL_PLUS_NEW_RUN_ID_COLLISION_AND_HASH_EXACT_MATERIALIZATION_PLUS_REQUIRED_COMPLETE_SUITES_EXACTLY_ONCE_PLUS_CACHE_BYPASSED_P7_CANONICAL_GATE_EXACTLY_ONCE_PLUS_NEW_SCOPED_AUTHORIZATION_PLUS_ALL_DRY_VALIDATION_PASS"
+}
