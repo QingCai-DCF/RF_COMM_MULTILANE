@@ -29,7 +29,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET` | `PASS` |
 | `P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE` | `PASS` |
 | `P8A_CANONICAL_REQUIREMENTS_STATE` | `PASS` |
-| `P8B_GEOMETRY_MAPPING_HANDOVER` | `PENDING` |
+| `P8B_GEOMETRY_MAPPING_HANDOVER` | `PASS` |
 | `P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT` | `PENDING` |
 | `P8D_SELECTIVE_REPEAT_DMA` | `PENDING` |
 | `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PENDING` |
@@ -67,7 +67,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 
 | Gate | Status |
 |---|---|
-| `P8B` | `PENDING` |
 | `P8C` | `PENDING` |
 | `P8D` | `PENDING` |
 | `P8E` | `PENDING` |
@@ -83,4 +82,4 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 
 Last verified evidence commit: `5006731277e49d9f2ddaa04a4726949674be5b27`.
 
-P8A was completed offline with `NO_HARDWARE=1`; it does not create or promote any hardware acceptance scope.
+P8A and P8B were completed offline with `NO_HARDWARE=1`; they do not create or promote any hardware acceptance scope.

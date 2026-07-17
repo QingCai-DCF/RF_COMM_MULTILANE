@@ -57,6 +57,12 @@ P8A_REQUIREMENT_IDS = {
     "P8A-LEGACY-001",
 }
 
+P8B_REQUIREMENT_IDS = {
+    "MAP-001", "MAP-002", "MAP-003", "MAP-004", "MAP-005", "MAP-006",
+    "PHASE-001", "PHASE-002", "PHASE-003", "HANDOVER-001", "HANDOVER-002",
+    "GEO-MODEL-001", "GEO-MODEL-002", "EVID-P8B-001",
+}
+
 REQUIRED_REQUIREMENT_FIELDS = {
     "requirement_id",
     "requirement_text",
@@ -80,7 +86,7 @@ EXPECTED_STAGE_STATUS = {
     "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET": "PASS",
     "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
     "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
-    "P8B_GEOMETRY_MAPPING_HANDOVER": "PENDING",
+    "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PENDING",
     "P8D_SELECTIVE_REPEAT_DMA": "PENDING",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING",
@@ -371,12 +377,15 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         for hash_index, record in enumerate(hashes):
             errors.extend(hash_record_errors(record, root, f"{label}.artifact_hashes[{hash_index}]"))
 
-    for req_id in INITIAL_REQUIREMENT_IDS:
+    for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PENDING":
             errors.append(f"{req_id} must remain PENDING until its scoped verification closes")
     for req_id in P8A_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PASS":
             errors.append(f"{req_id} must be PASS for the P8A baseline")
+    for req_id in P8B_REQUIREMENT_IDS:
+        if req_id in by_id and by_id[req_id].get("status") != "PASS":
+            errors.append(f"{req_id} must be PASS after P8B closure")
     return errors
 
 
@@ -465,7 +474,7 @@ def render_project_status(state: dict[str, Any]) -> str:
         "",
         f"Last verified evidence commit: `{state['last_verified_commit']}`.",
         "",
-        "P8A was completed offline with `NO_HARDWARE=1`; it does not create or promote any hardware acceptance scope.",
+        "P8A and P8B were completed offline with `NO_HARDWARE=1`; they do not create or promote any hardware acceptance scope.",
         "",
     ]
     return "\n".join(lines)
@@ -524,4 +533,3 @@ def render_traceability(document: dict[str, Any]) -> str:
 
 def dump_json(data: dict[str, Any]) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False, sort_keys=False) + "\n"
-

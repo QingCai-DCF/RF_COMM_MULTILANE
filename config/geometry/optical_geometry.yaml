@@ -1,0 +1,72 @@
+schema_version: 1
+geometry_profile: D200_D600_8X32
+coordinate_system:
+  origin: NOMINAL_COMMON_ROTOR_STATOR_CENTER
+  angle_unit: deg
+  wrap_interval: "[0,360)"
+  positive_direction: COUNTERCLOCKWISE_VIEWED_FROM_POSITIVE_Z
+  phase_rounding: NEAREST_FIXED_MODULE_HALF_TO_LOWER_INDEX
+rotor_radius_mm: 100.0
+stator_radius_mm: 300.0
+radial_gap_mm: 200.0
+rotating_module_count: 8
+fixed_module_count: 32
+logical_lane_count: 8
+sector_bank_count: 8
+modules_per_bank: 4
+rotating_spacing_deg: 45.0
+fixed_spacing_deg: 11.25
+fov_design_half_angle_deg: 12.0
+max_abs_speed_rpm: 600.0
+phase_update_period_target_us: 50.0
+mapping_prepare_latency_target_us: 100.0
+atomic_mapping_commit_target_us: 10.0
+application_service_gap_target_us: 100.0
+candidate_startup_lead_us: 700.0
+path_epoch_width: 32
+tolerances:
+  radial_eccentricity_mm:
+    value: null
+    status: PENDING_D13_OR_MECHANICAL_FREEZE
+    later_gate: D13
+  axial_runout_mm:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  rotor_stator_center_offset_mm:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  rotor_module_angle_error_deg:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  stator_module_angle_error_deg:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  rotating_pcb_tilt_deg:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  fixed_pcb_tilt_deg:
+    value: null
+    status: PENDING_FINAL_MECHANICAL
+    later_gate: P13
+  optical_axis_error_deg:
+    value: null
+    status: PENDING_OPTICS
+    later_gate: OPTICS
+  window_refraction_model:
+    value: null
+    status: PENDING_OPTICS
+    later_gate: OPTICS
+  baffle_occlusion_angular_mask_deg:
+    value: null
+    status: PENDING_OPTICS
+    later_gate: OPTICS
+  thermal_radial_growth_mm:
+    value: null
+    status: PENDING_ENVIRONMENT
+    later_gate: ENVIRONMENT
+

@@ -1,0 +1,25 @@
+# P8B state consistency summary
+
+- `test_id`: `P8B-STATE-NONPROMOTION`
+- `status`: `PASS`
+- `hardware_actions_executed`: `False`
+
+```json
+{
+  "expected": {
+    "current_program_stage": "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT",
+    "current_run_hardware_authorization": false,
+    "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
+    "final_product_status": "PENDING_HW",
+    "no_hardware_default": true,
+    "p7_status": "PASS",
+    "product_final_acceptance": "PENDING",
+    "rotation_status": "PENDING_FINAL_MECHANICAL",
+    "z7020_target_status": "PENDING_Z7020_HW"
+  },
+  "hardware_actions_executed": false,
+  "mismatches": {},
+  "status": "PASS",
+  "test_id": "P8B-STATE-NONPROMOTION"
+}
+```

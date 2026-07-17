@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8A-1",
+  "state_revision": "P8B-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -15,7 +15,8 @@
   "current_run_hardware_authorization": false,
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
-  "current_program_stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
+  "p8b_no_hardware_actions_executed": true,
+  "current_program_stage": "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -44,7 +45,7 @@
     "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET": "PASS",
     "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
     "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
-    "P8B_GEOMETRY_MAPPING_HANDOVER": "PENDING",
+    "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PENDING",
     "P8D_SELECTIVE_REPEAT_DMA": "PENDING",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING"
@@ -129,11 +130,32 @@
     "stuck_high_detection_claimed": false,
     "dual_channel_safety_claimed": false
   },
+  "p8b_acceptance": {
+    "status": "PASS",
+    "profile": "D200_D600_8X32",
+    "scope": "OFFLINE_GEOMETRY_MAPPING_CROSSBAR_EPOCH_PHASE_HANDOVER_LOGIC_MODEL",
+    "test_id": "P8B-OFFLINE-FULL-REGRESSION",
+    "evidence_path": "evidence/generated/p8b_final_summary.json",
+    "geometry_config_path": "config/geometry/optical_geometry.yaml",
+    "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
+    "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+    "p8a_checkpoint_tag": "p8a-pass",
+    "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS",
+    "logic_model_timing_target": "PASS",
+    "hardware_actions_executed": false,
+    "scope_exclusions": [
+      "REAL_600RPM_HANDOVER",
+      "FINAL_SECTOR_BANK_ELECTRICAL_SETTLE",
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ]
+  },
+  "completed_gates": [
+    {"gate_id": "P8A", "status": "PASS"},
+    {"gate_id": "P8B", "status": "PASS"}
+  ],
   "pending_gates": [
-    {
-      "gate_id": "P8B",
-      "status": "PENDING"
-    },
     {
       "gate_id": "P8C",
       "status": "PENDING"

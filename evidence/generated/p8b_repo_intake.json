@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "test_id": "P8B-REPO-CHECKPOINT",
+  "status": "PASS",
+  "captured_at_utc": "2026-07-17T15:11:20Z",
+  "workspace": "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE",
+  "requested_workspace_reused": true,
+  "new_worktree_created": false,
+  "initial_state": {
+    "head": "451d79164ea0033f3905b06a905f11b5cab33c00",
+    "branch": "DETACHED",
+    "worktree_dirty": true,
+    "dirty_content_classification": "P8A checkpoint implementation and regenerated offline evidence",
+    "project_constraints_modified": false,
+    "diff_check_returncode": 0
+  },
+  "checkpoint_branch": "p8/integration",
+  "checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+  "checkpoint_tag": "p8a-pass",
+  "commands": [
+    "git rev-parse --show-toplevel",
+    "git status --short --branch",
+    "git rev-parse HEAD",
+    "git diff --stat",
+    "git diff --check",
+    "$env:NO_HARDWARE='1'; python scripts/run_offline_gates.py",
+    "git switch -c p8/integration",
+    "git add -A",
+    "git commit -m 'chore: freeze P8A canonical baseline'",
+    "git tag -a p8a-pass -m 'P8A canonical baseline: offline gate PASS, NO_HARDWARE=1'"
+  ],
+  "scope_guards": {
+    "no_hardware": true,
+    "hardware_authorized": false,
+    "legacy_reference_modified": false,
+    "canonical_constraint_modified": false
+  }
+}

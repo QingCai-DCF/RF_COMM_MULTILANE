@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -18,12 +19,18 @@ VITIS_CROSS_GCC_CANDIDATES = [
 
 
 def build_parser():
-    return argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Run the canonical no-hardware RF_COMM_MULTILANE offline bootstrap gates."
     )
+    parser.add_argument(
+        "--include-p8b",
+        action="store_true",
+        help="Run the mandatory P8B Python/xsim geometry gate after the complete P0-P7/P8A regression.",
+    )
+    return parser
 
-def run(name, cmd, status=None):
-    p = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
+def run(name, cmd, status=None, env=None):
+    p = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, env=env)
     return {"name": name, "cmd": " ".join(cmd), "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr, "status": status}
 
 def run_iverilog_test(sim_dir, name, files, marker):
@@ -315,7 +322,7 @@ def write_summary(outdir, results):
     return status
 
 def main(argv=None):
-    build_parser().parse_args(argv)
+    args = build_parser().parse_args(argv)
     results = []
     py = sys.executable
     results.append(run("project_integrity", [py, "scripts/check_project_integrity.py"]))
@@ -353,8 +360,19 @@ def main(argv=None):
     results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
     status = write_summary(outdir, results)
 
+    if args.include_p8b:
+        parent_clean = all(r["returncode"] == 0 for r in results)
+        p8b_env = os.environ.copy()
+        p8b_cmd = [py, "scripts/run_p8b_geometry_gate.py"]
+        if parent_clean:
+            p8b_env["P8B_OFFLINE_PARENT"] = "1"
+            p8b_cmd.append("--parent-offline-pass")
+        results.append(run("p8b_geometry_mapping_handover", p8b_cmd, env=p8b_env))
+        status = write_summary(outdir, results)
+
     hard_fail = [r for r in results if r["returncode"] != 0]
     print(f"OFFLINE_GATES_RAN=1 status={status}")
+    print(f"P8B_INCLUDED={1 if args.include_p8b else 0}")
     print(f"GENERATED_SUMMARY={outdir / 'offline_gate_summary.md'}")
     return 1 if hard_fail else 0
 

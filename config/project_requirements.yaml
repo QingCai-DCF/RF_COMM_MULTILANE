@@ -1,347 +1,491 @@
 schema_version: 1
-document_version: "3.1"
+document_version: '3.1'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
-  - PASS
-  - PENDING
-  - FAIL
-  - WAIVED
+- PASS
+- PENDING
+- FAIL
+- WAIVED
 requirements:
-  - requirement_id: SYS-ARCH-001
-    requirement_text: 最终固定侧和旋转侧必须为两个独立 Zynq 节点。
-    profile: Z7020_8LANE_DUAL_ENDPOINT
-    verification_method: 双节点原理图、profile、构建产物和独立端到端硬件验收。
-    verification_stage: P10B
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-GEO-001
-    requirement_text: 旋转侧必须布置 8 个 TFDU，45° 等间隔。
-    profile: Z7020_ROTATING_8LANE_FINAL
-    verification_method: 机械图纸检查、实物计量和全环路光学验收。
-    verification_stage: P12
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-GEO-002
-    requirement_text: 固定侧必须布置 32 个 TFDU，11.25° 等间隔。
-    profile: Z7020_FIXED_8LANE_FINAL
-    verification_method: 机械图纸检查、实物计量和 32 模块全环验收。
-    verification_stage: P12
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-MOTION-001
-    requirement_text: 系统必须支持正反转、停启和任意连续轨迹，且 |rpm| <= 600。
-    profile: FINAL_PRODUCT_600RPM
-    verification_method: 最终机械装置上的双向分级升速、停启和轨迹覆盖测试。
-    verification_stage: P13
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-PERMIT-001
-    requirement_text: 每个独立端点各有且仅有一根本地 active-high GLOBAL_PERMIT。
-    profile: Z7020_8LANE_DUAL_ENDPOINT
-    verification_method: RTL、原理图、网表和实物信号计数与 fanout 审核。
-    verification_stage: P8C_D17
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-PERMIT-002
-    requirement_text: GLOBAL_PERMIT=0 必须关闭本端全部物理 TX。
-    profile: Z7020_8LANE_DUAL_ENDPOINT
-    verification_method: 形式属性、门级路径审核、permit drop 实测和最终 TX kill 测量。
-    verification_stage: P8C_D17
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-PERMIT-003
-    requirement_text: 禁止双 permit、permit heartbeat、per-bank permit 和 per-lane external GLOBAL_PERMIT。
-    profile: ALL_ENDPOINT_PROFILES
-    verification_method: RTL、寄存器、软件、原理图和接口静态唯一性检查。
-    verification_stage: P8C_D17
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SYS-PERMIT-004
-    requirement_text: permit 重新上升必须重新 arm，且不得恢复半帧。
-    profile: ALL_ENDPOINT_PROFILES
-    verification_method: permit 中断、reassert、显式 rearm 和 stale partial-frame rejection 属性与测试。
-    verification_stage: P8C
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PHY-SAFE-001
-    requirement_text: TFDU6102 的 Txd/Rxd/SD 极性和 static high-speed Mode 必须正确。
-    profile: ALL_TFDU_PROFILES
-    verification_method: RTL 静态检查、仿真和最终引脚电气测量。
-    verification_stage: P8C_P9_P12
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PHY-SAFE-002
-    requirement_text: 退出 shutdown 后必须等待至少 500 µs 才允许正常 RX/TX。
-    profile: ALL_TFDU_PROFILES
-    verification_method: 精确计数属性、仿真和硬件启动时序测量。
-    verification_stage: P8C_P9
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PHY-SAFE-003
-    requirement_text: 项目 MAX_CONTINUOUS_TXD_HIGH_US 必须 <= 1 µs。
-    profile: ALL_TFDU_PROFILES
-    verification_method: 连续高脉冲形式属性、负向仿真和外部测量。
-    verification_stage: P8C_P9
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PHY-SAFE-004
-    requirement_text: 每模块任意 clock-aligned 1000 µs 滑动窗口 duty 必须严格 <20%，设计目标 <=18%。
-    profile: ALL_TFDU_PROFILES
-    verification_method: exact sliding-window 形式证明、边界仿真和实测交叉检查。
-    verification_stage: P8C_P9
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: MAP-001
-    requirement_text: current mapping 必须始终为 8-lane permutation。
-    profile: Z7020_8LANE_TARGET
-    verification_method: 全 phase、方向和边界状态的 permutation 形式属性。
-    verification_stage: P8B
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: MAP-002
-    requirement_text: candidate mapping 必须支持正反方向并始终为 permutation。
-    profile: Z7020_8LANE_TARGET
-    verification_method: 正反向 candidate、wrap 和 q 边界的穷举属性。
-    verification_stage: P8B
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: MAP-003
-    requirement_text: mapping commit 必须原子，且 path epoch 每次 commit 只递增一次。
-    profile: Z7020_8LANE_TARGET
-    verification_method: 原子 commit、stale rejection 和 path epoch 形式属性。
-    verification_stage: P8B
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PERF-HD-001
-    requirement_text: 600 rpm 半双工 application goodput 必须 >=16 Mbit/s。
-    profile: FINAL_PRODUCT_600RPM_HALF_DUPLEX
-    verification_method: 最终硬件 600 rpm 应用层端到端 goodput 测量。
-    verification_stage: P13_P15
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: PERF-FD-001
-    requirement_text: 600 rpm 全双工 application goodput 必须 >=8 Mbit/s/方向。
-    profile: FINAL_PRODUCT_600RPM_FULL_DUPLEX
-    verification_method: 最终硬件双向并发应用层 goodput 测量。
-    verification_stage: P15
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: DATA-001
-    requirement_text: 错误、partial、stale 或 duplicate 对象不得提交。
-    profile: ALL_APPLICATION_PROFILES
-    verification_method: selective-repeat、DMA、handover、abort/restart 和最终端到端故障注入。
-    verification_stage: P8D_P13_P15
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: EVID-001
-    requirement_text: 每个 PASS 必须绑定 profile、test ID 和 evidence path。
-    profile: ALL_PROFILES
-    verification_method: 全阶段 evidence schema 和 canonical state consistency gate。
-    verification_stage: CONTINUOUS
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: EVID-002
-    requirement_text: 正式 artifact 必须内容寻址并以 SHA256 冻结。
-    profile: ALL_FORMAL_RUNS
-    verification_method: artifact manifest、文件名、内容和授权输入哈希一致性检查。
-    verification_stage: CONTINUOUS
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: SAFE-OPT-001
-    requirement_text: 系统级光学安全通过前不得放宽人员接近控制。
-    profile: FINAL_PRODUCT_OPTICAL_SAFETY
-    verification_method: 适用标准评估、可接近辐射测量和书面人员控制审核。
-    verification_stage: D16_P15
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: MECH-001
-    requirement_text: 600 rpm 前必须完成留存、动平衡和分级升速。
-    profile: FINAL_PRODUCT_600RPM
-    verification_method: 机械检查、动平衡报告和受控分级升速 evidence。
-    verification_stage: P13
-    test_id: null
-    evidence_path: null
-    status: PENDING
-    waiver: null
-    artifact_hashes: []
-
-  - requirement_id: P8A-CANON-001
-    requirement_text: PROJECT_CONSTRAINTS.txt 必须是唯一 canonical technical constraint，旧目标文件必须保持 superseded。
-    profile: P8A_BASELINE
-    verification_method: canonical marker、legacy marker、changelog hash 和唯一性静态检查。
-    verification_stage: P8A
-    test_id: P8A-CANONICAL-CONSTRAINT-GATE
-    evidence_path: PROJECT_CONSTRAINTS.txt
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: PROJECT_CONSTRAINTS.txt
-        sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
-      - path: PROJECT_CONSTRAINTS_CHANGELOG.md
-        sha256: f51da907122d1673bc3b657779997742df474ed391cd1a6772e0371da8cc176b
-
-  - requirement_id: P8A-STATE-001
-    requirement_text: config/project_state.json 必须是机器状态唯一事实源，PROJECT_STATUS.md 必须由它生成。
-    profile: P8A_BASELINE
-    verification_method: state schema、固定 scope 状态和生成文件 byte-exact 检查。
-    verification_stage: P8A
-    test_id: P8A-PROJECT-STATE-CONSISTENCY
-    evidence_path: PROJECT_STATUS.md
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: config/project_state.json
-        sha256: d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd
-      - path: PROJECT_STATUS.md
-        sha256: d333ddf403be6f8942d679cc7d00c98253deffbc022025fa9d8b450e24431620
-
-  - requirement_id: P8A-TRACE-001
-    requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
-    profile: P8A_BASELINE
-    verification_method: requirement ID 唯一性、字段完整性、状态和 PASS evidence/hash 约束检查。
-    verification_stage: P8A
-    test_id: P8A-REQUIREMENT-TRACEABILITY-BASELINE
-    evidence_path: config/project_requirements.yaml
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: PROJECT_CONSTRAINTS.txt
-        sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
-      - path: config/project_state.json
-        sha256: d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd
-
-  - requirement_id: P8A-EVID-001
-    requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
-    profile: P8A_BASELINE
-    verification_method: P0-P7 marker、JSON field、Markdown boundary、raw ledger shutdown 和历史冲突解析检查。
-    verification_stage: P8A
-    test_id: P8A-P0-P7-EVIDENCE-RECONCILIATION
-    evidence_path: evidence/generated/p8a_p0_p7_reconciliation.json
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: evidence/generated/p8a_p0_p7_reconciliation.json
-        sha256: 8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d
-      - path: evidence/generated/p7_final_acceptance_summary.json
-        sha256: a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b
-      - path: evidence/hardware/p7/p7_run_sequence_ledger.json
-        sha256: ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4
-
-  - requirement_id: P8A-SCOPE-001
-    requirement_text: P8A 离线结果不得提升、擦除或模糊任何硬件 scope。
-    profile: P8A_BASELINE
-    verification_method: canonical scoped status、P7 PASS preservation和最终硬件 PENDING 边界检查。
-    verification_stage: P8A
-    test_id: P8A-SCOPE-NONPROMOTION-GATE
-    evidence_path: PROJECT_STATUS.md
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: config/project_state.json
-        sha256: d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd
-      - path: PROJECT_STATUS.md
-        sha256: d333ddf403be6f8942d679cc7d00c98253deffbc022025fa9d8b450e24431620
-      - path: evidence/generated/p7_final_acceptance_summary.md
-        sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-
-  - requirement_id: P8A-LEGACY-001
-    requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
-    profile: P8A_BASELINE
-    verification_method: 历史 failure hash、最新 lane1 promotion 和非外推边界检查。
-    verification_stage: P8A
-    test_id: P8A-LEGACY-CURRENT-SCOPE-RECONCILIATION
-    evidence_path: evidence/generated/p8a_p0_p7_reconciliation.json
-    status: PASS
-    waiver: null
-    artifact_hashes:
-      - path: evidence/imported/evidence/final/BAD_DIR_fault_report.md
-        sha256: e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7
-      - path: evidence/generated/p7_lane1_promotion_summary.json
-        sha256: 6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363
-      - path: evidence/generated/p8a_p0_p7_reconciliation.json
-        sha256: 8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d
+- requirement_id: SYS-ARCH-001
+  requirement_text: 最终固定侧和旋转侧必须为两个独立 Zynq 节点。
+  profile: Z7020_8LANE_DUAL_ENDPOINT
+  verification_method: 双节点原理图、profile、构建产物和独立端到端硬件验收。
+  verification_stage: P10B
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-GEO-001
+  requirement_text: 旋转侧必须布置 8 个 TFDU，45° 等间隔。
+  profile: Z7020_ROTATING_8LANE_FINAL
+  verification_method: 机械图纸检查、实物计量和全环路光学验收。
+  verification_stage: P12
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-GEO-002
+  requirement_text: 固定侧必须布置 32 个 TFDU，11.25° 等间隔。
+  profile: Z7020_FIXED_8LANE_FINAL
+  verification_method: 机械图纸检查、实物计量和 32 模块全环验收。
+  verification_stage: P12
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-MOTION-001
+  requirement_text: 系统必须支持正反转、停启和任意连续轨迹，且 |rpm| <= 600。
+  profile: FINAL_PRODUCT_600RPM
+  verification_method: 最终机械装置上的双向分级升速、停启和轨迹覆盖测试。
+  verification_stage: P13
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-PERMIT-001
+  requirement_text: 每个独立端点各有且仅有一根本地 active-high GLOBAL_PERMIT。
+  profile: Z7020_8LANE_DUAL_ENDPOINT
+  verification_method: RTL、原理图、网表和实物信号计数与 fanout 审核。
+  verification_stage: P8C_D17
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-PERMIT-002
+  requirement_text: GLOBAL_PERMIT=0 必须关闭本端全部物理 TX。
+  profile: Z7020_8LANE_DUAL_ENDPOINT
+  verification_method: 形式属性、门级路径审核、permit drop 实测和最终 TX kill 测量。
+  verification_stage: P8C_D17
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-PERMIT-003
+  requirement_text: 禁止双 permit、permit heartbeat、per-bank permit 和 per-lane external GLOBAL_PERMIT。
+  profile: ALL_ENDPOINT_PROFILES
+  verification_method: RTL、寄存器、软件、原理图和接口静态唯一性检查。
+  verification_stage: P8C_D17
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SYS-PERMIT-004
+  requirement_text: permit 重新上升必须重新 arm，且不得恢复半帧。
+  profile: ALL_ENDPOINT_PROFILES
+  verification_method: permit 中断、reassert、显式 rearm 和 stale partial-frame rejection 属性与测试。
+  verification_stage: P8C
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: PHY-SAFE-001
+  requirement_text: TFDU6102 的 Txd/Rxd/SD 极性和 static high-speed Mode 必须正确。
+  profile: ALL_TFDU_PROFILES
+  verification_method: RTL 静态检查、仿真和最终引脚电气测量。
+  verification_stage: P8C_P9_P12
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: PHY-SAFE-002
+  requirement_text: 退出 shutdown 后必须等待至少 500 µs 才允许正常 RX/TX。
+  profile: ALL_TFDU_PROFILES
+  verification_method: 精确计数属性、仿真和硬件启动时序测量。
+  verification_stage: P8C_P9
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: PHY-SAFE-003
+  requirement_text: 项目 MAX_CONTINUOUS_TXD_HIGH_US 必须 <= 1 µs。
+  profile: ALL_TFDU_PROFILES
+  verification_method: 连续高脉冲形式属性、负向仿真和外部测量。
+  verification_stage: P8C_P9
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: PHY-SAFE-004
+  requirement_text: 每模块任意 clock-aligned 1000 µs 滑动窗口 duty 必须严格 <20%，设计目标 <=18%。
+  profile: ALL_TFDU_PROFILES
+  verification_method: exact sliding-window 形式证明、边界仿真和实测交叉检查。
+  verification_stage: P8C_P9
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: MAP-001
+  requirement_text: Current mapping shall be a complete eight-lane fixed-module and bank permutation for every m0.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Exhaustive 32-state Python reference and xsim RTL permutation checks.
+  verification_stage: P8B
+  test_id: P8B-PYTHON-MAPPING-EXHAUSTIVE
+  evidence_path: evidence/generated/p8b_mapping_exhaustive_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_path_mapping_pkg.sv
+    sha256: 6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b
+  - path: evidence/generated/p8b_mapping_exhaustive_summary.json
+    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
+- requirement_id: MAP-002
+  requirement_text: Forward and reverse candidate mappings shall be complete permutations with correct slot/bank wrap.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Exhaustive 512 lane-candidate tuples and direct q/s boundary tests.
+  verification_stage: P8B
+  test_id: P8B-HDL-FORWARD-REVERSE-WRAP
+  evidence_path: evidence/generated/p8b_mapping_exhaustive_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: tools/p8b_mapping_reference.py
+    sha256: d9d97209cb6f41fe4f389d697d4ac7a638101d1537516235abe35fc320f54565
+  - path: evidence/generated/p8b_mapping_exhaustive_summary.json
+    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
+- requirement_id: MAP-003
+  requirement_text: Mapping commit shall be atomic and increment path epoch exactly once per accepted request.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: xsim shadow/active atomicity, stretched request, reject, reset and small-width wrap tests.
+  verification_stage: P8B
+  test_id: P8B-HDL-PATH-EPOCH-ATOMICITY
+  evidence_path: evidence/generated/p8b_path_epoch_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_path_epoch_commit.sv
+    sha256: 1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c
+  - path: evidence/generated/p8b_path_epoch_summary.json
+    sha256: cb24066cf519af635b078b5058c2fb79a5506a044457d5e01cc7cc5afa1486af
+- requirement_id: PERF-HD-001
+  requirement_text: 600 rpm 半双工 application goodput 必须 >=16 Mbit/s。
+  profile: FINAL_PRODUCT_600RPM_HALF_DUPLEX
+  verification_method: 最终硬件 600 rpm 应用层端到端 goodput 测量。
+  verification_stage: P13_P15
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: PERF-FD-001
+  requirement_text: 600 rpm 全双工 application goodput 必须 >=8 Mbit/s/方向。
+  profile: FINAL_PRODUCT_600RPM_FULL_DUPLEX
+  verification_method: 最终硬件双向并发应用层 goodput 测量。
+  verification_stage: P15
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: DATA-001
+  requirement_text: 错误、partial、stale 或 duplicate 对象不得提交。
+  profile: ALL_APPLICATION_PROFILES
+  verification_method: selective-repeat、DMA、handover、abort/restart 和最终端到端故障注入。
+  verification_stage: P8D_P13_P15
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: EVID-001
+  requirement_text: 每个 PASS 必须绑定 profile、test ID 和 evidence path。
+  profile: ALL_PROFILES
+  verification_method: 全阶段 evidence schema 和 canonical state consistency gate。
+  verification_stage: CONTINUOUS
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: EVID-002
+  requirement_text: 正式 artifact 必须内容寻址并以 SHA256 冻结。
+  profile: ALL_FORMAL_RUNS
+  verification_method: artifact manifest、文件名、内容和授权输入哈希一致性检查。
+  verification_stage: CONTINUOUS
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: SAFE-OPT-001
+  requirement_text: 系统级光学安全通过前不得放宽人员接近控制。
+  profile: FINAL_PRODUCT_OPTICAL_SAFETY
+  verification_method: 适用标准评估、可接近辐射测量和书面人员控制审核。
+  verification_stage: D16_P15
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: MECH-001
+  requirement_text: 600 rpm 前必须完成留存、动平衡和分级升速。
+  profile: FINAL_PRODUCT_600RPM
+  verification_method: 机械检查、动平衡报告和受控分级升速 evidence。
+  verification_stage: P13
+  test_id: null
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P8A-CANON-001
+  requirement_text: PROJECT_CONSTRAINTS.txt 必须是唯一 canonical technical constraint，旧目标文件必须保持 superseded。
+  profile: P8A_BASELINE
+  verification_method: canonical marker、legacy marker、changelog hash 和唯一性静态检查。
+  verification_stage: P8A
+  test_id: P8A-CANONICAL-CONSTRAINT-GATE
+  evidence_path: PROJECT_CONSTRAINTS.txt
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: PROJECT_CONSTRAINTS.txt
+    sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
+  - path: PROJECT_CONSTRAINTS_CHANGELOG.md
+    sha256: f51da907122d1673bc3b657779997742df474ed391cd1a6772e0371da8cc176b
+- requirement_id: P8A-STATE-001
+  requirement_text: config/project_state.json 必须是机器状态唯一事实源，PROJECT_STATUS.md 必须由它生成。
+  profile: P8A_BASELINE
+  verification_method: state schema、固定 scope 状态和生成文件 byte-exact 检查。
+  verification_stage: P8A
+  test_id: P8A-PROJECT-STATE-CONSISTENCY
+  evidence_path: PROJECT_STATUS.md
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/project_state.json
+    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+  - path: PROJECT_STATUS.md
+    sha256: 6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f
+- requirement_id: P8A-TRACE-001
+  requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
+  profile: P8A_BASELINE
+  verification_method: requirement ID 唯一性、字段完整性、状态和 PASS evidence/hash 约束检查。
+  verification_stage: P8A
+  test_id: P8A-REQUIREMENT-TRACEABILITY-BASELINE
+  evidence_path: config/project_requirements.yaml
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: PROJECT_CONSTRAINTS.txt
+    sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
+  - path: config/project_state.json
+    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+- requirement_id: P8A-EVID-001
+  requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
+  profile: P8A_BASELINE
+  verification_method: P0-P7 marker、JSON field、Markdown boundary、raw ledger shutdown 和历史冲突解析检查。
+  verification_stage: P8A
+  test_id: P8A-P0-P7-EVIDENCE-RECONCILIATION
+  evidence_path: evidence/generated/p8a_p0_p7_reconciliation.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p8a_p0_p7_reconciliation.json
+    sha256: 8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d
+  - path: evidence/generated/p7_final_acceptance_summary.json
+    sha256: a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b
+  - path: evidence/hardware/p7/p7_run_sequence_ledger.json
+    sha256: ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4
+- requirement_id: P8A-SCOPE-001
+  requirement_text: P8A 离线结果不得提升、擦除或模糊任何硬件 scope。
+  profile: P8A_BASELINE
+  verification_method: canonical scoped status、P7 PASS preservation和最终硬件 PENDING 边界检查。
+  verification_stage: P8A
+  test_id: P8A-SCOPE-NONPROMOTION-GATE
+  evidence_path: PROJECT_STATUS.md
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/project_state.json
+    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+  - path: PROJECT_STATUS.md
+    sha256: 6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f
+  - path: evidence/generated/p7_final_acceptance_summary.md
+    sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
+- requirement_id: P8A-LEGACY-001
+  requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
+  profile: P8A_BASELINE
+  verification_method: 历史 failure hash、最新 lane1 promotion 和非外推边界检查。
+  verification_stage: P8A
+  test_id: P8A-LEGACY-CURRENT-SCOPE-RECONCILIATION
+  evidence_path: evidence/generated/p8a_p0_p7_reconciliation.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/imported/evidence/final/BAD_DIR_fault_report.md
+    sha256: e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7
+  - path: evidence/generated/p7_lane1_promotion_summary.json
+    sha256: 6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363
+  - path: evidence/generated/p8a_p0_p7_reconciliation.json
+    sha256: 8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d
+- requirement_id: MAP-004
+  requirement_text: The explicit 8x8 crossbar shall route distinguishable current/candidate data and expose inverse bank owners.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: xsim data-pattern mux and owner round-trip checks for every mapping state.
+  verification_stage: P8B
+  test_id: P8B-HDL-CROSSBAR-DATA
+  evidence_path: evidence/generated/p8b_crossbar_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_bank_lane_crossbar.sv
+    sha256: 97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886
+  - path: evidence/generated/p8b_crossbar_summary.json
+    sha256: ac573ebaca0d5e8844d5c1a060e4017c455b4967f362d677e08930a8e53b9958
+- requirement_id: MAP-005
+  requirement_text: Shadow mapping shall be context-bound and shall not control active/TX ownership before atomic commit.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: xsim prepare, context invalidation, active hold and atomic swap tests.
+  verification_stage: P8B
+  test_id: P8B-HDL-MAPPING-UNIT
+  evidence_path: evidence/generated/p8b_simulation_gate_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_path_mapping_engine.sv
+    sha256: 248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c
+  - path: sim/tb/tb_p8b_mapping_unit.sv
+    sha256: 7d7baaa638ebd81da3a44ada810d324252b47602472de493e5a1dad5eae5e30a
+- requirement_id: MAP-006
+  requirement_text: RTL mapping outputs shall match the independent Python reference for all 512 direction/lane tuples.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Machine-parsed RTL/Python CSV crosscheck.
+  verification_stage: P8B
+  test_id: P8B-RTL-PYTHON-CROSSCHECK
+  evidence_path: evidence/generated/p8b_rtl_python_crosscheck.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p8b_rtl_python_crosscheck.csv
+    sha256: ac520c1c9478efe12dd373793a103d357e57761199f4f3d37e2c96750552b3a2
+  - path: evidence/generated/p8b_rtl_python_crosscheck.json
+    sha256: 4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136
+- requirement_id: PHASE-001
+  requirement_text: Invalid, stale, uncertain, faulted or mismatched phase inputs shall fail closed into acquisition.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: xsim phase-validity guard fault injection.
+  verification_stage: P8B
+  test_id: P8B-HDL-PHASE-ACQUISITION
+  evidence_path: evidence/generated/p8b_phase_acquisition_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_phase_validity_guard.sv
+    sha256: f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742
+  - path: evidence/generated/p8b_phase_acquisition_summary.json
+    sha256: 983967e52b5c415bdd1b75ef28a820037e0eb59ceb43eec123b3f7f1c4fc2e4c
+- requirement_id: PHASE-002
+  requirement_text: Stop, restart and reversal shall require a fresh mapping and shall not reuse stale candidate context.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Deterministic seeded Python and xsim trajectory tests.
+  verification_stage: P8B
+  test_id: P8B-HDL-TRAJECTORY-RANDOMIZED
+  evidence_path: evidence/generated/p8b_phase_acquisition_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: tools/p8b_generate_trajectory.py
+    sha256: a1d19a1f9acdfe0d0ecc145bbe2a507a76add84d2b430175291cfe424cd28357
+  - path: sim/tb/tb_p8b_phase_trajectory.sv
+    sha256: d3487922d87ef3b5553197762af8d895b59754f0128238c7da3c15c5b0f622a9
+- requirement_id: PHASE-003
+  requirement_text: Phase-age motion shall use the 600 rpm bound without assuming constant speed or acceleration.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Direct 3.6 mdeg/us budget assertions in Python/xsim.
+  verification_stage: P8B
+  test_id: P8B-HDL-PHASE-ACQUISITION
+  evidence_path: evidence/generated/p8b_phase_acquisition_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_phase_validity_guard.sv
+    sha256: f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742
+  - path: docs/P8B_PHASE_ACQUISITION_MODEL.md
+    sha256: a4f0c32584787f5cc0663970ac8214ebbc9a2373157a4c0cb4b406e9ea1ed4ee
+- requirement_id: HANDOVER-001
+  requirement_text: Six handover intervals shall be measured separately and logic timing targets shall pass.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: xsim event timestamp metrics and target comparison.
+  verification_stage: P8B
+  test_id: P8B-HDL-PHASE-ACQUISITION
+  evidence_path: evidence/generated/p8b_handover_timing_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_handover_metrics.sv
+    sha256: f5f4862a0b439f08404fe249732fe108c0be0d6bc4cc77a4850d906ec046d4ab
+  - path: evidence/generated/p8b_handover_timing_summary.json
+    sha256: eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0
+- requirement_id: HANDOVER-002
+  requirement_text: Handover angular consumption and remaining margin shall be reported as nominal/provisional only.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: 600 rpm angular budget and nominal overlap computation.
+  verification_stage: P8B
+  test_id: P8B-PYTHON-GEOMETRY-NOMINAL
+  evidence_path: evidence/generated/p8b_handover_timing_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/geometry/optical_geometry.yaml
+    sha256: ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0
+  - path: evidence/generated/p8b_handover_timing_summary.json
+    sha256: eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0
+- requirement_id: GEO-MODEL-001
+  requirement_text: Nominal D200/D600 geometry shall match the closed-form reference values.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: High-resolution 2-D closed-form and 3-D vector-model crosscheck.
+  verification_stage: P8B
+  test_id: P8B-PYTHON-GEOMETRY-NOMINAL
+  evidence_path: evidence/generated/p8b_geometry_nominal_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: tools/p8b_geometry_model.py
+    sha256: 35b3d36bf086d2e4ef135ddacffbb2dfa01551dce351057feacda758fff0530b
+  - path: evidence/generated/p8b_geometry_nominal_summary.json
+    sha256: 0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5
+- requirement_id: GEO-MODEL-002
+  requirement_text: Unknown geometry tolerances shall remain null/PENDING and block worst-case hardware acceptance.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: Schema/gap ledger, bounded-only corner sweep and deterministic Monte Carlo model tests.
+  verification_stage: P8B
+  test_id: P8B-PYTHON-GEOMETRY-GAPS
+  evidence_path: evidence/generated/p8b_geometry_gap_ledger.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/geometry/optical_geometry.yaml
+    sha256: ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0
+  - path: evidence/generated/p8b_geometry_gap_ledger.json
+    sha256: 1c8fed77ff9d5842447a3449a911fe79d4591dab28bc8d83f99b2957da6aa2ea
+  - path: evidence/generated/p8b_geometry_worst_case_summary.json
+    sha256: 24268224d90bd0ef075b7b76a94cdab5f60db40552fdcabcce946c3914eb1174
+- requirement_id: EVID-P8B-001
+  requirement_text: Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware
+    scope.
+  profile: P8B_D200_D600_8X32_OFFLINE
+  verification_method: P8B requirement/state/evidence consistency gate.
+  verification_stage: P8B
+  test_id: P8B-REQUIREMENT-TRACEABILITY
+  evidence_path: evidence/generated/p8b_rtl_python_crosscheck.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p8b_mapping_exhaustive_summary.json
+    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
+  - path: evidence/generated/p8b_geometry_nominal_summary.json
+    sha256: 0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5
+  - path: evidence/generated/p8b_rtl_python_crosscheck.json
+    sha256: 4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136
