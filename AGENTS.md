@@ -11,47 +11,178 @@
 
 ## 推理
 - 优先使用第一性原理推理，而不是模式匹配。
-- 在解决问题前，先识别哪些信息是可观察的，哪些行动是可控制的，以及要求保证什么。
-- 如果某个属性可以被观察、触摸感知、标记、排序或以其他方式控制，就用一个可以利用分阶段/自适应选择的策略来求解；不要把问题简化成盲目的一次性抽样。
-- 对于定量、逻辑、边界或保证类等问题，在最终回答前，证明该策略在最坏情况下的充分性，并证明匹配的下界。
-- 如果答案是数字，重新检查算术，并确保最终数值准确回答了问题。
+- 在解决问题前，先识别哪些信息是可观察的、哪些行动可控制、要求保证什么。
+- 对定量、逻辑、边界或保证类问题，在最终回答前复核最坏情况充分性和算术。
+- 不得用阶段性 PASS、proxy evidence 或历史经验替代当前 scope 所需的直接证据。
 
 ## 通用性
-- 这些是通用工作规则；不要针对某个特定评测、预期答案等进行定制。
+- 这些是通用工作规则；不要针对特定评测或预期答案定制。
 
-## RF_COMM Rebuild Hard Constraints
-- `项目约束(目标）.txt` is a hard project constraint. Do not edit it unless the user explicitly asks for an exact constraint change and confirms it.
-- This workspace is the new rebuild project. Do not modify the legacy source project at `C:\Users\user\Documents\RF_COMM`.
-- Default mode is `NO_HARDWARE=1`. Do not program FPGA hardware, start PS ELF files, drive TFDU pins, use XSCT hardware targets, open Vivado Hardware Manager, capture ILA, or write UART commands unless the user explicitly authorizes hardware execution.
-- Any authorized hardware run must use a safe wrapper and must program TFDU shutdown afterwards. Treat the run as incomplete unless logs show `SHUTDOWN_EXIT=0` or `TFDU_SHUTDOWN_PROGRAMMED`.
-- Offline gates must keep `HARDWARE_ACCEPTANCE: PENDING_HW`; no offline or simulation result may promote hardware status to PASS.
-- Missing tools must be reported as `SKIP_WITH_REASON` or FAIL with evidence. Do not report a missing-tool path as PASS.
-- TFDU6102 safety contract checks are mandatory for P1 offline hardening. Keep `docs/TFDU6102_SAFETY_SUMMARY.md` and `docs/tfdu6102_safety_contract.md` aligned with RTL gates.
-- Legacy `RF_COMM` evidence proves only the scope it actually covers. Do not promote degraded lane0 evidence into 2-lane, 8-lane, Ethernet, rotation, or soak-test PASS claims.
-- Imported legacy RTL, XDC, Vivado projects, tools, and software under `legacy/` or `rtl/legacy_reference/` are read-only reference inputs, not canonical build inputs.
-- Old active top XDC and IP-local XDC conflict. New builds must use the canonical generated XDC at `constraints/active/PORT1.generated.xdc`, generated from `board_profiles/ax7010_tfdu_j10_j11_pinmap.csv`.
-- `AB_L1` is a legacy raw-layer BAD_DIR and must not be enabled as a reliable lane until fresh lane1 raw-pulse, frame CRC, ACK-only, and session/mask readback gates pass.
+# 1. Canonical 文件与职责边界
 
-## Canonical Project Inputs
+- `PROJECT_CONSTRAINTS.txt` is the sole canonical normative project constraint.
+- `docs/legacy/项目约束(目标）.txt` is historical and superseded. It must not override `PROJECT_CONSTRAINTS.txt`.
+- Do not edit `PROJECT_CONSTRAINTS.txt` unless:
+  1. the user explicitly requests a constraint revision;
+  2. the proposed change list is shown to the user;
+  3. the user confirms that change list.
+- After a confirmed constraint revision, preserve a changelog and previous-version hash.
+- `AGENTS.md` governs agent execution, authorization, safety workflow, repository boundaries and evidence discipline.
+- `PROJECT_CONSTRAINTS.txt` governs product goals, architecture, performance, geometry, protocol, hardware design and verification criteria.
+- `AGENTS.md` must not silently redefine product goals.
+- `PROJECT_CONSTRAINTS.txt` does not itself authorize a hardware run.
+
+# 2. Repository Boundary
+
+- This workspace is the rebuild project `RF_COMM_MULTILANE`.
+- Do not modify the legacy source project at `C:\Users\user\Documents\RF_COMM`.
+- `legacy/`, `rtl/legacy_reference/` and `docs/legacy/` are read-only reference inputs.
+- Imported legacy RTL, XDC, Vivado projects, tools and software are not canonical build inputs.
+
+# 3. Current Scope and Status
+
+Preserve these scoped states unless newer canonical evidence changes them:
+
+```text
+P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS
+CURRENT_Z7010_PLATFORM_ACCEPTANCE: PLATFORM_LIMITED_PASS
+Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW
+ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
+```
+
+- Offline gates may not promote any hardware scope.
+- Offline gates must not erase an existing scoped hardware PASS such as P7 stationary 2-lane acceptance.
+- `AB_L1` has a legacy `BAD_DIR` record. Preserve that history.
+- Current lane1 usability is determined by the latest canonical immutable P7 evidence.
+- Do not extrapolate the stationary P7 lane1 PASS to Z7020, sector-bank, rotating or product hardware.
+
+# 4. Hardware Authorization and Safe Execution
+
+- Default mode is `NO_HARDWARE=1`.
+- Do not program FPGA hardware, start PS ELF files, drive TFDU pins, connect XSCT/XSDB hardware targets, open Vivado Hardware Manager, capture ILA/VIO, write UART commands, use real Ethernet/SPI peers or operate a motor unless the user explicitly authorizes the current hardware run.
+- Historical authorization does not authorize a new run.
+- Every authorized hardware run must have:
+  - current-run authorization;
+  - immutable bitstream/ELF paths and SHA256;
+  - explicit board/profile/XDC/register-map inputs;
+  - bounded maximum runtime;
+  - safe wrapper;
+  - shutdown-before;
+  - shutdown-on-error, timeout, Ctrl+C and normal exit;
+  - shutdown-after evidence.
+- Treat a hardware run as incomplete unless logs show `SHUTDOWN_EXIT=0`, `TFDU_SHUTDOWN_PROGRAMMED`, or a stage-approved equivalent.
+- Missing tools or unavailable hardware must be `SKIP_WITH_REASON` or FAIL with evidence, never PASS.
+
+# 5. Single GLOBAL_PERMIT Hard Constraint
+
+- Each independent endpoint has exactly one local active-high `GLOBAL_PERMIT`.
+- The fixed endpoint distributes its one permit to all eight sector banks.
+- The rotating endpoint distributes its one permit to all eight rotating TX paths.
+- Do not introduce:
+  - dual-channel permits;
+  - permit A/B;
+  - permit heartbeat;
+  - per-bank `GLOBAL_PERMIT`;
+  - per-lane external `GLOBAL_PERMIT`;
+  - software-emulated second permit channels.
+- `BANK_FAULT`, `LANE_TX_PERMIT`, `ENDPOINT_ARMED`, TX one-hot, frame admission, duty guard, stuck-high guard and TX kill are allowed and mandatory, but they are not extra global permit channels.
+- `GLOBAL_PERMIT=0` must force all local physical TX paths off.
+- `GLOBAL_PERMIT=1` is necessary but never sufficient for TX.
+- The permit must default low at power-up, reset, open circuit, undriven input, FPGA-unconfigured state and partial-power state.
+- Permit deassertion must reach the final TX kill path without PS, FreeRTOS, TCP, SPI, AXI polling or a normal frame-state transition.
+- Permit reassertion must require explicit re-arm and must not resume a partial frame.
+- Receive-only acquisition may operate while `GLOBAL_PERMIT=0`.
+- SD control remains separate from the single global TX permit.
+- Software may observe permit state and request arm, but may not create, override or bypass physical permit high.
+- Do not claim that a single active-high permit detects a stuck-high fault.
+- Do not claim dual-channel, SIL/PL or redundant safety properties from this architecture.
+
+# 6. TFDU6102 Safety Hard Constraints
+
+- `Txd` is active high.
+- `Rxd` is active low.
+- `SD` is active-high shutdown.
+- Static `Mode=HIGH` selects MIR/FIR; do not mix static mode with dynamic mode programming.
+- Wait at least 500 us after shutdown exit before normal RX/TX operation.
+- Physical Txd must default low on reset/fault.
+- Full shutdown requires SD high and Txd low.
+- Receive-only acquisition may keep SD low only while Txd is hard-disabled.
+- Per-module exact rolling-duty requirement:
+  - any clock-aligned 1 ms sliding window;
+  - strict `<20%` hard limit;
+  - `<=18%` design target.
+- Project `MAX_CONTINUOUS_TXD_HIGH_US` is `<=1`.
+- Stuck-high, rolling-duty, one-hot, frame admission, pulse-limit and shutdown guards are mandatory in RTL/external hardware as applicable.
+- Keep `docs/TFDU6102_SAFETY_SUMMARY.md`, `docs/tfdu6102_safety_contract.md`, RTL properties and hardware gates aligned.
+
+# 7. Canonical Inputs and Profiles
+
+Canonical project sources:
+
+- Project constraint: `PROJECT_CONSTRAINTS.txt`
+- Register map: `config/register_map/ir_axi_regs.yaml`
+- Requirements: `config/project_requirements.yaml` after P8A
+- Machine state: `config/project_state.json` after P8A
+- Offline gate: `python scripts/run_offline_gates.py`
+
+Current development profile only:
+
 - Pinmap: `board_profiles/ax7010_tfdu_j10_j11_pinmap.csv`
 - XDC: `constraints/active/PORT1.generated.xdc`
 - Active profile: `board_profiles/ACTIVE_PROFILE.json`
-- Register map source of truth: `config/register_map/ir_axi_regs.yaml`
-- Offline gate entrypoint: `python scripts/run_offline_gates.py`
 
+Future profiles must be separate:
 
-## P3/P4 Pre-Hardware Boundary
-- Hardware is locked by default and P3 is documentation/dry-run only.
-- Offline gates and generated summaries must keep `HARDWARE_ACCEPTANCE: PENDING_HW`.
-- Hardware-capable scripts must default to dry-run or fail authorization before any hardware connection.
-- Future hardware requires `RF_COMM_HW_AUTH`, an authorization file, explicit board/bitstream/profile/hash inputs, max runtime, and shutdown-on-exit.
-- TFDU6102 startup wait, stuck-high guard, Txd default-low, SD shutdown, and shutdown-on-exit constraints remain mandatory.
-- Do not claim hardware, lane, Ethernet, rotation, soak, or product-final pass without real authorized P4 evidence.
+- `board_profiles/z7010_2lane/...`
+- `board_profiles/z7020_fixed_8lane/...`
+- `board_profiles/z7020_rotating_8lane/...`
 
-## P7 Runtime Optimization Constraints
-- Read and follow `docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md` for every new P7 diagnostic plan, offline checkpoint cycle, and formal run preparation.
-- New diagnostic run IDs must use adaptive suffix selection: run the mandatory safety prefix, then begin at the earliest unresolved or provably affected stage. Never resume a failed run, and never treat skipped historical PASS stages as acceptance coverage.
-- Skipping a stage requires machine-readable proof that all transitive stage inputs are unchanged; uncertainty fails closed and includes the stage.
-- Prefer fail-closed content-addressed caching for unchanged offline Vivado/Vitis substeps, but never cache hardware authorization, raw evidence, shutdown results, or hardware PASS. A cache-bypassed canonical offline gate remains mandatory before the final formal full run.
-- Run focused tests while iterating and each required complete suite exactly once before an authorization checkpoint; remove duplicate invocations, not required coverage.
-- These optimizations never change the formal complete acceptance run and never weaken per-run authorization, containment, shutdown, evidence, no-Ethernet, no-motion, or lane-mask constraints. Ordinary diagnostics never permit stationary execution. The sole exception is the bounded Stage 66 campaign authorized on 2026-07-15 and machine-governed by `config/p7_stage66_diagnostic_campaign_policy.json`: exact ordinals 1--4,66, at most ten actually launched new diagnostic run IDs, zero acceptance coverage, stop after the first complete 1800-second PASS, and a separate later formal 1--66 run.
+The AX7010 pinmap/XDC is canonical only for `Z7010_2LANE_DEV`. Never reuse it for either final Z7020 endpoint.
+
+# 8. State, Requirements and Evidence Discipline
+
+- `config/project_state.json` is the machine-readable status source after P8A.
+- `PROJECT_STATUS.md` must be generated from it.
+- `config/project_requirements.yaml` is the machine-readable requirement source after P8A.
+- Every new hard requirement must have a requirement ID.
+- Every PASS claim must reference a test ID, profile, artifact hashes and evidence path.
+- Requirements without verification evidence remain PENDING.
+- Historical replay or diagnostic summaries must not override canonical final evidence.
+- Contradictory PASS/FAIL/PENDING fields must fail the consistency gate.
+- Do not delete failed evidence or legacy failures.
+- Do not use Markdown summaries as substitutes for raw logs/JSON/CSV.
+- Do not promote:
+  - offline/simulation to hardware;
+  - Z7010 to Z7020;
+  - stationary 2-lane to rotating 8-lane;
+  - degraded to normal configuration;
+  - proxy/ILA inference to external electrical/optical measurement.
+
+# 9. Current Program Boundary: P8 and Later
+
+- P8 is offline by default.
+- P8 must preserve P0-P7 regression and scoped PASS states.
+- P8 must not execute hardware without new current-run authorization.
+- P8 must maintain common-source `Z7010_2LANE_DEV` and `Z7020_8LANE_TARGET` builds.
+- P8 must implement the single active-high `GLOBAL_PERMIT` architecture exactly as defined in `PROJECT_CONSTRAINTS.txt`.
+- P8A must establish canonical requirements and machine state before broad architecture changes.
+- P8B must close geometry/mapping/crossbar/handover properties.
+- P8C must close exact duty, TFDU safety and single permit properties.
+- P8D must close selective-repeat and DMA data plane.
+- P8E must close dual-target build/resource/timing/CDC.
+- Do not combine all P8 work into an unreviewable monolithic change.
+
+# 10. Historical Stage Rules
+
+- P3/P4 pre-hardware rules are historical. Move or retain them under `docs/legacy_stage_rules/P3_P4_RULES.md` when P8A performs repository cleanup.
+- P7 runtime optimization rules are historical and apply only when reproducing or auditing P7.
+- Preserve `docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md` and the Stage 66 campaign policy as immutable historical evidence.
+- P7-specific run ordinals, caching exceptions and dated authorization do not govern P8 or later stages.
+
+# 11. Automation Behavior
+
+- Prefer focused tests while iterating, followed by each required complete gate once before an acceptance checkpoint.
+- Fail closed when scope, artifact, profile, permit state or evidence provenance is uncertain.
+- Do not silently weaken safety, performance or evidence requirements to make a gate pass.
+- Do not claim product-final PASS until every final field in `PROJECT_CONSTRAINTS.txt` is supported by final-hardware evidence.

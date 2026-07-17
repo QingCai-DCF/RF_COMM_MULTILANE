@@ -1,147 +1,1824 @@
-本项目目标是在 ZYNQ-7010 平台上实现一套可靠的红外数据通信系统，用于在板卡和外部红外收发器之间完成数据发送、接收、链路状态管理和异常恢复。系统应支持 PS 端发起数据传输，PL 端完成红外链路处理，并将接收到的数据稳定返回给 PS 端。
+# RF_COMM_MULTILANE 项目约束、目标、架构与验证方案（V3.1）
+
+```text
+DOCUMENT_STATUS: NORMATIVE_PROJECT_CONSTRAINT
+DOCUMENT_VERSION: 3.1
+DECISION_BASIS: D1-D21 / Q001-Q250 + USER_CONFIRMED_V3_1_CHANGESET
+DECISION_REVIEW_STATUS: APPROVED
+ARCHITECTURE_DIRECTION: APPROVED
+OPEN_DIRECTION_DECISIONS: 0
+OPEN_IMPLEMENTATION_GATES: D12,D13,D14,D15,D16,D17,BATTERY,ENVIRONMENT,OPTICS
+CANONICAL_PROJECT_CONSTRAINT: PROJECT_CONSTRAINTS.txt
+LEGACY_PROJECT_CONSTRAINT: docs/legacy/项目约束(目标）.txt
+LEGACY_PROJECT_CONSTRAINT_STATUS: SUPERSEDED
+GLOBAL_PERMIT_ARCHITECTURE: SINGLE_ACTIVE_HIGH_PER_ENDPOINT
+CURRENT_DEVELOPMENT_PROFILE: Z7010_2LANE_DEV
+FINAL_PRODUCT_PROFILE: Z7020_8LANE_DUAL_ENDPOINT
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+NO_HARDWARE_ACTIONS_AUTHORIZED_BY_THIS_DOCUMENT: true
+PROJECT_CONSTRAINT_DOCUMENT_GRANTS_HARDWARE_AUTHORIZATION: false
+HISTORICAL_AUTHORIZED_HARDWARE_EVIDENCE_EXISTS: true
+P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS
+CURRENT_Z7010_PLATFORM_ACCEPTANCE: PLATFORM_LIMITED_PASS
+Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW
+ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
+```
+
+本文件是 RF_COMM_MULTILANE 的唯一 canonical 技术约束源，定义最终目标、硬约束、架构选择、软硬件技术路线、实施阶段、风险、验证方案、ADR、项目术语和证据边界。它同时区分：
+
+1. 当前一块 Zynq-7010 开发板、2 lane、4 个 TFDU 小板范围内的受限开发与已取得的 P7 静止硬件成果；
+2. 面向 Zynq-7020 的共源离线构建、迁移验证和双独立节点集成；
+3. 最终双端 `XC7Z020-2CLG400I`、D200/D600、8×32 光机结构在 600 rpm 下的正式产品验收。
+
+任何低一级证据都不得冒充高一级 PASS；任何历史失败也不得覆盖其后由同一 profile、不可变 artifact 和正式 evidence 证明的已解决状态。
+
+## 0. 规范边界
+
+### 0.1 规范性用语
+
+- **必须 / 禁止**：硬约束，违反即不能通过对应阶段。
+- **应 / 推荐**：默认技术选择；偏离时必须记录理由、风险与等效验证。
+- **可以**：允许的实现自由度。
+- **PENDING**：尚无足够证据，不表示失败，也不表示通过。
+- **SKIP_WITH_REASON**：工具或前置条件缺失而无法运行；不得记为 PASS。
+
+### 0.2 约束优先级与职责边界
+
+发生冲突时按以下顺序处理：
+
+1. 用户在当前任务中的明确指令；
+2. `AGENTS.md` 中的 agent 执行、安全、授权、证据和仓库边界规则；
+3. 本文件 `PROJECT_CONSTRAINTS.txt` 中的产品目标、技术架构、性能、几何、协议、硬件和验收约束；
+4. 机器可读 canonical profile、register map、pinmap、XDC、requirements 和 project state；
+5. 设计文档、阶段计划和生成的摘要；
+6. 当前正式 evidence；
+7. 历史 evidence 与 legacy 参考。
+
+职责边界：
+
+- `AGENTS.md` 决定 Codex/agent **可以如何执行**、何时需要授权、如何保留 evidence 和如何失败关闭；
+- `PROJECT_CONSTRAINTS.txt` 决定系统和产品 **必须实现什么**；
+- `AGENTS.md` 不得静默改写产品目标；
+- 本文件不构成任何一次硬件运行授权。
+
+原始 `项目约束(目标）.txt` 必须迁移或视为：
+
+```text
+LEGACY_PATH: docs/legacy/项目约束(目标）.txt
+LEGACY_STATUS: SUPERSEDED
+```
+
+旧文件只保留历史来源意义，不得覆盖本文件。`C:\Users\user\Documents\RF_COMM`、本仓库 `legacy/` 和 `rtl/legacy_reference/` 只读。
+
+当前开发板 canonical 输入为：
+
+- pinmap：`board_profiles/ax7010_tfdu_j10_j11_pinmap.csv`；
+- XDC：`constraints/active/PORT1.generated.xdc`；
+- active profile：`board_profiles/ACTIVE_PROFILE.json`；
+- register map：`config/register_map/ir_axi_regs.yaml`；
+- requirements：`config/project_requirements.yaml`；
+- machine state：`config/project_state.json`；
+- offline gate：`python scripts/run_offline_gates.py`。
+
+这些输入只描述 `Z7010_2LANE_DEV`。最终固定侧与旋转侧必须分别建立：
+
+```text
+board_profiles/z7020_fixed_8lane/
+board_profiles/z7020_rotating_8lane/
+```
+
+并分别生成 pinmap、XDC、clock/reset、DDR、Ethernet/SPI 和 I/O 约束。AX7010 XDC 禁止复用于任何最终 Z7020 端点。
+
+### 0.3 硬件执行边界
+
+- 默认 `NO_HARDWARE=1`。
+- 本文件不授权 FPGA 下载、PS ELF 启动、TFDU 管脚驱动、XSCT/XSDB target、Hardware Manager、ILA、UART、电机或旋转动作。
+- 当前运行授权字段为 `CURRENT_RUN_HARDWARE_AUTHORIZATION`，不得用它否定历史上已经取得的授权硬件 evidence。
+- 每一次新硬件运行必须取得独立、当前有效的授权，并绑定 board/profile、bitstream/ELF SHA256、最长运行时间和 shutdown-on-exit。
+- 授权硬件运行必须使用安全 wrapper；退出日志必须出现 `SHUTDOWN_EXIT=0` 或 `TFDU_SHUTDOWN_PROGRAMMED`，否则该 run 不完整。
+- 离线、仿真、综合、实现和缺工具结果都不能提升任何硬件 scope。
+- 离线工作必须保留已取得的 `P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS`，同时保持：
+
+```text
+Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW
+ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
+```
+
+### 0.4 状态与变更控制
+
+- `config/project_state.json` 是机器可读状态唯一事实源；`PROJECT_STATUS.md` 必须由它自动生成。
+- 任何相互矛盾的 PASS/FAIL/PENDING 字段必须使 status-consistency gate 失败。
+- 对本文件的修改必须先向用户展示逐项变更清单并得到明确确认；确认后记录旧文件 SHA256、新文件 SHA256、变更理由和影响范围。
+- 每条新增硬约束必须获得 requirement ID，并在 `docs/REQUIREMENT_TRACEABILITY_MATRIX.md` 中关联验证方法、test ID 和 evidence path。
+
+---
+
+## 1. 最终目标
+
+### 1.1 最终产品硬目标
+
+| 项目 | 最终约束 |
+|---|---|
+| 固定侧 FPGA | `XC7Z020-2CLG400I`；Vivado part `xc7z020clg400-2` |
+| 旋转侧 FPGA | `XC7Z020-2CLG400I`；Vivado part `xc7z020clg400-2` |
+| 板卡形态 | 商业核心板 + 自研载板；两端允许使用不同载板 |
+| 旋转侧直径 | 200 mm，名义半径 `r=100 mm` |
+| 固定侧直径 | 600 mm，名义半径 `R=300 mm` |
+| 旋转模块 | 8 个 TFDU6102，45° 等间隔 |
+| 固定模块 | 32 个 TFDU6102，11.25° 等间隔 |
+| 物理 sector bank | 8 个，每个连续管理 4 个固定模块 |
+| logical lane | 8 个；`Lk` 固定对应旋转模块 `Rk` |
+| 运动范围 | 正转、反转、速度变化、停转和重新启动；`|rpm| <= 600` |
+| 运动模型 | 不假设恒速、固定方向或已知加速度；支持满足 encoder/phase 预算的任意连续物理运动轨迹 |
+| 发射总许可 | 每个独立端点各有且仅有一根本地 active-high `GLOBAL_PERMIT` |
+| 半双工 RAW | 8 lane 同向，32 Mbit/s capability |
+| 全双工 RAW | 4+4 lane，16 Mbit/s/方向 capability |
+| 半双工应用 goodput | 硬门 `>=16 Mbit/s`；挑战目标 `>=19.2 Mbit/s`，挑战目标受完整 airtime budget 约束 |
+| 全双工应用 goodput | 硬门 `>=8 Mbit/s/方向`；挑战目标 `>=9.6 Mbit/s/方向` |
+| 连续运行 | 600 rpm、2 小时功能稳定性验收、正常配置 8 lane ready；不等同于寿命 qualification |
+| 数据完整性 | 错误对象提交数为 0；partial/stale/duplicate 不得误提交 |
+| 固定侧外部接口 | Ethernet/TCP，FreeRTOS + lwIP |
+| 旋转侧本地接口 | FPGA-to-FPGA SPI，具体角色与速率由阶段门冻结 |
+| 开放阵列安全 | 系统级评估通过前实行排除区、钥匙许可、急停和维护禁发 |
+| 模块故障 | 允许降级到 7..1 lane，但必须显式报告，不能继续声称 8-lane PASS |
+
+### 1.2 端到端目标拓扑
+
+```text
+PC application
+  <-> Ethernet/TCP
+fixed XC7Z020 PS: FreeRTOS + lwIP
+  <-> AXI DMA SG / HP DDR
+fixed XC7Z020 PL: protocol + 8-lane scheduler + handover + safety
+  <-> 8 discrete four-module sector banks / 32 fixed TFDU6102
+  <-> free-space infrared paths
+8 rotating TFDU6102
+  <-> rotating XC7Z020 PL: PHY + protocol + safety
+  <-> AXI DMA SG / HP DDR
+rotating XC7Z020 PS: FreeRTOS services
+  <-> framed FPGA-to-FPGA SPI
+local application FPGA
+```
+
+### 1.3 明确不保证的范围
+
+- 当前 Zynq-7010 开发板不属于最终产品平台。
+- 当前静止 2-lane evidence 不证明 8-lane、旋转、Ethernet 端到端、SPI 端到端或最终吞吐。
+- 单模块故障后不保证仍有 8 lane。
+- 环境参数未冻结前，不保证室外、强日照、粉尘、油雾、特定温度或振动环境。
+- 网络只按可信内网设计，不宣称适用于不可信公网。
+- 单个 TFDU6102 的器件级安全分类不代表 8/32 模块开放阵列的系统级安全结论。
+
+---
+
+## 2. 当前开发基线与 Z7010 优先路线
+
+### 2.1 当前可用硬件与状态
+
+```text
+CURRENT_FPGA_BOARD_COUNT: 1
+CURRENT_FPGA_FAMILY: Zynq-7010 development board
+CURRENT_CANONICAL_PART: xc7z010clg400-1
+CURRENT_LOGICAL_LANE_CAPACITY: 2
+CURRENT_TFDU_SMALL_BOARD_COUNT: 4
+CURRENT_ROTATION_FIXTURE: unavailable/not accepted
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+HISTORICAL_AUTHORIZED_HARDWARE_EVIDENCE_EXISTS: true
+P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS
+CURRENT_Z7010_PLATFORM_ACCEPTANCE: PLATFORM_LIMITED_PASS
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
+```
+
+当前开发平台的目标不是模拟已经拥有最终硬件，而是在不破坏迁移性的前提下最大化验证可移植功能。本文件本身不授予下一次硬件运行权限。
+
+### 2.2 已有 P0–P7 证据的有效范围
+
+已有成果可作为以下内容的回归基线：
+
+- TFDU 极性、startup、shutdown、stuck-high 和基础 duty 保护结构；
+- 4PPM codec、L1 frame、CRC、ACK、重传和基础 lane 调度；
+- AXI-Lite register map 和软件访问；
+- RFAP v1 对象分片、重组、CRC32、SHA256、backpressure 和恢复；
+- 单块 Zynq-7010 上的静止 2-lane PS 应用闭环；
+- P7 约 `0.081 Mbit/s` 的应用 goodput 功能基线。
+
+已有证据不能外推为：
+
+- 单 lane 4 Mbit/s 已通过；
+- 8 lane 同时工作；
+- 两个独立节点、独立时钟和独立 reset；
+- 32-to-8 sector bank 或动态 handover；
+- 任意角度、正反转或 600 rpm；
+- 32/16 Mbit/s RAW capability；
+- 16/8 Mbit/s application goodput；
+- Ethernet 到远端 SPI FPGA 的端到端链路；
+- 最终产品安全或可靠性。
+
+`AB_L1` 状态必须分层记录：
+
+```text
+AB_L1_LEGACY_STATUS: BAD_DIR
+AB_L1_CURRENT_STATUS: RESOLVED_WITHIN_P7_STATIONARY_PROFILE
+```
+
+legacy `BAD_DIR` 记录不得删除；但最新 canonical P7 evidence 已证明 lane1 在当前 Z7010、静止 2-lane、当前 bitstream/profile/XDC 和当前 TFDU 小板组合内可用。该结论不得外推到最终 Z7020、32×8 sector bank、旋转或不同光机安装。
+
+### 2.3 Z7010 平台应尽可能完成的工作
 
-配套使用的红外收发器为 TFDU-6102。系统目标不是简单点亮或采样红外 IO，而是实现具备数据完整性检查、丢包恢复、状态反馈和可扩展能力的红外通信链路。
+在未来取得硬件授权后，现有一块 Z7010、2 lane、4 小板平台应优先验证：
 
-本项目应用场景为旋转轴系无线通信。系统应能够在直径约 20 cm 的旋转轴系上工作，并满足 600 rpm 转速条件下的稳定通信需求。系统应适应旋转带来的相对位置变化、周期性对准变化和短时信号波动，在该应用场景下仍保持可靠的数据收发能力。
+1. 单 lane 和 2-lane PHY 的极性、startup、stuck-high、精确滑动 duty 与 shutdown；
+2. 在现有电气条件允许时逐步达到单 lane 4 Mbit/s，并记录真实波形、误码和温升；
+3. 2-lane 并发、独立队列、health-aware 调度和故障隔离；
+4. selective-repeat、SACK、至少 32 outstanding、ACK aggregation 和 retry migration；
+5. AXI-Stream、聚合 AXI DMA SG、descriptor ring、cache ownership 和 backpressure；
+6. RFAP v1 兼容、后继协议、streaming、对象 CRC/SHA 和原子发布；
+7. 固定侧 FreeRTOS/lwIP、TCP framing、断线恢复、telemetry 和 evidence 导出；
+8. 通过仿真输入或受控逻辑输入验证 phase、path epoch、handover 状态机和正反方向转换；
+9. 如果 4 个小板的实际接线允许，可做受限的单 lane/多 physical path 选择原型，但不得写成真实旋转或最终 bank PASS；
+10. 所有参数化 core 同时对 Z7010 2-lane 和 Z7020 8-lane 做离线 elaboration/synthesis。
 
-当前首版目标以单 lane 红外稳定通信为基础，同时保留扩展到最多 8 路红外 lane 阵列的能力。后续多 lane 可用于提高并行传输能力、提高链路冗余能力，或根据具体应用场景在速度和可靠性之间做权衡。
+### 2.4 Z7010 平台不能关闭的最终风险
 
-项目最终速率目标为：最多接入 8 路红外 lane；半双工通信速率最高 32 Mbit/s，全双工通信时每个方向通信速率最高 16 Mbit/s。该目标作为系统最终能力要求，首版单 lane 通信作为稳定性验证和功能闭环基础。
+仅凭当前硬件不能关闭：
 
-在完成红外链路通信目标后，系统还应进一步实现 PS 与电脑上位机之间的双向通信。电脑上位机应能够向 PS 下发控制命令、配置参数和待发送数据；PS 应能够向电脑上位机返回红外接收数据、发送结果、链路状态、错误信息和运行统计。最终系统应形成“电脑上位机 - ZYNQ PS - PL 红外链路 - 外部红外设备”的完整数据交互链路。
+- 8-lane 硬件并发和 32 个固定模块；
+- 双独立 Zynq 节点；
+- 8 个 physical sector bank 的真实 MUX/SD/TX 控制链；
+- ABZ、光机公差、动态 FOV 和 600 rpm；
+- 旋转电池、约 40 g 向心载荷和动平衡；
+- 开放阵列系统级可接近辐射；
+- 4+4 全双工光学串扰；
+- 最终 Z7020 I/O、资源、时序和载板信号完整性；
+- PC 到远端 SPI FPGA 的最终 goodput。
 
-功能目标：
+### 2.5 可移植实现合同
 
-实现 PS 到红外发送端的数据发送。
+从现在开始，新增设计必须遵循：
 
-实现红外接收端到 PS 的数据回传。
+- protocol、safety、register semantics 和核心状态机共用同一份源代码；
+- `LANE_COUNT`、`FIXED_MODULE_COUNT`、`SECTOR_BANK_COUNT`、队列深度和时钟比率参数化；
+- 板级 pin、clock、reset、DDR、Ethernet 和外设只存在于 board wrapper/profile；
+- PS BSP、FreeRTOS port、lwIP netif 和 cache/DMA glue 与应用服务分层；
+- register map 继续由 `config/register_map/ir_axi_regs.yaml` 生成并版本化；
+- Z7010 可以使用受限 lane 数和较小 buffer，但不得改变协议字段、安全语义和错误码；
+- 如果 Z7010 资源不足，可以建立 feature-sliced 开发构建，但必须保持接口一致并明确标记 `PLATFORM_LIMITED_PASS`；
+- 不得为了塞入 Z7010 而删除最终必须存在的安全、可观测性、CRC、超时或恢复语义；
+- 每次相关改动至少维护两种离线构建：`Z7010_2LANE_DEV` 与 `Z7020_8LANE_TARGET`；
+- Z7020 开发板若不是最终精确订货型号，只能形成迁移证据，不能替代最终核心板验收。
 
-支持数据包分片传输，适合传输长度大于单个红外帧容量的数据。
+### 2.6 证据等级
 
-支持发送完成、接收完成、错误状态、重传状态、链路忙闲状态等反馈。
+| 状态 | 含义 |
+|---|---|
+| `PORTABLE_FUNCTION_PASS` | 平台无关算法/协议通过仿真或受限硬件验证，可迁移但仍需目标平台复验 |
+| `PLATFORM_LIMITED_PASS` | 仅在当前 Z7010/2-lane/4-board/静止 profile 范围通过 |
+| `Z7020_OFFLINE_PASS` | 对目标 part 的 elaboration/synthesis/implementation 通过，没有硬件接受含义 |
+| `PENDING_Z7020_HW` | 必须在 Z7020 开发板或核心板上复验 |
+| `PENDING_FINAL_MECHANICAL` | 必须在最终光机、电池或旋转结构上复验 |
+| `P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS` | 已有真实硬件范围 PASS，只覆盖 P7 冻结 profile |
+| `FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW` | 最终产品硬件接受尚未完成 |
 
-支持发送端和接收端之间的确认机制，避免数据只发不管。
+任何离线 gate 都必须保留已有的低层硬件 PASS，并禁止将其提升到更高 scope。
 
-支持异常情况下的重传，提高弱光、遮挡、干扰或瞬时丢帧场景下的可靠性。
+---
 
-支持 CRC 校验，降低误码数据被当作有效数据接收的风险。
+## 3. 项目术语表
 
-支持在重试耗尽、接收异常、CRC 错误、协议错误等情况下给出明确状态，方便 PS 端软件和上位机判断问题。
+**Logical Lane（逻辑 lane）**：端到端稳定的数据服务身份 `L0..L7`，固定绑定旋转模块 `R0..R7`。物理路径切换不改变 logical lane。  
+_避免_：把 logical lane 当作固定侧某一个永久模块。
 
-支持扩展到最多 8 路多 lane 红外阵列，提高并行发送能力或链路冗余能力。
+**Physical Module（物理模块）**：一个具体 TFDU6102 及其板级电气接口。固定侧为 `F0..F31`，旋转侧为 `R0..R7`。
 
-支持 PS 与电脑上位机之间的双向数据交互。
+**Physical Path（物理路径）**：某 logical lane 在某一时刻使用的一对固定/旋转物理模块及其方向。
 
-支持电脑上位机向 PS 下发红外发送数据、链路配置、启动停止命令、状态查询命令和错误清除命令。
+**Physical Sector Bank（物理 sector bank）**：固定侧连续的 4 个 TFDU 模块及其离散选择/保护电路，共 8 个，编号 `SB0..SB7`。  
+_避免_：4 Bank、phase bank。
 
-支持 PS 向电脑上位机上传红外接收数据、发送结果、接收结果、错误事件、重传统计和链路健康状态。
+**Phase Index（相位索引）**：固定侧每个 sector bank 内被选择的模块槽位 `Q0..Q3`，由转角决定；不是实体 bank。
 
-支持 TCP 通信，用于 PS 与电脑上位机之间可靠、有序的数据传输。
+**Primary Path（主路径）**：当前承担某 logical lane 接收/发送服务的物理路径。
 
-支持 DHCP，使设备接入局域网后能够自动获取 IP 地址，降低部署和调试复杂度。
+**Candidate Path（候选路径）**：与 primary 同时 startup-ready、用于下一次或反方向 handover 的相邻路径。
 
-在 DHCP 不可用或调试需要时，建议保留静态 IP 配置能力，保证系统在无 DHCP 服务器环境下仍可使用。
+**Path Epoch（路径纪元）**：每次路径映射原子提交后递增的标识，用于去重、拒绝 stale 状态和关联 evidence。
 
-网络通信应支持连接建立、连接状态判断、断开检测和重新连接，避免上位机或网络短暂异常后系统无法恢复。
+**Handover**：logical lane 保持不变时，固定侧 physical path 从一个模块切换到相邻模块的过程。
 
-性能目标：
+**Acquisition**：上电、相位丢失或故障后重新获得 session、方向、速度和绝对光学映射的过程。
 
-当前红外 PHY 时钟为 64 MHz，单 lane 理论原始比特速率约为 4 Mbps。该速率是红外物理层的原始传输能力，不等同于最终有效数据吞吐率。
+**Receive-Only Acquisition**：`GLOBAL_PERMIT=0`、全部物理 TX 被禁止，但受控 RX 可以退出 shutdown 并用于寻找 session/phase/path 的 acquisition 状态。
 
-考虑协议头、前导码、CRC、ACK、重传和软件调度开销后，实际有效载荷吞吐量会低于理论原始速率。本项目优先目标是可靠传输和可恢复性，而不是追求极限裸速率。
+**Lane Ready**：该 logical lane 至少有一条 startup 完成、无 safety fault、session/path epoch 一致、近期可完成有效帧交易且队列可服务的路径。  
+_避免_：仅几何选中、仅 Rxd 翻转。
 
-最终系统应实现最多 8 路红外 lane 接入，半双工通信能力最高 32 Mbit/s，以及全双工通信时每个方向最高 16 Mbit/s 的通信能力。该速率目标应在满足稳定性、鲁棒性和连续运行要求的前提下实现。
+**Normal Configuration（正常配置）**：所有规定模块可用、phase valid、无 safety fault，并满足最终 8-lane 保证的状态。
 
-速率指标建议在后续验收阶段进一步明确统计口径，包括是按红外物理层原始速率、协议层有效载荷吞吐率，还是按上位机到上位机的端到端有效数据吞吐率统计。
+**Degraded Mode（降级模式）**：模块或路径故障后继续以 7..1 lane 受限服务，并显式报告 mask、reason 和 epoch 的状态。
 
-当前单 lane、16 字节分片配置下，单个分片的空口发送时间目标为几十微秒量级。完整 256 字节数据包在无重传、链路质量良好时，端到端红外链路延迟目标为毫秒量级。
+**PHY RAW Capability**：4PPM 物理编码的名义比特率能力，不扣除帧、ACK、重传和对象开销。
 
-发生 ACK 等待、分片重传、CRC 错误或链路干扰时，允许传输延迟动态增加，但系统应保持状态可控，不应死锁或丢失链路状态。
+**Frame Goodput**：扣除 L1/L2 开销后成功确认的帧 payload 速率。
 
-在直径约 20 cm、转速 600 rpm 的旋转轴系应用场景下，系统应保持稳定通信。该工况下轴系每秒约 10 转，系统应能适应周期性旋转带来的链路变化，并保持连续数据交互能力。
+**Application Goodput**：完成对象校验并原子提交的有效应用字节速率。
 
-PS 与电脑上位机之间的网络通信速率应高于红外链路有效吞吐需求，避免网络侧成为红外通信的主要瓶颈。
+**End-to-End Goodput**：PC/TCP 与远端 SPI FPGA 应用端点之间的 application goodput。
 
-电脑上位机下发控制命令后，PS 应能在可接受时间内返回响应或状态结果。对于普通状态查询和控制命令，目标应为用户可感知的低延迟响应。
+**Half Duplex（半双工）**：8 个 logical lane 在一个方向成批传输，方向切换受 quiet/commit 和 duty 约束。
 
-稳定性目标：
+**4+4 Full Duplex（4+4 全双工）**：4 个物理 lane 用于一个方向，另外 4 个用于反方向；单个 TFDU 不同时发射和接收。
 
-系统应能在连续发送多个数据包时保持状态不乱、不丢同步、不提前进入下一包。
+**GLOBAL_PERMIT**：每个独立端点各有且仅有一根本地 active-high 全局发射许可线。固定侧这一根分发到全部 8 个 sector bank；旋转侧这一根分发到全部 8 个旋转 TFDU 发射路径。`GLOBAL_PERMIT=1` 只是发射必要条件，不是充分条件；`GLOBAL_PERMIT=0` 必须使本端全部物理 TX 路径失能。禁止双通道 permit、permit A/B、permit heartbeat、每 bank 独立 permit 或每 lane 外部 global permit。
 
-接收端应能区分完整数据、错误数据和未完成数据。
+**BANK_FAULT**：每个 sector bank 独立产生的本地故障状态，可撤销该 bank 的 lane/path TX 条件并汇总到端点 fault logic；它不是第二根 `GLOBAL_PERMIT`。
 
-发送端应能根据接收反馈判断哪些数据已经成功收到，哪些需要重传。
+**LANE_TX_PERMIT**：PL 内部每 logical lane 的条件许可，由 phase/path、one-hot、duty、stuck-high、queue 和 frame admission 产生；它不是外部 global permit。
 
-链路发生短时间干扰后，应能通过重传恢复，而不是直接导致整个系统卡死。
+**ENDPOINT_ARMED**：在 `GLOBAL_PERMIT` 有效且所有安全前置条件成立后，由显式 arm 流程建立的端点发射状态。permit 重新上升不得自动恢复半帧或旧 arm。
 
-系统应支持连续运行和连续收发，不应因多包连续传输、ACK 延迟、错误帧、短时遮挡或网络短暂断开导致状态机死锁。
+**TX_KILL**：位于最终物理 TX buffer/Txd 路径之前的失败关闭门。permit、fatal fault、one-hot、duty 或 stuck-high 任一不满足时，TX_KILL 必须将物理 Txd 强制为低。
 
-在目标旋转轴系工况下，系统连续稳定通信时长应不小于 2 小时。
+**Safe State（安全状态）**：全部 Txd 低、外部 TX 禁止、状态和故障可读；根据 fault 类型，RX 可以保持 active 或进入 shutdown。
 
-PS 与电脑上位机之间的通信应能稳定维持连接，并能在连接断开后重新建立通信。
+**Shutdown State（关断状态）**：全部 Txd 低、全部相关 TFDU `SD=1`、外部 TX 禁止。
 
-当电脑上位机重启、网络中断、网线重新插拔、DHCP 地址变化或 TCP 连接异常断开时，系统应能恢复到可重新连接、可重新传输的状态。
+**Evidence Package（证据包）**：包含配置哈希、原始日志、计数器、运行条件、错误和 shutdown 结果的不可混淆验收材料。
 
-鲁棒性目标：
+---
 
-能够应对单个分片丢失。
+## 4. 最终架构选择
 
-能够应对多个分片在重试范围内丢失。
+### 4.1 两个独立节点
 
-能够应对部分 ACK 丢失。
+最终系统必须由固定侧和旋转侧两个独立 Zynq 节点组成：
 
-能够应对 CRC 错误帧。
+- 独立 bitstream；
+- 独立 FreeRTOS firmware；
+- 独立时钟和 reset；
+- 独立 node ID、session epoch、DMA ring 和 watchdog；
+- 不共享 RAM；
+- 不允许用同一 FPGA 内部数字 loopback 代表最终光链路；
+- 一个节点重启时，另一节点进入有界 acquisition，不提交旧 session 数据。
 
-能够应对接收端暂时未完成重组的情况。
+### 4.2 固定侧节点
 
-能够在超时后重新发送未确认数据。
+固定侧使用一个中央 `XC7Z020-2CLG400I`，负责：
 
-能够在重试耗尽时给出明确错误状态，方便 PS 端软件和电脑上位机处理。
+- Ethernet/TCP 与 PC；
+- FreeRTOS/lwIP、配置、telemetry 和 evidence；
+- AXI DMA SG/HP DDR；
+- 8-lane PHY、L1/L2/L3、调度、handover 和安全；
+- ABZ 捕获与 phase mapping；
+- 8 个离散 physical sector bank；
+- 32 个固定 TFDU 的状态、SD 和故障管理。
 
-能够在链路异常恢复后继续进行新的数据传输。
+任何 sector bank 上禁止放置 FPGA、CPLD 或 MCU。
 
-能够避免错误帧、重复帧、过期 ACK 或异常状态导致有效数据被错误接收。
+### 4.3 固定侧 sector bank
 
-能够在上位机连接异常、网络异常、DHCP 获取失败或 TCP 连接中断时给出明确状态，并允许重新初始化或重新连接。
+每个 `SBj` 包含连续的 4 个固定 TFDU，并至少具备：
 
-上位机通信目标：
+- 两个彼此独立的 4:1 RX MUX：current 与 candidate；
+- 一个 1:4 TX demux/one-hot fail-safe buffer；
+- 4 个模块的 SD 控制；
+- SD 串行写入后的原子 latch；
+- 实际输出 readback 或等效 PISO；
+- 链断、非法 one-hot、供电或 readback 不一致检测；
+- 一个共享端点级 `GLOBAL_PERMIT` 输入；
+- 一个 bank-local `BANK_FAULT` 输出；
+- bank-local one-hot、pulse-limit、SD、readback 和 fail-low 保护；
+- 外部 downstream pulse limiter/kill；
+- raw data 的差分 line driver/receiver，除非单端 SI 已证明。
 
-电脑上位机应能作为系统调试、控制和数据交互入口。
+每个 bank 禁止生成自己的 `GLOBAL_PERMIT`。所有 `BANK_FAULT` 汇总到端点安全控制器，但不构成第二许可通道。
 
-上位机应能显示当前设备连接状态、IP 地址、红外链路状态、发送状态、接收状态、错误状态和统计信息。
+全系统数据接口预算为：
 
-上位机应能向 PS 发送待发送数据，并接收 PS 返回的发送结果。
+```text
+8 TX data
+8 current RX data
+8 candidate RX data
+control/readback/fault/clock as required
+1 endpoint GLOBAL_PERMIT fanout
+```
 
-上位机应能接收 PS 上传的红外接收数据，并区分正常数据、错误事件和状态事件。
+具体 I/O、差分对、bank 电压、fanout、传播延时和核心板引出能力在 D12/D17 阶段门关闭后证明。
 
-上位机应能配置基本链路参数，例如是否使能发送、是否使能接收、lane 选择、会话参数、重传策略或调试模式。
+### 4.4 旋转侧节点
 
-上位机应支持 TCP 连接方式，保证命令和数据传输的可靠性、有序性和可追踪性。
+旋转侧使用一个 `XC7Z020-2CLG400I` 和 8 个 TFDU：
 
-系统接入局域网时，应优先支持 DHCP 自动获取地址，方便现场调试和多设备接入。
+- 每个 logical lane 固定绑定一个旋转 TFDU；
+- 支持半双工 8 lane 与 4+4 全双工角色；
+- 本地应用通过 FPGA-to-FPGA SPI 接入；
+- 旋转节点使用独立电池电源；
+- 电池/BMS/保险/连接器/储能/低压检测不依赖软件轮询完成安全关闭；
+- 欠压先撤销旋转端点本地 `GLOBAL_PERMIT`、记录 fault，再停止数据面；
+- 旋转侧 8 个 TX 路径共用且仅共用该端点的一根 active-high `GLOBAL_PERMIT`。
 
-验收目标：
+### 4.5 实时职责边界
 
-能够完成 PS 到红外发送端的数据发送。
+必须在 PL 或外部硬件中完成：
 
-能够完成红外接收端到 PS 的数据回传。
+- 4PPM 编解码；
+- startup、stuck-high、exact rolling duty 和 shutdown；
+- ABZ 边沿捕获、方向、速度和 phase validity；
+- current/candidate selection、8×8 crossbar 与 handover；
+- frame CRC、ARQ 时限、lane health 和 path epoch；
+- TX one-hot、`LANE_TX_PERMIT`、单一 `GLOBAL_PERMIT` 的最终 TX kill 和故障快速关闭。
 
-能够完成电脑上位机到 PS 的命令和数据下发。
+PS/FreeRTOS 负责：
 
-能够完成 PS 到电脑上位机的数据和状态上传。
+- 配置与策略；
+- DMA ring；
+- RFAP object service；
+- Ethernet/TCP 或 SPI service；
+- 日志、telemetry、长期统计和恢复编排。
 
-能够在电脑上位机、PS 和红外链路之间完成完整闭环通信。
+PS、TCP、SPI、GUI、普通 AXI polling 或日志任务不得成为微秒级安全闭环的一部分，也不得直接产生或绕过 `GLOBAL_PERMIT=1`。
 
-能够实现最多 8 路红外 lane 接入，半双工通信速率最高 32 Mbit/s，全双工通信时每个方向通信速率最高 16 Mbit/s。
+### 4.6 单一 active-high GLOBAL_PERMIT 架构
 
-能够检测 CRC 错误并避免错误数据被当作有效数据接收。
+每个独立端点各有且仅有一根本地 `GLOBAL_PERMIT`：
 
-能够在分片丢失或 ACK 丢失时触发重传并恢复通信。
+```text
+fixed endpoint:    1 x GLOBAL_PERMIT -> all 8 fixed sector banks
+rotating endpoint: 1 x GLOBAL_PERMIT -> all 8 rotating TX paths
+```
 
-能够在重试耗尽时上报明确错误状态。
+最终物理 TX 条件必须满足：
 
-能够在短时干扰或短时网络异常后恢复到可继续通信状态。
+```text
+TFDU_TXD_OUT[i] =
+    GLOBAL_PERMIT
+  & ENDPOINT_ARMED
+  & ENDPOINT_NO_FATAL_FAULT
+  & LANE_TX_PERMIT[i]
+  & TX_SELECT_VALID[i]
+  & PATH_EPOCH_VALID[i]
+  & DUTY_OK[i]
+  & STUCK_HIGH_OK[i]
+  & FRAME_ADMITTED[i]
+  & TXD_WAVEFORM[i]
+```
 
-能够在直径约 20 cm、600 rpm 转速的旋转轴系上连续稳定通信不小于 2 小时。
+任一项为 0 时，`TFDU_TXD_OUT[i]=0`。
 
-能够连续发送和接收多包数据，不出现乱序、状态死锁或不可恢复异常。
+默认和失效状态：
+
+```text
+GLOBAL_PERMIT_ACTIVE_LEVEL: HIGH
+GLOBAL_PERMIT_POWER_UP_DEFAULT: LOW
+GLOBAL_PERMIT_RESET_DEFAULT: LOW
+GLOBAL_PERMIT_OPEN_CIRCUIT_DEFAULT: LOW
+GLOBAL_PERMIT_UNDRIVEN_DEFAULT: LOW
+GLOBAL_PERMIT_FPGA_UNCONFIGURED_DEFAULT: LOW
+GLOBAL_PERMIT_PARTIAL_POWER_DEFAULT: LOW
+GLOBAL_PERMIT_REASSERT_AUTO_RESUME: false
+GLOBAL_PERMIT_ASSERT_FILTER_CYCLES: profile-defined
+```
+
+硬件要求：
+
+- permit 源端和每个分发接收点均有明确下拉；
+- 局部掉电不得通过保护二极管反向供电产生高电平；
+- permit 必须到达外部 TX buffer 或等效最终物理门，不能只存在于 AXI 寄存器；
+- permit 下降必须不等待 PS、FreeRTOS、AXI transaction、frame 完成或普通状态机轮询；
+- 初始设计目标为 `GLOBAL_PERMIT_TO_EXTERNAL_TX_DISABLE_TARGET_US <= 1`，最终由 D17 和器件传播延时冻结；
+- permit 上升可以同步和滤波，但必须重新完成 explicit arm，从新 frame boundary 开始；
+- permit 重新上升不得恢复中断的半帧；
+- `GLOBAL_PERMIT=0` 必须禁止 TX，但可以允许 receive-only acquisition；
+- `SD` 是独立的 per-module RX/shutdown 控制，不与单一 global TX permit 混同。
+
+单通道残余风险：
+
+- 下拉可以覆盖断线、未连接、输出高阻、FPGA 未配置和普通掉电；
+- 单一 active-high permit 本身不能检测短接到高、电路永久卡高或 PCB 内部短路到电源；
+- 不得将本架构宣称为双通道、SIL/PL 冗余或 stuck-high 可检测 permit；
+- per-lane stuck-high、exact duty、one-hot、frame admission、reset default-low、external pulse limiter 和 fatal-fault TX kill 仍为独立强制条件，但不是第二 permit 通道。
+
+许可来源：
+
+- 钥匙开关、急停常闭触点、维护状态、人员排除区和其他硬件条件可以串联形成许可链；
+- 所有条件最终只生成一根 active-high `GLOBAL_PERMIT`；
+- PS、GUI、TCP、SPI 和普通配置可以读取 permit、请求 arm 或主动撤销服务，但不得直接覆盖硬件许可链并强制 permit 为高。
+
+---
+
+## 5. 几何、映射与 handover
+
+### 5.1 名义几何
+
+```text
+rotor radius r = 100 mm
+stator radius R = 300 mm
+radial optical gap = 200 mm
+rotating module spacing = 45 degrees
+fixed module spacing = 11.25 degrees
+```
+
+固定模块编号 `F0..F31`，旋转模块编号 `R0..R7`。physical sector bank 定义为：
+
+```text
+SB0 = F0..F3
+SB1 = F4..F7
+...
+SB7 = F28..F31
+```
+
+### 5.2 映射模型与显式 crossbar
+
+设 `m0` 为当前最接近 `R0` 的固定模块索引：
+
+```text
+q = m0 mod 4                       # Phase Index
+s = floor(m0 / 4) mod 8            # R0 当前起始 sector
+current_fixed_index(k) = (m0 + 4*k) mod 32
+current_bank(k) = floor(current_fixed_index(k) / 4)
+current_slot(k) = current_fixed_index(k) mod 4
+```
+
+正向和反向候选路径分别定义为：
+
+```text
+forward_candidate_fixed_index(k) = (current_fixed_index(k) + 1) mod 32
+reverse_candidate_fixed_index(k) = (current_fixed_index(k) - 1) mod 32
+candidate_fixed_index(k, direction) =
+    forward_candidate_fixed_index(k), direction=FORWARD
+    reverse_candidate_fixed_index(k), direction=REVERSE
+candidate_bank(k, direction) = floor(candidate_fixed_index(k, direction) / 4)
+candidate_slot(k, direction) = candidate_fixed_index(k, direction) mod 4
+```
+
+物理 sector bank 输出与 logical lane 之间必须通过显式 8×8 permutation/crossbar 关联，不得依赖隐含 lane 编号。实现必须可导出：
+
+```text
+bank_current_owner(bank, phase)
+bank_candidate_owner(bank, phase, direction)
+logical_lane_to_current_bank_slot(k, phase)
+logical_lane_to_candidate_bank_slot(k, phase, direction)
+```
+
+每次 mapping commit 必须满足：
+
+- current mapping 是 `L0..L7` 的一一置换；
+- candidate mapping 是 `L0..L7` 的一一置换；
+- 任一 logical lane 只有一个 current owner；
+- 任一 bank 任一时刻最多一个 TX owner；
+- current/candidate RX 不发生非法 alias；
+- `q=3 -> 0`、`q=0 -> 3` 和正反转 wrap 正确；
+- path epoch 在一次且仅一次原子 commit 后递增；
+- 旧 epoch 的 readback、ACK、frame 和 object 状态不得作为新路径有效状态。
+
+### 5.3 FOV、overlap 与三维公差
+
+名义二维模型：
+
+- TFDU6102 名义参考约 ±15°；
+- 首版设计使用 ±12°保守线；
+- 32 模块、±12°时名义最小角度 overlap 约 4.80°；
+- 600 rpm 时名义 overlap 约 1.33 ms；
+- 固定模块切换节距 11.25°，600 rpm 时每 3.125 ms 经过一个节距；
+- 500 µs startup 在 600 rpm 对应 1.8°转角。
+
+最终保证不能只使用二维名义值，必须纳入：
+
+```text
+radial eccentricity
+axial runout
+rotor/stator concentricity error
+module angular placement error
+TFDU package optical-axis tolerance
+PCB tilt
+bearing clearance
+window thickness/refraction
+baffle occlusion
+thermal deformation
+assembly tolerance
+pollution and ageing
+```
+
+必须冻结并验证：
+
+```text
+MIN_WORST_CASE_ANGULAR_OVERLAP_DEG
+MIN_WORST_CASE_OVERLAP_TIME_US_AT_600RPM
+MAX_WORST_CASE_ROTATING_OPTICAL_ANGLE_DEG
+MAX_WORST_CASE_FIXED_OPTICAL_ANGLE_DEG
+```
+
+验证方法包括 worst-case stack-up、Monte Carlo、P11 静止角度 sweep 和 P12 全环实测。
+
+### 5.4 RX 与 TX 策略
+
+- 正常 RUN 时固定侧 32 个 RX 全部保持 startup-ready；
+- current/candidate 两条 RX 路径在 handover 前后可以同时接收；
+- 旧 RX 不因一次 handover 立即 shutdown；
+- 每个 physical sector bank 任一时刻最多一个 TX 获得许可；
+- 未选 TX 的 Txd 必须为低；
+- TX 只在 frame boundary/quiet commit 切换；
+- 同帧被 current/candidate 同时收到是正常现象，按 session、sequence 和 path epoch 去重；
+- `GLOBAL_PERMIT=0` 时可以保留 receive-only acquisition，但所有 TX 必须关闭；
+- 若某候选 RX 不是常驻 active，则必须在可能使用前至少提前 700 µs 启动；最终固定侧正常 RUN 以 all-32-RX-ready 为主。
+
+正确性依赖 `|rpm|<=600`、phase 连续、encoder 数据新鲜度和有界切换，不依赖恒定加速度或固定转向预测。
+
+### 5.5 运动轨迹、phase 丢失与 acquisition
+
+算法不得假设：
+
+- 恒定速度；
+- 恒定方向；
+- 已知加速度曲线；
+- 下一时刻一定沿当前方向运动。
+
+系统必须支持所有满足以下条件的连续物理运动轨迹：
+
+- `|rpm| <= 600`；
+- ABZ edge rate 不超过输入电气和 PL 捕获上限；
+- phase estimator uncertainty 不超过冻结预算；
+- phase 数据年龄不超过冻结预算；
+- 机械运动连续；
+- 方向可以在任意角位置反转；
+- 停转后可以重新启动。
+
+D13 必须冻结：
+
+```text
+MAX_PHASE_ERROR_DEG
+MAX_PHASE_UNCERTAINTY_DEG
+MAX_ENCODER_EDGE_RATE_HZ
+MAX_PHASE_DATA_AGE_US
+MAX_REACQUISITION_TIME_MS
+```
+
+增量式 ABZ 在首次 Z 或替代 acquisition 前没有绝对相位。出现下列任一条件时必须撤销新 TX admission、保持或拉低 `GLOBAL_PERMIT` 的有效发射结果，并进入 receive-only acquisition：
+
+- ABZ 非法跳变或边沿超限；
+- phase uncertainty 超预算；
+- direction/speed 不可信；
+- mapping/readback 不一致；
+- endpoint reset；
+- path epoch 无法对齐。
+
+### 5.6 handover 时序预算
+
+不得只使用单一的“mapping commit”指标。必须分别记录：
+
+```text
+PHASE_SAMPLE_TO_MAPPING_PREPARE_US
+MAPPING_PREPARE_TO_READY_US
+ATOMIC_MAPPING_COMMIT_US
+APPLICATION_SERVICE_GAP_US
+PATH_EPOCH_VISIBILITY_US
+REACQUISITION_TIME_MS
+```
+
+P8 初始设计目标：
+
+```text
+PHASE_UPDATE_PERIOD_US: <= 50
+MAPPING_PREPARE_LATENCY_US: <= 100
+ATOMIC_MAPPING_COMMIT_US: <= 10
+APPLICATION_SERVICE_GAP_US: <= 100
+```
+
+这些值必须在 D13、RTL timing、sector-bank 电气 settle 和 P11/P12 实测后冻结。prepare 可以提前完成；原子 commit 和实际 service gap 不得与软件计算耗时混为一谈。
+
+### 5.7 故障降级
+
+- 正常配置才允许 `ANY_ANGLE_8_LANE_READY: PASS`；
+- 固定模块故障可能使相邻模块超出设计 FOV；
+- 旋转模块故障必然减少一个 logical lane；
+- 故障后允许 7..1 lane，但必须原子更新 `active_lane_mask`、`degraded_reason` 和 `path_epoch`；
+- goodput 门槛必须注明实际 active lane 数；
+- degraded evidence 不得与正常 8-lane evidence 合并。
+
+---
+
+## 6. 光学、电源、机械与人员安全
+
+### 6.1 TFDU6102 安全合同与精确 duty
+
+所有开发与最终 profile 必须保持：
+
+- `Txd` 高有效；
+- `Rxd` 低有效；
+- `SD` 高有效 shutdown；
+- `Mode=HIGH` 固定高速模式；
+- 退出 shutdown 后等待至少 500 µs；
+- 正常连续 Txd HIGH 必须远低于器件约 80 µs 的内部长脉冲保护阈值；
+- fault、reset、timeout、异常退出和授权丢失后进入 safe state；
+- 不得用软件延时替代硬件 stuck-high/duty guard；
+- 安全文档、RTL gate 与外部门控保持一致。
+
+最终 duty 约束采用明确窗口：
+
+```text
+PER_MODULE_ROLLING_DUTY_WINDOW_US: 1000
+PER_MODULE_ROLLING_DUTY_HARD_LIMIT: < 20%
+PER_MODULE_ROLLING_DUTY_DESIGN_TARGET: <= 18%
+PER_MODULE_LONG_TERM_DUTY_WINDOW_MS: 100
+PER_MODULE_LONG_TERM_DUTY_TARGET: <= 18%
+MAX_CONTINUOUS_TXD_HIGH_US: <= 1
+```
+
+解释：
+
+- `<20%` 只对明确的 1000 µs 任意对齐滑动窗口计算，不对任意短窗口作数学上不可能的要求；
+- 18% 是正常设计目标，20% 是绝对硬门；
+- 每个物理 TFDU 独立计数，不能只计算 aggregate；
+- 实现必须是 exact sliding sum，或具有形式化证明的更保守等价整形器；
+- 固定 1 ms 分桶不能作为最终 rolling-duty PASS；
+- profile 可以收紧上述值，放宽必须经过本文件的受控修订。
+
+### 6.2 发射电流、端点聚合预算与电池
+
+- 按单 TFDU 0.6 A 发射峰值估算，8 个同时发射为 4.8 A 峰值；
+- 在 20% duty 上界下，IRED 平均电流基线约 0.96 A、3.17 W，另加 FPGA/PS/收发器和转换损耗；
+- 电池、BMS、保险、连接器、铜皮、稳压器和 bulk capacitance 按峰值及瞬态设计；
+- 容量、续航、低压阈值、温升、充电维护和故障隔离在旋转硬件前冻结；
+- 电池宜靠近旋转轴，固定结构必须有机械留存、冗余防松和动平衡证据。
+
+必须冻结：
+
+```text
+MAX_SIMULTANEOUS_TX_LANES
+MAX_ENDPOINT_INSTANTANEOUS_IRED_CURRENT_A
+MAX_ENDPOINT_AVERAGE_IRED_CURRENT_A
+MAX_ENDPOINT_TX_ACTIVE_RATIO
+MAX_POWER_RAIL_DROOP_MV
+```
+
+半双工 8-lane 与 4+4 全双工必须分别进行电源和瞬态预算。每 lane duty 合格不能替代端点聚合电源验证。
+
+### 6.3 旋转载荷
+
+600 rpm、半径 100 mm 处名义向心加速度约：
+
+```text
+omega = 62.83 rad/s
+a = omega^2 * 0.1 m = 394.8 m/s^2 ~= 40.3 g
+```
+
+所有旋转器件、线束、电池、连接器和小板必须按实际半径、质量、公差和超速裕量复算。进入 600 rpm 前必须完成静态留存、低速动平衡和分级升速。
+
+600 rpm 2 小时属于功能稳定性验收，不等同于轴承寿命、电池循环、热老化、连接器疲劳、污染耐受或产品 MTBF qualification；后者必须另设 qualification 计划。
+
+### 6.4 格挡、串扰与 optical link budget
+
+同侧模块间设置格挡，但格挡必须同时满足 FOV 与近红外材料验证：
+
+```text
+for half-angle 12 degrees: W/L >= 2*tan(12 degrees) ~= 0.425
+for half-angle 15 degrees: W/L >= 2*tan(15 degrees) ~= 0.536
+```
+
+`W` 为完整开口宽度，`L` 为通道长度。可见光下“黑色”不等于约 886 nm 下低反射；必须测试近红外反射、吸收、温升和污染后的表现。
+
+必须建立并冻结：
+
+```text
+desired-path link budget
+adjacent same-side crosstalk budget
+opposite-direction full-duplex crosstalk budget
+reflection-path budget
+ambient-light budget
+```
+
+基于 TFDU6102 datasheet 的首轮名义估算，在约 200.7 mm 光程下具有约 15 dB 量级的未扣损失余量；正式预算必须扣除角度、窗口、格挡、污染、温度、电源、安装误差、老化、环境光和反射。
+
+初始门槛：
+
+```text
+MIN_WORST_CASE_LINK_MARGIN_DB: >= 6 dB
+TARGET_WORST_CASE_LINK_MARGIN_DB: >= 10 dB
+MAX_FALSE_PULSE_RATE: profile-defined
+MAX_CROSSTALK_FRAME_RATE: profile-defined
+MIN_SIGNAL_TO_CROSSTALK_MARGIN_DB: profile-defined
+```
+
+串扰验证覆盖：
+
+- 同侧相邻模块；
+- 跨侧多发射器；
+- 窗口与结构反射；
+- 静止最坏相位；
+- 4+4 双向同时发射；
+- 0..600 rpm；
+- 环境光和污染边界。
+
+### 6.5 开放阵列人体接近策略与 permit 来源
+
+系统不封闭。系统级可接近红外辐射测量与适用标准评估通过前：
+
+- 发射区设置受控排除区；
+- 使用钥匙或等效受控许可链生成本端单一 active-high `GLOBAL_PERMIT`；
+- 提供独立急停；
+- 维护、对准、拆卸格挡或人员进入危险区域时强制 `GLOBAL_PERMIT=0`；
+- 不允许普通 GUI、网络、SPI 或普通软件命令绕过安全门；
+- 单器件 Class 1、格挡或软件限制均不能单独作为阵列安全结论。
+
+硬件许可链可以串联钥匙、急停常闭触点、维护状态和人员排除区条件，但最终只输出一根 `GLOBAL_PERMIT`。只有系统级测量证明在明确窗口、距离、反射、并发和单故障条件下安全，才可按书面条件放宽人体接近策略。
+
+### 6.6 单一 permit 的硬件验证
+
+离线必须证明：
+
+1. `GLOBAL_PERMIT=0` 时所有 TX 输出恒为 0；
+2. permit 在任意 TX pulse/frame 中间下降时，最终 TX kill 立即截止；
+3. permit 重新上升不恢复半帧，必须重新 arm；
+4. reset/power-up 时 permit effective 恒为 0；
+5. bank fault、illegal one-hot、duty fault、stuck-high fault 不能被 permit 高覆盖；
+6. receive-only acquisition 在 permit 低时仍可工作；
+7. 8 lane 同时请求时，每 bank one-hot 仍成立。
+
+硬件阶段必须形成：
+
+```text
+PERMIT_LOW_ALL_TX_OFF: PASS
+PERMIT_DROP_DURING_TX: PASS
+PERMIT_REASSERT_REQUIRES_ARM: PASS
+PERMIT_READBACK_MATCH: PASS
+PERMIT_POWERUP_LOW: PASS
+PERMIT_PARTIAL_POWER_FAIL_LOW: PASS
+```
+
+### 6.7 系统光学安全阶段门
+
+D16 必须冻结适用标准、测量距离、可接近位置、最大并发 TX、最大 duty、反射条件、窗口/格挡状态、维护状态、正常状态、单故障状态和急停/permit 关闭时间。系统级安全结论只能来自最终或经证明等效的光机配置。
+
+---
+
+## 7. PL/FPGA 技术路线
+
+### 7.1 逻辑分层
+
+```text
+board wrapper / clocks / resets / physical I/O
+  -> endpoint GLOBAL_PERMIT input and final TX kill
+  -> tfdu safety PHY per physical module
+  -> 4PPM codec and L1 frame
+  -> L2 selective-repeat ARQ
+  -> L3 logical lane / physical path / 8x8 crossbar / handover / health
+  -> aggregate AXI-Stream and AXI DMA SG
+  -> register/telemetry/evidence interface
+```
+
+固定侧另包含：
+
+```text
+ABZ capture -> phase estimator -> mapping prepare
+current/candidate permutation crossbar -> atomic path commit
+sector-bank control -> dual RX MUX -> one-hot TX demux
+SD atomic latch/readback -> BANK_FAULT aggregation
+single endpoint GLOBAL_PERMIT -> final physical TX kill
+```
+
+### 7.2 参数化要求
+
+核心 RTL 禁止硬编码最终与开发平台之间的差异：
+
+- `LANE_COUNT=2/8`；
+- `FIXED_MODULE_COUNT=4/32` 或仿真值；
+- `SECTOR_BANK_COUNT=1/8` 或受限原型值；
+- `MODULES_PER_BANK=4`；
+- queue/outstanding 深度；
+- clock-to-symbol 比率；
+- fixed/rotating endpoint role。
+
+Z7010 与 Z7020 的差异通过参数、wrapper、profile 和生成配置表达，不允许复制分叉一套不可追溯协议核心。
+
+### 7.3 duty、帧与 airtime
+
+4 Mbit/s/lane 必须重新闭合真实时序、独立时钟容差、TFDU 波形和 exact rolling-duty。以现有最大 L1 payload 247 byte、RFAP useful chunk 215 byte 为基线：
+
+```text
+preamble and frame representation ~= 1076 4PPM symbol slots
+nominal airtime ~= 538 us
+nominal Txd-high sum ~= 134.5 us
+continuous-frame optical pulse occupancy ~= 25%
+```
+
+不考虑 duty shaping 时：
+
+```text
+247-byte frame payload ~= 3.67 Mbit/s/lane
+215-byte RFAP useful chunk ~= 3.20 Mbit/s/lane
+```
+
+为满足 20% rolling-duty 硬门，持续 active ratio 的理论上限约为：
+
+```text
+20% / 25% = 0.8
+```
+
+由此得到：
+
+```text
+frame payload ceiling ~= 3.67 * 0.8 = 2.94 Mbit/s/lane
+RFAP useful chunk ceiling ~= 3.20 * 0.8 = 2.56 Mbit/s/lane
+8-lane ideal aggregate ~= 20.46 Mbit/s
+```
+
+因此：
+
+- 16 Mbit/s 半双工硬门约占理论上限 78.2%，仍需闭合 ACK、handover、guard、PER、retry、DMA 和软件开销；
+- 19.2 Mbit/s 挑战目标约占理论上限 93.8%，只有在完整 airtime budget 通过后才有效；
+- 若正常设计目标按 18% duty 运行，理论 aggregate ceiling 约 18.41 Mbit/s，19.2 Mbit/s 不再自动可达；
+- 不得为了挑战目标削弱 duty、CRC、重传或安全；
+- 临近 handover 边界必须做 frame admission；
+- 更大帧必须重新证明 airtime、overlap、buffer 和恢复。
+
+完整 airtime budget 必须包括：
+
+```text
+4PPM duty shaping
+preamble
+L1/L2/L3 headers
+CRC
+ACK/SACK aggregation
+direction window
+handover quiet/commit
+guard time
+expected PER and retransmission
+DMA descriptor gaps
+PS/network/SPI overhead
+```
+
+### 7.4 ARQ 与调度
+
+- 最终数据面使用 bounded selective-repeat；
+- 全局 outstanding 至少 32，推荐 64；
+- SACK window 至少 32；
+- sequence 至少 16 bit，并结合 session epoch 和 path epoch；
+- scheduler 使用 health-aware weighted round-robin；
+- 普通数据不复制；关键控制/切换帧可有限复制；
+- 只迁移未确认帧；已确认帧不得因 path 变化再次提交；
+- retry、timeout、queue 和 recovery 都必须有上限；
+- lane fault 不得阻塞其他健康 lane。
+
+### 7.5 CDC、reset 与故障
+
+- 两端时钟独立；
+- PS、DMA、PHY、ABZ 和外部 SPI 时钟域之间使用同步器、异步 FIFO 或有证明的 handshake；
+- CDC 工具报告中不得保留未解释的 critical crossing；
+- reset assertion 可以异步，deassertion 必须按域同步；
+- 任一 reset 不得产生 Txd 毛刺或非法 one-hot；
+- PL watchdog、illegal state、FIFO corruption、mapping collision 和 readback mismatch 必须撤销相应 `LANE_TX_PERMIT` 或进入端点 fatal TX kill；
+- `GLOBAL_PERMIT` 的 raw、sync 和 effective 信号必须分开处理；deassert 路径不得依赖普通同步状态机才关闭外部 TX；
+- permit reassert、reset recovery 和 path epoch 变化后不得恢复 stale frame、descriptor 或 object。
+
+### 7.6 DMA 与 DDR
+
+- 使用聚合 AXI DMA scatter-gather，经 Zynq HP 口访问 DDR；
+- lane striping、reorder、ARQ 和 handover 留在 PL；
+- PS 管理 descriptor ownership、cache flush/invalidate、batching 和回收；
+- TX/RX ring 独立且有 generation/epoch；
+- reset、abort、disconnect 后 descriptor 可确定性回收；
+- 不依赖逐 fragment MMIO copy 达成最终吞吐。
+
+### 7.7 register 与可观测性
+
+register map 必须提供版本化、原子快照和 clear 语义，至少覆盖：
+
+- build/profile/register-map ID 与哈希；
+- node/session/path epoch；
+- active lane mask 与 degraded reason；
+- 32 个固定模块和 8 个旋转模块状态；
+- current/candidate path、sector bank、Phase Index 和 crossbar owner；
+- ABZ count、phase、direction、rpm、validity、uncertainty 和 data age；
+- per-lane raw/frame/CRC/retry/duplicate/gap；
+- per-module rolling duty、stuck-high、SD/readback；
+- `global_permit_raw`；
+- `global_permit_sync`；
+- `global_permit_effective`；
+- `endpoint_armed`；
+- `tx_kill_active`；
+- `global_permit_rise_count`；
+- `global_permit_fall_count`；
+- `global_permit_drop_during_frame_count`；
+- `global_permit_rearm_count`；
+- `last_global_permit_drop_reason`；
+- `last_tx_kill_reason`；
+- `bank_fault_mask`；
+- `lane_tx_permit_mask`；
+- `effective_tx_enable_mask`；
+- DMA queue、watermark、drop/overflow；
+- handover prepare/commit/service-gap count、latency 和 failure；
+- safety fault history 和 shutdown result。
+
+`raw`、`sync` 和 `effective` 不得合并成一个状态位。
+
+### 7.8 Z7020 资源与时序目标
+
+最终 `xc7z020clg400-2` 实现目标：
+
+- LUT 与 FF 使用率各不高于 70%；
+- BRAM 与 DSP 使用率各不高于 75%；
+- 所有正式时钟 worst slack 非负；
+- 无未解释 CDC critical；
+- I/O bank 电压、pin 数和 simultaneous switching 有板级证明；
+- 保留 debug、ILA、协议扩展和 ECO 余量；
+- 资源不足时不得删除 safety/CRC/recovery 来硬塞，必须优化、分层或调整非安全 buffer。
+
+Z7010 的高资源使用率只用于识别热点，不作为最终 Z7020 资源 PASS。
+
+### 7.9 sector bank 电气与信号完整性目标
+
+D12/D17 前的初始设计目标：
+
+```text
+RX_MUX_BANDWIDTH_MIN_MHZ: profile-defined, sufficient for 4 Mbit/s FIR pulse spectrum
+RX_MUX_PROPAGATION_DELAY_MAX_NS: 15
+RX_MUX_CHANNEL_SKEW_MAX_NS: 10
+RX_PULSE_WIDTH_DISTORTION_MAX_NS: 10
+TX_DEMUX_PROPAGATION_DELAY_MAX_NS: 15
+TX_PULSE_WIDTH_DISTORTION_MAX_NS: 10
+MUX_SELECT_SETTLE_MAX_NS: profile-defined
+TX_OUTPUT_DEFAULT_STATE: LOW
+SELECT_CHANGE_ALLOWED_ONLY_WHEN_TXD_LOW: true
+PARTIAL_POWER_BEHAVIOR: FAIL_LOW
+FPGA_UNCONFIGURED_BEHAVIOR: TX_DISABLED
+```
+
+差分链路必须冻结 characteristic impedance、pair skew、connector、termination、common-mode 和 ESD；若采用单端，必须以 SI 仿真和实测证明在全长度、全温度和 simultaneous switching 下仍满足 pulse-width 和误码预算。
+
+### 7.10 核心板 I/O 与资源预算
+
+在 D12 和核心板采购前必须输出：
+
+```text
+required PL pins
+required differential pairs
+I/O bank allocation and voltages
+clock-capable pins
+ABZ pins
+SPI pins
+Ethernet/MIO usage
+global permit and fault pins
+debug reserve
+simultaneous switching estimate
+```
+
+固定侧 raw data 基线为：
+
+```text
+8 TX
+8 current RX
+8 candidate RX
+= 24 raw data channels
+```
+
+若全部使用差分即为 24 对、48 个 PL 引脚，另加 control/readback/fault/permit/ABZ/SPI/debug。商业核心板的实际可用引出必须先于载板原理图和采购关闭。
+
+---
+
+## 8. PS、网络与 SPI 技术路线
+
+### 8.1 FreeRTOS 服务划分
+
+两端使用 FreeRTOS。建议任务边界：
+
+```text
+safe boot/profile manager
+PL/register driver
+DMA ring manager
+RFAP object service
+network service (fixed side)
+SPI service (rotating side)
+configuration transaction manager
+telemetry/event service
+watchdog/recovery coordinator
+evidence/logger
+```
+
+优先级必须保证 DMA 回收、错误处理和 watchdog 不被日志或 GUI 请求饿死。硬实时和发射许可不依赖任务调度。
+
+### 8.2 固定侧 Ethernet/TCP
+
+固定侧使用 lwIP，至少支持：
+
+- DHCP；
+- 静态 IP fallback；
+- 链路断开检测；
+- 有界重连/重新监听；
+- heartbeat；
+- 显式 TCP message framing；
+- protocol/capability negotiation；
+- backpressure；
+- telemetry 与 evidence 导出。
+
+TCP 一次 `recv` 不代表一条完整消息。envelope 至少包含：
+
+```text
+magic
+protocol_version
+message_type
+flags
+request_id
+payload_length
+header_crc
+payload_crc
+```
+
+网络属于可信内网，不要求 TLS 和远程身份体系；但长度、状态机、CRC、版本、内存上限和 malformed input 隔离仍为硬要求。
+
+### 8.3 旋转侧 SPI
+
+SPI 的另一端也是 FPGA。协议必须包含：
+
+- magic/version/type；
+- payload length；
+- sequence/request ID；
+- CRC；
+- READY/credit 或等效流控；
+- timeout、abort 和 reset recovery；
+- capability negotiation；
+- 明确的 object boundary。
+
+master/slave、MIO/PL、SCLK 和 READY/IRQ 在 D14 阶段门关闭时冻结。SPI payload goodput 必须比对应 IR application goodput 硬门至少高 20%，否则不得进入端到端性能验收。
+
+### 8.4 配置事务、arm 与 permit 权限
+
+- `CONFIG_SET` 只写 staging；
+- `CONFIG_COMMIT` 在 quiet window 原子提交并递增 config/path epoch；
+- 非法组合拒绝且不改变 active config；
+- safety 字段不能被普通网络/SPI 命令放宽；
+- profile/readback/hash 不一致时保持 safe state；
+- 软件可以读取 `GLOBAL_PERMIT`、请求 `ENDPOINT_ARMED`、主动 disarm 或进入 shutdown；
+- 软件不得生成、强制或模拟第二根 `GLOBAL_PERMIT`；
+- `GLOBAL_PERMIT` 从低变高后必须由明确的 rearm transaction 建立新 frame admission；
+- permit 下降必须中止当前 TX 并使未完成 frame/object 按协议恢复，不得把 partial 数据标记为完成。
+
+---
+
+## 9. 协议、数据完整性与性能口径
+
+### 9.1 协议分层
+
+```text
+L0  TFDU6102 electrical/optical PHY and safety
+L1  4PPM symbol, preamble, frame length and CRC
+L2  sequence, ACK/SACK, selective-repeat ARQ
+L3  logical lane, physical path, handover, health and degradation
+L4  RFAP object fragmentation, streaming and integrity
+L5  PS services, Ethernet/TCP and SPI application APIs
+```
+
+层间禁止隐式共享不可恢复状态。path 变化不得清空 object/session；object abort 不得绕过 PHY safe state。
+
+### 9.2 RFAP 演进
+
+RFAP v1 保留为兼容和回归基线。版本化后继协议至少支持：
+
+- endpoint/node ID；
+- session epoch；
+- stream/object ID；
+- fragment offset/length；
+- sequence 与 SACK；
+- path epoch；
+- priority/lane policy；
+- object CRC32；
+- host/endpoint SHA256；
+- atomic publish；
+- stale/replay rejection；
+- abort/restart；
+- 至少 64 MiB 对象或不受固定对象大小限制的 streaming。
+
+### 9.3 ACK 与方向
+
+- 半双工不按每帧反转；使用成批方向窗口和聚合 ACK；
+- 方向切换只能发生在 quiet/commit window；
+- 全双工优先在反向 4-lane 数据流中捎带/聚合 ACK；
+- ACK loss 触发有界重传，不得造成无限反转或死锁。
+
+### 9.4 数据完整性
+
+只有同时满足以下条件才允许提交对象：
+
+- 完整长度收到；
+- fragment map 无缺口；
+- frame/object CRC 正确；
+- SHA256 与声明值一致；
+- session/object ID 当前有效；
+- 未发生 abort、timeout 或 stale epoch；
+- atomic publish 成功。
+
+错误、partial、duplicate、stale 或 retry-exhausted 对象都不得标为完成。
+
+### 9.5 性能口径
+
+必须分别记录：
+
+- `PHY_RAW_BPS`；
+- `FRAME_GOODPUT_BPS`；
+- `APPLICATION_GOODPUT_BPS`；
+- `PC_TO_REMOTE_GOODPUT_BPS`；
+- `REMOTE_TO_PC_GOODPUT_BPS`；
+- on-air、ACK、handover、PL queue、DMA、PS、network、SPI 和 object completion latency。
+
+端到端 application goodput 统计 PC/TCP 与远端 SPI FPGA 应用端点之间已校验并提交的有效字节；协议头、重传、填充和未提交对象不计入。
+
+### 9.6 最终性能门
+
+| 指标 | 硬验收门 | 挑战目标 |
+|---|---:|---:|
+| 单 lane PHY RAW | 4 Mbit/s | — |
+| 8-lane 半双工 PHY RAW | 32 Mbit/s capability | — |
+| 4+4 全双工 PHY RAW | 16 Mbit/s/方向 capability | — |
+| 600 rpm 半双工 application goodput | >=16 Mbit/s | >=19.2 Mbit/s，受 P8 airtime budget 条件约束 |
+| 600 rpm 全双工 application goodput | >=8 Mbit/s/方向 | >=9.6 Mbit/s/方向 |
+| phase update period | <=50 µs 初始目标 | 更低 |
+| mapping prepare latency | <=100 µs 初始目标 | 更低 |
+| atomic mapping commit | <=10 µs 初始目标 | 更低 |
+| application service gap | <=100 µs 初始目标 | 更低 |
+| handover 导致不可恢复对象失败 | 0 | 0 |
+| 正常配置错误对象提交 | 0 | 0 |
+| 网络与 SPI 可持续 payload goodput | 不成为瓶颈 | 比 IR 硬门高至少 20% |
+
+挑战目标失败不能反向判定硬门失败；硬门失败不能用 RAW capability 或挑战测试的部分结果掩盖。19.2 Mbit/s 只有在 exact duty、handover、ACK/SACK、PER、DMA、PS、network 和 SPI 的完整预算通过后才是有效挑战目标。
+
+```text
+HALF_DUPLEX_APPLICATION_GOODPUT_HARD: >=16 Mbit/s
+HALF_DUPLEX_APPLICATION_GOODPUT_STRETCH: >=19.2 Mbit/s
+STRETCH_STATUS: CONDITIONAL_ON_P8_AIRTIME_BUDGET
+```
+
+---
+
+## 10. 实施阶段
+
+### P8A：Requirements、canonical state 与证据一致性
+
+目标：在不执行硬件的前提下，建立后续所有阶段可机器验证的唯一规范和状态基线。
+
+任务：
+
+1. 将本文件设为 sole canonical technical constraint；
+2. 将旧 `项目约束(目标）.txt` 标记并迁移为 superseded legacy；
+3. 建立 `config/project_requirements.yaml` 与 requirement ID；
+4. 建立 `config/project_state.json`，自动生成 `PROJECT_STATUS.md`；
+5. 对 P0–P7 final JSON、Markdown 和 raw evidence 做一致性 reconciliation；
+6. 固化 `AB_L1` legacy failure 与 P7 current resolved scope；
+7. 增加 constraint/status/requirement consistency gate；
+8. 保持所有硬件状态 scope 不被离线结果错误提升。
+
+退出条件：
+
+```text
+CANONICAL_CONSTRAINT_GATE: PASS
+PROJECT_STATE_CONSISTENCY: PASS
+REQUIREMENT_TRACEABILITY_BASELINE: PASS
+P0_P7_EVIDENCE_RECONCILIATION: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+```
+
+### P8B：32×8 geometry、crossbar 与 handover model
+
+任务：
+
+1. 实现 current/forward-candidate/reverse-candidate 映射函数；
+2. 实现 bank-to-lane 与 lane-to-bank-slot 显式 8×8 crossbar；
+3. 建立正反转、停转、重启、`q=3->0` 和 `q=0->3` property；
+4. 建立 path epoch 原子 commit 和 stale rejection；
+5. 建立 phase uncertainty、data age 和 acquisition model；
+6. 建立三维公差 Monte Carlo 与 worst-case overlap 预算；
+7. 输出 handover prepare/commit/service-gap 独立指标。
+
+退出条件：
+
+```text
+32X8_MAPPING_PERMUTATION: PASS
+FORWARD_REVERSE_CANDIDATE_MAPPING: PASS
+PATH_EPOCH_ATOMICITY: PASS
+GEOMETRY_WORST_CASE_MODEL: PASS or PENDING_WITH_EXPLICIT_GAPS
+```
+
+### P8C：TFDU safety、exact duty 与单一 GLOBAL_PERMIT
+
+任务：
+
+1. 实现 per-module exact 1000 µs sliding-duty 或有证明的更保守整形器；
+2. 实现 `MAX_CONTINUOUS_TXD_HIGH_US <=1` guard；
+3. 实现每端点单一 active-high `GLOBAL_PERMIT`；
+4. 禁止双 permit、heartbeat 和 per-bank permit；
+5. 将 permit deassert 接入最终 physical TX kill；
+6. 分离 `GLOBAL_PERMIT` 与 SD/receive-only acquisition；
+7. 实现 raw/sync/effective/readback/counter；
+8. fault-inject permit drop、reassert、illegal one-hot、duty 和 stuck-high；
+9. 保持 P0–P7 regression。
+
+退出条件：
+
+```text
+EXACT_ROLLING_DUTY: PASS
+SINGLE_GLOBAL_PERMIT_ARCHITECTURE: PASS
+PERMIT_LOW_ALL_TX_OFF_PROPERTY: PASS
+PERMIT_DROP_DURING_TX_PROPERTY: PASS
+RECEIVE_ONLY_ACQUISITION_WITH_PERMIT_LOW: PASS
+```
+
+### P8D：Selective-repeat、SACK 与 DMA data plane
+
+任务：
+
+1. 实现 bounded selective-repeat；
+2. SACK window 至少 32；
+3. 全局 outstanding 至少 32，推荐 64；
+4. health-aware weighted scheduler、retry migration 和 ACK aggregation；
+5. 聚合 AXI-Stream 和 AXI DMA SG descriptor model；
+6. 独立 TX/RX ring、generation/epoch、cache ownership 和 backpressure；
+7. RFAP v1 兼容和 vNext streaming；
+8. 建立吞吐、airtime 和 service-gap 模型。
+
+### P8E：双目标构建、CDC、资源和时序关闭
+
+任务：
+
+1. 建立 `Z7010_2LANE_DEV` 与 `Z7020_8LANE_TARGET` 构建矩阵；
+2. 参数化 lane、endpoint、queue、clock 和 board wrapper；
+3. 建立 2/8-lane、independent-clock、CDC 和 reset 仿真；
+4. 对 `xc7z020clg400-2` 做 synthesis/implementation/timing/resource；
+5. 保持 RFAP、register map 和 P0–P7 regression；
+6. 输出核心板 I/O 和差分对预算。
+
+P8 总退出条件：
+
+```text
+P8A: PASS
+P8B: PASS
+P8C: PASS
+P8D: PASS
+P8E: PASS or SKIP_WITH_REASON only for unavailable licensed tools
+Z7010_2LANE_DEV regression: PASS
+Z7020_8LANE_TARGET elaboration: PASS
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
+```
+
+### P9：现有一块 Z7010、2 lane、4 小板的最大验证
+
+目标：在未来单独授权硬件后，尽量关闭平台无关功能风险，同时严格标注平台边界。
+
+任务：
+
+1. 安全 startup/shutdown、stuck-high、exact rolling duty 和异常退出；
+2. lane0/lane1 raw pulse、frame CRC、ACK-only、session/mask；
+3. 单 lane 4 Mbit/s 逐级验证，以及 2-lane 并发；
+4. DMA、descriptor batching、多 outstanding、SACK 和 backpressure；
+5. RFAP v1/vNext、large-object streaming、CRC/SHA、abort/restart；
+6. 固定侧 FreeRTOS/lwIP、TCP framing 和断线恢复；
+7. 4 小板可支持时进行受限 path selection/handover 原型；
+8. single `GLOBAL_PERMIT` 硬件 drop/rearm/readback；
+9. fault injection 与 bounded recovery；
+10. 至少 30 分钟静止稳定性；
+11. evidence 明确写 `PLATFORM_LIMITED_PASS`。
+
+不得把 P9 写成 8-lane、双节点、旋转、Z7020 或产品 PASS。
+
+### P10A：单块 Zynq-7020 迁移
+
+1. 冻结所选 Z7020 开发板 part、原理图、时钟、DDR、Ethernet、I/O 和 BSP；
+2. 建立开发板 profile/pinmap/XDC，不复用 AX7010 XDC；
+3. 运行 Z7010 与 Z7020 协议/寄存器一致性回归；
+4. 在一块 Z7020 板上完成资源、时序、DMA 和 single-permit 迁移；
+5. 开发板器件若不是 `XC7Z020-2CLG400I`，证据只标记为迁移证据。
+
+### P10B：双独立 Zynq-7020 节点
+
+1. 建立固定/旋转两套 bitstream 与 firmware；
+2. 验证独立 clock/reset/session、endpoint reboot 和双向对象；
+3. 无共享 RAM、无内部数字 loopback 冒充最终链路；
+4. 每端点各有且仅有一根本地 active-high `GLOBAL_PERMIT`；
+5. 双端 permit、fault、shutdown 和 session 状态分别记录。
+
+P11 可在 P10A 完成后先于 P10B 开展，以尽早关闭真实 FOV、sector bank 和 handover 风险；P10B 在进入 P12/P14 前必须完成。
+
+### P11：单 logical lane、四固定模块的动态 handover
+
+目标：在完整 32×8 全环前证明真实光机 FOV、overlap、ABZ、sector-bank 电气和 current/candidate handover。
+
+至少覆盖：
+
+- 1 个旋转模块；
+- 4 个固定模块，11.25°间隔；
+- D200/D600 名义几何；
+- ABZ/phase input；
+- 静止角度 sweep；
+- 正转、反转、变速、停转和 reacquisition；
+- 0、30、60、120、300、450、600 rpm 分级；
+- startup、overlap、frame admission、crossbar 和去重；
+- permit drop/rearm；
+- 实际 FOV、link margin、格挡、反射和串扰。
+
+P11 不得跳过。
+
+### P12：8×32 全环 bring-up
+
+任务：
+
+1. 32 固定模块和 8 physical sector bank 安装/ID/readback；
+2. 8 旋转模块安装、留存和动平衡；
+3. 8-lane 静止 raw matrix；
+4. 全角度 mapping permutation 和 path epoch；
+5. current/candidate overlap；
+6. all-32-RX 功耗和固定侧供电；
+7. 旋转电池、电压跌落和温升；
+8. 同侧、跨侧和反射串扰；
+9. 单一 permit fanout、partial-power 和 all-TX-off；
+10. 低速 30 分钟；
+11. 系统级开放阵列安全测量仍可保持 PENDING，但人员接近控制必须生效。
+
+### P13：600 rpm 8-lane 连续性
+
+按以下速度逐级进入，前一级未通过不得升速：
+
+```text
+0 -> 30 -> 60 -> 120 -> 300 -> 450 -> 600 rpm
+```
+
+每级覆盖正转、反转、速度变化、停转和 reacquisition，并检查：
+
+- `logical_lane_ready_count=8`；
+- mapping collision=0；
+- retry exhausted=0（正常配置）；
+- safety fault=0；
+- permit/fault/readback 一致；
+- handover count 与速度一致；
+- shutdown-before/after PASS。
+
+600 rpm 完成 10 分钟校准、30 分钟功能和 2 小时功能稳定性；应用数据损坏和不可恢复 handover 失败均为 0。2 小时结果不作为产品寿命 qualification。
+
+### P14：Ethernet、SPI 与端到端闭环
+
+覆盖：
+
+- DHCP/static fallback；
+- TCP framing、重连和 backpressure；
+- FPGA-to-FPGA SPI framing、CRC、credit 和 reset recovery；
+- PC -> fixed PS/PL -> IR -> rotating PS/PL -> SPI FPGA；
+- 反向完整路径；
+- 600 rpm 下同时运行；
+- 端到端 16 Mbit/s 半双工 application goodput；
+- 网线重插、PC/endpoint 重启、SPI peer reset；
+- telemetry 和 evidence 导出；
+- 网络/SPI 命令不能绕过 permit 或安全字段。
+
+### P15：4+4 全双工与产品最终验收
+
+覆盖：
+
+- 4+4 lane 原子角色分配；
+- 16 Mbit/s/方向 RAW capability；
+- 8 Mbit/s/方向 application goodput；
+- 双向 ACK 聚合；
+- 全双工光学串扰和 signal-to-crosstalk margin；
+- 正反转与 600 rpm 2 小时功能稳定性；
+- 模块、encoder、DMA、网络、SPI、电池和 permit 故障注入；
+- 电源、温升、机械、环境和系统级人员安全；
+- 完整 evidence freeze。
+
+---
+
+## 11. 风险登记与验证方案
+
+| ID | 风险 | 主要后果 | 缓解与验证 |
+|---|---|---|---|
+| R1 | 过度围绕 Z7010 优化 | 迁移困难或删减最终功能 | 共源参数化 core、双目标离线构建、Z7010 evidence 明确受限 |
+| R2 | Z7020 开发板不是最终订货型号 | 时序/I/O/温度证据不可直接继承 | 区分迁移板与最终核心板，在 `XC7Z020-2CLG400I` 上复验 |
+| R3 | 商业核心板引出 I/O 不足 | 24 raw 线和控制无法落板 | D12 前冻结 pin/differential-pair/bank-voltage/SI 预算 |
+| R4 | 当前 duty 是固定分桶 | 跨边界超 duty，安全不成立 | exact 1000 µs sliding duty、形式化、仿真和硬件验证 |
+| R5 | 19.2 Mbit/s 效率裕量过小 | 重传或 handover 后达不到挑战目标 | 硬门保持 16 Mbit/s，挑战目标受完整 airtime budget 条件约束 |
+| R6 | 实际 FOV/公差低于模型 | 任意角度丢 lane | ±12°设计线、三维 stack-up、Monte Carlo、P11 sweep、P12 全环测量 |
+| R7 | 开放阵列系统级辐射 | 人员伤害或无法验收 | D16、排除区、单一硬件 permit、急停、系统级测量与单故障评估 |
+| R8 | 格挡/反射/环境串扰 | CRC、误触发、全双工失败 | 886 nm 材料测试、反射/污染/日光和 4+4 矩阵 |
+| R9 | 电池峰值与约 40 g 载荷 | 欠压、脱落、失控发射 | 峰值供电、BMS/保险、欠压撤销 permit、留存、动平衡和分级升速 |
+| R10 | 增量 ABZ 无绝对相位 | 错误 mapping/TX | receive-only acquisition、Z/光学标定、phase validity 和故障注入 |
+| R11 | 双节点 CDC/reset | 亚稳、stale session、毛刺 | async FIFO/同步器、CDC tool、独立 reset/reboot 测试 |
+| R12 | 协议/队列复杂度 | 死锁、重复或内存耗尽 | bounded window/queue/retry、property test、长对象和 backpressure soak |
+| R13 | 4+4 光学互扰 | 全双工 goodput 不达标 | 独立角色、crosstalk budget、测量和必要光机优化；不得虚报 capability |
+| R14 | evidence 混淆 | 受限结果被写成最终 PASS | scope、hash、原始日志、machine state 和 review gate |
+| R15 | 单一 active-high permit 短接/卡高 | 许可线自身不能检测该故障 | 明确残余风险；保留 duty/stuck-high/one-hot/pulse-limit/fatal-fault 独立门；D17 fault injection |
+| R16 | TFDU6102 生命周期和供应 | 原型或量产无法采购 | D15 厂商/授权渠道/PCN/EOL/date-code/spares/替代路线 |
+| R17 | optical link margin 未闭合 | 名义能通但公差/污染后失效 | 正式 link budget，>=6 dB worst-case hard proposal，P11/P12 实测 |
+| R18 | 32×8 crossbar 映射错误 | lane 静默错接、重复 owner 或 stale epoch | permutation property、正反向 candidate、wrap 和 atomic commit assertion |
+| R19 | 状态文件互相矛盾 | Codex 误判阶段或覆盖 P7 PASS | `config/project_state.json` 唯一事实源和 consistency gate |
+| R20 | sector-bank MUX/长线畸变 | 100–140 ns RX pulse 被破坏 | 传播延时/skew/pulse distortion 数值预算、SI 仿真和实测 |
+| R21 | requirement 无 ID/无 evidence | 约束不可自动验收 | requirements YAML、traceability matrix、test/evidence linkage |
+
+### 11.1 离线验证
+
+至少包含：
+
+- lint/elaboration；
+- unit and integration simulation；
+- 2-lane/8-lane parameter matrix；
+- independent-clock/CDC/reset；
+- exact 1000 µs rolling-duty properties；
+- stuck-high and illegal-state injection；
+- single `GLOBAL_PERMIT` low/drop/reassert/power-up/partial-power properties；
+- 32×8 current/candidate crossbar permutation；
+- forward/reverse/wrap handover properties；
+- selective-repeat/SACK/sequence wrap；
+- duplicate/stale/object atomicity；
+- DMA ring and backpressure model；
+- Z7010/Z7020 synthesis/resource/timing；
+- project-state/requirements/evidence consistency；
+- P0–P7 regression。
+
+缺失工具必须记录 `SKIP_WITH_REASON`，不得把未运行写为 PASS。
+
+### 11.2 硬件验证层级
+
+| 层级 | 平台 | 可形成的结论 |
+|---|---|---|
+| H0 | 当前无新授权 | 不执行新硬件；保留已有 P7 scoped PASS |
+| H1 | 一块 Z7010、2 lane、4 小板 | `PLATFORM_LIMITED_PASS`；静止、2-lane、实际接线和 single-permit 原型范围 |
+| H2 | Z7020 开发板 | 迁移、资源、板级接口和单/双节点证据 |
+| H3 | P11 光机原型 | 单 lane 真实 FOV/handover/ABZ/sector-bank/permit |
+| H4 | 8×32 全环 | 静止/低速 8-lane、供电、串扰和 permit fanout |
+| H5 | 最终双端产品 | 600 rpm、端到端、全双工、安全和产品接受 |
+
+---
+
+## 12. 配置、证据、需求追踪与验收纪律
+
+每个正式运行必须冻结并记录：
+
+- source commit；
+- bitstream、固定 ELF、旋转 ELF/firmware SHA256；
+- board profile、pinmap、XDC、register-map SHA256；
+- FPGA exact part、板卡型号/revision/serial；
+- 固定/旋转模块 ID；
+- 机械安装、FOV、ABZ 和 phase calibration 版本；
+- lane/bank/module masks；
+- `GLOBAL_PERMIT` raw/sync/effective、arm、drop/rearm 和 fault 状态；
+- speed、direction、环境、电池状态；
+- start/end time；
+- raw logs、JSON/CSV、counters、faults；
+- authorization inputs；
+- shutdown result。
+
+禁止：
+
+- 使用可被覆盖的同名 bitstream 作为正式 evidence；
+- 使用未记录的手工 Vivado 修改；
+- 删除失败 evidence；
+- 用 Markdown 摘要代替原始日志；
+- 用 ILA/proxy 推断冒充外部电气或光学测量；
+- 用 Z7010 结果替代 Z7020；
+- 用静止 2-lane 结果替代旋转 8-lane；
+- 用 degraded lane 结果替代正常配置；
+- 用离线结果提升 hardware status；
+- 声称单一 permit 具有双通道或 stuck-high 检测能力。
+
+### 12.1 Requirement ID 基线
+
+从 V3.1 起，每条新增硬约束必须有 requirement ID。初始关键 ID：
+
+| ID | 约束摘要 |
+|---|---|
+| SYS-ARCH-001 | 最终固定侧和旋转侧必须为两个独立 Zynq 节点 |
+| SYS-GEO-001 | 旋转侧必须布置 8 个 TFDU，45°等间隔 |
+| SYS-GEO-002 | 固定侧必须布置 32 个 TFDU，11.25°等间隔 |
+| SYS-MOTION-001 | 正反转、停启和任意连续轨迹，`|rpm|<=600` |
+| SYS-PERMIT-001 | 每个端点各有且仅有一根本地 active-high `GLOBAL_PERMIT` |
+| SYS-PERMIT-002 | `GLOBAL_PERMIT=0` 必须关闭本端全部物理 TX |
+| SYS-PERMIT-003 | 禁止双 permit、permit heartbeat 和 per-bank permit |
+| SYS-PERMIT-004 | permit 重新上升必须重新 arm，不能恢复半帧 |
+| PHY-SAFE-001 | TFDU 极性和 static high-speed mode 必须正确 |
+| PHY-SAFE-002 | 退出 shutdown 后等待至少 500 µs |
+| PHY-SAFE-003 | 连续 Txd HIGH 不得超过 1 µs 项目上限 |
+| PHY-SAFE-004 | 任意对齐 1000 µs 滑动 duty 必须 `<20%`，设计目标 `<=18%` |
+| MAP-001 | current mapping 必须为 8-lane permutation |
+| MAP-002 | candidate mapping 必须支持正反方向并为 permutation |
+| MAP-003 | mapping commit 必须原子且 path epoch 只递增一次 |
+| PERF-HD-001 | 600 rpm 半双工 application goodput `>=16 Mbit/s` |
+| PERF-FD-001 | 600 rpm 全双工 application goodput `>=8 Mbit/s/方向` |
+| DATA-001 | 错误、partial、stale 或 duplicate 对象不得提交 |
+| EVID-001 | PASS 必须绑定 profile、test ID 和 evidence path |
+| EVID-002 | 正式 artifact 必须内容寻址且 SHA256 冻结 |
+| SAFE-OPT-001 | 系统级光学安全通过前不得放宽人员接近控制 |
+| MECH-001 | 600 rpm 前必须完成留存、动平衡和分级升速 |
+
+`config/project_requirements.yaml` 至少记录：
+
+```text
+requirement_id
+requirement_text
+profile
+verification_method
+verification_stage
+test_id
+evidence_path
+status
+waiver
+```
+
+### 12.2 机器状态唯一事实源
+
+`config/project_state.json` 必须至少包含：
+
+```text
+p7_status
+current_z7010_platform_status
+z7020_target_status
+rotation_status
+final_product_status
+current_run_hardware_authorization
+current_profiles
+legacy_known_failures
+resolved_failures
+pending_gates
+last_verified_commit
+```
+
+`PROJECT_STATUS.md` 必须由该 JSON 自动生成；历史 replay summary 不得覆盖最新 canonical final evidence。任何冲突必须 FAIL，不得由脚本静默选择。
+
+---
+
+## 13. Architecture Decision Records
+
+### ADR-001：采用 Z7010-first 开发、Z7020 最终产品
+
+**Status: Accepted.** 当前只有一块 Zynq-7010、2 lane、4 小板，因此先在该平台验证可移植功能；最终两端仍固定为 `XC7Z020-2CLG400I`。通过共源参数化 core 与板级 wrapper 隔离，避免当前资源限制改变最终架构；所有目标平台相关证据必须在 Z7020 上重取。
+
+### ADR-002：采用 D200/D600、8×32 几何
+
+**Status: Accepted.** 旋转侧 8 模块、固定侧 32 模块在 45°/11.25°节距下提供任意角度 8 logical lane 的几何基础，并在 ±12°设计线下保留 handover overlap。更少固定模块会显著压缩 FOV、公差和切换余量。
+
+### ADR-003：一个中央 XC7Z020 加八个离散 sector bank
+
+**Status: Accepted.** 固定侧所有实时选择由中央 PL 完成；每个四模块 bank 只使用离散 MUX、buffer、SD latch 和保护电路，不放 FPGA/CPLD/MCU。这样避免 8 套固件、时钟、升级和分布式安全状态，同时用外部失败关闭弥补离散控制风险。
+
+### ADR-004：正常 RUN 全部 32 RX 唤醒、每 bank 双 RX 单 TX
+
+**Status: Accepted.** all-RX-ready 使正反转和速度变化不依赖加速度预测；current/candidate 双 RX 支持 make-before-break 和去重；单 TX one-hot 控制功耗、串扰和非法并发。代价是固定侧 RX 平均功耗增加。
+
+### ADR-005：PL/外部硬件承担硬实时与安全，PS 使用 FreeRTOS
+
+**Status: Accepted.** 微秒级 PHY、ABZ、handover、duty 和 permit 不可依赖任务调度、TCP 或日志；PS/FreeRTOS 负责服务、配置、DMA、网络和恢复编排。该边界降低调度抖动和软件失控对发射安全的影响。
+
+### ADR-006：聚合 AXI DMA SG 加 selective-repeat
+
+**Status: Accepted.** P7 的 MMIO/stop-and-wait 只能证明功能，无法满足 8-lane goodput。最终采用聚合 DMA、descriptor batching、多个 outstanding、SACK 和 health-aware 调度；lane/path 细节留在 PL，避免 PS 逐帧干预。
+
+### ADR-007：保留 RFAP v1，使用版本化后继协议扩展
+
+**Status: Accepted.** 现有 P7 evidence 和工具依赖 RFAP v1，因此保留兼容模式；窗口、path epoch、streaming 和多节点能力通过协商进入后继版本，避免一次性破坏回归基线。
+
+### ADR-008：开放阵列在系统级测量前实行受控接近
+
+**Status: Accepted.** 单个 TFDU 的器件分类不能覆盖多发射器、反射、窗口、维护和单故障。系统测量通过前使用排除区、钥匙许可、急停和维护禁发；格挡只承担光路/串扰作用，不作为独立安全结论。
+
+### ADR-009：旋转侧首版使用电池
+
+**Status: Accepted.** 电池避免滑环对高速数据和电源噪声的耦合，但引入峰值电流、欠压、续航、约 40 g 载荷和动平衡风险。因此电池/BMS/留存/低压 permit 是进入旋转验收前的硬阶段门。
+
+### ADR-010：正常 8-lane 与故障降级分开验收
+
+**Status: Accepted.** 32/8 模块几何不能保证任意单模块故障后仍有 8 lane。正常配置保持硬性 8-lane 要求；故障后允许 7..1 lane 受限服务，但使用独立状态和 evidence，防止鲁棒性结果掩盖正常能力不足。
+
+### ADR-011：每个端点采用单一 active-high GLOBAL_PERMIT
+
+**Status: Accepted.** 固定侧和旋转侧作为两个电气独立节点，各自仅使用一根本地 active-high `GLOBAL_PERMIT`。不采用双通道 permit、permit heartbeat 或每 bank permit。permit 下降直接进入最终 TX kill，permit 上升必须重新 arm；receive-only acquisition 与 SD 控制保持独立。该选择简化硬件和验证，但不检测 permit stuck-high，残余风险由 duty、stuck-high、one-hot、pulse limiter、fatal fault 和人员安全控制共同限制。
+
+### ADR-012：PROJECT_CONSTRAINTS 与 project_state 成为唯一规范/状态源
+
+**Status: Accepted.** `PROJECT_CONSTRAINTS.txt` 是唯一 canonical 技术约束；旧目标文件 superseded。`config/project_state.json` 是机器状态事实源，`PROJECT_STATUS.md` 自动生成，以消除 P7、legacy failure 和最终产品 PENDING 之间的矛盾。
+
+### ADR-013：采用显式 8×8 current/candidate permutation crossbar
+
+**Status: Accepted.** physical sector bank 与 logical lane 的关系随 phase 和方向变化，不能用隐含 lane 编号。current 和 candidate 分别通过显式 permutation/crossbar 映射，并以 property 验证正反方向、wrap、one-hot owner 和 path epoch 原子性。
+
+---
+
+## 14. 已延期但必须关闭的阶段参数
+
+这些参数不是当前开放的架构方向问题，但会阻塞对应硬件阶段或最终验收：
+
+| Gate | 必须冻结的内容 | 最迟时点 |
+|---|---|---|
+| D12 核心板 | 精确型号/part、revision、原理图、I/O、差分对、bank 电压、时钟、DDR、BSP、simultaneous switching | 原理图、采购、profile/XDC 前 |
+| D13 ABZ | PPR、电气标准、最高边沿率、滤波、Z/绝对 acquisition、phase/error/data-age/reacquisition 预算 | 任何旋转硬件动作前 |
+| D14 SPI | master/slave、MIO/PL、SCLK、READY/IRQ、帧和 payload goodput | SPI 实现与验收前 |
+| D15 TFDU6102 生命周期与采购 | 厂商状态、授权渠道、可供数量、PCN/EOL、date code、备件、替代与重设计路线 | 大批采购和产品原理图冻结前 |
+| D16 系统光学安全 | 适用标准、测量距离、可接近位置、并发 TX、duty、反射、维护和单故障 | P13 高速运行和 P15 产品验收前 |
+| D17 单一 GLOBAL_PERMIT 实现 | 每端点一根 permit、来源、下拉、电平、fanout、buffer、deassert delay、partial power、readback、external TX kill、软件权限和 residual risk | sector-bank/旋转载板原理图冻结前 |
+| Battery | 电芯、BMS、容量、续航、保险、低压、温度、充电和机械留存 | 旋转电池采购与 P11/P12 前 |
+| Environment | 温度、环境光、污染、振动、冲击和维护周期 | 对应环境声明与 P15 前 |
+| Optics | 实际 FOV、link margin、格挡材料、反射、窗口和可接近辐射 | P11/P12/P15 相应 gate 前 |
+
+未关闭阶段门时只能保持 PENDING 或受限结论，不能用默认假设生成产品 PASS。
+
+---
+
+## 15. 最终验收矩阵与 Definition of Done
+
+### 15.1 阶段完成条件
+
+```text
+P0-P7 regression and limited baseline: PASS
+P8A canonical requirements/state: PASS
+P8B geometry/mapping/handover model: PASS
+P8C TFDU safety and single GLOBAL_PERMIT: PASS
+P8D selective-repeat/DMA data plane: PASS
+P8E portable Z7010/Z7020 build and timing: PASS
+P9 Z7010 2-lane/4-board limited development: PASS or formally superseded with evidence
+P10A single-Z7020 migration: PASS
+P10B independent dual endpoints: PASS
+P11 single-lane real optical handover: PASS
+P12 8x32 full-ring bring-up: PASS
+P13 600-rpm 8-lane continuity: PASS
+P14 Ethernet-to-SPI end-to-end: PASS
+P15 4+4 full-duplex and product acceptance: PASS
+```
+
+P9 可以因后续更强 Z7020 evidence 被正式 supersede，但不得静默跳过其安全和协议覆盖。P11 可以在 P10A 后、P10B 前执行，但 P10B 必须在 P12/P14 前通过。
+
+### 15.2 最终产品字段
+
+只有真实最终硬件 evidence 支持时，以下字段才允许为 PASS：
+
+```text
+FINAL_FIXED_FPGA: XC7Z020-2CLG400I
+FINAL_ROTATING_FPGA: XC7Z020-2CLG400I
+ROTATING_DIAMETER_MM: 200
+STATOR_DIAMETER_MM: 600
+ROTATING_MODULE_COUNT: 8
+FIXED_MODULE_COUNT: 32
+FIXED_SECTOR_BANK_COUNT: 8
+FIXED_MODULES_PER_BANK: 4
+PHASE_INDEX_COUNT: 4
+LOGICAL_LANE_COUNT: 8
+MAX_ABS_SPEED_RPM: 600
+GLOBAL_PERMIT_ARCHITECTURE: SINGLE_ACTIVE_HIGH_PER_ENDPOINT
+FIXED_ENDPOINT_GLOBAL_PERMIT_COUNT: 1
+ROTATING_ENDPOINT_GLOBAL_PERMIT_COUNT: 1
+PERMIT_LOW_ALL_TX_OFF: PASS
+PERMIT_DROP_DURING_TX: PASS
+PERMIT_REASSERT_REQUIRES_ARM: PASS
+EXACT_ROLLING_DUTY: PASS
+NORMAL_ANY_ANGLE_8_LANE_READY: PASS
+HALF_DUPLEX_RAW_32MBPS_CAPABILITY: PASS
+FULL_DUPLEX_RAW_16MBPS_PER_DIRECTION_CAPABILITY: PASS
+HALF_DUPLEX_APPLICATION_GOODPUT_16MBPS: PASS
+FULL_DUPLEX_APPLICATION_GOODPUT_8MBPS_PER_DIRECTION: PASS
+ROTATION_600RPM_BIDIRECTIONAL_2H_FUNCTIONAL: PASS
+ETHERNET_TO_REMOTE_SPI_END_TO_END: PASS
+APPLICATION_DATA_INTEGRITY: PASS
+SYSTEM_ACCESSIBLE_IR_SAFETY: PASS
+SHUTDOWN_SAFETY: PASS
+PRODUCT_FINAL_ACCEPTANCE: PASS
+```
+
+任一必需项缺失时：
+
+```text
+PRODUCT_FINAL_ACCEPTANCE: PENDING
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW or LIMITED
+```
+
+不得用挑战目标、受限平台、2 小时功能结果、proxy evidence 或 degraded lane evidence 改写这一规则。
+
+---
+
+## 16. 参考与当前事实源
+
+Canonical：
+
+- `AGENTS.md`；
+- `PROJECT_CONSTRAINTS.txt`；
+- `config/project_requirements.yaml`；
+- `config/project_state.json`；
+- `docs/REQUIREMENT_TRACEABILITY_MATRIX.md`；
+- `config/register_map/ir_axi_regs.yaml`。
+
+当前成果和设计参考：
+
+- `evidence/generated/p7_final_summary.md`；
+- `evidence/generated/p7_final_acceptance_summary.json`；
+- `evidence/generated/p7_performance_summary.md`；
+- `docs/P7_RUNTIME_OPTIMIZATION_CONSTRAINTS.md`，仅用于复现/审计 P7；
+- `docs/P7_APPLICATION_PROTOCOL.md`；
+- `config/p7_app_protocol.yaml`；
+- `docs/TFDU_LANE_PHY_SPEC.md`；
+- `docs/TFDU6102_SAFETY_SUMMARY.md`；
+- `docs/tfdu6102_safety_contract.md`；
+- `docs/datasheets/TFDU6102datasheet.pdf`；
+- `rtl/tfdu_lane_phy.sv`；
+- `rtl/ir_4ppm_codec.sv`；
+- `rtl/ir_frame_l1.sv`；
+- `rtl/ir_arq_l2.sv`；
+- `rtl/ir_multilane_scheduler.sv`；
+- `board_profiles/ACTIVE_PROFILE.json`；
+- `constraints/active/PORT1.generated.xdc`。
+
+Legacy：
+
+- `docs/legacy/项目约束(目标）.txt`：superseded historical source；
+- `C:\Users\user\Documents\RF_COMM`、`legacy/`、`rtl/legacy_reference/`：read-only reference。
+
+当参考文档与本文件的已批准方向冲突时，以本文件为项目级技术约束；当机器配置与本文件不一致时，必须显式报错并通过受控变更解决，不能默默选择其一。
