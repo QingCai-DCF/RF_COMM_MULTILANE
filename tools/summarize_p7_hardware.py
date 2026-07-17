@@ -46,6 +46,8 @@ COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 MARKER_KEY_RE = re.compile(r"^[A-Z][A-Z0-9_]{0,127}$")
 PS_MARKER = "P7_PS_APPLICATION_SAFE_STAGE"
 JTAG_MARKER = "P7_JTAG_AXI_SAFE_STAGE"
+PS_SUMMARY_NAME = "p7_ps_application_stage_summary.json"
+JTAG_SUMMARY_NAME = "p7_jtag_axi_stage_summary.json"
 BACKEND_PARSE_MARKER = "P7_JTAG_BACKEND_PARSE"
 JTAG_MANIFEST_SCHEMA = "rfap-p7-jtag-axi-dry-run-v1"
 PS_COUNTS_PER_SECOND = 333_333_343
@@ -290,6 +292,53 @@ OFFLINE_CRITICAL_SOURCES = (
     "tools/run_p7_ps_core_offline.py",
     "tools/summarize_p7_hardware.py",
 )
+LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES = frozenset(
+    {
+        "config/p7_stage66_diagnostic_campaign_policy.json",
+        "config/p7_vivado_helper_identity_profiles.json",
+        "scripts/hw/p7_helper_identity_probe.ps1",
+        "tools/p7_stage66_campaign.py",
+        "tools/p7_vivado_helper_identity.py",
+        "tools/prepare_p7_stage66_campaign_run.py",
+        "tools/record_p7_stage66_campaign_recovery.py",
+    }
+)
+LEGACY_OFFLINE_CHECKPOINT_GAP_PROFILES = {
+    "911e1a303ff58593cac5ff4c4b70150d17f9a26b": {
+        "profile_id": "p7_20260717_r74_formal_checkpoint_critical_source_gap_v1",
+        "checkpoint_sha256": "9ade79534e5b07cd9f2d806b4f8b2a3645c595ba3d6f46bbf80394e40069d883",
+        "missing_sources": LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES,
+    }
+}
+POST_RUN_CHECKPOINT_REPAIR_SOURCES = frozenset(
+    {
+        "tools/run_p7_gate.py",
+        "tools/summarize_p7_hardware.py",
+    }
+)
+IMPORTED_SPECIALIST_DIAGNOSTIC_PROFILES = {
+    "911e1a303ff58593cac5ff4c4b70150d17f9a26b": {
+        "profile_id": "p7_20260717_imported_stage62_ddr_diagnostics_v1",
+        "closure_files": {
+            "stage62_handoff/return/STAGE62_EVIDENCE_MANIFEST.json": "015ecce3d4d65b797326bcab88cbebaa31cf9f577c6f2e9c7ba4c41dea43ea11",
+            "ddr_handoff/return/DDR_EVIDENCE_MANIFEST.json": "d0bd07af91a6c3c92d24ded58f4283da5ac75d5c50415c76f2332e87fe227bb2",
+            "ddr_debug/iterations/CAMPAIGN_A_CLOSURE.json": "a8cba7a38447d847bf28473030ae4021ebb437aa717de5e423afa6dedcd1cb42",
+            "ddr_debug/campaign_b/CAMPAIGN_B_CLOSURE.json": "72c05d4a4d3cde15d40e2d3cfcce59b3d2c2b2c78fe02ceff4a410e133f611eb",
+            "ddr_debug/campaign_c2/CAMPAIGN_C2_CLOSURE.json": "b4539d634abcd177fbadf7bd1565dd1ee732517fc51b73676c20b153fc188eb5",
+            "ddr_debug/campaign_d/CAMPAIGN_D_CLOSURE.json": "704408f18f355684d002bcfa7c198ab45626657c15a724c75823f7fcc6d68cf3",
+        },
+        "r35": {
+            "run_id": "p7_20260714_stage62_microtest_r35_diag_only",
+            "observed_started_at_utc": "2026-07-13T18:14:58+00:00",
+            "classification_sha256": "1661136808640684c08bb836c4889818e541ce65be0f2bc451dc344adfe00cfa",
+            "raw_manifest_sha256": "23e39c0c37842a93a4cccb7184dfd393f18b8e28df0cc4991d390a6da56f8a59",
+            "wrapper_failure_sha256": "5fec12c1aa6296793525293711db6d1959d1bab72fb096e47c44eae1e64e56e8",
+            "authorization_sha256": "759cabfa978d1d0819ce550e3740c5dbeb5819adcb28c217ab92c981a55e99e3",
+            "raw_log_sha256": "cb7b0eb55b0cfb03eaa22eba251727ffef10130ba792cac9c6f9345db9694b3b",
+            "recovery_summary_sha256": "6a6248ce7c460ae6100aec79d230480a49b5c1e258b76ccde8b28515e4f890f8",
+        },
+    }
+}
 HISTORICAL_GIT_CRITICAL_SOURCES = (
     "scripts/hw/p7_hw_preflight.tcl",
     "scripts/hw/p7_jtag_axi_transactions.tcl",
@@ -2498,6 +2547,7 @@ def case_output_errors(
     expected_status: int = 3,
     expected_error: int = 0,
     require_zero_transport: bool = False,
+    output_filename: str | None = None,
 ) -> list[str]:
     errors: list[str] = []
     descriptor = case.get("descriptor")
@@ -2530,19 +2580,65 @@ def case_output_errors(
         output_bytes = int(case.get("output_bytes", -1))
     except (TypeError, ValueError):
         output_bytes = -1
+    output_sha = str(case.get("output_sha256", "")).lower()
+    artifact_provenance = case.get("artifact_provenance")
+    provenance_filename = (
+        artifact_provenance.get("output_filename")
+        if isinstance(artifact_provenance, Mapping)
+        else None
+    )
+    selected_output_filename = output_filename or (
+        str(provenance_filename) if provenance_filename else None
+    )
+    if selected_output_filename is not None:
+        filename_path = Path(selected_output_filename)
+        safe_filename = (
+            filename_path.name == selected_output_filename
+            and not filename_path.is_absolute()
+            and selected_output_filename not in {".", ".."}
+        )
+        append_error(errors, safe_filename, f"{prefix} output artifact filename is unsafe")
+        output_path = candidate.path.parent / "bundle" / selected_output_filename
+        if safe_filename and output_path.is_file() and not output_path.is_symlink():
+            artifact_bytes = output_path.stat().st_size
+            artifact_sha = sha256_file(output_path)
+            if output_bytes >= 0:
+                append_error(
+                    errors,
+                    output_bytes == artifact_bytes,
+                    f"{prefix} recorded output byte count differs from bound artifact",
+                )
+            if SHA256_RE.fullmatch(output_sha):
+                append_error(
+                    errors,
+                    output_sha == artifact_sha,
+                    f"{prefix} recorded output SHA256 differs from bound artifact",
+                )
+            output_bytes = artifact_bytes
+            output_sha = artifact_sha
+        elif provenance_filename:
+            errors.append(f"{prefix} provenance-bound output artifact is missing/not regular")
+        elif output_bytes < 0 or SHA256_RE.fullmatch(output_sha) is None:
+            errors.append(f"{prefix} explicit output artifact is missing and no host observation is recorded")
     append_error(errors, output_bytes == object_length, f"{prefix} output/input length mismatch")
     append_error(errors, value("status") == expected_status, f"{prefix} terminal status mismatch")
     append_error(errors, value("error_code") == expected_error, f"{prefix} terminal error code mismatch")
     expected_sha = str(descriptor.get("expected_sha256", "")).lower()
     input_sha = str(descriptor.get("input_sha256", "")).lower()
     descriptor_output_sha = str(descriptor.get("output_sha256", "")).lower()
-    output_sha = str(case.get("output_sha256", "")).lower()
     append_error(errors, bool(SHA256_RE.fullmatch(expected_sha)), f"{prefix} expected SHA256 missing")
-    append_error(errors, input_sha == expected_sha, f"{prefix} input SHA256 does not match expected identity")
     append_error(errors, SHA256_RE.fullmatch(output_sha) is not None, f"{prefix} host output SHA256 missing/malformed")
     expected_crc = descriptor.get("expected_crc32")
     fragments_total = value("fragments_total")
-    append_error(errors, fragments_total == max(1, (max(object_length, 0) + 214) // 215), f"{prefix} fragment geometry mismatch")
+    rejected_before_input_identity = (
+        expected_status == 6 and expected_error == 19 and require_zero_transport
+    )
+    if rejected_before_input_identity:
+        append_error(errors, input_sha == "0" * 64, f"{prefix} pre-input rejection unexpectedly publishes an input SHA256")
+        append_error(errors, fragments_total == 0, f"{prefix} pre-input rejection unexpectedly publishes fragment geometry")
+    else:
+        append_error(errors, input_sha == expected_sha, f"{prefix} input SHA256 does not match expected identity")
+        append_error(errors, fragments_total == max(1, (max(object_length, 0) + 214) // 215), f"{prefix} fragment geometry mismatch")
     if expected_status == 3:
         append_error(errors, value("bytes_completed") == object_length, f"{prefix} completed-byte count mismatch")
         append_error(errors, value("fragments_completed") == fragments_total, f"{prefix} completed-fragment count mismatch")
@@ -2558,7 +2654,10 @@ def case_output_errors(
         append_error(errors, expected_lanes is not None and observed_lanes == expected_lanes, f"{prefix} lane distribution mismatch")
     else:
         append_error(errors, value("bytes_completed") == 0, f"{prefix} negative case retained partial bytes")
-        append_error(errors, descriptor_output_sha == output_sha, f"{prefix} negative-case descriptor/host output SHA256 mismatch")
+        append_error(errors, descriptor_output_sha == "0" * 64, f"{prefix} negative case publishes a descriptor output SHA256")
+        zero_output_sha = hashlib.sha256(bytes(max(object_length, 0))).hexdigest()
+        append_error(errors, output_sha == zero_output_sha, f"{prefix} negative-case host output was not wiped to zero")
+        append_error(errors, value("output_crc32", -1) == 0, f"{prefix} negative case publishes a nonzero output CRC32")
         if require_zero_transport:
             append_error(errors, value("fragments_completed") == 0 and value("fragment_attempts") == 0, f"{prefix} rejected/strict-negative case attempted transport")
     append_error(errors, value("p6_retry_count", -1) >= 0, f"{prefix} P6 retry count missing/negative")
@@ -2627,10 +2726,17 @@ def validate_ps_functional(candidate: Candidate, evidence: RepositoryEvidence) -
         checkpoint_descriptor = checkpoint.get("descriptor", {})
         append_error(runtime_errors, int(checkpoint_descriptor.get("object_length", -1)) == 4_096, "PS functional checkpoint is not 4 KiB")
         append_error(runtime_errors, int(checkpoint_descriptor.get("lane_policy", -1)) == 3, "PS functional 4 KiB checkpoint is not stripe")
-        runtime_errors.extend(case_output_errors(candidate, checkpoint, "functional:4k-checkpoint:"))
+        runtime_errors.extend(
+            case_output_errors(
+                candidate,
+                checkpoint,
+                "functional:4k-checkpoint:",
+                output_filename="functional_checkpoint_4k_output_result.bin",
+            )
+        )
     boundary_errors = list(errors)
     boundary_pairs: set[tuple[int, int]] = set()
-    for case in boundary:
+    for boundary_index, case in enumerate(boundary):
         if not isinstance(case, dict):
             boundary_errors.append("boundary case is not an object")
             continue
@@ -2641,7 +2747,14 @@ def validate_ps_functional(candidate: Candidate, evidence: RepositoryEvidence) -
         except (TypeError, ValueError):
             length, policy = -1, -1
         boundary_pairs.add((length, policy))
-        boundary_errors.extend(case_output_errors(candidate, case, f"boundary:{length}:{policy}:"))
+        boundary_errors.extend(
+            case_output_errors(
+                candidate,
+                case,
+                f"boundary:{length}:{policy}:",
+                output_filename=f"boundary_{boundary_index}_output_result.bin",
+            )
+        )
     expected_pairs = {(length, policy) for length in REQUIRED_BOUNDARY_LENGTHS for policy in REQUIRED_BOUNDARY_POLICIES}
     append_error(boundary_errors, isinstance(boundary, list) and len(boundary) == len(expected_pairs), "hardware boundary matrix case count is not exactly 48")
     append_error(boundary_errors, boundary_pairs == expected_pairs, "hardware boundary matrix does not exactly cover every required length x lane policy")
@@ -12111,7 +12224,10 @@ def _stage66_campaign_authorization_fields(
 
 
 def _historical_stage66_campaign_epoch(
-    candidate: Candidate, evidence: RepositoryEvidence
+    candidate: Candidate,
+    evidence: RepositoryEvidence,
+    *,
+    offline_commit: str | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """Validate one superseded Stage66 campaign epoch as zero coverage.
 
@@ -12149,18 +12265,42 @@ def _historical_stage66_campaign_epoch(
             str(fields.get("P7_STAGE66_CAMPAIGN_POLICY_SHA256", "")).lower(),
         )
         errors.extend(f"historical Stage66 campaign policy: {item}" for item in policy_errors)
-    campaign_ledger_path = resolve_reference(
-        fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH"),
-        document=candidate.path,
-        repo_root=evidence.repo_root,
-    )
+    recorded_campaign_ledger_path = Path(
+        str(fields.get("P7_STAGE66_CAMPAIGN_LEDGER_PATH", ""))
+    ).resolve(strict=False)
     campaign_ledger: dict[str, Any] | None = None
-    if policy is not None and campaign_ledger_path is not None:
+    campaign_ledger_record: dict[str, Any] | None = None
+    if policy is not None:
+        campaign_ledger_path = stage66_campaign.campaign_ledger_path(policy)
         append_error(
             errors,
-            campaign_ledger_path == stage66_campaign.campaign_ledger_path(policy),
-            "historical Stage66 campaign ledger path differs from policy",
+            _same_registered_worktree_location(
+                recorded_campaign_ledger_path,
+                campaign_ledger_path,
+                evidence.repo_root,
+            ),
+            "historical Stage66 campaign ledger provenance is not the canonical registered-worktree location",
         )
+        if COMMIT_RE.fullmatch(str(offline_commit or "").lower()):
+            try:
+                campaign_ledger_relative = campaign_ledger_path.resolve(
+                    strict=False
+                ).relative_to(evidence.repo_root.resolve(strict=False)).as_posix()
+            except ValueError:
+                errors.append(
+                    "historical Stage66 canonical campaign ledger escapes the active repository"
+                )
+            else:
+                ledger_file_errors, campaign_ledger_record = _git_bound_import_file(
+                    evidence,
+                    offline_commit=str(offline_commit).lower(),
+                    relative=campaign_ledger_relative,
+                    expected_sha256=None,
+                    label="historical Stage66 canonical final campaign ledger",
+                )
+                errors.extend(ledger_file_errors)
+        elif campaign_ledger_path.is_file():
+            campaign_ledger_record = _hash_record(campaign_ledger_path)
         campaign_ledger, ledger_errors = stage66_campaign.validate_ledger(
             policy, campaign_ledger_path, allow_absent=False
         )
@@ -12320,6 +12460,8 @@ def _historical_stage66_campaign_epoch(
         "source_commit": source,
         "diagnostic_result": diagnostic_result,
         "coverage_keys": [],
+        "campaign_ledger": campaign_ledger_record,
+        "recorded_campaign_ledger_location": str(recorded_campaign_ledger_path),
         "outer_execution_ledger": _hash_record(outer_path) if outer_path.is_file() else None,
         "campaign_attempt": campaign_attempt,
         "verified_stage_count": len(attempts),
@@ -12438,7 +12580,7 @@ def _candidate_checkpoint_relation(
         relation = CHECKPOINT_RELATION_OLD_DIAGNOSTIC
     if stage66_campaign_historical:
         historical_epoch, historical_errors = _historical_stage66_campaign_epoch(
-            candidate, evidence
+            candidate, evidence, offline_commit=offline_commit
         )
     else:
         historical_epoch, historical_errors = _historical_epoch_record(candidate, evidence)
@@ -12466,6 +12608,556 @@ def _candidate_checkpoint_relation(
     return relation, errors, historical_epoch
 
 
+def _git_bound_import_file(
+    evidence: RepositoryEvidence,
+    *,
+    offline_commit: str,
+    relative: str,
+    expected_sha256: str | None,
+    label: str,
+) -> tuple[list[str], dict[str, Any] | None]:
+    errors: list[str] = []
+    root = evidence.repo_root.resolve(strict=False)
+    path = (root / relative).resolve(strict=False)
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return [f"{label} path escapes repository: {relative}"], None
+    append_error(errors, path.is_file(), f"{label} file missing: {relative}")
+    if not path.is_file():
+        return errors, None
+    live_sha256 = sha256_file(path)
+    if expected_sha256 is not None:
+        append_error(
+            errors,
+            SHA256_RE.fullmatch(expected_sha256) is not None
+            and live_sha256 == expected_sha256,
+            f"{label} SHA256 mismatch: {relative}",
+        )
+    frozen_bytes, git_error = _git_commit_source_bytes(root, offline_commit, relative)
+    if git_error is not None or frozen_bytes is None:
+        errors.append(git_error or f"{label} is absent from active checkpoint Git tree: {relative}")
+        frozen_sha256 = "MISSING"
+    else:
+        frozen_sha256 = hashlib.sha256(frozen_bytes).hexdigest()
+        append_error(
+            errors,
+            frozen_sha256 == live_sha256,
+            f"{label} live bytes differ from active checkpoint Git tree: {relative}",
+        )
+    record = _hash_record(path)
+    record.update(
+        {
+            "checkpoint_source_commit": offline_commit,
+            "checkpoint_git_blob_sha256": frozen_sha256,
+        }
+    )
+    return errors, record
+
+
+def _rehash_imported_raw_manifest(
+    manifest_path: Path,
+    *,
+    run_root: Path,
+    label: str,
+) -> tuple[list[str], dict[str, int]]:
+    errors: list[str] = []
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8", errors="strict"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return [f"{label} raw manifest invalid: {exc}"], {
+            "record_count": 0,
+            "partial_file_count": 0,
+        }
+    records = payload.get("records")
+    if not isinstance(records, list):
+        return [f"{label} raw manifest records missing"], {
+            "record_count": 0,
+            "partial_file_count": 0,
+        }
+    append_error(
+        errors,
+        payload.get("record_count") == len(records),
+        f"{label} raw manifest record_count mismatch",
+    )
+    root = run_root.resolve(strict=False)
+    seen: set[Path] = set()
+    for index, item in enumerate(records):
+        if not isinstance(item, dict):
+            errors.append(f"{label} raw manifest record {index} is malformed")
+            continue
+        relative = Path(str(item.get("path", "")))
+        path = (root / relative).resolve(strict=False)
+        try:
+            path.relative_to(root)
+        except ValueError:
+            errors.append(f"{label} raw manifest record {index} escapes run root")
+            continue
+        append_error(errors, path not in seen, f"{label} raw manifest record {index} duplicates a path")
+        seen.add(path)
+        append_error(errors, path.is_file(), f"{label} raw manifest file missing: {relative.as_posix()}")
+        expected_size = item.get("size_bytes", item.get("bytes"))
+        if path.is_file():
+            append_error(
+                errors,
+                expected_size == path.stat().st_size,
+                f"{label} raw manifest size mismatch: {relative.as_posix()}",
+            )
+            append_error(
+                errors,
+                str(item.get("sha256", "")).lower() == sha256_file(path),
+                f"{label} raw manifest SHA256 mismatch: {relative.as_posix()}",
+            )
+    partial_count = payload.get("partial_file_count", 0)
+    append_error(
+        errors,
+        isinstance(partial_count, int) and not isinstance(partial_count, bool) and partial_count >= 0,
+        f"{label} raw manifest partial_file_count malformed",
+    )
+    return errors, {
+        "record_count": len(records),
+        "partial_file_count": int(partial_count) if isinstance(partial_count, int) else -1,
+    }
+
+
+def _imported_shutdown_record(run_root: Path, which: str) -> dict[str, Any]:
+    result = run_root / f"shutdown_{which}_result.txt"
+    stdout = run_root / f"shutdown_{which}.stdout.log"
+    markers, duplicates = parse_marker_text(marker_text(result))
+    return {
+        "result_file": _hash_record(result) if result.is_file() else {"path": str(result), "missing": True},
+        "stdout_file": _hash_record(stdout) if stdout.is_file() else {"path": str(stdout), "missing": True},
+        "result_marker_duplicates": sorted(set(duplicates)),
+        "programming_attempted_marker": markers.get("P7_TCL_PROGRAMMING_ATTEMPTED") == "1",
+        "tfdu_shutdown_programmed": markers.get("TFDU_SHUTDOWN_PROGRAMMED", ""),
+        "p7_shutdown_result_pass": markers.get("P7_SHUTDOWN_RESULT") == "PASS",
+    }
+
+
+def _generic_recovery_end(summary_path: Path) -> str | None:
+    text = marker_text(summary_path)
+    matches = re.findall(r"^PROGRAM_TFDU_SHUTDOWN_SAFE_END\s+(.+?)\s*$", text, re.MULTILINE)
+    return matches[0] if len(matches) == 1 else None
+
+
+def imported_specialist_diagnostic_records(
+    evidence: RepositoryEvidence,
+    *,
+    offline_commit: str,
+    offline_time: float,
+) -> tuple[list[dict[str, Any]], list[str], set[Path]]:
+    errors: list[str] = []
+    records: list[dict[str, Any]] = []
+    accounted_dirs: set[Path] = set()
+    profile = IMPORTED_SPECIALIST_DIAGNOSTIC_PROFILES.get(offline_commit)
+    if not isinstance(profile, Mapping):
+        return [], ["active checkpoint has no exact imported-specialist diagnostic profile"], set()
+
+    closure_payloads: dict[str, dict[str, Any]] = {}
+    closure_records: dict[str, dict[str, Any]] = {}
+    for relative, expected_sha256 in dict(profile.get("closure_files", {})).items():
+        file_errors, file_record = _git_bound_import_file(
+            evidence,
+            offline_commit=offline_commit,
+            relative=str(relative),
+            expected_sha256=str(expected_sha256).lower(),
+            label="imported specialist closure",
+        )
+        errors.extend(file_errors)
+        if file_record is None:
+            continue
+        closure_records[str(relative)] = file_record
+        try:
+            value = json.loads(Path(file_record["path"]).read_text(encoding="utf-8", errors="strict"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            errors.append(f"imported specialist closure JSON invalid: {relative}: {exc}")
+            continue
+        if isinstance(value, dict):
+            closure_payloads[str(relative)] = value
+        else:
+            errors.append(f"imported specialist closure is not an object: {relative}")
+
+    stage_manifest_name = "stage62_handoff/return/STAGE62_EVIDENCE_MANIFEST.json"
+    ddr_manifest_name = "ddr_handoff/return/DDR_EVIDENCE_MANIFEST.json"
+    campaign_a_name = "ddr_debug/iterations/CAMPAIGN_A_CLOSURE.json"
+    campaign_b_name = "ddr_debug/campaign_b/CAMPAIGN_B_CLOSURE.json"
+    campaign_c2_name = "ddr_debug/campaign_c2/CAMPAIGN_C2_CLOSURE.json"
+    campaign_d_name = "ddr_debug/campaign_d/CAMPAIGN_D_CLOSURE.json"
+    required_payloads = {
+        stage_manifest_name,
+        ddr_manifest_name,
+        campaign_a_name,
+        campaign_b_name,
+        campaign_c2_name,
+        campaign_d_name,
+    }
+    if not required_payloads <= set(closure_payloads):
+        return records, errors + ["one or more imported specialist closure payloads are unavailable"], accounted_dirs
+
+    stage_manifest = closure_payloads[stage_manifest_name]
+    ddr_manifest = closure_payloads[ddr_manifest_name]
+    campaign_a = closure_payloads[campaign_a_name]
+    campaign_b = closure_payloads[campaign_b_name]
+    campaign_c2 = closure_payloads[campaign_c2_name]
+    campaign_d = closure_payloads[campaign_d_name]
+    append_error(errors, stage_manifest.get("schema") == "rf-comm-stage62-return-evidence-manifest-v1", "Stage62 import manifest schema mismatch")
+    append_error(errors, stage_manifest.get("coverage_claimed") is False and stage_manifest.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "Stage62 import manifest scope mismatch")
+    append_error(errors, ddr_manifest.get("schema") == "rf-comm-ddr-specialist-evidence-manifest-v2", "DDR import manifest schema mismatch")
+    append_error(errors, ddr_manifest.get("coverage_claimed") is False and ddr_manifest.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "DDR import manifest scope mismatch")
+    append_error(errors, campaign_a.get("status") == "CAMPAIGN_A_CLOSED_FIX_REQUIRED" and campaign_a.get("safe_shutdown_complete") is True, "Campaign A closure status/safety mismatch")
+    append_error(errors, campaign_b.get("status") == "FIX_REQUIRED" and campaign_b.get("diagnostic_only") is True and campaign_b.get("coverage_claimed") is False and campaign_b.get("safety", {}).get("safe_shutdown_complete") is True, "Campaign B closure status/scope/safety mismatch")
+    append_error(errors, campaign_c2.get("status") == "STOPPED_SAFETY_FAILURE_RECOVERED" and campaign_c2.get("diagnostic_only") is True and campaign_c2.get("coverage_claimed") is False and campaign_c2.get("safety", {}).get("safe_shutdown_complete") is True, "Campaign C2 closure status/scope/safety mismatch")
+    append_error(errors, campaign_d.get("status") == "COMPLETE_DIAGNOSTIC_STAGE62_THREE_RUN_STREAK_PASS" and campaign_d.get("diagnostic_only") is True and campaign_d.get("coverage_claimed") is False and campaign_d.get("final_safety", {}).get("safe_shutdown_complete") is True, "Campaign D closure status/scope/safety mismatch")
+
+    stage_entries = {
+        str(item.get("path")): item
+        for item in stage_manifest.get("entries", [])
+        if isinstance(item, dict) and isinstance(item.get("path"), str)
+    }
+    specialist_specs: list[dict[str, Any]] = []
+    for item in campaign_a.get("runs", []):
+        if not isinstance(item, dict) or item.get("authorization_state") != "consumed":
+            continue
+        run_id = str(item.get("run_id", ""))
+        specialist_specs.append(
+            {
+                "run_id": run_id,
+                "run_root": f"evidence/hardware/p7/ddr_external_master/{run_id}",
+                "source_commit": str(campaign_a.get("campaign_source_commit", "")).lower(),
+                "summary_sha256": None,
+                "raw_manifest_sha256": str(item.get("raw_evidence_manifest_sha256", "")).lower(),
+                "closure": campaign_a_name,
+                "expected_result": None,
+            }
+        )
+    append_error(errors, len(specialist_specs) == 9, "Campaign A imported hardware-run count mismatch")
+    retired_a = evidence.repo_root / "evidence/hardware/p7/ddr_external_master/p7_20260714_ddr_external_campaign_a_10"
+    append_error(errors, not retired_a.exists(), "Campaign A retired non-hardware run unexpectedly has an evidence directory")
+
+    for item in campaign_b.get("runs", []):
+        if not isinstance(item, dict):
+            continue
+        run_id = str(item.get("run_id", ""))
+        specialist_specs.append(
+            {
+                "run_id": run_id,
+                "run_root": f"evidence/hardware/p7/ddr_external_master/{run_id}",
+                "source_commit": str(campaign_b.get("source_commit", "")).lower(),
+                "summary_sha256": str(item.get("summary_sha256", "")).lower(),
+                "raw_manifest_sha256": str(item.get("raw_manifest_sha256", "")).lower(),
+                "closure": campaign_b_name,
+                "expected_result": str(item.get("result", "")),
+            }
+        )
+    append_error(errors, len(campaign_b.get("runs", [])) == 10, "Campaign B imported hardware-run count mismatch")
+
+    for item in campaign_c2.get("runs", []):
+        if not isinstance(item, dict):
+            continue
+        run_id = str(item.get("run_id", ""))
+        ordinal = int(item.get("ordinal", 0))
+        category = "ddr_external_master" if ordinal in {1, 2, 4, 5} else "stage62_microtest" if ordinal in {3, 6, 7} else "stage62_functional"
+        specialist_specs.append(
+            {
+                "run_id": run_id,
+                "run_root": f"evidence/hardware/p7/{category}/{run_id}",
+                "source_commit": str(campaign_c2.get("source_commit", "")).lower(),
+                "summary_sha256": str(item.get("summary_sha256", "")).lower(),
+                "raw_manifest_sha256": str(item.get("raw_manifest_sha256", "")).lower(),
+                "closure": campaign_c2_name,
+                "expected_result": str(item.get("result", "")),
+                "requires_independent_recovery": ordinal == 8,
+            }
+        )
+    append_error(errors, len(campaign_c2.get("runs", [])) == 8, "Campaign C2 imported hardware-run count mismatch")
+
+    for item in campaign_d.get("runs", []):
+        if not isinstance(item, dict):
+            continue
+        specialist_specs.append(
+            {
+                "run_id": str(item.get("run_id", "")),
+                "run_root": str(Path(str(item.get("summary_path", ""))).parent).replace("\\", "/"),
+                "source_commit": str(campaign_d.get("source_commit", "")).lower(),
+                "summary_sha256": str(item.get("summary_sha256", "")).lower(),
+                "raw_manifest_sha256": str(item.get("raw_manifest_sha256", "")).lower(),
+                "closure": campaign_d_name,
+                "expected_result": str(item.get("result", "")),
+            }
+        )
+    append_error(errors, len(campaign_d.get("runs", [])) == 3, "Campaign D imported hardware-run count mismatch")
+
+    for run_id, expected_result in (
+        ("p7_20260714_stage62_microtest_r36_diag_only", "PASS"),
+        ("p7_20260714_stage62_microtest_r37_diag_only", "FAIL"),
+    ):
+        run_root = f"evidence/hardware/p7/stage62_microtest/{run_id}"
+        summary_relative = f"{run_root}/p7_ps_application_stage_summary.json"
+        raw_relative = f"{run_root}/p7_raw_evidence_sha256_manifest.json"
+        summary_entry = stage_entries.get(summary_relative, {})
+        raw_entry = stage_entries.get(raw_relative, {})
+        specialist_specs.append(
+            {
+                "run_id": run_id,
+                "run_root": run_root,
+                "source_commit": "16d621d4b2fe5720e33a56adb1b19ad262feac25",
+                "summary_sha256": str(summary_entry.get("sha256", "")).lower(),
+                "raw_manifest_sha256": str(raw_entry.get("sha256", "")).lower(),
+                "closure": stage_manifest_name,
+                "expected_result": expected_result,
+            }
+        )
+
+    expected_run_ids = {str(item.get("run_id", "")) for item in specialist_specs}
+    append_error(errors, len(specialist_specs) == 32 and len(expected_run_ids) == 32, "imported specialist summary set is not exactly 32 unique runs")
+    candidate_by_run_id: dict[str, Candidate] = {}
+    specialist_prefixes = (
+        "evidence/hardware/p7/ddr_external_master/",
+        "evidence/hardware/p7/stage62_microtest/",
+        "evidence/hardware/p7/stage62_functional/",
+    )
+    for candidate in evidence.candidates:
+        relative = rel(candidate.path, evidence.repo_root).replace("\\", "/")
+        if not relative.startswith(specialist_prefixes):
+            continue
+        run_id = str(candidate.data.get("run_id", ""))
+        append_error(errors, run_id not in candidate_by_run_id, f"duplicate imported specialist summary run_id: {run_id}")
+        candidate_by_run_id[run_id] = candidate
+    append_error(errors, set(candidate_by_run_id) == expected_run_ids, "imported specialist discovered-summary set differs from closure set")
+
+    for spec in specialist_specs:
+        run_id = str(spec["run_id"])
+        candidate = candidate_by_run_id.get(run_id)
+        if candidate is None:
+            continue
+        run_root = (evidence.repo_root / str(spec["run_root"])).resolve(strict=False)
+        accounted_dirs.add(run_root)
+        summary_relative = f"{str(spec['run_root']).rstrip('/')}/p7_ps_application_stage_summary.json"
+        raw_relative = f"{str(spec['run_root']).rstrip('/')}/p7_raw_evidence_sha256_manifest.json"
+        file_errors, summary_record = _git_bound_import_file(
+            evidence,
+            offline_commit=offline_commit,
+            relative=summary_relative,
+            expected_sha256=spec.get("summary_sha256"),
+            label=f"imported specialist {run_id} summary",
+        )
+        errors.extend(file_errors)
+        file_errors, raw_manifest_record = _git_bound_import_file(
+            evidence,
+            offline_commit=offline_commit,
+            relative=raw_relative,
+            expected_sha256=str(spec.get("raw_manifest_sha256", "")),
+            label=f"imported specialist {run_id} raw manifest",
+        )
+        errors.extend(file_errors)
+        raw_metrics = {"record_count": 0, "partial_file_count": 0}
+        if raw_manifest_record is not None:
+            manifest_errors, raw_metrics = _rehash_imported_raw_manifest(
+                Path(raw_manifest_record["path"]),
+                run_root=run_root,
+                label=f"imported specialist {run_id}",
+            )
+            errors.extend(manifest_errors)
+        data = candidate.data
+        append_error(errors, candidate.path.resolve(strict=False) == (run_root / "p7_ps_application_stage_summary.json").resolve(strict=False), f"imported specialist {run_id} summary path mismatch")
+        append_error(errors, data.get("hardware_actions_executed") is True, f"imported specialist {run_id} lacks hardware_actions_executed=true")
+        append_error(errors, data.get("diagnostic_only") is True and data.get("coverage_claimed") is False, f"imported specialist {run_id} is not explicit zero-coverage diagnostic evidence")
+        append_error(errors, data.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"imported specialist {run_id} promoted hardware acceptance")
+        append_error(errors, data.get("ethernet_used") is False and data.get("motion_used") is False, f"imported specialist {run_id} violates no-Ethernet/no-motion scope")
+        append_error(errors, _candidate_source_commit(candidate) == spec.get("source_commit"), f"imported specialist {run_id} source commit mismatch")
+        append_error(errors, COMMIT_RE.fullmatch(str(spec.get("source_commit", ""))) is not None and spec.get("source_commit") != offline_commit, f"imported specialist {run_id} source commit is not a distinct valid specialist commit")
+        process = _candidate_process(candidate)
+        append_error(errors, process.get("process_tree_reaped") is True, f"imported specialist {run_id} candidate process tree was not reaped")
+        before = data.get("shutdown_before") if isinstance(data.get("shutdown_before"), dict) else {}
+        after = data.get("shutdown_after") if isinstance(data.get("shutdown_after"), dict) else {}
+        append_error(errors, before.get("returncode") == 0 and before.get("passed") is True and before.get("programming_attempted") is True, f"imported specialist {run_id} shutdown-before is not exact PASS")
+        shutdown_before = _imported_shutdown_record(run_root, "before")
+        shutdown_after = _imported_shutdown_record(run_root, "after")
+        append_error(errors, shutdown_before.get("result_marker_duplicates") == [] and shutdown_before.get("programming_attempted_marker") is True and shutdown_before.get("p7_shutdown_result_pass") is True, f"imported specialist {run_id} shutdown-before markers invalid")
+        recovery_record: dict[str, Any] | None = None
+        if spec.get("requires_independent_recovery") is True:
+            append_error(errors, after.get("passed") is False and after.get("returncode") != 0, f"imported specialist {run_id} primary shutdown failure was rewritten")
+            recovery = campaign_c2.get("recovery", {})
+            recovery_root = evidence.repo_root / str(recovery.get("evidence_directory", ""))
+            recovery_summary = recovery_root / "program_tfdu_shutdown_safe.summary.txt"
+            recovery_relative = rel(recovery_summary, evidence.repo_root).replace("\\", "/")
+            recovery_errors, recovery_file = _git_bound_import_file(
+                evidence,
+                offline_commit=offline_commit,
+                relative=recovery_relative,
+                expected_sha256=str(recovery.get("summary_sha256", "")).lower(),
+                label=f"imported specialist {run_id} independent recovery",
+            )
+            errors.extend(recovery_errors)
+            recovery_markers, recovery_duplicates = parse_marker_text(marker_text(recovery_summary))
+            recovery_end = _generic_recovery_end(recovery_summary)
+            append_error(errors, recovery_duplicates == [] and recovery_markers.get("SHUTDOWN_EXIT") == "0" and recovery_markers.get("PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS") == "PASS", f"imported specialist {run_id} independent recovery markers invalid")
+            append_error(errors, recovery_end is not None, f"imported specialist {run_id} independent recovery end missing")
+            recovery_record = {
+                "result": "PASS",
+                "summary_file": recovery_file,
+                "ended_at_utc": recovery_end,
+                "candidate_or_stage_reexecuted": False,
+            }
+            ended_at = recovery_end
+        else:
+            append_error(errors, after.get("returncode") == 0 and after.get("passed") is True and after.get("programming_attempted") is True, f"imported specialist {run_id} shutdown-after is not exact PASS")
+            append_error(errors, shutdown_after.get("result_marker_duplicates") == [] and shutdown_after.get("programming_attempted_marker") is True and shutdown_after.get("p7_shutdown_result_pass") is True, f"imported specialist {run_id} shutdown-after markers invalid")
+            ended_at = after.get("ended_at_utc")
+        started_at = data.get("preflight", {}).get("started_at_utc") if isinstance(data.get("preflight"), dict) else None
+        start_value = parse_time(started_at, float("nan"))
+        end_value = parse_time(ended_at, float("nan"))
+        append_error(errors, start_value == start_value and end_value == end_value and start_value <= end_value <= offline_time, f"imported specialist {run_id} chronology invalid")
+        expected_result = str(spec.get("expected_result") or "")
+        if expected_result == "PASS":
+            append_error(errors, candidate.marker == "PASS", f"imported specialist {run_id} closure PASS/result mismatch")
+        elif expected_result:
+            append_error(errors, candidate.marker != "PASS", f"imported specialist {run_id} closure failure/result mismatch")
+        raw_log = run_root / "p7_ps_application_raw_result.log"
+        if not raw_log.is_file():
+            partial_logs = sorted(run_root.glob("p7_ps_application_raw_result.log*"))
+            raw_log = partial_logs[0] if partial_logs else raw_log
+        event_log = run_root / "p7_ps_application_events.json"
+        records.append(
+            {
+                "record_kind": "IMPORTED_SPECIALIST_ZERO_COVERAGE_DIAGNOSTIC",
+                "profile_id": str(profile.get("profile_id", "")),
+                "run_id": run_id,
+                "checkpoint_relation": "PRECHECKPOINT_IMPORTED_SPECIALIST_ZERO_COVERAGE_DIAGNOSTIC",
+                "diagnostic_result": "PASS" if candidate.marker == "PASS" else "FAIL",
+                "runner_result": candidate.marker,
+                "source_commit": str(spec.get("source_commit", "")),
+                "hardware_actions_executed": True,
+                "diagnostic_only": True,
+                "coverage_claimed": False,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                "acceptance_coverage_keys": [],
+                "ethernet_used": False,
+                "motion_used": False,
+                "started_at_utc": started_at,
+                "ended_at_utc": ended_at,
+                "boundary_completeness": "FULL_SAFE_WRAPPER_SUMMARY",
+                "summary_file": summary_record,
+                "raw_log": _hash_record(raw_log) if raw_log.is_file() else {"path": str(raw_log), "missing": True},
+                "event_log": _hash_record(event_log) if event_log.is_file() else {"path": str(event_log), "missing": True},
+                "raw_manifest": raw_manifest_record,
+                "raw_record_count": raw_metrics["record_count"],
+                "partial_file_count": raw_metrics["partial_file_count"],
+                "shutdown_before": shutdown_before,
+                "shutdown_after": shutdown_after,
+                "independent_recovery": recovery_record,
+                "closure_file": closure_records.get(str(spec.get("closure", ""))),
+            }
+        )
+
+    r35_profile = profile.get("r35", {})
+    if isinstance(r35_profile, Mapping):
+        run_id = str(r35_profile.get("run_id", ""))
+        run_root_relative = f"evidence/hardware/p7/stage62_microtest/{run_id}"
+        run_root = (evidence.repo_root / run_root_relative).resolve(strict=False)
+        accounted_dirs.add(run_root)
+        r35_files: dict[str, dict[str, Any] | None] = {}
+        for key, relative, hash_key in (
+            ("classification", f"{run_root_relative}/r35_classification.json", "classification_sha256"),
+            ("raw_manifest", f"{run_root_relative}/raw_evidence_manifest_postmortem.json", "raw_manifest_sha256"),
+            ("wrapper_failure", f"{run_root_relative}/wrapper_failure.txt", "wrapper_failure_sha256"),
+            ("authorization", f"{run_root_relative}/authorization_file_frozen.txt", "authorization_sha256"),
+            ("raw_log", f"{run_root_relative}/p7_ps_application_raw_result.log", "raw_log_sha256"),
+            ("recovery", f"{run_root_relative}/recovery_after_wrapper_postprocess_failure/program_tfdu_shutdown_safe.summary.txt", "recovery_summary_sha256"),
+        ):
+            file_errors, file_record = _git_bound_import_file(
+                evidence,
+                offline_commit=offline_commit,
+                relative=relative,
+                expected_sha256=str(r35_profile.get(hash_key, "")).lower(),
+                label=f"imported specialist {run_id} {key}",
+            )
+            errors.extend(file_errors)
+            r35_files[key] = file_record
+        classification_path = run_root / "r35_classification.json"
+        try:
+            classification = json.loads(classification_path.read_text(encoding="utf-8", errors="strict"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            errors.append(f"imported specialist {run_id} classification invalid: {exc}")
+            classification = {}
+        append_error(errors, classification.get("run_status") == "FAIL_WRAPPER_POSTPROCESS" and classification.get("hardware_actions_executed") is True and classification.get("diagnostic_only") is True and classification.get("coverage_claimed") is False and classification.get("acceptance_valid") is False, f"imported specialist {run_id} classification scope/result mismatch")
+        append_error(errors, classification.get("wrapper_summary_created") is False and classification.get("must_not_resume") is True and classification.get("must_not_reuse_run_id") is True, f"imported specialist {run_id} immutable wrapper-failure classification mismatch")
+        manifest_metrics = {"record_count": 0, "partial_file_count": 0}
+        if r35_files.get("raw_manifest") is not None:
+            manifest_errors, manifest_metrics = _rehash_imported_raw_manifest(
+                Path(r35_files["raw_manifest"]["path"]),
+                run_root=run_root,
+                label=f"imported specialist {run_id}",
+            )
+            errors.extend(manifest_errors)
+        auth_markers, auth_duplicates = parse_marker_text(marker_text(run_root / "authorization_file_frozen.txt"))
+        append_error(errors, auth_duplicates == [] and auth_markers.get("P7_DIAGNOSTIC_ONLY") == "true" and auth_markers.get("P7_COVERAGE_CLAIMED") == "false" and auth_markers.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", f"imported specialist {run_id} frozen authorization scope mismatch")
+        source_commit = str(auth_markers.get("SOURCE_COMMIT", "")).lower()
+        append_error(errors, COMMIT_RE.fullmatch(source_commit) is not None and source_commit != offline_commit, f"imported specialist {run_id} frozen source commit invalid")
+        shutdown_before = _imported_shutdown_record(run_root, "before")
+        shutdown_after = _imported_shutdown_record(run_root, "after")
+        for which, shutdown in (("before", shutdown_before), ("after", shutdown_after)):
+            append_error(errors, shutdown.get("result_marker_duplicates") == [] and shutdown.get("programming_attempted_marker") is True and shutdown.get("p7_shutdown_result_pass") is True, f"imported specialist {run_id} shutdown-{which} markers invalid")
+        recovery_path = run_root / "recovery_after_wrapper_postprocess_failure/program_tfdu_shutdown_safe.summary.txt"
+        recovery_markers, recovery_duplicates = parse_marker_text(marker_text(recovery_path))
+        recovery_end = _generic_recovery_end(recovery_path)
+        append_error(errors, recovery_duplicates == [] and recovery_markers.get("SHUTDOWN_EXIT") == "0" and recovery_markers.get("PROGRAM_TFDU_SHUTDOWN_SAFE_STATUS") == "PASS", f"imported specialist {run_id} independent recovery markers invalid")
+        start_value = parse_time(r35_profile.get("observed_started_at_utc"), float("nan"))
+        end_value = parse_time(recovery_end, float("nan"))
+        append_error(errors, start_value == start_value and end_value == end_value and start_value <= end_value <= offline_time, f"imported specialist {run_id} observed chronology invalid")
+        records.append(
+            {
+                "record_kind": "IMPORTED_SPECIALIST_WRAPPER_POSTPROCESS_FAILURE",
+                "profile_id": str(profile.get("profile_id", "")),
+                "run_id": run_id,
+                "checkpoint_relation": "PRECHECKPOINT_IMPORTED_SPECIALIST_ZERO_COVERAGE_DIAGNOSTIC",
+                "diagnostic_result": "FAIL",
+                "runner_result": "FAIL_WRAPPER_POSTPROCESS",
+                "source_commit": source_commit,
+                "hardware_actions_executed": True,
+                "diagnostic_only": True,
+                "coverage_claimed": False,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                "acceptance_coverage_keys": [],
+                "ethernet_used": False,
+                "motion_used": False,
+                "started_at_utc": str(r35_profile.get("observed_started_at_utc", "")),
+                "ended_at_utc": recovery_end,
+                "boundary_completeness": "PARTIAL_LEGACY_WRAPPER_OBSERVED_FROM_PREFLIGHT_EXIT_THROUGH_INDEPENDENT_RECOVERY",
+                "summary_file": r35_files.get("classification"),
+                "raw_log": r35_files.get("raw_log"),
+                "event_log": {"path": str(run_root / "p7_ps_application_events.json"), "missing": True},
+                "raw_manifest": r35_files.get("raw_manifest"),
+                "raw_record_count": manifest_metrics["record_count"],
+                "partial_file_count": manifest_metrics["partial_file_count"],
+                "shutdown_before": shutdown_before,
+                "shutdown_after": shutdown_after,
+                "independent_recovery": {
+                    "result": "PASS",
+                    "summary_file": r35_files.get("recovery"),
+                    "ended_at_utc": recovery_end,
+                    "candidate_or_stage_reexecuted": False,
+                },
+                "wrapper_failure_file": r35_files.get("wrapper_failure"),
+                "authorization_file": r35_files.get("authorization"),
+                "closure_file": closure_records.get(stage_manifest_name),
+            }
+        )
+
+    records.sort(key=lambda item: (parse_time(item.get("started_at_utc"), float("inf")), str(item.get("run_id", ""))))
+    for index, item in enumerate(records, 1):
+        item["imported_sequence"] = index
+    append_error(errors, len(records) == 33, "imported specialist diagnostic record count is not exactly 33")
+    append_error(errors, len({str(item.get("run_id", "")) for item in records}) == len(records), "imported specialist diagnostic run IDs are not unique")
+    intervals = [
+        (parse_time(item.get("started_at_utc"), float("nan")), parse_time(item.get("ended_at_utc"), float("nan")))
+        for item in records
+    ]
+    append_error(errors, all(start == start and end == end and start <= end <= offline_time for start, end in intervals), "imported specialist diagnostic chronology is malformed or post-checkpoint")
+    append_error(errors, all(left[1] <= right[0] for left, right in zip(intervals, intervals[1:])), "imported specialist diagnostic intervals overlap")
+    return records, errors, accounted_dirs
+
+
 def candidate_has_hardware_footprint(candidate: Candidate) -> bool:
     observed, _duplicates = raw_markers(candidate)
     _event_path, events, _event_errors = load_authorized_events(candidate)
@@ -12479,9 +13171,14 @@ def candidate_has_hardware_footprint(candidate: Candidate) -> bool:
     )
 
 
-def orphan_hardware_footprint_errors(evidence: RepositoryEvidence) -> list[str]:
+def orphan_hardware_footprint_errors(
+    evidence: RepositoryEvidence,
+    *,
+    accounted_dirs: set[Path] | None = None,
+) -> list[str]:
     errors: list[str] = []
     candidate_dirs = {candidate.path.parent.resolve(strict=False) for candidate in evidence.candidates}
+    candidate_dirs.update(accounted_dirs or set())
     footprint_names = {
         "p7_ps_application_events.json",
         "p7_jtag_axi_stage_events.jsonl",
@@ -12705,14 +13402,58 @@ def _ledger_shutdown(candidate: Candidate, which: str, evidence: RepositoryEvide
     }
 
 
-def offline_checkpoint_errors(
+def _git_commit_source_bytes(
+    repo_root: Path,
+    source_commit: str,
+    relative: str,
+) -> tuple[bytes | None, str | None]:
+    relative_path = Path(relative)
+    if (
+        not COMMIT_RE.fullmatch(source_commit)
+        or relative_path.is_absolute()
+        or ".." in relative_path.parts
+    ):
+        return None, f"invalid Git-bound source reference: {relative}"
+    try:
+        completed = subprocess.run(
+            [
+                "git",
+                "show",
+                "--no-ext-diff",
+                "--no-textconv",
+                f"{source_commit}:{relative_path.as_posix()}",
+            ],
+            cwd=repo_root,
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return None, f"unable to read Git-bound source {relative}: {exc}"
+    if completed.returncode != 0:
+        detail = completed.stderr.decode("utf-8", errors="replace").strip()
+        return None, f"Git-bound source absent from frozen commit: {relative}: {detail}"
+    return completed.stdout, None
+
+
+def offline_checkpoint_validation(
     payload: Mapping[str, Any],
     *,
     checkpoint_path: Path,
     repo_root: Path,
     expected_commit: str,
-) -> list[str]:
+) -> tuple[list[str], dict[str, Any]]:
     errors: list[str] = []
+    checkpoint_sha256 = sha256_file(checkpoint_path) if checkpoint_path.is_file() else "MISSING"
+    attestation: dict[str, Any] = {
+        "schema": "rf-comm-p7-offline-checkpoint-validation-attestation-v1",
+        "checkpoint_sha256": checkpoint_sha256,
+        "source_commit": str(payload.get("source_commit", "")).lower(),
+        "critical_source_count": len(OFFLINE_CRITICAL_SOURCES),
+        "legacy_gap_profile_id": None,
+        "git_attested_missing_sources": [],
+        "post_run_repair_sources": [],
+    }
     append_error(errors, payload.get("P7_OFFLINE_GATE") == "PASS", "offline checkpoint is not P7_OFFLINE_GATE=PASS")
     append_error(errors, payload.get("hardware_actions_executed") is False and payload.get("NO_HARDWARE_ACTIONS_EXECUTED") is True, "offline checkpoint violates the no-hardware boundary")
     append_error(errors, payload.get("HARDWARE_ACCEPTANCE") == "PENDING_HW", "offline checkpoint promoted hardware acceptance")
@@ -12727,6 +13468,7 @@ def offline_checkpoint_errors(
     append_error(errors, payload.get("dirty_worktree") is False, "offline checkpoint does not prove dirty_worktree=false")
     tree_digest = str(payload.get("source_tree_listing_sha256", "")).lower()
     append_error(errors, SHA256_RE.fullmatch(tree_digest) is not None, "offline checkpoint source-tree listing SHA256 missing/malformed")
+    tree_verified = False
     if (repo_root / ".git").exists() and SHA256_RE.fullmatch(tree_digest):
         try:
             tree = subprocess.run(
@@ -12744,12 +13486,44 @@ def offline_checkpoint_errors(
             if tree.returncode == 0:
                 actual_tree_digest = hashlib.sha256(tree.stdout.encode("utf-8")).hexdigest()
                 append_error(errors, actual_tree_digest == tree_digest, "offline checkpoint source-tree listing SHA256 mismatch")
+                tree_verified = actual_tree_digest == tree_digest
+    attestation["source_tree_listing_verified"] = tree_verified
     source_hashes = payload.get("checkpoint_input_hashes")
     if not isinstance(source_hashes, dict):
-        return errors + ["offline checkpoint checkpoint_input_hashes object missing"]
+        return errors + ["offline checkpoint checkpoint_input_hashes object missing"], attestation
     append_error(errors, payload.get("checkpoint_input_count") == len(source_hashes), "offline checkpoint input-hash count mismatch")
     append_error(errors, bool(source_hashes), "offline checkpoint input-hash map is empty")
-    append_error(errors, set(OFFLINE_CRITICAL_SOURCES) <= set(source_hashes), "offline checkpoint omits one or more critical P7 source hashes")
+    attestation["explicit_checkpoint_input_count"] = len(source_hashes)
+    missing_critical = set(OFFLINE_CRITICAL_SOURCES) - set(source_hashes)
+    attestation["missing_critical_sources"] = sorted(missing_critical)
+    profile = LEGACY_OFFLINE_CHECKPOINT_GAP_PROFILES.get(source_commit)
+    profile_missing = set(profile.get("missing_sources", ())) if isinstance(profile, Mapping) else set()
+    profile_active = bool(
+        missing_critical
+        and isinstance(profile, Mapping)
+        and missing_critical == profile_missing
+        and checkpoint_sha256 == str(profile.get("checkpoint_sha256", "")).lower()
+        and tree_verified
+    )
+    if missing_critical:
+        append_error(
+            errors,
+            isinstance(profile, Mapping) and missing_critical == profile_missing,
+            "offline checkpoint omits critical P7 source hashes outside the exact allowlisted frozen gap",
+        )
+        if isinstance(profile, Mapping) and missing_critical == profile_missing:
+            append_error(
+                errors,
+                checkpoint_sha256 == str(profile.get("checkpoint_sha256", "")).lower(),
+                "offline checkpoint critical-source gap checkpoint SHA256 mismatch",
+            )
+            append_error(
+                errors,
+                tree_verified,
+                "offline checkpoint critical-source gap lacks a verified frozen Git tree",
+            )
+        if profile_active:
+            attestation["legacy_gap_profile_id"] = str(profile.get("profile_id", ""))
     root = repo_root.resolve(strict=False)
     for name, expected_value in source_hashes.items():
         expected = str(expected_value).lower()
@@ -12762,7 +13536,68 @@ def offline_checkpoint_errors(
         append_error(errors, path.is_file(), f"offline checkpoint source file missing: {name}")
         append_error(errors, SHA256_RE.fullmatch(expected) is not None, f"offline checkpoint source hash malformed: {name}")
         if path.is_file() and SHA256_RE.fullmatch(expected):
-            append_error(errors, sha256_file(path) == expected, f"offline checkpoint source changed after freeze: {name}")
+            materialized_sha256 = sha256_file(path)
+            if materialized_sha256 != expected:
+                repair_allowed = profile_active and str(name) in POST_RUN_CHECKPOINT_REPAIR_SOURCES
+                frozen_bytes, git_error = _git_commit_source_bytes(root, source_commit, str(name))
+                frozen_sha256 = hashlib.sha256(frozen_bytes).hexdigest() if frozen_bytes is not None else "MISSING"
+                append_error(
+                    errors,
+                    repair_allowed and git_error is None and frozen_sha256 == expected,
+                    f"offline checkpoint source changed after freeze: {name}",
+                )
+                if repair_allowed and git_error is None and frozen_sha256 == expected:
+                    attestation["post_run_repair_sources"].append(
+                        {
+                            "path": str(name),
+                            "frozen_commit_sha256": frozen_sha256,
+                            "checkpoint_sha256": expected,
+                            "post_run_materialized_sha256": materialized_sha256,
+                        }
+                    )
+    if profile_active:
+        for name in sorted(missing_critical):
+            frozen_bytes, git_error = _git_commit_source_bytes(root, source_commit, name)
+            if git_error is not None or frozen_bytes is None:
+                errors.append(git_error or f"unable to attest frozen critical source: {name}")
+                continue
+            frozen_sha256 = hashlib.sha256(frozen_bytes).hexdigest()
+            path = (root / name).resolve(strict=False)
+            try:
+                path.relative_to(root)
+            except ValueError:
+                errors.append(f"offline checkpoint critical-source gap path escapes repository: {name}")
+                continue
+            append_error(errors, path.is_file(), f"offline checkpoint critical-source gap file missing: {name}")
+            materialized_sha256 = sha256_file(path) if path.is_file() else "MISSING"
+            append_error(
+                errors,
+                materialized_sha256 == frozen_sha256,
+                f"offline checkpoint critical-source gap materialization differs from frozen Git source: {name}",
+            )
+            attestation["git_attested_missing_sources"].append(
+                {
+                    "path": name,
+                    "frozen_commit_sha256": frozen_sha256,
+                    "materialized_sha256": materialized_sha256,
+                }
+            )
+    return errors, attestation
+
+
+def offline_checkpoint_errors(
+    payload: Mapping[str, Any],
+    *,
+    checkpoint_path: Path,
+    repo_root: Path,
+    expected_commit: str,
+) -> list[str]:
+    errors, _attestation = offline_checkpoint_validation(
+        payload,
+        checkpoint_path=checkpoint_path,
+        repo_root=repo_root,
+        expected_commit=expected_commit,
+    )
     return errors
 
 
@@ -12838,6 +13673,68 @@ def _collapse_historical_epoch_candidates(
     ]
 
 
+def _global_hardware_chronology(
+    runs: Sequence[Mapping[str, Any]],
+    imported_specialist_diagnostics: Sequence[Mapping[str, Any]],
+) -> tuple[list[dict[str, Any]], list[str]]:
+    """Build one deterministic, non-overlapping chronology across both run classes."""
+    errors: list[str] = []
+    chronology: list[dict[str, Any]] = []
+    for run in runs:
+        summary = run.get("summary_file") if isinstance(run.get("summary_file"), Mapping) else {}
+        summary_path = str(summary.get("path", ""))
+        chronology.append(
+            {
+                "record_class": "SAFE_WRAPPER_SEQUENCE_RUN",
+                "record_reference": f"runs:{run.get('sequence')}",
+                "run_id": str(run.get("run_id") or Path(summary_path).parent.name),
+                "started_at_utc": run.get("started_at_utc"),
+                "ended_at_utc": run.get("ended_at_utc"),
+            }
+        )
+    for record in imported_specialist_diagnostics:
+        chronology.append(
+            {
+                "record_class": str(record.get("record_kind", "")),
+                "record_reference": f"imported_specialist_diagnostics:{record.get('imported_sequence')}",
+                "run_id": str(record.get("run_id", "")),
+                "started_at_utc": record.get("started_at_utc"),
+                "ended_at_utc": record.get("ended_at_utc"),
+            }
+        )
+    chronology.sort(
+        key=lambda item: (
+            parse_time(item.get("started_at_utc"), float("inf")),
+            str(item.get("record_class", "")),
+            str(item.get("run_id", "")),
+        )
+    )
+    intervals: list[tuple[float, float]] = []
+    for sequence, item in enumerate(chronology, 1):
+        item["global_sequence"] = sequence
+        start = parse_time(item.get("started_at_utc"), float("nan"))
+        end = parse_time(item.get("ended_at_utc"), float("nan"))
+        append_error(
+            errors,
+            start == start and end == end and start <= end,
+            f"global hardware chronology entry {sequence} has malformed boundaries",
+        )
+        intervals.append((start, end))
+    append_error(
+        errors,
+        all(
+            left_start == left_start
+            and left_end == left_end
+            and right_start == right_start
+            and right_end == right_end
+            and left_end <= right_start
+            for (left_start, left_end), (right_start, right_end) in zip(intervals, intervals[1:])
+        ),
+        "global hardware chronology contains overlapping hardware intervals",
+    )
+    return chronology, errors
+
+
 def generate_sequence_ledger(
     evidence: RepositoryEvidence,
     *,
@@ -12860,7 +13757,7 @@ def generate_sequence_ledger(
     offline_payload = json.loads(offline_checkpoint_summary.read_text(encoding="utf-8", errors="strict"))
     if not isinstance(offline_payload, dict):
         raise ValueError("offline checkpoint summary is not a JSON object")
-    checkpoint_errors = offline_checkpoint_errors(
+    checkpoint_errors, checkpoint_attestation = offline_checkpoint_validation(
         offline_payload,
         checkpoint_path=offline_checkpoint_summary,
         repo_root=evidence.repo_root,
@@ -12877,11 +13774,32 @@ def generate_sequence_ledger(
         process = _candidate_process(candidate)
         return (parse_time(wrapper_start, parse_time(process.get("started_at_utc"), candidate.timestamp)), str(candidate.path))
 
-    orphan_errors = orphan_hardware_footprint_errors(evidence)
+    imported_specialist_diagnostics, specialist_errors, specialist_dirs = (
+        imported_specialist_diagnostic_records(
+            evidence,
+            offline_commit=offline_checkpoint_commit.lower(),
+            offline_time=offline_time,
+        )
+    )
+    if specialist_errors:
+        raise ValueError("; ".join(specialist_errors))
+    imported_summary_paths = {
+        Path(str(record.get("summary_file", {}).get("path", ""))).resolve(strict=False)
+        for record in imported_specialist_diagnostics
+        if isinstance(record.get("summary_file"), Mapping)
+        and Path(str(record.get("summary_file", {}).get("path", ""))).name
+        in {PS_SUMMARY_NAME, JTAG_SUMMARY_NAME}
+    }
+    orphan_errors = orphan_hardware_footprint_errors(
+        evidence, accounted_dirs=specialist_dirs
+    )
     if orphan_errors:
         raise ValueError("; ".join(orphan_errors))
     hardware_candidates = [
-        item for item in evidence.candidates if candidate_has_hardware_footprint(item)
+        item
+        for item in evidence.candidates
+        if candidate_has_hardware_footprint(item)
+        and item.path.resolve(strict=False) not in imported_summary_paths
     ]
     executed = sorted(
         _collapse_historical_epoch_candidates(
@@ -12942,6 +13860,7 @@ def generate_sequence_ledger(
         runs.append(
             {
                 "sequence": sequence,
+                "run_id": candidate.path.parent.name,
                 "risk_index": _candidate_risk(candidate, evidence),
                 "stage": candidate.stage,
                 "kind": candidate.kind,
@@ -12983,6 +13902,11 @@ def generate_sequence_ledger(
     historical_order_errors = _historical_epoch_order_errors(historical_epochs, evidence)
     if historical_order_errors:
         raise ValueError("; ".join(historical_order_errors))
+    global_chronology, chronology_errors = _global_hardware_chronology(
+        runs, imported_specialist_diagnostics
+    )
+    if chronology_errors:
+        raise ValueError("; ".join(chronology_errors))
     payload = {
         "schema": "rf-comm-p7-run-sequence-ledger-v1",
         "generated_at_utc": utc_now(),
@@ -13006,8 +13930,17 @@ def generate_sequence_ledger(
             "source_commit": offline_checkpoint_commit.lower(),
             "generated_at_utc": offline_payload.get("generated_at_utc"),
             "summary_file": _hash_record(offline_checkpoint_summary),
+            "validation_attestation": checkpoint_attestation,
+            "generator_implementation": _hash_record(Path(__file__).resolve()),
         },
         "run_count": len(runs),
+        "precheckpoint_imported_specialist_diagnostic_count": len(
+            imported_specialist_diagnostics
+        ),
+        "imported_specialist_diagnostics": imported_specialist_diagnostics,
+        "total_hardware_record_count": len(runs)
+        + len(imported_specialist_diagnostics),
+        "global_chronology": global_chronology,
         "precheckpoint_read_only_diagnostic_count": read_only_diagnostic_count,
         "precheckpoint_failed_stage_diagnostic_count": failed_stage_diagnostic_count,
         "precheckpoint_stage66_campaign_diagnostic_count": stage66_campaign_diagnostic_count,
@@ -13015,6 +13948,7 @@ def generate_sequence_ledger(
             read_only_diagnostic_count
             + failed_stage_diagnostic_count
             + stage66_campaign_diagnostic_count
+            + len(imported_specialist_diagnostics)
         ),
         "runs": runs,
     }
@@ -13031,7 +13965,6 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             return "FAIL", footprint_errors + ["p7_run_sequence_ledger.json is missing after hardware execution"], {"run_count": len(executed)}
         return "PENDING_HW", [], {"run_count": 0}
     errors: list[str] = []
-    errors.extend(footprint_errors)
     try:
         payload = json.loads(ledger_path.read_text(encoding="utf-8", errors="strict"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -13055,24 +13988,89 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             errors.append(f"run sequence offline checkpoint JSON invalid: {exc}")
     offline_commit = str(offline.get("source_commit", "")).lower()
     append_error(errors, COMMIT_RE.fullmatch(offline_commit) is not None, "run sequence offline checkpoint commit malformed")
-    if COMMIT_RE.fullmatch(offline_commit):
-        executed = _collapse_historical_epoch_candidates(executed, offline_commit)
     offline_time = parse_time(offline.get("generated_at_utc"), float("nan"))
     append_error(errors, offline_time == offline_time, "run sequence offline checkpoint generated_at_utc malformed")
-    if offline_record and COMMIT_RE.fullmatch(offline_commit):
-        errors.extend(
-            offline_checkpoint_errors(
-                offline_payload,
-                checkpoint_path=Path(offline_record["path"]),
-                repo_root=evidence.repo_root,
-                expected_commit=offline_commit,
-            )
+    imported_specialist_diagnostics: list[dict[str, Any]] = []
+    specialist_dirs: set[Path] = set()
+    if COMMIT_RE.fullmatch(offline_commit) and offline_time == offline_time:
+        (
+            imported_specialist_diagnostics,
+            specialist_errors,
+            discovered_specialist_dirs,
+        ) = imported_specialist_diagnostic_records(
+            evidence,
+            offline_commit=offline_commit,
+            offline_time=offline_time,
         )
+        errors.extend(specialist_errors)
+        if not specialist_errors:
+            specialist_dirs = discovered_specialist_dirs
+            imported_summary_paths = {
+                Path(str(record.get("summary_file", {}).get("path", ""))).resolve(
+                    strict=False
+                )
+                for record in imported_specialist_diagnostics
+                if isinstance(record.get("summary_file"), Mapping)
+                and Path(str(record.get("summary_file", {}).get("path", ""))).name
+                in {PS_SUMMARY_NAME, JTAG_SUMMARY_NAME}
+            }
+            executed = [
+                item
+                for item in executed
+                if item.path.resolve(strict=False) not in imported_summary_paths
+            ]
+        executed = _collapse_historical_epoch_candidates(executed, offline_commit)
+    errors.extend(
+        orphan_hardware_footprint_errors(
+            evidence,
+            accounted_dirs=specialist_dirs if specialist_dirs else None,
+        )
+    )
+    if offline_record and COMMIT_RE.fullmatch(offline_commit):
+        checkpoint_errors, checkpoint_attestation = offline_checkpoint_validation(
+            offline_payload,
+            checkpoint_path=Path(offline_record["path"]),
+            repo_root=evidence.repo_root,
+            expected_commit=offline_commit,
+        )
+        errors.extend(checkpoint_errors)
+        append_error(
+            errors,
+            offline.get("validation_attestation") == checkpoint_attestation,
+            "run sequence offline checkpoint validation attestation mismatch",
+        )
+        generator_errors, _generator_record = verify_hash_record(
+            "run sequence generator implementation",
+            offline.get("generator_implementation"),
+            document=ledger_path,
+            repo_root=evidence.repo_root,
+            expected_required=False,
+        )
+        errors.extend(generator_errors)
 
     runs = payload.get("runs")
     if not isinstance(runs, list):
         return "FAIL", errors + ["run sequence runs list missing"], {}
     append_error(errors, payload.get("run_count") == len(runs), "run sequence run_count mismatch")
+    recorded_specialist_diagnostics = payload.get("imported_specialist_diagnostics")
+    append_error(
+        errors,
+        isinstance(recorded_specialist_diagnostics, list)
+        and recorded_specialist_diagnostics == imported_specialist_diagnostics,
+        "run sequence imported-specialist diagnostic records mismatch",
+    )
+    append_error(
+        errors,
+        payload.get("precheckpoint_imported_specialist_diagnostic_count")
+        == len(imported_specialist_diagnostics),
+        "run sequence imported-specialist diagnostic count mismatch",
+    )
+    append_error(
+        errors,
+        payload.get("total_hardware_record_count")
+        == len(runs) + len(imported_specialist_diagnostics),
+        "run sequence total hardware record count mismatch",
+    )
     append_error(errors, [item.get("sequence") for item in runs if isinstance(item, dict)] == list(range(1, len(runs) + 1)), "run sequence numbers are not contiguous")
     append_error(
         errors,
@@ -13113,7 +14111,8 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
             1
             for item in runs
             if isinstance(item, dict) and item.get("checkpoint_relation") in CHECKPOINT_RELATIONS_HISTORICAL
-        ),
+        )
+        + len(imported_specialist_diagnostics),
         "run sequence total historical failure count mismatch",
     )
     candidates_by_path = {item.path.resolve(strict=False): item for item in executed}
@@ -13174,6 +14173,7 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
         recorded_historical_epoch = run.get("historical_epoch") if isinstance(run.get("historical_epoch"), dict) else {}
         if historical_diagnostic and isinstance(historical_epoch, dict):
             historical_epochs.append(historical_epoch)
+        append_error(errors, run.get("run_id") == candidate.path.parent.name, f"run sequence entry {index} run ID mismatch")
         append_error(errors, run.get("stage") == candidate.stage and run.get("kind") == candidate.kind, f"run sequence entry {index} stage/kind mismatch")
         append_error(errors, run.get("risk_index") == _candidate_risk(candidate, evidence), f"run sequence entry {index} risk index mismatch")
         append_error(errors, run.get("attempted_coverage_keys") == expected_attempted, f"run sequence entry {index} attempted coverage mismatch")
@@ -13358,12 +14358,25 @@ def validate_sequence_ledger(evidence: RepositoryEvidence) -> tuple[str, list[st
     ]
     append_error(errors, all(value == value and value >= offline_time for value in bound_starts), "one or more active-checkpoint runs started before checkpoint freeze")
     append_error(errors, all(value == value and value <= offline_time for value in historical_ends), "one or more historical diagnostic epochs ended after checkpoint freeze")
+    expected_global_chronology, global_chronology_errors = _global_hardware_chronology(
+        [item for item in runs if isinstance(item, Mapping)],
+        imported_specialist_diagnostics,
+    )
+    errors.extend(global_chronology_errors)
+    append_error(
+        errors,
+        payload.get("global_chronology") == expected_global_chronology,
+        "run sequence global hardware chronology mismatch",
+    )
     # Missing coverage is not itself a ledger corruption; the corresponding
     # stage remains PENDING/FAIL elsewhere.  But the ledger must never invent a
     # key outside the declared risk model.
     append_error(errors, passed_keys <= all_required_keys, "run sequence contains undeclared PASS coverage keys")
     metrics = {
         "run_count": len(runs),
+        "imported_specialist_diagnostic_count": len(imported_specialist_diagnostics),
+        "total_hardware_record_count": len(runs) + len(imported_specialist_diagnostics),
+        "imported_specialist_accounted_directories": sorted(str(path) for path in specialist_dirs),
         "listed_executed_summaries": len(seen_summaries),
         "passed_coverage_keys": sorted(passed_keys),
         "ledger_sha256": sha256_file(ledger_path),
@@ -14038,8 +15051,27 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
         results["application_metrics"] = missing_stage(evidence, "application_metrics", "stationary application metrics are missing")
 
     results["shutdown"] = audit_all_shutdowns(evidence, checkpoint_candidates)
+    ledger_status, ledger_errors, ledger_metrics = validate_sequence_ledger(evidence)
     consistency_errors = list(evidence.parse_errors)
-    partial_files = [row["path"] for row in evidence.inventory if str(row.get("path", "")).casefold().endswith((".write_partial", ".partial", ".tmp"))]
+    specialist_partial_roots = (
+        {
+            Path(str(path)).resolve(strict=False)
+            for path in ledger_metrics.get(
+                "imported_specialist_accounted_directories", []
+            )
+        }
+        if ledger_status == "PASS"
+        else set()
+    )
+    partial_files = []
+    for row in evidence.inventory:
+        relative = str(row.get("path", ""))
+        if not relative.casefold().endswith((".write_partial", ".partial", ".tmp")):
+            continue
+        absolute = (evidence.repo_root / relative).resolve(strict=False)
+        if any(root == absolute or root in absolute.parents for root in specialist_partial_roots):
+            continue
+        partial_files.append(relative)
     if partial_files:
         consistency_errors.append(f"uncommitted/partial hardware evidence files remain: {partial_files}")
     consistency_errors.extend(verify_loose_hash_manifests(evidence))
@@ -14052,7 +15084,6 @@ def build_results(evidence: RepositoryEvidence) -> dict[str, StageResult]:
     for stage_name, stage_result in results.items():
         if stage_name != "consistency" and stage_result.status == "FAIL":
             consistency_errors.append(f"mandatory stage evidence is internally inconsistent: {stage_name}")
-    ledger_status, ledger_errors, ledger_metrics = validate_sequence_ledger(evidence)
     consistency_errors.extend(ledger_errors)
     unclassified_executed = [item for item in checkpoint_candidates if item.executed and item.stage.startswith("unclassified")]
     if unclassified_executed:

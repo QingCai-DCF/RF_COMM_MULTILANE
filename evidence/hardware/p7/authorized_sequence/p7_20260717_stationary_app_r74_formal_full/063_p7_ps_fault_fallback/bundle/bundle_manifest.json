@@ -1,0 +1,369 @@
+{
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "atomic_files": true,
+  "boundary_case_count": 0,
+  "boundary_cases": [],
+  "boundary_descriptor_batches": [],
+  "case_count": 7,
+  "cases": [
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_0.bin",
+        "sha256": "22b41418b47c36139bb82aad217bb9932f06b8650deb8d98355e71221a1331b1",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_0.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x00100000",
+      "lane_policy": 3,
+      "name": "stripe_lane0_to_lane1",
+      "object_id": 1,
+      "object_length": 65536,
+      "output_address": "0x00900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_0.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002010c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 0,
+      "trace_address": "0x01100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_0.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 2,
+      "unavailable_lane_mask": 1
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_1.bin",
+        "sha256": "0a73cad6574318e8858aa021044ee768ea86046aa353af6722e0c2462e0b59c1",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_1.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x02100000",
+      "lane_policy": 3,
+      "name": "stripe_lane1_to_lane0",
+      "object_id": 2,
+      "object_length": 65536,
+      "output_address": "0x02900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_1.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002020c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 1,
+      "trace_address": "0x03100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_1.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 2,
+      "unavailable_lane_mask": 2
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_2.bin",
+        "sha256": "1147ec5f3c576b11f9b84abac45f633e60436ba255216c3ceabb7785b222a815",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_2.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x04100000",
+      "lane_policy": 4,
+      "name": "replicate_lane0_unavailable",
+      "object_id": 3,
+      "object_length": 65536,
+      "output_address": "0x04900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_2.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002030c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 2,
+      "trace_address": "0x05100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_2.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 1
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_3.bin",
+        "sha256": "6c24a357bab4608f157106746005eced118c034b02982f371ef49093e54a35d8",
+        "size_bytes": 256
+      },
+      "expected_error": 0,
+      "expected_status": 3,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_3.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x06100000",
+      "lane_policy": 4,
+      "name": "replicate_lane1_unavailable",
+      "object_id": 4,
+      "object_length": 65536,
+      "output_address": "0x06900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_3.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002040c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 3,
+      "trace_address": "0x07100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_3.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 2
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_4.bin",
+        "sha256": "dbe075290b0fda5274a354e9e806934b11deea7cc4ca0a55debad0f55ad02fc4",
+        "size_bytes": 256
+      },
+      "expected_error": 8,
+      "expected_status": 4,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_4.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x08100000",
+      "lane_policy": 1,
+      "name": "strict_lane0_unavailable",
+      "object_id": 5,
+      "object_length": 65536,
+      "output_address": "0x08900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_4.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002050c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 4,
+      "trace_address": "0x09100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_4.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 1
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_5.bin",
+        "sha256": "41ce66f837e1de4d9040c15f878660a544803b977757da4f40a488534ff94300",
+        "size_bytes": 256
+      },
+      "expected_error": 8,
+      "expected_status": 4,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_5.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x0a100000",
+      "lane_policy": 2,
+      "name": "strict_lane1_unavailable",
+      "object_id": 6,
+      "object_length": 65536,
+      "output_address": "0x0a900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_5.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002060c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 5,
+      "trace_address": "0x0b100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_5.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 2
+    },
+    {
+      "abort_after_fragment": 4294967295,
+      "descriptor_free": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptor_free_6.bin",
+        "sha256": "04142bd049a72ca2f1c00ad9ce86a8d5d5ccc545d6faa1162acc6502be7b68aa",
+        "size_bytes": 256
+      },
+      "expected_error": 8,
+      "expected_status": 4,
+      "input": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\input_6.bin",
+        "sha256": "766d012a0c43b3d04ba72af7cb4249517589945577bc1e1a06425417ff813f05",
+        "size_bytes": 65536
+      },
+      "input_address": "0x0c100000",
+      "lane_policy": 3,
+      "name": "stripe_both_unavailable",
+      "object_id": 7,
+      "object_length": 65536,
+      "output_address": "0x0c900000",
+      "output_prefill_byte": 165,
+      "output_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\output_zero_6.bin",
+        "sha256": "77007cd74a06dc54e5114d01a41d2721679d5668a0c20022fe102c87ad4d65b8",
+        "size_bytes": 65536
+      },
+      "pattern": "deterministic",
+      "ready_publication": {
+        "address": "0x0002070c",
+        "published_after_body": true,
+        "value": 1
+      },
+      "session_epoch": "0x50370001",
+      "slot": 6,
+      "trace_address": "0x0d100000",
+      "trace_capacity": 305,
+      "trace_zero": {
+        "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\trace_zero_6.bin",
+        "sha256": "26246329fca08c3c7597476d7f95ed90cb9d1ca165876ddfca673a52d26d4147",
+        "size_bytes": 19520
+      },
+      "unavailable_after_fragment": 0,
+      "unavailable_lane_mask": 3
+    }
+  ],
+  "coverage_claimed": true,
+  "ddr_external_master": null,
+  "descriptors": {
+    "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\descriptors.bin",
+    "sha256": "ede79c1f92668d85d77262107974c447114144544e37234b3f1116b12c1feca8",
+    "size_bytes": 2048
+  },
+  "diagnostic_only": false,
+  "execution_plan": {
+    "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\execution_plan.txt",
+    "sha256": "09215db28af7a9d296b549d6c144a00d9613db735d2999d749ce700ce5ea5ac1",
+    "size_bytes": 1258
+  },
+  "execution_scope": "P7_PS_APPLICATION_STAGE",
+  "functional_checkpoint": null,
+  "generated_at_utc": "2026-07-17T00:40:54.471603+00:00",
+  "hardware_actions_executed": false,
+  "input_source": {
+    "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\build\\p7_authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\inputs\\p7_ps_seed_247.bin",
+    "sha256": "49b1170cf0b069be048c0a2674829870fcb89eebe0618ef45a0b01d3da533093",
+    "size_bytes": 247
+  },
+  "mailbox": {
+    "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\mailbox.bin",
+    "sha256": "859ce2f9fc56ecd72fa4eb1c9309b59c49738e81c18d2ccc2e54565a7e497fc5",
+    "size_bytes": 256
+  },
+  "mode": "fault-fallback",
+  "output_prefill_byte": 165,
+  "output_prefill_filename_compatibility": "legacy *_output_zero.bin names contain the manifest-bound 0xA5 canary",
+  "queue_overflow_candidate": null,
+  "queue_phase_mailboxes": {},
+  "run_id": null,
+  "schedule": {
+    "acceptance_sec": 0,
+    "calibration_plus_acceptance": 0,
+    "calibration_sec": 0,
+    "counts_per_second": 333333343,
+    "idle_margin_sec": 60,
+    "max_runtime_sec": 900,
+    "ready_drain_guard_sec": 0,
+    "rolling_goodput_window_sec": 0,
+    "scheduling_cutoff_sec": 840
+  },
+  "schema": "rf-comm-p7-ps-hardware-bundle-v1",
+  "stage62_microtest": null,
+  "stage62_microtest_control": {
+    "path": "D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p7\\authorized_sequence\\p7_20260717_stationary_app_r74_formal_full\\063_p7_ps_fault_fallback\\bundle\\stage62_microtest_control.bin",
+    "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+    "size_bytes": 64
+  }
+}

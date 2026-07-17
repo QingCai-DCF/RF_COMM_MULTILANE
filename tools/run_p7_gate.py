@@ -23,6 +23,32 @@ ROOT = Path(__file__).resolve().parents[1]
 GENERATED = ROOT / "evidence/generated"
 P6_BASELINE_COMMIT = "ca041d4877b831de84fe7829788ac835b0b46acd"
 
+OFFLINE_CHECKPOINT_CRITICAL_SOURCES = (
+    "config/p7_stage66_diagnostic_campaign_policy.json",
+    "config/p7_vivado_helper_identity_profiles.json",
+    "software/ps_driver/p7_app_service.h",
+    "software/ps_driver/p7_app_service.c",
+    "software/ps_driver/p7_runtime_main.c",
+    "software/ps_driver/p7_stage62_microtest.h",
+    "software/ps_driver/p7_stage62_microtest.c",
+    "scripts/hw/p7_ps_application_execute.tcl",
+    "scripts/hw/p7_helper_identity_probe.ps1",
+    "scripts/hw/run_p7_ps_application_stage_safe.py",
+    "scripts/hw/run_p7_jtag_axi_stage_safe.py",
+    "tools/p7_contained_launcher.py",
+    "tools/p7_jtag_backend.py",
+    "tools/p7_ps_mailbox_backend.py",
+    "tools/p7_stage66_campaign.py",
+    "tools/p7_vivado_helper_identity.py",
+    "tools/prepare_p7_stage66_campaign_run.py",
+    "tools/record_p7_stage66_campaign_recovery.py",
+    "tools/generate_p7_authorized_sequence_plan.py",
+    "tools/run_p7_gate.py",
+    "tools/run_p7_authorized_hardware_sequence.py",
+    "tools/run_p7_ps_core_offline.py",
+    "tools/summarize_p7_hardware.py",
+)
+
 P6_ARTIFACTS = {
     "p6_results_package": (
         "evidence/packages/rf_comm_multilane_p6_results_20260710_091555.zip",
@@ -363,6 +389,7 @@ def main() -> int:
         for path_text in (
             *active_inputs.keys(),
             *(entry[0] for entry in P6_ARTIFACTS.values()),
+            *OFFLINE_CHECKPOINT_CRITICAL_SOURCES,
             "evidence/generated/vivado/p6_jtag_candidate/p6_jtag_candidate_build_summary.json",
             "evidence/generated/vivado/p6_ps_candidate/p6_ps_candidate_build_summary.json",
             "evidence/generated/vitis/p7_ps_runtime/p7_ps_runtime_build_summary.json",

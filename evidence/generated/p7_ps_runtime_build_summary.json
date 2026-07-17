@@ -1,9 +1,9 @@
 {
   "P7_PS_RUNTIME_BUILD": "PASS",
-  "generated_at_utc": "2026-07-16T20:12:18+00:00",
+  "generated_at_utc": "2026-07-16T20:24:17+00:00",
   "returncode": 0,
-  "cache_bypass": true,
-  "command": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat scripts/build_p7_ps_runtime.tcl D:\\CodexWorktrees\\p7formal_d3eb4a6\\RF_COMM_MULTILANE D:\\CodexWorktrees\\p7formal_d3eb4a6\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0.xsa",
+  "cache_bypass": false,
+  "command": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat scripts/build_p7_ps_runtime.tcl D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE D:\\CodexWorktrees\\p7formal_911e1a3\\RF_COMM_MULTILANE\\evidence\\hardware\\p6\\bitstreams\\p6_ps_dynamic_transport_45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0.xsa",
   "xsct": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat",
   "xsa": "evidence/hardware/p6/bitstreams/p6_ps_dynamic_transport_45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0.xsa",
   "xsa_sha256": "45e39fa92e0199eef24892968e49e8abdaa9a7d9e4f571866b188316c6dc4cf0",
@@ -199,20 +199,20 @@
   "ps7_board_contract_verified": true,
   "ps7_board_contract_report": {
     "path": "evidence/generated/vitis/p7_ps_runtime/p7_ps7_board_contract.json",
-    "sha256": "2248c3b336dac2388c6ec2c52f021ef0c93663f7c3d50f051de7d215120c8ce6",
+    "sha256": "88423db468769081f5a0fdbfeadd166c6eb233b5c1ac006d2539ee8aa7763fa8",
     "status": "PASS"
   },
   "syntax_only": false,
   "artifacts": {
     "elf": {
       "source": "build/p7_ps_vitis_workspace/p7_runtime/Debug/p7_runtime.elf",
-      "sha256": "5b5a5086c480369cb1851398a89d531a90d28aa8176203f5dd00312a0dba9354",
-      "immutable": "evidence/hardware/p7/artifacts/p7_runtime_5b5a5086c480369cb1851398a89d531a90d28aa8176203f5dd00312a0dba9354.elf"
+      "sha256": "2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949",
+      "immutable": "evidence/hardware/p7/artifacts/p7_runtime_2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949.elf"
     },
     "linker_map": {
       "source": "build/p7_ps_vitis_workspace/p7_runtime/Debug/p7_runtime.map",
-      "sha256": "d27ea3a2be611661bb98980f41d4fb9cb16f1a471c2aac74ee1a77d73f450b80",
-      "immutable": "evidence/hardware/p7/artifacts/p7_runtime_d27ea3a2be611661bb98980f41d4fb9cb16f1a471c2aac74ee1a77d73f450b80.map",
+      "sha256": "95c48876c5b281ec2b3cb0c1eca0d56832d5593afa7426eee5909bc4ccac0c8e",
+      "immutable": "evidence/hardware/p7/artifacts/p7_runtime_95c48876c5b281ec2b3cb0c1eca0d56832d5593afa7426eee5909bc4ccac0c8e.map",
       "generated_copy": "evidence/generated/vitis/p7_ps_runtime/p7_runtime.map"
     },
     "bsp_xparameters": {
@@ -225,7 +225,7 @@
     "size": {
       "returncode": 0,
       "path": "evidence/generated/vitis/p7_ps_runtime/p7_runtime_size.txt",
-      "sha256": "f08f3eab49dde87a8399c5d311443f5f0750a2cabf9803e44308aa65fe3e53ef"
+      "sha256": "4fdf08236b354b6de48a195153a60d32717d9cc6ecab70db0b782b45a3905337"
     },
     "symbols": {
       "returncode": 0,
@@ -235,17 +235,17 @@
     "sections": {
       "returncode": 0,
       "path": "evidence/generated/vitis/p7_ps_runtime/p7_runtime_sections.txt",
-      "sha256": "0158bcca64eab58897e2ca2c469f180fdc7a52168f1567e044565d84b0446191"
+      "sha256": "1f9743bbee2f7aecbf6b7208a9e34708d4c2564f2690c02811f113c5d2566278"
     },
     "disassembly": {
       "returncode": 0,
       "path": "evidence/generated/vitis/p7_ps_runtime/p7_runtime_disassembly.txt",
-      "sha256": "66e904c76682d48510040b355c728062a2a414d8887d1e8d69fbf8a62a6d3381"
+      "sha256": "f2ca2643b10fbe7c9b537f794b996748a275bd65a9c06ea119a411ae34d6dfe1"
     },
     "stack_usage": {
       "returncode": 0,
       "path": "evidence/generated/vitis/p7_ps_runtime/p7_runtime_stack_usage.txt",
-      "sha256": "7bbbfc3c226174eb07cf87b7b629ca9b23cd114626e2303bad4ae3d55ff9635c",
+      "sha256": "37eb9564267060e6041bea827298ea476405f372bb4ea2c4386a6777c1e4ebe7",
       "source_count": 7
     }
   },
@@ -260,7 +260,7 @@
     "software/ps_driver/p7_admission_contract.h": "12f38347e8cb15857342d9c70a61a6e92a1eeddb40224637a0280c5400ce5d41",
     "software/ps_driver/ir_driver.c": "c69bdccaa0cab491b8415e2e43b513570e2c3c94298f3055e220abd43c27940f",
     "software/ps_driver/ir_driver.h": "88cfaccb8692af31489287251495500fad42780034fe822c69fa22b589240e9c",
-    "software/ps_driver/ir_regs.h": "30d2303565a65a328b543584c2192fb38200404b30ac5281391cc9761a5e4745",
+    "software/ps_driver/ir_regs.h": "a7c6a33471570f281e1d3568c6f1be49d6f2cc44a13375116c6379d5c292cd04",
     "software/common/rf_app_protocol.c": "5962df634e00c03ae2860e1141c36b58d3363e960868827726d372896101cbee",
     "software/common/rf_app_protocol.h": "3ab2c675b9c5303a02a0a40c99fe87712117ff3057d70c9cac57a9f7815cbefa",
     "software/common/rf_transport_backend.c": "c640edf44c188066eb6c827727511d59ffce894d1dcf1bf617839c512020a208",

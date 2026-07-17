@@ -20,6 +20,7 @@ if str(TOOLS) not in sys.path:
 
 import summarize_p7_hardware as subject  # noqa: E402
 import p7_jtag_backend as jtag_backend  # noqa: E402
+import run_p7_gate as offline_gate  # noqa: E402
 
 
 COMMIT = "a" * 40
@@ -1121,6 +1122,7 @@ class SyntheticEvidence:
         unavailable_after = (2 if unavailable else 0) if unavailable_after is None else unavailable_after
         lane_distribution = subject.expected_lane_distribution(policy, fragments, unavailable, unavailable_after)
         lane0, lane1, replicated = lane_distribution or (0, 0, 0)
+        rejected_before_input_identity = status == 6 and error == 19
         return {
             "magic": 0x53443750,
             "version": 1,
@@ -1132,14 +1134,14 @@ class SyntheticEvidence:
             "object_length": length,
             "bytes_completed": length if status == 3 else 0,
             "expected_sha256": sha,
-            "input_sha256": sha,
+            "input_sha256": "0" * 64 if rejected_before_input_identity else sha,
             "output_sha256": sha if status == 3 else "0" * 64,
             "expected_crc32": crc,
             "output_crc32": crc if status == 3 else 0,
             "lane_policy": policy,
             "unavailable_lane_mask": unavailable,
             "unavailable_after_fragment": unavailable_after,
-            "fragments_total": fragments,
+            "fragments_total": 0 if rejected_before_input_identity else fragments,
             "fragments_completed": fragments if status == 3 else 0,
             "fragment_attempts": fragments if status == 3 else 0,
             "fallback_count": fallback,
@@ -1161,6 +1163,7 @@ class SyntheticEvidence:
     @classmethod
     def case(cls, name: str, length: int, policy: int, **kwargs: int) -> dict[str, object]:
         descriptor = cls.descriptor(length, policy, **kwargs)
+        status = int(descriptor["status"])
         return {
             "name": name,
             "slot": 0,
@@ -1168,7 +1171,11 @@ class SyntheticEvidence:
             "failures": [],
             "descriptor": descriptor,
             "output_bytes": length,
-            "output_sha256": descriptor["output_sha256"],
+            "output_sha256": (
+                str(descriptor["output_sha256"])
+                if status == 3
+                else hashlib.sha256(bytes(length)).hexdigest()
+            ),
         }
 
     def make_ps(self, mode: str, postprocess: dict[str, object], extra_raw: list[str] | None = None) -> tuple[Path, dict[str, object]]:
@@ -2095,6 +2102,93 @@ class SummarizeP7HardwareTests(unittest.TestCase):
                     )
                 )
 
+    def test_case_output_contract_binds_artifacts_and_distinguishes_negative_wipe(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary) / "run"
+            bundle = run / "bundle"
+            bundle.mkdir(parents=True)
+            summary = run / "p7_ps_application_stage_summary.json"
+            summary.write_text("{}\n", encoding="utf-8")
+            candidate = subject.Candidate(summary, {}, "ps", "ps_runtime", 0.0)
+
+            positive = SyntheticEvidence.case("positive", 30, 1)
+            positive.pop("output_bytes")
+            positive.pop("output_sha256")
+            positive_output = bundle / "positive_output_result.bin"
+            positive_output.write_bytes(bytes(range(30)))
+            self.assertEqual(
+                subject.case_output_errors(
+                    candidate,
+                    positive,
+                    "positive:",
+                    output_filename=positive_output.name,
+                ),
+                [],
+            )
+
+            strict_negative = SyntheticEvidence.case(
+                "strict_negative", 65_536, 1, status=4, error=8
+            )
+            strict_negative["artifact_provenance"] = {
+                "output_filename": "strict_negative_output_result.bin"
+            }
+            strict_output = bundle / "strict_negative_output_result.bin"
+            strict_output.write_bytes(bytes(65_536))
+            self.assertEqual(
+                subject.case_output_errors(
+                    candidate,
+                    strict_negative,
+                    "strict-negative:",
+                    expected_status=4,
+                    expected_error=8,
+                    require_zero_transport=True,
+                ),
+                [],
+            )
+            strict_output.write_bytes(bytes([0xA5]) * 65_536)
+            errors = subject.case_output_errors(
+                candidate,
+                strict_negative,
+                "strict-negative:",
+                expected_status=4,
+                expected_error=8,
+                require_zero_transport=True,
+            )
+            self.assertTrue(any("bound artifact" in item for item in errors))
+            self.assertTrue(any("not wiped to zero" in item for item in errors))
+
+            replay = SyntheticEvidence.case(
+                "duplicate_replay_rejected", 1_048_576, 3, status=6, error=19
+            )
+            self.assertEqual(
+                subject.case_output_errors(
+                    candidate,
+                    replay,
+                    "replay:",
+                    expected_status=6,
+                    expected_error=19,
+                    require_zero_transport=True,
+                ),
+                [],
+            )
+            replay["descriptor"]["input_sha256"] = replay["descriptor"][
+                "expected_sha256"
+            ]
+            self.assertTrue(
+                any(
+                    "pre-input rejection unexpectedly publishes an input SHA256"
+                    in item
+                    for item in subject.case_output_errors(
+                        candidate,
+                        replay,
+                        "replay:",
+                        expected_status=6,
+                        expected_error=19,
+                        require_zero_transport=True,
+                    )
+                )
+            )
+
     @staticmethod
     def _git(root: Path, *args: str) -> str:
         return subprocess.run(
@@ -2104,6 +2198,207 @@ class SummarizeP7HardwareTests(unittest.TestCase):
             capture_output=True,
             check=True,
         ).stdout.strip()
+
+    def test_offline_checkpoint_critical_source_contract_and_exact_gap_attestation(self) -> None:
+        self.assertLessEqual(
+            set(subject.OFFLINE_CRITICAL_SOURCES),
+            set(offline_gate.OFFLINE_CHECKPOINT_CRITICAL_SOURCES),
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self._git(root, "init")
+            self._git(root, "config", "user.email", "synthetic@example.invalid")
+            self._git(root, "config", "user.name", "Synthetic P7 Test")
+            for relative in subject.OFFLINE_CRITICAL_SOURCES:
+                source = root / relative
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_bytes(f"frozen source: {relative}\n".encode("utf-8"))
+            self._git(root, "add", "-A")
+            self._git(root, "commit", "-m", "frozen checkpoint source")
+            source_commit = self._git(root, "rev-parse", "HEAD")
+            tree_listing = subprocess.run(
+                ["git", "ls-tree", "-r", "--full-tree", source_commit],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=True,
+            ).stdout
+            checkpoint_hashes = {
+                relative: digest(root / relative)
+                for relative in subject.OFFLINE_CRITICAL_SOURCES
+                if relative not in subject.LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES
+            }
+            payload = {
+                "P7_OFFLINE_GATE": "PASS",
+                "generated_at_utc": "2026-07-17T00:00:00+00:00",
+                "NO_HARDWARE_ACTIONS_EXECUTED": True,
+                "hardware_actions_executed": False,
+                "HARDWARE_ACCEPTANCE": "PENDING_HW",
+                "checks": {
+                    "P7_CLEAN_SOURCE_CHECKPOINT": True,
+                    "P7_CHECKPOINT_INPUT_HASHES": True,
+                },
+                "source_commit": source_commit,
+                "dirty_worktree": False,
+                "source_tree_listing_sha256": hashlib.sha256(
+                    tree_listing.encode("utf-8")
+                ).hexdigest(),
+                "checkpoint_input_hashes": checkpoint_hashes,
+                "checkpoint_input_count": len(checkpoint_hashes),
+            }
+            checkpoint = root / "evidence/generated/p7_offline_gate_summary.json"
+            checkpoint.parent.mkdir(parents=True, exist_ok=True)
+
+            def write_checkpoint(value: dict[str, object]) -> None:
+                checkpoint.write_text(
+                    json.dumps(value, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
+
+            write_checkpoint(payload)
+            profile = {
+                "profile_id": "synthetic_exact_gap_v1",
+                "checkpoint_sha256": digest(checkpoint),
+                "missing_sources": subject.LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES,
+            }
+            with mock.patch.dict(
+                subject.LEGACY_OFFLINE_CHECKPOINT_GAP_PROFILES,
+                {source_commit: profile},
+                clear=True,
+            ):
+                errors, attestation = subject.offline_checkpoint_validation(
+                    payload,
+                    checkpoint_path=checkpoint,
+                    repo_root=root,
+                    expected_commit=source_commit,
+                )
+                self.assertEqual(errors, [])
+                self.assertEqual(
+                    {item["path"] for item in attestation["git_attested_missing_sources"]},
+                    set(subject.LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES),
+                )
+
+                missing_source = root / next(iter(subject.LEGACY_OFFLINE_CHECKPOINT_GAP_SOURCES))
+                missing_original = missing_source.read_bytes()
+                missing_source.write_bytes(missing_original + b"tamper\n")
+                errors, _attestation = subject.offline_checkpoint_validation(
+                    payload,
+                    checkpoint_path=checkpoint,
+                    repo_root=root,
+                    expected_commit=source_commit,
+                )
+                self.assertIn(
+                    "critical-source gap materialization differs from frozen Git source",
+                    "\n".join(errors),
+                )
+                missing_source.write_bytes(missing_original)
+
+                repair_relative = "tools/summarize_p7_hardware.py"
+                repair_source = root / repair_relative
+                repair_source.write_text("post-run evidence-only repair\n", encoding="utf-8")
+                errors, attestation = subject.offline_checkpoint_validation(
+                    payload,
+                    checkpoint_path=checkpoint,
+                    repo_root=root,
+                    expected_commit=source_commit,
+                )
+                self.assertEqual(errors, [])
+                self.assertEqual(
+                    [item["path"] for item in attestation["post_run_repair_sources"]],
+                    [repair_relative],
+                )
+
+                nonrepair_relative = "software/ps_driver/p7_app_service.c"
+                nonrepair_source = root / nonrepair_relative
+                nonrepair_source.write_text("unapproved source mutation\n", encoding="utf-8")
+                errors, _attestation = subject.offline_checkpoint_validation(
+                    payload,
+                    checkpoint_path=checkpoint,
+                    repo_root=root,
+                    expected_commit=source_commit,
+                )
+                self.assertIn(
+                    f"offline checkpoint source changed after freeze: {nonrepair_relative}",
+                    errors,
+                )
+
+                unknown_gap = json.loads(json.dumps(payload))
+                unknown_relative = "software/ps_driver/p7_app_service.h"
+                del unknown_gap["checkpoint_input_hashes"][unknown_relative]
+                unknown_gap["checkpoint_input_count"] -= 1
+                write_checkpoint(unknown_gap)
+                errors, _attestation = subject.offline_checkpoint_validation(
+                    unknown_gap,
+                    checkpoint_path=checkpoint,
+                    repo_root=root,
+                    expected_commit=source_commit,
+                )
+                self.assertIn(
+                    "offline checkpoint omits critical P7 source hashes outside the exact allowlisted frozen gap",
+                    errors,
+                )
+
+    def test_frozen_imported_specialist_diagnostics_are_git_bound_zero_coverage(self) -> None:
+        checkpoint_path = ROOT / "evidence/generated/p7_offline_gate_summary.json"
+        checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+        offline_commit = str(checkpoint.get("source_commit", "")).lower()
+        self.assertIn(offline_commit, subject.IMPORTED_SPECIALIST_DIAGNOSTIC_PROFILES)
+        evidence = subject.RepositoryEvidence(
+            ROOT.resolve(),
+            (ROOT / "evidence/hardware/p7").resolve(),
+            (ROOT / "evidence/generated").resolve(),
+        )
+        subject.discover(evidence)
+        records, errors, accounted_dirs = (
+            subject.imported_specialist_diagnostic_records(
+                evidence,
+                offline_commit=offline_commit,
+                offline_time=subject.parse_time(
+                    checkpoint.get("generated_at_utc"), float("nan")
+                ),
+            )
+        )
+        self.assertEqual(errors, [])
+        self.assertEqual(len(records), 33)
+        self.assertEqual(len(accounted_dirs), 33)
+        self.assertEqual(len({item["run_id"] for item in records}), 33)
+        self.assertTrue(
+            all(
+                item.get("hardware_actions_executed") is True
+                and item.get("diagnostic_only") is True
+                and item.get("coverage_claimed") is False
+                and item.get("HARDWARE_ACCEPTANCE") == "PENDING_HW"
+                and item.get("acceptance_coverage_keys") == []
+                and item.get("ethernet_used") is False
+                and item.get("motion_used") is False
+                for item in records
+            )
+        )
+        campaign_d = [
+            item
+            for item in records
+            if "campaign_d_" in str(item.get("run_id", ""))
+        ]
+        self.assertEqual(len(campaign_d), 3)
+        self.assertTrue(all(item.get("diagnostic_result") == "PASS" for item in campaign_d))
+        r35 = next(
+            item
+            for item in records
+            if item.get("run_id") == "p7_20260714_stage62_microtest_r35_diag_only"
+        )
+        self.assertEqual(r35.get("diagnostic_result"), "FAIL")
+        self.assertEqual(r35.get("runner_result"), "FAIL_WRAPPER_POSTPROCESS")
+        self.assertEqual(
+            r35.get("boundary_completeness"),
+            "PARTIAL_LEGACY_WRAPPER_OBSERVED_FROM_PREFLIGHT_EXIT_THROUGH_INDEPENDENT_RECOVERY",
+        )
+        self.assertEqual(r35.get("independent_recovery", {}).get("result"), "PASS")
+        chronology, chronology_errors = subject._global_hardware_chronology([], records)
+        self.assertEqual(chronology_errors, [])
+        self.assertEqual(len(chronology), 33)
+        self.assertEqual(
+            [item.get("global_sequence") for item in chronology], list(range(1, 34))
+        )
 
     def _make_historical_fixture(self, root: Path) -> tuple[SyntheticEvidence, str, str]:
         fixture = SyntheticEvidence(root)

@@ -1,11 +1,11 @@
 # P7 final hardware acceptance summary
 
-GENERATED_AT_UTC: 2026-07-13T02:35:43+00:00
-P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET: PENDING_HW
-HARDWARE_ACCEPTANCE_STATIONARY_2LANE_APPLICATION: PENDING_HW
-STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PENDING_HW
+GENERATED_AT_UTC: 2026-07-17T03:30:50+00:00
+P7_STATIONARY_LOCAL_APPLICATION_LAYER_NO_ETHERNET: PASS
+HARDWARE_ACCEPTANCE_STATIONARY_2LANE_APPLICATION: PASS
+STATIONARY_2LANE_APPLICATION_ACCEPTANCE: PASS
 COMMIT: PENDING_FINAL_EVIDENCE_COMMIT
-SOURCE_COMMIT: 0539667cfbaa29a8ddb0b137bb9d4b222f1e4eb4
+SOURCE_COMMIT: 911e1a303ff58593cac5ff4c4b70150d17f9a26b
 USER_HARDWARE_AUTHORIZATION_FOR_P7: GRANTED
 NETWORK_CABLE_CONNECTED: false
 HARDWARE_MOVEMENT_ALLOWED: false
@@ -15,19 +15,19 @@ AVAILABLE_LANES: 2
 AVAILABLE_PHYSICAL_LANES: 2
 MAX_LANE_MASK: 0x3
 MAX_LANE_MASK_USED: 0x3
-HARDWARE_ACTIONS_EXECUTED: false
-PS_PL_PHY_PL_PS_APPLICATION_PASS: false
-JTAG_AXI_AUXILIARY_PATH_PASS: false
-JTAG_AXI_PL_PHY_PL_PASS: false
-FRAGMENTATION_REASSEMBLY: PENDING_HW
-FILE_INTEGRITY_SHA256: PENDING_HW
-QUEUE_BACKPRESSURE: PENDING_HW
-SOFTWARE_LANE_FALLBACK: PENDING_HW
-STATIONARY_30MIN: PENDING_HW
-SHUTDOWN_BEFORE: PENDING_HW
-SHUTDOWN_AFTER: PENDING_HW
-BITSTREAM_SHA256: PENDING_HW
-PS_ELF_SHA256: PENDING_HW
+HARDWARE_ACTIONS_EXECUTED: true
+PS_PL_PHY_PL_PS_APPLICATION_PASS: true
+JTAG_AXI_AUXILIARY_PATH_PASS: true
+JTAG_AXI_PL_PHY_PL_PASS: true
+FRAGMENTATION_REASSEMBLY: PASS
+FILE_INTEGRITY_SHA256: PASS
+QUEUE_BACKPRESSURE: PASS
+SOFTWARE_LANE_FALLBACK: PASS
+STATIONARY_30MIN: PASS
+SHUTDOWN_BEFORE: PASS
+SHUTDOWN_AFTER: PASS
+BITSTREAM_SHA256: 756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a
+PS_ELF_SHA256: 2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949
 ETHERNET_ACCEPTANCE: DEFERRED_NO_NETWORK_CABLE
 ROTATION_ACCEPTANCE: DEFERRED_NO_HARDWARE_MOVEMENT
 EIGHT_LANE_ACCEPTANCE: DEFERRED_ONLY_2_LANES_AVAILABLE
@@ -38,23 +38,35 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 
 | Gate | Result | Reason |
 |---|---|---|
-| safe_idle | PENDING_HW | safe-idle hardware stage is missing |
-| p6_frame_regression | PENDING_HW | P6 one-frame lane-mask regression is missing |
-| fragment_boundary | PENDING_HW | direct-JTAG 12-length x 4-policy boundary matrix is missing |
-| large_object_jtag | PENDING_HW | no fresh direct JTAG/AXI large-object safe-wrapper evidence |
-| ps_runtime | PENDING_HW | real PS functional runtime hardware stage is missing |
-| lane_fallback | PENDING_HW | lane_fallback hardware stage is missing |
-| abort_restart | PENDING_HW | abort_restart hardware stage is missing |
-| queue_backpressure | PENDING_HW | queue_backpressure hardware stage is missing |
-| calibration | PENDING_HW | embedded 300-second calibration window is missing |
-| stationary | PENDING_HW | the unique 1800-second real-PS stationary run is missing |
-| application_metrics | PENDING_HW | stationary application metrics are missing |
-| shutdown | PENDING_HW | no hardware-mutating P7 run exists to audit |
-| consistency | PENDING_HW | run-sequence ledger is pending |
+| safe_idle | PASS | fresh safe-idle readback and both shutdown barriers passed |
+| p6_frame_regression | PASS | strict raw-log-bound backend parses prove at least ten P6 frames on masks 0x1/0x2/0x3 |
+| fragment_boundary | PASS | direct-JTAG strict parser passed all 12 boundary lengths on lane0/lane1/stripe/replicate |
+| large_object_jtag | PASS | strict safe-wrapper + raw-log-bound backend parser passed the required 1 MiB/64 KiB matrix |
+| ps_runtime | PASS | real PS ELF completed the full large-object policy/pattern matrix |
+| lane_fallback | PASS | software-injected scheduler fallback and strict-negative cases passed |
+| abort_restart | PASS | abort, shutdown, new-epoch restart, atomicity, and replay rejection passed |
+| queue_backpressure | PASS | depth-1/depth-8/FIFO/overflow/STOP/ABORT queue cases passed |
+| calibration | PASS | the first 300 seconds of the same unique run supplied exactly ten clean calibration samples |
+| stationary | PASS | the unique real-PS stationary run completed the exact 1800-second 300+1500 contract |
+| application_metrics | PASS | bytes, goodput, latency, queue, retry, safety, and lane metrics are complete and source-labeled |
+| shutdown | PASS | every hardware-mutating run has rc=0 plus a fresh TFDU shutdown marker |
+| consistency | PASS | all selected summaries, raw records, hashes, targets, commits, risk order, and stationary-run cardinality agree |
 
 ## PASS
 
-- None.
+- safe_idle: fresh safe-idle readback and both shutdown barriers passed
+- p6_frame_regression: strict raw-log-bound backend parses prove at least ten P6 frames on masks 0x1/0x2/0x3
+- fragment_boundary: direct-JTAG strict parser passed all 12 boundary lengths on lane0/lane1/stripe/replicate
+- large_object_jtag: strict safe-wrapper + raw-log-bound backend parser passed the required 1 MiB/64 KiB matrix
+- ps_runtime: real PS ELF completed the full large-object policy/pattern matrix
+- lane_fallback: software-injected scheduler fallback and strict-negative cases passed
+- abort_restart: abort, shutdown, new-epoch restart, atomicity, and replay rejection passed
+- queue_backpressure: depth-1/depth-8/FIFO/overflow/STOP/ABORT queue cases passed
+- calibration: the first 300 seconds of the same unique run supplied exactly ten clean calibration samples
+- stationary: the unique real-PS stationary run completed the exact 1800-second 300+1500 contract
+- application_metrics: bytes, goodput, latency, queue, retry, safety, and lane metrics are complete and source-labeled
+- shutdown: every hardware-mutating run has rc=0 plus a fresh TFDU shutdown marker
+- consistency: all selected summaries, raw records, hashes, targets, commits, risk order, and stationary-run cardinality agree
 
 ## FAIL
 
@@ -66,19 +78,7 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 
 ## PENDING_HW
 
-- safe_idle: safe-idle hardware stage is missing
-- p6_frame_regression: P6 one-frame lane-mask regression is missing
-- fragment_boundary: direct-JTAG 12-length x 4-policy boundary matrix is missing
-- large_object_jtag: no fresh direct JTAG/AXI large-object safe-wrapper evidence
-- ps_runtime: real PS functional runtime hardware stage is missing
-- lane_fallback: lane_fallback hardware stage is missing
-- abort_restart: abort_restart hardware stage is missing
-- queue_backpressure: queue_backpressure hardware stage is missing
-- calibration: embedded 300-second calibration window is missing
-- stationary: the unique 1800-second real-PS stationary run is missing
-- application_metrics: stationary application metrics are missing
-- shutdown: no hardware-mutating P7 run exists to audit
-- consistency: run-sequence ledger is pending
+- None.
 
 ## GENERATED_SUMMARIES
 
@@ -150,7 +150,7 @@ PRODUCT_FINAL_ACCEPTANCE_REASON: PENDING_ETHERNET_ROTATION_AND_TARGET_LANE_COUNT
 - `evidence/generated/p7_stationary_local_application_layer_summary.json`
 - `evidence/generated/p7_stationary_local_application_layer_summary.md`
 
-NEXT_RECOMMENDED_STAGE: EXECUTE_OR_COLLECT_SAFE_IDLE
+NEXT_RECOMMENDED_STAGE: FINAL_EVIDENCE_COMMIT
 
 ## Boundary
 
