@@ -246,6 +246,12 @@ def check_requirements() -> tuple[bool, dict[str, Any]]:
 
 def check_state() -> tuple[bool, dict[str, Any]]:
     state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
+    p8c_pass = state.get("stage_status", {}).get("P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT") == "PASS"
+    expected_program_stage = (
+        "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
+        if p8c_pass
+        else "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"
+    )
     expected = {
         "p7_status": "PASS",
         "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
@@ -255,7 +261,7 @@ def check_state() -> tuple[bool, dict[str, Any]]:
         "product_final_acceptance": "PENDING",
         "current_run_hardware_authorization": False,
         "no_hardware_default": True,
-        "current_program_stage": "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT",
+        "current_program_stage": expected_program_stage,
     }
     mismatches = {key: {"expected": value, "actual": state.get(key)} for key, value in expected.items() if state.get(key) != value}
     if state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER") != "PASS":

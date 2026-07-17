@@ -1,129 +1,53 @@
-# TFDU Lane PHY Spec
+# TFDU Lane PHY Specification
 
 NO_HARDWARE_ACTIONS_EXECUTED: true
+
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+
 HARDWARE_ACCEPTANCE: PENDING_HW
 
-## Goal
+## Scope
 
-Define the P2 offline lane PHY wrapper contract around TFDU6102 polarity,
-startup, pulse measurement, and TX protection.
+P8C moves canonical safety ownership from logical lanes to physical TFDU modules. `rtl/ir_tfdu_physical_module_safety.sv` owns start-up, exact rolling duty, continuous-high protection, sticky faults, and telemetry for one physical module. `rtl/ir_tfdu_safety_endpoint.sv` applies endpoint arm, mapping/path conditions, SD separation, and the single raw permit final kill.
 
-## Non-Goals
+The P0-P7 `rtl/tfdu_lane_phy.sv` interface remains as a compatibility wrapper, but its former fixed-bucket implementation has been replaced by the P8C exact physical-module core. Legacy parameter names remain for source compatibility and cannot weaken the canonical 1 us / 18% protections.
 
-This spec does not prove any physical TFDU6102 link, board supply, optical
-alignment, lane direction, Ethernet path, rotation behavior, or soak behavior.
-It does not replace hardware authorization.
+## Physical-module state
 
-## Pin Definitions
-
-- `Txd` is high-active transmit input.
-- `Rxd` is low-active receive output.
-- `SD` is high-active shutdown.
-- `Mode=High` selects the static high-speed MIR/FIR policy for P2.
-- `Mode=Low` is treated as low-speed SIR mode and drops FIR pulse tests.
-
-## Reset And Shutdown Defaults
-
-In `RESET` and `SHUTDOWN_SAFE`:
-
-- `txd_o = 0`
-- `sd_o = 1`
-- `mode_o = 1` when the static high-speed profile is selected
-- `startup_done = 0`
-- `tx_ready = 0`
-- `rx_ready = 0`
-
-## Static Mode=High Strategy
-
-P2 uses static `Mode=High`. The wrapper drives `mode_o=1` as a stable policy
-and does not perform dynamic mode programming.
-
-## Dynamic Mode Programming Future Work
-
-If dynamic mode programming is introduced later, the `Mode` pin must not be
-treated as a normal force-driven GPIO at the same time. The `SD/Txd/Mode`
-timing must be validated independently before any hardware stage.
-
-## Startup Gate
-
-After `SD` leaves shutdown, RX startup wait must cover `500 us` in production
-configuration. P2 testbenches may shorten the parameter to keep offline tests
-fast. Before `startup_done`, frame TX and RX are blocked.
-
-## RX Active-Low Inversion Boundary
-
-`Rxd` inversion is centralized in the lane PHY wrapper. Protocol layers consume
-`rx_raw_active` and must not repeat `~rxd` handling.
-
-## TX Stuck-High Guard
-
-The wrapper tracks continuous TX high time. The default P2 wrapper threshold is
-`70 us`, below the `80 us` device protection limit. A fault clamps `txd_o=0`
-and returns the lane to shutdown-safe state.
-
-## TX Duty Window Guard
-
-The P2 wrapper exposes the maximum high stretch for the baseline gate. A richer
-windowed duty guard remains a later RTL hardening item before hardware use.
-
-## Raw Pulse Counter
-
-The wrapper increments `rx_pulse_count` on synchronized low-active RX pulse
-entry after startup.
-
-## Pulse Width Measurement
-
-The wrapper records `rx_last_pulse_width_cycles` for the last low-active RX
-pulse.
-
-## Fault Status
-
-P2 exposes `tx_stuck_fault` and `tx_high_max_cycles`. Future revisions may add
-fault codes, clear-on-write behavior, and explicit shutdown-forced status.
-
-## Register And Counter Exposure Recommendation
-
-Future AXI exposure should include:
-
-- `startup_done`
-- `rx_raw_active`
-- `rx_pulse_count`
-- `rx_last_pulse_width_cycles`
-- `tx_high_max_cycles`
-- `tx_stuck_fault`
-
-## Lane Generate Strategy
-
-Disabled lanes must hold `txd=0` and `sd=1`, or an equally explicit inactive
-safe state. Lane masks must compile for `LANE_COUNT=1`, `2`, and `8`.
-
-## Recommended State Machine
+State follows the electrical TFDU, not the logical lane that currently selects it:
 
 ```text
-RESET
-  -> SHUTDOWN_SAFE
-  -> STARTUP_WAIT
-  -> READY
-  -> ACTIVE_TX_RX
-  -> FAULT
-  -> SHUTDOWN_SAFE
+P8B active mapping + current path epoch + logical selection
+  -> physical module ID
+  -> per-module start-up/duty/continuous-high safety
+  -> endpoint arm and safety qualification
+  -> raw GLOBAL_PERMIT final AND
+  -> physical Txd
 ```
 
-## P2 Simulation Acceptance
+A path change from module A to B and back to A finds A's prior ring history intact. Only explicit history invalidation or an accepted safety clear can discard it, and either action starts a full 1000 us zero-fill cooldown.
 
-P2 accepts:
+## Output and receive behavior
 
-- reset/shutdown default checks
-- startup gate checks
-- active-low RX checks
-- pulse width checks
-- stuck-high guard checks
-- TFDU6102 behavior model smoke checks
-- paired link smoke checks when an HDL simulator exists
-- explicit `SKIP_WITH_REASON` for HDL tests when no simulator exists
+- Full shutdown: `SD=1`, `Txd=0`, start-up state cleared.
+- Receive-only: `SD=0` when enabled, `GLOBAL_PERMIT=0`, `Txd=0`; active-low RX acquisition and counters remain available after start-up.
+- Armed transmit: requires raw/synchronized permit, explicit arm, current mapping/path epoch, one-hot validity, no bank/module fault, complete start-up/history cooldown, frame admission, and waveform request.
+- Raw permit deassertion: combinationally forces all local physical `Txd` outputs low and asynchronously clears arm.
 
-## P3 And Later Hardware Raw PHY Relation
+## Canonical cycle values
 
-P3 should package a dry-run hardware acceptance plan. P4 or later may perform
-raw PHY smoke only after explicit user authorization, safe-wrapper use, and
-shutdown evidence.
+At 64 MHz:
+
+| Quantity | Cycles |
+|---|---:|
+| 500 us start-up | 32,000 |
+| 1000 us duty window/cooldown | 64,000 |
+| strict `<20%` legal maximum | 12,799 high cycles |
+| `<=18%` target | 11,520 high cycles |
+| 1 us continuous-high maximum | 64 |
+
+Non-integral profile conversions fail elaboration/config verification rather than shortening a safety interval.
+
+## Profiles and non-goals
+
+P8C executes 2-module Z7010 development, 8-module rotating, and 32-module fixed accounting models. The latter two are logic models only and do not reuse the AX7010 XDC. This specification does not prove final pinout, electrical fail-low behavior, current delivery, optical power, rotation, or product hardware acceptance.

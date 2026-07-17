@@ -1,0 +1,64 @@
+schema_version: 1
+configuration_id: TFDU_SAFETY_P8C_V1
+canonical_clock_hz: 64000000
+mode_strategy: static_high_speed
+receiver_startup_us: 500
+rolling_duty_window_us: 1000
+rolling_duty_hard_percent_strict_lt: 20
+rolling_duty_design_percent_max: 18
+long_term_duty_window_ms: 100
+long_term_duty_target_percent_max: 18
+max_continuous_txd_high_us: 1
+kill_reasons:
+  NONE: 0
+  RESET_OR_FULL_SHUTDOWN: 1
+  GLOBAL_PERMIT_LOW: 2
+  NOT_ARMED: 3
+  FATAL_FAULT: 4
+  ILLEGAL_ONE_HOT: 5
+  INVALID_SELECTED_MODULE: 6
+  STALE_OR_INVALID_PATH_EPOCH: 7
+  STARTUP_NOT_COMPLETE: 8
+  DUTY_TARGET_THROTTLE: 9
+  DUTY_HARD_FAULT: 10
+  STUCK_HIGH_FAULT: 11
+  FRAME_NOT_ADMITTED: 12
+  SD_ACTIVE: 13
+  HISTORY_COOLDOWN: 14
+  PARTIAL_FRAME_ABORTED: 15
+global_permit:
+  active_level: high
+  count_per_endpoint: 1
+  power_up_default: low
+  reset_default: low
+  open_circuit_default: low
+  undriven_default: low
+  fpga_unconfigured_default: low
+  partial_power_default: low
+  reassert_auto_resume: false
+  assert_filter_cycles: 4
+  rtl_deassert_kill: asynchronous_or_combinational
+  software_writable: false
+physical_profiles:
+  Z7010_2LANE_DEV:
+    endpoint_role: development
+    physical_module_count: 2
+    bank_count: 2
+    modules_per_bank: 1
+  Z7020_ROTATING_8LANE_MODEL:
+    endpoint_role: rotating
+    physical_module_count: 8
+    bank_count: 8
+    modules_per_bank: 1
+  Z7020_FIXED_32MODULE_ACCOUNTING_MODEL:
+    endpoint_role: fixed
+    physical_module_count: 32
+    bank_count: 8
+    modules_per_bank: 4
+hardware_followup:
+  global_permit_board_pulldown_contract: DEFINED
+  z7010_global_permit_pin_freeze: PENDING_P9_PIN_FREEZE
+  global_permit_physical_fail_low: PENDING_D17
+  global_permit_external_buffer_kill_latency: PENDING_D17
+  global_permit_partial_power: PENDING_D17
+  tfdu_duty_external_measurement: PENDING_P9_OR_LATER

@@ -63,6 +63,13 @@ P8B_REQUIREMENT_IDS = {
     "GEO-MODEL-001", "GEO-MODEL-002", "EVID-P8B-001",
 }
 
+P8C_REQUIREMENT_IDS = {
+    "SYS-PERMIT-001", "SYS-PERMIT-002", "SYS-PERMIT-003", "SYS-PERMIT-004",
+    "SYS-PERMIT-005", "SYS-PERMIT-006",
+    "PHY-SAFE-001", "PHY-SAFE-002", "PHY-SAFE-003", "PHY-SAFE-004",
+    "PHY-SAFE-005", "PHY-SAFE-006",
+}
+
 REQUIRED_REQUIREMENT_FIELDS = {
     "requirement_id",
     "requirement_text",
@@ -205,10 +212,15 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.extend(hash_record_errors(canonical, root, "canonical_constraint"))
 
     stage_status = state.get("stage_status", {})
+    p8c_pass = isinstance(stage_status, dict) and stage_status.get(
+        "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT") == "PASS"
     if not isinstance(stage_status, dict):
         errors.append("stage_status must be a mapping")
     else:
-        for key, expected in EXPECTED_STAGE_STATUS.items():
+        expected_stages = dict(EXPECTED_STAGE_STATUS)
+        if p8c_pass:
+            expected_stages["P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"] = "PASS"
+        for key, expected in expected_stages.items():
             if stage_status.get(key) != expected:
                 errors.append(f"stage_status.{key} must be {expected}")
 
@@ -287,11 +299,50 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             "global_permit_architecture": "SINGLE_ACTIVE_HIGH_PER_ENDPOINT",
             "fixed_endpoint_global_permit_count": 1,
             "rotating_endpoint_global_permit_count": 1,
-            "implementation_status": "PENDING_P8C_D17",
+            "implementation_status": (
+                "RTL_PORTABLE_FUNCTION_PASS_PHYSICAL_PENDING_D17"
+                if p8c_pass else "PENDING_P8C_D17"
+            ),
         }
         for key, value in expected_arch.items():
             if architecture.get(key) != value:
                 errors.append(f"architecture_status.{key} must be {value}")
+
+    if p8c_pass:
+        if state.get("current_program_stage") != "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE":
+            errors.append("current_program_stage must advance to P8D after P8C PASS")
+        if state.get("p8c_no_hardware_actions_executed") is not True:
+            errors.append("p8c_no_hardware_actions_executed must be true")
+        p8c = state.get("p8c_acceptance", {})
+        if not isinstance(p8c, dict):
+            errors.append("p8c_acceptance must be a mapping after P8C PASS")
+        else:
+            expected_p8c = {
+                "status": "PASS",
+                "profile": "P8C_MULTI_PROFILE_OFFLINE",
+                "test_id": "P8C-FINAL-ACCEPTANCE",
+                "hardware_actions_executed": False,
+                "hardware_scope_promoted": False,
+                "global_permit_physical_implementation": "PENDING_D17",
+                "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE",
+                "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER",
+            }
+            for key, value in expected_p8c.items():
+                if p8c.get(key) != value:
+                    errors.append(f"p8c_acceptance.{key} must be {value}")
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P8C final evidence"),
+                ("safety_config_path", "safety_config_sha256", "P8C safety config"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, p8c.get(path_key))
+                    digest = str(p8c.get(hash_key, "")).lower()
+                    if not artifact.is_file() or not SHA256_RE.fullmatch(digest) or sha256_file(artifact) != digest:
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            if not re.fullmatch(r"[0-9a-f]{40}", str(p8c.get("source_commit", "")).lower()):
+                errors.append("p8c_acceptance.source_commit must be a full Git commit hash")
 
     if state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER") == "PASS":
         p8b = state.get("p8b_acceptance", {})
@@ -409,7 +460,8 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         for hash_index, record in enumerate(hashes):
             errors.extend(hash_record_errors(record, root, f"{label}.artifact_hashes[{hash_index}]"))
 
-    for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS:
+    p8c_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8C_REQUIREMENT_IDS)
+    for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS - P8C_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PENDING":
             errors.append(f"{req_id} must remain PENDING until its scoped verification closes")
     for req_id in P8A_REQUIREMENT_IDS:
@@ -418,6 +470,20 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     for req_id in P8B_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PASS":
             errors.append(f"{req_id} must be PASS after P8B closure")
+    if p8c_closed:
+        missing_p8c = sorted(P8C_REQUIREMENT_IDS - set(by_id))
+        if missing_p8c:
+            errors.append(f"missing P8C requirement IDs: {', '.join(missing_p8c)}")
+        for req_id in P8C_REQUIREMENT_IDS & set(by_id):
+            item = by_id[req_id]
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P8C portable-function closure")
+            if item.get("verification_scope") != "PORTABLE_FUNCTION_PASS / OFFLINE_RTL":
+                errors.append(f"{req_id} must declare portable offline RTL verification scope")
+            if not item.get("hardware_followup"):
+                errors.append(f"{req_id} must retain explicit hardware follow-up")
+            if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
+                errors.append(f"{req_id} must declare a primary artifact_hash")
     return errors
 
 
@@ -486,6 +552,22 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"| `{_md(item['failure_id'])}` | `{_md(item['status'])}` | `{_md(item['evidence_path'])}` |"
         )
 
+    if isinstance(state.get("p8c_acceptance"), dict):
+        p8c = state["p8c_acceptance"]
+        lines += [
+            "",
+            "## P8C portable-function acceptance",
+            "",
+            f"- Status: `{p8c['status']}` (offline RTL/model scope only)",
+            f"- Source commit: `{p8c['source_commit']}`",
+            f"- Evidence: `{p8c['evidence_path']}`",
+            f"- Single global permit RTL: `{p8c['single_global_permit_rtl_architecture']}`",
+            f"- Exact rolling duty RTL: `{p8c['exact_rolling_duty_rtl_property']}`",
+            f"- Physical permit implementation: `{p8c['global_permit_physical_implementation']}`",
+            f"- Z7010 permit pin freeze: `{p8c['z7010_global_permit_pin_freeze']}`",
+            f"- External duty measurement: `{p8c['tfdu_duty_hardware_measurement']}`",
+        ]
+
     lines += [
         "",
         "`AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named P7 stationary Z7010 two-lane scope and is not extrapolated to future hardware.",
@@ -506,7 +588,7 @@ def render_project_status(state: dict[str, Any]) -> str:
         "",
         f"Last verified evidence commit: `{state['last_verified_commit']}`.",
         "",
-        "P8A and P8B were completed offline with `NO_HARDWARE=1`; they do not create or promote any hardware acceptance scope.",
+        "P8A, P8B, and any completed P8C portable-function gate were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.",
         "",
     ]
     return "\n".join(lines)

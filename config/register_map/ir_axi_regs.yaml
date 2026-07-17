@@ -1,4 +1,8 @@
 {
+  "schema_version": 2,
+  "register_map_version": "P8C-1",
+  "data_width_bits": 32,
+  "compatibility": "P0-P7 offsets and meanings are preserved; P8C is additive from 0x0400",
   "registers": [
     {
       "name": "CONTROL",
@@ -304,6 +308,97 @@
       "name": "P6_RX_WINDOW_BASE",
       "offset": "0x0300",
       "description": "P6 direct RX payload window base; 64 little-endian words through 0x03FC"
-    }
+    },
+    {
+      "name": "P8C_CONTROL",
+      "offset": "0x0400",
+      "access": "WO",
+      "description": "P8C safety control request pulses; no permit override",
+      "fields": [
+        {"name": "ENDPOINT_ARM_REQUEST", "bit": 0, "access": "WO"},
+        {"name": "ENDPOINT_DISARM_REQUEST", "bit": 1, "access": "WO"},
+        {"name": "FULL_SHUTDOWN_REQUEST", "bit": 2, "access": "WO"},
+        {"name": "SAFETY_FAULT_CLEAR_REQUEST", "bit": 3, "access": "WO"},
+        {"name": "SNAPSHOT_REQUEST", "bit": 4, "access": "WO"},
+        {"name": "TELEMETRY_CLEAR_REQUEST", "bit": 5, "access": "WO"}
+      ]
+    },
+    {
+      "name": "P8C_PERMIT_STATUS",
+      "offset": "0x0404",
+      "access": "RO",
+      "description": "Read-only raw/synchronized/effective permit and endpoint safety state",
+      "fields": [
+        {"name": "GLOBAL_PERMIT_RAW", "bit": 0, "access": "RO"},
+        {"name": "GLOBAL_PERMIT_SYNC", "bit": 1, "access": "RO"},
+        {"name": "GLOBAL_PERMIT_EFFECTIVE", "bit": 2, "access": "RO"},
+        {"name": "ENDPOINT_ARMED", "bit": 3, "access": "RO"},
+        {"name": "TX_KILL_ACTIVE", "bit": 4, "access": "RO"},
+        {"name": "PARTIAL_FRAME_ABORT_BLOCK", "bit": 5, "access": "RO"},
+        {"name": "SNAPSHOT_VALID", "bit": 6, "access": "RO"},
+        {"name": "ENDPOINT_FATAL_FAULT", "bit": 7, "access": "RO"}
+      ]
+    },
+    {"name": "P8C_PERMIT_RISE_COUNT", "offset": "0x0408", "access": "RO", "description": "Sampled raw permit rising-edge count"},
+    {"name": "P8C_PERMIT_FALL_COUNT", "offset": "0x040C", "access": "RO", "description": "Sampled raw permit falling-edge count"},
+    {"name": "P8C_PERMIT_DROP_DURING_FRAME_COUNT", "offset": "0x0410", "access": "RO", "description": "Permit drops observed while a frame was active"},
+    {"name": "P8C_PERMIT_REARM_COUNT", "offset": "0x0414", "access": "RO", "description": "Accepted explicit endpoint arm transactions"},
+    {
+      "name": "P8C_LAST_REASONS",
+      "offset": "0x0418",
+      "access": "RO",
+      "description": "Last global permit drop reason and last TX kill reason",
+      "fields": [
+        {"name": "LAST_GLOBAL_PERMIT_DROP_REASON", "lsb": 0, "width": 5, "access": "RO"},
+        {"name": "LAST_TX_KILL_REASON", "lsb": 8, "width": 5, "access": "RO"}
+      ]
+    },
+    {"name": "P8C_BANK_FAULT_MASK", "offset": "0x041C", "access": "RO", "description": "Physical-module-expanded bank fault mask"},
+    {"name": "P8C_LANE_TX_PERMIT_MASK", "offset": "0x0420", "access": "RO", "description": "Lane-local TX permission mask; not a global permit"},
+    {"name": "P8C_EFFECTIVE_TX_ENABLE_MASK", "offset": "0x0424", "access": "RO", "description": "Actual physical TX output mask after final raw permit kill"},
+    {"name": "P8C_PHYSICAL_MODULE_SELECTED_MASK", "offset": "0x0428", "access": "RO", "description": "Current physical module selection mask"},
+    {
+      "name": "P8C_ARM_STATUS",
+      "offset": "0x042C",
+      "access": "RO",
+      "description": "Arm accept/reject observability",
+      "fields": [
+        {"name": "ARM_ACCEPT_PULSE", "bit": 0, "access": "RO"},
+        {"name": "ARM_REJECT_PULSE", "bit": 1, "access": "RO"},
+        {"name": "FAULT_CLEAR_ACCEPT_PULSE", "bit": 2, "access": "RO"},
+        {"name": "ARM_REJECT_REASON", "lsb": 8, "width": 5, "access": "RO"}
+      ]
+    },
+    {"name": "P8C_SNAPSHOT_INDEX", "offset": "0x0430", "access": "RW", "description": "Physical module index captured by the next atomic snapshot request"},
+    {"name": "P8C_SNAPSHOT_ROLLING_HIGH", "offset": "0x0440", "access": "RO", "description": "Atomic snapshot rolling high cycles"},
+    {"name": "P8C_SNAPSHOT_ROLLING_MAX", "offset": "0x0444", "access": "RO", "description": "Atomic snapshot maximum rolling high cycles"},
+    {"name": "P8C_SNAPSHOT_WINDOW_CYCLES", "offset": "0x0448", "access": "RO", "description": "Exact rolling window cycles"},
+    {"name": "P8C_SNAPSHOT_HARD_LIMIT", "offset": "0x044C", "access": "RO", "description": "Strict less-than-20-percent integer limit"},
+    {"name": "P8C_SNAPSHOT_TARGET_LIMIT", "offset": "0x0450", "access": "RO", "description": "Less-than-or-equal-to-18-percent design target"},
+    {"name": "P8C_SNAPSHOT_DUTY_HEADROOM", "offset": "0x0454", "access": "RO", "description": "Remaining target headroom cycles"},
+    {"name": "P8C_SNAPSHOT_TARGET_THROTTLE_COUNT", "offset": "0x0458", "access": "RO", "description": "Target-policy throttle event count"},
+    {"name": "P8C_SNAPSHOT_HARD_FAULT_COUNT", "offset": "0x045C", "access": "RO", "description": "Sticky hard duty fault event count"},
+    {"name": "P8C_SNAPSHOT_CONTINUOUS_HIGH", "offset": "0x0460", "access": "RO", "description": "Current continuous high cycles"},
+    {"name": "P8C_SNAPSHOT_LONGEST_HIGH", "offset": "0x0464", "access": "RO", "description": "Longest observed high stretch cycles"},
+    {"name": "P8C_SNAPSHOT_STUCK_FAULT_COUNT", "offset": "0x0468", "access": "RO", "description": "Sticky continuous-high fault event count"},
+    {"name": "P8C_SNAPSHOT_STUCK_KILL_COUNT", "offset": "0x046C", "access": "RO", "description": "Continuous-high kill count"},
+    {"name": "P8C_SNAPSHOT_COOLDOWN_REMAINING", "offset": "0x0470", "access": "RO", "description": "History recovery cooldown cycles remaining"},
+    {"name": "P8C_SNAPSHOT_CHARGE_COUNT", "offset": "0x0474", "access": "RO", "description": "Actual or conservatively charged TX-high cycle count"},
+    {
+      "name": "P8C_SNAPSHOT_FLAGS",
+      "offset": "0x0478",
+      "access": "RO",
+      "description": "Atomic per-module safety flags",
+      "fields": [
+        {"name": "DUTY_TARGET_THROTTLE", "bit": 0, "access": "RO"},
+        {"name": "DUTY_HARD_FAULT", "bit": 1, "access": "RO"},
+        {"name": "STUCK_HIGH_FAULT", "bit": 2, "access": "RO"},
+        {"name": "DUTY_HISTORY_VALID", "bit": 3, "access": "RO"},
+        {"name": "COOLDOWN_ACTIVE", "bit": 4, "access": "RO"}
+      ]
+    },
+    {"name": "P8C_SNAPSHOT_RX_PULSE_COUNT", "offset": "0x047C", "access": "RO", "description": "Receive-only active-low RX pulse count"},
+    {"name": "P8C_REGISTER_MAP_VERSION", "offset": "0x04F0", "access": "RO", "description": "P8C register map version encoding"},
+    {"name": "P8C_REGISTER_MAP_HASH_LOW", "offset": "0x04F4", "access": "RO", "description": "Low 32 bits of canonical register-map SHA256"}
   ]
 }

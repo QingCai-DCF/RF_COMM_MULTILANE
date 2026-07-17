@@ -103,8 +103,7 @@ module tb_tfdu_lane_phy_smoke;
 
   task automatic check_expect(input bit cond, input string msg);
     if (!cond) begin
-      $error("EXPECT_FAIL: %s", msg);
-      $finish;
+      $fatal(1, "EXPECT_FAIL: %s", msg);
     end
   endtask
 
@@ -130,7 +129,7 @@ module tb_tfdu_lane_phy_smoke;
 
     rst_n = 1'b1;
     enable_phy = 1'b1;
-    tick(4);
+    tick(19);
     check_expect(phy_ready == 1'b0, "phy_ready stays low before startup delay");
     tick(3);
     check_expect(phy_ready == 1'b1, "phy_ready after startup delay");
@@ -160,7 +159,7 @@ module tb_tfdu_lane_phy_smoke;
 
     duty_rst_n = 1'b1;
     duty_enable_phy = 1'b1;
-    tick(5);
+    tick(12);
     check_expect(duty_phy_ready == 1'b1, "duty DUT ready");
     duty_tx_pulse_req = 1'b1;
     tick(5);

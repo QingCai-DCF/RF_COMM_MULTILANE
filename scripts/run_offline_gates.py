@@ -27,6 +27,16 @@ def build_parser():
         action="store_true",
         help="Run the mandatory P8B Python/xsim geometry gate after the complete P0-P7/P8A regression.",
     )
+    parser.add_argument(
+        "--include-p8c",
+        action="store_true",
+        help="Run the mandatory P8C safety gate after the complete P0-P8B regression.",
+    )
+    # Compatibility flags make the canonical integrated command explicit while
+    # preserving the existing always-on P0-P7 simulation and P8A checks.
+    parser.add_argument("--include-simulation", action="store_true")
+    parser.add_argument("--include-p8a", action="store_true")
+    parser.add_argument("--json-summary", action="store_true")
     return parser
 
 def run(name, cmd, status=None, env=None):
@@ -128,6 +138,8 @@ def run_sv_gates(outdir):
         (
             "lane_phy_sim",
             [
+                "rtl/ir_tfdu_exact_duty_accountant.sv",
+                "rtl/ir_tfdu_physical_module_safety.sv",
                 "rtl/tfdu_lane_phy.sv",
                 "sim/models/tfdu6102_behavior_model.sv",
                 "sim/tb/tb_tfdu_lane_phy_smoke.sv",
@@ -364,7 +376,8 @@ def main(argv=None):
     results.append(run("plan_completion_static", [py, "scripts/check_plan_completion_static.py"]))
     status = write_summary(outdir, results)
 
-    if args.include_p8b:
+    include_p8b = args.include_p8b or args.include_p8c
+    if include_p8b:
         parent_clean = all(r["returncode"] == 0 for r in results)
         p8b_env = os.environ.copy()
         p8b_cmd = [py, "scripts/run_p8b_geometry_gate.py"]
@@ -374,9 +387,21 @@ def main(argv=None):
         results.append(run("p8b_geometry_mapping_handover", p8b_cmd, env=p8b_env))
         status = write_summary(outdir, results)
 
+    if args.include_p8c:
+        parent_clean = all(r["returncode"] == 0 for r in results)
+        p8c_env = os.environ.copy()
+        p8c_env["NO_HARDWARE"] = "1"
+        p8c_cmd = [py, "scripts/run_p8c_safety_gate.py", "--json-summary"]
+        if parent_clean:
+            p8c_env["P8C_OFFLINE_PARENT"] = "1"
+            p8c_cmd.append("--parent-offline-pass")
+        results.append(run("p8c_tfdu_safety_single_global_permit", p8c_cmd, env=p8c_env))
+        status = write_summary(outdir, results)
+
     hard_fail = [r for r in results if r["returncode"] != 0]
     print(f"OFFLINE_GATES_RAN=1 status={status}")
-    print(f"P8B_INCLUDED={1 if args.include_p8b else 0}")
+    print(f"P8B_INCLUDED={1 if include_p8b else 0}")
+    print(f"P8C_INCLUDED={1 if args.include_p8c else 0}")
     print(f"GENERATED_SUMMARY={outdir / 'offline_gate_summary.md'}")
     return 1 if hard_fail else 0
 

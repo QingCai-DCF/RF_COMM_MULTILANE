@@ -7,6 +7,7 @@ enum {
   MOCK_CONTROL_START = 1u << 2,
   MOCK_P6_CTRL_COMMIT = 1u << 2,
   MOCK_P6_CTRL_START = 1u << 3,
+  MOCK_P6_CTRL_SHUTDOWN = 1u << 5,
   MOCK_STATUS_PHY_READY = 1u << 0,
   MOCK_STATUS_BUSY = 1u << 1,
   MOCK_STATUS_TX_DONE = 1u << 2,
@@ -14,10 +15,11 @@ enum {
   MOCK_P6_STATUS_READY = 1u << 1,
   MOCK_P6_STATUS_COMMITTED = 1u << 2,
   MOCK_P6_STATUS_DONE = 1u << 4,
+  MOCK_P6_MAILBOX_IDLE = 0x50364944u,
 };
 
 typedef struct {
-  uint32_t regs[IR_REG_P6_CAPS / 4u + 1u];
+  uint32_t regs[IR_REG_P8C_REGISTER_MAP_HASH_LOW / 4u + 1u];
   uint32_t p6_payload_words[64u];
   uint32_t p6_rx_words[64u];
   uint32_t p6_payload_word_index;
@@ -83,12 +85,38 @@ static void mock_write32(void *ctx, uint32_t offset, uint32_t value) {
     if (mock->regs[IR_REG_P6_LANE_MASK / 4u] & 2u) mock->regs[IR_REG_P6_RX_GOOD_COUNT_L1 / 4u] = 1u;
     mock->regs[IR_REG_P6_MAILBOX_STATUS / 4u] = 0x50364F4Bu;
   }
+  if (offset == IR_REG_P6_CTRL && (value & MOCK_P6_CTRL_SHUTDOWN)) {
+    mock->regs[IR_REG_P6_STATUS / 4u] = 0u;
+    mock->regs[IR_REG_STATUS / 4u] &= ~MOCK_STATUS_BUSY;
+    mock->regs[IR_REG_P6_MAILBOX_STATUS / 4u] = MOCK_P6_MAILBOX_IDLE;
+  }
+  if (offset == IR_REG_P8C_CONTROL &&
+      (value & IR_P8C_CONTROL_ENDPOINT_ARM_REQUEST_MASK)) {
+    mock->regs[IR_REG_P8C_PERMIT_STATUS / 4u] |=
+        IR_P8C_PERMIT_STATUS_ENDPOINT_ARMED_MASK |
+        IR_P8C_PERMIT_STATUS_GLOBAL_PERMIT_EFFECTIVE_MASK;
+    mock->regs[IR_REG_P8C_ARM_STATUS / 4u] =
+        IR_P8C_ARM_STATUS_ARM_ACCEPT_PULSE_MASK;
+  }
+  if (offset == IR_REG_P8C_CONTROL &&
+      (value & IR_P8C_CONTROL_ENDPOINT_DISARM_REQUEST_MASK)) {
+    mock->regs[IR_REG_P8C_PERMIT_STATUS / 4u] &=
+        ~(IR_P8C_PERMIT_STATUS_ENDPOINT_ARMED_MASK |
+          IR_P8C_PERMIT_STATUS_GLOBAL_PERMIT_EFFECTIVE_MASK);
+  }
+  if (offset == IR_REG_P8C_CONTROL &&
+      (value & IR_P8C_CONTROL_SNAPSHOT_REQUEST_MASK)) {
+    mock->regs[IR_REG_P8C_PERMIT_STATUS / 4u] |=
+        IR_P8C_PERMIT_STATUS_SNAPSHOT_VALID_MASK;
+  }
 }
 
 int main(void) {
   static mock_context_t mock;
   ir_driver_counters_t counters;
   ir_p6_payload_result_t p6_result;
+  ir_p8c_endpoint_status_t p8c_status;
+  ir_p8c_module_snapshot_t p8c_snapshot;
   uint8_t payload[16u];
   uint8_t rx_payload[16u];
   uint32_t rx_len = 0u;
@@ -119,5 +147,22 @@ int main(void) {
   for (uint32_t idx = 0u; idx < 16u; idx++) {
     if (rx_payload[idx] != payload[idx]) return 10;
   }
+  mock.regs[IR_REG_P8C_PERMIT_STATUS / 4u] =
+      IR_P8C_PERMIT_STATUS_GLOBAL_PERMIT_RAW_MASK |
+      IR_P8C_PERMIT_STATUS_GLOBAL_PERMIT_SYNC_MASK;
+  mock.regs[IR_REG_P8C_SNAPSHOT_ROLLING_HIGH / 4u] = 17u;
+  mock.regs[IR_REG_P8C_SNAPSHOT_WINDOW_CYCLES / 4u] = 64000u;
+  mock.regs[IR_REG_P8C_SNAPSHOT_HARD_LIMIT / 4u] = 12799u;
+  mock.regs[IR_REG_P8C_SNAPSHOT_TARGET_LIMIT / 4u] = 11520u;
+  if (ir_driver_p8c_request_arm(&io, 4u)) return 11;
+  if (ir_driver_p8c_read_status(&io, &p8c_status)) return 12;
+  if ((p8c_status.permit_status &
+       IR_P8C_PERMIT_STATUS_ENDPOINT_ARMED_MASK) == 0u) return 13;
+  if (ir_driver_p8c_snapshot_module(&io, 0u, &p8c_snapshot)) return 14;
+  if (p8c_snapshot.rolling_high_cycles != 17u ||
+      p8c_snapshot.rolling_window_cycles != 64000u ||
+      p8c_snapshot.hard_limit_cycles != 12799u ||
+      p8c_snapshot.target_limit_cycles != 11520u) return 15;
+  if (ir_driver_p8c_request_disarm(&io)) return 16;
   return 0;
 }

@@ -375,3 +375,93 @@ int ir_driver_p6_run_mailbox_payload(
   if (ir_driver_shutdown(io)) return -4;
   return run_result;
 }
+
+int ir_driver_p8c_read_status(const ir_mmio_t *io,
+                              ir_p8c_endpoint_status_t *status) {
+  if (!io || !io->read32 || !status) return -1;
+  status->permit_status = io->read32(io->ctx, IR_REG_P8C_PERMIT_STATUS);
+  status->permit_rise_count = io->read32(io->ctx, IR_REG_P8C_PERMIT_RISE_COUNT);
+  status->permit_fall_count = io->read32(io->ctx, IR_REG_P8C_PERMIT_FALL_COUNT);
+  status->permit_drop_during_frame_count =
+      io->read32(io->ctx, IR_REG_P8C_PERMIT_DROP_DURING_FRAME_COUNT);
+  status->permit_rearm_count = io->read32(io->ctx, IR_REG_P8C_PERMIT_REARM_COUNT);
+  status->last_reasons = io->read32(io->ctx, IR_REG_P8C_LAST_REASONS);
+  status->bank_fault_mask = io->read32(io->ctx, IR_REG_P8C_BANK_FAULT_MASK);
+  status->lane_tx_permit_mask = io->read32(io->ctx, IR_REG_P8C_LANE_TX_PERMIT_MASK);
+  status->effective_tx_enable_mask =
+      io->read32(io->ctx, IR_REG_P8C_EFFECTIVE_TX_ENABLE_MASK);
+  status->physical_module_selected_mask =
+      io->read32(io->ctx, IR_REG_P8C_PHYSICAL_MODULE_SELECTED_MASK);
+  status->arm_status = io->read32(io->ctx, IR_REG_P8C_ARM_STATUS);
+  return 0;
+}
+
+int ir_driver_p8c_request_arm(const ir_mmio_t *io, uint32_t max_polls) {
+  if (!io || !io->read32 || !io->write32 || max_polls == 0u) return -1;
+  io->write32(io->ctx, IR_REG_P8C_CONTROL,
+              IR_P8C_CONTROL_ENDPOINT_ARM_REQUEST_MASK);
+  for (uint32_t poll = 0u; poll < max_polls; ++poll) {
+    uint32_t status = io->read32(io->ctx, IR_REG_P8C_PERMIT_STATUS);
+    uint32_t arm_status = io->read32(io->ctx, IR_REG_P8C_ARM_STATUS);
+    if ((status & IR_P8C_PERMIT_STATUS_ENDPOINT_ARMED_MASK) != 0u) return 0;
+    if ((arm_status & IR_P8C_ARM_STATUS_ARM_REJECT_PULSE_MASK) != 0u) return -2;
+  }
+  return -3;
+}
+
+int ir_driver_p8c_request_disarm(const ir_mmio_t *io) {
+  if (!io || !io->write32) return -1;
+  io->write32(io->ctx, IR_REG_P8C_CONTROL,
+              IR_P8C_CONTROL_ENDPOINT_DISARM_REQUEST_MASK);
+  return 0;
+}
+
+int ir_driver_p8c_request_full_shutdown(const ir_mmio_t *io) {
+  if (!io || !io->write32) return -1;
+  io->write32(io->ctx, IR_REG_P8C_CONTROL,
+              IR_P8C_CONTROL_FULL_SHUTDOWN_REQUEST_MASK);
+  return 0;
+}
+
+int ir_driver_p8c_request_safety_fault_clear(const ir_mmio_t *io) {
+  if (!io || !io->read32 || !io->write32) return -1;
+  uint32_t permit = io->read32(io->ctx, IR_REG_P8C_PERMIT_STATUS);
+  uint32_t tx_mask = io->read32(io->ctx, IR_REG_P8C_EFFECTIVE_TX_ENABLE_MASK);
+  if ((permit & IR_P8C_PERMIT_STATUS_GLOBAL_PERMIT_RAW_MASK) != 0u ||
+      tx_mask != 0u) {
+    return -2;
+  }
+  io->write32(io->ctx, IR_REG_P8C_CONTROL,
+              IR_P8C_CONTROL_SAFETY_FAULT_CLEAR_REQUEST_MASK);
+  return 0;
+}
+
+int ir_driver_p8c_snapshot_module(const ir_mmio_t *io, uint32_t module_index,
+                                  ir_p8c_module_snapshot_t *snapshot) {
+  if (!io || !io->read32 || !io->write32 || !snapshot || module_index >= 32u)
+    return -1;
+  io->write32(io->ctx, IR_REG_P8C_SNAPSHOT_INDEX, module_index);
+  io->write32(io->ctx, IR_REG_P8C_CONTROL,
+              IR_P8C_CONTROL_SNAPSHOT_REQUEST_MASK);
+  uint32_t permit_status = io->read32(io->ctx, IR_REG_P8C_PERMIT_STATUS);
+  if ((permit_status & IR_P8C_PERMIT_STATUS_SNAPSHOT_VALID_MASK) == 0u)
+    return -2;
+  snapshot->module_index = module_index;
+  snapshot->rolling_high_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_ROLLING_HIGH);
+  snapshot->rolling_high_cycles_max_seen = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_ROLLING_MAX);
+  snapshot->rolling_window_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_WINDOW_CYCLES);
+  snapshot->hard_limit_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_HARD_LIMIT);
+  snapshot->target_limit_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_TARGET_LIMIT);
+  snapshot->duty_headroom_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_DUTY_HEADROOM);
+  snapshot->duty_target_throttle_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_TARGET_THROTTLE_COUNT);
+  snapshot->duty_hard_fault_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_HARD_FAULT_COUNT);
+  snapshot->continuous_high_cycles = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_CONTINUOUS_HIGH);
+  snapshot->longest_high_cycles_seen = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_LONGEST_HIGH);
+  snapshot->stuck_high_fault_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_STUCK_FAULT_COUNT);
+  snapshot->stuck_high_kill_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_STUCK_KILL_COUNT);
+  snapshot->cooldown_remaining = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_COOLDOWN_REMAINING);
+  snapshot->charge_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_CHARGE_COUNT);
+  snapshot->flags = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_FLAGS);
+  snapshot->rx_pulse_count = io->read32(io->ctx, IR_REG_P8C_SNAPSHOT_RX_PULSE_COUNT);
+  return 0;
+}

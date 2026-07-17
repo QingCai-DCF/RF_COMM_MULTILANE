@@ -72,6 +72,40 @@ typedef struct {
   uint32_t rx_digest;
 } ir_p6_payload_result_t;
 
+typedef struct {
+  uint32_t permit_status;
+  uint32_t permit_rise_count;
+  uint32_t permit_fall_count;
+  uint32_t permit_drop_during_frame_count;
+  uint32_t permit_rearm_count;
+  uint32_t last_reasons;
+  uint32_t bank_fault_mask;
+  uint32_t lane_tx_permit_mask;
+  uint32_t effective_tx_enable_mask;
+  uint32_t physical_module_selected_mask;
+  uint32_t arm_status;
+} ir_p8c_endpoint_status_t;
+
+typedef struct {
+  uint32_t module_index;
+  uint32_t rolling_high_cycles;
+  uint32_t rolling_high_cycles_max_seen;
+  uint32_t rolling_window_cycles;
+  uint32_t hard_limit_cycles;
+  uint32_t target_limit_cycles;
+  uint32_t duty_headroom_cycles;
+  uint32_t duty_target_throttle_count;
+  uint32_t duty_hard_fault_count;
+  uint32_t continuous_high_cycles;
+  uint32_t longest_high_cycles_seen;
+  uint32_t stuck_high_fault_count;
+  uint32_t stuck_high_kill_count;
+  uint32_t cooldown_remaining;
+  uint32_t charge_count;
+  uint32_t flags;
+  uint32_t rx_pulse_count;
+} ir_p8c_module_snapshot_t;
+
 int ir_driver_initialize(const ir_mmio_t *io, const ir_profile_config_t *profile, uint32_t startup_max_polls);
 int ir_driver_apply_profile(const ir_mmio_t *io, const ir_profile_config_t *profile);
 int ir_driver_wait_startup(const ir_mmio_t *io, uint32_t max_polls);
@@ -103,3 +137,10 @@ int ir_driver_p6_run_mailbox_payload(
     const uint8_t *payload,
     uint32_t max_polls,
     ir_p6_payload_result_t *result);
+int ir_driver_p8c_read_status(const ir_mmio_t *io, ir_p8c_endpoint_status_t *status);
+int ir_driver_p8c_request_arm(const ir_mmio_t *io, uint32_t max_polls);
+int ir_driver_p8c_request_disarm(const ir_mmio_t *io);
+int ir_driver_p8c_request_full_shutdown(const ir_mmio_t *io);
+int ir_driver_p8c_request_safety_fault_clear(const ir_mmio_t *io);
+int ir_driver_p8c_snapshot_module(const ir_mmio_t *io, uint32_t module_index,
+                                  ir_p8c_module_snapshot_t *snapshot);

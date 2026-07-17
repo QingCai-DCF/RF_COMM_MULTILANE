@@ -1,83 +1,43 @@
 # TFDU6102 Safety Summary
 
 NO_HARDWARE_ACTIONS_EXECUTED: true
+
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+
 HARDWARE_ACCEPTANCE: PENDING_HW
 
-## Pin Semantics
+`config/tfdu_safety.yaml` is the single machine-readable P8C safety source. Its generated canonical values are a 64 MHz clock, 500 us receiver start-up, an exact 64,000-cycle (1000 us) sliding window, strict `<20%` hard limit, `<=18%` admission target, and `MAX_CONTINUOUS_TXD_HIGH_US=1`.
 
-- Txd is active high transmit input.
-- Rxd is active low receive output.
-- SD is active high shutdown.
-- Mode=High selects MIR/FIR high-speed mode; Mode=Low selects SIR low-speed mode.
+## TFDU pin semantics
 
-## Shutdown Default
+- `Txd` is active high and must default low.
+- `Rxd` is active low.
+- `SD` is active-high shutdown. Full shutdown is `SD=1` and `Txd=0`.
+- Static `Mode=1` selects MIR/FIR. P8C does not mix this with dynamic mode programming.
+- Normal RX or TX is not valid until at least 500 us after `SD` is released.
 
-Reset and disabled lanes must hold Txd=0 and SD=1.
+## Exact duty and pulse protection
 
-## Static High-Speed Mode
+Each physical TFDU owns its own history ring and running sum. Logical lane, mapping, path epoch, arm, and permit transitions do not clear that history. In every clock-aligned 1000 us interval, admitted physical-high charge satisfies:
 
-The current project policy is static Mode=High after reset. SD exit must be
-followed by receiver startup wait before TX or RX is considered valid.
+```text
+high_cycles * 100 < window_cycles * 20
+```
 
-## Dynamic Mode Programming
+At 64 MHz the highest legal hard count is 12,799 cycles; the normal admission target is 11,520 cycles. History invalidation or accepted safety-fault clear forces a complete 64,000-cycle all-TX-low refill before history becomes valid again. The separate continuous-high guard allows at most 64 cycles at 64 MHz and latches a stuck-high fault on a `MAX+1` request.
 
-Dynamic mode programming is not active. If introduced later, Mode must not be
-simultaneously driven as a static GPIO and SD/Txd timing must remain separate.
+Because the `<=18%` property holds for every clock-aligned 1 ms interval, any clock-aligned 100 ms interval partitioned into 100 such intervals also meets the configured 18% long-term target.
 
-## Startup Wait
+## Single global permit
 
-Receiver startup wait must cover at least 500 us after shutdown exit or power-on.
+Each independent endpoint consumes exactly one local active-high `GLOBAL_PERMIT`. A raw-low value is the final combinational AND on every physical `Txd`; assertion passes through synchronization/filtering and still requires an explicit endpoint arm. A drop clears arm immediately, aborts an active frame, and prevents partial-frame resumption. Reassertion never auto-arms.
 
-## TX Stuck-High Protection
+`GLOBAL_PERMIT=0` does not force `SD=1`: receive-only acquisition may keep `SD=0` while the final permit kill holds every `Txd=0`. Full shutdown remains a separate request.
 
-Txd continuous high must not approach or exceed 80 us. P4 smoke profiles use a
-10 us trip limit. RTL must expose a stuck-high guard or a blocking TODO before
-hardware promotion.
+The fail-low board/pulldown behavior is a defined contract, not current hardware evidence. The Z7010 development profile has no frozen permit pin (`PENDING_P9_PIN_FREEZE`), and open-circuit, partial-power, and external-buffer behavior remain `PENDING_D17`.
 
-The exported multi-lane `txd_high_max` safety counter is the registered
-reduction maximum across every A/B endpoint and both available lanes in the
-same clock. Procedural assignment ordering must not replace a larger
-observation with a smaller one; directed simulation checks this reduction
-before a rebuilt artifact is authorized.
+XSIM can prove RTL X/Z fail-low behavior, but it cannot prove open-circuit, FPGA-unconfigured, or partial-power electrical behavior. External bias, final buffer topology, and kill latency remain `PENDING_D17`. External duty/current/optical measurements remain `PENDING_P9_OR_LATER`.
 
-## Duty-Cycle / Pulse Width Guard
+## Evidence boundary
 
-TX duty window protection is required; missing implementation must be a blocker,
-not a PASS.
-
-## IRED Current and VCC2 Droop
-
-IRED current and VCC2 droop are hardware acceptance measurements and are not
-validated by offline gates.
-
-## Decoupling and Layout
-
-C1/C3 4.7 uF, C2 0.1 uF, layout inductance, and supply quality must be checked
-before hardware acceptance.
-
-## RX Active-Low Convention
-
-Rxd inversion is centralized in the TFDU lane PHY wrapper.
-
-## P2 Simulation Model
-
-P2 uses a digital offline TFDU6102 behavior model. It checks shutdown, static
-Mode=High, 500 us startup policy, active-high Txd, active-low Rxd, pulse-width
-mapping, and stuck-high protection. It does not validate optical power, supply
-integrity, layout, distance, angle, rotation, or real board behavior.
-
-## Supply And Layout Notes For Later Hardware
-
-IRED current is expected to be at the hundreds of mA scale. VCC2 can droop under
-fast current rise. C1/C3 4.7 uF and C2 0.1 uF ceramic decoupling should be close
-to TFDU6102 power pins. Long, inductive, or resistive supply paths can reduce
-sensitivity and distance.
-
-## Hardware Test Authorization
-
-This document does not authorize hardware execution.
-
-## Evidence Requirements
-
-Hardware evidence must include authorization, run id, bitstream id, profile hash,
-shutdown evidence, and raw logs. Offline evidence cannot promote PENDING_HW.
+P8C evidence covers Python reference behavior, reduced and full-scale XSIM, 2/8/32-module models, register read-only behavior, static architecture checks, and out-of-context synthesis. It does not promote Z7020, rotating, sector-bank, optical, power, or final-product hardware acceptance. Historical P7 stationary two-lane acceptance remains scoped and unchanged.

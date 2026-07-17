@@ -45,7 +45,7 @@ def main() -> int:
     tests = [
         run_test(
             "tb_p6_dynamic_transport_engine",
-            ["rtl/tfdu_lane_phy.sv", "rtl/ir_4ppm_codec.sv", "rtl/p6_dynamic_transport_engine.sv", "sim/tb/tb_p6_dynamic_transport_engine.sv"],
+            ["rtl/ir_tfdu_exact_duty_accountant.sv", "rtl/ir_tfdu_physical_module_safety.sv", "rtl/tfdu_lane_phy.sv", "rtl/ir_4ppm_codec.sv", "rtl/p6_dynamic_transport_engine.sv", "sim/tb/tb_p6_dynamic_transport_engine.sv"],
             ["TB_P6_DYNAMIC_ENGINE_POSITIVE_CASES=480", "TB_P6_DYNAMIC_ENGINE_PASS=1"],
         ),
         run_test(

@@ -6,6 +6,8 @@ file mkdir $out_dir
 
 create_project p6_ps_candidate "$build_dir/project" -part xc7z010clg400-1 -force
 add_files -fileset sources_1 [list \
+  "$root_dir/rtl/ir_tfdu_exact_duty_accountant.sv" \
+  "$root_dir/rtl/ir_tfdu_physical_module_safety.sv" \
   "$root_dir/rtl/tfdu_lane_phy.sv" \
   "$root_dir/rtl/ir_4ppm_codec.sv" \
   "$root_dir/rtl/p6_dynamic_transport_engine.sv" \
