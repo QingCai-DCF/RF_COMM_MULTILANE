@@ -54,7 +54,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `HANDOVER-002` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-NOMINAL` | `evidence/generated/p8b_handover_timing_summary.json` | Handover angular consumption and remaining margin shall be reported as nominal/provisional only. |
 | `GEO-MODEL-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-NOMINAL` | `evidence/generated/p8b_geometry_nominal_summary.json` | Nominal D200/D600 geometry shall match the closed-form reference values. |
 | `GEO-MODEL-002` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-GAPS` | `evidence/generated/p8b_geometry_gap_ledger.json` | Unknown geometry tolerances shall remain null/PENDING and block worst-case hardware acceptance. |
-| `EVID-P8B-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-REQUIREMENT-TRACEABILITY` | `evidence/generated/p8b_rtl_python_crosscheck.json` | Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware scope. |
+| `EVID-P8B-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-REQUIREMENT-TRACEABILITY` | `evidence/generated/p8b_acceptance_core.json` | Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware scope. |
 
 ## PASS artifact bindings
 
@@ -80,13 +80,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883`
-- `PROJECT_STATUS.md` — `6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f`
+- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
+- `PROJECT_STATUS.md` — `716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883`
+- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
 
 ### `P8A-EVID-001`
 
@@ -96,8 +96,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883`
-- `PROJECT_STATUS.md` — `6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f`
+- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
+- `PROJECT_STATUS.md` — `716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -159,6 +159,6 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `EVID-P8B-001`
 
-- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327`
-- `evidence/generated/p8b_geometry_nominal_summary.json` — `0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5`
+- `evidence/generated/p8b_acceptance_core.json` — `eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40`
+- `evidence/generated/offline_gate_summary.json` — `4108eedd8632b80f734f9f74675b4e4463fb69df10f1987c217fe595709801a5`
 - `evidence/generated/p8b_rtl_python_crosscheck.json` — `4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136`

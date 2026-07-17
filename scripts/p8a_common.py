@@ -293,6 +293,38 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             if architecture.get(key) != value:
                 errors.append(f"architecture_status.{key} must be {value}")
 
+    if state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER") == "PASS":
+        p8b = state.get("p8b_acceptance", {})
+        if not isinstance(p8b, dict):
+            errors.append("p8b_acceptance must be a mapping after P8B PASS")
+        else:
+            expected_p8b = {
+                "status": "PASS",
+                "profile": "D200_D600_8X32",
+                "test_id": "P8B-OFFLINE-FULL-REGRESSION",
+                "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS",
+                "logic_model_timing_target": "PASS",
+                "hardware_actions_executed": False,
+            }
+            for key, value in expected_p8b.items():
+                if p8b.get(key) != value:
+                    errors.append(f"p8b_acceptance.{key} must be {value}")
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P8B acceptance core"),
+                ("geometry_config_path", "geometry_config_sha256", "P8B geometry config"),
+                ("full_regression_path", "full_regression_sha256", "P8B full regression"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, p8b.get(path_key))
+                    digest = str(p8b.get(hash_key, "")).lower()
+                    if not artifact.is_file() or not SHA256_RE.fullmatch(digest) or sha256_file(artifact) != digest:
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            source_commit = str(p8b.get("source_commit", "")).lower()
+            if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+                errors.append("p8b_acceptance.source_commit must be a full Git commit hash")
+
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         errors.append("last_verified_commit must be a full Git commit hash")

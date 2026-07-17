@@ -126,8 +126,8 @@ P8B = {
         "requirement_text": "Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware scope.",
         "verification_method": "P8B requirement/state/evidence consistency gate.",
         "test_id": "P8B-REQUIREMENT-TRACEABILITY",
-        "evidence_path": "evidence/generated/p8b_rtl_python_crosscheck.json",
-        "artifacts": ["evidence/generated/p8b_mapping_exhaustive_summary.json", "evidence/generated/p8b_geometry_nominal_summary.json", "evidence/generated/p8b_rtl_python_crosscheck.json"],
+        "evidence_path": "evidence/generated/p8b_acceptance_core.json",
+        "artifacts": ["evidence/generated/p8b_acceptance_core.json", "evidence/generated/offline_gate_summary.json", "evidence/generated/p8b_rtl_python_crosscheck.json"],
     },
 }
 

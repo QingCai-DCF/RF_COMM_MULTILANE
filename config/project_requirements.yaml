@@ -265,9 +265,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
   - path: PROJECT_STATUS.md
-    sha256: 6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f
+    sha256: 716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -281,7 +281,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
   profile: P8A_BASELINE
@@ -309,9 +309,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883
+    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
   - path: PROJECT_STATUS.md
-    sha256: 6283231f258b391a3be676224904b88a519fa8ca41f2d648dc57dc8b8de3868f
+    sha256: 716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
 - requirement_id: P8A-LEGACY-001
@@ -479,13 +479,13 @@ requirements:
   verification_method: P8B requirement/state/evidence consistency gate.
   verification_stage: P8B
   test_id: P8B-REQUIREMENT-TRACEABILITY
-  evidence_path: evidence/generated/p8b_rtl_python_crosscheck.json
+  evidence_path: evidence/generated/p8b_acceptance_core.json
   status: PASS
   waiver: null
   artifact_hashes:
-  - path: evidence/generated/p8b_mapping_exhaustive_summary.json
-    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
-  - path: evidence/generated/p8b_geometry_nominal_summary.json
-    sha256: 0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5
+  - path: evidence/generated/p8b_acceptance_core.json
+    sha256: eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40
+  - path: evidence/generated/offline_gate_summary.json
+    sha256: 4108eedd8632b80f734f9f74675b4e4463fb69df10f1987c217fe595709801a5
   - path: evidence/generated/p8b_rtl_python_crosscheck.json
     sha256: 4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136

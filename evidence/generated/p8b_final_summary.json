@@ -1,6 +1,6 @@
 {
   "acceptance_core_path": "evidence/generated/p8b_acceptance_core.json",
-  "acceptance_core_sha256": "b5408f1b46aaa37c06108911268be52b456aa2e1b79fae23cac2f47cf146c125",
+  "acceptance_core_sha256": "eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40",
   "branch": "p8/integration",
   "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
   "failures": [],
@@ -38,10 +38,7 @@
   },
   "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
   "p8a_checkpoint_tag": "p8a-pass",
-  "pending": [
-    "P8B-P0-P7-REGRESSION",
-    "P8B-OFFLINE-FULL-REGRESSION"
-  ],
+  "pending": [],
   "preserved_scope": {
     "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
     "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW",
@@ -50,7 +47,7 @@
     "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW"
   },
   "profile": "D200_D600_8X32",
-  "project_state_after_sha256": "1dbc779906f30530b63eb9810f024ec5ebc710943efa5b774a7b336ea52a2883",
+  "project_state_after_sha256": "05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456",
   "project_state_before_sha256": "d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd",
   "python_model_artifacts": [
     {
@@ -129,9 +126,9 @@
   },
   "schema_version": 1,
   "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+  "source_commit": "e47e89be423c9fe955d3f015959872325b24b2fb",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
-  "status": "PASS_FOCUSED_PENDING_FULL_REGRESSION",
+  "status": "PASS",
   "tests": [
     {
       "details": {
@@ -286,20 +283,20 @@
     },
     {
       "details": {
-        "parent_offline_gate": false
+        "parent_offline_gate": true
       },
       "evidence_path": "evidence/generated/offline_gate_summary.json",
       "profile": "P8B_OFFLINE_LOGIC_MODEL",
-      "status": "PENDING_FOCUSED_RUN",
+      "status": "PASS",
       "test_id": "P8B-P0-P7-REGRESSION"
     },
     {
       "details": {
-        "parent_offline_gate": false
+        "parent_offline_gate": true
       },
       "evidence_path": "evidence/generated/offline_gate_summary.json",
       "profile": "P8B_OFFLINE_LOGIC_MODEL",
-      "status": "PENDING_FOCUSED_RUN",
+      "status": "PASS",
       "test_id": "P8B-OFFLINE-FULL-REGRESSION"
     }
   ],

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8B-1",
+  "state_revision": "P8B-2",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -135,7 +135,11 @@
     "profile": "D200_D600_8X32",
     "scope": "OFFLINE_GEOMETRY_MAPPING_CROSSBAR_EPOCH_PHASE_HANDOVER_LOGIC_MODEL",
     "test_id": "P8B-OFFLINE-FULL-REGRESSION",
-    "evidence_path": "evidence/generated/p8b_final_summary.json",
+    "evidence_path": "evidence/generated/p8b_acceptance_core.json",
+    "evidence_sha256": "eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40",
+    "source_commit": "e47e89be423c9fe955d3f015959872325b24b2fb",
+    "full_regression_path": "evidence/generated/offline_gate_summary.json",
+    "full_regression_sha256": "4108eedd8632b80f734f9f74675b4e4463fb69df10f1987c217fe595709801a5",
     "geometry_config_path": "config/geometry/optical_geometry.yaml",
     "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
     "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
@@ -205,7 +209,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "5006731277e49d9f2ddaa04a4726949674be5b27",
+  "last_verified_commit": "e47e89be423c9fe955d3f015959872325b24b2fb",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json"
 }
