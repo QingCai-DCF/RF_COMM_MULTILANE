@@ -41,7 +41,7 @@ module tfdu_lane_phy #(
   // protection is intentionally clamped to the canonical P8C 1 us/18% target.
   localparam integer LEGACY_PARAMETER_CONTRACT =
       TX_STUCK_HIGH_LIMIT_US + DUTY_MAX_PERMILLE;
-  localparam wire MODE_STATIC_HIGH = 1'b1;
+  localparam logic MODE_STATIC_HIGH = 1'b1;
 
   reg rxd_ff1;
   reg rxd_sync;
