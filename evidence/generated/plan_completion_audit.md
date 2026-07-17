@@ -32,6 +32,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 
 | Scope | Offline gate evidence | Status |
 |---|---|---|
+| P8A canonical requirements/state/evidence | p8a_unit_tests:PASS, p8a_consistency:PASS | PASS |
 | M1 TFDU lane PHY | tfdu_safety_static:PASS, m1_tfdu_model_reference:PASS, lane_phy_sim:PASS | IMPLEMENTED_REFERENCE_PASS_SIM_PASS |
 | TFDU6102 behavior model | tfdu_safety_static:PASS, m1_tfdu_model_reference:PASS | IMPLEMENTED_REFERENCE_PASS |
 | SV port contract coverage | sv_port_contracts:PASS | STATIC_PASS |
@@ -78,4 +79,4 @@ The Vivado non-hardware build runner uses PATH Vivado when present, otherwise th
 `iverilog` and `verilator` remain absent when their discovery markers are `0`; this is distinct from Xilinx simulator availability.
 PS driver C compilation uses host `gcc`/`clang` when available, otherwise the Vitis ARM cross GCC syntax-only fallback when available.
 PS driver C compilation remains `PENDING_TOOL` only when neither a host C compiler nor the accepted Vitis cross compiler is available.
-Hardware acceptance remains `PENDING_HW` by project rule and was not executed.
+This offline gate evaluates no new hardware scope. Canonical state separately preserves the existing P7 stationary two-lane PASS, while Z7020, rotation, and final-product hardware acceptance remain pending.

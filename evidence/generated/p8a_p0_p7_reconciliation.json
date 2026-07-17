@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "stage": "P8A",
+  "status": "PASS",
+  "no_hardware_actions_executed": true,
+  "hardware_scope_promoted": false,
+  "current_scoped_status": {
+    "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
+    "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
+    "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW",
+    "ROTATION_ACCEPTANCE": "PENDING_FINAL_MECHANICAL",
+    "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "p7_current": {
+    "run_id": "p7_20260717_stationary_app_r74_formal_full",
+    "source_commit": "911e1a303ff58593cac5ff4c4b70150d17f9a26b",
+    "evidence_commit": "5006731277e49d9f2ddaa04a4726949674be5b27",
+    "profile": "Z7010_2LANE_DEV",
+    "test_id": "P7-R74-FORMAL-FULL",
+    "bitstream_sha256": "756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a",
+    "ps_elf_sha256": "2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949",
+    "shutdown_before": "PASS",
+    "shutdown_after": "PASS"
+  },
+  "stages": [
+    {
+      "stage": "P0_BOOTSTRAP",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P0-BOOTSTRAP-MARKERS",
+      "evidence": [
+        {
+          "path": "evidence/generated/bootstrap_markers.md",
+          "sha256": "23896dd01858df8afe68d450acf6940402d0c9090e999b8a5e890ca66468ff70",
+          "size_bytes": 570
+        }
+      ]
+    },
+    {
+      "stage": "P1_OFFLINE_HARDENING",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P1-OFFLINE-HARDENING",
+      "evidence": [
+        {
+          "path": "evidence/generated/p1_offline_hardening_summary.json",
+          "sha256": "dc7ce195885dea366186107bfe027f1b0ed6a72dfe0643a29ecf12fe7eb9078c",
+          "size_bytes": 31660
+        }
+      ]
+    },
+    {
+      "stage": "P2_SIMULATION_BASELINE",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P3-P2-RECHECK-PLUS-P7-REGRESSION",
+      "evidence": [
+        {
+          "path": "evidence/generated/p3_pre_hw_acceptance_package_summary.md",
+          "sha256": "c02b445c23af4148260fa44ec168eee2414b8bc3522fbdaa4b858402efcd50e4",
+          "size_bytes": 1575
+        },
+        {
+          "path": "evidence/generated/p7_offline_gate_summary.json",
+          "sha256": "9ade79534e5b07cd9f2d806b4f8b2a3645c595ba3d6f46bbf80394e40069d883",
+          "size_bytes": 20780
+        }
+      ]
+    },
+    {
+      "stage": "P3_PRE_HW_ACCEPTANCE_PACKAGE",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P3-PRE-HW-PACKAGE",
+      "evidence": [
+        {
+          "path": "evidence/generated/p3_pre_hw_acceptance_package_summary.md",
+          "sha256": "c02b445c23af4148260fa44ec168eee2414b8bc3522fbdaa4b858402efcd50e4",
+          "size_bytes": 1575
+        }
+      ]
+    },
+    {
+      "stage": "P4_AUTO_HARDWARE_ACCEPTANCE",
+      "status": "PASS_WITH_PROXY_ILA_EVIDENCE",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P4-AUTO-HW-PROXY",
+      "evidence": [
+        {
+          "path": "evidence/generated/p4_auto_hardware_acceptance_summary.json",
+          "sha256": "2bb5105d2ad280fb85cfcc0870c284e4743257cc1b0e117970d24a6bcf6b9b45",
+          "size_bytes": 2566
+        }
+      ]
+    },
+    {
+      "stage": "P5_2LANE_PROTOCOL_STABILIZATION",
+      "status": "PASS_WITH_NOTES",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P5-2LANE-PROTOCOL",
+      "evidence": [
+        {
+          "path": "evidence/generated/p5_2lane_protocol_stabilization_summary.json",
+          "sha256": "dc9d36fb22c1f9175649afd8d5f121f8fb47a9056d02173136930afe8412a57b",
+          "size_bytes": 11628
+        }
+      ]
+    },
+    {
+      "stage": "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P6-EVIDENCE-CONSISTENCY",
+      "evidence": [
+        {
+          "path": "evidence/generated/p6_evidence_consistency_summary.json",
+          "sha256": "477ae48aaafa9da114d183b309bea4476203372046c012f0fe812e6fd6f71681",
+          "size_bytes": 58
+        }
+      ]
+    },
+    {
+      "stage": "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE",
+      "status": "PASS",
+      "profile": "Z7010_2LANE_DEV",
+      "test_id": "P7-R74-FORMAL-FULL",
+      "evidence": [
+        {
+          "path": "evidence/generated/p7_final_acceptance_summary.json",
+          "sha256": "a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b",
+          "size_bytes": 1273547
+        },
+        {
+          "path": "evidence/generated/p7_final_acceptance_summary.md",
+          "sha256": "702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624",
+          "size_bytes": 8317
+        },
+        {
+          "path": "evidence/hardware/p7/p7_run_sequence_ledger.json",
+          "sha256": "ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4",
+          "size_bytes": 1846000
+        }
+      ]
+    }
+  ],
+  "historical_conflicts": [
+    {
+      "conflict_id": "P2_EARLY_FAIL_VS_CURRENT_PASS",
+      "historical_status": "FAIL",
+      "historical_evidence": "evidence/generated/p2_simulation_baseline_summary.md",
+      "resolution": "SUPERSEDED_FOR_CURRENT_P2_STATUS_BY_LATER_P2_RECHECK_AND_P7_REGRESSION",
+      "history_preserved": true
+    },
+    {
+      "conflict_id": "AB_L1_LEGACY_BAD_DIR_VS_CURRENT_P7_USABILITY",
+      "historical_status": "BAD_DIR",
+      "historical_evidence": "evidence/imported/evidence/final/BAD_DIR_fault_report.md",
+      "resolution": "RESOLVED_FOR_P7_STATIONARY_2LANE_ONLY",
+      "current_evidence": "evidence/generated/p7_lane1_promotion_summary.json",
+      "not_extrapolated_to": [
+        "Z7020",
+        "SECTOR_BANK",
+        "ROTATION",
+        "FINAL_PRODUCT"
+      ],
+      "history_preserved": true
+    },
+    {
+      "conflict_id": "P7_R41_FAIL_VS_P7_R74_PASS",
+      "historical_status": "IMMUTABLE_FAIL",
+      "historical_evidence": "evidence/generated/p7_r41_formal_failure.json",
+      "resolution": "R41_REMAINS_FAILED; LATER_DISTINCT_R74_FORMAL_RUN_IS_CURRENT_CANONICAL_PASS",
+      "current_evidence": "evidence/generated/p7_final_acceptance_summary.json",
+      "history_preserved": true
+    },
+    {
+      "conflict_id": "PRE_V3_1_STATUS_VS_CURRENT_CANONICAL_STATE",
+      "historical_status": "P7_PENDING_HW",
+      "historical_evidence": "docs/legacy_stage_rules/P7_PRE_V3_1_PROJECT_STATUS.md",
+      "resolution": "SUPERSEDED_BY_CONFIG_PROJECT_STATE_AND_GENERATED_ROOT_STATUS",
+      "history_preserved": true
+    }
+  ],
+  "input_artifacts": [
+    {
+      "path": "evidence/generated/bootstrap_markers.md",
+      "sha256": "23896dd01858df8afe68d450acf6940402d0c9090e999b8a5e890ca66468ff70",
+      "size_bytes": 570
+    },
+    {
+      "path": "evidence/generated/p1_offline_hardening_summary.json",
+      "sha256": "dc7ce195885dea366186107bfe027f1b0ed6a72dfe0643a29ecf12fe7eb9078c",
+      "size_bytes": 31660
+    },
+    {
+      "path": "evidence/generated/p2_simulation_baseline_summary.md",
+      "sha256": "e2bcef152d0b48bfcbdbd9e5066a165890602a10d1afcc49339117e6b8fc8568",
+      "size_bytes": 1840
+    },
+    {
+      "path": "evidence/generated/p3_pre_hw_acceptance_package_summary.md",
+      "sha256": "c02b445c23af4148260fa44ec168eee2414b8bc3522fbdaa4b858402efcd50e4",
+      "size_bytes": 1575
+    },
+    {
+      "path": "evidence/generated/p4_auto_hardware_acceptance_summary.json",
+      "sha256": "2bb5105d2ad280fb85cfcc0870c284e4743257cc1b0e117970d24a6bcf6b9b45",
+      "size_bytes": 2566
+    },
+    {
+      "path": "evidence/generated/p5_2lane_protocol_stabilization_summary.json",
+      "sha256": "dc9d36fb22c1f9175649afd8d5f121f8fb47a9056d02173136930afe8412a57b",
+      "size_bytes": 11628
+    },
+    {
+      "path": "evidence/generated/p6_evidence_consistency_summary.json",
+      "sha256": "477ae48aaafa9da114d183b309bea4476203372046c012f0fe812e6fd6f71681",
+      "size_bytes": 58
+    },
+    {
+      "path": "evidence/generated/p7_offline_gate_summary.json",
+      "sha256": "9ade79534e5b07cd9f2d806b4f8b2a3645c595ba3d6f46bbf80394e40069d883",
+      "size_bytes": 20780
+    },
+    {
+      "path": "evidence/generated/p7_lane1_promotion_summary.json",
+      "sha256": "6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363",
+      "size_bytes": 1795
+    },
+    {
+      "path": "evidence/generated/p7_final_acceptance_summary.json",
+      "sha256": "a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b",
+      "size_bytes": 1273547
+    },
+    {
+      "path": "evidence/generated/p7_final_acceptance_summary.md",
+      "sha256": "702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624",
+      "size_bytes": 8317
+    },
+    {
+      "path": "evidence/hardware/p7/p7_run_sequence_ledger.json",
+      "sha256": "ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4",
+      "size_bytes": 1846000
+    },
+    {
+      "path": "evidence/generated/p7_r41_formal_failure.json",
+      "sha256": "32bddfebc13630ab4261d4ab7b83851fb89800b84afdbb393f3983620d8a61a8",
+      "size_bytes": 5422
+    },
+    {
+      "path": "evidence/imported/evidence/final/BAD_DIR_fault_report.md",
+      "sha256": "e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7",
+      "size_bytes": 1263
+    },
+    {
+      "path": "docs/legacy_stage_rules/P7_PRE_V3_1_PROJECT_STATUS.md",
+      "sha256": "452bd17d1922065a44f783d80c977d073ad7fd7e1f0cb0b2c1b099248d5e8fe9",
+      "size_bytes": 20506
+    }
+  ],
+  "errors": []
+}

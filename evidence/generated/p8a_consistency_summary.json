@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "stage": "P8A",
+  "status": "PASS",
+  "no_hardware_actions_executed": true,
+  "hardware_scope_promoted": false,
+  "preserved_scope": {
+    "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
+    "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
+    "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW",
+    "ROTATION_ACCEPTANCE": "PENDING_FINAL_MECHANICAL",
+    "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW"
+  },
+  "gates": {
+    "CANONICAL_CONSTRAINT_GATE": {
+      "status": "PASS",
+      "errors": []
+    },
+    "PROJECT_STATE_CONSISTENCY": {
+      "status": "PASS",
+      "errors": []
+    },
+    "REQUIREMENT_TRACEABILITY_BASELINE": {
+      "status": "PASS",
+      "errors": []
+    },
+    "P0_P7_EVIDENCE_RECONCILIATION": {
+      "status": "PASS",
+      "errors": []
+    },
+    "NO_HARDWARE_ACTIONS_EXECUTED": {
+      "status": "PASS",
+      "value": true,
+      "errors": []
+    }
+  },
+  "input_artifacts": [
+    {
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    {
+      "path": "config/project_state.json",
+      "sha256": "d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd"
+    },
+    {
+      "path": "config/project_requirements.yaml",
+      "sha256": "9b822ae759008d69b4e6239774638c02d535600d329cfd0d75caa517e3018b54"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "sha256": "d333ddf403be6f8942d679cc7d00c98253deffbc022025fa9d8b450e24431620"
+    },
+    {
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "aee2aa82dad6f1d1124cd210c8cadf5e1c530b8ba2e5fa481436313b565c0111"
+    },
+    {
+      "path": "evidence/generated/p8a_p0_p7_reconciliation.json",
+      "sha256": "8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d"
+    },
+    {
+      "path": "evidence/generated/p8a_p0_p7_reconciliation.md",
+      "sha256": "42d004f484cdee737da7179b0168374c3ca153279322f73ad48ce6fc111e072d"
+    }
+  ]
+}

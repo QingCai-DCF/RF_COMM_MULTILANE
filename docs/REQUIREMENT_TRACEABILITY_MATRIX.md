@@ -1,0 +1,81 @@
+# Requirement Traceability Matrix
+
+> Generated from `config/project_requirements.yaml` by `scripts/generate_requirement_traceability.py`; do not edit by hand.
+
+Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
+
+```text
+REQUIREMENT_COUNT: 28
+PASS: 6
+PENDING: 22
+FAIL: 0
+WAIVED: 0
+```
+
+A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS means the requirement inventory and traceability machinery are complete; it does not promote unverified product requirements.
+
+| Requirement ID | Status | Profile | Verification stage | Test ID | Evidence | Requirement |
+|---|---|---|---|---|---|---|
+| `SYS-ARCH-001` | `PENDING` | Z7020_8LANE_DUAL_ENDPOINT | `P10B` | — | — | 最终固定侧和旋转侧必须为两个独立 Zynq 节点。 |
+| `SYS-GEO-001` | `PENDING` | Z7020_ROTATING_8LANE_FINAL | `P12` | — | — | 旋转侧必须布置 8 个 TFDU，45° 等间隔。 |
+| `SYS-GEO-002` | `PENDING` | Z7020_FIXED_8LANE_FINAL | `P12` | — | — | 固定侧必须布置 32 个 TFDU，11.25° 等间隔。 |
+| `SYS-MOTION-001` | `PENDING` | FINAL_PRODUCT_600RPM | `P13` | — | — | 系统必须支持正反转、停启和任意连续轨迹，且 \|rpm\| <= 600。 |
+| `SYS-PERMIT-001` | `PENDING` | Z7020_8LANE_DUAL_ENDPOINT | `P8C_D17` | — | — | 每个独立端点各有且仅有一根本地 active-high GLOBAL_PERMIT。 |
+| `SYS-PERMIT-002` | `PENDING` | Z7020_8LANE_DUAL_ENDPOINT | `P8C_D17` | — | — | GLOBAL_PERMIT=0 必须关闭本端全部物理 TX。 |
+| `SYS-PERMIT-003` | `PENDING` | ALL_ENDPOINT_PROFILES | `P8C_D17` | — | — | 禁止双 permit、permit heartbeat、per-bank permit 和 per-lane external GLOBAL_PERMIT。 |
+| `SYS-PERMIT-004` | `PENDING` | ALL_ENDPOINT_PROFILES | `P8C` | — | — | permit 重新上升必须重新 arm，且不得恢复半帧。 |
+| `PHY-SAFE-001` | `PENDING` | ALL_TFDU_PROFILES | `P8C_P9_P12` | — | — | TFDU6102 的 Txd/Rxd/SD 极性和 static high-speed Mode 必须正确。 |
+| `PHY-SAFE-002` | `PENDING` | ALL_TFDU_PROFILES | `P8C_P9` | — | — | 退出 shutdown 后必须等待至少 500 µs 才允许正常 RX/TX。 |
+| `PHY-SAFE-003` | `PENDING` | ALL_TFDU_PROFILES | `P8C_P9` | — | — | 项目 MAX_CONTINUOUS_TXD_HIGH_US 必须 <= 1 µs。 |
+| `PHY-SAFE-004` | `PENDING` | ALL_TFDU_PROFILES | `P8C_P9` | — | — | 每模块任意 clock-aligned 1000 µs 滑动窗口 duty 必须严格 <20%，设计目标 <=18%。 |
+| `MAP-001` | `PENDING` | Z7020_8LANE_TARGET | `P8B` | — | — | current mapping 必须始终为 8-lane permutation。 |
+| `MAP-002` | `PENDING` | Z7020_8LANE_TARGET | `P8B` | — | — | candidate mapping 必须支持正反方向并始终为 permutation。 |
+| `MAP-003` | `PENDING` | Z7020_8LANE_TARGET | `P8B` | — | — | mapping commit 必须原子，且 path epoch 每次 commit 只递增一次。 |
+| `PERF-HD-001` | `PENDING` | FINAL_PRODUCT_600RPM_HALF_DUPLEX | `P13_P15` | — | — | 600 rpm 半双工 application goodput 必须 >=16 Mbit/s。 |
+| `PERF-FD-001` | `PENDING` | FINAL_PRODUCT_600RPM_FULL_DUPLEX | `P15` | — | — | 600 rpm 全双工 application goodput 必须 >=8 Mbit/s/方向。 |
+| `DATA-001` | `PENDING` | ALL_APPLICATION_PROFILES | `P8D_P13_P15` | — | — | 错误、partial、stale 或 duplicate 对象不得提交。 |
+| `EVID-001` | `PENDING` | ALL_PROFILES | `CONTINUOUS` | — | — | 每个 PASS 必须绑定 profile、test ID 和 evidence path。 |
+| `EVID-002` | `PENDING` | ALL_FORMAL_RUNS | `CONTINUOUS` | — | — | 正式 artifact 必须内容寻址并以 SHA256 冻结。 |
+| `SAFE-OPT-001` | `PENDING` | FINAL_PRODUCT_OPTICAL_SAFETY | `D16_P15` | — | — | 系统级光学安全通过前不得放宽人员接近控制。 |
+| `MECH-001` | `PENDING` | FINAL_PRODUCT_600RPM | `P13` | — | — | 600 rpm 前必须完成留存、动平衡和分级升速。 |
+| `P8A-CANON-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-CANONICAL-CONSTRAINT-GATE` | `PROJECT_CONSTRAINTS.txt` | PROJECT_CONSTRAINTS.txt 必须是唯一 canonical technical constraint，旧目标文件必须保持 superseded。 |
+| `P8A-STATE-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-PROJECT-STATE-CONSISTENCY` | `PROJECT_STATUS.md` | config/project_state.json 必须是机器状态唯一事实源，PROJECT_STATUS.md 必须由它生成。 |
+| `P8A-TRACE-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-REQUIREMENT-TRACEABILITY-BASELINE` | `config/project_requirements.yaml` | V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。 |
+| `P8A-EVID-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-P0-P7-EVIDENCE-RECONCILIATION` | `evidence/generated/p8a_p0_p7_reconciliation.json` | P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。 |
+| `P8A-SCOPE-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-SCOPE-NONPROMOTION-GATE` | `PROJECT_STATUS.md` | P8A 离线结果不得提升、擦除或模糊任何硬件 scope。 |
+| `P8A-LEGACY-001` | `PASS` | P8A_BASELINE | `P8A` | `P8A-LEGACY-CURRENT-SCOPE-RECONCILIATION` | `evidence/generated/p8a_p0_p7_reconciliation.json` | AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。 |
+
+## PASS artifact bindings
+
+### `P8A-CANON-001`
+
+- `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
+- `PROJECT_CONSTRAINTS_CHANGELOG.md` — `f51da907122d1673bc3b657779997742df474ed391cd1a6772e0371da8cc176b`
+
+### `P8A-STATE-001`
+
+- `config/project_state.json` — `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
+- `PROJECT_STATUS.md` — `d333ddf403be6f8942d679cc7d00c98253deffbc022025fa9d8b450e24431620`
+
+### `P8A-TRACE-001`
+
+- `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
+- `config/project_state.json` — `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
+
+### `P8A-EVID-001`
+
+- `evidence/generated/p8a_p0_p7_reconciliation.json` — `8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d`
+- `evidence/generated/p7_final_acceptance_summary.json` — `a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b`
+- `evidence/hardware/p7/p7_run_sequence_ledger.json` — `ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4`
+
+### `P8A-SCOPE-001`
+
+- `config/project_state.json` — `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
+- `PROJECT_STATUS.md` — `d333ddf403be6f8942d679cc7d00c98253deffbc022025fa9d8b450e24431620`
+- `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
+
+### `P8A-LEGACY-001`
+
+- `evidence/imported/evidence/final/BAD_DIR_fault_report.md` — `e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7`
+- `evidence/generated/p7_lane1_promotion_summary.json` — `6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363`
+- `evidence/generated/p8a_p0_p7_reconciliation.json` — `8d3de8a562e72c8c635099c24090ee33c15b585b265090aa83d14881e3d1f76d`

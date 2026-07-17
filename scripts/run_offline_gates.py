@@ -275,6 +275,14 @@ def write_summary(outdir, results):
         "status": status,
         "no_hardware": True,
         "hardware_acceptance": "PENDING_HW",
+        "hardware_acceptance_scope": "NO_NEW_HARDWARE_SCOPE_EVALUATED",
+        "preserved_scoped_hardware_acceptance": {
+            "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
+            "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
+            "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW",
+            "ROTATION_ACCEPTANCE": "PENDING_FINAL_MECHANICAL",
+            "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW",
+        },
         "OFFLINE_CACHE_STATUS": "BYPASS",
         "OFFLINE_CACHE_KEY": None,
         "OFFLINE_CACHE_VALIDATED_OUTPUT_HASHES": {},
@@ -288,6 +296,12 @@ def write_summary(outdir, results):
         f"BOOTSTRAP_STATUS: {status}",
         "NO_HARDWARE_ACTIONS_EXECUTED: true",
         "HARDWARE_ACCEPTANCE: PENDING_HW",
+        "OFFLINE_GATE_HARDWARE_SCOPE: NO_NEW_HARDWARE_SCOPE_EVALUATED",
+        "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE_PRESERVED: PASS",
+        "CURRENT_Z7010_PLATFORM_ACCEPTANCE_PRESERVED: PLATFORM_LIMITED_PASS",
+        "Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW",
+        "ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL",
+        "FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW",
         "OFFLINE_CACHE_STATUS: BYPASS",
         "OFFLINE_REAL_BUILD_PROCESS_RAN: true",
         "",
@@ -305,6 +319,8 @@ def main(argv=None):
     results = []
     py = sys.executable
     results.append(run("project_integrity", [py, "scripts/check_project_integrity.py"]))
+    results.append(run("p8a_unit_tests", [py, "-m", "unittest", "tests.test_p8a_consistency", "-v"]))
+    results.append(run("p8a_consistency", [py, "scripts/check_p8a_consistency.py"]))
     results.append(run("xdc_conflicts", [py, "scripts/check_xdc_conflicts.py"]))
     results.append(run("tfdu_safety_static", [py, "scripts/check_tfdu_safety_static.py"]))
     results.append(run("m1_tfdu_model_reference", [py, "scripts/generate_m1_tfdu_model_reference.py"]))

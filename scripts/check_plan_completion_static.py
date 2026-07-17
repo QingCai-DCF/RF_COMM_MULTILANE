@@ -43,6 +43,8 @@ FORBIDDEN_CLAIM_LINES = [
 
 REQUIRED_PASS_GATES = [
     "project_integrity",
+    "p8a_unit_tests",
+    "p8a_consistency",
     "xdc_conflicts",
     "tfdu_safety_static",
     "m1_tfdu_model_reference",
@@ -76,6 +78,7 @@ REQUIRED_TOOL_GATED_GATES = [
 ]
 
 AUDIT_REQUIRED_TEXT = [
+    ("P8A canonical requirements/state/evidence", "PLAN_AUDIT_P8A_BASELINE_RECORDED"),
     ("SV port contract coverage", "PLAN_AUDIT_SV_PORT_CONTRACT_RECORDED"),
     ("m4_ps_driver_trace", "PLAN_AUDIT_M4_PS_DRIVER_TRACE_RECORDED"),
     ("m6_refusal_runtime", "PLAN_AUDIT_M6_REFUSAL_RUNTIME_RECORDED"),

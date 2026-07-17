@@ -3,6 +3,12 @@
 BOOTSTRAP_STATUS: PASS
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
+OFFLINE_GATE_HARDWARE_SCOPE: NO_NEW_HARDWARE_SCOPE_EVALUATED
+P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE_PRESERVED: PASS
+CURRENT_Z7010_PLATFORM_ACCEPTANCE_PRESERVED: PLATFORM_LIMITED_PASS
+Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW
+ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
+FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
 OFFLINE_CACHE_STATUS: BYPASS
 OFFLINE_REAL_BUILD_PROCESS_RAN: true
 
@@ -10,14 +16,54 @@ OFFLINE_REAL_BUILD_PROCESS_RAN: true
 
 ```text
 CURRENT_DIR_IS_NOT_LEGACY_RF_COMM=1
-PROJECT_CONSTRAINTS_CN_EXISTS=1
-PROJECT_CONSTRAINTS_HASH_MATCH=1
+LEGACY_PROJECT_CONSTRAINT_EXISTS=1
+CANONICAL_PROJECT_CONSTRAINT_EXISTS=1
+CANONICAL_PROJECT_CONSTRAINT_DECLARED=1
+LEGACY_PROJECT_CONSTRAINT_SUPERSEDED=1
+PROJECT_CONSTRAINTS_CHANGELOG_EXISTS=1
+PREVIOUS_PROJECT_CONSTRAINT_HASH_RECORDED=1
+LEGACY_PROJECT_CONSTRAINT_HASH_RECORDED=1
+CANONICAL_PROJECT_CONSTRAINT_HASH_RECORDED=1
+AGENTS_HASH_RECORDED=1
 AGENTS_MD_CREATED=1
 IMPORT_MANIFEST_EXISTS=1
 LEGACY_EVIDENCE_IMPORTED=1
 ACTIVE_PROFILE_EXISTS=1
 CANONICAL_XDC_EXISTS=1
 PINMAP_EXISTS=1
+
+```
+
+## p8a_unit_tests: PASS
+
+```text
+
+test_canonical_state_validates (tests.test_p8a_consistency.P8AConsistencyTests.test_canonical_state_validates) ... ok
+test_duplicate_requirement_id_fails (tests.test_p8a_consistency.P8AConsistencyTests.test_duplicate_requirement_id_fails) ... ok
+test_generated_documents_are_byte_exact_lf (tests.test_p8a_consistency.P8AConsistencyTests.test_generated_documents_are_byte_exact_lf) ... ok
+test_generated_documents_are_deterministic (tests.test_p8a_consistency.P8AConsistencyTests.test_generated_documents_are_deterministic) ... ok
+test_p0_p7_reconciliation_passes_and_preserves_conflicts (tests.test_p8a_consistency.P8AConsistencyTests.test_p0_p7_reconciliation_passes_and_preserves_conflicts) ... ok
+test_pass_requirement_requires_test_and_hash (tests.test_p8a_consistency.P8AConsistencyTests.test_pass_requirement_requires_test_and_hash) ... ok
+test_requirements_baseline_validates (tests.test_p8a_consistency.P8AConsistencyTests.test_requirements_baseline_validates) ... ok
+test_state_rejects_final_product_promotion (tests.test_p8a_consistency.P8AConsistencyTests.test_state_rejects_final_product_promotion) ... ok
+test_state_rejects_p7_regression (tests.test_p8a_consistency.P8AConsistencyTests.test_state_rejects_p7_regression) ... ok
+test_state_requires_legacy_ab_l1_record (tests.test_p8a_consistency.P8AConsistencyTests.test_state_requires_legacy_ab_l1_record) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.082s
+
+OK
+```
+
+## p8a_consistency: PASS
+
+```text
+CANONICAL_CONSTRAINT_GATE=PASS
+PROJECT_STATE_CONSISTENCY=PASS
+REQUIREMENT_TRACEABILITY_BASELINE=PASS
+P0_P7_EVIDENCE_RECONCILIATION=PASS
+NO_HARDWARE_ACTIONS_EXECUTED=1
+P8A_STATUS=PASS
 
 ```
 
@@ -590,11 +636,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/tfdu_lane_phy.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -624,9 +670,9 @@ source xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
-$finish called at time : 385 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 173
+$finish called at time : 385 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 173
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:20 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:09:54 2026...
 
 ```
 
@@ -641,11 +687,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -675,9 +721,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
-$finish called at time : 1685 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
+$finish called at time : 1685 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:24 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:09:59 2026...
 
 ```
 
@@ -692,9 +738,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_frame_l1.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_frame_l1.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_frame_l1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -723,9 +769,9 @@ source xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_FRAME_CRC_PASS=1
-$finish called at time : 145 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" Line 195
+$finish called at time : 145 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:28 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:10:03 2026...
 
 ```
 
@@ -740,11 +786,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -775,9 +821,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
-$finish called at time : 11705 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
+$finish called at time : 11705 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:33 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:10:08 2026...
 
 ```
 
@@ -792,9 +838,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_arq_l2.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_arq_l2.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_arq_l2
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_ack_only
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -823,9 +869,9 @@ source xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_ACK_ONLY_PASS=1
-$finish called at time : 425 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" Line 181
+$finish called at time : 425 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:37 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:10:13 2026...
 
 ```
 
@@ -840,9 +886,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_axi_regs_new
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -871,9 +917,9 @@ source xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_AXI_REGS_NEW_PASS=1
-$finish called at time : 266 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" Line 177
+$finish called at time : 266 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:42 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:10:18 2026...
 
 ```
 
@@ -888,9 +934,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/rtl/ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_multilane_scheduler
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -919,9 +965,9 @@ source xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
-$finish called at time : 146 ns : File "D:/CodexWorktrees/p7formal_d3eb4a6/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
+$finish called at time : 146 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 17 04:08:46 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 17 23:10:23 2026...
 
 ```
 
@@ -959,6 +1005,8 @@ PLAN_OFFLINE_SUMMARY_NO_HARDWARE_TRUE=1
 PLAN_OFFLINE_RESULTS_NO_HARD_FAIL=1
 PLAN_NO_HARDWARE_SCAN_PASS=1
 PLAN_GATE_PROJECT_INTEGRITY_PASS=1
+PLAN_GATE_P8A_UNIT_TESTS_PASS=1
+PLAN_GATE_P8A_CONSISTENCY_PASS=1
 PLAN_GATE_XDC_CONFLICTS_PASS=1
 PLAN_GATE_TFDU_SAFETY_STATIC_PASS=1
 PLAN_GATE_M1_TFDU_MODEL_REFERENCE_PASS=1
@@ -998,6 +1046,7 @@ PLAN_FORBIDDEN_CLAIM_EIGHT_LANE_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_AB_L1_FIXED_ABSENT=1
 PLAN_AUDIT_STATUS_RECORDED=1
 PLAN_AUDIT_OFFLINE_STATUS_RECORDED=1
+PLAN_AUDIT_P8A_BASELINE_RECORDED=1
 PLAN_AUDIT_SV_PORT_CONTRACT_RECORDED=1
 PLAN_AUDIT_M4_PS_DRIVER_TRACE_RECORDED=1
 PLAN_AUDIT_M6_REFUSAL_RUNTIME_RECORDED=1
