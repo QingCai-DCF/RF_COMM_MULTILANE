@@ -273,6 +273,7 @@ def verify_existing() -> tuple[bool, dict[str, Any]]:
             if not path.is_file() or sha256(path) != item["sha256"]:
                 errors.append(f"artifact mismatch: {item['path']}")
     commands = [
+        [sys.executable, "scripts/materialize_p8b_checkpoint_evidence.py", "--verify"],
         [sys.executable, "scripts/generate_tfdu_safety_config.py", "--verify"],
         [sys.executable, "scripts/generate_register_headers.py", "--verify"],
         [sys.executable, "scripts/check_p8c_safety_static.py"],
@@ -316,6 +317,7 @@ def main(argv: list[str] | None = None) -> int:
         failures.append("NO_HARDWARE/current authorization precondition")
 
     for name, command in {
+        "p8b_checkpoint_evidence_verify": [sys.executable, "scripts/materialize_p8b_checkpoint_evidence.py", "--verify"],
         "safety_config_verify": [sys.executable, "scripts/generate_tfdu_safety_config.py", "--verify"],
         "register_map_verify": [sys.executable, "scripts/generate_register_headers.py", "--verify"],
         "python_unit_tests": [sys.executable, "-m", "unittest", "discover", "-s", "tests/p8c", "-v"],
@@ -523,11 +525,14 @@ def main(argv: list[str] | None = None) -> int:
                        ROOT / "scripts/check_p8c_safety_static.py",
                        ROOT / "scripts/generate_tfdu_safety_config.py",
                        ROOT / "scripts/generate_register_headers.py",
+                       ROOT / "scripts/materialize_p8b_checkpoint_evidence.py",
                        ROOT / "scripts/vivado/p8c_resource_audit.tcl",
                        ROOT / "tools/p8c_tfdu_safety_reference.py",
                        ROOT / "software/ps_driver/ir_driver.c",
                        ROOT / "software/ps_driver/ir_driver.h",
-                       ROOT / "software/ps_driver/main_offline_stub.c"]
+                       ROOT / "software/ps_driver/main_offline_stub.c",
+                       ROOT / "evidence/generated/p8b_checkpoint_acceptance_core.json",
+                       ROOT / "evidence/generated/p8b_checkpoint_offline_gate_summary.json"]
     artifact_paths += [OUT / f"{stem}.{suffix}" for stem in REQUIRED_PAIRS for suffix in ("json", "md")]
     source_manifest_path = RAW / "source_manifest.json"
     source_manifest_path.write_text(json.dumps(active, indent=2, sort_keys=True) + "\n",

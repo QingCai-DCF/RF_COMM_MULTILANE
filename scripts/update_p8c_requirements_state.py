@@ -19,6 +19,16 @@ STATE_PATH = ROOT / "config/project_state.json"
 REQ_PATH = ROOT / "config/project_requirements.yaml"
 STATUS_PATH = ROOT / "PROJECT_STATUS.md"
 TRACE_PATH = ROOT / "docs/REQUIREMENT_TRACEABILITY_MATRIX.md"
+P8B_CHECKPOINT_EVIDENCE = {
+    "evidence_path": (
+        "evidence/generated/p8b_checkpoint_acceptance_core.json",
+        "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870",
+    ),
+    "full_regression_path": (
+        "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
+        "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470",
+    ),
+}
 
 
 def sha256(path: Path) -> str:
@@ -148,11 +158,15 @@ def main() -> int:
     state["pending_gates"] = [item for item in state["pending_gates"] if item.get("gate_id") != "P8C"]
     state["last_verified_commit"] = source_commit
     p8b = state.get("p8b_acceptance", {})
-    for path_key, hash_key in (("evidence_path", "evidence_sha256"),
-                               ("full_regression_path", "full_regression_sha256"),
-                               ("geometry_config_path", "geometry_config_sha256")):
-        if p8b.get(path_key) and (ROOT / p8b[path_key]).is_file():
-            p8b[hash_key] = sha256(ROOT / p8b[path_key])
+    for path_key, (path_value, expected_hash) in P8B_CHECKPOINT_EVIDENCE.items():
+        path = ROOT / path_value
+        if not path.is_file() or sha256(path) != expected_hash:
+            raise RuntimeError(f"P8B immutable checkpoint evidence mismatch: {path_value}")
+        hash_key = "evidence_sha256" if path_key == "evidence_path" else "full_regression_sha256"
+        p8b[path_key] = path_value
+        p8b[hash_key] = expected_hash
+    geometry_path = ROOT / p8b["geometry_config_path"]
+    p8b["geometry_config_sha256"] = sha256(geometry_path)
     STATE_PATH.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     STATUS_PATH.write_text(render_project_status(state), encoding="utf-8", newline="\n")
 

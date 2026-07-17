@@ -153,6 +153,24 @@ def main(argv: list[str] | None = None) -> int:
         p8b_results[value] = {"expected": expected, "actual": actual, "match": expected == actual}
     record("p8b_sources_not_forked", all(item["match"] for item in p8b_results.values()), p8b_results)
 
+    p8b_checkpoint_evidence = {
+        "evidence/generated/p8b_checkpoint_acceptance_core.json":
+            "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870",
+        "evidence/generated/p8b_checkpoint_offline_gate_summary.json":
+            "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470",
+    }
+    p8b_checkpoint_results = {
+        value: (ROOT / value).is_file() and sha256(ROOT / value) == expected
+        for value, expected in p8b_checkpoint_evidence.items()
+    }
+    state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
+    p8b_state = state.get("p8b_acceptance", {})
+    record("p8b_checkpoint_evidence_immutable",
+           all(p8b_checkpoint_results.values())
+           and p8b_state.get("evidence_path") == "evidence/generated/p8b_checkpoint_acceptance_core.json"
+           and p8b_state.get("full_regression_path") == "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
+           p8b_checkpoint_results)
+
     no_hw = subprocess.run([sys.executable, "scripts/check_no_hardware_calls.py"], cwd=ROOT,
                            text=True, capture_output=True)
     record("no_hardware_scan", no_hw.returncode == 0 and os.environ.get("NO_HARDWARE") == "1",
