@@ -4,7 +4,7 @@
 - `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
 - `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
 - `status`: `PASS`
-- `source_commit`: `e47e89be423c9fe955d3f015959872325b24b2fb`
+- `source_commit`: `6a723405c1be5328aaaa55ebf472fabc0aea991e`
 - `p8a_baseline_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
 - `p8a_baseline_tag`: `p8a-pass`
 - `branch`: `p8/integration`
@@ -53,7 +53,7 @@
     },
     {
       "path": "scripts/run_p8b_geometry_gate.py",
-      "sha256": "2c2a7fa8bca92ef3a1d925e4901d275ba925aab8e0b105b5a592a556ae3ff26e"
+      "sha256": "9341447e422b36c4819aa6417ecf1940cc7d2f4a666702efdd94c3194bd301ba"
     }
   ],
   "python_monte_carlo_samples": 4096,
@@ -95,7 +95,7 @@
   "run_id": "p8b_20260717_offline_geometry_mapping_handover",
   "schema_version": 1,
   "simulator": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "e47e89be423c9fe955d3f015959872325b24b2fb",
+  "source_commit": "6a723405c1be5328aaaa55ebf472fabc0aea991e",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
   "status": "PASS",
   "test_status": {

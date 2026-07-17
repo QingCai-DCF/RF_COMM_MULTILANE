@@ -4,7 +4,7 @@
 - `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
 - `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
 - `status`: `PASS`
-- `source_commit`: `e47e89be423c9fe955d3f015959872325b24b2fb`
+- `source_commit`: `6a723405c1be5328aaaa55ebf472fabc0aea991e`
 - `branch`: `p8/integration`
 - `worktree`: `C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE`
 - `profile`: `D200_D600_8X32`
@@ -17,18 +17,18 @@
 - `p8a_checkpoint_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
 - `p8a_checkpoint_tag`: `p8a-pass`
 - `acceptance_core_path`: `evidence/generated/p8b_acceptance_core.json`
-- `acceptance_core_sha256`: `eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40`
+- `acceptance_core_sha256`: `33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870`
 - `worst_case_geometry_acceptance`: `PENDING_WITH_EXPLICIT_GAPS`
 - `logic_model_timing_target`: `PASS`
 - `simulator_tool_version`: `Vivado Simulator/xsim 2023.1`
 - `project_state_before_sha256`: `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
-- `project_state_after_sha256`: `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
+- `project_state_after_sha256`: `50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6`
 - `first_failing_case`: `None`
 
 ```json
 {
   "acceptance_core_path": "evidence/generated/p8b_acceptance_core.json",
-  "acceptance_core_sha256": "eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40",
+  "acceptance_core_sha256": "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870",
   "branch": "p8/integration",
   "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
   "failures": [],
@@ -75,7 +75,7 @@
     "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW"
   },
   "profile": "D200_D600_8X32",
-  "project_state_after_sha256": "05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456",
+  "project_state_after_sha256": "50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6",
   "project_state_before_sha256": "d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd",
   "python_model_artifacts": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "path": "scripts/run_p8b_geometry_gate.py",
-      "sha256": "2c2a7fa8bca92ef3a1d925e4901d275ba925aab8e0b105b5a592a556ae3ff26e"
+      "sha256": "9341447e422b36c4819aa6417ecf1940cc7d2f4a666702efdd94c3194bd301ba"
     }
   ],
   "random_seeds": [
@@ -154,7 +154,7 @@
   },
   "schema_version": 1,
   "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "e47e89be423c9fe955d3f015959872325b24b2fb",
+  "source_commit": "6a723405c1be5328aaaa55ebf472fabc0aea991e",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
   "status": "PASS",
   "tests": [

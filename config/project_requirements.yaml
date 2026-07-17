@@ -141,7 +141,7 @@ requirements:
   - path: rtl/ir_path_mapping_pkg.sv
     sha256: 6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b
   - path: evidence/generated/p8b_mapping_exhaustive_summary.json
-    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
+    sha256: 449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce
 - requirement_id: MAP-002
   requirement_text: Forward and reverse candidate mappings shall be complete permutations with correct slot/bank wrap.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -155,7 +155,7 @@ requirements:
   - path: tools/p8b_mapping_reference.py
     sha256: d9d97209cb6f41fe4f389d697d4ac7a638101d1537516235abe35fc320f54565
   - path: evidence/generated/p8b_mapping_exhaustive_summary.json
-    sha256: bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327
+    sha256: 449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce
 - requirement_id: MAP-003
   requirement_text: Mapping commit shall be atomic and increment path epoch exactly once per accepted request.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -169,7 +169,7 @@ requirements:
   - path: rtl/ir_path_epoch_commit.sv
     sha256: 1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c
   - path: evidence/generated/p8b_path_epoch_summary.json
-    sha256: cb24066cf519af635b078b5058c2fb79a5506a044457d5e01cc7cc5afa1486af
+    sha256: ba231b341867cd5fb4a4e3501405c478b6914017e50c43402d79cbf0f0d94ec0
 - requirement_id: PERF-HD-001
   requirement_text: 600 rpm 半双工 application goodput 必须 >=16 Mbit/s。
   profile: FINAL_PRODUCT_600RPM_HALF_DUPLEX
@@ -265,9 +265,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
+    sha256: 50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6
   - path: PROJECT_STATUS.md
-    sha256: 716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc
+    sha256: 695fef763941b4a31e96601dc3dde3439f944055e6b52e9f0b70e482c5dd26a8
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -281,7 +281,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
+    sha256: 50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
   profile: P8A_BASELINE
@@ -309,9 +309,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456
+    sha256: 50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6
   - path: PROJECT_STATUS.md
-    sha256: 716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc
+    sha256: 695fef763941b4a31e96601dc3dde3439f944055e6b52e9f0b70e482c5dd26a8
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
 - requirement_id: P8A-LEGACY-001
@@ -343,7 +343,7 @@ requirements:
   - path: rtl/ir_bank_lane_crossbar.sv
     sha256: 97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886
   - path: evidence/generated/p8b_crossbar_summary.json
-    sha256: ac573ebaca0d5e8844d5c1a060e4017c455b4967f362d677e08930a8e53b9958
+    sha256: 21117b5297c9d1921e18ccac39d06066bf1fbc3f9566649d007a960474db08c1
 - requirement_id: MAP-005
   requirement_text: Shadow mapping shall be context-bound and shall not control active/TX ownership before atomic commit.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -369,9 +369,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p8b_rtl_python_crosscheck.csv
-    sha256: ac520c1c9478efe12dd373793a103d357e57761199f4f3d37e2c96750552b3a2
+    sha256: a15d1f0dd2904231df27101a6a29ca14abcc4782430b6605d854d408db5d274c
   - path: evidence/generated/p8b_rtl_python_crosscheck.json
-    sha256: 4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136
+    sha256: f5a48ea7419f68a601073f8b4d40769448847aaa04946fc359e9ca9ceff320de
 - requirement_id: PHASE-001
   requirement_text: Invalid, stale, uncertain, faulted or mismatched phase inputs shall fail closed into acquisition.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -385,7 +385,7 @@ requirements:
   - path: rtl/ir_phase_validity_guard.sv
     sha256: f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742
   - path: evidence/generated/p8b_phase_acquisition_summary.json
-    sha256: 983967e52b5c415bdd1b75ef28a820037e0eb59ceb43eec123b3f7f1c4fc2e4c
+    sha256: a39104698e930ae1ae1f073964e0ef1f0ee1acfbe605de921c3f28525aa974f8
 - requirement_id: PHASE-002
   requirement_text: Stop, restart and reversal shall require a fresh mapping and shall not reuse stale candidate context.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -427,7 +427,7 @@ requirements:
   - path: rtl/ir_handover_metrics.sv
     sha256: f5f4862a0b439f08404fe249732fe108c0be0d6bc4cc77a4850d906ec046d4ab
   - path: evidence/generated/p8b_handover_timing_summary.json
-    sha256: eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0
+    sha256: 9ec81796af32ef1a26f06fdf2c5ad31aa9a3b1ef52b0d92d36956a370b2842e7
 - requirement_id: HANDOVER-002
   requirement_text: Handover angular consumption and remaining margin shall be reported as nominal/provisional only.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -441,7 +441,7 @@ requirements:
   - path: config/geometry/optical_geometry.yaml
     sha256: ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0
   - path: evidence/generated/p8b_handover_timing_summary.json
-    sha256: eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0
+    sha256: 9ec81796af32ef1a26f06fdf2c5ad31aa9a3b1ef52b0d92d36956a370b2842e7
 - requirement_id: GEO-MODEL-001
   requirement_text: Nominal D200/D600 geometry shall match the closed-form reference values.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -455,7 +455,7 @@ requirements:
   - path: tools/p8b_geometry_model.py
     sha256: 35b3d36bf086d2e4ef135ddacffbb2dfa01551dce351057feacda758fff0530b
   - path: evidence/generated/p8b_geometry_nominal_summary.json
-    sha256: 0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5
+    sha256: c195a04d316bc1d3a99c0c1b3fa47e6ae81c0d21cddc6017ce7057aa5091fa41
 - requirement_id: GEO-MODEL-002
   requirement_text: Unknown geometry tolerances shall remain null/PENDING and block worst-case hardware acceptance.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -469,9 +469,9 @@ requirements:
   - path: config/geometry/optical_geometry.yaml
     sha256: ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0
   - path: evidence/generated/p8b_geometry_gap_ledger.json
-    sha256: 1c8fed77ff9d5842447a3449a911fe79d4591dab28bc8d83f99b2957da6aa2ea
+    sha256: ea11b045a2bc422e89d556033d99e761c3705c069177f1eca15e4042725c742f
   - path: evidence/generated/p8b_geometry_worst_case_summary.json
-    sha256: 24268224d90bd0ef075b7b76a94cdab5f60db40552fdcabcce946c3914eb1174
+    sha256: 748605a0bb9b07f9b2abab1abd0f1030e2c2bd121fa21c5af698ef5a56f0b30c
 - requirement_id: EVID-P8B-001
   requirement_text: Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware
     scope.
@@ -479,13 +479,13 @@ requirements:
   verification_method: P8B requirement/state/evidence consistency gate.
   verification_stage: P8B
   test_id: P8B-REQUIREMENT-TRACEABILITY
-  evidence_path: evidence/generated/p8b_acceptance_core.json
+  evidence_path: evidence/generated/p8b_rtl_python_crosscheck.json
   status: PASS
   waiver: null
   artifact_hashes:
-  - path: evidence/generated/p8b_acceptance_core.json
-    sha256: eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40
-  - path: evidence/generated/offline_gate_summary.json
-    sha256: 4108eedd8632b80f734f9f74675b4e4463fb69df10f1987c217fe595709801a5
+  - path: evidence/generated/p8b_mapping_exhaustive_summary.json
+    sha256: 449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce
+  - path: evidence/generated/p8b_geometry_nominal_summary.json
+    sha256: c195a04d316bc1d3a99c0c1b3fa47e6ae81c0d21cddc6017ce7057aa5091fa41
   - path: evidence/generated/p8b_rtl_python_crosscheck.json
-    sha256: 4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136
+    sha256: f5a48ea7419f68a601073f8b4d40769448847aaa04946fc359e9ca9ceff320de

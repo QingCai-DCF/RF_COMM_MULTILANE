@@ -80,6 +80,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `e47e89be423c9fe955d3f015959872325b24b2fb`.
+Last verified evidence commit: `6a723405c1be5328aaaa55ebf472fabc0aea991e`.
 
 P8A and P8B were completed offline with `NO_HARDWARE=1`; they do not create or promote any hardware acceptance scope.

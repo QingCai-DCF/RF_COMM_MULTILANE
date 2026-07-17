@@ -54,24 +54,24 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `HANDOVER-002` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-NOMINAL` | `evidence/generated/p8b_handover_timing_summary.json` | Handover angular consumption and remaining margin shall be reported as nominal/provisional only. |
 | `GEO-MODEL-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-NOMINAL` | `evidence/generated/p8b_geometry_nominal_summary.json` | Nominal D200/D600 geometry shall match the closed-form reference values. |
 | `GEO-MODEL-002` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-PYTHON-GEOMETRY-GAPS` | `evidence/generated/p8b_geometry_gap_ledger.json` | Unknown geometry tolerances shall remain null/PENDING and block worst-case hardware acceptance. |
-| `EVID-P8B-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-REQUIREMENT-TRACEABILITY` | `evidence/generated/p8b_acceptance_core.json` | Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware scope. |
+| `EVID-P8B-001` | `PASS` | P8B_D200_D600_8X32_OFFLINE | `P8B` | `P8B-REQUIREMENT-TRACEABILITY` | `evidence/generated/p8b_rtl_python_crosscheck.json` | Every P8B PASS shall bind a profile, test ID, evidence path and content hashes without promoting hardware scope. |
 
 ## PASS artifact bindings
 
 ### `MAP-001`
 
 - `rtl/ir_path_mapping_pkg.sv` — `6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b`
-- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327`
+- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce`
 
 ### `MAP-002`
 
 - `tools/p8b_mapping_reference.py` — `d9d97209cb6f41fe4f389d697d4ac7a638101d1537516235abe35fc320f54565`
-- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `bc06d52e78048f8fef19b9b7ceb7948b909f30a89bd033c5da7c24b000fe5327`
+- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce`
 
 ### `MAP-003`
 
 - `rtl/ir_path_epoch_commit.sv` — `1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c`
-- `evidence/generated/p8b_path_epoch_summary.json` — `cb24066cf519af635b078b5058c2fb79a5506a044457d5e01cc7cc5afa1486af`
+- `evidence/generated/p8b_path_epoch_summary.json` — `ba231b341867cd5fb4a4e3501405c478b6914017e50c43402d79cbf0f0d94ec0`
 
 ### `P8A-CANON-001`
 
@@ -80,13 +80,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
-- `PROJECT_STATUS.md` — `716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc`
+- `config/project_state.json` — `50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6`
+- `PROJECT_STATUS.md` — `695fef763941b4a31e96601dc3dde3439f944055e6b52e9f0b70e482c5dd26a8`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
+- `config/project_state.json` — `50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6`
 
 ### `P8A-EVID-001`
 
@@ -96,8 +96,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `05943ff1dae2118252d795977e6afea9ef9f7e26148473ff34814bf369932456`
-- `PROJECT_STATUS.md` — `716cee29bfdc5f5e04bb1bb31ea50e5543c493742ef57ad885ecec8ff8bf78cc`
+- `config/project_state.json` — `50c2d5839ec141fd988b7abb47188de5319139eef25619239ed01e96d96891c6`
+- `PROJECT_STATUS.md` — `695fef763941b4a31e96601dc3dde3439f944055e6b52e9f0b70e482c5dd26a8`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -109,7 +109,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `MAP-004`
 
 - `rtl/ir_bank_lane_crossbar.sv` — `97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886`
-- `evidence/generated/p8b_crossbar_summary.json` — `ac573ebaca0d5e8844d5c1a060e4017c455b4967f362d677e08930a8e53b9958`
+- `evidence/generated/p8b_crossbar_summary.json` — `21117b5297c9d1921e18ccac39d06066bf1fbc3f9566649d007a960474db08c1`
 
 ### `MAP-005`
 
@@ -118,13 +118,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `MAP-006`
 
-- `evidence/generated/p8b_rtl_python_crosscheck.csv` — `ac520c1c9478efe12dd373793a103d357e57761199f4f3d37e2c96750552b3a2`
-- `evidence/generated/p8b_rtl_python_crosscheck.json` — `4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136`
+- `evidence/generated/p8b_rtl_python_crosscheck.csv` — `a15d1f0dd2904231df27101a6a29ca14abcc4782430b6605d854d408db5d274c`
+- `evidence/generated/p8b_rtl_python_crosscheck.json` — `f5a48ea7419f68a601073f8b4d40769448847aaa04946fc359e9ca9ceff320de`
 
 ### `PHASE-001`
 
 - `rtl/ir_phase_validity_guard.sv` — `f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742`
-- `evidence/generated/p8b_phase_acquisition_summary.json` — `983967e52b5c415bdd1b75ef28a820037e0eb59ceb43eec123b3f7f1c4fc2e4c`
+- `evidence/generated/p8b_phase_acquisition_summary.json` — `a39104698e930ae1ae1f073964e0ef1f0ee1acfbe605de921c3f28525aa974f8`
 
 ### `PHASE-002`
 
@@ -139,26 +139,26 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `HANDOVER-001`
 
 - `rtl/ir_handover_metrics.sv` — `f5f4862a0b439f08404fe249732fe108c0be0d6bc4cc77a4850d906ec046d4ab`
-- `evidence/generated/p8b_handover_timing_summary.json` — `eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0`
+- `evidence/generated/p8b_handover_timing_summary.json` — `9ec81796af32ef1a26f06fdf2c5ad31aa9a3b1ef52b0d92d36956a370b2842e7`
 
 ### `HANDOVER-002`
 
 - `config/geometry/optical_geometry.yaml` — `ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0`
-- `evidence/generated/p8b_handover_timing_summary.json` — `eef32a3a7c7a75a3f1bdca20df3c78efbb85992f1930afa0da8d5da7752c5dd0`
+- `evidence/generated/p8b_handover_timing_summary.json` — `9ec81796af32ef1a26f06fdf2c5ad31aa9a3b1ef52b0d92d36956a370b2842e7`
 
 ### `GEO-MODEL-001`
 
 - `tools/p8b_geometry_model.py` — `35b3d36bf086d2e4ef135ddacffbb2dfa01551dce351057feacda758fff0530b`
-- `evidence/generated/p8b_geometry_nominal_summary.json` — `0a2783f15ca841a986c5408ec58908b63612b0547e0a1de0a10d6f9577b237c5`
+- `evidence/generated/p8b_geometry_nominal_summary.json` — `c195a04d316bc1d3a99c0c1b3fa47e6ae81c0d21cddc6017ce7057aa5091fa41`
 
 ### `GEO-MODEL-002`
 
 - `config/geometry/optical_geometry.yaml` — `ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0`
-- `evidence/generated/p8b_geometry_gap_ledger.json` — `1c8fed77ff9d5842447a3449a911fe79d4591dab28bc8d83f99b2957da6aa2ea`
-- `evidence/generated/p8b_geometry_worst_case_summary.json` — `24268224d90bd0ef075b7b76a94cdab5f60db40552fdcabcce946c3914eb1174`
+- `evidence/generated/p8b_geometry_gap_ledger.json` — `ea11b045a2bc422e89d556033d99e761c3705c069177f1eca15e4042725c742f`
+- `evidence/generated/p8b_geometry_worst_case_summary.json` — `748605a0bb9b07f9b2abab1abd0f1030e2c2bd121fa21c5af698ef5a56f0b30c`
 
 ### `EVID-P8B-001`
 
-- `evidence/generated/p8b_acceptance_core.json` — `eb3628dae5d064ce6b31ece3ffdc2f99ff8e51130c265127b77c3316d4d92d40`
-- `evidence/generated/offline_gate_summary.json` — `4108eedd8632b80f734f9f74675b4e4463fb69df10f1987c217fe595709801a5`
-- `evidence/generated/p8b_rtl_python_crosscheck.json` — `4baa93d5b7830e6263d40498cb7bf1f8b907c2041be38165d98cfb93d3e27136`
+- `evidence/generated/p8b_mapping_exhaustive_summary.json` — `449b5f8647fe2670f4c8463244e22de1d0c9c728a6098d3bb2ed3d0a0193a8ce`
+- `evidence/generated/p8b_geometry_nominal_summary.json` — `c195a04d316bc1d3a99c0c1b3fa47e6ae81c0d21cddc6017ce7057aa5091fa41`
+- `evidence/generated/p8b_rtl_python_crosscheck.json` — `f5a48ea7419f68a601073f8b4d40769448847aaa04946fc359e9ca9ceff320de`
