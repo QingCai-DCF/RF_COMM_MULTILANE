@@ -296,7 +296,11 @@ def write_summary(outdir, results):
         "OFFLINE_REAL_BUILD_PROCESS_RAN": True,
         "results": results,
     }
-    (outdir / "offline_gate_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (outdir / "offline_gate_summary.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     lines = [
         f"# Offline Gate Summary",
         "",
@@ -318,7 +322,7 @@ def write_summary(outdir, results):
         stdout = "\n".join(line.rstrip() for line in r["stdout"].strip().splitlines())
         stderr = "\n".join(line.rstrip() for line in r["stderr"].strip().splitlines())
         lines += [f"## {r['name']}: {mark}", "", "```text", stdout, stderr, "```", ""]
-    (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8")
+    (outdir / "offline_gate_summary.md").write_text("\n".join(lines), encoding="utf-8", newline="\n")
     return status
 
 def main(argv=None):

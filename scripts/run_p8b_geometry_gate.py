@@ -70,13 +70,17 @@ def write_pair(stem: str, title: str, data: dict[str, Any]) -> tuple[Path, Path]
     OUT.mkdir(parents=True, exist_ok=True)
     json_path = OUT / f"{stem}.json"
     md_path = OUT / f"{stem}.md"
-    json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    json_path.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     lines = [f"# {title}", ""]
     for key, value in data.items():
         if isinstance(value, (str, int, float, bool)) or value is None:
             lines.append(f"- `{key}`: `{value}`")
     lines += ["", "```json", json.dumps(data, indent=2, ensure_ascii=False, sort_keys=True), "```", ""]
-    md_path.write_text("\n".join(lines), encoding="utf-8")
+    md_path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     return json_path, md_path
 
 
@@ -128,7 +132,11 @@ def xsim_test(name: str, top: str, files: list[str], marker: str) -> dict[str, A
     output = "".join(outputs)
     stderr = "".join(errors)
     log_path = XSIM_OUT / f"{name}.log"
-    log_path.write_text(output + ("\nSTDERR\n" + stderr if stderr else ""), encoding="utf-8")
+    log_path.write_text(
+        output + ("\nSTDERR\n" + stderr if stderr else ""),
+        encoding="utf-8",
+        newline="\n",
+    )
     passed = returncode == 0 and marker in output and "P8B_ASSERT_FAIL=" not in output
     return {
         "name": name, "status": "PASS" if passed else "FAIL", "returncode": returncode,
@@ -174,7 +182,11 @@ def parse_crosscheck(output: str) -> tuple[list[dict[str, int]], list[str]]:
 def write_crosscheck_csv(rows: list[dict[str, int]]) -> Path:
     path = OUT / "p8b_rtl_python_crosscheck.csv"
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else ["m0", "direction", "lane"])
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]) if rows else ["m0", "direction", "lane"],
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
     return path
