@@ -24,6 +24,7 @@ RAW = OUT / "p8c_raw"
 VIVADO_BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 VIVADO = VIVADO_BIN / "vivado.bat"
 VSDEVCMD = Path(r"D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat")
+FULL_REGRESSION_TIMEOUT_S = 7200
 REQUIRED_PAIRS = [
     "p8c_repo_intake", "p8c_safety_config_summary",
     "p8c_exact_sliding_duty_reference_summary", "p8c_exact_sliding_duty_rtl_summary",
@@ -357,7 +358,7 @@ def main(argv: list[str] | None = None) -> int:
                            "final_full_regression_required": True}
     else:
         result = run([sys.executable, "scripts/run_offline_gates.py", "--include-p8b", "--json-summary"],
-                     env=env, timeout=3600)
+                     env=env, timeout=FULL_REGRESSION_TIMEOUT_S)
         write_log(RAW / "p0_p8b_full_regression.log", result)
         full_regression = {"status": "PASS" if result["returncode"] == 0 else "FAIL",
                            "source": "current canonical P0-P8B offline regression",
