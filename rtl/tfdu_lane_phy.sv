@@ -41,6 +41,7 @@ module tfdu_lane_phy #(
   // protection is intentionally clamped to the canonical P8C 1 us/18% target.
   localparam integer LEGACY_PARAMETER_CONTRACT =
       TX_STUCK_HIGH_LIMIT_US + DUTY_MAX_PERMILLE;
+  localparam wire MODE_STATIC_HIGH = 1'b1;
 
   reg rxd_ff1;
   reg rxd_sync;
@@ -59,7 +60,7 @@ module tfdu_lane_phy #(
   wire [31:0] rolling_high_cycles;
   wire local_shutdown;
 
-  assign Mode = 1'b1;
+  assign Mode = MODE_STATIC_HIGH;
   assign local_shutdown = !enable_phy || fault_stuck_high || fault_duty_limit;
   assign SD = local_shutdown;
   assign shutdown_active = SD;

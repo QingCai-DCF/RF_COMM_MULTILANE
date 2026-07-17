@@ -38,7 +38,10 @@ def main() -> int:
     data = json.loads((ROOT / "config/register_map/ir_axi_regs.yaml").read_text(encoding="utf-8"))
     regs = data["registers"]
     offsets = {r["name"]: int(r["offset"], 16) for r in regs}
-    rtl = (ROOT / "rtl/ir_axi_regs_new.sv").read_text(encoding="utf-8", errors="ignore")
+    rtl = "\n".join(
+        (ROOT / path).read_text(encoding="utf-8", errors="ignore")
+        for path in ("rtl/ir_axi_regs_new.sv", "rtl/ir_p8c_safety_regs.sv")
+    )
     hdr = (ROOT / "config/register_map/generated/ir_regs.h").read_text(encoding="utf-8", errors="ignore")
     py = (ROOT / "config/register_map/generated/ir_regs.py").read_text(encoding="utf-8", errors="ignore")
     md = (ROOT / "docs/design/REGISTER_CONTRACT.md").read_text(encoding="utf-8", errors="ignore")
