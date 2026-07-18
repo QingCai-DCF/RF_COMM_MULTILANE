@@ -32,7 +32,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P8B_GEOMETRY_MAPPING_HANDOVER` | `PASS` |
 | `P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT` | `PASS` |
 | `P8D_SELECTIVE_REPEAT_DMA` | `PASS` |
-| `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PENDING` |
+| `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PASS` |
 
 ## P7 canonical evidence
 
@@ -87,7 +87,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 
 | Gate | Status |
 |---|---|
-| `P8E` | `PENDING` |
+| `P9` | `PENDING_CURRENT_RUN_AUTHORIZATION` |
 | `D12_CORE_BOARD` | `PENDING` |
 | `D13_ABZ` | `PENDING` |
 | `D14_SPI` | `PENDING` |
@@ -98,6 +98,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`.
+Last verified evidence commit: `0c67e7717a5a0fb594a237a05184be65cf748f4f`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

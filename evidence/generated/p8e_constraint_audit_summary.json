@@ -1,0 +1,32 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "errors": [],
+  "formal_clocks": {
+    "axi_lite_clk": [
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc"
+    ],
+    "axis_dma_clk": [
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc"
+    ],
+    "protocol_clk": [
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc",
+      "constraints/core/common_clocks.xdc"
+    ]
+  },
+  "generated_utc": "2026-07-18T20:51:58.676491+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "raw_audit": "evidence/generated/p8e_raw/constraints/constraint_audit.json",
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-CONSTRAINT-LINT",
+  "z7020_board_io_timing": "PENDING_D12",
+  "z7020_board_pin_freeze": "PENDING_D12"
+}

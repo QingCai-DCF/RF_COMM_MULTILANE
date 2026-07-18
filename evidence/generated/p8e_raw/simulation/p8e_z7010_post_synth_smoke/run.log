@@ -1,0 +1,125 @@
+STARTED_UTC=2026-07-18T21:14:46.451392+00:00
+FINISHED_UTC=2026-07-18T21:15:01.664024+00:00
+RETURN_CODE=0
+COMMANDS=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE\evidence\generated\p8e_raw\build_matrix\Z7010_2LANE_DEV_IMPLEMENTATION\Default\post_synth_funcsim.v && D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE\sim\tb\tb_p8e_z7010_post_synth_smoke.sv && D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_p8e_z7010_post_synth_smoke glbl -L unisims_ver -s tb_p8e_z7010_post_synth_smoke_snapshot && D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p8e_z7010_post_synth_smoke_snapshot -runall
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Default/post_synth_funcsim.v" into library work
+INFO: [VRFC 10-311] analyzing module axi_dma_adapter
+INFO: [VRFC 10-311] analyzing module ir_ack_aggregator
+INFO: [VRFC 10-311] analyzing module ir_axis_tx_frontend
+INFO: [VRFC 10-311] analyzing module ir_data_plane_top
+INFO: [VRFC 10-311] analyzing module ir_dma_descriptor_model
+INFO: [VRFC 10-311] analyzing module ir_dma_descriptor_model_4
+INFO: [VRFC 10-311] analyzing module ir_endpoint_core
+INFO: [VRFC 10-311] analyzing module ir_health_weighted_scheduler
+INFO: [VRFC 10-311] analyzing module ir_p8c_resource_top
+INFO: [VRFC 10-311] analyzing module ir_p8d_resource_top
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_rx
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_tx
+INFO: [VRFC 10-311] analyzing module ir_shared_payload_store
+INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
+INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant_6
+INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
+INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety_5
+INFO: [VRFC 10-311] analyzing module ir_tfdu_safety_endpoint
+INFO: [VRFC 10-311] analyzing module level_sync
+INFO: [VRFC 10-311] analyzing module level_sync_0
+INFO: [VRFC 10-311] analyzing module level_sync_1
+INFO: [VRFC 10-311] analyzing module pulse_sync
+INFO: [VRFC 10-311] analyzing module reset_sync
+INFO: [VRFC 10-311] analyzing module reset_sync_2
+INFO: [VRFC 10-311] analyzing module reset_sync_3
+INFO: [VRFC 10-311] analyzing module z7010_2lane_dev_top
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_p8e_z7010_post_synth_smoke.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p8e_z7010_post_synth_smoke
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p8e_z7010_post_synth_smoke glbl -L unisims_ver -s tb_p8e_z7010_post_synth_smoke_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module unisims_ver.OBUF
+Compiling module unisims_ver.IBUF
+Compiling module unisims_ver.LUT5
+Compiling module unisims_ver.x_lut2_mux4
+Compiling module unisims_ver.LUT2
+Compiling module unisims_ver.FDPE_default
+Compiling module unisims_ver.FDCE_default
+Compiling module unisims_ver.LUT4
+Compiling module work.level_sync
+Compiling module unisims_ver.x_lut3_mux8
+Compiling module unisims_ver.LUT3
+Compiling module unisims_ver.x_lut1_mux2
+Compiling module unisims_ver.LUT1
+Compiling module work.level_sync_0
+Compiling module work.level_sync_1
+Compiling module work.reset_sync
+Compiling module work.reset_sync_2
+Compiling module unisims_ver.FDRE_default
+Compiling module unisims_ver.CARRY4
+Compiling module unisims_ver.LUT6
+Compiling module work.axi_dma_adapter
+Compiling module work.pulse_sync
+Compiling module work.ir_axis_tx_frontend
+Compiling module work.ir_ack_aggregator
+Compiling module unisims_ver.RAM32M
+Compiling module unisims_ver.MUXF7
+Compiling module work.ir_selective_repeat_rx
+Compiling module work.ir_health_weighted_scheduler
+Compiling module unisims_ver.MUXF8
+Compiling module unisims_ver.RAM32X1D
+Compiling module work.ir_selective_repeat_tx
+Compiling module work.ir_data_plane_top
+Compiling module unisims_ver.RAM64M
+Compiling module work.ir_shared_payload_store
+Compiling module unisims_ver.RAM64X1D
+Compiling module work.ir_dma_descriptor_model
+Compiling module unisims_ver.FDSE_default
+Compiling module unisims_ver.RB36_INTERNAL_VLOG(RAM_EXTENSION...
+Compiling module unisims_ver.RAMB36E1(RAM_EXTENSION_A="LOWER"...
+Compiling module unisims_ver.RB36_INTERNAL_VLOG(RAM_EXTENSION...
+Compiling module unisims_ver.RAMB36E1(RAM_EXTENSION_A="UPPER"...
+Compiling module work.ir_tfdu_exact_duty_accountant_6
+Compiling module work.ir_tfdu_physical_module_safety
+Compiling module work.ir_tfdu_exact_duty_accountant
+Compiling module work.ir_tfdu_physical_module_safety_5
+Compiling module work.ir_tfdu_safety_endpoint
+Compiling module work.ir_p8c_resource_top
+Compiling module work.ir_dma_descriptor_model_4
+Compiling module work.ir_p8d_resource_top
+Compiling module work.reset_sync_3
+Compiling module work.ir_endpoint_core
+Compiling module work.z7010_2lane_dev_top
+Compiling module work.tb_p8e_z7010_post_synth_smoke
+Compiling module work.glbl
+Built simulation snapshot tb_p8e_z7010_post_synth_smoke_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p8e_z7010_post_synth_smoke_snapshot/xsim_script.tcl
+# xsim {tb_p8e_z7010_post_synth_smoke_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8E_POST_SYNTH_SAFE_RESET_PASS=1
+P8E_POST_SYNTH_PERMIT_LOW_TXD_ZERO_PASS=1
+P8E_POST_SYNTH_CONTROL_X_ZERO_PASS=1
+TB_P8E_Z7010_POST_SYNTH_SMOKE_PASS=1
+$finish called at time : 477593 ps : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_p8e_z7010_post_synth_smoke.sv" Line 41
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 19 05:15:01 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

@@ -1,0 +1,44 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 19 04:54:25 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_pulse_width -file C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Default/post_route_pulse_width.rpt
+| Design       : z7010_2lane_dev_top
+| Device       : 7z010-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pulse Width Report
+
+Clock Name:         axi_lite_clk
+Waveform(ns):       { 0.000 10.000 }
+Period(ns):         20.000
+Sources:            { axi_lite_clk_i }
+
+Check Type        Corner  Lib Pin  Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     FDCE/C   n/a            1.000         20.000      19.000     SLICE_X16Y34  u_top/u_axil_reset/reset_pipe_reg[0]/C
+Low Pulse Width   Slow    FDCE/C   n/a            0.500         10.000      9.500      SLICE_X16Y34  u_top/u_axil_reset/reset_pipe_reg[0]/C
+High Pulse Width  Slow    FDCE/C   n/a            0.500         10.000      9.500      SLICE_X16Y34  u_top/u_axil_reset/reset_pipe_reg[0]/C
+
+Clock Name:         axis_dma_clk
+Waveform(ns):       { 0.000 5.000 }
+Period(ns):         10.000
+Sources:            { axis_dma_clk_i }
+
+Check Type        Corner  Lib Pin  Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     FDCE/C   n/a            1.000         10.000      9.000      SLICE_X16Y31  u_top/u_abort_axis_sync/sync_pipe_reg[0]/C
+Low Pulse Width   Slow    FDCE/C   n/a            0.500         5.000       4.500      SLICE_X16Y31  u_top/u_abort_axis_sync/sync_pipe_reg[0]/C
+High Pulse Width  Slow    FDCE/C   n/a            0.500         5.000       4.500      SLICE_X16Y31  u_top/u_abort_axis_sync/sync_pipe_reg[0]/C
+
+Clock Name:         protocol_clk
+Waveform(ns):       { 0.000 7.812 }
+Period(ns):         15.625
+Sources:            { protocol_clk_i }
+
+Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     RAMB36E1/CLKARDCLK  n/a            3.363         15.625      12.262     RAMB36_X0Y0   u_top/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[0].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_0/CLKARDCLK
+Low Pulse Width   Slow    RAMD32/CLK          n/a            1.250         7.813       6.563      SLICE_X10Y40  u_top/u_portable_architecture/data_plane/u_rx_window/entry_metadata_reg_r1_0_31_30_35/RAMA/CLK
+High Pulse Width  Slow    RAMD32/CLK          n/a            1.250         7.812       6.562      SLICE_X10Y40  u_top/u_portable_architecture/data_plane/u_rx_window/entry_metadata_reg_r1_0_31_30_35/RAMA/CLK
+

@@ -1,0 +1,36 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_hashes": [
+    {
+      "bytes": 1721,
+      "path": "config/source_manifests/z7010_2lane_dev.json",
+      "sha256": "26993d29f6785a0ec3e92d32d7f90f504486399d8a59a19ce28627b0bcd0496b"
+    },
+    {
+      "bytes": 1909,
+      "path": "config/source_manifests/z7020_fixed_core.json",
+      "sha256": "8a8a83e630625ce1efe40fb38ce401f6fac82d6cdb6ed48886d027cbab439d75"
+    },
+    {
+      "bytes": 1870,
+      "path": "config/source_manifests/z7020_rotating_core.json",
+      "sha256": "f7b6a0919c19bfc20b228757ed28422553c7c609fe75fb5d6535fa60bc7a5671"
+    },
+    {
+      "bytes": 768,
+      "path": "config/source_manifests/dual_endpoint_sim.json",
+      "sha256": "ef48206ffaeb83e005e023cb6993b86a6bfab614b34fdd9596b5abb87f5b7fdc"
+    }
+  ],
+  "common_source_core": "rtl/top/ir_endpoint_core.sv",
+  "generated_utc": "2026-07-18T20:51:58.675876+00:00",
+  "hardware_scope_promoted": false,
+  "manifest_count": 3,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "raw_audit": "evidence/generated/p8e_raw/constraints/constraint_audit.json",
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-SOURCE-MANIFEST-COMMON-CORE"
+}

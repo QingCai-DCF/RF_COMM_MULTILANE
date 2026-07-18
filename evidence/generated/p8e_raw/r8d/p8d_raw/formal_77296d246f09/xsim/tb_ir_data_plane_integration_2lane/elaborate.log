@@ -1,0 +1,30 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_ir_data_plane_integration_2lane -debug typical -s tb_ir_data_plane_integration_2lane_snapshot
+RETURN_CODE=0
+STARTED_UTC=2026-07-18T20:02:31.346515Z
+FINISHED_UTC=2026-07-18T20:02:33.484845Z
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_data_plane_integration_2lane -debug typical -s tb_ir_data_plane_integration_2lane_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3645] port 'tx_outstanding_high_watermark_o' remains unconnected for this instance [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/p8d_data_plane_integration_common.sv:55]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package work.ir_seq_math_pkg
+Compiling module work.ir_selective_repeat_tx(SACK_BITS...
+Compiling module work.ir_health_weighted_scheduler(LAN...
+Compiling module work.ir_selective_repeat_rx(WINDOW_SI...
+Compiling module work.ir_ack_aggregator(SACK_BITS=32)
+Compiling module work.ir_data_plane_top(LANE_COUNT=2,W...
+Compiling module work.p8d_data_plane_integration_commo...
+Compiling module work.tb_ir_data_plane_integration_2la...
+Built simulation snapshot tb_ir_data_plane_integration_2lane_snapshot
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

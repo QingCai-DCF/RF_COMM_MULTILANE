@@ -1,0 +1,22 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_tfdu_lane_phy_smoke_sim -runall
+RETURNCODE=0
+
+STDOUT
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_tfdu_lane_phy_smoke_sim/xsim_script.tcl
+# xsim {tb_tfdu_lane_phy_smoke_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_TFDU_LANE_PHY_SMOKE_PASS=1
+$finish called at time : 605 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 172
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 19 04:45:00 2026...
+
+STDERR

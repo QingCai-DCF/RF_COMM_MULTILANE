@@ -1,0 +1,36 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_hashes": [
+    {
+      "bytes": 1579,
+      "path": "config/board_requirements/z7020_fixed_io_requirements.yaml",
+      "sha256": "c75d8c7cf14c0760d8bca51eb6ee702e8677a3c4357a5f094f104e04e11482a0"
+    },
+    {
+      "bytes": 1108,
+      "path": "config/board_requirements/z7020_rotating_io_requirements.yaml",
+      "sha256": "b45a6c72f5dfdac506645a5363806104face6d3e990502a26a2be43066856af2"
+    },
+    {
+      "bytes": 1101,
+      "path": "docs/design/Z7020_FIXED_IO_BUDGET.md",
+      "sha256": "f8597ed7a1052ab48e0d4075474ec5b4ad7bbc011a043ec408cf2c5617962063"
+    },
+    {
+      "bytes": 855,
+      "path": "docs/design/Z7020_ROTATING_IO_BUDGET.md",
+      "sha256": "ebeaf3669f0f77625f9a2be4d08c51261e950cd38e74b0c6bb22026e4a5f420b"
+    }
+  ],
+  "generated_utc": "2026-07-18T21:15:01.688636+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "Z7020_FIXED_AND_ROTATING_D12_INPUT",
+  "schema_version": 1,
+  "scope": "BOARD_SELECTION_INPUT_ONLY_NO_PIN_OR_BOARD_ACCEPTANCE",
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-Z7020-IO-BUDGET",
+  "z7020_board_io_timing": "PENDING_D12",
+  "z7020_board_pin_freeze": "PENDING_D12"
+}

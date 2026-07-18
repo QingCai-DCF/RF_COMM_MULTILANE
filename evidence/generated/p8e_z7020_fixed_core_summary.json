@@ -1,0 +1,632 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "best_run": {
+    "artifacts": [
+      {
+        "bytes": 3171,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/build_config.tcl",
+        "sha256": "98ece26aa4b7282aa8427c038e6c3e1a9d993a0bbfdbd3383fbfaa6625c35fdf"
+      },
+      {
+        "bytes": 463,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/build_markers.txt",
+        "sha256": "c528faba6a0e0dddb7119047cc87fcf52926117f74abba97fd5fa7d9068cda41"
+      },
+      {
+        "bytes": 9641148,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_place.dcp",
+        "sha256": "345410d8f64eb9c0b0640355cc4effc95d5790a7cf70693f7c5b38544fbd1213"
+      },
+      {
+        "bytes": 11856923,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route.dcp",
+        "sha256": "a2071d670752d333e652c79c19bf8c59b27b3c8a4d6e5fd442cd88c4774e082a"
+      },
+      {
+        "bytes": 2620,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_cdc.rpt",
+        "sha256": "368ca1e1e441860f24190d4b0054293e6a2fff9feece789075dc357e16e02bc9"
+      },
+      {
+        "bytes": 5668,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_check_timing.rpt",
+        "sha256": "f0433152dd317a54371923fcb700da0f0c66926914e0e6a0f006486b28f69450"
+      },
+      {
+        "bytes": 2430,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_clock_interaction.rpt",
+        "sha256": "42d3063f37ccf106c161c90056a0e1721264fb5ee560e6cd134eb7fa302d270d"
+      },
+      {
+        "bytes": 3925,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_drc.rpt",
+        "sha256": "c9180fd9e11c19742c8c554ca9102b36df93f923d9a622b972baa1834baceac0"
+      },
+      {
+        "bytes": 2237,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_exceptions.rpt",
+        "sha256": "f626f01b178461ccc698c39199f6d4c35deef342fb864dd5402757d4e96b5edf"
+      },
+      {
+        "bytes": 419007,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_hold_paths.rpt",
+        "sha256": "b85e69103756addb315bc33c494966284596c75b4a2ba592e396f275598f5914"
+      },
+      {
+        "bytes": 21607,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_methodology.rpt",
+        "sha256": "89eb242c41ef33cc5e4a63b54b189bf07a702c2c03841fdbd20c8d54aac72a94"
+      },
+      {
+        "bytes": 10024,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_power.rpt",
+        "sha256": "ae448ed77b236e3331028678966c5fa42039a071f6890c0910c2147c30e80858"
+      },
+      {
+        "bytes": 3549,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_pulse_width.rpt",
+        "sha256": "77a45328467bd49b4efdea823008f926bd4847238ccad140cd4afe971f8a4a48"
+      },
+      {
+        "bytes": 1137857,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_setup_paths.rpt",
+        "sha256": "992b9e2b1da18eede9555be7500940c5a78e6faa67876504ab2cf2eedcce126e"
+      },
+      {
+        "bytes": 3309241,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_timing_summary.rpt",
+        "sha256": "756dfa049e40da88c5059926fe74012036bae4049a64f785081c8008b0342e79"
+      },
+      {
+        "bytes": 24732,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_utilization.rpt",
+        "sha256": "4a13e45a4696c66b215296fd3f0726d7acd6f9e978b80735f82d516895687956"
+      },
+      {
+        "bytes": 6096423,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth.dcp",
+        "sha256": "1791600466ff41f4894d4851225fcca436c24dc5176ac323decdec1ab6e7bc7b"
+      },
+      {
+        "bytes": 1893,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_drc.rpt",
+        "sha256": "aec2e78f4f44bd7e37183521340a891c2fe676b7ceb3b5b03aabeba447df4848"
+      },
+      {
+        "bytes": 11389642,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_funcsim.v",
+        "sha256": "227f0aa9acb1f9d3c5a8c4b5bf5f082dd8f83084f677113ac670a3128fff4116"
+      },
+      {
+        "bytes": 769048,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_timing_summary.rpt",
+        "sha256": "56e083cdd1fa532ab737cbe32ccd64c29a2553198ea127e7160075406da10370"
+      },
+      {
+        "bytes": 24618,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_utilization.rpt",
+        "sha256": "dde2ccae865d0bc423acbf07d39610f030c47916888af9f75e3c17b0ebc5f177"
+      },
+      {
+        "bytes": 116304,
+        "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/vivado_stdout_stderr.log",
+        "sha256": "4c593f34aaf40c7ed1f6f4c30bb1448690af3008c7f958f36a129315372cdc1b"
+      }
+    ],
+    "cdc_audit": {
+      "cdc_non_info": 0,
+      "cdc_unclassified": 0,
+      "unexplained_clock_interactions": 0,
+      "unsafe_multibit": 0
+    },
+    "exception_audit": {
+      "exception_rows": 6,
+      "expected_named_clock_group_rows": 6,
+      "reviewed_named_clock_group_rows": 6,
+      "unreviewed_exception_rows": 0,
+      "unreviewed_false_path_or_max_min_delay_rows": 0,
+      "unreviewed_rows": []
+    },
+    "hold_whs_ns": 0.058,
+    "markers": {
+      "P8E_BRAM18": "0",
+      "P8E_BRAM36": "64",
+      "P8E_CDC_CRITICAL": "0",
+      "P8E_CDC_WARNING": "0",
+      "P8E_DOCUMENTED_SEED": "1",
+      "P8E_DRC_CRITICAL": "0",
+      "P8E_DRC_ERROR": "0",
+      "P8E_DSP": "0",
+      "P8E_FF": "12217",
+      "P8E_HOLD_WHS_NS": "0.058",
+      "P8E_IMPLEMENTATION_COMPLETE": "1",
+      "P8E_LUT": "18787",
+      "P8E_PART": "xc7z020clg400-2",
+      "P8E_PROFILE": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "P8E_REQP_1839": "0",
+      "P8E_ROUTE_STATUS": "",
+      "P8E_SEED_APPLIED": "0",
+      "P8E_SETUP_WNS_NS": "0.713",
+      "P8E_STRATEGY": "Default",
+      "P8E_TNS_NS": "0.0",
+      "P8E_TOP": "z7020_fixed_core_timing_top"
+    },
+    "methodology_audit": {
+      "classified_warning_rules": [
+        {
+          "classification": "INTENTIONAL_FAIL_LOW_ASYNC_ASSERTION: raw GLOBAL_PERMIT/reset may only clear permit filter and arm state; raw permit low also directly gates final Txd.",
+          "description": "LUT drives async reset alert",
+          "rule": "LUTAR-1",
+          "violation_count": 1
+        },
+        {
+          "classification": "EXTERNAL_IO_CONTRACT_PENDING: no zero-nanosecond I/O delay is fabricated; Z7020 remains PENDING_D12 and Z7010 external timing remains platform follow-up.",
+          "description": "Missing input or output delay",
+          "rule": "TIMING-18",
+          "violation_count": 93
+        }
+      ],
+      "critical_methodology": 0,
+      "methodology_warning_rules": 2,
+      "unclassified_methodology_warning_rules": 0,
+      "unclassified_warning_rule_ids": []
+    },
+    "part": "xc7z020clg400-2",
+    "profile_id": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+    "required_reports_present": true,
+    "resource_limits_pass": true,
+    "resources": {
+      "BRAM18": 0,
+      "BRAM36": 64,
+      "DSP": 0,
+      "FF": 12217,
+      "LUT": 18787
+    },
+    "returncode": 0,
+    "setup_wns_ns": 0.713,
+    "status": "PASS",
+    "strategy": "Default",
+    "strategy_seed": 1,
+    "timing_audit": {
+      "pulse_width_violations": 0,
+      "unconstrained_internal_endpoints": 0,
+      "worst_pulse_width_slack_ns": 4.5
+    },
+    "tns_ns": 0.0,
+    "top_module": "z7020_fixed_core_timing_top",
+    "utilization_percent": {
+      "BRAM36": 45.714285714285715,
+      "DSP": 0.0,
+      "FF": 11.482142857142858,
+      "LUT": 35.31390977443609
+    },
+    "vivado_log": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/vivado_stdout_stderr.log"
+  },
+  "generated_utc": "2026-07-18T21:14:46.417840+00:00",
+  "hardware_scope_promoted": false,
+  "highlights": {
+    "best_setup_wns_ns": 0.713,
+    "bram_percent": 45.714285714285715,
+    "lut_percent": 35.31390977443609,
+    "worst_hold_whs_ns": 0.058
+  },
+  "part": "xc7z020clg400-2",
+  "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+  "runs": [
+    {
+      "artifacts": [
+        {
+          "bytes": 3171,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/build_config.tcl",
+          "sha256": "98ece26aa4b7282aa8427c038e6c3e1a9d993a0bbfdbd3383fbfaa6625c35fdf"
+        },
+        {
+          "bytes": 463,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/build_markers.txt",
+          "sha256": "c528faba6a0e0dddb7119047cc87fcf52926117f74abba97fd5fa7d9068cda41"
+        },
+        {
+          "bytes": 9641148,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_place.dcp",
+          "sha256": "345410d8f64eb9c0b0640355cc4effc95d5790a7cf70693f7c5b38544fbd1213"
+        },
+        {
+          "bytes": 11856923,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route.dcp",
+          "sha256": "a2071d670752d333e652c79c19bf8c59b27b3c8a4d6e5fd442cd88c4774e082a"
+        },
+        {
+          "bytes": 2620,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_cdc.rpt",
+          "sha256": "368ca1e1e441860f24190d4b0054293e6a2fff9feece789075dc357e16e02bc9"
+        },
+        {
+          "bytes": 5668,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_check_timing.rpt",
+          "sha256": "f0433152dd317a54371923fcb700da0f0c66926914e0e6a0f006486b28f69450"
+        },
+        {
+          "bytes": 2430,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_clock_interaction.rpt",
+          "sha256": "42d3063f37ccf106c161c90056a0e1721264fb5ee560e6cd134eb7fa302d270d"
+        },
+        {
+          "bytes": 3925,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_drc.rpt",
+          "sha256": "c9180fd9e11c19742c8c554ca9102b36df93f923d9a622b972baa1834baceac0"
+        },
+        {
+          "bytes": 2237,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_exceptions.rpt",
+          "sha256": "f626f01b178461ccc698c39199f6d4c35deef342fb864dd5402757d4e96b5edf"
+        },
+        {
+          "bytes": 419007,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_hold_paths.rpt",
+          "sha256": "b85e69103756addb315bc33c494966284596c75b4a2ba592e396f275598f5914"
+        },
+        {
+          "bytes": 21607,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_methodology.rpt",
+          "sha256": "89eb242c41ef33cc5e4a63b54b189bf07a702c2c03841fdbd20c8d54aac72a94"
+        },
+        {
+          "bytes": 10024,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_power.rpt",
+          "sha256": "ae448ed77b236e3331028678966c5fa42039a071f6890c0910c2147c30e80858"
+        },
+        {
+          "bytes": 3549,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_pulse_width.rpt",
+          "sha256": "77a45328467bd49b4efdea823008f926bd4847238ccad140cd4afe971f8a4a48"
+        },
+        {
+          "bytes": 1137857,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_setup_paths.rpt",
+          "sha256": "992b9e2b1da18eede9555be7500940c5a78e6faa67876504ab2cf2eedcce126e"
+        },
+        {
+          "bytes": 3309241,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_timing_summary.rpt",
+          "sha256": "756dfa049e40da88c5059926fe74012036bae4049a64f785081c8008b0342e79"
+        },
+        {
+          "bytes": 24732,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_utilization.rpt",
+          "sha256": "4a13e45a4696c66b215296fd3f0726d7acd6f9e978b80735f82d516895687956"
+        },
+        {
+          "bytes": 6096423,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth.dcp",
+          "sha256": "1791600466ff41f4894d4851225fcca436c24dc5176ac323decdec1ab6e7bc7b"
+        },
+        {
+          "bytes": 1893,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_drc.rpt",
+          "sha256": "aec2e78f4f44bd7e37183521340a891c2fe676b7ceb3b5b03aabeba447df4848"
+        },
+        {
+          "bytes": 11389642,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_funcsim.v",
+          "sha256": "227f0aa9acb1f9d3c5a8c4b5bf5f082dd8f83084f677113ac670a3128fff4116"
+        },
+        {
+          "bytes": 769048,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_timing_summary.rpt",
+          "sha256": "56e083cdd1fa532ab737cbe32ccd64c29a2553198ea127e7160075406da10370"
+        },
+        {
+          "bytes": 24618,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_synth_utilization.rpt",
+          "sha256": "dde2ccae865d0bc423acbf07d39610f030c47916888af9f75e3c17b0ebc5f177"
+        },
+        {
+          "bytes": 116304,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/vivado_stdout_stderr.log",
+          "sha256": "4c593f34aaf40c7ed1f6f4c30bb1448690af3008c7f958f36a129315372cdc1b"
+        }
+      ],
+      "cdc_audit": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exception_audit": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "hold_whs_ns": 0.058,
+      "markers": {
+        "P8E_BRAM18": "0",
+        "P8E_BRAM36": "64",
+        "P8E_CDC_CRITICAL": "0",
+        "P8E_CDC_WARNING": "0",
+        "P8E_DOCUMENTED_SEED": "1",
+        "P8E_DRC_CRITICAL": "0",
+        "P8E_DRC_ERROR": "0",
+        "P8E_DSP": "0",
+        "P8E_FF": "12217",
+        "P8E_HOLD_WHS_NS": "0.058",
+        "P8E_IMPLEMENTATION_COMPLETE": "1",
+        "P8E_LUT": "18787",
+        "P8E_PART": "xc7z020clg400-2",
+        "P8E_PROFILE": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+        "P8E_REQP_1839": "0",
+        "P8E_ROUTE_STATUS": "",
+        "P8E_SEED_APPLIED": "0",
+        "P8E_SETUP_WNS_NS": "0.713",
+        "P8E_STRATEGY": "Default",
+        "P8E_TNS_NS": "0.0",
+        "P8E_TOP": "z7020_fixed_core_timing_top"
+      },
+      "methodology_audit": {
+        "classified_warning_rules": [
+          {
+            "classification": "INTENTIONAL_FAIL_LOW_ASYNC_ASSERTION: raw GLOBAL_PERMIT/reset may only clear permit filter and arm state; raw permit low also directly gates final Txd.",
+            "description": "LUT drives async reset alert",
+            "rule": "LUTAR-1",
+            "violation_count": 1
+          },
+          {
+            "classification": "EXTERNAL_IO_CONTRACT_PENDING: no zero-nanosecond I/O delay is fabricated; Z7020 remains PENDING_D12 and Z7010 external timing remains platform follow-up.",
+            "description": "Missing input or output delay",
+            "rule": "TIMING-18",
+            "violation_count": 93
+          }
+        ],
+        "critical_methodology": 0,
+        "methodology_warning_rules": 2,
+        "unclassified_methodology_warning_rules": 0,
+        "unclassified_warning_rule_ids": []
+      },
+      "part": "xc7z020clg400-2",
+      "profile_id": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "required_reports_present": true,
+      "resource_limits_pass": true,
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 64,
+        "DSP": 0,
+        "FF": 12217,
+        "LUT": 18787
+      },
+      "returncode": 0,
+      "setup_wns_ns": 0.713,
+      "status": "PASS",
+      "strategy": "Default",
+      "strategy_seed": 1,
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0,
+      "top_module": "z7020_fixed_core_timing_top",
+      "utilization_percent": {
+        "BRAM36": 45.714285714285715,
+        "DSP": 0.0,
+        "FF": 11.482142857142858,
+        "LUT": 35.31390977443609
+      },
+      "vivado_log": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/vivado_stdout_stderr.log"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 3218,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/build_config.tcl",
+          "sha256": "743d065e8ffef7d38b52da6d6d62b9ae2cacbef1e2a58b09dc6a61b00af53c32"
+        },
+        {
+          "bytes": 475,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/build_markers.txt",
+          "sha256": "805ee1d367f30142741b96e3f37ed4a2043811f73cd26a0ce5e05f7d63dff9c7"
+        },
+        {
+          "bytes": 9638591,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_place.dcp",
+          "sha256": "0432b3881a92236ef1d6a74231fcff7e1ac44c83638887673a47d19b40cb4d7d"
+        },
+        {
+          "bytes": 11853147,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route.dcp",
+          "sha256": "58873141149ec660361ea2629c587e97148fb3652ccd4baac801ffc5e703f035"
+        },
+        {
+          "bytes": 2656,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_cdc.rpt",
+          "sha256": "602bfbfc9babcdd163d832df01f1b4394806bd7dffb497459b759b52d98a8a15"
+        },
+        {
+          "bytes": 5704,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_check_timing.rpt",
+          "sha256": "2103554b9faa3b2de30981e8ed7d03d65853fe0613cc7e880f93b6d389b436d5"
+        },
+        {
+          "bytes": 2466,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_clock_interaction.rpt",
+          "sha256": "86efc0d98a5bbd7de1a8b41851d0cff5f2d14d2fafde4c5ea67866a0efc28fca"
+        },
+        {
+          "bytes": 3962,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_drc.rpt",
+          "sha256": "af32d9f30207466d6cee2629fba818748cef98e30a1d1e41601a6e3e7be68d2f"
+        },
+        {
+          "bytes": 2273,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_exceptions.rpt",
+          "sha256": "8ee9f0b70a22c610059e504f41f7ae98b6f85ba6307e337fc864a7e039d920c7"
+        },
+        {
+          "bytes": 419043,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_hold_paths.rpt",
+          "sha256": "dfaedac1c4bd86ce7e3eb163b0a4bdcf4e3e9ac483b02827fdeb9dc38bdde87e"
+        },
+        {
+          "bytes": 21643,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_methodology.rpt",
+          "sha256": "114c9c7b91c347ff179a821ffea0d9d6b286812b1e574b0b11d4d14b27ab82ad"
+        },
+        {
+          "bytes": 10060,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_power.rpt",
+          "sha256": "b6c239692e5a83cc65527f7755addd9029f0c444a41a302088d9c28eafd1438c"
+        },
+        {
+          "bytes": 3585,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_pulse_width.rpt",
+          "sha256": "a8480f59d5e43206b88c6b874a4268d6e2ba3c86f65339d69af4ba671da66b2f"
+        },
+        {
+          "bytes": 1137893,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_setup_paths.rpt",
+          "sha256": "7bb646ce8ec63578b79becb76ce8e85169f70fe085a72b6a48d9a0fb5e3af59c"
+        },
+        {
+          "bytes": 3309277,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_timing_summary.rpt",
+          "sha256": "3ee1129236cde20ad5743c5607b95b1879f13bf795e7e37bef4e79f9cf11c281"
+        },
+        {
+          "bytes": 24768,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_utilization.rpt",
+          "sha256": "80a934f46f7377ad6dcbb4bd53e2d4aa3b2c6a4bc1638a89caa42d1923364eeb"
+        },
+        {
+          "bytes": 6096676,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_synth.dcp",
+          "sha256": "76b3fa8864c4e7342fc425ada87cdd74f87d25975d90bd34a020b3eb3b913cb2"
+        },
+        {
+          "bytes": 1929,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_synth_drc.rpt",
+          "sha256": "06dbf4dabe05a8f239e5e0804c733c482e3fc0a3b9f09165e453a84fd3667881"
+        },
+        {
+          "bytes": 11389654,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_synth_funcsim.v",
+          "sha256": "2e2153b2b8d6c48a77c7ba10a4d34bd5882c68b252e8ea373d29e326f0429254"
+        },
+        {
+          "bytes": 769084,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_synth_timing_summary.rpt",
+          "sha256": "269f01f36e1476df3f4505ba1af17ef4223c528f0cb86950f9e36f8f50af373f"
+        },
+        {
+          "bytes": 24654,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_synth_utilization.rpt",
+          "sha256": "d2488135d2e62f156cc2b77df273656dad2e23f7a044fb8e7b3406d8743eca29"
+        },
+        {
+          "bytes": 116487,
+          "path": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/vivado_stdout_stderr.log",
+          "sha256": "a642c37e8516fc86699477ea73f002eca086ff323c8e4ba4f35d1c9d5fbf65bf"
+        }
+      ],
+      "cdc_audit": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exception_audit": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "hold_whs_ns": 0.058,
+      "markers": {
+        "P8E_BRAM18": "0",
+        "P8E_BRAM36": "64",
+        "P8E_CDC_CRITICAL": "0",
+        "P8E_CDC_WARNING": "0",
+        "P8E_DOCUMENTED_SEED": "2",
+        "P8E_DRC_CRITICAL": "0",
+        "P8E_DRC_ERROR": "0",
+        "P8E_DSP": "0",
+        "P8E_FF": "12217",
+        "P8E_HOLD_WHS_NS": "0.058",
+        "P8E_IMPLEMENTATION_COMPLETE": "1",
+        "P8E_LUT": "18787",
+        "P8E_PART": "xc7z020clg400-2",
+        "P8E_PROFILE": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+        "P8E_REQP_1839": "0",
+        "P8E_ROUTE_STATUS": "",
+        "P8E_SEED_APPLIED": "0",
+        "P8E_SETUP_WNS_NS": "0.713",
+        "P8E_STRATEGY": "Performance_Explore",
+        "P8E_TNS_NS": "0.0",
+        "P8E_TOP": "z7020_fixed_core_timing_top"
+      },
+      "methodology_audit": {
+        "classified_warning_rules": [
+          {
+            "classification": "INTENTIONAL_FAIL_LOW_ASYNC_ASSERTION: raw GLOBAL_PERMIT/reset may only clear permit filter and arm state; raw permit low also directly gates final Txd.",
+            "description": "LUT drives async reset alert",
+            "rule": "LUTAR-1",
+            "violation_count": 1
+          },
+          {
+            "classification": "EXTERNAL_IO_CONTRACT_PENDING: no zero-nanosecond I/O delay is fabricated; Z7020 remains PENDING_D12 and Z7010 external timing remains platform follow-up.",
+            "description": "Missing input or output delay",
+            "rule": "TIMING-18",
+            "violation_count": 93
+          }
+        ],
+        "critical_methodology": 0,
+        "methodology_warning_rules": 2,
+        "unclassified_methodology_warning_rules": 0,
+        "unclassified_warning_rule_ids": []
+      },
+      "part": "xc7z020clg400-2",
+      "profile_id": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "required_reports_present": true,
+      "resource_limits_pass": true,
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 64,
+        "DSP": 0,
+        "FF": 12217,
+        "LUT": 18787
+      },
+      "returncode": 0,
+      "setup_wns_ns": 0.713,
+      "status": "PASS",
+      "strategy": "Performance_Explore",
+      "strategy_seed": 2,
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0,
+      "top_module": "z7020_fixed_core_timing_top",
+      "utilization_percent": {
+        "BRAM36": 45.714285714285715,
+        "DSP": 0.0,
+        "FF": 11.482142857142858,
+        "LUT": 35.31390977443609
+      },
+      "vivado_log": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/vivado_stdout_stderr.log"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "ROUTED_OFFLINE_IMPLEMENTATION_ONLY",
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "strategy_robustness": {
+    "all_documented_strategies_pass": true,
+    "passing_runs": 2,
+    "required_runs": 2
+  },
+  "test_id": "P8E-Z7020-FIXED-ROUTED-CORE"
+}

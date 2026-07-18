@@ -1,0 +1,87 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_hashes": [
+    {
+      "bytes": 4695,
+      "path": "rtl/ir_shared_payload_store.sv",
+      "sha256": "a4b44c58b862208127302e8e3bd67a5f5a405f2c0c9af6b1e38a54cc8e06a62a"
+    },
+    {
+      "bytes": 7657,
+      "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+      "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+    },
+    {
+      "bytes": 12080,
+      "path": "rtl/ir_dma_descriptor_model.sv",
+      "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+    },
+    {
+      "bytes": 589,
+      "path": "rtl/common/reset_sync.sv",
+      "sha256": "d75b79556cdc4be58fe3eba9d4dc5a7d59c44785978c517df92029c5096d75c4"
+    }
+  ],
+  "cdc_reset_sim": {
+    "log": "evidence/generated/p8e_raw/simulation/p8e_cdc_reset_matrix/run.log",
+    "log_sha256": "5fedd578e37723bb01c8d876294f7150276e7588373e9ed712d33dabe289b448",
+    "markers": [
+      "P8E_CDC_RATIO_1_PASS=1",
+      "P8E_CDC_RATIO_2_PASS=1",
+      "P8E_CDC_RATIO_3_PASS=1",
+      "P8E_CDC_RATIO_4_PASS=1",
+      "P8E_CDC_RATIO_5_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_101_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_211_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_307_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_401_PASS=1",
+      "P8E_CDC_RANDOM_RESET_RECOVERY_PASS=1",
+      "P8E_CDC_STALE_COMPLETION_ZERO_PASS=1",
+      "P8E_RESET_DEASSERT_SYNC_PASS=1",
+      "TB_P8E_CDC_RESET_MATRIX_PASS=1"
+    ],
+    "status": "PASS",
+    "test_id": "p8e_cdc_reset_matrix",
+    "top": "tb_p8e_cdc_reset_matrix"
+  },
+  "generated_utc": "2026-07-18T21:14:46.440340+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "reqp_1839_by_run": [
+    {
+      "count": "0",
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "strategy": "Default"
+    },
+    {
+      "count": "0",
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "strategy": "Performance_Explore"
+    },
+    {
+      "count": "0",
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "strategy": "Default"
+    },
+    {
+      "count": "0",
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "strategy": "Performance_Explore"
+    },
+    {
+      "count": "0",
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "strategy": "Default"
+    },
+    {
+      "count": "0",
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "strategy": "Performance_Explore"
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-RESET-BRAM-REQP1839"
+}

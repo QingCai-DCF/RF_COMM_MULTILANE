@@ -1,0 +1,267 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 19 04:56:35 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_methodology -file C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Performance_Explore/post_route_methodology.rpt
+| Design       : z7010_2lane_dev_top
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Fully Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: z7010_2lane_dev_top
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max violations: <unlimited>
+             Violations found: 45
++-----------+----------+-------------------------------+------------+
+| Rule      | Severity | Description                   | Violations |
++-----------+----------+-------------------------------+------------+
+| LUTAR-1   | Warning  | LUT drives async reset alert  | 1          |
+| TIMING-18 | Warning  | Missing input or output delay | 44         |
++-----------+----------+-------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+LUTAR-1#1 Warning
+LUT drives async reset alert  
+LUT cell u_top/u_protocol_reset/permit_meta_q_i_1, with 2 or more inputs, drives asynchronous preset/clear pin(s) u_top/u_portable_architecture/safety_accounting/endpoint/endpoint_armed_o_reg/CLR,
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_filter_count_q_reg[0]/CLR,
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_filter_count_q_reg[1]/CLR,
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_filter_count_q_reg[2]/CLR,
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_meta_q_reg/CLR,
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_sync_q_reg/CLR
+u_top/u_portable_architecture/safety_accounting/endpoint/permit_sync_valid_q_reg/CLR. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+TIMING-18#1 Warning
+Missing input or output delay  
+An input delay is missing on control_abort_i relative to the rising and/or falling clock edge(s) of axis_dma_clk, protocol_clk.
+Related violations: <none>
+
+TIMING-18#2 Warning
+Missing input or output delay  
+An input delay is missing on dma_tx_kick_i relative to the rising and/or falling clock edge(s) of axis_dma_clk.
+Related violations: <none>
+
+TIMING-18#3 Warning
+Missing input or output delay  
+An input delay is missing on endpoint_arm_request_i relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#4 Warning
+Missing input or output delay  
+An input delay is missing on global_permit_i relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#5 Warning
+Missing input or output delay  
+An input delay is missing on ir_rx_in_0[0] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#6 Warning
+Missing input or output delay  
+An input delay is missing on ir_rx_in_0[1] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#7 Warning
+Missing input or output delay  
+An input delay is missing on protocol_ack_event_i relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#8 Warning
+Missing input or output delay  
+An input delay is missing on reset_n_i relative to the rising and/or falling clock edge(s) of axi_lite_clk, axis_dma_clk, protocol_clk.
+Related violations: <none>
+
+TIMING-18#9 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[0] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#10 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[10] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#11 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[11] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#12 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[12] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#13 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[13] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#14 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[14] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#15 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[15] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#16 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[16] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#17 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[17] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#18 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[18] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#19 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[19] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#20 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[1] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#21 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[20] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#22 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[21] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#23 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[22] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#24 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[23] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#25 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[24] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#26 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[25] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#27 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[26] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#28 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[27] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#29 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[28] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#30 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[29] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#31 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[2] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#32 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[30] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#33 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[31] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#34 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[3] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#35 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[4] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#36 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[5] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#37 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[6] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#38 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[7] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#39 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[8] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#40 Warning
+Missing input or output delay  
+An input delay is missing on stimulus_seed_i[9] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#41 Warning
+Missing input or output delay  
+An output delay is missing on architecture_status_o relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#42 Warning
+Missing input or output delay  
+An output delay is missing on clock_domain_status_o relative to the rising and/or falling clock edge(s) of axi_lite_clk, axis_dma_clk, protocol_clk.
+Related violations: <none>
+
+TIMING-18#43 Warning
+Missing input or output delay  
+An output delay is missing on ir_tx_out_0[0] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+TIMING-18#44 Warning
+Missing input or output delay  
+An output delay is missing on ir_tx_out_0[1] relative to the rising and/or falling clock edge(s) of protocol_clk.
+Related violations: <none>
+
+

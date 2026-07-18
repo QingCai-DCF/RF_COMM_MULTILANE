@@ -1,0 +1,59 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 19 04:55:47 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Performance_Explore/post_synth_utilization.rpt
+| Design       : z7010_2lane_dev_top
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-------------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                           Instance                          |              Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| z7010_2lane_dev_top                                         |                            (top) |       7730 |       7366 |     364 |    0 | 4572 |      4 |      0 |          0 |
+|   (z7010_2lane_dev_top)                                     |                            (top) |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|   u_top                                                     |                 ir_endpoint_core |       7730 |       7366 |     364 |    0 | 4572 |      4 |      0 |          0 |
+|     (u_top)                                                 |                 ir_endpoint_core |         32 |         32 |       0 |    0 |   32 |      0 |      0 |          0 |
+|     u_abort_axis_sync                                       |                       level_sync |          1 |          1 |       0 |    0 |    2 |      0 |      0 |          0 |
+|     u_abort_sync                                            |                     level_sync_0 |         17 |         17 |       0 |    0 |    2 |      0 |      0 |          0 |
+|     u_arm_sync                                              |                     level_sync_1 |          1 |          1 |       0 |    0 |    2 |      0 |      0 |          0 |
+|     u_axil_reset                                            |                       reset_sync |          1 |          1 |       0 |    0 |    3 |      0 |      0 |          0 |
+|     u_axis_reset                                            |                     reset_sync_2 |          1 |          1 |       0 |    0 |    3 |      0 |      0 |          0 |
+|     u_dma_adapter                                           |                  axi_dma_adapter |         10 |         10 |       0 |    0 |   34 |      0 |      0 |          0 |
+|     u_dma_kick_sync                                         |                       pulse_sync |          4 |          4 |       0 |    0 |    7 |      0 |      0 |          0 |
+|     u_portable_architecture                                 |              ir_p8d_resource_top |       7662 |       7298 |     364 |    0 | 4484 |      4 |      0 |          0 |
+|       axis_frontend                                         |              ir_axis_tx_frontend |         80 |         80 |       0 |    0 |  115 |      0 |      0 |          0 |
+|       data_plane                                            |                ir_data_plane_top |       4647 |       4619 |      28 |    0 | 3211 |      0 |      0 |          0 |
+|         (data_plane)                                        |                ir_data_plane_top |          0 |          0 |       0 |    0 |    4 |      0 |      0 |          0 |
+|         u_ack_aggregator                                    |                ir_ack_aggregator |        102 |        102 |       0 |    0 |  133 |      0 |      0 |          0 |
+|         u_rx_window                                         |           ir_selective_repeat_rx |        251 |        227 |      24 |    0 |  136 |      0 |      0 |          0 |
+|         u_scheduler                                         |     ir_health_weighted_scheduler |        406 |        406 |       0 |    0 |  430 |      0 |      0 |          0 |
+|         u_tx_window                                         |           ir_selective_repeat_tx |       3888 |       3884 |       4 |    0 | 2508 |      0 |      0 |          0 |
+|       payload_store                                         |          ir_shared_payload_store |        344 |        200 |     144 |    0 |   73 |      0 |      0 |          0 |
+|       rx_ring                                               |          ir_dma_descriptor_model |       1157 |       1061 |      96 |    0 |  389 |      0 |      0 |          0 |
+|       safety_accounting                                     |              ir_p8c_resource_top |        272 |        272 |       0 |    0 |  307 |      4 |      0 |          0 |
+|         endpoint                                            |          ir_tfdu_safety_endpoint |        272 |        272 |       0 |    0 |  307 |      4 |      0 |          0 |
+|           (endpoint)                                        |          ir_tfdu_safety_endpoint |          2 |          2 |       0 |    0 |    9 |      0 |      0 |          0 |
+|           g_physical_safety[0].u_physical_module_safety     |   ir_tfdu_physical_module_safety |        132 |        132 |       0 |    0 |  149 |      2 |      0 |          0 |
+|             (g_physical_safety[0].u_physical_module_safety) |   ir_tfdu_physical_module_safety |         32 |         32 |       0 |    0 |   67 |      0 |      0 |          0 |
+|             u_exact_duty_accountant                         |  ir_tfdu_exact_duty_accountant_6 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|           g_physical_safety[1].u_physical_module_safety     | ir_tfdu_physical_module_safety_5 |        138 |        138 |       0 |    0 |  149 |      2 |      0 |          0 |
+|             (g_physical_safety[1].u_physical_module_safety) | ir_tfdu_physical_module_safety_5 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|             u_exact_duty_accountant                         |    ir_tfdu_exact_duty_accountant |        105 |        105 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       tx_ring                                               |        ir_dma_descriptor_model_4 |       1162 |       1066 |      96 |    0 |  389 |      0 |      0 |          0 |
+|     u_protocol_reset                                        |                     reset_sync_3 |          5 |          5 |       0 |    0 |    3 |      0 |      0 |          0 |
++-------------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

@@ -1,0 +1,129 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "future_margin_reserved_for": [
+    "board_wrapper",
+    "ABZ",
+    "sector_bank_control",
+    "vendor_AXI_DMA_IP",
+    "Ethernet_or_SPI_glue",
+    "debug_and_ECO"
+  ],
+  "generated_utc": "2026-07-18T21:15:01.679199+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "runs": [
+    {
+      "limits_pass": true,
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 4,
+        "DSP": 0,
+        "FF": 4561,
+        "LUT": 8095
+      },
+      "strategy": "Default",
+      "utilization_percent": {
+        "BRAM36": 6.666666666666667,
+        "DSP": 0.0,
+        "FF": 12.957386363636363,
+        "LUT": 45.99431818181818
+      }
+    },
+    {
+      "limits_pass": true,
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 4,
+        "DSP": 0,
+        "FF": 4561,
+        "LUT": 8095
+      },
+      "strategy": "Performance_Explore",
+      "utilization_percent": {
+        "BRAM36": 6.666666666666667,
+        "DSP": 0.0,
+        "FF": 12.957386363636363,
+        "LUT": 45.99431818181818
+      }
+    },
+    {
+      "limits_pass": true,
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 16,
+        "DSP": 0,
+        "FF": 9005,
+        "LUT": 15144
+      },
+      "strategy": "Default",
+      "utilization_percent": {
+        "BRAM36": 11.428571428571429,
+        "DSP": 0.0,
+        "FF": 8.463345864661655,
+        "LUT": 28.466165413533833
+      }
+    },
+    {
+      "limits_pass": true,
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 16,
+        "DSP": 0,
+        "FF": 9005,
+        "LUT": 15144
+      },
+      "strategy": "Performance_Explore",
+      "utilization_percent": {
+        "BRAM36": 11.428571428571429,
+        "DSP": 0.0,
+        "FF": 8.463345864661655,
+        "LUT": 28.466165413533833
+      }
+    },
+    {
+      "limits_pass": true,
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 64,
+        "DSP": 0,
+        "FF": 12217,
+        "LUT": 18787
+      },
+      "strategy": "Default",
+      "utilization_percent": {
+        "BRAM36": 45.714285714285715,
+        "DSP": 0.0,
+        "FF": 11.482142857142858,
+        "LUT": 35.31390977443609
+      }
+    },
+    {
+      "limits_pass": true,
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "resources": {
+        "BRAM18": 0,
+        "BRAM36": 64,
+        "DSP": 0,
+        "FF": 12217,
+        "LUT": 18787
+      },
+      "strategy": "Performance_Explore",
+      "utilization_percent": {
+        "BRAM36": 45.714285714285715,
+        "DSP": 0.0,
+        "FF": 11.482142857142858,
+        "LUT": 35.31390977443609
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-RESOURCE-MARGIN"
+}

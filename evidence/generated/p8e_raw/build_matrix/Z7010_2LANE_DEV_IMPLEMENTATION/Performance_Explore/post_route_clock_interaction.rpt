@@ -1,0 +1,27 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 19 04:56:32 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_clock_interaction -file C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Performance_Explore/post_route_clock_interaction.rpt
+| Design       : z7010_2lane_dev_top
+| Device       : 7z010-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Clock Interaction Report
+
+Clock Interaction Table
+-----------------------
+
+                            WNS                            TNS Failing  TNS Total    WNS Path         Clock-Pair           Inter-Clock          
+From Clock    To Clock      Clock Edges  WNS(ns)  TNS(ns)    Endpoints    Endpoints  Requirement(ns)  Classification       Constraints          
+------------  ------------  -----------  -------  -------  -----------  -----------  ---------------  -------------------  -------------------  
+axi_lite_clk  axi_lite_clk  rise - rise    18.88     0.00            0            2            20.00  Clean                Timed                
+axis_dma_clk  axis_dma_clk  rise - rise     6.64     0.00            0          108            10.00  Clean                Timed                
+axis_dma_clk  protocol_clk                                           0            1                   Ignored              Asynchronous Groups  
+protocol_clk  axis_dma_clk                                           0            1                   Ignored              Asynchronous Groups  
+protocol_clk  protocol_clk  rise - rise     0.14     0.00            0        13573            15.62  Clean                Timed                
+
+

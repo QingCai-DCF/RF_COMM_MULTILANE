@@ -1,0 +1,13 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe tools/p8e_dual_endpoint_reference.py --output C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE\evidence\generated\p8e_raw\simulation\dual_endpoint_reference.json --json-summary
+STARTED_UTC=2026-07-18T20:52:13.718146+00:00
+FINISHED_UTC=2026-07-18T20:52:13.780367+00:00
+RETURN_CODE=0
+STDOUT_BEGIN
+P8E_DUAL_ENDPOINT_REFERENCE_STATUS=PASS
+P8E_DUAL_ENDPOINT_DUPLICATE_APPLICATION_DELIVERY_ZERO=1
+{"CURRENT_RUN_HARDWARE_AUTHORIZATION": false, "NO_HARDWARE_ACTIONS_EXECUTED": true, "application_objects_per_direction": 96, "completed_at_tick": 552, "coverage": {"ack_first_attempt_drops": 14, "backpressure_deferrals": 13, "data_first_attempt_drops": 20, "descriptor_ring_wrap": true, "independent_endpoint_resets": 2, "lane_fault_avoidance_events": 5, "path_epoch_updates": 2, "permit_low_receive_only_events": {"fixed": 9, "rotating": 9}, "reordered_data_frames": 32, "sequence_wrap": true}, "generated_utc": "2026-07-18T20:52:13.772696+00:00", "invariants": {"deadlock": 0, "descriptor_double_completion": 0, "descriptor_leak": 0, "duplicate_application_delivery": 0, "partial_object_commit": 0, "stale_path_commit": 0, "stale_session_commit": 0, "tx_safety_violation": 0}, "observed_rejections": {"duplicate_acks": 0, "duplicate_frames": 16, "stale_acks": 2, "stale_path_frames": 3, "stale_session_frames": 7}, "profile": "Z7020_DUAL_ENDPOINT_DIGITAL_LINK_SIM", "schema_version": 1, "scope": "OFFLINE_DETERMINISTIC_BEHAVIORAL_REFERENCE_ONLY", "source_sha256": "bb68400c6a52aa3498dc9e4e61ae6033ff53dc6a6b26491112dbca349fd42d08", "status": "PASS", "test_id": "P8E-DUAL-ENDPOINT-IMPAIRMENT-REFERENCE"}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

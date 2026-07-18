@@ -1,0 +1,20 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe -m unittest tests.test_p8e_profile_contract -v
+STARTED_UTC=2026-07-18T20:52:13.907263+00:00
+FINISHED_UTC=2026-07-18T20:52:13.994017+00:00
+RETURN_CODE=0
+STDOUT_BEGIN
+
+STDOUT_END
+STDERR_BEGIN
+test_generated_hash_matches_canonical_matrix (tests.test_p8e_profile_contract.P8EProfileContractTests.test_generated_hash_matches_canonical_matrix) ... ok
+test_profile_abi_is_32_bytes (tests.test_p8e_profile_contract.P8EProfileContractTests.test_profile_abi_is_32_bytes) ... ok
+test_profile_values_are_generated_not_redeclared (tests.test_p8e_profile_contract.P8EProfileContractTests.test_profile_values_are_generated_not_redeclared) ... ok
+test_software_does_not_create_or_override_global_permit (tests.test_p8e_profile_contract.P8EProfileContractTests.test_software_does_not_create_or_override_global_permit) ... ok
+test_z7020_board_inputs_remain_pending (tests.test_p8e_profile_contract.P8EProfileContractTests.test_z7020_board_inputs_remain_pending) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.016s
+
+OK
+
+STDERR_END

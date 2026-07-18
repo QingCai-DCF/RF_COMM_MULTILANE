@@ -1,0 +1,39 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_hashes": [
+    {
+      "bytes": 6175,
+      "path": "rtl/platform/axi_dma_adapter.sv",
+      "sha256": "7fded9593295a6a80d9dbf044f68815f8975913f36d9680c7c7e01007033037b"
+    },
+    {
+      "bytes": 5580,
+      "path": "sim/tb/tb_axi_dma_adapter.sv",
+      "sha256": "0e13fcaaf8b8dbf905d75a7aec877d30ff73e9ad171e939d31cd7cd97f9220e2"
+    }
+  ],
+  "design_document": "docs/design/P8E_AXI_DMA_STATIC_INTEGRATION.md",
+  "generated_utc": "2026-07-18T21:15:01.676109+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "real_axi_dma_ddr_runtime": "PENDING_P9_OR_P10",
+  "real_cache_coherency": "PENDING_P9_OR_P10",
+  "schema_version": 1,
+  "simulation": {
+    "log": "evidence/generated/p8e_raw/simulation/p8e_axi_dma_adapter/run.log",
+    "log_sha256": "5ca9695f23765d0b386b716f51d90a1dea7aa745fcc18dce7fd25ba52a752c06",
+    "markers": [
+      "P8E_AXI_DMA_TLAST_TKEEP_BACKPRESSURE_PASS=1",
+      "P8E_AXI_DMA_DESCRIPTOR_COMPLETION_PASS=1",
+      "P8E_AXI_DMA_RESET_ABORT_STALE_REJECT_PASS=1",
+      "TB_AXI_DMA_ADAPTER_PASS=1"
+    ],
+    "status": "PASS",
+    "test_id": "p8e_axi_dma_adapter",
+    "top": "tb_axi_dma_adapter"
+  },
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-AXI-DMA-STATIC-ADAPTER"
+}

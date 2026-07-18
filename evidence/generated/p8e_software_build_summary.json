@@ -1,0 +1,53 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "arm_cross_syntax": {
+    "P8E_PROFILE_Z7010_2LANE_DEV": {
+      "log": "evidence/generated/p8e_raw/software/p8e_profile_z7010_2lane_dev.log",
+      "status": "PASS"
+    },
+    "P8E_PROFILE_Z7020_FIXED_8LANE": {
+      "log": "evidence/generated/p8e_raw/software/p8e_profile_z7020_fixed_8lane.log",
+      "status": "PASS"
+    },
+    "P8E_PROFILE_Z7020_ROTATING_8LANE": {
+      "log": "evidence/generated/p8e_raw/software/p8e_profile_z7020_rotating_8lane.log",
+      "status": "PASS"
+    }
+  },
+  "artifact_hashes": [
+    {
+      "bytes": 2934,
+      "path": "software/ps_driver/p8e_profile.c",
+      "sha256": "01a171df7c0c979e978ef40838f0c7e1f21e7c90d05367b3c1ae2f7ab9abd50b"
+    },
+    {
+      "bytes": 1162,
+      "path": "software/ps_driver/p8e_profile.h",
+      "sha256": "d289dbfaaad90ef09f0e398c666f32d7b0f10ad1c403df56a8e2740ba3b9be97"
+    },
+    {
+      "bytes": 1884,
+      "path": "software/ps_driver/p8e_profile_config.h",
+      "sha256": "7cf497010a78f2fefc5c4f417ca1499f443130088025c48438056c2cbed14004"
+    },
+    {
+      "bytes": 1078,
+      "path": "software/ps_driver/p8e_profile_offline_test.c",
+      "sha256": "3ff3dc03a80178acd653c97e1dfa163578d3e8260c54a29a8c3a236d7b8e333e"
+    }
+  ],
+  "bsp_runtime": "SKIP_WITH_REASON_NO_FROZEN_BSP_AND_NO_HARDWARE_RUNTIME",
+  "generated_header_consistency": "PASS",
+  "generated_utc": "2026-07-18T21:15:01.678691+00:00",
+  "hardware_scope_promoted": false,
+  "host_offline_tests": {
+    "log": "evidence/generated/p8e_raw/software/host_profile_tests.log",
+    "status": "PASS"
+  },
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-SOFTWARE-MULTI-PROFILE-BUILD"
+}

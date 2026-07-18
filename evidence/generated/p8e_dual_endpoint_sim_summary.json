@@ -1,0 +1,72 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "deterministic_impairment_reference": {
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "application_objects_per_direction": 96,
+    "completed_at_tick": 552,
+    "coverage": {
+      "ack_first_attempt_drops": 14,
+      "backpressure_deferrals": 13,
+      "data_first_attempt_drops": 20,
+      "descriptor_ring_wrap": true,
+      "independent_endpoint_resets": 2,
+      "lane_fault_avoidance_events": 5,
+      "path_epoch_updates": 2,
+      "permit_low_receive_only_events": {
+        "fixed": 9,
+        "rotating": 9
+      },
+      "reordered_data_frames": 32,
+      "sequence_wrap": true
+    },
+    "generated_utc": "2026-07-18T20:52:13.772696+00:00",
+    "invariants": {
+      "deadlock": 0,
+      "descriptor_double_completion": 0,
+      "descriptor_leak": 0,
+      "duplicate_application_delivery": 0,
+      "partial_object_commit": 0,
+      "stale_path_commit": 0,
+      "stale_session_commit": 0,
+      "tx_safety_violation": 0
+    },
+    "observed_rejections": {
+      "duplicate_acks": 0,
+      "duplicate_frames": 16,
+      "stale_acks": 2,
+      "stale_path_frames": 3,
+      "stale_session_frames": 7
+    },
+    "profile": "Z7020_DUAL_ENDPOINT_DIGITAL_LINK_SIM",
+    "schema_version": 1,
+    "scope": "OFFLINE_DETERMINISTIC_BEHAVIORAL_REFERENCE_ONLY",
+    "source_sha256": "bb68400c6a52aa3498dc9e4e61ae6033ff53dc6a6b26491112dbca349fd42d08",
+    "status": "PASS",
+    "test_id": "P8E-DUAL-ENDPOINT-IMPAIRMENT-REFERENCE"
+  },
+  "generated_utc": "2026-07-18T21:15:01.676519+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "Z7020_DUAL_ENDPOINT_DIGITAL_LINK_SIM",
+  "rtl_independent_clock_reset_sim": {
+    "log": "evidence/generated/p8e_raw/simulation/p8e_dual_endpoint/run.log",
+    "log_sha256": "e7bdfc45e97d3dc00ac90c13104583e712afaeb5f60eebac628d29f36dc3cd12",
+    "markers": [
+      "P8E_DUAL_INDEPENDENT_CLOCK_RESET_PASS=1",
+      "P8E_DUAL_SINGLE_ENDPOINT_RESET_RECOVERY_PASS=1",
+      "P8E_DUAL_PERMIT_LOW_RECEIVE_ONLY_PASS=1",
+      "P8E_DUAL_DEADLOCK_ZERO_PASS=1",
+      "P8E_DUAL_TX_SAFETY_VIOLATION_ZERO_PASS=1",
+      "TB_P8E_DUAL_ENDPOINT_PASS=1"
+    ],
+    "status": "PASS",
+    "test_id": "p8e_dual_endpoint",
+    "top": "tb_p8e_dual_endpoint"
+  },
+  "schema_version": 1,
+  "scope": "RTL_INDEPENDENT_CLOCK_RESET_PLUS_OFFLINE_BEHAVIORAL_CHANNEL_REFERENCE",
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-DUAL-ENDPOINT-DIGITAL-SIM"
+}

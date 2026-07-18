@@ -1,0 +1,155 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "cdc_ratio_reset_sim": {
+    "log": "evidence/generated/p8e_raw/simulation/p8e_cdc_reset_matrix/run.log",
+    "log_sha256": "5fedd578e37723bb01c8d876294f7150276e7588373e9ed712d33dabe289b448",
+    "markers": [
+      "P8E_CDC_RATIO_1_PASS=1",
+      "P8E_CDC_RATIO_2_PASS=1",
+      "P8E_CDC_RATIO_3_PASS=1",
+      "P8E_CDC_RATIO_4_PASS=1",
+      "P8E_CDC_RATIO_5_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_101_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_211_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_307_PASS=1",
+      "P8E_CDC_DETERMINISTIC_SEED_401_PASS=1",
+      "P8E_CDC_RANDOM_RESET_RECOVERY_PASS=1",
+      "P8E_CDC_STALE_COMPLETION_ZERO_PASS=1",
+      "P8E_RESET_DEASSERT_SYNC_PASS=1",
+      "TB_P8E_CDC_RESET_MATRIX_PASS=1"
+    ],
+    "status": "PASS",
+    "test_id": "p8e_cdc_reset_matrix",
+    "top": "tb_p8e_cdc_reset_matrix"
+  },
+  "generated_utc": "2026-07-18T21:14:46.437901+00:00",
+  "hardware_scope_promoted": false,
+  "highlights": {
+    "cdc_critical": 0,
+    "cdc_unclassified": 0,
+    "reset_deassert_sync": "PASS",
+    "unsafe_multibit": 0
+  },
+  "implementation_audits": [
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Default/post_route_cdc.rpt",
+      "strategy": "Default"
+    },
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7010_2LANE_DEV_IMPLEMENTATION/Performance_Explore/post_route_cdc.rpt",
+      "strategy": "Performance_Explore"
+    },
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION/Default/post_route_cdc.rpt",
+      "strategy": "Default"
+    },
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION/Performance_Explore/post_route_cdc.rpt",
+      "strategy": "Performance_Explore"
+    },
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Default/post_route_cdc.rpt",
+      "strategy": "Default"
+    },
+    {
+      "cdc": {
+        "cdc_non_info": 0,
+        "cdc_unclassified": 0,
+        "unexplained_clock_interactions": 0,
+        "unsafe_multibit": 0
+      },
+      "exceptions": {
+        "exception_rows": 6,
+        "expected_named_clock_group_rows": 6,
+        "reviewed_named_clock_group_rows": 6,
+        "unreviewed_exception_rows": 0,
+        "unreviewed_false_path_or_max_min_delay_rows": 0,
+        "unreviewed_rows": []
+      },
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "report": "evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_cdc.rpt",
+      "strategy": "Performance_Explore"
+    }
+  ],
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-CDC-RDC-CLOSURE"
+}

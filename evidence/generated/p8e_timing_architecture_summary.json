@@ -1,0 +1,119 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_hashes": [
+    {
+      "bytes": 25643,
+      "path": "rtl/ir_selective_repeat_tx.sv",
+      "sha256": "4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c"
+    },
+    {
+      "bytes": 9254,
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4"
+    },
+    {
+      "bytes": 10050,
+      "path": "rtl/ir_health_weighted_scheduler.sv",
+      "sha256": "f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236"
+    },
+    {
+      "bytes": 12080,
+      "path": "rtl/ir_dma_descriptor_model.sv",
+      "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+    },
+    {
+      "bytes": 2772,
+      "path": "docs/design/P8E_TIMING_CDC_RESET_ARCHITECTURE.md",
+      "sha256": "4b76e7820078b3d83a08d5e5689103774bb8185ce48c99c0b1e2cacdf783f62f"
+    }
+  ],
+  "bounded_engines": {
+    "dma_abort_one_descriptor_per_cycle": true,
+    "rx_base_advance": true,
+    "scheduler_two_stage": true,
+    "tx_ack_reclaim_timeout": true
+  },
+  "design_document": "docs/design/P8E_TIMING_CDC_RESET_ARCHITECTURE.md",
+  "generated_utc": "2026-07-18T21:14:46.443191+00:00",
+  "hardware_scope_promoted": false,
+  "implementation_timing": [
+    {
+      "hold_whs_ns": 0.054,
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "setup_wns_ns": 0.136,
+      "strategy": "Default",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    },
+    {
+      "hold_whs_ns": 0.054,
+      "profile": "Z7010_2LANE_DEV_IMPLEMENTATION",
+      "setup_wns_ns": 0.136,
+      "strategy": "Performance_Explore",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    },
+    {
+      "hold_whs_ns": 0.072,
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "setup_wns_ns": 0.09,
+      "strategy": "Default",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    },
+    {
+      "hold_whs_ns": 0.072,
+      "profile": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+      "setup_wns_ns": 0.09,
+      "strategy": "Performance_Explore",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    },
+    {
+      "hold_whs_ns": 0.058,
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "setup_wns_ns": 0.713,
+      "strategy": "Default",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    },
+    {
+      "hold_whs_ns": 0.058,
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION",
+      "setup_wns_ns": 0.713,
+      "strategy": "Performance_Explore",
+      "timing_audit": {
+        "pulse_width_violations": 0,
+        "unconstrained_internal_endpoints": 0,
+        "worst_pulse_width_slack_ns": 4.5
+      },
+      "tns_ns": 0.0
+    }
+  ],
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-BOUNDED-TIMING-ARCHITECTURE"
+}

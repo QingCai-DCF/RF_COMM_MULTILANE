@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "stage": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+  "test_id": "P8E-PRECOMPLETION-DIRECT-REVERIFICATION",
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "status": "PASS",
+  "verified_source_commit": "55fe57509896babec48bbf897ab32ab161382599",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "scope": "Direct current-source P8C exact-duty and P8D functional re-verification used only to refresh stale canonical PASS artifact bindings before the parent full regression. The failed parent provenance result is not promoted and must be closed by the final P8E full gate.",
+  "requirements": [
+    {
+      "requirement_id": "PHY-SAFE-004",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+          "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_raw/formal_55fe57509896/regression/p8c/p8c_exact_sliding_duty_rtl_summary.json",
+      "direct_evidence_sha256": "f51eabab77512f48e052144be46d97771625ead3e8a1fee2fabc0722d68c53b7",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "reduced_exact_duty": "PASS",
+        "full_scale_exact_duty": "PASS",
+        "rtl_python_trace": "PASS"
+      }
+    },
+    {
+      "requirement_id": "PHY-SAFE-005",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+          "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_raw/formal_55fe57509896/regression/p8c/p8c_exact_sliding_duty_rtl_summary.json",
+      "direct_evidence_sha256": "f51eabab77512f48e052144be46d97771625ead3e8a1fee2fabc0722d68c53b7",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "reduced_exact_duty": "PASS",
+        "full_scale_exact_duty": "PASS",
+        "rtl_python_trace": "PASS"
+      }
+    },
+    {
+      "requirement_id": "L2-ARQ-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_selective_repeat_tx.sv",
+          "sha256": "4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c"
+        },
+        {
+          "path": "rtl/ir_selective_repeat_rx.sv",
+          "sha256": "25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json",
+      "direct_evidence_sha256": "6d78f26b50f4c594a34637794478347d94411099ac0c90d6b65eb292d734cf5b",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "L2-DUP-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_selective_repeat_rx.sv",
+          "sha256": "25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_selective_repeat_reference_summary.json",
+      "direct_evidence_sha256": "3c865be5a9b6747d6d0a01be2d589d12a3b99a0b7300fdb0c4e6674a43f058d7",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "L2-STALE-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_selective_repeat_tx.sv",
+          "sha256": "4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c"
+        },
+        {
+          "path": "rtl/ir_selective_repeat_rx.sv",
+          "sha256": "25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json",
+      "direct_evidence_sha256": "6d78f26b50f4c594a34637794478347d94411099ac0c90d6b65eb292d734cf5b",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "L2-MIG-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "sim/tb/tb_ir_scheduler_migration.sv",
+          "sha256": "13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_scheduler_migration_summary.json",
+      "direct_evidence_sha256": "ddf249b634cadd9c0ccd243996c0f1d56dfbc08a0e6209c3dbfd6d903406f5a8",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "L2-RETRY-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_selective_repeat_tx.sv",
+          "sha256": "4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json",
+      "direct_evidence_sha256": "6d78f26b50f4c594a34637794478347d94411099ac0c90d6b65eb292d734cf5b",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "SCHED-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_health_weighted_scheduler.sv",
+          "sha256": "f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_scheduler_migration_summary.json",
+      "direct_evidence_sha256": "ddf249b634cadd9c0ccd243996c0f1d56dfbc08a0e6209c3dbfd6d903406f5a8",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "SCHED-002",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_health_weighted_scheduler.sv",
+          "sha256": "f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236"
+        },
+        {
+          "path": "sim/tb/tb_ir_scheduler_migration.sv",
+          "sha256": "13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_scheduler_migration_summary.json",
+      "direct_evidence_sha256": "ddf249b634cadd9c0ccd243996c0f1d56dfbc08a0e6209c3dbfd6d903406f5a8",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "SCHED-003",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_health_weighted_scheduler.sv",
+          "sha256": "f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_scheduler_migration_summary.json",
+      "direct_evidence_sha256": "ddf249b634cadd9c0ccd243996c0f1d56dfbc08a0e6209c3dbfd6d903406f5a8",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "DMA-001",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_dma_descriptor_model.sv",
+          "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_dma_descriptor_ring_summary.json",
+      "direct_evidence_sha256": "077e44aaa845bdc758b976a33e481b0cb7ff3c5207e4cb669119aec5ed7bd552",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "DMA-002",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_dma_descriptor_model.sv",
+          "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+        },
+        {
+          "path": "sim/tb/tb_ir_dma_descriptor_ring.sv",
+          "sha256": "b795dd33940fc639df971190d5c1bba0dc0d99bba6076e58753575c5fd008574"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_dma_descriptor_ring_summary.json",
+      "direct_evidence_sha256": "077e44aaa845bdc758b976a33e481b0cb7ff3c5207e4cb669119aec5ed7bd552",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "DMA-003",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_dma_descriptor_model.sv",
+          "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_dma_descriptor_ring_summary.json",
+      "direct_evidence_sha256": "077e44aaa845bdc758b976a33e481b0cb7ff3c5207e4cb669119aec5ed7bd552",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    },
+    {
+      "requirement_id": "DMA-004",
+      "status": "PASS",
+      "changed_artifacts": [
+        {
+          "path": "rtl/ir_dma_descriptor_model.sv",
+          "sha256": "f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81"
+        }
+      ],
+      "direct_evidence_path": "evidence/generated/p8e_raw/r8d/p8d_dma_descriptor_ring_summary.json",
+      "direct_evidence_sha256": "077e44aaa845bdc758b976a33e481b0cb7ff3c5207e4cb669119aec5ed7bd552",
+      "direct_evidence_status": "PASS",
+      "checks": {
+        "summary_status": "PASS"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8D-1",
+  "state_revision": "P8E-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -16,23 +16,35 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+  "current_program_stage": "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
-      "status": "ACTIVE_DEVELOPMENT_PROFILE",
+      "status": "PLATFORM_LIMITED_OFFLINE_IMPLEMENTATION_PASS",
       "active_profile_path": "board_profiles/ACTIVE_PROFILE.json",
       "pinmap_path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
       "xdc_path": "constraints/active/PORT1.generated.xdc",
       "available_physical_lanes": 2
     },
     {
-      "profile": "Z7020_8LANE_TARGET",
-      "status": "PENDING_SEPARATE_FIXED_AND_ROTATING_PROFILES",
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE",
+      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
       "active_profile_path": null,
       "pinmap_path": null,
       "xdc_path": null,
-      "available_physical_lanes": null
+      "available_physical_lanes": 8,
+      "part": "xc7z020clg400-2",
+      "board_inputs": "PENDING_D12"
+    },
+    {
+      "profile": "Z7020_ROTATING_8LANE_CORE",
+      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
+      "active_profile_path": null,
+      "pinmap_path": null,
+      "xdc_path": null,
+      "available_physical_lanes": 8,
+      "part": "xc7z020clg400-2",
+      "board_inputs": "PENDING_D12"
     }
   ],
   "stage_status": {
@@ -48,7 +60,7 @@
     "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
     "P8D_SELECTIVE_REPEAT_DMA": "PASS",
-    "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING"
+    "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS"
   },
   "p7_evidence": {
     "status": "PASS",
@@ -176,12 +188,16 @@
     {
       "gate_id": "P8D",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P8E",
+      "status": "PASS"
     }
   ],
   "pending_gates": [
     {
-      "gate_id": "P8E",
-      "status": "PENDING"
+      "gate_id": "P9",
+      "status": "PENDING_CURRENT_RUN_AUTHORIZATION"
     },
     {
       "gate_id": "D12_CORE_BOARD",
@@ -220,7 +236,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
+  "last_verified_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -251,7 +267,7 @@
   },
   "p8d_status": "PASS",
   "p8d_no_hardware_actions_executed": true,
-  "p8e_status": "PENDING",
+  "p8e_status": "PASS",
   "p8d_acceptance": {
     "status": "PASS",
     "profile": "P8D_MULTI_PROFILE_OFFLINE",
@@ -272,6 +288,35 @@
       "Z7020_HARDWARE",
       "ROTATION_HARDWARE",
       "THROUGHPUT_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ]
+  },
+  "p8_portable_architecture_status": "PASS",
+  "p9_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+  "p8e_no_hardware_actions_executed": true,
+  "p8e_acceptance": {
+    "status": "PASS",
+    "profile": "P8E_MULTI_PROFILE_OFFLINE",
+    "scope": "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION",
+    "test_id": "P8E-DUAL-TARGET-BUILD-CDC-RESOURCE-TIMING-FINAL",
+    "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+    "evidence_path": "evidence/generated/p8e_final_summary.json",
+    "evidence_sha256": "08183cbe6fa453e903d8bd3a61f464f001d5714dc08982a7e0fbb47fbe23850c",
+    "artifact_manifest_path": "evidence/generated/p8e_raw/artifact_sha256_manifest.json",
+    "artifact_manifest_sha256": "615c950f5f91cdf4af8b92039d3da53f274f1e1907928a3687b25bbb558cec4e",
+    "build_matrix_path": "config/p8e_build_matrix.yaml",
+    "build_matrix_sha256": "5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502",
+    "clock_reset_path": "config/p8e_clock_reset.yaml",
+    "clock_reset_sha256": "0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "scope_exclusions": [
+      "REAL_AXI_DMA_DDR",
+      "Z7020_BOARD_IO",
+      "Z7010_HARDWARE_RERUN",
+      "GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION",
+      "TFDU_EXTERNAL_MEASUREMENT",
+      "ROTATION_HARDWARE",
       "FINAL_PRODUCT_HARDWARE"
     ]
   }

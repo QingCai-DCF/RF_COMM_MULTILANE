@@ -1,0 +1,33 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifact_count": 1765,
+  "artifact_manifest": "evidence/generated/p8e_raw/artifact_sha256_manifest.json",
+  "errors": [],
+  "generated_utc": "2026-07-18T21:25:30.759755+00:00",
+  "hardware_scope_promoted": false,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "required_pairs_checked": [
+    "p8e_repo_intake",
+    "p8e_build_matrix_summary",
+    "p8e_source_manifest_summary",
+    "p8e_constraint_audit_summary",
+    "p8e_timing_architecture_summary",
+    "p8e_z7010_implementation_summary",
+    "p8e_z7020_fixed_core_summary",
+    "p8e_z7020_rotating_core_summary",
+    "p8e_cdc_rdc_summary",
+    "p8e_reset_bram_summary",
+    "p8e_axi_dma_static_integration_summary",
+    "p8e_dual_endpoint_sim_summary",
+    "p8e_software_build_summary",
+    "p8e_resource_margin_summary",
+    "p8e_power_estimate_summary",
+    "p8e_io_budget_summary",
+    "p8e_p0_p8d_regression_summary"
+  ],
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8E-EVIDENCE-CONSISTENCY"
+}

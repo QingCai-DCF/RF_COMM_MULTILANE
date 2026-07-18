@@ -1,0 +1,62 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 19 05:14:37 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_drc -file C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/build_matrix/Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION/Performance_Explore/post_route_drc.rpt
+| Design       : z7020_fixed_core_timing_top
+| Device       : xc7z020clg400-2
+| Speed File   : -2
+| Design State : Fully Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: z7020_fixed_core_timing_top
+          Floorplan: design_1
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 2
++-----------+----------+--------------------+------------+
+| Rule      | Severity | Description        | Violations |
++-----------+----------+--------------------+------------+
+| RTSTAT-10 | Warning  | No routable loads  | 1          |
+| ZPS7-1    | Warning  | PS7 block required | 1          |
++-----------+----------+--------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+RTSTAT-10#1 Warning
+No routable loads  
+50 net(s) have no routable loads. The problem bus(es) and/or net(s) are u_top/u_fixed/u_dma_adapter/clock_domain_status_o,
+u_top/u_fixed/u_portable_architecture/data_plane/physical_attempt_sequence_o[15:0],
+u_top/u_fixed/u_portable_architecture/data_plane/u_scheduler/architecture_status_o,
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[11].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[13].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[14].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[16].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[17].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[19].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[21].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[23].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[26].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[30].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[4].u_physical_module_safety/physical_txd_o[0],
+u_top/u_fixed/u_portable_architecture/safety_accounting/endpoint/g_physical_safety[7].u_physical_module_safety/physical_txd_o[0]
+ (the first 15 of 35 listed).
+Related violations: <none>
+
+ZPS7-1#1 Warning
+PS7 block required  
+The PS7 cell must be used in this Zynq design in order to enable correct default configuration.
+Related violations: <none>
+
+

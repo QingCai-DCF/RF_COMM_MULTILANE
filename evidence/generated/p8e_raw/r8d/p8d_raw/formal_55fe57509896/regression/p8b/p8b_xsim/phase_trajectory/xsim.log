@@ -1,0 +1,30 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sun Jul 19 02:27:50 2026
+# Process ID: 34976
+# Current directory: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/r8d/p8d_raw/formal_55fe57509896/regression/p8b/p8b_xsim/phase_trajectory
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_p8b_phase_trajectory_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/r8d/p8d_raw/formal_55fe57509896/regression/p8b/p8b_xsim/phase_trajectory/xsim.log
+# Journal file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8e_raw/r8d/p8d_raw/formal_55fe57509896/regression/p8b/p8b_xsim/phase_trajectory\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_p8b_phase_trajectory_snapshot/xsim_script.tcl
+# xsim {tb_p8b_phase_trajectory_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8B_METRIC_SAMPLE_TO_PREPARE_US=10
+P8B_METRIC_PREPARE_TO_READY_US=20
+P8B_METRIC_ATOMIC_COMMIT_US=2
+P8B_METRIC_SERVICE_GAP_US=30
+P8B_METRIC_EPOCH_VISIBILITY_US=35
+P8B_METRIC_REACQUISITION_US=100
+P8B_RANDOMIZED_SAMPLES=896
+P8B_HDL_PHASE_ACQUISITION_PASS=1
+P8B_HDL_TRAJECTORY_RANDOMIZED_PASS=1
+TB_P8B_PHASE_TRAJECTORY_PASS=1
+$finish called at time : 19820 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_p8b_phase_trajectory.sv" Line 240
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 19 02:27:51 2026...

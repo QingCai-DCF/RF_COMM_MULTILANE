@@ -1,0 +1,47 @@
+# P8D canonical data-plane configuration
+
+- Status: `PASS`
+- Test ID: `P8D-CANONICAL-CONFIG`
+- Profile: `P8D_MULTI_PROFILE_OFFLINE`
+- Source commit: `0c67e7717a5a0fb594a237a05184be65cf748f4f`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "command_log": "evidence/generated/p8e_raw/r8d/p8d_raw/formal_0c67e7717a5a/canonical_config.log",
+  "config_path": "config/p8d_data_plane.yaml",
+  "config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+  "generated_utc": "2026-07-18T21:15:01.941170Z",
+  "hardware_scope_promoted": false,
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "schema_validation": {
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "profile": "P8D_MULTI_PROFILE_OFFLINE",
+    "schema_version": 1,
+    "source_path": "config/p8d_data_plane.yaml",
+    "source_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+    "status": "PASS",
+    "test_id": "P8D-CANONICAL-CONFIG-SCHEMA",
+    "validation": {
+      "active_window_less_than_half_space": true,
+      "descriptor_layout_bytes_covered": 64,
+      "minimum_outstanding": 32,
+      "minimum_sack_bits": 32,
+      "profile_count": 3,
+      "profiles": [
+        "Z7010_2LANE_DEV",
+        "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE",
+        "Z7020_ROTATING_8LANE_MODEL"
+      ],
+      "sequence_space": 65536,
+      "status": "PASS"
+    }
+  },
+  "schema_version": 1,
+  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "status": "PASS",
+  "test_id": "P8D-CANONICAL-CONFIG"
+}
+```
