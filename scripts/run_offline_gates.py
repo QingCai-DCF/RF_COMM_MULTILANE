@@ -32,6 +32,11 @@ def build_parser():
         action="store_true",
         help="Run the mandatory P8C safety gate after the complete P0-P8B regression.",
     )
+    parser.add_argument(
+        "--include-p8d",
+        action="store_true",
+        help="Run the mandatory P8D selective-repeat/DMA gate, including isolated P8B/P8C regressions.",
+    )
     # Compatibility flags make the canonical integrated command explicit while
     # preserving the existing always-on P0-P7 simulation and P8A checks.
     parser.add_argument("--include-simulation", action="store_true")
@@ -398,10 +403,22 @@ def main(argv=None):
         results.append(run("p8c_tfdu_safety_single_global_permit", p8c_cmd, env=p8c_env))
         status = write_summary(outdir, results)
 
+    if args.include_p8d:
+        parent_clean = all(r["returncode"] == 0 for r in results)
+        p8d_env = os.environ.copy()
+        p8d_env["NO_HARDWARE"] = "1"
+        p8d_env["CURRENT_RUN_HARDWARE_AUTHORIZATION"] = "false"
+        p8d_cmd = [py, "scripts/run_p8d_data_plane_gate.py", "--full", "--json-summary"]
+        if parent_clean:
+            p8d_cmd.append("--parent-offline-pass")
+        results.append(run("p8d_selective_repeat_sack_dma_data_plane", p8d_cmd, env=p8d_env))
+        status = write_summary(outdir, results)
+
     hard_fail = [r for r in results if r["returncode"] != 0]
     print(f"OFFLINE_GATES_RAN=1 status={status}")
     print(f"P8B_INCLUDED={1 if include_p8b else 0}")
     print(f"P8C_INCLUDED={1 if args.include_p8c else 0}")
+    print(f"P8D_INCLUDED={1 if args.include_p8d else 0}")
     print(f"GENERATED_SUMMARY={outdir / 'offline_gate_summary.md'}")
     return 1 if hard_fail else 0
 

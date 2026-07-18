@@ -285,10 +285,20 @@ def result(test_id: str, passed: bool, evidence: str, details: dict[str, Any] | 
 
 
 def main(argv: list[str] | None = None) -> int:
+    global OUT, XSIM_OUT
     parser = argparse.ArgumentParser()
     parser.add_argument("--json-summary", action="store_true")
     parser.add_argument("--parent-offline-pass", action="store_true")
+    parser.add_argument("--output-root", type=Path,
+                        help="Write generated gate evidence below this repository-local directory.")
     args = parser.parse_args(argv)
+    if args.output_root:
+        candidate = args.output_root if args.output_root.is_absolute() else ROOT / args.output_root
+        candidate = candidate.resolve()
+        if not candidate.is_relative_to(ROOT.resolve()):
+            parser.error("--output-root must remain inside the repository")
+        OUT = candidate
+        XSIM_OUT = OUT / "p8b_xsim"
     OUT.mkdir(parents=True, exist_ok=True)
     XSIM_OUT.mkdir(parents=True, exist_ok=True)
 

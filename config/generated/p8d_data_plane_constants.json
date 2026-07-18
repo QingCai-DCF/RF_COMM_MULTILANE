@@ -1,0 +1,299 @@
+{
+  "config": {
+    "accepted_previous_path_epochs": 1,
+    "ack_aggregation_frame_threshold": 8,
+    "ack_aggregation_max_delay_cycles": 32000,
+    "ack_credit_low_watermark": 8,
+    "airtime_model_parameters": {
+      "ack_frame_payload_bytes": 20,
+      "direction_guard_us": 10.0,
+      "direction_window_frames": 32,
+      "dma_descriptor_gap_us": 0.5,
+      "frame_overhead_bytes": 22,
+      "latency_jitter_us": 25.0,
+      "nominal_per": 0.01,
+      "nominal_txd_high_fraction": 0.25,
+      "phy_raw_bps_per_lane": 4000000,
+      "ps_network_spi_placeholder_overhead_fraction": 0.01
+    },
+    "axis_data_width_by_profile": {
+      "Z7010_2LANE_DEV": 32,
+      "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE": 64,
+      "Z7020_ROTATING_8LANE_MODEL": 64
+    },
+    "axis_keep_enabled": true,
+    "axis_user_width": 64,
+    "configuration_id": "P8D_DATA_PLANE_V1",
+    "control_priority_burst_max": 4,
+    "control_priority_policy": "strict_with_bounded_burst",
+    "descriptor_alignment_bytes": 64,
+    "descriptor_bytes": 64,
+    "descriptor_generation_bits": 16,
+    "descriptor_layout": {
+      "byte_order": "little_endian",
+      "fields": [
+        {
+          "name": "version_state_generation",
+          "offset": 0,
+          "width_bits": 32
+        },
+        {
+          "name": "flags_priority_lane_policy",
+          "offset": 4,
+          "width_bits": 32
+        },
+        {
+          "name": "buffer_address",
+          "offset": 8,
+          "width_bits": 64
+        },
+        {
+          "name": "buffer_capacity",
+          "offset": 16,
+          "width_bits": 32
+        },
+        {
+          "name": "requested_length",
+          "offset": 20,
+          "width_bits": 32
+        },
+        {
+          "name": "actual_length",
+          "offset": 24,
+          "width_bits": 32
+        },
+        {
+          "name": "stream_id",
+          "offset": 28,
+          "width_bits": 32
+        },
+        {
+          "name": "object_id",
+          "offset": 32,
+          "width_bits": 32
+        },
+        {
+          "name": "user_tag",
+          "offset": 36,
+          "width_bits": 32
+        },
+        {
+          "name": "session_epoch",
+          "offset": 40,
+          "width_bits": 32
+        },
+        {
+          "name": "completion_status",
+          "offset": 44,
+          "width_bits": 16
+        },
+        {
+          "name": "error_code",
+          "offset": 46,
+          "width_bits": 16
+        },
+        {
+          "name": "next_index",
+          "offset": 48,
+          "width_bits": 32
+        },
+        {
+          "name": "reserved0",
+          "offset": 52,
+          "width_bits": 32
+        },
+        {
+          "name": "timestamp_or_cookie",
+          "offset": 56,
+          "width_bits": 64
+        }
+      ],
+      "version": 1
+    },
+    "duplicate_history_depth": 128,
+    "duty_design_target": 0.18,
+    "duty_hard_limit": 0.2,
+    "global_outstanding_by_profile": {
+      "Z7010_2LANE_DEV": 32,
+      "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE": 64,
+      "Z7020_ROTATING_8LANE_MODEL": 64
+    },
+    "global_outstanding_default": 32,
+    "handover_service_gap_source": {
+      "evidence_path": "evidence/generated/p8b_handover_timing_summary.json",
+      "fixed_module_pitch_time_at_600rpm_us": 3125.0,
+      "metric": "application_service_gap_us",
+      "nominal_us": 30.0
+    },
+    "legacy_mode_version": 1,
+    "max_ack_payload_bytes": 32,
+    "max_frame_bytes": 288,
+    "max_l1_payload_bytes": 247,
+    "max_retry": 7,
+    "object_id_width": 32,
+    "path_epoch_width": 16,
+    "payload_buffer_strategy": "shared_global_tx_rx_frame_stores",
+    "protocol_version": "RF_COMM_L2",
+    "retransmission_storage_strategy": "shared_global_entry_indexed_store",
+    "retry_backoff_policy": "bounded_exponential_saturating",
+    "retry_priority_burst_max": 8,
+    "retry_priority_policy": "retry_then_normal_with_bounded_burst",
+    "rfap_v1_useful_chunk_bytes": 215,
+    "rfap_vnext": {
+      "atomic_publish_required": true,
+      "endpoint_sha256_required": true,
+      "final_length_may_be_unknown": true,
+      "header_bytes": 48,
+      "maximum_bounded_inflight_bytes": 1048576,
+      "minimum_supported_object_bytes": 67108864,
+      "object_crc32_required": true
+    },
+    "ring_index_bits": 32,
+    "rto_initial_cycles": 64000,
+    "rto_max_cycles": 512000,
+    "rto_min_cycles": 32000,
+    "rx_reorder_window": 64,
+    "rx_ring_depth": 64,
+    "sack_window_bits_by_profile": {
+      "Z7010_2LANE_DEV": 32,
+      "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE": 64,
+      "Z7020_ROTATING_8LANE_MODEL": 64
+    },
+    "scheduler_default_weights": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "scheduler_type": "weighted_deficit_round_robin_bytes",
+    "scheduler_weight_width": 8,
+    "schema_version": 1,
+    "sequence_width_bits": 16,
+    "session_epoch_width": 32,
+    "starvation_bound": 4096,
+    "stream_id_width": 32,
+    "tx_ring_depth": 64,
+    "vnext_mode_version": 2
+  },
+  "configuration_id": "P8D_DATA_PLANE_V1",
+  "descriptor": {
+    "alignment_bytes": 64,
+    "bytes": 64,
+    "fields": [
+      {
+        "name": "version_state_generation",
+        "offset": 0,
+        "width_bits": 32
+      },
+      {
+        "name": "flags_priority_lane_policy",
+        "offset": 4,
+        "width_bits": 32
+      },
+      {
+        "name": "buffer_address",
+        "offset": 8,
+        "width_bits": 64
+      },
+      {
+        "name": "buffer_capacity",
+        "offset": 16,
+        "width_bits": 32
+      },
+      {
+        "name": "requested_length",
+        "offset": 20,
+        "width_bits": 32
+      },
+      {
+        "name": "actual_length",
+        "offset": 24,
+        "width_bits": 32
+      },
+      {
+        "name": "stream_id",
+        "offset": 28,
+        "width_bits": 32
+      },
+      {
+        "name": "object_id",
+        "offset": 32,
+        "width_bits": 32
+      },
+      {
+        "name": "user_tag",
+        "offset": 36,
+        "width_bits": 32
+      },
+      {
+        "name": "session_epoch",
+        "offset": 40,
+        "width_bits": 32
+      },
+      {
+        "name": "completion_status",
+        "offset": 44,
+        "width_bits": 16
+      },
+      {
+        "name": "error_code",
+        "offset": 46,
+        "width_bits": 16
+      },
+      {
+        "name": "next_index",
+        "offset": 48,
+        "width_bits": 32
+      },
+      {
+        "name": "reserved0",
+        "offset": 52,
+        "width_bits": 32
+      },
+      {
+        "name": "timestamp_or_cookie",
+        "offset": 56,
+        "width_bits": 64
+      }
+    ],
+    "version": 1
+  },
+  "profiles": {
+    "Z7010_2LANE_DEV": {
+      "axis_data_width": 32,
+      "global_outstanding": 32,
+      "sack_window_bits": 32
+    },
+    "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE": {
+      "axis_data_width": 64,
+      "global_outstanding": 64,
+      "sack_window_bits": 64
+    },
+    "Z7020_ROTATING_8LANE_MODEL": {
+      "axis_data_width": 64,
+      "global_outstanding": 64,
+      "sack_window_bits": 64
+    }
+  },
+  "schema_version": 1,
+  "source_path": "config/p8d_data_plane.yaml",
+  "source_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+  "validation": {
+    "active_window_less_than_half_space": true,
+    "descriptor_layout_bytes_covered": 64,
+    "minimum_outstanding": 32,
+    "minimum_sack_bits": 32,
+    "profile_count": 3,
+    "profiles": [
+      "Z7010_2LANE_DEV",
+      "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE",
+      "Z7020_ROTATING_8LANE_MODEL"
+    ],
+    "sequence_space": 65536,
+    "status": "PASS"
+  }
+}

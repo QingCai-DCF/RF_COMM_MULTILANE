@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8C-1",
+  "state_revision": "P8D-0",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -47,7 +47,7 @@
     "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
     "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
-    "P8D_SELECTIVE_REPEAT_DMA": "PENDING",
+    "P8D_SELECTIVE_REPEAT_DMA": "IN_PROGRESS",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING"
   },
   "p7_evidence": {
@@ -248,5 +248,8 @@
       "DUTY_EXTERNAL_MEASUREMENT",
       "FINAL_PRODUCT_HARDWARE"
     ]
-  }
+  },
+  "p8d_status": "IN_PROGRESS",
+  "p8d_no_hardware_actions_executed": true,
+  "p8e_status": "PENDING"
 }

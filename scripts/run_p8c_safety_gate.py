@@ -295,12 +295,22 @@ def verify_existing() -> tuple[bool, dict[str, Any]]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    global OUT, RAW
     parser = argparse.ArgumentParser()
     parser.add_argument("--json-summary", action="store_true")
     parser.add_argument("--parent-offline-pass", action="store_true")
     parser.add_argument("--no-full-regression", action="store_true")
     parser.add_argument("--verify-existing", action="store_true")
+    parser.add_argument("--output-root", type=Path,
+                        help="Write generated gate evidence below this repository-local directory.")
     args = parser.parse_args(argv)
+    if args.output_root:
+        candidate = args.output_root if args.output_root.is_absolute() else ROOT / args.output_root
+        candidate = candidate.resolve()
+        if not candidate.is_relative_to(ROOT.resolve()):
+            parser.error("--output-root must remain inside the repository")
+        OUT = candidate
+        RAW = OUT / "p8c_raw"
     if args.verify_existing:
         passed, summary = verify_existing()
         print(json.dumps(summary, sort_keys=True) if args.json_summary else f"P8C_VERIFY_EXISTING={summary['status']}")

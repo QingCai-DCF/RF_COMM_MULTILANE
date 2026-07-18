@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P8C-1` (`0x08030001`)
-- Canonical source SHA256: `9993ae99c883a921f61bf1af8f1aca54b8a89fa7cd53452f435a6ed992c7fd2d`
-- P0-P7 offsets and semantics are preserved; P8C is additive from `0x0400`.
+- Register map version: `P8D-1` (`0x08040001`)
+- Canonical source SHA256: `8f029023d7871a7b8351c9c9256164d34a0ec2954754c261c31da410851d34b1`
+- Compatibility: P0-P8C offsets and meanings are preserved; P8D is additive from 0x0500.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -100,3 +100,121 @@
 | `P8C_SNAPSHOT_RX_PULSE_COUNT` | `0x047C` | `RO` | Receive-only active-low RX pulse count |
 | `P8C_REGISTER_MAP_VERSION` | `0x04F0` | `RO` | P8C register map version encoding |
 | `P8C_REGISTER_MAP_HASH_LOW` | `0x04F4` | `RO` | Low 32 bits of canonical register-map SHA256 |
+| `P8D_CONTROL` | `0x0500` | `WO` | P8D request pulses; no physical permit or safety override |
+| `P8D_STATUS` | `0x0504` | `RO` | Data-plane state and atomic snapshot validity |
+| `P8D_L2_PROTOCOL_VERSION` | `0x0508` | `RO` | Negotiated-capable L2 vNext protocol version |
+| `P8D_L2_CAPABILITIES` | `0x050C` | `RO` | SACK, aggregation, path-epoch, streaming, AXIS width capabilities |
+| `P8D_PROTOCOL_MODE` | `0x0510` | `RW` | Atomic session mode: legacy stop-and-wait or selective-repeat vNext |
+| `P8D_SESSION_EPOCH` | `0x0514` | `RW` | Current data-plane session epoch |
+| `P8D_PATH_EPOCH` | `0x0518` | `RW` | Current accepted path epoch |
+| `P8D_TX_WINDOW_SIZE` | `0x051C` | `RW` | Global TX selective-repeat window size |
+| `P8D_RX_WINDOW_SIZE` | `0x0520` | `RW` | Global RX reorder window size |
+| `P8D_RETRY_CONFIG` | `0x0524` | `RW` | Bounded maximum retry and initial RTO configuration |
+| `P8D_TX_NEXT_SEQUENCE` | `0x0528` | `RO` | Next globally allocated TX sequence |
+| `P8D_TX_ACK_BASE` | `0x052C` | `RO` | Lowest TX sequence not cumulatively acknowledged |
+| `P8D_RX_BASE_SEQUENCE` | `0x0530` | `RO` | Lowest RX sequence not contiguously delivered |
+| `P8D_GLOBAL_OUTSTANDING_COUNT` | `0x0534` | `RO` | Current global outstanding count |
+| `P8D_GLOBAL_OUTSTANDING_HIGH_WATERMARK` | `0x0538` | `RO` | Atomic snapshot global outstanding high watermark |
+| `P8D_SACK_WINDOW_BITS` | `0x053C` | `RW` | Negotiated SACK bitmap width |
+| `P8D_LAST_SACK_BITMAP_LOW` | `0x0540` | `RO` | Atomic snapshot SACK bits 31:0 |
+| `P8D_LAST_SACK_BITMAP_HIGH` | `0x0544` | `RO` | Atomic snapshot SACK bits 63:32 |
+| `P8D_ACK_AGGREGATION_COUNT` | `0x0548` | `RO` | Frames accumulated into ACK batches |
+| `P8D_ACK_TIMER_EXPIRY_COUNT` | `0x054C` | `RO` | Maximum ACK delay expirations |
+| `P8D_ACK_FRAMES_SENT` | `0x0550` | `RO` | Aggregated ACK frames sent |
+| `P8D_ACK_FRAMES_RECEIVED` | `0x0554` | `RO` | ACK/SACK frames received |
+| `P8D_DUPLICATE_ACK_COUNT` | `0x0558` | `RO` | Duplicate ACK count |
+| `P8D_STALE_ACK_COUNT` | `0x055C` | `RO` | Old-session ACK rejection count |
+| `P8D_OUT_OF_WINDOW_ACK_COUNT` | `0x0560` | `RO` | Future or malformed ACK-window rejection count |
+| `P8D_TX_RETRY_COUNT` | `0x0564` | `RO` | TX retry attempt count |
+| `P8D_TX_RETRY_EXHAUSTED_COUNT` | `0x0568` | `RO` | Bounded retry exhaustion count |
+| `P8D_TIMEOUT_COUNT` | `0x056C` | `RO` | RTO expiry count |
+| `P8D_MIGRATION_COUNT` | `0x0570` | `RO` | Unacknowledged-entry migration count |
+| `P8D_LANE_FAULT_MIGRATION_COUNT` | `0x0574` | `RO` | Lane-fault-triggered migration count |
+| `P8D_DUTY_DEFER_COUNT` | `0x0578` | `RO` | P8C duty-headroom scheduler deferrals |
+| `P8D_PERMIT_DEFER_COUNT` | `0x057C` | `RO` | GLOBAL_PERMIT-effective scheduler deferrals |
+| `P8D_MAPPING_DEFER_COUNT` | `0x0580` | `RO` | P8B mapping-invalid scheduler deferrals |
+| `P8D_RX_OUT_OF_ORDER_COUNT` | `0x0584` | `RO` | Accepted out-of-order data count |
+| `P8D_RX_DUPLICATE_COUNT` | `0x0588` | `RO` | Suppressed duplicate data count |
+| `P8D_RX_OLD_COUNT` | `0x058C` | `RO` | Old sequence rejection count |
+| `P8D_RX_FUTURE_COUNT` | `0x0590` | `RO` | Future out-of-window rejection count |
+| `P8D_RX_STALE_SESSION_COUNT` | `0x0594` | `RO` | Stale session data rejection count |
+| `P8D_RX_STALE_PATH_EPOCH_COUNT` | `0x0598` | `RO` | Stale path-attempt rejection count |
+| `P8D_RX_GAP_COUNT` | `0x059C` | `RO` | RX reorder gap observation count |
+| `P8D_RX_GAP_TIMEOUT_COUNT` | `0x05A0` | `RO` | Bounded gap recovery expiry count |
+| `P8D_SCHEDULER_ACTIVE_MASK` | `0x05A4` | `RW` | Logical lane scheduling enable mask |
+| `P8D_SCHEDULER_STARVATION_BOUND` | `0x05A8` | `RW` | Configured bounded-starvation limit |
+| `P8D_SCHEDULER_DEFER_REASON` | `0x05AC` | `RO` | Last scheduler defer reason |
+| `P8D_SCHEDULER_WEIGHT0` | `0x05B0` | `RW` | Lane 0 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT1` | `0x05B4` | `RW` | Lane 1 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT2` | `0x05B8` | `RW` | Lane 2 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT3` | `0x05BC` | `RW` | Lane 3 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT4` | `0x05C0` | `RW` | Lane 4 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT5` | `0x05C4` | `RW` | Lane 5 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT6` | `0x05C8` | `RW` | Lane 6 byte-deficit weight |
+| `P8D_SCHEDULER_WEIGHT7` | `0x05CC` | `RW` | Lane 7 byte-deficit weight |
+| `P8D_SCHEDULER_STARVATION_MAX` | `0x05D0` | `RO` | Maximum observed eligible-lane starvation cycles |
+| `P8D_TX_RING_DEPTH` | `0x05D4` | `RW` | Independent TX descriptor ring depth |
+| `P8D_TX_RING_PRODUCER` | `0x05D8` | `RO` | Monotonic TX producer counter |
+| `P8D_TX_RING_CONSUMER` | `0x05DC` | `RO` | Monotonic TX consumer counter |
+| `P8D_TX_RING_GENERATION` | `0x05E0` | `RO` | TX generation/epoch |
+| `P8D_TX_RING_HIGH_WATERMARK` | `0x05E4` | `RO` | TX ring high watermark |
+| `P8D_TX_RING_FULL_COUNT` | `0x05E8` | `RO` | TX ring full backpressure count |
+| `P8D_RX_RING_DEPTH` | `0x05EC` | `RW` | Independent RX descriptor ring depth |
+| `P8D_RX_RING_PRODUCER` | `0x05F0` | `RO` | Monotonic RX producer counter |
+| `P8D_RX_RING_CONSUMER` | `0x05F4` | `RO` | Monotonic RX consumer counter |
+| `P8D_RX_RING_GENERATION` | `0x05F8` | `RO` | RX generation/epoch |
+| `P8D_RX_RING_HIGH_WATERMARK` | `0x05FC` | `RO` | RX ring high watermark |
+| `P8D_RX_RING_FULL_COUNT` | `0x0600` | `RO` | RX ring full backpressure count |
+| `P8D_DESCRIPTOR_COMPLETE_COUNT` | `0x0604` | `RO` | Single descriptor completion count |
+| `P8D_DESCRIPTOR_ERROR_COUNT` | `0x0608` | `RO` | Descriptor error completion count |
+| `P8D_DESCRIPTOR_ABORT_COUNT` | `0x060C` | `RO` | Deterministically aborted descriptors |
+| `P8D_DESCRIPTOR_STALE_GENERATION_COUNT` | `0x0610` | `RO` | Rejected stale-generation completion count |
+| `P8D_AXIS_TX_STALL_CYCLES` | `0x0614` | `RO` | TX AXI-Stream backpressure cycles |
+| `P8D_AXIS_RX_STALL_CYCLES` | `0x0618` | `RO` | RX AXI-Stream backpressure cycles |
+| `P8D_AXIS_PROTOCOL_ERROR_COUNT` | `0x061C` | `RO` | Malformed TKEEP/TLAST/length count |
+| `P8D_PAYLOAD_STORE_USED` | `0x0620` | `RO` | Shared frame-store allocation count |
+| `P8D_PAYLOAD_STORE_HIGH_WATERMARK` | `0x0624` | `RO` | Shared frame-store high watermark |
+| `P8D_ABORT_STREAM_ID` | `0x0628` | `RW` | Stream correlation for bounded abort |
+| `P8D_ABORT_OBJECT_ID` | `0x062C` | `RW` | Object correlation for bounded abort |
+| `P8D_REGISTER_MAP_VERSION` | `0x0630` | `RO` | P8D register-map version encoding |
+| `P8D_REGISTER_MAP_HASH_LOW` | `0x0634` | `RO` | Low 32 bits of canonical register-map SHA256 |
+| `P8D_LANE0_SCHEDULED_FRAMES` | `0x0640` | `RO` | Lane 0 scheduled frames |
+| `P8D_LANE0_SCHEDULED_BYTES` | `0x0644` | `RO` | Lane 0 scheduled bytes |
+| `P8D_LANE0_RETRIES` | `0x0648` | `RO` | Lane 0 retries |
+| `P8D_LANE0_MIGRATIONS` | `0x064C` | `RO` | Lane 0 migrations |
+| `P8D_LANE0_DEFER_COUNT` | `0x0650` | `RO` | Lane 0 deferrals |
+| `P8D_LANE1_SCHEDULED_FRAMES` | `0x0654` | `RO` | Lane 1 scheduled frames |
+| `P8D_LANE1_SCHEDULED_BYTES` | `0x0658` | `RO` | Lane 1 scheduled bytes |
+| `P8D_LANE1_RETRIES` | `0x065C` | `RO` | Lane 1 retries |
+| `P8D_LANE1_MIGRATIONS` | `0x0660` | `RO` | Lane 1 migrations |
+| `P8D_LANE1_DEFER_COUNT` | `0x0664` | `RO` | Lane 1 deferrals |
+| `P8D_LANE2_SCHEDULED_FRAMES` | `0x0668` | `RO` | Lane 2 scheduled frames |
+| `P8D_LANE2_SCHEDULED_BYTES` | `0x066C` | `RO` | Lane 2 scheduled bytes |
+| `P8D_LANE2_RETRIES` | `0x0670` | `RO` | Lane 2 retries |
+| `P8D_LANE2_MIGRATIONS` | `0x0674` | `RO` | Lane 2 migrations |
+| `P8D_LANE2_DEFER_COUNT` | `0x0678` | `RO` | Lane 2 deferrals |
+| `P8D_LANE3_SCHEDULED_FRAMES` | `0x067C` | `RO` | Lane 3 scheduled frames |
+| `P8D_LANE3_SCHEDULED_BYTES` | `0x0680` | `RO` | Lane 3 scheduled bytes |
+| `P8D_LANE3_RETRIES` | `0x0684` | `RO` | Lane 3 retries |
+| `P8D_LANE3_MIGRATIONS` | `0x0688` | `RO` | Lane 3 migrations |
+| `P8D_LANE3_DEFER_COUNT` | `0x068C` | `RO` | Lane 3 deferrals |
+| `P8D_LANE4_SCHEDULED_FRAMES` | `0x0690` | `RO` | Lane 4 scheduled frames |
+| `P8D_LANE4_SCHEDULED_BYTES` | `0x0694` | `RO` | Lane 4 scheduled bytes |
+| `P8D_LANE4_RETRIES` | `0x0698` | `RO` | Lane 4 retries |
+| `P8D_LANE4_MIGRATIONS` | `0x069C` | `RO` | Lane 4 migrations |
+| `P8D_LANE4_DEFER_COUNT` | `0x06A0` | `RO` | Lane 4 deferrals |
+| `P8D_LANE5_SCHEDULED_FRAMES` | `0x06A4` | `RO` | Lane 5 scheduled frames |
+| `P8D_LANE5_SCHEDULED_BYTES` | `0x06A8` | `RO` | Lane 5 scheduled bytes |
+| `P8D_LANE5_RETRIES` | `0x06AC` | `RO` | Lane 5 retries |
+| `P8D_LANE5_MIGRATIONS` | `0x06B0` | `RO` | Lane 5 migrations |
+| `P8D_LANE5_DEFER_COUNT` | `0x06B4` | `RO` | Lane 5 deferrals |
+| `P8D_LANE6_SCHEDULED_FRAMES` | `0x06B8` | `RO` | Lane 6 scheduled frames |
+| `P8D_LANE6_SCHEDULED_BYTES` | `0x06BC` | `RO` | Lane 6 scheduled bytes |
+| `P8D_LANE6_RETRIES` | `0x06C0` | `RO` | Lane 6 retries |
+| `P8D_LANE6_MIGRATIONS` | `0x06C4` | `RO` | Lane 6 migrations |
+| `P8D_LANE6_DEFER_COUNT` | `0x06C8` | `RO` | Lane 6 deferrals |
+| `P8D_LANE7_SCHEDULED_FRAMES` | `0x06CC` | `RO` | Lane 7 scheduled frames |
+| `P8D_LANE7_SCHEDULED_BYTES` | `0x06D0` | `RO` | Lane 7 scheduled bytes |
+| `P8D_LANE7_RETRIES` | `0x06D4` | `RO` | Lane 7 retries |
+| `P8D_LANE7_MIGRATIONS` | `0x06D8` | `RO` | Lane 7 migrations |
+| `P8D_LANE7_DEFER_COUNT` | `0x06DC` | `RO` | Lane 7 deferrals |

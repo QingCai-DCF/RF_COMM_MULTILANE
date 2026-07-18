@@ -5,6 +5,7 @@ build/
 *.jou
 *.log
 !evidence/hardware/p7/**/*.log
+!evidence/generated/p8d_raw/**/*.log
 *.str
 *.wdb
 *.dcp
@@ -33,3 +34,18 @@ evidence/generated/hw_preflight/
 # committed separately after each terminal outcome; never ignore the lock.
 /evidence/generated/p7_stage66_campaign_next_preparation/
 /evidence/hardware/p7/stage66_diagnostic_campaign/p7_stage66_stationary_diagnostic_20260715/campaign_ledger.json
+
+# P8D iterative probes and local compile products.  Formal run directories are
+# intentionally not ignored because accepted and failed evidence is immutable.
+/evidence/generated/p8d_raw/quick_*/
+/evidence/generated/p8d_raw/reference_probe/
+/evidence/generated/p8d_raw/reference_quick/
+/evidence/generated/p8d_raw/resource_dev_*/
+/evidence/generated/p8d_raw/resource_dev_*.stderr.txt
+/evidence/generated/p8d_raw/resource_dev_*.stdout.txt
+/evidence/generated/p8d_raw/rtl_compile_dev/
+/evidence/generated/p8d_raw/p8d_driver_offline_test.exe
+/evidence/generated/p8d_raw/airtime_probe.*
+/evidence/generated/p8d_raw/airtime_quick.*
+/evidence/generated/p8d_raw/rfap_probe.json
+/evidence/generated/p8d_raw/rfap_quick.json

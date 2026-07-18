@@ -78,7 +78,7 @@ def render(data: dict[str, Any]) -> dict[Path, str]:
         "",
         f"- Register map version: `{map_version_text}` (`0x{map_version_value:08X}`)",
         f"- Canonical source SHA256: `{map_hash}`",
-        "- P0-P7 offsets and semantics are preserved; P8C is additive from `0x0400`.",
+        f"- Compatibility: {data.get('compatibility', 'versioned additive map')}.",
         "",
         "| Name | Offset | Access | Description |",
         "|---|---:|---|---|",
@@ -117,6 +117,7 @@ def render(data: dict[str, Any]) -> dict[Path, str]:
         "hash_low": f"0x{map_hash_low:08X}",
         "register_count": len(regs),
         "p8c_additive_base": "0x0400",
+        "p8d_additive_base": "0x0500",
         "legacy_compatible": True,
     }
     outputs = {

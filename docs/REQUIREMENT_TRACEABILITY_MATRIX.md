@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 43
+REQUIREMENT_COUNT: 64
 PASS: 32
-PENDING: 11
+PENDING: 32
 FAIL: 0
 WAIVED: 0
 ```
@@ -59,6 +59,27 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `SYS-PERMIT-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-RECEIVE-ONLY-ACQUISITION` | `evidence/generated/p8c_receive_only_acquisition_summary.json` | Permit low allows controlled receive-only acquisition while every physical TX remains disabled. |
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8c_exact_sliding_duty_rtl_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
+| `L2-ARQ-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
+| `L2-ARQ-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The shared global outstanding window supports at least 32 frames. |
+| `L2-SEQ-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Sequence width is at least 16 bits and modular wrap is bit-exact. |
+| `L2-SACK-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The negotiated SACK window supports at least 32 bits. |
+| `L2-SACK-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-DUP-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | A duplicate logical frame never commits or completes twice. |
+| `L2-STALE-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Stale session/path data and ACK records are rejected. |
+| `L2-MIG-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Only unacknowledged frames may migrate across eligible lanes or paths. |
+| `L2-RETRY-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Retry count, timeout/backoff, and exhaustion are bounded. |
+| `SCHED-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Scheduling is health-aware and weighted across eligible lanes. |
+| `SCHED-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | A faulted lane does not block work on healthy eligible lanes. |
+| `SCHED-003` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Scheduler fairness and starvation are explicitly bounded. |
+| `AXIS-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure. |
+| `DMA-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Independent bounded TX and RX scatter-gather descriptor rings are modeled. |
+| `DMA-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Descriptor ownership permits exactly one completion and one reclaim. |
+| `DMA-003` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Reset and abort deterministically reclaim ring and payload ownership. |
+| `DMA-004` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Descriptor generation rejects stale completions after wrap or reset. |
+| `RFAP-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | RFAP v1/P7 vectors and legacy fallback remain compatible. |
+| `RFAP-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | RFAP vNext streaming validates large objects with bounded memory and atomic publish. |
+| `PERF-MODEL-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. |
+| `PERF-MODEL-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. |
 
 ## PASS artifact bindings
 
@@ -132,13 +153,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175`
-- `PROJECT_STATUS.md` — `028207231aa6af20a5b7622b274d43de9a21381dfd400826c6f8f5e7e9ce0ea4`
+- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
+- `PROJECT_STATUS.md` — `9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175`
+- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
 
 ### `P8A-EVID-001`
 
@@ -148,8 +169,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175`
-- `PROJECT_STATUS.md` — `028207231aa6af20a5b7622b274d43de9a21381dfd400826c6f8f5e7e9ce0ea4`
+- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
+- `PROJECT_STATUS.md` — `9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
