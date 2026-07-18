@@ -1,5 +1,5 @@
 schema_version: 1
-document_version: '3.1'
+document_version: '4.0'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
@@ -49,85 +49,157 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: SYS-PERMIT-001
-  requirement_text: 每个独立端点各有且仅有一根本地 active-high GLOBAL_PERMIT。
-  profile: Z7020_8LANE_DUAL_ENDPOINT
-  verification_method: RTL、原理图、网表和实物信号计数与 fanout 审核。
-  verification_stage: P8C_D17
-  test_id: null
-  evidence_path: null
-  status: PENDING
-  waiver: null
-  artifact_hashes: []
-- requirement_id: SYS-PERMIT-002
-  requirement_text: GLOBAL_PERMIT=0 必须关闭本端全部物理 TX。
-  profile: Z7020_8LANE_DUAL_ENDPOINT
-  verification_method: 形式属性、门级路径审核、permit drop 实测和最终 TX kill 测量。
-  verification_stage: P8C_D17
-  test_id: null
-  evidence_path: null
-  status: PENDING
-  waiver: null
-  artifact_hashes: []
-- requirement_id: SYS-PERMIT-003
-  requirement_text: 禁止双 permit、permit heartbeat、per-bank permit 和 per-lane external GLOBAL_PERMIT。
-  profile: ALL_ENDPOINT_PROFILES
-  verification_method: RTL、寄存器、软件、原理图和接口静态唯一性检查。
-  verification_stage: P8C_D17
-  test_id: null
-  evidence_path: null
-  status: PENDING
-  waiver: null
-  artifact_hashes: []
-- requirement_id: SYS-PERMIT-004
-  requirement_text: permit 重新上升必须重新 arm，且不得恢复半帧。
-  profile: ALL_ENDPOINT_PROFILES
-  verification_method: permit 中断、reassert、显式 rearm 和 stale partial-frame rejection 属性与测试。
+  requirement_text: Each independent endpoint has exactly one local active-high GLOBAL_PERMIT input.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
   verification_stage: P8C
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8C-SINGLE-GLOBAL-PERMIT
+  evidence_path: evidence/generated/p8c_single_global_permit_architecture_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: config/tfdu_safety.yaml
+    sha256: e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06
+  - path: evidence/generated/p8c_single_global_permit_architecture_summary.json
+    sha256: 8f3e1de16d01fb0b63477bb30e6accf7be048791228d4cf89bd1c21620c6c287
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  hardware_followup: Physical signal count, fail-low bias, fanout, and final buffer implementation remain PENDING_D17.
+- requirement_id: SYS-PERMIT-002
+  requirement_text: GLOBAL_PERMIT low forces every local physical Txd output low through the final RTL kill.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-PERMIT-FAULT-INJECTION
+  evidence_path: evidence/generated/p8c_permit_fault_injection_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: sim/tb/tb_p8c_endpoint_safety.sv
+    sha256: bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593
+  - path: evidence/generated/p8c_permit_fault_injection_summary.json
+    sha256: f3badd716d4817d35376afa908319a3ffb9d63c143a9aa6c2c26ca13198a8ea9
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  hardware_followup: External electrical kill path and deassertion latency remain PENDING_D17.
+- requirement_id: SYS-PERMIT-003
+  requirement_text: Canonical RTL has no dual, heartbeat, per-bank, or per-lane external global permit channel.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-STATIC-SINGLE-PERMIT
+  evidence_path: evidence/generated/p8c_single_global_permit_architecture_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/p8c_active_sources.json
+    sha256: 6e8a9753a02f8db8913ddd0caac25cb3c5ee3e8927b756446a72b9ee036cabb2
+  - path: scripts/check_p8c_safety_static.py
+    sha256: 6d7fc502066b59b9b545dd3146b1598f2d228e6dabd7bda27ffc7e1aff07b9a7
+  - path: evidence/generated/p8c_single_global_permit_architecture_summary.json
+    sha256: 8f3e1de16d01fb0b63477bb30e6accf7be048791228d4cf89bd1c21620c6c287
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: 6e8a9753a02f8db8913ddd0caac25cb3c5ee3e8927b756446a72b9ee036cabb2
+  hardware_followup: Schematic and netlist uniqueness remain PENDING_D17.
+- requirement_id: SYS-PERMIT-004
+  requirement_text: Permit reassertion requires explicit re-arm and cannot resume a partial frame.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-PERMIT-FAULT-INJECTION
+  evidence_path: evidence/generated/p8c_permit_fault_injection_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: sim/tb/tb_p8c_endpoint_safety.sv
+    sha256: bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593
+  - path: evidence/generated/p8c_permit_fault_injection_summary.json
+    sha256: f3badd716d4817d35376afa908319a3ffb9d63c143a9aa6c2c26ca13198a8ea9
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  hardware_followup: Final-hardware interruption and external observer tests remain PENDING_D17/P9.
 - requirement_id: PHY-SAFE-001
-  requirement_text: TFDU6102 的 Txd/Rxd/SD 极性和 static high-speed Mode 必须正确。
-  profile: ALL_TFDU_PROFILES
-  verification_method: RTL 静态检查、仿真和最终引脚电气测量。
-  verification_stage: P8C_P9_P12
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  requirement_text: TFDU6102 Txd/Rxd/SD polarity and static high-speed Mode semantics are correct in portable RTL.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-TFDU-POLARITY-MODE
+  evidence_path: evidence/generated/p8c_continuous_high_guard_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_tfdu_physical_module_safety.sv
+    sha256: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: evidence/generated/p8c_continuous_high_guard_summary.json
+    sha256: 3e6122f662a9b7dd08b23b3a4f8c701de3b2b8ed8ca781f5b642cf3dbae25fa1
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  hardware_followup: Final pin electrical polarity and optical behavior remain PENDING_P9/P12.
 - requirement_id: PHY-SAFE-002
-  requirement_text: 退出 shutdown 后必须等待至少 500 µs 才允许正常 RX/TX。
-  profile: ALL_TFDU_PROFILES
-  verification_method: 精确计数属性、仿真和硬件启动时序测量。
-  verification_stage: P8C_P9
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  requirement_text: Normal RX/TX is blocked for at least 500 us after shutdown exit.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-FULL-SCALE-STARTUP
+  evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_tfdu_physical_module_safety.sv
+    sha256: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  - path: sim/tb/tb_p8c_full_scale.sv
+    sha256: de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c
+  - path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+    sha256: be832ebf4a1909618c41a2815846a24625d51d3045defd79815d0d6d861a6719
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  hardware_followup: External shutdown-exit timing measurement remains PENDING_P9.
 - requirement_id: PHY-SAFE-003
-  requirement_text: 项目 MAX_CONTINUOUS_TXD_HIGH_US 必须 <= 1 µs。
-  profile: ALL_TFDU_PROFILES
-  verification_method: 连续高脉冲形式属性、负向仿真和外部测量。
-  verification_stage: P8C_P9
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  requirement_text: Portable RTL limits continuous physical Txd high to at most 1 us and latches MAX+1 fault.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-RTL-CONTINUOUS-HIGH
+  evidence_path: evidence/generated/p8c_continuous_high_guard_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_tfdu_physical_module_safety.sv
+    sha256: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  - path: sim/tb/tb_p8c_physical_safety.sv
+    sha256: 51f5705b35a659b7a4363fed34da3ebe81ebdef95b5b1c9d961b5d77d7a5d34b
+  - path: evidence/generated/p8c_continuous_high_guard_summary.json
+    sha256: 3e6122f662a9b7dd08b23b3a4f8c701de3b2b8ed8ca781f5b642cf3dbae25fa1
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: 428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19
+  hardware_followup: External pulse-width measurement remains PENDING_P9_OR_LATER.
 - requirement_id: PHY-SAFE-004
-  requirement_text: 每模块任意 clock-aligned 1000 µs 滑动窗口 duty 必须严格 <20%，设计目标 <=18%。
-  profile: ALL_TFDU_PROFILES
-  verification_method: exact sliding-window 形式证明、边界仿真和实测交叉检查。
-  verification_stage: P8C_P9
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  requirement_text: Each physical module satisfies exact arbitrary-alignment 1000 us strict <20% duty with <=18% target admission.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  test_id: P8C-RTL-EXACT-DUTY
+  evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_tfdu_exact_duty_accountant.sv
+    sha256: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  - path: sim/tb/tb_p8c_full_scale.sv
+    sha256: de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c
+  - path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+    sha256: be832ebf4a1909618c41a2815846a24625d51d3045defd79815d0d6d861a6719
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  hardware_followup: External per-module rolling-duty measurement remains PENDING_P9_OR_LATER.
 - requirement_id: MAP-001
   requirement_text: Current mapping shall be a complete eight-lane fixed-module and bank permutation for every m0.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -265,9 +337,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 724c16808b3d55e0a66abfabd1e82492c4319dd07830b63b75d8b3f68fa52faf
+    sha256: e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175
   - path: PROJECT_STATUS.md
-    sha256: bf6a7ca024d8e82a69af7c6599c6e75756a262baf4c4a4033f05f6817d0c7bd9
+    sha256: 028207231aa6af20a5b7622b274d43de9a21381dfd400826c6f8f5e7e9ce0ea4
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -281,7 +353,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 724c16808b3d55e0a66abfabd1e82492c4319dd07830b63b75d8b3f68fa52faf
+    sha256: e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
   profile: P8A_BASELINE
@@ -309,9 +381,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 724c16808b3d55e0a66abfabd1e82492c4319dd07830b63b75d8b3f68fa52faf
+    sha256: e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175
   - path: PROJECT_STATUS.md
-    sha256: bf6a7ca024d8e82a69af7c6599c6e75756a262baf4c4a4033f05f6817d0c7bd9
+    sha256: 028207231aa6af20a5b7622b274d43de9a21381dfd400826c6f8f5e7e9ce0ea4
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
 - requirement_id: P8A-LEGACY-001
@@ -489,3 +561,79 @@ requirements:
     sha256: c195a04d316bc1d3a99c0c1b3fa47e6ae81c0d21cddc6017ce7057aa5091fa41
   - path: evidence/generated/p8b_rtl_python_crosscheck.json
     sha256: f5a48ea7419f68a601073f8b4d40769448847aaa04946fc359e9ca9ceff320de
+- requirement_id: SYS-PERMIT-005
+  requirement_text: Raw permit deassert reaches the final RTL Txd kill without PS or normal frame completion.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  test_id: P8C-RAW-PERMIT-FINAL-KILL
+  evidence_path: evidence/generated/p8c_permit_fault_injection_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  artifact_hashes:
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: sim/tb/tb_p8c_endpoint_safety.sv
+    sha256: bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593
+  - path: evidence/generated/p8c_permit_fault_injection_summary.json
+    sha256: f3badd716d4817d35376afa908319a3ffb9d63c143a9aa6c2c26ca13198a8ea9
+  hardware_followup: Pin-to-final-driver electrical latency remains PENDING_D17.
+- requirement_id: SYS-PERMIT-006
+  requirement_text: Permit low allows controlled receive-only acquisition while every physical TX remains disabled.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  test_id: P8C-RECEIVE-ONLY-ACQUISITION
+  evidence_path: evidence/generated/p8c_receive_only_acquisition_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  artifact_hashes:
+  - path: rtl/ir_tfdu_safety_endpoint.sv
+    sha256: b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315
+  - path: sim/tb/tb_p8c_endpoint_safety.sv
+    sha256: bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593
+  - path: evidence/generated/p8c_receive_only_acquisition_summary.json
+    sha256: 5cc50500f336232e2fad211cc8b611114ce25ddc470d73b0675a4670886fbab8
+  hardware_followup: Receive-only operation on final endpoint hardware remains PENDING_P9_OR_LATER.
+- requirement_id: PHY-SAFE-005
+  requirement_text: Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  test_id: P8C-HISTORY-COOLDOWN
+  evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  artifact_hashes:
+  - path: rtl/ir_tfdu_exact_duty_accountant.sv
+    sha256: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  - path: sim/tb/tb_p8c_exact_duty.sv
+    sha256: bca756a20bc65b02d5293704bb23f755e9570f328b2cbbcd331f547380209a8c
+  - path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+    sha256: be832ebf4a1909618c41a2815846a24625d51d3045defd79815d0d6d861a6719
+  hardware_followup: Final hardware reset/clear sequencing remains PENDING_D17/P9.
+- requirement_id: PHY-SAFE-006
+  requirement_text: Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions.
+  profile: P8C_MULTI_PROFILE_OFFLINE
+  verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
+  verification_stage: P8C
+  verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
+  test_id: P8C-PHYSICAL-MODULE-ACCOUNTING
+  evidence_path: evidence/generated/p8c_physical_module_accounting_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: f4d2b8a58c02c7379b9c47e109d000b578fafb7d0f9d9578c7efa70ed5655928
+  artifact_hashes:
+  - path: rtl/ir_p8c_mapping_safety_adapter.sv
+    sha256: f4d2b8a58c02c7379b9c47e109d000b578fafb7d0f9d9578c7efa70ed5655928
+  - path: sim/tb/tb_p8c_profile_matrix.sv
+    sha256: d044e572bdc244b673ff298b56c442daaa3df0af8595f35086783577ede7a13f
+  - path: evidence/generated/p8c_physical_module_accounting_summary.json
+    sha256: 0a8ecb742db212e4fb017618400668421d88a81e7077fe652707e2253c0df6a7
+  hardware_followup: Final 32-module bank wiring and identity audit remain PENDING_D17/P12.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8B-2",
+  "state_revision": "P8C-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -16,7 +16,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT",
+  "current_program_stage": "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -46,7 +46,7 @@
     "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
     "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
     "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
-    "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PENDING",
+    "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
     "P8D_SELECTIVE_REPEAT_DMA": "PENDING",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING"
   },
@@ -126,9 +126,14 @@
     "global_permit_architecture": "SINGLE_ACTIVE_HIGH_PER_ENDPOINT",
     "fixed_endpoint_global_permit_count": 1,
     "rotating_endpoint_global_permit_count": 1,
-    "implementation_status": "PENDING_P8C_D17",
+    "implementation_status": "RTL_PORTABLE_FUNCTION_PASS_PHYSICAL_PENDING_D17",
     "stuck_high_detection_claimed": false,
-    "dual_channel_safety_claimed": false
+    "dual_channel_safety_claimed": false,
+    "single_global_permit_rtl_architecture": "PASS",
+    "global_permit_physical_implementation": "PENDING_D17",
+    "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE",
+    "exact_rolling_duty_rtl_property": "PASS",
+    "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER"
   },
   "p8b_acceptance": {
     "status": "PASS",
@@ -156,14 +161,20 @@
     ]
   },
   "completed_gates": [
-    {"gate_id": "P8A", "status": "PASS"},
-    {"gate_id": "P8B", "status": "PASS"}
-  ],
-  "pending_gates": [
+    {
+      "gate_id": "P8A",
+      "status": "PASS"
+    },
+    {
+      "gate_id": "P8B",
+      "status": "PASS"
+    },
     {
       "gate_id": "P8C",
-      "status": "PENDING"
-    },
+      "status": "PASS"
+    }
+  ],
+  "pending_gates": [
     {
       "gate_id": "P8D",
       "status": "PENDING"
@@ -209,7 +220,33 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "6a723405c1be5328aaaa55ebf472fabc0aea991e",
+  "last_verified_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
-  "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json"
+  "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
+  "p8c_no_hardware_actions_executed": true,
+  "p8c_acceptance": {
+    "status": "PASS",
+    "profile": "P8C_MULTI_PROFILE_OFFLINE",
+    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL",
+    "test_id": "P8C-FINAL-ACCEPTANCE",
+    "source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+    "evidence_path": "evidence/generated/p8c_final_summary.json",
+    "evidence_sha256": "161d89e30eb6bcc607cbb1732fcccd739519e5d92e014e3530199d8b92dc819e",
+    "safety_config_path": "config/tfdu_safety.yaml",
+    "safety_config_sha256": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06",
+    "single_global_permit_rtl_architecture": "PASS",
+    "global_permit_physical_implementation": "PENDING_D17",
+    "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE",
+    "exact_rolling_duty_rtl_property": "PASS",
+    "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "scope_exclusions": [
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "SECTOR_BANK_HARDWARE",
+      "DUTY_EXTERNAL_MEASUREMENT",
+      "FINAL_PRODUCT_HARDWARE"
+    ]
+  }
 }

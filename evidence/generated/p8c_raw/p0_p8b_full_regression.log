@@ -1,0 +1,46 @@
+COMMAND=python scripts/run_offline_gates.py --include-simulation --include-p8a --include-p8b --include-p8c --json-summary (P0-P8B parent slice)
+RETURNCODE=0
+
+STDOUT
+OFFLINE_GATES_RAN=1 status=PASS
+P8B_INCLUDED=1
+P8C_PARENT_INVOCATION=PASS
+PARENT_RESULT_COUNT=32
+RESULT=project_integrity RETURNCODE=0
+RESULT=p8a_unit_tests RETURNCODE=0
+RESULT=p8a_consistency RETURNCODE=0
+RESULT=xdc_conflicts RETURNCODE=0
+RESULT=tfdu_safety_static RETURNCODE=0
+RESULT=m1_tfdu_model_reference RETURNCODE=0
+RESULT=register_map_generation RETURNCODE=0
+RESULT=no_hardware_calls RETURNCODE=0
+RESULT=sv_port_contracts RETURNCODE=0
+RESULT=host_client_unit_tests RETURNCODE=0
+RESULT=m2_detect_window_sweep RETURNCODE=0
+RESULT=m2_static_reference_checks RETURNCODE=0
+RESULT=m3_crc_bad_ack_reference RETURNCODE=0
+RESULT=m3_static_reference_checks RETURNCODE=0
+RESULT=m4_ps_driver_trace RETURNCODE=0
+RESULT=m4_static_reference_checks RETURNCODE=0
+RESULT=scheduler_static_checks RETURNCODE=0
+RESULT=m5_static_nonhardware_build_checks RETURNCODE=0
+RESULT=m6_static_hardware_prep_checks RETURNCODE=0
+RESULT=m6_refusal_runtime RETURNCODE=0
+RESULT=ps_driver_c_compile RETURNCODE=0
+RESULT=m5_vivado_nonhardware_build RETURNCODE=0
+RESULT=lane_phy_sim RETURNCODE=0
+RESULT=m2_4ppm_codec_sim RETURNCODE=0
+RESULT=m2_frame_l1_sim RETURNCODE=0
+RESULT=m2_4ppm_model_integration_sim RETURNCODE=0
+RESULT=m3_lane0_ack_only_sim RETURNCODE=0
+RESULT=m4_axi_regs_sim RETURNCODE=0
+RESULT=scheduler_sim RETURNCODE=0
+RESULT=generate_plan_completion_audit RETURNCODE=0
+RESULT=plan_completion_static RETURNCODE=0
+RESULT=p8b_geometry_mapping_handover RETURNCODE=0
+FULL_RAW_RESULT_PATH=evidence/generated/offline_gate_summary.json
+FULL_RAW_RESULT_SHA256=6665c4fa37a24c4a3eb6ad13b9302122d097fc3558a6d77504da6e668e805a1f
+P8C_PARENT_REGRESSION_SUMMARY_PATH=evidence/generated/p8c_p0_p8b_regression_summary.json
+P8C_PARENT_REGRESSION_SUMMARY_SHA256=056ebea33f35f6697268a28b87e6a5ffca7e13738e4af20146ac47e3352eec7d
+
+STDERR

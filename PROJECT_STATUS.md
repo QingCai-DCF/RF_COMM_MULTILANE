@@ -30,7 +30,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE` | `PASS` |
 | `P8A_CANONICAL_REQUIREMENTS_STATE` | `PASS` |
 | `P8B_GEOMETRY_MAPPING_HANDOVER` | `PASS` |
-| `P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT` | `PENDING` |
+| `P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT` | `PASS` |
 | `P8D_SELECTIVE_REPEAT_DMA` | `PENDING` |
 | `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PENDING` |
 
@@ -56,6 +56,17 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `AB_L1_CURRENT_P7_SCOPE` | `RESOLVED_FOR_P7_STATIONARY_2LANE_ONLY` | `evidence/generated/p7_lane1_promotion_summary.json` |
 | `P7_R41_HOST_SORT_OVERFLOW` | `SOURCE_FIX_OFFLINE_VALIDATED_R41_REMAINS_FAILED` | `evidence/generated/p7_r41_postfailure_validation.json` |
 
+## P8C portable-function acceptance
+
+- Status: `PASS` (offline RTL/model scope only)
+- Source commit: `e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134`
+- Evidence: `evidence/generated/p8c_final_summary.json`
+- Single global permit RTL: `PASS`
+- Exact rolling duty RTL: `PASS`
+- Physical permit implementation: `PENDING_D17`
+- Z7010 permit pin freeze: `PENDING_P9_PIN_FREEZE`
+- External duty measurement: `PENDING_P9_OR_LATER`
+
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named P7 stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 
 ## Architecture and pending gates
@@ -63,11 +74,10 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - GLOBAL_PERMIT architecture: `SINGLE_ACTIVE_HIGH_PER_ENDPOINT`
 - Fixed endpoint permit count: `1`
 - Rotating endpoint permit count: `1`
-- Implementation status: `PENDING_P8C_D17`
+- Implementation status: `RTL_PORTABLE_FUNCTION_PASS_PHYSICAL_PENDING_D17`
 
 | Gate | Status |
 |---|---|
-| `P8C` | `PENDING` |
 | `P8D` | `PENDING` |
 | `P8E` | `PENDING` |
 | `D12_CORE_BOARD` | `PENDING` |
@@ -80,6 +90,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `6a723405c1be5328aaaa55ebf472fabc0aea991e`.
+Last verified evidence commit: `e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134`.
 
 P8A, P8B, and any completed P8C portable-function gate were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.
