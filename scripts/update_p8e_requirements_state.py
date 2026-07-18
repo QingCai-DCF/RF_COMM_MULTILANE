@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,8 @@ REQ_PATH = ROOT / "config/project_requirements.yaml"
 STATUS_PATH = ROOT / "PROJECT_STATUS.md"
 TRACE_PATH = ROOT / "docs/REQUIREMENT_TRACEABILITY_MATRIX.md"
 FINAL_PATH = ROOT / "evidence/generated/p8e_final_summary.json"
+PRECOMPLETION_PATH = ROOT / "evidence/generated/p8e_precompletion_reverification_summary.json"
+PRECOMPLETION_MD_PATH = ROOT / "evidence/generated/p8e_precompletion_reverification_summary.md"
 
 SCOPE = "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION"
 FOLLOWUP = (
@@ -112,6 +115,148 @@ def records(paths: list[str]) -> list[dict[str, str]]:
     return result
 
 
+def git_blob_sha256_candidates(commit: str, path: str) -> set[str]:
+    blob = subprocess.check_output(["git", "show", f"{commit}:{path}"], cwd=ROOT)
+    checkout_bytes = blob.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+    return {hashlib.sha256(blob).hexdigest(), hashlib.sha256(checkout_bytes).hexdigest()}
+
+
+def direct_reverification(requirement: dict[str, Any], verified_commit: str) -> dict[str, Any]:
+    old_evidence = requirement.get("evidence_path")
+    if not isinstance(old_evidence, str):
+        raise RuntimeError(f"{requirement['requirement_id']} lacks prior evidence")
+    basename = Path(old_evidence).name
+    if requirement.get("verification_stage") == "P8D":
+        candidate = ROOT / "evidence/generated/p8e_raw/r8d" / basename
+        if not candidate.is_file():
+            raise FileNotFoundError(candidate.relative_to(ROOT).as_posix())
+        payload = json.loads(candidate.read_text(encoding="utf-8"))
+        if payload.get("status") != "PASS" or payload.get("source_commit") != verified_commit:
+            raise RuntimeError(
+                f"{requirement['requirement_id']} P8D direct re-verification is not PASS at {verified_commit}"
+            )
+        checks = {"summary_status": "PASS"}
+    elif requirement.get("verification_stage") == "P8C" and basename == "p8c_exact_sliding_duty_rtl_summary.json":
+        matches = list((ROOT / "evidence/generated/p8e_raw/r8d").rglob(basename))
+        if len(matches) != 1:
+            raise RuntimeError(f"expected one isolated P8C exact-duty summary, found {len(matches)}")
+        candidate = matches[0]
+        payload = json.loads(candidate.read_text(encoding="utf-8"))
+        checks = {
+            "reduced_exact_duty": payload.get("reduced", {}).get("status"),
+            "full_scale_exact_duty": payload.get("full_scale", {}).get("status"),
+            "rtl_python_trace": payload.get("trace_comparison", {}).get("status"),
+        }
+        if payload.get("source_commit") != verified_commit or set(payload.get("failures", [])) != {
+            "parent_offline_provenance"
+        } or any(value != "PASS" for value in checks.values()):
+            raise RuntimeError(
+                f"{requirement['requirement_id']} focused P8C exact-duty evidence is insufficient"
+            )
+    else:
+        raise RuntimeError(
+            f"no direct precompletion re-verification rule for {requirement['requirement_id']}"
+        )
+    return {
+        "direct_evidence_path": candidate.relative_to(ROOT).as_posix(),
+        "direct_evidence_sha256": sha256(candidate),
+        "direct_evidence_status": "PASS",
+        "checks": checks,
+    }
+
+
+def prepare_reverification(verified_commit: str) -> None:
+    if not re.fullmatch(r"[0-9a-f]{40}", verified_commit):
+        raise RuntimeError("--verified-source-commit must be a full lowercase Git commit")
+    git("cat-file", "-e", f"{verified_commit}^{{commit}}")
+    document = yaml.safe_load(REQ_PATH.read_text(encoding="utf-8"))
+    affected: list[tuple[dict[str, Any], list[str], dict[str, Any]]] = []
+    for requirement in document.get("requirements", []):
+        if requirement.get("status") != "PASS":
+            continue
+        changed_paths: list[str] = []
+        for artifact in requirement.get("artifact_hashes", []):
+            item = artifact.get("path")
+            if not isinstance(item, str) or item.startswith("evidence/") or not (ROOT / item).is_file():
+                continue
+            if artifact.get("sha256") != sha256(ROOT / item):
+                if sha256(ROOT / item) not in git_blob_sha256_candidates(verified_commit, item):
+                    raise RuntimeError(
+                        f"{requirement['requirement_id']} current {item} differs from verified commit {verified_commit}"
+                    )
+                changed_paths.append(item)
+        if changed_paths:
+            affected.append((requirement, changed_paths,
+                             direct_reverification(requirement, verified_commit)))
+    if not affected:
+        raise RuntimeError("no stale PASS artifact bindings require P8E precompletion re-verification")
+
+    summary = {
+        "schema_version": 1,
+        "stage": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+        "test_id": "P8E-PRECOMPLETION-DIRECT-REVERIFICATION",
+        "profile": "P8E_MULTI_PROFILE_OFFLINE",
+        "status": "PASS",
+        "verified_source_commit": verified_commit,
+        "NO_HARDWARE_ACTIONS_EXECUTED": True,
+        "CURRENT_RUN_HARDWARE_AUTHORIZATION": False,
+        "scope": (
+            "Direct current-source P8C exact-duty and P8D functional re-verification used only to refresh "
+            "stale canonical PASS artifact bindings before the parent full regression. The failed parent "
+            "provenance result is not promoted and must be closed by the final P8E full gate."
+        ),
+        "requirements": [
+            {
+                "requirement_id": requirement["requirement_id"],
+                "status": "PASS",
+                "changed_artifacts": records(changed_paths),
+                **direct,
+            }
+            for requirement, changed_paths, direct in affected
+        ],
+    }
+    PRECOMPLETION_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PRECOMPLETION_PATH.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
+                                  encoding="utf-8", newline="\n")
+    PRECOMPLETION_MD_PATH.write_text(
+        "# P8E Precompletion Direct Re-verification\n\n```json\n"
+        + json.dumps(summary, indent=2, ensure_ascii=False) + "\n```\n",
+        encoding="utf-8", newline="\n",
+    )
+    precompletion_rel = PRECOMPLETION_PATH.relative_to(ROOT).as_posix()
+    precompletion_hash = sha256(PRECOMPLETION_PATH)
+    for requirement, _changed_paths, _direct in affected:
+        history = requirement.setdefault("reverification_history", [])
+        previous = {
+            "stage": "P8E_PRECOMPLETION",
+            "previous_source_commit": requirement.get("source_commit"),
+            "previous_evidence_path": requirement.get("evidence_path"),
+            "previous_artifact_hash": requirement.get("artifact_hash"),
+        }
+        if not history or history[-1] != previous:
+            history.append(previous)
+        refreshed = []
+        seen: set[str] = set()
+        for artifact in requirement.get("artifact_hashes", []):
+            item = artifact.get("path")
+            if isinstance(item, str) and not item.startswith("evidence/") and (ROOT / item).is_file() and item not in seen:
+                refreshed.append({"path": item, "sha256": sha256(ROOT / item)})
+                seen.add(item)
+        refreshed.append({"path": precompletion_rel, "sha256": precompletion_hash})
+        requirement["artifact_hashes"] = refreshed
+        requirement["artifact_hash"] = refreshed[0]["sha256"]
+        requirement["evidence_path"] = precompletion_rel
+        requirement["source_commit"] = verified_commit
+        requirement["reverification_stage"] = "P8E_PRECOMPLETION"
+
+    REQ_PATH.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True, width=120),
+                        encoding="utf-8", newline="\n")
+    TRACE_PATH.write_text(render_traceability(document), encoding="utf-8", newline="\n")
+    print(f"P8E_PRECOMPLETION_REVERIFICATION=PASS")
+    print(f"P8E_PRECOMPLETION_VERIFIED_SOURCE_COMMIT={verified_commit}")
+    print(f"P8E_PRECOMPLETION_REQUIREMENT_COUNT={len(affected)}")
+
+
 def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -> None:
     p8d_root = ROOT / "evidence/generated/p8e_raw/r8d"
     p8e_regression = "evidence/generated/p8e_p0_p8d_regression_summary.json"
@@ -127,6 +272,7 @@ def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -
             for artifact in original_artifacts
         )
         p8d_reverified = requirement.get("verification_stage") == "P8D"
+        prepared_reverification = requirement.get("reverification_stage") == "P8E_PRECOMPLETION"
         # Current P8D semantics were timing-refactored in P8E, so bind those
         # requirements to the isolated full current-source P8D rerun.
         if p8d_reverified:
@@ -140,7 +286,7 @@ def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -
         # Any earlier-stage requirement whose bound source changed needs fresh
         # current-source regression evidence.  Never pair a new artifact hash
         # with the historical source commit or its old generated summary.
-        if changed_source and not p8d_reverified:
+        if (changed_source or prepared_reverification) and not p8d_reverified:
             requirement["evidence_path"] = p8e_regression
             requirement["source_commit"] = source_commit
             requirement["reverification_stage"] = "P8E"
@@ -154,7 +300,7 @@ def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -
                 candidate = p8d_root / Path(item).name
                 if candidate.is_file():
                     item = candidate.relative_to(ROOT).as_posix()
-            elif changed_source and item.startswith("evidence/"):
+            elif (changed_source or prepared_reverification) and item.startswith("evidence/"):
                 continue
             if (ROOT / item).is_file() and item not in seen:
                 refreshed.append({"path": item, "sha256": sha256(ROOT / item)})
@@ -170,7 +316,14 @@ def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-commit")
+    parser.add_argument("--prepare-reverification", action="store_true")
+    parser.add_argument("--verified-source-commit")
     args = parser.parse_args()
+    if args.prepare_reverification:
+        if not args.verified_source_commit:
+            parser.error("--prepare-reverification requires --verified-source-commit")
+        prepare_reverification(args.verified_source_commit)
+        return 0
     source_commit = args.source_commit or git("rev-parse", "HEAD")
     final = json.loads(FINAL_PATH.read_text(encoding="utf-8"))
     if final.get("status") != "PASS" or final.get("source_commit") != source_commit:

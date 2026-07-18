@@ -901,6 +901,9 @@ def main(argv: list[str] | None = None) -> int:
         parent_log = parent["log"]
     elif full:
         parent_log = "PARENT_RUN_OFFLINE_GATES_INCLUDE_P8D"
+        if os.environ.get("P8D_OFFLINE_PARENT") != "1":
+            base_parent_status = "FAIL"
+            parent_log = "P8D_PARENT_PROVENANCE_MISSING"
     if full:
         p8b_dir = run_dir / "regression/p8b"
         p8b_env = env.copy()

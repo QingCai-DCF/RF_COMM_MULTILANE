@@ -247,10 +247,18 @@ def check_requirements() -> tuple[bool, dict[str, Any]]:
 def check_state() -> tuple[bool, dict[str, Any]]:
     state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
     p8c_pass = state.get("stage_status", {}).get("P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT") == "PASS"
-    expected_program_stage = (
-        "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
+    # A P8B regression must remain valid while a later portable/offline stage
+    # is active.  Requiring the stage to remain exactly P8D made the P8B
+    # non-promotion check fail as soon as canonical state advanced to P8E,
+    # even though every protected hardware scope remained unchanged.
+    allowed_program_stages = (
+        {
+            "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+            "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+            "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+        }
         if p8c_pass
-        else "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"
+        else {"P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"}
     )
     expected = {
         "p7_status": "PASS",
@@ -261,12 +269,17 @@ def check_state() -> tuple[bool, dict[str, Any]]:
         "product_final_acceptance": "PENDING",
         "current_run_hardware_authorization": False,
         "no_hardware_default": True,
-        "current_program_stage": expected_program_stage,
     }
     mismatches = {key: {"expected": value, "actual": state.get(key)} for key, value in expected.items() if state.get(key) != value}
+    if state.get("current_program_stage") not in allowed_program_stages:
+        mismatches["current_program_stage"] = {
+            "expected_one_of": sorted(allowed_program_stages),
+            "actual": state.get("current_program_stage"),
+        }
     if state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER") != "PASS":
         mismatches["stage_status.P8B_GEOMETRY_MAPPING_HANDOVER"] = {
             "expected": "PASS", "actual": state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER")}
+    expected["current_program_stage"] = sorted(allowed_program_stages)
     return not mismatches, {"expected": expected, "mismatches": mismatches,
                             "hardware_actions_executed": False}
 

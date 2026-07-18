@@ -724,10 +724,12 @@ def run_gate(args: argparse.Namespace) -> int:
         p8d_args = [sys.executable, "scripts/run_p8d_data_plane_gate.py",
                     "--full" if full else "--quick", "--output-root", str(p8d_regression_root),
                     "--json-summary"]
+        p8d_env = env.copy()
         if full and parent_offline_pass:
             p8d_args.append("--parent-offline-pass")
+            p8d_env["P8D_OFFLINE_PARENT"] = "1"
         p8d_regression_cmd = run_command(p8d_args, RAW / "r8d_gate.log",
-                                         28800 if full else 1800, env=env)
+                                         28800 if full else 1800, env=p8d_env)
         p8d_regression_path = p8d_regression_root / "p8d_acceptance_core.json"
         p8d_regression = json.loads(p8d_regression_path.read_text(encoding="utf-8")) if p8d_regression_path.is_file() else {"status": "FAIL"}
     regression_status = "PASS" if full and p8d_regression_cmd["returncode"] == 0 \
