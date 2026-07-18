@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "stage": "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+  "status": "FAIL",
+  "fail_closed": true,
+  "first_blocker": "WORKTREE_NOT_CLEAN_BEFORE_P8D",
+  "start_timestamp_utc": "2026-07-18T03:29:54.9731990Z",
+  "worktree": {
+    "path": "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE",
+    "path_source": "current user-selected P8 worktree override",
+    "branch": "p8/integration",
+    "head": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+    "initial_status_short": [
+      "?? docs/P8C_COMPLETION_SUMMARY.md"
+    ],
+    "initial_modified_files": [],
+    "initial_untracked_files": [
+      {
+        "path": "docs/P8C_COMPLETION_SUMMARY.md",
+        "sha256": "05882864481922927d28660baed7ea4ab4c8545f4ecd0953c34ed52153f6d9d7",
+        "size_bytes": 8116,
+        "git_blob": "5b13d14f4d19179f7028858595cca3e176e9f411",
+        "project_commit_history": false,
+        "pre_turn_capture_ref": "refs/codex/turn-diffs/captures/1784345487966/2dc630c5-3622-4541-b051-6f19dbca45a6/base"
+      }
+    ],
+    "clean_before_p8d": false
+  },
+  "baseline": {
+    "base_tag": "p8c-pass",
+    "base_tag_resolved_commit": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+    "expected_base_checkpoint_commit": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+    "p8c_source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+    "head_is_base_or_known_descendant": true,
+    "p8c_verify_existing": {
+      "command": "python scripts/run_p8c_safety_gate.py --verify-existing --json-summary",
+      "status": "FAIL",
+      "returncode": 1,
+      "errors": [
+        "worktree is not clean"
+      ],
+      "underlying_checks_returned_zero": true,
+      "no_hardware_actions_executed": true,
+      "current_run_hardware_authorization": false
+    }
+  },
+  "hashes": {
+    "PROJECT_CONSTRAINTS.txt": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+    "AGENTS.md": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb",
+    "config/project_state.json": "e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175",
+    "config/project_requirements.yaml": "d7c19fe0a67fa6807a456d132e8a538bc0f7800ceb7e5ba16fc2445bd13dfd95",
+    "config/tfdu_safety.yaml": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06",
+    "config/register_map/ir_axi_regs.yaml": "9993ae99c883a921f61bf1af8f1aca54b8a89fa7cd53452f435a6ed992c7fd2d",
+    "evidence/generated/p8c_final_summary.json": "161d89e30eb6bcc607cbb1732fcccd739519e5d92e014e3530199d8b92dc819e",
+    "evidence/generated/p8c_final_summary.md": "41f104ffda9512dd844872c211b9ee3dd7826bf9422d0c37d87192f620921b88"
+  },
+  "environment": {
+    "NO_HARDWARE": "1",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+    "HARDWARE_ACTIONS_ALLOWED": false,
+    "python": "3.14.3",
+    "python_executable": "C:/Users/user/AppData/Local/Programs/Python/Python314/python.exe",
+    "git": "2.54.0.windows.1",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "vivado": "NOT_FOUND",
+    "xsim": "NOT_FOUND",
+    "gcc": "NOT_FOUND",
+    "arm_none_eabi_gcc": "NOT_FOUND"
+  },
+  "required_checks": {
+    "branch_is_p8_integration": true,
+    "p8c_pass_exists": true,
+    "p8c_pass_matches_expected_checkpoint": true,
+    "head_is_base_or_known_clean_descendant": false,
+    "worktree_clean_before_p8d": false,
+    "project_constraints_hash_matches": true,
+    "p8c_verify_existing_passes": false
+  },
+  "differences": [
+    "Untracked pre-existing file docs/P8C_COMPLETION_SUMMARY.md was present before any P8D modification.",
+    "The file is absent from project branch/tag history; its exact blob is retained by the Codex pre-turn capture, proving it predates P8D edits in this task.",
+    "P8C verify-existing failed solely because the worktree was not clean."
+  ],
+  "decision": "STOP_P8D_IMPLEMENTATION_PENDING_USER_DIRECTION_ON_PREEXISTING_UNTRACKED_FILE",
+  "hardware_actions_executed": false
+}
