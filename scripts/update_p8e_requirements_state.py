@@ -12,7 +12,12 @@ from typing import Any
 
 import yaml
 
-from p8a_common import render_project_status, render_traceability, validate_state
+from p8a_common import (
+    render_project_status,
+    render_traceability,
+    validate_requirements,
+    validate_state,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / "config/project_state.json"
@@ -306,11 +311,41 @@ def refresh_existing_pass_hashes(document: dict[str, Any], source_commit: str) -
                 refreshed.append({"path": item, "sha256": sha256(ROOT / item)})
                 seen.add(item)
         evidence = requirement.get("evidence_path")
-        if isinstance(evidence, str) and (ROOT / evidence).is_file() and evidence not in seen:
+        # A requirements document cannot carry a content hash of itself.
+        # P8A-TRACE-001 uses the document as its evidence_path, while its
+        # artifact bindings deliberately cover the canonical constraint and
+        # machine state instead.
+        if isinstance(evidence, str) and evidence != REQ_PATH.relative_to(ROOT).as_posix() \
+                and (ROOT / evidence).is_file() and evidence not in seen:
             refreshed.append({"path": evidence, "sha256": sha256(ROOT / evidence)})
         if refreshed:
             requirement["artifact_hashes"] = refreshed
             requirement["artifact_hash"] = refreshed[0]["sha256"]
+
+
+def normalize_final_artifact_hashes(document: dict[str, Any]) -> None:
+    """Refresh final on-disk bindings without introducing a self hash."""
+    self_paths = {
+        REQ_PATH.relative_to(ROOT).as_posix(),
+        TRACE_PATH.relative_to(ROOT).as_posix(),
+    }
+    for requirement in document.get("requirements", []):
+        if requirement.get("status") != "PASS":
+            continue
+        refreshed: list[dict[str, str]] = []
+        seen: set[str] = set()
+        for artifact in requirement.get("artifact_hashes", []):
+            item = artifact.get("path")
+            if not isinstance(item, str) or item in self_paths or item in seen:
+                continue
+            path = ROOT / item
+            if path.is_file():
+                refreshed.append({"path": item, "sha256": sha256(path)})
+                seen.add(item)
+        if refreshed:
+            requirement["artifact_hashes"] = refreshed
+            if "artifact_hash" in requirement:
+                requirement["artifact_hash"] = refreshed[0]["sha256"]
 
 
 def main() -> int:
@@ -353,10 +388,6 @@ def main() -> int:
             "artifact_hash": artifact_records[0]["sha256"],
             "artifact_hashes": artifact_records, "hardware_followup": FOLLOWUP,
         })
-
-    REQ_PATH.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True, width=120),
-                        encoding="utf-8", newline="\n")
-    TRACE_PATH.write_text(render_traceability(document), encoding="utf-8", newline="\n")
 
     state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
     state.update({
@@ -408,10 +439,19 @@ def main() -> int:
     }
     STATE_PATH.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n",
                           encoding="utf-8", newline="\n")
-    errors = validate_state(state, ROOT)
-    if errors:
-        raise RuntimeError("state validation failed: " + "; ".join(errors))
     STATUS_PATH.write_text(render_project_status(state), encoding="utf-8", newline="\n")
+
+    # Machine-state and generated-status hashes can only be frozen after
+    # those files reach their final P8E contents.  The requirements file is
+    # then written once, with its intentional self-reference excluded.
+    normalize_final_artifact_hashes(document)
+    REQ_PATH.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True, width=120),
+                        encoding="utf-8", newline="\n")
+    TRACE_PATH.write_text(render_traceability(document), encoding="utf-8", newline="\n")
+
+    errors = validate_state(state, ROOT) + validate_requirements(document, ROOT)
+    if errors:
+        raise RuntimeError("P8E canonical update validation failed: " + "; ".join(errors))
     print("P8E_MACHINE_STATE=PASS")
     print(f"P8E_REQUIREMENTS_UPDATED={len(SPECS)}")
     print(f"P8E_SOURCE_COMMIT={source_commit}")

@@ -78,6 +78,16 @@ P8D_REQUIREMENT_IDS = {
     "RFAP-001", "RFAP-002", "PERF-MODEL-001", "PERF-MODEL-002",
 }
 
+P8E_REQUIREMENT_IDS = {
+    "BUILD-001", "BUILD-002",
+    "TIMING-001", "TIMING-002", "TIMING-003", "TIMING-004",
+    "CDC-001", "CDC-002", "CDC-003", "CDC-004", "RDC-001",
+    "DRC-001", "DRC-002",
+    "RESOURCE-001", "RESOURCE-002", "RESOURCE-003",
+    "AXIDMA-001", "AXIDMA-002",
+    "PROFILE-001", "PROFILE-002", "REPRO-001",
+}
+
 REQUIRED_REQUIREMENT_FIELDS = {
     "requirement_id",
     "requirement_text",
@@ -225,6 +235,8 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT") == "PASS"
     p8d_stage = stage_status.get("P8D_SELECTIVE_REPEAT_DMA") if isinstance(stage_status, dict) else None
     p8d_pass = p8d_stage == "PASS"
+    p8e_stage = stage_status.get("P8E_DUAL_TARGET_BUILD_TIMING_CDC") if isinstance(stage_status, dict) else None
+    p8e_pass = p8e_stage == "PASS"
     if not isinstance(stage_status, dict):
         errors.append("stage_status must be a mapping")
     else:
@@ -233,13 +245,19 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             expected_stages["P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"] = "PASS"
         if p8d_stage in {"IN_PROGRESS", "PASS"}:
             expected_stages["P8D_SELECTIVE_REPEAT_DMA"] = p8d_stage
+        if p8e_stage in {"IN_PROGRESS", "PASS"}:
+            expected_stages["P8E_DUAL_TARGET_BUILD_TIMING_CDC"] = p8e_stage
         for key, expected in expected_stages.items():
             if stage_status.get(key) != expected:
                 errors.append(f"stage_status.{key} must be {expected}")
         if p8d_stage not in {"PENDING", "IN_PROGRESS", "PASS"}:
             errors.append("stage_status.P8D_SELECTIVE_REPEAT_DMA has invalid status")
+        if p8e_stage not in {"PENDING", "IN_PROGRESS", "PASS"}:
+            errors.append("stage_status.P8E_DUAL_TARGET_BUILD_TIMING_CDC has invalid status")
     if state.get("p8d_status") != p8d_stage:
         errors.append("p8d_status must match stage_status.P8D_SELECTIVE_REPEAT_DMA")
+    if state.get("p8e_status") != p8e_stage:
+        errors.append("p8e_status must match stage_status.P8E_DUAL_TARGET_BUILD_TIMING_CDC")
 
     profiles = state.get("current_profiles", [])
     if not isinstance(profiles, list):
@@ -248,7 +266,14 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         profile_names = {item.get("profile") for item in profiles if isinstance(item, dict)}
         if "Z7010_2LANE_DEV" not in profile_names:
             errors.append("current_profiles must include Z7010_2LANE_DEV")
-        if "Z7020_8LANE_TARGET" not in profile_names:
+        if p8e_pass:
+            required_p8e_profiles = {
+                "Z7020_FIXED_8LANE_32MODULE_CORE",
+                "Z7020_ROTATING_8LANE_CORE",
+            }
+            if not required_p8e_profiles.issubset(profile_names):
+                errors.append("current_profiles must include both P8E exact-part Z7020 core profiles")
+        elif "Z7020_8LANE_TARGET" not in profile_names:
             errors.append("current_profiles must include pending Z7020_8LANE_TARGET")
 
     legacy = state.get("legacy_known_failures", [])
@@ -327,8 +352,11 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
 
     if p8c_pass:
         expected_program_stage = (
-            "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
-            if p8d_pass else "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
+            "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+            if p8e_pass else (
+                "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
+                if p8d_pass else "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
+            )
         )
         if state.get("current_program_stage") != expected_program_stage:
             errors.append(f"current_program_stage must be {expected_program_stage}")
@@ -368,8 +396,8 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     if p8d_pass:
         if state.get("p8d_no_hardware_actions_executed") is not True:
             errors.append("p8d_no_hardware_actions_executed must be true")
-        if state.get("p8e_status") != "PENDING":
-            errors.append("p8e_status must remain PENDING after P8D closure")
+        if not p8e_pass and state.get("p8e_status") not in {"PENDING", "IN_PROGRESS"}:
+            errors.append("p8e_status must remain PENDING/IN_PROGRESS until P8E closure")
         p8d = state.get("p8d_acceptance", {})
         if not isinstance(p8d, dict):
             errors.append("p8d_acceptance must be a mapping after P8D PASS")
@@ -391,6 +419,44 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append(f"P8D acceptance evidence path invalid: {exc}")
             if not re.fullmatch(r"[0-9a-f]{40}", str(p8d.get("source_commit", "")).lower()):
                 errors.append("p8d_acceptance.source_commit must be a full Git commit hash")
+
+    if p8e_pass:
+        if state.get("p8e_no_hardware_actions_executed") is not True:
+            errors.append("p8e_no_hardware_actions_executed must be true")
+        if state.get("p8_portable_architecture_status") != "PASS":
+            errors.append("p8_portable_architecture_status must be PASS after P8E closure")
+        if state.get("p9_status") != "PENDING_CURRENT_RUN_AUTHORIZATION":
+            errors.append("p9_status must remain PENDING_CURRENT_RUN_AUTHORIZATION")
+        p8e = state.get("p8e_acceptance", {})
+        if not isinstance(p8e, dict):
+            errors.append("p8e_acceptance must be a mapping after P8E PASS")
+        else:
+            expected_p8e = {
+                "status": "PASS",
+                "profile": "P8E_MULTI_PROFILE_OFFLINE",
+                "scope": "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION",
+                "test_id": "P8E-DUAL-TARGET-BUILD-CDC-RESOURCE-TIMING-FINAL",
+                "hardware_actions_executed": False,
+                "hardware_scope_promoted": False,
+            }
+            for key, value in expected_p8e.items():
+                if p8e.get(key) != value:
+                    errors.append(f"p8e_acceptance.{key} must be {value}")
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P8E final evidence"),
+                ("artifact_manifest_path", "artifact_manifest_sha256", "P8E artifact manifest"),
+                ("build_matrix_path", "build_matrix_sha256", "P8E build matrix"),
+                ("clock_reset_path", "clock_reset_sha256", "P8E clock/reset config"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, p8e.get(path_key))
+                    digest = str(p8e.get(hash_key, "")).lower()
+                    if not artifact.is_file() or not SHA256_RE.fullmatch(digest) or sha256_file(artifact) != digest:
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            if not re.fullmatch(r"[0-9a-f]{40}", str(p8e.get("source_commit", "")).lower()):
+                errors.append("p8e_acceptance.source_commit must be a full Git commit hash")
 
     if state.get("stage_status", {}).get("P8B_GEOMETRY_MAPPING_HANDOVER") == "PASS":
         p8b = state.get("p8b_acceptance", {})
@@ -513,6 +579,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
 
     p8c_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8C_REQUIREMENT_IDS)
     p8d_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8D_REQUIREMENT_IDS)
+    p8e_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8E_REQUIREMENT_IDS)
     for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS - P8C_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PENDING":
             errors.append(f"{req_id} must remain PENDING until its scoped verification closes")
@@ -543,6 +610,20 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must be PASS after P8D portable-function closure")
             if item.get("verification_scope") != "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL":
                 errors.append(f"{req_id} must declare P8D portable offline verification scope")
+            if not item.get("hardware_followup"):
+                errors.append(f"{req_id} must retain explicit hardware follow-up")
+            if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
+                errors.append(f"{req_id} must declare a primary artifact_hash")
+    if p8e_closed:
+        missing_p8e = sorted(P8E_REQUIREMENT_IDS - set(by_id))
+        if missing_p8e:
+            errors.append(f"missing P8E requirement IDs: {', '.join(missing_p8e)}")
+        for req_id in P8E_REQUIREMENT_IDS & set(by_id):
+            item = by_id[req_id]
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P8E portable architecture closure")
+            if item.get("verification_scope") != "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION":
+                errors.append(f"{req_id} must declare P8E portable routed-offline verification scope")
             if not item.get("hardware_followup"):
                 errors.append(f"{req_id} must retain explicit hardware follow-up")
             if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
