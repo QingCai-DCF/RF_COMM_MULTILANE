@@ -187,19 +187,26 @@ requirements:
   verification_method: Current Python/XSIM/static/OOC evidence with physical hardware follow-up retained.
   verification_stage: P8C
   test_id: P8C-RTL-EXACT-DUTY
-  evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_tfdu_exact_duty_accountant.sv
-    sha256: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+    sha256: 05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f
   - path: sim/tb/tb_p8c_full_scale.sv
     sha256: de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c
-  - path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
-    sha256: be832ebf4a1909618c41a2815846a24625d51d3045defd79815d0d6d861a6719
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
-  artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  artifact_hash: 05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f
   hardware_followup: External per-module rolling-duty measurement remains PENDING_P9_OR_LATER.
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+    previous_artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: MAP-001
   requirement_text: Current mapping shall be a complete eight-lane fixed-module and bank permutation for every m0.
   profile: P8B_D200_D600_8X32_OFFLINE
@@ -606,18 +613,25 @@ requirements:
   verification_stage: P8C
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL
   test_id: P8C-HISTORY-COOLDOWN
-  evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
-  artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  artifact_hash: 05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f
   artifact_hashes:
   - path: rtl/ir_tfdu_exact_duty_accountant.sv
-    sha256: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+    sha256: 05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f
   - path: sim/tb/tb_p8c_exact_duty.sv
     sha256: bca756a20bc65b02d5293704bb23f755e9570f328b2cbbcd331f547380209a8c
-  - path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
-    sha256: be832ebf4a1909618c41a2815846a24625d51d3045defd79815d0d6d861a6719
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Final hardware reset/clear sequencing remains PENDING_D17/P9.
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8c_exact_sliding_duty_rtl_summary.json
+    previous_artifact_hash: 2f49d7afdad61ec69ef312acaa0e3f115b79df2a2939427672631e441dd3e6bd
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: PHY-SAFE-006
   requirement_text: Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions.
   profile: P8C_MULTI_PROFILE_OFFLINE
@@ -644,19 +658,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SELECTIVE-REPEAT-RTL
-  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_selective_repeat_tx.sv
-    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+    sha256: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
   - path: rtl/ir_selective_repeat_rx.sv
-    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
-  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
-    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
+    sha256: 25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  artifact_hash: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    previous_artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: L2-ARQ-002
   requirement_text: The shared global outstanding window supports at least 32 frames.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -744,19 +765,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-PYTHON-REFERENCE-CAMPAIGN
-  evidence_path: evidence/generated/p8d_selective_repeat_reference_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: tools/p8d_data_plane_reference.py
     sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
   - path: rtl/ir_selective_repeat_rx.sv
-    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
-  - path: evidence/generated/p8d_selective_repeat_reference_summary.json
-    sha256: 4af7ee3c6bf0716598410fbbde7e920aa69ec9bfcc30b0bd8b630ae64cbd6108
+    sha256: 25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_selective_repeat_reference_summary.json
+    previous_artifact_hash: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: L2-STALE-001
   requirement_text: Stale session/path data and ACK records are rejected.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -764,19 +792,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SELECTIVE-REPEAT-RTL
-  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_selective_repeat_tx.sv
-    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+    sha256: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
   - path: rtl/ir_selective_repeat_rx.sv
-    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
-  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
-    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
+    sha256: 25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  artifact_hash: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    previous_artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: L2-MIG-001
   requirement_text: Only unacknowledged frames may migrate across eligible lanes or paths.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -784,19 +819,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_retry_migration.sv
     sha256: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: 7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4
-  - path: evidence/generated/p8d_scheduler_migration_summary.json
-    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
+    sha256: 13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+    previous_artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: L2-RETRY-001
   requirement_text: Retry count, timeout/backoff, and exhaustion are bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -804,19 +846,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SELECTIVE-REPEAT-RTL
-  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_selective_repeat_tx.sv
-    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+    sha256: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
-    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  artifact_hash: 4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    previous_artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: SCHED-001
   requirement_text: Scheduling is health-aware and weighted across eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -824,19 +873,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
   - path: tools/p8d_data_plane_reference.py
     sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
-  - path: evidence/generated/p8d_scheduler_migration_summary.json
-    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+    previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: SCHED-002
   requirement_text: A faulted lane does not block work on healthy eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -844,19 +900,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: 7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4
-  - path: evidence/generated/p8d_scheduler_migration_summary.json
-    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
+    sha256: 13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+    previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: SCHED-003
   requirement_text: Scheduler fairness and starvation are explicitly bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -864,19 +927,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p8d_scheduler_migration_summary.json
-    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+    previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: AXIS-001
   requirement_text: Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -904,19 +974,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-DMA-DESCRIPTOR-RING
-  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_dma_descriptor_model.sv
-    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+    sha256: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
   - path: software/ps_driver/p8d_driver.h
     sha256: 5878e26abbb1c77c47004eba34819c7c4b64fe57048e3669b1ea0b5296018f6e
-  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
-    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  artifact_hash: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    previous_artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: DMA-002
   requirement_text: Descriptor ownership permits exactly one completion and one reclaim.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -924,19 +1001,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-DMA-DESCRIPTOR-RING
-  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_dma_descriptor_model.sv
-    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+    sha256: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
   - path: sim/tb/tb_ir_dma_descriptor_ring.sv
-    sha256: 43f5637ee927a310e31a35a2957430cd93986c79a589fc88284aeee332dafc22
-  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
-    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
+    sha256: b795dd33940fc639df971190d5c1bba0dc0d99bba6076e58753575c5fd008574
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  artifact_hash: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    previous_artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: DMA-003
   requirement_text: Reset and abort deterministically reclaim ring and payload ownership.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -944,19 +1028,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-DMA-DESCRIPTOR-RING
-  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_dma_descriptor_model.sv
-    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+    sha256: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
   - path: tools/p8d_data_plane_reference.py
     sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
-  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
-    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  artifact_hash: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    previous_artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: DMA-004
   requirement_text: Descriptor generation rejects stale completions after wrap or reset.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -964,19 +1055,26 @@ requirements:
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
   test_id: P8D-DMA-DESCRIPTOR-RING
-  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_dma_descriptor_model.sv
-    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+    sha256: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
   - path: software/ps_driver/p8d_driver.c
     sha256: e233e5a7b7c7e3cf86305970ee95547982988ab1468eb688fe497841af0f88a1
-  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
-    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
+  - path: evidence/generated/p8e_precompletion_reverification_summary.json
+    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  artifact_hash: f4009747f8607c8f8bc3d400a092fcd06058a9b289806e8f6a03c5fcdf29eb81
+  reverification_history:
+  - stage: P8E_PRECOMPLETION
+    previous_source_commit: null
+    previous_evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    previous_artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  source_commit: 55fe57509896babec48bbf897ab32ab161382599
+  reverification_stage: P8E_PRECOMPLETION
 - requirement_id: RFAP-001
   requirement_text: RFAP v1/P7 vectors and legacy fallback remain compatible.
   profile: P8D_MULTI_PROFILE_OFFLINE
