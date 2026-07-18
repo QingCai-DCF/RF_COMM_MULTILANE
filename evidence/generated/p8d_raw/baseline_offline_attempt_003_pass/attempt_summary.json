@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "stage": "P8D-00_BASELINE_FREEZE",
+  "attempt": 3,
+  "status": "PASS",
+  "command": "python scripts/run_offline_gates.py --include-p8c --json-summary",
+  "environment": {
+    "NO_HARDWARE": "1",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false
+  },
+  "start_timestamp_utc": "2026-07-18T04:05:16Z",
+  "end_timestamp_utc": "2026-07-18T05:05:16.7440457Z",
+  "runtime_seconds": 3600.4,
+  "runner_bound_seconds": 5400,
+  "baseline_head": "95baa247d55d46bd2070a54ec3e8699f4510e037",
+  "p8c_tag_resolved_commit": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+  "summary": {
+    "status": "PASS",
+    "result_count": 33,
+    "failure_count": 0,
+    "pending_tool_count": 0,
+    "p8b_included": true,
+    "p8b_returncode": 0,
+    "p8c_included": true,
+    "p8c_returncode": 0,
+    "offline_gate_json_sha256": "9488663acd2adaff6292c15aa792281c1d2269a1e6076631b141aef0654ca84e",
+    "offline_gate_markdown_sha256": "d2d4edaec634c89b1bc8f3635f086b6c905b961750a50edbdc2f627f753a7358",
+    "p8c_final_json_sha256": "c9b27e493f26ef2053e59811be113674adc47c5bd144eed79213a168dfc0660d",
+    "p8c_final_markdown_sha256": "d47f1a7b58ee7a5fc6c28d3c855aa5566ffa2430336498572f35abfe28cc0b0c"
+  },
+  "preservation": {
+    "tracked_outputs_copied": 114,
+    "copied_bytes_before_summary_files": 2598520,
+    "tracked_deletion_recorded": "evidence/generated/p8c_raw/p0_p8b_full_regression.log",
+    "canonical_p8c_outputs_restored_after_copy": true
+  },
+  "no_hardware_actions_executed": true,
+  "hardware_scope_promoted": false
+}
