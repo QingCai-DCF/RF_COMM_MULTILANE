@@ -193,7 +193,13 @@ def run_xsim(name: str, sources: list[str], top: str, markers: list[str],
 
 
 def repo_intake(full: bool, parent_offline_pass: bool = False) -> dict[str, Any]:
-    status_short = git("status", "--short")
+    # Preserve the leading index/worktree status columns.  The generic git()
+    # helper strips leading whitespace, which corrupts the first porcelain
+    # record (" M" becomes "M ") and can make an evidence-only parent run
+    # look like a dirty source checkout.
+    status_short = subprocess.check_output(
+        ["git", "status", "--porcelain=v1"], cwd=ROOT, text=True
+    ).rstrip()
     files = {
         "PROJECT_CONSTRAINTS.txt": ROOT / "PROJECT_CONSTRAINTS.txt",
         "AGENTS.md": ROOT / "AGENTS.md",
