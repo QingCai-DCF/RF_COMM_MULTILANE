@@ -69,7 +69,9 @@ module tb_ir_selective_repeat_rx;
     repeat(3) @(posedge clk); rst_n=1; @(posedge clk); #1;
 
     receive(7, 16'd1, 16'd10, 1'b1, 16'h101);
-    check_expect(rx_accept && sack_bitmap[1] && !sack_bitmap[0],
+    check_expect(rx_accept, "out-of-order frame is accepted into the commit pipeline");
+    repeat(2) @(posedge clk); #1;
+    check_expect(sack_bitmap[1] && !sack_bitmap[0],
            "out-of-order frame creates a SACK hole");
     receive(7, 16'd1, 16'd10, 1'b1, 16'h101);
     check_expect(duplicate_count == 1 && credit == 31, "duplicate is suppressed without storage growth");
@@ -82,7 +84,9 @@ module tb_ir_selective_repeat_rx;
     receive(7, 16'd0, 16'd10, 1'b0, 16'h100);
     check_expect(protocol_error_count == 1, "L1-invalid frame cannot enter reorder storage");
     receive(7, 16'd0, 16'd10, 1'b1, 16'h100);
-    check_expect(rx_accept && sack_bitmap[0], "gap closure is accepted once");
+    check_expect(rx_accept, "gap closure is accepted once");
+    repeat(2) @(posedge clk); #1;
+    check_expect(sack_bitmap[0], "gap closure updates the registered SACK bitmap");
     delivery_ready=1;
     repeat(3) @(posedge clk); #1;
     check_expect(expected_delivery == 2 && delivery_count == 2 && rx_base == 2,

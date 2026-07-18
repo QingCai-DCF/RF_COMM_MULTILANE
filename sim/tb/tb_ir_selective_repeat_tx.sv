@@ -79,10 +79,22 @@ module tb_ir_selective_repeat_tx;
     end
   endtask
 
+  task automatic wait_attempt_valid(input int bound);
+    int cycles;
+    begin
+      cycles = 0;
+      while (!attempt_valid && cycles < bound) begin
+        @(negedge clk); cycles = cycles + 1;
+      end
+      check_expect(attempt_valid,
+                   "attempt selection completes within bounded window scan latency");
+    end
+  endtask
+
   task automatic send_attempt(input logic [2:0] lane);
     begin
       selected_lane = lane;
-      while (!attempt_valid) @(negedge clk);
+      wait_attempt_valid(160);
       attempt_ready = 1'b1;
       @(posedge clk); #1;
       attempt_ready = 1'b0;
@@ -104,6 +116,34 @@ module tb_ir_selective_repeat_tx;
     end
   endtask
 
+  task automatic wait_outstanding(input int expected, input int bound);
+    int cycles;
+    begin
+      cycles = 0;
+      while (outstanding != expected && cycles < bound) begin
+        @(posedge clk); #1; cycles = cycles + 1;
+      end
+      check_expect(outstanding == expected, "bounded ACK/reclaim pipeline completes");
+    end
+  endtask
+
+  task automatic wait_counter(input int selector, input int expected, input int bound);
+    int cycles;
+    begin
+      cycles = 0;
+      while (((selector == 0 ? retry_count :
+               selector == 1 ? exhausted_count :
+               selector == 2 ? duplicate_ack_count : stale_ack_count) != expected) &&
+             cycles < bound) begin
+        @(posedge clk); #1; cycles = cycles + 1;
+      end
+      check_expect((selector == 0 ? retry_count :
+                    selector == 1 ? exhausted_count :
+                    selector == 2 ? duplicate_ack_count : stale_ack_count) == expected,
+                   "bounded background engine updates counter");
+    end
+  endtask
+
   initial begin
     rst_n = 1'b0; clear_counters = 1'b0; session_reset = 1'b0; abort_all = 1'b0;
     session_epoch = 32'h1234; allocate_valid = 1'b0; allocate_payload_ref = '0;
@@ -118,24 +158,29 @@ module tb_ir_selective_repeat_tx;
     check_expect(!allocate_ready, "full window applies backpressure");
     check_expect(high_watermark == 32, "high watermark records full window");
     send_ack(session_epoch, 16'd32, 32'd0);
+    wait_outstanding(0, 160);
     check_expect(outstanding == 0 && completion_pulse && completion_batch == 32,
            "cumulative ACK completes each entry once");
     send_ack(session_epoch, 16'd32, 32'd0);
+    wait_counter(2, 1, 160);
     check_expect(duplicate_ack_count == 1, "duplicate ACK is harmless");
     send_ack(session_epoch - 1, 16'd32, 32'd0);
+    wait_counter(3, 1, 80);
     check_expect(stale_ack_count == 1, "stale-session ACK is rejected");
 
     session_reset = 1'b1; @(posedge clk); #1; session_reset = 1'b0;
     allocate_one(77);
-    check_expect(attempt_sequence == 0 && outstanding == 1, "session reset restarts sequence space");
+    check_expect(outstanding == 1, "session reset restarts sequence space");
     send_attempt(3'd0);
-    repeat (5) @(posedge clk); #1;
-    check_expect(retry_count == 1 && attempt_is_retry, "first timeout queues a retry");
+    wait_counter(0, 1, 96);
+    wait_attempt_valid(160);
+    check_expect(attempt_sequence == 0 && attempt_is_retry, "first timeout queues a retry");
     send_attempt(3'd1);
-    repeat (5) @(posedge clk); #1;
-    check_expect(retry_count == 2 && attempt_is_retry, "second timeout remains bounded retry");
+    wait_counter(0, 2, 96);
+    wait_attempt_valid(160);
+    check_expect(attempt_is_retry, "second timeout remains bounded retry");
     send_attempt(3'd1);
-    repeat (5) @(posedge clk); #1;
+    wait_counter(1, 1, 96);
     check_expect(exhausted_count == 1 && outstanding == 0 && exhausted_sticky,
            "retry exhaustion deterministically releases window ownership");
     check_expect(migration_count == 1, "only the unacknowledged retry migrated");

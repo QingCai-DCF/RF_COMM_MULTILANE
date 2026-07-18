@@ -6,6 +6,7 @@ build/
 *.log
 !evidence/hardware/p7/**/*.log
 !evidence/generated/p8d_raw/**/*.log
+!evidence/generated/p8e_raw/**/*.log
 *.str
 *.wdb
 *.dcp
@@ -49,3 +50,12 @@ evidence/generated/hw_preflight/
 /evidence/generated/p8d_raw/airtime_quick.*
 /evidence/generated/p8d_raw/rfap_probe.json
 /evidence/generated/p8d_raw/rfap_quick.json
+
+# P8E implementation work products are content-addressed in the accepted raw
+# artifact manifest.  Retain reports and logs, but do not version Vivado/XSim
+# scratch projects, generated simulation netlists, or iterative development
+# runs.
+/evidence/generated/p8e_raw/development/
+/evidence/generated/p8e_raw/**/project/
+/evidence/generated/p8e_raw/**/work/
+/evidence/generated/p8e_raw/**/post_synth_funcsim.v

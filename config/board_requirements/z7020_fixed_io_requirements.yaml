@@ -1,0 +1,34 @@
+schema_version: 1
+requirement_scope: D12_INPUT_NOT_BOARD_SELECTION
+profile_id: Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION
+board_status: PENDING_D12
+pin_assignments: PENDING_D12
+single_ended_groups:
+  tx_data: {count: 8, direction: output, voltage_candidates: [1.8V, 2.5V, 3.3V]}
+  current_rx: {count: 8, direction: input, voltage_candidates: [1.8V, 2.5V, 3.3V]}
+  candidate_rx: {count: 8, direction: input, voltage_candidates: [1.8V, 2.5V, 3.3V]}
+  sector_bank_address: {count: 3, direction: output}
+  sector_bank_latch: {count: 1, direction: output}
+  sector_bank_readback: {count: 1, direction: input}
+  sector_bank_fault: {count: 8, direction: input}
+  sd_serial_control: {count: 4, direction: mixed, notes: data_clock_latch_readback_for_32_SD_controls}
+  global_permit: {count: 1, direction: input, polarity: active_high, default_external_state: low}
+  abz: {count: 3, direction: input, clock_capable_pin_preferred: true}
+  service_and_debug_reserve: {count_min: 10, direction: mixed}
+differential_pairs:
+  required_min: 0
+  candidates: [ethernet_reference_clock, external_low_jitter_clock]
+conditional_interfaces:
+  ethernet: PENDING_D12_MIO_OR_EMIO_OR_EXTERNAL_MAC
+  mdio: PENDING_D12
+  spi: PENDING_D12
+clock_capable_inputs_min: 2
+maximum_tfdu_sector_banks: 8
+simultaneous_switching_assumption: eight_Txd_outputs_possible_but_duty_and_one_hot_guards_remain_active
+blocking_unknowns:
+  - FPGA_board_and_package_selection
+  - bank_voltage_partition
+  - PS_DDR_MIO_assignment
+  - Ethernet_topology
+  - GLOBAL_PERMIT_physical_interface_D17
+  - ABZ_electrical_standard_D13

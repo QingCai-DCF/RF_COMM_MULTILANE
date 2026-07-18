@@ -49,11 +49,19 @@ module ir_tfdu_exact_duty_accountant #(
   reg             outgoing_bit_q;
   reg [31:0]      cooldown_cycles_q;
   wire [PTR_W-1:0] next_history_ptr;
+  wire             history_write_bit;
   wire [32:0] rolling_without_outgoing;
   wire [32:0] rolling_next;
 
   assign next_history_ptr =
       (history_ptr_q == WINDOW_CYCLES-1) ? {PTR_W{1'b0}} : history_ptr_q + 1'b1;
+  // The history RAM has an unconditional write and read on every clock.  Its
+  // enable and output-register reset pins therefore cannot be driven from an
+  // asynchronously asserted endpoint reset.  During reset/invalidation the
+  // write data is zero and the full-window cooldown makes any stale read value
+  // unobservable before accounting is re-enabled.
+  assign history_write_bit = rst_n && duty_history_valid_o &&
+      !history_invalidate_i && !safety_fault_clear_i && charge_i;
   assign rolling_without_outgoing = {1'b0, rolling_high_cycles_o} - outgoing_bit_q;
   assign rolling_next = rolling_without_outgoing + charge_i;
   assign target_admit_next_o = duty_history_valid_o && !duty_hard_fault_o &&
@@ -83,19 +91,14 @@ module ir_tfdu_exact_duty_accountant #(
       $fatal(1, "P8C target integer calculation failed");
   end
 
-  // Keep the RAM port in a purely synchronous process so Vivado can infer
-  // block RAM. Safety state may reset asynchronously, but history is made
-  // unusable until the separate full-window zero-fill cooldown completes.
+  // Keep the RAM port unconditional and purely synchronous so Vivado can
+  // infer block RAM without reset/enable control pins sourced by async-reset
+  // logic.  No reset is required on outgoing_bit_q: while the memory is being
+  // zero-filled, duty_history_valid_o is false and all accounting outputs are
+  // held at their safe cooldown values.
   always @(posedge clk) begin
-    if (!rst_n || history_invalidate_i || safety_fault_clear_i) begin
-      outgoing_bit_q <= 1'b0;
-    end else if (!duty_history_valid_o) begin
-      history_mem[history_ptr_q] <= 1'b0;
-      outgoing_bit_q <= 1'b0;
-    end else begin
-      history_mem[history_ptr_q] <= charge_i;
-      outgoing_bit_q <= history_mem[next_history_ptr];
-    end
+    history_mem[history_ptr_q] <= history_write_bit;
+    outgoing_bit_q <= history_mem[next_history_ptr];
   end
 
   // Accountant state uses a synchronous reset; the surrounding physical

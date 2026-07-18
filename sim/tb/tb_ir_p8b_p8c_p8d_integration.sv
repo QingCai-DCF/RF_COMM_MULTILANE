@@ -125,6 +125,12 @@ module tb_ir_p8b_p8c_p8d_integration;
     begin timeout=0;while(attempts<target&&timeout<300)begin @(posedge clk);timeout=timeout+1;end
       check_expect(attempts>=target,"attempt admitted in bounded time");end
   endtask
+  task automatic wait_outstanding(input integer target);
+    integer timeout;
+    begin timeout=0;while(outstanding!=target&&timeout<260)begin
+      @(posedge clk);#1;timeout=timeout+1;end
+      check_expect(outstanding==target,"bounded ACK reclaim completes");end
+  endtask
   task automatic arm_endpoint;
     begin
       repeat(8)@(posedge clk);arm_request=1;@(posedge clk);#1;arm_request=0;
@@ -156,12 +162,12 @@ module tb_ir_p8b_p8c_p8d_integration;
                  "P8C permit drop preserves unacked P8D ownership and kills retries");
     global_permit=1;arm_endpoint();wait_attempt(2);
     check_expect(last_sequence==0&&last_retry,"retry restarts whole frame after explicit re-arm");
-    ack(1);check_expect(outstanding==0,"ACKed frame never retries or migrates again");
+    ack(1);wait_outstanding(0);check_expect(outstanding==0,"ACKed frame never retries or migrates again");
 
     phase_valid=0;allocate();repeat(20)@(posedge clk);#1;
     check_expect(attempts==2&&outstanding==1,"P8B invalid mapping blocks physical attempt");
     phase_valid=1;wait_attempt(3);check_expect(last_sequence==1,"mapping recovery admits queued global entry");
-    ack(2);check_expect(outstanding==0&&physical_txd==0,"no data-plane control can bypass final Txd kill");
+    ack(2);wait_outstanding(0);check_expect(outstanding==0&&physical_txd==0,"no data-plane control can bypass final Txd kill");
     $display("P8D_P8B_MAPPING_GATE_INTEGRATION_PASS=1");
     $display("P8D_P8C_SINGLE_PERMIT_FINAL_KILL_INTEGRATION_PASS=1");
     $display("P8D_PARTIAL_FRAME_NOT_RESUMED_PASS=1");

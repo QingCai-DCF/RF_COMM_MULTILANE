@@ -18,7 +18,8 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "evidence/generated"
+CANONICAL_OUT = ROOT / "evidence/generated"
+OUT = CANONICAL_OUT
 RAW = OUT / "p8d_raw"
 VIVADO_BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 VIVADO = VIVADO_BIN / "vivado.bat"
@@ -369,7 +370,7 @@ def parse_resource(profile: str, spec: dict[str, Any], directory: Path,
                         and utilization["BRAM36"] <= 0.75 and utilization["DSP"] <= 0.75)
     passed = (command["returncode"] == 0 and markers.get("P8D_OOC_SYNTHESIS_PASS") == "1"
               and within_device and projected_ok and critical == 0 and errors == 0)
-    baseline_path = OUT / "p8c_raw/resource_audit" / spec["p8c_profile"] / "resource_markers.txt"
+    baseline_path = CANONICAL_OUT / "p8c_raw/resource_audit" / spec["p8c_profile"] / "resource_markers.txt"
     baseline: dict[str, int] = {}
     if baseline_path.is_file():
         for line in baseline_path.read_text(encoding="utf-8").splitlines():
@@ -504,7 +505,7 @@ def baseline_checks() -> dict[str, Any]:
     constraint_hash = sha256(ROOT / "PROJECT_CONSTRAINTS.txt")
     if constraint_hash != PROJECT_CONSTRAINTS_SHA256:
         errors.append("PROJECT_CONSTRAINTS.txt hash mismatch")
-    p8c_final = OUT / "p8c_final_summary.json"
+    p8c_final = CANONICAL_OUT / "p8c_final_summary.json"
     state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
     expected_p8c_hash = state.get("p8c_acceptance", {}).get("evidence_sha256")
     if not p8c_final.is_file() or sha256(p8c_final) != expected_p8c_hash:
@@ -691,6 +692,7 @@ def verify_existing() -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    global OUT, RAW
     parser = argparse.ArgumentParser()
     parser.add_argument("--json-summary", action="store_true")
     parser.add_argument("--verify-existing", action="store_true")
@@ -701,7 +703,15 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--full", action="store_true")
     parser.add_argument("--parent-offline-pass", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--finalize-metadata", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--output-root", type=Path, default=CANONICAL_OUT,
+                        help="Write P8D regression artifacts below this repository-local directory.")
     args = parser.parse_args(argv)
+
+    OUT = args.output_root if args.output_root.is_absolute() else ROOT / args.output_root
+    OUT = OUT.resolve()
+    if not OUT.is_relative_to(ROOT.resolve()):
+        parser.error("--output-root must remain inside the repository")
+    RAW = OUT / "p8d_raw"
 
     if args.verify_existing:
         return verify_existing()

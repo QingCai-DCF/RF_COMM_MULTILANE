@@ -1,0 +1,19 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "profile": "P8E_MULTI_PROFILE_OFFLINE",
+  "schema_version": 1,
+  "source_path": "config/p8e_build_matrix.yaml",
+  "source_sha256": "5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502",
+  "status": "PASS",
+  "test_id": "P8E-CANONICAL-BUILD-CONFIG",
+  "validation": {
+    "common_source_core": "rtl/top/ir_endpoint_core.sv",
+    "minimum_outstanding": 32,
+    "minimum_sack_bits": 32,
+    "profile_count": 3,
+    "status": "PASS",
+    "strategy_count": 2,
+    "z7020_board_inputs_pending_d12": true
+  }
+}

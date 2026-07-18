@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "profile_id": "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION",
+  "part": "xc7z020clg400-2",
+  "top_module": "z7020_rotating_core_timing_top",
+  "include_directories": ["rtl"],
+  "generated_sources": ["rtl/generated/tfdu_safety_pkg.sv", "rtl/generated/ir_p8e_profile_pkg.sv"],
+  "source_order": [
+    "rtl/generated/tfdu_safety_pkg.sv",
+    "rtl/generated/ir_p8e_profile_pkg.sv",
+    "rtl/common/reset_sync.sv", "rtl/common/level_sync.sv", "rtl/common/pulse_sync.sv",
+    "rtl/common/toggle_handshake.sv", "rtl/common/async_fifo.sv",
+    "rtl/ir_tfdu_exact_duty_accountant.sv", "rtl/ir_tfdu_physical_module_safety.sv",
+    "rtl/ir_tfdu_safety_endpoint.sv", "rtl/ir_p8c_resource_tops.sv",
+    "rtl/ir_seq_math_pkg.sv", "rtl/ir_ack_aggregator.sv",
+    "rtl/ir_health_weighted_scheduler.sv", "rtl/ir_selective_repeat_tx.sv",
+    "rtl/ir_selective_repeat_rx.sv", "rtl/ir_axis_tx_frontend.sv",
+    "rtl/ir_dma_descriptor_model.sv", "rtl/ir_shared_payload_store.sv",
+    "rtl/ir_data_plane_top.sv", "rtl/ir_p8d_resource_tops.sv",
+    "rtl/platform/axi_dma_adapter.sv", "rtl/top/ir_endpoint_core.sv",
+    "rtl/top/ir_rotating_endpoint_core.sv", "rtl/top/z7020_rotating_core_timing_top.sv"
+  ],
+  "constraints": ["constraints/core/common_clocks.xdc", "constraints/core/cdc_exceptions.xdc", "constraints/core/reset_constraints.xdc", "constraints/profile/z7020_rotating_core.xdc"],
+  "profile_parameters": {"endpoint_role": "ROTATING", "lane_count": 8, "window_size": 64, "sack_bits": 64, "physical_module_count": 8},
+  "clock_definitions": {"protocol_clk_i_mhz": 64, "axis_dma_clk_i_mhz": 100, "axi_lite_clk_i_mhz": 50},
+  "board_pinmap": "PENDING_D12", "board_xdc": "PENDING_D12",
+  "expected_excluded_legacy_sources": ["legacy/**", "rtl/legacy_reference/**", "docs/legacy/**", "constraints/active/PORT1.generated.xdc", "constraints/legacy_conflicts/**"]
+}

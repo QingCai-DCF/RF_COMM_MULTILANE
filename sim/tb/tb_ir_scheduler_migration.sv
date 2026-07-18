@@ -58,10 +58,15 @@ module tb_ir_scheduler_migration;
   endtask
   task automatic issue_once(output logic admitted, output logic [2:0] lane,
                             output logic [3:0] reason);
+    integer timeout;
     begin
       @(negedge clk); request_valid=1;
       while(!request_ready) @(negedge clk);
       @(posedge clk); #1; request_valid=0;
+      timeout=0;
+      while(!decision_valid&&timeout<8) begin
+        @(posedge clk); #1; timeout=timeout+1;
+      end
       check_expect(decision_valid,"scheduler must return a bounded decision");
       admitted=decision_admit; lane=decision_lane; reason=defer_reason;
       @(posedge clk); #1;

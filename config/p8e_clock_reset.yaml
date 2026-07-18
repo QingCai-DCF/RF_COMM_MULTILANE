@@ -1,0 +1,64 @@
+schema_version: 1
+stage: P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING
+reset_policy:
+  assertion: asynchronous_endpoint_wide
+  deassertion: synchronous_per_clock_domain
+  synchronizer_depth: 3
+  combinational_reset_logic: forbidden
+  raw_global_permit_low_kill_bypasses_reset_synchronizers: true
+domains:
+  phy_clock:
+    source: protocol_clock
+    frequency_mhz: 64
+    relation: synchronous
+    reset_source: endpoint_reset_n
+    cdc_primitive: none
+  protocol_clock:
+    source: ps_fclk_or_board_clock_shell
+    frequency_mhz: 64
+    relation: root
+    reset_source: endpoint_reset_n
+    reset_deassertion: reset_sync_3_stage
+  axis_dma_clock:
+    source: ps_fclk_or_dma_ip_clock
+    frequency_mhz: 100
+    relation: asynchronous_to_protocol_unless_profile_proves_common_source
+    reset_source: endpoint_reset_n
+    reset_deassertion: reset_sync_3_stage
+    cdc_primitive: async_fifo_or_pulse_sync
+  axi_lite_clock:
+    source: ps_fclk
+    frequency_mhz: 50
+    relation: asynchronous_to_protocol_unless_profile_proves_common_source
+    reset_source: endpoint_reset_n
+    reset_deassertion: reset_sync_3_stage
+    cdc_primitive: level_sync_or_toggle_handshake
+  ps_fclk:
+    source: PS7
+    frequency_mhz: profile_defined
+    relation: platform_shell_pending
+    reset_source: PS7_FCLK_RESET_N
+  abz_clock_or_input_domain:
+    source: PENDING_D13
+    frequency_mhz: PENDING_D13
+    relation: asynchronous
+    reset_source: endpoint_reset_n
+    cdc_primitive: level_sync_or_gray_counter
+  spi_clock_domain:
+    source: PENDING_D12
+    frequency_mhz: PENDING_D12
+    relation: asynchronous
+    reset_source: endpoint_reset_n
+    cdc_primitive: async_fifo_or_toggle_handshake
+  ethernet_service_domain_if_present:
+    source: PENDING_D12
+    frequency_mhz: PENDING_D12
+    relation: asynchronous
+    reset_source: endpoint_reset_n
+    cdc_primitive: async_fifo
+endpoint_reset_contract:
+  fixed_and_rotating_resets_independent: true
+  local_clock_domains_share_endpoint_assertion: true
+  stale_descriptor_generation_rejected: true
+  partial_frame_resume_after_reset: false
+  receive_only_with_global_permit_low: allowed

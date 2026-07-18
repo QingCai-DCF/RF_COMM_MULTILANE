@@ -33,20 +33,46 @@ module ir_shared_payload_store #(
   logic [ENTRY_COUNT-1:0] allocated;
   logic [ADDRESS_WIDTH-1:0] write_address;
   logic [ADDRESS_WIDTH-1:0] read_address;
+  logic write_pending;
+  logic [ADDRESS_WIDTH-1:0] write_address_pending;
+  logic [DATA_WIDTH+KEEP_WIDTH-1:0] write_payload_pending;
+  logic read_pending;
+  logic [ADDRESS_WIDTH-1:0] read_address_pending;
 
   assign allocate_ready_o = !allocated[allocate_entry_i];
   assign write_address = write_entry_i * BEATS_PER_FRAME + write_beat_i;
   assign read_address = read_entry_i * BEATS_PER_FRAME + read_beat_i;
 
+  // RAM controls are produced only by synchronously reset command registers.
+  // The asynchronously observable ownership table never directly drives a
+  // RAMB enable, closing Vivado REQP-1839 without suppressing the rule.
   always_ff @(posedge clk) begin
-    if (write_valid_i && allocated[write_entry_i])
-      memory[write_address] <= {write_keep_i, write_data_i};
-    if (read_valid_i && allocated[read_entry_i]) begin
-      {read_keep_o, read_data_o} <= memory[read_address];
+    if (!rst_n) begin
+      write_pending <= 1'b0;
+      write_address_pending <= '0;
+      write_payload_pending <= '0;
+      read_pending <= 1'b0;
+      read_address_pending <= '0;
+      read_data_o <= '0;
+      read_keep_o <= '0;
+    end else begin
+      if (write_pending)
+        memory[write_address_pending] <= write_payload_pending;
+      if (read_pending)
+        {read_keep_o, read_data_o} <= memory[read_address_pending];
+      write_pending <= write_valid_i && allocated[write_entry_i];
+      if (write_valid_i && allocated[write_entry_i]) begin
+        write_address_pending <= write_address;
+        write_payload_pending <= {write_keep_i, write_data_i};
+      end
+      read_pending <= read_valid_i && allocated[read_entry_i];
+      if (read_valid_i && allocated[read_entry_i])
+        read_address_pending <= read_address;
     end
   end
 
-  always_ff @(posedge clk or negedge rst_n) begin
+  // Ownership reset is synchronous because it feeds the RAM command capture.
+  always_ff @(posedge clk) begin
     integer ownership_delta;
     if (!rst_n) begin
       allocated <= '0;

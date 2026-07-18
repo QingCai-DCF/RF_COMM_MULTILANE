@@ -1,0 +1,25 @@
+schema_version: 1
+requirement_scope: D12_INPUT_NOT_BOARD_SELECTION
+profile_id: Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION
+board_status: PENDING_D12
+pin_assignments: PENDING_D12
+single_ended_groups:
+  tx_data: {count: 8, direction: output, voltage_candidates: [1.8V, 2.5V, 3.3V]}
+  rx_data: {count: 8, direction: input, voltage_candidates: [1.8V, 2.5V, 3.3V]}
+  sd_control: {count: 8, direction: output}
+  global_permit: {count: 1, direction: input, polarity: active_high, default_external_state: low}
+  local_fpga_spi: {count: 4, direction: mixed}
+  battery_bms_fault: {count_min: 4, direction: input}
+  clock_reset_debug_reserve: {count_min: 8, direction: mixed}
+differential_pairs:
+  required_min: 0
+  candidates: [external_low_jitter_clock]
+clock_capable_inputs_min: 1
+simultaneous_switching_assumption: eight_Txd_outputs_budgeted_while_runtime_duty_and_one_hot_guards_remain_active
+blocking_unknowns:
+  - FPGA_board_and_package_selection
+  - bank_voltage_partition
+  - rotating_power_and_level_translation
+  - SPI_voltage_and_rate
+  - GLOBAL_PERMIT_physical_interface_D17
+  - battery_BMS_signal_definition

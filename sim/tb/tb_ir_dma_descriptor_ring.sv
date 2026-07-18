@@ -66,16 +66,26 @@ module tb_ir_dma_descriptor_ring;
     if(!condition) $fatal(1,"DMA_EXPECT_FAIL: %s",message);
   endtask
   task automatic prepare(input integer tag);
+    integer timeout;
     begin
       @(negedge clk); cpu_tag=tag; cpu_address=64'h1000+tag*64;
       cpu_capacity=512; cpu_length=256; cpu_prepare_valid=1;
-      while(!cpu_prepare_ready) @(negedge clk);
+      timeout=0;
+      while(!cpu_prepare_ready&&timeout<80)begin @(negedge clk);timeout=timeout+1;end
+      if(!cpu_prepare_ready)
+        $display("DMA_PREPARE_TIMEOUT tag=%0d abort_scan=%0b abort_index=%0d occupancy=%0d producer=%0d consumer=%0d state=%0d",
+                 tag,tx_ring.abort_scan_active,tx_ring.abort_scan_index,occupancy,
+                 producer_count,cpu_consumer_count,tx_ring.state[tx_ring.prepare_index]);
+      check_expect(cpu_prepare_ready,"descriptor prepare becomes ready within bounded reset scan");
       @(posedge clk); #1; cpu_prepare_valid=0;
     end
   endtask
   task automatic handoff(output logic [2:0] index,output logic [15:0] gen);
+    integer timeout;
     begin
-      while(!hw_valid) @(negedge clk);
+      timeout=0;
+      while(!hw_valid&&timeout<80)begin @(negedge clk);timeout=timeout+1;end
+      check_expect(hw_valid,"hardware ownership handoff becomes valid");
       index=hw_index; gen=hw_generation; hw_ready=1;
       @(posedge clk); #1; hw_ready=0;
     end
@@ -88,9 +98,20 @@ module tb_ir_dma_descriptor_ring;
     end
   endtask
   task automatic reap;
+    integer timeout;
     begin
-      while(!cpu_completion_valid) @(negedge clk);
+      timeout=0;
+      while(!cpu_completion_valid&&timeout<80)begin @(negedge clk);timeout=timeout+1;end
+      check_expect(cpu_completion_valid,"CPU completion becomes visible after bounded abort scan");
       cpu_completion_ready=1; @(posedge clk); #1; cpu_completion_ready=0;
+    end
+  endtask
+  task automatic wait_abort_count(input integer target);
+    integer timeout;
+    begin
+      timeout=0;
+      while(abort_count!=target&&timeout<40)begin @(posedge clk);#1;timeout=timeout+1;end
+      check_expect(abort_count==target,"bounded descriptor abort scan completes");
     end
   endtask
 
@@ -115,6 +136,7 @@ module tb_ir_dma_descriptor_ring;
 
     prepare(2); handoff(saved_index,saved_generation);
     abort_ring=1; @(posedge clk); #1; abort_ring=0;
+    wait_abort_count(1);
     check_expect(generation!=saved_generation && abort_count==1,
                  "abort advances generation and terminates owned descriptor");
     complete(saved_index,saved_generation);
@@ -127,6 +149,7 @@ module tb_ir_dma_descriptor_ring;
     cpu_prepare_valid=1; @(posedge clk); #1; cpu_prepare_valid=0;
     check_expect(full_count==1,"ring-full event is counted");
     abort_ring=1; @(posedge clk); #1; abort_ring=0;
+    wait_abort_count(9);
     for(int descriptor=0;descriptor<8;descriptor++) reap();
     check_expect(occupancy==0 && leak_count==0 && abort_count==9,
                  "abort/reclaim is deterministic with zero descriptor leak");

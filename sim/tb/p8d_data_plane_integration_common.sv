@@ -139,6 +139,16 @@ module p8d_data_plane_integration_common #(
       check_expect(physical_attempts>=target,"physical attempt arrives within bounded time");
     end
   endtask
+  task automatic wait_outstanding(input integer target);
+    integer timeout;
+    begin
+      timeout=0;
+      while(tx_outstanding_count!=target && timeout<240) begin
+        @(posedge clk);#1;timeout=timeout+1;
+      end
+      check_expect(tx_outstanding_count==target,"ACK reclaim completes within bounded scan latency");
+    end
+  endtask
 
   always @(posedge clk) begin
     if(!rst_n) begin physical_attempts=0;delivered=0;end
@@ -179,7 +189,7 @@ module p8d_data_plane_integration_common #(
                  "permit-low pauses attempts without losing global window ownership");
     global_permit_effective=1;wait_attempt_count(1);
     check_expect(last_attempt_sequence==0,"first global sequence is attempted once");
-    acknowledge(1);check_expect(tx_outstanding_count==0,"ACK reclaims first entry");
+    acknowledge(1);wait_outstanding(0);check_expect(tx_outstanding_count==0,"ACK reclaims first entry");
 
     receive(1,16'h101);receive(1,16'h101);receive(0,16'h100);
     check_expect(rx_duplicate_count==1,"same frame on any lane is suppressed");
@@ -194,7 +204,7 @@ module p8d_data_plane_integration_common #(
     active_lane_mask='0;active_lane_mask[LANE_COUNT-1]=1;
     attempt_before=physical_attempts;allocate(2);wait_attempt_count(attempt_before+1);
     check_expect(last_attempt_lane==LANE_COUNT-1,"scheduler isolates all ineligible lanes");
-    acknowledge(2);
+    acknowledge(2);wait_outstanding(0);
 
     active_lane_mask='0;active_lane_mask[0]=1;global_permit_effective=0;
     attempt_before=physical_attempts;allocate(3);repeat(10) @(posedge clk);#1;
@@ -202,7 +212,7 @@ module p8d_data_plane_integration_common #(
                  "live permit recheck prevents a queued physical attempt");
     global_permit_effective=1;wait_attempt_count(attempt_before+1);
     check_expect(last_attempt_sequence==2,"re-arm restarts at a complete frame boundary");
-    acknowledge(3);check_expect(tx_outstanding_count==0,"final outstanding entry reclaimed");
+    acknowledge(3);wait_outstanding(0);check_expect(tx_outstanding_count==0,"final outstanding entry reclaimed");
 
     $display("P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1");
     $display("P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1");

@@ -65,6 +65,8 @@ module ir_dma_descriptor_model #(
   logic [COMPLETION_WIDTH-1:0] cpu_completion;
   logic [15:0] completion_error_value;
   logic prepare_accept,completion_accept;
+  logic abort_scan_active;
+  logic [INDEX_WIDTH-1:0] abort_scan_index;
 
   initial begin
     if(RING_DEPTH<2||(RING_DEPTH&(RING_DEPTH-1))!=0)
@@ -86,9 +88,10 @@ module ir_dma_descriptor_model #(
     generation_complete_memory[hw_complete_index_i]==hw_complete_generation_i&&
     state[hw_complete_index_i]==DESC_HW_OWNED;
 
-  assign cpu_prepare_ready_o=(occupancy_o<RING_DEPTH)&&
+  assign cpu_prepare_ready_o=!abort_scan_active&&(occupancy_o<RING_DEPTH)&&
     ((state[prepare_index]==DESC_FREE)||(state[prepare_index]==DESC_CPU_RECLAIMED));
-  assign hw_descriptor_valid_o=(hardware_consumer_count_o<producer_count_o)&&
+  assign hw_descriptor_valid_o=!abort_scan_active&&
+    (hardware_consumer_count_o<producer_count_o)&&
     state[hw_index]==DESC_CPU_PREPARED&&generation_hw_memory[hw_index]==generation_o;
   assign hw_descriptor_index_o=hw_index;
   assign hw_descriptor_generation_o=generation_hw_memory[hw_index];
@@ -135,7 +138,6 @@ module ir_dma_descriptor_model #(
 
   always_ff @(posedge clk or negedge rst_n) begin:descriptor_state
     integer entry;
-    integer aborted_entries;
     logic [GENERATION_WIDTH-1:0] next_generation;
     if(!rst_n) begin
       producer_count_o<=0;hardware_consumer_count_o<=0;cpu_consumer_count_o<=0;
@@ -144,6 +146,7 @@ module ir_dma_descriptor_model #(
       ring_full_count_o<=0;completion_count_o<=0;error_count_o<=0;abort_count_o<=0;
       stale_generation_count_o<=0;hw_complete_accept_pulse_o<=0;
       hw_complete_reject_pulse_o<=0;
+      abort_scan_active<=0;abort_scan_index<='0;
       for(entry=0;entry<RING_DEPTH;entry=entry+1)begin
         state[entry]<=DESC_FREE;
       end
@@ -153,17 +156,33 @@ module ir_dma_descriptor_model #(
         ring_full_count_o<=0;completion_count_o<=0;error_count_o<=0;abort_count_o<=0;
         stale_generation_count_o<=0;high_watermark_o<=occupancy_o;
       end
-      if(soft_reset_i||abort_i)begin
-        aborted_entries=0;next_generation=generation_o+1'b1;
+      if((soft_reset_i||abort_i)&&!abort_scan_active)begin
+        next_generation=generation_o+1'b1;
         if(next_generation=='0)next_generation={{(GENERATION_WIDTH-1){1'b0}},1'b1};
         generation_o<=next_generation;hardware_consumer_count_o<=producer_count_o;
         descriptor_leak_count_o<=0;
-        for(entry=0;entry<RING_DEPTH;entry=entry+1)begin
-          if(state[entry]==DESC_CPU_PREPARED||state[entry]==DESC_HW_OWNED)begin
-            state[entry]<=DESC_ABORTED;aborted_entries=aborted_entries+1;
-          end
+        abort_scan_active<=1;abort_scan_index<='0;
+      end else if(abort_scan_active)begin
+        // One descriptor per cycle keeps abort accounting out of the main
+        // data/ownership critical path.  RING_DEPTH bounds completion latency.
+        if(hw_complete_valid_i)begin
+          hw_complete_reject_pulse_o<=1'b1;
+          if(hw_complete_generation_i!=generation_o)
+            stale_generation_count_o<=stale_generation_count_o+1'b1;
+          else error_count_o<=error_count_o+1'b1;
         end
-        if(aborted_entries!=0)abort_count_o<=abort_count_o+aborted_entries;
+        if(state[abort_scan_index]==DESC_CPU_PREPARED||
+           state[abort_scan_index]==DESC_HW_OWNED)begin
+          state[abort_scan_index]<=DESC_ABORTED;
+          abort_count_o<=abort_count_o+1'b1;
+        end
+        if(cpu_completion_valid_o&&cpu_completion_ready_i)begin
+          state[completion_index]<=DESC_CPU_RECLAIMED;
+          cpu_consumer_count_o<=cpu_consumer_count_o+1'b1;
+        end
+        if(abort_scan_index==RING_DEPTH-1)begin
+          abort_scan_active<=0;abort_scan_index<='0;
+        end else abort_scan_index<=abort_scan_index+1'b1;
       end else begin
         if(cpu_prepare_valid_i&&!cpu_prepare_ready_o)ring_full_count_o<=ring_full_count_o+1'b1;
         if(prepare_accept)begin

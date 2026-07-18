@@ -1,0 +1,88 @@
+{
+  "profiles": {
+    "Z7010_2LANE_DEV_IMPLEMENTATION": {
+      "AXIS_DATA_WIDTH": 64,
+      "CLOCK_TARGET_MHZ": 64,
+      "DESCRIPTOR_RING_DEPTH": 64,
+      "ENDPOINT_ROLE": 0,
+      "LANE_COUNT": 2,
+      "PHYSICAL_MODULE_COUNT": 2,
+      "PROFILE_ID": 7344130,
+      "PROFILE_VERSION": 1,
+      "RX_WINDOW": 32,
+      "SACK_BITS": 32,
+      "TX_WINDOW": 32,
+      "board_pinmap": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "board_xdc": "constraints/active/PORT1.generated.xdc",
+      "part": "xc7z010clg400-1",
+      "source_manifest": "config/source_manifests/z7010_2lane_dev.json",
+      "top_module": "z7010_2lane_dev_top"
+    },
+    "Z7020_FIXED_8LANE_32MODULE_CORE_IMPLEMENTATION": {
+      "AXIS_DATA_WIDTH": 64,
+      "CLOCK_TARGET_MHZ": 64,
+      "DESCRIPTOR_RING_DEPTH": 64,
+      "ENDPOINT_ROLE": 1,
+      "LANE_COUNT": 8,
+      "PHYSICAL_MODULE_COUNT": 32,
+      "PROFILE_ID": 7348472,
+      "PROFILE_VERSION": 1,
+      "RX_WINDOW": 64,
+      "SACK_BITS": 64,
+      "TX_WINDOW": 64,
+      "board_pinmap": "PENDING_D12",
+      "board_xdc": "PENDING_D12",
+      "part": "xc7z020clg400-2",
+      "source_manifest": "config/source_manifests/z7020_fixed_core.json",
+      "top_module": "z7020_fixed_core_timing_top"
+    },
+    "Z7020_ROTATING_8LANE_CORE_IMPLEMENTATION": {
+      "AXIS_DATA_WIDTH": 64,
+      "CLOCK_TARGET_MHZ": 64,
+      "DESCRIPTOR_RING_DEPTH": 64,
+      "ENDPOINT_ROLE": 2,
+      "LANE_COUNT": 8,
+      "PHYSICAL_MODULE_COUNT": 8,
+      "PROFILE_ID": 7348392,
+      "PROFILE_VERSION": 1,
+      "RX_WINDOW": 64,
+      "SACK_BITS": 64,
+      "TX_WINDOW": 64,
+      "board_pinmap": "PENDING_D12",
+      "board_xdc": "PENDING_D12",
+      "part": "xc7z020clg400-2",
+      "source_manifest": "config/source_manifests/z7020_rotating_core.json",
+      "top_module": "z7020_rotating_core_timing_top"
+    }
+  },
+  "schema_version": 1,
+  "source_path": "config/p8e_build_matrix.yaml",
+  "source_sha256": "5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502",
+  "strategies": [
+    {
+      "id": "Default",
+      "phys_opt_directive": "Default",
+      "place_directive": "Default",
+      "route_directive": "Default",
+      "seed": 1,
+      "synth_directive": "Default"
+    },
+    {
+      "id": "Performance_Explore",
+      "phys_opt_directive": "AggressiveExplore",
+      "place_directive": "Explore",
+      "route_directive": "Explore",
+      "seed": 2,
+      "synth_directive": "PerformanceOptimized"
+    }
+  ],
+  "validation": {
+    "common_source_core": "rtl/top/ir_endpoint_core.sv",
+    "minimum_outstanding": 32,
+    "minimum_sack_bits": 32,
+    "profile_count": 3,
+    "status": "PASS",
+    "strategy_count": 2,
+    "z7020_board_inputs_pending_d12": true
+  }
+}

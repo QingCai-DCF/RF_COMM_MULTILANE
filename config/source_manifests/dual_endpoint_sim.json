@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "profile_id": "Z7020_DUAL_ENDPOINT_DIGITAL_LINK_SIM",
+  "top_module": "ir_dual_endpoint_sim_top",
+  "include_directories": ["rtl", "sim/tb"],
+  "generated_sources": ["rtl/generated/tfdu_safety_pkg.sv", "rtl/generated/ir_p8e_profile_pkg.sv"],
+  "source_manifests": ["config/source_manifests/z7020_fixed_core.json", "config/source_manifests/z7020_rotating_core.json"],
+  "additional_sources": ["rtl/top/ir_dual_endpoint_sim_top.sv", "sim/tb/tb_p8e_dual_endpoint.sv"],
+  "constraints": [],
+  "clock_definitions": {"fixed_protocol": "independent", "rotating_protocol": "independent", "fixed_axis": "independent", "rotating_axis": "independent"},
+  "expected_excluded_legacy_sources": ["legacy/**", "rtl/legacy_reference/**", "docs/legacy/**"]
+}
