@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P8D-0",
+  "state_revision": "P8D-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -16,7 +16,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+  "current_program_stage": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -47,7 +47,7 @@
     "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
     "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
-    "P8D_SELECTIVE_REPEAT_DMA": "IN_PROGRESS",
+    "P8D_SELECTIVE_REPEAT_DMA": "PASS",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PENDING"
   },
   "p7_evidence": {
@@ -172,13 +172,13 @@
     {
       "gate_id": "P8C",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P8D",
+      "status": "PASS"
     }
   ],
   "pending_gates": [
-    {
-      "gate_id": "P8D",
-      "status": "PENDING"
-    },
     {
       "gate_id": "P8E",
       "status": "PENDING"
@@ -220,7 +220,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+  "last_verified_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -249,7 +249,30 @@
       "FINAL_PRODUCT_HARDWARE"
     ]
   },
-  "p8d_status": "IN_PROGRESS",
+  "p8d_status": "PASS",
   "p8d_no_hardware_actions_executed": true,
-  "p8e_status": "PENDING"
+  "p8e_status": "PENDING",
+  "p8d_acceptance": {
+    "status": "PASS",
+    "profile": "P8D_MULTI_PROFILE_OFFLINE",
+    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL",
+    "test_id": "P8D-ACCEPTANCE-CORE",
+    "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
+    "evidence_path": "evidence/generated/p8d_acceptance_core.json",
+    "evidence_sha256": "4ed7512d5f02240797144883ebf99078d55a9728251ca81cff9232066cc7629a",
+    "data_plane_config_path": "config/p8d_data_plane.yaml",
+    "data_plane_config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+    "architecture_16mbps_feasibility": "PASS",
+    "stretch_19p2mbps_feasibility": "FAIL",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "scope_exclusions": [
+      "REAL_AXI_DMA",
+      "DDR_HARDWARE",
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "THROUGHPUT_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ]
+  }
 }

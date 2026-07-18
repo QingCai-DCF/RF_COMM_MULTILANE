@@ -1,0 +1,290 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -nojournal -nolog -notrace -source C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE\scripts\vivado\p8c_resource_audit.tcl -tclargs C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE ir_p8c_resource_top_2 xc7z010clg400-1 C:\Users\user\AppData\Local\Temp\p8c_ooc_7mkrlyxi\out
+RETURNCODE=0
+
+STDOUT
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE\scripts\vivado\p8c_resource_audit.tcl} -notrace
+create_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 1390.258 ; gain = 160.223
+Command: synth_design -mode out_of_context -top ir_p8c_resource_top_2 -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 11256
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1829.484 ; gain = 414.391
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ir_p8c_resource_top_2' [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_p8c_resource_tops.sv:58]
+INFO: [Synth 8-6157] synthesizing module 'ir_p8c_resource_top' [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_p8c_resource_tops.sv:6]
+	Parameter PHYSICAL_MODULE_COUNT bound to: 2 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_safety_endpoint' [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_safety_endpoint.sv:8]
+	Parameter PHYSICAL_MODULE_COUNT bound to: 2 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_physical_module_safety' [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_physical_module_safety.sv:7]
+	Parameter CLOCK_HZ bound to: 64000000 - type: integer 
+	Parameter STARTUP_US bound to: 500 - type: integer 
+	Parameter WINDOW_US bound to: 1000 - type: integer 
+	Parameter HARD_PERCENT_STRICT_LT bound to: 20 - type: integer 
+	Parameter TARGET_PERCENT_MAX bound to: 18 - type: integer 
+	Parameter MAX_CONTINUOUS_HIGH_US bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_exact_duty_accountant' [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_exact_duty_accountant.sv:8]
+	Parameter CLOCK_HZ bound to: 64000000 - type: integer 
+	Parameter WINDOW_US bound to: 1000 - type: integer 
+	Parameter HARD_PERCENT_STRICT_LT bound to: 20 - type: integer 
+	Parameter TARGET_PERCENT_MAX bound to: 18 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_exact_duty_accountant' (0#1) [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_exact_duty_accountant.sv:8]
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_physical_module_safety' (0#1) [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_physical_module_safety.sv:7]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_safety_endpoint.sv:107]
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_safety_endpoint' (0#1) [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_tfdu_safety_endpoint.sv:8]
+INFO: [Synth 8-6155] done synthesizing module 'ir_p8c_resource_top' (0#1) [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_p8c_resource_tops.sv:6]
+INFO: [Synth 8-6155] done synthesizing module 'ir_p8c_resource_top_2' (0#1) [C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/rtl/ir_p8c_resource_tops.sv:58]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1925.203 ; gain = 510.109
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1925.203 ; gain = 510.109
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1925.203 ; gain = 510.109
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1925.203 ; gain = 510.109
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input   33 Bit       Adders := 2     
+	   2 Input   33 Bit       Adders := 2     
+	   2 Input   32 Bit       Adders := 6     
+	   2 Input   16 Bit       Adders := 2     
+	   2 Input   14 Bit       Adders := 2     
+	   2 Input    3 Bit       Adders := 1     
++---XORs : 
+	               70 Bit    Wide XORs := 1     
++---Registers : 
+	               64 Bit    Registers := 1     
+	               32 Bit    Registers := 10    
+	                5 Bit    Registers := 3     
+	                3 Bit    Registers := 1     
+	                2 Bit    Registers := 3     
+	                1 Bit    Registers := 21    
++---RAMs : 
+	              62K Bit	(64000 X 1 bit)          RAMs := 2     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 16    
+	   2 Input   16 Bit        Muxes := 2     
+	   2 Input   14 Bit        Muxes := 2     
+	   7 Input    4 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 12    
+	   2 Input    3 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 36    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 80 (col length:40)
+BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name           | RTL Object                                                                                          | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ir_p8c_resource_top_2 | impl/endpoint/g_physical_safety[0].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|ir_p8c_resource_top_2 | impl/endpoint/g_physical_safety[1].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name           | RTL Object                                                                                          | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ir_p8c_resource_top_2 | impl/endpoint/g_physical_safety[0].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|ir_p8c_resource_top_2 | impl/endpoint/g_physical_safety[1].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
++----------------------+-----------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance impl/endpoint/g_physical_safety[0].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance impl/endpoint/g_physical_safety[1].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |CARRY4   |    82|
+|2     |LUT1     |    11|
+|3     |LUT2     |   231|
+|4     |LUT3     |     8|
+|5     |LUT4     |    48|
+|6     |LUT5     |    36|
+|7     |LUT6     |    30|
+|8     |RAMB36E1 |     4|
+|9     |FDCE     |   143|
+|10    |FDRE     |   162|
+|11    |FDSE     |     2|
++------+---------+------+
+
+Report Instance Areas: 
++------+------------------------------------------------------+---------------------------------+------+
+|      |Instance                                              |Module                           |Cells |
++------+------------------------------------------------------+---------------------------------+------+
+|1     |top                                                   |                                 |   757|
+|2     |  impl                                                |ir_p8c_resource_top              |   757|
+|3     |    endpoint                                          |ir_tfdu_safety_endpoint          |   757|
+|4     |      \g_physical_safety[0].u_physical_module_safety  |ir_tfdu_physical_module_safety   |   360|
+|5     |        u_exact_duty_accountant                       |ir_tfdu_exact_duty_accountant_1  |   231|
+|6     |      \g_physical_safety[1].u_physical_module_safety  |ir_tfdu_physical_module_safety_0 |   374|
+|7     |        u_exact_duty_accountant                       |ir_tfdu_exact_duty_accountant    |   237|
++------+------------------------------------------------------+---------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+Synthesis Optimization Complete : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 2128.234 ; gain = 713.141
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2138.578 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 86 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2228.625 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 7084de9a
+INFO: [Common 17-83] Releasing license: Synthesis
+24 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 2228.625 ; gain = 838.367
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
+Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
+Command: report_drc -file C:/Users/user/AppData/Local/Temp/p8c_ooc_7mkrlyxi/out/drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2023.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/AppData/Local/Temp/p8c_ooc_7mkrlyxi/out/drc.rpt.
+report_drc completed successfully
+WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ RAMB18*}'.
+WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ SRL*}'.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/AppData/Local/Temp/p8c_ooc_7mkrlyxi/out/post_synth.dcp' has been generated.
+INFO: [Common 17-206] Exiting Vivado at Sat Jul 18 18:25:26 2026...
+
+STDERR

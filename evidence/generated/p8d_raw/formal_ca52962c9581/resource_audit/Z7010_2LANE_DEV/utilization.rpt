@@ -1,0 +1,47 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sat Jul 18 18:16:15 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/user/AppData/Local/Temp/p8d_ooc_trrt2bz0/out/utilization.rpt
+| Design       : ir_p8d_resource_top
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                         Instance                        |              Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| ir_p8d_resource_top                                     |                            (top) |      12693 |      12253 |     440 |    0 | 4047 |      8 |      0 |          0 |
+|   axis_frontend                                         |              ir_axis_tx_frontend |        100 |        100 |       0 |    0 |  169 |      0 |      0 |          0 |
+|   data_plane                                            |                ir_data_plane_top |       8617 |       8601 |      16 |    0 | 2564 |      0 |      0 |          0 |
+|     (data_plane)                                        |                ir_data_plane_top |          0 |          0 |       0 |    0 |   20 |      0 |      0 |          0 |
+|     u_ack_aggregator                                    |                ir_ack_aggregator |        103 |        103 |       0 |    0 |  133 |      0 |      0 |          0 |
+|     u_rx_window                                         |           ir_selective_repeat_rx |       1977 |       1977 |       0 |    0 |  688 |      0 |      0 |          0 |
+|     u_scheduler                                         |     ir_health_weighted_scheduler |        464 |        464 |       0 |    0 |  406 |      0 |      0 |          0 |
+|     u_tx_window                                         |           ir_selective_repeat_tx |       6073 |       6057 |      16 |    0 | 1317 |      0 |      0 |          0 |
+|   payload_store                                         |          ir_shared_payload_store |        149 |        149 |       0 |    0 |   45 |      4 |      0 |          0 |
+|   rx_ring                                               |          ir_dma_descriptor_model |       1774 |       1562 |     212 |    0 |  481 |      0 |      0 |          0 |
+|   safety_accounting                                     |              ir_p8c_resource_top |        284 |        284 |       0 |    0 |  307 |      4 |      0 |          0 |
+|     endpoint                                            |          ir_tfdu_safety_endpoint |        284 |        284 |       0 |    0 |  307 |      4 |      0 |          0 |
+|       (endpoint)                                        |          ir_tfdu_safety_endpoint |          4 |          4 |       0 |    0 |    9 |      0 |      0 |          0 |
+|       g_physical_safety[0].u_physical_module_safety     |   ir_tfdu_physical_module_safety |        138 |        138 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[0].u_physical_module_safety) |   ir_tfdu_physical_module_safety |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                         |  ir_tfdu_exact_duty_accountant_2 |        105 |        105 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[1].u_physical_module_safety     | ir_tfdu_physical_module_safety_1 |        142 |        142 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[1].u_physical_module_safety) | ir_tfdu_physical_module_safety_1 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                         |    ir_tfdu_exact_duty_accountant |        109 |        109 |       0 |    0 |   82 |      2 |      0 |          0 |
+|   tx_ring                                               |        ir_dma_descriptor_model_0 |       1769 |       1557 |     212 |    0 |  481 |      0 |      0 |          0 |
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

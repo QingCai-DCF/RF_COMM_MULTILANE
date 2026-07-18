@@ -1,0 +1,28 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_ir_scheduler_migration_snapshot -runall
+RETURN_CODE=0
+STARTED_UTC=2026-07-18T10:13:39.019763Z
+FINISHED_UTC=2026-07-18T10:13:41.687100Z
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_scheduler_migration_snapshot/xsim_script.tcl
+# xsim {tb_ir_scheduler_migration_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1
+P8D_SCHEDULER_FAIRNESS_PASS=1
+P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1
+TB_IR_SCHEDULER_MIGRATION_PASS=1
+$finish called at time : 11439 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_scheduler_migration.sv" Line 127
+exit
+INFO: [Common 17-206] Exiting xsim at Sat Jul 18 18:13:41 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

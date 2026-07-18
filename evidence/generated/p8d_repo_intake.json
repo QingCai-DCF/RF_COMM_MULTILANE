@@ -1,0 +1,145 @@
+{
+  "schema_version": 2,
+  "stage": "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+  "status": "PASS",
+  "start_timestamp_utc": "2026-07-18T05:07:07.9868581Z",
+  "worktree": {
+    "path": "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE",
+    "path_source": "current user-selected P8 worktree override",
+    "branch": "p8/integration",
+    "head_before_p8d_source_changes": "f76b477cba165270dde59e9db2a8cd8bb1a83ccc",
+    "initial_status_short": [],
+    "clean_before_p8d_source_changes": true
+  },
+  "baseline": {
+    "base_tag": "p8c-pass",
+    "base_tag_resolved_commit": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+    "expected_base_checkpoint_commit": "c44b0d45133bf75c9c71f53dde77f3dc186ad131",
+    "p8c_source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+    "head_is_known_clean_descendant": true,
+    "authorized_resolution_commits": [
+      {
+        "commit": "26a85e28951a4d0cb57c85bb4a93c6b153615a63",
+        "purpose": "User-confirmed P8C completion summary"
+      },
+      {
+        "commit": "cff54f9432eb75dafdd370bbb22265c219e2df09",
+        "purpose": "Preserve initial fail-closed intake evidence"
+      },
+      {
+        "commit": "95baa247d55d46bd2070a54ec3e8699f4510e037",
+        "purpose": "Preserve interrupted full-regression evidence"
+      },
+      {
+        "commit": "f76b477cba165270dde59e9db2a8cd8bb1a83ccc",
+        "purpose": "Freeze passing baseline full-regression evidence"
+      }
+    ],
+    "p8c_verify_existing": {
+      "command": "python scripts/run_p8c_safety_gate.py --verify-existing --json-summary",
+      "status": "PASS",
+      "returncode": 0,
+      "no_hardware_actions_executed": true,
+      "current_run_hardware_authorization": false
+    },
+    "full_offline_regression": {
+      "command": "python scripts/run_offline_gates.py --include-p8c --json-summary",
+      "status": "PASS",
+      "returncode": 0,
+      "runtime_seconds": 3600.4,
+      "result_count": 33,
+      "failure_count": 0,
+      "pending_tool_count": 0,
+      "p8b_included": true,
+      "p8c_included": true,
+      "raw_evidence": "evidence/generated/p8d_raw/baseline_offline_attempt_003_pass"
+    },
+    "preserved_failed_attempts": [
+      "evidence/generated/p8d_raw/intake_attempt_001_fail.json",
+      "evidence/generated/p8d_raw/baseline_offline_attempt_002_timeout/attempt_summary.json"
+    ]
+  },
+  "hashes": {
+    "PROJECT_CONSTRAINTS.txt": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+    "AGENTS.md": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb",
+    "config/project_state.json": "e52f7e46a9f4ada89b083e9c318748a25c694069227f47a6ccf4a00e42eab175",
+    "config/project_requirements.yaml": "d7c19fe0a67fa6807a456d132e8a538bc0f7800ceb7e5ba16fc2445bd13dfd95",
+    "config/tfdu_safety.yaml": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06",
+    "config/register_map/ir_axi_regs.yaml": "9993ae99c883a921f61bf1af8f1aca54b8a89fa7cd53452f435a6ed992c7fd2d",
+    "evidence/generated/p8c_final_summary.json": "161d89e30eb6bcc607cbb1732fcccd739519e5d92e014e3530199d8b92dc819e",
+    "evidence/generated/p8c_final_summary.md": "41f104ffda9512dd844872c211b9ee3dd7826bf9422d0c37d87192f620921b88"
+  },
+  "environment": {
+    "NO_HARDWARE": "1",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+    "HARDWARE_ACTIONS_ALLOWED": false,
+    "python": "3.14.3",
+    "python_executable": "C:/Users/user/AppData/Local/Programs/Python/Python314/python.exe",
+    "git": "2.54.0.windows.1",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "vivado": "2023.1 build 3865809",
+    "vivado_path": "D:/Xilinx/Vivado/2023.1/bin/vivado.bat",
+    "xsim_path": "D:/Xilinx/Vivado/2023.1/bin/xsim.bat",
+    "vitis_arm_gcc": "arm-xilinx-eabi-gcc 12.2.0"
+  },
+  "existing_implementation_paths": {
+    "legacy_stop_and_wait_l2": ["rtl/ir_arq_l2.sv"],
+    "scheduler": ["rtl/ir_multilane_scheduler.sv"],
+    "l1_and_codec": ["rtl/ir_frame_l1.sv", "rtl/ir_4ppm_codec.sv", "rtl/tfdu_lane_phy.sv"],
+    "p8b_mapping_crossbar_epoch": [
+      "rtl/ir_bank_lane_crossbar.sv",
+      "rtl/ir_path_epoch_commit.sv",
+      "rtl/ir_path_mapping_engine.sv",
+      "rtl/ir_path_mapping_pkg.sv"
+    ],
+    "p8c_safety_integration": [
+      "rtl/ir_p8c_mapping_safety_adapter.sv",
+      "rtl/ir_tfdu_exact_duty_accountant.sv",
+      "rtl/ir_tfdu_physical_module_safety.sv",
+      "rtl/ir_tfdu_safety_endpoint.sv"
+    ],
+    "rfap_object_fragment": [
+      "config/p7_app_protocol.yaml",
+      "tools/p7_app_protocol.py",
+      "software/ps_driver/p7_app_service.c",
+      "software/ps_driver/p7_app_service.h"
+    ],
+    "axi_lite_register_block": ["rtl/ir_axi_regs_new.sv", "config/register_map/ir_axi_regs.yaml"],
+    "ps_driver": [
+      "software/ps_driver/ir_driver.c",
+      "software/ps_driver/ir_driver.h",
+      "software/ps_driver/ir_profile.c",
+      "software/ps_driver/ir_profile.h"
+    ],
+    "host_local_tools": ["software/host_client", "software/legacy_host_client"],
+    "python_reference_models": [
+      "tools/p8b_geometry_model.py",
+      "tools/p8b_mapping_reference.py",
+      "tools/p8c_tfdu_safety_reference.py",
+      "sim/models/tfdu6102_reference.py"
+    ],
+    "xsim_benches": ["sim/tb"],
+    "offline_gates": [
+      "scripts/run_offline_gates.py",
+      "scripts/run_p8b_geometry_gate.py",
+      "scripts/run_p8c_safety_gate.py"
+    ],
+    "profile_config_generators": [
+      "scripts/generate_register_headers.py",
+      "scripts/generate_tfdu_safety_config.py",
+      "scripts/generate_project_status.py"
+    ]
+  },
+  "required_checks": {
+    "branch_is_p8_integration": true,
+    "p8c_pass_exists": true,
+    "p8c_pass_matches_expected_checkpoint": true,
+    "head_is_base_or_known_clean_descendant": true,
+    "worktree_clean_before_p8d_source_changes": true,
+    "project_constraints_hash_matches": true,
+    "p8c_verify_existing_passes": true,
+    "full_offline_regression_passes": true
+  },
+  "hardware_actions_executed": false,
+  "decision": "PROCEED_WITH_P8D_IMPLEMENTATION"
+}

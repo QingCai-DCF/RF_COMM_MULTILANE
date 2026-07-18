@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sat Jul 18 20:09:57 2026
+# Process ID: 39100
+# Current directory: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_data_plane_integration_8lane/work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_ir_data_plane_integration_8lane_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_data_plane_integration_8lane/work/xsim.log
+# Journal file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_data_plane_integration_8lane/work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_ir_data_plane_integration_8lane_snapshot/xsim_script.tcl
+# xsim {tb_ir_data_plane_integration_8lane_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1
+P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1
+TB_IR_DATA_PLANE_INTEGRATION_8LANE_PASS=1
+$finish called at time : 556 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/p8d_data_plane_integration_common.sv" Line 211
+exit
+INFO: [Common 17-206] Exiting xsim at Sat Jul 18 20:09:59 2026...

@@ -337,9 +337,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b
+    sha256: 85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615
   - path: PROJECT_STATUS.md
-    sha256: 9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f
+    sha256: d90615ba36364db821fcef478b12b66494243510de9ada0733e50e33bda7e431
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -353,7 +353,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b
+    sha256: 85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
   profile: P8A_BASELINE
@@ -381,9 +381,9 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b
+    sha256: 85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615
   - path: PROJECT_STATUS.md
-    sha256: 9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f
+    sha256: d90615ba36364db821fcef478b12b66494243510de9ada0733e50e33bda7e431
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
 - requirement_id: P8A-LEGACY-001
@@ -640,273 +640,420 @@ requirements:
 - requirement_id: L2-ARQ-001
   requirement_text: Each endpoint direction uses bounded selective-repeat TX/RX windows.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SELECTIVE-REPEAT-RTL
+  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_selective_repeat_tx.sv
+    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  - path: rtl/ir_selective_repeat_rx.sv
+    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
+  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
 - requirement_id: L2-ARQ-002
   requirement_text: The shared global outstanding window supports at least 32 frames.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-CANONICAL-CONFIG
+  evidence_path: evidence/generated/p8d_data_plane_config_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: config/p8d_data_plane.yaml
+    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - path: rtl/ir_data_plane_top.sv
+    sha256: 7c07a0bb35a9bed5c4565758fa23b61017508787bf929f50905a9c5d6d0d8e63
+  - path: evidence/generated/p8d_data_plane_config_summary.json
+    sha256: 661c3586fb074ad01869446278a1d23c2e54306f491b4f63cf4298f1964b39c1
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
 - requirement_id: L2-SEQ-001
   requirement_text: Sequence width is at least 16 bits and modular wrap is bit-exact.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SELECTIVE-REPEAT-RTL
+  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_seq_math_pkg.sv
+    sha256: 860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e
+  - path: sim/tb/tb_ir_seq_math.sv
+    sha256: a01ab71e3891e4074a9b4f89719ced7561b39b83218ddf424965093d42608e5b
+  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e
 - requirement_id: L2-SACK-001
   requirement_text: The negotiated SACK window supports at least 32 bits.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SACK-ACK-AGGREGATION
+  evidence_path: evidence/generated/p8d_sack_ack_aggregation_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_sack_codec.sv
+    sha256: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
+  - path: config/p8d_data_plane.yaml
+    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - path: evidence/generated/p8d_sack_ack_aggregation_summary.json
+    sha256: dd3665eb31fd9b7797adccf3c55c207d9c60b3af49a9d76c05d0e1f816f228d9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
 - requirement_id: L2-SACK-002
   requirement_text: ACK aggregation has a bounded frame threshold and maximum delay.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SACK-ACK-AGGREGATION
+  evidence_path: evidence/generated/p8d_sack_ack_aggregation_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_ack_aggregator.sv
+    sha256: e2d27f15541d903a79b4f6fdb9e8d03ffbe6ab5d59940cab762bece76c5ba1c2
+  - path: sim/tb/tb_ir_sack_ack_aggregation.sv
+    sha256: cf7b1985d099d54b5fe3cd699466c1595c13dd2895d91657b408ccda91e2c6e5
+  - path: evidence/generated/p8d_sack_ack_aggregation_summary.json
+    sha256: dd3665eb31fd9b7797adccf3c55c207d9c60b3af49a9d76c05d0e1f816f228d9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: e2d27f15541d903a79b4f6fdb9e8d03ffbe6ab5d59940cab762bece76c5ba1c2
 - requirement_id: L2-DUP-001
   requirement_text: A duplicate logical frame never commits or completes twice.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-PYTHON-REFERENCE-CAMPAIGN
+  evidence_path: evidence/generated/p8d_selective_repeat_reference_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: tools/p8d_data_plane_reference.py
+    sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
+  - path: rtl/ir_selective_repeat_rx.sv
+    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
+  - path: evidence/generated/p8d_selective_repeat_reference_summary.json
+    sha256: 4af7ee3c6bf0716598410fbbde7e920aa69ec9bfcc30b0bd8b630ae64cbd6108
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
 - requirement_id: L2-STALE-001
   requirement_text: Stale session/path data and ACK records are rejected.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SELECTIVE-REPEAT-RTL
+  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_selective_repeat_tx.sv
+    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  - path: rtl/ir_selective_repeat_rx.sv
+    sha256: 85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0
+  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
 - requirement_id: L2-MIG-001
   requirement_text: Only unacknowledged frames may migrate across eligible lanes or paths.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SCHEDULER-MIGRATION
+  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_retry_migration.sv
+    sha256: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  - path: sim/tb/tb_ir_scheduler_migration.sv
+    sha256: 7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4
+  - path: evidence/generated/p8d_scheduler_migration_summary.json
+    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
 - requirement_id: L2-RETRY-001
   requirement_text: Retry count, timeout/backoff, and exhaustion are bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SELECTIVE-REPEAT-RTL
+  evidence_path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_selective_repeat_tx.sv
+    sha256: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
+  - path: config/p8d_data_plane.yaml
+    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - path: evidence/generated/p8d_selective_repeat_rtl_summary.json
+    sha256: 19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5
 - requirement_id: SCHED-001
   requirement_text: Scheduling is health-aware and weighted across eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SCHEDULER-MIGRATION
+  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_health_weighted_scheduler.sv
+    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  - path: tools/p8d_data_plane_reference.py
+    sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
+  - path: evidence/generated/p8d_scheduler_migration_summary.json
+    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
 - requirement_id: SCHED-002
   requirement_text: A faulted lane does not block work on healthy eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SCHEDULER-MIGRATION
+  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_health_weighted_scheduler.sv
+    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  - path: sim/tb/tb_ir_scheduler_migration.sv
+    sha256: 7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4
+  - path: evidence/generated/p8d_scheduler_migration_summary.json
+    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
 - requirement_id: SCHED-003
   requirement_text: Scheduler fairness and starvation are explicitly bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-SCHEDULER-MIGRATION
+  evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_health_weighted_scheduler.sv
+    sha256: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
+  - path: config/p8d_data_plane.yaml
+    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - path: evidence/generated/p8d_scheduler_migration_summary.json
+    sha256: af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
 - requirement_id: AXIS-001
   requirement_text: Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-AXIS-BACKPRESSURE
+  evidence_path: evidence/generated/p8d_axis_backpressure_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_axis_tx_frontend.sv
+    sha256: 961d7583f2493e54a3e23e74486de1fecf32da10ff28b85b9533236c5b7fb86f
+  - path: rtl/ir_axis_rx_backend.sv
+    sha256: 7747c33d9b27a11a194e45ad895d6b0283f1e2f3626eb6c81845ad50c4b10539
+  - path: evidence/generated/p8d_axis_backpressure_summary.json
+    sha256: f5b67a03a0237e85a1ad20d3c0d9133a6a06f41d5c71db688eeda3ca23eb0227
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 961d7583f2493e54a3e23e74486de1fecf32da10ff28b85b9533236c5b7fb86f
 - requirement_id: DMA-001
   requirement_text: Independent bounded TX and RX scatter-gather descriptor rings are modeled.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-DMA-DESCRIPTOR-RING
+  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_dma_descriptor_model.sv
+    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  - path: software/ps_driver/p8d_driver.h
+    sha256: 5878e26abbb1c77c47004eba34819c7c4b64fe57048e3669b1ea0b5296018f6e
+  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
 - requirement_id: DMA-002
   requirement_text: Descriptor ownership permits exactly one completion and one reclaim.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-DMA-DESCRIPTOR-RING
+  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_dma_descriptor_model.sv
+    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  - path: sim/tb/tb_ir_dma_descriptor_ring.sv
+    sha256: 43f5637ee927a310e31a35a2957430cd93986c79a589fc88284aeee332dafc22
+  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
 - requirement_id: DMA-003
   requirement_text: Reset and abort deterministically reclaim ring and payload ownership.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-DMA-DESCRIPTOR-RING
+  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_dma_descriptor_model.sv
+    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  - path: tools/p8d_data_plane_reference.py
+    sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
+  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
 - requirement_id: DMA-004
   requirement_text: Descriptor generation rejects stale completions after wrap or reset.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-DMA-DESCRIPTOR-RING
+  evidence_path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: rtl/ir_dma_descriptor_model.sv
+    sha256: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
+  - path: software/ps_driver/p8d_driver.c
+    sha256: e233e5a7b7c7e3cf86305970ee95547982988ab1468eb688fe497841af0f88a1
+  - path: evidence/generated/p8d_dma_descriptor_ring_summary.json
+    sha256: 5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0
 - requirement_id: RFAP-001
   requirement_text: RFAP v1/P7 vectors and legacy fallback remain compatible.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-RFAP-V1-VNEXT-COMPATIBILITY
+  evidence_path: evidence/generated/p8d_rfap_compatibility_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: tools/p8d_rfap_reference.py
+    sha256: 9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d
+  - path: tests/vectors/p7_app_protocol_vectors.json
+    sha256: b1015c343dec626328a3b5a1295754b065c1d28a681c87ca71dcb533463d36df
+  - path: evidence/generated/p8d_rfap_compatibility_summary.json
+    sha256: 24e26c25eb2538bbc0bc4891d8fb42acfd8caef196a6678202b381c6218d096f
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d
 - requirement_id: RFAP-002
   requirement_text: RFAP vNext streaming validates large objects with bounded memory and atomic publish.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-RFAP-V1-VNEXT-COMPATIBILITY
+  evidence_path: evidence/generated/p8d_rfap_compatibility_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: tools/p8d_rfap_reference.py
+    sha256: 9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d
+  - path: docs/design/P8D_RFAP_VNEXT_COMPATIBILITY.md
+    sha256: 6433a2467aeab13a94c4b72ee90cd5680ca1443eed6e67d932795fae9da56ad3
+  - path: evidence/generated/p8d_rfap_compatibility_summary.json
+    sha256: 24e26c25eb2538bbc0bc4891d8fb42acfd8caef196a6678202b381c6218d096f
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d
 - requirement_id: PERF-MODEL-001
   requirement_text: The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-AIRTIME-BUDGET-MODEL
+  evidence_path: evidence/generated/p8d_airtime_budget_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: scripts/model_p8d_airtime.py
+    sha256: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
+  - path: config/p8d_data_plane.yaml
+    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - path: evidence/generated/p8d_airtime_budget_summary.json
+    sha256: 4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
 - requirement_id: PERF-MODEL-002
   requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty.
   profile: P8D_MULTI_PROFILE_OFFLINE
-  verification_method: Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
+  verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P8D-AIRTIME-BUDGET-MODEL
+  evidence_path: evidence/generated/p8d_airtime_budget_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: scripts/model_p8d_airtime.py
+    sha256: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
+  - path: evidence/generated/p8d_airtime_budget_summary.json
+    sha256: 4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a
+  - path: evidence/generated/p8d_airtime_budget_summary.json
+    sha256: 4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
+  artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986

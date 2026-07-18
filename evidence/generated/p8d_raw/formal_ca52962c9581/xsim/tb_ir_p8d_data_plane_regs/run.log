@@ -1,0 +1,27 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_ir_p8d_data_plane_regs_snapshot -runall
+RETURN_CODE=0
+STARTED_UTC=2026-07-18T10:14:22.558837Z
+FINISHED_UTC=2026-07-18T10:14:25.350107Z
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_p8d_data_plane_regs_snapshot/xsim_script.tcl
+# xsim {tb_ir_p8d_data_plane_regs_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_REGISTER_RO_SNAPSHOT_PASS=1
+P8D_REGISTER_CONFIG_FAIL_CLOSED_PASS=1
+TB_IR_P8D_DATA_PLANE_REGS_PASS=1
+$finish called at time : 99 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_p8d_data_plane_regs.sv" Line 99
+exit
+INFO: [Common 17-206] Exiting xsim at Sat Jul 18 18:14:25 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

@@ -1,0 +1,23 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_ir_dma_descriptor_ring -debug typical -s tb_ir_dma_descriptor_ring_snapshot
+RETURN_CODE=0
+STARTED_UTC=2026-07-18T12:09:41.456230Z
+FINISHED_UTC=2026-07-18T12:09:42.932634Z
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_dma_descriptor_ring -debug typical -s tb_ir_dma_descriptor_ring_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_dma_descriptor_model(RING_DEP...
+Compiling module work.tb_ir_dma_descriptor_ring
+Built simulation snapshot tb_ir_dma_descriptor_ring_snapshot
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

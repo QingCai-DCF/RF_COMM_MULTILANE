@@ -31,7 +31,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P8A_CANONICAL_REQUIREMENTS_STATE` | `PASS` |
 | `P8B_GEOMETRY_MAPPING_HANDOVER` | `PASS` |
 | `P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT` | `PASS` |
-| `P8D_SELECTIVE_REPEAT_DMA` | `IN_PROGRESS` |
+| `P8D_SELECTIVE_REPEAT_DMA` | `PASS` |
 | `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PENDING` |
 
 ## P7 canonical evidence
@@ -67,6 +67,15 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Z7010 permit pin freeze: `PENDING_P9_PIN_FREEZE`
 - External duty measurement: `PENDING_P9_OR_LATER`
 
+## P8D portable data-plane acceptance
+
+- Status: `PASS` (offline RTL/software/model scope only)
+- Source commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`
+- Evidence: `evidence/generated/p8d_acceptance_core.json`
+- 16 Mbit/s architecture model: `PASS`
+- 19.2 Mbit/s stretch model: `FAIL`
+- Real AXI DMA, DDR/cache coherency, Z7020 hardware, rotation, and final timing/CDC remain pending.
+
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named P7 stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 
 ## Architecture and pending gates
@@ -78,7 +87,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 
 | Gate | Status |
 |---|---|
-| `P8D` | `PENDING` |
 | `P8E` | `PENDING` |
 | `D12_CORE_BOARD` | `PENDING` |
 | `D13_ABZ` | `PENDING` |
@@ -90,6 +98,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134`.
+Last verified evidence commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

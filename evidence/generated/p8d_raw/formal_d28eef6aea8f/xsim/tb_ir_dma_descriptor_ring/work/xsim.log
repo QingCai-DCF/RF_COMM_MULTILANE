@@ -1,0 +1,25 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sat Jul 18 18:31:25 2026
+# Process ID: 1372
+# Current directory: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f/xsim/tb_ir_dma_descriptor_ring/work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_ir_dma_descriptor_ring_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f/xsim/tb_ir_dma_descriptor_ring/work/xsim.log
+# Journal file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f/xsim/tb_ir_dma_descriptor_ring/work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_ir_dma_descriptor_ring_snapshot/xsim_script.tcl
+# xsim {tb_ir_dma_descriptor_ring_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_TX_RX_RING_INDEPENDENCE_PASS=1
+P8D_DESCRIPTOR_SINGLE_COMPLETION_PASS=1
+P8D_RESET_ABORT_STALE_GENERATION_PASS=1
+P8D_DESCRIPTOR_LEAK_ZERO_PASS=1
+TB_IR_DMA_DESCRIPTOR_RING_PASS=1
+$finish called at time : 326 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_dma_descriptor_ring.sv" Line 138
+exit
+INFO: [Common 17-206] Exiting xsim at Sat Jul 18 18:31:27 2026...

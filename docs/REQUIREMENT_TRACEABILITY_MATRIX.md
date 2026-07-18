@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 64
-PASS: 32
-PENDING: 32
+PASS: 53
+PENDING: 11
 FAIL: 0
 WAIVED: 0
 ```
@@ -59,27 +59,27 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `SYS-PERMIT-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-RECEIVE-ONLY-ACQUISITION` | `evidence/generated/p8c_receive_only_acquisition_summary.json` | Permit low allows controlled receive-only acquisition while every physical TX remains disabled. |
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8c_exact_sliding_duty_rtl_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
-| `L2-ARQ-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
-| `L2-ARQ-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The shared global outstanding window supports at least 32 frames. |
-| `L2-SEQ-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Sequence width is at least 16 bits and modular wrap is bit-exact. |
-| `L2-SACK-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | ACK aggregation has a bounded frame threshold and maximum delay. |
-| `L2-DUP-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | A duplicate logical frame never commits or completes twice. |
-| `L2-STALE-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Stale session/path data and ACK records are rejected. |
-| `L2-MIG-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Only unacknowledged frames may migrate across eligible lanes or paths. |
-| `L2-RETRY-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Retry count, timeout/backoff, and exhaustion are bounded. |
-| `SCHED-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Scheduling is health-aware and weighted across eligible lanes. |
-| `SCHED-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | A faulted lane does not block work on healthy eligible lanes. |
-| `SCHED-003` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Scheduler fairness and starvation are explicitly bounded. |
-| `AXIS-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure. |
-| `DMA-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Independent bounded TX and RX scatter-gather descriptor rings are modeled. |
-| `DMA-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Descriptor ownership permits exactly one completion and one reclaim. |
-| `DMA-003` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Reset and abort deterministically reclaim ring and payload ownership. |
-| `DMA-004` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | Descriptor generation rejects stale completions after wrap or reset. |
-| `RFAP-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | RFAP v1/P7 vectors and legacy fallback remain compatible. |
-| `RFAP-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | RFAP vNext streaming validates large objects with bounded memory and atomic publish. |
-| `PERF-MODEL-001` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. |
-| `PERF-MODEL-002` | `PENDING` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | — | — | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. |
+| `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8d_selective_repeat_rtl_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
+| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-CANONICAL-CONFIG` | `evidence/generated/p8d_data_plane_config_summary.json` | The shared global outstanding window supports at least 32 frames. |
+| `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
+| `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8d_sack_ack_aggregation_summary.json` | The negotiated SACK window supports at least 32 bits. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8d_sack_ack_aggregation_summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8d_selective_repeat_reference_summary.json` | A duplicate logical frame never commits or completes twice. |
+| `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8d_selective_repeat_rtl_summary.json` | Stale session/path data and ACK records are rejected. |
+| `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8d_scheduler_migration_summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
+| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8d_selective_repeat_rtl_summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
+| `SCHED-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8d_scheduler_migration_summary.json` | Scheduling is health-aware and weighted across eligible lanes. |
+| `SCHED-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8d_scheduler_migration_summary.json` | A faulted lane does not block work on healthy eligible lanes. |
+| `SCHED-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8d_scheduler_migration_summary.json` | Scheduler fairness and starvation are explicitly bounded. |
+| `AXIS-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AXIS-BACKPRESSURE` | `evidence/generated/p8d_axis_backpressure_summary.json` | Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure. |
+| `DMA-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8d_dma_descriptor_ring_summary.json` | Independent bounded TX and RX scatter-gather descriptor rings are modeled. |
+| `DMA-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8d_dma_descriptor_ring_summary.json` | Descriptor ownership permits exactly one completion and one reclaim. |
+| `DMA-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8d_dma_descriptor_ring_summary.json` | Reset and abort deterministically reclaim ring and payload ownership. |
+| `DMA-004` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8d_dma_descriptor_ring_summary.json` | Descriptor generation rejects stale completions after wrap or reset. |
+| `RFAP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8d_rfap_compatibility_summary.json` | RFAP v1/P7 vectors and legacy fallback remain compatible. |
+| `RFAP-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8d_rfap_compatibility_summary.json` | RFAP vNext streaming validates large objects with bounded memory and atomic publish. |
+| `PERF-MODEL-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8d_airtime_budget_summary.json` | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. |
+| `PERF-MODEL-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8d_airtime_budget_summary.json` | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. |
 
 ## PASS artifact bindings
 
@@ -153,13 +153,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
-- `PROJECT_STATUS.md` — `9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f`
+- `config/project_state.json` — `85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615`
+- `PROJECT_STATUS.md` — `d90615ba36364db821fcef478b12b66494243510de9ada0733e50e33bda7e431`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
+- `config/project_state.json` — `85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615`
 
 ### `P8A-EVID-001`
 
@@ -169,8 +169,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `330d472eb05cee903a8e79192958cdd56f48d9fba52ed47ab58d73e0b62e469b`
-- `PROJECT_STATUS.md` — `9c89f6e9f8c71d0df1fb8cf0f11fcef9e48388c962a5344aa99c3962a0b49c7f`
+- `config/project_state.json` — `85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615`
+- `PROJECT_STATUS.md` — `d90615ba36364db821fcef478b12b66494243510de9ada0733e50e33bda7e431`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -259,3 +259,129 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `rtl/ir_p8c_mapping_safety_adapter.sv` — `f4d2b8a58c02c7379b9c47e109d000b578fafb7d0f9d9578c7efa70ed5655928`
 - `sim/tb/tb_p8c_profile_matrix.sv` — `d044e572bdc244b673ff298b56c442daaa3df0af8595f35086783577ede7a13f`
 - `evidence/generated/p8c_physical_module_accounting_summary.json` — `0a8ecb742db212e4fb017618400668421d88a81e7077fe652707e2253c0df6a7`
+
+### `L2-ARQ-001`
+
+- `rtl/ir_selective_repeat_tx.sv` — `4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5`
+- `rtl/ir_selective_repeat_rx.sv` — `85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0`
+- `evidence/generated/p8d_selective_repeat_rtl_summary.json` — `19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804`
+
+### `L2-ARQ-002`
+
+- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `rtl/ir_data_plane_top.sv` — `7c07a0bb35a9bed5c4565758fa23b61017508787bf929f50905a9c5d6d0d8e63`
+- `evidence/generated/p8d_data_plane_config_summary.json` — `661c3586fb074ad01869446278a1d23c2e54306f491b4f63cf4298f1964b39c1`
+
+### `L2-SEQ-001`
+
+- `rtl/ir_seq_math_pkg.sv` — `860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e`
+- `sim/tb/tb_ir_seq_math.sv` — `a01ab71e3891e4074a9b4f89719ced7561b39b83218ddf424965093d42608e5b`
+- `evidence/generated/p8d_selective_repeat_rtl_summary.json` — `19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804`
+
+### `L2-SACK-001`
+
+- `rtl/ir_sack_codec.sv` — `bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e`
+- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `evidence/generated/p8d_sack_ack_aggregation_summary.json` — `dd3665eb31fd9b7797adccf3c55c207d9c60b3af49a9d76c05d0e1f816f228d9`
+
+### `L2-SACK-002`
+
+- `rtl/ir_ack_aggregator.sv` — `e2d27f15541d903a79b4f6fdb9e8d03ffbe6ab5d59940cab762bece76c5ba1c2`
+- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `cf7b1985d099d54b5fe3cd699466c1595c13dd2895d91657b408ccda91e2c6e5`
+- `evidence/generated/p8d_sack_ack_aggregation_summary.json` — `dd3665eb31fd9b7797adccf3c55c207d9c60b3af49a9d76c05d0e1f816f228d9`
+
+### `L2-DUP-001`
+
+- `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
+- `rtl/ir_selective_repeat_rx.sv` — `85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0`
+- `evidence/generated/p8d_selective_repeat_reference_summary.json` — `4af7ee3c6bf0716598410fbbde7e920aa69ec9bfcc30b0bd8b630ae64cbd6108`
+
+### `L2-STALE-001`
+
+- `rtl/ir_selective_repeat_tx.sv` — `4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5`
+- `rtl/ir_selective_repeat_rx.sv` — `85d36ef646b1c3906d0e08c15b97f3ef67878ba1e9f6a217f3b8d82b67b2ddb0`
+- `evidence/generated/p8d_selective_repeat_rtl_summary.json` — `19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804`
+
+### `L2-MIG-001`
+
+- `rtl/ir_retry_migration.sv` — `53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4`
+- `evidence/generated/p8d_scheduler_migration_summary.json` — `af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3`
+
+### `L2-RETRY-001`
+
+- `rtl/ir_selective_repeat_tx.sv` — `4d16d3ad09bd55b092606a44c39449c337e6291646aaa60d12d49d20a3fd99f5`
+- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `evidence/generated/p8d_selective_repeat_rtl_summary.json` — `19c5eca6871ac6a9b13bd4e0cb3c1ff5f6643cc59b630fc3067b7153271ff804`
+
+### `SCHED-001`
+
+- `rtl/ir_health_weighted_scheduler.sv` — `5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a`
+- `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
+- `evidence/generated/p8d_scheduler_migration_summary.json` — `af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3`
+
+### `SCHED-002`
+
+- `rtl/ir_health_weighted_scheduler.sv` — `5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `7ca86530439d942dd4e6e314b22a1b2b8aa6cebaa242d92834d9c56254a113e4`
+- `evidence/generated/p8d_scheduler_migration_summary.json` — `af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3`
+
+### `SCHED-003`
+
+- `rtl/ir_health_weighted_scheduler.sv` — `5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a`
+- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `evidence/generated/p8d_scheduler_migration_summary.json` — `af52964c98ee8aeb8314eeae8cc7e073b69eeeb9c70a458a389badb768d374e3`
+
+### `AXIS-001`
+
+- `rtl/ir_axis_tx_frontend.sv` — `961d7583f2493e54a3e23e74486de1fecf32da10ff28b85b9533236c5b7fb86f`
+- `rtl/ir_axis_rx_backend.sv` — `7747c33d9b27a11a194e45ad895d6b0283f1e2f3626eb6c81845ad50c4b10539`
+- `evidence/generated/p8d_axis_backpressure_summary.json` — `f5b67a03a0237e85a1ad20d3c0d9133a6a06f41d5c71db688eeda3ca23eb0227`
+
+### `DMA-001`
+
+- `rtl/ir_dma_descriptor_model.sv` — `1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0`
+- `software/ps_driver/p8d_driver.h` — `5878e26abbb1c77c47004eba34819c7c4b64fe57048e3669b1ea0b5296018f6e`
+- `evidence/generated/p8d_dma_descriptor_ring_summary.json` — `5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6`
+
+### `DMA-002`
+
+- `rtl/ir_dma_descriptor_model.sv` — `1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0`
+- `sim/tb/tb_ir_dma_descriptor_ring.sv` — `43f5637ee927a310e31a35a2957430cd93986c79a589fc88284aeee332dafc22`
+- `evidence/generated/p8d_dma_descriptor_ring_summary.json` — `5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6`
+
+### `DMA-003`
+
+- `rtl/ir_dma_descriptor_model.sv` — `1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0`
+- `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
+- `evidence/generated/p8d_dma_descriptor_ring_summary.json` — `5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6`
+
+### `DMA-004`
+
+- `rtl/ir_dma_descriptor_model.sv` — `1b679118c10225b2d2383a89c28ca118d141fc6a92c81a9b623dcf73239d28c0`
+- `software/ps_driver/p8d_driver.c` — `e233e5a7b7c7e3cf86305970ee95547982988ab1468eb688fe497841af0f88a1`
+- `evidence/generated/p8d_dma_descriptor_ring_summary.json` — `5c34f007e3f227eff41c6e4088bf5e252dcfd46b3632586d23803d12cb0e7ec6`
+
+### `RFAP-001`
+
+- `tools/p8d_rfap_reference.py` — `9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d`
+- `tests/vectors/p7_app_protocol_vectors.json` — `b1015c343dec626328a3b5a1295754b065c1d28a681c87ca71dcb533463d36df`
+- `evidence/generated/p8d_rfap_compatibility_summary.json` — `24e26c25eb2538bbc0bc4891d8fb42acfd8caef196a6678202b381c6218d096f`
+
+### `RFAP-002`
+
+- `tools/p8d_rfap_reference.py` — `9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d`
+- `docs/design/P8D_RFAP_VNEXT_COMPATIBILITY.md` — `6433a2467aeab13a94c4b72ee90cd5680ca1443eed6e67d932795fae9da56ad3`
+- `evidence/generated/p8d_rfap_compatibility_summary.json` — `24e26c25eb2538bbc0bc4891d8fb42acfd8caef196a6678202b381c6218d096f`
+
+### `PERF-MODEL-001`
+
+- `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
+- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `evidence/generated/p8d_airtime_budget_summary.json` — `4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a`
+
+### `PERF-MODEL-002`
+
+- `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
+- `evidence/generated/p8d_airtime_budget_summary.json` — `4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a`
+- `evidence/generated/p8d_airtime_budget_summary.json` — `4b4e784d30d0b2aaaa1c48af8aeeb0fc94ba1547102a9973b32fa07bceaa6d0a`

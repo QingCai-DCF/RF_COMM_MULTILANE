@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sat Jul 18 20:10:22 2026
+# Process ID: 40304
+# Current directory: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_p8d_data_plane_regs/work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_ir_p8d_data_plane_regs_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_p8d_data_plane_regs/work/xsim.log
+# Journal file: C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/xsim/tb_ir_p8d_data_plane_regs/work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_ir_p8d_data_plane_regs_snapshot/xsim_script.tcl
+# xsim {tb_ir_p8d_data_plane_regs_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_REGISTER_RO_SNAPSHOT_PASS=1
+P8D_REGISTER_CONFIG_FAIL_CLOSED_PASS=1
+TB_IR_P8D_DATA_PLANE_REGS_PASS=1
+$finish called at time : 99 ns : File "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE/sim/tb/tb_ir_p8d_data_plane_regs.sv" Line 99
+exit
+INFO: [Common 17-206] Exiting xsim at Sat Jul 18 20:10:24 2026...
