@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "stage": "P8D-00_BASELINE_FREEZE",
+  "attempt": 2,
+  "status": "ABORTED_AFTER_OUTER_TIMEOUT_AND_CHILD_TERMINATION",
+  "command": "python scripts/run_offline_gates.py --include-p8c --json-summary",
+  "environment": {
+    "NO_HARDWARE": "1",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false
+  },
+  "timeout_seconds": 904,
+  "outer_timeout_behavior": "The shell tool timed out but the Python process tree continued detached.",
+  "observed_progress": {
+    "completed_vivado_stage_logs": [
+      "safe_idle",
+      "tfdu_control_idle",
+      "raw_pulse",
+      "raw_lane_matrix"
+    ],
+    "interrupted_vivado_stage": "protocol_lane0",
+    "partial_vivado_reports_preserved": 20,
+    "vivado_logs_preserved": 10
+  },
+  "orphan_process_cleanup": {
+    "verified_workspace_root": "C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE",
+    "root_process": {
+      "pid": 31484,
+      "name": "vivado.exe",
+      "mode": "batch",
+      "script": "scripts/vivado_nonhardware_build.tcl",
+      "stage": "protocol_lane0"
+    },
+    "descendant_pids": [24692, 37332],
+    "stopped_pids": [37332, 24692, 31484],
+    "all_confirmed_stopped": true
+  },
+  "continued_process_tree_cleanup": {
+    "reason": "The killed protocol_lane0 child made the aggregate result irrecoverably failing; the detached parent then entered nested P8C/P8B regression.",
+    "stopped_pids": [30744, 34300, 26972, 36668, 34328, 35128, 3440, 21908],
+    "all_confirmed_stopped": true,
+    "post_timeout_tracked_outputs_preserved": 39,
+    "tracked_deletions_recorded": [
+      "evidence/generated/p8c_raw/artifact_sha256_manifest.json",
+      "evidence/generated/p8c_raw/source_manifest.json"
+    ]
+  },
+  "failure_classification": "OUTER_RUNNER_BOUND_TOO_SHORT_AND_TIMEOUT_DID_NOT_TERMINATE_PROCESS_TREE",
+  "retry_policy": "Preserve raw partial artifacts, restore only generated tracked outputs from the clean baseline, and rerun with a bounded 5400-second maximum runtime.",
+  "no_hardware_actions_executed": true
+}
