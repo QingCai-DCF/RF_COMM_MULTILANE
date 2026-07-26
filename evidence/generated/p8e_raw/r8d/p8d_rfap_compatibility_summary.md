@@ -3,14 +3,14 @@
 - Status: `PASS`
 - Test ID: `P8D-RFAP-V1-VNEXT-COMPATIBILITY`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `0c67e7717a5a0fb594a237a05184be65cf748f4f`
+- Source commit: `56fbf42788dc90779f7580ad86855ea935a3542c`
 
 ```json
 {
   "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
-  "command_log": "evidence/generated/p8e_raw/r8d/p8d_raw/formal_0c67e7717a5a/rfap_compatibility.log",
-  "generated_utc": "2026-07-18T21:16:09.199408Z",
+  "command_log": "evidence/generated/p8e_raw/r8d/p8d_raw/formal_56fbf42788dc/rfap_compatibility.log",
+  "generated_utc": "2026-07-26T09:34:52.843892Z",
   "hardware_scope_promoted": false,
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "raw_summary": {
@@ -44,7 +44,7 @@
     "vnext_header_bytes": 48
   },
   "schema_version": 1,
-  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c",
   "status": "PASS",
   "test_id": "P8D-RFAP-V1-VNEXT-COMPATIBILITY"
 }

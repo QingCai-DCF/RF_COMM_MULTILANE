@@ -1,0 +1,24 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_ir_scheduler_migration -debug typical -s tb_ir_scheduler_migration_snapshot
+RETURN_CODE=0
+STARTED_UTC=2026-07-26T09:34:06.895258Z
+FINISHED_UTC=2026-07-26T09:34:08.186977Z
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_scheduler_migration -debug typical -s tb_ir_scheduler_migration_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_health_weighted_scheduler(STA...
+Compiling module work.ir_retry_migration
+Compiling module work.tb_ir_scheduler_migration
+Built simulation snapshot tb_ir_scheduler_migration_snapshot
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

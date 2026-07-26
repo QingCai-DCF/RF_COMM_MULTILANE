@@ -21,7 +21,7 @@
       "reordered_data_frames": 32,
       "sequence_wrap": true
     },
-    "generated_utc": "2026-07-18T20:52:13.772696+00:00",
+    "generated_utc": "2026-07-26T09:11:40.953212+00:00",
     "invariants": {
       "deadlock": 0,
       "descriptor_double_completion": 0,
@@ -46,12 +46,12 @@
     "status": "PASS",
     "test_id": "P8E-DUAL-ENDPOINT-IMPAIRMENT-REFERENCE"
   },
-  "generated_utc": "2026-07-18T21:15:01.676519+00:00",
+  "generated_utc": "2026-07-26T09:33:45.854965+00:00",
   "hardware_scope_promoted": false,
   "profile": "Z7020_DUAL_ENDPOINT_DIGITAL_LINK_SIM",
   "rtl_independent_clock_reset_sim": {
     "log": "evidence/generated/p8e_raw/simulation/p8e_dual_endpoint/run.log",
-    "log_sha256": "e7bdfc45e97d3dc00ac90c13104583e712afaeb5f60eebac628d29f36dc3cd12",
+    "log_sha256": "c9ccd03c070f423e61199e510e344b46710f957429ed433d3d68eabc5ae70aa4",
     "markers": [
       "P8E_DUAL_INDEPENDENT_CLOCK_RESET_PASS=1",
       "P8E_DUAL_SINGLE_ENDPOINT_RESET_RECOVERY_PASS=1",
@@ -66,7 +66,7 @@
   },
   "schema_version": 1,
   "scope": "RTL_INDEPENDENT_CLOCK_RESET_PLUS_OFFLINE_BEHAVIORAL_CHANNEL_REFERENCE",
-  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c",
   "status": "PASS",
   "test_id": "P8E-DUAL-ENDPOINT-DIGITAL-SIM"
 }

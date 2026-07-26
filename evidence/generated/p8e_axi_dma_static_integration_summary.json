@@ -14,7 +14,7 @@
     }
   ],
   "design_document": "docs/design/P8E_AXI_DMA_STATIC_INTEGRATION.md",
-  "generated_utc": "2026-07-18T21:15:01.676109+00:00",
+  "generated_utc": "2026-07-26T09:33:45.854544+00:00",
   "hardware_scope_promoted": false,
   "profile": "P8E_MULTI_PROFILE_OFFLINE",
   "real_axi_dma_ddr_runtime": "PENDING_P9_OR_P10",
@@ -22,7 +22,7 @@
   "schema_version": 1,
   "simulation": {
     "log": "evidence/generated/p8e_raw/simulation/p8e_axi_dma_adapter/run.log",
-    "log_sha256": "5ca9695f23765d0b386b716f51d90a1dea7aa745fcc18dce7fd25ba52a752c06",
+    "log_sha256": "5a1924baa41dc8f353e9c45b21962922dd256706ec9c190a04b0491c456b5227",
     "markers": [
       "P8E_AXI_DMA_TLAST_TKEEP_BACKPRESSURE_PASS=1",
       "P8E_AXI_DMA_DESCRIPTOR_COMPLETION_PASS=1",
@@ -33,7 +33,7 @@
     "test_id": "p8e_axi_dma_adapter",
     "top": "tb_axi_dma_adapter"
   },
-  "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c",
   "status": "PASS",
   "test_id": "P8E-AXI-DMA-STATIC-ADAPTER"
 }

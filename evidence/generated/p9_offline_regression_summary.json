@@ -1,36 +1,50 @@
 {
   "failed_gate_count": 0,
-  "gate_count": 31,
+  "gate_count": 32,
   "hardware_actions_executed": false,
-  "mode": "BASE_OFFLINE_NO_P8E",
+  "includes_p8e_full": true,
+  "mode": "COMPLETE_OFFLINE_WITH_P8E_FULL",
   "no_hardware_actions_executed": true,
-  "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r2/raw_logs/offline_base.log",
-  "raw_log_sha256": "65a0fb73783d35041ffd2c9ba9149dc7c4e0006fb4facf860ce793b910cba9e7",
-  "runtime_seconds": 3270,
+  "p8e": {
+    "artifact_count": 1970,
+    "artifact_manifest_sha256": "e331b36a8d3138b36eac969b4dbf395c7c0b8565c882d80e83f0fcda02593308",
+    "fail_count": 0,
+    "final_summary_sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88",
+    "pass_count": 43,
+    "status": "PASS",
+    "verify_existing_after_full_log": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/raw_logs/p8e_verify_existing_after_full.log",
+    "verify_existing_after_full_log_sha256": "0c59d18316b601721ef4f507d915162e228b58886cb8b95549a6debac230e8a1"
+  },
+  "prior_base_regression": {
+    "failed_gate_count": 0,
+    "gate_count": 31,
+    "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r2/raw_logs/offline_base.log",
+    "raw_log_sha256": "65a0fb73783d35041ffd2c9ba9149dc7c4e0006fb4facf860ce793b910cba9e7",
+    "status": "PASS"
+  },
+  "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/raw_logs/offline_include_p8e.log",
+  "raw_log_sha256": "bf1563f3387953c52cc3b8cec11e6c948a3f4286d26e70d2babf310439eff841",
+  "runtime_seconds": 5224,
   "schema_version": 1,
-  "source_commit": "d2c3db43c5f6d308ea9f1864a3d36a228bffcc6a",
+  "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c",
   "status": "PASS",
-  "test_id": "P9-01-BASE-OFFLINE-FULL-REGRESSION",
+  "test_id": "P9-01-COMPLETE-OFFLINE-FULL-REGRESSION",
   "verified_snapshots": [
     {
-      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/offline_gate_summary.json",
-      "sha256": "cf2eb4b1b1842ac0c831e1758f591ae0e5960d1f40ca5dfba32b29bee849312d"
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/offline_gate_summary.json",
+      "sha256": "954e23e021e46eb42651bb5bd2342c9f552906e1c8552eacc738391f799b9538"
     },
     {
-      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/offline_gate_summary.md",
-      "sha256": "a3970b08897e50a3651b1b51414fa016554f4d5333a60b325a5da90d58f7d868"
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_final_summary.json",
+      "sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88"
     },
     {
-      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/plan_completion_audit.md",
-      "sha256": "c4009f48153e193130b9d849817a3f6d1f989ef4013ff8d116c2e5a3e0582b0c"
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_evidence_consistency_summary.json",
+      "sha256": "a8a6ce3923d43b298bc2b83922ac76901148a7d3098be5e9720fb2502dbfd07f"
     },
     {
-      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/p8a_consistency_summary.json",
-      "sha256": "364883d271c4a7af53c4838f83d1b857bc1cc00200ab00dbe7ae13625bf49f08"
-    },
-    {
-      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/vivado/nonhardware_build_summary.json",
-      "sha256": "22305b8f5018810fe3d05c38e2101209b99cc0b000cbc8fc6cdf34813379da99"
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_p0_p8d_regression_summary.json",
+      "sha256": "88b1a88b9e35d4e12bfc720410dce7e37607238ac4ea1e20b6987689971e1ab6"
     }
   ]
 }

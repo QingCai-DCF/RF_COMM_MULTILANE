@@ -3,8 +3,8 @@
 - Status: `PASS`
 - test_id: `P8E-RESOURCE-MARGIN`
 - profile: `P8E_MULTI_PROFILE_OFFLINE`
-- source_commit: `0c67e7717a5a0fb594a237a05184be65cf748f4f`
-- generated_utc: `2026-07-18T21:15:01.679199+00:00`
+- source_commit: `56fbf42788dc90779f7580ad86855ea935a3542c`
+- generated_utc: `2026-07-26T09:33:45.857247+00:00`
 - NO_HARDWARE_ACTIONS_EXECUTED: `true`
 - CURRENT_RUN_HARDWARE_AUTHORIZATION: `false`
 
