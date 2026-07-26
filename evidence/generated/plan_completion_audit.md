@@ -1,10 +1,10 @@
 # Plan Completion Audit
 
-PLAN_COMPLETION_AUDIT_STATUS=PASS
+PLAN_COMPLETION_AUDIT_STATUS=FAIL
 PLAN_COMPLETION_STATIC=PASS
 OFFLINE_GATES_RAN=1
-OFFLINE_GATE_STATUS=PASS
-NO_HARDWARE_ACTIONS_EXECUTED=1
+OFFLINE_GATE_STATUS=FAIL
+NO_HARDWARE_ACTIONS_EXECUTED=0
 
 ## Section 14 Markers
 
@@ -25,21 +25,21 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | `TFDU_SAFETY_DOC_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
 | `NEW_RTL_SKELETON_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
 | `REGISTER_MAP_SINGLE_SOURCE_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
-| `OFFLINE_GATES_RAN=1` | `evidence/generated/offline_gate_summary.md` | PROVEN |
-| `NO_HARDWARE_ACTIONS_EXECUTED=1` | `evidence/generated/offline_gate_summary.md` | PROVEN |
+| `OFFLINE_GATES_RAN=1` | `evidence/generated/offline_gate_summary.md` | MISSING |
+| `NO_HARDWARE_ACTIONS_EXECUTED=1` | `evidence/generated/offline_gate_summary.md` | MISSING |
 
 ## Milestone Evidence
 
 | Scope | Offline gate evidence | Status |
 |---|---|---|
-| P8A canonical requirements/state/evidence | p8a_unit_tests:PASS, p8a_consistency:PASS | PASS |
+| P8A canonical requirements/state/evidence | p8a_unit_tests:FAIL, p8a_consistency:FAIL | FAIL |
 | M1 TFDU lane PHY | tfdu_safety_static:PASS, m1_tfdu_model_reference:PASS, lane_phy_sim:PASS | IMPLEMENTED_REFERENCE_PASS_SIM_PASS |
 | TFDU6102 behavior model | tfdu_safety_static:PASS, m1_tfdu_model_reference:PASS | IMPLEMENTED_REFERENCE_PASS |
-| SV port contract coverage | sv_port_contracts:PASS | STATIC_PASS |
+| SV port contract coverage | sv_port_contracts:FAIL | FAIL |
 | M2 4PPM codec and frame L1 | m2_detect_window_sweep:PASS, m2_static_reference_checks:PASS, m2_4ppm_codec_sim:PASS, m2_frame_l1_sim:PASS | IMPLEMENTED_STATIC_PASS_SIM_PASS |
 | 4PPM plus TFDU behavior model integration | m2_4ppm_model_integration_sim:PASS | TESTBENCH_STATIC_PASS_SIM_PASS |
 | M3 lane0 ACK/retry | m3_crc_bad_ack_reference:PASS, m3_static_reference_checks:PASS, m3_lane0_ack_only_sim:PASS | IMPLEMENTED_REFERENCE_PASS_SIM_PASS |
-| M4 AXI register contract | register_map_generation:PASS, m4_ps_driver_trace:PASS, m4_static_reference_checks:PASS, m4_axi_regs_sim:PASS | IMPLEMENTED_TRACE_PASS_SIM_PASS |
+| M4 AXI register contract | register_map_generation:PASS, m4_ps_driver_trace:PASS, m4_static_reference_checks:FAIL, m4_axi_regs_sim:PASS | FAIL |
 | PS driver fixed initialization sequence | m4_ps_driver_trace:PASS, ps_driver_c_compile:PASS | TRACE_PASS_C_COMPILE_PASS |
 | Multilane scheduler requirement | scheduler_static_checks:PASS, scheduler_sim:PASS | IMPLEMENTED_STATIC_PASS_SIM_PASS |
 | M5 Vivado non-hardware build | m5_static_nonhardware_build_checks:PASS, m5_vivado_nonhardware_build:PASS | SCRIPTED_STATIC_PASS_VIVADO_PASS |

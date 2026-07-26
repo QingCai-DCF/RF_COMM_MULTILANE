@@ -208,6 +208,33 @@ report_timing_summary -report_unconstrained -check_timing_verbose \
 report_utilization -hierarchical -file "$out_dir/post_route_utilization_p9_candidate.rpt"
 report_cdc -details -file "$out_dir/post_route_cdc_p9_candidate.rpt"
 report_clock_interaction -file "$out_dir/post_route_clock_interaction_p9_candidate.rpt"
+
+set drc_critical 0
+set drc_error 0
+foreach violation [get_drc_violations -quiet] {
+  set severity [get_property SEVERITY $violation]
+  if {[string match -nocase "*critical*" $severity]} { incr drc_critical }
+  if {[string equal -nocase $severity "error"]} { incr drc_error }
+}
+set reqp_1839 [llength [get_drc_violations -quiet REQP-1839*]]
+set methodology_critical 0
+foreach violation [get_methodology_violations -quiet] {
+  if {[string match -nocase "*critical*" [get_property SEVERITY $violation]]} {
+    incr methodology_critical
+  }
+}
+set cdc_critical 0
+if {![catch {set cdc_violations [get_cdc_violations -quiet]}]} {
+  foreach violation $cdc_violations {
+    if {[string match -nocase "*critical*" [get_property SEVERITY $violation]]} {
+      incr cdc_critical
+    }
+  }
+}
+if {$drc_critical != 0 || $drc_error != 0 || $reqp_1839 != 0 ||
+    $methodology_critical != 0 || $cdc_critical != 0} {
+  error "P9 signoff severity gate failed: DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical"
+}
 write_checkpoint -force "$out_dir/post_route_p9_candidate.dcp"
 write_bitstream -force "$out_dir/ir_p9_z7010_2lane_candidate.bit"
 write_hw_platform -fixed -include_bit -force -file "$out_dir/ir_p9_z7010_2lane.xsa"
@@ -224,5 +251,11 @@ puts $marker "P9_DMA_DATA_WIDTH=32"
 puts $marker "P9_PROTOCOL_CLOCK_HZ=64000000"
 puts $marker "P9_DMA_CLOCK_HZ=100000000"
 puts $marker "P9_AXIL_CLOCK_HZ=50000000"
+puts $marker "P9_CANONICAL_XDC=constraints/active/PORT1.generated.xdc"
+puts $marker "P9_DRC_CRITICAL_COUNT=$drc_critical"
+puts $marker "P9_DRC_ERROR_COUNT=$drc_error"
+puts $marker "P9_REQP_1839_COUNT=$reqp_1839"
+puts $marker "P9_METHODOLOGY_CRITICAL_COUNT=$methodology_critical"
+puts $marker "P9_CDC_CRITICAL_COUNT=$cdc_critical"
 close $marker
 puts "P9_CANDIDATE_BUILD=PASS"

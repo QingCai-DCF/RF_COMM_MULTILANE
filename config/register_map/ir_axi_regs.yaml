@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "register_map_version": "P9-2",
+  "register_map_version": "P9-3",
   "data_width_bits": 32,
   "compatibility": "P0-P8D offsets and meanings are preserved; P9 Z7010 DMA/optical runtime is additive from 0x0700",
   "registers": [
@@ -646,7 +646,22 @@
     {"name": "P9_DUTY_HARD_LIMIT", "offset": "0x0858", "access": "RO", "description": "Strict less-than-20-percent high-cycle limit"},
     {"name": "P9_DUTY_TARGET_LIMIT", "offset": "0x085C", "access": "RO", "description": "Less-than-or-equal-to-18-percent target high cycles"},
     {"name": "P9_INITIAL_SEQUENCE", "offset": "0x0860", "access": "RW", "description": "Bounded validation-only selective-repeat initial sequence"},
-    {"name": "P9_PROTOCOL_FAULT_FLAGS", "offset": "0x0864", "access": "RW", "description": "Single-use validation fault flags: stale session/path, future/old/out-of-order sequence, bad CRC, duplicate ACK"},
+    {
+      "name": "P9_PROTOCOL_FAULT_FLAGS", "offset": "0x0864", "access": "RW",
+      "description": "Bounded validation fault injection; scheduler-only mapping and target-duty masks never bypass physical safety",
+      "fields": [
+        {"name": "STALE_SESSION_ONCE", "bit": 0, "access": "RW"},
+        {"name": "STALE_PATH_ONCE", "bit": 1, "access": "RW"},
+        {"name": "FUTURE_SEQUENCE_ONCE", "bit": 2, "access": "RW"},
+        {"name": "OLD_SEQUENCE_ONCE", "bit": 3, "access": "RW"},
+        {"name": "BAD_CRC_ONCE", "bit": 4, "access": "RW"},
+        {"name": "DUPLICATE_ACK_ONCE", "bit": 5, "access": "RW"},
+        {"name": "REORDER_HOLD_ONCE", "bit": 6, "access": "RW"},
+        {"name": "ACK_SACK_LOSS_ONCE", "bit": 7, "access": "RW"},
+        {"name": "MAPPING_INVALID_LANE_MASK", "lsb": 8, "width": 2, "access": "RW"},
+        {"name": "DUTY_THROTTLE_LANE_MASK", "lsb": 10, "width": 2, "access": "RW"}
+      ]
+    },
     {"name": "P9_RX_OUT_OF_ORDER_COUNT", "offset": "0x0868", "access": "RO", "description": "Current-run accepted out-of-order frame count"},
     {"name": "P9_RX_OLD_COUNT", "offset": "0x086C", "access": "RO", "description": "Current-run old-sequence rejection count"},
     {"name": "P9_RX_FUTURE_COUNT", "offset": "0x0870", "access": "RO", "description": "Current-run future-window rejection count"},

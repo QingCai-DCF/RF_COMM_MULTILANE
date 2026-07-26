@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 85
+REQUIREMENT_COUNT: 112
 PASS: 74
-PENDING: 11
+PENDING: 38
 FAIL: 0
 WAIVED: 0
 ```
@@ -101,6 +101,33 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `PROFILE-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-CONSTRAINT-LINT` | `evidence/generated/p8e_constraint_audit_summary.json` | The canonical Z7010 board XDC is isolated from every Z7020 profile. |
 | `PROFILE-002` | `PASS` | Z7020_FIXED_AND_ROTATING_D12_INPUT | `P8E` | `P8E-Z7020-IO-BUDGET` | `evidence/generated/p8e_io_budget_summary.json` | Unknown Z7020 board pins and board I/O timing remain PENDING_D12 and are not invented. |
 | `REPRO-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-EVIDENCE-CONSISTENCY` | `evidence/generated/p8e_evidence_consistency_summary.json` | The clean-checkout batch implementation and evidence flow is reproducible and content-addressed. |
+| `P9-HW-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Immutable candidate, shutdown, XSA, BSP, runner, and ELF provenance is hash-bound. |
+| `P9-HW-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Safe boot, shutdown-before, shutdown-on-exit, and shutdown-after are confirmed. |
+| `P9-HW-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The formal run is bound to the current user authorization and immutable artifacts. |
+| `P9-PHY-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Fresh AB/BA raw counters pass for both logical lanes and four physical directions. |
+| `P9-PHY-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Lane 0 operates at the configured 4 Mbit/s raw PHY rate. |
+| `P9-PHY-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Lane 1 operates at the configured 4 Mbit/s raw PHY rate. |
+| `P9-PHY-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Both lanes concurrently provide 8 Mbit/s aggregate raw capability. |
+| `P9-SAFE-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | All four TFDU paths observe the hardware startup wait before readiness. |
+| `P9-SAFE-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Hardware runtime continuous-high telemetry remains at or below one microsecond. |
+| `P9-SAFE-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Exact 1 ms rolling-duty runtime accounting remains below the strict hard limit and design target. |
+| `P9-SAFE-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Disarm reaches final TX kill, aborts the active train, and explicit re-arm does not resume it. |
+| `P9-L2-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The real optical runtime exercises a 32-outstanding selective-repeat window. |
+| `P9-L2-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The real optical runtime exercises 32-bit SACK and bounded ACK aggregation. |
+| `P9-L2-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Sequence wrap, loss, reorder, stale, CRC, duplicate, and retry recovery preserve exactly-once delivery. |
+| `P9-L3-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The two-lane hardware scheduler runs single-lane, equal, and weighted profiles. |
+| `P9-L3-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Unavailable, invalid-mapping, and duty-throttled lanes are isolated from scheduling. |
+| `P9-L3-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Only unacknowledged work migrates to the healthy lane and clean acknowledged work never migrates. |
+| `P9-DMA-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The PS runtime uses the implemented AXI DMA scatter-gather engine and DDR buffers. |
+| `P9-DMA-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Cache flush, invalidate, barrier, cache-enabled, and cache-disabled ownership paths are exercised. |
+| `P9-DMA-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Each real DMA descriptor completes and is reclaimed exactly once without leak. |
+| `P9-DMA-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Idle/queued reset, abort, soft reset, stale completion, reboot, and recovery are verified. |
+| `P9-RFAP-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | RFAP v1 is parsed, reassembled, integrity checked, and atomically published at runtime. |
+| `P9-RFAP-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | RFAP vNext streaming is parsed and atomically published through the frozen PS/PL runtime. |
+| `P9-RFAP-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Fresh A-to-B and B-to-A objects preserve CRC32, SHA-256, and zero partial publish. |
+| `P9-PERF-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | PS preparation, DMA, PL completion, integrity, frame, and application throughput are characterized. |
+| `P9-SOAK-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation. |
+| `P9-EVID-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries. |
 
 ## PASS artifact bindings
 
@@ -150,7 +177,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_tfdu_exact_duty_accountant.sv` — `05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f`
 - `sim/tb/tb_p8c_full_scale.sv` — `de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c`
-- `evidence/generated/p8e_p0_p8d_regression_summary.json` — `176a7cbab52778f8a341ead51d9df9c0ebbe7e916e07b1fdd73b0c8fbe25032a`
+- `evidence/generated/p8e_p0_p8d_regression_summary.json` — `88b1a88b9e35d4e12bfc720410dce7e37607238ac4ea1e20b6987689971e1ab6`
 
 ### `MAP-001`
 
@@ -174,13 +201,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `0c88eaaf7df1c32feabe548f78e63b63e2230349289690089b7616af6df66661`
-- `PROJECT_STATUS.md` — `3dfc562073efeb08e63ca5fcf5655c8c3ece2598057e4c53083fd72b39e18208`
+- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
+- `PROJECT_STATUS.md` — `d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `0c88eaaf7df1c32feabe548f78e63b63e2230349289690089b7616af6df66661`
+- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
 
 ### `P8A-EVID-001`
 
@@ -190,8 +217,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `0c88eaaf7df1c32feabe548f78e63b63e2230349289690089b7616af6df66661`
-- `PROJECT_STATUS.md` — `3dfc562073efeb08e63ca5fcf5655c8c3ece2598057e4c53083fd72b39e18208`
+- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
+- `PROJECT_STATUS.md` — `d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -276,7 +303,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_tfdu_exact_duty_accountant.sv` — `05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f`
 - `sim/tb/tb_p8c_exact_duty.sv` — `bca756a20bc65b02d5293704bb23f755e9570f328b2cbbcd331f547380209a8c`
-- `evidence/generated/p8e_p0_p8d_regression_summary.json` — `176a7cbab52778f8a341ead51d9df9c0ebbe7e916e07b1fdd73b0c8fbe25032a`
+- `evidence/generated/p8e_p0_p8d_regression_summary.json` — `88b1a88b9e35d4e12bfc720410dce7e37607238ac4ea1e20b6987689971e1ab6`
 
 ### `PHY-SAFE-006`
 
@@ -286,44 +313,44 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-ARQ-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c`
-- `rtl/ir_selective_repeat_rx.sv` — `25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4`
+- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
+- `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `rtl/ir_data_plane_top.sv` — `7c07a0bb35a9bed5c4565758fa23b61017508787bf929f50905a9c5d6d0d8e63`
-- `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` — `cf243210e4ce089cf626cfa69254dcd32a5af906a02a7553f568332eba47b647`
+- `rtl/ir_data_plane_top.sv` — `ccf5d0915eab5b9340a88a28a8c2d09619387c9d6fbd16e4fc9537458531b150`
+- `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` — `ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b`
 
 ### `L2-SEQ-001`
 
 - `rtl/ir_seq_math_pkg.sv` — `860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e`
 - `sim/tb/tb_ir_seq_math.sv` — `a01ab71e3891e4074a9b4f89719ced7561b39b83218ddf424965093d42608e5b`
-- `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` — `8c10791a2e5018f955cc48e8705e18736259fbf733988e4b63fc7e6c6c6c867f`
+- `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` — `cf333bf444f41f9a8d9af29987a7a1f78ef76ba84a9e65dc2f0fdc751b8d2418`
 
 ### `L2-SACK-001`
 
 - `rtl/ir_sack_codec.sv` — `bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `2789797027ec4de5305acd562858b22a8138ee917e85602bc4e07a0833a0725f`
+- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `4e94640c66f08534a4baa422b214b3dab61381010a2f071e2f77674ee1322dc8`
 
 ### `L2-SACK-002`
 
-- `rtl/ir_ack_aggregator.sv` — `e2d27f15541d903a79b4f6fdb9e8d03ffbe6ab5d59940cab762bece76c5ba1c2`
+- `rtl/ir_ack_aggregator.sv` — `1a616e5b8d3a65732a4307e333c1ca98cddf481c8c0eca064ee7045de7262b07`
 - `sim/tb/tb_ir_sack_ack_aggregation.sv` — `cf7b1985d099d54b5fe3cd699466c1595c13dd2895d91657b408ccda91e2c6e5`
-- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `2789797027ec4de5305acd562858b22a8138ee917e85602bc4e07a0833a0725f`
+- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `4e94640c66f08534a4baa422b214b3dab61381010a2f071e2f77674ee1322dc8`
 
 ### `L2-DUP-001`
 
 - `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
-- `rtl/ir_selective_repeat_rx.sv` — `25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4`
+- `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `L2-STALE-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c`
-- `rtl/ir_selective_repeat_rx.sv` — `25b5cf6ff573ba01a31370bd44ae1bdd4d6367160e4d11b472cea17856a70cb4`
+- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
+- `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `L2-MIG-001`
@@ -334,7 +361,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-RETRY-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `4b8a88322ce0e25b7530b44294ef3511192d17cce2b385dcc6da15e521522c9c`
+- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
@@ -360,7 +387,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_axis_tx_frontend.sv` — `961d7583f2493e54a3e23e74486de1fecf32da10ff28b85b9533236c5b7fb86f`
 - `rtl/ir_axis_rx_backend.sv` — `7747c33d9b27a11a194e45ad895d6b0283f1e2f3626eb6c81845ad50c4b10539`
-- `evidence/generated/p8e_raw/r8d/p8d_axis_backpressure_summary.json` — `2a74758cfd517a0212268c15410a0dfade805ac06304b030cecd9432a7def129`
+- `evidence/generated/p8e_raw/r8d/p8d_axis_backpressure_summary.json` — `02a9f08946cb227b956a98c5edc984076f76e3ae30f54bf1387fc04530507fcf`
 
 ### `DMA-001`
 
@@ -390,146 +417,146 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `tools/p8d_rfap_reference.py` — `9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d`
 - `tests/vectors/p7_app_protocol_vectors.json` — `b1015c343dec626328a3b5a1295754b065c1d28a681c87ca71dcb533463d36df`
-- `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` — `ba8b897d3b407ca7cb1c204923a2dcba8ef49c13397dc119f48e1b7d651c7e2e`
+- `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` — `50964a6185df19d6cb670cb633a2134c8fd9dbe0fd2afb0365f06c04353316ab`
 
 ### `RFAP-002`
 
 - `tools/p8d_rfap_reference.py` — `9d319cd01abd8a6eb618d96824a73d4408915446e05e6fb804df830f9e24915d`
 - `docs/design/P8D_RFAP_VNEXT_COMPATIBILITY.md` — `6433a2467aeab13a94c4b72ee90cd5680ca1443eed6e67d932795fae9da56ad3`
-- `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` — `ba8b897d3b407ca7cb1c204923a2dcba8ef49c13397dc119f48e1b7d651c7e2e`
+- `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` — `50964a6185df19d6cb670cb633a2134c8fd9dbe0fd2afb0365f06c04353316ab`
 
 ### `PERF-MODEL-001`
 
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `178093e79f912d194079a7d75cfb28d1e0858f0a0ba5ec824aafd1378cb5b9f1`
+- `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
 
 ### `PERF-MODEL-002`
 
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
-- `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `178093e79f912d194079a7d75cfb28d1e0858f0a0ba5ec824aafd1378cb5b9f1`
+- `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
 
 ### `BUILD-001`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
 - `rtl/top/ir_endpoint_core.sv` — `dbd1c089ca87f995ab659ab0f89882bb16a1e28257ae60e4d9fff64f5b330155`
-- `evidence/generated/p8e_build_matrix_summary.json` — `6eb6204b8396ed3660b0fedd3aca99b20907ec639aeb6897c23308289b5aab99`
+- `evidence/generated/p8e_build_matrix_summary.json` — `cf8ab50efe7dd3c11e72f2068b0f6ed985d3e2a8758eab09eab29f8fa2a9cc22`
 
 ### `BUILD-002`
 
 - `rtl/top/ir_fixed_endpoint_core.sv` — `e1e754b5f1ef909b60663f143975e5a34ce70ba70d9758d4e8df3d16ab80ccb4`
 - `rtl/top/ir_rotating_endpoint_core.sv` — `61ef025deb381fdcde71bac75e21085911228c12ffafc348d37b65648e1afb0b`
-- `evidence/generated/p8e_source_manifest_summary.json` — `2017ca460f21beb16539847f9f8f9a66e8b4a6cd269a5f07234a5cb7cf0a8e40`
+- `evidence/generated/p8e_source_manifest_summary.json` — `42d9044b0c505881793f5de02a54d02e6008eb280e26ede9a2a837814e07c5d1`
 
 ### `TIMING-001`
 
 - `scripts/vivado/run_p8e_build.tcl` — `659c4c4bcf7125b52dddc12165f454bc8cbb138b364434fd46dbf71b2698499a`
 - `constraints/core/common_clocks.xdc` — `5729ef1fb8204366a15ca09cbdd7400cdaead4d5a7d4ed71f614946b88e17b58`
-- `evidence/generated/p8e_build_matrix_summary.json` — `6eb6204b8396ed3660b0fedd3aca99b20907ec639aeb6897c23308289b5aab99`
+- `evidence/generated/p8e_build_matrix_summary.json` — `cf8ab50efe7dd3c11e72f2068b0f6ed985d3e2a8758eab09eab29f8fa2a9cc22`
 
 ### `TIMING-002`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
 - `config/p8e_clock_reset.yaml` — `0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2`
-- `evidence/generated/p8e_timing_architecture_summary.json` — `a3b2d2bf6a61855a51805c1b8cae5aef6a7ff1575c880b6610fa6d055c0c315f`
+- `evidence/generated/p8e_timing_architecture_summary.json` — `94f878bfea0585c4aee7a27f766760aba6dfda323f983ab6423bd1bb20e61f50`
 
 ### `TIMING-003`
 
 - `constraints/core/common_clocks.xdc` — `5729ef1fb8204366a15ca09cbdd7400cdaead4d5a7d4ed71f614946b88e17b58`
 - `scripts/check_p8e_constraints.py` — `e1e66ca031b8073ac6f8f7c985a60f4fca7536443be8f2a70be2a32138adbc61`
-- `evidence/generated/p8e_constraint_audit_summary.json` — `fb42d2af50483781cd94a3af1492e7e31750954478a3fd8c2ed0b615de8e054e`
+- `evidence/generated/p8e_constraint_audit_summary.json` — `c58b124bcb29e82661d322f83a73c4e65ac6c1a1dcb193cf21b105a0685f2f17`
 
 ### `TIMING-004`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
 - `scripts/run_p8e_build_matrix.py` — `1e24d24a34faad722b589fdf52bf5ed9939e2354104d98daab1fe67c80b0ff0e`
-- `evidence/generated/p8e_build_matrix_summary.json` — `6eb6204b8396ed3660b0fedd3aca99b20907ec639aeb6897c23308289b5aab99`
+- `evidence/generated/p8e_build_matrix_summary.json` — `cf8ab50efe7dd3c11e72f2068b0f6ed985d3e2a8758eab09eab29f8fa2a9cc22`
 
 ### `CDC-001`
 
 - `config/p8e_clock_reset.yaml` — `0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2`
 - `constraints/core/cdc_exceptions.xdc` — `a3123be01abc5815b31de4a67871512fa89b465be3013e0e9efae73d85250fab`
-- `evidence/generated/p8e_cdc_rdc_summary.json` — `16bb8404b62c95d2c47cd00667a9660a0b9685e03fe6d3a3fde58342134c4106`
+- `evidence/generated/p8e_cdc_rdc_summary.json` — `1c6ec904b518912f4eaeda817476fed426b60d193e3eb6fe832a10ac38011d64`
 
 ### `CDC-002`
 
 - `rtl/common/toggle_handshake.sv` — `27b7e5cbc7e7fba919fd6c379c1c8538af567d3b9ba3b6d92c686390a1e3fb9b`
 - `rtl/common/async_fifo.sv` — `a969bcfee4c37d2e3ffc771987f4e3830561606bb74fc9dfbd8c59f69cd65d32`
-- `evidence/generated/p8e_cdc_rdc_summary.json` — `16bb8404b62c95d2c47cd00667a9660a0b9685e03fe6d3a3fde58342134c4106`
+- `evidence/generated/p8e_cdc_rdc_summary.json` — `1c6ec904b518912f4eaeda817476fed426b60d193e3eb6fe832a10ac38011d64`
 
 ### `CDC-003`
 
 - `rtl/common/reset_sync.sv` — `d75b79556cdc4be58fe3eba9d4dc5a7d59c44785978c517df92029c5096d75c4`
 - `sim/tb/tb_p8e_cdc_reset_matrix.sv` — `c2944ce2f1c1ac1553ea818cdb6161d99ad7ee9b93d5f719888ca9521dbded2b`
-- `evidence/generated/p8e_cdc_rdc_summary.json` — `16bb8404b62c95d2c47cd00667a9660a0b9685e03fe6d3a3fde58342134c4106`
+- `evidence/generated/p8e_cdc_rdc_summary.json` — `1c6ec904b518912f4eaeda817476fed426b60d193e3eb6fe832a10ac38011d64`
 
 ### `CDC-004`
 
 - `sim/tb/tb_p8e_dual_endpoint.sv` — `6b60476c5c8277baa8f21e2405c36cfc89c5a68b72fb3732419d6501e35addee`
 - `tools/p8e_dual_endpoint_reference.py` — `bb68400c6a52aa3498dc9e4e61ae6033ff53dc6a6b26491112dbca349fd42d08`
-- `evidence/generated/p8e_dual_endpoint_sim_summary.json` — `0fac980958eda656bea4fdbb9ffc1d79b09ea809fa8bc0f2109e95c1f66cbb2a`
+- `evidence/generated/p8e_dual_endpoint_sim_summary.json` — `ac2557537dbd475b7999b70450525379237cc1fd6a550459cab226e461655d1d`
 
 ### `RDC-001`
 
 - `config/p8e_clock_reset.yaml` — `0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2`
 - `sim/tb/tb_p8e_cdc_reset_matrix.sv` — `c2944ce2f1c1ac1553ea818cdb6161d99ad7ee9b93d5f719888ca9521dbded2b`
-- `evidence/generated/p8e_cdc_rdc_summary.json` — `16bb8404b62c95d2c47cd00667a9660a0b9685e03fe6d3a3fde58342134c4106`
+- `evidence/generated/p8e_cdc_rdc_summary.json` — `1c6ec904b518912f4eaeda817476fed426b60d193e3eb6fe832a10ac38011d64`
 
 ### `DRC-001`
 
 - `rtl/ir_shared_payload_store.sv` — `a4b44c58b862208127302e8e3bd67a5f5a405f2c0c9af6b1e38a54cc8e06a62a`
 - `rtl/ir_tfdu_exact_duty_accountant.sv` — `05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f`
-- `evidence/generated/p8e_reset_bram_summary.json` — `f1824daed55ddbe1b38518bbacff1df151c6a5cf51c5cd835e18a4e2b1c45295`
+- `evidence/generated/p8e_reset_bram_summary.json` — `de22334479642394c6a7716beda9d097c4921bb8c9eaf1cfb1b9aa7cc537d180`
 
 ### `DRC-002`
 
 - `scripts/vivado/run_p8e_build.tcl` — `659c4c4bcf7125b52dddc12165f454bc8cbb138b364434fd46dbf71b2698499a`
 - `scripts/run_p8e_build_matrix.py` — `1e24d24a34faad722b589fdf52bf5ed9939e2354104d98daab1fe67c80b0ff0e`
-- `evidence/generated/p8e_build_matrix_summary.json` — `6eb6204b8396ed3660b0fedd3aca99b20907ec639aeb6897c23308289b5aab99`
+- `evidence/generated/p8e_build_matrix_summary.json` — `cf8ab50efe7dd3c11e72f2068b0f6ed985d3e2a8758eab09eab29f8fa2a9cc22`
 
 ### `RESOURCE-001`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
-- `rtl/ir_p8d_resource_tops.sv` — `231a30033c7763a6e8b0daae07a924a4dc46ce3788b14d0a692d365dd9b37e98`
-- `evidence/generated/p8e_resource_margin_summary.json` — `ec89ce55bb448580b220df65b3a247a471101cc5fea22072f1670b30cc3c9035`
+- `rtl/ir_p8d_resource_tops.sv` — `bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c`
+- `evidence/generated/p8e_resource_margin_summary.json` — `c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8`
 
 ### `RESOURCE-002`
 
 - `rtl/top/z7010_2lane_dev_top.sv` — `fc937858f269a6db06ab5088e4a193df37f7c772171191391c3d569eaef619a4`
-- `rtl/ir_p8d_resource_tops.sv` — `231a30033c7763a6e8b0daae07a924a4dc46ce3788b14d0a692d365dd9b37e98`
-- `evidence/generated/p8e_resource_margin_summary.json` — `ec89ce55bb448580b220df65b3a247a471101cc5fea22072f1670b30cc3c9035`
+- `rtl/ir_p8d_resource_tops.sv` — `bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c`
+- `evidence/generated/p8e_resource_margin_summary.json` — `c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8`
 
 ### `RESOURCE-003`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
-- `evidence/generated/p8e_resource_margin_summary.json` — `ec89ce55bb448580b220df65b3a247a471101cc5fea22072f1670b30cc3c9035`
+- `evidence/generated/p8e_resource_margin_summary.json` — `c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8`
 
 ### `AXIDMA-001`
 
 - `rtl/platform/axi_dma_adapter.sv` — `7fded9593295a6a80d9dbf044f68815f8975913f36d9680c7c7e01007033037b`
 - `docs/design/P8E_AXI_DMA_STATIC_INTEGRATION.md` — `ff09ab752575137f6c62a83255a5a9e6b9ecfe4f467c0fe9b11a45b5074c7b92`
-- `evidence/generated/p8e_axi_dma_static_integration_summary.json` — `c495647cea7e8b22208973134eaf2185171f2fc02ec3104e2c6a357639241216`
+- `evidence/generated/p8e_axi_dma_static_integration_summary.json` — `509e428b72c56575791800863d7fa8956f504dc8a69b06f311e8ca34ed1612f2`
 
 ### `AXIDMA-002`
 
 - `rtl/platform/axi_dma_adapter.sv` — `7fded9593295a6a80d9dbf044f68815f8975913f36d9680c7c7e01007033037b`
 - `sim/tb/tb_axi_dma_adapter.sv` — `0e13fcaaf8b8dbf905d75a7aec877d30ff73e9ad171e939d31cd7cd97f9220e2`
-- `evidence/generated/p8e_axi_dma_static_integration_summary.json` — `c495647cea7e8b22208973134eaf2185171f2fc02ec3104e2c6a357639241216`
+- `evidence/generated/p8e_axi_dma_static_integration_summary.json` — `509e428b72c56575791800863d7fa8956f504dc8a69b06f311e8ca34ed1612f2`
 
 ### `PROFILE-001`
 
 - `constraints/active/PORT1.generated.xdc` — `f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344`
 - `scripts/check_p8e_constraints.py` — `e1e66ca031b8073ac6f8f7c985a60f4fca7536443be8f2a70be2a32138adbc61`
-- `evidence/generated/p8e_constraint_audit_summary.json` — `fb42d2af50483781cd94a3af1492e7e31750954478a3fd8c2ed0b615de8e054e`
+- `evidence/generated/p8e_constraint_audit_summary.json` — `c58b124bcb29e82661d322f83a73c4e65ac6c1a1dcb193cf21b105a0685f2f17`
 
 ### `PROFILE-002`
 
 - `config/board_requirements/z7020_fixed_io_requirements.yaml` — `c75d8c7cf14c0760d8bca51eb6ee702e8677a3c4357a5f094f104e04e11482a0`
 - `config/board_requirements/z7020_rotating_io_requirements.yaml` — `b45a6c72f5dfdac506645a5363806104face6d3e990502a26a2be43066856af2`
-- `evidence/generated/p8e_io_budget_summary.json` — `ed7cdb4db15107d6623b7ecafe897ee133df88394f2b9133ad6f5f65c70f6f4f`
+- `evidence/generated/p8e_io_budget_summary.json` — `880b91789f72cc6910a9404186374cebf64738e2bbe0e3762133f545f29ac2fc`
 
 ### `REPRO-001`
 
 - `scripts/run_p8e_dual_target_gate.py` — `c70c96284643f07a7c3f13396a76a9931cecc8623027cf7c815d5be1b6430084`
 - `scripts/run_p8e_build_matrix.py` — `1e24d24a34faad722b589fdf52bf5ed9939e2354104d98daab1fe67c80b0ff0e`
-- `evidence/generated/p8e_evidence_consistency_summary.json` — `4ec3add3453d73bf7622d190cf50abc71ff496cfa2a93c028887744b5fcdf48a`
+- `evidence/generated/p8e_evidence_consistency_summary.json` — `a8a6ce3923d43b298bc2b83922ac76901148a7d3098be5e9720fb2502dbfd07f`

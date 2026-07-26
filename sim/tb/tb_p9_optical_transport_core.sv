@@ -61,6 +61,9 @@ module tb_p9_optical_transport_core;
   wire output_complete;
   wire [31:0] input_byte_count;
   wire [31:0] output_byte_count;
+  wire raw_busy;
+  wire raw_done;
+  wire [31:0] raw_sent_count;
   wire [15:0] tx_next_sequence;
   wire [15:0] tx_ack_base;
   wire [5:0] tx_outstanding_count;
@@ -89,6 +92,7 @@ module tb_p9_optical_transport_core;
   wire [31:0] physical_drop_data_count;
   wire [31:0] physical_drop_ack_count;
   wire [127:0] tx_high_max_flat;
+  wire [127:0] physical_tx_counts_flat;
   wire [127:0] duty_high_max_flat;
   wire [31:0] duty_hard_limit_cycles;
   wire [31:0] duty_target_limit_cycles;
@@ -162,8 +166,9 @@ module tb_p9_optical_transport_core;
     .object_done_o(object_done), .object_fail_o(object_fail),
     .object_error_o(object_error), .input_complete_o(input_complete),
     .output_complete_o(output_complete), .input_byte_count_o(input_byte_count),
-    .output_byte_count_o(output_byte_count), .raw_busy_o(), .raw_done_o(),
-    .raw_sent_count_o(), .tx_next_sequence_o(tx_next_sequence),
+    .output_byte_count_o(output_byte_count), .raw_busy_o(raw_busy),
+    .raw_done_o(raw_done), .raw_sent_count_o(raw_sent_count),
+    .tx_next_sequence_o(tx_next_sequence),
     .tx_ack_base_o(tx_ack_base), .tx_outstanding_count_o(tx_outstanding_count),
     .tx_outstanding_high_watermark_o(tx_outstanding_high_watermark),
     .rx_base_sequence_o(rx_base_sequence), .rx_sack_bitmap_o(rx_sack_bitmap),
@@ -191,7 +196,7 @@ module tb_p9_optical_transport_core;
     .physical_symbol_error_count_o(),
     .physical_drop_data_count_o(physical_drop_data_count),
     .physical_drop_ack_count_o(physical_drop_ack_count),
-    .raw_rx_counts_flat_o(), .physical_tx_counts_flat_o(),
+    .raw_rx_counts_flat_o(), .physical_tx_counts_flat_o(physical_tx_counts_flat),
     .tx_high_max_flat_o(tx_high_max_flat), .duty_high_max_flat_o(duty_high_max_flat),
     .duty_high_current_flat_o(), .duty_headroom_flat_o(),
     .duty_target_throttle_count_flat_o(), .duty_hard_fault_count_flat_o(),
@@ -417,6 +422,49 @@ module tb_p9_optical_transport_core;
       $fatal(1, "rolling-duty hard limit reached: max=%h hard=%0d",
              duty_high_max_flat, duty_hard_limit_cycles);
     if (duty_target_limit_cycles == 0) $fatal(1, "invalid duty target telemetry");
+
+    // Validation-only mapping and duty masks remove exactly one lane and
+    // exercise the production scheduler defer inputs without creating permit.
+    run_object(600, 8'hd1, 1'b0, 0, 0, 16'h2100, 32'h0000_0100);
+    if (scheduler_frames_flat[31:0] != 0 || scheduler_frames_flat[63:32] == 0)
+      $fatal(1, "mapping-invalid lane was scheduled: %h", scheduler_frames_flat);
+    run_object(600, 8'hd2, 1'b1, 0, 0, 16'h2200, 32'h0000_0800);
+    if (scheduler_frames_flat[31:0] == 0 || scheduler_frames_flat[63:32] != 0)
+      $fatal(1, "duty-throttled lane was scheduled: %h", scheduler_frames_flat);
+
+    // Drop the local arm while a long raw train is in progress.  Re-arming
+    // must not resume any partial train or pulse.
+    cfg_fault_flags = 0;
+    raw_direction = 0;
+    raw_lane_mask = 2'b11;
+    raw_pulse_target = 1000;
+    raw_spacing_cycles = 128;
+    @(negedge clk); raw_start = 1;
+    @(posedge clk); @(negedge clk); raw_start = 0;
+    for (int raw_watchdog = 0; raw_sent_count < 4 && raw_watchdog < 2000;
+         raw_watchdog = raw_watchdog + 1) @(posedge clk);
+    if (!raw_busy || raw_sent_count < 4)
+      $fatal(1, "raw disarm stimulus did not become active");
+    @(negedge clk); disarm_request = 1;
+    @(posedge clk); @(negedge clk); disarm_request = 0;
+    repeat (4) @(posedge clk);
+    if (raw_busy || endpoint_armed || !tx_kill_active || {b_txd, a_txd} != 0)
+      $fatal(1, "disarm did not immediately kill and abort raw train");
+    begin
+      logic [127:0] stopped_counts;
+      logic [31:0] stopped_sent;
+      stopped_counts = physical_tx_counts_flat;
+      stopped_sent = raw_sent_count;
+      repeat (300) @(posedge clk);
+      if (physical_tx_counts_flat != stopped_counts || raw_sent_count != stopped_sent)
+        $fatal(1, "raw train advanced after disarm");
+      @(negedge clk); arm_request = 1;
+      @(posedge clk); @(negedge clk); arm_request = 0;
+      repeat (300) @(posedge clk);
+      if (!endpoint_armed || raw_busy || physical_tx_counts_flat != stopped_counts ||
+          raw_sent_count != stopped_sent || {b_txd, a_txd} != 0)
+        $fatal(1, "partial raw train resumed after explicit re-arm");
+    end
 
     receiver_enable = 0;
     @(negedge clk); full_shutdown_request = 1;

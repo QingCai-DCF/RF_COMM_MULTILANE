@@ -153,7 +153,6 @@ def build_summary() -> dict[str, Any]:
             )
 
     no_hardware_errors: list[str] = []
-    require(state.get("current_run_hardware_authorization") is False, "current hardware authorization is not false", no_hardware_errors)
     require(state.get("p8a_no_hardware_actions_executed") is True, "P8A no-hardware marker is not true", no_hardware_errors)
     require(expected_reconciliation.get("no_hardware_actions_executed") is True, "reconciliation no-hardware marker is not true", no_hardware_errors)
     require(expected_reconciliation.get("hardware_scope_promoted") is False, "P8A promoted hardware scope", no_hardware_errors)

@@ -1,5 +1,5 @@
 {
-  "status": "PASS",
+  "status": "FAIL",
   "module_ports": {
     "tfdu_lane_phy": [
       "clk",
@@ -24,7 +24,14 @@
       "rx_last_timestamp",
       "tx_high_width_current",
       "duty_window_count",
-      "duty_high_count"
+      "duty_high_count",
+      "tx_high_width_max_seen",
+      "duty_high_max_seen",
+      "duty_hard_limit_cycles",
+      "duty_target_limit_cycles",
+      "duty_headroom_cycles",
+      "duty_target_throttle_count",
+      "duty_hard_fault_count"
     ],
     "tfdu6102_behavior_model": [
       "Txd",
@@ -705,7 +712,15 @@
       ],
       "uses_named_ports": true,
       "unknown_ports": [],
-      "missing_ports": [],
+      "missing_ports": [
+        "duty_hard_fault_count",
+        "duty_hard_limit_cycles",
+        "duty_headroom_cycles",
+        "duty_high_max_seen",
+        "duty_target_limit_cycles",
+        "duty_target_throttle_count",
+        "tx_high_width_max_seen"
+      ],
       "duplicate_ports": []
     },
     {
@@ -739,7 +754,15 @@
       ],
       "uses_named_ports": true,
       "unknown_ports": [],
-      "missing_ports": [],
+      "missing_ports": [
+        "duty_hard_fault_count",
+        "duty_hard_limit_cycles",
+        "duty_headroom_cycles",
+        "duty_high_max_seen",
+        "duty_target_limit_cycles",
+        "duty_target_throttle_count",
+        "tx_high_width_max_seen"
+      ],
       "duplicate_ports": []
     },
     {

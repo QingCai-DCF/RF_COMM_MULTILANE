@@ -30,6 +30,7 @@ P8E_CHECKPOINT = "57ff1079b10a5c0de156b621820774bbb111c5ee"
 P8E_SOURCE = "0c67e7717a5a0fb594a237a05184be65cf748f4f"
 P9_BRANCH = "p9/z7010-stationary-2lane"
 EXPECTED_WORKTREE = Path(r"C:\Users\user\Documents\RF_COMM_MULTILANE_P9")
+VIVADO = Path(r"D:\Xilinx\Vivado\2023.1\bin\vivado.bat")
 
 STAGES = tuple(f"P9-{index:02d}" for index in range(29))
 HARDWARE_STAGE_FIRST = "P9-04"
@@ -225,7 +226,71 @@ def default_run_id() -> str:
     return f"p9_{timestamp}_{source_short}_unfrozen"
 
 
+def execute_build_and_freeze(run_root: Path, authorization_path: Path,
+                             requested_run_id: str) -> dict[str, Any]:
+    source_commit = git("rev-parse", "HEAD")
+    timing_dir = ROOT / "evidence/generated/vivado/p9_z7010_candidate/timing_audit"
+    commands: list[tuple[str, list[str], int]] = [
+        ("candidate", [str(VIVADO), "-mode", "batch", "-source",
+                       str(ROOT / "scripts/build_p9_z7010_candidate.tcl"),
+                       "-tclargs", str(ROOT)], 7200),
+        ("timing_audit", [str(VIVADO), "-mode", "batch", "-source",
+                           str(ROOT / "scripts/audit_p9_timing_checkpoint.tcl"),
+                           "-tclargs",
+                           str(ROOT / "evidence/generated/vivado/p9_z7010_candidate/post_route_p9_candidate.dcp"),
+                           str(timing_dir)], 1800),
+        ("shutdown", [str(VIVADO), "-mode", "batch", "-source",
+                      str(ROOT / "scripts/build_p9_z7010_shutdown.tcl"),
+                      "-tclargs", str(ROOT)], 3600),
+        ("ps_runtime", [sys.executable, str(ROOT / "scripts/build_p9_ps_runtime.py")], 3600),
+        ("candidate_regression", [sys.executable,
+                                  str(ROOT / "scripts/run_p9_candidate_regression.py"),
+                                  "--source-commit", source_commit], 7200),
+    ]
+    freeze_command = [sys.executable, str(ROOT / "scripts/freeze_p9_artifacts.py"),
+                      "--source-commit", source_commit,
+                      "--phase1-authorization", str(authorization_path)]
+    if requested_run_id:
+        freeze_command.extend(["--run-id", requested_run_id])
+    commands.append(("freeze", freeze_command, 1800))
+
+    results: dict[str, Any] = {}
+    errors: list[str] = []
+    env = os.environ.copy()
+    env["NO_HARDWARE"] = "1"
+    env["CURRENT_RUN_HARDWARE_AUTHORIZATION"] = "false"
+    for name, command, timeout in commands:
+        result = run_command(command, run_root / f"raw_logs/build_{name}.log",
+                             env=env, timeout=timeout)
+        results[name] = result
+        if result["returncode"] != 0:
+            errors.append(f"{name} failed with return code {result['returncode']}")
+            break
+    freeze_summary_path = OUT / "p9_artifact_freeze_summary.json"
+    freeze_summary = json.loads(freeze_summary_path.read_text(encoding="utf-8")) \
+        if not errors and freeze_summary_path.is_file() else None
+    if not errors and (not isinstance(freeze_summary, dict) or
+                       freeze_summary.get("status") != "PASS" or
+                       freeze_summary.get("source_commit") != source_commit):
+        errors.append("freeze summary is absent, failed, or not source-bound")
+    return {
+        "status": "PASS" if not errors else "FAIL",
+        "test_id": "P9-02-BUILD-AND-IMMUTABLE-FREEZE",
+        "source_commit": source_commit,
+        "hardware_actions_executed": False,
+        "steps": results,
+        "freeze_summary": freeze_summary,
+        "errors": errors,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+    if "--execute-hardware" in argv:
+        from p9_hardware_runtime import main as hardware_main
+        return hardware_main(argv)
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--build-only", action="store_true")
@@ -242,12 +307,35 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-summary", action="store_true")
     args = parser.parse_args(argv)
 
+    requested_run_id = args.run_id
     run_id = args.run_id or default_run_id()
     run_root = ROOT / "evidence/hardware/p9" / run_id
     run_root.mkdir(parents=True, exist_ok=True)
     authorization_path = args.authorize_from.resolve()
     intake = collect_intake(authorization_path)
     p8e = run_p8e_verify(run_root) if args.stage == "P9-00" else {"status": "NOT_RUN"}
+    if args.build_only:
+        build_errors = list(intake.get("errors", []))
+        if args.stage != "P9-02": build_errors.append("--build-only requires --stage P9-02")
+        if args.formal: build_errors.append("--build-only cannot be combined with --formal")
+        authorization = validate_authorization(
+            authorization_path, stage="P9-02", max_runtime=1800,
+            lane_mask=3, require_bound_artifacts=False,
+        )
+        if authorization["status"] != "PASS": build_errors.extend(authorization["errors"])
+        if args.dry_run or build_errors:
+            build = {"status": "PASS" if args.dry_run and not build_errors else "FAIL",
+                     "test_id": "P9-02-BUILD-DRY-RUN", "planned": True,
+                     "hardware_actions_executed": False, "errors": build_errors}
+        else:
+            build = execute_build_and_freeze(run_root, authorization_path, requested_run_id)
+        summary = {"schema_version": 1, **build, "stage": "P9-02",
+                   "run_id": run_id, "intake": intake, "authorization": authorization,
+                   "dry_run": args.dry_run, "build_only": True}
+        write_json(run_root / "final/orchestrator_result.json", summary)
+        if args.json_summary: print(json.dumps(summary, sort_keys=True))
+        else: print(f"P9_BUILD_FREEZE_STATUS={summary['status']}")
+        return 0 if summary["status"] == "PASS" else 1
     hardware_requested = args.formal and args.stage >= HARDWARE_STAGE_FIRST
     effective_runtime = args.max_runtime
     authorization = validate_authorization(

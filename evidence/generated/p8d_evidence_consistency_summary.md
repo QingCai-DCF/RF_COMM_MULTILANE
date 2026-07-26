@@ -1,25 +1,23 @@
 # P8D evidence consistency
 
-- Status: `PASS`
+- Status: `FAIL`
 - Test ID: `P8D-EVIDENCE-CONSISTENCY`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`
+- Source commit: `0e3aca774213327dcc668a93b2fe663f048c7e11`
 
 ```json
 {
   "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
-  "generated_utc": "2026-07-18T12:29:05.158083Z",
+  "generated_utc": "2026-07-26T13:11:24.531703Z",
   "hardware_scope_promoted": false,
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
-  "required_pairs_present": true,
-  "requirements_sha256": "ef2a62a4e177259aa5b87301dc053bc91150628ddd71e128153fe17bbce620c2",
+  "raw_logs_present": true,
+  "required_component_pairs_present": true,
   "schema_version": 1,
-  "selected_raw_run": "evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001",
-  "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
-  "source_commit_is_ancestor": true,
-  "state_sha256": "85bdb7a6fb1c0aa83eb5e34aedc782a6e8e6427b0c34879637708354fd739615",
-  "status": "PASS",
+  "selected_raw_run": "evidence/generated/p8d_raw/formal_0e3aca774213",
+  "source_commit": "0e3aca774213327dcc668a93b2fe663f048c7e11",
+  "status": "FAIL",
   "test_id": "P8D-EVIDENCE-CONSISTENCY"
 }
 ```

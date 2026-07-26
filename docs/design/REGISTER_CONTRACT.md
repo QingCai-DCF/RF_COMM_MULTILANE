@@ -2,8 +2,8 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P9-2` (`0x09000002`)
-- Canonical source SHA256: `2e422c25a68b3d013a96e9c9df7aaf4664ddd3e9e5d551aff40516004468387e`
+- Register map version: `P9-3` (`0x09000003`)
+- Canonical source SHA256: `9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a`
 - Compatibility: P0-P8D offsets and meanings are preserved; P9 Z7010 DMA/optical runtime is additive from 0x0700.
 
 | Name | Offset | Access | Description |
@@ -307,7 +307,7 @@
 | `P9_DUTY_HARD_LIMIT` | `0x0858` | `RO` | Strict less-than-20-percent high-cycle limit |
 | `P9_DUTY_TARGET_LIMIT` | `0x085C` | `RO` | Less-than-or-equal-to-18-percent target high cycles |
 | `P9_INITIAL_SEQUENCE` | `0x0860` | `RW` | Bounded validation-only selective-repeat initial sequence |
-| `P9_PROTOCOL_FAULT_FLAGS` | `0x0864` | `RW` | Single-use validation fault flags: stale session/path, future/old/out-of-order sequence, bad CRC, duplicate ACK |
+| `P9_PROTOCOL_FAULT_FLAGS` | `0x0864` | `RW` | Bounded validation fault injection; scheduler-only mapping and target-duty masks never bypass physical safety |
 | `P9_RX_OUT_OF_ORDER_COUNT` | `0x0868` | `RO` | Current-run accepted out-of-order frame count |
 | `P9_RX_OLD_COUNT` | `0x086C` | `RO` | Current-run old-sequence rejection count |
 | `P9_RX_FUTURE_COUNT` | `0x0870` | `RO` | Current-run future-window rejection count |

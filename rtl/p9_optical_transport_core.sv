@@ -247,7 +247,8 @@ module p9_optical_transport_core #(
   wire [STORE_ADDR_WIDTH-1:0] ingress_write_address =
       ingress_current_slot * MAX_PAYLOAD_BYTES + ingress_frame_length_q;
   wire ingress_store_write = beat_valid_q && !allocate_pending_q &&
-      !start_object_i && !abort_object_i && !full_shutdown_request_i &&
+      !start_object_i && !abort_object_i && !disarm_request_i &&
+      !full_shutdown_request_i &&
       !any_safety_fault;
 
   // Keep all payload and immutable slot metadata memories out of the
@@ -265,7 +266,8 @@ module p9_optical_transport_core #(
     end
   end
 
-  assign s_axis_tready_o = object_active_q && !object_fail_q && !input_complete_q &&
+  assign s_axis_tready_o = object_active_q && !object_fail_q && !disarm_request_i &&
+      !input_complete_q &&
       !beat_valid_q && !allocate_pending_q && ingress_can_start_frame;
   assign input_complete_o = input_complete_q;
   assign input_byte_count_o = ingress_bytes_q;
@@ -299,7 +301,7 @@ module p9_optical_transport_core #(
         ingress_frame_crc_q <= 32'hFFFF_FFFF;
         ingress_fragment_offset_q <= 0;
         allocate_pending_q <= 0;
-      end else if (abort_object_i || full_shutdown_request_i || any_safety_fault) begin
+      end else if (abort_object_i || disarm_request_i || full_shutdown_request_i || any_safety_fault) begin
         beat_valid_q <= 0;
         allocate_pending_q <= 0;
       end else begin
@@ -382,6 +384,17 @@ module p9_optical_transport_core #(
   wire [3:0] dp_scheduler_defer;
   wire [1:0] lane_runtime_ready;
   wire [1:0] effective_lane_mask = object_lane_mask_q & ~cfg_lane_unavailable_i;
+  // The validation-only masks exercise the real scheduler defer paths.  They
+  // can only remove a lane; they cannot create permit, mapping or duty
+  // headroom.  Physical target-duty headroom remains independently enforced.
+  wire [1:0] mapping_valid_mask = ~cfg_fault_flags_i[9:8];
+  wire [1:0] injected_duty_headroom_mask = ~cfg_fault_flags_i[11:10];
+  wire [1:0] physical_duty_headroom_mask =
+      ~{a_fault_duty[1] | b_fault_duty[1],
+        a_fault_duty[0] | b_fault_duty[0]};
+  wire [1:0] schedulable_lane_mask = effective_lane_mask &
+      mapping_valid_mask & injected_duty_headroom_mask &
+      physical_duty_headroom_mask;
 
   ir_data_plane_top #(
     .LANE_COUNT(2), .WINDOW_SIZE(WINDOW_SIZE), .SACK_BITS(SACK_BITS),
@@ -391,15 +404,15 @@ module p9_optical_transport_core #(
     .clk(clk), .rst_n(rst_n), .clear_counters_i(clear_counters_i),
     .session_reset_i(session_reset_pulse_q),
     .initial_sequence_i(object_initial_sequence_q),
-    .abort_all_i(abort_object_i || full_shutdown_request_i || any_safety_fault ||
+    .abort_all_i(abort_object_i || disarm_request_i || full_shutdown_request_i || any_safety_fault ||
                  object_fail_q),
     .session_epoch_i(object_session_q), .path_epoch_i(object_path_q),
     .path_epoch_valid_i(1'b1), .lane_weights_i(object_lane_weights_q),
     .active_lane_mask_i(effective_lane_mask), .lane_ready_i(lane_runtime_ready),
-    .lane_health_i(~cfg_lane_unavailable_i), .mapping_valid_i(2'b11),
+    .lane_health_i(~cfg_lane_unavailable_i), .mapping_valid_i(mapping_valid_mask),
     .frame_admission_i(2'b11), .lane_tx_permit_i({2{endpoint_armed_q}}),
-    .duty_headroom_i(~{a_fault_duty[1] | b_fault_duty[1],
-                       a_fault_duty[0] | b_fault_duty[0]}),
+    .duty_headroom_i(physical_duty_headroom_mask &
+                     injected_duty_headroom_mask),
     .fault_free_i(~{a_fault_stuck[1] | b_fault_stuck[1],
                     a_fault_stuck[0] | b_fault_stuck[0]}),
     .global_permit_effective_i(endpoint_armed_q), .endpoint_armed_i(endpoint_armed_q),
@@ -521,9 +534,9 @@ module p9_optical_transport_core #(
   reg ack_received_pulse_q;
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
-  assign lane_runtime_ready[0] = effective_lane_mask[0] && !serializer_busy[0] &&
+  assign lane_runtime_ready[0] = schedulable_lane_mask[0] && !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] && phase_q == PH_DATA;
-  assign lane_runtime_ready[1] = effective_lane_mask[1] && !serializer_busy[1] &&
+  assign lane_runtime_ready[1] = schedulable_lane_mask[1] && !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] && phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);
@@ -533,7 +546,7 @@ module p9_optical_transport_core #(
     for (tx_lane = 0; tx_lane < 2; tx_lane = tx_lane + 1) begin : g_serializer
       p9_4ppm_frame_tx #(.PAYLOAD_ADDR_WIDTH(STORE_ADDR_WIDTH)) u_serializer (
         .clk(clk), .rst_n(rst_n), .enable_i(endpoint_armed_q && !tx_kill),
-        .abort_i(abort_object_i || full_shutdown_request_i),
+        .abort_i(abort_object_i || disarm_request_i || full_shutdown_request_i),
         .rate_select_i(object_rate_q), .start_valid_i(lane_start_pending[tx_lane]),
         .start_ready_o(serializer_start_ready[tx_lane]),
         .frame_is_ack_i(lane_frame_ack[tx_lane]),
@@ -616,14 +629,16 @@ module p9_optical_transport_core #(
       if (start_object_i) begin
         phase_q <= PH_DATA;
         drop_data_remaining_q <= cfg_drop_data_count_i;
-        drop_ack_remaining_q <= cfg_drop_ack_count_i;
+        drop_ack_remaining_q <= cfg_fault_flags_i[7] ?
+            (cfg_drop_ack_count_i == 8'hff ? 8'hff :
+             cfg_drop_ack_count_i + 1'b1) : cfg_drop_ack_count_i;
         fault_flags_remaining_q <= cfg_fault_flags_i;
         fault_attempt_budget_q <= (cfg_fault_flags_i[4:0] != 0) ? 3 : 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
         end
-      end else if (abort_object_i || full_shutdown_request_i || any_safety_fault) begin
+      end else if (abort_object_i || disarm_request_i || full_shutdown_request_i || any_safety_fault) begin
         phase_q <= PH_DATA;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
@@ -688,23 +703,23 @@ module p9_optical_transport_core #(
               phase_guard_q <= 16'd256;
             end
           end
-          PH_ACK_GUARD: if (lanes_idle && effective_lane_mask != 0) begin
+          PH_ACK_GUARD: if (lanes_idle && schedulable_lane_mask != 0) begin
             if (phase_guard_q != 0) phase_guard_q <= phase_guard_q - 1'b1;
             else begin
-              ack_lane_q <= effective_lane_mask[0] ? 1'b0 : 1'b1;
-              lane_frame_ack[effective_lane_mask[0] ? 0 : 1] <= 1;
-              lane_session[effective_lane_mask[0] ? 0 : 1] <= dp_local_ack_session;
-              lane_path[effective_lane_mask[0] ? 0 : 1] <= object_path_q;
-              lane_sequence[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_length[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_crc[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_flags[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_object[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_fragment[effective_lane_mask[0] ? 0 : 1] <= 0;
-              lane_ack_base[effective_lane_mask[0] ? 0 : 1] <= dp_local_ack_base;
-              lane_ack_bitmap[effective_lane_mask[0] ? 0 : 1] <= dp_local_ack_bitmap;
-              lane_ack_credit[effective_lane_mask[0] ? 0 : 1] <= dp_local_ack_credit;
-              lane_start_pending[effective_lane_mask[0] ? 0 : 1] <= 1;
+              ack_lane_q <= schedulable_lane_mask[0] ? 1'b0 : 1'b1;
+              lane_frame_ack[schedulable_lane_mask[0] ? 0 : 1] <= 1;
+              lane_session[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_session;
+              lane_path[schedulable_lane_mask[0] ? 0 : 1] <= object_path_q;
+              lane_sequence[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_length[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_crc[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_flags[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_object[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_fragment[schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_ack_base[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_base;
+              lane_ack_bitmap[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_bitmap;
+              lane_ack_credit[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_credit;
+              lane_start_pending[schedulable_lane_mask[0] ? 0 : 1] <= 1;
               phase_q <= PH_ACK_START;
             end
           end
@@ -770,7 +785,11 @@ module p9_optical_transport_core #(
           end
         end else raw_cycle_q <= raw_cycle_q + 1'b1;
       end
-      if (full_shutdown_request_i || any_safety_fault) raw_busy_q <= 0;
+      if (disarm_request_i || full_shutdown_request_i || any_safety_fault) begin
+        raw_busy_q <= 0;
+        raw_mask_q <= 0;
+        raw_cycle_q <= 0;
+      end
     end
   end
 
@@ -1007,7 +1026,7 @@ module p9_optical_transport_core #(
   end
 
   wire rxc_store_write = rxc_state_q == RXC_COPY && !start_object_i &&
-      !abort_object_i && !full_shutdown_request_i;
+      !abort_object_i && !disarm_request_i && !full_shutdown_request_i;
   always @(posedge clk) begin : rx_payload_memory
     if (rxc_store_write)
       rx_store[rxc_base_q + rxc_write_index_q] <= rxc_lane_q ?
@@ -1071,7 +1090,7 @@ module p9_optical_transport_core #(
         reorder_hold_q <= cfg_fault_flags_i[6];
         for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) rx_pending[rx_lane] <= 0;
         for (rx_lane = 0; rx_lane < WINDOW_SIZE; rx_lane = rx_lane + 1) rx_final_slot[rx_lane] <= 0;
-      end else if (abort_object_i || full_shutdown_request_i) begin
+      end else if (abort_object_i || disarm_request_i || full_shutdown_request_i) begin
         rxc_state_q <= RXC_IDLE;
         reorder_hold_q <= 0;
         for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) rx_pending[rx_lane] <= 0;
@@ -1192,7 +1211,8 @@ module p9_optical_transport_core #(
   reg output_complete_q;
   reg [31:0] output_bytes_q;
   wire [15:0] output_remaining = out_length_q - out_stream_index_q;
-  assign m_axis_tvalid_o = out_state_q == OUT_STREAM;
+  assign m_axis_tvalid_o = out_state_q == OUT_STREAM && !abort_object_i &&
+      !disarm_request_i && !full_shutdown_request_i;
   assign m_axis_tdata_o = {
       output_remaining > 3 ? output_stage[out_stream_index_q + 3] : 8'd0,
       output_remaining > 2 ? output_stage[out_stream_index_q + 2] : 8'd0,
@@ -1206,7 +1226,7 @@ module p9_optical_transport_core #(
   assign output_byte_count_o = output_bytes_q;
 
   wire output_stage_write = out_state_q == OUT_COPY && !start_object_i &&
-      !abort_object_i && !full_shutdown_request_i;
+      !abort_object_i && !disarm_request_i && !full_shutdown_request_i;
   always @(posedge clk) begin : output_stage_memory
     if (output_stage_write)
       output_stage[out_copy_index_q] <= rx_store_read_data_q;
@@ -1230,7 +1250,7 @@ module p9_optical_transport_core #(
         out_state_q <= OUT_IDLE;
         output_complete_q <= 0;
         output_bytes_q <= 0;
-      end else if (abort_object_i || full_shutdown_request_i) begin
+      end else if (abort_object_i || disarm_request_i || full_shutdown_request_i) begin
         out_state_q <= OUT_IDLE;
       end else begin
         case (out_state_q)
@@ -1319,8 +1339,14 @@ module p9_optical_transport_core #(
           receiver_enable_q <= 1;
           shutdown_latched_q <= 0;
         end
-        if (disarm_request_i) endpoint_armed_q <= 0;
-        if (arm_request_i && receiver_enable_q && &phy_ready_mask_o)
+        if (disarm_request_i) begin
+          endpoint_armed_q <= 0;
+          if (object_active_q) begin
+            object_active_q <= 0;
+            object_fail_q <= 1;
+            object_error_q <= 32'h5009_0008;
+          end
+        end else if (arm_request_i && receiver_enable_q && &phy_ready_mask_o)
           endpoint_armed_q <= 1;
         if (abort_object_i) begin
           endpoint_armed_q <= 0;
@@ -1332,6 +1358,8 @@ module p9_optical_transport_core #(
           object_done_q <= 0;
           if (!endpoint_armed_q || raw_busy_q || cfg_lane_mask_i == 0 ||
               (cfg_lane_mask_i & ~cfg_lane_unavailable_i) == 0 ||
+              (cfg_lane_mask_i & ~cfg_lane_unavailable_i &
+               ~cfg_fault_flags_i[9:8] & ~cfg_fault_flags_i[11:10]) == 0 ||
               cfg_rate_select_i == 2'd3) begin
             object_active_q <= 0;
             object_fail_q <= 1;

@@ -6,7 +6,7 @@ base_checkpoint: 57ff1079b10a5c0de156b621820774bbb111c5ee
 base_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
 branch: p9/z7010-stationary-2lane
 part: xc7z010clg400-1
-top: p9_z7010_stationary_2lane_top
+top: p9_ps_system_wrapper
 profile: Z7010_2LANE_DEV
 lane_count: 2
 physical_module_count: 4
@@ -21,6 +21,23 @@ movement_allowed: false
 rotation_allowed: false
 ethernet_allowed: false
 spi_peer_allowed: false
+
+target_identity:
+  hw_server_url: localhost:3121
+  vivado_target: localhost:3121/xilinx_tcf/Digilent/210512180081
+  cable_serial: "210512180081"
+  live_device: xc7z010_1
+  idcode_normalized: "13722093"
+
+raw_idle_acceptance:
+  duration_ms: 5000
+  max_raw_pulses_per_physical_module: 16
+  max_false_preamble_count: 0
+  max_false_data_frames: 0
+  max_false_ack_frames: 0
+  max_crc_bad: 0
+  max_frame_bad: 0
+  max_symbol_errors: 0
 
 clock:
   protocol_hz: 64000000
@@ -64,6 +81,12 @@ performance:
   modeled_application_goodput_bps: null
   application_goodput_target_bps: null
   freeze_required_before_hardware: true
+  two_lane_model_gap: PENDING_NO_CREDIBLE_FROZEN_2LANE_APPLICATION_MODEL
+  cpu_load: SKIP_WITH_REASON_BAREMETAL_NOT_INSTRUMENTED
+
+instrumentation:
+  uart: SKIP_WITH_REASON_NO_UART_CORE_IN_FROZEN_CANDIDATE
+  ila_vio: SKIP_WITH_REASON_NO_ILA_OR_VIO_CORE_IN_FROZEN_CANDIDATE
 
 unchanged_pending_scopes:
   ETHERNET_LWIP_RUNTIME: DEFERRED_NOT_REQUIRED_FOR_P9

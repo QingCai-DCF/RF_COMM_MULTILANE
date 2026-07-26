@@ -43,6 +43,12 @@ enum {
   P9_PHY_SAFETY_MASK = 0x00000f00U,
   P9_POLL_DELAY_US = 50U,
   P9_RESET_POLLS = 200000U,
+  P9_RFAP_V1_HEADER_BYTES = 32U,
+  P9_RFAP_V1_CHUNK_BYTES = 215U,
+  P9_RFAP_V1_MAX_USEFUL_BYTES = 8U * 1024U * 1024U,
+  P9_RFAP_VNEXT_HEADER_BYTES = 48U,
+  P9_RFAP_VNEXT_CHUNK_BYTES = 64U * 1024U,
+  P9_DMA_MAX_TRANSFER_BYTES = 0x03ffffffU,
 };
 
 typedef struct {
@@ -88,6 +94,72 @@ static uint32_t g_rx_started;
 static uint32_t g_ring_depth;
 static uint32_t g_cache_enabled;
 static p9_metrics_t g_metrics;
+
+static void p9_write_u16_le(uint8_t *output, uint16_t value) {
+  output[0] = (uint8_t)value;
+  output[1] = (uint8_t)(value >> 8);
+}
+
+static void p9_write_u32_le(uint8_t *output, uint32_t value) {
+  output[0] = (uint8_t)value;
+  output[1] = (uint8_t)(value >> 8);
+  output[2] = (uint8_t)(value >> 16);
+  output[3] = (uint8_t)(value >> 24);
+}
+
+static void p9_write_u64_le(uint8_t *output, uint64_t value) {
+  p9_write_u32_le(output, (uint32_t)value);
+  p9_write_u32_le(output + 4U, (uint32_t)(value >> 32));
+}
+
+static uint16_t p9_read_u16_le(const uint8_t *input) {
+  return (uint16_t)((uint16_t)input[0] | ((uint16_t)input[1] << 8));
+}
+
+static uint32_t p9_read_u32_le(const uint8_t *input) {
+  return (uint32_t)input[0] | ((uint32_t)input[1] << 8) |
+         ((uint32_t)input[2] << 16) | ((uint32_t)input[3] << 24);
+}
+
+static uint64_t p9_read_u64_le(const uint8_t *input) {
+  return (uint64_t)p9_read_u32_le(input) |
+         ((uint64_t)p9_read_u32_le(input + 4U) << 32);
+}
+
+static uint8_t p9_pattern_byte(uint32_t object_id, uint32_t index) {
+  static const uint8_t binary_corpus[32] = {
+      0x00, 0xff, 0x55, 0xaa, 0x7e, 0x81, 0x01, 0x80,
+      0x10, 0xef, 0x33, 0xcc, 0x0f, 0xf0, 0x5a, 0xa5,
+      0x52, 0x46, 0x41, 0x50, 0x00, 0x01, 0xfe, 0xff,
+      0x13, 0x37, 0xde, 0xad, 0xbe, 0xef, 0xc3, 0x3c};
+  uint32_t mode = object_id >> 28;
+  if (mode == 1U) return 0U;
+  if (mode == 2U) return 0xffU;
+  if (mode == 3U) return (uint8_t)index;
+  if (mode == 4U) return binary_corpus[index & 31U];
+  uint32_t mixed = (object_id & UINT32_C(0x0fffffff)) ^
+                   (index * UINT32_C(0x9e3779b9)) ^ UINT32_C(0xa5c31f27);
+  mixed ^= mixed >> 16;
+  mixed *= UINT32_C(0x7feb352d);
+  mixed ^= mixed >> 15;
+  mixed *= UINT32_C(0x846ca68b);
+  mixed ^= mixed >> 16;
+  return (uint8_t)(mixed >> 24);
+}
+
+static uint32_t p9_crc32_update_byte(uint32_t crc, uint8_t value) {
+  crc ^= value;
+  for (uint32_t bit = 0U; bit < 8U; ++bit)
+    crc = (crc & 1U) != 0U ? (crc >> 1) ^ UINT32_C(0xedb88320) : crc >> 1;
+  return crc;
+}
+
+static uint32_t p9_generated_crc32(uint32_t object_id, uint32_t bytes) {
+  uint32_t crc = UINT32_C(0xffffffff);
+  for (uint32_t index = 0U; index < bytes; ++index)
+    crc = p9_crc32_update_byte(crc, p9_pattern_byte(object_id, index));
+  return crc ^ UINT32_C(0xffffffff);
+}
 
 static uint32_t p9_pl_read(uint32_t offset) {
   return Xil_In32((UINTPTR)IR_PL_BASEADDR + offset);
@@ -422,6 +494,7 @@ static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
   XAxiDma_BdRing *tx = XAxiDma_GetTxRing(&g_dma);
   XAxiDma_BdRing *rx = XAxiDma_GetRxRing(&g_dma);
   uint32_t tx_done = 0U, rx_done = 0U, pl_done = 0U;
+  uint64_t poll_start = p9_time_now();
   uint64_t deadline = p9_deadline_ms(timeout_ms);
   while (p9_time_now() < deadline) {
     XAxiDma_Bd *set;
@@ -438,6 +511,9 @@ static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
       g_metrics.tx_completed += (uint32_t)count;
       p9_advance_consumer(1U);
       tx_done = 1U;
+      p9_store_u64(&m->dma_tx_completion_ticks_low,
+                   &m->dma_tx_completion_ticks_high,
+                   p9_time_now() - poll_start);
     }
     if (rx_done == 0U &&
         (count = XAxiDma_BdRingFromHw(rx, XAXIDMA_ALL_BDS, &set)) != 0) {
@@ -453,13 +529,21 @@ static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
       g_metrics.rx_completed += (uint32_t)count;
       p9_advance_consumer(0U);
       rx_done = 1U;
+      p9_store_u64(&m->dma_rx_completion_ticks_low,
+                   &m->dma_rx_completion_ticks_high,
+                   p9_time_now() - poll_start);
     }
     uint32_t pl_status = p9_pl_read(IR_REG_P9_STATUS);
     if ((pl_status & P9_STATUS_OBJECT_FAIL) != 0U) {
       m->last_error_detail = p9_pl_read(IR_REG_P9_OBJECT_ERROR);
       return P9_RUNTIME_PL_OBJECT;
     }
-    if ((pl_status & P9_STATUS_OBJECT_DONE) != 0U) pl_done = 1U;
+    if ((pl_status & P9_STATUS_OBJECT_DONE) != 0U && pl_done == 0U) {
+      pl_done = 1U;
+      p9_store_u64(&m->pl_completion_ticks_low,
+                   &m->pl_completion_ticks_high,
+                   p9_time_now() - poll_start);
+    }
     if (tx_done != 0U && rx_done != 0U && pl_done != 0U) {
       g_metrics.last_completion_token = token;
       return P9_RUNTIME_OK;
@@ -474,8 +558,11 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
   p9_fill_identity(m);
   if (status != P9_RUNTIME_OK) return status;
   if (m->pl_id != UINT32_C(0x50395a10) ||
-      m->pl_build_id != UINT32_C(0x50090001) ||
+      m->pl_build_id != UINT32_C(0x50090002) ||
       m->pl_profile_id != UINT32_C(0x00701022) ||
+      m->pl_register_map_version != IR_REGISTER_MAP_VERSION ||
+      m->pl_register_map_hash_low != IR_REGISTER_MAP_HASH_LOW ||
+      m->pl_capabilities != UINT32_C(0xf7204221) ||
       m->dma_has_sg != 1U || m->dma_base_address != UINT32_C(0x40400000))
     return P9_RUNTIME_PL_IDENTITY;
   return P9_RUNTIME_OK;
@@ -516,12 +603,238 @@ static int p9_command_raw(volatile p9_mailbox_t *m) {
 }
 
 static void p9_fill_generated_payload(uint8_t *buffer, uint32_t bytes,
-                                      uint32_t seed) {
-  uint32_t state = seed ^ UINT32_C(0x9e3779b9);
-  for (uint32_t index = 0U; index < bytes; ++index) {
-    state = state * UINT32_C(1664525) + UINT32_C(1013904223);
-    buffer[index] = (uint8_t)(state >> 24);
+                                      uint32_t object_id) {
+  for (uint32_t index = 0U; index < bytes; ++index)
+    buffer[index] = p9_pattern_byte(object_id, index);
+}
+
+static int p9_rfap_transfer_bytes(volatile p9_mailbox_t *m,
+                                  uint32_t *transfer_bytes) {
+  uint32_t rfap_flags = m->command_flags &
+      (P9_FLAG_RFAP_V1_PAYLOAD | P9_FLAG_RFAP_VNEXT_PAYLOAD);
+  if (rfap_flags == (P9_FLAG_RFAP_V1_PAYLOAD | P9_FLAG_RFAP_VNEXT_PAYLOAD))
+    return P9_RUNTIME_BAD_ARGUMENT;
+  uint64_t encoded = m->object_size;
+  if (rfap_flags == P9_FLAG_RFAP_V1_PAYLOAD) {
+    if (m->object_size > P9_RFAP_V1_MAX_USEFUL_BYTES)
+      return P9_RUNTIME_BAD_ARGUMENT;
+    uint32_t fragments =
+        (m->object_size + P9_RFAP_V1_CHUNK_BYTES - 1U) /
+        P9_RFAP_V1_CHUNK_BYTES;
+    if (fragments == 0U || fragments > UINT16_MAX)
+      return P9_RUNTIME_BAD_ARGUMENT;
+    encoded += (uint64_t)fragments * P9_RFAP_V1_HEADER_BYTES;
+  } else if (rfap_flags == P9_FLAG_RFAP_VNEXT_PAYLOAD) {
+    uint32_t fragments =
+        (m->object_size + P9_RFAP_VNEXT_CHUNK_BYTES - 1U) /
+        P9_RFAP_VNEXT_CHUNK_BYTES;
+    if (fragments == 0U) return P9_RUNTIME_BAD_ARGUMENT;
+    encoded += (uint64_t)fragments * P9_RFAP_VNEXT_HEADER_BYTES;
   }
+  if (encoded == 0U || encoded > P9_DMA_MAX_TRANSFER_BYTES)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  *transfer_bytes = (uint32_t)encoded;
+  return P9_RUNTIME_OK;
+}
+
+static int p9_encode_rfap_v1(volatile p9_mailbox_t *m, uint8_t *output,
+                             uint32_t transfer_bytes) {
+  uint32_t useful = m->object_size;
+  uint32_t fragments =
+      (useful + P9_RFAP_V1_CHUNK_BYTES - 1U) / P9_RFAP_V1_CHUNK_BYTES;
+  uint32_t object_crc = p9_generated_crc32(m->object_id, useful);
+  uint32_t useful_offset = 0U, encoded_offset = 0U;
+  for (uint32_t fragment = 0U; fragment < fragments; ++fragment) {
+    uint32_t remaining = useful - useful_offset;
+    uint16_t chunk = (uint16_t)(remaining > P9_RFAP_V1_CHUNK_BYTES ?
+                                    P9_RFAP_V1_CHUNK_BYTES : remaining);
+    uint8_t *header = output + encoded_offset;
+    header[0] = 'R'; header[1] = 'F'; header[2] = 'A'; header[3] = 'P';
+    header[4] = 1U;
+    header[5] = (uint8_t)((fragment == 0U ? 1U : 0U) |
+                          (fragment + 1U == fragments ? 2U : 0U));
+    p9_write_u16_le(header + 6U, P9_RFAP_V1_HEADER_BYTES);
+    p9_write_u32_le(header + 8U, m->session_epoch);
+    p9_write_u32_le(header + 12U, m->object_id);
+    p9_write_u32_le(header + 16U, useful);
+    p9_write_u16_le(header + 20U, (uint16_t)fragment);
+    p9_write_u16_le(header + 22U, (uint16_t)fragments);
+    p9_write_u16_le(header + 24U, chunk);
+    p9_write_u16_le(header + 26U, 0U);
+    p9_write_u32_le(header + 28U, object_crc);
+    for (uint32_t index = 0U; index < chunk; ++index)
+      header[P9_RFAP_V1_HEADER_BYTES + index] =
+          p9_pattern_byte(m->object_id, useful_offset + index);
+    useful_offset += chunk;
+    encoded_offset += P9_RFAP_V1_HEADER_BYTES + chunk;
+  }
+  if (encoded_offset != transfer_bytes || useful_offset != useful)
+    return P9_RUNTIME_RFAP_VALIDATION;
+  m->rfap_mode = 1U;
+  m->rfap_fragment_count = fragments;
+  m->rfap_useful_bytes = useful;
+  m->rfap_useful_crc32 = object_crc;
+  return P9_RUNTIME_OK;
+}
+
+static int p9_encode_rfap_vnext(volatile p9_mailbox_t *m, uint8_t *output,
+                                uint32_t transfer_bytes) {
+  uint32_t useful = m->object_size;
+  uint32_t fragments =
+      (useful + P9_RFAP_VNEXT_CHUNK_BYTES - 1U) /
+      P9_RFAP_VNEXT_CHUNK_BYTES;
+  uint32_t useful_offset = 0U, encoded_offset = 0U;
+  for (uint32_t fragment = 0U; fragment < fragments; ++fragment) {
+    uint32_t remaining = useful - useful_offset;
+    uint32_t chunk = remaining > P9_RFAP_VNEXT_CHUNK_BYTES ?
+                         P9_RFAP_VNEXT_CHUNK_BYTES : remaining;
+    uint8_t *header = output + encoded_offset;
+    header[0] = 'R'; header[1] = 'F'; header[2] = 'A'; header[3] = 'P';
+    header[4] = 2U;
+    header[5] = (uint8_t)((fragment == 0U ? 1U : 0U) |
+                          (fragment + 1U == fragments ? 2U : 0U));
+    p9_write_u16_le(header + 6U, P9_RFAP_VNEXT_HEADER_BYTES);
+    p9_write_u32_le(header + 8U, UINT32_C(0x70100001));
+    p9_write_u32_le(header + 12U, m->session_epoch);
+    p9_write_u32_le(header + 16U, 1U + m->direction);
+    p9_write_u32_le(header + 20U, m->object_id);
+    p9_write_u64_le(header + 24U, useful_offset);
+    p9_write_u32_le(header + 32U, chunk);
+    p9_write_u16_le(header + 36U,
+                    (uint16_t)(m->initial_sequence + fragment));
+    p9_write_u16_le(header + 38U, (uint16_t)m->path_epoch);
+    p9_write_u64_le(header + 40U, useful);
+    for (uint32_t index = 0U; index < chunk; ++index)
+      header[P9_RFAP_VNEXT_HEADER_BYTES + index] =
+          p9_pattern_byte(m->object_id, useful_offset + index);
+    useful_offset += chunk;
+    encoded_offset += P9_RFAP_VNEXT_HEADER_BYTES + chunk;
+  }
+  if (encoded_offset != transfer_bytes || useful_offset != useful)
+    return P9_RUNTIME_RFAP_VALIDATION;
+  m->rfap_mode = 2U;
+  m->rfap_fragment_count = fragments;
+  m->rfap_useful_bytes = useful;
+  m->rfap_useful_crc32 = p9_generated_crc32(m->object_id, useful);
+  return P9_RUNTIME_OK;
+}
+
+static int p9_prepare_payload(volatile p9_mailbox_t *m, uint8_t *output,
+                              uint32_t transfer_bytes) {
+  if ((m->command_flags & P9_FLAG_RFAP_V1_PAYLOAD) != 0U)
+    return p9_encode_rfap_v1(m, output, transfer_bytes);
+  if ((m->command_flags & P9_FLAG_RFAP_VNEXT_PAYLOAD) != 0U)
+    return p9_encode_rfap_vnext(m, output, transfer_bytes);
+  if ((m->command_flags & P9_FLAG_GENERATE_PAYLOAD_IN_PS) != 0U)
+    p9_fill_generated_payload(output, transfer_bytes, m->object_id);
+  return P9_RUNTIME_OK;
+}
+
+static int p9_validate_rfap_v1(volatile p9_mailbox_t *m,
+                               const uint8_t *input,
+                               uint32_t transfer_bytes) {
+  uint32_t expected_fragments =
+      (m->object_size + P9_RFAP_V1_CHUNK_BYTES - 1U) /
+      P9_RFAP_V1_CHUNK_BYTES;
+  uint32_t expected_crc = p9_generated_crc32(m->object_id, m->object_size);
+  uint32_t encoded = 0U, useful = 0U;
+  uint32_t crc = UINT32_C(0xffffffff);
+  for (uint32_t fragment = 0U; fragment < expected_fragments; ++fragment) {
+    if (encoded + P9_RFAP_V1_HEADER_BYTES > transfer_bytes)
+      return P9_RUNTIME_RFAP_VALIDATION;
+    const uint8_t *header = input + encoded;
+    uint32_t remaining = m->object_size - useful;
+    uint16_t chunk = (uint16_t)(remaining > P9_RFAP_V1_CHUNK_BYTES ?
+                                    P9_RFAP_V1_CHUNK_BYTES : remaining);
+    uint8_t flags = (uint8_t)((fragment == 0U ? 1U : 0U) |
+                              (fragment + 1U == expected_fragments ? 2U : 0U));
+    if (header[0] != 'R' || header[1] != 'F' || header[2] != 'A' ||
+        header[3] != 'P' || header[4] != 1U || header[5] != flags ||
+        p9_read_u16_le(header + 6U) != P9_RFAP_V1_HEADER_BYTES ||
+        p9_read_u32_le(header + 8U) != m->session_epoch ||
+        p9_read_u32_le(header + 12U) != m->object_id ||
+        p9_read_u32_le(header + 16U) != m->object_size ||
+        p9_read_u16_le(header + 20U) != fragment ||
+        p9_read_u16_le(header + 22U) != expected_fragments ||
+        p9_read_u16_le(header + 24U) != chunk ||
+        p9_read_u16_le(header + 26U) != 0U ||
+        p9_read_u32_le(header + 28U) != expected_crc ||
+        encoded + P9_RFAP_V1_HEADER_BYTES + chunk > transfer_bytes)
+      return P9_RUNTIME_RFAP_VALIDATION;
+    for (uint32_t index = 0U; index < chunk; ++index) {
+      uint8_t value = header[P9_RFAP_V1_HEADER_BYTES + index];
+      if (value != p9_pattern_byte(m->object_id, useful + index))
+        return P9_RUNTIME_RFAP_VALIDATION;
+      crc = p9_crc32_update_byte(crc, value);
+    }
+    useful += chunk;
+    encoded += P9_RFAP_V1_HEADER_BYTES + chunk;
+  }
+  if (encoded != transfer_bytes || useful != m->object_size ||
+      (crc ^ UINT32_C(0xffffffff)) != expected_crc)
+    return P9_RUNTIME_RFAP_VALIDATION;
+  m->rfap_validation_pass = 1U;
+  m->rfap_atomic_publish_count = 1U;
+  m->rfap_useful_crc32 = expected_crc;
+  return P9_RUNTIME_OK;
+}
+
+static int p9_validate_rfap_vnext(volatile p9_mailbox_t *m,
+                                  const uint8_t *input,
+                                  uint32_t transfer_bytes) {
+  uint32_t expected_fragments =
+      (m->object_size + P9_RFAP_VNEXT_CHUNK_BYTES - 1U) /
+      P9_RFAP_VNEXT_CHUNK_BYTES;
+  uint32_t encoded = 0U, useful = 0U;
+  uint32_t crc = UINT32_C(0xffffffff);
+  for (uint32_t fragment = 0U; fragment < expected_fragments; ++fragment) {
+    if (encoded + P9_RFAP_VNEXT_HEADER_BYTES > transfer_bytes)
+      return P9_RUNTIME_RFAP_VALIDATION;
+    const uint8_t *header = input + encoded;
+    uint32_t remaining = m->object_size - useful;
+    uint32_t chunk = remaining > P9_RFAP_VNEXT_CHUNK_BYTES ?
+                         P9_RFAP_VNEXT_CHUNK_BYTES : remaining;
+    uint8_t flags = (uint8_t)((fragment == 0U ? 1U : 0U) |
+                              (fragment + 1U == expected_fragments ? 2U : 0U));
+    if (header[0] != 'R' || header[1] != 'F' || header[2] != 'A' ||
+        header[3] != 'P' || header[4] != 2U || header[5] != flags ||
+        p9_read_u16_le(header + 6U) != P9_RFAP_VNEXT_HEADER_BYTES ||
+        p9_read_u32_le(header + 8U) != UINT32_C(0x70100001) ||
+        p9_read_u32_le(header + 12U) != m->session_epoch ||
+        p9_read_u32_le(header + 16U) != 1U + m->direction ||
+        p9_read_u32_le(header + 20U) != m->object_id ||
+        p9_read_u64_le(header + 24U) != useful ||
+        p9_read_u32_le(header + 32U) != chunk ||
+        p9_read_u16_le(header + 36U) !=
+            (uint16_t)(m->initial_sequence + fragment) ||
+        p9_read_u16_le(header + 38U) != (uint16_t)m->path_epoch ||
+        p9_read_u64_le(header + 40U) != m->object_size ||
+        encoded + P9_RFAP_VNEXT_HEADER_BYTES + chunk > transfer_bytes)
+      return P9_RUNTIME_RFAP_VALIDATION;
+    for (uint32_t index = 0U; index < chunk; ++index) {
+      uint8_t value = header[P9_RFAP_VNEXT_HEADER_BYTES + index];
+      if (value != p9_pattern_byte(m->object_id, useful + index))
+        return P9_RUNTIME_RFAP_VALIDATION;
+      crc = p9_crc32_update_byte(crc, value);
+    }
+    useful += chunk;
+    encoded += P9_RFAP_VNEXT_HEADER_BYTES + chunk;
+  }
+  if (encoded != transfer_bytes || useful != m->object_size)
+    return P9_RUNTIME_RFAP_VALIDATION;
+  m->rfap_validation_pass = 1U;
+  m->rfap_atomic_publish_count = 1U;
+  m->rfap_useful_crc32 = crc ^ UINT32_C(0xffffffff);
+  return P9_RUNTIME_OK;
+}
+
+static int p9_validate_rfap(volatile p9_mailbox_t *m, const uint8_t *input,
+                            uint32_t transfer_bytes) {
+  if ((m->command_flags & P9_FLAG_RFAP_V1_PAYLOAD) != 0U)
+    return p9_validate_rfap_v1(m, input, transfer_bytes);
+  if ((m->command_flags & P9_FLAG_RFAP_VNEXT_PAYLOAD) != 0U)
+    return p9_validate_rfap_vnext(m, input, transfer_bytes);
+  return P9_RUNTIME_OK;
 }
 
 static int p9_configure_object(volatile p9_mailbox_t *m) {
@@ -535,7 +848,7 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
   p9_pl_write(IR_REG_P9_INITIAL_SEQUENCE, m->initial_sequence & 0xffffU);
   p9_pl_write(IR_REG_P9_PROTOCOL_FAULT_FLAGS,
-              m->protocol_fault_flags & 0x7fU);
+              m->protocol_fault_flags & 0xfffU);
   p9_pl_write(IR_REG_P9_FAULT_INJECTION,
               (m->drop_data_count & 0xffU) |
                   ((m->drop_ack_count & 0xffU) << 8) |
@@ -545,14 +858,18 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
 
 static int p9_validate_object_args(volatile p9_mailbox_t *m,
                                    UINTPTR *tx_address,
-                                   UINTPTR *rx_address) {
+                                   UINTPTR *rx_address,
+                                   uint32_t *transfer_bytes) {
   if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
       m->rate_select > 2U || (m->ring_depth != 8U && m->ring_depth != 32U) ||
       m->cache_mode > 1U || m->object_size == 0U ||
       m->object_size > P9_MAX_OBJECT_BYTES || m->tx_offset > 63U ||
-      m->rx_offset > 63U ||
-      m->object_size + m->tx_offset > P9_MAX_OBJECT_BYTES ||
-      m->object_size + m->rx_offset > P9_MAX_OBJECT_BYTES)
+      m->rx_offset > 63U)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  int status = p9_rfap_transfer_bytes(m, transfer_bytes);
+  if (status != P9_RUNTIME_OK ||
+      *transfer_bytes + m->tx_offset > P9_MAX_OBJECT_BYTES ||
+      *transfer_bytes + m->rx_offset > P9_MAX_OBJECT_BYTES)
     return P9_RUNTIME_BAD_ARGUMENT;
   *tx_address = (UINTPTR)P9_TX_BUFFER_BASEADDR + m->tx_offset;
   *rx_address = (UINTPTR)P9_RX_BUFFER_BASEADDR + m->rx_offset;
@@ -561,12 +878,20 @@ static int p9_validate_object_args(volatile p9_mailbox_t *m,
 
 static int p9_command_object(volatile p9_mailbox_t *m) {
   UINTPTR tx_address, rx_address;
+  uint32_t transfer_bytes = 0U;
+  uint64_t object_runtime_start = p9_time_now();
   uint32_t tx_submitted_before = g_metrics.tx_submitted;
   uint32_t tx_completed_before = g_metrics.tx_completed;
   uint32_t rx_submitted_before = g_metrics.rx_submitted;
   uint32_t rx_completed_before = g_metrics.rx_completed;
-  int status = p9_validate_object_args(m, &tx_address, &rx_address);
-  if (status != P9_RUNTIME_OK) return status;
+  int status = p9_validate_object_args(m, &tx_address, &rx_address,
+                                       &transfer_bytes);
+  if (status != P9_RUNTIME_OK) {
+    p9_store_u64(&m->object_runtime_ticks_low,
+                 &m->object_runtime_ticks_high,
+                 p9_time_now() - object_runtime_start);
+    return status;
+  }
   status = p9_shutdown();
   if (status != P9_RUNTIME_OK) return status;
   if (g_ring_depth != m->ring_depth) {
@@ -575,19 +900,22 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
   }
   uint8_t *tx_buffer = (uint8_t *)tx_address;
   uint8_t *rx_buffer = (uint8_t *)rx_address;
-  if ((m->command_flags & P9_FLAG_GENERATE_PAYLOAD_IN_PS) != 0U) {
-    p9_fill_generated_payload(tx_buffer, m->object_size, m->object_id);
-    memset(rx_buffer, 0, m->object_size);
-  }
+  uint64_t prepare_start = p9_time_now();
+  status = p9_prepare_payload(m, tx_buffer, transfer_bytes);
+  if (status != P9_RUNTIME_OK) goto object_exit;
+  memset(rx_buffer, 0, transfer_bytes);
   uint8_t input_sha[32], output_sha[32];
-  m->input_crc32 = p9_crc32(tx_buffer, m->object_size);
-  p9_sha256(tx_buffer, m->object_size, input_sha);
+  m->input_crc32 = p9_crc32(tx_buffer, transfer_bytes);
+  p9_sha256(tx_buffer, transfer_bytes, input_sha);
   p9_copy_digest(m->input_sha256, input_sha);
+  p9_store_u64(&m->payload_prepare_ticks_low,
+               &m->payload_prepare_ticks_high,
+               p9_time_now() - prepare_start);
   if (m->cache_mode != 0U) {
     p9_cache_enable();
     g_metrics.cache_enabled_exercised = 1U;
-    p9_cache_flush(tx_address, m->object_size);
-    p9_cache_invalidate(rx_address, m->object_size);
+    p9_cache_flush(tx_address, transfer_bytes);
+    p9_cache_invalidate(rx_address, transfer_bytes);
   } else {
     p9_cache_disable();
     g_metrics.cache_disabled_exercised = 1U;
@@ -598,7 +926,7 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) goto object_exit;
   p9_configure_object(m);
   uint32_t token = m->command_sequence ^ m->object_id ^ UINT32_C(0x50390000);
-  status = p9_submit_rx(rx_address, m->object_size, token);
+  status = p9_submit_rx(rx_address, transfer_bytes, token);
   if (status != P9_RUNTIME_OK) goto object_exit;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
   usleep(10U);
@@ -615,29 +943,35 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
     (void)p9_dma_initialize(m->ring_depth, 1U);
     goto object_exit;
   }
-  status = p9_submit_tx(tx_address, m->object_size, token);
+  status = p9_submit_tx(tx_address, transfer_bytes, token);
   if (status != P9_RUNTIME_OK) goto object_exit;
   status = p9_poll_completion(m, token, m->timeout_ms);
   if (status == P9_RUNTIME_OK) {
     if (m->cache_mode != 0U)
-      p9_cache_invalidate(rx_address, m->object_size);
+      p9_cache_invalidate(rx_address, transfer_bytes);
     dsb();
     g_metrics.memory_barrier_count++;
-    m->output_crc32 = p9_crc32(rx_buffer, m->object_size);
-    p9_sha256(rx_buffer, m->object_size, output_sha);
+    uint64_t integrity_start = p9_time_now();
+    m->output_crc32 = p9_crc32(rx_buffer, transfer_bytes);
+    p9_sha256(rx_buffer, transfer_bytes, output_sha);
     p9_copy_digest(m->output_sha256, output_sha);
     m->first_mismatch_offset = UINT32_C(0xffffffff);
-    for (uint32_t index = 0U; index < m->object_size; ++index) {
+    for (uint32_t index = 0U; index < transfer_bytes; ++index) {
       if (tx_buffer[index] != rx_buffer[index]) {
         m->first_mismatch_offset = index;
         status = P9_RUNTIME_PAYLOAD_MISMATCH;
         break;
       }
     }
-    if (m->actual_rx_length != m->object_size ||
+    if (m->actual_rx_length != transfer_bytes ||
         m->input_crc32 != m->output_crc32 ||
         memcmp(input_sha, output_sha, sizeof(input_sha)) != 0)
       status = P9_RUNTIME_PAYLOAD_MISMATCH;
+    if (status == P9_RUNTIME_OK)
+      status = p9_validate_rfap(m, rx_buffer, transfer_bytes);
+    p9_store_u64(&m->integrity_verify_ticks_low,
+                 &m->integrity_verify_ticks_high,
+                 p9_time_now() - integrity_start);
   }
 
 object_exit:
@@ -659,6 +993,9 @@ object_exit:
     int shutdown_status = p9_shutdown();
     if (status == P9_RUNTIME_OK) status = shutdown_status;
   }
+  p9_store_u64(&m->object_runtime_ticks_low,
+               &m->object_runtime_ticks_high,
+               p9_time_now() - object_runtime_start);
   return status;
 }
 
@@ -700,16 +1037,18 @@ static int p9_command_dma_reset_idle(volatile p9_mailbox_t *m) {
 
 static int p9_command_dma_reset_queued(volatile p9_mailbox_t *m) {
   UINTPTR tx_address, rx_address;
-  int status = p9_validate_object_args(m, &tx_address, &rx_address);
+  uint32_t transfer_bytes = 0U;
+  int status = p9_validate_object_args(m, &tx_address, &rx_address,
+                                       &transfer_bytes);
   if (status != P9_RUNTIME_OK) return status;
   status = p9_shutdown();
   if (status != P9_RUNTIME_OK) return status;
   status = p9_dma_initialize(m->ring_depth, 1U);
   if (status != P9_RUNTIME_OK) return status;
   uint32_t token = m->command_sequence ^ UINT32_C(0x51554555);
-  status = p9_submit_rx(rx_address, m->object_size, token);
+  status = p9_submit_rx(rx_address, transfer_bytes, token);
   if (status == P9_RUNTIME_OK)
-    status = p9_submit_tx(tx_address, m->object_size, token);
+    status = p9_submit_tx(tx_address, transfer_bytes, token);
   if (status != P9_RUNTIME_OK) return status;
   usleep(1000U);
   g_metrics.dma_reset_while_queued_count++;
@@ -724,20 +1063,30 @@ static int p9_command_dma_reset_queued(volatile p9_mailbox_t *m) {
 
 static int p9_command_abort_outstanding(volatile p9_mailbox_t *m) {
   UINTPTR tx_address, rx_address;
-  int status = p9_validate_object_args(m, &tx_address, &rx_address);
+  uint32_t transfer_bytes = 0U;
+  int status = p9_validate_object_args(m, &tx_address, &rx_address,
+                                       &transfer_bytes);
   if (status != P9_RUNTIME_OK) return status;
   status = p9_shutdown();
   if (status != P9_RUNTIME_OK) return status;
   status = p9_dma_initialize(m->ring_depth, 1U);
   if (status != P9_RUNTIME_OK) return status;
+  status = p9_prepare_payload(m, (uint8_t *)tx_address, transfer_bytes);
+  if (status != P9_RUNTIME_OK) return status;
+  memset((void *)rx_address, 0, transfer_bytes);
+  if (m->cache_mode != 0U) {
+    p9_cache_enable();
+    p9_cache_flush(tx_address, transfer_bytes);
+    p9_cache_invalidate(rx_address, transfer_bytes);
+  }
   status = p9_enable_and_arm();
   if (status != P9_RUNTIME_OK) return status;
   p9_configure_object(m);
   uint32_t token = m->command_sequence ^ UINT32_C(0x41424f52);
-  status = p9_submit_rx(rx_address, m->object_size, token);
+  status = p9_submit_rx(rx_address, transfer_bytes, token);
   if (status != P9_RUNTIME_OK) goto abort_exit;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
-  status = p9_submit_tx(tx_address, m->object_size, token);
+  status = p9_submit_tx(tx_address, transfer_bytes, token);
   if (status != P9_RUNTIME_OK) goto abort_exit;
   {
     uint64_t deadline = p9_deadline_ms(m->timeout_ms == 0U ? 1000U :
@@ -788,6 +1137,109 @@ static int p9_command_stale_completion(volatile p9_mailbox_t *m) {
     return P9_RUNTIME_BAD_ARGUMENT;
   g_metrics.stale_completion_rejected++;
   return P9_RUNTIME_OK;
+}
+
+static void p9_read_physical_tx_counts(volatile uint32_t output[4]) {
+  output[0] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_A0);
+  output[1] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_A1);
+  output[2] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_B0);
+  output[3] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_B1);
+}
+
+static int p9_command_permit_drop(volatile p9_mailbox_t *m) {
+  if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
+      m->raw_target < 64U || m->raw_spacing_cycles < 128U)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  int status = p9_shutdown();
+  if (status != P9_RUNTIME_OK) return status;
+  status = p9_enable_and_arm();
+  if (status != P9_RUNTIME_OK) return status;
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
+  p9_pl_write(IR_REG_P9_RAW_CONFIG,
+              (m->lane_mask & 3U) | ((m->direction & 1U) << 8));
+  p9_pl_write(IR_REG_P9_RAW_TARGET, m->raw_target);
+  p9_pl_write(IR_REG_P9_RAW_SPACING, m->raw_spacing_cycles);
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_RAW_MASK);
+
+  uint64_t deadline = p9_deadline_ms(m->timeout_ms == 0U ? 10000U :
+                                                            m->timeout_ms);
+  uint32_t active_seen = 0U;
+  while (p9_time_now() < deadline) {
+    uint32_t raw_sent = p9_pl_read(IR_REG_P9_RAW_SENT_COUNT);
+    uint32_t pl_status = p9_pl_read(IR_REG_P9_STATUS);
+    if (raw_sent >= 4U && (pl_status & P9_STATUS_RAW_BUSY) != 0U) {
+      active_seen = 1U;
+      break;
+    }
+    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U)
+      break;
+    usleep(P9_POLL_DELAY_US);
+  }
+  if (active_seen == 0U) {
+    status = P9_RUNTIME_PERMIT_DROP;
+    goto permit_exit;
+  }
+  p9_read_physical_tx_counts(m->permit_tx_before_drop);
+  m->permit_raw_sent_before_drop = p9_pl_read(IR_REG_P9_RAW_SENT_COUNT);
+  m->permit_result_flags |= 1U << 0;
+
+  /* This is the local endpoint disarm request.  It does not synthesize or
+   * override the external single GLOBAL_PERMIT and it does not assert SD. */
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_DISARM_REQUEST_MASK);
+  deadline = p9_deadline_ms(20U);
+  while (p9_time_now() < deadline) {
+    uint32_t pl_status = p9_pl_read(IR_REG_P9_STATUS);
+    if ((pl_status & P9_STATUS_ENDPOINT_ARMED) == 0U &&
+        (pl_status & P9_STATUS_TX_KILL_ACTIVE) != 0U &&
+        (pl_status & P9_STATUS_RAW_BUSY) == 0U) {
+      m->permit_result_flags |= (1U << 1) | (1U << 2);
+      break;
+    }
+    usleep(P9_POLL_DELAY_US);
+  }
+  m->permit_status_after_drop = p9_pl_read(IR_REG_P9_STATUS);
+  p9_read_physical_tx_counts(m->permit_tx_after_drop);
+  m->permit_raw_sent_after_drop = p9_pl_read(IR_REG_P9_RAW_SENT_COUNT);
+  usleep(1000U);
+  volatile uint32_t stable_counts[4];
+  p9_read_physical_tx_counts(stable_counts);
+  uint32_t stable_sent = p9_pl_read(IR_REG_P9_RAW_SENT_COUNT);
+  uint32_t stable = stable_sent == m->permit_raw_sent_after_drop;
+  for (uint32_t index = 0U; index < 4U; ++index)
+    if (stable_counts[index] != m->permit_tx_after_drop[index]) stable = 0U;
+  if (stable != 0U) m->permit_result_flags |= 1U << 3;
+
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_ARM_REQUEST_MASK);
+  deadline = p9_deadline_ms(20U);
+  while (p9_time_now() < deadline) {
+    uint32_t pl_status = p9_pl_read(IR_REG_P9_STATUS);
+    if ((pl_status & P9_STATUS_ENDPOINT_ARMED) != 0U &&
+        (pl_status & P9_STATUS_TX_KILL_ACTIVE) == 0U) {
+      m->permit_result_flags |= 1U << 4;
+      break;
+    }
+    usleep(P9_POLL_DELAY_US);
+  }
+  usleep(1000U);
+  m->permit_status_after_rearm = p9_pl_read(IR_REG_P9_STATUS);
+  p9_read_physical_tx_counts(m->permit_tx_after_rearm);
+  m->permit_raw_sent_after_rearm = p9_pl_read(IR_REG_P9_RAW_SENT_COUNT);
+  uint32_t no_resume =
+      (m->permit_status_after_rearm & P9_STATUS_RAW_BUSY) == 0U &&
+      m->permit_raw_sent_after_rearm == m->permit_raw_sent_after_drop;
+  for (uint32_t index = 0U; index < 4U; ++index)
+    if (m->permit_tx_after_rearm[index] != m->permit_tx_after_drop[index])
+      no_resume = 0U;
+  if (no_resume != 0U) m->permit_result_flags |= 1U << 5;
+  status = m->permit_result_flags == 0x3fU ?
+               P9_RUNTIME_OK : P9_RUNTIME_PERMIT_DROP;
+
+permit_exit:
+  {
+    int shutdown_status = p9_shutdown();
+    if (status == P9_RUNTIME_OK) status = shutdown_status;
+  }
+  return status;
 }
 
 static int p9_command_idle_noise(volatile p9_mailbox_t *m) {
@@ -846,6 +1298,8 @@ static void p9_clear_result_fields(volatile p9_mailbox_t *m) {
     m->input_sha256[index] = 0U;
     m->output_sha256[index] = 0U;
   }
+  volatile uint32_t *extended = &m->payload_prepare_ticks_low;
+  for (uint32_t index = 0U; index < 37U; ++index) extended[index] = 0U;
 }
 
 static int p9_dispatch(volatile p9_mailbox_t *m) {
@@ -861,6 +1315,8 @@ static int p9_dispatch(volatile p9_mailbox_t *m) {
     case P9_COMMAND_STALE_COMPLETION: return p9_command_stale_completion(m);
     case P9_COMMAND_SHUTDOWN: return p9_shutdown();
     case P9_COMMAND_IDLE_NOISE: return p9_command_idle_noise(m);
+    case P9_COMMAND_PERMIT_DROP_DIAGNOSTIC:
+      return p9_command_permit_drop(m);
     default: return P9_RUNTIME_BAD_COMMAND;
   }
 }

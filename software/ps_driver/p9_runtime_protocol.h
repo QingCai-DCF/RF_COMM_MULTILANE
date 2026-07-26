@@ -1,6 +1,7 @@
 #ifndef P9_RUNTIME_PROTOCOL_H
 #define P9_RUNTIME_PROTOCOL_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define P9_MAILBOX_BASEADDR UINT32_C(0x00020000)
@@ -10,8 +11,8 @@
 #define P9_RX_BUFFER_BASEADDR UINT32_C(0x06000000)
 #define P9_MAX_OBJECT_BYTES UINT32_C(0x04000000)
 #define P9_MAILBOX_MAGIC UINT32_C(0x424d3950) /* P9MB */
-#define P9_RUNTIME_BUILD_ID UINT32_C(0x50090003)
-#define P9_MAILBOX_SCHEMA_VERSION UINT32_C(3)
+#define P9_RUNTIME_BUILD_ID UINT32_C(0x50090004)
+#define P9_MAILBOX_SCHEMA_VERSION UINT32_C(4)
 #define P9_PL_SNAPSHOT_WORDS 99U
 
 enum p9_service_state {
@@ -37,6 +38,7 @@ enum p9_command {
   P9_COMMAND_STALE_COMPLETION = 9,
   P9_COMMAND_SHUTDOWN = 10,
   P9_COMMAND_IDLE_NOISE = 11,
+  P9_COMMAND_PERMIT_DROP_DIAGNOSTIC = 12,
 };
 
 enum p9_runtime_status {
@@ -57,11 +59,15 @@ enum p9_runtime_status {
   P9_RUNTIME_RAW_TIMEOUT = 14,
   P9_RUNTIME_RESET_FAILED = 15,
   P9_RUNTIME_EXPECTED_ABORT = 16,
+  P9_RUNTIME_RFAP_VALIDATION = 17,
+  P9_RUNTIME_PERMIT_DROP = 18,
 };
 
 enum p9_command_flags {
   P9_FLAG_ALLOW_EXPECTED_OBJECT_FAILURE = 1U << 0,
   P9_FLAG_GENERATE_PAYLOAD_IN_PS = 1U << 1,
+  P9_FLAG_RFAP_V1_PAYLOAD = 1U << 2,
+  P9_FLAG_RFAP_VNEXT_PAYLOAD = 1U << 3,
 };
 
 /* The host writes command_sequence last and the firmware writes
@@ -175,8 +181,50 @@ typedef struct p9_mailbox {
   volatile uint32_t last_error_detail;
 
   volatile uint32_t pl_register_snapshot[P9_PL_SNAPSHOT_WORDS];
+
+  /* Direct PS/runtime latency instrumentation.  Each pair is a 64-bit TTC
+   * count with the low word first. */
+  volatile uint32_t payload_prepare_ticks_low;
+  volatile uint32_t payload_prepare_ticks_high;
+  volatile uint32_t dma_tx_completion_ticks_low;
+  volatile uint32_t dma_tx_completion_ticks_high;
+  volatile uint32_t dma_rx_completion_ticks_low;
+  volatile uint32_t dma_rx_completion_ticks_high;
+  volatile uint32_t pl_completion_ticks_low;
+  volatile uint32_t pl_completion_ticks_high;
+  volatile uint32_t integrity_verify_ticks_low;
+  volatile uint32_t integrity_verify_ticks_high;
+  volatile uint32_t object_runtime_ticks_low;
+  volatile uint32_t object_runtime_ticks_high;
+
+  /* Permit-drop diagnostic captures all four physical module counters before
+   * drop, after drop, and after an explicit re-arm. */
+  volatile uint32_t permit_tx_before_drop[4];
+  volatile uint32_t permit_tx_after_drop[4];
+  volatile uint32_t permit_tx_after_rearm[4];
+  volatile uint32_t permit_status_after_drop;
+  volatile uint32_t permit_status_after_rearm;
+  volatile uint32_t permit_raw_sent_before_drop;
+  volatile uint32_t permit_raw_sent_after_drop;
+  volatile uint32_t permit_raw_sent_after_rearm;
+  volatile uint32_t permit_result_flags;
+
+  /* Runtime RFAP parser/reassembly evidence. */
+  volatile uint32_t rfap_mode;
+  volatile uint32_t rfap_fragment_count;
+  volatile uint32_t rfap_useful_bytes;
+  volatile uint32_t rfap_validation_pass;
+  volatile uint32_t rfap_partial_publish_count;
+  volatile uint32_t rfap_atomic_publish_count;
+  volatile uint32_t rfap_useful_crc32;
 } p9_mailbox_t;
 
+_Static_assert(offsetof(p9_mailbox_t, pl_register_snapshot) == 116U * 4U,
+               "P9 PL snapshot mailbox offset changed");
+_Static_assert(offsetof(p9_mailbox_t, payload_prepare_ticks_low) == 215U * 4U,
+               "P9 appended telemetry mailbox offset changed");
+_Static_assert(sizeof(p9_mailbox_t) == 252U * 4U,
+               "P9 mailbox schema-4 layout must be exactly 252 words");
 _Static_assert(sizeof(p9_mailbox_t) <= 1024U,
                "P9 mailbox must remain inside one OCM page");
 

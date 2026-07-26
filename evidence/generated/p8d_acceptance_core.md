@@ -1,9 +1,9 @@
 # P8D acceptance core
 
-- Status: `PASS`
+- Status: `FAIL`
 - Test ID: `P8D-ACCEPTANCE-CORE`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`
+- Source commit: `0e3aca774213327dcc668a93b2fe663f048c7e11`
 
 ```json
 {
@@ -29,14 +29,14 @@
     "GLOBAL_OUTSTANDING_32": "PASS",
     "HEALTH_AWARE_WEIGHTED_SCHEDULER": "PASS",
     "LANE_FAULT_ISOLATION": "PASS",
-    "NO_HARDWARE_STATIC_SCAN": "PASS",
-    "OFFLINE_FULL_REGRESSION": "PASS",
-    "P0_P8C_REGRESSION": "PASS",
-    "P8C_BASELINE_RECHECK": "PASS",
+    "NO_HARDWARE_STATIC_SCAN": "FAIL",
+    "OFFLINE_FULL_REGRESSION": "FAIL",
+    "P0_P8C_REGRESSION": "FAIL",
+    "P8C_BASELINE_RECHECK": "FAIL",
     "P8D_CANONICAL_CONFIG": "PASS",
     "PARTIAL_OBJECT_COMMIT_ZERO": "PASS",
     "PS_DRIVER_OFFLINE": "PASS",
-    "REGISTER_MAP_CONSISTENCY": "PASS",
+    "REGISTER_MAP_CONSISTENCY": "FAIL",
     "RESET_ABORT_DETERMINISTIC_RECLAIM": "PASS",
     "RETRY_EXHAUSTION_BOUNDED": "PASS",
     "RETRY_MIGRATION": "PASS",
@@ -57,17 +57,23 @@
     "Z7020_OUTSTANDING_64_PROFILE": "PASS",
     "Z7020_ROTATING_8LANE_PROFILE": "PASS"
   },
-  "failures": [],
-  "generated_utc": "2026-07-18T12:28:07.467144Z",
+  "failures": [
+    "NO_HARDWARE_STATIC_SCAN",
+    "OFFLINE_FULL_REGRESSION",
+    "P0_P8C_REGRESSION",
+    "P8C_BASELINE_RECHECK",
+    "REGISTER_MAP_CONSISTENCY"
+  ],
+  "generated_utc": "2026-07-26T13:11:24.530725Z",
   "hardware_scope_promoted": false,
   "mode": "FULL",
   "no_hardware_scan": {
     "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
     "NO_HARDWARE": "1",
-    "existing_scan": "PASS",
-    "existing_scan_log": "evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/no_hardware_existing_scan.log",
+    "existing_scan": "FAIL",
+    "existing_scan_log": "evidence/generated/p8d_raw/formal_0e3aca774213/no_hardware_existing_scan.log",
     "p8d_forbidden_hits": [],
-    "status": "PASS",
+    "status": "FAIL",
     "test_id": "P8D-NO-HARDWARE-STATIC-SCAN"
   },
   "performance_blockers": [
@@ -75,9 +81,9 @@
   ],
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "schema_version": 1,
-  "selected_raw_run": "evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001",
-  "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
-  "status": "PASS",
+  "selected_raw_run": "evidence/generated/p8d_raw/formal_0e3aca774213",
+  "source_commit": "0e3aca774213327dcc668a93b2fe663f048c7e11",
+  "status": "FAIL",
   "test_id": "P8D-ACCEPTANCE-CORE",
   "timing_followup": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
 }

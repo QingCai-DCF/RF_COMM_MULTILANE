@@ -7,7 +7,11 @@ set output_dir [file normalize [lindex $argv 1]]
 file mkdir $output_dir
 open_checkpoint $checkpoint_path
 
-report_timing_summary -report_unconstrained -max_paths 1000 \
+# Keep the human timing summary compact.  The following check_timing report is
+# the authoritative exhaustive audit for no_clock and
+# unconstrained_internal_endpoints; listing every external unconstrained I/O
+# path here only duplicates tens of megabytes without adding gate coverage.
+report_timing_summary -max_paths 10 \
   -file "$output_dir/unconstrained_paths.rpt"
 check_timing -verbose -file "$output_dir/check_timing_verbose.rpt"
 close_design

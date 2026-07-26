@@ -3,14 +3,14 @@
 - Status: `PASS`
 - Test ID: `P8D-AIRTIME-BUDGET-MODEL`
 - Profile: `P8D_8LANE_MODEL`
-- Source commit: `d28eef6aea8f545282076dd1a19a344adb12ccd9`
+- Source commit: `0e3aca774213327dcc668a93b2fe663f048c7e11`
 
 ```json
 {
   "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
-  "command_log": "evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/airtime_model.log",
-  "generated_utc": "2026-07-18T12:10:26.698025Z",
+  "command_log": "evidence/generated/p8d_raw/formal_0e3aca774213/airtime_model.log",
+  "generated_utc": "2026-07-26T12:05:20.680979Z",
   "hardware_scope_promoted": false,
   "model": {
     "19P2MBPS_STRETCH_FEASIBILITY": "FAIL",
@@ -58,9 +58,9 @@
   },
   "profile": "P8D_8LANE_MODEL",
   "schema_version": 1,
-  "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
+  "source_commit": "0e3aca774213327dcc668a93b2fe663f048c7e11",
   "status": "PASS",
-  "sweep_csv": "evidence/generated/p8d_raw/formal_d28eef6aea8f_attempt_001/airtime_sweep.csv",
+  "sweep_csv": "evidence/generated/p8d_raw/formal_0e3aca774213/airtime_sweep.csv",
   "test_id": "P8D-AIRTIME-BUDGET-MODEL"
 }
 ```
