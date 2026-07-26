@@ -35,10 +35,18 @@ set result_file [file normalize [lindex $argv 5]]
 set expected_live_part "xc7z010"
 set expected_live_device "xc7z010_1"
 set expected_idcode "13722093"
+set expected_aux_part "arm_dap"
+set expected_aux_device "arm_dap_0"
+set expected_aux_idcode "4BA00477"
 set manager_open 0
 set server_connected 0
 set target_open 0
 set selected_target ""
+set all_device_count 0
+set exact_device_count 0
+set auxiliary_device_count 0
+set unexpected_device_count 0
+set device_records {}
 
 set rc [catch {
   if {![info exists ::env(RF_COMM_P9_HW_AUTH)] ||
@@ -73,19 +81,39 @@ set rc [catch {
 
   set all_devices [get_hw_devices -quiet *]
   set device_matches {}
+  set auxiliary_devices {}
+  set unexpected_devices {}
+  set all_device_count [llength $all_devices]
   foreach candidate $all_devices {
     set part ""; set name ""; set idcode ""
     catch {set part [get_property PART $candidate]}
     catch {set name [get_property NAME $candidate]}
     catch {set idcode [get_property IDCODE $candidate]}
+    set normalized_idcode [p9_normal_idcode $idcode]
+    lappend device_records [list "$candidate" $part $name $idcode $normalized_idcode]
     if {[string equal -nocase $part $expected_live_part] &&
         [string equal -nocase $name $expected_live_device] &&
-        [p9_normal_idcode $idcode] eq $expected_idcode} {
+        $normalized_idcode eq $expected_idcode} {
       lappend device_matches $candidate
+    } elseif {[string equal -nocase $part $expected_aux_part] &&
+              [string equal -nocase $name $expected_aux_device] &&
+              $normalized_idcode eq $expected_aux_idcode} {
+      lappend auxiliary_devices $candidate
+    } else {
+      lappend unexpected_devices $candidate
     }
   }
-  if {[llength $all_devices] != 1 || [llength $device_matches] != 1} {
-    error "expected one live Zynq-7010 device and one exact match"
+  set exact_device_count [llength $device_matches]
+  set auxiliary_device_count [llength $auxiliary_devices]
+  set unexpected_device_count [llength $unexpected_devices]
+  if {$exact_device_count != 1} {
+    error "expected exactly one canonical live Zynq-7010 match; found $exact_device_count"
+  }
+  if {$auxiliary_device_count > 1} {
+    error "expected at most one canonical ARM DAP object; found $auxiliary_device_count"
+  }
+  if {$unexpected_device_count != 0} {
+    error "unexpected hardware-manager objects found: $unexpected_device_count"
   }
   set device [lindex $device_matches 0]
   current_hw_device $device
@@ -99,6 +127,10 @@ set rc [catch {
       "P9_TARGET_IDENTITY_RESULT=PASS" \
       "P9_TARGET_IDENTITY_READ_ONLY=1" \
       "P9_TARGET_IDENTITY_SINGLE_TARGET=1" \
+      "P9_TARGET_IDENTITY_HW_OBJECT_COUNT=$all_device_count" \
+      "P9_TARGET_IDENTITY_EXACT_FPGA_MATCH_COUNT=$exact_device_count" \
+      "P9_TARGET_IDENTITY_AUXILIARY_DAP_COUNT=$auxiliary_device_count" \
+      "P9_TARGET_IDENTITY_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count" \
       "P9_TARGET_IDENTITY_TARGET=$selected_target" \
       "P9_TARGET_IDENTITY_BOARD_ID=$expected_board" \
       "P9_TARGET_IDENTITY_CANONICAL_PART=$expected_part" \
@@ -108,6 +140,14 @@ set rc [catch {
       "P9_TARGET_IDENTITY_LIVE_IDCODE_NORMALIZED=[p9_normal_idcode $live_idcode]"] {
     puts $out $line
     puts $line
+  }
+  set record_index 0
+  foreach record $device_records {
+    lassign $record object part name idcode normalized
+    set line "P9_TARGET_IDENTITY_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+    puts $out $line
+    puts $line
+    incr record_index
   }
   close $out
 } error_text error_options]
@@ -122,7 +162,17 @@ if {$rc != 0} {
     set out [open $result_file w]
     puts $out "P9_TARGET_IDENTITY_RESULT=FAIL"
     puts $out "P9_TARGET_IDENTITY_READ_ONLY=1"
+    puts $out "P9_TARGET_IDENTITY_HW_OBJECT_COUNT=$all_device_count"
+    puts $out "P9_TARGET_IDENTITY_EXACT_FPGA_MATCH_COUNT=$exact_device_count"
+    puts $out "P9_TARGET_IDENTITY_AUXILIARY_DAP_COUNT=$auxiliary_device_count"
+    puts $out "P9_TARGET_IDENTITY_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count"
     puts $out "P9_TARGET_IDENTITY_ERROR=[string map [list \"\\r\" \" \" \"\\n\" \" \" \"=\" \"_\"] $error_text]"
+    set record_index 0
+    foreach record $device_records {
+      lassign $record object part name idcode normalized
+      puts $out "P9_TARGET_IDENTITY_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+      incr record_index
+    }
     close $out
   }
   puts stderr "P9_TARGET_IDENTITY_RESULT=FAIL"

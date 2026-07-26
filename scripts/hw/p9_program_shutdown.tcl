@@ -27,6 +27,11 @@ set authorization_file [file normalize [lindex $argv 4]]
 set bit_file [file normalize [lindex $argv 5]]
 set result_file [file normalize [lindex $argv 6]]
 set manager_open 0; set server_connected 0; set target_open 0; set selected_target ""
+set all_device_count 0
+set exact_device_count 0
+set auxiliary_device_count 0
+set unexpected_device_count 0
+set device_records {}
 
 set rc [catch {
   if {![info exists ::env(RF_COMM_P9_HW_AUTH)] ||
@@ -54,16 +59,45 @@ set rc [catch {
   open_hw_target $selected_target
   set target_open 1
   set devices [get_hw_devices -quiet *]
-  if {[llength $devices] != 1} { error "expected one live device" }
-  set device [lindex $devices 0]
+  set exact_devices {}
+  set auxiliary_devices {}
+  set unexpected_devices {}
+  set all_device_count [llength $devices]
+  foreach candidate $devices {
+    set part ""; set name ""; set idcode ""
+    catch {set part [get_property PART $candidate]}
+    catch {set name [get_property NAME $candidate]}
+    catch {set idcode [get_property IDCODE $candidate]}
+    set normalized_idcode [p9_normal_idcode $idcode]
+    lappend device_records [list "$candidate" $part $name $idcode $normalized_idcode]
+    if {[string equal -nocase $part "xc7z010"] &&
+        [string equal -nocase $name "xc7z010_1"] &&
+        $normalized_idcode eq "13722093"} {
+      lappend exact_devices $candidate
+    } elseif {[string equal -nocase $part "arm_dap"] &&
+              [string equal -nocase $name "arm_dap_0"] &&
+              $normalized_idcode eq "4BA00477"} {
+      lappend auxiliary_devices $candidate
+    } else {
+      lappend unexpected_devices $candidate
+    }
+  }
+  set exact_device_count [llength $exact_devices]
+  set auxiliary_device_count [llength $auxiliary_devices]
+  set unexpected_device_count [llength $unexpected_devices]
+  if {$exact_device_count != 1} {
+    error "expected exactly one canonical live Zynq-7010 match; found $exact_device_count"
+  }
+  if {$auxiliary_device_count > 1} {
+    error "expected at most one canonical ARM DAP object; found $auxiliary_device_count"
+  }
+  if {$unexpected_device_count != 0} {
+    error "unexpected hardware-manager objects found: $unexpected_device_count"
+  }
+  set device [lindex $exact_devices 0]
   set live_part [get_property PART $device]
   set live_name [get_property NAME $device]
   set live_idcode [get_property IDCODE $device]
-  if {![string equal -nocase $live_part "xc7z010"] ||
-      ![string equal -nocase $live_name "xc7z010_1"] ||
-      [p9_normal_idcode $live_idcode] ne "13722093"} {
-    error "live device identity mismatch"
-  }
   current_hw_device $device
   refresh_hw_device -update_hw_probes false $device
   set_property PROGRAM.FILE $bit_file $device
@@ -74,6 +108,10 @@ set rc [catch {
       "P9_SHUTDOWN_PROGRAM_RESULT=PASS" \
       "TFDU_SHUTDOWN_PROGRAMMED=1" \
       "SHUTDOWN_EXIT=0" \
+      "P9_SHUTDOWN_HW_OBJECT_COUNT=$all_device_count" \
+      "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT=$exact_device_count" \
+      "P9_SHUTDOWN_AUXILIARY_DAP_COUNT=$auxiliary_device_count" \
+      "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count" \
       "P9_SHUTDOWN_TARGET=$selected_target" \
       "P9_SHUTDOWN_LIVE_DEVICE=$live_name" \
       "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED=[p9_normal_idcode $live_idcode]" \
@@ -84,6 +122,14 @@ set rc [catch {
       "P9_SHUTDOWN_ACTIVE_TX_MASK=0"] {
     puts $out $line
     puts $line
+  }
+  set record_index 0
+  foreach record $device_records {
+    lassign $record object part name idcode normalized
+    set line "P9_SHUTDOWN_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+    puts $out $line
+    puts $line
+    incr record_index
   }
   close $out
 } error_text error_options]
@@ -99,7 +145,17 @@ if {$rc != 0} {
     puts $out "P9_SHUTDOWN_PROGRAM_RESULT=FAIL"
     puts $out "TFDU_SHUTDOWN_PROGRAMMED=0"
     puts $out "SHUTDOWN_EXIT=1"
+    puts $out "P9_SHUTDOWN_HW_OBJECT_COUNT=$all_device_count"
+    puts $out "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT=$exact_device_count"
+    puts $out "P9_SHUTDOWN_AUXILIARY_DAP_COUNT=$auxiliary_device_count"
+    puts $out "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count"
     puts $out "P9_SHUTDOWN_ERROR=[string map [list \"\\r\" \" \" \"\\n\" \" \" \"=\" \"_\"] $error_text]"
+    set record_index 0
+    foreach record $device_records {
+      lassign $record object part name idcode normalized
+      puts $out "P9_SHUTDOWN_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+      incr record_index
+    }
     close $out
   }
   puts stderr "P9_SHUTDOWN_PROGRAM_RESULT=FAIL"

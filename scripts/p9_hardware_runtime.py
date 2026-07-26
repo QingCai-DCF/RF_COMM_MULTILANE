@@ -719,7 +719,11 @@ def invoke_shutdown(run_root: Path, phase2: Path, shutdown_bit: Path,
     process = run_bounded(command, stdout, stderr, timeout=180, env=env,
                           abort_file=abort_file)
     markers = parse_markers(result_file)
-    passed = process["returncode"] == 0 and markers.get("TFDU_SHUTDOWN_PROGRAMMED") == "1" and markers.get("SHUTDOWN_EXIT") == "0"
+    passed = (process["returncode"] == 0
+              and markers.get("TFDU_SHUTDOWN_PROGRAMMED") == "1"
+              and markers.get("SHUTDOWN_EXIT") == "0"
+              and markers.get("P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT") == "1"
+              and markers.get("P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT") == "0")
     payload = {"status": "PASS" if passed else "FAIL", "label": label,
                "process": process, "markers": markers,
                "result_path": rel(result_file) if result_file.is_file() else None}
@@ -738,7 +742,12 @@ def invoke_preflight(run_root: Path, phase2: Path, env: dict[str, str],
     process = run_bounded(command, stdout, stderr, timeout=180, env=env,
                           abort_file=abort_file)
     markers = parse_markers(result_file)
-    passed = process["returncode"] == 0 and markers.get("P9_TARGET_IDENTITY_RESULT") == "PASS" and markers.get("P9_TARGET_IDENTITY_SINGLE_TARGET") == "1" and markers.get("P9_TARGET_IDENTITY_LIVE_IDCODE_NORMALIZED") == "13722093"
+    passed = (process["returncode"] == 0
+              and markers.get("P9_TARGET_IDENTITY_RESULT") == "PASS"
+              and markers.get("P9_TARGET_IDENTITY_SINGLE_TARGET") == "1"
+              and markers.get("P9_TARGET_IDENTITY_EXACT_FPGA_MATCH_COUNT") == "1"
+              and markers.get("P9_TARGET_IDENTITY_UNEXPECTED_HW_OBJECT_COUNT") == "0"
+              and markers.get("P9_TARGET_IDENTITY_LIVE_IDCODE_NORMALIZED") == "13722093")
     return {"status": "PASS" if passed else "FAIL", "test_id": "P9-04-TARGET-IDENTITY",
             "process": process, "markers": markers,
             "raw": rel(result_file) if result_file.is_file() else None}
