@@ -33,6 +33,9 @@ VCVARS64 = Path(
 P8C_TAG = "p8c-pass"
 P8C_CHECKPOINT = "c44b0d45133bf75c9c71f53dde77f3dc186ad131"
 P8C_SOURCE = "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134"
+P8E_TAG = "p8e-pass"
+P8E_CHECKPOINT = "57ff1079b10a5c0de156b621820774bbb111c5ee"
+P9_BRANCH = "p9/z7010-stationary-2lane"
 PROJECT_CONSTRAINTS_SHA256 = "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
 
 COMMON = {
@@ -496,8 +499,20 @@ def baseline_checks() -> dict[str, Any]:
     branch = git("branch", "--show-current")
     head = git("rev-parse", "HEAD")
     tag_target = git("rev-list", "-n", "1", P8C_TAG)
-    if branch != "p8/integration":
-        errors.append(f"branch is {branch}, expected p8/integration")
+    p9_descendant_validation = (
+        os.environ.get("P9_DESCENDANT_OFFLINE_VALIDATION", "0") == "1"
+        and branch == P9_BRANCH
+        and git("rev-parse", f"{P8E_TAG}^{{}}") == P8E_CHECKPOINT
+        and subprocess.run(
+            ["git", "merge-base", "--is-ancestor", P8E_CHECKPOINT, head],
+            cwd=ROOT,
+        ).returncode == 0
+    )
+    if branch != "p8/integration" and not p9_descendant_validation:
+        errors.append(
+            f"branch is {branch}, expected p8/integration or an explicitly bound "
+            f"{P9_BRANCH} descendant of {P8E_TAG}"
+        )
     if tag_target != P8C_CHECKPOINT:
         errors.append(f"{P8C_TAG} resolves to {tag_target}, expected {P8C_CHECKPOINT}")
     if subprocess.run(["git", "merge-base", "--is-ancestor", P8C_CHECKPOINT, head], cwd=ROOT).returncode:
@@ -513,6 +528,8 @@ def baseline_checks() -> dict[str, Any]:
     return {"status": "PASS" if not errors else "FAIL", "errors": errors,
             "branch": branch, "head": head, "p8c_tag": P8C_TAG,
             "p8c_tag_target": tag_target, "p8c_source_commit": P8C_SOURCE,
+            "p9_descendant_validation": p9_descendant_validation,
+            "p8e_tag": P8E_TAG, "p8e_checkpoint": P8E_CHECKPOINT,
             "project_constraints_sha256": constraint_hash,
             "pre_p8d_intake": "evidence/generated/p8d_repo_intake.json"}
 

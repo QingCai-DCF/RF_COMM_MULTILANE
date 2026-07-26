@@ -28,6 +28,9 @@ CLOCK_RESET = ROOT / "config/p8e_clock_reset.yaml"
 PROJECT_CONSTRAINTS_SHA256 = "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
 P8D_CHECKPOINT = "435ca10b3ec9cb601753870f9220c40c439044e8"
 P8D_SOURCE = "d28eef6aea8f545282076dd1a19a344adb12ccd9"
+P8E_TAG = "p8e-pass"
+P8E_CHECKPOINT = "57ff1079b10a5c0de156b621820774bbb111c5ee"
+P9_BRANCH = "p9/z7010-stationary-2lane"
 
 REQUIRED_STEMS = (
     "p8e_repo_intake",
@@ -69,6 +72,19 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+TEXT_ARTIFACT_SUFFIXES = {
+    ".bat", ".csv", ".json", ".log", ".md", ".rpt", ".sv", ".tcl", ".txt", ".v"
+}
+
+
+def artifact_sha256(path: Path) -> str:
+    """Hash text evidence in its repository-stable LF representation."""
+    data = path.read_bytes()
+    if path.suffix.lower() in TEXT_ARTIFACT_SUFFIXES:
+        data = data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def rel(path: Path) -> str:
@@ -216,7 +232,17 @@ def repo_intake(full: bool, parent_offline_pass: bool = False) -> dict[str, Any]
     branch = git("branch", "--show-current")
     tag_object = git("rev-parse", "p8d-pass")
     tag_target = git("rev-parse", "p8d-pass^{}")
-    if branch != "p8/integration": errors.append(f"branch={branch}")
+    head = git("rev-parse", "HEAD")
+    p9_descendant_validation = (
+        os.environ.get("P9_DESCENDANT_OFFLINE_VALIDATION", "0") == "1"
+        and branch == P9_BRANCH
+        and git("rev-parse", f"{P8E_TAG}^{{}}") == P8E_CHECKPOINT
+        and subprocess.run(
+            ["git", "merge-base", "--is-ancestor", P8E_CHECKPOINT, head], cwd=ROOT
+        ).returncode == 0
+    )
+    if branch != "p8/integration" and not p9_descendant_validation:
+        errors.append(f"branch={branch}")
     if tag_target != P8D_CHECKPOINT: errors.append(f"p8d target={tag_target}")
     if sha256(ROOT / "PROJECT_CONSTRAINTS.txt") != PROJECT_CONSTRAINTS_SHA256:
         errors.append("PROJECT_CONSTRAINTS SHA256 mismatch")
@@ -231,9 +257,11 @@ def repo_intake(full: bool, parent_offline_pass: bool = False) -> dict[str, Any]
         **COMMON, "status": "PASS" if not errors else "FAIL",
         "test_id": "P8E-REPO-INTAKE", "profile": "P8E_MULTI_PROFILE_OFFLINE",
         "start_timestamp_utc": utc_now(), "worktree_path": str(ROOT), "branch": branch,
-        "head": git("rev-parse", "HEAD"), "p8d_source_commit": P8D_SOURCE,
+        "head": head, "p8d_source_commit": P8D_SOURCE,
         "p8d_tag": "p8d-pass", "p8d_tag_object": tag_object,
         "p8d_tag_peeled_target": tag_target, "git_status_short": status_lines,
+        "p9_descendant_validation": p9_descendant_validation,
+        "p8e_tag": P8E_TAG, "p8e_checkpoint": P8E_CHECKPOINT,
         "parent_offline_pass": parent_offline_pass,
         "parent_generated_status_accepted": parent_offline_pass and parent_generated_only,
         "input_sha256": {name: sha256(path) for name, path in files.items()},
@@ -354,6 +382,7 @@ def source_records(paths: list[str]) -> list[dict[str, Any]]:
 def create_artifact_manifest() -> dict[str, Any]:
     artifacts: list[dict[str, Any]] = []
     excluded_parts = {"project", "work", "xsim.dir", ".Xil"}
+    candidates: list[Path] = []
     for path in sorted(RAW.rglob("*")):
         if not path.is_file() or path.name == "artifact_sha256_manifest.json":
             continue
@@ -362,7 +391,27 @@ def create_artifact_manifest() -> dict[str, Any]:
             continue
         if path.suffix in {".jou", ".pb", ".wdb", ".str"}:
             continue
-        artifacts.append({"path": rel(path), "sha256": sha256(path), "bytes": path.stat().st_size})
+        candidates.append(path)
+    relative_candidates = [rel(path) for path in candidates]
+    ignored: set[str] = set()
+    if relative_candidates:
+        ignored_result = subprocess.run(
+            ["git", "check-ignore", "--stdin"], cwd=ROOT, text=True,
+            input="\n".join(relative_candidates) + "\n", capture_output=True,
+        )
+        ignored = {line.strip().replace("\\", "/") for line in ignored_result.stdout.splitlines()}
+    for path, relative_path in zip(candidates, relative_candidates):
+        if relative_path in ignored:
+            continue
+        artifacts.append({
+            "path": relative_path,
+            "sha256": artifact_sha256(path),
+            "bytes": path.stat().st_size,
+            "hash_representation": (
+                "LF_NORMALIZED_TEXT" if path.suffix.lower() in TEXT_ARTIFACT_SUFFIXES
+                else "EXACT_BINARY"
+            ),
+        })
     manifest = {
         **COMMON, "status": "PASS", "test_id": "P8E-RAW-ARTIFACT-SHA256-MANIFEST",
         "generated_utc": utc_now(), "source_commit": git("rev-parse", "HEAD"),
@@ -380,7 +429,7 @@ def verify_artifact_manifest() -> list[str]:
     for item in manifest.get("artifacts", []):
         artifact = ROOT / item["path"]
         if not artifact.is_file(): errors.append(f"missing {item['path']}")
-        elif sha256(artifact) != item["sha256"]: errors.append(f"hash mismatch {item['path']}")
+        elif artifact_sha256(artifact) != item["sha256"]: errors.append(f"hash mismatch {item['path']}")
     return errors
 
 
@@ -731,6 +780,8 @@ def run_gate(args: argparse.Namespace) -> int:
                     "--full" if full else "--quick", "--output-root", str(p8d_regression_root),
                     "--json-summary"]
         p8d_env = env.copy()
+        if os.environ.get("P9_DESCENDANT_OFFLINE_VALIDATION", "0") == "1":
+            p8d_env["P9_DESCENDANT_OFFLINE_VALIDATION"] = "1"
         if full and parent_offline_pass:
             p8d_args.append("--parent-offline-pass")
             p8d_env["P8D_OFFLINE_PARENT"] = "1"
