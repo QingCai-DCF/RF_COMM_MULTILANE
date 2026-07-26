@@ -323,7 +323,19 @@ def main(argv: list[str] | None = None) -> int:
     commands: dict[str, Any] = {}
 
     state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
-    if os.environ.get("NO_HARDWARE") != "1" or state.get("current_run_hardware_authorization") is not False:
+    p9_stage_key = "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+    p9_stage = state.get("stage_status", {}).get(p9_stage_key)
+    p9_authorized_lifecycle = (
+        state.get("current_program_stage") == p9_stage_key
+        and state.get("p9_status") == p9_stage
+        and p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+        and state.get("current_run_hardware_authorization") is True
+    )
+    authorization_is_compatible = (
+        state.get("current_run_hardware_authorization") is False
+        or p9_authorized_lifecycle
+    )
+    if os.environ.get("NO_HARDWARE") != "1" or not authorization_is_compatible:
         failures.append("NO_HARDWARE/current authorization precondition")
 
     for name, command in {

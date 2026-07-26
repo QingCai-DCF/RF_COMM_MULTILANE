@@ -246,6 +246,13 @@ def check_requirements() -> tuple[bool, dict[str, Any]]:
 
 def check_state() -> tuple[bool, dict[str, Any]]:
     state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
+    p9_stage_key = "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+    p9_stage = state.get("stage_status", {}).get(p9_stage_key)
+    p9_authorized_lifecycle = (
+        state.get("current_program_stage") == p9_stage_key
+        and state.get("p9_status") == p9_stage
+        and p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+    )
     p8c_pass = state.get("stage_status", {}).get("P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT") == "PASS"
     # A P8B regression must remain valid while a later portable/offline stage
     # is active.  Requiring the stage to remain exactly P8D made the P8B
@@ -256,6 +263,7 @@ def check_state() -> tuple[bool, dict[str, Any]]:
             "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
             "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
             "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+            p9_stage_key,
         }
         if p8c_pass
         else {"P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT"}
@@ -267,7 +275,11 @@ def check_state() -> tuple[bool, dict[str, Any]]:
         "rotation_status": "PENDING_FINAL_MECHANICAL",
         "final_product_status": "PENDING_HW",
         "product_final_acceptance": "PENDING",
-        "current_run_hardware_authorization": False,
+        # A later, explicitly authorized P9 run does not invalidate an offline
+        # P8B geometry regression.  It is accepted only when the canonical P9
+        # lifecycle fields agree; any authorization outside that lifecycle
+        # remains a hard failure.
+        "current_run_hardware_authorization": p9_authorized_lifecycle,
         "no_hardware_default": True,
     }
     mismatches = {key: {"expected": value, "actual": state.get(key)} for key, value in expected.items() if state.get(key) != value}

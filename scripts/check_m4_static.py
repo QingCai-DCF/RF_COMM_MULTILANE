@@ -51,6 +51,20 @@ def p8d_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
     return offset == expected_offset and all(token in rtl for token in decoder_tokens)
 
 
+def p9_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
+    """Confirm that the P9 peripheral decodes the canonical register offset.
+
+    The P9 peripheral includes the generated register-map header, but its case
+    decoder uses literal 12-bit case items so synthesis reports remain easy to
+    audit.  Match a complete case label rather than accepting an offset that
+    merely occurs in a comment, parameter, or unrelated expression.
+    """
+    if f"`IR_REG_{name}" in rtl:
+        return True
+    literal_case = re.compile(rf"(?im)^\s*12'h{offset:03x}\s*:")
+    return literal_case.search(rtl) is not None
+
+
 @dataclass
 class RegModel:
     regs: dict[int, int] = field(default_factory=dict)
@@ -82,6 +96,9 @@ def main() -> int:
     p8d_rtl = (ROOT / "rtl/ir_p8d_data_plane_regs.sv").read_text(
         encoding="utf-8", errors="ignore"
     )
+    p9_rtl = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
+        encoding="utf-8", errors="ignore"
+    )
     hdr = (ROOT / "config/register_map/generated/ir_regs.h").read_text(encoding="utf-8", errors="ignore")
     py = (ROOT / "config/register_map/generated/ir_regs.py").read_text(encoding="utf-8", errors="ignore")
     md = (ROOT / "docs/design/REGISTER_CONTRACT.md").read_text(encoding="utf-8", errors="ignore")
@@ -96,7 +113,9 @@ def main() -> int:
         macro = f"IR_REG_{name}"
         require(macro in hdr and macro in py, f"M4_GENERATED_OFFSET_{name}", errors)
         require(f"`{name}`" in md and f"`0x{off:04X}`" in md, f"M4_DOC_OFFSET_{name}", errors)
-        if name.startswith("P8D_"):
+        if name.startswith("P9_"):
+            rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
+        elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:
             rtl_consumes_register = ("REG_" + name) in legacy_rtl

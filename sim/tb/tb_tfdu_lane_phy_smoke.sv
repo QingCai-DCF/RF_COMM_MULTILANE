@@ -25,6 +25,13 @@ module tb_tfdu_lane_phy_smoke;
   logic [31:0] tx_high_width_current;
   logic [31:0] duty_window_count;
   logic [31:0] duty_high_count;
+  logic [31:0] tx_high_width_max_seen;
+  logic [31:0] duty_high_max_seen;
+  logic [31:0] duty_hard_limit_cycles;
+  logic [31:0] duty_target_limit_cycles;
+  logic [31:0] duty_headroom_cycles;
+  logic [31:0] duty_target_throttle_count;
+  logic [31:0] duty_hard_fault_count;
 
   logic duty_rst_n;
   logic duty_enable_phy;
@@ -66,7 +73,14 @@ module tb_tfdu_lane_phy_smoke;
     .rx_last_timestamp(rx_last_timestamp),
     .tx_high_width_current(tx_high_width_current),
     .duty_window_count(duty_window_count),
-    .duty_high_count(duty_high_count)
+    .duty_high_count(duty_high_count),
+    .tx_high_width_max_seen(tx_high_width_max_seen),
+    .duty_high_max_seen(duty_high_max_seen),
+    .duty_hard_limit_cycles(duty_hard_limit_cycles),
+    .duty_target_limit_cycles(duty_target_limit_cycles),
+    .duty_headroom_cycles(duty_headroom_cycles),
+    .duty_target_throttle_count(duty_target_throttle_count),
+    .duty_hard_fault_count(duty_hard_fault_count)
   );
 
   tfdu_lane_phy #(
@@ -98,7 +112,14 @@ module tb_tfdu_lane_phy_smoke;
     .rx_last_timestamp(),
     .tx_high_width_current(),
     .duty_window_count(),
-    .duty_high_count()
+    .duty_high_count(),
+    .tx_high_width_max_seen(),
+    .duty_high_max_seen(),
+    .duty_hard_limit_cycles(),
+    .duty_target_limit_cycles(),
+    .duty_headroom_cycles(),
+    .duty_target_throttle_count(),
+    .duty_hard_fault_count()
   );
 
   task automatic check_expect(input bit cond, input string msg);
