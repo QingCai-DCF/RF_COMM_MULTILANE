@@ -40,14 +40,12 @@ module p9_4ppm_frame_rx #(
   output wire  [31:0] symbol_error_count_o
 );
   // The largest P9 object (64 MiB) produces fewer than 2^20 DATA/ACK frames
-  // at the fixed 247-byte L1 payload.  Saturating 20-bit physical counters
-  // therefore retain exact values for every authorized P9 campaign while
+  // at the fixed 247-byte L1 payload.  Twenty-bit physical counters therefore
+  // retain exact values for every authorized P9 campaign while
   // avoiding six unnecessarily wide 32-bit incrementers across the two
   // receive paths on the resource-limited XC7Z010.  The AXI register contract
   // remains 32-bit through explicit zero extension.
   localparam int PHYSICAL_COUNTER_WIDTH = 20;
-  localparam logic [PHYSICAL_COUNTER_WIDTH-1:0] PHYSICAL_COUNTER_MAX =
-      {PHYSICAL_COUNTER_WIDTH{1'b1}};
   typedef enum logic [1:0] {RX_WAIT, RX_COLLECT, RX_VALIDATE} state_t;
   state_t state;
   logic [7:0] header [0:23];
@@ -168,15 +166,13 @@ module p9_4ppm_frame_rx #(
         frame_type_known <= 1'b0;
       end else begin
         if (symbol_error_i) begin
-          if (symbol_error_count_q != PHYSICAL_COUNTER_MAX)
-            symbol_error_count_q <= symbol_error_count_q + 1'b1;
+          symbol_error_count_q <= symbol_error_count_q + 1'b1;
           if (state == RX_COLLECT) malformed <= 1'b1;
         end
         unique case (state)
           RX_WAIT: begin
             if (preamble_valid_i) begin
-              if (preamble_count_q != PHYSICAL_COUNTER_MAX)
-                preamble_count_q <= preamble_count_q + 1'b1;
+              preamble_count_q <= preamble_count_q + 1'b1;
               state <= RX_COLLECT;
               byte_index <= 16'd0;
               symbol_index <= 2'd0;
@@ -250,13 +246,10 @@ module p9_4ppm_frame_rx #(
             frame_is_ack_o <= active_ack;
             frame_crc_valid_o <= header_valid && payload_valid && !malformed;
             if (header_valid && payload_valid && !malformed) begin
-              if (frame_good_count_q != PHYSICAL_COUNTER_MAX)
-                frame_good_count_q <= frame_good_count_q + 1'b1;
+              frame_good_count_q <= frame_good_count_q + 1'b1;
             end else begin
-              if (frame_bad_count_q != PHYSICAL_COUNTER_MAX)
-                frame_bad_count_q <= frame_bad_count_q + 1'b1;
-              if ((!header_valid || !payload_valid) &&
-                  crc_bad_count_q != PHYSICAL_COUNTER_MAX)
+              frame_bad_count_q <= frame_bad_count_q + 1'b1;
+              if (!header_valid || !payload_valid)
                 crc_bad_count_q <= crc_bad_count_q + 1'b1;
             end
             session_epoch_o <= {header[5], header[4], header[3], header[2]};

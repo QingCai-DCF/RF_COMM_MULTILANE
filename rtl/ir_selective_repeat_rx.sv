@@ -45,12 +45,10 @@ module ir_selective_repeat_rx #(
   localparam int COUNT_WIDTH = $clog2(WINDOW_SIZE + 1);
   localparam int META_WIDTH = 16 + PAYLOAD_REF_WIDTH + 16;
   // A 64 MiB P9 object fragments into fewer than 2^20 DATA frames.  These
-  // counters saturate at that exact campaign envelope and are zero-extended
+  // counters cover that exact campaign envelope and are zero-extended
   // at the unchanged 32-bit interface, saving 108 FF/LUT counter bits in the
   // XC7Z010 candidate without weakening any P9 observable.
   localparam int EVENT_COUNTER_WIDTH = 20;
-  localparam logic [EVENT_COUNTER_WIDTH-1:0] EVENT_COUNTER_MAX =
-      {EVENT_COUNTER_WIDTH{1'b1}};
 
   logic [WINDOW_SIZE-1:0] entry_valid;
   (* ram_style="distributed" *) logic [META_WIDTH-1:0] entry_metadata [0:WINDOW_SIZE-1];
@@ -186,8 +184,7 @@ module ir_selective_repeat_rx #(
           entry_valid[delivery_index] <= 1'b0;
           rx_base_sequence_o <= rx_base_sequence_o + 1'b1;
           sack_next = sack_next >> 1;
-          if (delivery_count_q != EVENT_COUNTER_MAX)
-            delivery_count_q <= delivery_count_q + 1'b1;
+          delivery_count_q <= delivery_count_q + 1'b1;
           occupancy_delta = occupancy_delta - 1;
         end
 
@@ -202,41 +199,30 @@ module ir_selective_repeat_rx #(
 
         if (rx_valid_i && rx_ready_o) begin
           if (!rx_l1_valid_i) begin
-            if (protocol_error_count_q != EVENT_COUNTER_MAX)
-              protocol_error_count_q <= protocol_error_count_q + 1'b1;
+            protocol_error_count_q <= protocol_error_count_q + 1'b1;
           end else if (rx_session_epoch_i != session_epoch_i) begin
-            if (stale_session_count_q != EVENT_COUNTER_MAX)
-              stale_session_count_q <= stale_session_count_q + 1'b1;
+            stale_session_count_q <= stale_session_count_q + 1'b1;
           end else if (!receive_path_valid) begin
-            if (stale_path_epoch_count_q != EVENT_COUNTER_MAX)
-              stale_path_epoch_count_q <= stale_path_epoch_count_q + 1'b1;
+            stale_path_epoch_count_q <= stale_path_epoch_count_q + 1'b1;
           end else if (receive_distance >= 16'h8000) begin
-            if (old_count_q != EVENT_COUNTER_MAX)
-              old_count_q <= old_count_q + 1'b1;
-            if (duplicate_count_q != EVENT_COUNTER_MAX)
-              duplicate_count_q <= duplicate_count_q + 1'b1;
+            old_count_q <= old_count_q + 1'b1;
+            duplicate_count_q <= duplicate_count_q + 1'b1;
           end else if (receive_distance >= WINDOW_SIZE) begin
-            if (future_count_q != EVENT_COUNTER_MAX)
-              future_count_q <= future_count_q + 1'b1;
+            future_count_q <= future_count_q + 1'b1;
           end else if (entry_valid[receive_index]) begin
             if (entry_metadata[receive_index][META_WIDTH-1 -: 16] == rx_sequence_i) begin
-              if (duplicate_count_q != EVENT_COUNTER_MAX)
-                duplicate_count_q <= duplicate_count_q + 1'b1;
+              duplicate_count_q <= duplicate_count_q + 1'b1;
               if (entry_metadata[receive_index][16 +: PAYLOAD_REF_WIDTH] != rx_payload_ref_i ||
                   entry_metadata[receive_index][15:0] != rx_payload_length_i)
-                if (protocol_error_count_q != EVENT_COUNTER_MAX)
-                  protocol_error_count_q <= protocol_error_count_q + 1'b1;
-            end else begin
-              if (protocol_error_count_q != EVENT_COUNTER_MAX)
                 protocol_error_count_q <= protocol_error_count_q + 1'b1;
+            end else begin
+              protocol_error_count_q <= protocol_error_count_q + 1'b1;
             end
           end else begin
             rx_accept_pulse_o <= 1'b1;
             if (receive_distance != 0) begin
-              if (out_of_order_count_q != EVENT_COUNTER_MAX)
-                out_of_order_count_q <= out_of_order_count_q + 1'b1;
-              if (gap_count_q != EVENT_COUNTER_MAX)
-                gap_count_q <= gap_count_q + 1'b1;
+              out_of_order_count_q <= out_of_order_count_q + 1'b1;
+              gap_count_q <= gap_count_q + 1'b1;
             end
           end
         end
