@@ -365,10 +365,21 @@ def validate_build(source_commit: str) -> tuple[list[Path], dict[str, Any]]:
 
     build_tcl = (ROOT / "scripts/build_p9_z7010_candidate.tcl").read_text(
         encoding="utf-8", errors="replace")
-    xdc_mentions = sorted(set(re.findall(r'[^"\s]+\.xdc', build_tcl,
-                                         re.IGNORECASE)))
-    if xdc_mentions != ["$root_dir/constraints/active/PORT1.generated.xdc"]:
-        errors.append(f"candidate build XDC set is not canonical-only: {xdc_mentions}")
+    # Audit commands that can actually load an XDC.  A plain text marker also
+    # records the canonical XDC path, but it is evidence output rather than a
+    # constraint input and must not be counted as a second loaded file.
+    xdc_load_commands = [
+        line.strip()
+        for line in build_tcl.splitlines()
+        if re.match(r"^\s*(?:read_xdc|add_files)\b", line, re.IGNORECASE)
+        and re.search(r"\.xdc(?:\s|\"|$)", line, re.IGNORECASE)
+    ]
+    expected_xdc_command = 'read_xdc "$root_dir/constraints/active/PORT1.generated.xdc"'
+    if xdc_load_commands != [expected_xdc_command]:
+        errors.append(
+            "candidate build XDC load commands are not canonical-only: "
+            f"{xdc_load_commands}"
+        )
 
     input_paths = p9_build_inputs()
     missing_inputs = [rel(path) for path in input_paths if not path.is_file()]
