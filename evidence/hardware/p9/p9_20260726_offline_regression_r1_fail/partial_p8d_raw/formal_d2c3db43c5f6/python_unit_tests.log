@@ -1,0 +1,27 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe -m unittest discover -s tests/p8d -v
+RETURN_CODE=0
+STARTED_UTC=2026-07-26T06:52:07.496240Z
+FINISHED_UTC=2026-07-26T06:52:07.594460Z
+STDOUT_BEGIN
+
+STDOUT_END
+STDERR_BEGIN
+test_partial_or_stale_stream_not_published (test_p8d_data_plane.RfapStreamingTests.test_partial_or_stale_stream_not_published) ... ok
+test_vnext_bounded_stream_atomic_publish (test_p8d_data_plane.RfapStreamingTests.test_vnext_bounded_stream_atomic_publish) ... ok
+test_vnext_header_and_negotiation (test_p8d_data_plane.RfapStreamingTests.test_vnext_header_and_negotiation) ... ok
+test_axis_random_backpressure (test_p8d_data_plane.SchedulerAxisDmaTests.test_axis_random_backpressure) ... ok
+test_independent_rings_generation_and_reclaim (test_p8d_data_plane.SchedulerAxisDmaTests.test_independent_rings_generation_and_reclaim) ... ok
+test_weighted_scheduler_and_fault_isolation (test_p8d_data_plane.SchedulerAxisDmaTests.test_weighted_scheduler_and_fault_isolation) ... ok
+test_ack_aggregation_bounded (test_p8d_data_plane.SelectiveRepeatTests.test_ack_aggregation_bounded) ... ok
+test_retry_exhaustion_bounded (test_p8d_data_plane.SelectiveRepeatTests.test_retry_exhaustion_bounded) ... ok
+test_rx_reorder_duplicate_and_stale (test_p8d_data_plane.SelectiveRepeatTests.test_rx_reorder_duplicate_and_stale) ... ok
+test_tx_sack_hole_duplicate_ack_and_migration (test_p8d_data_plane.SelectiveRepeatTests.test_tx_sack_hole_duplicate_ack_and_migration) ... ok
+test_modular_wrap (test_p8d_data_plane.SequenceAndSackTests.test_modular_wrap) ... ok
+test_reduced_exhaustive (test_p8d_data_plane.SequenceAndSackTests.test_reduced_exhaustive) ... ok
+test_sack_round_trip (test_p8d_data_plane.SequenceAndSackTests.test_sack_round_trip) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.002s
+
+OK
+STDERR_END

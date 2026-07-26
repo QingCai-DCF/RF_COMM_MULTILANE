@@ -530,6 +530,6 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `REPRO-001`
 
-- `scripts/run_p8e_dual_target_gate.py` — `b1b1906ca1a6d218b14b396aee97ab1b4eccb78925db2f3a247b5a3f7a84a3d7`
+- `scripts/run_p8e_dual_target_gate.py` — `c70c96284643f07a7c3f13396a76a9931cecc8623027cf7c815d5be1b6430084`
 - `scripts/run_p8e_build_matrix.py` — `1e24d24a34faad722b589fdf52bf5ed9939e2354104d98daab1fe67c80b0ff0e`
 - `evidence/generated/p8e_evidence_consistency_summary.json` — `4ec3add3453d73bf7622d190cf50abc71ff496cfa2a93c028887744b5fcdf48a`

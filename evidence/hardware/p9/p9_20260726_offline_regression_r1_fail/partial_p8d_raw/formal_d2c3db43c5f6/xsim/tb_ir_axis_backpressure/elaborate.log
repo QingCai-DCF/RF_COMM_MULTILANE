@@ -1,0 +1,24 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_ir_axis_backpressure -debug typical -s tb_ir_axis_backpressure_snapshot
+RETURN_CODE=0
+STARTED_UTC=2026-07-26T06:52:33.203680Z
+FINISHED_UTC=2026-07-26T06:52:34.301541Z
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_ir_axis_backpressure -debug typical -s tb_ir_axis_backpressure_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.ir_axis_tx_frontend_default
+Compiling module work.ir_axis_rx_backend
+Compiling module work.tb_ir_axis_backpressure
+Built simulation snapshot tb_ir_axis_backpressure_snapshot
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

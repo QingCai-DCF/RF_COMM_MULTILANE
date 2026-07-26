@@ -428,8 +428,25 @@ def verify_artifact_manifest() -> list[str]:
     errors: list[str] = []
     for item in manifest.get("artifacts", []):
         artifact = ROOT / item["path"]
-        if not artifact.is_file(): errors.append(f"missing {item['path']}")
-        elif artifact_sha256(artifact) != item["sha256"]: errors.append(f"hash mismatch {item['path']}")
+        if not artifact.is_file():
+            errors.append(f"missing {item['path']}")
+            continue
+
+        expected = item["sha256"]
+        representation = item.get("hash_representation")
+        exact_hash = sha256(artifact)
+        stable_hash = artifact_sha256(artifact)
+        if representation == "EXACT_BINARY":
+            valid = expected == exact_hash
+        elif representation == "LF_NORMALIZED_TEXT":
+            valid = expected == stable_hash
+        else:
+            # The immutable P8E checkpoint predates the representation field
+            # and records exact checkout bytes.  Accept either its exact hash
+            # or the stable LF-normalized text hash used by new manifests.
+            valid = expected in {exact_hash, stable_hash}
+        if not valid:
+            errors.append(f"hash mismatch {item['path']}")
     return errors
 
 

@@ -1,0 +1,36 @@
+{
+  "failed_gate_count": 0,
+  "gate_count": 31,
+  "hardware_actions_executed": false,
+  "mode": "BASE_OFFLINE_NO_P8E",
+  "no_hardware_actions_executed": true,
+  "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r2/raw_logs/offline_base.log",
+  "raw_log_sha256": "65a0fb73783d35041ffd2c9ba9149dc7c4e0006fb4facf860ce793b910cba9e7",
+  "runtime_seconds": 3270,
+  "schema_version": 1,
+  "source_commit": "d2c3db43c5f6d308ea9f1864a3d36a228bffcc6a",
+  "status": "PASS",
+  "test_id": "P9-01-BASE-OFFLINE-FULL-REGRESSION",
+  "verified_snapshots": [
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/offline_gate_summary.json",
+      "sha256": "cf2eb4b1b1842ac0c831e1758f591ae0e5960d1f40ca5dfba32b29bee849312d"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/offline_gate_summary.md",
+      "sha256": "a3970b08897e50a3651b1b51414fa016554f4d5333a60b325a5da90d58f7d868"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/plan_completion_audit.md",
+      "sha256": "c4009f48153e193130b9d849817a3f6d1f989ef4013ff8d116c2e5a3e0582b0c"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/p8a_consistency_summary.json",
+      "sha256": "364883d271c4a7af53c4838f83d1b857bc1cc00200ab00dbe7ae13625bf49f08"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r2/snapshot/evidence/generated/vivado/nonhardware_build_summary.json",
+      "sha256": "22305b8f5018810fe3d05c38e2101209b99cc0b000cbc8fc6cdf34813379da99"
+    }
+  ]
+}
