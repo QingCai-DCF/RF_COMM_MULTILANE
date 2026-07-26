@@ -30,20 +30,27 @@ module ir_selective_repeat_rx #(
   output logic [15:0]                  rx_base_sequence_o,
   output logic [SACK_BITS-1:0]         sack_bitmap_o,
   output logic [$clog2(WINDOW_SIZE+1)-1:0] receiver_credit_o,
-  output logic [31:0]                  out_of_order_count_o,
-  output logic [31:0]                  duplicate_count_o,
-  output logic [31:0]                  old_count_o,
-  output logic [31:0]                  future_count_o,
-  output logic [31:0]                  stale_session_count_o,
-  output logic [31:0]                  stale_path_epoch_count_o,
-  output logic [31:0]                  gap_count_o,
-  output logic [31:0]                  delivery_count_o,
-  output logic [31:0]                  protocol_error_count_o
+  output wire  [31:0]                  out_of_order_count_o,
+  output wire  [31:0]                  duplicate_count_o,
+  output wire  [31:0]                  old_count_o,
+  output wire  [31:0]                  future_count_o,
+  output wire  [31:0]                  stale_session_count_o,
+  output wire  [31:0]                  stale_path_epoch_count_o,
+  output wire  [31:0]                  gap_count_o,
+  output wire  [31:0]                  delivery_count_o,
+  output wire  [31:0]                  protocol_error_count_o
 );
   import ir_seq_math_pkg::*;
   localparam int INDEX_WIDTH = $clog2(WINDOW_SIZE);
   localparam int COUNT_WIDTH = $clog2(WINDOW_SIZE + 1);
   localparam int META_WIDTH = 16 + PAYLOAD_REF_WIDTH + 16;
+  // A 64 MiB P9 object fragments into fewer than 2^20 DATA frames.  These
+  // counters saturate at that exact campaign envelope and are zero-extended
+  // at the unchanged 32-bit interface, saving 108 FF/LUT counter bits in the
+  // XC7Z010 candidate without weakening any P9 observable.
+  localparam int EVENT_COUNTER_WIDTH = 20;
+  localparam logic [EVENT_COUNTER_WIDTH-1:0] EVENT_COUNTER_MAX =
+      {EVENT_COUNTER_WIDTH{1'b1}};
 
   logic [WINDOW_SIZE-1:0] entry_valid;
   (* ram_style="distributed" *) logic [META_WIDTH-1:0] entry_metadata [0:WINDOW_SIZE-1];
@@ -55,6 +62,15 @@ module ir_selective_repeat_rx #(
   logic receive_path_valid;
   logic [INDEX_WIDTH-1:0] receive_index;
   logic [INDEX_WIDTH-1:0] delivery_index;
+  logic [EVENT_COUNTER_WIDTH-1:0] out_of_order_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] duplicate_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] old_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] future_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] stale_session_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] stale_path_epoch_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] gap_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] delivery_count_q;
+  logic [EVENT_COUNTER_WIDTH-1:0] protocol_error_count_q;
 
   // A synchronous command stage isolates the RAM write enable from every
   // asynchronously asserted metadata reset.  The input is stalled for this
@@ -86,6 +102,15 @@ module ir_selective_repeat_rx #(
   assign delivery_sequence_o = rx_base_sequence_o;
   assign delivery_payload_ref_o = delivery_metadata[16 +: PAYLOAD_REF_WIDTH];
   assign delivery_payload_length_o = delivery_metadata[15:0];
+  assign out_of_order_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, out_of_order_count_q};
+  assign duplicate_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, duplicate_count_q};
+  assign old_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, old_count_q};
+  assign future_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, future_count_q};
+  assign stale_session_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, stale_session_count_q};
+  assign stale_path_epoch_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, stale_path_epoch_count_q};
+  assign gap_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, gap_count_q};
+  assign delivery_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, delivery_count_q};
+  assign protocol_error_count_o = {{(32-EVENT_COUNTER_WIDTH){1'b0}}, protocol_error_count_q};
 
   always_ff @(posedge clk) begin : reorder_metadata_memory
     if (!rst_n || session_reset_i) begin
@@ -124,15 +149,15 @@ module ir_selective_repeat_rx #(
       sack_bitmap_o <= '0;
       occupancy <= '0;
       rx_accept_pulse_o <= 1'b0;
-      out_of_order_count_o <= 32'd0;
-      duplicate_count_o <= 32'd0;
-      old_count_o <= 32'd0;
-      future_count_o <= 32'd0;
-      stale_session_count_o <= 32'd0;
-      stale_path_epoch_count_o <= 32'd0;
-      gap_count_o <= 32'd0;
-      delivery_count_o <= 32'd0;
-      protocol_error_count_o <= 32'd0;
+      out_of_order_count_q <= '0;
+      duplicate_count_q <= '0;
+      old_count_q <= '0;
+      future_count_q <= '0;
+      stale_session_count_q <= '0;
+      stale_path_epoch_count_q <= '0;
+      gap_count_q <= '0;
+      delivery_count_q <= '0;
+      protocol_error_count_q <= '0;
     end else begin
       rx_accept_pulse_o <= 1'b0;
       occupancy_delta = 0;
@@ -140,15 +165,15 @@ module ir_selective_repeat_rx #(
       delivery_fire = delivery_valid_o && delivery_ready_i;
 
       if (clear_counters_i) begin
-        out_of_order_count_o <= 32'd0;
-        duplicate_count_o <= 32'd0;
-        old_count_o <= 32'd0;
-        future_count_o <= 32'd0;
-        stale_session_count_o <= 32'd0;
-        stale_path_epoch_count_o <= 32'd0;
-        gap_count_o <= 32'd0;
-        delivery_count_o <= 32'd0;
-        protocol_error_count_o <= 32'd0;
+        out_of_order_count_q <= '0;
+        duplicate_count_q <= '0;
+        old_count_q <= '0;
+        future_count_q <= '0;
+        stale_session_count_q <= '0;
+        stale_path_epoch_count_q <= '0;
+        gap_count_q <= '0;
+        delivery_count_q <= '0;
+        protocol_error_count_q <= '0;
       end
 
       if (session_reset_i) begin
@@ -161,7 +186,8 @@ module ir_selective_repeat_rx #(
           entry_valid[delivery_index] <= 1'b0;
           rx_base_sequence_o <= rx_base_sequence_o + 1'b1;
           sack_next = sack_next >> 1;
-          delivery_count_o <= delivery_count_o + 1'b1;
+          if (delivery_count_q != EVENT_COUNTER_MAX)
+            delivery_count_q <= delivery_count_q + 1'b1;
           occupancy_delta = occupancy_delta - 1;
         end
 
@@ -176,30 +202,41 @@ module ir_selective_repeat_rx #(
 
         if (rx_valid_i && rx_ready_o) begin
           if (!rx_l1_valid_i) begin
-            protocol_error_count_o <= protocol_error_count_o + 1'b1;
+            if (protocol_error_count_q != EVENT_COUNTER_MAX)
+              protocol_error_count_q <= protocol_error_count_q + 1'b1;
           end else if (rx_session_epoch_i != session_epoch_i) begin
-            stale_session_count_o <= stale_session_count_o + 1'b1;
+            if (stale_session_count_q != EVENT_COUNTER_MAX)
+              stale_session_count_q <= stale_session_count_q + 1'b1;
           end else if (!receive_path_valid) begin
-            stale_path_epoch_count_o <= stale_path_epoch_count_o + 1'b1;
+            if (stale_path_epoch_count_q != EVENT_COUNTER_MAX)
+              stale_path_epoch_count_q <= stale_path_epoch_count_q + 1'b1;
           end else if (receive_distance >= 16'h8000) begin
-            old_count_o <= old_count_o + 1'b1;
-            duplicate_count_o <= duplicate_count_o + 1'b1;
+            if (old_count_q != EVENT_COUNTER_MAX)
+              old_count_q <= old_count_q + 1'b1;
+            if (duplicate_count_q != EVENT_COUNTER_MAX)
+              duplicate_count_q <= duplicate_count_q + 1'b1;
           end else if (receive_distance >= WINDOW_SIZE) begin
-            future_count_o <= future_count_o + 1'b1;
+            if (future_count_q != EVENT_COUNTER_MAX)
+              future_count_q <= future_count_q + 1'b1;
           end else if (entry_valid[receive_index]) begin
             if (entry_metadata[receive_index][META_WIDTH-1 -: 16] == rx_sequence_i) begin
-              duplicate_count_o <= duplicate_count_o + 1'b1;
+              if (duplicate_count_q != EVENT_COUNTER_MAX)
+                duplicate_count_q <= duplicate_count_q + 1'b1;
               if (entry_metadata[receive_index][16 +: PAYLOAD_REF_WIDTH] != rx_payload_ref_i ||
                   entry_metadata[receive_index][15:0] != rx_payload_length_i)
-                protocol_error_count_o <= protocol_error_count_o + 1'b1;
+                if (protocol_error_count_q != EVENT_COUNTER_MAX)
+                  protocol_error_count_q <= protocol_error_count_q + 1'b1;
             end else begin
-              protocol_error_count_o <= protocol_error_count_o + 1'b1;
+              if (protocol_error_count_q != EVENT_COUNTER_MAX)
+                protocol_error_count_q <= protocol_error_count_q + 1'b1;
             end
           end else begin
             rx_accept_pulse_o <= 1'b1;
             if (receive_distance != 0) begin
-              out_of_order_count_o <= out_of_order_count_o + 1'b1;
-              gap_count_o <= gap_count_o + 1'b1;
+              if (out_of_order_count_q != EVENT_COUNTER_MAX)
+                out_of_order_count_q <= out_of_order_count_q + 1'b1;
+              if (gap_count_q != EVENT_COUNTER_MAX)
+                gap_count_q <= gap_count_q + 1'b1;
             end
           end
         end
