@@ -19,6 +19,7 @@ module ir_selective_repeat_tx #(
   input  logic                         rst_n,
   input  logic                         clear_counters_i,
   input  logic                         session_reset_i,
+  input  logic [15:0]                  initial_sequence_i,
   input  logic [31:0]                  session_epoch_i,
   input  logic                         abort_all_i,
   input  logic                         allocate_valid_i,
@@ -235,7 +236,10 @@ module ir_selective_repeat_tx #(
     end
   end
 
-  always_ff @(posedge clk or negedge rst_n) begin : tx_state
+  // tx_next_sequence_o contributes to the payload BRAM write address in P9.
+  // Synchronous reset prevents RAMB async-control corruption warnings while
+  // the independent physical TX kill path remains fail-low.
+  always_ff @(posedge clk) begin : tx_state
     integer signed occupancy_delta;
     logic [15:0] captured_distance;
     logic [15:0] captured_span;
@@ -324,8 +328,8 @@ module ir_selective_repeat_tx #(
 
       if (session_reset_i || abort_all_i) begin
         entry_valid <= '0;
-        tx_next_sequence_o <= 16'd0;
-        tx_ack_base_o <= 16'd0;
+        tx_next_sequence_o <= session_reset_i ? initial_sequence_i : 16'd0;
+        tx_ack_base_o <= session_reset_i ? initial_sequence_i : 16'd0;
         outstanding_count_o <= '0;
         retry_burst_count <= '0;
         time_counter <= 32'd0;

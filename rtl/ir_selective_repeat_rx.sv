@@ -10,6 +10,7 @@ module ir_selective_repeat_rx #(
   input  logic                         rst_n,
   input  logic                         clear_counters_i,
   input  logic                         session_reset_i,
+  input  logic [15:0]                  initial_sequence_i,
   input  logic [31:0]                  session_epoch_i,
   input  logic [15:0]                  current_path_epoch_i,
   input  logic                         rx_valid_i,
@@ -152,7 +153,7 @@ module ir_selective_repeat_rx #(
 
       if (session_reset_i) begin
         entry_valid <= '0;
-        rx_base_sequence_o <= 16'd0;
+        rx_base_sequence_o <= initial_sequence_i;
         sack_bitmap_o <= '0;
         occupancy <= '0;
       end else begin

@@ -1,0 +1,263 @@
+`timescale 1ns/1ps
+
+// Generic P9 physical frame receiver.  It consumes symbols only from the
+// active-low-Rxd-normalized P6/P8C decoder, validates header/payload CRCs, and
+// writes DATA payload bytes into a lane-local temporary buffer.  A frame event
+// is emitted only after the complete optical frame has been observed.
+module p9_4ppm_frame_rx #(
+  parameter int MAX_PAYLOAD_BYTES = 247
+) (
+  input  logic        clk,
+  input  logic        rst_n,
+  input  logic        enable_i,
+  input  logic        align_i,
+  input  logic [1:0]  symbol_i,
+  input  logic        symbol_valid_i,
+  input  logic        symbol_error_i,
+  input  logic        preamble_valid_i,
+  output logic        payload_write_pulse_o,
+  output logic [7:0]  payload_write_index_o,
+  output logic [7:0]  payload_write_data_o,
+  output logic        frame_valid_o,
+  output logic        frame_is_ack_o,
+  output logic        frame_crc_valid_o,
+  output logic [31:0] session_epoch_o,
+  output logic [15:0] path_epoch_o,
+  output logic [15:0] sequence_o,
+  output logic [15:0] payload_length_o,
+  output logic [7:0]  flags_o,
+  output logic [7:0]  lane_id_o,
+  output logic [31:0] object_id_o,
+  output logic [31:0] fragment_offset_o,
+  output logic [15:0] ack_base_o,
+  output logic [31:0] ack_bitmap_o,
+  output logic [15:0] ack_credit_o,
+  output logic        direction_o,
+  output logic [31:0] frame_good_count_o,
+  output logic [31:0] frame_bad_count_o,
+  output logic [31:0] crc_bad_count_o,
+  output logic [31:0] preamble_count_o,
+  output logic [31:0] symbol_error_count_o
+);
+  typedef enum logic [1:0] {RX_WAIT, RX_COLLECT, RX_VALIDATE} state_t;
+  state_t state;
+  logic [7:0] header [0:23];
+  logic [15:0] byte_index;
+  logic [1:0] symbol_index;
+  logic [7:0] current_byte;
+  logic frame_type_known;
+  logic active_ack;
+  logic malformed;
+  logic [15:0] header_crc;
+  logic [31:0] payload_crc;
+  logic [31:0] seen_payload_crc;
+  logic [15:0] observed_payload_length;
+
+  function automatic logic [15:0] crc16_next_byte(
+    input logic [7:0] data, input logic [15:0] crc_in
+  );
+    logic [15:0] c;
+    logic [7:0] d;
+    begin
+      c = crc_in;
+      d = data;
+      for (int idx = 0; idx < 8; idx++) begin
+        c = (c[15] ^ d[7]) ? ({c[14:0], 1'b0} ^ 16'h1021) : {c[14:0], 1'b0};
+        d = {d[6:0], 1'b0};
+      end
+      crc16_next_byte = c;
+    end
+  endfunction
+
+  function automatic logic [31:0] crc32_next_byte(
+    input logic [7:0] data, input logic [31:0] crc_in
+  );
+    logic [31:0] c;
+    begin
+      c = crc_in;
+      for (int idx = 0; idx < 8; idx++)
+        c = (c[0] ^ data[idx]) ? ((c >> 1) ^ 32'hEDB8_8320) : (c >> 1);
+      crc32_next_byte = c;
+    end
+  endfunction
+
+  // Synchronous reset is deliberate: payload index/write controls directly
+  // drive inferred receive BRAM ports and must never be asynchronously reset.
+  always_ff @(posedge clk) begin
+    logic [7:0] completed_byte;
+    logic header_valid;
+    logic payload_valid;
+    logic [15:0] data_payload_index;
+    logic [15:0] data_trailer_index;
+    if (!rst_n) begin
+      state <= RX_WAIT;
+      byte_index <= 16'd0;
+      symbol_index <= 2'd0;
+      current_byte <= 8'd0;
+      frame_type_known <= 1'b0;
+      active_ack <= 1'b0;
+      malformed <= 1'b0;
+      header_crc <= 16'hFFFF;
+      payload_crc <= 32'hFFFF_FFFF;
+      seen_payload_crc <= 32'd0;
+      observed_payload_length <= 16'd0;
+      payload_write_pulse_o <= 1'b0;
+      payload_write_index_o <= 8'd0;
+      payload_write_data_o <= 8'd0;
+      frame_valid_o <= 1'b0;
+      frame_is_ack_o <= 1'b0;
+      frame_crc_valid_o <= 1'b0;
+      session_epoch_o <= 32'd0;
+      path_epoch_o <= 16'd0;
+      sequence_o <= 16'd0;
+      payload_length_o <= 16'd0;
+      flags_o <= 8'd0;
+      lane_id_o <= 8'd0;
+      object_id_o <= 32'd0;
+      fragment_offset_o <= 32'd0;
+      ack_base_o <= 16'd0;
+      ack_bitmap_o <= 32'd0;
+      ack_credit_o <= 16'd0;
+      direction_o <= 1'b0;
+      frame_good_count_o <= 32'd0;
+      frame_bad_count_o <= 32'd0;
+      crc_bad_count_o <= 32'd0;
+      preamble_count_o <= 32'd0;
+      symbol_error_count_o <= 32'd0;
+      for (int idx = 0; idx < 24; idx++) header[idx] <= 8'd0;
+    end else begin
+      payload_write_pulse_o <= 1'b0;
+      frame_valid_o <= 1'b0;
+      frame_crc_valid_o <= 1'b0;
+      completed_byte = current_byte;
+      header_valid = 1'b0;
+      payload_valid = 1'b0;
+      data_payload_index = byte_index - 16'd24;
+      data_trailer_index = byte_index - (16'd24 + observed_payload_length);
+
+      if (!enable_i || align_i) begin
+        state <= RX_WAIT;
+        byte_index <= 16'd0;
+        symbol_index <= 2'd0;
+        current_byte <= 8'd0;
+        frame_type_known <= 1'b0;
+      end else begin
+        if (symbol_error_i) begin
+          symbol_error_count_o <= symbol_error_count_o + 1'b1;
+          if (state == RX_COLLECT) malformed <= 1'b1;
+        end
+        unique case (state)
+          RX_WAIT: begin
+            if (preamble_valid_i) begin
+              preamble_count_o <= preamble_count_o + 1'b1;
+              state <= RX_COLLECT;
+              byte_index <= 16'd0;
+              symbol_index <= 2'd0;
+              current_byte <= 8'd0;
+              frame_type_known <= 1'b0;
+              active_ack <= 1'b0;
+              malformed <= 1'b0;
+              header_crc <= 16'hFFFF;
+              payload_crc <= 32'hFFFF_FFFF;
+              seen_payload_crc <= 32'd0;
+              observed_payload_length <= 16'd0;
+              for (int idx = 0; idx < 24; idx++) header[idx] <= 8'd0;
+            end
+          end
+          RX_COLLECT: begin
+            if (symbol_valid_i) begin
+              completed_byte = current_byte;
+              completed_byte[2*symbol_index +: 2] = symbol_i;
+              current_byte <= completed_byte;
+              if (symbol_index == 2'd3) begin
+                current_byte <= 8'd0;
+                symbol_index <= 2'd0;
+                if (byte_index < 24) header[byte_index] <= completed_byte;
+                if (byte_index == 1) begin
+                  frame_type_known <= (completed_byte == 8'h31 || completed_byte == 8'h32);
+                  active_ack <= completed_byte == 8'h32;
+                  if (completed_byte != 8'h31 && completed_byte != 8'h32) malformed <= 1'b1;
+                end
+                if ((!active_ack && byte_index < 22) ||
+                    (active_ack && byte_index < 18) ||
+                    (!frame_type_known && byte_index < 2))
+                  header_crc <= crc16_next_byte(completed_byte, header_crc);
+                if (!active_ack && byte_index == 11) begin
+                  observed_payload_length <= {completed_byte, header[10]};
+                  if ({completed_byte, header[10]} > MAX_PAYLOAD_BYTES)
+                    malformed <= 1'b1;
+                end
+                if (!active_ack && byte_index >= 24 &&
+                    data_payload_index < observed_payload_length) begin
+                  payload_write_pulse_o <= 1'b1;
+                  payload_write_index_o <= data_payload_index[7:0];
+                  payload_write_data_o <= completed_byte;
+                  payload_crc <= crc32_next_byte(completed_byte, payload_crc);
+                end else if (!active_ack && data_trailer_index < 4 &&
+                             byte_index >= 24 + observed_payload_length) begin
+                  seen_payload_crc[8*data_trailer_index +: 8] <= completed_byte;
+                end
+                if ((active_ack && byte_index == 19) ||
+                    (!active_ack && byte_index == 27 + observed_payload_length)) begin
+                  state <= RX_VALIDATE;
+                end else begin
+                  byte_index <= byte_index + 1'b1;
+                end
+              end else begin
+                symbol_index <= symbol_index + 1'b1;
+              end
+            end
+          end
+          RX_VALIDATE: begin
+            if (active_ack) begin
+              header_valid = header[0] == 8'hAD && header[1] == 8'h32 &&
+                  {header[19], header[18]} == header_crc && header[10] == 8'd32;
+              payload_valid = 1'b1;
+            end else begin
+              header_valid = header[0] == 8'hA5 && header[1] == 8'h31 &&
+                  {header[23], header[22]} == header_crc &&
+                  observed_payload_length <= MAX_PAYLOAD_BYTES;
+              payload_valid = seen_payload_crc == ~payload_crc;
+            end
+            frame_valid_o <= 1'b1;
+            frame_is_ack_o <= active_ack;
+            frame_crc_valid_o <= header_valid && payload_valid && !malformed;
+            if (header_valid && payload_valid && !malformed)
+              frame_good_count_o <= frame_good_count_o + 1'b1;
+            else begin
+              frame_bad_count_o <= frame_bad_count_o + 1'b1;
+              if (!header_valid || !payload_valid) crc_bad_count_o <= crc_bad_count_o + 1'b1;
+            end
+            session_epoch_o <= {header[5], header[4], header[3], header[2]};
+            path_epoch_o <= {header[7], header[6]};
+            if (active_ack) begin
+              sequence_o <= 16'd0;
+              payload_length_o <= 16'd0;
+              flags_o <= 8'd0;
+              lane_id_o <= 8'd0;
+              object_id_o <= 32'd0;
+              fragment_offset_o <= 32'd0;
+              ack_base_o <= {header[9], header[8]};
+              direction_o <= header[11][0];
+              ack_credit_o <= {header[13], header[12]};
+              ack_bitmap_o <= {header[17], header[16], header[15], header[14]};
+            end else begin
+              sequence_o <= {header[9], header[8]};
+              payload_length_o <= {header[11], header[10]};
+              flags_o <= header[12];
+              lane_id_o <= header[13];
+              object_id_o <= {header[17], header[16], header[15], header[14]};
+              fragment_offset_o <= {header[21], header[20], header[19], header[18]};
+              ack_base_o <= 16'd0;
+              ack_bitmap_o <= 32'd0;
+              ack_credit_o <= 16'd0;
+              direction_o <= 1'b0;
+            end
+            state <= RX_WAIT;
+          end
+          default: state <= RX_WAIT;
+        endcase
+      end
+    end
+  end
+endmodule

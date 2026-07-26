@@ -19,6 +19,7 @@ module tb_ir_selective_repeat_rx;
 
   ir_selective_repeat_rx #(.WINDOW_SIZE(32), .SACK_BITS(32)) dut (
     .clk, .rst_n, .clear_counters_i(clear_counters), .session_reset_i(session_reset),
+    .initial_sequence_i(16'd0),
     .session_epoch_i(session_epoch), .current_path_epoch_i(current_path_epoch),
     .rx_valid_i(rx_valid), .rx_ready_o(rx_ready), .rx_l1_valid_i(rx_l1_valid),
     .rx_session_epoch_i(rx_session_epoch), .rx_sequence_i(rx_sequence),

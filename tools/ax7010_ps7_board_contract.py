@@ -364,6 +364,7 @@ def _check_init_payload(
 def validate_xsa(
     path: Path,
     errors: list[dict[str, Any]],
+    expected_hwh_name: str = "p6_ps_system.hwh",
 ) -> dict[str, bytes]:
     artifact = "vivado_xsa"
     payloads: dict[str, bytes] = {}
@@ -373,7 +374,7 @@ def validate_xsa(
     try:
         with zipfile.ZipFile(path) as archive:
             names = set(archive.namelist())
-            for required in ("p6_ps_system.hwh", "sysdef.xml", "ps7_init.tcl", "ps7_init.c"):
+            for required in (expected_hwh_name, "sysdef.xml", "ps7_init.tcl", "ps7_init.c"):
                 if required not in names:
                     _record_mismatch(
                         errors,
@@ -405,8 +406,8 @@ def validate_xsa(
                     break
         if observed_device != EXPECTED_DEVICE:
             _record_mismatch(errors, "xsa_sysdef", "device", EXPECTED_DEVICE, observed_device)
-    if "p6_ps_system.hwh" in payloads:
-        hwh = _load_xml_bytes(payloads["p6_ps_system.hwh"], "xsa_hwh", errors)
+    if expected_hwh_name in payloads:
+        hwh = _load_xml_bytes(payloads[expected_hwh_name], "xsa_hwh", errors)
         if hwh is not None:
             module = _find_ps7_module(hwh)
             if module is None:
@@ -541,6 +542,7 @@ def validate_vitis_artifacts(
     platform_ps7_init_tcl: Path,
     platform_ps7_init_c: Path,
     fsbl_ps7_init_c: Path,
+    expected_hwh_name: str = "p6_ps_system.hwh",
 ) -> dict[str, Any]:
     report = _base_report("vitis")
     errors: list[dict[str, Any]] = report["errors"]
@@ -553,7 +555,7 @@ def validate_vitis_artifacts(
         "vitis_fsbl_ps7_init_c": fsbl_ps7_init_c,
     }
     report["artifacts"] = {name: _artifact(path) for name, path in paths.items()}
-    xsa_payloads = validate_xsa(xsa, errors)
+    xsa_payloads = validate_xsa(xsa, errors, expected_hwh_name)
     if not platform_xsa.is_file():
         _record_mismatch(
             errors, "vitis_platform_xsa", "file", "present", None, reason="MISSING_FILE"

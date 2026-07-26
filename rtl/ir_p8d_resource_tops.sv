@@ -51,7 +51,8 @@ module ir_p8d_resource_top #(
 
   ir_data_plane_top #(.LANE_COUNT(LANE_COUNT),.WINDOW_SIZE(WINDOW_SIZE),
     .SACK_BITS(SACK_BITS)) data_plane (
-    .clk,.rst_n,.clear_counters_i(1'b0),.session_reset_i(1'b0),.abort_all_i(abort_i),
+    .clk,.rst_n,.clear_counters_i(1'b0),.session_reset_i(1'b0),
+    .initial_sequence_i(16'd0),.abort_all_i(abort_i),
     .session_epoch_i(32'd1),.path_epoch_i(16'd1),.path_epoch_valid_i(1'b1),
     .lane_weights_i({LANE_COUNT{8'h01}}),.active_lane_mask_i({LANE_COUNT{1'b1}}),
     .lane_ready_i({LANE_COUNT{1'b1}}),.lane_health_i({LANE_COUNT{1'b1}}),

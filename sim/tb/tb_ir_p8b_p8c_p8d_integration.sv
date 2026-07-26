@@ -73,7 +73,8 @@ module tb_ir_p8b_p8c_p8d_integration;
 
   ir_data_plane_top #(.LANE_COUNT(8),.WINDOW_SIZE(64),.SACK_BITS(64),
                       .MAX_RETRY(3),.RTO_CYCLES(16)) data_plane (
-    .clk,.rst_n,.clear_counters_i(1'b0),.session_reset_i(1'b0),.abort_all_i(1'b0),
+    .clk,.rst_n,.clear_counters_i(1'b0),.session_reset_i(1'b0),
+    .initial_sequence_i(16'd0),.abort_all_i(1'b0),
     .session_epoch_i(32'h88),.path_epoch_i(16'd1),.path_epoch_valid_i(active_valid&&phase_valid),
     .lane_weights_i(64'h0101010101010101),.active_lane_mask_i(8'hff),
     .lane_ready_i(8'hff),.lane_health_i(~(duty_fault|stuck_fault)),

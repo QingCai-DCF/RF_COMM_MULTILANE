@@ -35,7 +35,14 @@ module tfdu_lane_phy #(
   output reg  [31:0]  rx_last_timestamp,
   output wire [31:0]  tx_high_width_current,
   output wire [31:0]  duty_window_count,
-  output wire [31:0]  duty_high_count
+  output wire [31:0]  duty_high_count,
+  output wire [31:0]  tx_high_width_max_seen,
+  output wire [31:0]  duty_high_max_seen,
+  output wire [31:0]  duty_hard_limit_cycles,
+  output wire [31:0]  duty_target_limit_cycles,
+  output wire [31:0]  duty_headroom_cycles,
+  output wire [31:0]  duty_target_throttle_count,
+  output wire [31:0]  duty_hard_fault_count
 );
   // Compatibility parameters remain visible for older profiles. The active
   // protection is intentionally clamped to the canonical P8C 1 us/18% target.
@@ -90,27 +97,30 @@ module tfdu_lane_phy #(
     .txd_pre_final_o(txd_pre_final),
     .startup_done_o(module_startup_done),
     .continuous_high_cycles_o(tx_high_width_current),
-    .longest_high_cycles_seen_o(),
+    .longest_high_cycles_seen_o(tx_high_width_max_seen),
     .stuck_high_fault_o(module_stuck_fault),
     .stuck_high_fault_count_o(),
     .stuck_high_kill_count_o(),
     .rolling_high_cycles_o(rolling_high_cycles),
-    .rolling_high_cycles_max_seen_o(),
+    .rolling_high_cycles_max_seen_o(duty_high_max_seen),
     .rolling_window_cycles_o(rolling_window_cycles),
-    .hard_limit_cycles_o(),
-    .target_limit_cycles_o(),
-    .duty_headroom_cycles_o(),
+    .hard_limit_cycles_o(duty_hard_limit_cycles),
+    .target_limit_cycles_o(duty_target_limit_cycles),
+    .duty_headroom_cycles_o(duty_headroom_cycles),
     .duty_target_throttle_o(duty_target_throttle),
-    .duty_target_throttle_count_o(),
+    .duty_target_throttle_count_o(duty_target_throttle_count),
     .duty_hard_fault_o(module_duty_hard_fault),
-    .duty_hard_fault_count_o(),
+    .duty_hard_fault_count_o(duty_hard_fault_count),
     .duty_history_valid_o(history_valid),
     .duty_recovery_cooldown_active_o(cooldown_active),
     .duty_recovery_cooldown_remaining_o(),
     .actual_or_conservative_charge_count_o()
   );
 
-  always @(posedge clk or negedge rst_n) begin
+  // Telemetry/sticky fault registers are synchronously reset so their values
+  // can safely feed protocol BRAM control cones.  Reset still forces physical
+  // SD high and Txd low asynchronously through enable_phy/final endpoint kill.
+  always @(posedge clk) begin
     if (!rst_n) begin
       fault_stuck_high <= 1'b0;
       fault_duty_limit <= 1'b0;

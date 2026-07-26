@@ -57,6 +57,7 @@ module p8d_data_plane_integration_common #(
     .MAX_RETRY(3),.RTO_CYCLES(16)
   ) dut (
     .clk,.rst_n,.clear_counters_i(clear_counters),.session_reset_i(session_reset),
+    .initial_sequence_i(16'd0),
     .abort_all_i(abort_all),.session_epoch_i(session_epoch),.path_epoch_i(path_epoch),
     .path_epoch_valid_i(path_epoch_valid),.lane_weights_i(lane_weights),
     .active_lane_mask_i(active_lane_mask),.lane_ready_i(lane_ready),

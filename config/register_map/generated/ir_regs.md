@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P8D-1` (`0x08040001`)
-- Canonical source SHA256: `8f029023d7871a7b8351c9c9256164d34a0ec2954754c261c31da410851d34b1`
-- Compatibility: P0-P8C offsets and meanings are preserved; P8D is additive from 0x0500.
+- Register map version: `P9-2` (`0x09000002`)
+- Canonical source SHA256: `2e422c25a68b3d013a96e9c9df7aaf4664ddd3e9e5d551aff40516004468387e`
+- Compatibility: P0-P8D offsets and meanings are preserved; P9 Z7010 DMA/optical runtime is additive from 0x0700.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -218,3 +218,102 @@
 | `P8D_LANE7_RETRIES` | `0x06D4` | `RO` | Lane 7 retries |
 | `P8D_LANE7_MIGRATIONS` | `0x06D8` | `RO` | Lane 7 migrations |
 | `P8D_LANE7_DEFER_COUNT` | `0x06DC` | `RO` | Lane 7 deferrals |
+| `P9_ID` | `0x0700` | `RO` | P9 Z7010 stationary two-lane peripheral identity |
+| `P9_BUILD_ID` | `0x0704` | `RO` | P9 functional build identity |
+| `P9_PROFILE_ID` | `0x0708` | `RO` | Z7010 two-lane development profile identity |
+| `P9_REGISTER_MAP_VERSION` | `0x070C` | `RO` | Canonical generated register-map version |
+| `P9_REGISTER_MAP_HASH_LOW` | `0x0710` | `RO` | Low 32 bits of canonical register-map SHA256 |
+| `P9_CAPABILITIES` | `0x0714` | `RO` | Payload, window, module, lane and protocol capabilities |
+| `P9_CONTROL` | `0x0718` | `WO` | Fail-closed P9 control request pulses and receiver enable commands |
+| `P9_STATUS` | `0x071C` | `RO` | Endpoint, object, stream and raw-generator status |
+| `P9_PHY_STATUS` | `0x0720` | `RO` | Per-module ready, startup and sticky safety masks |
+| `P9_OBJECT_ERROR` | `0x0724` | `RO` | Sticky P9 object error code |
+| `P9_OBJECT_CONFIG` | `0x0728` | `RW` | Lane mask, PHY rate and payload direction |
+| `P9_LANE_WEIGHTS` | `0x072C` | `RW` | Two 8-bit health-weighted scheduler weights |
+| `P9_SESSION_EPOCH` | `0x0730` | `RW` | P9 selective-repeat session epoch |
+| `P9_PATH_EPOCH` | `0x0734` | `RW` | P9 physical-attempt path epoch |
+| `P9_OBJECT_ID` | `0x0738` | `RW` | P9 object identity |
+| `P9_FAULT_INJECTION` | `0x073C` | `RW` | Bounded DATA/ACK drop counts and live lane-unavailable mask |
+| `P9_RAW_CONFIG` | `0x0740` | `RW` | Raw pulse lane mask and direction |
+| `P9_RAW_TARGET` | `0x0744` | `RW` | Raw pulse train target count |
+| `P9_RAW_SPACING` | `0x0748` | `RW` | Raw pulse spacing in 64 MHz cycles |
+| `P9_RAW_SENT_COUNT` | `0x074C` | `RO` | Completed raw pulse trains |
+| `P9_INPUT_BYTE_COUNT` | `0x0750` | `RO` | Accepted AXI DMA MM2S bytes |
+| `P9_OUTPUT_BYTE_COUNT` | `0x0754` | `RO` | Delivered AXI DMA S2MM bytes |
+| `P9_TX_SEQUENCE_BASE` | `0x0758` | `RO` | Packed TX next sequence and cumulative ACK base |
+| `P9_WINDOW_STATUS` | `0x075C` | `RO` | RX base, outstanding count and outstanding high watermark |
+| `P9_SACK_BITMAP` | `0x0760` | `RO` | Current 32-bit SACK bitmap |
+| `P9_TX_ATTEMPT_COUNT` | `0x0764` | `RO` | Physical DATA attempt handshakes |
+| `P9_TX_RETRY_COUNT` | `0x0768` | `RO` | Selective-repeat retries |
+| `P9_TX_RETRY_EXHAUSTED_COUNT` | `0x076C` | `RO` | Bounded retry exhaustion count |
+| `P9_TX_TIMEOUT_COUNT` | `0x0770` | `RO` | RTO expiry count |
+| `P9_TX_MIGRATION_COUNT` | `0x0774` | `RO` | Unacknowledged-attempt lane migration count |
+| `P9_RX_DUPLICATE_COUNT` | `0x0778` | `RO` | Suppressed duplicate DATA frames |
+| `P9_ACK_AGGREGATION_COUNT` | `0x077C` | `RO` | DATA frames accumulated for ACK/SACK |
+| `P9_ACK_TIMER_EXPIRY_COUNT` | `0x0780` | `RO` | ACK maximum-delay expirations |
+| `P9_ACK_FRAMES_SENT` | `0x0784` | `RO` | Reverse optical ACK/SACK frames sent |
+| `P9_DUPLICATE_ACK_COUNT` | `0x0788` | `RO` | Duplicate ACK observations |
+| `P9_STALE_ACK_COUNT` | `0x078C` | `RO` | Stale-session ACK rejections |
+| `P9_OUT_OF_WINDOW_ACK_COUNT` | `0x0790` | `RO` | Malformed or future ACK-window rejections |
+| `P9_RX_STALE_SESSION_COUNT` | `0x0794` | `RO` | Stale-session DATA rejections |
+| `P9_RX_STALE_PATH_COUNT` | `0x0798` | `RO` | Stale-path DATA rejections |
+| `P9_PHYSICAL_DATA_GOOD` | `0x079C` | `RO` | Direction-selected good physical DATA frames |
+| `P9_PHYSICAL_ACK_GOOD` | `0x07A0` | `RO` | Direction-selected good physical ACK frames |
+| `P9_PHYSICAL_CRC_BAD` | `0x07A4` | `RO` | All-module physical CRC failures |
+| `P9_PHYSICAL_DROP_DATA` | `0x07A8` | `RO` | Injected DATA frame drops |
+| `P9_PHYSICAL_DROP_ACK` | `0x07AC` | `RO` | Injected ACK frame drops |
+| `P9_LANE0_SCHEDULED_FRAMES` | `0x07B0` | `RO` | Lane 0 scheduled frame count |
+| `P9_LANE1_SCHEDULED_FRAMES` | `0x07B4` | `RO` | Lane 1 scheduled frame count |
+| `P9_LANE0_SCHEDULED_BYTES` | `0x07B8` | `RO` | Lane 0 scheduled byte count |
+| `P9_LANE1_SCHEDULED_BYTES` | `0x07BC` | `RO` | Lane 1 scheduled byte count |
+| `P9_LANE0_RETRIES` | `0x07C0` | `RO` | Lane 0 retry count |
+| `P9_LANE1_RETRIES` | `0x07C4` | `RO` | Lane 1 retry count |
+| `P9_LANE0_MIGRATIONS` | `0x07C8` | `RO` | Lane 0 migration count |
+| `P9_LANE1_MIGRATIONS` | `0x07CC` | `RO` | Lane 1 migration count |
+| `P9_SCHEDULER_STARVATION_MAX` | `0x07D0` | `RO` | Maximum eligible-lane starvation |
+| `P9_RAW_RX_A0` | `0x07D4` | `RO` | A-side lane 0 raw active-low pulse count |
+| `P9_RAW_RX_A1` | `0x07D8` | `RO` | A-side lane 1 raw active-low pulse count |
+| `P9_RAW_RX_B0` | `0x07DC` | `RO` | B-side lane 0 raw active-low pulse count |
+| `P9_RAW_RX_B1` | `0x07E0` | `RO` | B-side lane 1 raw active-low pulse count |
+| `P9_PHYSICAL_TX_A0` | `0x07E4` | `RO` | A-side lane 0 physical pulse count |
+| `P9_PHYSICAL_TX_A1` | `0x07E8` | `RO` | A-side lane 1 physical pulse count |
+| `P9_PHYSICAL_TX_B0` | `0x07EC` | `RO` | B-side lane 0 physical pulse count |
+| `P9_PHYSICAL_TX_B1` | `0x07F0` | `RO` | B-side lane 1 physical pulse count |
+| `P9_TX_HIGH_MAX_A0` | `0x07F4` | `RO` | A-side lane 0 maximum continuous Txd high cycles |
+| `P9_TX_HIGH_MAX_A1` | `0x07F8` | `RO` | A-side lane 1 maximum continuous Txd high cycles |
+| `P9_TX_HIGH_MAX_B0` | `0x07FC` | `RO` | B-side lane 0 maximum continuous Txd high cycles |
+| `P9_TX_HIGH_MAX_B1` | `0x0800` | `RO` | B-side lane 1 maximum continuous Txd high cycles |
+| `P9_DUTY_MAX_A0` | `0x0804` | `RO` | A-side lane 0 maximum rolling-window high cycles |
+| `P9_DUTY_MAX_A1` | `0x0808` | `RO` | A-side lane 1 maximum rolling-window high cycles |
+| `P9_DUTY_MAX_B0` | `0x080C` | `RO` | B-side lane 0 maximum rolling-window high cycles |
+| `P9_DUTY_MAX_B1` | `0x0810` | `RO` | B-side lane 1 maximum rolling-window high cycles |
+| `P9_DUTY_CURRENT_A0` | `0x0814` | `RO` | A-side lane 0 current rolling-window high cycles |
+| `P9_DUTY_CURRENT_A1` | `0x0818` | `RO` | A-side lane 1 current rolling-window high cycles |
+| `P9_DUTY_CURRENT_B0` | `0x081C` | `RO` | B-side lane 0 current rolling-window high cycles |
+| `P9_DUTY_CURRENT_B1` | `0x0820` | `RO` | B-side lane 1 current rolling-window high cycles |
+| `P9_DUTY_HEADROOM_A0` | `0x0824` | `RO` | A-side lane 0 target-duty headroom cycles |
+| `P9_DUTY_HEADROOM_A1` | `0x0828` | `RO` | A-side lane 1 target-duty headroom cycles |
+| `P9_DUTY_HEADROOM_B0` | `0x082C` | `RO` | B-side lane 0 target-duty headroom cycles |
+| `P9_DUTY_HEADROOM_B1` | `0x0830` | `RO` | B-side lane 1 target-duty headroom cycles |
+| `P9_DUTY_THROTTLE_A0` | `0x0834` | `RO` | A-side lane 0 target-duty throttle count |
+| `P9_DUTY_THROTTLE_A1` | `0x0838` | `RO` | A-side lane 1 target-duty throttle count |
+| `P9_DUTY_THROTTLE_B0` | `0x083C` | `RO` | B-side lane 0 target-duty throttle count |
+| `P9_DUTY_THROTTLE_B1` | `0x0840` | `RO` | B-side lane 1 target-duty throttle count |
+| `P9_DUTY_HARD_FAULT_A0` | `0x0844` | `RO` | A-side lane 0 hard-duty fault count |
+| `P9_DUTY_HARD_FAULT_A1` | `0x0848` | `RO` | A-side lane 1 hard-duty fault count |
+| `P9_DUTY_HARD_FAULT_B0` | `0x084C` | `RO` | B-side lane 0 hard-duty fault count |
+| `P9_DUTY_HARD_FAULT_B1` | `0x0850` | `RO` | B-side lane 1 hard-duty fault count |
+| `P9_DUTY_WINDOW_CYCLES` | `0x0854` | `RO` | Exact 1 ms rolling duty window cycles |
+| `P9_DUTY_HARD_LIMIT` | `0x0858` | `RO` | Strict less-than-20-percent high-cycle limit |
+| `P9_DUTY_TARGET_LIMIT` | `0x085C` | `RO` | Less-than-or-equal-to-18-percent target high cycles |
+| `P9_INITIAL_SEQUENCE` | `0x0860` | `RW` | Bounded validation-only selective-repeat initial sequence |
+| `P9_PROTOCOL_FAULT_FLAGS` | `0x0864` | `RW` | Single-use validation fault flags: stale session/path, future/old/out-of-order sequence, bad CRC, duplicate ACK |
+| `P9_RX_OUT_OF_ORDER_COUNT` | `0x0868` | `RO` | Current-run accepted out-of-order frame count |
+| `P9_RX_OLD_COUNT` | `0x086C` | `RO` | Current-run old-sequence rejection count |
+| `P9_RX_FUTURE_COUNT` | `0x0870` | `RO` | Current-run future-window rejection count |
+| `P9_RX_GAP_COUNT` | `0x0874` | `RO` | Current-run reorder-gap observation count |
+| `P9_RX_DELIVERY_COUNT` | `0x0878` | `RO` | Current-run ordered delivery count |
+| `P9_RX_PROTOCOL_ERROR_COUNT` | `0x087C` | `RO` | Current-run receive protocol error count |
+| `P9_PHYSICAL_FRAME_BAD_COUNT` | `0x0880` | `RO` | Current-run physical parser rejected-frame count |
+| `P9_PHYSICAL_PREAMBLE_COUNT` | `0x0884` | `RO` | Current-run physical preamble count |
+| `P9_PHYSICAL_SYMBOL_ERROR_COUNT` | `0x0888` | `RO` | Current-run physical symbol error count |

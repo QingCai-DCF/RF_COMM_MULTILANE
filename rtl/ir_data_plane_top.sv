@@ -16,6 +16,7 @@ module ir_data_plane_top #(
   input  logic                           rst_n,
   input  logic                           clear_counters_i,
   input  logic                           session_reset_i,
+  input  logic [15:0]                    initial_sequence_i,
   input  logic                           abort_all_i,
   input  logic [31:0]                    session_epoch_i,
   input  logic [15:0]                    path_epoch_i,
@@ -102,8 +103,14 @@ module ir_data_plane_top #(
   output logic [31:0]                    tx_out_of_window_ack_count_o,
   output logic [31:0]                    tx_migration_count_o,
   output logic [31:0]                    rx_duplicate_count_o,
+  output logic [31:0]                    rx_out_of_order_count_o,
+  output logic [31:0]                    rx_old_count_o,
+  output logic [31:0]                    rx_future_count_o,
   output logic [31:0]                    rx_stale_session_count_o,
   output logic [31:0]                    rx_stale_path_count_o,
+  output logic [31:0]                    rx_gap_count_o,
+  output logic [31:0]                    rx_delivery_count_o,
+  output logic [31:0]                    rx_protocol_error_count_o,
   output logic [31:0]                    ack_aggregation_count_o,
   output logic [31:0]                    ack_timer_expiry_count_o,
   output logic [31:0]                    ack_frames_sent_o,
@@ -157,13 +164,6 @@ module ir_data_plane_top #(
   logic [2:0] selected_lane_padded;
 
   logic rx_accept_pulse;
-  logic [31:0] rx_out_of_order_unused;
-  logic [31:0] rx_old_unused;
-  logic [31:0] rx_future_unused;
-  logic [31:0] rx_gap_unused;
-  logic [31:0] rx_delivery_count_unused;
-  logic [31:0] rx_protocol_error_unused;
-
   initial begin
     if (LANE_COUNT < 2 || LANE_COUNT > 8 || (LANE_COUNT & (LANE_COUNT-1)) != 0)
       $error("LANE_COUNT must be 2, 4, or 8");
@@ -239,7 +239,8 @@ module ir_data_plane_top #(
     .RTO_CYCLES(RTO_CYCLES), .PAYLOAD_REF_WIDTH(PAYLOAD_REF_WIDTH),
     .DESCRIPTOR_WIDTH(DESCRIPTOR_WIDTH)
   ) u_tx_window (
-    .clk, .rst_n, .clear_counters_i, .session_reset_i, .session_epoch_i,
+    .clk, .rst_n, .clear_counters_i, .session_reset_i, .initial_sequence_i,
+    .session_epoch_i,
     .abort_all_i, .allocate_valid_i(tx_allocate_valid_i),
     .allocate_ready_o(tx_allocate_ready_o),
     .allocate_payload_ref_i(tx_allocate_payload_ref_i),
@@ -305,7 +306,8 @@ module ir_data_plane_top #(
     .WINDOW_SIZE(WINDOW_SIZE), .SACK_BITS(SACK_BITS),
     .PAYLOAD_REF_WIDTH(PAYLOAD_REF_WIDTH)
   ) u_rx_window (
-    .clk, .rst_n, .clear_counters_i, .session_reset_i, .session_epoch_i,
+    .clk, .rst_n, .clear_counters_i, .session_reset_i, .initial_sequence_i,
+    .session_epoch_i,
     .current_path_epoch_i(path_epoch_i), .rx_valid_i(rx_frame_valid_i),
     .rx_ready_o(rx_frame_ready_o), .rx_l1_valid_i,
     .rx_session_epoch_i, .rx_sequence_i, .rx_path_epoch_i,
@@ -316,13 +318,13 @@ module ir_data_plane_top #(
     .delivery_payload_length_o(rx_delivery_payload_length_o),
     .rx_base_sequence_o, .sack_bitmap_o(rx_sack_bitmap_o),
     .receiver_credit_o(rx_receiver_credit_o),
-    .out_of_order_count_o(rx_out_of_order_unused),
-    .duplicate_count_o(rx_duplicate_count_o), .old_count_o(rx_old_unused),
-    .future_count_o(rx_future_unused),
+    .out_of_order_count_o(rx_out_of_order_count_o),
+    .duplicate_count_o(rx_duplicate_count_o), .old_count_o(rx_old_count_o),
+    .future_count_o(rx_future_count_o),
     .stale_session_count_o(rx_stale_session_count_o),
-    .stale_path_epoch_count_o(rx_stale_path_count_o), .gap_count_o(rx_gap_unused),
-    .delivery_count_o(rx_delivery_count_unused),
-    .protocol_error_count_o(rx_protocol_error_unused)
+    .stale_path_epoch_count_o(rx_stale_path_count_o), .gap_count_o(rx_gap_count_o),
+    .delivery_count_o(rx_delivery_count_o),
+    .protocol_error_count_o(rx_protocol_error_count_o)
   );
 
   ir_ack_aggregator #(

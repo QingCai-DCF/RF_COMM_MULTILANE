@@ -38,12 +38,15 @@ module ir_ack_aggregator #(
   always_comb begin
     timer_trigger = (pending_frames != 0) &&
                     (delay_counter >= MAX_DELAY_CYCLES - 1);
+    // A control or direction-boundary event may represent a retransmitted
+    // frame after the previous ACK was lost.  In that case there need not be
+    // a newly accepted reorder entry, but the current cumulative ACK/SACK
+    // state still has to be emitted to make ACK loss recoverable.
     trigger_now = ((pending_frames >= FRAME_THRESHOLD) || timer_trigger ||
                    ((pending_frames != 0) &&
                     (receiver_credit_i <= CREDIT_LOW_WATERMARK)) ||
                    ((pending_frames != 0) && gap_blocked_i) ||
-                   ((pending_frames != 0) && control_event_i) ||
-                   ((pending_frames != 0) && direction_boundary_i) ||
+                   control_event_i || direction_boundary_i ||
                    ((pending_frames != 0) && explicit_request_i));
   end
 

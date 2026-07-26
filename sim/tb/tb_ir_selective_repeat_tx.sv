@@ -34,6 +34,7 @@ module tb_ir_selective_repeat_tx;
     .WINDOW_SIZE(32), .SACK_BITS(32), .MAX_RETRY(2), .RTO_CYCLES(4)
   ) dut (
     .clk, .rst_n, .clear_counters_i(clear_counters), .session_reset_i(session_reset),
+    .initial_sequence_i(16'd0),
     .session_epoch_i(session_epoch), .abort_all_i(abort_all),
     .allocate_valid_i(allocate_valid), .allocate_ready_o(allocate_ready),
     .allocate_payload_ref_i(allocate_payload_ref),
