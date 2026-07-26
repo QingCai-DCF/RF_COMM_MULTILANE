@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PREFLIGHT = ROOT / "scripts/hw/p9_hw_preflight.tcl"
 SHUTDOWN = ROOT / "scripts/hw/p9_program_shutdown.tcl"
+XSDB_STAGE = ROOT / "scripts/hw/p9_xsdb_stage.tcl"
 TARGET = "localhost:3121/xilinx_tcf/Digilent/210512180081"
 BOARD_ID = "210512180081"
 PART = "xc7z010clg400-1"
@@ -126,6 +127,52 @@ class P9HardwareTargetTclTests(unittest.TestCase):
             self.assertIn("if {$unexpected_device_count != 0}", text)
             self.assertNotIn("[llength $all_devices] != 1", text)
             self.assertNotIn("[llength $devices] != 1", text)
+
+    def xsdb_identity_interp(self) -> tkinter.Tcl:
+        interp = tkinter.Tcl()
+        source = XSDB_STAGE.read_text(encoding="utf-8")
+        interp.eval(source[: source.index("if {[llength $argv] != 12}")])
+        return interp
+
+    def test_xsdb_accepts_dap_tap_plus_one_exact_zynq_tap(self) -> None:
+        interp = self.xsdb_identity_interp()
+        interp.eval(
+            f"""
+            set records [list \
+              [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+              [dict create node_id 1 name arm_dap idcode 4BA00477] \
+              [dict create node_id 2 name xc7z010 idcode 13722093]]
+            set identity [p9_select_jtag_identity $records {BOARD_ID}]
+            """
+        )
+        self.assertEqual("2", interp.eval("llength [dict get $identity device_nodes]"))
+        self.assertEqual("1", interp.eval("llength [dict get $identity exact_device_matches]"))
+        self.assertEqual("2", interp.eval("dict get [dict get $identity device] node_id"))
+
+    def test_xsdb_rejects_duplicate_exact_zynq_taps(self) -> None:
+        interp = self.xsdb_identity_interp()
+        with self.assertRaises(tkinter.TclError):
+            interp.eval(
+                f"""
+                p9_select_jtag_identity [list \
+                  [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+                  [dict create node_id 1 name arm_dap idcode 4BA00477] \
+                  [dict create node_id 2 name xc7z010 idcode 13722093] \
+                  [dict create node_id 3 name xc7z010 idcode 0x13722093]] {BOARD_ID}
+                """
+            )
+
+    def test_xsdb_rejects_second_or_wrong_cable_root(self) -> None:
+        interp = self.xsdb_identity_interp()
+        with self.assertRaises(tkinter.TclError):
+            interp.eval(
+                f"""
+                p9_select_jtag_identity [list \
+                  [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+                  [dict create level 0 jtag_cable_serial 999999999999] \
+                  [dict create node_id 2 name xc7z010 idcode 13722093]] {BOARD_ID}
+                """
+            )
 
 
 if __name__ == "__main__":

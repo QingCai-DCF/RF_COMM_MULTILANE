@@ -20,6 +20,38 @@ proc p9_normal_idcode {value} {
   return ""
 }
 
+proc p9_select_jtag_identity {records board_id} {
+  set cable_roots {}
+  set cable_matches {}
+  set device_nodes {}
+  set device_matches {}
+  foreach props $records {
+    if {[dict exists $props jtag_cable_serial] &&
+        [dict exists $props level] && [dict get $props level] == 0} {
+      lappend cable_roots $props
+      if {[string equal -nocase [dict get $props jtag_cable_serial] $board_id]} {
+        lappend cable_matches $props
+      }
+    }
+    if {![dict exists $props idcode] || ![dict exists $props name]} { continue }
+    lappend device_nodes $props
+    if {[string equal -nocase [dict get $props name] xc7z010] &&
+        [p9_normal_idcode [dict get $props idcode]] eq "13722093" &&
+        [dict exists $props node_id]} {
+      lappend device_matches $props
+    }
+  }
+  if {[llength $cable_roots] != 1 || [llength $cable_matches] != 1} {
+    error "P9 XSDB requires exactly one authorized cable root"
+  }
+  if {[llength $device_matches] != 1} {
+    error "P9 XSDB requires exactly one canonical Zynq-7010/IDCODE match"
+  }
+  return [dict create cable [lindex $cable_matches 0] \
+      device [lindex $device_matches 0] cable_roots $cable_roots \
+      device_nodes $device_nodes exact_device_matches $device_matches]
+}
+
 proc p9_unique_targets_by_id {records} {
   set result {}; set seen [dict create]
   foreach props $records {
@@ -363,23 +395,22 @@ set rc [catch {
   connect -url $xsdb_url
   set connected 1
   set jtag_records [jtag targets -target-properties]
-  set cable_roots {}; set cable_matches {}; set device_matches {}; set device_nodes {}
-  foreach props $jtag_records {
-    if {[dict exists $props jtag_cable_serial] && [dict exists $props level] && [dict get $props level] == 0} {
-      lappend cable_roots $props
-      if {[string equal -nocase [dict get $props jtag_cable_serial] $expected_board]} { lappend cable_matches $props }
-    }
-    if {[dict exists $props idcode] && [dict exists $props name]} {
-      lappend device_nodes $props
-      if {[string equal -nocase [dict get $props name] xc7z010] &&
-          [p9_normal_idcode [dict get $props idcode]] eq "13722093"} { lappend device_matches $props }
-    }
+  set jtag_identity [p9_select_jtag_identity $jtag_records $expected_board]
+  set device [dict get $jtag_identity device]
+  set device_nodes [dict get $jtag_identity device_nodes]
+  p9_say "P9_XSDB_CABLE_ROOT_COUNT=[llength [dict get $jtag_identity cable_roots]]"
+  p9_say "P9_XSDB_JTAG_DEVICE_COUNT=[llength $device_nodes]"
+  p9_say "P9_XSDB_EXACT_FPGA_MATCH_COUNT=[llength [dict get $jtag_identity exact_device_matches]]"
+  set jtag_index 0
+  foreach props $device_nodes {
+    set name [dict get $props name]
+    set idcode [dict get $props idcode]
+    set node_id "UNKNOWN"
+    if {[dict exists $props node_id]} { set node_id [dict get $props node_id] }
+    set safe_name [string map [list "=" "_" "|" "_" "\r" "" "\n" ""] $name]
+    p9_say "P9_XSDB_ENUM_DEVICE_$jtag_index=$safe_name|NODE_ID=$node_id|IDCODE=$idcode|NORMALIZED=[p9_normal_idcode $idcode]"
+    incr jtag_index
   }
-  if {[llength $cable_roots] != 1 || [llength $cable_matches] != 1 ||
-      [llength $device_nodes] != 1 || [llength $device_matches] != 1} {
-    error "P9 XSDB exact cable/device/IDCODE identity failed"
-  }
-  set device [lindex $device_matches 0]
   set debug [p9_classify_targets [targets -target-properties] [dict get $device node_id] $expected_board]
   set dap [dict get $debug dap]; set apu [dict get $debug apu]
   set fpga_targets [dict get $debug fpga]; set cpu_targets [dict get $debug cpu0]
