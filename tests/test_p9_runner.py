@@ -213,6 +213,22 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("ack_turnaround_guard_cycles: 4096", config)
         self.assertIn("ack_turnaround_guard_us_at_64mhz: 64", config)
 
+    def test_p9_receiver_acquires_phase_from_delayed_preamble(self):
+        codec = (ROOT / "rtl/ir_4ppm_codec.sv").read_text(encoding="utf-8")
+        wrapper = (ROOT / "rtl/p9_rate_4ppm_rx.sv").read_text(encoding="utf-8")
+        testbench = (ROOT / "sim/tb/tb_p9_4ppm_frame_link.sv").read_text(
+            encoding="utf-8"
+        )
+        regression = (ROOT / "scripts/run_p9_candidate_regression.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("RX_ACQUIRE_ON_FIRST_PULSE = 1'b0", codec)
+        self.assertIn("rx_phase_acquired", codec)
+        self.assertEqual(3, wrapper.count(".RX_ACQUIRE_ON_FIRST_PULSE(1'b1)"))
+        self.assertIn("RX_PATH_DELAY_CYCLES = 12", testbench)
+        self.assertIn("TB_P9_4PPM_FRAME_LINK_DELAYED=PASS", testbench)
+        self.assertIn('"p9_frame_link_delayed"', regression)
+
     def test_back_to_back_frames_realign_codec_without_truncating_parser_tail(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
             encoding="utf-8"
@@ -220,9 +236,11 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
             encoding="utf-8"
         )
-        self.assertEqual(
-            1, core.count(".align_i(!serializer_busy[tx_lane])")
-        )
+        self.assertNotIn(".align_i(!serializer_busy[tx_lane])", core)
+        self.assertIn("reg serializer_busy_d [0:1]", core)
+        self.assertIn("wire serializer_busy_rise", core)
+        self.assertIn("!receive_window || serializer_busy_rise ||", core)
+        self.assertIn("rx_frame_valid[tx_lane]", core)
         self.assertEqual(1, core.count(".align_i(!receive_window)"))
         self.assertIn("run_object(247*20", testbench)
 

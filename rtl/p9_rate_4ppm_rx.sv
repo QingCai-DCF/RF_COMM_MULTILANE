@@ -29,7 +29,8 @@ module p9_rate_4ppm_rx (
 
   ir_4ppm_codec #(
     .CNT_CHIP_MAX(31), .CNT_PREAMBLE(16), .TX_PULSE_CYCLES(8),
-    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(31)
+    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(31),
+    .RX_ACQUIRE_ON_FIRST_PULSE(1'b1)
   ) u_rx_1mbps (
     .clk, .rst_n, .enable(enable_i && selected_rate == 2'd0),
     .tx_symbol(2'b00), .tx_symbol_valid(1'b0), .tx_symbol_ready(),
@@ -44,7 +45,8 @@ module p9_rate_4ppm_rx (
 
   ir_4ppm_codec #(
     .CNT_CHIP_MAX(15), .CNT_PREAMBLE(16), .TX_PULSE_CYCLES(8),
-    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(15)
+    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(15),
+    .RX_ACQUIRE_ON_FIRST_PULSE(1'b1)
   ) u_rx_2mbps (
     .clk, .rst_n, .enable(enable_i && selected_rate == 2'd1),
     .tx_symbol(2'b00), .tx_symbol_valid(1'b0), .tx_symbol_ready(),
@@ -59,7 +61,8 @@ module p9_rate_4ppm_rx (
 
   ir_4ppm_codec #(
     .CNT_CHIP_MAX(7), .CNT_PREAMBLE(16), .TX_PULSE_CYCLES(5),
-    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(7)
+    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(7),
+    .RX_ACQUIRE_ON_FIRST_PULSE(1'b1)
   ) u_rx_4mbps (
     .clk, .rst_n, .enable(enable_i && selected_rate == 2'd2),
     .tx_symbol(2'b00), .tx_symbol_valid(1'b0), .tx_symbol_ready(),

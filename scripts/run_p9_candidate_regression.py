@@ -29,6 +29,11 @@ RTL_SOURCES = [
     "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
     "rtl/p9_optical_transport_core.sv", "sim/tb/tb_p9_optical_transport_core.sv",
 ]
+FRAME_LINK_SOURCES = [
+    "rtl/ir_4ppm_codec.sv", "rtl/p9_rate_4ppm_rx.sv",
+    "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
+    "sim/tb/tb_p9_4ppm_frame_link.sv",
+]
 POST_MARKERS = [
     "P9_POST_SYNTH_SAFE_RESET_PASS=1",
     "P9_POST_SYNTH_DISARM_KILL_PASS=1",
@@ -133,6 +138,18 @@ def main(argv: list[str] | None = None) -> int:
     rtl = run_steps("p9_rtl_full", rtl_commands, raw / "rtl_work",
                     ["TB_P9_OPTICAL_TRANSPORT_CORE=PASS"])
 
+    frame_link_commands = [
+        [str(TOOLS["xvlog"]), "-sv", "-i", str(ROOT / "rtl"),
+         *[str(ROOT / source) for source in FRAME_LINK_SOURCES]],
+        [str(TOOLS["xelab"]), "tb_p9_4ppm_frame_link", "-debug", "typical",
+         "-s", "tb_p9_4ppm_frame_link_delayed_snapshot"],
+        [str(TOOLS["xsim"]), "tb_p9_4ppm_frame_link_delayed_snapshot", "-runall"],
+    ]
+    frame_link = run_steps(
+        "p9_frame_link_delayed", frame_link_commands, raw / "frame_link_work",
+        ["TB_P9_4PPM_FRAME_LINK_DELAYED=PASS"],
+    )
+
     post_dir = raw / "post_synth"
     build = run_steps("p9_post_synth_build", [[str(TOOLS["vivado"]), "-mode", "batch",
         "-source", str(ROOT / "scripts/build_p9_post_synth_core.tcl"), "-tclargs",
@@ -169,13 +186,15 @@ def main(argv: list[str] | None = None) -> int:
         "p9_post_synth_build_markers.txt")]
     artifacts = [{"path": rel(path), "sha256": sha256(path), "bytes": path.stat().st_size}
                  for path in artifact_paths if path.is_file()]
-    status = "PASS" if rtl["status"] == build["status"] == post["status"] == "PASS" else "FAIL"
+    status = "PASS" if (rtl["status"] == frame_link["status"] ==
+                         build["status"] == post["status"] == "PASS") else "FAIL"
     summary = {
         "schema_version": 1, "status": status,
         "test_id": "P9-CANDIDATE-SOURCE-POST-SYNTH-REGRESSION",
         "generated_utc": utc_now(), "source_commit": source_commit,
         "profile": "Z7010_2LANE_DEV", "part": "xc7z010clg400-1",
-        "rtl_full_regression": rtl, "post_synth_build": build,
+        "rtl_full_regression": rtl, "delayed_frame_link_regression": frame_link,
+        "post_synth_build": build,
         "post_synth_safety": post, "post_synth_markers": build_markers,
         "post_synth_artifacts": artifacts,
     }

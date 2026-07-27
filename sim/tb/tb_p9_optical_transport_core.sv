@@ -109,10 +109,12 @@ module tb_p9_optical_transport_core;
   wire [31:0] physical_ack_frames_good;
   wire [31:0] physical_crc_bad;
   wire [31:0] physical_symbol_error_count;
+  wire [31:0] physical_frame_bad;
   wire [31:0] physical_drop_data_count;
   wire [31:0] physical_drop_ack_count;
   wire [127:0] tx_high_max_flat;
   wire [127:0] physical_tx_counts_flat;
+  wire [127:0] raw_rx_counts_flat;
   wire [127:0] duty_high_max_flat;
   wire [31:0] duty_hard_limit_cycles;
   wire [31:0] duty_target_limit_cycles;
@@ -221,11 +223,12 @@ module tb_p9_optical_transport_core;
     .physical_data_frames_good_o(physical_data_frames_good),
     .physical_ack_frames_good_o(physical_ack_frames_good),
     .physical_crc_bad_o(physical_crc_bad),
-    .physical_frame_bad_o(), .physical_preamble_count_o(),
+    .physical_frame_bad_o(physical_frame_bad), .physical_preamble_count_o(),
     .physical_symbol_error_count_o(physical_symbol_error_count),
     .physical_drop_data_count_o(physical_drop_data_count),
     .physical_drop_ack_count_o(physical_drop_ack_count),
-    .raw_rx_counts_flat_o(), .physical_tx_counts_flat_o(physical_tx_counts_flat),
+    .raw_rx_counts_flat_o(raw_rx_counts_flat),
+    .physical_tx_counts_flat_o(physical_tx_counts_flat),
     .tx_high_max_flat_o(tx_high_max_flat), .duty_high_max_flat_o(duty_high_max_flat),
     .duty_high_current_flat_o(), .duty_headroom_flat_o(),
     .duty_target_throttle_count_flat_o(), .duty_hard_fault_count_flat_o(),
@@ -371,9 +374,27 @@ module tb_p9_optical_transport_core;
         @(posedge clk); #1;
         watchdog = watchdog + 1;
       end
-      if (object_fail)
+      if (object_fail) begin
+        $display("CORE_FAIL_DIAG dir=%0d len=%0d attempts=%0d retries=%0d timeouts=%0d exhausted=%0d data=%0d ack=%0d crc=%0d frame_bad=%0d symbol_errors=%0d tx=%0d,%0d,%0d,%0d raw=%0d,%0d,%0d,%0d phase=%0d busy=%b rx_acquired=%0b rx_tick=%0d rx_chip=%0d rx_capture=%b chip_seen=%0b preambles=%0d parser_state=%0d",
+                 direction, length, tx_attempt_count, tx_retry_count,
+                 tx_timeout_count, tx_retry_exhausted_count,
+                 physical_data_frames_good, physical_ack_frames_good,
+                 physical_crc_bad, physical_frame_bad,
+                 physical_symbol_error_count,
+                 physical_tx_counts_flat[31:0], physical_tx_counts_flat[63:32],
+                 physical_tx_counts_flat[95:64], physical_tx_counts_flat[127:96],
+                 raw_rx_counts_flat[31:0], raw_rx_counts_flat[63:32],
+                 raw_rx_counts_flat[95:64], raw_rx_counts_flat[127:96],
+                 dut.phase_q, dut.serializer_busy,
+                 dut.g_receive[0].u_codec.u_rx_4mbps.rx_phase_acquired,
+                 dut.g_receive[0].u_codec.u_rx_4mbps.rx_tick,
+                 dut.g_receive[0].u_codec.u_rx_4mbps.rx_chip_idx,
+                 dut.g_receive[0].u_codec.u_rx_4mbps.rx_capture,
+                 dut.g_receive[0].u_codec.u_rx_4mbps.chip_seen,
+                 dut.rx_preamble_count[0], dut.g_receive[0].u_parser.state);
         $fatal(1, "object failed dir=%0d drops=%0d/%0d error=%08x",
                direction, drop_data, drop_ack, object_error);
+      end
       if (!object_done) begin
         $display("CORE_DIAG dir=%0d len=%0d active=%0b in=%0b out=%0b bytes=%0d/%0d captured=%0d seq=%0d ack=%0d rxbase=%0d outstanding=%0d attempts=%0d retries=%0d timeouts=%0d data_good=%0d ack_good=%0d crc_bad=%0d phase=%0d",
                  direction, length, object_active, input_complete, output_complete,

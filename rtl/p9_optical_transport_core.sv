@@ -544,6 +544,7 @@ module p9_optical_transport_core #(
   wire serializer_pulse [0:1];
   wire serializer_busy [0:1];
   wire serializer_done [0:1];
+  reg serializer_busy_d [0:1];
   reg [6:0] receive_tail [0:1];
   reg receive_tail_destination_b [0:1];
 
@@ -630,6 +631,7 @@ module p9_optical_transport_core #(
         lane_ack_bitmap[copy_lane] <= 0;
         lane_ack_credit[copy_lane] <= 0;
         lane_source_a[copy_lane] <= 0;
+        serializer_busy_d[copy_lane] <= 0;
         receive_tail[copy_lane] <= 0;
         receive_tail_destination_b[copy_lane] <= 0;
       end
@@ -640,6 +642,7 @@ module p9_optical_transport_core #(
         dropped_ack_count_q <= 0;
       end
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
+        serializer_busy_d[copy_lane] <= serializer_busy[copy_lane];
         if (lane_start_pending[copy_lane] && serializer_start_ready[copy_lane]) begin
           lane_start_pending[copy_lane] <= 0;
           lane_source_a[copy_lane] <= lane_frame_ack[copy_lane] ?
@@ -994,16 +997,21 @@ module p9_optical_transport_core #(
           b_phy_ready[tx_lane] : a_phy_ready[tx_lane];
       wire selected_rx_pulse = receive_tail_destination_b[tx_lane] ?
           b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane];
-      // The parser needs the post-frame tail to validate its final byte, but
-      // the symbol decoder must realign to every serializer start.  Keeping
-      // the decoder live through the variable CRC-preparation gap lets that
-      // gap move the 4PPM chip grid between back-to-back frames and eventually
-      // corrupt an otherwise valid burst.  busy rises exactly when the first
-      // preamble symbol starts, so !busy is the per-frame physical alignment
-      // reference while receive_window remains the parser lifetime.
+      wire serializer_busy_rise = serializer_busy[tx_lane] &&
+          !serializer_busy_d[tx_lane];
+      // Keep the decoder alive through the bounded post-frame receive tail:
+      // the final optical symbol reaches Rxd after serializer busy falls.
+      // A one-cycle align at every busy rising edge still prevents the
+      // variable CRC-preparation gap from carrying a stale chip grid into the
+      // next frame.  A completed-frame pulse returns the decoder to
+      // first-pulse acquisition without manufacturing an empty tail symbol.
+      // The TFDU Rxd synchronizer guarantees that the busy-edge align
+      // precedes the first received preamble pulse.
       p9_rate_4ppm_rx u_codec (
         .clk(clk), .rst_n(rst_n), .enable_i(selected_phy_ready),
-        .rate_select_i(object_rate_q), .align_i(!serializer_busy[tx_lane]),
+        .rate_select_i(object_rate_q),
+        .align_i(!receive_window || serializer_busy_rise ||
+                 rx_frame_valid[tx_lane]),
         .rx_pulse_active_i(selected_rx_pulse), .symbol_o(rx_symbol[tx_lane]),
         .symbol_valid_o(rx_symbol_valid[tx_lane]),
         .symbol_error_o(rx_symbol_error[tx_lane]),

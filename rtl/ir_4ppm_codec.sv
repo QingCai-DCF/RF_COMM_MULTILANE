@@ -4,7 +4,11 @@ module ir_4ppm_codec #(
   parameter int CNT_PREAMBLE = 16,
   parameter int TX_PULSE_CYCLES = 8,
   parameter int DETECT_START_CYCLES = 0,
-  parameter int DETECT_END_CYCLES = CNT_CHIP_MAX
+  parameter int DETECT_END_CYCLES = CNT_CHIP_MAX,
+  // Legacy users retain the serializer-aligned receive grid.  P9 enables
+  // first-pulse acquisition because a real TFDU path and the Rxd synchronizer
+  // add latency that is not phase-locked to the local serializer start.
+  parameter bit RX_ACQUIRE_ON_FIRST_PULSE = 1'b0
 ) (
   input  logic       clk,
   input  logic       rst_n,
@@ -53,6 +57,7 @@ module ir_4ppm_codec #(
   logic [1:0] rx_chip_idx;
   logic [3:0] rx_capture;
   logic chip_seen;
+  logic rx_phase_acquired;
   logic [3:0] rx_complete_chips;
   logic [2:0] rx_complete_decode;
 
@@ -103,6 +108,7 @@ module ir_4ppm_codec #(
     debug_status[21:18] = rx_capture;
     debug_status[25:22] = tx_preamble_count[3:0];
     debug_status[29:26] = rx_preamble_count[3:0];
+    debug_status[30] = rx_phase_acquired;
   end
 
   always_ff @(posedge clk or negedge rst_n) begin
@@ -173,6 +179,7 @@ module ir_4ppm_codec #(
       rx_chip_idx <= 2'd0;
       rx_capture <= 4'b0000;
       chip_seen <= 1'b0;
+      rx_phase_acquired <= !RX_ACQUIRE_ON_FIRST_PULSE;
       rx_symbol <= 2'b00;
       rx_symbol_valid <= 1'b0;
       rx_symbol_error <= 1'b0;
@@ -188,8 +195,26 @@ module ir_4ppm_codec #(
         rx_chip_idx <= 2'd0;
         rx_capture <= 4'b0000;
         chip_seen <= 1'b0;
+        rx_phase_acquired <= !RX_ACQUIRE_ON_FIRST_PULSE;
         rx_preamble_count <= 16'd0;
         rx_symbol_chips <= 4'b0000;
+      end else if (RX_ACQUIRE_ON_FIRST_PULSE && !rx_phase_acquired) begin
+        // The first received pulse is chip 0 of the all-zero P9 preamble.
+        // Starting at tick 1 accounts for the acquisition sample itself and
+        // keeps every following preamble pulse on the next symbol's tick 0.
+        // This removes unknown optical/synchronizer latency without changing
+        // the transmitted chip period or accepting a partial frame.
+        rx_tick <= '0;
+        rx_chip_idx <= 2'd0;
+        rx_capture <= 4'b0000;
+        chip_seen <= 1'b0;
+        rx_preamble_count <= 16'd0;
+        rx_symbol_chips <= 4'b0000;
+        if (rx_pulse_active) begin
+          rx_phase_acquired <= 1'b1;
+          rx_tick <= {{(TICK_W-1){1'b0}}, 1'b1};
+          chip_seen <= 1'b1;
+        end
       end else begin
         if ((rx_tick >= DETECT_START_INT[TICK_W-1:0]) &&
             (rx_tick <= DETECT_END_INT[TICK_W-1:0]) &&

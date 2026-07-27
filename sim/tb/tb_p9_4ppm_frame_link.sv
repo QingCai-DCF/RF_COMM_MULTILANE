@@ -12,6 +12,13 @@ module tb_p9_4ppm_frame_link;
   logic [12:0] payload_base, payload_address;
   logic [7:0] payload_data;
   logic tx_pulse, tx_busy, tx_done;
+  // The standalone link bench bypasses tfdu_lane_phy and the external TFDU
+  // pair.  Preserve the stationary-fixture failure mode with a bounded path
+  // delay: an 8-cycle pulse shifted by 12 cycles crosses a 16-cycle 2 Mbit/s
+  // chip boundary unless the receiver acquires phase from the preamble.
+  localparam integer RX_PATH_DELAY_CYCLES = 12;
+  logic [RX_PATH_DELAY_CYCLES-1:0] rx_path_delay;
+  wire delayed_rx_pulse = rx_path_delay[RX_PATH_DELAY_CYCLES-1];
   logic rx_align;
   logic [7:0] rx_tail_window;
   logic [31:0] tx_frames, tx_bytes;
@@ -34,6 +41,10 @@ module tb_p9_4ppm_frame_link;
 
   always_comb payload_data = source[payload_address];
   always_ff @(posedge clk) if (rx_payload_we) received[rx_payload_index] <= rx_payload_data;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) rx_path_delay <= '0;
+    else rx_path_delay <= {rx_path_delay[RX_PATH_DELAY_CYCLES-2:0], tx_pulse};
+  end
   always_ff @(posedge clk) begin
     if (!rst_n) begin
       observed_tx_high_cycles <= 0;
@@ -69,7 +80,7 @@ module tb_p9_4ppm_frame_link;
 
   p9_rate_4ppm_rx u_codec (
     .clk, .rst_n, .enable_i(enable), .rate_select_i(rate_select), .align_i(rx_align),
-    .rx_pulse_active_i(tx_pulse), .symbol_o(rx_symbol), .symbol_valid_o(rx_symbol_valid),
+    .rx_pulse_active_i(delayed_rx_pulse), .symbol_o(rx_symbol), .symbol_valid_o(rx_symbol_valid),
     .symbol_error_o(rx_symbol_error), .preamble_valid_o(rx_preamble_valid),
     .preamble_count_o(rx_preamble_count), .symbol_chips_o(rx_symbol_chips)
   );
@@ -178,6 +189,7 @@ module tb_p9_4ppm_frame_link;
     send_data(1, 31);
     send_data(2, 247);
     send_ack();
+    $display("TB_P9_4PPM_FRAME_LINK_DELAYED=PASS");
     $display("TB_P9_4PPM_FRAME_LINK=PASS");
     $finish;
   end
