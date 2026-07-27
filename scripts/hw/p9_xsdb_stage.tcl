@@ -155,6 +155,39 @@ proc p9_classify_targets {records device_id board_id} {
       cpu0 [p9_unique_targets_by_id $cpu0]]
 }
 
+proc p9_wait_debug_targets {device_id board_id {max_attempts 51} {delay_ms 100}} {
+  if {![string is integer -strict $max_attempts] || $max_attempts < 1 ||
+      ![string is integer -strict $delay_ms] || $delay_ms < 0} {
+    error "invalid P9 debug-target discovery bound"
+  }
+  set started_ms [clock milliseconds]
+  set last_counts [dict create dap 0 apu 0 fpga 0 cpu0 0]
+  for {set attempt 1} {$attempt <= $max_attempts} {incr attempt} {
+    set debug [p9_classify_targets [targets -target-properties] $device_id $board_id]
+    set dap_count [llength [dict get $debug dap]]
+    set apu_count [llength [dict get $debug apu]]
+    set fpga_count [llength [dict get $debug fpga]]
+    set cpu_count [llength [dict get $debug cpu0]]
+    set last_counts [dict create dap $dap_count apu $apu_count \
+        fpga $fpga_count cpu0 $cpu_count]
+
+    # Missing descendants are a bounded discovery condition immediately after
+    # hw_server connect.  Any duplicate authorized FPGA/CPU/reset target is an
+    # ambiguity and must fail closed without waiting for it to disappear.
+    if {$dap_count > 1 || $apu_count > 1 || $fpga_count > 1 || $cpu_count > 1} {
+      error "P9 XSDB ambiguous debug-target topology: $last_counts"
+    }
+    set reset_unique [expr {$dap_count == 1 || ($dap_count == 0 && $apu_count == 1)}]
+    if {$fpga_count == 1 && $cpu_count == 1 && $reset_unique} {
+      dict set debug discovery_attempts $attempt
+      dict set debug discovery_elapsed_ms [expr {[clock milliseconds] - $started_ms}]
+      return $debug
+    }
+    if {$attempt < $max_attempts && $delay_ms > 0} { after $delay_ms }
+  }
+  error "P9 XSDB debug-target discovery timeout after $max_attempts attempts: $last_counts"
+}
+
 proc p9_read32 {address} {
   return [expr {[mrd -value $address] & 0xFFFFFFFF}]
 }
@@ -553,12 +586,11 @@ set rc [catch {
     p9_say "P9_XSDB_ENUM_DEVICE_$jtag_index=$safe_name|NODE_ID=$node_id|IDCODE=$idcode|NORMALIZED=[p9_normal_idcode $idcode]"
     incr jtag_index
   }
-  set debug [p9_classify_targets [targets -target-properties] [dict get $device node_id] $expected_board]
+  set debug [p9_wait_debug_targets [dict get $device node_id] $expected_board]
   set dap [dict get $debug dap]; set apu [dict get $debug apu]
   set fpga_targets [dict get $debug fpga]; set cpu_targets [dict get $debug cpu0]
-  if {[llength $fpga_targets] != 1 || [llength $cpu_targets] != 1} {
-    error "P9 XSDB FPGA/CPU0 target is not unique"
-  }
+  p9_say "P9_XSDB_DEBUG_DISCOVERY_ATTEMPTS=[dict get $debug discovery_attempts]"
+  p9_say "P9_XSDB_DEBUG_DISCOVERY_ELAPSED_MS=[dict get $debug discovery_elapsed_ms]"
   if {[llength $dap] == 1} { set reset_target [lindex $dap 0] \
   } elseif {[llength $dap] == 0 && [llength $apu] == 1} { set reset_target [lindex $apu 0] \
   } else { error "P9 XSDB reset target is not unique" }

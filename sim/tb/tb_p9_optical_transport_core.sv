@@ -2,7 +2,7 @@
 `default_nettype none
 
 module tb_p9_optical_transport_core;
-  localparam integer MAX_OBJECT_BYTES = 2048;
+  localparam integer MAX_OBJECT_BYTES = 8192;
 
   logic clk = 0;
   logic rst_n = 0;
@@ -440,6 +440,13 @@ module tb_p9_optical_transport_core;
       $fatal(1, "out-of-order/SACK gap recovery not observed");
 
     run_object(600, 8'hc7, 1'b0, 0, 0, 16'h2000, 0);
+
+    // More than one full selective-repeat half-window is required here: the
+    // former shared parser/codec tail kept the decoder running through each
+    // variable inter-frame preparation gap and accumulated a chip-grid phase
+    // error that short objects could not expose.
+    cfg_rate_select = 2'd2;
+    run_object(247*20, 8'hc8, 1'b0, 0, 0, 16'h3000, 0);
 
     if (scheduler_frames_flat[31:0] == 0 || scheduler_frames_flat[63:32] == 0)
       $fatal(1, "two-lane scheduler did not exercise both lanes: %h", scheduler_frames_flat);

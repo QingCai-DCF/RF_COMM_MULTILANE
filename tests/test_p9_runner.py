@@ -208,6 +208,29 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("ack_turnaround_guard_cycles: 4096", config)
         self.assertIn("ack_turnaround_guard_us_at_64mhz: 64", config)
 
+    def test_back_to_back_frames_realign_codec_without_truncating_parser_tail(self):
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(
+            1, core.count(".align_i(!serializer_busy[tx_lane])")
+        )
+        self.assertEqual(1, core.count(".align_i(!receive_window)"))
+        self.assertIn("run_object(247*20", testbench)
+
+    def test_xsdb_waits_for_missing_debug_descendants_but_rejects_ambiguity(self):
+        tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("proc p9_wait_debug_targets", tcl)
+        self.assertIn("P9 XSDB ambiguous debug-target topology", tcl)
+        self.assertIn("P9 XSDB debug-target discovery timeout", tcl)
+        self.assertIn("P9_XSDB_DEBUG_DISCOVERY_ATTEMPTS=", tcl)
+        self.assertIn("P9_XSDB_DEBUG_DISCOVERY_ELAPSED_MS=", tcl)
+
     def test_unused_dma_sg_control_status_stream_is_disabled(self):
         build_tcl = (ROOT / "scripts/build_p9_z7010_candidate.tcl").read_text(
             encoding="utf-8"

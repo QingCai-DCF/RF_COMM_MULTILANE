@@ -948,9 +948,16 @@ module p9_optical_transport_core #(
           b_phy_ready[tx_lane] : a_phy_ready[tx_lane];
       wire selected_rx_pulse = receive_tail_destination_b[tx_lane] ?
           b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane];
+      // The parser needs the post-frame tail to validate its final byte, but
+      // the symbol decoder must realign to every serializer start.  Keeping
+      // the decoder live through the variable CRC-preparation gap lets that
+      // gap move the 4PPM chip grid between back-to-back frames and eventually
+      // corrupt an otherwise valid burst.  busy rises exactly when the first
+      // preamble symbol starts, so !busy is the per-frame physical alignment
+      // reference while receive_window remains the parser lifetime.
       p9_rate_4ppm_rx u_codec (
         .clk(clk), .rst_n(rst_n), .enable_i(selected_phy_ready),
-        .rate_select_i(object_rate_q), .align_i(!receive_window),
+        .rate_select_i(object_rate_q), .align_i(!serializer_busy[tx_lane]),
         .rx_pulse_active_i(selected_rx_pulse), .symbol_o(rx_symbol[tx_lane]),
         .symbol_valid_o(rx_symbol_valid[tx_lane]),
         .symbol_error_o(rx_symbol_error[tx_lane]),
