@@ -46,12 +46,27 @@ module tb_p9_optical_transport_core;
 
   wire [1:0] a_txd, a_sd, a_mode;
   wire [1:0] b_txd, b_sd, b_mode;
+  localparam integer TB_TFDU_TURNAROUND_CYCLES = 4_096;
+  logic [12:0] a_rx_recovery_cycles [0:1];
+  logic [12:0] b_rx_recovery_cycles [0:1];
+  logic [1:0] serializer_busy_previous;
+  wire [1:0] combined_txd = a_txd | b_txd;
   // The frozen stationary Z7010 fixture exposes a selected-lane pulse at
   // both same-lane receivers.  Model that profile-specific near-end
   // visibility while the DUT continues to decode only the selected
-  // destination side for each frame direction.
-  wire [1:0] a_rxd = ~(a_txd | b_txd);
-  wire [1:0] b_rxd = ~(a_txd | b_txd);
+  // destination side for each frame direction.  A module's receiver needs
+  // the same conservative recovery interval after its own complete TX frame
+  // that the stationary hardware requires before the opposite direction may
+  // begin.  This catches missing guards in either DATA-to-ACK or ACK-to-DATA
+  // transitions without weakening the exact same-lane raw visibility model.
+  wire [1:0] a_rxd = ~(combined_txd & {
+      a_rx_recovery_cycles[1] == 0,
+      a_rx_recovery_cycles[0] == 0
+  });
+  wire [1:0] b_rxd = ~(combined_txd & {
+      b_rx_recovery_cycles[1] == 0,
+      b_rx_recovery_cycles[0] == 0
+  });
   wire endpoint_armed;
   wire tx_kill_active;
   wire [3:0] phy_ready_mask;
@@ -218,6 +233,37 @@ module tb_p9_optical_transport_core;
     .duty_hard_limit_cycles_o(duty_hard_limit_cycles),
     .duty_target_limit_cycles_o(duty_target_limit_cycles)
   );
+
+  integer recovery_lane;
+  always_ff @(posedge clk or negedge rst_n) begin : model_tfdu_turnaround_recovery
+    if (!rst_n) begin
+      serializer_busy_previous <= 0;
+      for (recovery_lane = 0; recovery_lane < 2; recovery_lane = recovery_lane + 1) begin
+        a_rx_recovery_cycles[recovery_lane] <= 0;
+        b_rx_recovery_cycles[recovery_lane] <= 0;
+      end
+    end else begin
+      for (recovery_lane = 0; recovery_lane < 2; recovery_lane = recovery_lane + 1) begin
+        serializer_busy_previous[recovery_lane] <= dut.serializer_busy[recovery_lane];
+        if (serializer_busy_previous[recovery_lane] &&
+            !dut.serializer_busy[recovery_lane] &&
+            dut.lane_source_a[recovery_lane]) begin
+          a_rx_recovery_cycles[recovery_lane] <= TB_TFDU_TURNAROUND_CYCLES;
+        end else if (a_rx_recovery_cycles[recovery_lane] != 0) begin
+          a_rx_recovery_cycles[recovery_lane] <=
+              a_rx_recovery_cycles[recovery_lane] - 1'b1;
+        end
+        if (serializer_busy_previous[recovery_lane] &&
+            !dut.serializer_busy[recovery_lane] &&
+            !dut.lane_source_a[recovery_lane]) begin
+          b_rx_recovery_cycles[recovery_lane] <= TB_TFDU_TURNAROUND_CYCLES;
+        end else if (b_rx_recovery_cycles[recovery_lane] != 0) begin
+          b_rx_recovery_cycles[recovery_lane] <=
+              b_rx_recovery_cycles[recovery_lane] - 1'b1;
+        end
+      end
+    end
+  end
 
   task automatic pulse_start;
     begin

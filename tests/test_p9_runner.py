@@ -181,7 +181,10 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("policy: BOTH_ENDPOINTS_EXACT_SELECTED_LANE", config)
-        self.assertEqual(2, testbench.count("~(a_txd | b_txd)"))
+        self.assertIn("wire [1:0] combined_txd = a_txd | b_txd;", testbench)
+        self.assertEqual(2, testbench.count("= ~(combined_txd & {"))
+        self.assertIn("a_rx_recovery_cycles[1] == 0", testbench)
+        self.assertIn("b_rx_recovery_cycles[1] == 0", testbench)
 
     def test_command3_observation_schema_preserves_flags_and_failure_dump(self):
         tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
@@ -202,9 +205,11 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 4_096", core)
-        self.assertIn(
-            "phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;", core
+        self.assertEqual(
+            2, core.count("phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;")
         )
+        self.assertIn("PH_DATA_GUARD", core)
+        self.assertIn("both DATA-to-ACK and ACK-to-DATA directions", core)
         self.assertIn("ack_turnaround_guard_cycles: 4096", config)
         self.assertIn("ack_turnaround_guard_us_at_64mhz: 64", config)
 

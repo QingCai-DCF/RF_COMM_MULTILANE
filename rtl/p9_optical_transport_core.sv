@@ -8,10 +8,11 @@ module p9_optical_transport_core #(
   parameter integer MAX_PAYLOAD_BYTES = 247,
   parameter integer STORE_ADDR_WIDTH = 13,
   parameter integer RTO_CYCLES = 4_000_000,
-  // The stationary TFDU fixture directly showed that the former 4 us
-  // DATA-to-ACK gap began the reverse frame before the transmitting module's
-  // receiver had recovered.  Keep a conservative 64 us half-duplex
-  // turnaround, matching the canonical 4096-cycle guard at 64 MHz.
+  // The stationary TFDU fixture directly showed that a short half-duplex
+  // direction change begins the reverse frame before the transmitting
+  // module's receiver has recovered.  Keep a conservative 64 us guard in
+  // both DATA-to-ACK and ACK-to-DATA directions, matching the canonical
+  // 4096-cycle interval at 64 MHz.
   parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_096
 ) (
   input  wire         clk,
@@ -554,7 +555,8 @@ module p9_optical_transport_core #(
   assign tx_store_read_addr[1] = serializer_payload_address[1];
 
   typedef enum reg [2:0] {PH_DATA, PH_ACK_GUARD, PH_ACK_START,
-                          PH_ACK_WAIT_DONE, PH_ACK_WAIT_RX} phase_t;
+                          PH_ACK_WAIT_DONE, PH_ACK_WAIT_RX,
+                          PH_DATA_GUARD} phase_t;
   phase_t phase_q;
   reg [15:0] phase_guard_q;
   reg ack_lane_q;
@@ -778,13 +780,21 @@ module p9_optical_transport_core #(
                 lane_start_pending[ack_lane_q] <= 1;
                 phase_q <= PH_ACK_WAIT_DONE;
               end else begin
-                phase_q <= PH_DATA;
+                // The reverse transmitter has just completed an ACK.  Its
+                // local receiver must recover before the next DATA frame is
+                // allowed to start in the opposite direction.
+                phase_q <= PH_DATA_GUARD;
+                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
               end
               ack_wait_q <= 0;
             end else begin
               ack_wait_q <= ack_wait_q + 1'b1;
               if (ack_wait_q >= RTO_CYCLES-1) phase_q <= PH_DATA;
             end
+          end
+          PH_DATA_GUARD: if (lanes_idle) begin
+            if (phase_guard_q != 0) phase_guard_q <= phase_guard_q - 1'b1;
+            else phase_q <= PH_DATA;
           end
           default: ;
         endcase
