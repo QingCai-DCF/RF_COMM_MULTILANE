@@ -27,6 +27,8 @@ P8B active mapping + current path epoch + logical selection
 
 A path change from module A to B and back to A finds A's prior ring history intact. Only explicit history invalidation or an accepted safety clear can discard it, and either action starts a full 1000 us zero-fill cooldown.
 
+The compatibility `tfdu_lane_phy` keeps its historical controlled-safety-clear behavior by default. The P9 transport core explicitly selects telemetry-only `CLEAR_COUNTERS`: it clears measurement counters without clearing sticky safety faults, invalidating duty history, or reopening the cooldown. This matches the canonical separation between telemetry clear and safety-fault clear.
+
 ## Output and receive behavior
 
 - Full shutdown: `SD=1`, `Txd=0`, start-up state cleared.

@@ -11,7 +11,11 @@ module tfdu_lane_phy #(
   parameter integer TFDU_STARTUP_US = 500,
   parameter integer TX_STUCK_HIGH_LIMIT_US = 10,
   parameter integer DUTY_WINDOW_US = 1000,
-  parameter integer DUTY_MAX_PERMILLE = 200
+  parameter integer DUTY_MAX_PERMILLE = 200,
+  // Legacy users historically treated clear_sticky as a controlled safety
+  // clear.  P9's CLEAR_COUNTERS register is telemetry-only and overrides this
+  // parameter to zero so a measurement reset cannot erase duty history.
+  parameter integer CLEAR_STICKY_INVALIDATES_HISTORY = 1
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -66,6 +70,8 @@ module tfdu_lane_phy #(
   wire [31:0] rolling_window_cycles;
   wire [31:0] rolling_high_cycles;
   wire local_shutdown;
+  wire safety_fault_clear = clear_sticky &&
+      (CLEAR_STICKY_INVALIDATES_HISTORY != 0);
 
   assign Mode = MODE_STATIC_HIGH;
   assign local_shutdown = !enable_phy || fault_stuck_high || fault_duty_limit;
@@ -90,7 +96,7 @@ module tfdu_lane_phy #(
     .clk(clk),
     .rst_n(rst_n),
     .history_invalidate_i(1'b0),
-    .safety_fault_clear_i(clear_sticky),
+    .safety_fault_clear_i(safety_fault_clear),
     .telemetry_clear_i(clear_sticky),
     .sd_active_i(local_shutdown),
     .tx_request_i(enable_phy && tx_pulse_req && !fault_stuck_high && !fault_duty_limit),
@@ -142,19 +148,23 @@ module tfdu_lane_phy #(
       rxd_sync_d <= rxd_sync;
       txd_d <= Txd;
 
-      if (clear_sticky) begin
+      if (safety_fault_clear) begin
         fault_stuck_high <= 1'b0;
         fault_duty_limit <= 1'b0;
+      end else begin
+        if (module_stuck_fault)
+          fault_stuck_high <= 1'b1;
+        if (module_duty_hard_fault || duty_target_throttle)
+          fault_duty_limit <= 1'b1;
+      end
+
+      if (clear_sticky) begin
         rx_raw_count <= 32'd0;
         tx_pulse_count <= 32'd0;
         rx_pulse_width_min <= 32'd0;
         rx_pulse_width_max <= 32'd0;
         rx_last_timestamp <= 32'd0;
       end else begin
-        if (module_stuck_fault)
-          fault_stuck_high <= 1'b1;
-        if (module_duty_hard_fault || duty_target_throttle)
-          fault_duty_limit <= 1'b1;
         if (!txd_d && Txd)
           tx_pulse_count <= tx_pulse_count + 1'b1;
       end

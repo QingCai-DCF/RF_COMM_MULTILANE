@@ -833,7 +833,10 @@ module p9_optical_transport_core #(
 
   generate
     for (tx_lane = 0; tx_lane < 2; tx_lane = tx_lane + 1) begin : g_physical
-      tfdu_lane_phy #(.CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500)) u_a_phy (
+      tfdu_lane_phy #(
+        .CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500),
+        .CLEAR_STICKY_INVALIDATES_HISTORY(0)
+      ) u_a_phy (
         .clk(clk), .rst_n(rst_n), .enable_phy(physical_enable),
         .clear_sticky(clear_counters_i), .tx_pulse_req(a_tx_request[tx_lane]),
         .rxd(a_rxd_i[tx_lane]), .Txd(a_txd_internal[tx_lane]), .SD(a_sd_o[tx_lane]),
@@ -852,7 +855,10 @@ module p9_optical_transport_core #(
         .duty_target_throttle_count(a_target_throttle_count[tx_lane]),
         .duty_hard_fault_count(a_hard_fault_count[tx_lane])
       );
-      tfdu_lane_phy #(.CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500)) u_b_phy (
+      tfdu_lane_phy #(
+        .CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500),
+        .CLEAR_STICKY_INVALIDATES_HISTORY(0)
+      ) u_b_phy (
         .clk(clk), .rst_n(rst_n), .enable_phy(physical_enable),
         .clear_sticky(clear_counters_i), .tx_pulse_req(b_tx_request[tx_lane]),
         .rxd(b_rxd_i[tx_lane]), .Txd(b_txd_internal[tx_lane]), .SD(b_sd_o[tx_lane]),

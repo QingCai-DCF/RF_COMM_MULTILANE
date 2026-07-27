@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +14,14 @@ SPEC = importlib.util.spec_from_file_location(
 assert SPEC and SPEC.loader
 P9 = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(P9)
+
+HW_SPEC = importlib.util.spec_from_file_location(
+    "p9_hardware_runtime", ROOT / "scripts/p9_hardware_runtime.py"
+)
+assert HW_SPEC and HW_SPEC.loader
+P9_HW = importlib.util.module_from_spec(HW_SPEC)
+sys.modules[HW_SPEC.name] = P9_HW
+HW_SPEC.loader.exec_module(P9_HW)
 
 
 class P9AuthorizationTests(unittest.TestCase):
@@ -51,6 +60,78 @@ class P9AuthorizationTests(unittest.TestCase):
     def test_wrong_scope_fails(self):
         path = self.write_record({"scope": "WRONG_SCOPE", "artifact_binding_phase": "PHASE2_IMMUTABLE_ARTIFACTS_BOUND"})
         self.assertEqual(self.validate(path)["status"], "FAIL")
+
+
+class P9HardwareDutyEvaluatorTests(unittest.TestCase):
+    @staticmethod
+    def safe_idle_observation() -> tuple[dict, list[int]]:
+        row = {
+            "label": "duty_boundary", "command": 1, "expected_status": 0,
+            "sequence": 1001, "lane": 0, "direction": 0, "rate": 0,
+            "size": 0, "window": "NA",
+        }
+        words = [0] * 256
+        words[0] = 0x424D3950
+        words[1] = P9_HW.P9_MAILBOX_SCHEMA
+        words[2] = P9_HW.P9_FIRMWARE_BUILD_ID
+        words[3] = 4
+        words[7] = row["sequence"]
+        words[8] = 0
+        words[32] = 0x50395A10
+        words[33] = P9_HW.P9_PL_BUILD_ID
+        words[34] = 0x00701022
+        words[35] = P9_HW.EXPECTED_REGISTER_MAP_VERSION
+        words[36] = P9_HW.EXPECTED_REGISTER_MAP_HASH_LOW
+        words[37] = 0xF7204221
+        words[39] = 0x40400000
+        words[40] = 1
+        words[49] = 64
+        words[50] = 32
+
+        def set_pl(index: int, value: int) -> None:
+            words[P9_HW.PL_SNAPSHOT_START + index] = value
+
+        set_pl(0, 0x50395A10)
+        set_pl(7, 0x2)
+        set_pl(85, 64_000)
+        set_pl(86, 12_799)
+        set_pl(87, 11_520)
+        return row, words
+
+    def test_canonical_strict_duty_telemetry_passes(self):
+        row, words = self.safe_idle_observation()
+        errors, detail = P9_HW.evaluate_observation(row, words)
+        self.assertEqual([], errors)
+        self.assertEqual(64_000, detail["duty_window_cycles"])
+        self.assertEqual(12_799, detail["duty_hard_max_high_cycles"])
+        self.assertEqual(11_520, detail["duty_target_max_high_cycles"])
+
+    def test_12799_is_below_strict_20_percent_but_12800_is_not(self):
+        row, words = self.safe_idle_observation()
+        words[P9_HW.PL_SNAPSHOT_START + 65] = 12_799
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertFalse(any("strict 20%" in error for error in errors))
+        words[P9_HW.PL_SNAPSHOT_START + 65] = 12_800
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertTrue(any("strict 20%" in error for error in errors))
+
+    def test_noncanonical_hard_limit_telemetry_fails(self):
+        row, words = self.safe_idle_observation()
+        words[P9_HW.PL_SNAPSHOT_START + 86] = 12_800
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertTrue(any("64000/12799/11520" in error for error in errors))
+
+    def test_p9_counter_clear_cannot_invalidate_physical_duty_history(self):
+        lane_phy = (ROOT / "rtl/tfdu_lane_phy.sv").read_text(encoding="utf-8")
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(encoding="utf-8")
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("parameter integer CLEAR_STICKY_INVALIDATES_HISTORY = 1", lane_phy)
+        self.assertIn(".safety_fault_clear_i(safety_fault_clear)", lane_phy)
+        self.assertIn(".telemetry_clear_i(clear_sticky)", lane_phy)
+        self.assertEqual(2, core.count(".CLEAR_STICKY_INVALIDATES_HISTORY(0)"))
+        self.assertIn("P9 telemetry clear invalidated safety/startup state", testbench)
 
 
 if __name__ == "__main__":

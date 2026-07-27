@@ -48,6 +48,9 @@ HW_SERVER_URL = "localhost:3121"
 XSDB_URL = "tcp:localhost:3121"
 MAILBOX_WORDS = 256
 PL_SNAPSHOT_START = 116
+P9_DUTY_WINDOW_CYCLES = 64_000
+P9_DUTY_HARD_MAX_HIGH_CYCLES = 12_799
+P9_DUTY_TARGET_MAX_HIGH_CYCLES = 11_520
 PL_SNAPSHOT_WORDS = 99
 P9_MAILBOX_SCHEMA = 4
 P9_FIRMWARE_BUILD_ID = 0x50090004
@@ -829,12 +832,15 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
     high_max = [pl(words, i) for i in range(61, 65)]
     duty_max = [pl(words, i) for i in range(65, 69)]
     hard_faults = [pl(words, i) for i in range(81, 85)]
+    window_cycles = pl(words, 85)
     hard_limit, target_limit = pl(words, 86), pl(words, 87)
     if any(value > 64 for value in high_max): errors.append(f"{label}: >1us continuous-high observation")
     if any(hard_faults): errors.append(f"{label}: hard duty fault count nonzero")
-    if hard_limit != 12800 or target_limit != 11520:
-        errors.append(f"{label}: exact duty limits do not equal 20%/18% of 64k cycles")
-    if any(value >= hard_limit for value in duty_max): errors.append(f"{label}: strict 20% duty boundary violated")
+    if (window_cycles, hard_limit, target_limit) != (
+            P9_DUTY_WINDOW_CYCLES, P9_DUTY_HARD_MAX_HIGH_CYCLES,
+            P9_DUTY_TARGET_MAX_HIGH_CYCLES):
+        errors.append(f"{label}: exact duty telemetry is not 64000/12799/11520 cycles")
+    if any(value > hard_limit for value in duty_max): errors.append(f"{label}: strict 20% duty boundary violated")
     if any(value > target_limit for value in duty_max): errors.append(f"{label}: 18% design target exceeded")
     if words[96] or words[97] or words[98]: errors.append(f"{label}: descriptor double completion/leak")
 
@@ -860,6 +866,9 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         "object_config_readback": pl(words, 10),
         "lane_weights_readback": pl(words, 11),
         "raw_config_readback": pl(words, 16),
+        "duty_window_cycles": window_cycles,
+        "duty_hard_max_high_cycles": hard_limit,
+        "duty_target_max_high_cycles": target_limit,
         "duty_max_cycles": duty_max, "duty_hard_faults": hard_faults,
         "raw_rx": [pl(words, i) for i in range(53, 57)],
         "physical_tx": [pl(words, i) for i in range(57, 61)],

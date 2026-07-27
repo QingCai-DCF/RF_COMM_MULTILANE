@@ -258,7 +258,24 @@ module tb_p9_optical_transport_core;
     integer index;
     logic [31:0] crc_before;
     begin
-      crc_before = physical_crc_bad;
+      // Mirror the PS command lifecycle: every object begins from confirmed
+      // full shutdown, then receiver startup, explicit arm, and telemetry
+      // reset.  Duty history continues to age through shutdown and is not
+      // erased by the counter clear.
+      receiver_enable = 0;
+      @(negedge clk); full_shutdown_request = 1;
+      repeat (4) @(posedge clk);
+      @(negedge clk); full_shutdown_request = 0; receiver_enable = 1;
+      for (int object_ready_watchdog = 0;
+           phy_ready_mask != 4'hf && object_ready_watchdog < 100_000;
+           object_ready_watchdog = object_ready_watchdog + 1) @(posedge clk);
+      if (phy_ready_mask != 4'hf || safety_fault_mask != 0)
+        $fatal(1, "object lifecycle did not reach safe physical ready state");
+      @(negedge clk); arm_request = 1;
+      @(posedge clk); @(negedge clk); arm_request = 0;
+      repeat (2) @(posedge clk);
+      if (!endpoint_armed || tx_kill_active)
+        $fatal(1, "object lifecycle explicit arm failed");
       cfg_direction = direction;
       cfg_session_epoch = cfg_session_epoch + 1;
       cfg_path_epoch = cfg_path_epoch + 1;
@@ -272,6 +289,7 @@ module tb_p9_optical_transport_core;
       @(posedge clk);
       @(negedge clk);
       clear_counters = 0;
+      crc_before = physical_crc_bad;
       capture_clear = 1;
       @(posedge clk);
       @(negedge clk);
@@ -373,6 +391,15 @@ module tb_p9_optical_transport_core;
     repeat (2) @(posedge clk);
     if (!endpoint_armed || tx_kill_active) $fatal(1, "endpoint arm failed");
 
+    // P9 CLEAR_COUNTERS is telemetry-only.  It must not invalidate the exact
+    // duty-history ring or reopen the 1000 us TX-low cooldown.
+    @(negedge clk); clear_counters = 1;
+    @(posedge clk); @(negedge clk); clear_counters = 0;
+    #1;
+    if (phy_ready_mask != 4'hf || startup_done_mask != 4'hf ||
+        !endpoint_armed || tx_kill_active)
+      $fatal(1, "P9 telemetry clear invalidated safety/startup state");
+
     run_object(600, 8'h21, 1'b0, 0, 0, 16'h0000, 0);
     run_object(600, 8'h42, 1'b0, 1, 0, 16'h0100, 0);
     if (physical_drop_data_count != 1 || tx_retry_count == 0)
@@ -415,11 +442,15 @@ module tb_p9_optical_transport_core;
     if (tx_high_max_flat[31:0] > 64 || tx_high_max_flat[63:32] > 64 ||
         tx_high_max_flat[95:64] > 64 || tx_high_max_flat[127:96] > 64)
       $fatal(1, "continuous-high safety maximum exceeded: %h", tx_high_max_flat);
-    if (duty_high_max_flat[31:0] >= duty_hard_limit_cycles ||
-        duty_high_max_flat[63:32] >= duty_hard_limit_cycles ||
-        duty_high_max_flat[95:64] >= duty_hard_limit_cycles ||
-        duty_high_max_flat[127:96] >= duty_hard_limit_cycles)
-      $fatal(1, "rolling-duty hard limit reached: max=%h hard=%0d",
+    if (duty_hard_limit_cycles != 32'd12799 ||
+        duty_target_limit_cycles != 32'd11520)
+      $fatal(1, "noncanonical duty telemetry: hard=%0d target=%0d",
+             duty_hard_limit_cycles, duty_target_limit_cycles);
+    if (duty_high_max_flat[31:0] > duty_hard_limit_cycles ||
+        duty_high_max_flat[63:32] > duty_hard_limit_cycles ||
+        duty_high_max_flat[95:64] > duty_hard_limit_cycles ||
+        duty_high_max_flat[127:96] > duty_hard_limit_cycles)
+      $fatal(1, "rolling-duty hard maximum exceeded: max=%h hard=%0d",
              duty_high_max_flat, duty_hard_limit_cycles);
     if (duty_target_limit_cycles == 0) $fatal(1, "invalid duty target telemetry");
 

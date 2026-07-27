@@ -15,7 +15,7 @@ Required future PS sequence:
 8. readback verify
 9. enable PHY
 10. wait >= 500 us startup
-11. clear counters/sticky
+11. clear telemetry counters only; never clear sticky safety faults or duty history
 12. start bounded test
 13. stop
 14. force shutdown
