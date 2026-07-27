@@ -208,6 +208,22 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("ack_turnaround_guard_cycles: 4096", config)
         self.assertIn("ack_turnaround_guard_us_at_64mhz: 64", config)
 
+    def test_unused_dma_sg_control_status_stream_is_disabled(self):
+        build_tcl = (ROOT / "scripts/build_p9_z7010_candidate.tcl").read_text(
+            encoding="utf-8"
+        )
+        freeze = (ROOT / "scripts/freeze_p9_artifacts.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(
+            1, build_tcl.count("CONFIG.c_sg_include_stscntrl_strm {0}")
+        )
+        self.assertNotIn("CONFIG.c_sg_include_stscntrl_strm {1}", build_tcl)
+        self.assertIn("P9_DMA_SG_STSCNTRL_STREAM=DISABLED", build_tcl)
+        self.assertIn(
+            "candidate unused DMA SG control/status stream is not disabled", freeze
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

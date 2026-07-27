@@ -379,6 +379,7 @@ def main(argv: list[str] | None = None) -> int:
         env["NO_HARDWARE"] = "0"
         env["RF_COMM_P9_HW_AUTH"] = "P9_PHASE2_IMMUTABLE_AUTHORIZED"
         env["RF_COMM_P9_DIAGNOSTIC_ONLY"] = "1"
+        env["RF_COMM_P9_DIAGNOSTIC_DMA_SNAPSHOT"] = "1"
         server_proc, server = frozen.start_hw_server(diagnostic_root / "raw_logs")
         write_json(diagnostic_root / "target_identity/hw_server.json", server)
         if server.get("status") != "PASS":

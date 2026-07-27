@@ -327,6 +327,8 @@ def validate_build(source_commit: str) -> tuple[list[Path], dict[str, Any]]:
     if candidate_markers.get("P9_CANONICAL_XDC") != \
             "constraints/active/PORT1.generated.xdc":
         errors.append("candidate canonical XDC marker mismatch")
+    if candidate_markers.get("P9_DMA_SG_STSCNTRL_STREAM") != "DISABLED":
+        errors.append("candidate unused DMA SG control/status stream is not disabled")
     for marker in ("P9_DRC_CRITICAL_COUNT", "P9_DRC_ERROR_COUNT",
                    "P9_REQP_1839_COUNT", "P9_METHODOLOGY_CRITICAL_COUNT",
                    "P9_CDC_CRITICAL_COUNT"):
@@ -380,6 +382,9 @@ def validate_build(source_commit: str) -> tuple[list[Path], dict[str, Any]]:
             "candidate build XDC load commands are not canonical-only: "
             f"{xdc_load_commands}"
         )
+    if build_tcl.count("CONFIG.c_sg_include_stscntrl_strm {0}") != 1 or \
+            "CONFIG.c_sg_include_stscntrl_strm {1}" in build_tcl:
+        errors.append("candidate DMA SG control/status stream configuration is not fail-closed")
 
     input_paths = p9_build_inputs()
     missing_inputs = [rel(path) for path in input_paths if not path.is_file()]

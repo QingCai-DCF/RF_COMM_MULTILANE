@@ -159,6 +159,10 @@ proc p9_read32 {address} {
   return [expr {[mrd -value $address] & 0xFFFFFFFF}]
 }
 
+proc p9_read32_force {address} {
+  return [expr {[mrd -force -value $address] & 0xFFFFFFFF}]
+}
+
 proc p9_check_abort {} {
   global abort_file
   if {[file exists $abort_file]} {
@@ -203,6 +207,54 @@ proc p9_record_observation {d window started finished dump_path observed_status 
       $started $finished $observed_status $observed_state $sequence $dump_path]
   puts $observation_handle [join $values "|"]
   flush $observation_handle
+}
+
+# Diagnostic-only, read-only snapshots of the live AXI DMA channels and their
+# first TX/RX descriptors.  The frozen diagnostic wrapper is the only caller
+# that may enable this path.  It neither stops the CPU nor writes a PL, DMA, or
+# descriptor address, so the captured state precedes the PS timeout cleanup.
+proc p9_dma_diagnostic_snapshot {label sequence elapsed_ms ordinal} {
+  global dump_dir
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label]} { error "unsafe DMA snapshot label" }
+  set final [file join $dump_dir [format "%s.dma_snapshot_%02d.psv" $label $ordinal]]
+  set partial "${final}.partial"
+  catch {file delete -force $partial}
+  set handle [open $partial w]
+  puts $handle "schema_version|1"
+  puts $handle "label|$label"
+  puts $handle "sequence|$sequence"
+  puts $handle "elapsed_ms|$elapsed_ms"
+  foreach spec {
+    {mm2s_dmacr 0x40400000} {mm2s_dmasr 0x40400004}
+    {mm2s_curdesc 0x40400008} {mm2s_taildesc 0x40400010}
+    {s2mm_dmacr 0x40400030} {s2mm_dmasr 0x40400034}
+    {s2mm_curdesc 0x40400038} {s2mm_taildesc 0x40400040}
+    {pl_status 0x43C0071C} {pl_object_error 0x43C00724}
+    {pl_input_byte_count 0x43C00750} {pl_output_byte_count 0x43C00754}
+  } {
+    set name [lindex $spec 0]
+    set value [p9_read32_force [lindex $spec 1]]
+    puts $handle "$name|[format 0x%08X $value]"
+  }
+  foreach ring_spec {{tx 0x01000000} {rx 0x01001000}} {
+    set ring [lindex $ring_spec 0]
+    set base [lindex $ring_spec 1]
+    for {set offset 0} {$offset < 64} {incr offset 4} {
+      set value [p9_read32_force [expr {$base + $offset}]]
+      puts $handle [format "%s_bd_%02X|0x%08X" $ring $offset $value]
+    }
+  }
+  foreach buffer_spec {{tx_buffer 0x02000000} {rx_buffer 0x06000000}} {
+    set name [lindex $buffer_spec 0]
+    set base [lindex $buffer_spec 1]
+    for {set offset 0} {$offset < 64} {incr offset 4} {
+      set value [p9_read32_force [expr {$base + $offset}]]
+      puts $handle [format "%s_%02X|0x%08X" $name $offset $value]
+    }
+  }
+  close $handle
+  file rename -force $partial $final
+  p9_say "P9_DMA_DIAGNOSTIC_SNAPSHOT=[file normalize $final]"
 }
 
 proc p9_case_dict {fields} {
@@ -296,11 +348,26 @@ proc p9_execute_case {d {window "NA"}} {
 
   set deadline [expr {$started + [dict get $d timeout] + 5000}]
   set terminal 0
+  set diagnostic_dma 0
+  if {[info exists ::env(RF_COMM_P9_DIAGNOSTIC_DMA_SNAPSHOT)] &&
+      $::env(RF_COMM_P9_DIAGNOSTIC_DMA_SNAPSHOT) eq "1" &&
+      [dict get $d command] == 3} {
+    set diagnostic_dma 1
+  }
+  set diagnostic_schedule {100 500 2000}
+  set diagnostic_ordinal 0
   while {[clock milliseconds] < $deadline} {
     p9_check_abort
     set response [p9_read32 0x0002001C]
     set state [p9_read32 0x0002000C]
     if {$response == $sequence && $state in {4 5 6}} { set terminal 1; break }
+    if {$diagnostic_dma && $diagnostic_ordinal < [llength $diagnostic_schedule]} {
+      set elapsed [expr {[clock milliseconds] - $started}]
+      if {$elapsed >= [lindex $diagnostic_schedule $diagnostic_ordinal]} {
+        p9_dma_diagnostic_snapshot [dict get $d label] $sequence $elapsed $diagnostic_ordinal
+        incr diagnostic_ordinal
+      }
+    }
     after 5
   }
   if {!$terminal} { error "P9 command timeout label=[dict get $d label]" }

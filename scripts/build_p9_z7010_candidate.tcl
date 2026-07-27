@@ -68,8 +68,12 @@ set_property -dict [list \
 ] $ps
 
 set dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0]
+# P9 uses only the primary MM2S/S2MM payload streams.  Leaving the optional
+# SG control/status stream enabled makes S2MM wait forever for an unconnected
+# S_AXIS_STS packet after it has already written the payload to DDR.
 set_property -dict [list \
   CONFIG.c_include_sg {1} \
+  CONFIG.c_sg_include_stscntrl_strm {0} \
   CONFIG.c_sg_length_width {26} \
   CONFIG.c_addr_width {32} \
   CONFIG.c_include_mm2s {1} \
@@ -246,6 +250,7 @@ puts $marker "P9_TOP=p9_ps_system_wrapper"
 puts $marker "P9_P9_AXI_BASE=0x43C00000"
 puts $marker "P9_DMA_AXI_BASE=0x40400000"
 puts $marker "P9_DMA_MODE=SCATTER_GATHER"
+puts $marker "P9_DMA_SG_STSCNTRL_STREAM=DISABLED"
 puts $marker "P9_DMA_HP_PORT=S_AXI_HP0"
 puts $marker "P9_DMA_DATA_WIDTH=32"
 puts $marker "P9_PROTOCOL_CLOCK_HZ=64000000"
