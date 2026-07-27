@@ -183,6 +183,31 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("policy: BOTH_ENDPOINTS_EXACT_SELECTED_LANE", config)
         self.assertEqual(2, testbench.count("~(a_txd | b_txd)"))
 
+    def test_command3_observation_schema_preserves_flags_and_failure_dump(self):
+        tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("expected_status|flags|lane|direction", tcl)
+        self.assertIn("[dict get $d flags] [dict get $d lane]", tcl)
+        terminal = tcl.index("set observed_status [p9_read32 0x00020020]")
+        dump = tcl.index("set dump_path [p9_dump_mailbox [dict get $d label]]", terminal)
+        mismatch = tcl.index("P9 command status mismatch", terminal)
+        self.assertLess(dump, mismatch)
+
+    def test_stationary_ack_turnaround_guard_is_4096_cycles(self):
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        config = (ROOT / "config/p9_z7010_stationary_2lane.yaml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 4_096", core)
+        self.assertIn(
+            "phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;", core
+        )
+        self.assertIn("ack_turnaround_guard_cycles: 4096", config)
+        self.assertIn("ack_turnaround_guard_us_at_64mhz: 64", config)
+
 
 if __name__ == "__main__":
     unittest.main()

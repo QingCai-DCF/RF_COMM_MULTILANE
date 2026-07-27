@@ -29,6 +29,7 @@ DIAGNOSTIC_ROOT = ROOT / "evidence/hardware/p9_diagnostics"
 FROZEN_RUNTIME_MEMBER = "scripts/p9_hardware_runtime.py"
 ALLOWED_HOST_DIAGNOSTIC_DRIFT = {
     "scripts/p9_hardware_runtime.py",
+    "scripts/hw/p9_xsdb_stage.tcl",
     "sim/tb/tb_p9_optical_transport_core.sv",
     "tests/test_p9_runner.py",
 }

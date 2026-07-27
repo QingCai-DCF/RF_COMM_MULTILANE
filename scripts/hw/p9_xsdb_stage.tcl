@@ -123,7 +123,7 @@ proc p9_dump_mailbox {label} {
 proc p9_record_observation {d window started finished dump_path observed_status observed_state sequence} {
   global observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
-      [dict get $d lane] [dict get $d direction] [dict get $d rate] [dict get $d weights] \
+      [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] [dict get $d weights] \
       [dict get $d size] [dict get $d ring] [dict get $d cache] [dict get $d txoff] \
       [dict get $d rxoff] [dict get $d timeout] [dict get $d session] [dict get $d path] \
       [dict get $d object] [dict get $d dropdata] [dict get $d dropack] \
@@ -236,6 +236,13 @@ proc p9_execute_case {d {window "NA"}} {
   if {!$terminal} { error "P9 command timeout label=[dict get $d label]" }
   set observed_status [p9_read32 0x00020020]
   set observed_state [p9_read32 0x0002000C]
+  # Preserve the terminal mailbox before interpreting its status.  A failed
+  # command is primary hardware evidence too; previously the status check
+  # raised first and discarded the PL error code, DMA state, and counters
+  # needed to diagnose the failure.
+  set dump_path [p9_dump_mailbox [dict get $d label]]
+  set finished [clock milliseconds]
+  p9_record_observation $d $window $started $finished $dump_path $observed_status $observed_state $sequence
   if {$observed_status != [dict get $d expected_status]} {
     error "P9 command status mismatch label=[dict get $d label] expected=[dict get $d expected_status] observed=$observed_status"
   }
@@ -246,9 +253,6 @@ proc p9_execute_case {d {window "NA"}} {
   } elseif {$observed_state != 5} {
     error "expected failing command did not reach FAULT state"
   }
-  set dump_path [p9_dump_mailbox [dict get $d label]]
-  set finished [clock milliseconds]
-  p9_record_observation $d $window $started $finished $dump_path $observed_status $observed_state $sequence
   p9_say "P9_CASE_PASS=[dict get $d label]"
   if {[dict get $d command] != 10} { con }
 }
@@ -347,7 +351,7 @@ file mkdir [file dirname $result_file]
 set result_handle [open $result_file w]
 set observation_file [file join $dump_dir observations.psv]
 set observation_handle [open $observation_file w]
-puts $observation_handle "label|command|expected_status|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|observed_status|observed_state|sequence|dump_path"
+puts $observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|observed_status|observed_state|sequence|dump_path"
 flush $observation_handle
 
 set rc [catch {

@@ -73,6 +73,8 @@ protocol:
   sequence_width_bits: 16
   outstanding: 32
   sack_window_bits: 32
+  ack_turnaround_guard_cycles: 4096
+  ack_turnaround_guard_us_at_64mhz: 64
   ack_aggregation_frame_threshold: 8
   maximum_retry: 7
   max_l1_payload_bytes: 247

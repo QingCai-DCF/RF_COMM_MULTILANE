@@ -7,7 +7,12 @@ module p9_optical_transport_core #(
   parameter integer SACK_BITS = 32,
   parameter integer MAX_PAYLOAD_BYTES = 247,
   parameter integer STORE_ADDR_WIDTH = 13,
-  parameter integer RTO_CYCLES = 4_000_000
+  parameter integer RTO_CYCLES = 4_000_000,
+  // The stationary TFDU fixture directly showed that the former 4 us
+  // DATA-to-ACK gap began the reverse frame before the transmitting module's
+  // receiver had recovered.  Keep a conservative 64 us half-duplex
+  // turnaround, matching the canonical 4096-cycle guard at 64 MHz.
+  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_096
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -700,7 +705,7 @@ module p9_optical_transport_core #(
               dp_local_ack_ready_q <= 1;
             end else begin
               phase_q <= PH_ACK_GUARD;
-              phase_guard_q <= 16'd256;
+              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
             end
           end
           PH_ACK_GUARD: if (lanes_idle && schedulable_lane_mask != 0) begin
