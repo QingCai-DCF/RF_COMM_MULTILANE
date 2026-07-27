@@ -268,6 +268,15 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             "candidate unused DMA SG control/status stream is not disabled", freeze
         )
 
+    def test_idempotent_ack_and_sack_reorder_do_not_require_retry(self):
+        self.assertEqual(
+            {"fault_duplicate_ack", "fault_reorder"},
+            set(P9_HW.P9_FAULTS_WITHOUT_REQUIRED_RETRY),
+        )
+        plans = {case.label: case for case in P9_HW.build_plans()["P9-18"]}
+        self.assertEqual(1 << 5, plans["fault_duplicate_ack"].faultflags)
+        self.assertEqual(1 << 6, plans["fault_reorder"].faultflags)
+
 
 if __name__ == "__main__":
     unittest.main()

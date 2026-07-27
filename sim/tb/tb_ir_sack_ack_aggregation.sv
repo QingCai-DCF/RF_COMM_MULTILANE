@@ -63,19 +63,25 @@ module tb_ir_sack_ack_aggregation;
            bitmap_out==bitmap_in && width_out==32,
            "aggregated ACK captures complete SACK state");
     ack_base_in=16'h1234; bitmap_in=32'hffff_ffff; #1;
+    accept_frame();
     check_expect(ack_base_out==16'hfffe && bitmap_out==32'h0000_0005,
            "ACK payload remains stable under backpressure");
     consume_ack();
     check_expect(sent_count==1 && !ack_valid, "ACK handshake counts exactly once");
+    repeat(7) @(posedge clk); #1;
+    check_expect(ack_valid && timer_count==1 && ack_base_out==16'h1234 &&
+           bitmap_out==32'hffff_ffff,
+           "event arriving under ACK backpressure produces a later snapshot");
+    consume_ack();
 
     ack_base_in=16'h0100; bitmap_in=32'd1; accept_frame();
     repeat(7) @(posedge clk); #1;
-    check_expect(ack_valid && timer_count==1, "bounded maximum delay triggers ACK");
+    check_expect(ack_valid && timer_count==2, "bounded maximum delay triggers ACK");
     consume_ack();
     credit_in=16'd2; accept_frame(); repeat(2) @(posedge clk); #1;
     check_expect(ack_valid, "low receiver credit triggers immediate cumulative ACK");
     consume_ack();
-    check_expect(sent_count==3, "all aggregate ACKs complete once");
+    check_expect(sent_count==4, "all aggregate ACKs complete once");
     $display("P8D_SACK_ENCODE_DECODE_PASS=1");
     $display("P8D_ACK_AGGREGATION_BOUNDED_DELAY_PASS=1");
     $display("TB_IR_SACK_ACK_AGGREGATION_PASS=1");

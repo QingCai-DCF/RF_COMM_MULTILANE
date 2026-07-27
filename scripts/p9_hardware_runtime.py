@@ -71,6 +71,10 @@ P9_RAW_RX_OBSERVATION_POLICY = "BOTH_ENDPOINTS_EXACT_SELECTED_LANE"
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 RUN_RE = re.compile(r"^p9_[A-Za-z0-9_.-]+$")
 STAGE_RE = re.compile(r"^P9-(?:0[4-9]|1[0-9]|2[0-6])$")
+P9_FAULTS_WITHOUT_REQUIRED_RETRY = frozenset({
+    "fault_duplicate_ack",
+    "fault_reorder",
+})
 
 
 def utc_now() -> str:
@@ -1251,7 +1255,11 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
                 errors.append(f"{case_label}: direct {field} counter evidence absent")
         for case_label, detail in by_label.items():
             if case_label.startswith("fault_") and case_label not in {
-                    "fault_retry_exhausted", "fault_post_recovery_clean"} and \
+                    "fault_retry_exhausted", "fault_post_recovery_clean",
+                    # These are receive-side idempotence/SACK exercises.  A
+                    # retry is neither necessary nor desirable when the
+                    # original DATA set was delivered completely.
+                    *P9_FAULTS_WITHOUT_REQUIRED_RETRY} and \
                     detail["tx_retries"] == 0:
                 errors.append(f"{case_label}: injected fault did not exercise bounded retry")
         exhausted = [detail for detail in details if detail["label"] == "fault_retry_exhausted"]

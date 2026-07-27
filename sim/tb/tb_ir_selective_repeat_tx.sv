@@ -165,6 +165,20 @@ module tb_ir_selective_repeat_tx;
     send_ack(session_epoch, 16'd32, 32'd0);
     wait_counter(2, 1, 160);
     check_expect(duplicate_ack_count == 1, "duplicate ACK is harmless");
+
+    // A repeated SACK snapshot can have an ACK base just behind the newly
+    // advanced TX base.  It is still a bounded, idempotent duplicate rather
+    // than a future/malformed ACK, and it must not reclaim a live hole.
+    session_reset = 1'b1; @(posedge clk); #1; session_reset = 1'b0;
+    allocate_one(40);
+    allocate_one(41);
+    send_ack(session_epoch, 16'd0, 32'h0000_0001);
+    wait_outstanding(1, 160);
+    send_ack(session_epoch, 16'd0, 32'h0000_0001);
+    wait_counter(2, 2, 160);
+    check_expect(outstanding == 1 && tx_ack_base == 16'd1,
+                 "old-base duplicate SACK preserves the live hole");
+
     send_ack(session_epoch - 1, 16'd32, 32'd0);
     wait_counter(3, 1, 80);
     check_expect(stale_ack_count == 1, "stale-session ACK is rejected");

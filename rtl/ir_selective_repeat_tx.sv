@@ -242,6 +242,7 @@ module ir_selective_repeat_tx #(
   always_ff @(posedge clk) begin : tx_state
     integer signed occupancy_delta;
     logic [15:0] captured_distance;
+    logic [15:0] captured_back_distance;
     logic [15:0] captured_span;
     logic malformed_now;
     logic [31:0] reclaimed_total;
@@ -469,9 +470,17 @@ module ir_selective_repeat_tx #(
               ack_state <= ACK_IDLE;
             end else if (ack_validate_index == SACK_BITS-1) begin
               captured_distance = seq_distance(ack_base_capture, ack_window_start);
+              captured_back_distance = seq_distance(ack_window_start, ack_base_capture);
               captured_span = ack_active_span_snapshot;
+              // A retransmitted immutable SACK snapshot can trail the newly
+              // advanced TX base.  Accept at most one prior bounded window;
+              // reclaim still matches only live sequence metadata, so the
+              // old snapshot is idempotent while older/future bases fail.
               if (ack_malformed_seen || malformed_now ||
-                  captured_distance > captured_span || captured_distance > WINDOW_SIZE) begin
+                  (seq_before(ack_base_capture, ack_window_start) ?
+                    (captured_back_distance > WINDOW_SIZE) :
+                    (captured_distance > captured_span ||
+                     captured_distance > WINDOW_SIZE))) begin
                 out_of_window_ack_count_o <= out_of_window_ack_count_o + 1'b1;
                 ack_state <= ACK_IDLE;
               end else begin

@@ -93,6 +93,7 @@ module tb_p9_optical_transport_core;
   wire [31:0] physical_data_frames_good;
   wire [31:0] physical_ack_frames_good;
   wire [31:0] physical_crc_bad;
+  wire [31:0] physical_symbol_error_count;
   wire [31:0] physical_drop_data_count;
   wire [31:0] physical_drop_ack_count;
   wire [127:0] tx_high_max_flat;
@@ -145,7 +146,10 @@ module tb_p9_optical_transport_core;
 
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
-    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(100_000)
+    // Keep simulation accelerated relative to the 4,000,000-cycle hardware
+    // RTO, but leave enough time for multiple DATA frames, turnaround, ACK
+    // serialization, and the bounded ACK-reclaim scan.
+    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(500_000)
   ) dut (
     .clk, .rst_n,
     .receiver_enable_i(receiver_enable), .arm_request_i(arm_request),
@@ -203,7 +207,7 @@ module tb_p9_optical_transport_core;
     .physical_ack_frames_good_o(physical_ack_frames_good),
     .physical_crc_bad_o(physical_crc_bad),
     .physical_frame_bad_o(), .physical_preamble_count_o(),
-    .physical_symbol_error_count_o(),
+    .physical_symbol_error_count_o(physical_symbol_error_count),
     .physical_drop_data_count_o(physical_drop_data_count),
     .physical_drop_ack_count_o(physical_drop_ack_count),
     .raw_rx_counts_flat_o(), .physical_tx_counts_flat_o(physical_tx_counts_flat),
@@ -266,7 +270,9 @@ module tb_p9_optical_transport_core;
   );
     integer watchdog;
     integer index;
+    integer expected_frames;
     logic [31:0] crc_before;
+    logic [31:0] symbol_before;
     begin
       // Mirror the PS command lifecycle: every object begins from confirmed
       // full shutdown, then receiver startup, explicit arm, and telemetry
@@ -300,6 +306,7 @@ module tb_p9_optical_transport_core;
       @(negedge clk);
       clear_counters = 0;
       crc_before = physical_crc_bad;
+      symbol_before = physical_symbol_error_count;
       capture_clear = 1;
       @(posedge clk);
       @(negedge clk);
@@ -314,7 +321,7 @@ module tb_p9_optical_transport_core;
         $fatal(1, "object did not start dir=%0d error=%08x", direction, object_error);
       stream_object(length, seed);
       watchdog = 0;
-      while (!object_done && !object_fail && watchdog < 1_500_000) begin
+      while (!object_done && !object_fail && watchdog < 5_000_000) begin
         @(posedge clk); #1;
         watchdog = watchdog + 1;
       end
@@ -344,6 +351,24 @@ module tb_p9_optical_transport_core;
           safety_fault_mask != 0 || tx_retry_exhausted_count != 0)
         $fatal(1, "integrity/safety counter failure crc=%0d safety=%x exhausted=%0d",
                physical_crc_bad, safety_fault_mask, tx_retry_exhausted_count);
+      if (drop_data == 0 && drop_ack == 0 && fault_flags == 0) begin
+        expected_frames = (length + 246) / 247;
+        if (tx_retry_count != 0 || tx_timeout_count != 0 ||
+            rx_duplicate_count != 0)
+          $fatal(1, "clean object required retry/timeout/duplicate: retries=%0d timeouts=%0d duplicates=%0d attempts=%0d data=%0d acks=%0d txbase=%04x rxbase=%04x local=%04x/%08x peer=%04x/%08x",
+                 tx_retry_count, tx_timeout_count, rx_duplicate_count,
+                 tx_attempt_count, physical_data_frames_good,
+                 physical_ack_frames_good, tx_ack_base, rx_base_sequence,
+                 dut.dp_local_ack_base, dut.dp_local_ack_bitmap,
+                 dut.dp_peer_ack_base_q, dut.dp_peer_ack_bitmap_q);
+        if (physical_data_frames_good != expected_frames ||
+            physical_crc_bad != crc_before ||
+            physical_symbol_error_count != symbol_before)
+          $fatal(1, "clean physical frame accounting mismatch expected=%0d good=%0d crc=%0d/%0d symbol=%0d/%0d",
+                 expected_frames, physical_data_frames_good,
+                 physical_crc_bad, crc_before,
+                 physical_symbol_error_count, symbol_before);
+      end
       $display("P9_CORE_OBJECT_PASS dir=%0d len=%0d drop_data=%0d drop_ack=%0d initial=%04x faults=%02x retries=%0d duplicates=%0d",
                direction, length, drop_data, drop_ack, initial_sequence,
                fault_flags[5:0], tx_retry_count, rx_duplicate_count);
@@ -442,8 +467,10 @@ module tb_p9_optical_transport_core;
     if (tx_duplicate_ack_count == 0)
       $fatal(1, "duplicate ACK rejection not observed");
     run_object(600, 8'ha7, 1'b0, 0, 0, 16'h1600, 32'h40);
-    if (rx_out_of_order_count == 0 || rx_gap_count == 0 || tx_retry_count == 0)
+    if (rx_out_of_order_count == 0 || rx_gap_count == 0)
       $fatal(1, "out-of-order/SACK gap recovery not observed");
+    if (tx_retry_count != 0 || tx_timeout_count != 0)
+      $fatal(1, "SACK reorder recovery required an unnecessary retry");
 
     run_object(600, 8'hc7, 1'b0, 0, 0, 16'h2000, 0);
 

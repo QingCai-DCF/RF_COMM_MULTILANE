@@ -223,7 +223,11 @@ module p9_axi_dma_peripheral (
             if (reg_wr_data[3]) disarm_pulse_q <= 1;
             if (reg_wr_data[4]) begin
               receiver_enable_q <= 0;
-              cfg_lane_mask_q <= 0;
+              // Preserve the last requested lane/rate/direction tuple for
+              // post-shutdown evidence readback.  This is configuration only:
+              // receiver_enable is cleared here and the independent core
+              // shutdown pulse asynchronously owns endpoint arm, final TX
+              // kill, Txd-low, and SD-high behavior.
               shutdown_pulse_q <= 1;
             end
             if (reg_wr_data[5]) begin

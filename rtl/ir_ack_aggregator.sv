@@ -71,7 +71,17 @@ module ir_ack_aggregator #(
       end
       if (ack_valid_o && ack_ready_i) begin
         ack_valid_o <= 1'b0;
-        pending_frames <= '0;
+        // pending_frames counts receive/control events that occurred after
+        // the currently presented immutable ACK snapshot.  They must survive
+        // this handshake so a following cumulative ACK can cover them.
+        if (rx_accept_i) begin
+          if (pending_frames < FRAME_THRESHOLD + 1)
+            pending_frames <= pending_frames + 1'b1;
+          aggregation_count_o <= aggregation_count_o + 1'b1;
+        end
+        if ((control_event_i || direction_boundary_i) &&
+            pending_frames == 0 && !rx_accept_i)
+          pending_frames <= {{(FRAME_COUNT_WIDTH-1){1'b0}}, 1'b1};
         delay_counter <= 32'd0;
         ack_frames_sent_o <= ack_frames_sent_o + 1'b1;
       end else begin
@@ -84,6 +94,9 @@ module ir_ack_aggregator #(
         if (pending_frames != 0 && !ack_valid_o) begin
           delay_counter <= delay_counter + 1'b1;
         end
+        if (ack_valid_o && (control_event_i || direction_boundary_i) &&
+            pending_frames == 0 && !rx_accept_i)
+          pending_frames <= {{(FRAME_COUNT_WIDTH-1){1'b0}}, 1'b1};
         if (!ack_valid_o && trigger_now) begin
           ack_valid_o <= 1'b1;
           ack_session_epoch_o <= session_epoch_i;
@@ -91,6 +104,11 @@ module ir_ack_aggregator #(
           ack_bitmap_o <= sack_bitmap_i;
           ack_width_o <= sack_width_i;
           ack_receiver_credit_o <= receiver_credit_i;
+          // All events accumulated so far are represented by this frozen
+          // snapshot.  New events arriving while VALID waits for READY are
+          // accumulated independently above.
+          pending_frames <= '0;
+          delay_counter <= 32'd0;
           if (timer_trigger) timer_expiry_count_o <= timer_expiry_count_o + 1'b1;
         end
       end

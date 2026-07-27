@@ -177,6 +177,8 @@ module p9_optical_transport_core #(
   reg [15:0] object_initial_sequence_q;
   reg [31:0] fault_flags_remaining_q;
   reg [2:0] fault_attempt_budget_q;
+  reg duplicate_ack_validation_pending_q;
+  reg [31:0] duplicate_ack_validation_start_q;
   reg session_reset_pulse_q;
   reg [7:0] drop_data_remaining_q;
   reg [7:0] drop_ack_remaining_q;
@@ -365,6 +367,13 @@ module p9_optical_transport_core #(
   reg [15:0] dp_peer_ack_base_q;
   reg [31:0] dp_peer_ack_bitmap_q;
   reg [5:0] dp_peer_ack_width_q;
+  // The RX window commits metadata through a synchronous staging cycle.  A
+  // control event asserted with dp_rx_frame_valid_q would therefore snapshot
+  // the previous ACK/SACK state and force a needless RTO/retransmission for
+  // every clean frame.  Delay the physical-frame event until both the RX
+  // metadata and registered SACK bitmap are observable.  Duplicates take the
+  // same path, so a lost ACK still causes a bounded re-ACK of stable state.
+  reg [1:0] dp_ack_control_pipe_q;
   reg dp_rx_frame_valid_q;
   reg dp_rx_l1_valid_q;
   reg [31:0] dp_rx_session_q;
@@ -455,7 +464,7 @@ module p9_optical_transport_core #(
     // Every validated physical DATA receive event can force a cumulative
     // response.  New frames still participate in aggregation; duplicates
     // force a re-ACK so reverse-path ACK loss is recoverable.
-    .ack_control_event_i(dp_rx_frame_valid_q && dp_rx_l1_valid_q),
+    .ack_control_event_i(dp_ack_control_pipe_q[1]),
     .ack_direction_boundary_i(1'b0),
     .ack_explicit_request_i(input_complete_q && tx_outstanding_count_o != 0),
     .local_ack_valid_o(dp_local_ack_valid), .local_ack_ready_i(dp_local_ack_ready_q),
@@ -494,6 +503,20 @@ module p9_optical_transport_core #(
     .scheduler_migrations_flat_o(scheduler_migrations_flat_o),
     .scheduler_maximum_starvation_o(scheduler_maximum_starvation_o)
   );
+
+  always @(posedge clk or negedge rst_n) begin : ack_control_alignment
+    if (!rst_n) begin
+      dp_ack_control_pipe_q <= 2'b00;
+    end else if (start_object_i || abort_object_i || disarm_request_i ||
+                 full_shutdown_request_i || any_safety_fault) begin
+      dp_ack_control_pipe_q <= 2'b00;
+    end else begin
+      dp_ack_control_pipe_q <= {
+          dp_ack_control_pipe_q[0],
+          dp_rx_frame_valid_q && dp_rx_l1_valid_q
+      };
+    end
+  end
 
   // Two independent serializers read their own synchronous BRAM replica.
   // Each serializer holds its current byte while prefetching the next, so no
@@ -585,6 +608,8 @@ module p9_optical_transport_core #(
       drop_ack_remaining_q <= 0;
       fault_flags_remaining_q <= 0;
       fault_attempt_budget_q <= 0;
+      duplicate_ack_validation_pending_q <= 0;
+      duplicate_ack_validation_start_q <= 0;
       dropped_data_count_q <= 0;
       dropped_ack_count_q <= 0;
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
@@ -639,6 +664,8 @@ module p9_optical_transport_core #(
              cfg_drop_ack_count_i + 1'b1) : cfg_drop_ack_count_i;
         fault_flags_remaining_q <= cfg_fault_flags_i;
         fault_attempt_budget_q <= (cfg_fault_flags_i[4:0] != 0) ? 3 : 0;
+        duplicate_ack_validation_pending_q <= cfg_fault_flags_i[5];
+        duplicate_ack_validation_start_q <= tx_duplicate_ack_count_o;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
@@ -647,6 +674,7 @@ module p9_optical_transport_core #(
         phase_q <= PH_DATA;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
+        duplicate_ack_validation_pending_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
         end
@@ -656,7 +684,11 @@ module p9_optical_transport_core #(
         drop_ack_remaining_q <= 0;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
+        duplicate_ack_validation_pending_q <= 0;
       end else begin
+        if (duplicate_ack_validation_pending_q &&
+            tx_duplicate_ack_count_o != duplicate_ack_validation_start_q)
+          duplicate_ack_validation_pending_q <= 0;
         if (dp_attempt_valid && dp_attempt_ready) begin
           if (drop_data_remaining_q != 0) begin
             drop_data_remaining_q <= drop_data_remaining_q - 1'b1;
@@ -698,7 +730,11 @@ module p9_optical_transport_core #(
         end
 
         case (phase_q)
-          PH_DATA: if (dp_local_ack_valid) begin
+          // READY is registered.  Once asserted for a validation-only dropped
+          // ACK, do not consume the same held VALID again on the following
+          // handshake cycle and accidentally serialize an ACK that was meant
+          // to be lost.
+          PH_DATA: if (dp_local_ack_valid && !dp_local_ack_ready_q) begin
             if (drop_ack_remaining_q != 0) begin
               drop_ack_remaining_q <= drop_ack_remaining_q - 1'b1;
               dropped_ack_count_q <= dropped_ack_count_q + 1'b1;
@@ -1458,7 +1494,8 @@ module p9_optical_transport_core #(
           object_error_q <= 32'h5009_0007;
         end
         if (object_active_q && input_complete_q && output_complete_q &&
-            tx_outstanding_count_o == 0 && !allocate_pending_q) begin
+            tx_outstanding_count_o == 0 && !allocate_pending_q &&
+            !duplicate_ack_validation_pending_q) begin
           object_active_q <= 0;
           object_done_q <= 1;
         end
