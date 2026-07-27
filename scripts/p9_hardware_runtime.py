@@ -59,6 +59,15 @@ PERFORMANCE_START = 215
 PERMIT_START = 227
 RFAP_START = 245
 P9_DMA_MAX_TRANSFER = 0x03FFFFFF
+# The current stationary Z7010 fixture exposes each selected-lane optical
+# pulse at both physical receivers on that lane.  The protocol decoder still
+# consumes only the direction-selected destination receiver (see
+# p9_optical_transport_core.g_receive).  Raw acceptance therefore requires an
+# exact count at both same-lane receivers and zero counts on the unselected
+# lane; it must not misclassify the deterministic near-end observation as an
+# extra destination pulse.  This policy is P9/Z7010-profile-specific and may
+# not be extrapolated to Z7020 or the final mechanical geometry.
+P9_RAW_RX_OBSERVATION_POLICY = "BOTH_ENDPOINTS_EXACT_SELECTED_LANE"
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 RUN_RE = re.compile(r"^p9_[A-Za-z0-9_.-]+$")
 STAGE_RE = re.compile(r"^P9-(?:0[4-9]|1[0-9]|2[0-6])$")
@@ -267,7 +276,7 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
         Case("p9_07_permit_drop_mid_raw", 12, lane=3, direction=0,
              rawtarget=100000, spacing=128, timeout=10_000),
         Case("p9_07_rearm_a", 2, lane=1, direction=0, rawtarget=16, spacing=1024, timeout=10_000),
-        Case("p9_07_rearm_b", 2, lane=1, direction=0, rawtarget=16, spacing=1024, timeout=10_000),
+        Case("p9_07_rearm_b", 2, lane=1, direction=1, rawtarget=16, spacing=1024, timeout=10_000),
     ]
     plans["P9-08"] = [Case("p9_08_idle_noise_5000ms", 11, idle=5000, timeout=15_000)]
     plans["P9-09"] = raw_cases("ab_l0", 1, 0)
@@ -930,7 +939,15 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         for lane_index in range(2):
             if lane & (1 << lane_index):
                 expected_tx[(2 if direction else 0) + lane_index] = target
-                expected_rx[(0 if direction else 2) + lane_index] = target
+                # The frozen current-board profile has deterministic same-lane
+                # visibility at both endpoint receivers.  Requiring both
+                # counts to equal the transmitted target also proves that the
+                # destination count has neither loss nor extras while keeping
+                # the opposite logical lane at zero.
+                expected_rx[lane_index] = target
+                expected_rx[2 + lane_index] = target
+        detail["raw_rx_observation_policy"] = P9_RAW_RX_OBSERVATION_POLICY
+        detail["expected_raw_rx"] = expected_rx
         if detail["physical_tx"] != expected_tx: errors.append(f"{label}: physical TX raw vector mismatch")
         if detail["raw_rx"] != expected_rx: errors.append(f"{label}: physical RX raw vector mismatch")
     if command == 3 and expected_status == 0 and not (row["flags"] & 1 and words[60] == 0):

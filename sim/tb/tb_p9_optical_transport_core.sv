@@ -46,8 +46,12 @@ module tb_p9_optical_transport_core;
 
   wire [1:0] a_txd, a_sd, a_mode;
   wire [1:0] b_txd, b_sd, b_mode;
-  wire [1:0] a_rxd = ~b_txd;
-  wire [1:0] b_rxd = ~a_txd;
+  // The frozen stationary Z7010 fixture exposes a selected-lane pulse at
+  // both same-lane receivers.  Model that profile-specific near-end
+  // visibility while the DUT continues to decode only the selected
+  // destination side for each frame direction.
+  wire [1:0] a_rxd = ~(a_txd | b_txd);
+  wire [1:0] b_rxd = ~(a_txd | b_txd);
   wire endpoint_armed;
   wire tx_kill_active;
   wire [3:0] phy_ready_mask;

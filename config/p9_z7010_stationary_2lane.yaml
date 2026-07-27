@@ -39,6 +39,19 @@ raw_idle_acceptance:
   max_frame_bad: 0
   max_symbol_errors: 0
 
+# Direct stationary-board diagnostics show exact same-lane visibility at both
+# A and B receivers for every 64/1000/4096-pulse train in both directions.
+# The direction-selected destination receiver remains the sole protocol input;
+# this profile-specific observation must not be extrapolated to Z7020 or final
+# mechanical geometry.
+raw_receiver_observation:
+  policy: BOTH_ENDPOINTS_EXACT_SELECTED_LANE
+  selected_lane_a_count: equals_transmitted_pulses
+  selected_lane_b_count: equals_transmitted_pulses
+  unselected_lane_counts: zero
+  protocol_decoder_input: direction_selected_destination_only
+  scope: Z7010_2LANE_DEV_STATIONARY_CURRENT_FIXTURE_ONLY
+
 clock:
   protocol_hz: 64000000
   axi_dma_hz: 100000000

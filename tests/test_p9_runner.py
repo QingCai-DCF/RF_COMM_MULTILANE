@@ -133,6 +133,56 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertEqual(2, core.count(".CLEAR_STICKY_INVALIDATES_HISTORY(0)"))
         self.assertIn("P9 telemetry clear invalidated safety/startup state", testbench)
 
+    def raw_observation(self, *, direction: int) -> tuple[dict, list[int]]:
+        row, words = self.safe_idle_observation()
+        row.update({
+            "label": f"raw_direction_{direction}", "command": 2,
+            "lane": 1, "direction": direction, "rawtarget": 64,
+        })
+
+        def set_pl(index: int, value: int) -> None:
+            words[P9_HW.PL_SNAPSHOT_START + index] = value
+
+        set_pl(16, 1 | (direction << 8))
+        set_pl(19, 64)
+        # Current stationary Z7010 policy: both same-lane receivers see the
+        # exact train, while the other lane sees no pulses.
+        set_pl(53, 64)
+        set_pl(55, 64)
+        set_pl(57 + (2 if direction else 0), 64)
+        return row, words
+
+    def test_raw_selected_lane_exact_at_both_endpoint_receivers(self):
+        for direction in (0, 1):
+            with self.subTest(direction=direction):
+                row, words = self.raw_observation(direction=direction)
+                errors, detail = P9_HW.evaluate_observation(row, words)
+                self.assertEqual([], errors)
+                self.assertEqual(
+                    "BOTH_ENDPOINTS_EXACT_SELECTED_LANE",
+                    detail["raw_rx_observation_policy"],
+                )
+                self.assertEqual([64, 0, 64, 0], detail["expected_raw_rx"])
+
+    def test_raw_off_lane_pulse_still_fails_closed(self):
+        row, words = self.raw_observation(direction=0)
+        words[P9_HW.PL_SNAPSHOT_START + 54] = 1
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertTrue(any("physical RX raw vector mismatch" in error for error in errors))
+
+    def test_p9_rearm_plan_covers_both_directions_and_profile_policy_is_bound(self):
+        plans = P9_HW.build_plans()
+        rearm = [case for case in plans["P9-07"] if getattr(case, "label", "").startswith("p9_07_rearm_")]
+        self.assertEqual([0, 1], [case.direction for case in rearm])
+        config = (ROOT / "config/p9_z7010_stationary_2lane.yaml").read_text(
+            encoding="utf-8"
+        )
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("policy: BOTH_ENDPOINTS_EXACT_SELECTED_LANE", config)
+        self.assertEqual(2, testbench.count("~(a_txd | b_txd)"))
+
 
 if __name__ == "__main__":
     unittest.main()
