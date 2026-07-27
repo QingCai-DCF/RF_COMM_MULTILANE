@@ -260,7 +260,7 @@ module p9_4ppm_frame_tx #(
       header_crc_index <= 5'd0;
       header_crc_work <= 16'hFFFF;
       active_chip_cycles <= 8'd8;
-      active_pulse_cycles <= 8'd5;
+      active_pulse_cycles <= 8'd8;
       total_symbols <= 16'd0;
       symbol_index <= 16'd0;
       symbol_cycle <= 16'd0;
@@ -309,7 +309,11 @@ module p9_4ppm_frame_tx #(
           unique case (rate_select_i)
             2'd0: begin active_chip_cycles <= 8'd32; active_pulse_cycles <= 8'd8; end
             2'd1: begin active_chip_cycles <= 8'd16; active_pulse_cycles <= 8'd8; end
-            default: begin active_chip_cycles <= 8'd8; active_pulse_cycles <= 8'd5; end
+            // IrDA FIR at 4 Mbit/s uses one 125 ns pulse-position chip.
+            // At the canonical 64 MHz protocol clock this is exactly eight
+            // cycles; shorter pulses are outside the TFDU6102 FIR timing
+            // table and were directly observed to lose physical pulses.
+            default: begin active_chip_cycles <= 8'd8; active_pulse_cycles <= 8'd8; end
           endcase
           total_symbols <= PREAMBLE_SYMBOLS +
               (frame_is_ack_i ? ACK_HEADER_BYTES*4 :

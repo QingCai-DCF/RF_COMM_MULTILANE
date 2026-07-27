@@ -60,8 +60,11 @@ module p9_rate_4ppm_rx (
   );
 
   ir_4ppm_codec #(
-    .CNT_CHIP_MAX(7), .CNT_PREAMBLE(16), .TX_PULSE_CYCLES(5),
-    .DETECT_START_CYCLES(0), .DETECT_END_CYCLES(7),
+    .CNT_CHIP_MAX(7), .CNT_PREAMBLE(16), .TX_PULSE_CYCLES(8),
+    // Sample the centre of each 125 ns FIR chip.  The two-cycle aperture
+    // accepts the TFDU6102 100..140 ns Rxd pulse-width range plus its 20 ns
+    // leading-edge jitter without counting a stretched neighbouring tail.
+    .DETECT_START_CYCLES(3), .DETECT_END_CYCLES(4),
     .RX_ACQUIRE_ON_FIRST_PULSE(1'b1)
   ) u_rx_4mbps (
     .clk, .rst_n, .enable(enable_i && selected_rate == 2'd2),

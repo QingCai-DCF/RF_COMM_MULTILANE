@@ -240,6 +240,8 @@ def p9_build_inputs() -> list[Path]:
         "scripts/run_p9_z7010_stationary_2lane.py",
         "scripts/hw/p9_hw_preflight.tcl", "scripts/hw/p9_program_shutdown.tcl",
         "scripts/hw/p9_xsdb_stage.tcl",
+        "sim/tb/tb_p9_4ppm_frame_link.sv",
+        "sim/tb/tb_p9_tfdu_fir_frame_link.sv",
         "sim/tb/tb_p9_optical_transport_core.sv",
         "sim/tb/tb_p9_post_synth_safety.sv",
         "tools/run_p9_z7010_stationary_2lane.ps1",

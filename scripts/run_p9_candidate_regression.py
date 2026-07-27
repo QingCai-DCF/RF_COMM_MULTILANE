@@ -34,6 +34,11 @@ FRAME_LINK_SOURCES = [
     "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
     "sim/tb/tb_p9_4ppm_frame_link.sv",
 ]
+FIR_FRAME_LINK_SOURCES = [
+    "rtl/ir_4ppm_codec.sv", "rtl/p9_rate_4ppm_rx.sv",
+    "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
+    "sim/tb/tb_p9_tfdu_fir_frame_link.sv",
+]
 POST_MARKERS = [
     "P9_POST_SYNTH_SAFE_RESET_PASS=1",
     "P9_POST_SYNTH_DISARM_KILL_PASS=1",
@@ -150,6 +155,29 @@ def main(argv: list[str] | None = None) -> int:
         ["TB_P9_4PPM_FRAME_LINK_DELAYED=PASS"],
     )
 
+    fir_frame_link_commands = [
+        [str(TOOLS["xvlog"]), "-sv", "-i", str(ROOT / "rtl"),
+         *[str(ROOT / source) for source in FIR_FRAME_LINK_SOURCES]],
+    ]
+    for corner in ("min", "typ", "max"):
+        top = f"tb_p9_tfdu_fir_frame_link_{corner}"
+        snapshot = f"{top}_snapshot"
+        fir_frame_link_commands.extend([
+            [str(TOOLS["xelab"]), top, "-debug", "typical", "-s", snapshot],
+            [str(TOOLS["xsim"]), snapshot, "-runall"],
+        ])
+    fir_frame_link = run_steps(
+        "p9_tfdu_fir_frame_link", fir_frame_link_commands,
+        raw / "tfdu_fir_frame_link_work",
+        [
+            "P9_FIR_RX_125_WIDTH_NS=100", "P9_FIR_RX_250_WIDTH_NS=225",
+            "P9_FIR_RX_125_WIDTH_NS=120", "P9_FIR_RX_250_WIDTH_NS=250",
+            "P9_FIR_RX_125_WIDTH_NS=140", "P9_FIR_RX_250_WIDTH_NS=275",
+            "P9_FIR_RX_JITTER_NS=20", "P9_FIR_TX_PULSE_CYCLES=8",
+            "TB_P9_TFDU_FIR_FRAME_LINK=PASS",
+        ],
+    )
+
     post_dir = raw / "post_synth"
     build = run_steps("p9_post_synth_build", [[str(TOOLS["vivado"]), "-mode", "batch",
         "-source", str(ROOT / "scripts/build_p9_post_synth_core.tcl"), "-tclargs",
@@ -187,13 +215,15 @@ def main(argv: list[str] | None = None) -> int:
     artifacts = [{"path": rel(path), "sha256": sha256(path), "bytes": path.stat().st_size}
                  for path in artifact_paths if path.is_file()]
     status = "PASS" if (rtl["status"] == frame_link["status"] ==
-                         build["status"] == post["status"] == "PASS") else "FAIL"
+                         fir_frame_link["status"] == build["status"] ==
+                         post["status"] == "PASS") else "FAIL"
     summary = {
         "schema_version": 1, "status": status,
         "test_id": "P9-CANDIDATE-SOURCE-POST-SYNTH-REGRESSION",
         "generated_utc": utc_now(), "source_commit": source_commit,
         "profile": "Z7010_2LANE_DEV", "part": "xc7z010clg400-1",
         "rtl_full_regression": rtl, "delayed_frame_link_regression": frame_link,
+        "tfdu_fir_frame_link_regression": fir_frame_link,
         "post_synth_build": build,
         "post_synth_safety": post, "post_synth_markers": build_markers,
         "post_synth_artifacts": artifacts,

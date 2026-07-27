@@ -557,12 +557,12 @@ module tb_p9_optical_transport_core;
         duty_target_limit_cycles != 32'd11520)
       $fatal(1, "noncanonical duty telemetry: hard=%0d target=%0d",
              duty_hard_limit_cycles, duty_target_limit_cycles);
-    if (duty_high_max_flat[31:0] > duty_hard_limit_cycles ||
-        duty_high_max_flat[63:32] > duty_hard_limit_cycles ||
-        duty_high_max_flat[95:64] > duty_hard_limit_cycles ||
-        duty_high_max_flat[127:96] > duty_hard_limit_cycles)
-      $fatal(1, "rolling-duty hard maximum exceeded: max=%h hard=%0d",
-             duty_high_max_flat, duty_hard_limit_cycles);
+    if (duty_high_max_flat[31:0] > duty_target_limit_cycles ||
+        duty_high_max_flat[63:32] > duty_target_limit_cycles ||
+        duty_high_max_flat[95:64] > duty_target_limit_cycles ||
+        duty_high_max_flat[127:96] > duty_target_limit_cycles)
+      $fatal(1, "rolling-duty 18 percent target exceeded: max=%h target=%0d",
+             duty_high_max_flat, duty_target_limit_cycles);
     if (duty_target_limit_cycles == 0) $fatal(1, "invalid duty target telemetry");
 
     // Validation-only mapping and duty masks remove exactly one lane and

@@ -229,6 +229,51 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("TB_P9_4PPM_FRAME_LINK_DELAYED=PASS", testbench)
         self.assertIn('"p9_frame_link_delayed"', regression)
 
+    def test_p9_4mbps_uses_tfdu_fir_pulse_and_bounded_duty_admission(self):
+        tx = (ROOT / "rtl/p9_4ppm_frame_tx.sv").read_text(encoding="utf-8")
+        wrapper = (ROOT / "rtl/p9_rate_4ppm_rx.sv").read_text(encoding="utf-8")
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        config = (ROOT / "config/p9_z7010_stationary_2lane.yaml").read_text(
+            encoding="utf-8"
+        )
+        fir_bench = (ROOT / "sim/tb/tb_p9_tfdu_fir_frame_link.sv").read_text(
+            encoding="utf-8"
+        )
+        regression = (ROOT / "scripts/run_p9_candidate_regression.py").read_text(
+            encoding="utf-8"
+        )
+        peripheral = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
+            encoding="utf-8"
+        )
+        firmware = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(
+            encoding="utf-8"
+        )
+        protocol = (ROOT / "software/ps_driver/p9_runtime_protocol.h").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("active_pulse_cycles <= 8'd8", tx)
+        self.assertIn(".TX_PULSE_CYCLES(8)", wrapper)
+        self.assertIn(".DETECT_START_CYCLES(3), .DETECT_END_CYCLES(4)", wrapper)
+        self.assertIn("FRAME_DUTY_GUARD_CYCLES = 20_480", core)
+        self.assertIn("frame_duty_guard_q[0] == 0", core)
+        self.assertIn("frame_duty_guard_q[1] == 0", core)
+        self.assertIn(
+            "frame_duty_guard_q[copy_lane] <= FRAME_DUTY_GUARD_CYCLES", core
+        )
+        self.assertIn("frame_admission_duty_guard_cycles: 20480", config)
+        self.assertIn("frame_admission_duty_guard_us_at_64mhz: 320", config)
+        self.assertIn("raw_bps: 4000000, chip_cycles: 8, tx_pulse_cycles: 8", config)
+        self.assertIn("model_rxd_sync", fir_bench)
+        self.assertIn("TB_P9_TFDU_FIR_FRAME_LINK=PASS", fir_bench)
+        self.assertIn('"p9_tfdu_fir_frame_link"', regression)
+        self.assertIn("P9_BUILD_ID = 32'h5009_0003", peripheral)
+        self.assertIn("m->pl_build_id != UINT32_C(0x50090003)", firmware)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090005)", protocol)
+        self.assertEqual(0x50090003, P9_HW.P9_PL_BUILD_ID)
+        self.assertEqual(0x50090005, P9_HW.P9_FIRMWARE_BUILD_ID)
+
     def test_back_to_back_frames_realign_codec_without_truncating_parser_tail(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
             encoding="utf-8"

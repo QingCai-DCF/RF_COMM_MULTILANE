@@ -51,10 +51,12 @@ PL_SNAPSHOT_START = 116
 P9_DUTY_WINDOW_CYCLES = 64_000
 P9_DUTY_HARD_MAX_HIGH_CYCLES = 12_799
 P9_DUTY_TARGET_MAX_HIGH_CYCLES = 11_520
+P9_FRAME_DUTY_GUARD_CYCLES = 20_480
+P9_FRAME_DUTY_GUARD_US = 320
 PL_SNAPSHOT_WORDS = 99
 P9_MAILBOX_SCHEMA = 4
-P9_FIRMWARE_BUILD_ID = 0x50090004
-P9_PL_BUILD_ID = 0x50090002
+P9_FIRMWARE_BUILD_ID = 0x50090005
+P9_PL_BUILD_ID = 0x50090003
 PERFORMANCE_START = 215
 PERMIT_START = 227
 RFAP_START = 245
@@ -1086,14 +1088,18 @@ def write_stage_raw_evidence(stage: str, stage_dir: Path,
         write_csv(path, records); paths["fault_injection_trace"] = rel(path)
 
     if stage in {"P9-13", "P9-14", "P9-15", "P9-24"}:
-        rate_table = {0: (1_000_000, 32, 8), 1: (2_000_000, 16, 8),
-                      2: (4_000_000, 8, 5)}
+        rate_table = {
+            0: (1_000_000, 32, 8, 0, 31),
+            1: (2_000_000, 16, 8, 0, 15),
+            2: (4_000_000, 8, 8, 3, 4),
+        }
         records = []
         for row in rows:
             detail = by_label.get(row["label"])
             if detail is None or row["command"] != 3:
                 continue
-            raw_bps, chip_cycles, pulse_cycles = rate_table[row["rate"]]
+            raw_bps, chip_cycles, pulse_cycles, rx_start, rx_end = \
+                rate_table[row["rate"]]
             seconds = detail["object_runtime_ticks"] / detail["counts_per_second"] \
                 if detail["counts_per_second"] and detail["object_runtime_ticks"] else 0.0
             transfer_bytes = rfap_transfer_bytes(row)
@@ -1107,8 +1113,10 @@ def write_stage_raw_evidence(stage: str, stage_dir: Path,
                 "configured_raw_bps_per_lane": raw_bps,
                 "configured_aggregate_raw_bps": raw_bps * int(row["lane"]).bit_count(),
                 "chip_cycles": chip_cycles, "tx_pulse_cycles": pulse_cycles,
-                "rx_pulse_window_min_cycles": 0,
-                "rx_pulse_window_max_cycles": chip_cycles - 1,
+                "rx_pulse_window_min_cycles": rx_start,
+                "rx_pulse_window_max_cycles": rx_end,
+                "frame_admission_duty_guard_cycles": P9_FRAME_DUTY_GUARD_CYCLES,
+                "frame_admission_duty_guard_us": P9_FRAME_DUTY_GUARD_US,
                 "useful_bytes": row["size"], "encoded_transfer_bytes": transfer_bytes,
                 "data_frames": data_frames, "ack_frames": detail["ack_frames"],
                 "theoretical_data_air_bits": data_air_bits,

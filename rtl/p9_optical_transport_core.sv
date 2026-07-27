@@ -13,7 +13,13 @@ module p9_optical_transport_core #(
   // module's receiver has recovered.  Keep a conservative 64 us guard in
   // both DATA-to-ACK and ACK-to-DATA directions, matching the canonical
   // 4096-cycle interval at 64 MHz.
-  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_096
+  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_096,
+  // A 4 Mbit/s FIR symbol contains one 125 ns pulse in 500 ns, so the
+  // instantaneous frame duty is 25%.  Prevent a lane from launching another
+  // frame for 320 us after completion.  Even if ACK generation is suppressed
+  // by a fault-injection case, any clock-aligned 1 ms window then contains at
+  // most 680 us of frame activity (170 us Txd high), below the 18% target.
+  parameter integer FRAME_DUTY_GUARD_CYCLES = 20_480
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -135,6 +141,8 @@ module p9_optical_transport_core #(
 );
   localparam integer STORE_BYTES = WINDOW_SIZE * MAX_PAYLOAD_BYTES;
   localparam integer ENTRY_WIDTH = $clog2(WINDOW_SIZE);
+  localparam integer FRAME_DUTY_GUARD_WIDTH =
+      (FRAME_DUTY_GUARD_CYCLES < 1) ? 1 : $clog2(FRAME_DUTY_GUARD_CYCLES + 1);
 
   function automatic [31:0] crc32_next_byte(
     input [7:0] data, input [31:0] crc_in
@@ -547,6 +555,7 @@ module p9_optical_transport_core #(
   reg serializer_busy_d [0:1];
   reg [6:0] receive_tail [0:1];
   reg receive_tail_destination_b [0:1];
+  reg [FRAME_DUTY_GUARD_WIDTH-1:0] frame_duty_guard_q [0:1];
 
   always @(posedge clk) begin
     tx_store_read_data[0] <= tx_store_lane0[tx_store_read_addr[0]];
@@ -566,9 +575,11 @@ module p9_optical_transport_core #(
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
   assign lane_runtime_ready[0] = schedulable_lane_mask[0] && !serializer_busy[0] &&
-      serializer_start_ready[0] && !lane_start_pending[0] && phase_q == PH_DATA;
+      serializer_start_ready[0] && !lane_start_pending[0] &&
+      frame_duty_guard_q[0] == 0 && phase_q == PH_DATA;
   assign lane_runtime_ready[1] = schedulable_lane_mask[1] && !serializer_busy[1] &&
-      serializer_start_ready[1] && !lane_start_pending[1] && phase_q == PH_DATA;
+      serializer_start_ready[1] && !lane_start_pending[1] &&
+      frame_duty_guard_q[1] == 0 && phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);
 
@@ -634,6 +645,7 @@ module p9_optical_transport_core #(
         serializer_busy_d[copy_lane] <= 0;
         receive_tail[copy_lane] <= 0;
         receive_tail_destination_b[copy_lane] <= 0;
+        frame_duty_guard_q[copy_lane] <= 0;
       end
     end else begin
       dp_local_ack_ready_q <= 0;
@@ -643,6 +655,11 @@ module p9_optical_transport_core #(
       end
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
         serializer_busy_d[copy_lane] <= serializer_busy[copy_lane];
+        if (serializer_done[copy_lane]) begin
+          frame_duty_guard_q[copy_lane] <= FRAME_DUTY_GUARD_CYCLES;
+        end else if (frame_duty_guard_q[copy_lane] != 0) begin
+          frame_duty_guard_q[copy_lane] <= frame_duty_guard_q[copy_lane] - 1'b1;
+        end
         if (lane_start_pending[copy_lane] && serializer_start_ready[copy_lane]) begin
           lane_start_pending[copy_lane] <= 0;
           lane_source_a[copy_lane] <= lane_frame_ack[copy_lane] ?

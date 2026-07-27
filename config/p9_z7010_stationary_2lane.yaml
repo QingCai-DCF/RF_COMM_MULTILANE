@@ -58,11 +58,13 @@ clock:
   axi_lite_hz: 50000000
 
 phy_rate_ladder:
-  - {raw_bps: 1000000, chip_cycles: 32, tx_pulse_cycles: 8}
-  - {raw_bps: 2000000, chip_cycles: 16, tx_pulse_cycles: 8}
-  - {raw_bps: 4000000, chip_cycles: 8, tx_pulse_cycles: 5}
+  - {raw_bps: 1000000, chip_cycles: 32, tx_pulse_cycles: 8, rx_detect_start_cycles: 0, rx_detect_end_cycles: 31}
+  - {raw_bps: 2000000, chip_cycles: 16, tx_pulse_cycles: 8, rx_detect_start_cycles: 0, rx_detect_end_cycles: 15}
+  - {raw_bps: 4000000, chip_cycles: 8, tx_pulse_cycles: 8, rx_detect_start_cycles: 3, rx_detect_end_cycles: 4}
 phy_target_raw_bps_per_lane: 4000000
 two_lane_raw_capability_bps: 8000000
+frame_admission_duty_guard_cycles: 20480
+frame_admission_duty_guard_us_at_64mhz: 320
 startup_wait_us: 500
 rolling_window_us: 1000
 duty_design_target_percent: 18
