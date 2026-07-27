@@ -25,6 +25,7 @@ proc p9_select_jtag_identity {records board_id} {
   set cable_matches {}
   set device_nodes {}
   set device_matches {}
+  set dap_matches {}
   foreach props $records {
     if {[dict exists $props jtag_cable_serial] &&
         [dict exists $props level] && [dict get $props level] == 0} {
@@ -40,16 +41,85 @@ proc p9_select_jtag_identity {records board_id} {
         [dict exists $props node_id]} {
       lappend device_matches $props
     }
+    if {[string equal -nocase [dict get $props name] arm_dap] &&
+        [p9_normal_idcode [dict get $props idcode]] eq "4BA00477" &&
+        [dict exists $props node_id]} {
+      lappend dap_matches $props
+    }
   }
   if {[llength $cable_roots] != 1 || [llength $cable_matches] != 1} {
     error "P9 XSDB requires exactly one authorized cable root"
   }
-  if {[llength $device_matches] != 1} {
-    error "P9 XSDB requires exactly one canonical Zynq-7010/IDCODE match"
+  if {[llength $device_nodes] != 2 || [llength $device_matches] != 1 ||
+      [llength $dap_matches] != 1} {
+    error "P9 XSDB requires exactly one canonical ARM-DAP plus Zynq-7010 JTAG chain"
   }
   return [dict create cable [lindex $cable_matches 0] \
       device [lindex $device_matches 0] cable_roots $cable_roots \
-      device_nodes $device_nodes exact_device_matches $device_matches]
+      cable_matches $cable_matches device_nodes $device_nodes \
+      exact_device_matches $device_matches exact_dap_matches $dap_matches]
+}
+
+proc p9_jtag_topology_counts {records board_id} {
+  set cable_roots 0; set cable_matches 0; set device_nodes 0
+  set device_matches 0; set dap_matches 0
+  foreach props $records {
+    if {[dict exists $props jtag_cable_serial] &&
+        [dict exists $props level] && [dict get $props level] == 0} {
+      incr cable_roots
+      if {[string equal -nocase [dict get $props jtag_cable_serial] $board_id]} {
+        incr cable_matches
+      }
+    }
+    if {![dict exists $props idcode] || ![dict exists $props name]} { continue }
+    incr device_nodes
+    if {[string equal -nocase [dict get $props name] xc7z010] &&
+        [p9_normal_idcode [dict get $props idcode]] eq "13722093" &&
+        [dict exists $props node_id]} {
+      incr device_matches
+    }
+    if {[string equal -nocase [dict get $props name] arm_dap] &&
+        [p9_normal_idcode [dict get $props idcode]] eq "4BA00477" &&
+        [dict exists $props node_id]} {
+      incr dap_matches
+    }
+  }
+  return [dict create cable_roots $cable_roots cable_matches $cable_matches \
+      device_nodes $device_nodes device_matches $device_matches dap_matches $dap_matches]
+}
+
+proc p9_wait_jtag_identity {board_id {max_attempts 51} {delay_ms 100}} {
+  if {![string is integer -strict $max_attempts] || $max_attempts < 1 ||
+      ![string is integer -strict $delay_ms] || $delay_ms < 0} {
+    error "invalid P9 JTAG discovery bound"
+  }
+  set started_ms [clock milliseconds]
+  set last_counts [dict create cable_roots 0 cable_matches 0 device_nodes 0 \
+      device_matches 0 dap_matches 0]
+  for {set attempt 1} {$attempt <= $max_attempts} {incr attempt} {
+    set records [jtag targets -target-properties]
+    set last_counts [p9_jtag_topology_counts $records $board_id]
+    set roots [dict get $last_counts cable_roots]
+    set root_matches [dict get $last_counts cable_matches]
+    set devices [dict get $last_counts device_nodes]
+    set zynq_matches [dict get $last_counts device_matches]
+    set dap_matches [dict get $last_counts dap_matches]
+
+    # A second/wrong cable or an ambiguous/extra JTAG device is a hard
+    # authorization failure, never a discovery condition to wait through.
+    if {$roots > 1 || ($roots == 1 && $root_matches != 1) ||
+        $devices > 2 || $zynq_matches > 1 || $dap_matches > 1 ||
+        ($devices == 2 && ($zynq_matches != 1 || $dap_matches != 1))} {
+      error "P9 XSDB unauthorized or ambiguous JTAG topology: $last_counts"
+    }
+    if {![catch {p9_select_jtag_identity $records $board_id} identity]} {
+      dict set identity discovery_attempts $attempt
+      dict set identity discovery_elapsed_ms [expr {[clock milliseconds] - $started_ms}]
+      return $identity
+    }
+    if {$attempt < $max_attempts && $delay_ms > 0} { after $delay_ms }
+  }
+  error "P9 XSDB JTAG discovery timeout after $max_attempts attempts: $last_counts"
 }
 
 proc p9_unique_targets_by_id {records} {
@@ -398,10 +468,11 @@ set rc [catch {
 
   connect -url $xsdb_url
   set connected 1
-  set jtag_records [jtag targets -target-properties]
-  set jtag_identity [p9_select_jtag_identity $jtag_records $expected_board]
+  set jtag_identity [p9_wait_jtag_identity $expected_board]
   set device [dict get $jtag_identity device]
   set device_nodes [dict get $jtag_identity device_nodes]
+  p9_say "P9_XSDB_JTAG_DISCOVERY_ATTEMPTS=[dict get $jtag_identity discovery_attempts]"
+  p9_say "P9_XSDB_JTAG_DISCOVERY_ELAPSED_MS=[dict get $jtag_identity discovery_elapsed_ms]"
   p9_say "P9_XSDB_CABLE_ROOT_COUNT=[llength [dict get $jtag_identity cable_roots]]"
   p9_say "P9_XSDB_JTAG_DEVICE_COUNT=[llength $device_nodes]"
   p9_say "P9_XSDB_EXACT_FPGA_MATCH_COUNT=[llength [dict get $jtag_identity exact_device_matches]]"

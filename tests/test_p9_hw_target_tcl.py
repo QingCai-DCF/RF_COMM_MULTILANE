@@ -174,6 +174,50 @@ class P9HardwareTargetTclTests(unittest.TestCase):
                 """
             )
 
+    def test_xsdb_waits_for_complete_authorized_chain(self) -> None:
+        interp = self.xsdb_identity_interp()
+        interp.eval(
+            f"""
+            set ::p9_jtag_calls 0
+            set ::p9_jtag_snapshots [list \
+              [list] \
+              [list \
+                [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+                [dict create node_id 1 name arm_dap idcode 4BA00477]] \
+              [list \
+                [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+                [dict create node_id 1 name arm_dap idcode 4BA00477] \
+                [dict create node_id 2 name xc7z010 idcode 13722093]]]
+            proc jtag {{subcommand args}} {{
+              incr ::p9_jtag_calls
+              return [lindex $::p9_jtag_snapshots [expr {{$::p9_jtag_calls - 1}}]]
+            }}
+            set identity [p9_wait_jtag_identity {BOARD_ID} 3 0]
+            """
+        )
+        self.assertEqual("3", interp.eval("dict get $identity discovery_attempts"))
+        self.assertEqual("3", interp.eval("set ::p9_jtag_calls"))
+        self.assertEqual("2", interp.eval("llength [dict get $identity device_nodes]"))
+
+    def test_xsdb_wait_rejects_ambiguous_root_immediately(self) -> None:
+        interp = self.xsdb_identity_interp()
+        interp.eval(
+            f"""
+            set ::p9_jtag_calls 0
+            proc jtag {{subcommand args}} {{
+              incr ::p9_jtag_calls
+              return [list \
+                [dict create level 0 jtag_cable_serial {BOARD_ID}] \
+                [dict create level 0 jtag_cable_serial 999999999999] \
+                [dict create node_id 1 name arm_dap idcode 4BA00477] \
+                [dict create node_id 2 name xc7z010 idcode 13722093]]
+            }}
+            """
+        )
+        with self.assertRaises(tkinter.TclError):
+            interp.eval(f"p9_wait_jtag_identity {BOARD_ID} 3 0")
+        self.assertEqual("1", interp.eval("set ::p9_jtag_calls"))
+
 
 if __name__ == "__main__":
     unittest.main()
