@@ -221,6 +221,27 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertEqual(1, core.count(".align_i(!receive_window)"))
         self.assertIn("run_object(247*20", testbench)
 
+    def test_s2mm_stream_packs_fragment_tails_into_one_contiguous_packet(self):
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("reg [2:0] out_pack_count_q", core)
+        self.assertIn("out_pack_data_q[8*out_pack_count_q +: 8]", core)
+        self.assertIn("out_pack_last_q <= out_final_q", core)
+        self.assertNotIn("output_remaining == 3 ? 4'h7", core)
+        self.assertIn("non-final AXI DMA beat contains a TKEEP hole", testbench)
+
+    def test_dma_diagnostic_reads_only_bounded_live_descriptors(self):
+        tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("{rx_current 0x40400038 0x01001000 0x01001800}", tcl)
+        self.assertIn("($pointer & 0x3F) != 0", tcl)
+        self.assertIn("%s_pointer_invalid", tcl)
+
     def test_xsdb_waits_for_missing_debug_descendants_but_rejects_ambiguity(self):
         tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
             encoding="utf-8"

@@ -277,6 +277,32 @@ proc p9_dma_diagnostic_snapshot {label sequence elapsed_ms ordinal} {
       puts $handle [format "%s_bd_%02X|0x%08X" $ring $offset $value]
     }
   }
+  # Capture the descriptors that the DMA hardware names in CURDESC/TAILDESC,
+  # not only descriptor zero.  Long-running diagnostic cases advance around
+  # the SG ring, so descriptor zero can be stale evidence from an earlier
+  # command.  Bounds and alignment are checked before every read so a corrupt
+  # DMA pointer cannot turn this read-only diagnostic into an arbitrary AXI
+  # memory walk.
+  foreach current_spec {
+    {tx_current 0x40400008 0x01000000 0x01000800}
+    {tx_tail    0x40400010 0x01000000 0x01000800}
+    {rx_current 0x40400038 0x01001000 0x01001800}
+    {rx_tail    0x40400040 0x01001000 0x01001800}
+  } {
+    set name [lindex $current_spec 0]
+    set pointer [expr {[p9_read32_force [lindex $current_spec 1]] & 0xFFFFFFC0}]
+    set lower [lindex $current_spec 2]
+    set upper [lindex $current_spec 3]
+    if {$pointer < $lower || $pointer >= $upper || ($pointer & 0x3F) != 0} {
+      puts $handle [format "%s_pointer_invalid|0x%08X" $name $pointer]
+      continue
+    }
+    puts $handle [format "%s_pointer|0x%08X" $name $pointer]
+    for {set offset 0} {$offset < 64} {incr offset 4} {
+      set value [p9_read32_force [expr {$pointer + $offset}]]
+      puts $handle [format "%s_%02X|0x%08X" $name $offset $value]
+    }
+  }
   foreach buffer_spec {{tx_buffer 0x02000000} {rx_buffer 0x06000000}} {
     set name [lindex $buffer_spec 0]
     set base [lindex $buffer_spec 1]

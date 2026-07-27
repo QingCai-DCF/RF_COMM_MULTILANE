@@ -1213,33 +1213,40 @@ module p9_optical_transport_core #(
   end
 
   // Ordered receive frames are copied to a small staging buffer and emitted
-  // to AXI DMA S2MM with TLAST only on the final object fragment.
+  // to AXI DMA S2MM as one byte-contiguous packet.  A payload fragment is 247
+  // bytes, so emitting each fragment independently would put TKEEP=4'h7 on
+  // an intermediate (non-TLAST) beat.  AXI DMA does not accept those holes as
+  // a continuation of one packet: its descriptor byte accounting then loses
+  // four bytes at every fragment boundary.  The pack register below carries
+  // 1--3 residual bytes into the next fragment; consequently every non-final
+  // beat has TKEEP=4'hf and only the object-final beat may be partial.
   reg [STORE_ADDR_WIDTH-1:0] rx_store_read_addr_q;
   reg [7:0] rx_store_read_data_q;
   always @(posedge clk) rx_store_read_data_q <= rx_store[rx_store_read_addr_q];
   // Three pad bytes make every final 32-bit AXI read in bounds.  They are
   // explicitly cleared for each fragment and masked by TKEEP.
   (* ram_style="distributed" *) reg [7:0] output_stage [0:MAX_PAYLOAD_BYTES+2];
-  typedef enum reg [2:0] {OUT_IDLE, OUT_PRIME, OUT_COPY, OUT_STREAM, OUT_COMMIT} out_state_t;
+  typedef enum reg [2:0] {
+    OUT_IDLE, OUT_PRIME, OUT_COPY, OUT_STREAM, OUT_DRAIN, OUT_COMMIT
+  } out_state_t;
   out_state_t out_state_q;
   reg [7:0] out_copy_index_q;
   reg [7:0] out_stream_index_q;
   reg [15:0] out_length_q;
   reg out_final_q;
+  reg [31:0] out_pack_data_q;
+  reg [2:0] out_pack_count_q;
+  reg out_pack_valid_q;
+  reg out_pack_last_q;
   reg output_complete_q;
   reg [31:0] output_bytes_q;
-  wire [15:0] output_remaining = out_length_q - out_stream_index_q;
-  assign m_axis_tvalid_o = out_state_q == OUT_STREAM && !abort_object_i &&
+  assign m_axis_tvalid_o = out_pack_valid_q && !abort_object_i &&
       !disarm_request_i && !full_shutdown_request_i;
-  assign m_axis_tdata_o = {
-      output_remaining > 3 ? output_stage[out_stream_index_q + 3] : 8'd0,
-      output_remaining > 2 ? output_stage[out_stream_index_q + 2] : 8'd0,
-      output_remaining > 1 ? output_stage[out_stream_index_q + 1] : 8'd0,
-      output_stage[out_stream_index_q]};
-  assign m_axis_tkeep_o = output_remaining >= 4 ? 4'hf :
-                          output_remaining == 3 ? 4'h7 :
-                          output_remaining == 2 ? 4'h3 : 4'h1;
-  assign m_axis_tlast_o = out_final_q && output_remaining <= 4;
+  assign m_axis_tdata_o = out_pack_data_q;
+  assign m_axis_tkeep_o = out_pack_count_q == 4 ? 4'hf :
+                          out_pack_count_q == 3 ? 4'h7 :
+                          out_pack_count_q == 2 ? 4'h3 : 4'h1;
+  assign m_axis_tlast_o = out_pack_last_q;
   assign output_complete_o = output_complete_q;
   assign output_byte_count_o = output_bytes_q;
 
@@ -1258,6 +1265,10 @@ module p9_optical_transport_core #(
       out_stream_index_q <= 0;
       out_length_q <= 0;
       out_final_q <= 0;
+      out_pack_data_q <= 0;
+      out_pack_count_q <= 0;
+      out_pack_valid_q <= 0;
+      out_pack_last_q <= 0;
       output_complete_q <= 0;
       output_bytes_q <= 0;
       dp_delivery_ready_q <= 0;
@@ -1266,10 +1277,16 @@ module p9_optical_transport_core #(
       dp_delivery_ready_q <= 0;
       if (start_object_i) begin
         out_state_q <= OUT_IDLE;
+        out_pack_count_q <= 0;
+        out_pack_valid_q <= 0;
+        out_pack_last_q <= 0;
         output_complete_q <= 0;
         output_bytes_q <= 0;
       end else if (abort_object_i || disarm_request_i || full_shutdown_request_i) begin
         out_state_q <= OUT_IDLE;
+        out_pack_count_q <= 0;
+        out_pack_valid_q <= 0;
+        out_pack_last_q <= 0;
       end else begin
         case (out_state_q)
           OUT_IDLE: if (dp_delivery_valid) begin
@@ -1292,15 +1309,48 @@ module p9_optical_transport_core #(
               rx_store_read_addr_q <= rx_store_read_addr_q + 1'b1;
             end
           end
-          OUT_STREAM: if (m_axis_tvalid_o && m_axis_tready_i) begin
-            if (output_remaining <= 4) begin
-              output_bytes_q <= output_bytes_q + output_remaining;
-              if (out_final_q) output_complete_q <= 1;
-              out_state_q <= OUT_COMMIT;
+          OUT_STREAM: begin
+            if (out_pack_valid_q) begin
+              if (m_axis_tvalid_o && m_axis_tready_i) begin
+                output_bytes_q <= output_bytes_q + out_pack_count_q;
+                out_pack_count_q <= 0;
+                out_pack_valid_q <= 0;
+                out_pack_last_q <= 0;
+              end
             end else begin
-              output_bytes_q <= output_bytes_q + 4;
-              out_stream_index_q <= out_stream_index_q + 4;
+              out_pack_data_q[8*out_pack_count_q +: 8] <=
+                  output_stage[out_stream_index_q];
+              if (out_stream_index_q == out_length_q - 1'b1) begin
+                if (out_final_q || out_pack_count_q == 3) begin
+                  out_pack_count_q <= out_pack_count_q + 1'b1;
+                  out_pack_valid_q <= 1;
+                  out_pack_last_q <= out_final_q;
+                  out_state_q <= OUT_DRAIN;
+                end else begin
+                  // Keep a partial word across this non-final fragment.  It
+                  // will be completed with bytes from the next delivery.
+                  out_pack_count_q <= out_pack_count_q + 1'b1;
+                  out_state_q <= OUT_COMMIT;
+                end
+              end else begin
+                out_stream_index_q <= out_stream_index_q + 1'b1;
+                if (out_pack_count_q == 3) begin
+                  out_pack_count_q <= 4;
+                  out_pack_valid_q <= 1;
+                  out_pack_last_q <= 0;
+                end else begin
+                  out_pack_count_q <= out_pack_count_q + 1'b1;
+                end
+              end
             end
+          end
+          OUT_DRAIN: if (m_axis_tvalid_o && m_axis_tready_i) begin
+            output_bytes_q <= output_bytes_q + out_pack_count_q;
+            if (out_pack_last_q) output_complete_q <= 1;
+            out_pack_count_q <= 0;
+            out_pack_valid_q <= 0;
+            out_pack_last_q <= 0;
+            out_state_q <= OUT_COMMIT;
           end
           OUT_COMMIT: begin
             // Pulse registered READY for exactly one cycle.  A contiguous

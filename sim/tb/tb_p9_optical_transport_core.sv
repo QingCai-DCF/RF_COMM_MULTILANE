@@ -129,6 +129,12 @@ module tb_p9_optical_transport_core;
       captured_count <= 0;
       captured_last <= 0;
     end else if (m_axis_tvalid && m_axis_tready) begin
+      if (!m_axis_tlast && m_axis_tkeep !== 4'hf)
+        $fatal(1, "non-final AXI DMA beat contains a TKEEP hole: %x",
+               m_axis_tkeep);
+      if (m_axis_tlast && !(m_axis_tkeep inside {4'h1, 4'h3, 4'h7, 4'hf}))
+        $fatal(1, "final AXI DMA beat has non-contiguous TKEEP: %x",
+               m_axis_tkeep);
       for (byte_lane = 0; byte_lane < 4; byte_lane = byte_lane + 1)
         if (m_axis_tkeep[byte_lane])
           received[captured_count + byte_lane] <= m_axis_tdata[8*byte_lane +: 8];
