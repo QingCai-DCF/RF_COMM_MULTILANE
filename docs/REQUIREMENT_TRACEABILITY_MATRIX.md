@@ -59,15 +59,15 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `SYS-PERMIT-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-RECEIVE-ONLY-ACQUISITION` | `evidence/generated/p8c_receive_only_acquisition_summary.json` | Permit low allows controlled receive-only acquisition while every physical TX remains disabled. |
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8e_p0_p8d_regression_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
-| `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
+| `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
 | `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-CANONICAL-CONFIG` | `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` | The shared global outstanding window supports at least 32 frames. |
 | `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
 | `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
 | `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A duplicate logical frame never commits or completes twice. |
-| `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Stale session/path data and ACK records are rejected. |
+| `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` | Stale session/path data and ACK records are rejected. |
 | `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
-| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
+| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
 | `SCHED-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Scheduling is health-aware and weighted across eligible lanes. |
 | `SCHED-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A faulted lane does not block work on healthy eligible lanes. |
 | `SCHED-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Scheduler fairness and starvation are explicitly bounded. |
@@ -313,9 +313,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-ARQ-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
+- `rtl/ir_selective_repeat_tx.sv` — `edbece615530d9ef0ca1939ba64fb76fea11e1264be6273c1dbf9b02e0c60ce0`
 - `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` — `b142e95471e822aa97f635333cb54287324831e27ee289815523a0d0b589eb35`
 
 ### `L2-ARQ-002`
 
@@ -337,9 +337,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-SACK-002`
 
-- `rtl/ir_ack_aggregator.sv` — `1a616e5b8d3a65732a4307e333c1ca98cddf481c8c0eca064ee7045de7262b07`
-- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `cf7b1985d099d54b5fe3cd699466c1595c13dd2895d91657b408ccda91e2c6e5`
-- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `4e94640c66f08534a4baa422b214b3dab61381010a2f071e2f77674ee1322dc8`
+- `rtl/ir_ack_aggregator.sv` — `1d7c3d27b10943468ead9e7673efca72306e4e5a5844ded160d5f2a827c18ae7`
+- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `2009bac05b4c73de6cabef28d60f8320d5d9f0fb459411cce9b538f13412a310`
+- `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` — `b142e95471e822aa97f635333cb54287324831e27ee289815523a0d0b589eb35`
 
 ### `L2-DUP-001`
 
@@ -349,9 +349,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-STALE-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
+- `rtl/ir_selective_repeat_tx.sv` — `edbece615530d9ef0ca1939ba64fb76fea11e1264be6273c1dbf9b02e0c60ce0`
 - `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` — `b142e95471e822aa97f635333cb54287324831e27ee289815523a0d0b589eb35`
 
 ### `L2-MIG-001`
 
@@ -361,9 +361,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-RETRY-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5`
+- `rtl/ir_selective_repeat_tx.sv` — `edbece615530d9ef0ca1939ba64fb76fea11e1264be6273c1dbf9b02e0c60ce0`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` — `b142e95471e822aa97f635333cb54287324831e27ee289815523a0d0b589eb35`
 
 ### `SCHED-001`
 

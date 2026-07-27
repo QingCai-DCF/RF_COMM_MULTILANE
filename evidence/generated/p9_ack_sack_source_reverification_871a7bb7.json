@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-07-27T17:44:55.2919125Z",
+  "stage": "P9_PRE_HARDWARE_P8D_EXACT_SOURCE",
+  "test_id": "P9-PRE-HARDWARE-P8D-ACK-SACK-REVERIFICATION",
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "verification_scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL",
+  "status": "PASS",
+  "verified_source_commit": "871a7bb727496025f9270128da92846a3883ddbc",
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "hardware_scope_promoted": false,
+  "claim_boundary": "This record closes only the direct current-source ACK/SACK/selective-repeat component bindings listed below. It does not promote the parent full P8D run, hardware acceptance, Z7020, rotation, or final-product acceptance.",
+  "parent_full_p8d_run": {
+    "status": "FAIL",
+    "source_commit": "871a7bb727496025f9270128da92846a3883ddbc",
+    "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/gate_run.json",
+    "sha256": "1ec2345ca0e83cf42bf2b37bd7bbc7e4da5a7a829ca87d2d2feff4b470fd003f",
+    "failures": [
+      "OFFLINE_FULL_REGRESSION",
+      "P0_P8C_REGRESSION"
+    ],
+    "failure_boundary": "The parent failures were canonical requirement provenance/hash failures caused by the changed source artifacts. All functional ACK/SACK/selective-repeat XSIM gates referenced by this component record passed. The parent full gate must be rerun and pass after these bindings are corrected."
+  },
+  "baseline": {
+    "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/baseline_checks.json",
+    "sha256": "3c03215959dc64417005319f050a2b7459e69b693058e5a140fbf9da33807600"
+  },
+  "source_artifacts": [
+    {
+      "path": "rtl/ir_selective_repeat_tx.sv",
+      "sha256": "edbece615530d9ef0ca1939ba64fb76fea11e1264be6273c1dbf9b02e0c60ce0"
+    },
+    {
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    {
+      "path": "rtl/ir_ack_aggregator.sv",
+      "sha256": "1d7c3d27b10943468ead9e7673efca72306e4e5a5844ded160d5f2a827c18ae7"
+    },
+    {
+      "path": "sim/tb/tb_ir_sack_ack_aggregation.sv",
+      "sha256": "2009bac05b4c73de6cabef28d60f8320d5d9f0fb459411cce9b538f13412a310"
+    },
+    {
+      "path": "config/p8d_data_plane.yaml",
+      "sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02"
+    }
+  ],
+  "direct_evidence": [
+    {
+      "test": "tb_ir_selective_repeat_tx",
+      "status": "PASS",
+      "required_markers": [
+        "P8D_GLOBAL_OUTSTANDING_32_PASS=1",
+        "P8D_RETRY_EXHAUSTION_BOUNDED_PASS=1",
+        "P8D_ACKED_FRAME_SINGLE_COMPLETION_PASS=1",
+        "TB_IR_SELECTIVE_REPEAT_TX_PASS=1"
+      ],
+      "compile_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_selective_repeat_tx/compile.log",
+        "sha256": "6972782b1cfedfd0c22fe1eb11a998255dea6e67813758f846342d1a935e17a3"
+      },
+      "run_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_selective_repeat_tx/run.log",
+        "sha256": "4cf4fe15f35b2e9732d575fa3aa7168633c3d2a463697c200faf574d51dca7c8"
+      }
+    },
+    {
+      "test": "tb_ir_sack_ack_aggregation",
+      "status": "PASS",
+      "required_markers": [
+        "P8D_SACK_ENCODE_DECODE_PASS=1",
+        "P8D_ACK_AGGREGATION_BOUNDED_DELAY_PASS=1",
+        "TB_IR_SACK_ACK_AGGREGATION_PASS=1"
+      ],
+      "compile_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_sack_ack_aggregation/compile.log",
+        "sha256": "6d4c52f88b04f0c573699132e1a94ec2ff33df2936982dfd0846d1d9d769f1fc"
+      },
+      "run_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_sack_ack_aggregation/run.log",
+        "sha256": "2a22a07a3123f2fa435f878a6c2c4d2732242e800656fcded6b2f416b1d202da"
+      }
+    },
+    {
+      "test": "tb_ir_data_plane_integration_2lane",
+      "status": "PASS",
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_2LANE_PASS=1"
+      ],
+      "run_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_data_plane_integration_2lane/run.log",
+        "sha256": "c2bd4adc7764ea730c2bc259b6a584e48c1aaf00d6a795f4f4b4a530e1ad1e2d"
+      }
+    },
+    {
+      "test": "tb_ir_data_plane_integration_8lane",
+      "status": "PASS",
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_8LANE_PASS=1"
+      ],
+      "run_log": {
+        "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_871a7bb72749/xsim/tb_ir_data_plane_integration_8lane/run.log",
+        "sha256": "808c697ef7c5093cd25eddec7af7702a931adad4ead9305e962cf4c36fd90e0a"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "L2-ARQ-001",
+      "status": "PASS",
+      "evidence_tests": [
+        "tb_ir_selective_repeat_tx",
+        "tb_ir_data_plane_integration_2lane",
+        "tb_ir_data_plane_integration_8lane"
+      ]
+    },
+    {
+      "requirement_id": "L2-SACK-002",
+      "status": "PASS",
+      "evidence_tests": [
+        "tb_ir_sack_ack_aggregation"
+      ]
+    },
+    {
+      "requirement_id": "L2-STALE-001",
+      "status": "PASS",
+      "evidence_tests": [
+        "tb_ir_selective_repeat_tx",
+        "tb_ir_data_plane_integration_2lane",
+        "tb_ir_data_plane_integration_8lane"
+      ]
+    },
+    {
+      "requirement_id": "L2-RETRY-001",
+      "status": "PASS",
+      "evidence_tests": [
+        "tb_ir_selective_repeat_tx"
+      ]
+    }
+  ]
+}
