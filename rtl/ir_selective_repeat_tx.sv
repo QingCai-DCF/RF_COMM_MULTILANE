@@ -149,6 +149,7 @@ module ir_selective_repeat_tx #(
   logic [31:0] ack_reclaimed_count;
   logic [INDEX_WIDTH:0] ack_advance_count;
   logic [INDEX_WIDTH-1:0] ack_scan_index;
+  logic [$clog2(WINDOW_SIZE+1)-1:0] outstanding_high_watermark_q;
   logic [15:0] ack_scan_sequence_value;
   logic [15:0] ack_scan_distance;
   logic [15:0] ack_scan_snapshot_distance;
@@ -167,6 +168,9 @@ module ir_selective_repeat_tx #(
   end
 
   assign allocation_fire = allocate_valid_i && allocate_ready_o;
+  assign outstanding_high_watermark_o =
+      (outstanding_count_o > outstanding_high_watermark_q) ?
+      outstanding_count_o : outstanding_high_watermark_q;
   assign allocate_ready_o = (outstanding_count_o < WINDOW_SIZE) &&
                             !entry_valid[tx_next_sequence_o[INDEX_WIDTH-1:0]];
 
@@ -252,7 +256,7 @@ module ir_selective_repeat_tx #(
       tx_next_sequence_o <= 16'd0;
       tx_ack_base_o <= 16'd0;
       outstanding_count_o <= '0;
-      outstanding_high_watermark_o <= '0;
+      outstanding_high_watermark_q <= '0;
       allocate_pulse_o <= 1'b0;
       allocated_sequence_o <= 16'd0;
       allocated_entry_o <= '0;
@@ -314,13 +318,12 @@ module ir_selective_repeat_tx #(
       time_counter <= time_counter + 1'b1;
       timer_scan_index <= timer_scan_index + 1'b1;
 
-      // Sample the already-registered occupancy instead of recomputing the
-      // post-event value through the ACK reclaim datapath.  The one-cycle
-      // telemetry latency still captures every committed occupancy peak (the
-      // count itself changes only on a clock edge) and keeps ACK sequence/RAM
-      // lookup logic out of the high-watermark register enable path.
-      if (outstanding_count_o > outstanding_high_watermark_o)
-        outstanding_high_watermark_o <= outstanding_count_o;
+      // Capture history from the registered occupancy.  The output also takes
+      // the max with the current registered occupancy, so a newly committed
+      // peak is visible immediately without putting ACK sequence/RAM lookup
+      // logic on this telemetry path.
+      if (outstanding_count_o > outstanding_high_watermark_q)
+        outstanding_high_watermark_q <= outstanding_count_o;
 
       if (clear_counters_i) begin
         attempt_count_o <= 32'd0;
@@ -331,7 +334,7 @@ module ir_selective_repeat_tx #(
         stale_ack_count_o <= 32'd0;
         out_of_window_ack_count_o <= 32'd0;
         migration_count_o <= 32'd0;
-        outstanding_high_watermark_o <= outstanding_count_o;
+        outstanding_high_watermark_q <= outstanding_count_o;
         retry_exhausted_sticky_o <= 1'b0;
       end
 

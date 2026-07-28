@@ -50,7 +50,7 @@ module p9_axi_dma_peripheral (
   output logic [1:0]   loop_tx_b0
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
-  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0007;
+  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0008;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
 
   logic reg_wr_en;
