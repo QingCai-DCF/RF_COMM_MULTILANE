@@ -99,6 +99,12 @@ set rst50 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ax
 set stream_rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_protocol_64]
 set stream_rst100 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_dma_100]
 set stream_rst50 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_dma_50]
+# stream_reset_request_o is an active-high pulse which is low while the data
+# path is allowed to run.  proc_sys_reset defaults aux_reset_in to active-low;
+# override that default so the idle request cannot hold DMA/AXIS in reset.
+foreach stream_reset [list $stream_rst64 $stream_rst100 $stream_rst50] {
+  set_property CONFIG.C_AUX_RESET_HIGH {1} $stream_reset
+}
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins rst_protocol_64/slowest_sync_clk]
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK1] [get_bd_pins rst_dma_100/slowest_sync_clk]
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK2] [get_bd_pins rst_axil_50/slowest_sync_clk]
@@ -269,6 +275,7 @@ puts $marker "P9_PROTOCOL_CLOCK_HZ=64000000"
 puts $marker "P9_DMA_CLOCK_HZ=100000000"
 puts $marker "P9_AXIL_CLOCK_HZ=50000000"
 puts $marker "P9_STREAM_RESET_DOMAINS=PROTOCOL64_DMA100_AXIL50"
+puts $marker "P9_STREAM_AUX_RESET_ACTIVE_HIGH=1"
 puts $marker "P9_CANONICAL_XDC=constraints/active/PORT1.generated.xdc"
 puts $marker "P9_DRC_CRITICAL_COUNT=$drc_critical"
 puts $marker "P9_DRC_ERROR_COUNT=$drc_error"

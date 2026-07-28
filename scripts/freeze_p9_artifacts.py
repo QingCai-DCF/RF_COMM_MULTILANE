@@ -334,6 +334,8 @@ def validate_build(source_commit: str) -> tuple[list[Path], dict[str, Any]]:
     if candidate_markers.get("P9_STREAM_RESET_DOMAINS") != \
             "PROTOCOL64_DMA100_AXIL50":
         errors.append("candidate coordinated stream/DMA reset marker mismatch")
+    if candidate_markers.get("P9_STREAM_AUX_RESET_ACTIVE_HIGH") != "1":
+        errors.append("candidate stream aux reset polarity is not active-high")
     for marker in ("P9_DRC_CRITICAL_COUNT", "P9_DRC_ERROR_COUNT",
                    "P9_REQP_1839_COUNT", "P9_METHODOLOGY_CRITICAL_COUNT",
                    "P9_CDC_CRITICAL_COUNT"):

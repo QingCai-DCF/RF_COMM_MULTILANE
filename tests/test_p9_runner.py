@@ -204,8 +204,39 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         )
         read32 = tcl[tcl.index("proc p9_read32 {address}"):
                      tcl.index("proc p9_read32_force {address}")]
-        self.assertIn("mrd -force -value $address", read32)
+        self.assertIn(
+            "mrd -address-space AP0 -force -value $address", read32
+        )
+        self.assertIn("p9_select_memory_target", read32)
         self.assertNotIn("mrd -value $address", read32)
+
+        live_reads = [
+            line.strip() for line in tcl.splitlines()
+            if "mrd " in line and not line.lstrip().startswith("#")
+        ]
+        live_writes = [
+            line.strip() for line in tcl.splitlines()
+            if "mwr " in line and not line.lstrip().startswith("#")
+        ]
+        self.assertTrue(live_reads)
+        self.assertTrue(live_writes)
+        for command in live_reads:
+            self.assertIn("-address-space AP0", command)
+        for command in live_writes:
+            self.assertIn("-address-space AP0", command)
+            self.assertIn("-bypass-cache-sync", command)
+        self.assertIn("proc p9_select_cpu_target", tcl)
+        self.assertIn("proc p9_select_memory_target", tcl)
+        self.assertIn("P9_XSDB_APU_TARGET_COUNT", tcl)
+        self.assertIn("P9_XSDB_DEBUG_RECOVERY_SYSTEM_RESET=1", tcl)
+        self.assertIn("configparams force-mem-accesses 1", tcl)
+        self.assertIn("configparams force-mem-accesses 0", tcl)
+        self.assertIn("P9_XSDB_FORCE_MEM_ACCESSES_WINDOW=PS7_INIT_ONLY", tcl)
+        self.assertIn("P9_READY_TIMEOUT_SNAPSHOT", tcl)
+        self.assertIn("P9_XSDB_PL_PREFLIGHT", tcl)
+        self.assertIn("P9_XSDB_STREAM_RESET_PREFLIGHT", tcl)
+        self.assertIn("p9_write32 0x43C00718 0x0000001A", tcl)
+        self.assertIn("p9_write32 0x43C00718 0x00000200", tcl)
 
     def test_stationary_ack_turnaround_guard_is_4096_cycles(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
@@ -311,10 +342,19 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
                        "rst_stream_dma_50"):
             self.assertIn(domain, build)
         self.assertIn("p9_peripheral_0/stream_reset_request_o", build)
+        self.assertIn(
+            "foreach stream_reset [list $stream_rst64 $stream_rst100 $stream_rst50]",
+            build,
+        )
+        self.assertIn(
+            "set_property CONFIG.C_AUX_RESET_HIGH {1} $stream_reset", build
+        )
+        self.assertIn("P9_STREAM_AUX_RESET_ACTIVE_HIGH=1", build)
         self.assertIn("return p9_dma_initialize(depth, count_dma_reset);",
                       firmware)
         self.assertIn("p9_reset_stream_path(8U, 0U, 0U)", firmware)
         self.assertIn("P9_STREAM_RESET_DOMAINS", freeze)
+        self.assertIn("P9_STREAM_AUX_RESET_ACTIVE_HIGH", freeze)
 
     def test_terminal_window_capture_precedes_shutdown_and_is_command_bound(self):
         firmware = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(

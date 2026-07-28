@@ -156,6 +156,7 @@ proc p9_classify_targets {records device_id board_id} {
 }
 
 proc p9_wait_debug_targets {device_id board_id {max_attempts 51} {delay_ms 100}} {
+  global p9_active_target_id
   if {![string is integer -strict $max_attempts] || $max_attempts < 1 ||
       ![string is integer -strict $delay_ms] || $delay_ms < 0} {
     error "invalid P9 debug-target discovery bound"
@@ -177,6 +178,20 @@ proc p9_wait_debug_targets {device_id board_id {max_attempts 51} {delay_ms 100}}
     if {$dap_count > 1 || $apu_count > 1 || $fpga_count > 1 || $cpu_count > 1} {
       error "P9 XSDB ambiguous debug-target topology: $last_counts"
     }
+    # A prior system reset can leave only the unique DAP and FPGA visible
+    # while the immutable shutdown image keeps every TFDU TX path off.  One
+    # bounded DAP system reset is allowed to repopulate the PS descendants;
+    # no repeated reset loop or ambiguous target selection is permitted.
+    if {$attempt == 1 && $dap_count == 1 && $fpga_count == 1 &&
+        ($apu_count == 0 || $cpu_count == 0)} {
+      set dap_target [lindex [dict get $debug dap] 0]
+      targets [dict get $dap_target target_id]
+      set p9_active_target_id [dict get $dap_target target_id]
+      rst -system
+      p9_say "P9_XSDB_DEBUG_RECOVERY_SYSTEM_RESET=1"
+      after 1000
+      continue
+    }
     set reset_unique [expr {$dap_count == 1 || ($dap_count == 0 && $apu_count == 1)}]
     if {$fpga_count == 1 && $cpu_count == 1 && $reset_unique} {
       dict set debug discovery_attempts $attempt
@@ -188,21 +203,52 @@ proc p9_wait_debug_targets {device_id board_id {max_attempts 51} {delay_ms 100}}
   error "P9 XSDB debug-target discovery timeout after $max_attempts attempts: $last_counts"
 }
 
+proc p9_select_target_id {target_id} {
+  global p9_active_target_id
+  if {![string is integer -strict $target_id] || $target_id < 0} {
+    error "invalid P9 debug target id"
+  }
+  if {$p9_active_target_id != $target_id} {
+    targets $target_id
+    set p9_active_target_id $target_id
+  }
+}
+
+proc p9_select_cpu_target {} {
+  global p9_cpu_target_id
+  p9_select_target_id $p9_cpu_target_id
+}
+
+proc p9_select_memory_target {} {
+  global p9_memory_target_id
+  p9_select_target_id $p9_memory_target_id
+}
+
 proc p9_read32 {address} {
   # Mailbox polling is intentionally concurrent with the bare-metal runtime.
-  # XSDB otherwise rejects an mrd when the selected CPU execution context is
-  # running, even though the DAP memory access itself is permitted.
-  return [expr {[mrd -force -value $address] & 0xFFFFFFFF}]
+  # Select the unique APU target and route the access through its Zynq AHB-AP
+  # address space instead of the running CPU execution context.  -force alone
+  # only bypasses address protection.
+  p9_select_memory_target
+  return [expr {[mrd -address-space AP0 -force -value $address] & 0xFFFFFFFF}]
 }
 
 proc p9_read32_force {address} {
-  return [expr {[mrd -force -value $address] & 0xFFFFFFFF}]
+  p9_select_memory_target
+  return [expr {[mrd -address-space AP0 -force -value $address] & 0xFFFFFFFF}]
+}
+
+proc p9_write32 {address value} {
+  # The runtime keeps the command mailbox uncached.  Bypass debugger cache
+  # synchronization so a live write never requires halting the Cortex-A9.
+  p9_select_memory_target
+  mwr -address-space AP0 -force -bypass-cache-sync $address $value
 }
 
 proc p9_check_abort {} {
   global abort_file
   if {[file exists $abort_file]} {
-    catch {mwr 0x43C00718 0x0000001A}
+    catch {p9_write32 0x43C00718 0x0000001A}
     error "P9 abort sentinel observed"
   }
 }
@@ -221,12 +267,15 @@ proc p9_dump_mailbox {label} {
   set final [file join $dump_dir "${label}.bin"]
   set partial "${final}.partial"
   catch {file delete -force $partial}
+  p9_select_cpu_target
   catch {stop}
-  mrd -size b -bin -file $partial 0x00020000 1024
+  p9_select_memory_target
+  mrd -address-space AP0 -force -size b -bin -file $partial 0x00020000 1024
   if {![file isfile $partial] || [file size $partial] != 1024} {
     error "P9 mailbox dump is not exactly 1024 bytes for $label"
   }
   file rename -force $partial $final
+  p9_select_cpu_target
   return $final
 }
 
@@ -342,7 +391,9 @@ proc p9_case_dict {fields} {
 }
 
 proc p9_wait_ready {label} {
+  global p9_cpu_target_id
   set deadline [expr {[clock milliseconds] + 15000}]
+  set magic 0; set state 0; set status 0
   while {[clock milliseconds] < $deadline} {
     p9_check_abort
     set magic [p9_read32 0x00020000]
@@ -355,7 +406,27 @@ proc p9_wait_ready {label} {
     if {$state == 5} { error "P9 service entered FAULT during $label startup status=$status" }
     after 10
   }
-  error "P9 service ready timeout for $label"
+  set cpu_state "UNKNOWN"
+  foreach props [targets -target-properties] {
+    if {[dict exists $props target_id] &&
+        [dict get $props target_id] == $p9_cpu_target_id &&
+        [dict exists $props state]} {
+      set cpu_state [dict get $props state]
+    }
+  }
+  set pc_text "UNAVAILABLE"
+  if {[catch {
+    p9_select_cpu_target
+    stop
+    set pc_text [rrd r15]
+  } pc_error]} {
+    set pc_text "READ_ERROR:$pc_error"
+  }
+  set pc_text [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $pc_text]
+  p9_say [format "P9_READY_TIMEOUT_SNAPSHOT=magic:0x%08X,state:0x%08X,status:0x%08X,cpu:%s,pc:%s" \
+      $magic $state $status $cpu_state $pc_text]
+  error [format "P9 service ready timeout for %s magic=0x%08X state=0x%08X status=0x%08X cpu=%s" \
+      $label $magic $state $status $cpu_state]
 }
 
 proc p9_execute_case {d {window "NA"}} {
@@ -367,32 +438,32 @@ proc p9_execute_case {d {window "NA"}} {
 
   # SUBMITTED is written while sequence still equals the prior response.  All
   # arguments follow, and command_sequence is the final atomic publish write.
-  mwr 0x0002000C 2
-  mwr 0x00020014 [dict get $d command]
-  mwr 0x00020024 [dict get $d flags]
-  mwr 0x00020028 [dict get $d lane]
-  mwr 0x0002002C [dict get $d direction]
-  mwr 0x00020030 [dict get $d rate]
-  mwr 0x00020034 [dict get $d weights]
-  mwr 0x00020038 [dict get $d size]
-  mwr 0x0002003C [dict get $d ring]
-  mwr 0x00020040 [dict get $d cache]
-  mwr 0x00020044 [dict get $d txoff]
-  mwr 0x00020048 [dict get $d rxoff]
-  mwr 0x0002004C [dict get $d timeout]
-  mwr 0x00020050 [dict get $d session]
-  mwr 0x00020054 [dict get $d path]
-  mwr 0x00020058 [dict get $d object]
-  mwr 0x0002005C [dict get $d dropdata]
-  mwr 0x00020060 [dict get $d dropack]
-  mwr 0x00020064 [dict get $d unavailable]
-  mwr 0x00020068 [dict get $d rawtarget]
-  mwr 0x0002006C [dict get $d spacing]
-  mwr 0x00020070 [dict get $d stale]
-  mwr 0x00020074 [dict get $d initialseq]
-  mwr 0x00020078 [dict get $d faultflags]
-  mwr 0x0002007C [dict get $d idle]
-  mwr 0x00020018 $sequence
+  p9_write32 0x0002000C 2
+  p9_write32 0x00020014 [dict get $d command]
+  p9_write32 0x00020024 [dict get $d flags]
+  p9_write32 0x00020028 [dict get $d lane]
+  p9_write32 0x0002002C [dict get $d direction]
+  p9_write32 0x00020030 [dict get $d rate]
+  p9_write32 0x00020034 [dict get $d weights]
+  p9_write32 0x00020038 [dict get $d size]
+  p9_write32 0x0002003C [dict get $d ring]
+  p9_write32 0x00020040 [dict get $d cache]
+  p9_write32 0x00020044 [dict get $d txoff]
+  p9_write32 0x00020048 [dict get $d rxoff]
+  p9_write32 0x0002004C [dict get $d timeout]
+  p9_write32 0x00020050 [dict get $d session]
+  p9_write32 0x00020054 [dict get $d path]
+  p9_write32 0x00020058 [dict get $d object]
+  p9_write32 0x0002005C [dict get $d dropdata]
+  p9_write32 0x00020060 [dict get $d dropack]
+  p9_write32 0x00020064 [dict get $d unavailable]
+  p9_write32 0x00020068 [dict get $d rawtarget]
+  p9_write32 0x0002006C [dict get $d spacing]
+  p9_write32 0x00020070 [dict get $d stale]
+  p9_write32 0x00020074 [dict get $d initialseq]
+  p9_write32 0x00020078 [dict get $d faultflags]
+  p9_write32 0x0002007C [dict get $d idle]
+  p9_write32 0x00020018 $sequence
 
   if {[dict get $d injectmask] != 0} {
     set running_deadline [expr {[clock milliseconds] + 5000}]
@@ -404,7 +475,7 @@ proc p9_execute_case {d {window "NA"}} {
     if {[p9_read32 0x0002000C] != 3} { error "case completed before requested asynchronous injection" }
     after [dict get $d injectdelay]
     set injected [expr {([dict get $d dropdata] & 0xFF) | (([dict get $d dropack] & 0xFF) << 8) | (([dict get $d injectmask] & 3) << 16)}]
-    mwr 0x43C0073C $injected
+    p9_write32 0x43C0073C $injected
     p9_say "P9_ASYNC_LANE_INJECTION=[dict get $d label]:[dict get $d injectmask]"
   }
 
@@ -544,6 +615,7 @@ set stage [lindex $argv 9]
 set authorization_file [file normalize [lindex $argv 10]]
 set run_id [lindex $argv 11]
 set connected 0; set candidate_programmed 0; set cpu_selected 0
+set p9_active_target_id -1; set p9_cpu_target_id -1; set p9_memory_target_id -1
 set command_sequence 1000
 file mkdir $dump_dir
 file mkdir [file dirname $result_file]
@@ -623,8 +695,13 @@ set rc [catch {
   if {[llength $dap] == 1} { set reset_target [lindex $dap 0] \
   } elseif {[llength $dap] == 0 && [llength $apu] == 1} { set reset_target [lindex $apu 0] \
   } else { error "P9 XSDB reset target is not unique" }
+  if {[llength $apu] != 1} { error "P9 XSDB APU memory target is not unique" }
   set fpga_target [lindex $fpga_targets 0]
   set cpu_target [lindex $cpu_targets 0]
+  set p9_cpu_target_id [dict get $cpu_target target_id]
+  set p9_memory_target_id [dict get [lindex $apu 0] target_id]
+  p9_say "P9_XSDB_APU_TARGET_COUNT=[llength $apu]"
+  p9_say "P9_XSDB_CPU0_TARGET_COUNT=[llength $cpu_targets]"
   p9_say "P9_XSDB_IDENTITY=PASS"
   p9_say "P9_XSDB_BOARD_ID=$expected_board"
   p9_say "P9_XSDB_IDCODE=13722093"
@@ -632,18 +709,49 @@ set rc [catch {
   p9_say "P9_XSDB_RUN_ID=$run_id"
 
   targets [dict get $reset_target target_id]
+  set p9_active_target_id [dict get $reset_target target_id]
   rst -system
   after 1000
   targets [dict get $fpga_target target_id]
+  set p9_active_target_id [dict get $fpga_target target_id]
   fpga -file $candidate_bit
   set candidate_programmed 1
   p9_say "P9_CANDIDATE_PROGRAMMED=1"
   after 1000
-  targets [dict get $cpu_target target_id]
+  p9_select_cpu_target
   set cpu_selected 1
   source $ps7_init_file
-  ps7_init
-  ps7_post_config
+  configparams force-mem-accesses 1
+  set ps7_init_rc [catch {
+    ps7_init
+    ps7_post_config
+  } ps7_init_error]
+  catch {configparams force-mem-accesses 0}
+  if {$ps7_init_rc != 0} { error "P9 PS7 initialization failed: $ps7_init_error" }
+  p9_say "P9_XSDB_FORCE_MEM_ACCESSES_WINDOW=PS7_INIT_ONLY"
+  set preflight_id [p9_read32 0x43C00700]
+  if {$preflight_id != 0x50395A10} {
+    error [format "P9 PL preflight identity mismatch: 0x%08X" $preflight_id]
+  }
+  p9_write32 0x43C00718 0x0000001A
+  after 10
+  set preflight_status [p9_read32 0x43C0071C]
+  set mm2s_dmacr [p9_read32 0x40400000]
+  set mm2s_dmasr [p9_read32 0x40400004]
+  set s2mm_dmacr [p9_read32 0x40400030]
+  set s2mm_dmasr [p9_read32 0x40400034]
+  p9_say [format "P9_XSDB_PL_PREFLIGHT=id:0x%08X,status:0x%08X,mm2s_cr:0x%08X,mm2s_sr:0x%08X,s2mm_cr:0x%08X,s2mm_sr:0x%08X" \
+      $preflight_id $preflight_status \
+      $mm2s_dmacr $mm2s_dmasr $s2mm_dmacr $s2mm_dmasr]
+  p9_write32 0x43C00718 0x00000200
+  after 10
+  set reset_id [p9_read32 0x43C00700]
+  set reset_status [p9_read32 0x43C0071C]
+  set reset_mm2s_status [p9_read32 0x40400004]
+  set reset_s2mm_status [p9_read32 0x40400034]
+  p9_say [format "P9_XSDB_STREAM_RESET_PREFLIGHT=id:0x%08X,status:0x%08X,mm2s_sr:0x%08X,s2mm_sr:0x%08X" \
+      $reset_id $reset_status $reset_mm2s_status $reset_s2mm_status]
+  p9_select_cpu_target
   rst -processor
   dow $elf_file
   p9_say "P9_PS_ELF_DOWNLOADED=1"
@@ -651,6 +759,7 @@ set rc [catch {
   p9_wait_ready initial_boot
   set ready_dump [p9_dump_mailbox "${stage}_ready"]
   p9_say "P9_INITIAL_READY_DUMP=$ready_dump"
+  p9_select_cpu_target
   con
 
   foreach record $parsed_plan {
@@ -659,6 +768,7 @@ set rc [catch {
       p9_execute_case [lindex $record 1]
     } elseif {$kind eq "REBOOT"} {
       set label [lindex $record 1]
+      p9_select_cpu_target
       catch {stop}
       rst -processor
       dow $elf_file
@@ -666,6 +776,7 @@ set rc [catch {
       p9_wait_ready $label
       set dump_path [p9_dump_mailbox $label]
       p9_say "P9_REBOOT_PASS=$label"
+      p9_select_cpu_target
       con
     } elseif {$kind eq "SOAK"} {
       p9_run_soak [lindex $record 1] [lindex $record 2]
@@ -673,20 +784,23 @@ set rc [catch {
   }
 
   if {$stage eq "P9-19"} {
+    p9_select_cpu_target
     catch {stop}
+    p9_select_memory_target
     foreach spec [list [list tx_bd_ring 0x01000000] [list rx_bd_ring 0x01001000]] {
       set name [lindex $spec 0]
       set address [lindex $spec 1]
       set final [file join $dump_dir "${name}.bin"]
       set partial "${final}.partial"
       catch {file delete -force $partial}
-      mrd -size b -bin -file $partial $address 4096
+      mrd -address-space AP0 -force -size b -bin -file $partial $address 4096
       if {![file isfile $partial] || [file size $partial] != 4096} {
         error "P9 DMA descriptor ring dump failed: $name"
       }
       file rename -force $partial $final
       p9_say "P9_DMA_DESCRIPTOR_DUMP_${name}=$final"
     }
+    p9_select_cpu_target
     con
   }
 
@@ -702,7 +816,7 @@ set rc [catch {
 
 if {$rc != 0} {
   if {$cpu_selected} {
-    catch {mwr 0x43C00718 0x0000001A}
+    catch {p9_write32 0x43C00718 0x0000001A}
     catch {after 10}
   }
   p9_say "P9_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR=1"
