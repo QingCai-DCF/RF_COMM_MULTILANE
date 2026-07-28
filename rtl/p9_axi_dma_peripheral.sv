@@ -50,7 +50,7 @@ module p9_axi_dma_peripheral (
   output logic [1:0]   loop_tx_b0
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
-  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0005;
+  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0006;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
 
   logic reg_wr_en;
@@ -167,8 +167,6 @@ module p9_axi_dma_peripheral (
   );
 
   assign reg_rd_valid = reg_rd_en;
-  assign stream_reset_request_o = |stream_reset_hold_q;
-
   // Register commands can gate inferred payload BRAM write/read ports in the
   // transport core.  Reset them synchronously; the core's independent final
   // endpoint/Txd kill remains asynchronously asserted from s_axi_aresetn.
@@ -183,6 +181,7 @@ module p9_axi_dma_peripheral (
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
       stream_reset_hold_q <= 0;
+      stream_reset_request_o <= 0;
       cfg_lane_mask_q <= 0;
       cfg_lane_weights_q <= 16'h0101;
       cfg_rate_q <= 2'd2;
@@ -210,8 +209,10 @@ module p9_axi_dma_peripheral (
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
-      if (stream_reset_hold_q != 0)
+      if (stream_reset_hold_q != 0) begin
         stream_reset_hold_q <= stream_reset_hold_q - 1'b1;
+        if (stream_reset_hold_q == 1) stream_reset_request_o <= 0;
+      end
       if (object_done) object_done_sticky_q <= 1;
       if (object_fail) object_fail_sticky_q <= 1;
       if (raw_done) raw_done_sticky_q <= 1;
@@ -258,6 +259,7 @@ module p9_axi_dma_peripheral (
               // reset interval, so no stale AXI-Stream beat can survive an
               // abort/reset/reboot recovery sequence.
               stream_reset_hold_q <= 6'd32;
+              stream_reset_request_o <= 1;
               object_done_sticky_q <= 0;
               object_fail_sticky_q <= 0;
               raw_done_sticky_q <= 0;

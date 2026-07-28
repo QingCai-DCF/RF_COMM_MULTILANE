@@ -269,14 +269,14 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("model_rxd_sync", fir_bench)
         self.assertIn("TB_P9_TFDU_FIR_FRAME_LINK=PASS", fir_bench)
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
-        self.assertIn("P9_BUILD_ID = 32'h5009_0005", peripheral)
-        self.assertIn("m->pl_build_id != UINT32_C(0x50090005)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090008)", protocol)
+        self.assertIn("P9_BUILD_ID = 32'h5009_0006", peripheral)
+        self.assertIn("m->pl_build_id != UINT32_C(0x50090006)", firmware)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090009)", protocol)
         self.assertIn("P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)", protocol)
         self.assertIn("terminal_window_command_sequence", protocol)
         self.assertIn("p9_capture_terminal_window(m);", firmware)
-        self.assertEqual(0x50090005, P9_HW.P9_PL_BUILD_ID)
-        self.assertEqual(0x50090008, P9_HW.P9_FIRMWARE_BUILD_ID)
+        self.assertEqual(0x50090006, P9_HW.P9_PL_BUILD_ID)
+        self.assertEqual(0x50090009, P9_HW.P9_FIRMWARE_BUILD_ID)
 
     def test_pl_soft_reset_flushes_all_stream_domains_and_rebuilds_dma(self):
         peripheral = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
@@ -295,6 +295,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("stream_reset_hold_q <= 6'd32", peripheral)
+        self.assertIn("stream_reset_request_o <= 1", peripheral)
         self.assertIn("!stream_reset_request_o", peripheral)
         self.assertIn(".stream_reset_request_o(stream_reset_request_o)", wrapper)
         for domain in ("rst_stream_protocol_64", "rst_stream_dma_100",
