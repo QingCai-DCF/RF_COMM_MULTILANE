@@ -38,6 +38,7 @@ module p9_axi_dma_peripheral (
   output logic [31:0]  m_axis_tdata,
   output logic [3:0]   m_axis_tkeep,
   output logic         m_axis_tlast,
+  output logic         stream_reset_request_o,
 
   output logic [1:0]   ir_mode_out_0,
   input  logic [1:0]   ir_rx_in_0,
@@ -49,7 +50,7 @@ module p9_axi_dma_peripheral (
   output logic [1:0]   loop_tx_b0
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
-  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0004;
+  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0005;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
 
   logic reg_wr_en;
@@ -68,7 +69,7 @@ module p9_axi_dma_peripheral (
   logic start_pulse_q;
   logic abort_pulse_q;
   logic raw_start_pulse_q;
-  logic soft_reset_pulse_q;
+  logic [5:0] stream_reset_hold_q;
   logic [1:0] cfg_lane_mask_q;
   logic [15:0] cfg_lane_weights_q;
   logic [1:0] cfg_rate_q;
@@ -166,6 +167,7 @@ module p9_axi_dma_peripheral (
   );
 
   assign reg_rd_valid = reg_rd_en;
+  assign stream_reset_request_o = |stream_reset_hold_q;
 
   // Register commands can gate inferred payload BRAM write/read ports in the
   // transport core.  Reset them synchronously; the core's independent final
@@ -180,7 +182,7 @@ module p9_axi_dma_peripheral (
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
-      soft_reset_pulse_q <= 0;
+      stream_reset_hold_q <= 0;
       cfg_lane_mask_q <= 0;
       cfg_lane_weights_q <= 16'h0101;
       cfg_rate_q <= 2'd2;
@@ -208,7 +210,8 @@ module p9_axi_dma_peripheral (
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
-      soft_reset_pulse_q <= 0;
+      if (stream_reset_hold_q != 0)
+        stream_reset_hold_q <= stream_reset_hold_q - 1'b1;
       if (object_done) object_done_sticky_q <= 1;
       if (object_fail) object_fail_sticky_q <= 1;
       if (raw_done) raw_done_sticky_q <= 1;
@@ -249,7 +252,12 @@ module p9_axi_dma_peripheral (
             if (reg_wr_data[9]) begin
               receiver_enable_q <= 0;
               cfg_lane_mask_q <= 0;
-              soft_reset_pulse_q <= 1;
+              // Hold the request long enough for each proc_sys_reset instance
+              // to observe it and synchronously release the 64/100/50 MHz
+              // protocol-stream/DMA domains.  The transport core shares this
+              // reset interval, so no stale AXI-Stream beat can survive an
+              // abort/reset/reboot recovery sequence.
+              stream_reset_hold_q <= 6'd32;
               object_done_sticky_q <= 0;
               object_fail_sticky_q <= 0;
               raw_done_sticky_q <= 0;
@@ -396,7 +404,7 @@ module p9_axi_dma_peripheral (
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
     .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000)
   ) u_transport (
-    .clk(s_axi_aclk), .rst_n(s_axi_aresetn && !soft_reset_pulse_q),
+    .clk(s_axi_aclk), .rst_n(s_axi_aresetn && !stream_reset_request_o),
     .receiver_enable_i(receiver_enable_q), .arm_request_i(arm_pulse_q),
     .disarm_request_i(disarm_pulse_q), .full_shutdown_request_i(shutdown_pulse_q),
     .clear_counters_i(clear_pulse_q), .start_object_i(start_pulse_q),

@@ -572,7 +572,7 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
   p9_fill_identity(m);
   if (status != P9_RUNTIME_OK) return status;
   if (m->pl_id != UINT32_C(0x50395a10) ||
-      m->pl_build_id != UINT32_C(0x50090004) ||
+      m->pl_build_id != UINT32_C(0x50090005) ||
       m->pl_profile_id != UINT32_C(0x00701022) ||
       m->pl_register_map_version != IR_REGISTER_MAP_VERSION ||
       m->pl_register_map_hash_low != IR_REGISTER_MAP_HASH_LOW ||
@@ -1135,15 +1135,26 @@ abort_exit:
   return status;
 }
 
-static int p9_command_pl_soft_reset(void) {
-  int status = p9_shutdown();
-  if (status != P9_RUNTIME_OK) return status;
+static int p9_reset_stream_path(uint32_t depth, uint32_t count_pl_reset,
+                                uint32_t count_dma_reset) {
+  if (depth != 8U && depth != 32U) depth = 8U;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_DATA_PLANE_SOFT_RESET_MASK);
-  g_metrics.pl_soft_reset_count++;
+  if (count_pl_reset != 0U) g_metrics.pl_soft_reset_count++;
+  /* The PL request is stretched and synchronously released in every stream
+   * clock domain.  Wait well past that bound before rebuilding the real SG
+   * rings whose hardware ownership was discarded by the reset. */
   usleep(100U);
   if (p9_pl_read(IR_REG_P9_ID) != UINT32_C(0x50395a10))
     return P9_RUNTIME_PL_IDENTITY;
-  return p9_verify_safe_idle();
+  int status = p9_verify_safe_idle();
+  if (status != P9_RUNTIME_OK) return status;
+  return p9_dma_initialize(depth, count_dma_reset);
+}
+
+static int p9_command_pl_soft_reset(void) {
+  int status = p9_shutdown();
+  if (status != P9_RUNTIME_OK) return status;
+  return p9_reset_stream_path(g_ring_depth, 1U, 1U);
 }
 
 static int p9_command_stale_completion(volatile p9_mailbox_t *m) {
@@ -1352,7 +1363,7 @@ int main(void) {
   mailbox->service_state = P9_SERVICE_BOOT;
   int startup_status = p9_shutdown();
   if (startup_status == P9_RUNTIME_OK)
-    startup_status = p9_dma_initialize(8U, 0U);
+    startup_status = p9_reset_stream_path(8U, 0U, 0U);
   p9_fill_identity(mailbox);
   p9_copy_metrics(mailbox);
   p9_snapshot_pl(mailbox);

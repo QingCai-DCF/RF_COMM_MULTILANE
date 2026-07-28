@@ -40,6 +40,7 @@ module p9_axi_dma_peripheral_bd (
   (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TDATA" *) output [31:0] m_axis_tdata,
   (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TKEEP" *) output [3:0] m_axis_tkeep,
   (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TLAST" *) output m_axis_tlast,
+  output stream_reset_request_o,
 
   output [1:0] ir_mode_out_0,
   input  [1:0] ir_rx_in_0,
@@ -66,6 +67,7 @@ module p9_axi_dma_peripheral_bd (
     .s_axis_tlast(s_axis_tlast), .m_axis_tvalid(m_axis_tvalid),
     .m_axis_tready(m_axis_tready), .m_axis_tdata(m_axis_tdata),
     .m_axis_tkeep(m_axis_tkeep), .m_axis_tlast(m_axis_tlast),
+    .stream_reset_request_o(stream_reset_request_o),
     .ir_mode_out_0(ir_mode_out_0), .ir_rx_in_0(ir_rx_in_0),
     .ir_sd_0(ir_sd_0), .ir_tx_out_0(ir_tx_out_0),
     .loop_mode_b0(loop_mode_b0), .loop_rx_b0(loop_rx_b0),

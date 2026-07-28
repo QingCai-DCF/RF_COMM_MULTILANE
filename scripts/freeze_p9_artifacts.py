@@ -331,6 +331,9 @@ def validate_build(source_commit: str) -> tuple[list[Path], dict[str, Any]]:
         errors.append("candidate canonical XDC marker mismatch")
     if candidate_markers.get("P9_DMA_SG_STSCNTRL_STREAM") != "DISABLED":
         errors.append("candidate unused DMA SG control/status stream is not disabled")
+    if candidate_markers.get("P9_STREAM_RESET_DOMAINS") != \
+            "PROTOCOL64_DMA100_AXIL50":
+        errors.append("candidate coordinated stream/DMA reset marker mismatch")
     for marker in ("P9_DRC_CRITICAL_COUNT", "P9_DRC_ERROR_COUNT",
                    "P9_REQP_1839_COUNT", "P9_METHODOLOGY_CRITICAL_COUNT",
                    "P9_CDC_CRITICAL_COUNT"):
