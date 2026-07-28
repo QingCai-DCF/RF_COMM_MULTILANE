@@ -742,7 +742,11 @@ module p9_optical_transport_core #(
                 (fault_attempt_budget_q != 0 && fault_flags_remaining_q[2]) ?
                 dp_attempt_sequence + WINDOW_SIZE :
                 ((fault_attempt_budget_q != 0 && fault_flags_remaining_q[3]) ?
-                 dp_attempt_sequence - 1'b1 :
+                 // Keep every bounded injected attempt strictly behind the
+                 // receiver's object-start base.  Subtracting one from each
+                 // attempt's own sequence can alias a later payload onto the
+                 // current RX base and corrupt an otherwise recovered object.
+                 object_initial_sequence_q - 1'b1 :
                  dp_attempt_sequence);
             lane_length[dp_attempt_lane] <= dp_attempt_payload_length;
             lane_crc[dp_attempt_lane] <=

@@ -76,6 +76,7 @@ SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 RUN_RE = re.compile(r"^p9_[A-Za-z0-9_.-]+$")
 STAGE_RE = re.compile(r"^P9-(?:0[4-9]|1[0-9]|2[0-6])$")
 P9_FAULTS_WITHOUT_REQUIRED_RETRY = frozenset({
+    "fault_drop_ack",
     "fault_duplicate_ack",
     "fault_reorder",
 })
@@ -326,22 +327,28 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
                     size=247 * 256, object_id=0x1704, fault=1 << 7),
     ]
     faults = [
-        ("drop_one_data", dict(dropdata=1)),
-        ("drop_burst_data", dict(dropdata=3)),
-        ("drop_ack", dict(dropack=1)),
-        ("duplicate_data_by_ack_loss", dict(dropack=1)),
-        ("stale_session", dict(fault=1 << 0)),
-        ("stale_path", dict(fault=1 << 1)),
-        ("future_sequence", dict(fault=1 << 2)),
-        ("old_sequence", dict(fault=1 << 3)),
-        ("crc_corruption", dict(fault=1 << 4)),
-        ("duplicate_ack", dict(fault=1 << 5)),
-        ("reorder", dict(fault=1 << 6)),
+        ("drop_one_data", 247 * 96, dict(dropdata=1)),
+        ("drop_burst_data", 247 * 96, dict(dropdata=3)),
+        ("drop_ack", 247 * 96, dict(dropack=1)),
+        # With multiple DATA frames a later cumulative ACK can legitimately
+        # cover one lost ACK before RTO.  Use one DATA frame here so loss of
+        # its sole ACK must exercise timeout, retransmission, duplicate DATA
+        # rejection, and re-ACK without weakening the separate cumulative-ACK
+        # recovery case above.
+        ("duplicate_data_by_ack_loss", 247, dict(dropack=1)),
+        ("stale_session", 247 * 96, dict(fault=1 << 0)),
+        ("stale_path", 247 * 96, dict(fault=1 << 1)),
+        ("future_sequence", 247 * 96, dict(fault=1 << 2)),
+        ("old_sequence", 247 * 96, dict(fault=1 << 3)),
+        ("crc_corruption", 247 * 96, dict(fault=1 << 4)),
+        ("duplicate_ack", 247 * 96, dict(fault=1 << 5)),
+        ("reorder", 247 * 96, dict(fault=1 << 6)),
     ]
     plans["P9-18"] = [
         object_case(f"fault_{name}", lane=3, direction=index & 1, rate=2,
-                    size=247 * 96, object_id=0x1800 + index, timeout=90_000, **kwargs)
-        for index, (name, kwargs) in enumerate(faults)
+                    size=case_size, object_id=0x1800 + index,
+                    timeout=90_000, **kwargs)
+        for index, (name, case_size, kwargs) in enumerate(faults)
     ]
     plans["P9-18"].extend([
         object_case("fault_retry_exhausted", lane=3, direction=0, rate=2,
@@ -926,6 +933,7 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         "post_shutdown_tx_sequence_base": post_shutdown_tx_sequence_base,
         "post_shutdown_window_status": post_shutdown_window_status,
         "window_status": terminal_window_status, "sack_bitmap": pl(words, 24),
+        "outstanding_count": (terminal_window_status >> 16) & 0x3F,
         "outstanding_high_watermark": (terminal_window_status >> 22) & 0x3F,
         "tx_next_sequence": terminal_tx_sequence_base & 0xFFFF,
         "tx_ack_base": (terminal_tx_sequence_base >> 16) & 0xFFFF,
@@ -1034,6 +1042,40 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
                 detail["permit_raw_sent"][1] != detail["permit_raw_sent"][2]:
             errors.append(f"{label}: partial raw train resumed after re-arm")
     return errors, detail
+
+
+def ack_loss_recovery_errors(detail: dict[str, Any], expected_frames: int,
+                             initial_sequence: int = 0) -> list[str]:
+    """Require direct loss plus an exactly drained selective-repeat object.
+
+    A later cumulative ACK may cover a lost ACK before the oldest frame reaches
+    RTO, so retry_count is intentionally not part of this proof.  Cases that
+    specifically require a retransmission impose that requirement separately.
+    """
+    errors: list[str] = []
+    label = detail["label"]
+    expected_final = (initial_sequence + expected_frames) & 0xFFFF
+    if detail["dropped_ack"] == 0:
+        errors.append(f"{label}: injected ACK loss was not directly counted")
+    if detail["ack_aggregation"] == 0 or detail["physical_ack_good"] == 0:
+        errors.append(f"{label}: cumulative ACK recovery was not directly observed")
+    if detail["ack_frames"] != detail["physical_ack_good"] + detail["dropped_ack"]:
+        errors.append(f"{label}: emitted/received/dropped ACK accounting mismatch")
+    if detail["tx_attempts"] != expected_frames + detail["tx_retries"]:
+        errors.append(f"{label}: DATA attempt/retry accounting mismatch")
+    if detail["rx_delivery"] != expected_frames:
+        errors.append(f"{label}: exactly-once delivery count mismatch")
+    if detail["outstanding_count"] != 0:
+        errors.append(f"{label}: terminal TX window did not drain")
+    if (detail["tx_next_sequence"], detail["tx_ack_base"],
+            detail["rx_base_sequence"]) != (expected_final,) * 3:
+        errors.append(
+            f"{label}: terminal sequence state did not drain to "
+            f"0x{expected_final:04X}"
+        )
+    if detail["retry_exhausted"] != 0:
+        errors.append(f"{label}: ACK-loss recovery exhausted retries")
+    return errors
 
 
 def write_stage_raw_evidence(stage: str, stage_dir: Path,
@@ -1258,8 +1300,11 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         bitmap_loss = by_label.get("sack_ack_bitmap_loss")
         duplicate = by_label.get("sack_duplicate_ack")
         reorder = by_label.get("sack_reorder")
-        if not ack_loss or ack_loss["dropped_ack"] == 0 or ack_loss["tx_retries"] == 0:
-            errors.append("ACK-loss recovery counters absent")
+        if not ack_loss:
+            errors.append("ACK-loss recovery observation absent")
+        else:
+            errors.extend(ack_loss_recovery_errors(
+                ack_loss, math.ceil(ack_loss["requested_size"] / 247)))
         if not bitmap_loss or bitmap_loss["dropped_ack"] == 0:
             errors.append("SACK/ACK bitmap-loss injection counter absent")
         if not duplicate or duplicate["duplicate_acks"] == 0:
@@ -1285,6 +1330,11 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             detail = by_label.get(case_label)
             if not detail or detail[field] < minimum:
                 errors.append(f"{case_label}: direct {field} counter evidence absent")
+        for case_label in ("fault_drop_ack", "fault_duplicate_data_by_ack_loss"):
+            detail = by_label.get(case_label)
+            if detail:
+                errors.extend(ack_loss_recovery_errors(
+                    detail, math.ceil(detail["requested_size"] / 247)))
         for case_label, detail in by_label.items():
             if case_label.startswith("fault_") and case_label not in {
                     "fault_retry_exhausted", "fault_post_recovery_clean",

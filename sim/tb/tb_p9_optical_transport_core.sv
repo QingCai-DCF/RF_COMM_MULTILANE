@@ -572,7 +572,9 @@ module tb_p9_optical_transport_core;
     run_object(91, 8'ha3, 1'b0, 0, 0, 16'h1200, 32'h04);
     if (rx_future_count == 0 || tx_retry_count == 0)
       $fatal(1, "future-window rejection/recovery not observed");
-    run_object(91, 8'ha4, 1'b0, 0, 0, 16'h1300, 32'h08);
+    // More than one frame is required to catch an injected old sequence that
+    // accidentally aliases a later payload onto the current receive base.
+    run_object(247*2, 8'ha4, 1'b0, 0, 0, 16'h1300, 32'h08);
     if (rx_old_count == 0 || tx_retry_count == 0)
       $fatal(1, "old-sequence rejection/recovery not observed");
     run_object(91, 8'ha5, 1'b0, 0, 0, 16'h1400, 32'h10);

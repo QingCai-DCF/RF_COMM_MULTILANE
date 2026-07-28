@@ -333,6 +333,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertTrue(detail["terminal_window_valid"])
         self.assertEqual(final_sequence, detail["tx_next_sequence"])
         self.assertEqual(final_sequence, detail["tx_ack_base"])
+        self.assertEqual(0, detail["outstanding_count"])
         self.assertEqual(0, detail["post_shutdown_tx_sequence_base"])
 
         words[P9_HW.TERMINAL_WINDOW_START + 1] += 1
@@ -417,14 +418,64 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             "candidate unused DMA SG control/status stream is not disabled", freeze
         )
 
-    def test_idempotent_ack_and_sack_reorder_do_not_require_retry(self):
+    def test_cumulative_ack_idempotence_and_sack_reorder_retry_policy(self):
         self.assertEqual(
-            {"fault_duplicate_ack", "fault_reorder"},
+            {"fault_drop_ack", "fault_duplicate_ack", "fault_reorder"},
             set(P9_HW.P9_FAULTS_WITHOUT_REQUIRED_RETRY),
         )
         plans = {case.label: case for case in P9_HW.build_plans()["P9-18"]}
+        self.assertEqual(247 * 96, plans["fault_drop_ack"].size)
+        self.assertEqual(247, plans["fault_duplicate_data_by_ack_loss"].size)
         self.assertEqual(1 << 5, plans["fault_duplicate_ack"].faultflags)
         self.assertEqual(1 << 6, plans["fault_reorder"].faultflags)
+
+    def test_ack_loss_recovery_accepts_cumulative_drain_without_retry(self):
+        detail = {
+            "label": "sack_ack_loss_recovery",
+            "dropped_ack": 1,
+            "ack_aggregation": 256,
+            "ack_frames": 145,
+            "physical_ack_good": 144,
+            "tx_attempts": 256,
+            "tx_retries": 0,
+            "rx_delivery": 256,
+            "outstanding_count": 0,
+            "tx_next_sequence": 256,
+            "tx_ack_base": 256,
+            "rx_base_sequence": 256,
+            "retry_exhausted": 0,
+        }
+        self.assertEqual([], P9_HW.ack_loss_recovery_errors(detail, 256))
+
+    def test_ack_loss_recovery_fails_without_terminal_drain(self):
+        detail = {
+            "label": "sack_ack_loss_recovery",
+            "dropped_ack": 1,
+            "ack_aggregation": 256,
+            "ack_frames": 145,
+            "physical_ack_good": 144,
+            "tx_attempts": 256,
+            "tx_retries": 0,
+            "rx_delivery": 256,
+            "outstanding_count": 1,
+            "tx_next_sequence": 256,
+            "tx_ack_base": 255,
+            "rx_base_sequence": 256,
+            "retry_exhausted": 0,
+        }
+        errors = P9_HW.ack_loss_recovery_errors(detail, 256)
+        self.assertTrue(any("did not drain" in error for error in errors))
+
+    def test_old_sequence_fault_is_bound_to_object_start_base(self):
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("object_initial_sequence_q - 1'b1", core)
+        self.assertNotIn("dp_attempt_sequence - 1'b1", core)
+        self.assertIn("run_object(247*2, 8'ha4", testbench)
 
 
 if __name__ == "__main__":
