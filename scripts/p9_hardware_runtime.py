@@ -340,9 +340,13 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
         ("stale_path", 247 * 96, dict(fault=1 << 1)),
         ("future_sequence", 247 * 96, dict(fault=1 << 2)),
         ("old_sequence", 247 * 96, dict(fault=1 << 3)),
-        ("crc_corruption", 247 * 96, dict(fault=1 << 4)),
         ("duplicate_ack", 247 * 96, dict(fault=1 << 5)),
         ("reorder", 247 * 96, dict(fault=1 << 6)),
+        # Keep the intentional parser CRC/frame-bad counters after all other
+        # successful fault cases.  The explicit recovery soft reset below
+        # then clears that cumulative parser telemetry together with the
+        # controlled retry-exhaustion state before the final clean object.
+        ("crc_corruption", 247 * 96, dict(fault=1 << 4)),
     ]
     plans["P9-18"] = [
         object_case(f"fault_{name}", lane=3, direction=index & 1, rate=2,
@@ -354,6 +358,7 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
         object_case("fault_retry_exhausted", lane=3, direction=0, rate=2,
                     size=247 * 8, object_id=0x18F0, dropdata=255,
                     expected_status=12, timeout=120_000),
+        Case("fault_recovery_soft_reset", 8, timeout=10_000),
         object_case("fault_post_recovery_clean", lane=3, direction=1, rate=2,
                     size=64 * 1024, object_id=0x18FF, timeout=90_000),
     ])
@@ -1001,7 +1006,10 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         if words[61] != words[62] or digest(words, 63) != digest(words, 71):
             errors.append(f"{label}: CRC/SHA mismatch")
         if words[79] != 0xFFFFFFFF: errors.append(f"{label}: payload mismatch offset set")
-        if detail["physical_crc_bad"] or detail["physical_frame_bad"] or detail["physical_symbol_errors"]:
+        intentional_crc_injection = bool(row["faultflags"] & (1 << 4))
+        if detail["physical_symbol_errors"] or (
+                not intentional_crc_injection and
+                (detail["physical_crc_bad"] or detail["physical_frame_bad"])):
             errors.append(f"{label}: physical frame/CRC/symbol error")
         if detail["retry_exhausted"]: errors.append(f"{label}: retry exhausted in successful object")
         expected_frames = math.ceil(transfer_bytes / 247)
@@ -1347,6 +1355,10 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         exhausted = [detail for detail in details if detail["label"] == "fault_retry_exhausted"]
         if not exhausted or exhausted[0]["retry_exhausted"] == 0 or exhausted[0]["tx_timeouts"] == 0:
             errors.append("controlled retry exhaustion evidence absent")
+        recovery_reset = [detail for detail in details
+                          if detail["label"] == "fault_recovery_soft_reset"]
+        if not recovery_reset or recovery_reset[0]["pl_soft_reset_count"] == 0:
+            errors.append("post-fault PL recovery reset evidence absent")
         recovery = [detail for detail in details if detail["label"] == "fault_post_recovery_clean"]
         if not recovery or any((recovery[0]["physical_crc_bad"], recovery[0]["retry_exhausted"],
                                 recovery[0]["descriptor_leak"])):

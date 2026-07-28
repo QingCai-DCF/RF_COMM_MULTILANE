@@ -428,6 +428,47 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertEqual(247, plans["fault_duplicate_data_by_ack_loss"].size)
         self.assertEqual(1 << 5, plans["fault_duplicate_ack"].faultflags)
         self.assertEqual(1 << 6, plans["fault_reorder"].faultflags)
+        self.assertEqual(8, plans["fault_recovery_soft_reset"].command)
+        labels = [case.label for case in P9_HW.build_plans()["P9-18"]]
+        self.assertLess(labels.index("fault_reorder"),
+                        labels.index("fault_crc_corruption"))
+        self.assertLess(labels.index("fault_crc_corruption"),
+                        labels.index("fault_retry_exhausted"))
+        self.assertLess(labels.index("fault_retry_exhausted"),
+                        labels.index("fault_recovery_soft_reset"))
+        self.assertLess(labels.index("fault_recovery_soft_reset"),
+                        labels.index("fault_post_recovery_clean"))
+
+    def test_intentional_crc_fault_allows_only_expected_parser_counters(self):
+        row, words = self.safe_idle_observation()
+        row.update({
+            "label": "fault_crc_corruption", "command": 3,
+            "flags": 0, "lane": 3, "direction": 0, "rate": 2,
+            "weights": 0x0101, "size": 247, "dropdata": 0,
+            "dropack": 0, "faultflags": 1 << 4, "unavailable": 0,
+            "injectmask": 0,
+        })
+
+        def set_pl(index: int, value: int) -> None:
+            words[P9_HW.PL_SNAPSHOT_START + index] = value
+
+        words[60] = 247
+        words[79] = 0xFFFFFFFF
+        set_pl(10, 3 | (2 << 8))
+        set_pl(11, 0x0101)
+        set_pl(20, 247)
+        set_pl(21, 247)
+        set_pl(41, 3)
+        set_pl(96, 3)
+        words[P9_HW.TERMINAL_WINDOW_START] = P9_HW.P9_TERMINAL_WINDOW_VALID
+        words[P9_HW.TERMINAL_WINDOW_START + 1] = row["sequence"]
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertFalse(any("physical frame/CRC/symbol error" in error
+                             for error in errors))
+        row["faultflags"] = 0
+        errors, _ = P9_HW.evaluate_observation(row, words)
+        self.assertTrue(any("physical frame/CRC/symbol error" in error
+                            for error in errors))
 
     def test_ack_loss_recovery_accepts_cumulative_drain_without_retry(self):
         detail = {
