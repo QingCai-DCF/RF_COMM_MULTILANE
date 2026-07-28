@@ -314,6 +314,14 @@ module ir_selective_repeat_tx #(
       time_counter <= time_counter + 1'b1;
       timer_scan_index <= timer_scan_index + 1'b1;
 
+      // Sample the already-registered occupancy instead of recomputing the
+      // post-event value through the ACK reclaim datapath.  The one-cycle
+      // telemetry latency still captures every committed occupancy peak (the
+      // count itself changes only on a clock edge) and keeps ACK sequence/RAM
+      // lookup logic out of the high-watermark register enable path.
+      if (outstanding_count_o > outstanding_high_watermark_o)
+        outstanding_high_watermark_o <= outstanding_count_o;
+
       if (clear_counters_i) begin
         attempt_count_o <= 32'd0;
         retry_count_o <= 32'd0;
@@ -549,8 +557,6 @@ module ir_selective_repeat_tx #(
 
         if (occupancy_delta != 0) begin
           outstanding_count_o <= outstanding_count_o + occupancy_delta;
-          if (outstanding_count_o + occupancy_delta > outstanding_high_watermark_o)
-            outstanding_high_watermark_o <= outstanding_count_o + occupancy_delta;
         end
 
         // Capture after queue consumption so a same-cycle newer ACK remains queued.
