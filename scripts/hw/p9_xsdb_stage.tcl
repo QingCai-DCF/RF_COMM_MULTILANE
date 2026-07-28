@@ -189,7 +189,10 @@ proc p9_wait_debug_targets {device_id board_id {max_attempts 51} {delay_ms 100}}
 }
 
 proc p9_read32 {address} {
-  return [expr {[mrd -value $address] & 0xFFFFFFFF}]
+  # Mailbox polling is intentionally concurrent with the bare-metal runtime.
+  # XSDB otherwise rejects an mrd when the selected CPU execution context is
+  # running, even though the DAP memory access itself is permitted.
+  return [expr {[mrd -force -value $address] & 0xFFFFFFFF}]
 }
 
 proc p9_read32_force {address} {

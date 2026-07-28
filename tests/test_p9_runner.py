@@ -198,6 +198,15 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         mismatch = tcl.index("P9 command status mismatch", terminal)
         self.assertLess(dump, mismatch)
 
+    def test_xsdb_mailbox_polling_uses_running_context_safe_reads(self):
+        tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
+            encoding="utf-8"
+        )
+        read32 = tcl[tcl.index("proc p9_read32 {address}"):
+                     tcl.index("proc p9_read32_force {address}")]
+        self.assertIn("mrd -force -value $address", read32)
+        self.assertNotIn("mrd -value $address", read32)
+
     def test_stationary_ack_turnaround_guard_is_4096_cycles(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
             encoding="utf-8"
