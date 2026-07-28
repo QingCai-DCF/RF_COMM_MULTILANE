@@ -240,6 +240,20 @@ static void p9_snapshot_pl(volatile p9_mailbox_t *mailbox) {
         p9_pl_read(IR_REG_P9_ID + 4U * index);
 }
 
+static void p9_capture_terminal_window(volatile p9_mailbox_t *mailbox) {
+  /* A full shutdown deliberately asserts abort_all_i in PL and clears the TX
+   * next/ACK-base registers.  Capture the completed object's terminal window
+   * directly from MMIO before shutdown, then publish the validity marker last.
+   * The normal PL snapshot remains a separate, post-shutdown safety record. */
+  mailbox->terminal_window_valid = 0U;
+  mailbox->terminal_window_command_sequence = mailbox->command_sequence;
+  mailbox->terminal_tx_sequence_base = p9_pl_read(IR_REG_P9_TX_SEQUENCE_BASE);
+  mailbox->terminal_window_status = p9_pl_read(IR_REG_P9_WINDOW_STATUS);
+  dsb();
+  mailbox->terminal_window_valid = P9_TERMINAL_WINDOW_VALID;
+  dsb();
+}
+
 static void p9_copy_metrics(volatile p9_mailbox_t *m) {
   m->tx_submitted = g_metrics.tx_submitted;
   m->tx_completed = g_metrics.tx_completed;
@@ -947,6 +961,7 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) goto object_exit;
   status = p9_poll_completion(m, token, m->timeout_ms);
   if (status == P9_RUNTIME_OK) {
+    p9_capture_terminal_window(m);
     if (m->cache_mode != 0U)
       p9_cache_invalidate(rx_address, transfer_bytes);
     dsb();
@@ -1299,7 +1314,7 @@ static void p9_clear_result_fields(volatile p9_mailbox_t *m) {
     m->output_sha256[index] = 0U;
   }
   volatile uint32_t *extended = &m->payload_prepare_ticks_low;
-  for (uint32_t index = 0U; index < 37U; ++index) extended[index] = 0U;
+  for (uint32_t index = 0U; index < 41U; ++index) extended[index] = 0U;
 }
 
 static int p9_dispatch(volatile p9_mailbox_t *m) {

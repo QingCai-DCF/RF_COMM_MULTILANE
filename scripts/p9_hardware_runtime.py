@@ -54,12 +54,14 @@ P9_DUTY_TARGET_MAX_HIGH_CYCLES = 11_520
 P9_FRAME_DUTY_GUARD_CYCLES = 20_480
 P9_FRAME_DUTY_GUARD_US = 320
 PL_SNAPSHOT_WORDS = 99
-P9_MAILBOX_SCHEMA = 4
-P9_FIRMWARE_BUILD_ID = 0x50090006
+P9_MAILBOX_SCHEMA = 5
+P9_FIRMWARE_BUILD_ID = 0x50090007
 P9_PL_BUILD_ID = 0x50090004
 PERFORMANCE_START = 215
 PERMIT_START = 227
 RFAP_START = 245
+TERMINAL_WINDOW_START = 252
+P9_TERMINAL_WINDOW_VALID = 0x5457494E
 P9_DMA_MAX_TRANSFER = 0x03FFFFFF
 # The current stationary Z7010 fixture exposes each selected-lane optical
 # pulse at both physical receivers on that lane.  The protocol decoder still
@@ -859,6 +861,20 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
     if any(value > target_limit for value in duty_max): errors.append(f"{label}: 18% design target exceeded")
     if words[96] or words[97] or words[98]: errors.append(f"{label}: descriptor double completion/leak")
 
+    post_shutdown_tx_sequence_base = pl(words, 22)
+    post_shutdown_window_status = pl(words, 23)
+    terminal_window_valid = (
+        words[TERMINAL_WINDOW_START] == P9_TERMINAL_WINDOW_VALID
+        and words[TERMINAL_WINDOW_START + 1] == words[6]
+    )
+    terminal_tx_sequence_base = (
+        words[TERMINAL_WINDOW_START + 2]
+        if terminal_window_valid else post_shutdown_tx_sequence_base
+    )
+    terminal_window_status = (
+        words[TERMINAL_WINDOW_START + 3]
+        if terminal_window_valid else post_shutdown_window_status
+    )
     detail: dict[str, Any] = {
         "label": label, "command": command, "expected_status": expected_status,
         "lane_mask": row["lane"], "direction": row["direction"],
@@ -903,11 +919,17 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         "rx_ring_generations": [words[90], words[91]],
         "ring_full_observed": [words[92], words[93]],
         "ring_empty_observed": [words[94], words[95]],
-        "window_status": pl(words, 23), "sack_bitmap": pl(words, 24),
-        "outstanding_high_watermark": (pl(words, 23) >> 22) & 0x3F,
-        "tx_next_sequence": pl(words, 22) & 0xFFFF,
-        "tx_ack_base": (pl(words, 22) >> 16) & 0xFFFF,
-        "rx_base_sequence": pl(words, 23) & 0xFFFF,
+        "terminal_window_valid": terminal_window_valid,
+        "terminal_window_command_sequence": words[TERMINAL_WINDOW_START + 1],
+        "terminal_tx_sequence_base": words[TERMINAL_WINDOW_START + 2],
+        "terminal_window_status": words[TERMINAL_WINDOW_START + 3],
+        "post_shutdown_tx_sequence_base": post_shutdown_tx_sequence_base,
+        "post_shutdown_window_status": post_shutdown_window_status,
+        "window_status": terminal_window_status, "sack_bitmap": pl(words, 24),
+        "outstanding_high_watermark": (terminal_window_status >> 22) & 0x3F,
+        "tx_next_sequence": terminal_tx_sequence_base & 0xFFFF,
+        "tx_ack_base": (terminal_tx_sequence_base >> 16) & 0xFFFF,
+        "rx_base_sequence": terminal_window_status & 0xFFFF,
         "rx_stale_session": pl(words, 37), "rx_stale_path": pl(words, 38),
         "rx_out_of_order": pl(words, 90), "rx_old": pl(words, 91),
         "rx_future": pl(words, 92), "rx_delivery": pl(words, 94),
@@ -957,6 +979,8 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         if detail["physical_tx"] != expected_tx: errors.append(f"{label}: physical TX raw vector mismatch")
         if detail["raw_rx"] != expected_rx: errors.append(f"{label}: physical RX raw vector mismatch")
     if command == 3 and expected_status == 0 and not (row["flags"] & 1 and words[60] == 0):
+        if not terminal_window_valid:
+            errors.append(f"{label}: pre-shutdown terminal window snapshot missing or unbound")
         size = row["size"]
         transfer_bytes = rfap_transfer_bytes(row)
         expected_config = (row["lane"] & 3) | ((row["rate"] & 3) << 8) | \

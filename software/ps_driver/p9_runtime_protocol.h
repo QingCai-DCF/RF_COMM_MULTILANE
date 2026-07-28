@@ -11,9 +11,10 @@
 #define P9_RX_BUFFER_BASEADDR UINT32_C(0x06000000)
 #define P9_MAX_OBJECT_BYTES UINT32_C(0x04000000)
 #define P9_MAILBOX_MAGIC UINT32_C(0x424d3950) /* P9MB */
-#define P9_RUNTIME_BUILD_ID UINT32_C(0x50090006)
-#define P9_MAILBOX_SCHEMA_VERSION UINT32_C(4)
+#define P9_RUNTIME_BUILD_ID UINT32_C(0x50090007)
+#define P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)
 #define P9_PL_SNAPSHOT_WORDS 99U
+#define P9_TERMINAL_WINDOW_VALID UINT32_C(0x5457494e) /* TWIN */
 
 enum p9_service_state {
   P9_SERVICE_BOOT = 0,
@@ -217,14 +218,24 @@ typedef struct p9_mailbox {
   volatile uint32_t rfap_partial_publish_count;
   volatile uint32_t rfap_atomic_publish_count;
   volatile uint32_t rfap_useful_crc32;
+
+  /* Object-terminal selective-repeat state captured directly from PL before
+   * the mandatory full shutdown clears the TX window.  The command sequence
+   * binds the capture to this mailbox transaction; valid is published last. */
+  volatile uint32_t terminal_window_valid;
+  volatile uint32_t terminal_window_command_sequence;
+  volatile uint32_t terminal_tx_sequence_base;
+  volatile uint32_t terminal_window_status;
 } p9_mailbox_t;
 
 _Static_assert(offsetof(p9_mailbox_t, pl_register_snapshot) == 116U * 4U,
                "P9 PL snapshot mailbox offset changed");
 _Static_assert(offsetof(p9_mailbox_t, payload_prepare_ticks_low) == 215U * 4U,
                "P9 appended telemetry mailbox offset changed");
-_Static_assert(sizeof(p9_mailbox_t) == 252U * 4U,
-               "P9 mailbox schema-4 layout must be exactly 252 words");
+_Static_assert(offsetof(p9_mailbox_t, terminal_window_valid) == 252U * 4U,
+               "P9 terminal window mailbox offset changed");
+_Static_assert(sizeof(p9_mailbox_t) == 256U * 4U,
+               "P9 mailbox schema-5 layout must be exactly 256 words");
 _Static_assert(sizeof(p9_mailbox_t) <= 1024U,
                "P9 mailbox must remain inside one OCM page");
 

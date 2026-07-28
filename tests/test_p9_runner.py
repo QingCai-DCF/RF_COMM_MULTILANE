@@ -75,6 +75,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         words[1] = P9_HW.P9_MAILBOX_SCHEMA
         words[2] = P9_HW.P9_FIRMWARE_BUILD_ID
         words[3] = 4
+        words[6] = row["sequence"]
         words[7] = row["sequence"]
         words[8] = 0
         words[32] = 0x50395A10
@@ -270,9 +271,74 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
         self.assertIn("P9_BUILD_ID = 32'h5009_0004", peripheral)
         self.assertIn("m->pl_build_id != UINT32_C(0x50090004)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090006)", protocol)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090007)", protocol)
+        self.assertIn("P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)", protocol)
+        self.assertIn("terminal_window_command_sequence", protocol)
+        self.assertIn("p9_capture_terminal_window(m);", firmware)
         self.assertEqual(0x50090004, P9_HW.P9_PL_BUILD_ID)
-        self.assertEqual(0x50090006, P9_HW.P9_FIRMWARE_BUILD_ID)
+        self.assertEqual(0x50090007, P9_HW.P9_FIRMWARE_BUILD_ID)
+
+    def test_terminal_window_capture_precedes_shutdown_and_is_command_bound(self):
+        firmware = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(
+            encoding="utf-8"
+        )
+        capture = firmware.index("p9_capture_terminal_window(m);")
+        object_exit = firmware.index("object_exit:", capture)
+        shutdown = firmware.index("int shutdown_status = p9_shutdown();", object_exit)
+        self.assertLess(capture, object_exit)
+        self.assertLess(object_exit, shutdown)
+        self.assertIn(
+            "terminal_window_command_sequence = mailbox->command_sequence", firmware
+        )
+        self.assertLess(
+            firmware.index("terminal_window_status = p9_pl_read", 0),
+            firmware.index("terminal_window_valid = P9_TERMINAL_WINDOW_VALID", 0),
+        )
+
+    def test_object_evaluator_uses_bound_pre_shutdown_window_snapshot(self):
+        row, words = self.safe_idle_observation()
+        size = 247 * 96
+        final_sequence = (0xFFFE + 96) & 0xFFFF
+        row.update({
+            "label": "sr_wrap_d0", "command": 3, "flags": 0,
+            "lane": 3, "direction": 0, "rate": 2, "weights": 0x0101,
+            "size": size, "dropdata": 0, "dropack": 0,
+            "faultflags": 0, "unavailable": 0, "injectmask": 0,
+        })
+
+        def set_pl(index: int, value: int) -> None:
+            words[P9_HW.PL_SNAPSHOT_START + index] = value
+
+        words[60] = size
+        words[79] = 0xFFFFFFFF
+        set_pl(10, 3 | (2 << 8))
+        set_pl(11, 0x0101)
+        set_pl(20, size)
+        set_pl(21, size)
+        set_pl(22, 0)  # Mandatory shutdown has cleared the live TX window.
+        set_pl(23, (32 << 22) | final_sequence)
+        set_pl(39, 96)
+        set_pl(94, 96)
+        words[P9_HW.TERMINAL_WINDOW_START] = P9_HW.P9_TERMINAL_WINDOW_VALID
+        words[P9_HW.TERMINAL_WINDOW_START + 1] = row["sequence"]
+        words[P9_HW.TERMINAL_WINDOW_START + 2] = (
+            final_sequence | (final_sequence << 16)
+        )
+        words[P9_HW.TERMINAL_WINDOW_START + 3] = (
+            (32 << 22) | final_sequence
+        )
+
+        errors, detail = P9_HW.evaluate_observation(row, words)
+        self.assertEqual([], errors)
+        self.assertTrue(detail["terminal_window_valid"])
+        self.assertEqual(final_sequence, detail["tx_next_sequence"])
+        self.assertEqual(final_sequence, detail["tx_ack_base"])
+        self.assertEqual(0, detail["post_shutdown_tx_sequence_base"])
+
+        words[P9_HW.TERMINAL_WINDOW_START + 1] += 1
+        errors, detail = P9_HW.evaluate_observation(row, words)
+        self.assertTrue(any("terminal window snapshot" in error for error in errors))
+        self.assertFalse(detail["terminal_window_valid"])
 
     def test_ingress_rechecks_window_admission_at_an_axi_beat_fragment_boundary(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
