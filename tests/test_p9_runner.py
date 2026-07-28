@@ -423,6 +423,12 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             {"fault_drop_ack", "fault_duplicate_ack", "fault_reorder"},
             set(P9_HW.P9_FAULTS_WITHOUT_REQUIRED_RETRY),
         )
+        self.assertTrue(P9_HW.p9_fault_requires_retry_evidence(
+            "fault_drop_one_data"))
+        self.assertFalse(P9_HW.p9_fault_requires_retry_evidence(
+            "fault_recovery_soft_reset"))
+        self.assertFalse(P9_HW.p9_fault_requires_retry_evidence(
+            "fault_post_recovery_clean"))
         plans = {case.label: case for case in P9_HW.build_plans()["P9-18"]}
         self.assertEqual(247 * 96, plans["fault_drop_ack"].size)
         self.assertEqual(247, plans["fault_duplicate_data_by_ack_loss"].size)

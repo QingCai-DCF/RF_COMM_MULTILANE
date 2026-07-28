@@ -80,6 +80,17 @@ P9_FAULTS_WITHOUT_REQUIRED_RETRY = frozenset({
     "fault_duplicate_ack",
     "fault_reorder",
 })
+P9_FAULT_RETRY_EXEMPT_CASES = P9_FAULTS_WITHOUT_REQUIRED_RETRY | frozenset({
+    "fault_retry_exhausted",
+    "fault_recovery_soft_reset",
+    "fault_post_recovery_clean",
+})
+
+
+def p9_fault_requires_retry_evidence(case_label: str) -> bool:
+    """Return whether a P9-18 injected-fault case must show a TX retry."""
+    return (case_label.startswith("fault_")
+            and case_label not in P9_FAULT_RETRY_EXEMPT_CASES)
 
 
 def utc_now() -> str:
@@ -1344,13 +1355,10 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
                 errors.extend(ack_loss_recovery_errors(
                     detail, math.ceil(detail["requested_size"] / 247)))
         for case_label, detail in by_label.items():
-            if case_label.startswith("fault_") and case_label not in {
-                    "fault_retry_exhausted", "fault_post_recovery_clean",
-                    # These are receive-side idempotence/SACK exercises.  A
-                    # retry is neither necessary nor desirable when the
-                    # original DATA set was delivered completely.
-                    *P9_FAULTS_WITHOUT_REQUIRED_RETRY} and \
-                    detail["tx_retries"] == 0:
+            # Receive-side idempotence/SACK cases can drain cumulatively, and
+            # recovery-control/clean-verification cases do not inject a fault.
+            if (p9_fault_requires_retry_evidence(case_label)
+                    and detail["tx_retries"] == 0):
                 errors.append(f"{case_label}: injected fault did not exercise bounded retry")
         exhausted = [detail for detail in details if detail["label"] == "fault_retry_exhausted"]
         if not exhausted or exhausted[0]["retry_exhausted"] == 0 or exhausted[0]["tx_timeouts"] == 0:
