@@ -268,11 +268,26 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("model_rxd_sync", fir_bench)
         self.assertIn("TB_P9_TFDU_FIR_FRAME_LINK=PASS", fir_bench)
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
-        self.assertIn("P9_BUILD_ID = 32'h5009_0003", peripheral)
-        self.assertIn("m->pl_build_id != UINT32_C(0x50090003)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090005)", protocol)
-        self.assertEqual(0x50090003, P9_HW.P9_PL_BUILD_ID)
-        self.assertEqual(0x50090005, P9_HW.P9_FIRMWARE_BUILD_ID)
+        self.assertIn("P9_BUILD_ID = 32'h5009_0004", peripheral)
+        self.assertIn("m->pl_build_id != UINT32_C(0x50090004)", firmware)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090006)", protocol)
+        self.assertEqual(0x50090004, P9_HW.P9_PL_BUILD_ID)
+        self.assertEqual(0x50090006, P9_HW.P9_FIRMWARE_BUILD_ID)
+
+    def test_ingress_rechecks_window_admission_at_an_axi_beat_fragment_boundary(self):
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("wire ingress_byte_can_advance", core)
+        self.assertIn(
+            "beat_valid_q && !allocate_pending_q && ingress_byte_can_advance", core
+        )
+        self.assertIn("run_object(247*100", testbench)
+        self.assertIn("TX slot generation mismatch", testbench)
+        self.assertIn("TX final metadata mismatch", testbench)
 
     def test_back_to_back_frames_realign_codec_without_truncating_parser_tail(self):
         core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(

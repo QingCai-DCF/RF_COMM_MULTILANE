@@ -251,6 +251,14 @@ module p9_optical_transport_core #(
   wire dp_allocate_pulse;
   wire [15:0] dp_allocated_sequence;
   wire ingress_can_start_frame = ingress_frame_length_q != 0 || dp_allocate_ready;
+  // A 247-byte fragment boundary can fall inside one 32-bit AXI beat.  The
+  // beat may therefore already be buffered when the previous fragment fills
+  // the selective-repeat window.  Recheck admission before consuming the
+  // first byte of every fragment; otherwise the residual 1--3 bytes make the
+  // next frame non-empty and allow it to overwrite a still-live circular
+  // payload slot.
+  wire ingress_byte_can_advance = ingress_frame_length_q != 0 ||
+                                  dp_allocate_ready;
   wire [7:0] ingress_current_byte = beat_data_q[8*beat_byte_index_q +: 8];
   wire [31:0] ingress_next_crc = crc32_next_byte(ingress_current_byte,
                                                   ingress_frame_crc_q);
@@ -263,6 +271,7 @@ module p9_optical_transport_core #(
   wire [STORE_ADDR_WIDTH-1:0] ingress_write_address =
       ingress_current_slot * MAX_PAYLOAD_BYTES + ingress_frame_length_q;
   wire ingress_store_write = beat_valid_q && !allocate_pending_q &&
+      ingress_byte_can_advance &&
       !start_object_i && !abort_object_i && !disarm_request_i &&
       !full_shutdown_request_i &&
       !any_safety_fault;
@@ -333,7 +342,7 @@ module p9_optical_transport_core #(
             ingress_error_pulse_q <= 1;
           end
         end
-        if (beat_valid_q && !allocate_pending_q) begin
+        if (beat_valid_q && !allocate_pending_q && ingress_byte_can_advance) begin
           ingress_bytes_q <= ingress_bytes_q + 1'b1;
           ingress_frame_crc_q <= ingress_next_crc;
           if (beat_byte_index_q == beat_byte_count_q - 1'b1)

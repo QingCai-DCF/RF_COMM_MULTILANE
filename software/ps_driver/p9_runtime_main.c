@@ -558,7 +558,7 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
   p9_fill_identity(m);
   if (status != P9_RUNTIME_OK) return status;
   if (m->pl_id != UINT32_C(0x50395a10) ||
-      m->pl_build_id != UINT32_C(0x50090003) ||
+      m->pl_build_id != UINT32_C(0x50090004) ||
       m->pl_profile_id != UINT32_C(0x00701022) ||
       m->pl_register_map_version != IR_REGISTER_MAP_VERSION ||
       m->pl_register_map_hash_low != IR_REGISTER_MAP_HASH_LOW ||

@@ -2,7 +2,7 @@
 `default_nettype none
 
 module tb_p9_optical_transport_core;
-  localparam integer MAX_OBJECT_BYTES = 8192;
+  localparam integer MAX_OBJECT_BYTES = 65536;
 
   logic clk = 0;
   logic rst_n = 0;
@@ -123,6 +123,10 @@ module tb_p9_optical_transport_core;
   integer captured_count;
   logic captured_last;
   logic [7:0] received [0:MAX_OBJECT_BYTES-1];
+  logic monitor_long_object;
+  integer monitor_seed;
+  integer monitor_frame_count;
+  logic [15:0] monitor_initial_sequence;
 
   function automatic [7:0] payload_pattern(input integer index, input integer seed);
     payload_pattern = ((index * 37) ^ (index >> 2) ^ seed) & 8'hff;
@@ -158,6 +162,32 @@ module tb_p9_optical_transport_core;
           received[captured_count + byte_lane] <= m_axis_tdata[8*byte_lane +: 8];
       captured_count <= captured_count + keep_bytes(m_axis_tkeep);
       if (m_axis_tlast) captured_last <= 1;
+    end
+  end
+
+  always @(posedge clk) begin : monitor_window_generation_binding
+    integer lane;
+    integer relative_sequence;
+    integer payload_offset;
+    if (monitor_long_object) begin
+      for (lane = 0; lane < 2; lane = lane + 1) begin
+        if (dut.lane_start_pending[lane] && dut.serializer_start_ready[lane] &&
+            !dut.lane_frame_ack[lane]) begin
+          relative_sequence = dut.lane_sequence[lane] - monitor_initial_sequence;
+          payload_offset = relative_sequence * 247;
+          if (dut.tx_store_lane0[dut.lane_payload_base[lane]] !==
+              payload_pattern(payload_offset, monitor_seed))
+            $fatal(1, "TX slot generation mismatch lane=%0d sequence=%0d slot=%0d got=%02x expected=%02x",
+                   lane, relative_sequence, dut.lane_payload_base[lane] / 247,
+                   dut.tx_store_lane0[dut.lane_payload_base[lane]],
+                   payload_pattern(payload_offset, monitor_seed));
+          if (dut.lane_flags[lane][0] !==
+              (relative_sequence == monitor_frame_count - 1))
+            $fatal(1, "TX final metadata mismatch lane=%0d sequence=%0d final=%0b expected=%0b",
+                   lane, relative_sequence, dut.lane_flags[lane][0],
+                   relative_sequence == monitor_frame_count - 1);
+        end
+      end
     end
   end
 
@@ -349,6 +379,11 @@ module tb_p9_optical_transport_core;
       cfg_drop_ack_count = drop_ack;
       cfg_initial_sequence = initial_sequence;
       cfg_fault_flags = fault_flags;
+      monitor_long_object = (length > 8192 && fault_flags == 0 &&
+                             drop_data == 0 && drop_ack == 0);
+      monitor_seed = seed;
+      monitor_frame_count = (length + 246) / 247;
+      monitor_initial_sequence = initial_sequence;
       @(negedge clk);
       clear_counters = 1;
       @(posedge clk);
@@ -436,6 +471,7 @@ module tb_p9_optical_transport_core;
                  physical_crc_bad, crc_before,
                  physical_symbol_error_count, symbol_before);
       end
+      monitor_long_object = 0;
       $display("P9_CORE_OBJECT_PASS dir=%0d len=%0d drop_data=%0d drop_ack=%0d initial=%04x faults=%02x retries=%0d duplicates=%0d",
                direction, length, drop_data, drop_ack, initial_sequence,
                fault_flags[5:0], tx_retry_count, rx_duplicate_count);
@@ -474,6 +510,10 @@ module tb_p9_optical_transport_core;
     s_axis_tlast = 0;
     m_axis_tready = 1;
     capture_clear = 0;
+    monitor_long_object = 0;
+    monitor_seed = 0;
+    monitor_frame_count = 0;
+    monitor_initial_sequence = 0;
 
     repeat (8) @(posedge clk);
     rst_n = 1;
@@ -501,6 +541,14 @@ module tb_p9_optical_transport_core;
     if (phy_ready_mask != 4'hf || startup_done_mask != 4'hf ||
         !endpoint_armed || tx_kill_active)
       $fatal(1, "P9 telemetry clear invalidated safety/startup state");
+
+    if ($test$plusargs("P9_WINDOW_ONLY")) begin
+      cfg_lane_mask = 2'b01;
+      cfg_rate_select = 2'd2;
+      run_object(247*100, 8'hc9, 1'b0, 0, 0, 16'h0000, 0);
+      $display("TB_P9_WINDOW_WRAP_ONLY=PASS");
+      $finish;
+    end
 
     run_object(600, 8'h21, 1'b0, 0, 0, 16'h0000, 0);
     run_object(600, 8'h42, 1'b0, 1, 0, 16'h0100, 0);
@@ -540,6 +588,15 @@ module tb_p9_optical_transport_core;
       $fatal(1, "SACK reorder recovery required an unnecessary retry");
 
     run_object(600, 8'hc7, 1'b0, 0, 0, 16'h2000, 0);
+
+    // Exercise more than three complete 32-entry window generations on one
+    // physical lane.  Slot-local final/CRC/fragment metadata must remain
+    // bound to its allocated sequence while ingress wraps and reuses the
+    // payload store.
+    cfg_lane_mask = 2'b01;
+    cfg_rate_select = 2'd2;
+    run_object(247*100, 8'hc9, 1'b0, 0, 0, 16'h0000, 0);
+    cfg_lane_mask = 2'b11;
 
     // More than one full selective-repeat half-window is required here: the
     // former shared parser/codec tail kept the decoder running through each
