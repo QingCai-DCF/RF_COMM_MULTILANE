@@ -14,6 +14,7 @@ module ir_health_weighted_scheduler #(
   input  logic                          clk,
   input  logic                          rst_n,
   input  logic                          clear_counters_i,
+  input  logic                          state_reset_i,
   input  logic [LANE_COUNT*WEIGHT_WIDTH-1:0] lane_weights_i,
   input  logic [LANE_COUNT-1:0]         active_lane_mask_i,
   input  logic [LANE_COUNT-1:0]         lane_ready_i,
@@ -137,8 +138,107 @@ module ir_health_weighted_scheduler #(
         starvation[lane] <= 32'd0;
       end
     end else begin
-      if (decision_valid_o && decision_ready_i)
+      // Object/session boundaries must flush both halves of the scheduler
+      // handshake and its deficit state.  Clearing telemetry alone is not a
+      // state reset: a stale decision from an aborted object must never be
+      // consumed by the next object.
+      if (state_reset_i) begin
+        request_pending <= 1'b0;
         decision_valid_o <= 1'b0;
+        decision_admit_o <= 1'b0;
+        decision_entry_o <= '0;
+        decision_lane_o <= '0;
+        decision_path_epoch_o <= 16'd0;
+        decision_defer_reason_o <= 4'd0;
+        decision_migration_reason_o <= 4'd0;
+        round_robin_pointer <= '0;
+        eligible_snapshot <= '0;
+        weight_snapshot <= '0;
+        permit_snapshot <= 1'b0;
+        armed_snapshot <= 1'b0;
+        kill_snapshot <= 1'b1;
+        epoch_valid_snapshot <= 1'b0;
+        credit_valid_snapshot <= 1'b0;
+        retry_snapshot <= 1'b0;
+        for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
+          deficit[lane] <= '0;
+          starvation[lane] <= 32'd0;
+        end
+      end else begin
+        if (decision_valid_o && decision_ready_i)
+          decision_valid_o <= 1'b0;
+
+        if (request_valid_i && request_ready_o) begin
+          request_pending <= 1'b1;
+          eligible_snapshot <= active_lane_mask_i & lane_ready_i & lane_health_i &
+              mapping_valid_i & frame_admission_i & lane_tx_permit_i &
+              duty_headroom_i & fault_free_i;
+          weight_snapshot <= lane_weights_i;
+          permit_snapshot <= global_permit_effective_i;
+          armed_snapshot <= endpoint_armed_i;
+          kill_snapshot <= tx_kill_active_i;
+          epoch_valid_snapshot <= path_epoch_valid_i;
+          credit_valid_snapshot <= receiver_credit_i != 0;
+          entry_snapshot <= request_entry_i;
+          cost_snapshot <= request_cost_bytes_i;
+          priority_snapshot <= request_priority_i;
+          retry_snapshot <= request_retry_i;
+          last_lane_snapshot <= request_last_lane_i;
+          path_epoch_snapshot <= path_epoch_i;
+        end
+
+        if (request_pending && (!decision_valid_o || decision_ready_i)) begin
+          request_pending <= 1'b0;
+          decision_valid_o <= 1'b1;
+          decision_admit_o <= 1'b0;
+          decision_entry_o <= entry_snapshot;
+          decision_lane_o <= '0;
+          decision_path_epoch_o <= path_epoch_snapshot;
+          decision_defer_reason_o <= 4'd0;
+          decision_migration_reason_o <= 4'd0;
+          if (!permit_snapshot || !armed_snapshot || kill_snapshot) begin
+            decision_defer_reason_o <= 4'd1;
+          end else if (!epoch_valid_snapshot) begin
+            decision_defer_reason_o <= 4'd2;
+          end else if (!credit_valid_snapshot) begin
+            decision_defer_reason_o <= 4'd3;
+          end else if (eligible_snapshot == '0) begin
+            decision_defer_reason_o <= 4'd4;
+          end else if (affordable_mask == '0) begin
+            decision_defer_reason_o <= 4'd5;
+            for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
+              if (eligible_snapshot[lane]) begin
+                weight_value = weight_snapshot[lane*WEIGHT_WIDTH +: WEIGHT_WIDTH];
+                if (weight_value == 0) weight_value = 1;
+                deficit[lane] <= deficit[lane] + QUANTUM_BYTES * weight_value;
+              end
+            end
+          end else begin
+            decision_admit_o <= 1'b1;
+            decision_lane_o <= selected_lane;
+            decision_migration_reason_o <=
+                (retry_snapshot && selected_lane != last_lane_snapshot) ? 4'd1 : 4'd0;
+            deficit[selected_lane] <= deficit[selected_lane] - cost_snapshot;
+            round_robin_pointer <= (selected_lane == LANE_COUNT-1) ? '0 : selected_lane + 1'b1;
+            scheduled_frames[selected_lane] <= scheduled_frames[selected_lane] + 1'b1;
+            scheduled_bytes[selected_lane] <= scheduled_bytes[selected_lane] + cost_snapshot;
+            if (retry_snapshot) retries[selected_lane] <= retries[selected_lane] + 1'b1;
+            if (retry_snapshot && selected_lane != last_lane_snapshot)
+              migrations[selected_lane] <= migrations[selected_lane] + 1'b1;
+            for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
+              if (eligible_snapshot[lane]) begin
+                if (lane == selected_lane) begin
+                  starvation[lane] <= 32'd0;
+                end else begin
+                  starvation[lane] <= starvation[lane] + 1'b1;
+                  if (starvation[lane] + 1'b1 > maximum_starvation_o)
+                    maximum_starvation_o <= starvation[lane] + 1'b1;
+                end
+              end
+            end
+          end
+        end
+      end
 
       if (clear_counters_i) begin
         maximum_starvation_o <= 32'd0;
@@ -148,77 +248,6 @@ module ir_health_weighted_scheduler #(
           retries[lane] <= 32'd0;
           migrations[lane] <= 32'd0;
           starvation[lane] <= 32'd0;
-        end
-      end
-
-      if (request_valid_i && request_ready_o) begin
-        request_pending <= 1'b1;
-        eligible_snapshot <= active_lane_mask_i & lane_ready_i & lane_health_i &
-            mapping_valid_i & frame_admission_i & lane_tx_permit_i &
-            duty_headroom_i & fault_free_i;
-        weight_snapshot <= lane_weights_i;
-        permit_snapshot <= global_permit_effective_i;
-        armed_snapshot <= endpoint_armed_i;
-        kill_snapshot <= tx_kill_active_i;
-        epoch_valid_snapshot <= path_epoch_valid_i;
-        credit_valid_snapshot <= receiver_credit_i != 0;
-        entry_snapshot <= request_entry_i;
-        cost_snapshot <= request_cost_bytes_i;
-        priority_snapshot <= request_priority_i;
-        retry_snapshot <= request_retry_i;
-        last_lane_snapshot <= request_last_lane_i;
-        path_epoch_snapshot <= path_epoch_i;
-      end
-
-      if (request_pending && (!decision_valid_o || decision_ready_i)) begin
-        request_pending <= 1'b0;
-        decision_valid_o <= 1'b1;
-        decision_admit_o <= 1'b0;
-        decision_entry_o <= entry_snapshot;
-        decision_lane_o <= '0;
-        decision_path_epoch_o <= path_epoch_snapshot;
-        decision_defer_reason_o <= 4'd0;
-        decision_migration_reason_o <= 4'd0;
-        if (!permit_snapshot || !armed_snapshot || kill_snapshot) begin
-          decision_defer_reason_o <= 4'd1;
-        end else if (!epoch_valid_snapshot) begin
-          decision_defer_reason_o <= 4'd2;
-        end else if (!credit_valid_snapshot) begin
-          decision_defer_reason_o <= 4'd3;
-        end else if (eligible_snapshot == '0) begin
-          decision_defer_reason_o <= 4'd4;
-        end else if (affordable_mask == '0) begin
-          decision_defer_reason_o <= 4'd5;
-          for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
-            if (eligible_snapshot[lane]) begin
-              weight_value = weight_snapshot[lane*WEIGHT_WIDTH +: WEIGHT_WIDTH];
-              if (weight_value == 0) weight_value = 1;
-              deficit[lane] <= deficit[lane] + QUANTUM_BYTES * weight_value;
-            end
-          end
-        end else begin
-          decision_admit_o <= 1'b1;
-          decision_lane_o <= selected_lane;
-          decision_migration_reason_o <=
-              (retry_snapshot && selected_lane != last_lane_snapshot) ? 4'd1 : 4'd0;
-          deficit[selected_lane] <= deficit[selected_lane] - cost_snapshot;
-          round_robin_pointer <= (selected_lane == LANE_COUNT-1) ? '0 : selected_lane + 1'b1;
-          scheduled_frames[selected_lane] <= scheduled_frames[selected_lane] + 1'b1;
-          scheduled_bytes[selected_lane] <= scheduled_bytes[selected_lane] + cost_snapshot;
-          if (retry_snapshot) retries[selected_lane] <= retries[selected_lane] + 1'b1;
-          if (retry_snapshot && selected_lane != last_lane_snapshot)
-            migrations[selected_lane] <= migrations[selected_lane] + 1'b1;
-          for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
-            if (eligible_snapshot[lane]) begin
-              if (lane == selected_lane) begin
-                starvation[lane] <= 32'd0;
-              end else begin
-                starvation[lane] <= starvation[lane] + 1'b1;
-                if (starvation[lane] + 1'b1 > maximum_starvation_o)
-                  maximum_starvation_o <= starvation[lane] + 1'b1;
-              end
-            end
-          end
         end
       end
     end

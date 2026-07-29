@@ -50,7 +50,7 @@ module p9_axi_dma_peripheral (
   output logic [1:0]   loop_tx_b0
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
-  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0008;
+  localparam logic [31:0] P9_BUILD_ID = 32'h5009_0009;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
 
   logic reg_wr_en;
@@ -88,6 +88,7 @@ module p9_axi_dma_peripheral (
   logic [31:0] raw_spacing_q;
   logic object_done_sticky_q;
   logic object_fail_sticky_q;
+  logic object_fail_d_q;
   logic raw_done_sticky_q;
 
   logic endpoint_armed;
@@ -200,6 +201,7 @@ module p9_axi_dma_peripheral (
       raw_spacing_q <= 32'd1024;
       object_done_sticky_q <= 0;
       object_fail_sticky_q <= 0;
+      object_fail_d_q <= 0;
       raw_done_sticky_q <= 0;
     end else begin
       arm_pulse_q <= 0;
@@ -213,8 +215,12 @@ module p9_axi_dma_peripheral (
         stream_reset_hold_q <= stream_reset_hold_q - 1'b1;
         if (stream_reset_hold_q == 1) stream_reset_request_o <= 0;
       end
+      object_fail_d_q <= object_fail;
       if (object_done) object_done_sticky_q <= 1;
-      if (object_fail) object_fail_sticky_q <= 1;
+      // object_fail is level-sticky in the core.  Latch only its rising edge;
+      // otherwise the previous object's high level is sampled once more on
+      // the cycle after START and resurrects a failure that START just cleared.
+      if (object_fail && !object_fail_d_q) object_fail_sticky_q <= 1;
       if (raw_done) raw_done_sticky_q <= 1;
       if (safety_fault_mask != 0) receiver_enable_q <= 0;
 

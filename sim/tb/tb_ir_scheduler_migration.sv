@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_ir_scheduler_migration;
   logic clk=0; always #5 clk=~clk;
-  logic rst_n, clear_counters;
+  logic rst_n, clear_counters, state_reset;
   logic [63:0] weights;
   logic [7:0] active_mask, lane_ready, lane_health, mapping_valid;
   logic [7:0] frame_admission, lane_tx_permit, duty_headroom, fault_free;
@@ -25,7 +25,8 @@ module tb_ir_scheduler_migration;
   integer lane_tally[0:7];
 
   ir_health_weighted_scheduler #(.LANE_COUNT(8), .ENTRY_WIDTH(6), .STARVATION_BOUND(64)) dut (
-    .clk, .rst_n, .clear_counters_i(clear_counters), .lane_weights_i(weights),
+    .clk, .rst_n, .clear_counters_i(clear_counters), .state_reset_i(state_reset),
+    .lane_weights_i(weights),
     .active_lane_mask_i(active_mask), .lane_ready_i(lane_ready), .lane_health_i(lane_health),
     .mapping_valid_i(mapping_valid), .frame_admission_i(frame_admission),
     .lane_tx_permit_i(lane_tx_permit), .duty_headroom_i(duty_headroom),
@@ -84,7 +85,7 @@ module tb_ir_scheduler_migration;
   endtask
 
   initial begin
-    rst_n=0; clear_counters=0; weights=64'h0101010101010101;
+    rst_n=0; clear_counters=0; state_reset=0; weights=64'h0101010101010101;
     active_mask=8'hff; lane_ready=8'hff; lane_health=8'hff; mapping_valid=8'hff;
     frame_admission=8'hff; lane_tx_permit=8'hff; duty_headroom=8'hff; fault_free=8'hff;
     global_permit=1; endpoint_armed=1; tx_kill=0; path_epoch_valid=1;
@@ -104,6 +105,39 @@ module tb_ir_scheduler_migration;
       check_expect(lane_tally[lane]>=63 && lane_tally[lane]<=65,
              "equal lanes remain fair within one decision");
     check_expect(maximum_starvation<16,"healthy lane starvation remains explicitly bounded");
+
+    // Reset the decision/deficit state at an object boundary, then prove both
+    // unequal-weight directions directly in RTL rather than relying only on
+    // the Python reference model.
+    @(negedge clk); state_reset=1; clear_counters=1;
+    @(posedge clk); #1; state_reset=0; clear_counters=0;
+    weights=64'h0101010101010301; active_mask=8'h03;
+    for(int lane=0;lane<8;lane++) lane_tally[lane]=0;
+    for(int request=0;request<512;request++) begin
+      logic [2:0] lane;
+      request_entry=request[5:0];
+      issue_admitted(lane); lane_tally[lane]=lane_tally[lane]+1;
+    end
+    $display("SCHED_WEIGHT_1_TO_3_COUNTS=%0d,%0d", lane_tally[0], lane_tally[1]);
+    check_expect(lane_tally[1] >= 3*lane_tally[0]-4 &&
+                 lane_tally[1] <= 3*lane_tally[0]+4,
+                 "1:3 weighted byte-cost service ratio");
+
+    @(negedge clk); state_reset=1; clear_counters=1;
+    @(posedge clk); #1; state_reset=0; clear_counters=0;
+    weights=64'h0101010101010103;
+    for(int lane=0;lane<8;lane++) lane_tally[lane]=0;
+    for(int request=0;request<512;request++) begin
+      logic [2:0] lane;
+      request_entry=request[5:0];
+      issue_admitted(lane); lane_tally[lane]=lane_tally[lane]+1;
+    end
+    $display("SCHED_WEIGHT_3_TO_1_COUNTS=%0d,%0d", lane_tally[0], lane_tally[1]);
+    check_expect(lane_tally[0] >= 3*lane_tally[1]-4 &&
+                 lane_tally[0] <= 3*lane_tally[1]+4,
+                 "3:1 weighted byte-cost service ratio");
+
+    weights=64'h0101010101010101; active_mask=8'hff;
 
     lane_health[0]=0; duty_headroom[1]=0; mapping_valid[2]=0; lane_tx_permit[3]=0;
     repeat(32) begin
@@ -127,6 +161,7 @@ module tb_ir_scheduler_migration;
     check_expect(migration_gate_reason==3,"all-lanes-unavailable defer reason is explicit");
     $display("P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1");
     $display("P8D_SCHEDULER_FAIRNESS_PASS=1");
+    $display("P8D_SCHEDULER_UNEQUAL_WEIGHT_PASS=1");
     $display("P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1");
     $display("TB_IR_SCHEDULER_MIGRATION_PASS=1");
     $finish;

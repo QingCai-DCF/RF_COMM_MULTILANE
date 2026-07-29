@@ -1487,6 +1487,10 @@ module p9_optical_transport_core #(
           object_error_q <= any_safety_fault ? 32'h5009_0002 : 32'h5009_0001;
         end
       end else begin
+        if (clear_counters_i && !object_active_q) begin
+          object_fail_q <= 0;
+          object_error_q <= 0;
+        end
         if (receiver_enable_i) begin
           receiver_enable_q <= 1;
           shutdown_latched_q <= 0;

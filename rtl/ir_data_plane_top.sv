@@ -159,8 +159,9 @@ module ir_data_plane_top #(
   logic [15:0] scheduler_decision_path_epoch;
   logic [3:0] scheduler_decision_defer_reason;
   logic [3:0] scheduler_migration_reason_unused;
-  logic [LANE_COUNT-1:0] live_eligible_mask;
-  logic live_decision_safe;
+  logic [LANE_COUNT-1:0] scheduler_eligible_mask;
+  logic live_decision_path_safe;
+  logic live_decision_transmit_ready;
   logic [2:0] selected_lane_padded;
 
   logic rx_accept_pulse;
@@ -171,20 +172,29 @@ module ir_data_plane_top #(
       $error("WINDOW_SIZE must be at least 32 and below sequence half-space");
   end
 
-  assign live_eligible_mask = active_lane_mask_i & lane_ready_i & lane_health_i &
-                              mapping_valid_i & frame_admission_i & lane_tx_permit_i &
-                              duty_headroom_i & fault_free_i;
-  assign live_decision_safe = global_permit_effective_i && endpoint_armed_i &&
-                              !tx_kill_active_i && path_epoch_valid_i &&
-                              (peer_receiver_credit_i != 0) &&
-                              live_eligible_mask[scheduler_decision_lane];
+  // Transient serializer/backpressure readiness is deliberately not part of
+  // the weighted choice.  Once a safe lane is selected, hold that choice until
+  // the physical boundary is ready.  Permanent health/mapping/permit/fault
+  // changes still cancel the decision immediately and force a fresh choice.
+  assign scheduler_eligible_mask = active_lane_mask_i & lane_health_i &
+                                   mapping_valid_i & frame_admission_i &
+                                   lane_tx_permit_i & duty_headroom_i &
+                                   fault_free_i;
+  assign live_decision_path_safe = global_permit_effective_i && endpoint_armed_i &&
+                                   !tx_kill_active_i && path_epoch_valid_i &&
+                                   (peer_receiver_credit_i != 0) &&
+                                   scheduler_eligible_mask[scheduler_decision_lane];
+  assign live_decision_transmit_ready = live_decision_path_safe &&
+                                        lane_ready_i[scheduler_decision_lane];
   assign selected_lane_padded = {{(3-LANE_WIDTH){1'b0}}, scheduler_decision_lane};
 
   assign scheduler_request_valid = tx_attempt_valid && !request_inflight;
   assign physical_attempt_valid_o = request_inflight && scheduler_decision_valid &&
-                                    scheduler_decision_admit && live_decision_safe;
+                                    scheduler_decision_admit &&
+                                    live_decision_transmit_ready;
   assign scheduler_decision_ready = scheduler_decision_valid &&
-      ((!scheduler_decision_admit) || (!live_decision_safe) || physical_attempt_ready_i);
+      ((!scheduler_decision_admit) || (!live_decision_path_safe) ||
+       (lane_ready_i[scheduler_decision_lane] && physical_attempt_ready_i));
   assign tx_attempt_ready = physical_attempt_valid_o && physical_attempt_ready_i;
   assign physical_attempt_entry_o = pending_entry;
   assign physical_attempt_sequence_o = pending_sequence;
@@ -225,7 +235,7 @@ module ir_data_plane_top #(
           request_inflight <= 1'b0;
           if (!scheduler_decision_admit)
             scheduler_last_defer_reason_o <= scheduler_decision_defer_reason;
-          else if (!live_decision_safe)
+          else if (!live_decision_path_safe)
             scheduler_last_defer_reason_o <= 4'd6;
           else
             scheduler_last_defer_reason_o <= 4'd0;
@@ -277,8 +287,10 @@ module ir_data_plane_top #(
   ir_health_weighted_scheduler #(
     .LANE_COUNT(LANE_COUNT), .ENTRY_WIDTH(ENTRY_WIDTH)
   ) u_scheduler (
-    .clk, .rst_n, .clear_counters_i, .lane_weights_i,
-    .active_lane_mask_i, .lane_ready_i, .lane_health_i, .mapping_valid_i,
+    .clk, .rst_n, .clear_counters_i,
+    .state_reset_i(session_reset_i || abort_all_i), .lane_weights_i,
+    .active_lane_mask_i, .lane_ready_i({LANE_COUNT{1'b1}}),
+    .lane_health_i, .mapping_valid_i,
     .frame_admission_i, .lane_tx_permit_i, .duty_headroom_i, .fault_free_i,
     .global_permit_effective_i, .endpoint_armed_i, .tx_kill_active_i,
     .path_epoch_valid_i, .receiver_credit_i(peer_receiver_credit_i), .path_epoch_i,

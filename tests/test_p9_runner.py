@@ -309,14 +309,27 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("model_rxd_sync", fir_bench)
         self.assertIn("TB_P9_TFDU_FIR_FRAME_LINK=PASS", fir_bench)
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
-        self.assertIn("P9_BUILD_ID = 32'h5009_0008", peripheral)
-        self.assertIn("m->pl_build_id != UINT32_C(0x50090008)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x50090009)", protocol)
+        self.assertIn("P9_BUILD_ID = 32'h5009_0009", peripheral)
+        self.assertIn("m->pl_build_id != UINT32_C(0x50090009)", firmware)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x5009000a)", protocol)
         self.assertIn("P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)", protocol)
         self.assertIn("terminal_window_command_sequence", protocol)
         self.assertIn("p9_capture_terminal_window(m);", firmware)
-        self.assertEqual(0x50090008, P9_HW.P9_PL_BUILD_ID)
-        self.assertEqual(0x50090009, P9_HW.P9_FIRMWARE_BUILD_ID)
+        self.assertIn("if (object_fail && !object_fail_d_q)", peripheral)
+        self.assertIn("clear_counters_i && !object_active_q", core)
+        self.assertEqual(0x50090009, P9_HW.P9_PL_BUILD_ID)
+        self.assertEqual(0x5009000A, P9_HW.P9_FIRMWARE_BUILD_ID)
+
+    def test_scheduler_plan_forces_real_retry_migration_and_explicit_all_down_fault(self):
+        plan = {case.label: case for case in P9_HW.build_plans()["P9-20"]}
+        migration = plan["retry_migration"]
+        self.assertEqual(
+            (1, 1, 10),
+            (migration.dropdata, migration.injectmask, migration.injectdelay),
+        )
+        all_down = plan["all_lanes_unavailable"]
+        self.assertEqual(12, all_down.expected_status)
+        self.assertEqual(0, all_down.flags & 1)
 
     def test_pl_soft_reset_flushes_all_stream_domains_and_rebuilds_dma(self):
         peripheral = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(

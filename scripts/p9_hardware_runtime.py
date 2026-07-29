@@ -55,8 +55,8 @@ P9_FRAME_DUTY_GUARD_CYCLES = 20_480
 P9_FRAME_DUTY_GUARD_US = 320
 PL_SNAPSHOT_WORDS = 99
 P9_MAILBOX_SCHEMA = 5
-P9_FIRMWARE_BUILD_ID = 0x50090009
-P9_PL_BUILD_ID = 0x50090008
+P9_FIRMWARE_BUILD_ID = 0x5009000A
+P9_PL_BUILD_ID = 0x50090009
 PERFORMANCE_START = 215
 PERMIT_START = 227
 RFAP_START = 245
@@ -421,7 +421,8 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
         object_case("sched_3_to_1", lane=3, direction=0, rate=2,
                     size=247 * 512, object_id=0x2004, weights=0x0103),
         object_case("retry_migration", lane=3, direction=1, rate=2,
-                    size=247 * 256, object_id=0x2005, dropdata=1),
+                    size=247 * 256, object_id=0x2005, dropdata=1,
+                    injectmask=1, injectdelay=10),
         object_case("lane0_unavailable", lane=3, direction=0, rate=2,
                     size=247 * 256, object_id=0x2006, unavailable=1),
         object_case("lane1_unavailable", lane=3, direction=1, rate=2,
@@ -439,7 +440,7 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
                     injectdelay=100, timeout=120_000),
         object_case("all_lanes_unavailable", lane=3, direction=0, rate=2,
                     size=4096, object_id=0x2009, unavailable=3,
-                    allow_failure=True, timeout=30_000),
+                    expected_status=12, timeout=30_000),
         object_case("scheduler_recovery", lane=3, direction=1, rate=2,
                     size=65536, object_id=0x200A),
     ]
@@ -916,9 +917,12 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         "dma_reset_while_queued_count": words[107],
         "object_abort_count": words[108], "pl_soft_reset_count": words[109],
         "shutdown_attempt_count": words[110], "shutdown_verified_count": words[111],
+        "last_error_detail": words[115],
         "pl_status": status, "phy_status": phy, "tx_high_max_cycles": high_max,
+        "pl_object_error": pl(words, 9),
         "object_config_readback": pl(words, 10),
         "lane_weights_readback": pl(words, 11),
+        "fault_injection_readback": pl(words, 15),
         "raw_config_readback": pl(words, 16),
         "duty_window_cycles": window_cycles,
         "duty_hard_max_high_cycles": hard_limit,
@@ -936,6 +940,7 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
         "scheduler_bytes": [pl(words, 46), pl(words, 47)],
         "scheduler_retries": [pl(words, 48), pl(words, 49)],
         "scheduler_migrations": [pl(words, 50), pl(words, 51)],
+        "scheduler_maximum_starvation": pl(words, 52),
         "tx_ring_indices": [words[84], words[85]],
         "rx_ring_indices": [words[86], words[87]],
         "tx_ring_generations": [words[88], words[89]],
@@ -1042,6 +1047,11 @@ def evaluate_observation(row: dict[str, Any], words: list[int]) -> tuple[list[st
             errors.append(f"{label}: expected object failure published output")
         if not (pl(words, 7) & (1 << 4)) and pl(words, 9) == 0:
             errors.append(f"{label}: expected object failure lacked PL failure evidence")
+    elif command == 3 and expected_status == 12:
+        if words[60] != 0 or pl(words, 21) != 0 or words[250] != 0:
+            errors.append(f"{label}: expected PL object rejection published output")
+        if words[115] == 0 or pl(words, 9) == 0:
+            errors.append(f"{label}: expected PL object rejection lacked bound error detail")
     if command == 7 and row["flags"] & (4 | 8):
         expected_mode = 1 if row["flags"] & 4 else 2
         if detail["rfap_mode"] != expected_mode or \
