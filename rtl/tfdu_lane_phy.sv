@@ -15,7 +15,13 @@ module tfdu_lane_phy #(
   // Legacy users historically treated clear_sticky as a controlled safety
   // clear.  P9's CLEAR_COUNTERS register is telemetry-only and overrides this
   // parameter to zero so a measurement reset cannot erase duty history.
-  parameter integer CLEAR_STICKY_INVALIDATES_HISTORY = 1
+  parameter integer CLEAR_STICKY_INVALIDATES_HISTORY = 1,
+  // Legacy frame generators cannot pause safely after a target-policy
+  // throttle, so retain their historical sticky shutdown by default.  P9
+  // performs whole-frame duty admission before starting a serializer and
+  // therefore keeps a target throttle nonfatal while the exact hard fault
+  // remains sticky and fail-closed.
+  parameter integer TARGET_THROTTLE_LATCHES_FAULT = 1
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -154,7 +160,8 @@ module tfdu_lane_phy #(
       end else begin
         if (module_stuck_fault)
           fault_stuck_high <= 1'b1;
-        if (module_duty_hard_fault || duty_target_throttle)
+        if (module_duty_hard_fault ||
+            (duty_target_throttle && TARGET_THROTTLE_LATCHES_FAULT != 0))
           fault_duty_limit <= 1'b1;
       end
 

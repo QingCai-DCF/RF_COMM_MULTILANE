@@ -116,6 +116,7 @@ module tb_p9_optical_transport_core;
   wire [127:0] physical_tx_counts_flat;
   wire [127:0] raw_rx_counts_flat;
   wire [127:0] duty_high_max_flat;
+  wire [127:0] duty_target_throttle_count_flat;
   wire [31:0] duty_hard_limit_cycles;
   wire [31:0] duty_target_limit_cycles;
 
@@ -261,7 +262,8 @@ module tb_p9_optical_transport_core;
     .physical_tx_counts_flat_o(physical_tx_counts_flat),
     .tx_high_max_flat_o(tx_high_max_flat), .duty_high_max_flat_o(duty_high_max_flat),
     .duty_high_current_flat_o(), .duty_headroom_flat_o(),
-    .duty_target_throttle_count_flat_o(), .duty_hard_fault_count_flat_o(),
+    .duty_target_throttle_count_flat_o(duty_target_throttle_count_flat),
+    .duty_hard_fault_count_flat_o(),
     .duty_window_cycles_o(),
     .duty_hard_limit_cycles_o(duty_hard_limit_cycles),
     .duty_target_limit_cycles_o(duty_target_limit_cycles)
@@ -410,12 +412,18 @@ module tb_p9_optical_transport_core;
         watchdog = watchdog + 1;
       end
       if (object_fail) begin
-        $display("CORE_FAIL_DIAG dir=%0d len=%0d attempts=%0d retries=%0d timeouts=%0d exhausted=%0d data=%0d ack=%0d crc=%0d frame_bad=%0d symbol_errors=%0d tx=%0d,%0d,%0d,%0d raw=%0d,%0d,%0d,%0d phase=%0d busy=%b rx_acquired=%0b rx_tick=%0d rx_chip=%0d rx_capture=%b chip_seen=%0b preambles=%0d parser_state=%0d",
+        $display("CORE_FAIL_DIAG dir=%0d len=%0d attempts=%0d retries=%0d timeouts=%0d exhausted=%0d data=%0d ack=%0d crc=%0d frame_bad=%0d symbol_errors=%0d safety=%h stuck_a=%b stuck_b=%b duty_a=%b duty_b=%b duty_current_a=%0d,%0d duty_current_b=%0d,%0d duty_max_a=%0d,%0d duty_max_b=%0d,%0d tx=%0d,%0d,%0d,%0d raw=%0d,%0d,%0d,%0d phase=%0d busy=%b rx_acquired=%0b rx_tick=%0d rx_chip=%0d rx_capture=%b chip_seen=%0b preambles=%0d parser_state=%0d",
                  direction, length, tx_attempt_count, tx_retry_count,
                  tx_timeout_count, tx_retry_exhausted_count,
                  physical_data_frames_good, physical_ack_frames_good,
                  physical_crc_bad, physical_frame_bad,
-                 physical_symbol_error_count,
+                 physical_symbol_error_count, safety_fault_mask,
+                 dut.a_fault_stuck, dut.b_fault_stuck,
+                 dut.a_fault_duty, dut.b_fault_duty,
+                 dut.a_duty_current[0], dut.a_duty_current[1],
+                 dut.b_duty_current[0], dut.b_duty_current[1],
+                 dut.a_duty_max[0], dut.a_duty_max[1],
+                 dut.b_duty_max[0], dut.b_duty_max[1],
                  physical_tx_counts_flat[31:0], physical_tx_counts_flat[63:32],
                  physical_tx_counts_flat[95:64], physical_tx_counts_flat[127:96],
                  raw_rx_counts_flat[31:0], raw_rx_counts_flat[63:32],
@@ -450,9 +458,11 @@ module tb_p9_optical_transport_core;
                  direction, index, received[index], payload_pattern(index, seed));
       if (((fault_flags[4] == 0) && physical_crc_bad != crc_before) ||
           (fault_flags[4] && physical_crc_bad == crc_before) ||
-          safety_fault_mask != 0 || tx_retry_exhausted_count != 0)
-        $fatal(1, "integrity/safety counter failure crc=%0d safety=%x exhausted=%0d",
-               physical_crc_bad, safety_fault_mask, tx_retry_exhausted_count);
+          safety_fault_mask != 0 || tx_retry_exhausted_count != 0 ||
+          duty_target_throttle_count_flat != 0)
+        $fatal(1, "integrity/safety counter failure crc=%0d safety=%x exhausted=%0d duty_throttle=%h",
+               physical_crc_bad, safety_fault_mask, tx_retry_exhausted_count,
+               duty_target_throttle_count_flat);
       if (drop_data == 0 && drop_ack == 0 && fault_flags == 0) begin
         expected_frames = (length + 246) / 247;
         if (tx_retry_count != 0 || tx_timeout_count != 0 ||
@@ -551,6 +561,21 @@ module tb_p9_optical_transport_core;
     end
 
     run_object(600, 8'h21, 1'b0, 0, 0, 16'h0000, 0);
+    // Exercise the weighted scheduler through the real serializer, exact-duty
+    // admission, receiver, ACK, and selective-repeat path.  Every fragment is
+    // the same cost, so 16 frames must realize the configured 1:3 split
+    // exactly in either orientation.
+    cfg_lane_weights = 16'h0301;
+    run_object(247*16, 8'h31, 1'b0, 0, 0, 16'h0030, 0);
+    if (scheduler_frames_flat[31:0] != 4 || scheduler_frames_flat[63:32] != 12)
+      $fatal(1, "real-path 1:3 weighted schedule mismatch: %h",
+             scheduler_frames_flat);
+    cfg_lane_weights = 16'h0103;
+    run_object(247*16, 8'h32, 1'b1, 0, 0, 16'h0040, 0);
+    if (scheduler_frames_flat[31:0] != 12 || scheduler_frames_flat[63:32] != 4)
+      $fatal(1, "real-path 3:1 weighted schedule mismatch: %h",
+             scheduler_frames_flat);
+    cfg_lane_weights = 16'h0101;
     run_object(600, 8'h42, 1'b0, 1, 0, 16'h0100, 0);
     if (physical_drop_data_count != 1 || tx_retry_count == 0)
       $fatal(1, "DATA loss did not cause bounded retry");
@@ -622,6 +647,9 @@ module tb_p9_optical_transport_core;
         duty_high_max_flat[127:96] > duty_target_limit_cycles)
       $fatal(1, "rolling-duty 18 percent target exceeded: max=%h target=%0d",
              duty_high_max_flat, duty_target_limit_cycles);
+    if (duty_target_throttle_count_flat != 0)
+      $fatal(1, "whole-frame duty admission allowed a mid-frame target throttle: %h",
+             duty_target_throttle_count_flat);
     if (duty_target_limit_cycles == 0) $fatal(1, "invalid duty target telemetry");
 
     // Validation-only mapping and duty masks remove exactly one lane and

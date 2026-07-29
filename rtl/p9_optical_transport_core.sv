@@ -575,7 +575,7 @@ module p9_optical_transport_core #(
 
   typedef enum reg [2:0] {PH_DATA, PH_ACK_GUARD, PH_ACK_START,
                           PH_ACK_WAIT_DONE, PH_ACK_WAIT_RX,
-                          PH_DATA_GUARD} phase_t;
+                          PH_ACK_REPEAT_WAIT, PH_DATA_GUARD} phase_t;
   phase_t phase_q;
   reg [15:0] phase_guard_q;
   reg ack_lane_q;
@@ -583,12 +583,42 @@ module p9_optical_transport_core #(
   reg ack_received_pulse_q;
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
+  // Admit an entire encoded frame against the exact physical-module duty
+  // headroom before its first symbol.  A DATA frame has 16 preamble symbols,
+  // 24 header bytes, payload, and four CRC bytes; every 4PPM symbol requests
+  // exactly eight Txd-high clock cycles at all supported raw rates.  Reserving
+  // the complete frame prevents a target-policy throttle from deleting a chip
+  // in the middle of an otherwise valid physical frame.
+  wire [31:0] data_frame_required_high_cycles =
+      32'd1024 + ({16'd0, dp_attempt_payload_length} << 5);
+  wire [31:0] data_lane0_headroom = object_direction_q ?
+      duty_headroom_flat_o[95:64] : duty_headroom_flat_o[31:0];
+  wire [31:0] data_lane1_headroom = object_direction_q ?
+      duty_headroom_flat_o[127:96] : duty_headroom_flat_o[63:32];
+  wire [1:0] data_frame_duty_ready = {
+      data_lane1_headroom >= data_frame_required_high_cycles,
+      data_lane0_headroom >= data_frame_required_high_cycles
+  };
+  // ACK frames contain 16 preamble plus 20*4 data symbols, or 768 Txd-high
+  // cycles.  ACKs travel from the opposite physical endpoint.
+  wire [31:0] ack_lane0_headroom = object_direction_q ?
+      duty_headroom_flat_o[31:0] : duty_headroom_flat_o[95:64];
+  wire [31:0] ack_lane1_headroom = object_direction_q ?
+      duty_headroom_flat_o[63:32] : duty_headroom_flat_o[127:96];
+  wire [1:0] ack_frame_duty_ready = {
+      ack_lane1_headroom >= 32'd768,
+      ack_lane0_headroom >= 32'd768
+  };
+  wire [1:0] ack_schedulable_lane_mask =
+      schedulable_lane_mask & ack_frame_duty_ready;
   assign lane_runtime_ready[0] = schedulable_lane_mask[0] && !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] &&
-      frame_duty_guard_q[0] == 0 && phase_q == PH_DATA;
+      frame_duty_guard_q[0] == 0 && data_frame_duty_ready[0] &&
+      phase_q == PH_DATA;
   assign lane_runtime_ready[1] = schedulable_lane_mask[1] && !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] &&
-      frame_duty_guard_q[1] == 0 && phase_q == PH_DATA;
+      frame_duty_guard_q[1] == 0 && data_frame_duty_ready[1] &&
+      phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);
 
@@ -779,23 +809,23 @@ module p9_optical_transport_core #(
               phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
             end
           end
-          PH_ACK_GUARD: if (lanes_idle && schedulable_lane_mask != 0) begin
+          PH_ACK_GUARD: if (lanes_idle && ack_schedulable_lane_mask != 0) begin
             if (phase_guard_q != 0) phase_guard_q <= phase_guard_q - 1'b1;
             else begin
-              ack_lane_q <= schedulable_lane_mask[0] ? 1'b0 : 1'b1;
-              lane_frame_ack[schedulable_lane_mask[0] ? 0 : 1] <= 1;
-              lane_session[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_session;
-              lane_path[schedulable_lane_mask[0] ? 0 : 1] <= object_path_q;
-              lane_sequence[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_length[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_crc[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_flags[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_object[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_fragment[schedulable_lane_mask[0] ? 0 : 1] <= 0;
-              lane_ack_base[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_base;
-              lane_ack_bitmap[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_bitmap;
-              lane_ack_credit[schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_credit;
-              lane_start_pending[schedulable_lane_mask[0] ? 0 : 1] <= 1;
+              ack_lane_q <= ack_schedulable_lane_mask[0] ? 1'b0 : 1'b1;
+              lane_frame_ack[ack_schedulable_lane_mask[0] ? 0 : 1] <= 1;
+              lane_session[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_session;
+              lane_path[ack_schedulable_lane_mask[0] ? 0 : 1] <= object_path_q;
+              lane_sequence[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_length[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_crc[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_flags[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_object[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_fragment[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_ack_base[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_base;
+              lane_ack_bitmap[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_bitmap;
+              lane_ack_credit[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_credit;
+              lane_start_pending[ack_schedulable_lane_mask[0] ? 0 : 1] <= 1;
               phase_q <= PH_ACK_START;
             end
           end
@@ -810,8 +840,7 @@ module p9_optical_transport_core #(
               // the selective-repeat TX window.
               if (fault_flags_remaining_q[5]) begin
                 fault_flags_remaining_q[5] <= 0;
-                lane_start_pending[ack_lane_q] <= 1;
-                phase_q <= PH_ACK_WAIT_DONE;
+                phase_q <= PH_ACK_REPEAT_WAIT;
               end else begin
                 // The reverse transmitter has just completed an ACK.  Its
                 // local receiver must recover before the next DATA frame is
@@ -824,6 +853,12 @@ module p9_optical_transport_core #(
               ack_wait_q <= ack_wait_q + 1'b1;
               if (ack_wait_q >= RTO_CYCLES-1) phase_q <= PH_DATA;
             end
+          end
+          PH_ACK_REPEAT_WAIT: if (lanes_idle &&
+              schedulable_lane_mask[ack_lane_q] &&
+              ack_frame_duty_ready[ack_lane_q]) begin
+            lane_start_pending[ack_lane_q] <= 1;
+            phase_q <= PH_ACK_WAIT_DONE;
           end
           PH_DATA_GUARD: if (lanes_idle) begin
             if (phase_guard_q != 0) phase_guard_q <= phase_guard_q - 1'b1;
@@ -919,7 +954,8 @@ module p9_optical_transport_core #(
     for (tx_lane = 0; tx_lane < 2; tx_lane = tx_lane + 1) begin : g_physical
       tfdu_lane_phy #(
         .CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500),
-        .CLEAR_STICKY_INVALIDATES_HISTORY(0)
+        .CLEAR_STICKY_INVALIDATES_HISTORY(0),
+        .TARGET_THROTTLE_LATCHES_FAULT(0)
       ) u_a_phy (
         .clk(clk), .rst_n(rst_n), .enable_phy(physical_enable),
         .clear_sticky(clear_counters_i), .tx_pulse_req(a_tx_request[tx_lane]),
@@ -941,7 +977,8 @@ module p9_optical_transport_core #(
       );
       tfdu_lane_phy #(
         .CLK_HZ(CLK_HZ), .TFDU_STARTUP_US(500),
-        .CLEAR_STICKY_INVALIDATES_HISTORY(0)
+        .CLEAR_STICKY_INVALIDATES_HISTORY(0),
+        .TARGET_THROTTLE_LATCHES_FAULT(0)
       ) u_b_phy (
         .clk(clk), .rst_n(rst_n), .enable_phy(physical_enable),
         .clear_sticky(clear_counters_i), .tx_pulse_req(b_tx_request[tx_lane]),
