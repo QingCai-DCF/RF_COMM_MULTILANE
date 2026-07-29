@@ -75,6 +75,7 @@ module ir_data_plane_top #(
   output logic [15:0]                    rx_delivery_sequence_o,
   output logic [PAYLOAD_REF_WIDTH-1:0]   rx_delivery_payload_ref_o,
   output logic [15:0]                    rx_delivery_payload_length_o,
+  output logic                           rx_accept_pulse_o,
 
   input  logic                           ack_control_event_i,
   input  logic                           ack_direction_boundary_i,
@@ -165,6 +166,7 @@ module ir_data_plane_top #(
   logic [2:0] selected_lane_padded;
 
   logic rx_accept_pulse;
+  assign rx_accept_pulse_o = rx_accept_pulse;
   initial begin
     if (LANE_COUNT < 2 || LANE_COUNT > 8 || (LANE_COUNT & (LANE_COUNT-1)) != 0)
       $error("LANE_COUNT must be 2, 4, or 8");

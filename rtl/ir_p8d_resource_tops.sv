@@ -78,7 +78,7 @@ module ir_p8d_resource_top #(
     .rx_payload_ref_i({{(16-$clog2(WINDOW_SIZE)){1'b0}},descriptor_index_i}),
     .rx_payload_length_i(payload_length_i),.rx_delivery_valid_o(),
     .rx_delivery_ready_i(1'b1),.rx_delivery_sequence_o(),.rx_delivery_payload_ref_o(),
-    .rx_delivery_payload_length_o(),.ack_control_event_i(1'b0),
+    .rx_delivery_payload_length_o(),.rx_accept_pulse_o(),.ack_control_event_i(1'b0),
     .ack_direction_boundary_i(1'b0),.ack_explicit_request_i(1'b0),
     .local_ack_valid_o(),.local_ack_ready_i(1'b1),.local_ack_session_epoch_o(),
     .local_ack_base_o(),.local_ack_bitmap_o(),.local_ack_width_o(),

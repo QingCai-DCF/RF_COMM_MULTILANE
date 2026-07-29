@@ -388,7 +388,7 @@ module p9_optical_transport_core #(
   // The RX window commits metadata through a synchronous staging cycle.  A
   // control event asserted with dp_rx_frame_valid_q would therefore snapshot
   // the previous ACK/SACK state.  Delay the physical-frame classification
-  // until both the registered SACK bitmap and rx_accept_pulse are observable.
+  // until both the registered SACK bitmap and dp_rx_accept_pulse are observable.
   // Newly accepted DATA must remain subject to the bounded ACK aggregator;
   // only a valid frame that was not newly accepted (for example a duplicate
   // after ACK loss) forces an immediate cumulative re-ACK of stable state.
@@ -407,6 +407,7 @@ module p9_optical_transport_core #(
   wire [15:0] dp_delivery_sequence;
   wire [ENTRY_WIDTH-1:0] dp_delivery_payload_ref;
   wire [15:0] dp_delivery_payload_length;
+  wire dp_rx_accept_pulse;
   wire dp_local_ack_valid;
   reg dp_local_ack_ready_q;
   wire [31:0] dp_local_ack_session;
@@ -481,6 +482,7 @@ module p9_optical_transport_core #(
     .rx_delivery_sequence_o(dp_delivery_sequence),
     .rx_delivery_payload_ref_o(dp_delivery_payload_ref),
     .rx_delivery_payload_length_o(dp_delivery_payload_length),
+    .rx_accept_pulse_o(dp_rx_accept_pulse),
     // A validated physical DATA event that was not newly accepted forces a
     // cumulative response.  New frames participate in bounded aggregation;
     // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
@@ -538,7 +540,7 @@ module p9_optical_transport_core #(
           dp_ack_control_pipe_q[0],
           dp_rx_frame_valid_q && dp_rx_l1_valid_q
       };
-      dp_rx_accept_delayed_q <= rx_accept_pulse;
+      dp_rx_accept_delayed_q <= dp_rx_accept_pulse;
     end
   end
 

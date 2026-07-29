@@ -662,7 +662,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         testbench = (ROOT / "sim/tb/tb_p9_optical_transport_core.sv").read_text(
             encoding="utf-8"
         )
-        self.assertIn("dp_rx_accept_delayed_q <= rx_accept_pulse;", core)
+        self.assertIn("dp_rx_accept_delayed_q <= dp_rx_accept_pulse;", core)
         self.assertIn("dp_ack_control_pipe_q[1] &&\n                         !dp_rx_accept_delayed_q", core)
         self.assertIn("bounded ACK aggregation absent", testbench)
 
