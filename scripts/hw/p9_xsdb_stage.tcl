@@ -466,17 +466,44 @@ proc p9_execute_case {d {window "NA"}} {
   p9_write32 0x00020018 $sequence
 
   if {[dict get $d injectmask] != 0} {
-    set running_deadline [expr {[clock milliseconds] + 5000}]
-    while {[clock milliseconds] < $running_deadline} {
+    # RUNNING is published before the PS prepares the object payload.  Wait
+    # until the PL has accepted START_OBJECT as well, otherwise the later
+    # p9_configure_object() write can overwrite this asynchronous mask.
+    set object_active_seen 0
+    set injection_deadline [expr {[clock milliseconds] + 5000}]
+    while {[clock milliseconds] < $injection_deadline} {
       p9_check_abort
-      if {[p9_read32 0x0002000C] == 3} { break }
+      set injection_state [p9_read32 0x0002000C]
+      if {$injection_state in {4 5 6}} {
+        error "case completed before requested asynchronous injection"
+      }
+      if {$injection_state == 3} {
+        set injection_pl_status [p9_read32 0x43C0071C]
+        if {($injection_pl_status & 4) != 0} {
+          set object_active_seen 1
+          break
+        }
+      }
       after 1
     }
-    if {[p9_read32 0x0002000C] != 3} { error "case completed before requested asynchronous injection" }
+    if {!$object_active_seen} {
+      error "PL object did not become active before requested asynchronous injection"
+    }
     after [dict get $d injectdelay]
+    p9_check_abort
+    set pre_injection_state [p9_read32 0x0002000C]
+    set pre_injection_status [p9_read32 0x43C0071C]
+    if {$pre_injection_state != 3 || ($pre_injection_status & 4) == 0} {
+      error "case completed before requested asynchronous injection"
+    }
     set injected [expr {([dict get $d dropdata] & 0xFF) | (([dict get $d dropack] & 0xFF) << 8) | (([dict get $d injectmask] & 3) << 16)}]
     p9_write32 0x43C0073C $injected
+    set injection_readback [p9_read32 0x43C0073C]
+    if {($injection_readback & 0x0003FFFF) != $injected} {
+      error [format "asynchronous injection readback mismatch: expected=0x%08X observed=0x%08X" $injected $injection_readback]
+    }
     p9_say "P9_ASYNC_LANE_INJECTION=[dict get $d label]:[dict get $d injectmask]"
+    p9_say [format "P9_ASYNC_LANE_INJECTION_READBACK=0x%08X" $injection_readback]
   }
 
   set deadline [expr {$started + [dict get $d timeout] + 5000}]

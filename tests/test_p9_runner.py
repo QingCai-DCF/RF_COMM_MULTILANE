@@ -331,6 +331,28 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertEqual(12, all_down.expected_status)
         self.assertEqual(0, all_down.flags & 1)
 
+    def test_async_lane_injection_waits_for_active_object_and_verifies_readback(self):
+        tcl = (ROOT / "scripts/hw/p9_xsdb_stage.tcl").read_text(
+            encoding="utf-8"
+        )
+        start = tcl.index("if {[dict get $d injectmask] != 0}")
+        end = tcl.index("set deadline [expr {$started", start)
+        injection = tcl[start:end]
+        active_read = injection.index("p9_read32 0x43C0071C")
+        active_gate = injection.index("($injection_pl_status & 4) != 0")
+        delay = injection.index("after [dict get $d injectdelay]")
+        write = injection.index("p9_write32 0x43C0073C $injected")
+        readback = injection.index("set injection_readback [p9_read32 0x43C0073C]")
+        self.assertLess(active_read, active_gate)
+        self.assertLess(active_gate, delay)
+        self.assertLess(delay, write)
+        self.assertLess(write, readback)
+        self.assertIn("if {!$object_active_seen}", injection)
+        self.assertIn("$pre_injection_state != 3", injection)
+        self.assertIn("($pre_injection_status & 4) == 0", injection)
+        self.assertIn("($injection_readback & 0x0003FFFF) != $injected", injection)
+        self.assertIn("P9_ASYNC_LANE_INJECTION_READBACK=", injection)
+
     def test_pl_soft_reset_flushes_all_stream_domains_and_rebuilds_dma(self):
         peripheral = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
             encoding="utf-8"
