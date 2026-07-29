@@ -1,0 +1,457 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifacts": [
+    {
+      "path": "config/generated/tfdu_safety_constants.json",
+      "sha256": "9c1922d9418ac71c7b0bbe3d1a0609f309a8c48348c04700e239df0aec3f154e"
+    },
+    {
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "e1a71b393a98b3cec28ef40c14a5f54da6cbe8ff6f37f0b547d46ad4d784f955"
+    },
+    {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "64b1fb5dc00eac0cea55d09f6d86b6c1061bbf220d001a52e739211e2105eb6b"
+    },
+    {
+      "path": "config/tfdu_safety.yaml",
+      "sha256": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06"
+    },
+    {
+      "path": "evidence/generated/p8b_checkpoint_acceptance_core.json",
+      "sha256": "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870"
+    },
+    {
+      "path": "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
+      "sha256": "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_continuous_high_guard_summary.json",
+      "sha256": "b4b8215bb1fcb17bf44f051ac550b1810fbf2bfe8e3e39b46c4cd22cb4ff433c"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_continuous_high_guard_summary.md",
+      "sha256": "2e97ee7133c9de22353d98ada19fee1dd9a4ae110049fe7cff114f01efd0b5b1"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_exact_sliding_duty_reference_summary.json",
+      "sha256": "52ed82e2530fbb3d5882276596297edd7c4c3f618e8a7d209ad1812202dd5b84"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_exact_sliding_duty_reference_summary.md",
+      "sha256": "74e0d72b29c0c7027c1538aad7119d43b684ab2f2ddf520ee6d3480266b6cb8b"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_exact_sliding_duty_rtl_summary.json",
+      "sha256": "f8e5ce69733751f7703145a7a700a8e203b3da75ea1129f46599c183b6742f31"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_exact_sliding_duty_rtl_summary.md",
+      "sha256": "e7a6e48481a6985e78507b5bb16cb189709e95e2e21fe7229a6d097e2b2d090f"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_final_summary.json",
+      "sha256": "d6b578f2e52d5d71b4777b916e620c76374d7dfc15c2873d80cfdacde914d146"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_final_summary.md",
+      "sha256": "9ec4805de21563908f05d9c5f819b1eec74cb18681f8458d5f95be490ea78efa"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_offline_gate_summary.json",
+      "sha256": "b881b4d4b97fd3590cd35679060429b64d6c645e297c7659b019cbfda32f36ea"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_offline_gate_summary.md",
+      "sha256": "dfd6bafcdd47042afbb88c7ef6e8e6fa7a65f50b9bd16f410ff2f450d418ad86"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_p0_p8b_regression_summary.json",
+      "sha256": "7e8560dd660dd8373060e72a4fe5d32bb9a0313371b480c6808a5f807ab0c95c"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_p0_p8b_regression_summary.md",
+      "sha256": "337abacaca2bb30465c5c597f3382029fd33b6b39ee3173eb63ea51b3f8c3693"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_permit_fault_injection_summary.json",
+      "sha256": "b96c050a08f8c374bf8e24f75cd9467a37a41f83d9bcd9388f25d3a12cae5343"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_permit_fault_injection_summary.md",
+      "sha256": "797d873831db2b1db72b39e176524122032a6b6687c18f707900fc16f5582e33"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_physical_module_accounting_summary.json",
+      "sha256": "3ab4e25169578eddbebf75745a4c29bf3b223aa1c2a0cdf838cd0cbf4b87dd14"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_physical_module_accounting_summary.md",
+      "sha256": "d94ae803a82306d23d4e1c4cded78c442896b27465a30993dbcfa646718582fb"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_profile_matrix_summary.json",
+      "sha256": "051ac5911f83a392e3ab003db00ca5e8c3b7af525d9b9f6c061db22b46f50010"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_profile_matrix_summary.md",
+      "sha256": "91d867c0704b1aaf1b85ea3cbd47c657018699de24be4c016b653375a402afc5"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/p8b_checkpoint_evidence_verify.log",
+      "sha256": "666ae5bbb8ff395a11223d7df528acfc53a5bfa1922cabe9b4af99d7cc7682cd"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/python_reference.log",
+      "sha256": "b21dec999d97d6cefa842ef060cde982e8e5064c68243bd134457a9d54a64efe"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/python_unit_tests.log",
+      "sha256": "06f417185173a273d0e4e39ca458f890184a182c78fc04b1ac99ab3dbc22b5db"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/register_map_verify.log",
+      "sha256": "a186ebad9e18fb17ad8b084e617e30793fdb0efd41ed6ed1e018c470f5fef393"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/check_timing.rpt",
+      "sha256": "97c3bc138f59ceeba24ef3e1b9ec2e240ef551123e0dbc423b54fd1bdac2ad3c"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/drc.rpt",
+      "sha256": "303c713beed5b992910c20a5605c571c8f2fa8a95b1bbc316158f4f09b15b78a"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/resource_markers.txt",
+      "sha256": "24014c3174bf2c86e0a748425d0da7e8baf5079cfd4828b043b6768876be2b31"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/timing_summary.rpt",
+      "sha256": "16e734c4912018c3e7aac9e6acd69f33c26eb063320609373615523ab00a5109"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/utilization.rpt",
+      "sha256": "76745fa555141138f43a8d2df2a676c425c92b34c34b5a9b32478fbe0f7524ab"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7010_2LANE_DEV/vivado.log",
+      "sha256": "2d62cf1555463b668e31659ddd940818754277dc005b6581d22e32598922a777"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/check_timing.rpt",
+      "sha256": "0c0983989a73ba049d7b321e6ae29b6e22b7f08e2c559fc96cbb4ab7b183aba1"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/drc.rpt",
+      "sha256": "e62d8d7d8ce67d778a64f75a820df4c685af521f42f19afe42d538c2a092717f"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/resource_markers.txt",
+      "sha256": "10788e0d3f1b245697ea06065166199e7499a089447632b21efe811249d76061"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/timing_summary.rpt",
+      "sha256": "269f0f93911425b56d56c94626691d1d34f7576814be2a4b672ccddf76c4536d"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/utilization.rpt",
+      "sha256": "a7e449180a576296149885af3fecd017d82062dc80b8bd1b297d1f85c5f876d7"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/vivado.log",
+      "sha256": "b8a5043baf740e38936c6993e2a2919ffaf408fb3e7b04b75baf43c2e974934c"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/check_timing.rpt",
+      "sha256": "602a6077f5b4b753e24b2872f0a110bf5318d9b2a55b459854d87d9b11313095"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/drc.rpt",
+      "sha256": "162ef3f83549bbdf6f6eaa3c6c886f96fcdb90cfb31c2e097a5679575c8bff3d"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/resource_markers.txt",
+      "sha256": "16ad393c69f7bc620ddc456ec0d3ee835fe09c318cf631e751ed10bd66d9f3a4"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/timing_summary.rpt",
+      "sha256": "dc7ff2afca2cb3f65733fb9e909567410006003ec4cc3ff267520ecd26c72bfa"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/utilization.rpt",
+      "sha256": "47c8ed657320bf998deb035ce24f7873412fde30505e138bb90f820f0623939a"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/vivado.log",
+      "sha256": "a71ff9df5ec2302695612f8546b2c39b93dcaeb345e2f4e63110fd1908173fdc"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/safety_config_verify.log",
+      "sha256": "7f12bbc650fb45564005047e9bfb16d81468cf26870143b8ebaf3726ff01d86e"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/software/ps_driver_host_compile_and_run.log",
+      "sha256": "55922649d14ea456ba0af8ad75c989e4fffd2e66feb71953ebca59c801693cd1"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/source_manifest.json",
+      "sha256": "9205a53cbd680ba3ba015300df7186841eb2e160225cf5e98976ffab302603cb"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/static_architecture.log",
+      "sha256": "9e2fc34382f20d8c69f366206e0f4e7e89de1803160e0b773a56f0f6aa32ba32"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/trace_comparison.json",
+      "sha256": "88cd0a23a440a1798b5e8536ec65ffb9eb213efe6db6a8f0a9f580cea1e2695b"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/trace_comparison.log",
+      "sha256": "2fa82cecf140b962154222538d839348ccbcf2b0388adb356524c5f7336223ac"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_endpoint_safety/compile.log",
+      "sha256": "8d650b7670932ae81d0a60bc5096535e009e6353c89026e527dacc147b3ede4f"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_endpoint_safety/elaborate.log",
+      "sha256": "dd7b12facf69d820d150bad866e1bb974add823e4aa0960b3866ff0ed650de2d"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_endpoint_safety/run.log",
+      "sha256": "70e511849ab3da2d104fa451bdfbccaa0742cea7efe10bb64bae36fd80ead98b"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_exact_duty/compile.log",
+      "sha256": "b59b1b251657320fa5b6b9ddc0a663190b9b490635c2063f75fe696f124ba309"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_exact_duty/elaborate.log",
+      "sha256": "c3566a30d421efa14aa578d2f81985e1e43a19c3757c92d24358814792503602"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_exact_duty/run.log",
+      "sha256": "74bf6144b1cb7e650c9353a0c2523ca9939b3bb1b4068a4e02d6633745916558"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_full_scale/compile.log",
+      "sha256": "30c8869c8d905380a4ce61b990b757f61bd698718fa7b54e9ea2d38ddc4a2432"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_full_scale/elaborate.log",
+      "sha256": "2826b9dd6310b9d533bf3c6a5d17e7716c94bcefac45e7f75a9b9f28b9b6f262"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_full_scale/run.log",
+      "sha256": "b6b7d1b09d421cac8d5558845c7697712dec977c6450559075c80e6456dd0632"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_physical_safety/compile.log",
+      "sha256": "c203903a072b60f33c6a33200a13510c37b9936d93fff1baf310c42a9d414e52"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_physical_safety/elaborate.log",
+      "sha256": "4d5baf705edf610d78273912ecde9708d23e4f127d974b846bc04ce5eea0f8f1"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_physical_safety/run.log",
+      "sha256": "2d3c42e21b44293952b47026bccb1bec0b8ec48d23616fec567fac20595af7d0"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_profile_matrix/compile.log",
+      "sha256": "8ffe6af0cb877e08d9c11bcb87edc76f55e0e36e667334861a105b867c0dffcf"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_profile_matrix/elaborate.log",
+      "sha256": "cc235be8cfaf964dad9515b1c76dad3d3a8bdbcb35ec33b16ffec09c925cb41e"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_profile_matrix/run.log",
+      "sha256": "f600a4552be121a2b81e9de81d1c122c518d3b42989313828c23587e5b0ffcca"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_safety_regs/compile.log",
+      "sha256": "64ffe8b88f52ee22c181b3983cca2aae25b67277f37ade032e4828fe3725bb40"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_safety_regs/elaborate.log",
+      "sha256": "fde7da788e5d6e634fa9ac1a1e5c3c7a1fcc7419cc84a5b8cc02b91dcad2c27d"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_safety_regs/run.log",
+      "sha256": "f8e8d68fc73ac2430081e4e024577c4dc5ff1d65a8a352ad58e4d2ea38f977b5"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_trace_crosscheck/compile.log",
+      "sha256": "08f254b2c254687110459251880b390fbc8843cc3fe6f46464e248dae5f65f32"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_trace_crosscheck/elaborate.log",
+      "sha256": "c19bafb4f0d4884a724b6c1a2e73ab77dea1f8fd47e6bd86fb438a38bec961f8"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_p8c_trace_crosscheck/run.log",
+      "sha256": "9d319487ba11007fc341c934a13d604710bc49a2c08469ba85a7b9c208c964e0"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/compile.log",
+      "sha256": "c1a92676e4adb1e9d61f7d8a65eaeb970a21902cd86f59ef6d5ffe8fe6b62956"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/elaborate.log",
+      "sha256": "67e1ff4c91a34b938cb641436a556ff0cde6cced26e02e6f46369bc9f054938d"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/run.log",
+      "sha256": "0113f56b5ecbe126af8ee47b466abbb14a3d4609ec39d8226639b3e6784532c0"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_receive_only_acquisition_summary.json",
+      "sha256": "32254a80f26e9ca5a167089bcaed8c419291638f971bae03eba725292c0c25fb"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_receive_only_acquisition_summary.md",
+      "sha256": "8c84427f5eb1d6d245eeaf6ead9225f98ff427fb4be3073ccc2a9b9bd286a2ef"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_register_map_summary.json",
+      "sha256": "1f5135a5379a12e584f96900170a0b07d657f3de0cf81d5272b7e20a2c60fcff"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_register_map_summary.md",
+      "sha256": "bb0929f40f2518dd9fcf8766d55874de7149758dc70d7ca2941bb65d8f6e1377"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_resource_audit_summary.json",
+      "sha256": "43e57fef7201fb204afe924bb04703b5f57688b265214c2f91e8582ff4f68971"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_resource_audit_summary.md",
+      "sha256": "b297cea23a88e5c268b5aa2cade162663f73cc06e77350616f0b81647e21e2a1"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_safety_config_summary.json",
+      "sha256": "532b899495a3bde558db0da53abcab721adaf906f93ef6cfcef90d9c644b9a1b"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_safety_config_summary.md",
+      "sha256": "a01e656a77e4b298f778e4631700d2dab754ce56dd5807255029bb4ee04b7195"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_single_global_permit_architecture_summary.json",
+      "sha256": "3d3906c10881bca2ddba7e37a2e3abb978c7084bb452a2fee248069a1acb16e2"
+    },
+    {
+      "path": "evidence/generated/p9_prebuild_p8c_sync_reset/p8c_single_global_permit_architecture_summary.md",
+      "sha256": "e5108fac637402fc33123157bf6b9306333edbe3bd02bf3571703f17a5161750"
+    },
+    {
+      "path": "rtl/generated/tfdu_safety_pkg.sv",
+      "sha256": "1fec3f8e485fac737dd8479486379a469ebed644da48dbeb3d42ed12b4ee6705"
+    },
+    {
+      "path": "rtl/ir_p8c_mapping_safety_adapter.sv",
+      "sha256": "f4d2b8a58c02c7379b9c47e109d000b578fafb7d0f9d9578c7efa70ed5655928"
+    },
+    {
+      "path": "rtl/ir_p8c_resource_tops.sv",
+      "sha256": "901c743159795b276f5cc70d13cb93b84c77b1a9e46b173c4a85805eac72cb3d"
+    },
+    {
+      "path": "rtl/ir_p8c_safety_integration.sv",
+      "sha256": "0ba9b943a0ea978b0cf431eb09bfceab78d93f33672b86221d4e6bd6533d354c"
+    },
+    {
+      "path": "rtl/ir_p8c_safety_regs.sv",
+      "sha256": "c6f6a6131a17f35f39b9d0d2167546ed4e0adeb526a9e7a506dff5c0f9874800"
+    },
+    {
+      "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+      "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+    },
+    {
+      "path": "rtl/ir_tfdu_physical_module_safety.sv",
+      "sha256": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19"
+    },
+    {
+      "path": "rtl/ir_tfdu_safety_endpoint.sv",
+      "sha256": "b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315"
+    },
+    {
+      "path": "rtl/tfdu_lane_phy.sv",
+      "sha256": "f581f928b45b512cd74ffcf63992655632a1d074a78b374c955f3abca31a6bb6"
+    },
+    {
+      "path": "scripts/check_p8c_safety_static.py",
+      "sha256": "6d7fc502066b59b9b545dd3146b1598f2d228e6dabd7bda27ffc7e1aff07b9a7"
+    },
+    {
+      "path": "scripts/generate_register_headers.py",
+      "sha256": "57a55a129a752f08e0c75ac78290ce6ff4b65f6848df40c1a5e61a6c22f2a058"
+    },
+    {
+      "path": "scripts/generate_tfdu_safety_config.py",
+      "sha256": "eec1f046df8af62ee8d9a3950db28766a791ddf53837806a926b04e0f9785fe5"
+    },
+    {
+      "path": "scripts/materialize_p8b_checkpoint_evidence.py",
+      "sha256": "ac91c3d649d176eb976225f722341cf8c151b9909f7075cd914dcde58d0db2a4"
+    },
+    {
+      "path": "scripts/run_p8c_safety_gate.py",
+      "sha256": "08f2cfbaaa2e641db0f208ed8d3f796c85662b0ba80e939c839cb2df588a990d"
+    },
+    {
+      "path": "scripts/vivado/p8c_resource_audit.tcl",
+      "sha256": "f972f3bcf968504c853251c5668992a66ef913a2a165b2a149af864ed0327d74"
+    },
+    {
+      "path": "sim/tb/tb_p8c_endpoint_safety.sv",
+      "sha256": "bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593"
+    },
+    {
+      "path": "sim/tb/tb_p8c_exact_duty.sv",
+      "sha256": "bca756a20bc65b02d5293704bb23f755e9570f328b2cbbcd331f547380209a8c"
+    },
+    {
+      "path": "sim/tb/tb_p8c_full_scale.sv",
+      "sha256": "de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c"
+    },
+    {
+      "path": "sim/tb/tb_p8c_physical_safety.sv",
+      "sha256": "51f5705b35a659b7a4363fed34da3ebe81ebdef95b5b1c9d961b5d77d7a5d34b"
+    },
+    {
+      "path": "sim/tb/tb_p8c_profile_matrix.sv",
+      "sha256": "d044e572bdc244b673ff298b56c442daaa3df0af8595f35086783577ede7a13f"
+    },
+    {
+      "path": "sim/tb/tb_p8c_safety_regs.sv",
+      "sha256": "8e84edbd287192dfb23a583b7fa442982ecd2c76fc01c7af53d681a0f8520051"
+    },
+    {
+      "path": "sim/tb/tb_p8c_trace_crosscheck.sv",
+      "sha256": "0507d67b94a7393d35e4001ebe627daf507481b54c88c243a36761fdf19610d7"
+    },
+    {
+      "path": "software/ps_driver/ir_driver.c",
+      "sha256": "65408f0f35d77f4609cb81ae54cc89101972b8c8124bc300a46afbb5e616bd2f"
+    },
+    {
+      "path": "software/ps_driver/ir_driver.h",
+      "sha256": "dcdf7ce2174a3e51de751e669973470e122ea0b1810cb2d5802d226a4837f437"
+    },
+    {
+      "path": "software/ps_driver/main_offline_stub.c",
+      "sha256": "0d312f55a1c2ac1171d309c718a47ef4d903d59d9e80d36daf0f808294296db4"
+    },
+    {
+      "path": "tools/p8c_tfdu_safety_reference.py",
+      "sha256": "65d6461940ca0b45f6266e5ada717e07efce7296cf6b3d8ad3be3d3d4da4eb36"
+    }
+  ],
+  "source_commit": "0e3aca774213327dcc668a93b2fe663f048c7e11",
+  "status": "PASS"
+}

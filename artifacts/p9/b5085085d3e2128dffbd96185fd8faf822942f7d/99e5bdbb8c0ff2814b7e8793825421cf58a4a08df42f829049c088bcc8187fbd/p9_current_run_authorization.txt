@@ -1,0 +1,18 @@
+用户当前运行硬件授权（本 Codex task，2026-07-26）：
+
+我授权 Codex 在
+P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
+范围内执行当前单块 Zynq-7010、2 lane、静止且不可移动硬件的自动化操作。
+
+允许 Codex 自动构建和冻结 bitstream/XSA/BSP/PS ELF，连接
+hw_server、Vivado Hardware Manager、XSDB/JTAG，program 已冻结
+SHA256 的 shutdown/candidate bitstream，运行已冻结 PS ELF，通过
+JTAG/AXI、DDR、AXI DMA、UART、ILA/VIO 执行测试，并在 lane mask
+0x1、0x2、0x3 上进行受控 TFDU 发射。
+
+允许最长 1800 秒的静止测试。失败、超时、异常或退出时必须自动
+禁止发射、执行 TFDU shutdown，并保存完整失败 evidence。
+
+禁止移动、旋转、调角、遮挡、交换或重新接线硬件；禁止 lane mask
+大于 0x3；禁止要求连接网线；禁止将结果外推到 Z7020、8 lane、
+旋转或产品最终验收。

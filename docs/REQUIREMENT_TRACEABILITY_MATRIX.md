@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 112
-PASS: 74
-PENDING: 38
+PASS: 101
+PENDING: 11
 FAIL: 0
 WAIVED: 0
 ```
@@ -101,33 +101,33 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `PROFILE-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-CONSTRAINT-LINT` | `evidence/generated/p8e_constraint_audit_summary.json` | The canonical Z7010 board XDC is isolated from every Z7020 profile. |
 | `PROFILE-002` | `PASS` | Z7020_FIXED_AND_ROTATING_D12_INPUT | `P8E` | `P8E-Z7020-IO-BUDGET` | `evidence/generated/p8e_io_budget_summary.json` | Unknown Z7020 board pins and board I/O timing remain PENDING_D12 and are not invented. |
 | `REPRO-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-EVIDENCE-CONSISTENCY` | `evidence/generated/p8e_evidence_consistency_summary.json` | The clean-checkout batch implementation and evidence flow is reproducible and content-addressed. |
-| `P9-HW-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Immutable candidate, shutdown, XSA, BSP, runner, and ELF provenance is hash-bound. |
-| `P9-HW-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Safe boot, shutdown-before, shutdown-on-exit, and shutdown-after are confirmed. |
-| `P9-HW-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The formal run is bound to the current user authorization and immutable artifacts. |
-| `P9-PHY-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Fresh AB/BA raw counters pass for both logical lanes and four physical directions. |
-| `P9-PHY-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Lane 0 operates at the configured 4 Mbit/s raw PHY rate. |
-| `P9-PHY-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Lane 1 operates at the configured 4 Mbit/s raw PHY rate. |
-| `P9-PHY-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Both lanes concurrently provide 8 Mbit/s aggregate raw capability. |
-| `P9-SAFE-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | All four TFDU paths observe the hardware startup wait before readiness. |
-| `P9-SAFE-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Hardware runtime continuous-high telemetry remains at or below one microsecond. |
-| `P9-SAFE-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Exact 1 ms rolling-duty runtime accounting remains below the strict hard limit and design target. |
-| `P9-SAFE-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Disarm reaches final TX kill, aborts the active train, and explicit re-arm does not resume it. |
-| `P9-L2-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The real optical runtime exercises a 32-outstanding selective-repeat window. |
-| `P9-L2-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The real optical runtime exercises 32-bit SACK and bounded ACK aggregation. |
-| `P9-L2-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Sequence wrap, loss, reorder, stale, CRC, duplicate, and retry recovery preserve exactly-once delivery. |
-| `P9-L3-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The two-lane hardware scheduler runs single-lane, equal, and weighted profiles. |
-| `P9-L3-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Unavailable, invalid-mapping, and duty-throttled lanes are isolated from scheduling. |
-| `P9-L3-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Only unacknowledged work migrates to the healthy lane and clean acknowledged work never migrates. |
-| `P9-DMA-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The PS runtime uses the implemented AXI DMA scatter-gather engine and DDR buffers. |
-| `P9-DMA-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Cache flush, invalidate, barrier, cache-enabled, and cache-disabled ownership paths are exercised. |
-| `P9-DMA-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Each real DMA descriptor completes and is reclaimed exactly once without leak. |
-| `P9-DMA-004` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Idle/queued reset, abort, soft reset, stale completion, reboot, and recovery are verified. |
-| `P9-RFAP-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | RFAP v1 is parsed, reassembled, integrity checked, and atomically published at runtime. |
-| `P9-RFAP-002` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | RFAP vNext streaming is parsed and atomically published through the frozen PS/PL runtime. |
-| `P9-RFAP-003` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | Fresh A-to-B and B-to-A objects preserve CRC32, SHA-256, and zero partial publish. |
-| `P9-PERF-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | PS preparation, DMA, PL completion, integrity, frame, and application throughput are characterized. |
-| `P9-SOAK-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation. |
-| `P9-EVID-001` | `PENDING` | Z7010_2LANE_DEV | `P9` | — | — | The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries. |
+| `P9-HW-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-02-IMMUTABLE-ARTIFACT-FREEZE` | `evidence/generated/p9_artifact_freeze_summary.json` | Immutable candidate, shutdown, XSA, BSP, runner, and ELF provenance is hash-bound. |
+| `P9-HW-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-HW-002-SHUTDOWN` | `evidence/generated/p9_shutdown_summary.json` | Safe boot, shutdown-before, shutdown-on-exit, and shutdown-after are confirmed. |
+| `P9-HW-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-HW-003` | `evidence/generated/p9_authorization_summary.json` | The formal run is bound to the current user authorization and immutable artifacts. |
+| `P9-PHY-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PHY-001` | `evidence/generated/p9_raw_lane_matrix_summary.json` | Fresh AB/BA raw counters pass for both logical lanes and four physical directions. |
+| `P9-PHY-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PHY-002` | `evidence/generated/p9_phy_4mbps_summary.json` | Lane 0 operates at the configured 4 Mbit/s raw PHY rate. |
+| `P9-PHY-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PHY-003` | `evidence/generated/p9_phy_4mbps_summary.json` | Lane 1 operates at the configured 4 Mbit/s raw PHY rate. |
+| `P9-PHY-004` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PHY-004` | `evidence/generated/p9_phy_4mbps_summary.json` | Both lanes concurrently provide 8 Mbit/s aggregate raw capability. |
+| `P9-SAFE-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SAFE-001` | `evidence/generated/p9_tfdu_safety_summary.json` | All four TFDU paths observe the hardware startup wait before readiness. |
+| `P9-SAFE-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SAFE-002` | `evidence/generated/p9_tfdu_safety_summary.json` | Hardware runtime continuous-high telemetry remains at or below one microsecond. |
+| `P9-SAFE-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SAFE-003` | `evidence/generated/p9_tfdu_safety_summary.json` | Exact 1 ms rolling-duty runtime accounting remains below the strict hard limit and design target. |
+| `P9-SAFE-004` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SAFE-004` | `evidence/generated/p9_tfdu_safety_summary.json` | Disarm reaches final TX kill, aborts the active train, and explicit re-arm does not resume it. |
+| `P9-L2-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L2-001` | `evidence/generated/p9_selective_repeat_summary.json` | The real optical runtime exercises a 32-outstanding selective-repeat window. |
+| `P9-L2-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L2-002` | `evidence/generated/p9_sack_ack_summary.json` | The real optical runtime exercises 32-bit SACK and bounded ACK aggregation. |
+| `P9-L2-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L2-003` | `evidence/generated/p9_sack_ack_summary.json` | Sequence wrap, loss, reorder, stale, CRC, duplicate, and retry recovery preserve exactly-once delivery. |
+| `P9-L3-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L3-001` | `evidence/generated/p9_scheduler_migration_summary.json` | The two-lane hardware scheduler runs single-lane, equal, and weighted profiles. |
+| `P9-L3-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L3-002` | `evidence/generated/p9_scheduler_migration_summary.json` | Unavailable, invalid-mapping, and duty-throttled lanes are isolated from scheduling. |
+| `P9-L3-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-L3-003` | `evidence/generated/p9_scheduler_migration_summary.json` | Only unacknowledged work migrates to the healthy lane and clean acknowledged work never migrates. |
+| `P9-DMA-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-DMA-001` | `evidence/generated/p9_dma_ddr_cache_summary.json` | The PS runtime uses the implemented AXI DMA scatter-gather engine and DDR buffers. |
+| `P9-DMA-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-DMA-002` | `evidence/generated/p9_dma_ddr_cache_summary.json` | Cache flush, invalidate, barrier, cache-enabled, and cache-disabled ownership paths are exercised. |
+| `P9-DMA-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-DMA-003` | `evidence/generated/p9_dma_ddr_cache_summary.json` | Each real DMA descriptor completes and is reclaimed exactly once without leak. |
+| `P9-DMA-004` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-DMA-004` | `evidence/generated/p9_dma_ddr_cache_summary.json` | Idle/queued reset, abort, soft reset, stale completion, reboot, and recovery are verified. |
+| `P9-RFAP-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-RFAP-001` | `evidence/generated/p9_rfap_runtime_summary.json` | RFAP v1 is parsed, reassembled, integrity checked, and atomically published at runtime. |
+| `P9-RFAP-002` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-RFAP-002` | `evidence/generated/p9_rfap_runtime_summary.json` | RFAP vNext streaming is parsed and atomically published through the frozen PS/PL runtime. |
+| `P9-RFAP-003` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-RFAP-003` | `evidence/generated/p9_rfap_runtime_summary.json` | Fresh A-to-B and B-to-A objects preserve CRC32, SHA-256, and zero partial publish. |
+| `P9-PERF-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PERF-001` | `evidence/generated/p9_performance_summary.json` | PS preparation, DMA, PL completion, integrity, frame, and application throughput are characterized. |
+| `P9-SOAK-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SOAK-001` | `evidence/generated/p9_stationary_30min_summary.json` | The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation. |
+| `P9-EVID-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-EVID-001` | `evidence/generated/p9_evidence_consistency_summary.json` | The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries. |
 
 ## PASS artifact bindings
 
@@ -201,13 +201,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
-- `PROJECT_STATUS.md` — `d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493`
+- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
+- `PROJECT_STATUS.md` — `d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
+- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
 
 ### `P8A-EVID-001`
 
@@ -217,8 +217,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
-- `PROJECT_STATUS.md` — `d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493`
+- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
+- `PROJECT_STATUS.md` — `d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -560,3 +560,192 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `scripts/run_p8e_dual_target_gate.py` — `c70c96284643f07a7c3f13396a76a9931cecc8623027cf7c815d5be1b6430084`
 - `scripts/run_p8e_build_matrix.py` — `1e24d24a34faad722b589fdf52bf5ed9939e2354104d98daab1fe67c80b0ff0e`
 - `evidence/generated/p8e_evidence_consistency_summary.json` — `a8a6ce3923d43b298bc2b83922ac76901148a7d3098be5e9720fb2502dbfd07f`
+
+### `P9-HW-001`
+
+- `evidence/generated/p9_artifact_freeze_summary.json` — `ed030b098778bc9a5b8300cdeaecf6415e82d138a50b5955fcd4e2d0625b6bf6`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-HW-002`
+
+- `evidence/generated/p9_shutdown_summary.json` — `b941ab88477ab5950b90aee5af71ffe31e292aca08d0ee4202c52efc788c3788`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-HW-003`
+
+- `evidence/generated/p9_authorization_summary.json` — `dba87d0213e46ce213589e4a6f6cc5127f827f4c836698039388d76e035efcca`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-PHY-001`
+
+- `evidence/generated/p9_raw_lane_matrix_summary.json` — `6e0a485539625bb9fb3a5a0c10414fdb2756d4c551e70584161bec37ec5120ac`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-PHY-002`
+
+- `evidence/generated/p9_phy_4mbps_summary.json` — `cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-PHY-003`
+
+- `evidence/generated/p9_phy_4mbps_summary.json` — `cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-PHY-004`
+
+- `evidence/generated/p9_phy_4mbps_summary.json` — `cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-SAFE-001`
+
+- `evidence/generated/p9_tfdu_safety_summary.json` — `a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-SAFE-002`
+
+- `evidence/generated/p9_tfdu_safety_summary.json` — `a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-SAFE-003`
+
+- `evidence/generated/p9_tfdu_safety_summary.json` — `a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-SAFE-004`
+
+- `evidence/generated/p9_tfdu_safety_summary.json` — `a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L2-001`
+
+- `evidence/generated/p9_selective_repeat_summary.json` — `5d509307281ba62c12219813ec4ae4460cbee70936eec4e79b5c028c7c3a7d99`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L2-002`
+
+- `evidence/generated/p9_sack_ack_summary.json` — `c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L2-003`
+
+- `evidence/generated/p9_sack_ack_summary.json` — `c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L3-001`
+
+- `evidence/generated/p9_scheduler_migration_summary.json` — `71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L3-002`
+
+- `evidence/generated/p9_scheduler_migration_summary.json` — `71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-L3-003`
+
+- `evidence/generated/p9_scheduler_migration_summary.json` — `71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-DMA-001`
+
+- `evidence/generated/p9_dma_ddr_cache_summary.json` — `99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-DMA-002`
+
+- `evidence/generated/p9_dma_ddr_cache_summary.json` — `99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-DMA-003`
+
+- `evidence/generated/p9_dma_ddr_cache_summary.json` — `99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-DMA-004`
+
+- `evidence/generated/p9_dma_ddr_cache_summary.json` — `99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-RFAP-001`
+
+- `evidence/generated/p9_rfap_runtime_summary.json` — `77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-RFAP-002`
+
+- `evidence/generated/p9_rfap_runtime_summary.json` — `77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-RFAP-003`
+
+- `evidence/generated/p9_rfap_runtime_summary.json` — `77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-PERF-001`
+
+- `evidence/generated/p9_performance_summary.json` — `a709f75441a8abb6384a90f3c557f781309673536363e0daa22287d55ccb7cef`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-SOAK-001`
+
+- `evidence/generated/p9_stationary_30min_summary.json` — `66e53376d759ecb3a7dab95b13ed3f194ca67577412a457cb7f72cb6eb7e6a10`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-EVID-001`
+
+- `evidence/generated/p9_evidence_consistency_summary.json` — `6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
+- `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`

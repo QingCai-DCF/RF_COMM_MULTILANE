@@ -1,0 +1,72 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Jul 26 21:24:04 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -hierarchical_depth 6 -file C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/generated/vivado/p9_peripheral_counter_compact_ooc/p9_peripheral_ooc_utilization.rpt
+| Design       : p9_axi_dma_peripheral_bd
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|              Instance              |               Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| p9_axi_dma_peripheral_bd           |                             (top) |      10567 |      10217 |     350 |    0 | 8511 |     14 |      2 |          0 |
+|   (p9_axi_dma_peripheral_bd)       |                             (top) |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|   impl                             |             p9_axi_dma_peripheral |      10567 |      10217 |     350 |    0 | 8511 |     14 |      2 |          0 |
+|     (impl)                         |             p9_axi_dma_peripheral |          0 |          0 |       0 |    0 |  250 |      0 |      0 |          0 |
+|     u_axi_lite                     |                p6_axi_lite_bridge |        323 |        323 |       0 |    0 |  155 |      0 |      0 |          0 |
+|     u_transport                    |         p9_optical_transport_core |      10244 |       9894 |     350 |    0 | 8106 |     14 |      2 |          0 |
+|       (u_transport)                |         p9_optical_transport_core |        981 |        739 |     242 |    0 | 1631 |      6 |      2 |          0 |
+|       g_physical[0].u_a_phy        |                     tfdu_lane_phy |        311 |        311 |       0 |    0 |  347 |      2 |      0 |          0 |
+|         (g_physical[0].u_a_phy)    |                     tfdu_lane_phy |          2 |          2 |       0 |    0 |   70 |      0 |      0 |          0 |
+|         u_p8c_physical_safety      | ir_tfdu_physical_module_safety_13 |        309 |        309 |       0 |    0 |  277 |      2 |      0 |          0 |
+|           (u_p8c_physical_safety)  | ir_tfdu_physical_module_safety_13 |         89 |         89 |       0 |    0 |   99 |      0 |      0 |          0 |
+|           u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_14 |        220 |        220 |       0 |    0 |  178 |      2 |      0 |          0 |
+|       g_physical[0].u_b_phy        |                   tfdu_lane_phy_0 |        556 |        556 |       0 |    0 |  347 |      2 |      0 |          0 |
+|         (g_physical[0].u_b_phy)    |                   tfdu_lane_phy_0 |         69 |         69 |       0 |    0 |   70 |      0 |      0 |          0 |
+|         u_p8c_physical_safety      | ir_tfdu_physical_module_safety_11 |        487 |        487 |       0 |    0 |  277 |      2 |      0 |          0 |
+|           (u_p8c_physical_safety)  | ir_tfdu_physical_module_safety_11 |        121 |        121 |       0 |    0 |   99 |      0 |      0 |          0 |
+|           u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_12 |        366 |        366 |       0 |    0 |  178 |      2 |      0 |          0 |
+|       g_physical[1].u_a_phy        |                   tfdu_lane_phy_1 |        416 |        416 |       0 |    0 |  347 |      2 |      0 |          0 |
+|         (g_physical[1].u_a_phy)    |                   tfdu_lane_phy_1 |        110 |        110 |       0 |    0 |   70 |      0 |      0 |          0 |
+|         u_p8c_physical_safety      |  ir_tfdu_physical_module_safety_9 |        306 |        306 |       0 |    0 |  277 |      2 |      0 |          0 |
+|           (u_p8c_physical_safety)  |  ir_tfdu_physical_module_safety_9 |         89 |         89 |       0 |    0 |   99 |      0 |      0 |          0 |
+|           u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_10 |        217 |        217 |       0 |    0 |  178 |      2 |      0 |          0 |
+|       g_physical[1].u_b_phy        |                   tfdu_lane_phy_2 |        315 |        315 |       0 |    0 |  347 |      2 |      0 |          0 |
+|         (g_physical[1].u_b_phy)    |                   tfdu_lane_phy_2 |          6 |          6 |       0 |    0 |   70 |      0 |      0 |          0 |
+|         u_p8c_physical_safety      |    ir_tfdu_physical_module_safety |        309 |        309 |       0 |    0 |  277 |      2 |      0 |          0 |
+|           (u_p8c_physical_safety)  |    ir_tfdu_physical_module_safety |         89 |         89 |       0 |    0 |   99 |      0 |      0 |          0 |
+|           u_exact_duty_accountant  |     ir_tfdu_exact_duty_accountant |        220 |        220 |       0 |    0 |  178 |      2 |      0 |          0 |
+|       g_receive[0].u_codec         |                   p9_rate_4ppm_rx |         73 |         73 |       0 |    0 |   60 |      0 |      0 |          0 |
+|         u_rx_1mbps                 |                   ir_4ppm_codec_6 |         27 |         27 |       0 |    0 |   21 |      0 |      0 |          0 |
+|         u_rx_2mbps                 |   ir_4ppm_codec__parameterized0_7 |         22 |         22 |       0 |    0 |   20 |      0 |      0 |          0 |
+|         u_rx_4mbps                 |   ir_4ppm_codec__parameterized1_8 |         24 |         24 |       0 |    0 |   19 |      0 |      0 |          0 |
+|       g_receive[0].u_parser        |                  p9_4ppm_frame_rx |        438 |        438 |       0 |    0 |  550 |      0 |      0 |          0 |
+|       g_receive[1].u_codec         |                 p9_rate_4ppm_rx_3 |         74 |         74 |       0 |    0 |   60 |      0 |      0 |          0 |
+|         u_rx_1mbps                 |                     ir_4ppm_codec |         27 |         27 |       0 |    0 |   21 |      0 |      0 |          0 |
+|         u_rx_2mbps                 |     ir_4ppm_codec__parameterized0 |         23 |         23 |       0 |    0 |   20 |      0 |      0 |          0 |
+|         u_rx_4mbps                 |     ir_4ppm_codec__parameterized1 |         24 |         24 |       0 |    0 |   19 |      0 |      0 |          0 |
+|       g_receive[1].u_parser        |                p9_4ppm_frame_rx_4 |        417 |        417 |       0 |    0 |  550 |      0 |      0 |          0 |
+|       g_serializer[0].u_serializer |                  p9_4ppm_frame_tx |        571 |        571 |       0 |    0 |  340 |      0 |      0 |          0 |
+|       g_serializer[1].u_serializer |                p9_4ppm_frame_tx_5 |        706 |        706 |       0 |    0 |  341 |      0 |      0 |          0 |
+|       u_data_plane                 |                 ir_data_plane_top |       5386 |       5278 |     108 |    0 | 3186 |      0 |      0 |          0 |
+|         (u_data_plane)             |                 ir_data_plane_top |         59 |         59 |       0 |    0 |   38 |      0 |      0 |          0 |
+|         u_ack_aggregator           |                 ir_ack_aggregator |        151 |        151 |       0 |    0 |  219 |      0 |      0 |          0 |
+|         u_rx_window                |            ir_selective_repeat_rx |        792 |        740 |      52 |    0 |  300 |      0 |      0 |          0 |
+|         u_scheduler                |      ir_health_weighted_scheduler |        671 |        671 |       0 |    0 |  477 |      0 |      0 |          0 |
+|         u_tx_window                |            ir_selective_repeat_tx |       3713 |       3657 |      56 |    0 | 2152 |      0 |      0 |          0 |
++------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

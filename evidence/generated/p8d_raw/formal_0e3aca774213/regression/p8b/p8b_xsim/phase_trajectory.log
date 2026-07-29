@@ -1,0 +1,48 @@
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/rtl/ir_path_mapping_pkg.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/rtl/ir_phase_validity_guard.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_phase_validity_guard
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/rtl/ir_handover_metrics.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_handover_metrics
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/sim/tb/tb_p8b_phase_trajectory.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p8b_phase_trajectory
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p8b_phase_trajectory -debug typical -s tb_p8b_phase_trajectory_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package work.ir_path_mapping_pkg
+Compiling module work.ir_phase_validity_guard
+Compiling module work.ir_handover_metrics(CYCLES_PER_U...
+Compiling module work.tb_p8b_phase_trajectory
+Built simulation snapshot tb_p8b_phase_trajectory_snapshot
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p8b_phase_trajectory_snapshot/xsim_script.tcl
+# xsim {tb_p8b_phase_trajectory_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8B_METRIC_SAMPLE_TO_PREPARE_US=10
+P8B_METRIC_PREPARE_TO_READY_US=20
+P8B_METRIC_ATOMIC_COMMIT_US=2
+P8B_METRIC_SERVICE_GAP_US=30
+P8B_METRIC_EPOCH_VISIBILITY_US=35
+P8B_METRIC_REACQUISITION_US=100
+P8B_RANDOMIZED_SAMPLES=896
+P8B_HDL_PHASE_ACQUISITION_PASS=1
+P8B_HDL_TRAJECTORY_RANDOMIZED_PASS=1
+TB_P8B_PHASE_TRAJECTORY_PASS=1
+$finish called at time : 19820 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/sim/tb/tb_p8b_phase_trajectory.sv" Line 240
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 26 21:08:20 2026...

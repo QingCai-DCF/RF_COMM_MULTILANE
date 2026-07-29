@@ -1,0 +1,84 @@
+{
+  "generated_utc": "2026-07-27T19:07:55+00:00",
+  "part": "xc7z010clg400-1",
+  "post_synth_artifacts": [
+    {
+      "bytes": 3901911,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/post_synth_p9_core.dcp",
+      "sha256": "ba0ca3eff1f770b9e611dbb80cc761565208ba4469bc0dbd06f81a5aa60fd888"
+    },
+    {
+      "bytes": 6460605,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/post_synth_p9_core_funcsim.v",
+      "sha256": "badbb61a7f749f5f95e3230d4575c18f3a63103faedafc185a734ce84aac5a3b"
+    },
+    {
+      "bytes": 109427,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/post_synth_timing_summary_p9_core.rpt",
+      "sha256": "462193a52ff7c216590e453a5db292926769bbd0e9e54685d54600766d35bddb"
+    },
+    {
+      "bytes": 7991,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/post_synth_utilization_p9_core.rpt",
+      "sha256": "b2f885205fdc1e6f3ceea2b067a6013163eefbb4d0aa2aa265782815d585a0f7"
+    },
+    {
+      "bytes": 1886,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/post_synth_drc_p9_core.rpt",
+      "sha256": "b5bbe867a8c73c5b93a818554bc91e91a2117a1b071448d03ae78321e30ba16d"
+    },
+    {
+      "bytes": 240,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/post_synth/p9_post_synth_build_markers.txt",
+      "sha256": "86292449d210f0f5cf4d031ce83a2c156223bf76f3405a3cbc6f78f60ebf9c00"
+    }
+  ],
+  "post_synth_build": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/p9_post_synth_build.log",
+    "log_sha256": "221c0231eb9c028ba4ed5fd63ebc9b24dd2261154b13f902003230615a91bc3d",
+    "markers": [
+      "P9_POST_SYNTH_BUILD=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_build"
+  },
+  "post_synth_markers": {
+    "P9_POST_SYNTH_BUILD": "PASS",
+    "P9_POST_SYNTH_CLOCK_NS": "15.625",
+    "P9_POST_SYNTH_DRC_CRITICAL_COUNT": "0",
+    "P9_POST_SYNTH_DRC_ERROR_COUNT": "0",
+    "P9_POST_SYNTH_PART": "xc7z010clg400-1",
+    "P9_POST_SYNTH_REQP_1839_COUNT": "0",
+    "P9_POST_SYNTH_TOP": "p9_optical_transport_core"
+  },
+  "post_synth_safety": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/p9_post_synth_safety.log",
+    "log_sha256": "095fb3a3e9e92d05a4e4b4c2bafca761efd56ed23835184d6c46b89193c4c9e7",
+    "markers": [
+      "P9_POST_SYNTH_SAFE_RESET_PASS=1",
+      "P9_POST_SYNTH_DISARM_KILL_PASS=1",
+      "P9_POST_SYNTH_NO_PARTIAL_RESUME_PASS=1",
+      "P9_POST_SYNTH_FINAL_SHUTDOWN_PASS=1",
+      "TB_P9_POST_SYNTH_SAFETY=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_safety"
+  },
+  "profile": "Z7010_2LANE_DEV",
+  "rtl_full_regression": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260727T190424.464996Z_b5085085d3e2/p9_rtl_full.log",
+    "log_sha256": "f627167209694387a24d4da687ea76edfd2765c478eeb1d43d2c6062a2b08fc4",
+    "markers": [
+      "TB_P9_OPTICAL_TRANSPORT_CORE=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_rtl_full"
+  },
+  "schema_version": 1,
+  "source_commit": "b5085085d3e2128dffbd96185fd8faf822942f7d",
+  "status": "PASS",
+  "test_id": "P9-CANDIDATE-SOURCE-POST-SYNTH-REGRESSION"
+}

@@ -1,0 +1,67 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Mon Jul 27 20:12:17 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/generated/p9_candidate_regression/raw/20260727T120919.694890Z_b42d4b2d1fa0/post_synth/post_synth_utilization_p9_core.rpt
+| Design       : p9_optical_transport_core
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++--------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|            Instance            |               Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++--------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| p9_optical_transport_core      |                             (top) |       9702 |       9352 |     350 |    0 | 8101 |     14 |      2 |          0 |
+|   (p9_optical_transport_core)  |                             (top) |        639 |        397 |     242 |    0 | 1631 |      6 |      2 |          0 |
+|   g_physical[0].u_a_phy        |                     tfdu_lane_phy |        671 |        671 |       0 |    0 |  347 |      2 |      0 |          0 |
+|     (g_physical[0].u_a_phy)    |                     tfdu_lane_phy |        336 |        336 |       0 |    0 |   70 |      0 |      0 |          0 |
+|     u_p8c_physical_safety      | ir_tfdu_physical_module_safety_13 |        335 |        335 |       0 |    0 |  277 |      2 |      0 |          0 |
+|       (u_p8c_physical_safety)  | ir_tfdu_physical_module_safety_13 |        117 |        117 |       0 |    0 |   99 |      0 |      0 |          0 |
+|       u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_14 |        218 |        218 |       0 |    0 |  178 |      2 |      0 |          0 |
+|   g_physical[0].u_b_phy        |                   tfdu_lane_phy_0 |        334 |        334 |       0 |    0 |  347 |      2 |      0 |          0 |
+|     (g_physical[0].u_b_phy)    |                   tfdu_lane_phy_0 |          5 |          5 |       0 |    0 |   70 |      0 |      0 |          0 |
+|     u_p8c_physical_safety      | ir_tfdu_physical_module_safety_11 |        329 |        329 |       0 |    0 |  277 |      2 |      0 |          0 |
+|       (u_p8c_physical_safety)  | ir_tfdu_physical_module_safety_11 |        117 |        117 |       0 |    0 |   99 |      0 |      0 |          0 |
+|       u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_12 |        212 |        212 |       0 |    0 |  178 |      2 |      0 |          0 |
+|   g_physical[1].u_a_phy        |                   tfdu_lane_phy_1 |        368 |        368 |       0 |    0 |  347 |      2 |      0 |          0 |
+|     (g_physical[1].u_a_phy)    |                   tfdu_lane_phy_1 |         46 |         46 |       0 |    0 |   70 |      0 |      0 |          0 |
+|     u_p8c_physical_safety      |  ir_tfdu_physical_module_safety_9 |        322 |        322 |       0 |    0 |  277 |      2 |      0 |          0 |
+|       (u_p8c_physical_safety)  |  ir_tfdu_physical_module_safety_9 |        117 |        117 |       0 |    0 |   99 |      0 |      0 |          0 |
+|       u_exact_duty_accountant  |  ir_tfdu_exact_duty_accountant_10 |        205 |        205 |       0 |    0 |  178 |      2 |      0 |          0 |
+|   g_physical[1].u_b_phy        |                   tfdu_lane_phy_2 |        333 |        333 |       0 |    0 |  347 |      2 |      0 |          0 |
+|     (g_physical[1].u_b_phy)    |                   tfdu_lane_phy_2 |          5 |          5 |       0 |    0 |   70 |      0 |      0 |          0 |
+|     u_p8c_physical_safety      |    ir_tfdu_physical_module_safety |        328 |        328 |       0 |    0 |  277 |      2 |      0 |          0 |
+|       (u_p8c_physical_safety)  |    ir_tfdu_physical_module_safety |        117 |        117 |       0 |    0 |   99 |      0 |      0 |          0 |
+|       u_exact_duty_accountant  |     ir_tfdu_exact_duty_accountant |        211 |        211 |       0 |    0 |  178 |      2 |      0 |          0 |
+|   g_receive[0].u_codec         |                   p9_rate_4ppm_rx |         76 |         76 |       0 |    0 |   60 |      0 |      0 |          0 |
+|     u_rx_1mbps                 |                   ir_4ppm_codec_6 |         27 |         27 |       0 |    0 |   21 |      0 |      0 |          0 |
+|     u_rx_2mbps                 |   ir_4ppm_codec__parameterized0_7 |         22 |         22 |       0 |    0 |   20 |      0 |      0 |          0 |
+|     u_rx_4mbps                 |   ir_4ppm_codec__parameterized1_8 |         27 |         27 |       0 |    0 |   19 |      0 |      0 |          0 |
+|   g_receive[0].u_parser        |                  p9_4ppm_frame_rx |        436 |        436 |       0 |    0 |  550 |      0 |      0 |          0 |
+|   g_receive[1].u_codec         |                 p9_rate_4ppm_rx_3 |         77 |         77 |       0 |    0 |   60 |      0 |      0 |          0 |
+|     u_rx_1mbps                 |                     ir_4ppm_codec |         27 |         27 |       0 |    0 |   21 |      0 |      0 |          0 |
+|     u_rx_2mbps                 |     ir_4ppm_codec__parameterized0 |         23 |         23 |       0 |    0 |   20 |      0 |      0 |          0 |
+|     u_rx_4mbps                 |     ir_4ppm_codec__parameterized1 |         27 |         27 |       0 |    0 |   19 |      0 |      0 |          0 |
+|   g_receive[1].u_parser        |                p9_4ppm_frame_rx_4 |        458 |        458 |       0 |    0 |  550 |      0 |      0 |          0 |
+|   g_serializer[0].u_serializer |                  p9_4ppm_frame_tx |        573 |        573 |       0 |    0 |  340 |      0 |      0 |          0 |
+|   g_serializer[1].u_serializer |                p9_4ppm_frame_tx_5 |        566 |        566 |       0 |    0 |  341 |      0 |      0 |          0 |
+|   u_data_plane                 |                 ir_data_plane_top |       5171 |       5063 |     108 |    0 | 3181 |      0 |      0 |          0 |
+|     (u_data_plane)             |                 ir_data_plane_top |         61 |         61 |       0 |    0 |   38 |      0 |      0 |          0 |
+|     u_ack_aggregator           |                 ir_ack_aggregator |        245 |        245 |       0 |    0 |  219 |      0 |      0 |          0 |
+|     u_rx_window                |            ir_selective_repeat_rx |        728 |        676 |      52 |    0 |  300 |      0 |      0 |          0 |
+|     u_scheduler                |      ir_health_weighted_scheduler |        569 |        569 |       0 |    0 |  477 |      0 |      0 |          0 |
+|     u_tx_window                |            ir_selective_repeat_tx |       3568 |       3512 |      56 |    0 | 2147 |      0 |      0 |          0 |
++--------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

@@ -1,0 +1,29 @@
+# P8D PS driver offline contract
+
+- Status: `PASS`
+- Test ID: `P8D-PS-DRIVER-OFFLINE`
+- Profile: `P8D_PS_OFFLINE_MOCK`
+- Source commit: `5097ef02140c8eac79d49f7ff7cd9ed2f7a4a3e8`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "arm_cross_syntax": "PASS",
+  "arm_log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/software/arm_cross_syntax.log",
+  "cache_callbacks_exercised": true,
+  "descriptor_size_bytes": 64,
+  "generated_utc": "2026-07-27T22:11:56.641943Z",
+  "hardware_bsp_used": false,
+  "hardware_runtime_used": false,
+  "hardware_scope_promoted": false,
+  "host_compile_and_run": "PASS",
+  "host_log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/software/host_compile_and_run.log",
+  "host_reason": null,
+  "profile": "P8D_PS_OFFLINE_MOCK",
+  "schema_version": 1,
+  "source_commit": "5097ef02140c8eac79d49f7ff7cd9ed2f7a4a3e8",
+  "status": "PASS",
+  "test_id": "P8D-PS-DRIVER-OFFLINE"
+}
+```

@@ -1,0 +1,100 @@
+schema_version: 1
+configuration_id: P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED
+scope: P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
+base_tag: p8e-pass
+base_checkpoint: 57ff1079b10a5c0de156b621820774bbb111c5ee
+base_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
+branch: p9/z7010-stationary-2lane
+part: xc7z010clg400-1
+top: p9_ps_system_wrapper
+profile: Z7010_2LANE_DEV
+lane_count: 2
+physical_module_count: 4
+allowed_lane_masks: [1, 2, 3]
+maximum_lane_mask: 3
+maximum_runtime_seconds: 1800
+formal_soak_seconds: 1800
+warmup_seconds: 300
+acceptance_window_seconds: 1500
+network_required: false
+movement_allowed: false
+rotation_allowed: false
+ethernet_allowed: false
+spi_peer_allowed: false
+
+target_identity:
+  hw_server_url: localhost:3121
+  vivado_target: localhost:3121/xilinx_tcf/Digilent/210512180081
+  cable_serial: "210512180081"
+  live_device: xc7z010_1
+  idcode_normalized: "13722093"
+
+raw_idle_acceptance:
+  duration_ms: 5000
+  max_raw_pulses_per_physical_module: 16
+  max_false_preamble_count: 0
+  max_false_data_frames: 0
+  max_false_ack_frames: 0
+  max_crc_bad: 0
+  max_frame_bad: 0
+  max_symbol_errors: 0
+
+clock:
+  protocol_hz: 64000000
+  axi_dma_hz: 100000000
+  axi_lite_hz: 50000000
+
+phy_rate_ladder:
+  - {raw_bps: 1000000, chip_cycles: 32, tx_pulse_cycles: 8}
+  - {raw_bps: 2000000, chip_cycles: 16, tx_pulse_cycles: 8}
+  - {raw_bps: 4000000, chip_cycles: 8, tx_pulse_cycles: 5}
+phy_target_raw_bps_per_lane: 4000000
+two_lane_raw_capability_bps: 8000000
+startup_wait_us: 500
+rolling_window_us: 1000
+duty_design_target_percent: 18
+duty_hard_limit_strict_lt_percent: 20
+max_continuous_txd_high_us: 1
+
+protocol:
+  sequence_width_bits: 16
+  outstanding: 32
+  sack_window_bits: 32
+  ack_aggregation_frame_threshold: 8
+  maximum_retry: 7
+  max_l1_payload_bytes: 247
+  rfap_v1_useful_chunk_bytes: 215
+
+dma:
+  ip: xilinx.com:ip:axi_dma
+  mode: scatter_gather
+  data_width_bits: 32
+  tx_ring_depths: [8, 32]
+  rx_ring_depths: [8, 32]
+  descriptor_alignment_bytes: 64
+  cache_line_bytes: 32
+  hp_port: S_AXI_HP0
+
+performance:
+  model_source: config/p8d_data_plane.yaml
+  target_fraction_of_model: 0.70
+  modeled_application_goodput_bps: null
+  application_goodput_target_bps: null
+  freeze_required_before_hardware: true
+  two_lane_model_gap: PENDING_NO_CREDIBLE_FROZEN_2LANE_APPLICATION_MODEL
+  cpu_load: SKIP_WITH_REASON_BAREMETAL_NOT_INSTRUMENTED
+
+instrumentation:
+  uart: SKIP_WITH_REASON_NO_UART_CORE_IN_FROZEN_CANDIDATE
+  ila_vio: SKIP_WITH_REASON_NO_ILA_OR_VIO_CORE_IN_FROZEN_CANDIDATE
+
+unchanged_pending_scopes:
+  ETHERNET_LWIP_RUNTIME: DEFERRED_NOT_REQUIRED_FOR_P9
+  GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION: PENDING_D17
+  EXTERNAL_TFDU_DUTY_MEASUREMENT: PENDING_EXTERNAL_MEASUREMENT
+  REAL_OPTICAL_LINK_BUDGET: PENDING_FINAL_GEOMETRY_AND_MEASUREMENT
+  ABZ: PENDING_HARDWARE
+  PHYSICAL_HANDOVER: PENDING_P11
+  Z7020_TARGET_ACCEPTANCE: PENDING_Z7020_HW
+  ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
+  FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW

@@ -1,0 +1,127 @@
+# P8B acceptance core
+
+- `schema_version`: `1`
+- `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
+- `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
+- `status`: `PASS`
+- `source_commit`: `6d88b7854219c8b514ef36109a456ffbda4972d8`
+- `p8a_baseline_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
+- `p8a_baseline_tag`: `p8a-pass`
+- `branch`: `p9/z7010-stationary-2lane`
+- `profile`: `D200_D600_8X32`
+- `no_hardware`: `True`
+- `simulator`: `Vivado Simulator/xsim 2023.1`
+- `python_monte_carlo_samples`: `4096`
+- `hdl_randomized_samples`: `896`
+- `worst_case_geometry_acceptance`: `PENDING_WITH_EXPLICIT_GAPS`
+
+```json
+{
+  "branch": "p9/z7010-stationary-2lane",
+  "geometry_config": {
+    "path": "config/geometry/optical_geometry.yaml",
+    "sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0"
+  },
+  "hdl_randomized_samples": 896,
+  "no_hardware": true,
+  "p8a_baseline_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+  "p8a_baseline_tag": "p8a-pass",
+  "preserved_hardware_scope": {
+    "current_program_stage": [
+      "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+      "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+      "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+      "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+    ],
+    "current_run_hardware_authorization": true,
+    "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
+    "final_product_status": "PENDING_HW",
+    "no_hardware_default": true,
+    "p7_status": "PASS",
+    "product_final_acceptance": "PENDING",
+    "rotation_status": "PENDING_FINAL_MECHANICAL",
+    "z7020_target_status": "PENDING_Z7020_HW"
+  },
+  "profile": "D200_D600_8X32",
+  "python_artifacts": [
+    {
+      "path": "tools/p8b_mapping_reference.py",
+      "sha256": "d9d97209cb6f41fe4f389d697d4ac7a638101d1537516235abe35fc320f54565"
+    },
+    {
+      "path": "tools/p8b_geometry_model.py",
+      "sha256": "35b3d36bf086d2e4ef135ddacffbb2dfa01551dce351057feacda758fff0530b"
+    },
+    {
+      "path": "tools/p8b_generate_trajectory.py",
+      "sha256": "a1d19a1f9acdfe0d0ecc145bbe2a507a76add84d2b430175291cfe424cd28357"
+    },
+    {
+      "path": "scripts/run_p8b_geometry_gate.py",
+      "sha256": "04bdd038930b44ca7f004d1fdd5b874d394e7364b5fb5cee6f2a9cda5492373d"
+    }
+  ],
+  "python_monte_carlo_samples": 4096,
+  "random_seeds": [
+    1,
+    7,
+    17,
+    31,
+    127,
+    1024,
+    20260717
+  ],
+  "rtl_artifacts": [
+    {
+      "path": "rtl/ir_path_mapping_pkg.sv",
+      "sha256": "6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b"
+    },
+    {
+      "path": "rtl/ir_path_mapping_engine.sv",
+      "sha256": "248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c"
+    },
+    {
+      "path": "rtl/ir_bank_lane_crossbar.sv",
+      "sha256": "97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886"
+    },
+    {
+      "path": "rtl/ir_path_epoch_commit.sv",
+      "sha256": "1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c"
+    },
+    {
+      "path": "rtl/ir_phase_validity_guard.sv",
+      "sha256": "f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742"
+    },
+    {
+      "path": "rtl/ir_handover_metrics.sv",
+      "sha256": "f5f4862a0b439f08404fe249732fe108c0be0d6bc4cc77a4850d906ec046d4ab"
+    }
+  ],
+  "run_id": "p8b_20260717_offline_geometry_mapping_handover",
+  "schema_version": 1,
+  "simulator": "Vivado Simulator/xsim 2023.1",
+  "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
+  "status": "PASS",
+  "test_status": {
+    "P8B-CONFIG-SCHEMA": "PASS",
+    "P8B-HDL-CROSSBAR-DATA": "PASS",
+    "P8B-HDL-FORWARD-REVERSE-WRAP": "PASS",
+    "P8B-HDL-MAPPING-UNIT": "PASS",
+    "P8B-HDL-PATH-EPOCH-ATOMICITY": "PASS",
+    "P8B-HDL-PHASE-ACQUISITION": "PASS",
+    "P8B-HDL-TRAJECTORY-RANDOMIZED": "PASS",
+    "P8B-NO-HARDWARE-STATIC-SCAN": "PASS",
+    "P8B-OFFLINE-FULL-REGRESSION": "PASS",
+    "P8B-P0-P7-REGRESSION": "PASS",
+    "P8B-PYTHON-GEOMETRY-GAPS": "PASS",
+    "P8B-PYTHON-GEOMETRY-NOMINAL": "PASS",
+    "P8B-PYTHON-MAPPING-EXHAUSTIVE": "PASS",
+    "P8B-REPO-CHECKPOINT": "PASS",
+    "P8B-REQUIREMENT-TRACEABILITY": "PASS",
+    "P8B-RTL-PYTHON-CROSSCHECK": "PASS",
+    "P8B-STATE-NONPROMOTION": "PASS"
+  },
+  "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
+}
+```

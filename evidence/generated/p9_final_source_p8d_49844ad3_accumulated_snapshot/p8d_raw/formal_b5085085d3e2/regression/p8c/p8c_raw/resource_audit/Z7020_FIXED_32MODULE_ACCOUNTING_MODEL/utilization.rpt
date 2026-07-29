@@ -1,0 +1,127 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Tue Jul 28 02:51:29 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/user/AppData/Local/Temp/p8c_ooc_h8vbrxem/out/utilization.rpt
+| Design       : ir_p8c_resource_top_32
+| Device       : xc7z020clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++----------------------------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                         Instance                         |               Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++----------------------------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| ir_p8c_resource_top_32                                   |                             (top) |       4301 |       4301 |       0 |    0 | 4777 |     64 |      0 |          0 |
+|   impl                                                   |               ir_p8c_resource_top |       4301 |       4301 |       0 |    0 | 4777 |     64 |      0 |          0 |
+|     endpoint                                             |           ir_tfdu_safety_endpoint |       4301 |       4301 |       0 |    0 | 4777 |     64 |      0 |          0 |
+|       (endpoint)                                         |           ir_tfdu_safety_endpoint |         13 |         13 |       0 |    0 |    9 |      0 |      0 |          0 |
+|       g_physical_safety[0].u_physical_module_safety      |    ir_tfdu_physical_module_safety |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[0].u_physical_module_safety)  |    ir_tfdu_physical_module_safety |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_61 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[10].u_physical_module_safety     |  ir_tfdu_physical_module_safety_0 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[10].u_physical_module_safety) |  ir_tfdu_physical_module_safety_0 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_60 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[11].u_physical_module_safety     |  ir_tfdu_physical_module_safety_1 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[11].u_physical_module_safety) |  ir_tfdu_physical_module_safety_1 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_59 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[12].u_physical_module_safety     |  ir_tfdu_physical_module_safety_2 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[12].u_physical_module_safety) |  ir_tfdu_physical_module_safety_2 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_58 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[13].u_physical_module_safety     |  ir_tfdu_physical_module_safety_3 |        134 |        134 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[13].u_physical_module_safety) |  ir_tfdu_physical_module_safety_3 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_57 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[14].u_physical_module_safety     |  ir_tfdu_physical_module_safety_4 |        132 |        132 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[14].u_physical_module_safety) |  ir_tfdu_physical_module_safety_4 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_56 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[15].u_physical_module_safety     |  ir_tfdu_physical_module_safety_5 |        134 |        134 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[15].u_physical_module_safety) |  ir_tfdu_physical_module_safety_5 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_55 |        101 |        101 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[16].u_physical_module_safety     |  ir_tfdu_physical_module_safety_6 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[16].u_physical_module_safety) |  ir_tfdu_physical_module_safety_6 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_54 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[17].u_physical_module_safety     |  ir_tfdu_physical_module_safety_7 |        135 |        135 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[17].u_physical_module_safety) |  ir_tfdu_physical_module_safety_7 |         35 |         35 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_53 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[18].u_physical_module_safety     |  ir_tfdu_physical_module_safety_8 |        138 |        138 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[18].u_physical_module_safety) |  ir_tfdu_physical_module_safety_8 |         38 |         38 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_52 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[19].u_physical_module_safety     |  ir_tfdu_physical_module_safety_9 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[19].u_physical_module_safety) |  ir_tfdu_physical_module_safety_9 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_51 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[1].u_physical_module_safety      | ir_tfdu_physical_module_safety_10 |        135 |        135 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[1].u_physical_module_safety)  | ir_tfdu_physical_module_safety_10 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_50 |        101 |        101 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[20].u_physical_module_safety     | ir_tfdu_physical_module_safety_11 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[20].u_physical_module_safety) | ir_tfdu_physical_module_safety_11 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_49 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[21].u_physical_module_safety     | ir_tfdu_physical_module_safety_12 |        139 |        139 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[21].u_physical_module_safety) | ir_tfdu_physical_module_safety_12 |         35 |         35 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_48 |        104 |        104 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[22].u_physical_module_safety     | ir_tfdu_physical_module_safety_13 |        131 |        131 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[22].u_physical_module_safety) | ir_tfdu_physical_module_safety_13 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_47 |         98 |         98 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[23].u_physical_module_safety     | ir_tfdu_physical_module_safety_14 |        134 |        134 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[23].u_physical_module_safety) | ir_tfdu_physical_module_safety_14 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_46 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[24].u_physical_module_safety     | ir_tfdu_physical_module_safety_15 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[24].u_physical_module_safety) | ir_tfdu_physical_module_safety_15 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_45 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[25].u_physical_module_safety     | ir_tfdu_physical_module_safety_16 |        135 |        135 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[25].u_physical_module_safety) | ir_tfdu_physical_module_safety_16 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_44 |        101 |        101 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[26].u_physical_module_safety     | ir_tfdu_physical_module_safety_17 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[26].u_physical_module_safety) | ir_tfdu_physical_module_safety_17 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_43 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[27].u_physical_module_safety     | ir_tfdu_physical_module_safety_18 |        134 |        134 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[27].u_physical_module_safety) | ir_tfdu_physical_module_safety_18 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_42 |        101 |        101 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[28].u_physical_module_safety     | ir_tfdu_physical_module_safety_19 |        132 |        132 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[28].u_physical_module_safety) | ir_tfdu_physical_module_safety_19 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_41 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[29].u_physical_module_safety     | ir_tfdu_physical_module_safety_20 |        135 |        135 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[29].u_physical_module_safety) | ir_tfdu_physical_module_safety_20 |         35 |         35 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_40 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[2].u_physical_module_safety      | ir_tfdu_physical_module_safety_21 |        134 |        134 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[2].u_physical_module_safety)  | ir_tfdu_physical_module_safety_21 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_39 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[30].u_physical_module_safety     | ir_tfdu_physical_module_safety_22 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[30].u_physical_module_safety) | ir_tfdu_physical_module_safety_22 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_38 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[31].u_physical_module_safety     | ir_tfdu_physical_module_safety_23 |        138 |        138 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[31].u_physical_module_safety) | ir_tfdu_physical_module_safety_23 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_37 |        104 |        104 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[3].u_physical_module_safety      | ir_tfdu_physical_module_safety_24 |        135 |        135 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[3].u_physical_module_safety)  | ir_tfdu_physical_module_safety_24 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_36 |        102 |        102 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[4].u_physical_module_safety      | ir_tfdu_physical_module_safety_25 |        131 |        131 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[4].u_physical_module_safety)  | ir_tfdu_physical_module_safety_25 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_35 |         98 |         98 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[5].u_physical_module_safety      | ir_tfdu_physical_module_safety_26 |        137 |        137 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[5].u_physical_module_safety)  | ir_tfdu_physical_module_safety_26 |         36 |         36 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_34 |        101 |        101 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[6].u_physical_module_safety      | ir_tfdu_physical_module_safety_27 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[6].u_physical_module_safety)  | ir_tfdu_physical_module_safety_27 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_33 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[7].u_physical_module_safety      | ir_tfdu_physical_module_safety_28 |        133 |        133 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[7].u_physical_module_safety)  | ir_tfdu_physical_module_safety_28 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_32 |        100 |        100 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[8].u_physical_module_safety      | ir_tfdu_physical_module_safety_29 |        132 |        132 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[8].u_physical_module_safety)  | ir_tfdu_physical_module_safety_29 |         33 |         33 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |  ir_tfdu_exact_duty_accountant_31 |         99 |         99 |       0 |    0 |   82 |      2 |      0 |          0 |
+|       g_physical_safety[9].u_physical_module_safety      | ir_tfdu_physical_module_safety_30 |        137 |        137 |       0 |    0 |  149 |      2 |      0 |          0 |
+|         (g_physical_safety[9].u_physical_module_safety)  | ir_tfdu_physical_module_safety_30 |         34 |         34 |       0 |    0 |   67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                          |     ir_tfdu_exact_duty_accountant |        103 |        103 |       0 |    0 |   82 |      2 |      0 |          0 |
++----------------------------------------------------------+-----------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

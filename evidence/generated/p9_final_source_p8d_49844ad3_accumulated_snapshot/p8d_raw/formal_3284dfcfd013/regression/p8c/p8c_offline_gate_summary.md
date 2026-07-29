@@ -1,0 +1,225 @@
+# P8C offline gate
+
+```text
+STATUS: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+HARDWARE_SCOPE_PROMOTED: false
+```
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "commands": {
+    "p8b_checkpoint_evidence_verify": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/p8b_checkpoint_evidence_verify.log",
+      "status": "PASS"
+    },
+    "python_reference": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/python_reference.log",
+      "status": "PASS"
+    },
+    "python_unit_tests": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/python_unit_tests.log",
+      "status": "PASS"
+    },
+    "register_map_verify": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/register_map_verify.log",
+      "status": "PASS"
+    },
+    "safety_config_verify": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/safety_config_verify.log",
+      "status": "PASS"
+    },
+    "static_architecture": {
+      "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/static_architecture.log",
+      "status": "PASS"
+    }
+  },
+  "failures": [],
+  "full_regression": {
+    "parent_environment": "1",
+    "source": "parent run_offline_gates.py",
+    "status": "PASS"
+  },
+  "generated_at_utc": "2026-07-26T20:50:41+00:00",
+  "mandatory_vector_coverage": {
+    "CONTINUOUS_HIGH_VECTOR_MATRIX": "PASS",
+    "EXACT_DUTY_TARGETED_VECTOR_MATRIX": "PASS",
+    "MULTI_PROFILE_VECTOR_MATRIX": "PASS",
+    "ONE_HOT_PATH_VECTOR_MATRIX": "PASS",
+    "PERMIT_VECTOR_MATRIX": "PASS"
+  },
+  "profile": "P8C_MULTI_PROFILE_OFFLINE",
+  "resource_status": "PASS",
+  "software": {
+    "log": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/software/ps_driver_host_compile_and_run.log",
+    "status": "PASS"
+  },
+  "source_commit": "3284dfcfd01339457da7d86271cf6e5f223a7e46",
+  "status": "PASS",
+  "test_id": "P8C-OFFLINE-GATE",
+  "xsim": {
+    "tb_p8c_endpoint_safety": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_endpoint_safety",
+      "markers": [
+        "P8C_PERMIT_VECTOR_MATRIX_PASS=1",
+        "P8C_FAULT_DROP_MID_HIGH_PASS=1",
+        "P8C_HISTORY_PERMIT_LANE_PATH_PRESERVED_PASS=1",
+        "P8C_KILL_REASON_PRIORITY_PASS=1",
+        "TB_P8C_ENDPOINT_SAFETY_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/generated/tfdu_safety_pkg.sv",
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "rtl/ir_tfdu_safety_endpoint.sv",
+        "sim/tb/tb_p8c_endpoint_safety.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_exact_duty": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_exact_duty",
+      "markers": [
+        "P8C_TELEMETRY_CLEAR_HISTORY_PRESERVED_PASS=1",
+        "P8C_EXACT_VECTOR_MATRIX_PASS=1",
+        "TB_P8C_EXACT_DUTY_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "sim/tb/tb_p8c_exact_duty.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_full_scale": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_full_scale",
+      "markers": [
+        "P8C_LONG_PERIODIC_4PPM_LIKE_PASS=1",
+        "TB_P8C_FULL_SCALE_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/generated/tfdu_safety_pkg.sv",
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "rtl/ir_tfdu_safety_endpoint.sv",
+        "sim/tb/tb_p8c_full_scale.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_physical_safety": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_physical_safety",
+      "markers": [
+        "P8C_CONTINUOUS_VECTOR_MATRIX_PASS=1",
+        "P8C_SD_HISTORY_PRESERVED_PASS=1",
+        "TB_P8C_PHYSICAL_SAFETY_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "sim/tb/tb_p8c_physical_safety.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_profile_matrix": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_profile_matrix",
+      "markers": [
+        "P8C_ILLEGAL_COMMIT_DURING_FRAME_PASS=1",
+        "P8C_PERMIT_DROP_DURING_PATH_COMMIT_PASS=1",
+        "P8C_INDEPENDENT_FAULT_ISOLATION_PASS=1",
+        "TB_P8C_PROFILE_MATRIX_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/generated/tfdu_safety_pkg.sv",
+        "rtl/ir_path_mapping_pkg.sv",
+        "rtl/ir_path_mapping_engine.sv",
+        "rtl/ir_path_epoch_commit.sv",
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "rtl/ir_tfdu_safety_endpoint.sv",
+        "rtl/ir_p8c_mapping_safety_adapter.sv",
+        "rtl/ir_p8c_safety_integration.sv",
+        "sim/tb/tb_p8c_profile_matrix.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_safety_regs": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_safety_regs",
+      "markers": [
+        "TB_P8C_SAFETY_REGS_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/ir_p8c_safety_regs.sv",
+        "sim/tb/tb_p8c_safety_regs.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_p8c_trace_crosscheck": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_p8c_trace_crosscheck",
+      "markers": [
+        "TB_P8C_TRACE_CROSSCHECK_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "sim/tb/tb_p8c_trace_crosscheck.sv"
+      ],
+      "status": "PASS"
+    },
+    "tb_tfdu_lane_phy_smoke": {
+      "log_directory": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_3284dfcfd013/regression/p8c/p8c_raw/xsim/tb_tfdu_lane_phy_smoke",
+      "markers": [
+        "TB_TFDU_LANE_PHY_SMOKE_PASS=1"
+      ],
+      "phase_returncodes": {
+        "compile": 0,
+        "elaborate": 0,
+        "run": 0
+      },
+      "sources": [
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "rtl/tfdu_lane_phy.sv",
+        "sim/models/tfdu6102_behavior_model.sv",
+        "sim/tb/tb_tfdu_lane_phy_smoke.sv"
+      ],
+      "status": "PASS"
+    }
+  }
+}
+```

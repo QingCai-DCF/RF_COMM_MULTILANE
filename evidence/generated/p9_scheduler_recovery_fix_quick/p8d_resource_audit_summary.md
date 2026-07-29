@@ -1,0 +1,27 @@
+# P8D OOC resource audit
+
+- Status: `SKIP_WITH_REASON`
+- Test ID: `P8D-OOC-RESOURCE-AUDIT`
+- Profile: `P8D_MULTI_PROFILE_OFFLINE`
+- Source commit: `7adbd8fbee27ed8643ed9234506d7cd463f79158`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "generated_utc": "2026-07-29T02:11:08.535313Z",
+  "hardware_scope_promoted": false,
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "profiles": {
+    "Z7010_2LANE_DEV": {
+      "reason": "quick mode",
+      "status": "SKIP_WITH_REASON"
+    }
+  },
+  "schema_version": 1,
+  "scope": "ARCHITECTURE_FEASIBILITY_ONLY_P8E_TIMING_CDC_SIGNOFF_PENDING",
+  "source_commit": "7adbd8fbee27ed8643ed9234506d7cd463f79158",
+  "status": "SKIP_WITH_REASON",
+  "test_id": "P8D-OOC-RESOURCE-AUDIT"
+}
+```

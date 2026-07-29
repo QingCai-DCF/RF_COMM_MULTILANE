@@ -1,0 +1,112 @@
+{
+  "delayed_frame_link_regression": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/p9_frame_link_delayed.log",
+    "log_sha256": "16cf9244c15db81bd162c0236a54b9c03b873b65597d95503b88b1cc6549cc37",
+    "markers": [
+      "TB_P9_4PPM_FRAME_LINK_DELAYED=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_frame_link_delayed"
+  },
+  "generated_utc": "2026-07-29T01:34:33+00:00",
+  "part": "xc7z010clg400-1",
+  "post_synth_artifacts": [
+    {
+      "bytes": 3938495,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/post_synth_p9_core.dcp",
+      "sha256": "37aa6d9cdcdff0ebe1487fff2dee669777ff2e6079c00b90552c5ceb98e2a72a"
+    },
+    {
+      "bytes": 6521209,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/post_synth_p9_core_funcsim.v",
+      "sha256": "396a54cb183b42a29eeca889655d6d1c76a0f8d6c43cac096575027e0146bd7e"
+    },
+    {
+      "bytes": 109583,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/post_synth_timing_summary_p9_core.rpt",
+      "sha256": "74b65096a4760732b8092aa64f4faf6873f26cd98802c7a06986cce7e6fe86fe"
+    },
+    {
+      "bytes": 7991,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/post_synth_utilization_p9_core.rpt",
+      "sha256": "cb40ff6e7d929e489f839817d75ce3f1c4f822ae5d37b933fc4dfac6847d128c"
+    },
+    {
+      "bytes": 1886,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/post_synth_drc_p9_core.rpt",
+      "sha256": "45183ee0f1a5dd55fd7c76cca1696a1671557f9ed429b2e5792ac223b9194745"
+    },
+    {
+      "bytes": 240,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/post_synth/p9_post_synth_build_markers.txt",
+      "sha256": "86292449d210f0f5cf4d031ce83a2c156223bf76f3405a3cbc6f78f60ebf9c00"
+    }
+  ],
+  "post_synth_build": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/p9_post_synth_build.log",
+    "log_sha256": "043ab0374bb4c8d1414de1191bf7b4cb68f3f8372ec2bec98abdb5a599b176df",
+    "markers": [
+      "P9_POST_SYNTH_BUILD=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_build"
+  },
+  "post_synth_markers": {
+    "P9_POST_SYNTH_BUILD": "PASS",
+    "P9_POST_SYNTH_CLOCK_NS": "15.625",
+    "P9_POST_SYNTH_DRC_CRITICAL_COUNT": "0",
+    "P9_POST_SYNTH_DRC_ERROR_COUNT": "0",
+    "P9_POST_SYNTH_PART": "xc7z010clg400-1",
+    "P9_POST_SYNTH_REQP_1839_COUNT": "0",
+    "P9_POST_SYNTH_TOP": "p9_optical_transport_core"
+  },
+  "post_synth_safety": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/p9_post_synth_safety.log",
+    "log_sha256": "7d7a3b87ddbe0fad61764309dc7969ffed7aa56b2ead15a5433438f5277d8b44",
+    "markers": [
+      "P9_POST_SYNTH_SAFE_RESET_PASS=1",
+      "P9_POST_SYNTH_DISARM_KILL_PASS=1",
+      "P9_POST_SYNTH_NO_PARTIAL_RESUME_PASS=1",
+      "P9_POST_SYNTH_FINAL_SHUTDOWN_PASS=1",
+      "TB_P9_POST_SYNTH_SAFETY=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_safety"
+  },
+  "profile": "Z7010_2LANE_DEV",
+  "rtl_full_regression": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/p9_rtl_full.log",
+    "log_sha256": "cc55c496a1897fe9fc67f1e2baa6802102d687eb7d21d321526cba9278afcd7f",
+    "markers": [
+      "TB_P9_OPTICAL_TRANSPORT_CORE=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_rtl_full"
+  },
+  "schema_version": 1,
+  "source_commit": "7adbd8fbee27ed8643ed9234506d7cd463f79158",
+  "status": "PASS",
+  "test_id": "P9-CANDIDATE-SOURCE-POST-SYNTH-REGRESSION",
+  "tfdu_fir_frame_link_regression": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260729T012953.421366Z_7adbd8fbee27/p9_tfdu_fir_frame_link.log",
+    "log_sha256": "eb0f5380ffb96e795bdb30ce4126de84a0c889a121c7169e9f8273d0185c9f50",
+    "markers": [
+      "P9_FIR_RX_125_WIDTH_NS=100",
+      "P9_FIR_RX_250_WIDTH_NS=225",
+      "P9_FIR_RX_125_WIDTH_NS=120",
+      "P9_FIR_RX_250_WIDTH_NS=250",
+      "P9_FIR_RX_125_WIDTH_NS=140",
+      "P9_FIR_RX_250_WIDTH_NS=275",
+      "P9_FIR_RX_JITTER_NS=20",
+      "P9_FIR_TX_PULSE_CYCLES=8",
+      "TB_P9_TFDU_FIR_FRAME_LINK=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_tfdu_fir_frame_link"
+  }
+}

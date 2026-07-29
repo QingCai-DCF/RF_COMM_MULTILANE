@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537
+    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
   - path: PROJECT_STATUS.md
-    sha256: d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493
-  artifact_hash: f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537
+    sha256: d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17
+  artifact_hash: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537
+    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537
+    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
   - path: PROJECT_STATUS.md
-    sha256: d6b35a39e938c92d50deaf709332583e360aa217e4359182ce2839fe4a3a9493
+    sha256: d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537
+  artifact_hash: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -1714,375 +1714,543 @@ requirements:
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-02-IMMUTABLE-ARTIFACT-FREEZE
+  evidence_path: evidence/generated/p9_artifact_freeze_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_artifact_freeze_summary.json
+    sha256: ed030b098778bc9a5b8300cdeaecf6415e82d138a50b5955fcd4e2d0625b6bf6
+  - &id001
+    path: artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit
+    sha256: ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308
+  - &id002
+    path: artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit
+    sha256: a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8
+  - &id003
+    path: artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf
+    sha256: 2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: ed030b098778bc9a5b8300cdeaecf6415e82d138a50b5955fcd4e2d0625b6bf6
 - requirement_id: P9-HW-002
   requirement_text: Safe boot, shutdown-before, shutdown-on-exit, and shutdown-after are confirmed.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-HW-002-SHUTDOWN
+  evidence_path: evidence/generated/p9_shutdown_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_shutdown_summary.json
+    sha256: b941ab88477ab5950b90aee5af71ffe31e292aca08d0ee4202c52efc788c3788
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: b941ab88477ab5950b90aee5af71ffe31e292aca08d0ee4202c52efc788c3788
 - requirement_id: P9-HW-003
   requirement_text: The formal run is bound to the current user authorization and immutable artifacts.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-HW-003
+  evidence_path: evidence/generated/p9_authorization_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_authorization_summary.json
+    sha256: dba87d0213e46ce213589e4a6f6cc5127f827f4c836698039388d76e035efcca
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: dba87d0213e46ce213589e4a6f6cc5127f827f4c836698039388d76e035efcca
 - requirement_id: P9-PHY-001
   requirement_text: Fresh AB/BA raw counters pass for both logical lanes and four physical directions.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-PHY-001
+  evidence_path: evidence/generated/p9_raw_lane_matrix_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_raw_lane_matrix_summary.json
+    sha256: 6e0a485539625bb9fb3a5a0c10414fdb2756d4c551e70584161bec37ec5120ac
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 6e0a485539625bb9fb3a5a0c10414fdb2756d4c551e70584161bec37ec5120ac
 - requirement_id: P9-PHY-002
   requirement_text: Lane 0 operates at the configured 4 Mbit/s raw PHY rate.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-PHY-002
+  evidence_path: evidence/generated/p9_phy_4mbps_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_phy_4mbps_summary.json
+    sha256: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
 - requirement_id: P9-PHY-003
   requirement_text: Lane 1 operates at the configured 4 Mbit/s raw PHY rate.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-PHY-003
+  evidence_path: evidence/generated/p9_phy_4mbps_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_phy_4mbps_summary.json
+    sha256: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
 - requirement_id: P9-PHY-004
   requirement_text: Both lanes concurrently provide 8 Mbit/s aggregate raw capability.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-PHY-004
+  evidence_path: evidence/generated/p9_phy_4mbps_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_phy_4mbps_summary.json
+    sha256: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: cd3bfd4d3e80d25fa26f1b3b0227f3022f061451b99d32c49ebffba85090e1d3
 - requirement_id: P9-SAFE-001
   requirement_text: All four TFDU paths observe the hardware startup wait before readiness.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-SAFE-001
+  evidence_path: evidence/generated/p9_tfdu_safety_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_tfdu_safety_summary.json
+    sha256: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
 - requirement_id: P9-SAFE-002
   requirement_text: Hardware runtime continuous-high telemetry remains at or below one microsecond.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-SAFE-002
+  evidence_path: evidence/generated/p9_tfdu_safety_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_tfdu_safety_summary.json
+    sha256: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
 - requirement_id: P9-SAFE-003
   requirement_text: Exact 1 ms rolling-duty runtime accounting remains below the strict hard limit and design target.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-SAFE-003
+  evidence_path: evidence/generated/p9_tfdu_safety_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_tfdu_safety_summary.json
+    sha256: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
 - requirement_id: P9-SAFE-004
   requirement_text: Disarm reaches final TX kill, aborts the active train, and explicit re-arm does not resume it.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-SAFE-004
+  evidence_path: evidence/generated/p9_tfdu_safety_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_tfdu_safety_summary.json
+    sha256: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: a47851869324028271aff095a1560df30842d7fef3e9ad089f6f4b5ac94067e5
 - requirement_id: P9-L2-001
   requirement_text: The real optical runtime exercises a 32-outstanding selective-repeat window.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L2-001
+  evidence_path: evidence/generated/p9_selective_repeat_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_selective_repeat_summary.json
+    sha256: 5d509307281ba62c12219813ec4ae4460cbee70936eec4e79b5c028c7c3a7d99
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 5d509307281ba62c12219813ec4ae4460cbee70936eec4e79b5c028c7c3a7d99
 - requirement_id: P9-L2-002
   requirement_text: The real optical runtime exercises 32-bit SACK and bounded ACK aggregation.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L2-002
+  evidence_path: evidence/generated/p9_sack_ack_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_sack_ack_summary.json
+    sha256: c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba
 - requirement_id: P9-L2-003
   requirement_text: Sequence wrap, loss, reorder, stale, CRC, duplicate, and retry recovery preserve exactly-once delivery.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L2-003
+  evidence_path: evidence/generated/p9_sack_ack_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_sack_ack_summary.json
+    sha256: c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: c678044a4035ee9450bb0224a817d36a86287360ce04d006a6d5a08368b3ebba
 - requirement_id: P9-L3-001
   requirement_text: The two-lane hardware scheduler runs single-lane, equal, and weighted profiles.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L3-001
+  evidence_path: evidence/generated/p9_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_scheduler_migration_summary.json
+    sha256: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
 - requirement_id: P9-L3-002
   requirement_text: Unavailable, invalid-mapping, and duty-throttled lanes are isolated from scheduling.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L3-002
+  evidence_path: evidence/generated/p9_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_scheduler_migration_summary.json
+    sha256: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
 - requirement_id: P9-L3-003
   requirement_text: Only unacknowledged work migrates to the healthy lane and clean acknowledged work never migrates.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-L3-003
+  evidence_path: evidence/generated/p9_scheduler_migration_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_scheduler_migration_summary.json
+    sha256: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 71d83c1a2286267f0dc6a52fa508e7212732d8a2807012820357f045560dd4ae
 - requirement_id: P9-DMA-001
   requirement_text: The PS runtime uses the implemented AXI DMA scatter-gather engine and DDR buffers.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-DMA-001
+  evidence_path: evidence/generated/p9_dma_ddr_cache_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_dma_ddr_cache_summary.json
+    sha256: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
 - requirement_id: P9-DMA-002
   requirement_text: Cache flush, invalidate, barrier, cache-enabled, and cache-disabled ownership paths are exercised.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-DMA-002
+  evidence_path: evidence/generated/p9_dma_ddr_cache_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_dma_ddr_cache_summary.json
+    sha256: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
 - requirement_id: P9-DMA-003
   requirement_text: Each real DMA descriptor completes and is reclaimed exactly once without leak.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-DMA-003
+  evidence_path: evidence/generated/p9_dma_ddr_cache_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_dma_ddr_cache_summary.json
+    sha256: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
 - requirement_id: P9-DMA-004
   requirement_text: Idle/queued reset, abort, soft reset, stale completion, reboot, and recovery are verified.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-DMA-004
+  evidence_path: evidence/generated/p9_dma_ddr_cache_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_dma_ddr_cache_summary.json
+    sha256: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 99c825017f5c1b33621a326d4fb4c82909069619ab67d2ba1d5d2c8d428f986a
 - requirement_id: P9-RFAP-001
   requirement_text: RFAP v1 is parsed, reassembled, integrity checked, and atomically published at runtime.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-RFAP-001
+  evidence_path: evidence/generated/p9_rfap_runtime_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_rfap_runtime_summary.json
+    sha256: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
 - requirement_id: P9-RFAP-002
   requirement_text: RFAP vNext streaming is parsed and atomically published through the frozen PS/PL runtime.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-RFAP-002
+  evidence_path: evidence/generated/p9_rfap_runtime_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_rfap_runtime_summary.json
+    sha256: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
 - requirement_id: P9-RFAP-003
   requirement_text: Fresh A-to-B and B-to-A objects preserve CRC32, SHA-256, and zero partial publish.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-RFAP-003
+  evidence_path: evidence/generated/p9_rfap_runtime_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_rfap_runtime_summary.json
+    sha256: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 77a72e67561febdbbea062a65ec9f95670dc5da9ddf0fcd02e9f256567686412
 - requirement_id: P9-PERF-001
   requirement_text: PS preparation, DMA, PL completion, integrity, frame, and application throughput are characterized.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-PERF-001
+  evidence_path: evidence/generated/p9_performance_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_performance_summary.json
+    sha256: a709f75441a8abb6384a90f3c557f781309673536363e0daa22287d55ccb7cef
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: a709f75441a8abb6384a90f3c557f781309673536363e0daa22287d55ccb7cef
 - requirement_id: P9-SOAK-001
   requirement_text: The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-SOAK-001
+  evidence_path: evidence/generated/p9_stationary_30min_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_stationary_30min_summary.json
+    sha256: 66e53376d759ecb3a7dab95b13ed3f194ca67577412a457cb7f72cb6eb7e6a10
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 66e53376d759ecb3a7dab95b13ed3f194ca67577412a457cb7f72cb6eb7e6a10
 - requirement_id: P9-EVID-001
   requirement_text: The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries.
   profile: Z7010_2LANE_DEV
   verification_method: Fresh direct Z7010/JTAG/AXI-DMA/DDR/optical runtime evidence under immutable authorization.
   verification_stage: P9
   verification_scope: Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION
-  test_id: null
-  evidence_path: null
-  status: PENDING
+  test_id: P9-EVID-001
+  evidence_path: evidence/generated/p9_evidence_consistency_summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p9_evidence_consistency_summary.json
+    sha256: 6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6
+  - *id001
+  - *id002
+  - *id003
   hardware_followup: This PASS is limited to one stationary Zynq-7010 board and two lanes. Z7020, eight lanes, rotating hardware,
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
+  artifact_hash: 6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6

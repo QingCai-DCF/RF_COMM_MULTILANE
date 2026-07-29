@@ -1,0 +1,3178 @@
+{
+  "errors": [],
+  "markers": {
+    "P9_ASYNC_LANE_INJECTION": "lane_fault_in_flight:1",
+    "P9_ASYNC_LANE_INJECTION_READBACK": "0x00010000",
+    "P9_CANDIDATE_PROGRAMMED": "1",
+    "P9_CASE_PASS": "P9-20_endpoint_shutdown",
+    "P9_DMA_DIAGNOSTIC_SNAPSHOT": "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/scheduler/p9_20/mailbox/scheduler_recovery.dma_snapshot_01.psv",
+    "P9_ENDPOINT_SHUTDOWN": "PASS",
+    "P9_INITIAL_READY_DUMP": "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/scheduler/p9_20/mailbox/P9-20_ready.bin",
+    "P9_PS_ELF_DOWNLOADED": "1",
+    "P9_SERVICE_READY_LABEL": "initial_boot",
+    "P9_XSDB_APU_TARGET_COUNT": "1",
+    "P9_XSDB_BOARD_ID": "210512180081",
+    "P9_XSDB_CABLE_ROOT_COUNT": "1",
+    "P9_XSDB_CPU0_TARGET_COUNT": "1",
+    "P9_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P9_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "3",
+    "P9_XSDB_ENUM_DEVICE_0": "arm_dap|NODE_ID=2|IDCODE=4ba00477|NORMALIZED=4BA00477",
+    "P9_XSDB_ENUM_DEVICE_1": "xc7z010|NODE_ID=3|IDCODE=13722093|NORMALIZED=13722093",
+    "P9_XSDB_EXACT_FPGA_MATCH_COUNT": "1",
+    "P9_XSDB_FORCE_MEM_ACCESSES_WINDOW": "PS7_INIT_ONLY",
+    "P9_XSDB_IDCODE": "13722093",
+    "P9_XSDB_IDENTITY": "PASS",
+    "P9_XSDB_JTAG_DEVICE_COUNT": "2",
+    "P9_XSDB_JTAG_DISCOVERY_ATTEMPTS": "9",
+    "P9_XSDB_JTAG_DISCOVERY_ELAPSED_MS": "869",
+    "P9_XSDB_PL_PREFLIGHT": "id:0x50395A10,status:0x00000002,mm2s_cr:0x00010002,mm2s_sr:0x00010009,s2mm_cr:0x00010002,s2mm_sr:0x00010009",
+    "P9_XSDB_RUN_ID": "p9_20260729T084813Z_528556b51e1f_85faf9262170",
+    "P9_XSDB_STAGE": "P9-20",
+    "P9_XSDB_STAGE_RESULT": "PASS",
+    "P9_XSDB_STREAM_RESET_PREFLIGHT": "id:0x50395A10,status:0x00000002,mm2s_sr:0x00010009,s2mm_sr:0x00010009"
+  },
+  "observation_count": 15,
+  "observation_index": "evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/current_evaluator/p9_20/mailbox/observations.psv",
+  "observations": [
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 1,
+      "cache_invalidate_count": 2,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118874078,
+      "dma_tx_completion_ticks": 103096953,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        8928,
+        0,
+        768,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227923442,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 4213524720,
+      "input_sha256": "4760099b813d1fe9caf06615817803ac4460dc30e958881ea7def806f46f5ed2",
+      "integrity_verify_ticks": 15198102,
+      "label": "sched_lane0",
+      "lane_mask": 1,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 23,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 513,
+      "object_runtime_ticks": 227922954,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 4213524720,
+      "output_sha256": "4760099b813d1fe9caf06615817803ac4460dc30e958881ea7def806f46f5ed2",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93393813,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 512,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        268568,
+        0,
+        24080,
+        0
+      ],
+      "pl_completion_ticks": 118908192,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        292648,
+        0,
+        292648,
+        0
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        1,
+        1
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        68864,
+        0
+      ],
+      "scheduler_frames": [
+        256,
+        0
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 3,
+      "shutdown_verified_count": 3,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1001,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        1,
+        1
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 2,
+      "cache_invalidate_count": 4,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118873954,
+      "dma_tx_completion_ticks": 103096863,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        0,
+        768,
+        0,
+        8928
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227721453,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 2551913615,
+      "input_sha256": "5ceb8403b2a83742a035788c5a8a64723eb39a9c198bb9d051baf8d06bdab8ae",
+      "integrity_verify_ticks": 15086463,
+      "label": "sched_lane1",
+      "lane_mask": 2,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 44,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66050,
+      "object_runtime_ticks": 227720964,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 2551913615,
+      "output_sha256": "5ceb8403b2a83742a035788c5a8a64723eb39a9c198bb9d051baf8d06bdab8ae",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93336334,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 1024,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        0,
+        24080,
+        0,
+        268900
+      ],
+      "pl_completion_ticks": 118908066,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        0,
+        292980,
+        0,
+        292980
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        2,
+        2
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        68864
+      ],
+      "scheduler_frames": [
+        0,
+        256
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 5,
+      "shutdown_verified_count": 5,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1002,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        2,
+        2
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 512,
+      "ack_frames": 512,
+      "actual_rx_length": 126464,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 3,
+      "cache_invalidate_count": 6,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 131899473,
+      "dma_tx_completion_ticks": 124104509,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        8928,
+        8928,
+        1536,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 349151203,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 3080196894,
+      "input_sha256": "52eec810a751ed75e10990c3da7246f20995058c7cc7c6f5dc0d10d471c433af",
+      "integrity_verify_ticks": 30068109,
+      "label": "sched_equal",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 65,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 349150714,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 3080196894,
+      "output_sha256": "52eec810a751ed75e10990c3da7246f20995058c7cc7c6f5dc0d10d471c433af",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 186591498,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 512,
+      "physical_crc_bad": 0,
+      "physical_data_good": 512,
+      "physical_frame_bad": 0,
+      "physical_preamble": 2048,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        268618,
+        268705,
+        48321,
+        0
+      ],
+      "pl_completion_ticks": 132001248,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134218240,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        316939,
+        268705,
+        316939,
+        268705
+      ],
+      "requested_size": 126464,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 512,
+      "rx_delivery": 512,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 256,
+      "rx_old": 0,
+      "rx_out_of_order": 256,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        3,
+        3
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        68864,
+        68864
+      ],
+      "scheduler_frames": [
+        256,
+        256
+      ],
+      "scheduler_maximum_starvation": 1,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 7,
+      "shutdown_verified_count": 7,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 33554944,
+      "terminal_window_command_sequence": 1003,
+      "terminal_window_status": 134218240,
+      "terminal_window_valid": true,
+      "tx_ack_base": 512,
+      "tx_attempts": 512,
+      "tx_high_max_cycles": [
+        16,
+        16,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 512,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        3,
+        3
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134218240
+    },
+    {
+      "ack_aggregation": 512,
+      "ack_frames": 512,
+      "actual_rx_length": 126464,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 4,
+      "cache_invalidate_count": 8,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 178612231,
+      "dma_tx_completion_ticks": 166996724,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        1536,
+        0,
+        8928,
+        8928
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 395798214,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 392847145,
+      "input_sha256": "5f01a6d57290cc81b3fbfa018924c9698f1605145f4cb870a95d8ced152903c2",
+      "integrity_verify_ticks": 30068902,
+      "label": "sched_1_to_3",
+      "lane_mask": 3,
+      "lane_weights_readback": 769,
+      "last_error_detail": 0,
+      "memory_barrier_count": 86,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 395797725,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 392847145,
+      "output_sha256": "5f01a6d57290cc81b3fbfa018924c9698f1605145f4cb870a95d8ced152903c2",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 186592560,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 512,
+      "physical_crc_bad": 0,
+      "physical_data_good": 512,
+      "physical_frame_bad": 0,
+      "physical_preamble": 3072,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        48242,
+        0,
+        134315,
+        402606
+      ],
+      "pl_completion_ticks": 178646343,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134218240,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        182557,
+        402606,
+        182557,
+        402606
+      ],
+      "requested_size": 126464,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 512,
+      "rx_delivery": 512,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 121,
+      "rx_old": 0,
+      "rx_out_of_order": 121,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        4,
+        4
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        34432,
+        103296
+      ],
+      "scheduler_frames": [
+        128,
+        384
+      ],
+      "scheduler_maximum_starvation": 4,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 9,
+      "shutdown_verified_count": 9,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 33554944,
+      "terminal_window_command_sequence": 1004,
+      "terminal_window_status": 134218240,
+      "terminal_window_valid": true,
+      "tx_ack_base": 512,
+      "tx_attempts": 512,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 512,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        4,
+        4
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134218240
+    },
+    {
+      "ack_aggregation": 512,
+      "ack_frames": 512,
+      "actual_rx_length": 126464,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 5,
+      "cache_invalidate_count": 10,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 184955522,
+      "dma_tx_completion_ticks": 173305932,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        8928,
+        8928,
+        1536,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 402608317,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 1828239677,
+      "input_sha256": "991fb42d052aaa070f8d9c5869790f4ac034579fd4e4cb80dd72f187992a43a0",
+      "integrity_verify_ticks": 30392189,
+      "label": "sched_3_to_1",
+      "lane_mask": 3,
+      "lane_weights_readback": 259,
+      "last_error_detail": 0,
+      "memory_barrier_count": 107,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 402607829,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 1828239677,
+      "output_sha256": "991fb42d052aaa070f8d9c5869790f4ac034579fd4e4cb80dd72f187992a43a0",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 186736066,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 512,
+      "physical_crc_bad": 0,
+      "physical_data_good": 512,
+      "physical_frame_bad": 0,
+      "physical_preamble": 4096,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        403274,
+        134335,
+        48239,
+        0
+      ],
+      "pl_completion_ticks": 184989662,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134218240,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        451513,
+        134335,
+        451513,
+        134335
+      ],
+      "requested_size": 126464,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 512,
+      "rx_delivery": 512,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 128,
+      "rx_old": 0,
+      "rx_out_of_order": 128,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        5,
+        5
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        103296,
+        34432
+      ],
+      "scheduler_frames": [
+        384,
+        128
+      ],
+      "scheduler_maximum_starvation": 4,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 11,
+      "shutdown_verified_count": 11,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 33554944,
+      "terminal_window_command_sequence": 1005,
+      "terminal_window_status": 134218240,
+      "terminal_window_valid": true,
+      "tx_ack_base": 512,
+      "tx_attempts": 512,
+      "tx_high_max_cycles": [
+        16,
+        16,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 512,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        5,
+        5
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134218240
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 6,
+      "cache_invalidate_count": 12,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 125286121,
+      "dma_tx_completion_ticks": 109491808,
+      "dropped_ack": 0,
+      "dropped_data": 1,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        1536,
+        768,
+        8928,
+        8928
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 234076758,
+      "expected_status": 0,
+      "fault_injection_readback": 65537,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 173449977,
+      "input_sha256": "8b55912b196ef56e62fb7ab41ddff0ebd727015ede7ad7844dab82c701bdc9a2",
+      "integrity_verify_ticks": 15035683,
+      "label": "retry_migration",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 128,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 234076269,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 173449977,
+      "output_sha256": "8b55912b196ef56e62fb7ab41ddff0ebd727015ede7ad7844dab82c701bdc9a2",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93330244,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 4608,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        2348,
+        21719,
+        13643,
+        255255
+      ],
+      "pl_completion_ticks": 125320235,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        15991,
+        276974,
+        15991,
+        276974
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 31,
+      "rx_old": 0,
+      "rx_out_of_order": 31,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        6,
+        6
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        3766,
+        65367
+      ],
+      "scheduler_frames": [
+        14,
+        243
+      ],
+      "scheduler_maximum_starvation": 1,
+      "scheduler_migrations": [
+        0,
+        1
+      ],
+      "scheduler_retries": [
+        0,
+        1
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 13,
+      "shutdown_verified_count": 13,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1006,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 257,
+      "tx_high_max_cycles": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "tx_migrations": 1,
+      "tx_next_sequence": 256,
+      "tx_retries": 1,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        6,
+        6
+      ],
+      "tx_timeouts": 1,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 7,
+      "cache_invalidate_count": 14,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118873991,
+      "dma_tx_completion_ticks": 103096818,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        0,
+        8928,
+        0,
+        768
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227670656,
+      "expected_status": 0,
+      "fault_injection_readback": 65536,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 1544922277,
+      "input_sha256": "b75c8c3ddd453a99b4720be0e8610249dea6facece0a8e8ec25a2b8498db0a48",
+      "integrity_verify_ticks": 15038726,
+      "label": "lane0_unavailable",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 149,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 227670167,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 1544922277,
+      "output_sha256": "b75c8c3ddd453a99b4720be0e8610249dea6facece0a8e8ec25a2b8498db0a48",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93333170,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 5120,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        0,
+        268873,
+        0,
+        24080
+      ],
+      "pl_completion_ticks": 118908102,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        0,
+        292953,
+        0,
+        292953
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        7,
+        7
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        68864
+      ],
+      "scheduler_frames": [
+        0,
+        256
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 15,
+      "shutdown_verified_count": 15,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1007,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        7,
+        7
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 8,
+      "cache_invalidate_count": 16,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118874139,
+      "dma_tx_completion_ticks": 103096950,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        768,
+        0,
+        8928,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227882127,
+      "expected_status": 0,
+      "fault_injection_readback": 131072,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 671314360,
+      "input_sha256": "4376570817a5b95a7065db1937d37688b02972fb944e0fdd72670abd912340b0",
+      "integrity_verify_ticks": 15193782,
+      "label": "lane1_unavailable",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 170,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 227881638,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 671314360,
+      "output_sha256": "4376570817a5b95a7065db1937d37688b02972fb944e0fdd72670abd912340b0",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93389514,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 5632,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        24080,
+        0,
+        268762,
+        0
+      ],
+      "pl_completion_ticks": 118908276,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        292842,
+        0,
+        292842,
+        0
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        8,
+        8
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        68864,
+        0
+      ],
+      "scheduler_frames": [
+        256,
+        0
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 17,
+      "shutdown_verified_count": 17,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1008,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        8,
+        8
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 9,
+      "cache_invalidate_count": 18,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118873970,
+      "dma_tx_completion_ticks": 103096799,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        0,
+        8928,
+        0,
+        768
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227868078,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 1794231699,
+      "input_sha256": "7f68a366e5470d93510995a64c68017c3d48eda6ba8d89e97e65662948b87662",
+      "integrity_verify_ticks": 15188308,
+      "label": "lane0_mapping_invalid",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 191,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 227867590,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 1794231699,
+      "output_sha256": "7f68a366e5470d93510995a64c68017c3d48eda6ba8d89e97e65662948b87662",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93381045,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 6144,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        0,
+        268736,
+        0,
+        24080
+      ],
+      "pl_completion_ticks": 118908108,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        0,
+        292816,
+        0,
+        292816
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        9,
+        9
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        68864
+      ],
+      "scheduler_frames": [
+        0,
+        256
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 19,
+      "shutdown_verified_count": 19,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1009,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        9,
+        9
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 10,
+      "cache_invalidate_count": 20,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118874031,
+      "dma_tx_completion_ticks": 103096847,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        768,
+        0,
+        8928,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227663754,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 1010737771,
+      "input_sha256": "b9a2f25213d04b9106be737aa99fb57c64e6b8a6d9beadc25c521d228c05360d",
+      "integrity_verify_ticks": 15038564,
+      "label": "lane1_mapping_invalid",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 212,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 227663264,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 1010737771,
+      "output_sha256": "b9a2f25213d04b9106be737aa99fb57c64e6b8a6d9beadc25c521d228c05360d",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93326469,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 6656,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        24080,
+        0,
+        268301,
+        0
+      ],
+      "pl_completion_ticks": 118908154,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        292381,
+        0,
+        292381,
+        0
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        10,
+        10
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        68864,
+        0
+      ],
+      "scheduler_frames": [
+        256,
+        0
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 21,
+      "shutdown_verified_count": 21,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1010,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        10,
+        10
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 11,
+      "cache_invalidate_count": 22,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118873937,
+      "dma_tx_completion_ticks": 103096824,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        0,
+        8928,
+        0,
+        768
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227734412,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 230869212,
+      "input_sha256": "fd881ef495b68781e15b90c213afd0499cb0c8259af6bd80809b9a6a182af079",
+      "integrity_verify_ticks": 15090287,
+      "label": "lane0_duty_throttle",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 233,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 227733925,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 230869212,
+      "output_sha256": "fd881ef495b68781e15b90c213afd0499cb0c8259af6bd80809b9a6a182af079",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93345446,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 7168,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        0,
+        268443,
+        0,
+        24080
+      ],
+      "pl_completion_ticks": 118908063,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        0,
+        292523,
+        0,
+        292523
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        11,
+        11
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        68864
+      ],
+      "scheduler_frames": [
+        0,
+        256
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 23,
+      "shutdown_verified_count": 23,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1011,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        11,
+        11
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 256,
+      "ack_frames": 256,
+      "actual_rx_length": 63232,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 12,
+      "cache_invalidate_count": 24,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 118873969,
+      "dma_tx_completion_ticks": 103096874,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        768,
+        0,
+        8928,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 227893502,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 1572894644,
+      "input_sha256": "0ad0abc3d8a95aa2c006874edef7fc1487905468425fbc3d2e8c0d80ba9146ba",
+      "integrity_verify_ticks": 15199476,
+      "label": "lane1_duty_throttle",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 254,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 227893013,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 1572894644,
+      "output_sha256": "0ad0abc3d8a95aa2c006874edef7fc1487905468425fbc3d2e8c0d80ba9146ba",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 93395362,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 256,
+      "physical_crc_bad": 0,
+      "physical_data_good": 256,
+      "physical_frame_bad": 0,
+      "physical_preamble": 7680,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        24080,
+        0,
+        268568,
+        0
+      ],
+      "pl_completion_ticks": 118908082,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217984,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        292648,
+        0,
+        292648,
+        0
+      ],
+      "requested_size": 63232,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 256,
+      "rx_delivery": 256,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        12,
+        12
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        68864,
+        0
+      ],
+      "scheduler_frames": [
+        256,
+        0
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 25,
+      "shutdown_verified_count": 25,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 16777472,
+      "terminal_window_command_sequence": 1012,
+      "terminal_window_status": 134217984,
+      "terminal_window_valid": true,
+      "tx_ack_base": 256,
+      "tx_attempts": 256,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 256,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        12,
+        12
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217984
+    },
+    {
+      "ack_aggregation": 4246,
+      "ack_frames": 4246,
+      "actual_rx_length": 1048576,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 13,
+      "cache_invalidate_count": 26,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 1,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 1946389450,
+      "dma_tx_completion_ticks": 1930390526,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        8928,
+        8928,
+        1536,
+        1536
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 3748349970,
+      "expected_status": 0,
+      "fault_injection_readback": 65536,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 2198973074,
+      "input_sha256": "400c6fab975cebfaab3763bdff95075f61a8bca70f559885775abbc6fcb6b19c",
+      "integrity_verify_ticks": 252240144,
+      "label": "lane_fault_in_flight",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 275,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 3748349480,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 2198973074,
+      "output_sha256": "400c6fab975cebfaab3763bdff95075f61a8bca70f559885775abbc6fcb6b19c",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 1547838948,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 4246,
+      "physical_crc_bad": 0,
+      "physical_data_good": 4246,
+      "physical_frame_bad": 0,
+      "physical_preamble": 16172,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        74541,
+        4380867,
+        13307,
+        385893
+      ],
+      "pl_completion_ticks": 1946423589,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134221974,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        87848,
+        4766760,
+        87848,
+        4766760
+      ],
+      "requested_size": 1048576,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 4246,
+      "rx_delivery": 4246,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 71,
+      "rx_old": 0,
+      "rx_out_of_order": 71,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        13,
+        13
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        19368,
+        1122889
+      ],
+      "scheduler_frames": [
+        72,
+        4175
+      ],
+      "scheduler_maximum_starvation": 1,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 27,
+      "shutdown_verified_count": 27,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 278270102,
+      "terminal_window_command_sequence": 1013,
+      "terminal_window_status": 134221974,
+      "terminal_window_valid": true,
+      "tx_ack_base": 4246,
+      "tx_attempts": 4246,
+      "tx_high_max_cycles": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 4246,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        13,
+        13
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134221974
+    },
+    {
+      "ack_aggregation": 0,
+      "ack_frames": 0,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 14,
+      "cache_invalidate_count": 27,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 3,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 6438075,
+      "expected_status": 12,
+      "fault_injection_readback": 196608,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 2173100592,
+      "input_sha256": "a5fd8a99fe99885a7d9268af8758c4c1716dcce3db00043a3022e46e003d02a0",
+      "integrity_verify_ticks": 0,
+      "label": "all_lanes_unavailable",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 1342767109,
+      "memory_barrier_count": 294,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 515,
+      "object_runtime_ticks": 6437587,
+      "observed_status": 12,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 0,
+      "payload_prepare_ticks": 6093246,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 0,
+      "physical_crc_bad": 0,
+      "physical_data_good": 0,
+      "physical_frame_bad": 0,
+      "physical_preamble": 16172,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pl_completion_ticks": 0,
+      "pl_object_error": 1342767109,
+      "pl_soft_reset_count": 0,
+      "pl_status": 18,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 4246,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "requested_size": 4096,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 4246,
+      "rx_delivery": 0,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        14,
+        14
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        0
+      ],
+      "scheduler_frames": [
+        0,
+        0
+      ],
+      "scheduler_maximum_starvation": 0,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 5,
+      "shutdown_attempt_count": 29,
+      "shutdown_verified_count": 29,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 0,
+      "terminal_window_command_sequence": 0,
+      "terminal_window_status": 0,
+      "terminal_window_valid": false,
+      "tx_ack_base": 0,
+      "tx_attempts": 0,
+      "tx_high_max_cycles": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        13,
+        13
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 4246
+    },
+    {
+      "ack_aggregation": 266,
+      "ack_frames": 266,
+      "actual_rx_length": 65536,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 15,
+      "cache_invalidate_count": 29,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "dma_reset_count": 3,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 67980976,
+      "dma_tx_completion_ticks": 59998402,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        1536,
+        0,
+        8928,
+        8928
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 180778412,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 3047298315,
+      "input_sha256": "0ffb44e67652e990854151f4cfc759c6ca406fa970485d72bfa4e120aa9af9b2",
+      "integrity_verify_ticks": 15583015,
+      "label": "scheduler_recovery",
+      "lane_mask": 3,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 315,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 180777918,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 3047298315,
+      "output_sha256": "0ffb44e67652e990854151f4cfc759c6ca406fa970485d72bfa4e120aa9af9b2",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 96715572,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 266,
+      "physical_crc_bad": 0,
+      "physical_data_good": 266,
+      "physical_frame_bad": 0,
+      "physical_preamble": 16704,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        25029,
+        0,
+        139504,
+        138988
+      ],
+      "pl_completion_ticks": 68082748,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217994,
+      "rate_select": 2,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        164533,
+        138988,
+        164533,
+        138988
+      ],
+      "requested_size": 65536,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 266,
+      "rx_delivery": 266,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 133,
+      "rx_old": 0,
+      "rx_out_of_order": 133,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        15,
+        15
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        35777,
+        35611
+      ],
+      "scheduler_frames": [
+        133,
+        133
+      ],
+      "scheduler_maximum_starvation": 1,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 31,
+      "shutdown_verified_count": 31,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 17432842,
+      "terminal_window_command_sequence": 1015,
+      "terminal_window_status": 134217994,
+      "terminal_window_valid": true,
+      "tx_ack_base": 266,
+      "tx_attempts": 266,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 266,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        14,
+        14
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217994
+    },
+    {
+      "ack_aggregation": 266,
+      "ack_frames": 266,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 15,
+      "cache_invalidate_count": 29,
+      "command": 10,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 3,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        1536,
+        0,
+        8928,
+        8928
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 1558,
+      "expected_status": 0,
+      "fault_injection_readback": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 0,
+      "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "integrity_verify_ticks": 0,
+      "label": "P9-20_endpoint_shutdown",
+      "lane_mask": 0,
+      "lane_weights_readback": 257,
+      "last_error_detail": 0,
+      "memory_barrier_count": 317,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 66051,
+      "object_runtime_ticks": 0,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_count": 0,
+      "outstanding_high_watermark": 32,
+      "payload_prepare_ticks": 0,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 266,
+      "physical_crc_bad": 0,
+      "physical_data_good": 266,
+      "physical_frame_bad": 0,
+      "physical_preamble": 16704,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        25029,
+        0,
+        139504,
+        138988
+      ],
+      "pl_completion_ticks": 0,
+      "pl_object_error": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "post_shutdown_tx_sequence_base": 0,
+      "post_shutdown_window_status": 134217994,
+      "rate_select": 0,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        164533,
+        138988,
+        164533,
+        138988
+      ],
+      "requested_size": 0,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 266,
+      "rx_delivery": 266,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 133,
+      "rx_old": 0,
+      "rx_out_of_order": 133,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        15,
+        15
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        35777,
+        35611
+      ],
+      "scheduler_frames": [
+        133,
+        133
+      ],
+      "scheduler_maximum_starvation": 1,
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 6,
+      "shutdown_attempt_count": 32,
+      "shutdown_verified_count": 32,
+      "stale_acks": 0,
+      "terminal_tx_sequence_base": 0,
+      "terminal_window_command_sequence": 0,
+      "terminal_window_status": 0,
+      "terminal_window_valid": false,
+      "tx_ack_base": 0,
+      "tx_attempts": 266,
+      "tx_high_max_cycles": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        14,
+        14
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 134217994
+    }
+  ],
+  "process": {
+    "active_limit_seconds": null,
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\528556b51e1f4b808e206f78246f7b1a5a3fe642\\85faf92621700d2bb58013d2990ef51ca483aa1f44278335b3f86d01d9f9bf06\\ir_p9_z7010_2lane_candidate.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\528556b51e1f4b808e206f78246f7b1a5a3fe642\\45333e485c6354b128a4e546b0e7d0bdfc8950d0eff599047e4cf511b6c5398b\\p9_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\528556b51e1f4b808e206f78246f7b1a5a3fe642\\294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260729T084813Z_528556b51e1f_85faf9262170\\20260729T084935Z_p9_20\\authorization\\plans\\P9-20.plan.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260729T084813Z_528556b51e1f_85faf9262170\\20260729T084935Z_p9_20\\scheduler\\p9_20\\mailbox",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260729T084813Z_528556b51e1f_85faf9262170\\20260729T084935Z_p9_20\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260729T084813Z_528556b51e1f_85faf9262170\\20260729T084935Z_p9_20\\scheduler\\p9_20\\xsdb_stage_result.txt",
+      "P9-20",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260729T084813Z_528556b51e1f_85faf9262170\\authorization\\phase2_immutable_artifacts.json",
+      "p9_20260729T084813Z_528556b51e1f_85faf9262170"
+    ],
+    "elapsed_seconds": 33.355094,
+    "error": "",
+    "interrupted": false,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/raw_logs/p9_20.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/raw_logs/p9_20.stdout.log",
+    "stdout_sha256": "f038351740491b8eaa4cb50d57facb4860c6b16d0b40422e20925f3c50067eb2",
+    "timed_out": false
+  },
+  "raw_evidence": {
+    "object_integrity_manifest": "evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/current_evaluator/p9_20/object_integrity_manifest.json"
+  },
+  "raw_result": "evidence/hardware/p9_diagnostics/p9_20260729T084813Z_528556b51e1f_85faf9262170/20260729T084935Z_p9_20/current_evaluator/p9_20/xsdb_stage_result.txt",
+  "schema_version": 1,
+  "stage": "P9-20",
+  "status": "PASS",
+  "test_id": "P9-20-HARDWARE"
+}

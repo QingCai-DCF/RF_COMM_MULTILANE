@@ -1,0 +1,23 @@
+# P8D evidence consistency
+
+- Status: `FAIL`
+- Test ID: `P8D-EVIDENCE-CONSISTENCY`
+- Profile: `P8D_MULTI_PROFILE_OFFLINE`
+- Source commit: `8ecf71c2a795b887daac7c8f91300b1eb8a2921f`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "generated_utc": "2026-07-29T12:23:13.996643Z",
+  "hardware_scope_promoted": false,
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "raw_logs_present": true,
+  "required_component_pairs_present": true,
+  "schema_version": 1,
+  "selected_raw_run": "evidence/generated/p9_final_source_p8d_8ecf71c2/p8d_raw/formal_8ecf71c2a795",
+  "source_commit": "8ecf71c2a795b887daac7c8f91300b1eb8a2921f",
+  "status": "FAIL",
+  "test_id": "P8D-EVIDENCE-CONSISTENCY"
+}
+```

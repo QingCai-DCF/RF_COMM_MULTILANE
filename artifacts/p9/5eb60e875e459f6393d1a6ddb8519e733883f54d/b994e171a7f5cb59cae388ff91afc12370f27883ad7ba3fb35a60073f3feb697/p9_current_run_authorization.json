@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "authorization_id": "P9_CURRENT_USER_MESSAGE_2026-07-26",
+  "authorized": true,
+  "authorization_source": "current user message in this Codex task",
+  "authorization_verbatim_utf8_path": "config/p9_current_run_authorization.txt",
+  "authorization_verbatim_utf8_sha256": "99e5bdbb8c0ff2814b7e8793825421cf58a4a08df42f829049c088bcc8187fbd",
+  "scope": "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+  "board": "single Zynq-7010 / AX7010-class board",
+  "stationary": true,
+  "lane_count": 2,
+  "allowed_lane_masks": [1, 2, 3],
+  "maximum_lane_mask": 3,
+  "maximum_runtime_seconds": 1800,
+  "allowed_operations": [
+    "build_and_freeze_bitstream_xsa_bsp_ps_elf",
+    "connect_hw_server_vivado_hardware_manager_xsdb_jtag",
+    "program_frozen_shutdown_and_candidate_bitstreams",
+    "run_frozen_ps_elf",
+    "jtag_axi_ddr_axi_dma_uart_ila_vio_testing",
+    "controlled_tfdu_transmit_lane_masks_0x1_0x2_0x3"
+  ],
+  "forbidden_operations": [
+    "move_board_or_tfdu",
+    "rotate_or_adjust_angle",
+    "occlude_or_swap_modules",
+    "rewire_or_replug",
+    "lane_mask_above_0x3",
+    "require_ethernet_cable",
+    "operate_motor",
+    "z7020_or_8lane_or_rotation_or_product_final_promotion"
+  ],
+  "shutdown_required_before": true,
+  "shutdown_required_on_error_timeout_interrupt_and_normal_exit": true,
+  "preserve_failure_evidence": true,
+  "artifact_binding_phase": "PHASE1_SCOPE_AUTHORIZATION_ARTIFACT_HASHES_PENDING",
+  "user_reconfirmation_after_freeze_required": false
+}

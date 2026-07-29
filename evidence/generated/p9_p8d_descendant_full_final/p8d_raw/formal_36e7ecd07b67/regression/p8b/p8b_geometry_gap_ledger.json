@@ -1,0 +1,108 @@
+{
+  "gap_count": 11,
+  "gaps": [
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_D13_OR_MECHANICAL_FREEZE",
+      "later_gate": "D13",
+      "parameter": "radial_eccentricity_mm",
+      "sensitivity": "path length and both incidence angles",
+      "value": null,
+      "why_needed": "path length and both incidence angles"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "axial_runout_mm",
+      "sensitivity": "3-D path length and out-of-plane incidence",
+      "value": null,
+      "why_needed": "3-D path length and out-of-plane incidence"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "rotor_stator_center_offset_mm",
+      "sensitivity": "all lane phase and incidence symmetry",
+      "value": null,
+      "why_needed": "all lane phase and incidence symmetry"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "rotor_module_angle_error_deg",
+      "sensitivity": "rotating-axis alignment and overlap",
+      "value": null,
+      "why_needed": "rotating-axis alignment and overlap"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "stator_module_angle_error_deg",
+      "sensitivity": "nearest-module delta and overlap",
+      "value": null,
+      "why_needed": "nearest-module delta and overlap"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "rotating_pcb_tilt_deg",
+      "sensitivity": "rotating incidence",
+      "value": null,
+      "why_needed": "rotating incidence"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_FINAL_MECHANICAL",
+      "later_gate": "P13",
+      "parameter": "fixed_pcb_tilt_deg",
+      "sensitivity": "fixed incidence",
+      "value": null,
+      "why_needed": "fixed incidence"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_OPTICS",
+      "later_gate": "OPTICS",
+      "parameter": "optical_axis_error_deg",
+      "sensitivity": "effective FOV margin",
+      "value": null,
+      "why_needed": "effective FOV margin"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_OPTICS",
+      "later_gate": "OPTICS",
+      "parameter": "window_refraction_model",
+      "sensitivity": "effective ray direction",
+      "value": null,
+      "why_needed": "effective ray direction"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_OPTICS",
+      "later_gate": "OPTICS",
+      "parameter": "baffle_occlusion_angular_mask_deg",
+      "sensitivity": "usable overlap interval",
+      "value": null,
+      "why_needed": "usable overlap interval"
+    },
+    {
+      "blocking_scope": "FINAL_ROTATING_OPTICAL_HARDWARE_ACCEPTANCE",
+      "current_status": "PENDING_ENVIRONMENT",
+      "later_gate": "ENVIRONMENT",
+      "parameter": "thermal_radial_growth_mm",
+      "sensitivity": "radial gap and incidence",
+      "value": null,
+      "why_needed": "radial gap and incidence"
+    }
+  ],
+  "status": "PASS",
+  "test_id": "P8B-PYTHON-GEOMETRY-GAPS",
+  "unknown_values_defaulted_to_zero": false,
+  "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
+}

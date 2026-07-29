@@ -1,0 +1,265 @@
+{
+  "errors": [
+    "XSDB PASS marker absent",
+    "endpoint shutdown marker absent",
+    "lane0_d0_r0_fixed_short: service_state",
+    "lane0_d0_r0_fixed_short: command_status",
+    "lane0_d0_r0_fixed_short: lane/rate/direction/weight readback mismatch",
+    "lane0_d0_r0_fixed_short: object byte count mismatch",
+    "lane0_d0_r0_fixed_short: CRC/SHA mismatch",
+    "lane0_d0_r0_fixed_short: clean physical data-frame count mismatch",
+    "not all direction/rate 10,000-frame cases ran",
+    "direction 0 rate 0: frozen PHY pattern matrix incomplete",
+    "direction 0 rate 1: frozen PHY pattern matrix incomplete",
+    "direction 0 rate 2: frozen PHY pattern matrix incomplete",
+    "direction 1 rate 0: frozen PHY pattern matrix incomplete",
+    "direction 1 rate 1: frozen PHY pattern matrix incomplete",
+    "direction 1 rate 2: frozen PHY pattern matrix incomplete"
+  ],
+  "markers": {
+    "P9_CANDIDATE_PROGRAMMED": "1",
+    "P9_DMA_DIAGNOSTIC_SNAPSHOT": "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/mailbox/lane0_d0_r0_fixed_short.dma_snapshot_02.psv",
+    "P9_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+    "P9_INITIAL_READY_DUMP": "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/mailbox/P9-13_ready.bin",
+    "P9_PS_ELF_DOWNLOADED": "1",
+    "P9_SERVICE_READY_LABEL": "initial_boot",
+    "P9_XSDB_BOARD_ID": "210512180081",
+    "P9_XSDB_CABLE_ROOT_COUNT": "1",
+    "P9_XSDB_ENUM_DEVICE_0": "arm_dap|NODE_ID=2|IDCODE=4ba00477|NORMALIZED=4BA00477",
+    "P9_XSDB_ENUM_DEVICE_1": "xc7z010|NODE_ID=3|IDCODE=13722093|NORMALIZED=13722093",
+    "P9_XSDB_EXACT_FPGA_MATCH_COUNT": "1",
+    "P9_XSDB_IDCODE": "13722093",
+    "P9_XSDB_IDENTITY": "PASS",
+    "P9_XSDB_JTAG_DEVICE_COUNT": "2",
+    "P9_XSDB_JTAG_DISCOVERY_ATTEMPTS": "1",
+    "P9_XSDB_JTAG_DISCOVERY_ELAPSED_MS": "6",
+    "P9_XSDB_RUN_ID": "p9_20260727T091709Z_aa07bac1690f_78f166754c1b",
+    "P9_XSDB_STAGE": "P9-13",
+    "P9_XSDB_STAGE_ERROR": "P9 command status mismatch label=lane0_d0_r0_fixed_short expected=0 observed=10",
+    "P9_XSDB_STAGE_RESULT": "FAIL"
+  },
+  "observation_count": 1,
+  "observation_index": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/mailbox/observations.psv",
+  "observations": [
+    {
+      "ack_aggregation": 1,
+      "ack_frames": 2,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 1,
+      "cache_flush_count": 1,
+      "cache_invalidate_count": 1,
+      "command": 3,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 2,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 732,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 1,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        2016,
+        0,
+        768,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 10000433944,
+      "expected_status": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 137084632,
+      "input_sha256": "16ad154a6fe30976d4d339bd10bca02ac5ad801fd844b9b35711fba53add6274",
+      "integrity_verify_ticks": 0,
+      "label": "lane0_d0_r0_fixed_short",
+      "lane_mask": 1,
+      "lane_weights_readback": 257,
+      "memory_barrier_count": 20,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 0,
+      "object_runtime_ticks": 10000433419,
+      "observed_status": 10,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_high_watermark": 1,
+      "payload_prepare_ticks": 70807,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 2,
+      "physical_crc_bad": 0,
+      "physical_data_good": 2,
+      "physical_frame_bad": 0,
+      "physical_preamble": 4,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        504,
+        0,
+        192,
+        0
+      ],
+      "pl_completion_ticks": 21095277,
+      "pl_soft_reset_count": 0,
+      "pl_status": 106,
+      "rate_select": 0,
+      "raw_config_readback": 0,
+      "raw_rx": [
+        696,
+        0,
+        696,
+        0
+      ],
+      "requested_size": 31,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 1,
+      "rx_delivery": 1,
+      "rx_duplicates": 1,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 1,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        1,
+        1
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        106,
+        0
+      ],
+      "scheduler_frames": [
+        2,
+        0
+      ],
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        1,
+        0
+      ],
+      "service_state": 5,
+      "shutdown_attempt_count": 3,
+      "shutdown_verified_count": 3,
+      "stale_acks": 0,
+      "tx_ack_base": 0,
+      "tx_attempts": 2,
+      "tx_high_max_cycles": [
+        8,
+        0,
+        8,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 1,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        1,
+        1
+      ],
+      "tx_timeouts": 1,
+      "window": "NA",
+      "window_status": 4194305
+    }
+  ],
+  "process": {
+    "active_limit_seconds": null,
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\aa07bac1690f4d7db77532ec79a043781518fcab\\78f166754c1bd6086e8d7426047dc81e430706a70901c0836c9c40d83ee4d76c\\ir_p9_z7010_2lane_candidate.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\aa07bac1690f4d7db77532ec79a043781518fcab\\087ec810a81b7093e8ec5436e7be39b52d003d9b2c05177214649d80c549a70f\\p9_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\aa07bac1690f4d7db77532ec79a043781518fcab\\294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T091709Z_aa07bac1690f_78f166754c1b\\20260727T093545Z_p9_13\\authorization\\plans\\P9-13.plan.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T091709Z_aa07bac1690f_78f166754c1b\\20260727T093545Z_p9_13\\phy_rate\\p9_13\\mailbox",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T091709Z_aa07bac1690f_78f166754c1b\\20260727T093545Z_p9_13\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T091709Z_aa07bac1690f_78f166754c1b\\20260727T093545Z_p9_13\\phy_rate\\p9_13\\xsdb_stage_result.txt",
+      "P9-13",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T091709Z_aa07bac1690f_78f166754c1b\\authorization\\phase2_immutable_artifacts.json",
+      "p9_20260727T091709Z_aa07bac1690f_78f166754c1b"
+    ],
+    "elapsed_seconds": 40.37078,
+    "error": "",
+    "interrupted": false,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/raw_logs/p9_13.stderr.log",
+    "stderr_sha256": "561f9e3f6334484b7ee2f9a72be9ea25de4af34ff750ad8f9159fb7b5f82d0b1",
+    "stdout": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/raw_logs/p9_13.stdout.log",
+    "stdout_sha256": "65731444d1b833c751866a92536be0dceb225f02d005a7aaa208150e2deb1a6d",
+    "timed_out": false
+  },
+  "raw_evidence": {
+    "object_integrity_manifest": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/object_integrity_manifest.json",
+    "rate_performance": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/phy_rate_characterization.csv"
+  },
+  "raw_result": "evidence/hardware/p9_diagnostics/p9_20260727T091709Z_aa07bac1690f_78f166754c1b/20260727T093545Z_p9_13/phy_rate/p9_13/xsdb_stage_result.txt",
+  "schema_version": 1,
+  "stage": "P9-13",
+  "status": "FAIL",
+  "test_id": "P9-13-HARDWARE"
+}

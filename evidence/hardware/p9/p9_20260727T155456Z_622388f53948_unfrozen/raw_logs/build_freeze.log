@@ -1,0 +1,11 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\freeze_p9_artifacts.py --source-commit 622388f5394839e3554a0a7c489715a80b26bff8 --phase1-authorization C:\Users\user\Documents\RF_COMM_MULTILANE_P9\config\p9_current_run_authorization.json
+STARTED_UTC=2026-07-27T16:06:03+00:00
+FINISHED_UTC=2026-07-27T16:06:04+00:00
+RETURN_CODE=0
+STDOUT_BEGIN
+{"artifact_manifest": {"bytes": 34782, "path": "artifacts/p9/p9_20260727T160604Z_622388f53948_7376123ae014/artifact_manifest.json", "sha256": "143bab87e3ccaa3d2be2ae721da5dc58dee3d4c0bd7956d146b1ae8885466a14"}, "bsp_sha256": "4a05091c4c457dad5f0382df7c5690bb9e662303108f5d8ce194b4dc9fbc7bc7", "candidate_bitstream_sha256": "7376123ae01407ca3065a09c326454a3010debcbbd0bf42bac01414b18bfbc54", "elf_sha256": "38279bf0bde537266b777077830e06a785407c25035acecf86cc4345fccfbd59", "frozen_artifact_count": 41, "generated_utc": "2026-07-27T16:06:04+00:00", "phase2_authorization": {"bytes": 7725, "path": "evidence/hardware/p9/p9_20260727T160604Z_622388f53948_7376123ae014/authorization/phase2_immutable_artifacts.json", "sha256": "c5dd0947f22559e9b806e2ce84f51864abfebbdbac8753e4c411753a5f0ebd71"}, "run_id": "p9_20260727T160604Z_622388f53948_7376123ae014", "runner_package_sha256": "7420d3699ce5be41f210b99b3f40395f87b77a61073408adc7aeb67047ed3eca", "schema_version": 1, "shutdown_bitstream_sha256": "d6e33e969c7afa7bbb6e0ba26e893ca15802edb027cf37f962544b8240c2a341", "source_commit": "622388f5394839e3554a0a7c489715a80b26bff8", "status": "PASS", "test_id": "P9-02-IMMUTABLE-ARTIFACT-FREEZE", "xsa_sha256": "e143241db83929069d65af3eb540bb6dd47cb6d8344111ccee679380db749e69"}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

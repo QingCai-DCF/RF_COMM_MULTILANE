@@ -1,0 +1,289 @@
+{
+  "goal_path": "C:\\Users\\user\\Downloads\\P9_Z7010_STATIONARY_2LANE_HARDWARE_VALIDATION_GOAL.md",
+  "goal_sha256": "543c89cb2afc1c4787f8f7b70b07ad3580018da03bad89cdfe09b84b68bad1bf",
+  "inputs": [
+    {
+      "bytes": 803,
+      "path": "rtl/generated/tfdu_safety_config.svh",
+      "sha256": "afce2804034e0423a954988aeb0b59b2b97d28a53165648891b3cc33b2718e1d"
+    },
+    {
+      "bytes": 20607,
+      "path": "rtl/generated/ir_register_map_defs.svh",
+      "sha256": "9634195c65e8d677562eaee740dedb0f8d4600dac037da5bca3c3f35a84d5e40"
+    },
+    {
+      "bytes": 867,
+      "path": "rtl/ir_seq_math_pkg.sv",
+      "sha256": "860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e"
+    },
+    {
+      "bytes": 10050,
+      "path": "rtl/ir_health_weighted_scheduler.sv",
+      "sha256": "f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236"
+    },
+    {
+      "bytes": 25978,
+      "path": "rtl/ir_selective_repeat_tx.sv",
+      "sha256": "1b8da963365cebf8c7900294e40ce365139698d1f07d9f9f0a44beb0fd7770c5"
+    },
+    {
+      "bytes": 10841,
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    {
+      "bytes": 3992,
+      "path": "rtl/ir_ack_aggregator.sv",
+      "sha256": "1a616e5b8d3a65732a4307e333c1ca98cddf481c8c0eca064ee7045de7262b07"
+    },
+    {
+      "bytes": 17869,
+      "path": "rtl/ir_data_plane_top.sv",
+      "sha256": "ccf5d0915eab5b9340a88a28a8c2d09619387c9d6fbd16e4fc9537458531b150"
+    },
+    {
+      "bytes": 7657,
+      "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+      "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+    },
+    {
+      "bytes": 6843,
+      "path": "rtl/ir_tfdu_physical_module_safety.sv",
+      "sha256": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19"
+    },
+    {
+      "bytes": 7273,
+      "path": "rtl/tfdu_lane_phy.sv",
+      "sha256": "b24979ac2c3c499ce3fbfcc4ba119dad02bf0f471f180f9d9d39453cd23c6ccd"
+    },
+    {
+      "bytes": 7789,
+      "path": "rtl/ir_4ppm_codec.sv",
+      "sha256": "afd1289872a6186eed3f0ec8a605e56f11a7fcd18dda9343a3fcd615962ed64e"
+    },
+    {
+      "bytes": 3506,
+      "path": "rtl/p9_rate_4ppm_rx.sv",
+      "sha256": "4f45c1e1155a3e110cb98574ace8abd6461995eca705de4826263cf0728b1c13"
+    },
+    {
+      "bytes": 14287,
+      "path": "rtl/p9_4ppm_frame_tx.sv",
+      "sha256": "150de8309729b9370832f81b3e7343416781703ab4366aa3777a2455ce3aabd1"
+    },
+    {
+      "bytes": 11462,
+      "path": "rtl/p9_4ppm_frame_rx.sv",
+      "sha256": "7af59cddbddd99c0e6dbb5a0807327eddd0842a731d39762632c54b5c672d571"
+    },
+    {
+      "bytes": 61685,
+      "path": "rtl/p9_optical_transport_core.sv",
+      "sha256": "931f0cd9945fab0007640db43ef3c54a433fee2ad4340b313df91ede8141050c"
+    },
+    {
+      "bytes": 3335,
+      "path": "rtl/p6_axi_lite_bridge.sv",
+      "sha256": "2569233aa9cc985acfd0b7369680d94e11c2cd82d95ea14f0f77b56a5145f432"
+    },
+    {
+      "bytes": 20363,
+      "path": "rtl/p9_axi_dma_peripheral.sv",
+      "sha256": "d162308c2e46178748754b8222d98359ea74d86744d9533639209915a1c4f097"
+    },
+    {
+      "bytes": 3628,
+      "path": "rtl/p9_axi_dma_peripheral_bd.v",
+      "sha256": "b2026000684658cf5bd0ce3481a28d86f41cd6d4b96cbaaa81e91332707e13ce"
+    },
+    {
+      "bytes": 660,
+      "path": "rtl/p9_z7010_shutdown_top.v",
+      "sha256": "7cfc2b8a7092dcc86368f687add46682e7e3e2256f5da98ff862bef87aa45ee4"
+    },
+    {
+      "bytes": 2018,
+      "path": "constraints/active/PORT1.generated.xdc",
+      "sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344"
+    },
+    {
+      "bytes": 1412,
+      "path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd"
+    },
+    {
+      "bytes": 899,
+      "path": "board_profiles/ACTIVE_PROFILE.json",
+      "sha256": "f6fb603f20dced9eaebb3aaaaa8f492931a28cb6466c7511f797341bf41b1b9b"
+    },
+    {
+      "bytes": 43966,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
+    },
+    {
+      "bytes": 20493,
+      "path": "config/register_map/generated/ir_regs.h",
+      "sha256": "44a387138a4bf8648c4dcf2cc990d816d82ecf930ccd76260ce67c579e55c664"
+    },
+    {
+      "bytes": 3639,
+      "path": "config/p9_z7010_stationary_2lane.yaml",
+      "sha256": "16b9a39ac5810cc3d1925695dd1416984ab7e9207cb4c202ad88ff5c657a385c"
+    },
+    {
+      "bytes": 1518,
+      "path": "config/p9_current_run_authorization.json",
+      "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697"
+    },
+    {
+      "bytes": 947,
+      "path": "config/p9_current_run_authorization.txt",
+      "sha256": "99e5bdbb8c0ff2814b7e8793825421cf58a4a08df42f829049c088bcc8187fbd"
+    },
+    {
+      "bytes": 12378,
+      "path": "config/project_state.json",
+      "sha256": "f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537"
+    },
+    {
+      "bytes": 113907,
+      "path": "config/project_requirements.yaml",
+      "sha256": "4ca1600a8638f8204f249d2c28fd27752793fc467ed28e9bfe157c195d687530"
+    },
+    {
+      "bytes": 20493,
+      "path": "software/ps_driver/ir_regs.h",
+      "sha256": "44a387138a4bf8648c4dcf2cc990d816d82ecf930ccd76260ce67c579e55c664"
+    },
+    {
+      "bytes": 5988,
+      "path": "software/ps_driver/p9_crypto.c",
+      "sha256": "cbe3f1aa0f2c9bb681c6a5e01169aad8b6943ffbab398dba9911a01c7867290f"
+    },
+    {
+      "bytes": 213,
+      "path": "software/ps_driver/p9_crypto.h",
+      "sha256": "55be459a44496b5571dbab423f3017f4b628a41d8e20e4ceeb1e1b6b1e07ff50"
+    },
+    {
+      "bytes": 55353,
+      "path": "software/ps_driver/p9_runtime_main.c",
+      "sha256": "89ecadf385762591dff0a3b190b47e1ceddf9746f2bed30fee6fcfa60b2ed300"
+    },
+    {
+      "bytes": 8322,
+      "path": "software/ps_driver/p9_runtime_protocol.h",
+      "sha256": "30e25d89c23d15ada73ebdc10977d026e6fd5c216fa2767b2879313ee338ec0b"
+    },
+    {
+      "bytes": 1798,
+      "path": "tests/test_p9_crypto.c",
+      "sha256": "68f17b8af43d152536f3778119f7dfbfd34fbdae55f42d595fc71a3712041681"
+    },
+    {
+      "bytes": 8030,
+      "path": "tests/test_p9_runner.py",
+      "sha256": "c28be238d6db4585d2d4d6939497523d7efafb3cd2532779c1d8ec99335adfea"
+    },
+    {
+      "bytes": 22765,
+      "path": "tools/ax7010_ps7_board_contract.py",
+      "sha256": "35b8f2369187a44c5f3db6964bd94d635d2c271c6e4878933dff97e9de61b8b9"
+    },
+    {
+      "bytes": 14454,
+      "path": "scripts/build_p9_z7010_candidate.tcl",
+      "sha256": "037c165865e7a83a8fb0f8673a3cf8388a4a7205a585d02979f5bb2a93b6433d"
+    },
+    {
+      "bytes": 752,
+      "path": "scripts/audit_p9_timing_checkpoint.tcl",
+      "sha256": "d8b3217bc181f67453a9ff504d548cfbaefc7031e5a43b59ac59fa04c8e27eb7"
+    },
+    {
+      "bytes": 1516,
+      "path": "scripts/build_p9_z7010_shutdown.tcl",
+      "sha256": "cc36751d5d0b82abd66c9eea2c6bc2b42409383930113fef69e1db1749736f88"
+    },
+    {
+      "bytes": 8557,
+      "path": "scripts/build_p9_ps_runtime.py",
+      "sha256": "f821cb6cf6e87ef5e3a01d77ce4ae88c037116f4d30cffce40069d7584513849"
+    },
+    {
+      "bytes": 2519,
+      "path": "scripts/build_p9_ps_runtime.tcl",
+      "sha256": "7f24cf7dabc2b8aeb356a2d294c970fc3d7f1c3a67dd529f6611433a67c20f46"
+    },
+    {
+      "bytes": 2975,
+      "path": "scripts/build_p9_post_synth_core.tcl",
+      "sha256": "035f2a6fd8475a8d52298144355c833013a97b16e52b49e2e30b8edc6a278814"
+    },
+    {
+      "bytes": 8334,
+      "path": "scripts/run_p9_candidate_regression.py",
+      "sha256": "c1885e8e10b95558f17b84e5d5643498a9e0bf582fb076e056f28b1bf0399cb5"
+    },
+    {
+      "bytes": 16100,
+      "path": "scripts/update_p9_requirements_state.py",
+      "sha256": "49d03b82490e27758ecc5c5e0eb26bac798686fd21828fcdf4f54c182472b5f9"
+    },
+    {
+      "bytes": 4892,
+      "path": "scripts/test_p9_cli_fail_closed.py",
+      "sha256": "a680229a4edd5709262560216bfafedd24a3b92d156c5e9102399313eefcfdec"
+    },
+    {
+      "bytes": 30366,
+      "path": "scripts/freeze_p9_artifacts.py",
+      "sha256": "35571d0e492b0ef86f142ea988bcf233bd0bf13c12b8f33a8e3d1ba12a0cdd08"
+    },
+    {
+      "bytes": 111851,
+      "path": "scripts/p9_hardware_runtime.py",
+      "sha256": "e7447a3e4ebda6f2e78a6ec7857985573ec5cd211d681394051a3f73d6f25609"
+    },
+    {
+      "bytes": 18241,
+      "path": "scripts/run_p9_z7010_stationary_2lane.py",
+      "sha256": "efc17e3b3495f6d6a5a5c19b7a7f584a9f79993aacfdc1219f2e3b6ba77fa813"
+    },
+    {
+      "bytes": 7046,
+      "path": "scripts/hw/p9_hw_preflight.tcl",
+      "sha256": "badb84c337da3ef08a28a3011f46f809c2405cd0330bd6fc761cd7d9b0aefc12"
+    },
+    {
+      "bytes": 6726,
+      "path": "scripts/hw/p9_program_shutdown.tcl",
+      "sha256": "8b04bea836555215787742654dfeae13b5c76755997a306c2391e8931365b15b"
+    },
+    {
+      "bytes": 21473,
+      "path": "scripts/hw/p9_xsdb_stage.tcl",
+      "sha256": "e25cc6fc4d62bb6aa232411a98685b83fa8955410a9c35e73271f7c4b9876189"
+    },
+    {
+      "bytes": 21895,
+      "path": "sim/tb/tb_p9_optical_transport_core.sv",
+      "sha256": "cae75f9a675b4b2400f8c29527155a160d3df08defdd1468076045d71946ee18"
+    },
+    {
+      "bytes": 8909,
+      "path": "sim/tb/tb_p9_post_synth_safety.sv",
+      "sha256": "86f368d23bd05cac9dca0235fcdc68f4a70ea0455244edd0a95d393de8d9e9d7"
+    },
+    {
+      "bytes": 2003,
+      "path": "tools/run_p9_z7010_stationary_2lane.ps1",
+      "sha256": "2c525b870bb6a6e97bafb70af367b9ddcf25d6e5029dc9ce27f8b53aeb9acdfd"
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "2849850acaf0cba1dbdf5eaa744ddef9ffd75dc1",
+  "status": "PASS"
+}

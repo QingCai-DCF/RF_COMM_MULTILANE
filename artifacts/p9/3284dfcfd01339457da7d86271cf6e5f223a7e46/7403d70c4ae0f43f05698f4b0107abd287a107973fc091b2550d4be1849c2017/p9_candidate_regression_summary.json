@@ -1,0 +1,84 @@
+{
+  "generated_utc": "2026-07-26T21:03:06+00:00",
+  "part": "xc7z010clg400-1",
+  "post_synth_artifacts": [
+    {
+      "bytes": 3903421,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/post_synth_p9_core.dcp",
+      "sha256": "86a108246582de0fdf004e954d1cb7bd3f0ff13027dad76ece02d7e9e7bedec0"
+    },
+    {
+      "bytes": 6494405,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/post_synth_p9_core_funcsim.v",
+      "sha256": "6a0c95786813a929e7c8c2c7d4d83939bc6be9d8ec96a8fc7973a63536758c7c"
+    },
+    {
+      "bytes": 109986,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/post_synth_timing_summary_p9_core.rpt",
+      "sha256": "f6cb22ca2ea1cfab18a654840bc46eba753ae729a6c06f5db67f1d9db2c6897f"
+    },
+    {
+      "bytes": 7991,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/post_synth_utilization_p9_core.rpt",
+      "sha256": "81f9bb44ed2b12111ff5be0b981c573027c5df6e49ee5bc8ef386b1c6767c0a7"
+    },
+    {
+      "bytes": 1886,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/post_synth_drc_p9_core.rpt",
+      "sha256": "32a38ff459ce926cf5733a6b27db21cfb99deb76a67c38b4c9288f42f07d6332"
+    },
+    {
+      "bytes": 240,
+      "path": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/post_synth/p9_post_synth_build_markers.txt",
+      "sha256": "86292449d210f0f5cf4d031ce83a2c156223bf76f3405a3cbc6f78f60ebf9c00"
+    }
+  ],
+  "post_synth_build": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/p9_post_synth_build.log",
+    "log_sha256": "3d7dad5290108433b8920a1b09ae29a083a4bd3cef3a33fd5920c5493f6efbc4",
+    "markers": [
+      "P9_POST_SYNTH_BUILD=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_build"
+  },
+  "post_synth_markers": {
+    "P9_POST_SYNTH_BUILD": "PASS",
+    "P9_POST_SYNTH_CLOCK_NS": "15.625",
+    "P9_POST_SYNTH_DRC_CRITICAL_COUNT": "0",
+    "P9_POST_SYNTH_DRC_ERROR_COUNT": "0",
+    "P9_POST_SYNTH_PART": "xc7z010clg400-1",
+    "P9_POST_SYNTH_REQP_1839_COUNT": "0",
+    "P9_POST_SYNTH_TOP": "p9_optical_transport_core"
+  },
+  "post_synth_safety": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/p9_post_synth_safety.log",
+    "log_sha256": "a3c1ea8a2ca9c671a0f65bec681af0184c2c589e79fce61609d327634b22bcf3",
+    "markers": [
+      "P9_POST_SYNTH_SAFE_RESET_PASS=1",
+      "P9_POST_SYNTH_DISARM_KILL_PASS=1",
+      "P9_POST_SYNTH_NO_PARTIAL_RESUME_PASS=1",
+      "P9_POST_SYNTH_FINAL_SHUTDOWN_PASS=1",
+      "TB_P9_POST_SYNTH_SAFETY=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_post_synth_safety"
+  },
+  "profile": "Z7010_2LANE_DEV",
+  "rtl_full_regression": {
+    "log": "evidence/generated/p9_candidate_regression/raw/20260726T210000.759090Z_3284dfcfd013/p9_rtl_full.log",
+    "log_sha256": "1ab6120cfa1c0f8bed48f0a90f389eae67ca717c41981a09b23ad8c97b2e0cfe",
+    "markers": [
+      "TB_P9_OPTICAL_TRANSPORT_CORE=PASS"
+    ],
+    "returncode": 0,
+    "status": "PASS",
+    "test_id": "p9_rtl_full"
+  },
+  "schema_version": 1,
+  "source_commit": "3284dfcfd01339457da7d86271cf6e5f223a7e46",
+  "status": "PASS",
+  "test_id": "P9-CANDIDATE-SOURCE-POST-SYNTH-REGRESSION"
+}

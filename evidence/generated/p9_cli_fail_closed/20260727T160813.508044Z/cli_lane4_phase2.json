@@ -1,0 +1,157 @@
+{
+  "active_xdc_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+  "allowed_lane_masks": [
+    1,
+    2,
+    3
+  ],
+  "allowed_operations": [
+    "build_and_freeze_bitstream_xsa_bsp_ps_elf",
+    "connect_hw_server_vivado_hardware_manager_xsdb_jtag",
+    "program_frozen_shutdown_and_candidate_bitstreams",
+    "run_frozen_ps_elf",
+    "jtag_axi_ddr_axi_dma_uart_ila_vio_testing",
+    "controlled_tfdu_transmit_lane_masks_0x1_0x2_0x3"
+  ],
+  "application_goodput_target_bps": null,
+  "artifact_binding_phase": "PHASE2_IMMUTABLE_ARTIFACTS_BOUND",
+  "artifact_manifest_path": "artifacts/p9/p9_20260727T160604Z_622388f53948_7376123ae014/artifact_manifest.json",
+  "artifact_manifest_sha256": "143bab87e3ccaa3d2be2ae721da5dc58dee3d4c0bd7956d146b1ae8885466a14",
+  "authorization_id": "P9_CURRENT_USER_MESSAGE_2026-07-26",
+  "authorization_source": "current user message in this Codex task",
+  "authorization_verbatim_utf8_path": "config/p9_current_run_authorization.txt",
+  "authorization_verbatim_utf8_sha256": "99e5bdbb8c0ff2814b7e8793825421cf58a4a08df42f829049c088bcc8187fbd",
+  "authorized": true,
+  "board": "single Zynq-7010 / AX7010-class board",
+  "bound_utc": "2026-07-27T16:06:04+00:00",
+  "bsp_archive": {
+    "bytes": 1718114,
+    "logical_name": "p9_ps7_bsp_deterministic.zip",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/4a05091c4c457dad5f0382df7c5690bb9e662303108f5d8ce194b4dc9fbc7bc7/p9_ps7_bsp_deterministic.zip",
+    "read_only": true,
+    "sha256": "4a05091c4c457dad5f0382df7c5690bb9e662303108f5d8ce194b4dc9fbc7bc7",
+    "source_path": "evidence/generated/vitis/p9_ps_runtime/p9_ps7_bsp_deterministic.zip"
+  },
+  "candidate_bitstream": {
+    "bytes": 2083856,
+    "logical_name": "ir_p9_z7010_2lane_candidate.bit",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/7376123ae01407ca3065a09c326454a3010debcbbd0bf42bac01414b18bfbc54/ir_p9_z7010_2lane_candidate.bit",
+    "read_only": true,
+    "sha256": "7376123ae01407ca3065a09c326454a3010debcbbd0bf42bac01414b18bfbc54",
+    "source_path": "evidence/generated/vivado/p9_z7010_candidate/ir_p9_z7010_2lane_candidate.bit"
+  },
+  "ethernet_required": false,
+  "forbidden_operations": [
+    "move_board_or_tfdu",
+    "rotate_or_adjust_angle",
+    "occlude_or_swap_modules",
+    "rewire_or_replug",
+    "lane_mask_above_0x3",
+    "require_ethernet_cable",
+    "operate_motor",
+    "z7020_or_8lane_or_rotation_or_product_final_promotion"
+  ],
+  "generated_ps_header": {
+    "bytes": 20493,
+    "logical_name": "ir_regs.h",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/44a387138a4bf8648c4dcf2cc990d816d82ecf930ccd76260ce67c579e55c664/ir_regs.h",
+    "read_only": true,
+    "sha256": "44a387138a4bf8648c4dcf2cc990d816d82ecf930ccd76260ce67c579e55c664",
+    "source_path": "software/ps_driver/ir_regs.h"
+  },
+  "generated_rtl_header": {
+    "bytes": 20607,
+    "logical_name": "ir_register_map_defs.svh",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/9634195c65e8d677562eaee740dedb0f8d4600dac037da5bca3c3f35a84d5e40/ir_register_map_defs.svh",
+    "read_only": true,
+    "sha256": "9634195c65e8d677562eaee740dedb0f8d4600dac037da5bca3c3f35a84d5e40",
+    "source_path": "rtl/generated/ir_register_map_defs.svh"
+  },
+  "goal_path": "C:\\Users\\user\\Downloads\\P9_Z7010_STATIONARY_2LANE_HARDWARE_VALIDATION_GOAL.md",
+  "goal_sha256": "543c89cb2afc1c4787f8f7b70b07ad3580018da03bad89cdfe09b84b68bad1bf",
+  "hardware_config": {
+    "bytes": 3714,
+    "logical_name": "p9_z7010_stationary_2lane.yaml",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/94dcefa3ed32a8c0850db7162d496067c3352df12b334aaf05aa8bf131fe9f41/p9_z7010_stationary_2lane.yaml",
+    "read_only": true,
+    "sha256": "94dcefa3ed32a8c0850db7162d496067c3352df12b334aaf05aa8bf131fe9f41",
+    "source_path": "config/p9_z7010_stationary_2lane.yaml"
+  },
+  "hardware_stationary_immutable": true,
+  "lane_count": 2,
+  "lane_masks": [
+    1,
+    2,
+    3
+  ],
+  "maximum_lane_mask": 3,
+  "maximum_runtime_seconds": 1800,
+  "maximum_single_test_seconds": 1800,
+  "modeled_application_goodput_bps": null,
+  "movement_allowed": false,
+  "network_allowed": false,
+  "p9_config_sha256": "94dcefa3ed32a8c0850db7162d496067c3352df12b334aaf05aa8bf131fe9f41",
+  "part": "xc7z010clg400-1",
+  "phase1_authorization_path": "config/p9_current_run_authorization.json",
+  "phase1_authorization_sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697",
+  "pinmap_sha256": "583a0151cb1e968f7d0782e38d20e1e4b9df387310966561c14fb2383a8541cd",
+  "preserve_failure_evidence": true,
+  "profile": "Z7010_2LANE_DEV",
+  "project_requirements_sha256": "4ca1600a8638f8204f249d2c28fd27752793fc467ed28e9bfe157c195d687530",
+  "project_state_sha256": "f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537",
+  "ps7_init_tcl": {
+    "bytes": 25838,
+    "logical_name": "ps7_init.tcl",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470/ps7_init.tcl",
+    "read_only": true,
+    "sha256": "294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470",
+    "source_path": "build/p9_ps_vitis_workspace/p9_platform/hw/ps7_init.tcl"
+  },
+  "ps_elf": {
+    "bytes": 371828,
+    "logical_name": "p9_runtime.elf",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/38279bf0bde537266b777077830e06a785407c25035acecf86cc4345fccfbd59/p9_runtime.elf",
+    "read_only": true,
+    "sha256": "38279bf0bde537266b777077830e06a785407c25035acecf86cc4345fccfbd59",
+    "source_path": "build/p9_ps_vitis_workspace/p9_runtime/Debug/p9_runtime.elf"
+  },
+  "register_map_sha256": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a",
+  "rotation_allowed": false,
+  "run_id": "p9_20260727T160604Z_622388f53948_7376123ae014_negative_lane4",
+  "runner_package": {
+    "bytes": 157004,
+    "logical_name": "p9_host_jtag_runner_deterministic.zip",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/7420d3699ce5be41f210b99b3f40395f87b77a61073408adc7aeb67047ed3eca/p9_host_jtag_runner_deterministic.zip",
+    "read_only": true,
+    "sha256": "7420d3699ce5be41f210b99b3f40395f87b77a61073408adc7aeb67047ed3eca",
+    "source_path": "evidence/generated/vitis/p9_ps_runtime/p9_host_jtag_runner_deterministic.zip"
+  },
+  "schema_version": 2,
+  "scope": "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+  "shutdown_bitstream": {
+    "bytes": 2083857,
+    "logical_name": "ir_p9_shutdown_z7010.bit",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/d6e33e969c7afa7bbb6e0ba26e893ca15802edb027cf37f962544b8240c2a341/ir_p9_shutdown_z7010.bit",
+    "read_only": true,
+    "sha256": "d6e33e969c7afa7bbb6e0ba26e893ca15802edb027cf37f962544b8240c2a341",
+    "source_path": "evidence/generated/vivado/p9_z7010_shutdown/ir_p9_shutdown_z7010.bit"
+  },
+  "shutdown_required_before": true,
+  "shutdown_required_on_error_timeout_interrupt_and_normal_exit": true,
+  "source_commit": "622388f5394839e3554a0a7c489715a80b26bff8",
+  "source_manifest": {
+    "bytes": 9678,
+    "logical_name": "p9_source_input_manifest.json",
+    "path": "artifacts/p9/622388f5394839e3554a0a7c489715a80b26bff8/8e5f5910a648d85d9e6abfe0e9b23c9ca602e31793ae70040f3fe79601be0dc3/p9_source_input_manifest.json",
+    "read_only": true,
+    "sha256": "8e5f5910a648d85d9e6abfe0e9b23c9ca602e31793ae70040f3fe79601be0dc3",
+    "source_path": "evidence/generated/vitis/p9_ps_runtime/p9_source_input_manifest.json"
+  },
+  "stage_range": [
+    "P9-04",
+    "P9-26"
+  ],
+  "stationary": true,
+  "two_lane_application_model": "PENDING_NO_CREDIBLE_FROZEN_2LANE_APPLICATION_MODEL",
+  "user_reconfirmation_after_freeze_required": false
+}

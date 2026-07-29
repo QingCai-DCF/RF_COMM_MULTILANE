@@ -50,3 +50,18 @@ evidence/generated/p7_r73_stage66_campaign_c07_pass_package/** -text -whitespace
 evidence/generated/p7_formal_1ca54d2_suite_precondition_failure/** -text -whitespace
 evidence/hardware/p7/artifacts/* -text -whitespace
 evidence/hardware/p7/** -text -whitespace
+
+# Preserve byte-exact, content-addressed P9 artifacts and generated/hardware
+# evidence.  Raw Vivado/XSDB outputs commonly contain CRLF and trailing vendor
+# formatting that are covered by immutable SHA256 manifests.
+artifacts/p9/** -text -whitespace
+evidence/hardware/p9/** -text -whitespace
+evidence/hardware/p9_diagnostics/** -text -whitespace
+evidence/generated/p9_* -text -whitespace
+evidence/generated/p9_*/** -text -whitespace
+evidence/generated/vivado/p9_*/** -text -whitespace
+evidence/generated/vitis/p9_*/** -text -whitespace
+
+# Recovered/formal P8D raw Vivado and XSim records are also immutable evidence;
+# retain vendor spacing and original line endings in the P9 evidence checkpoint.
+evidence/generated/p8d_raw/** -text -whitespace

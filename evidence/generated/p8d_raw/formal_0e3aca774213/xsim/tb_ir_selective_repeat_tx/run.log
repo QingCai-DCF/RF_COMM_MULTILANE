@@ -1,0 +1,28 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_ir_selective_repeat_tx_snapshot -runall
+RETURN_CODE=0
+STARTED_UTC=2026-07-26T12:04:24.139757Z
+FINISHED_UTC=2026-07-26T12:04:26.740933Z
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_selective_repeat_tx_snapshot/xsim_script.tcl
+# xsim {tb_ir_selective_repeat_tx_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_GLOBAL_OUTSTANDING_32_PASS=1
+P8D_RETRY_EXHAUSTION_BOUNDED_PASS=1
+P8D_ACKED_FRAME_SINGLE_COMPLETION_PASS=1
+TB_IR_SELECTIVE_REPEAT_TX_PASS=1
+$finish called at time : 3986 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/sim/tb/tb_ir_selective_repeat_tx.sv" Line 196
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 26 20:04:26 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

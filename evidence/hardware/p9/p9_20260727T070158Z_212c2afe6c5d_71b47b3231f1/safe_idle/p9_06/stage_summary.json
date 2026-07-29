@@ -1,0 +1,51 @@
+{
+  "errors": [
+    "XSDB PASS marker absent",
+    "candidate program marker absent",
+    "PS ELF download marker absent",
+    "endpoint shutdown marker absent",
+    "stage executed no test commands"
+  ],
+  "markers": {
+    "P9_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+    "P9_XSDB_STAGE_ERROR": "P9 XSDB requires exactly one authorized cable root",
+    "P9_XSDB_STAGE_RESULT": "FAIL"
+  },
+  "observation_count": 0,
+  "observation_index": "evidence/hardware/p9/p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1/safe_idle/p9_06/mailbox/observations.psv",
+  "observations": [],
+  "process": {
+    "active_limit_seconds": null,
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\212c2afe6c5dfb2fd2c2f6b77aefab027a18d867\\71b47b3231f1ec913715a6c96c23b28991dddfe896c85d5051297ee6d4415f42\\ir_p9_z7010_2lane_candidate.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\212c2afe6c5dfb2fd2c2f6b77aefab027a18d867\\087ec810a81b7093e8ec5436e7be39b52d003d9b2c05177214649d80c549a70f\\p9_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\212c2afe6c5dfb2fd2c2f6b77aefab027a18d867\\294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1\\authorization\\plans\\P9-06.plan.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1\\safe_idle\\p9_06\\mailbox",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1\\safe_idle\\p9_06\\xsdb_stage_result.txt",
+      "P9-06",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1\\authorization\\phase2_immutable_artifacts.json",
+      "p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1"
+    ],
+    "elapsed_seconds": 1.117971,
+    "error": "",
+    "interrupted": false,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p9/p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1/raw_logs/p9_06.stderr.log",
+    "stderr_sha256": "5f98ffbe402608a899f47c3b8c593a439cd29e21d53914aefa586baa7e6ea378",
+    "stdout": "evidence/hardware/p9/p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1/raw_logs/p9_06.stdout.log",
+    "stdout_sha256": "bf706e49141466aaeb8c3b83a3576e5cd246b2d7e12f488bf25279ed1947f4ed",
+    "timed_out": false
+  },
+  "raw_evidence": {},
+  "raw_result": "evidence/hardware/p9/p9_20260727T070158Z_212c2afe6c5d_71b47b3231f1/safe_idle/p9_06/xsdb_stage_result.txt",
+  "schema_version": 1,
+  "stage": "P9-06",
+  "status": "FAIL",
+  "test_id": "P9-06-HARDWARE"
+}

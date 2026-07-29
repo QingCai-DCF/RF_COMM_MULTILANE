@@ -1,0 +1,40 @@
+{
+  "active_z7010_xdc_sha256": "f53239e233c25509b6f15b5d0154be07f686c83c1568524a9ecf2e4bcbaa1344",
+  "canonical_safety_config": "config/tfdu_safety.yaml",
+  "compatibility_sources": [
+    "rtl/tfdu_lane_phy.sv"
+  ],
+  "excluded_legacy_fixed_bucket_sources": [
+    "rtl/tfdu/tfdu_lane_phy.sv"
+  ],
+  "ooc_only_sources": [
+    "rtl/ir_p8c_resource_tops.sv"
+  ],
+  "p8b_consumed_sources": {
+    "rtl/ir_bank_lane_crossbar.sv": "97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886",
+    "rtl/ir_path_epoch_commit.sv": "1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c",
+    "rtl/ir_path_mapping_engine.sv": "248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c",
+    "rtl/ir_path_mapping_pkg.sv": "6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b"
+  },
+  "production_sources": [
+    "rtl/generated/tfdu_safety_pkg.sv",
+    "rtl/ir_tfdu_exact_duty_accountant.sv",
+    "rtl/ir_tfdu_physical_module_safety.sv",
+    "rtl/ir_tfdu_safety_endpoint.sv",
+    "rtl/ir_p8c_mapping_safety_adapter.sv",
+    "rtl/ir_p8c_safety_integration.sv",
+    "rtl/ir_p8c_safety_regs.sv"
+  ],
+  "project_constraints_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+  "schema_version": 1,
+  "simulation_sources": [
+    "sim/tb/tb_p8c_exact_duty.sv",
+    "sim/tb/tb_p8c_physical_safety.sv",
+    "sim/tb/tb_p8c_endpoint_safety.sv",
+    "sim/tb/tb_p8c_safety_regs.sv",
+    "sim/tb/tb_p8c_trace_crosscheck.sv",
+    "sim/tb/tb_p8c_profile_matrix.sv",
+    "sim/tb/tb_p8c_full_scale.sv"
+  ],
+  "stage": "P8C_TFDU_SAFETY_EXACT_DUTY_SINGLE_GLOBAL_PERMIT"
+}

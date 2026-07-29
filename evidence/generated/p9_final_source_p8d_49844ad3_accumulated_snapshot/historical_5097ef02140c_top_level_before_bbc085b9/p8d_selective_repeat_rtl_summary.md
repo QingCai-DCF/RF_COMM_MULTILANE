@@ -1,0 +1,355 @@
+# P8D selective-repeat RTL
+
+- Status: `PASS`
+- Test ID: `P8D-SELECTIVE-REPEAT-RTL`
+- Profile: `P8D_MULTI_PROFILE_OFFLINE`
+- Source commit: `5097ef02140c8eac79d49f7ff7cd9ed2f7a4a3e8`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "generated_utc": "2026-07-27T22:11:55.559165Z",
+  "hardware_scope_promoted": false,
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "rtl_python_crosscheck": {
+    "actual_records": 2048,
+    "expected_path": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/reference/crosscheck_expected.json",
+    "expected_records": 2048,
+    "first_mismatches": [],
+    "mismatch_count": 0,
+    "rtl_log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8d_python_crosscheck/run.log",
+    "status": "PASS",
+    "test_id": "P8D-RTL-PYTHON-CROSSCHECK"
+  },
+  "schema_version": 1,
+  "simulations": {
+    "tb_ir_data_plane_integration_2lane": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_2lane",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_data_plane_top.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\p8d_data_plane_integration_common.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_data_plane_integration_2lane.sv",
+          "finished_utc": "2026-07-27T22:11:27.537487Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_2lane/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:26.757730Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_data_plane_integration_2lane -debug typical -s tb_ir_data_plane_integration_2lane_snapshot",
+          "finished_utc": "2026-07-27T22:11:28.871537Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_2lane/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:27.538097Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_data_plane_integration_2lane_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:31.590159Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_2lane/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:28.872105Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_2LANE_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "rtl/ir_data_plane_top.sv",
+        "sim/tb/p8d_data_plane_integration_common.sv",
+        "sim/tb/tb_ir_data_plane_integration_2lane.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_data_plane_integration_2lane"
+    },
+    "tb_ir_data_plane_integration_8lane": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_8lane",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_data_plane_top.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\p8d_data_plane_integration_common.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_data_plane_integration_8lane.sv",
+          "finished_utc": "2026-07-27T22:11:32.382652Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_8lane/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:31.608694Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_data_plane_integration_8lane -debug typical -s tb_ir_data_plane_integration_8lane_snapshot",
+          "finished_utc": "2026-07-27T22:11:33.724521Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_8lane/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:32.383265Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_data_plane_integration_8lane_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:36.404251Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_data_plane_integration_8lane/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:33.725099Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_8LANE_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "rtl/ir_data_plane_top.sv",
+        "sim/tb/p8d_data_plane_integration_common.sv",
+        "sim/tb/tb_ir_data_plane_integration_8lane.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_data_plane_integration_8lane"
+    },
+    "tb_ir_p8b_p8c_p8d_integration": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8b_p8c_p8d_integration",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\generated\\tfdu_safety_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_path_mapping_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_path_mapping_engine.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_tfdu_exact_duty_accountant.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_tfdu_physical_module_safety.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_tfdu_safety_endpoint.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_data_plane_top.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_p8b_p8c_p8d_integration.sv",
+          "finished_utc": "2026-07-27T22:11:37.202915Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8b_p8c_p8d_integration/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:36.422582Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_p8b_p8c_p8d_integration -debug typical -s tb_ir_p8b_p8c_p8d_integration_snapshot",
+          "finished_utc": "2026-07-27T22:11:38.804491Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8b_p8c_p8d_integration/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:37.203850Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_p8b_p8c_p8d_integration_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:41.430940Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8b_p8c_p8d_integration/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:38.805166Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_P8B_MAPPING_GATE_INTEGRATION_PASS=1",
+        "P8D_P8C_SINGLE_PERMIT_FINAL_KILL_INTEGRATION_PASS=1",
+        "P8D_PARTIAL_FRAME_NOT_RESUMED_PASS=1",
+        "TB_IR_P8B_P8C_P8D_INTEGRATION_PASS=1"
+      ],
+      "sources": [
+        "rtl/generated/tfdu_safety_pkg.sv",
+        "rtl/ir_path_mapping_pkg.sv",
+        "rtl/ir_path_mapping_engine.sv",
+        "rtl/ir_tfdu_exact_duty_accountant.sv",
+        "rtl/ir_tfdu_physical_module_safety.sv",
+        "rtl/ir_tfdu_safety_endpoint.sv",
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "rtl/ir_data_plane_top.sv",
+        "sim/tb/tb_ir_p8b_p8c_p8d_integration.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_p8b_p8c_p8d_integration"
+    },
+    "tb_ir_p8d_cdc_ratios": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8d_cdc_ratios",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_p8d_async_descriptor_bridge.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_p8d_cdc_ratios.sv",
+          "finished_utc": "2026-07-27T22:11:46.548442Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8d_cdc_ratios/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:45.798780Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_p8d_cdc_ratios -debug typical -s tb_ir_p8d_cdc_ratios_snapshot",
+          "finished_utc": "2026-07-27T22:11:48.286290Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8d_cdc_ratios/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:46.549121Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_p8d_cdc_ratios_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:50.898041Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_p8d_cdc_ratios/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:48.286888Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_CDC_RATIO_1_1_PASS=1",
+        "P8D_CDC_RATIO_2_1_PASS=1",
+        "P8D_CDC_RATIO_3_2_PASS=1",
+        "P8D_CDC_ASYNC_PHASE_PASS=1",
+        "TB_IR_P8D_CDC_RATIOS_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_p8d_async_descriptor_bridge.sv",
+        "sim/tb/tb_ir_p8d_cdc_ratios.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_p8d_cdc_ratios"
+    },
+    "tb_ir_selective_repeat_rx": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_rx",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_selective_repeat_rx.sv",
+          "finished_utc": "2026-07-27T22:11:04.740415Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_rx/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:04.001413Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_selective_repeat_rx -debug typical -s tb_ir_selective_repeat_rx_snapshot",
+          "finished_utc": "2026-07-27T22:11:05.858313Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_rx/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:04.741089Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_selective_repeat_rx_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:08.524944Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_rx/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:05.858906Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_RX_REORDER_DUPLICATE_SUPPRESSION_PASS=1",
+        "P8D_STALE_SESSION_PATH_REJECTION_PASS=1",
+        "TB_IR_SELECTIVE_REPEAT_RX_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "sim/tb/tb_ir_selective_repeat_rx.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_selective_repeat_rx"
+    },
+    "tb_ir_selective_repeat_tx": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_tx",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_selective_repeat_tx.sv",
+          "finished_utc": "2026-07-27T22:11:00.331072Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_tx/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:10:59.581048Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_selective_repeat_tx -debug typical -s tb_ir_selective_repeat_tx_snapshot",
+          "finished_utc": "2026-07-27T22:11:01.360871Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_tx/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:00.331651Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_selective_repeat_tx_snapshot -runall",
+          "finished_utc": "2026-07-27T22:11:03.983459Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_selective_repeat_tx/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:11:01.361440Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_GLOBAL_OUTSTANDING_32_PASS=1",
+        "P8D_RETRY_EXHAUSTION_BOUNDED_PASS=1",
+        "P8D_ACKED_FRAME_SINGLE_COMPLETION_PASS=1",
+        "TB_IR_SELECTIVE_REPEAT_TX_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "sim/tb/tb_ir_selective_repeat_tx.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_selective_repeat_tx"
+    },
+    "tb_ir_seq_math": {
+      "log_directory": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_seq_math",
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\sim\\tb\\tb_ir_seq_math.sv",
+          "finished_utc": "2026-07-27T22:10:56.106671Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_seq_math/compile.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:10:55.358257Z",
+          "timed_out": false
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_seq_math -debug typical -s tb_ir_seq_math_snapshot",
+          "finished_utc": "2026-07-27T22:10:56.982490Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_seq_math/elaborate.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:10:56.107431Z",
+          "timed_out": false
+        },
+        "fatal_detected": false,
+        "missing_markers": [],
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_seq_math_snapshot -runall",
+          "finished_utc": "2026-07-27T22:10:59.562347Z",
+          "log": "evidence/generated/p9_final_source_p8d_retry/p8d_raw/formal_5097ef02140c/xsim/tb_ir_seq_math/run.log",
+          "returncode": 0,
+          "started_utc": "2026-07-27T22:10:56.983046Z",
+          "timed_out": false
+        }
+      },
+      "required_markers": [
+        "P8D_SEQUENCE_WIDTH_16_PASS=1",
+        "P8D_SEQUENCE_WRAP_PASS=1",
+        "TB_IR_SEQ_MATH_PASS=1"
+      ],
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "sim/tb/tb_ir_seq_math.sv"
+      ],
+      "status": "PASS",
+      "top": "tb_ir_seq_math"
+    }
+  },
+  "source_commit": "5097ef02140c8eac79d49f7ff7cd9ed2f7a4a3e8",
+  "status": "PASS",
+  "test_id": "P8D-SELECTIVE-REPEAT-RTL"
+}
+```

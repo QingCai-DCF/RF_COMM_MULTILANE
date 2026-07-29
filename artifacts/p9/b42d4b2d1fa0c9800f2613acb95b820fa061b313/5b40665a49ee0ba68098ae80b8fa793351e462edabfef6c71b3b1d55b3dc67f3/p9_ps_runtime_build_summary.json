@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P9-02-PS-RUNTIME-BUILD",
+  "generated_at_utc": "2026-07-27T12:09:19+00:00",
+  "syntax_only": false,
+  "xsct_returncode": 0,
+  "xsa": {
+    "path": "evidence/generated/vivado/p9_z7010_candidate/ir_p9_z7010_2lane.xsa",
+    "size": 742494,
+    "sha256": "e529be450fce120c20442187f26fab85dcbf471231c8ed224b748ad948c528c3"
+  },
+  "artifacts": {
+    "p9_runtime.elf": {
+      "path": "build/p9_ps_vitis_workspace/p9_runtime/Debug/p9_runtime.elf",
+      "size": 371828,
+      "sha256": "38279bf0bde537266b777077830e06a785407c25035acecf86cc4345fccfbd59"
+    },
+    "p9_runtime.map": {
+      "path": "build/p9_ps_vitis_workspace/p9_runtime/Debug/p9_runtime.map",
+      "size": 127419,
+      "sha256": "6810c1a0a5ca5b07574788ea7de378f9ba98df89cc28e9b1b3c955ca538643f2"
+    },
+    "xparameters.h": {
+      "path": "build/p9_ps_vitis_workspace/p9_platform/ps7_cortexa9_0/standalone_domain/bsp/ps7_cortexa9_0/include/xparameters.h",
+      "size": 11342,
+      "sha256": "5826b39f68478645a021743d6f56adf439731c9fb88df2e4397c635e44f9ba86"
+    },
+    "xaxidma.h": {
+      "path": "build/p9_ps_vitis_workspace/p9_platform/ps7_cortexa9_0/standalone_domain/bsp/ps7_cortexa9_0/include/xaxidma.h",
+      "size": 29477,
+      "sha256": "bec38f328d90c98d9e6a2116acaf504e5e4560c17aa0e9f645de4a28d428a139"
+    },
+    "ps7_init.tcl": {
+      "path": "build/p9_ps_vitis_workspace/p9_platform/hw/ps7_init.tcl",
+      "size": 25838,
+      "sha256": "294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470"
+    }
+  },
+  "source_sha256": {
+    "software/ps_driver/p9_runtime_main.c": "89ecadf385762591dff0a3b190b47e1ceddf9746f2bed30fee6fcfa60b2ed300",
+    "software/ps_driver/p9_runtime_protocol.h": "30e25d89c23d15ada73ebdc10977d026e6fd5c216fa2767b2879313ee338ec0b",
+    "software/ps_driver/p9_crypto.c": "cbe3f1aa0f2c9bb681c6a5e01169aad8b6943ffbab398dba9911a01c7867290f",
+    "software/ps_driver/p9_crypto.h": "55be459a44496b5571dbab423f3017f4b628a41d8e20e4ceeb1e1b6b1e07ff50",
+    "software/ps_driver/ir_regs.h": "44a387138a4bf8648c4dcf2cc990d816d82ecf930ccd76260ce67c579e55c664",
+    "scripts/build_p9_ps_runtime.tcl": "7f24cf7dabc2b8aeb356a2d294c970fc3d7f1c3a67dd529f6611433a67c20f46"
+  },
+  "inspection": {
+    "size": {
+      "returncode": 0,
+      "path": "evidence/generated/vitis/p9_ps_runtime/p9_runtime_size.txt",
+      "sha256": "581e7b4c0cece9458708381880ba318b76f0b0f37a6343b28235aa9a9d32c184"
+    },
+    "symbols": {
+      "returncode": 0,
+      "path": "evidence/generated/vitis/p9_ps_runtime/p9_runtime_symbols.txt",
+      "sha256": "c60451890543bd981bdad63c98e027e8376b856eb96fbbe17c90d8b43169591a"
+    },
+    "sections": {
+      "returncode": 0,
+      "path": "evidence/generated/vitis/p9_ps_runtime/p9_runtime_sections.txt",
+      "sha256": "1787f543674e2bc68a10106a87ec5c6a36101486bf36426ba07649529f0ed89b"
+    }
+  },
+  "elf_end_address": "0x00016060",
+  "mailbox_base": "0x00020000",
+  "tx_bd_base": "0x01000000",
+  "rx_bd_base": "0x01001000",
+  "tx_buffer_base": "0x02000000",
+  "rx_buffer_base": "0x06000000",
+  "maximum_object_bytes": 67108864,
+  "xparameters_checks": {
+    "dma_device": true,
+    "dma_base": true,
+    "dma_sg": true,
+    "dma_sg_width": true,
+    "p9_base": true
+  },
+  "board_contract": {
+    "status": "PASS",
+    "path": "evidence/generated/vitis/p9_ps_runtime/p9_ps7_board_contract.json",
+    "sha256": "fe6b62853cad9aa134de03c9750ed81dda4a8b05d6d43de885d6237bfb2709e6"
+  },
+  "native_crypto_protocol_test": "PASS",
+  "errors": []
+}

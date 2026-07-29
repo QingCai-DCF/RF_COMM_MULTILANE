@@ -1,0 +1,20 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\freeze_p9_artifacts.py --source-commit 85f88c4dfe5599600c80dbe50b2dac6c312e73c0 --phase1-authorization C:\Users\user\Documents\RF_COMM_MULTILANE_P9\config\p9_current_run_authorization.json
+STARTED_UTC=2026-07-26T19:45:27+00:00
+FINISHED_UTC=2026-07-26T19:45:27+00:00
+RETURN_CODE=1
+STDOUT_BEGIN
+
+STDOUT_END
+STDERR_BEGIN
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\freeze_p9_artifacts.py", line 611, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\freeze_p9_artifacts.py", line 434, in main
+    required, build_audit = validate_build(source_commit)
+                            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\freeze_p9_artifacts.py", line 403, in validate_build
+    raise RuntimeError("; ".join(errors))
+RuntimeError: candidate build XDC set is not canonical-only: ['$root_dir/constraints/active/PORT1.generated.xdc', 'P9_CANONICAL_XDC=constraints/active/PORT1.generated.xdc']
+
+STDERR_END

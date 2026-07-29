@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "FAIL",
+  "test_scope": "POSTFINAL_NO_HARDWARE_P0_P7_P8A_SIMULATION_REGRESSION",
+  "hardware_actions_executed": false,
+  "first_attempt_outer_timeout_seconds": 124,
+  "first_attempt_process_survived_outer_timeout": true,
+  "second_attempt_returncode": 1,
+  "first_failing_gate": "m5_vivado_nonhardware_build",
+  "root_cause": "The surviving first-attempt Vivado process held project_protocol_lane0_ack while the second attempt tried to recreate the same cache directory.",
+  "vivado_error": "ERROR: [Project 1-161] Failed to remove the directory project_protocol_lane0_ack/rf_comm_nonhardware_protocol_lane0_ack.cache because it was in use by another process.",
+  "disposition": "Preserve this failure package, allow the exact first-attempt process tree to exit naturally, then rerun once without concurrent writers.",
+  "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "formal_hardware_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc"
+}

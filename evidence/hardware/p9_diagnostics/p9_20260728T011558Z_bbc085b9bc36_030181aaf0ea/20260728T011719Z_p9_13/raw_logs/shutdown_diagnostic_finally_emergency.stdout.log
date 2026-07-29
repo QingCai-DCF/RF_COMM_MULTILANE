@@ -1,0 +1,205 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\hw\p9_program_shutdown.tcl}
+# proc p9_normal_idcode {value} {
+#   set clean [string tolower [string map {_ ""} [string trim $value]]]
+#   if {[regexp {^[01]{32}$} $clean]} {
+#     set numeric 0
+#     foreach bit [split $clean ""] { set numeric [expr {($numeric << 1) | ($bit eq "1")}] }
+#     return [format %08X $numeric]
+#   }
+#   if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} { return [string toupper $hexadecimal] }
+#   if {[regexp {^[0-9a-f]{8}$} $clean]} { return [string toupper $clean] }
+#   return ""
+# }
+# if {[llength $argv] != 7} {
+#   error "usage: p9_program_shutdown.tcl <server-url> <target> <board-id> <part> <phase2-auth> <shutdown-bit> <result>"
+# }
+# set server_url [lindex $argv 0]
+# set expected_target [lindex $argv 1]
+# set expected_board [lindex $argv 2]
+# set expected_part [lindex $argv 3]
+# set authorization_file [file normalize [lindex $argv 4]]
+# set bit_file [file normalize [lindex $argv 5]]
+# set result_file [file normalize [lindex $argv 6]]
+# set manager_open 0;
+# set server_connected 0;
+# set target_open 0;
+# set selected_target ""
+# set all_device_count 0
+# set exact_device_count 0
+# set auxiliary_device_count 0
+# set unexpected_device_count 0
+# set device_records {}
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+INFO: [Labtools 27-1434] Device xc7z010 (JTAG device index = 1) is programmed with a design that has no supported debug core(s) in it.
+INFO: [Labtools 27-3164] End of startup status: HIGH
+P9_SHUTDOWN_PROGRAM_RESULT=PASS
+TFDU_SHUTDOWN_PROGRAMMED=1
+SHUTDOWN_EXIT=0
+P9_SHUTDOWN_HW_OBJECT_COUNT=2
+P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT=1
+P9_SHUTDOWN_AUXILIARY_DAP_COUNT=1
+P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT=0
+P9_SHUTDOWN_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P9_SHUTDOWN_LIVE_DEVICE=xc7z010_1
+P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED=13722093
+P9_SHUTDOWN_TXD_OUTPUT_INTENT=0
+P9_SHUTDOWN_SD_REQUEST_ACTIVE=1
+P9_SHUTDOWN_MODE_HIGH=1
+P9_SHUTDOWN_ENDPOINT_ARMED=0
+P9_SHUTDOWN_ACTIVE_TX_MASK=0
+P9_SHUTDOWN_ENUM_DEVICE_0=arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477
+P9_SHUTDOWN_ENUM_DEVICE_1=xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093
+# set rc [catch {
+#   if {![info exists ::env(RF_COMM_P9_HW_AUTH)] ||
+#       $::env(RF_COMM_P9_HW_AUTH) ne "P9_PHASE2_IMMUTABLE_AUTHORIZED"} {
+#     error "P9 phase-2 environment marker required"
+#   }
+#   if {![file isfile $authorization_file] || ![file isfile $bit_file]} {
+#     error "authorization or immutable shutdown bitstream missing"
+#   }
+#   if {![string equal -nocase $expected_part "xc7z010clg400-1"] ||
+#       [string first [string tolower $expected_board] [string tolower $expected_target]] < 0} {
+#     error "P9 shutdown target contract mismatch"
+#   }
+#   open_hw_manager
+#   set manager_open 1
+#   connect_hw_server -url $server_url
+#   set server_connected 1
+#   set matches {}
+#   foreach candidate [get_hw_targets -quiet *] {
+#     if {[string equal -nocase [string trim "$candidate"] $expected_target]} { lappend matches $candidate }
+#   }
+#   if {[llength $matches] != 1} { error "expected one exact target match" }
+#   set selected_target [lindex $matches 0]
+#   current_hw_target $selected_target
+#   open_hw_target $selected_target
+#   set target_open 1
+#   set devices [get_hw_devices -quiet *]
+#   set exact_devices {}
+#   set auxiliary_devices {}
+#   set unexpected_devices {}
+#   set all_device_count [llength $devices]
+#   foreach candidate $devices {
+#     set part ""; set name ""; set idcode ""
+#     catch {set part [get_property PART $candidate]}
+#     catch {set name [get_property NAME $candidate]}
+#     catch {set idcode [get_property IDCODE $candidate]}
+#     set normalized_idcode [p9_normal_idcode $idcode]
+#     lappend device_records [list "$candidate" $part $name $idcode $normalized_idcode]
+#     if {[string equal -nocase $part "xc7z010"] &&
+#         [string equal -nocase $name "xc7z010_1"] &&
+#         $normalized_idcode eq "13722093"} {
+#       lappend exact_devices $candidate
+#     } elseif {[string equal -nocase $part "arm_dap"] &&
+#               [string equal -nocase $name "arm_dap_0"] &&
+#               $normalized_idcode eq "4BA00477"} {
+#       lappend auxiliary_devices $candidate
+#     } else {
+#       lappend unexpected_devices $candidate
+#     }
+#   }
+#   set exact_device_count [llength $exact_devices]
+#   set auxiliary_device_count [llength $auxiliary_devices]
+#   set unexpected_device_count [llength $unexpected_devices]
+#   if {$exact_device_count != 1} {
+#     error "expected exactly one canonical live Zynq-7010 match; found $exact_device_count"
+#   }
+#   if {$auxiliary_device_count > 1} {
+#     error "expected at most one canonical ARM DAP object; found $auxiliary_device_count"
+#   }
+#   if {$unexpected_device_count != 0} {
+#     error "unexpected hardware-manager objects found: $unexpected_device_count"
+#   }
+#   set device [lindex $exact_devices 0]
+#   set live_part [get_property PART $device]
+#   set live_name [get_property NAME $device]
+#   set live_idcode [get_property IDCODE $device]
+#   current_hw_device $device
+#   refresh_hw_device -update_hw_probes false $device
+#   set_property PROGRAM.FILE $bit_file $device
+#   program_hw_devices $device
+#   file mkdir [file dirname $result_file]
+#   set out [open $result_file w]
+#   foreach line [list \
+#       "P9_SHUTDOWN_PROGRAM_RESULT=PASS" \
+#       "TFDU_SHUTDOWN_PROGRAMMED=1" \
+#       "SHUTDOWN_EXIT=0" \
+#       "P9_SHUTDOWN_HW_OBJECT_COUNT=$all_device_count" \
+#       "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT=$exact_device_count" \
+#       "P9_SHUTDOWN_AUXILIARY_DAP_COUNT=$auxiliary_device_count" \
+#       "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count" \
+#       "P9_SHUTDOWN_TARGET=$selected_target" \
+#       "P9_SHUTDOWN_LIVE_DEVICE=$live_name" \
+#       "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED=[p9_normal_idcode $live_idcode]" \
+#       "P9_SHUTDOWN_TXD_OUTPUT_INTENT=0" \
+#       "P9_SHUTDOWN_SD_REQUEST_ACTIVE=1" \
+#       "P9_SHUTDOWN_MODE_HIGH=1" \
+#       "P9_SHUTDOWN_ENDPOINT_ARMED=0" \
+#       "P9_SHUTDOWN_ACTIVE_TX_MASK=0"] {
+#     puts $out $line
+#     puts $line
+#   }
+#   set record_index 0
+#   foreach record $device_records {
+#     lassign $record object part name idcode normalized
+#     set line "P9_SHUTDOWN_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+#     puts $out $line
+#     puts $line
+#     incr record_index
+#   }
+#   close $out
+# } error_text error_options]
+# if {$target_open} { catch {close_hw_target $selected_target} }
+INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+# if {$server_connected} { catch {disconnect_hw_server} }
+# if {$manager_open} { catch {close_hw_manager} }
+# if {$rc != 0} {
+#   catch {
+#     file mkdir [file dirname $result_file]
+#     set out [open $result_file w]
+#     puts $out "P9_SHUTDOWN_PROGRAM_RESULT=FAIL"
+#     puts $out "TFDU_SHUTDOWN_PROGRAMMED=0"
+#     puts $out "SHUTDOWN_EXIT=1"
+#     puts $out "P9_SHUTDOWN_HW_OBJECT_COUNT=$all_device_count"
+#     puts $out "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT=$exact_device_count"
+#     puts $out "P9_SHUTDOWN_AUXILIARY_DAP_COUNT=$auxiliary_device_count"
+#     puts $out "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT=$unexpected_device_count"
+#     puts $out "P9_SHUTDOWN_ERROR=[string map [list \"\\r\" \" \" \"\\n\" \" \" \"=\" \"_\"] $error_text]"
+#     set record_index 0
+#     foreach record $device_records {
+#       lassign $record object part name idcode normalized
+#       puts $out "P9_SHUTDOWN_ENUM_DEVICE_$record_index=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+#       incr record_index
+#     }
+#     close $out
+#   }
+#   puts stderr "P9_SHUTDOWN_PROGRAM_RESULT=FAIL"
+#   puts stderr $error_text
+#   exit 31
+# }
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Tue Jul 28 09:18:14 2026...

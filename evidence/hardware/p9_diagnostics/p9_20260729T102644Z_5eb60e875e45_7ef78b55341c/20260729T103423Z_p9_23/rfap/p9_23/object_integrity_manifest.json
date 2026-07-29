@@ -1,0 +1,50 @@
+{
+  "objects": [
+    {
+      "actual_dma_rx_bytes": 1049344,
+      "atomic_publish_count": 1,
+      "command": 3,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 2878050052,
+      "input_sha256": "4c357114ec4e0c7e36498506f3ad4ac364e6a6f0e440400079d9530966c3c9ab",
+      "label": "object_a_to_b",
+      "lane_mask": 3,
+      "object_id": 8960,
+      "output_crc32": 2878050052,
+      "output_sha256": "4c357114ec4e0c7e36498506f3ad4ac364e6a6f0e440400079d9530966c3c9ab",
+      "partial_publish_count": 0,
+      "rate_select": 2,
+      "requested_useful_bytes": 1048576,
+      "rfap_fragment_count": 16,
+      "rfap_mode": 2,
+      "rfap_useful_crc32": 364675755,
+      "rfap_validation_pass": 1
+    },
+    {
+      "actual_dma_rx_bytes": 1049344,
+      "atomic_publish_count": 1,
+      "command": 3,
+      "descriptor_leak": 0,
+      "direction": 1,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 4019213605,
+      "input_sha256": "47f66666e9d7f6fa80a07403d62316003e6b16dcfc0c5675bffbb9021848582b",
+      "label": "object_b_to_a",
+      "lane_mask": 3,
+      "object_id": 8961,
+      "output_crc32": 4019213605,
+      "output_sha256": "47f66666e9d7f6fa80a07403d62316003e6b16dcfc0c5675bffbb9021848582b",
+      "partial_publish_count": 0,
+      "rate_select": 2,
+      "requested_useful_bytes": 1048576,
+      "rfap_fragment_count": 16,
+      "rfap_mode": 2,
+      "rfap_useful_crc32": 3980226037,
+      "rfap_validation_pass": 1
+    }
+  ],
+  "schema_version": 1,
+  "stage": "P9-23"
+}

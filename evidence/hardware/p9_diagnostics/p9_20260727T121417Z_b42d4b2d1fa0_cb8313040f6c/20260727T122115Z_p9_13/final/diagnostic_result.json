@@ -1,0 +1,263 @@
+{
+  "current_diagnostic_evaluator_sha256": "e7447a3e4ebda6f2e78a6ec7857985573ec5cd211d681394051a3f73d6f25609",
+  "current_evaluator": {
+    "errors": [
+      "XSDB PASS marker absent",
+      "candidate program marker absent",
+      "PS ELF download marker absent",
+      "endpoint shutdown marker absent",
+      "stage executed no test commands",
+      "not all direction/rate 10,000-frame cases ran",
+      "direction 0 rate 0: frozen PHY pattern matrix incomplete",
+      "direction 0 rate 1: frozen PHY pattern matrix incomplete",
+      "direction 0 rate 2: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 0: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 1: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 2: frozen PHY pattern matrix incomplete"
+    ],
+    "status": "FAIL"
+  },
+  "diagnostic_root": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13",
+  "ended_utc": "2026-07-27T12:22:07+00:00",
+  "errors": [
+    "RuntimeError: P9-13 raw hardware stage did not pass: process_pass=True marker_mismatches={'P9_XSDB_IDENTITY': {'expected': 'PASS', 'actual': None}, 'P9_XSDB_BOARD_ID': {'expected': '210512180081', 'actual': None}, 'P9_XSDB_IDCODE': {'expected': '13722093', 'actual': None}, 'P9_XSDB_STAGE': {'expected': 'P9-13', 'actual': None}, 'P9_XSDB_RUN_ID': {'expected': 'p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c', 'actual': None}, 'P9_CANDIDATE_PROGRAMMED': {'expected': '1', 'actual': None}, 'P9_PS_ELF_DOWNLOADED': {'expected': '1', 'actual': None}, 'P9_ENDPOINT_SHUTDOWN': {'expected': 'PASS', 'actual': None}, 'P9_XSDB_STAGE_RESULT': {'expected': 'PASS', 'actual': 'FAIL'}}"
+  ],
+  "external_network_used": false,
+  "finally_emergency_shutdown": {
+    "label": "diagnostic_finally_emergency",
+    "markers": {
+      "P9_SHUTDOWN_ACTIVE_TX_MASK": "0",
+      "P9_SHUTDOWN_AUXILIARY_DAP_COUNT": "1",
+      "P9_SHUTDOWN_ENDPOINT_ARMED": "0",
+      "P9_SHUTDOWN_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P9_SHUTDOWN_ENUM_DEVICE_1": "xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093",
+      "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT": "1",
+      "P9_SHUTDOWN_HW_OBJECT_COUNT": "2",
+      "P9_SHUTDOWN_LIVE_DEVICE": "xc7z010_1",
+      "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED": "13722093",
+      "P9_SHUTDOWN_MODE_HIGH": "1",
+      "P9_SHUTDOWN_PROGRAM_RESULT": "PASS",
+      "P9_SHUTDOWN_SD_REQUEST_ACTIVE": "1",
+      "P9_SHUTDOWN_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "P9_SHUTDOWN_TXD_OUTPUT_INTENT": "0",
+      "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT": "0",
+      "SHUTDOWN_EXIT": "0",
+      "TFDU_SHUTDOWN_PROGRAMMED": "1"
+    },
+    "process": {
+      "active_limit_seconds": null,
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+        "-mode",
+        "batch",
+        "-source",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_program_shutdown.tcl",
+        "-tclargs",
+        "localhost:3121",
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "210512180081",
+        "xc7z010clg400-1",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\authorization\\phase2_immutable_artifacts.json",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\b42d4b2d1fa0c9800f2613acb95b820fa061b313\\2000b2da09b9fc6fc17936075981986198362e07106b1ee524c6588ccb2eb8c3\\ir_p9_shutdown_z7010.bit",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\20260727T122115Z_p9_13\\shutdown\\diagnostic_finally_emergency\\shutdown_result.txt"
+      ],
+      "elapsed_seconds": 16.412433,
+      "error": "",
+      "interrupted": false,
+      "returncode": 0,
+      "stderr": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_diagnostic_finally_emergency.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_diagnostic_finally_emergency.stdout.log",
+      "stdout_sha256": "6682072eca2aa071cef67375ef3f0fdbe001bfa661b9e9e7c844aa3bfc48cd16",
+      "timed_out": false
+    },
+    "result_path": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/shutdown/diagnostic_finally_emergency/shutdown_result.txt",
+    "status": "PASS"
+  },
+  "formal_acceptance_credit": false,
+  "frozen_evaluator": {
+    "errors": [
+      "XSDB PASS marker absent",
+      "candidate program marker absent",
+      "PS ELF download marker absent",
+      "endpoint shutdown marker absent",
+      "stage executed no test commands",
+      "not all direction/rate 10,000-frame cases ran",
+      "direction 0 rate 0: frozen PHY pattern matrix incomplete",
+      "direction 0 rate 1: frozen PHY pattern matrix incomplete",
+      "direction 0 rate 2: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 0: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 1: frozen PHY pattern matrix incomplete",
+      "direction 1 rate 2: frozen PHY pattern matrix incomplete"
+    ],
+    "known_strict_duty_host_bug_only": false,
+    "status": "FAIL"
+  },
+  "frozen_runtime_sha256": "e7447a3e4ebda6f2e78a6ec7857985573ec5cd211d681394051a3f73d6f25609",
+  "hardware_actions_executed": true,
+  "hw_server": {
+    "pid": 1364,
+    "reused": false,
+    "started": true,
+    "status": "PASS",
+    "stderr": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/hw_server.stderr.log",
+    "stdout": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/hw_server.stdout.log"
+  },
+  "marker_mismatches": {
+    "P9_CANDIDATE_PROGRAMMED": {
+      "actual": null,
+      "expected": "1"
+    },
+    "P9_ENDPOINT_SHUTDOWN": {
+      "actual": null,
+      "expected": "PASS"
+    },
+    "P9_PS_ELF_DOWNLOADED": {
+      "actual": null,
+      "expected": "1"
+    },
+    "P9_XSDB_BOARD_ID": {
+      "actual": null,
+      "expected": "210512180081"
+    },
+    "P9_XSDB_IDCODE": {
+      "actual": null,
+      "expected": "13722093"
+    },
+    "P9_XSDB_IDENTITY": {
+      "actual": null,
+      "expected": "PASS"
+    },
+    "P9_XSDB_RUN_ID": {
+      "actual": null,
+      "expected": "p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c"
+    },
+    "P9_XSDB_STAGE": {
+      "actual": null,
+      "expected": "P9-13"
+    },
+    "P9_XSDB_STAGE_RESULT": {
+      "actual": "FAIL",
+      "expected": "PASS"
+    }
+  },
+  "maximum_lane_mask": "0x3",
+  "no_hardware_movement": true,
+  "phase2": "evidence/hardware/p9/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/authorization/phase2_immutable_artifacts.json",
+  "phase2_sha256": "3a57680fb667dd23e39e7ef4a1975f5babb444137f8ccc06b0cfaa54622315c5",
+  "plan_entry_count": 48,
+  "plan_sha256": "cb7b215c737bb793f45ab233ba195d72eaebdbb38f983e814641e6c05a60fece",
+  "rotation_executed": false,
+  "run_id": "p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c",
+  "runner_package_sha256": "ed0df66ccf472ef240bdc9f0be9592b4cf6d4e5b1e77dafabfdc4437ceae4cb0",
+  "schema_version": 1,
+  "shutdown_after": {
+    "label": "p9_13_diagnostic_after",
+    "markers": {
+      "P9_SHUTDOWN_ACTIVE_TX_MASK": "0",
+      "P9_SHUTDOWN_AUXILIARY_DAP_COUNT": "1",
+      "P9_SHUTDOWN_ENDPOINT_ARMED": "0",
+      "P9_SHUTDOWN_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P9_SHUTDOWN_ENUM_DEVICE_1": "xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093",
+      "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT": "1",
+      "P9_SHUTDOWN_HW_OBJECT_COUNT": "2",
+      "P9_SHUTDOWN_LIVE_DEVICE": "xc7z010_1",
+      "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED": "13722093",
+      "P9_SHUTDOWN_MODE_HIGH": "1",
+      "P9_SHUTDOWN_PROGRAM_RESULT": "PASS",
+      "P9_SHUTDOWN_SD_REQUEST_ACTIVE": "1",
+      "P9_SHUTDOWN_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "P9_SHUTDOWN_TXD_OUTPUT_INTENT": "0",
+      "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT": "0",
+      "SHUTDOWN_EXIT": "0",
+      "TFDU_SHUTDOWN_PROGRAMMED": "1"
+    },
+    "process": {
+      "active_limit_seconds": null,
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+        "-mode",
+        "batch",
+        "-source",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_program_shutdown.tcl",
+        "-tclargs",
+        "localhost:3121",
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "210512180081",
+        "xc7z010clg400-1",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\authorization\\phase2_immutable_artifacts.json",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\b42d4b2d1fa0c9800f2613acb95b820fa061b313\\2000b2da09b9fc6fc17936075981986198362e07106b1ee524c6588ccb2eb8c3\\ir_p9_shutdown_z7010.bit",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\20260727T122115Z_p9_13\\shutdown\\p9_13_diagnostic_after\\shutdown_result.txt"
+      ],
+      "elapsed_seconds": 16.694354,
+      "error": "",
+      "interrupted": false,
+      "returncode": 0,
+      "stderr": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_after.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_after.stdout.log",
+      "stdout_sha256": "1abb1ae3c2eb44f97399a524c97be61a1f068eadbcec70a4219c60c87bd87819",
+      "timed_out": false
+    },
+    "result_path": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/shutdown/p9_13_diagnostic_after/shutdown_result.txt",
+    "status": "PASS"
+  },
+  "shutdown_before": {
+    "label": "p9_13_diagnostic_before",
+    "markers": {
+      "P9_SHUTDOWN_ACTIVE_TX_MASK": "0",
+      "P9_SHUTDOWN_AUXILIARY_DAP_COUNT": "1",
+      "P9_SHUTDOWN_ENDPOINT_ARMED": "0",
+      "P9_SHUTDOWN_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P9_SHUTDOWN_ENUM_DEVICE_1": "xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093",
+      "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT": "1",
+      "P9_SHUTDOWN_HW_OBJECT_COUNT": "2",
+      "P9_SHUTDOWN_LIVE_DEVICE": "xc7z010_1",
+      "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED": "13722093",
+      "P9_SHUTDOWN_MODE_HIGH": "1",
+      "P9_SHUTDOWN_PROGRAM_RESULT": "PASS",
+      "P9_SHUTDOWN_SD_REQUEST_ACTIVE": "1",
+      "P9_SHUTDOWN_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "P9_SHUTDOWN_TXD_OUTPUT_INTENT": "0",
+      "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT": "0",
+      "SHUTDOWN_EXIT": "0",
+      "TFDU_SHUTDOWN_PROGRAMMED": "1"
+    },
+    "process": {
+      "active_limit_seconds": null,
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+        "-mode",
+        "batch",
+        "-source",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_program_shutdown.tcl",
+        "-tclargs",
+        "localhost:3121",
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "210512180081",
+        "xc7z010clg400-1",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\authorization\\phase2_immutable_artifacts.json",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\b42d4b2d1fa0c9800f2613acb95b820fa061b313\\2000b2da09b9fc6fc17936075981986198362e07106b1ee524c6588ccb2eb8c3\\ir_p9_shutdown_z7010.bit",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c\\20260727T122115Z_p9_13\\shutdown\\p9_13_diagnostic_before\\shutdown_result.txt"
+      ],
+      "elapsed_seconds": 16.678652,
+      "error": "",
+      "interrupted": false,
+      "returncode": 0,
+      "stderr": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_before.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_before.stdout.log",
+      "stdout_sha256": "34f763053e9ac8719ea0b2d445729c823f850969c5d334062338dba5afe0cbd6",
+      "timed_out": false
+    },
+    "result_path": "evidence/hardware/p9_diagnostics/p9_20260727T121417Z_b42d4b2d1fa0_cb8313040f6c/20260727T122115Z_p9_13/shutdown/p9_13_diagnostic_before/shutdown_result.txt",
+    "status": "PASS"
+  },
+  "shutdowns_pass": true,
+  "stage": "P9-13",
+  "stage_process_pass": true,
+  "started_utc": "2026-07-27T12:21:15+00:00",
+  "status": "DIAGNOSTIC_FAIL",
+  "worktree_drift": [],
+  "wrapper_sha256": "fba813084428a1470af149426404d2243e2f9d0f469c1404679ea5c999f1c379"
+}

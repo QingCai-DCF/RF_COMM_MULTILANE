@@ -1,0 +1,48 @@
+{
+  "artifact_count": 1765,
+  "artifact_manifest_bytes": 535658195,
+  "artifact_manifest_sha256": "615c950f5f91cdf4af8b92039d3da53f274f1e1907928a3687b25bbb558cec4e",
+  "hardware_actions_executed": false,
+  "initial_verify": {
+    "hash_mismatch_count": 161,
+    "log": "evidence/hardware/p9/p9_20260726_baseline_intake/raw_logs/p8e_verify_existing.log",
+    "log_sha256": "75373cf33c285ff3d84c8239481eefd9235021780f13aa3b2e77ac7fd6ead813",
+    "missing_count": 781,
+    "status": "FAIL"
+  },
+  "no_hardware_actions_executed": true,
+  "read_only_source": {
+    "branch": "p8/integration",
+    "hash_mismatch_count": 0,
+    "head": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+    "missing_count": 0,
+    "path": "C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE",
+    "read_only": true,
+    "status_after": [
+      "?? docs/audit/"
+    ],
+    "status_before": [
+      "?? docs/audit/"
+    ],
+    "validation_log": "evidence/hardware/p9/p9_20260726_p8e_restored_verify/raw_logs/readonly_source_manifest_validation.log",
+    "validation_log_sha256": "a5d985d30cd546a7b2ed23dd6923a1f0c0c93ef48344f56b80f08b564977ebc1"
+  },
+  "restored_target": {
+    "copied_count": 1765,
+    "post_copy_hash_verified_count": 1765,
+    "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9"
+  },
+  "schema_version": 1,
+  "source_commit": "d2c3db43c5f6d308ea9f1864a3d36a228bffcc6a",
+  "status": "PASS",
+  "test_id": "P9-00-P8E-IMMUTABLE-BASELINE-RECHECK",
+  "verify_existing": {
+    "artifact_count": 1765,
+    "errors": [],
+    "log": "evidence/hardware/p9/p9_20260726_p8e_restored_verify/raw_logs/p8e_verify_existing.log",
+    "log_sha256": "6fc1661d4afaca2dffbc578a5a7b11f4122771c1050f6d9b75ccdfd7bae4285a",
+    "orchestrator_result": "evidence/hardware/p9/p9_20260726_p8e_restored_verify/final/orchestrator_result.json",
+    "orchestrator_result_sha256": "782103e144f52c44e82e29797e9abd6dfc23d7eb86f6f199cde4bedbcabb8dd2",
+    "status": "PASS"
+  }
+}

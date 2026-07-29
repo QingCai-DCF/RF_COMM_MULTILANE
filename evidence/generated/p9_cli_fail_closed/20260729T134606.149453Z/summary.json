@@ -1,0 +1,81 @@
+{
+  "cli_lane4_returncode": 1,
+  "failures": [],
+  "hardware_server_start_calls": 0,
+  "negative_cases": {
+    "ethernet_required": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\ethernet_required.json",
+      "errors": [
+        "stationary/no-movement/no-rotation/no-network authorization mismatch"
+      ],
+      "rejected": true
+    },
+    "lane_mask_0x4": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\lane_mask_0x4.json",
+      "errors": [
+        "authorized lane masks are not exactly 0x1/0x2/0x3"
+      ],
+      "rejected": true
+    },
+    "missing_authorization": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\missing_authorization.json",
+      "errors": [
+        "phase-2 authorization unreadable: [Errno 2] No such file or directory: 'C:\\\\Users\\\\user\\\\Documents\\\\RF_COMM_MULTILANE_P9\\\\evidence\\\\generated\\\\p9_cli_fail_closed\\\\20260729T134606.149453Z\\\\missing_authorization.json'"
+      ],
+      "rejected": true
+    },
+    "missing_shutdown": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\missing_shutdown.json",
+      "errors": [
+        "shutdown_bitstream immutable file missing"
+      ],
+      "rejected": true
+    },
+    "movement_allowed": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\movement_allowed.json",
+      "errors": [
+        "stationary/no-movement/no-rotation/no-network authorization mismatch"
+      ],
+      "rejected": true
+    },
+    "network_allowed": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\network_allowed.json",
+      "errors": [
+        "stationary/no-movement/no-rotation/no-network authorization mismatch"
+      ],
+      "rejected": true
+    },
+    "rotation_allowed": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\rotation_allowed.json",
+      "errors": [
+        "stationary/no-movement/no-rotation/no-network authorization mismatch"
+      ],
+      "rejected": true
+    },
+    "wrong_active_xdc": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\wrong_active_xdc.json",
+      "errors": [
+        "active XDC SHA-256 binding mismatch"
+      ],
+      "rejected": true
+    },
+    "wrong_candidate_hash": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\wrong_candidate_hash.json",
+      "errors": [
+        "candidate_bitstream SHA-256 mismatch"
+      ],
+      "rejected": true
+    },
+    "wrong_profile": {
+      "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\p9_cli_fail_closed\\20260729T134606.149453Z\\wrong_profile.json",
+      "errors": [
+        "part/profile mismatch"
+      ],
+      "rejected": true
+    }
+  },
+  "phase2": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc\\authorization\\phase2_immutable_artifacts.json",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P9-03-CLI-FAIL-CLOSED-NEGATIVE"
+}

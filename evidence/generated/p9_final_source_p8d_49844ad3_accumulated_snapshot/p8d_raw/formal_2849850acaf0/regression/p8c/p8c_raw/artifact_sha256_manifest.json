@@ -1,0 +1,457 @@
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "artifacts": [
+    {
+      "path": "config/generated/tfdu_safety_constants.json",
+      "sha256": "9c1922d9418ac71c7b0bbe3d1a0609f309a8c48348c04700e239df0aec3f154e"
+    },
+    {
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "7a9d7c4f55218b2a6cd6e59cd34993281541c698ac3c60750b5297e4c3e3054d"
+    },
+    {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
+    },
+    {
+      "path": "config/tfdu_safety.yaml",
+      "sha256": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06"
+    },
+    {
+      "path": "evidence/generated/p8b_checkpoint_acceptance_core.json",
+      "sha256": "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870"
+    },
+    {
+      "path": "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
+      "sha256": "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_continuous_high_guard_summary.json",
+      "sha256": "27211b48afaa0e2eeaf08aeaca89937e3751385fd4edc71dc3c5ed30cf14bf07"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_continuous_high_guard_summary.md",
+      "sha256": "2aeb918c1a7775df7696014635b0ebf407c89e5f68687d0aa3bdfe3bf3ea4ceb"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_exact_sliding_duty_reference_summary.json",
+      "sha256": "109def4b689b77bdd49cf61e5e4ea8e023000ee5ee5f4cbaa2aae2a18c80ba7b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_exact_sliding_duty_reference_summary.md",
+      "sha256": "b9220ce2c118cfdeec523390bccfdc1c2d955b04ee18373eaac5eb5d9fc6ca64"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_exact_sliding_duty_rtl_summary.json",
+      "sha256": "6d367be07b954721064a6a0dd10f838a08802433e376f3aa58134fc9417be82c"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_exact_sliding_duty_rtl_summary.md",
+      "sha256": "d2603b1e7d302831f61886fb3de678e6a571517df77649cdbf64603ef1a9ebd2"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_final_summary.json",
+      "sha256": "0138d74368777b480f9228b2ef11c9666e30f1142a98b3528a26db2e0e10397a"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_final_summary.md",
+      "sha256": "08927c57997b5ef76b778e36884ab513d51eec21780cd80c53de2104f03baded"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_offline_gate_summary.json",
+      "sha256": "991491e0723a4993d3b99d313cebe0bc8611a1e84f9df2b361f445eb9092258a"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_offline_gate_summary.md",
+      "sha256": "cc1cf8a8d637ddc68b089ec06e48585d9167af8d9c197f9621604f7948b79b84"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_p0_p8b_regression_summary.json",
+      "sha256": "80e06969f7025be34372b935a0631d294fff6a2387d8a15684081af20122e638"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_p0_p8b_regression_summary.md",
+      "sha256": "e04a72a0bd2f90730274cf7443b56a4ecace3e245665da048a461704a68c9e49"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_permit_fault_injection_summary.json",
+      "sha256": "cdf57262a1936a009a95ce321c6d4f5782f7c78fc698fb76fcb5f2376259db7d"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_permit_fault_injection_summary.md",
+      "sha256": "780a32ae65896b76222e2bfc581681741615ca07a19213635d262216c0ff8190"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_physical_module_accounting_summary.json",
+      "sha256": "5432f40b3bd2629d6e471b88aeddbb64ae50d32ee627d263419c84fb70315a00"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_physical_module_accounting_summary.md",
+      "sha256": "4556c6aaa58108dc427b8eb927e9fca62bfd79b5f5804728c7e14264bc18fcf3"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_profile_matrix_summary.json",
+      "sha256": "e98616fcf84129cc6afd095ae3124026e448a65a0436a6fa3f5ae330e7cb08dd"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_profile_matrix_summary.md",
+      "sha256": "f9868ba05c28b25b5c8c363520cdfd268c210597a5ada1e13448a0ea9c07780f"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/p8b_checkpoint_evidence_verify.log",
+      "sha256": "666ae5bbb8ff395a11223d7df528acfc53a5bfa1922cabe9b4af99d7cc7682cd"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/python_reference.log",
+      "sha256": "b21dec999d97d6cefa842ef060cde982e8e5064c68243bd134457a9d54a64efe"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/python_unit_tests.log",
+      "sha256": "b41328b9493885d1326adee999fce77dea0487e3ccc7f0fdf799010edfe6f77e"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/register_map_verify.log",
+      "sha256": "2fd4e6d30d1a77b4c03c6f0427e2b2c4b608d505e6586603d598c383321f723c"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/check_timing.rpt",
+      "sha256": "862c7ff7ae6729f4acdffc93f2353e5afdc14ec4758ac5d9144d4e3258875b98"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/drc.rpt",
+      "sha256": "1fa6df44bc611ab8f3d5eac09d7ab8cc1297abccf4b11b47343c06f8351b00ac"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/resource_markers.txt",
+      "sha256": "24014c3174bf2c86e0a748425d0da7e8baf5079cfd4828b043b6768876be2b31"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/timing_summary.rpt",
+      "sha256": "b566ebdbf9c2ae25fbec767eee4bb3561481b19f0a11260fd729f4f108f93f69"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/utilization.rpt",
+      "sha256": "7c944d7633a42d3699f62bde97b25eb8dce6b5b172e68ba40cd96d37d141e936"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/vivado.log",
+      "sha256": "8ab2bea6151d56dfad57ab27951c7153bf3c6f618e62e94652ceaa6c52216bb4"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/check_timing.rpt",
+      "sha256": "a5b1e05dc51dcb3364ee139c34022711a74dd3b9959a25bb41cb52b51ab1ee78"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/drc.rpt",
+      "sha256": "bc6bfbeb2a2cb41d46eec6b220e6bd33959e36432e0c7ba524edf2cab90ebd92"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/resource_markers.txt",
+      "sha256": "10788e0d3f1b245697ea06065166199e7499a089447632b21efe811249d76061"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/timing_summary.rpt",
+      "sha256": "812da2eae5b79c3745cc7af65770e0ad18cacff67af1c2f1e3cf996898468450"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/utilization.rpt",
+      "sha256": "c34ad7f880df1b0365812b8bdb853f034ad34bf660247b5bbfce5e89b06f4fad"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/vivado.log",
+      "sha256": "6fa39a40ba94256e70eca84637be0cf2a6098681c5cd649181465021cb1cf4f0"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/check_timing.rpt",
+      "sha256": "648e50ecd2a86d6eab7510bd6118712261763761213fc31e9d72b6f02b754bb7"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/drc.rpt",
+      "sha256": "ec56dcf0489e08c8e8c05c068b11c784c97a19bea9d21082bf597d0b6c08ded4"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/resource_markers.txt",
+      "sha256": "16ad393c69f7bc620ddc456ec0d3ee835fe09c318cf631e751ed10bd66d9f3a4"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/timing_summary.rpt",
+      "sha256": "743970e21845d3782cb05c7447ae0b5b09f25830ff3722b1d0d7d33dba1b74d9"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/utilization.rpt",
+      "sha256": "7bbb5c9016a1620e2249e32a52169d49aee07e58caf66509c9cfdf888c4b9e1b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/vivado.log",
+      "sha256": "146f8a9a509baf4c2152368c0aafeec5bf7d96d1bc19c6050984e5f292bb54e2"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/safety_config_verify.log",
+      "sha256": "7f12bbc650fb45564005047e9bfb16d81468cf26870143b8ebaf3726ff01d86e"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/software/ps_driver_host_compile_and_run.log",
+      "sha256": "b8cbd6d3d85ddeebca39e0fe7803fc080bea02ac750f4015cb32818d2ea4d76b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/source_manifest.json",
+      "sha256": "9205a53cbd680ba3ba015300df7186841eb2e160225cf5e98976ffab302603cb"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/static_architecture.log",
+      "sha256": "9e2fc34382f20d8c69f366206e0f4e7e89de1803160e0b773a56f0f6aa32ba32"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/trace_comparison.json",
+      "sha256": "88cd0a23a440a1798b5e8536ec65ffb9eb213efe6db6a8f0a9f580cea1e2695b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/trace_comparison.log",
+      "sha256": "4566f5addff27c437dc4d665b1dfc830c169bd8200d873ad539df9e98bb262d9"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_endpoint_safety/compile.log",
+      "sha256": "8d650b7670932ae81d0a60bc5096535e009e6353c89026e527dacc147b3ede4f"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_endpoint_safety/elaborate.log",
+      "sha256": "dd7b12facf69d820d150bad866e1bb974add823e4aa0960b3866ff0ed650de2d"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_endpoint_safety/run.log",
+      "sha256": "ca2916cf8c50cf90f1fbc28a50d032a482cd44ada3f712adcbab9496fb23912e"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_exact_duty/compile.log",
+      "sha256": "b59b1b251657320fa5b6b9ddc0a663190b9b490635c2063f75fe696f124ba309"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_exact_duty/elaborate.log",
+      "sha256": "c3566a30d421efa14aa578d2f81985e1e43a19c3757c92d24358814792503602"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_exact_duty/run.log",
+      "sha256": "9dae29ea45184336abb41a60ac1f23fb332a3556a1f0a84601df4ef83a9c199c"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_full_scale/compile.log",
+      "sha256": "30c8869c8d905380a4ce61b990b757f61bd698718fa7b54e9ea2d38ddc4a2432"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_full_scale/elaborate.log",
+      "sha256": "2826b9dd6310b9d533bf3c6a5d17e7716c94bcefac45e7f75a9b9f28b9b6f262"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_full_scale/run.log",
+      "sha256": "cdd624afe94997e32eb20deb3fd4b8605efd695fd5a2fdddf197055ca18277b7"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_physical_safety/compile.log",
+      "sha256": "c203903a072b60f33c6a33200a13510c37b9936d93fff1baf310c42a9d414e52"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_physical_safety/elaborate.log",
+      "sha256": "4d5baf705edf610d78273912ecde9708d23e4f127d974b846bc04ce5eea0f8f1"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_physical_safety/run.log",
+      "sha256": "8017f9a581ab68bce1baa52e20b617cb96de6763e95d836a0875079b020dbe8a"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_profile_matrix/compile.log",
+      "sha256": "8ffe6af0cb877e08d9c11bcb87edc76f55e0e36e667334861a105b867c0dffcf"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_profile_matrix/elaborate.log",
+      "sha256": "cc235be8cfaf964dad9515b1c76dad3d3a8bdbcb35ec33b16ffec09c925cb41e"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_profile_matrix/run.log",
+      "sha256": "f4467410b2743a246094e657ea9ae6707cacbfe4c4b647e82b4514f2ad1f41f7"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_safety_regs/compile.log",
+      "sha256": "64ffe8b88f52ee22c181b3983cca2aae25b67277f37ade032e4828fe3725bb40"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_safety_regs/elaborate.log",
+      "sha256": "fde7da788e5d6e634fa9ac1a1e5c3c7a1fcc7419cc84a5b8cc02b91dcad2c27d"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_safety_regs/run.log",
+      "sha256": "403703eabe8260a8643b8cbb7df5f6c00c8ce1f4bd43e9cc65073a7b7557c7ae"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_trace_crosscheck/compile.log",
+      "sha256": "08f254b2c254687110459251880b390fbc8843cc3fe6f46464e248dae5f65f32"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_trace_crosscheck/elaborate.log",
+      "sha256": "c19bafb4f0d4884a724b6c1a2e73ab77dea1f8fd47e6bd86fb438a38bec961f8"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_p8c_trace_crosscheck/run.log",
+      "sha256": "861c7b3bea77aa003eb5e51c58d21b19556f9003d792938dc080d32cec0da94a"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/compile.log",
+      "sha256": "c1a92676e4adb1e9d61f7d8a65eaeb970a21902cd86f59ef6d5ffe8fe6b62956"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/elaborate.log",
+      "sha256": "37bc002fd82789d463e2ea060c552513dd1cdf49439ab14f3bb71b2793ccf6e3"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_raw/xsim/tb_tfdu_lane_phy_smoke/run.log",
+      "sha256": "65bc96584e8ef08ea8aa545def00f6af74a0d5061a206760902cb650ad5311aa"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_receive_only_acquisition_summary.json",
+      "sha256": "c70f25ecacd76997e6132669c4031364d44474d0ca738a0b401e8008884abe8b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_receive_only_acquisition_summary.md",
+      "sha256": "6f43693b693d31c230f1145f770e4c8f2315b95633f344b986520ac5f22bc8c9"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_register_map_summary.json",
+      "sha256": "9d30c0358a70a1c1529a63e9d0ae6d73d0b802bb7389e9c875ebcb8f344963b4"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_register_map_summary.md",
+      "sha256": "554e2999372dc4f9e15a3630f15fa0d0144c77fff2f33c51e1bd25421c0fd865"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_resource_audit_summary.json",
+      "sha256": "e79da4f9bd50e9506455db13f7689255d263f4550a0b4cf17870474ae7e547cf"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_resource_audit_summary.md",
+      "sha256": "69d0fd42ad85da6af69eb259639498156ae775c31c49697ad21ed2c8544b810b"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_safety_config_summary.json",
+      "sha256": "c6da90757d057b7ac5a31a556664bc4c1382ac5064eb2663b50a7d89f9ae7c87"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_safety_config_summary.md",
+      "sha256": "b4ec5b0d712d482d708abc0bf57c4bdde5dd533f3e141b38cbc2c65f4f0c97c9"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_single_global_permit_architecture_summary.json",
+      "sha256": "7e2d552000c097816d7330a283920a3022476d54f67b08d72e9d2799345ee017"
+    },
+    {
+      "path": "evidence/generated/p9_final_source_p8d/p8d_raw/formal_2849850acaf0/regression/p8c/p8c_single_global_permit_architecture_summary.md",
+      "sha256": "fdc1364ce7596f37049ffcf6c19b810415e456b5d4c81c57f7cf7bb701d440b3"
+    },
+    {
+      "path": "rtl/generated/tfdu_safety_pkg.sv",
+      "sha256": "1fec3f8e485fac737dd8479486379a469ebed644da48dbeb3d42ed12b4ee6705"
+    },
+    {
+      "path": "rtl/ir_p8c_mapping_safety_adapter.sv",
+      "sha256": "f4d2b8a58c02c7379b9c47e109d000b578fafb7d0f9d9578c7efa70ed5655928"
+    },
+    {
+      "path": "rtl/ir_p8c_resource_tops.sv",
+      "sha256": "901c743159795b276f5cc70d13cb93b84c77b1a9e46b173c4a85805eac72cb3d"
+    },
+    {
+      "path": "rtl/ir_p8c_safety_integration.sv",
+      "sha256": "0ba9b943a0ea978b0cf431eb09bfceab78d93f33672b86221d4e6bd6533d354c"
+    },
+    {
+      "path": "rtl/ir_p8c_safety_regs.sv",
+      "sha256": "c6f6a6131a17f35f39b9d0d2167546ed4e0adeb526a9e7a506dff5c0f9874800"
+    },
+    {
+      "path": "rtl/ir_tfdu_exact_duty_accountant.sv",
+      "sha256": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f"
+    },
+    {
+      "path": "rtl/ir_tfdu_physical_module_safety.sv",
+      "sha256": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19"
+    },
+    {
+      "path": "rtl/ir_tfdu_safety_endpoint.sv",
+      "sha256": "b5ed87792283b0cf0c495d5f813a37268ca779addd0aa3ce8613136d64afb315"
+    },
+    {
+      "path": "rtl/tfdu_lane_phy.sv",
+      "sha256": "b24979ac2c3c499ce3fbfcc4ba119dad02bf0f471f180f9d9d39453cd23c6ccd"
+    },
+    {
+      "path": "scripts/check_p8c_safety_static.py",
+      "sha256": "6d7fc502066b59b9b545dd3146b1598f2d228e6dabd7bda27ffc7e1aff07b9a7"
+    },
+    {
+      "path": "scripts/generate_register_headers.py",
+      "sha256": "57a55a129a752f08e0c75ac78290ce6ff4b65f6848df40c1a5e61a6c22f2a058"
+    },
+    {
+      "path": "scripts/generate_tfdu_safety_config.py",
+      "sha256": "eec1f046df8af62ee8d9a3950db28766a791ddf53837806a926b04e0f9785fe5"
+    },
+    {
+      "path": "scripts/materialize_p8b_checkpoint_evidence.py",
+      "sha256": "ac91c3d649d176eb976225f722341cf8c151b9909f7075cd914dcde58d0db2a4"
+    },
+    {
+      "path": "scripts/run_p8c_safety_gate.py",
+      "sha256": "b0c8f2f1bf8711e7938c62d6cb6aa49ff0d6ae75e14072733941f7c4f549ac54"
+    },
+    {
+      "path": "scripts/vivado/p8c_resource_audit.tcl",
+      "sha256": "f972f3bcf968504c853251c5668992a66ef913a2a165b2a149af864ed0327d74"
+    },
+    {
+      "path": "sim/tb/tb_p8c_endpoint_safety.sv",
+      "sha256": "bd067f0d5e7e2ddfd84b30f7983c4edda9dc22be19df994a08cfd6fd562f1593"
+    },
+    {
+      "path": "sim/tb/tb_p8c_exact_duty.sv",
+      "sha256": "bca756a20bc65b02d5293704bb23f755e9570f328b2cbbcd331f547380209a8c"
+    },
+    {
+      "path": "sim/tb/tb_p8c_full_scale.sv",
+      "sha256": "de7d29f8ca19a3bf65856d76b8bce60c16fc11b6a715088c3d34c251230c731c"
+    },
+    {
+      "path": "sim/tb/tb_p8c_physical_safety.sv",
+      "sha256": "51f5705b35a659b7a4363fed34da3ebe81ebdef95b5b1c9d961b5d77d7a5d34b"
+    },
+    {
+      "path": "sim/tb/tb_p8c_profile_matrix.sv",
+      "sha256": "d044e572bdc244b673ff298b56c442daaa3df0af8595f35086783577ede7a13f"
+    },
+    {
+      "path": "sim/tb/tb_p8c_safety_regs.sv",
+      "sha256": "8e84edbd287192dfb23a583b7fa442982ecd2c76fc01c7af53d681a0f8520051"
+    },
+    {
+      "path": "sim/tb/tb_p8c_trace_crosscheck.sv",
+      "sha256": "0507d67b94a7393d35e4001ebe627daf507481b54c88c243a36761fdf19610d7"
+    },
+    {
+      "path": "software/ps_driver/ir_driver.c",
+      "sha256": "65408f0f35d77f4609cb81ae54cc89101972b8c8124bc300a46afbb5e616bd2f"
+    },
+    {
+      "path": "software/ps_driver/ir_driver.h",
+      "sha256": "dcdf7ce2174a3e51de751e669973470e122ea0b1810cb2d5802d226a4837f437"
+    },
+    {
+      "path": "software/ps_driver/main_offline_stub.c",
+      "sha256": "0d312f55a1c2ac1171d309c718a47ef4d903d59d9e80d36daf0f808294296db4"
+    },
+    {
+      "path": "tools/p8c_tfdu_safety_reference.py",
+      "sha256": "65d6461940ca0b45f6266e5ada717e07efce7296cf6b3d8ad3be3d3d4da4eb36"
+    }
+  ],
+  "source_commit": "2849850acaf0cba1dbdf5eaa744ddef9ffd75dc1",
+  "status": "PASS"
+}

@@ -1,0 +1,152 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P9\evidence\hardware\p9\p9_20260726T210307Z_3284dfcfd013_483cab5af576\shutdown\recovery_exact_device\p9_emergency_shutdown_exact_device.tcl}
+# proc p9_normal_idcode {value} {
+#   set clean [string tolower [string map {_ ""} [string trim $value]]]
+#   if {[regexp {^[01]{32}$} $clean]} {
+#     set numeric 0
+#     foreach bit [split $clean ""] {
+#       set numeric [expr {($numeric << 1) | ($bit eq "1")}]
+#     }
+#     return [format %08X $numeric]
+#   }
+#   if {[regexp {^0x([0-9a-f]{8})$} $clean unused hexadecimal]} {
+#     return [string toupper $hexadecimal]
+#   }
+#   if {[regexp {^[0-9a-f]{8}$} $clean]} {
+#     return [string toupper $clean]
+#   }
+#   return ""
+# }
+# if {[llength $argv] != 5} {
+#   error "usage: p9_emergency_shutdown_exact_device.tcl <server-url> <target> <phase2-auth> <shutdown-bit> <result>"
+# }
+# set server_url [lindex $argv 0]
+# set expected_target [lindex $argv 1]
+# set authorization_file [file normalize [lindex $argv 2]]
+# set bit_file [file normalize [lindex $argv 3]]
+# set result_file [file normalize [lindex $argv 4]]
+# set manager_open 0
+# set server_connected 0
+# set target_open 0
+# set selected_target ""
+# set device_records {}
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+INFO: [Labtools 27-1435] Device xc7z010 (JTAG device index = 1) is not programmed (DONE status = 0).
+INFO: [Labtools 27-3164] End of startup status: HIGH
+# set rc [catch {
+#   if {![info exists ::env(RF_COMM_P9_HW_AUTH)] ||
+#       $::env(RF_COMM_P9_HW_AUTH) ne "P9_PHASE2_IMMUTABLE_AUTHORIZED"} {
+#     error "P9 phase-2 environment marker required"
+#   }
+#   if {![file isfile $authorization_file] || ![file isfile $bit_file]} {
+#     error "authorization or immutable shutdown bitstream missing"
+#   }
+#   open_hw_manager
+#   set manager_open 1
+#   connect_hw_server -url $server_url
+#   set server_connected 1
+#   set matches {}
+#   foreach candidate [get_hw_targets -quiet *] {
+#     if {[string equal -nocase [string trim "$candidate"] $expected_target]} {
+#       lappend matches $candidate
+#     }
+#   }
+#   if {[llength $matches] != 1} {
+#     error "expected one exact authorized target match; found [llength $matches]"
+#   }
+#   set selected_target [lindex $matches 0]
+#   current_hw_target $selected_target
+#   open_hw_target $selected_target
+#   set target_open 1
+# 
+#   set exact_devices {}
+#   foreach candidate [get_hw_devices -quiet *] {
+#     set part ""; set name ""; set idcode ""
+#     catch {set part [get_property PART $candidate]}
+#     catch {set name [get_property NAME $candidate]}
+#     catch {set idcode [get_property IDCODE $candidate]}
+#     lappend device_records [list "$candidate" $part $name $idcode [p9_normal_idcode $idcode]]
+#     if {[string equal -nocase $part "xc7z010"] &&
+#         [string equal -nocase $name "xc7z010_1"] &&
+#         [p9_normal_idcode $idcode] eq "13722093"} {
+#       lappend exact_devices $candidate
+#     }
+#   }
+#   if {[llength $exact_devices] != 1} {
+#     error "expected exactly one authorized Zynq-7010 device; found [llength $exact_devices]"
+#   }
+#   set device [lindex $exact_devices 0]
+#   current_hw_device $device
+#   refresh_hw_device -update_hw_probes false $device
+#   set_property PROGRAM.FILE $bit_file $device
+#   program_hw_devices $device
+# 
+#   file mkdir [file dirname $result_file]
+#   set out [open $result_file w]
+#   puts $out "P9_EMERGENCY_RECOVERY_RESULT=PASS"
+#   puts $out "TFDU_SHUTDOWN_PROGRAMMED=1"
+#   puts $out "SHUTDOWN_EXIT=0"
+#   puts $out "P9_SHUTDOWN_TARGET=$selected_target"
+#   puts $out "P9_SHUTDOWN_DEVICE=$device"
+#   puts $out "P9_SHUTDOWN_TXD_OUTPUT_INTENT=0"
+#   puts $out "P9_SHUTDOWN_SD_REQUEST_ACTIVE=1"
+#   puts $out "P9_SHUTDOWN_ACTIVE_TX_MASK=0"
+#   foreach record $device_records {
+#     lassign $record object part name idcode normalized
+#     puts $out "P9_ENUM_DEVICE=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+#   }
+#   close $out
+# } error_text error_options]
+# if {$target_open} { catch {close_hw_target $selected_target} }
+INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+# if {$server_connected} { catch {disconnect_hw_server} }
+# if {$manager_open} { catch {close_hw_manager} }
+# if {$rc != 0} {
+#   catch {
+#     file mkdir [file dirname $result_file]
+#     set out [open $result_file w]
+#     puts $out "P9_EMERGENCY_RECOVERY_RESULT=FAIL"
+#     puts $out "TFDU_SHUTDOWN_PROGRAMMED=0"
+#     puts $out "SHUTDOWN_EXIT=1"
+#     puts $out "P9_SHUTDOWN_ERROR=[string map [list \"\r\" \" \" \"\n\" \" \" \"=\" \"_\"] $error_text]"
+#     foreach record $device_records {
+#       lassign $record object part name idcode normalized
+#       puts $out "P9_ENUM_DEVICE=$object|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+#     }
+#     close $out
+#   }
+#   puts stderr "P9_EMERGENCY_RECOVERY_RESULT=FAIL"
+#   puts stderr $error_text
+#   exit 41
+# }
+# puts "P9_EMERGENCY_RECOVERY_RESULT=PASS"
+P9_EMERGENCY_RECOVERY_RESULT=PASS
+# puts "TFDU_SHUTDOWN_PROGRAMMED=1"
+TFDU_SHUTDOWN_PROGRAMMED=1
+# puts "SHUTDOWN_EXIT=0"
+SHUTDOWN_EXIT=0
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Mon Jul 27 05:06:14 2026...

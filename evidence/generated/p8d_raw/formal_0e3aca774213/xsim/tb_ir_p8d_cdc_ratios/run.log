@@ -1,0 +1,29 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_ir_p8d_cdc_ratios_snapshot -runall
+RETURN_CODE=0
+STARTED_UTC=2026-07-26T12:05:11.463564Z
+FINISHED_UTC=2026-07-26T12:05:14.115706Z
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_p8d_cdc_ratios_snapshot/xsim_script.tcl
+# xsim {tb_ir_p8d_cdc_ratios_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_CDC_RATIO_1_1_PASS=1
+P8D_CDC_RATIO_2_1_PASS=1
+P8D_CDC_RATIO_3_2_PASS=1
+P8D_CDC_ASYNC_PHASE_PASS=1
+TB_IR_P8D_CDC_RATIOS_PASS=1
+$finish called at time : 15219 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/sim/tb/tb_ir_p8d_cdc_ratios.sv" Line 56
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Jul 26 20:05:14 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

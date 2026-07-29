@@ -1,0 +1,62 @@
+{
+  "candidate_sha256": "ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308",
+  "generated_utc": "2026-07-29T14:46:56+00:00",
+  "part": "xc7z010clg400-1",
+  "profile": "Z7010_2LANE_DEV",
+  "ps_elf_sha256": "2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1",
+  "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+  "schema_version": 1,
+  "shutdown_sha256": "a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8",
+  "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "status": "PASS",
+  "target_identity": {
+    "markers": {
+      "P9_TARGET_IDENTITY_AUXILIARY_DAP_COUNT": "1",
+      "P9_TARGET_IDENTITY_BOARD_ID": "210512180081",
+      "P9_TARGET_IDENTITY_CANONICAL_PART": "xc7z010clg400-1",
+      "P9_TARGET_IDENTITY_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P9_TARGET_IDENTITY_ENUM_DEVICE_1": "xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093",
+      "P9_TARGET_IDENTITY_EXACT_FPGA_MATCH_COUNT": "1",
+      "P9_TARGET_IDENTITY_HW_OBJECT_COUNT": "2",
+      "P9_TARGET_IDENTITY_LIVE_DEVICE": "xc7z010_1",
+      "P9_TARGET_IDENTITY_LIVE_IDCODE": "00010011011100100010000010010011",
+      "P9_TARGET_IDENTITY_LIVE_IDCODE_NORMALIZED": "13722093",
+      "P9_TARGET_IDENTITY_LIVE_PART": "xc7z010",
+      "P9_TARGET_IDENTITY_READ_ONLY": "1",
+      "P9_TARGET_IDENTITY_RESULT": "PASS",
+      "P9_TARGET_IDENTITY_SINGLE_TARGET": "1",
+      "P9_TARGET_IDENTITY_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "P9_TARGET_IDENTITY_UNEXPECTED_HW_OBJECT_COUNT": "0"
+    },
+    "process": {
+      "active_limit_seconds": null,
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+        "-mode",
+        "batch",
+        "-source",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_hw_preflight.tcl",
+        "-tclargs",
+        "localhost:3121",
+        "localhost:3121/xilinx_tcf/Digilent/210512180081",
+        "210512180081",
+        "xc7z010clg400-1",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc\\authorization\\phase2_immutable_artifacts.json",
+        "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc\\target_identity\\target_identity_raw.txt"
+      ],
+      "elapsed_seconds": 10.44491,
+      "error": "",
+      "interrupted": false,
+      "returncode": 0,
+      "stderr": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/raw_logs/p9_04_preflight.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/raw_logs/p9_04_preflight.stdout.log",
+      "stdout_sha256": "be94d31d0adfc2964a84638479b457a988f9c61df29d3d67eecd4b942ec9a22e",
+      "timed_out": false
+    },
+    "raw": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/target_identity/target_identity_raw.txt",
+    "status": "PASS",
+    "test_id": "P9-04-TARGET-IDENTITY"
+  },
+  "test_id": "P9-04-TARGET-IDENTITY"
+}

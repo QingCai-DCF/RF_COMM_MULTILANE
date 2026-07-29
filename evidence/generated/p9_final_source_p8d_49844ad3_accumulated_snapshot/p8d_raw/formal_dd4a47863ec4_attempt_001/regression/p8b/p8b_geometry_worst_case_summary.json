@@ -1,0 +1,77 @@
+{
+  "canonical_bounded_corner_sweep": {
+    "corner_count": 0,
+    "reason": "no frozen finite tolerance bounds",
+    "status": "PENDING_WITH_EXPLICIT_GAPS"
+  },
+  "canonical_seeded_monte_carlo": {
+    "reason": "no frozen finite tolerance bounds",
+    "sample_count": 0,
+    "seed": 20260717,
+    "status": "PENDING_WITH_EXPLICIT_GAPS"
+  },
+  "model_validation_only": {
+    "deterministic_seeded_monte_carlo": {
+      "max": 8.62536697296503,
+      "mean": 8.42355330124692,
+      "min": 8.220743287330807,
+      "p1": 8.227660697903847,
+      "p5": 8.244020215041223,
+      "p50": 8.424951660745222,
+      "p95": 8.602634983543236,
+      "p99": 8.619377529696095,
+      "purpose": "RISK_AND_SENSITIVITY_NOT_WORST_CASE_GUARANTEE",
+      "sample_count": 4096,
+      "seed": 20260717,
+      "status": "PASS",
+      "worst_parameters": {
+        "axial_runout_mm": 0.0316930403784836,
+        "fixed_axis_error_deg": -0.03899723475051728,
+        "radial_eccentricity_x_mm": 0.07878079465800802,
+        "rotating_axis_error_deg": -0.19805543955370075
+      },
+      "worst_result": {
+        "fixed_incidence_angle_deg": 2.8413184579108046,
+        "path_length_mm": 200.64306343181406,
+        "rotating_incidence_angle_deg": 8.62536697296503
+      }
+    },
+    "exact_corner_sweep": {
+      "corner_count": 16,
+      "method": "EXACT_FINITE_CORNER_ENUMERATION",
+      "status": "PASS",
+      "worst": {
+        "fixed_incidence_angle_deg": 3.0032288590612235,
+        "path_length_mm": 200.62207709040365,
+        "rotating_incidence_angle_deg": 8.628206669076045
+      },
+      "worst_parameters": {
+        "axial_runout_mm": -0.05,
+        "fixed_axis_error_deg": -0.2,
+        "radial_eccentricity_x_mm": 0.1,
+        "rotating_axis_error_deg": -0.2
+      }
+    },
+    "not_product_acceptance": true,
+    "synthetic_bounds": {
+      "axial_runout_mm": [
+        -0.05,
+        0.05
+      ],
+      "fixed_axis_error_deg": [
+        -0.2,
+        0.2
+      ],
+      "radial_eccentricity_x_mm": [
+        -0.1,
+        0.1
+      ],
+      "rotating_axis_error_deg": [
+        -0.2,
+        0.2
+      ]
+    }
+  },
+  "profile": "D200_D600_8X32",
+  "status": "PENDING_WITH_EXPLICIT_GAPS"
+}

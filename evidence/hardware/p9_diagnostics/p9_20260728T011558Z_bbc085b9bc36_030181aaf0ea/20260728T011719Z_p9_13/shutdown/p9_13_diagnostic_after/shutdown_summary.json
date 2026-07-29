@@ -1,0 +1,51 @@
+{
+  "label": "p9_13_diagnostic_after",
+  "markers": {
+    "P9_SHUTDOWN_ACTIVE_TX_MASK": "0",
+    "P9_SHUTDOWN_AUXILIARY_DAP_COUNT": "1",
+    "P9_SHUTDOWN_ENDPOINT_ARMED": "0",
+    "P9_SHUTDOWN_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+    "P9_SHUTDOWN_ENUM_DEVICE_1": "xc7z010_1|PART=xc7z010|NAME=xc7z010_1|IDCODE=00010011011100100010000010010011|NORMALIZED=13722093",
+    "P9_SHUTDOWN_EXACT_FPGA_MATCH_COUNT": "1",
+    "P9_SHUTDOWN_HW_OBJECT_COUNT": "2",
+    "P9_SHUTDOWN_LIVE_DEVICE": "xc7z010_1",
+    "P9_SHUTDOWN_LIVE_IDCODE_NORMALIZED": "13722093",
+    "P9_SHUTDOWN_MODE_HIGH": "1",
+    "P9_SHUTDOWN_PROGRAM_RESULT": "PASS",
+    "P9_SHUTDOWN_SD_REQUEST_ACTIVE": "1",
+    "P9_SHUTDOWN_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+    "P9_SHUTDOWN_TXD_OUTPUT_INTENT": "0",
+    "P9_SHUTDOWN_UNEXPECTED_HW_OBJECT_COUNT": "0",
+    "SHUTDOWN_EXIT": "0",
+    "TFDU_SHUTDOWN_PROGRAMMED": "1"
+  },
+  "process": {
+    "active_limit_seconds": null,
+    "command": [
+      "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "-mode",
+      "batch",
+      "-source",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_program_shutdown.tcl",
+      "-tclargs",
+      "localhost:3121",
+      "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "210512180081",
+      "xc7z010clg400-1",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T011558Z_bbc085b9bc36_030181aaf0ea\\authorization\\phase2_immutable_artifacts.json",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\bbc085b9bc36697978364f151c8d4f31e08d1667\\900387845f960d864ecda9536cc0f676d09572616bdf7d068d55da5777bd85e8\\ir_p9_shutdown_z7010.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9_diagnostics\\p9_20260728T011558Z_bbc085b9bc36_030181aaf0ea\\20260728T011719Z_p9_13\\shutdown\\p9_13_diagnostic_after\\shutdown_result.txt"
+    ],
+    "elapsed_seconds": 12.560541,
+    "error": "",
+    "interrupted": false,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p9_diagnostics/p9_20260728T011558Z_bbc085b9bc36_030181aaf0ea/20260728T011719Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_after.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "evidence/hardware/p9_diagnostics/p9_20260728T011558Z_bbc085b9bc36_030181aaf0ea/20260728T011719Z_p9_13/raw_logs/shutdown_p9_13_diagnostic_after.stdout.log",
+    "stdout_sha256": "8dc0fb23f363552352b3e999f585b58f6a44d7e51097db042420e7c731a4d616",
+    "timed_out": false
+  },
+  "result_path": "evidence/hardware/p9_diagnostics/p9_20260728T011558Z_bbc085b9bc36_030181aaf0ea/20260728T011719Z_p9_13/shutdown/p9_13_diagnostic_after/shutdown_result.txt",
+  "status": "PASS"
+}

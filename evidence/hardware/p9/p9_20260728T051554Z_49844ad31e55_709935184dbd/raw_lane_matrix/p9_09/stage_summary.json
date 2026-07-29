@@ -1,0 +1,819 @@
+{
+  "errors": [],
+  "markers": {
+    "P9_CANDIDATE_PROGRAMMED": "1",
+    "P9_CASE_PASS": "P9-09_endpoint_shutdown",
+    "P9_ENDPOINT_SHUTDOWN": "PASS",
+    "P9_INITIAL_READY_DUMP": "C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_lane_matrix/p9_09/mailbox/P9-09_ready.bin",
+    "P9_PS_ELF_DOWNLOADED": "1",
+    "P9_SERVICE_READY_LABEL": "initial_boot",
+    "P9_XSDB_BOARD_ID": "210512180081",
+    "P9_XSDB_CABLE_ROOT_COUNT": "1",
+    "P9_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P9_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "7",
+    "P9_XSDB_ENUM_DEVICE_0": "arm_dap|NODE_ID=2|IDCODE=4ba00477|NORMALIZED=4BA00477",
+    "P9_XSDB_ENUM_DEVICE_1": "xc7z010|NODE_ID=3|IDCODE=13722093|NORMALIZED=13722093",
+    "P9_XSDB_EXACT_FPGA_MATCH_COUNT": "1",
+    "P9_XSDB_IDCODE": "13722093",
+    "P9_XSDB_IDENTITY": "PASS",
+    "P9_XSDB_JTAG_DEVICE_COUNT": "2",
+    "P9_XSDB_JTAG_DISCOVERY_ATTEMPTS": "1",
+    "P9_XSDB_JTAG_DISCOVERY_ELAPSED_MS": "6",
+    "P9_XSDB_RUN_ID": "p9_20260728T051554Z_49844ad31e55_709935184dbd",
+    "P9_XSDB_STAGE": "P9-09",
+    "P9_XSDB_STAGE_RESULT": "PASS"
+  },
+  "observation_count": 3,
+  "observation_index": "evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_lane_matrix/p9_09/mailbox/observations.psv",
+  "observations": [
+    {
+      "ack_aggregation": 0,
+      "ack_frames": 0,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 0,
+      "cache_flush_count": 0,
+      "cache_invalidate_count": 0,
+      "command": 2,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 0,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        315,
+        0,
+        0,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 553338,
+      "expected_raw_rx": [
+        64,
+        0,
+        64,
+        0
+      ],
+      "expected_status": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 0,
+      "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "integrity_verify_ticks": 0,
+      "label": "ab_l0_64",
+      "lane_mask": 1,
+      "lane_weights_readback": 257,
+      "memory_barrier_count": 11,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 512,
+      "object_runtime_ticks": 0,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_high_watermark": 0,
+      "payload_prepare_ticks": 0,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 0,
+      "physical_crc_bad": 0,
+      "physical_data_good": 0,
+      "physical_frame_bad": 0,
+      "physical_preamble": 0,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        64,
+        0,
+        0,
+        0
+      ],
+      "pl_completion_ticks": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 258,
+      "rate_select": 0,
+      "raw_config_readback": 1,
+      "raw_rx": [
+        64,
+        0,
+        64,
+        0
+      ],
+      "raw_rx_observation_policy": "BOTH_ENDPOINTS_EXACT_SELECTED_LANE",
+      "requested_size": 0,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 0,
+      "rx_delivery": 0,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        0,
+        0
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        0
+      ],
+      "scheduler_frames": [
+        0,
+        0
+      ],
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 3,
+      "shutdown_verified_count": 3,
+      "stale_acks": 0,
+      "tx_ack_base": 0,
+      "tx_attempts": 0,
+      "tx_high_max_cycles": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        0,
+        0
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 0
+    },
+    {
+      "ack_aggregation": 0,
+      "ack_frames": 0,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 0,
+      "cache_flush_count": 0,
+      "cache_invalidate_count": 0,
+      "command": 2,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 0,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        315,
+        0,
+        0,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 6263348,
+      "expected_raw_rx": [
+        1000,
+        0,
+        1000,
+        0
+      ],
+      "expected_status": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 0,
+      "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "integrity_verify_ticks": 0,
+      "label": "ab_l0_1000",
+      "lane_mask": 1,
+      "lane_weights_readback": 257,
+      "memory_barrier_count": 21,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 512,
+      "object_runtime_ticks": 0,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_high_watermark": 0,
+      "payload_prepare_ticks": 0,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 0,
+      "physical_crc_bad": 0,
+      "physical_data_good": 0,
+      "physical_frame_bad": 0,
+      "physical_preamble": 0,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        1000,
+        0,
+        0,
+        0
+      ],
+      "pl_completion_ticks": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 258,
+      "rate_select": 0,
+      "raw_config_readback": 1,
+      "raw_rx": [
+        1000,
+        0,
+        1000,
+        0
+      ],
+      "raw_rx_observation_policy": "BOTH_ENDPOINTS_EXACT_SELECTED_LANE",
+      "requested_size": 0,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 0,
+      "rx_delivery": 0,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        0,
+        0
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        0
+      ],
+      "scheduler_frames": [
+        0,
+        0
+      ],
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 5,
+      "shutdown_verified_count": 5,
+      "stale_acks": 0,
+      "tx_ack_base": 0,
+      "tx_attempts": 0,
+      "tx_high_max_cycles": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        0,
+        0
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 0
+    },
+    {
+      "ack_aggregation": 0,
+      "ack_frames": 0,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 0,
+      "cache_flush_count": 0,
+      "cache_invalidate_count": 0,
+      "command": 2,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 0,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        315,
+        0,
+        0,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 22056221,
+      "expected_raw_rx": [
+        4096,
+        0,
+        4096,
+        0
+      ],
+      "expected_status": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 0,
+      "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "integrity_verify_ticks": 0,
+      "label": "ab_l0_4096",
+      "lane_mask": 1,
+      "lane_weights_readback": 257,
+      "memory_barrier_count": 31,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 512,
+      "object_runtime_ticks": 0,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_high_watermark": 0,
+      "payload_prepare_ticks": 0,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 0,
+      "physical_crc_bad": 0,
+      "physical_data_good": 0,
+      "physical_frame_bad": 0,
+      "physical_preamble": 0,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        4096,
+        0,
+        0,
+        0
+      ],
+      "pl_completion_ticks": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 258,
+      "rate_select": 0,
+      "raw_config_readback": 1,
+      "raw_rx": [
+        4096,
+        0,
+        4096,
+        0
+      ],
+      "raw_rx_observation_policy": "BOTH_ENDPOINTS_EXACT_SELECTED_LANE",
+      "requested_size": 0,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 0,
+      "rx_delivery": 0,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        0,
+        0
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        0
+      ],
+      "scheduler_frames": [
+        0,
+        0
+      ],
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 4,
+      "shutdown_attempt_count": 7,
+      "shutdown_verified_count": 7,
+      "stale_acks": 0,
+      "tx_ack_base": 0,
+      "tx_attempts": 0,
+      "tx_high_max_cycles": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        0,
+        0
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 0
+    },
+    {
+      "ack_aggregation": 0,
+      "ack_frames": 0,
+      "actual_rx_length": 0,
+      "cache_disabled_exercised": 0,
+      "cache_enabled_exercised": 0,
+      "cache_flush_count": 0,
+      "cache_invalidate_count": 0,
+      "command": 10,
+      "counts_per_second": 333333343,
+      "descriptor_leak": 0,
+      "direction": 0,
+      "dma_reset_count": 0,
+      "dma_reset_while_queued_count": 0,
+      "dma_rx_completion_ticks": 0,
+      "dma_tx_completion_ticks": 0,
+      "dropped_ack": 0,
+      "dropped_data": 0,
+      "duplicate_acks": 0,
+      "duty_hard_faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duty_hard_max_high_cycles": 12799,
+      "duty_max_cycles": [
+        315,
+        0,
+        0,
+        0
+      ],
+      "duty_target_max_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "elapsed_ticks": 1561,
+      "expected_status": 0,
+      "first_mismatch_offset": 4294967295,
+      "input_crc32": 0,
+      "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "integrity_verify_ticks": 0,
+      "label": "P9-09_endpoint_shutdown",
+      "lane_mask": 0,
+      "lane_weights_readback": 257,
+      "memory_barrier_count": 33,
+      "misaligned_transfer_handled": 0,
+      "object_abort_count": 0,
+      "object_config_readback": 512,
+      "object_runtime_ticks": 0,
+      "observed_status": 0,
+      "out_of_window_acks": 0,
+      "output_crc32": 0,
+      "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "outstanding_high_watermark": 0,
+      "payload_prepare_ticks": 0,
+      "permit_raw_sent": [
+        0,
+        0,
+        0
+      ],
+      "permit_result_flags": 0,
+      "permit_status_after_drop": 0,
+      "permit_status_after_rearm": 0,
+      "permit_tx_after_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_after_rearm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "permit_tx_before_drop": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "phy_status": 0,
+      "physical_ack_good": 0,
+      "physical_crc_bad": 0,
+      "physical_data_good": 0,
+      "physical_frame_bad": 0,
+      "physical_preamble": 0,
+      "physical_symbol_errors": 0,
+      "physical_tx": [
+        4096,
+        0,
+        0,
+        0
+      ],
+      "pl_completion_ticks": 0,
+      "pl_soft_reset_count": 0,
+      "pl_status": 258,
+      "rate_select": 0,
+      "raw_config_readback": 1,
+      "raw_rx": [
+        4096,
+        0,
+        4096,
+        0
+      ],
+      "requested_size": 0,
+      "retry_exhausted": 0,
+      "rfap_atomic_publish_count": 0,
+      "rfap_fragment_count": 0,
+      "rfap_mode": 0,
+      "rfap_partial_publish_count": 0,
+      "rfap_useful_bytes": 0,
+      "rfap_useful_crc32": 0,
+      "rfap_validation_pass": 0,
+      "ring_empty_observed": [
+        1,
+        1
+      ],
+      "ring_full_observed": [
+        0,
+        0
+      ],
+      "rx_base_sequence": 0,
+      "rx_delivery": 0,
+      "rx_duplicates": 0,
+      "rx_future": 0,
+      "rx_gaps": 0,
+      "rx_old": 0,
+      "rx_out_of_order": 0,
+      "rx_protocol_errors": 0,
+      "rx_ring_generations": [
+        0,
+        0
+      ],
+      "rx_ring_indices": [
+        0,
+        0
+      ],
+      "rx_stale_path": 0,
+      "rx_stale_session": 0,
+      "sack_bitmap": 0,
+      "scheduler_bytes": [
+        0,
+        0
+      ],
+      "scheduler_frames": [
+        0,
+        0
+      ],
+      "scheduler_migrations": [
+        0,
+        0
+      ],
+      "scheduler_retries": [
+        0,
+        0
+      ],
+      "service_state": 6,
+      "shutdown_attempt_count": 8,
+      "shutdown_verified_count": 8,
+      "stale_acks": 0,
+      "tx_ack_base": 0,
+      "tx_attempts": 0,
+      "tx_high_max_cycles": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "tx_migrations": 0,
+      "tx_next_sequence": 0,
+      "tx_retries": 0,
+      "tx_ring_generations": [
+        0,
+        0
+      ],
+      "tx_ring_indices": [
+        0,
+        0
+      ],
+      "tx_timeouts": 0,
+      "window": "NA",
+      "window_status": 0
+    }
+  ],
+  "process": {
+    "active_limit_seconds": null,
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\scripts\\hw\\p9_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\49844ad31e557bfd1f87a052c72530e49e3ebd7e\\709935184dbd054af3a9ab122c02a69367ce0299646615fe21c8911bccc050ee\\ir_p9_z7010_2lane_candidate.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\49844ad31e557bfd1f87a052c72530e49e3ebd7e\\fcb53bf427e7af3445a59af88b3f51536edf3a16ba7bdc7054faf55880777020\\p9_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\artifacts\\p9\\49844ad31e557bfd1f87a052c72530e49e3ebd7e\\294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T051554Z_49844ad31e55_709935184dbd\\authorization\\plans\\P9-09.plan.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T051554Z_49844ad31e55_709935184dbd\\raw_lane_matrix\\p9_09\\mailbox",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T051554Z_49844ad31e55_709935184dbd\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T051554Z_49844ad31e55_709935184dbd\\raw_lane_matrix\\p9_09\\xsdb_stage_result.txt",
+      "P9-09",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\hardware\\p9\\p9_20260728T051554Z_49844ad31e55_709935184dbd\\authorization\\phase2_immutable_artifacts.json",
+      "p9_20260728T051554Z_49844ad31e55_709935184dbd"
+    ],
+    "elapsed_seconds": 12.660321,
+    "error": "",
+    "interrupted": false,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_logs/p9_09.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_logs/p9_09.stdout.log",
+    "stdout_sha256": "9563e240d773e83fde76c79ae512639d94f8a7ef9f804ed48eac2c17d060d5f3",
+    "timed_out": false
+  },
+  "raw_evidence": {
+    "raw_counter_matrix": "evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_lane_matrix/p9_09/raw_counter_matrix.csv"
+  },
+  "raw_result": "evidence/hardware/p9/p9_20260728T051554Z_49844ad31e55_709935184dbd/raw_lane_matrix/p9_09/xsdb_stage_result.txt",
+  "schema_version": 1,
+  "stage": "P9-09",
+  "status": "PASS",
+  "test_id": "P9-09-HARDWARE"
+}

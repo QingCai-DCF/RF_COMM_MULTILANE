@@ -1,0 +1,339 @@
+# P8B final summary
+
+- `schema_version`: `1`
+- `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
+- `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
+- `status`: `PASS`
+- `source_commit`: `528556b51e1f4b808e206f78246f7b1a5a3fe642`
+- `branch`: `p9/z7010-stationary-2lane`
+- `worktree`: `C:\Users\user\Documents\RF_COMM_MULTILANE_P9`
+- `profile`: `D200_D600_8X32`
+- `no_hardware`: `True`
+- `hardware_authorized`: `False`
+- `hardware_actions_executed`: `False`
+- `geometry_config_path`: `config/geometry/optical_geometry.yaml`
+- `geometry_config_sha256`: `ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0`
+- `canonical_constraint_sha256`: `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
+- `p8a_checkpoint_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
+- `p8a_checkpoint_tag`: `p8a-pass`
+- `acceptance_core_path`: `evidence/generated/p9_final_source_p8d_528556b5/p8d_raw/formal_528556b51e1f_attempt_001/regression/p8b/p8b_acceptance_core.json`
+- `acceptance_core_sha256`: `0d8cc187bd2bdff3705630d757db94375c9711b5d1917f6d9cb42209d31a370c`
+- `worst_case_geometry_acceptance`: `PENDING_WITH_EXPLICIT_GAPS`
+- `logic_model_timing_target`: `PASS`
+- `simulator_tool_version`: `Vivado Simulator/xsim 2023.1`
+- `project_state_before_sha256`: `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
+- `project_state_after_sha256`: `f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537`
+- `first_failing_case`: `None`
+
+```json
+{
+  "acceptance_core_path": "evidence/generated/p9_final_source_p8d_528556b5/p8d_raw/formal_528556b51e1f_attempt_001/regression/p8b/p8b_acceptance_core.json",
+  "acceptance_core_sha256": "0d8cc187bd2bdff3705630d757db94375c9711b5d1917f6d9cb42209d31a370c",
+  "branch": "p9/z7010-stationary-2lane",
+  "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+  "failures": [],
+  "first_failing_case": null,
+  "geometry_config_path": "config/geometry/optical_geometry.yaml",
+  "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
+  "handover_metrics": {
+    "application_service_gap_us": 30,
+    "atomic_mapping_commit_us": 2,
+    "mapping_prepare_to_ready_us": 20,
+    "path_epoch_visibility_us": 35,
+    "phase_sample_to_mapping_prepare_us": 10,
+    "randomized_hdl_samples": 896,
+    "reacquisition_time_us": 100
+  },
+  "hardware_actions_executed": false,
+  "hardware_authorized": false,
+  "logic_model_timing_target": "PASS",
+  "no_hardware": true,
+  "nominal_geometry_outputs": {
+    "config_path": "config/geometry/optical_geometry.yaml",
+    "config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
+    "delta_max_nearest_deg": 5.625,
+    "fixed_module_pitch_time_at_600rpm_us": 3125.0,
+    "nominal_overlap_time_at_600rpm_us": 1333.8853609060882,
+    "nominal_two_module_overlap_deg": 4.801987299261917,
+    "nominal_worst_fixed_angle_deg": 2.799011108647052,
+    "nominal_worst_path_length_mm": 200.72099142757386,
+    "nominal_worst_rotating_angle_deg": 8.424011108647056,
+    "profile": "D200_D600_8X32",
+    "scope": "NOMINAL_MODEL_ONLY",
+    "single_module_rotating_angle_limit_delta_deg": 8.025993649630959,
+    "status": "PASS",
+    "test_id": "P8B-PYTHON-GEOMETRY-NOMINAL"
+  },
+  "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+  "p8a_checkpoint_tag": "p8a-pass",
+  "pending": [],
+  "preserved_scope": {
+    "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
+    "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW",
+    "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
+    "ROTATION_ACCEPTANCE": "PENDING_FINAL_MECHANICAL",
+    "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW"
+  },
+  "profile": "D200_D600_8X32",
+  "project_state_after_sha256": "f1bee3a60f573e9b86d76aa04f0354f8fb9346918b2669acc227b7a383175537",
+  "project_state_before_sha256": "d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd",
+  "python_model_artifacts": [
+    {
+      "path": "tools/p8b_mapping_reference.py",
+      "sha256": "d9d97209cb6f41fe4f389d697d4ac7a638101d1537516235abe35fc320f54565"
+    },
+    {
+      "path": "tools/p8b_geometry_model.py",
+      "sha256": "35b3d36bf086d2e4ef135ddacffbb2dfa01551dce351057feacda758fff0530b"
+    },
+    {
+      "path": "tools/p8b_generate_trajectory.py",
+      "sha256": "a1d19a1f9acdfe0d0ecc145bbe2a507a76add84d2b430175291cfe424cd28357"
+    },
+    {
+      "path": "scripts/run_p8b_geometry_gate.py",
+      "sha256": "04bdd038930b44ca7f004d1fdd5b874d394e7364b5fb5cee6f2a9cda5492373d"
+    }
+  ],
+  "random_seeds": [
+    1,
+    7,
+    17,
+    31,
+    127,
+    1024,
+    20260717
+  ],
+  "requirements_updated": [
+    "EVID-P8B-001",
+    "GEO-MODEL-001",
+    "GEO-MODEL-002",
+    "HANDOVER-001",
+    "HANDOVER-002",
+    "MAP-001",
+    "MAP-002",
+    "MAP-003",
+    "MAP-004",
+    "MAP-005",
+    "MAP-006",
+    "PHASE-001",
+    "PHASE-002",
+    "PHASE-003"
+  ],
+  "rtl_artifacts": [
+    {
+      "path": "rtl/ir_path_mapping_pkg.sv",
+      "sha256": "6be70a692a1b39ecae347c52b9440fd6f7b1e41434362423aeb53519dabd505b"
+    },
+    {
+      "path": "rtl/ir_path_mapping_engine.sv",
+      "sha256": "248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c"
+    },
+    {
+      "path": "rtl/ir_bank_lane_crossbar.sv",
+      "sha256": "97be64e23308e85768866c8bc5037d9f4f2bfb3670a9981915d3f5686519e886"
+    },
+    {
+      "path": "rtl/ir_path_epoch_commit.sv",
+      "sha256": "1cd34f339393fdfce3f554d33501ba12a65b3daf85190ffa01bad2d95890db4c"
+    },
+    {
+      "path": "rtl/ir_phase_validity_guard.sv",
+      "sha256": "f0f32489c307d01e49741708b14689aeaa3b511fa33a25bb047a6687a2a21742"
+    },
+    {
+      "path": "rtl/ir_handover_metrics.sv",
+      "sha256": "f5f4862a0b439f08404fe249732fe108c0be0d6bc4cc77a4850d906ec046d4ab"
+    }
+  ],
+  "run_id": "p8b_20260717_offline_geometry_mapping_handover",
+  "sample_counts": {
+    "hdl_randomized": 896,
+    "python_monte_carlo": 4096,
+    "rtl_python_crosscheck": 512
+  },
+  "schema_version": 1,
+  "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
+  "source_commit": "528556b51e1f4b808e206f78246f7b1a5a3fe642",
+  "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
+  "status": "PASS",
+  "tests": [
+    {
+      "details": {
+        "commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+        "expected_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+        "message": "chore: freeze P8A canonical baseline",
+        "tag": "p8a-pass"
+      },
+      "evidence_path": "evidence/generated/p8a_checkpoint_freeze_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-REPO-CHECKPOINT"
+    },
+    {
+      "details": {
+        "sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
+        "unknown_tolerances_are_null": true
+      },
+      "evidence_path": "config/geometry/optical_geometry.yaml",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-CONFIG-SCHEMA"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_mapping_exhaustive_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-PYTHON-MAPPING-EXHAUSTIVE"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_geometry_nominal_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-PYTHON-GEOMETRY-NOMINAL"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_geometry_gap_ledger.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-PYTHON-GEOMETRY-GAPS"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_simulation_gate_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-MAPPING-UNIT"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_crossbar_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-CROSSBAR-DATA"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_mapping_exhaustive_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-FORWARD-REVERSE-WRAP"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_path_epoch_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-PATH-EPOCH-ATOMICITY"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_phase_acquisition_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-PHASE-ACQUISITION"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_phase_acquisition_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-HDL-TRAJECTORY-RANDOMIZED"
+    },
+    {
+      "details": {},
+      "evidence_path": "evidence/generated/p8b_rtl_python_crosscheck.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-RTL-PYTHON-CROSSCHECK"
+    },
+    {
+      "details": {
+        "errors": [],
+        "missing": [],
+        "required_ids": [
+          "EVID-P8B-001",
+          "GEO-MODEL-001",
+          "GEO-MODEL-002",
+          "HANDOVER-001",
+          "HANDOVER-002",
+          "MAP-001",
+          "MAP-002",
+          "MAP-003",
+          "MAP-004",
+          "MAP-005",
+          "MAP-006",
+          "PHASE-001",
+          "PHASE-002",
+          "PHASE-003"
+        ]
+      },
+      "evidence_path": "config/project_requirements.yaml",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-REQUIREMENT-TRACEABILITY"
+    },
+    {
+      "details": {
+        "expected": {
+          "current_program_stage": [
+            "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+            "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+            "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+            "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+          ],
+          "current_run_hardware_authorization": true,
+          "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
+          "final_product_status": "PENDING_HW",
+          "no_hardware_default": true,
+          "p7_status": "PASS",
+          "product_final_acceptance": "PENDING",
+          "rotation_status": "PENDING_FINAL_MECHANICAL",
+          "z7020_target_status": "PENDING_Z7020_HW"
+        },
+        "hardware_actions_executed": false,
+        "mismatches": {}
+      },
+      "evidence_path": "evidence/generated/p8b_state_consistency_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-STATE-NONPROMOTION"
+    },
+    {
+      "details": {
+        "NO_HARDWARE": "1",
+        "existing_scan_returncode": 0,
+        "hardware_actions_executed": false,
+        "static_scan_stdout": "NO_HARDWARE_ACTIONS_EXECUTED=1"
+      },
+      "evidence_path": "evidence/generated/p8b_final_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-NO-HARDWARE-STATIC-SCAN"
+    },
+    {
+      "details": {
+        "parent_offline_gate": true
+      },
+      "evidence_path": "evidence/generated/offline_gate_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-P0-P7-REGRESSION"
+    },
+    {
+      "details": {
+        "parent_offline_gate": true
+      },
+      "evidence_path": "evidence/generated/offline_gate_summary.json",
+      "profile": "P8B_OFFLINE_LOGIC_MODEL",
+      "status": "PASS",
+      "test_id": "P8B-OFFLINE-FULL-REGRESSION"
+    }
+  ],
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9",
+  "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
+}
+```

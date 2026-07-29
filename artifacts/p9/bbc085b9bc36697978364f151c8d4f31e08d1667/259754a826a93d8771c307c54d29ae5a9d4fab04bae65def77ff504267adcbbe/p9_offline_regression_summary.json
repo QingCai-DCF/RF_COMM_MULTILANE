@@ -1,0 +1,50 @@
+{
+  "failed_gate_count": 0,
+  "gate_count": 32,
+  "hardware_actions_executed": false,
+  "includes_p8e_full": true,
+  "mode": "COMPLETE_OFFLINE_WITH_P8E_FULL",
+  "no_hardware_actions_executed": true,
+  "p8e": {
+    "artifact_count": 1970,
+    "artifact_manifest_sha256": "e331b36a8d3138b36eac969b4dbf395c7c0b8565c882d80e83f0fcda02593308",
+    "fail_count": 0,
+    "final_summary_sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88",
+    "pass_count": 43,
+    "status": "PASS",
+    "verify_existing_after_full_log": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/raw_logs/p8e_verify_existing_after_full.log",
+    "verify_existing_after_full_log_sha256": "0c59d18316b601721ef4f507d915162e228b58886cb8b95549a6debac230e8a1"
+  },
+  "prior_base_regression": {
+    "failed_gate_count": 0,
+    "gate_count": 31,
+    "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r2/raw_logs/offline_base.log",
+    "raw_log_sha256": "65a0fb73783d35041ffd2c9ba9149dc7c4e0006fb4facf860ce793b910cba9e7",
+    "status": "PASS"
+  },
+  "raw_log": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/raw_logs/offline_include_p8e.log",
+  "raw_log_sha256": "bf1563f3387953c52cc3b8cec11e6c948a3f4286d26e70d2babf310439eff841",
+  "runtime_seconds": 5224,
+  "schema_version": 1,
+  "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c",
+  "status": "PASS",
+  "test_id": "P9-01-COMPLETE-OFFLINE-FULL-REGRESSION",
+  "verified_snapshots": [
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/offline_gate_summary.json",
+      "sha256": "954e23e021e46eb42651bb5bd2342c9f552906e1c8552eacc738391f799b9538"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_final_summary.json",
+      "sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_evidence_consistency_summary.json",
+      "sha256": "a8a6ce3923d43b298bc2b83922ac76901148a7d3098be5e9720fb2502dbfd07f"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260726_offline_regression_r3_full_p8e/snapshot/evidence/generated/p8e_p0_p8d_regression_summary.json",
+      "sha256": "88b1a88b9e35d4e12bfc720410dce7e37607238ac4ea1e20b6987689971e1ab6"
+    }
+  ]
+}

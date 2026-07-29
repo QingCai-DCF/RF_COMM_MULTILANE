@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P9-0",
+  "state_revision": "P9-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -16,11 +16,11 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+  "current_program_stage": "P10A_Z7020_SINGLE_BOARD_MIGRATION",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
-      "status": "P9_PLATFORM_LIMITED_HARDWARE_VALIDATION_IN_PROGRESS",
+      "status": "PLATFORM_LIMITED_HARDWARE_PASS",
       "active_profile_path": "board_profiles/ACTIVE_PROFILE.json",
       "pinmap_path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
       "xdc_path": "constraints/active/PORT1.generated.xdc",
@@ -61,7 +61,7 @@
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
     "P8D_SELECTIVE_REPEAT_DMA": "PASS",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
-    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "IN_PROGRESS"
+    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
   "p7_evidence": {
     "status": "PASS",
@@ -193,13 +193,13 @@
     {
       "gate_id": "P8E",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P9",
+      "status": "PASS"
     }
   ],
   "pending_gates": [
-    {
-      "gate_id": "P9",
-      "status": "IN_PROGRESS_CURRENT_RUN_AUTHORIZED"
-    },
     {
       "gate_id": "D12_CORE_BOARD",
       "status": "PENDING"
@@ -237,7 +237,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+  "last_verified_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -293,7 +293,7 @@
     ]
   },
   "p8_portable_architecture_status": "PASS",
-  "p9_status": "IN_PROGRESS",
+  "p9_status": "PASS",
   "p8e_no_hardware_actions_executed": true,
   "p8e_acceptance": {
     "status": "PASS",
@@ -325,5 +325,30 @@
     "status": "VALIDATED_PHASE1_SCOPE_AUTHORIZATION",
     "path": "config/p9_current_run_authorization.json",
     "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697"
+  },
+  "p9_acceptance": {
+    "status": "PASS",
+    "profile": "Z7010_2LANE_DEV",
+    "scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+    "test_id": "P9-FINAL",
+    "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+    "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+    "evidence_path": "evidence/generated/p9_evidence_consistency_summary.json",
+    "evidence_sha256": "6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6",
+    "phase2_authorization_path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/authorization/phase2_immutable_artifacts.json",
+    "phase2_authorization_sha256": "5428fc875492d54511484a13ca177d74037156b088f8358bebdb0bbc081ed004",
+    "candidate_bitstream_sha256": "ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308",
+    "shutdown_bitstream_sha256": "a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8",
+    "ps_elf_sha256": "2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1",
+    "hardware_actions_executed": true,
+    "no_hardware_movement": true,
+    "scope_exclusions": [
+      "Z7020",
+      "EIGHT_LANE",
+      "ROTATION",
+      "ETHERNET",
+      "PHYSICAL_GLOBAL_PERMIT_D17",
+      "FINAL_PRODUCT"
+    ]
   }
 }

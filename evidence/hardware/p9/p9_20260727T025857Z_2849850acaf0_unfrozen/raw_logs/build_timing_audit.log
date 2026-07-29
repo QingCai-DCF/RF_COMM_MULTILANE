@@ -1,0 +1,69 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -source C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\audit_p9_timing_checkpoint.tcl -tclargs C:\Users\user\Documents\RF_COMM_MULTILANE_P9\evidence\generated\vivado\p9_z7010_candidate\post_route_p9_candidate.dcp C:\Users\user\Documents\RF_COMM_MULTILANE_P9\evidence\generated\vivado\p9_z7010_candidate\timing_audit
+STARTED_UTC=2026-07-27T03:08:43+00:00
+FINISHED_UTC=2026-07-27T03:09:20+00:00
+RETURN_CODE=0
+STDOUT_BEGIN
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P9\scripts\audit_p9_timing_checkpoint.tcl}
+# if {$argc < 2} {
+#   error "usage: audit_p9_timing_checkpoint.tcl <checkpoint.dcp> <output-dir>"
+# }
+# set checkpoint_path [file normalize [lindex $argv 0]]
+# set output_dir [file normalize [lindex $argv 1]]
+# file mkdir $output_dir
+# open_checkpoint $checkpoint_path
+Command: open_checkpoint C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/generated/vivado/p9_z7010_candidate/post_route_p9_candidate.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.038 . Memory (MB): peak = 1238.527 ; gain = 8.453
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.302 . Memory (MB): peak = 1849.727 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2106 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2023.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF Files: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2636.812 ; gain = 28.805
+Restored from archive | CPU: 3.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2636.812 ; gain = 28.805
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2636.812 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 111 instances were transformed.
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 51 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 12 instances
+  RAM64M => RAM64M (RAMD64E(x4)): 48 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2023.1 (64-bit) build 3865809
+open_checkpoint: Time (s): cpu = 00:00:23 ; elapsed = 00:00:24 . Memory (MB): peak = 2636.812 ; gain = 1407.098
+# report_timing_summary -max_paths 10 \
+#   -file "$output_dir/unconstrained_paths.rpt"
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+report_timing_summary: Time (s): cpu = 00:00:08 ; elapsed = 00:00:05 . Memory (MB): peak = 2911.117 ; gain = 274.305
+# check_timing -verbose -file "$output_dir/check_timing_verbose.rpt"
+# close_design
+# puts "P9_TIMING_AUDIT_COMPLETE=$output_dir"
+P9_TIMING_AUDIT_COMPLETE=C:/Users/user/Documents/RF_COMM_MULTILANE_P9/evidence/generated/vivado/p9_z7010_candidate/timing_audit
+INFO: [Common 17-206] Exiting Vivado at Mon Jul 27 11:09:19 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

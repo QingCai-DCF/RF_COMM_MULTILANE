@@ -1,0 +1,42 @@
+PATTERN=*p9_peripheral_0_m_axis_TLAST*
+NET=p9_ps_system_i/p9_peripheral_0_m_axis_TLAST CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/s_axis_tlast DIR=IN REF=s_axis_tlast
+PATTERN=*s2mm_axis_clock_converter_M_AXIS_TLAST*
+NET=p9_ps_system_i/s2mm_axis_clock_converter_M_AXIS_TLAST CONSTANT=
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/axi_dma_0/s_axis_s2mm_tlast DIR=IN REF=s_axis_s2mm_tlast
+PATTERN=*m_axis_tlast*
+NET=p9_ps_system_i/mm2s_axis_clock_converter/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/mm2s_axis_clock_converter/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/mm2s_axis_clock_converter/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/mm2s_axis_clock_converter/inst/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/mm2s_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/m_payload[36] DIR=OUT REF=m_payload[36]
+  PIN=p9_ps_system_i/mm2s_axis_clock_converter/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/p9_peripheral_0/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/p9_peripheral_0/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/p9_peripheral_0/inst/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/p9_peripheral_0/inst/impl/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast_INST_0/O DIR=OUT REF=O
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast_INST_0_i_1_n_0 CONSTANT=
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/FSM_sequential_out_state_q[2]_i_2/I0 DIR=IN REF=I0
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/output_complete_q_i_1/I0 DIR=IN REF=I0
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast_INST_0/I1 DIR=IN REF=I1
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/out_stream_index_q[7]_i_1/I4 DIR=IN REF=I4
+  PIN=p9_ps_system_i/p9_peripheral_0/inst/impl/u_transport/m_axis_tlast_INST_0_i_1/O DIR=OUT REF=O
+NET=p9_ps_system_i/s2mm_axis_clock_converter/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/m_axis_tlast DIR=OUT REF=m_axis_tlast
+NET=p9_ps_system_i/s2mm_axis_clock_converter/inst/m_axis_tlast CONSTANT=
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/m_payload[36] DIR=OUT REF=m_payload[36]
+  PIN=p9_ps_system_i/s2mm_axis_clock_converter/inst/m_axis_tlast DIR=OUT REF=m_axis_tlast
+PIN_MATCH=p9_ps_system_i/mm2s_axis_clock_converter/m_axis_tlast DIR=OUT NET=p9_ps_system_i/mm2s_axis_clock_converter_M_AXIS_TLAST
+PIN_MATCH=p9_ps_system_i/p9_peripheral_0/m_axis_tlast DIR=OUT NET=p9_ps_system_i/p9_peripheral_0_m_axis_TLAST
+PIN_MATCH=p9_ps_system_i/s2mm_axis_clock_converter/m_axis_tlast DIR=OUT NET=p9_ps_system_i/s2mm_axis_clock_converter_M_AXIS_TLAST

@@ -1,0 +1,31 @@
+{
+  "angular_consumption_deg": {
+    "application_service_gap": 0.36,
+    "atomic_commit": 0.036,
+    "candidate_startup_lead": 2.52,
+    "mapping_prepare": 0.36,
+    "phase_update_period": 0.18
+  },
+  "logic_model_timing_target": "PASS",
+  "metrics": {
+    "application_service_gap_us": 30,
+    "atomic_mapping_commit_us": 2,
+    "mapping_prepare_to_ready_us": 20,
+    "path_epoch_visibility_us": 35,
+    "phase_sample_to_mapping_prepare_us": 10,
+    "randomized_hdl_samples": 896,
+    "reacquisition_time_us": 100
+  },
+  "nominal_overlap_deg": 4.801987299261917,
+  "nominal_provisional_remaining_after_age_prepare_commit_deg": 3.865987299261917,
+  "real_600rpm_handover": "NOT_CLAIMED",
+  "remaining_margin_scope": "NOMINAL_PROVISIONAL_ONLY",
+  "status": "PASS",
+  "targets_us": {
+    "application_service_gap_us": 100,
+    "atomic_mapping_commit_us": 10,
+    "mapping_prepare_to_ready_us": 100,
+    "phase_sample_to_mapping_prepare_us": 50
+  },
+  "test_id": "HANDOVER-001"
+}

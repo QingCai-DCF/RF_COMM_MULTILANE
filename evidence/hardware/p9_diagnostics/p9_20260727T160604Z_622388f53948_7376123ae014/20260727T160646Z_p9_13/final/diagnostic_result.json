@@ -1,0 +1,38 @@
+{
+  "current_diagnostic_evaluator_sha256": "e7447a3e4ebda6f2e78a6ec7857985573ec5cd211d681394051a3f73d6f25609",
+  "diagnostic_root": "evidence/hardware/p9_diagnostics/p9_20260727T160604Z_622388f53948_7376123ae014/20260727T160646Z_p9_13",
+  "ended_utc": "2026-07-27T16:06:47+00:00",
+  "errors": [
+    "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\user\\\\Documents\\\\RF_COMM_MULTILANE_P9\\\\evidence\\\\hardware\\\\p9\\\\p9_20260727T160604Z_622388f53948_7376123ae014\\\\authorization\\\\authorization_record.json'"
+  ],
+  "external_network_used": false,
+  "finally_emergency_shutdown": {
+    "status": "NOT_RUN"
+  },
+  "formal_acceptance_credit": false,
+  "frozen_runtime_sha256": "e7447a3e4ebda6f2e78a6ec7857985573ec5cd211d681394051a3f73d6f25609",
+  "hardware_actions_executed": false,
+  "hw_server": {
+    "status": "NOT_RUN"
+  },
+  "maximum_lane_mask": "0x3",
+  "no_hardware_movement": true,
+  "phase2": "evidence/hardware/p9/p9_20260727T160604Z_622388f53948_7376123ae014/authorization/phase2_immutable_artifacts.json",
+  "phase2_sha256": "c5dd0947f22559e9b806e2ce84f51864abfebbdbac8753e4c411753a5f0ebd71",
+  "rotation_executed": false,
+  "run_id": "p9_20260727T160604Z_622388f53948_7376123ae014",
+  "runner_package_sha256": "7420d3699ce5be41f210b99b3f40395f87b77a61073408adc7aeb67047ed3eca",
+  "schema_version": 1,
+  "shutdown_after": {
+    "status": "NOT_RUN"
+  },
+  "shutdown_before": {
+    "status": "NOT_RUN"
+  },
+  "shutdowns_pass": true,
+  "stage": "P9-13",
+  "started_utc": "2026-07-27T16:06:46+00:00",
+  "status": "DIAGNOSTIC_FAIL",
+  "worktree_drift": [],
+  "wrapper_sha256": "fba813084428a1470af149426404d2243e2f9d0f469c1404679ea5c999f1c379"
+}

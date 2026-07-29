@@ -1,0 +1,15 @@
+drop_ack_request,drop_data_request,dropped_ack,dropped_data,duplicate_acks,fault_flags,label,physical_crc_bad,retry_exhausted,rx_duplicates,rx_future,rx_gaps,rx_old,rx_out_of_order,rx_protocol_errors,rx_stale_path,rx_stale_session,tx_attempts,tx_retries,tx_timeouts
+0,1,0,1,0,0,fault_drop_one_data,0,0,0,0,31,0,31,0,0,0,97,1,1
+0,3,0,3,0,0,fault_drop_burst_data,0,0,0,0,31,0,31,0,0,0,99,3,3
+1,0,1,0,0,0,fault_drop_ack,0,0,0,0,1,0,1,0,0,0,96,0,0
+1,0,1,0,0,0,fault_duplicate_data_by_ack_loss,0,0,1,0,0,1,0,0,0,0,2,1,1
+0,0,0,0,2,1,fault_stale_session,0,0,0,0,31,0,31,0,0,3,99,3,3
+0,0,0,0,2,2,fault_stale_path,0,0,0,0,31,0,31,0,3,0,99,3,3
+0,0,0,0,2,4,fault_future_sequence,0,0,0,3,31,0,31,0,0,0,99,3,3
+0,0,0,0,2,8,fault_old_sequence,0,0,3,0,31,3,31,0,0,0,99,3,3
+0,0,0,0,1,32,fault_duplicate_ack,0,0,0,0,1,0,1,0,0,0,96,0,0
+0,0,0,0,0,64,fault_reorder,0,0,0,0,1,0,1,0,0,0,96,0,0
+0,0,0,0,0,16,fault_crc_corruption,3,0,0,0,31,0,31,3,0,0,99,3,3
+0,255,0,64,0,0,fault_retry_exhausted,3,1,0,0,0,0,0,0,0,0,64,56,57
+0,0,0,0,0,0,fault_recovery_soft_reset,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,fault_post_recovery_clean,0,0,0,0,2,0,2,0,0,0,266,0,0

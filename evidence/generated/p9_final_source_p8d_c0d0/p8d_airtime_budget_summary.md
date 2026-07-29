@@ -1,0 +1,66 @@
+# P8D airtime and goodput budget
+
+- Status: `PASS`
+- Test ID: `P8D-AIRTIME-BUDGET-MODEL`
+- Profile: `P8D_8LANE_MODEL`
+- Source commit: `c0d0e120ad622aac8828ee2f37d1ce87853d9573`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "command_log": "evidence/generated/p9_final_source_p8d_c0d0/p8d_raw/formal_c0d0e120ad62/airtime_model.log",
+  "generated_utc": "2026-07-27T12:31:14.662622Z",
+  "hardware_scope_promoted": false,
+  "model": {
+    "19P2MBPS_STRETCH_FEASIBILITY": "FAIL",
+    "8LANE_16MBPS_ARCHITECTURE_FEASIBILITY": "PASS",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+    "NO_HARDWARE_ACTIONS_EXECUTED": true,
+    "architecture_blockers": [
+      "The 18% duty-limited RFAP useful ceiling is below 19.2 Mbit/s; the stretch target is not feasible with the frozen v1 frame/chunk geometry."
+    ],
+    "baseline": {
+      "ack_sack_overhead_fraction": 0.04609929078014184,
+      "descriptor_gap_overhead_fraction": 0.0009285051067780873,
+      "descriptor_gap_us": 0.5,
+      "duty_limited_capacity_bps": 18414869.888475835,
+      "duty_target": 0.18,
+      "frame_airtime_us": 538.0,
+      "frame_payload_ceiling_bps": 29382899.62825279,
+      "handover_overhead_fraction": 0.0096,
+      "handover_service_gap_us": 30.0,
+      "lane_count": 8,
+      "latency_p50_estimate_us": 2251.0,
+      "latency_p99_estimate_us": 2309.15,
+      "modeled_application_goodput_bps": 17035285.452960823,
+      "outstanding": 64,
+      "per": 0.01,
+      "phy_raw_capacity_bps": 32000000.0,
+      "placeholder_overhead_fraction": 0.01,
+      "required_window_occupancy": 32,
+      "retry_overhead_fraction": 0.01,
+      "rfap_useful_ceiling_bps": 25576208.178438663,
+      "sack_batch": 32,
+      "window_factor": 1.0
+    },
+    "config_path": "config/p8d_data_plane.yaml",
+    "config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+    "p8b_handover_evidence_path": "evidence/generated/p8b_handover_timing_summary.json",
+    "p8b_handover_evidence_sha256": "9ec81796af32ef1a26f06fdf2c5ad31aa9a3b1ef52b0d92d36956a370b2842e7",
+    "performance_scope": "OFFLINE_ARCHITECTURE_MODEL_ONLY",
+    "profile": "P8D_8LANE_MODEL",
+    "required_maximum_total_overhead_fraction_for_16mbps": 0.1311369509043927,
+    "schema_version": 1,
+    "sensitivity_rows": 5760,
+    "status": "PASS",
+    "test_id": "P8D-AIRTIME-BUDGET-MODEL"
+  },
+  "profile": "P8D_8LANE_MODEL",
+  "schema_version": 1,
+  "source_commit": "c0d0e120ad622aac8828ee2f37d1ce87853d9573",
+  "status": "PASS",
+  "sweep_csv": "evidence/generated/p9_final_source_p8d_c0d0/p8d_raw/formal_c0d0e120ad62/airtime_sweep.csv",
+  "test_id": "P8D-AIRTIME-BUDGET-MODEL"
+}
+```

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "phase": "vitis",
+  "generated_at_utc": "2026-07-29T13:40:16+00:00",
+  "expected_device": "xc7z010clg400-1",
+  "expected_ps7_parameters": {
+    "PCW_CRYSTAL_PERIPHERAL_FREQMHZ": "33.333333",
+    "PCW_APU_PERIPHERAL_FREQMHZ": "666.666666",
+    "PCW_PRESET_BANK0_VOLTAGE": "LVCMOS 3.3V",
+    "PCW_PRESET_BANK1_VOLTAGE": "LVCMOS 1.8V",
+    "PCW_UIPARAM_DDR_PARTNO": "MT41J128M16 HA-125",
+    "PCW_UIPARAM_DDR_DRAM_WIDTH": "16 Bits",
+    "PCW_UIPARAM_DDR_DEVICE_CAPACITY": "2048 MBits",
+    "PCW_UIPARAM_DDR_BUS_WIDTH": "32 Bit",
+    "PCW_UIPARAM_DDR_FREQ_MHZ": "533.333333",
+    "PCW_UIPARAM_DDR_T_FAW": "40.0",
+    "PCW_UIPARAM_DDR_ECC": "Disabled",
+    "PCW_UIPARAM_DDR_TRAIN_READ_GATE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_DATA_EYE": "1",
+    "PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL": "1"
+  },
+  "errors": [],
+  "artifacts": {
+    "vivado_xsa": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\evidence\\generated\\vivado\\p9_z7010_candidate\\ir_p9_z7010_2lane.xsa",
+      "exists": true,
+      "size": 747102,
+      "sha256": "b6d7ad979c2617cd8e1ef1a90ec57fce3ebff0ada15eb3bbbd844c16da932726"
+    },
+    "vitis_platform_xsa": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\build\\p9_ps_vitis_workspace\\p9_platform\\hw\\ir_p9_z7010_2lane.xsa",
+      "exists": true,
+      "size": 747102,
+      "sha256": "b6d7ad979c2617cd8e1ef1a90ec57fce3ebff0ada15eb3bbbd844c16da932726"
+    },
+    "vitis_ps7_parameters": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\build\\p9_ps_vitis_workspace\\p9_platform\\zynq_fsbl\\ps7_parameters.xml",
+      "exists": true,
+      "size": 39439,
+      "sha256": "ab4277470204cca5c83ee8a9ad1dcbb02951f2d2435b6fa0cc6423c98e1d1362"
+    },
+    "vitis_platform_ps7_init_tcl": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\build\\p9_ps_vitis_workspace\\p9_platform\\hw\\ps7_init.tcl",
+      "exists": true,
+      "size": 25838,
+      "sha256": "294de9f80b22a6d9bd10fa2b3f399f6a60e7829162fabaeeb00aa13be0fea470"
+    },
+    "vitis_platform_ps7_init_c": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\build\\p9_ps_vitis_workspace\\p9_platform\\hw\\ps7_init.c",
+      "exists": true,
+      "size": 322375,
+      "sha256": "c0dd963f14b79fe341dc5d80c149951c49e9156a2fb05750a0bcf29170b84bc9"
+    },
+    "vitis_fsbl_ps7_init_c": {
+      "absolute_path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P9\\build\\p9_ps_vitis_workspace\\p9_platform\\zynq_fsbl\\ps7_init.c",
+      "exists": true,
+      "size": 322375,
+      "sha256": "c0dd963f14b79fe341dc5d80c149951c49e9156a2fb05750a0bcf29170b84bc9"
+    }
+  },
+  "hardware_action_taken": false,
+  "HARDWARE_ACCEPTANCE": "PENDING_HW",
+  "status": "PASS"
+}

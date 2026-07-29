@@ -1,0 +1,63 @@
+{
+  "current_diagnostic_evaluator_sha256": "467e06ced5123457af4789ab03694204152d361425b18e7f0236368b79f5de07",
+  "diagnostic_root": "evidence/hardware/p9_diagnostics/p9_20260726T234741Z_fe206ad55540_4c173bac8731/20260726T235904Z_p9_07",
+  "ended_utc": "2026-07-26T23:59:04+00:00",
+  "errors": [
+    "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\user\\\\Documents\\\\RF_COMM_MULTILANE_P9\\\\evidence\\\\hardware\\\\p9_diagnostics\\\\p9_20260726T234741Z_fe206ad55540_4c173bac8731\\\\20260726T235904Z_p9_07\\\\raw_logs\\\\hw_server.stdout.log'",
+    "one or more mandatory shutdown operations did not pass"
+  ],
+  "external_network_used": false,
+  "finally_emergency_shutdown": {
+    "status": "NOT_RUN"
+  },
+  "formal_acceptance_credit": false,
+  "frozen_runtime_sha256": "7c02abf1313dfe477493fbec8b1ffd74da2f8575aa64c11901bfac75a4ec16e6",
+  "hardware_actions_executed": false,
+  "hw_server": {
+    "status": "NOT_RUN"
+  },
+  "maximum_lane_mask": "0x3",
+  "no_hardware_movement": true,
+  "phase2": "evidence/hardware/p9/p9_20260726T234741Z_fe206ad55540_4c173bac8731/authorization/phase2_immutable_artifacts.json",
+  "phase2_sha256": "7d68d686e8d09b822faa3d9b59d6b992ff315e5a4abd32fd5d7bed0b98d455e6",
+  "plan_entry_count": 4,
+  "plan_sha256": "377d9933bbdd5c94424bd7a7f25f8cedfce4cce463fd1e5e7e65b2dabfafa542",
+  "rotation_executed": false,
+  "run_id": "p9_20260726T234741Z_fe206ad55540_4c173bac8731",
+  "runner_package_sha256": "4ddc69d0401ff906959dad2fe7e9ddf6352eec2f6b3eaf0757b1286f99e015da",
+  "schema_version": 1,
+  "shutdown_after": {
+    "status": "NOT_RUN"
+  },
+  "shutdown_before": {
+    "status": "NOT_RUN"
+  },
+  "shutdowns_pass": false,
+  "stage": "P9-07",
+  "started_utc": "2026-07-26T23:59:04+00:00",
+  "status": "DIAGNOSTIC_FAIL",
+  "worktree_drift": [
+    {
+      "classification": "HOST_DIAGNOSTIC_ONLY_NO_FROZEN_HW_INPUT_CHANGE",
+      "frozen_git_blob_sha256": "8bdca4966628ad6123c0d042ba2fa7dcb259ba6ce79e82190c215e8f16c51b38",
+      "frozen_sha256": "8bdca4966628ad6123c0d042ba2fa7dcb259ba6ce79e82190c215e8f16c51b38",
+      "path": "tests/test_p9_runner.py",
+      "worktree_sha256": "13ba508fd949371aacdf4b4145e99ff83e5b4dafe72e6762297f01e6bbee5f14"
+    },
+    {
+      "classification": "HOST_DIAGNOSTIC_ONLY_NO_FROZEN_HW_INPUT_CHANGE",
+      "frozen_git_blob_sha256": "7c02abf1313dfe477493fbec8b1ffd74da2f8575aa64c11901bfac75a4ec16e6",
+      "frozen_sha256": "7c02abf1313dfe477493fbec8b1ffd74da2f8575aa64c11901bfac75a4ec16e6",
+      "path": "scripts/p9_hardware_runtime.py",
+      "worktree_sha256": "467e06ced5123457af4789ab03694204152d361425b18e7f0236368b79f5de07"
+    },
+    {
+      "classification": "HOST_DIAGNOSTIC_ONLY_NO_FROZEN_HW_INPUT_CHANGE",
+      "frozen_git_blob_sha256": "88a9fc0982d6102fe99fa0e32678ee3d0efd08e1a60c7907d2d233e2edc61987",
+      "frozen_sha256": "88a9fc0982d6102fe99fa0e32678ee3d0efd08e1a60c7907d2d233e2edc61987",
+      "path": "sim/tb/tb_p9_optical_transport_core.sv",
+      "worktree_sha256": "84b02c08e9175bad3d706d2700e7c057bcf08ffc7ed6aa4c51332207aac89ef0"
+    }
+  ],
+  "wrapper_sha256": "29c101916b19f13b69262a700d3960acad67a0fcf9b81361815aa30694639b76"
+}
