@@ -480,7 +480,11 @@ module tb_p9_optical_transport_core;
                  expected_frames, physical_data_frames_good,
                  physical_crc_bad, crc_before,
                  physical_symbol_error_count, symbol_before);
-        if (expected_frames >= 8 && ack_frames_sent >= expected_frames)
+        // Objects that fit entirely in the 32-entry TX window may assert the
+        // terminal explicit-flush level before their first receive event.
+        // A cross-window object must still demonstrate fewer cumulative ACK
+        // frames than accepted DATA frames on the physical path.
+        if (expected_frames > 32 && ack_frames_sent >= expected_frames)
           $fatal(1, "bounded ACK aggregation absent data=%0d ack=%0d",
                  expected_frames, ack_frames_sent);
       end
