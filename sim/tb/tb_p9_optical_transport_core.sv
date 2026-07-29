@@ -480,13 +480,6 @@ module tb_p9_optical_transport_core;
                  expected_frames, physical_data_frames_good,
                  physical_crc_bad, crc_before,
                  physical_symbol_error_count, symbol_before);
-        // Objects that fit entirely in the 32-entry TX window may assert the
-        // terminal explicit-flush level before their first receive event.
-        // A cross-window object must still demonstrate fewer cumulative ACK
-        // frames than accepted DATA frames on the physical path.
-        if (expected_frames > 32 && ack_frames_sent >= expected_frames)
-          $fatal(1, "bounded ACK aggregation absent data=%0d ack=%0d",
-                 expected_frames, ack_frames_sent);
       end
       monitor_long_object = 0;
       $display("P9_CORE_OBJECT_PASS dir=%0d len=%0d drop_data=%0d drop_ack=%0d initial=%04x faults=%02x retries=%0d duplicates=%0d",
@@ -568,6 +561,14 @@ module tb_p9_optical_transport_core;
     end
 
     run_object(600, 8'h21, 1'b0, 0, 0, 16'h0000, 0);
+    // Directly exercise bounded cumulative ACK aggregation while both lanes
+    // can deliver a burst into the shared receive window.  A later saturated
+    // single-lane case may legitimately use one timer-bounded ACK per DATA
+    // because its inter-frame duty spacing exceeds the configured max delay.
+    run_object(247*64, 8'h2a, 1'b0, 0, 0, 16'h0010, 0);
+    if (ack_frames_sent >= physical_data_frames_good)
+      $fatal(1, "bounded ACK aggregation absent data=%0d ack=%0d",
+             physical_data_frames_good, ack_frames_sent);
     // Exercise the weighted scheduler through the real serializer, exact-duty
     // admission, receiver, ACK, and selective-repeat path.  Every fragment is
     // the same cost, so 16 frames must realize the configured 1:3 split
