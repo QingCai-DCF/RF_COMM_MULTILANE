@@ -726,7 +726,7 @@ requirements:
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - path: rtl/ir_data_plane_top.sv
-    sha256: 65d6b2325a2321ad29ee387f07eda8cc13189f19305f9dce9c2e01a45c55d614
+    sha256: cfbbc31d9a521d7c3acf3d2e015625eb7115460ae91de368811960719fab9217
   - path: evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json
     sha256: ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
@@ -1542,7 +1542,7 @@ requirements:
   - path: config/p8e_build_matrix.yaml
     sha256: 5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502
   - path: rtl/ir_p8d_resource_tops.sv
-    sha256: bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c
+    sha256: ef32ee89fa2fceb43c34294976bb2166bf61c49cb601c2a698af8208851ac110
   - path: evidence/generated/p8e_resource_margin_summary.json
     sha256: c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8
   hardware_followup: Z7020 board pins and board I/O timing remain PENDING_D12; real AXI DMA/DDR/cache, GLOBAL_PERMIT physical
@@ -1565,7 +1565,7 @@ requirements:
   - path: rtl/top/z7010_2lane_dev_top.sv
     sha256: fc937858f269a6db06ab5088e4a193df37f7c772171191391c3d569eaef619a4
   - path: rtl/ir_p8d_resource_tops.sv
-    sha256: bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c
+    sha256: ef32ee89fa2fceb43c34294976bb2166bf61c49cb601c2a698af8208851ac110
   - path: evidence/generated/p8e_resource_margin_summary.json
     sha256: c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8
   hardware_followup: Z7020 board pins and board I/O timing remain PENDING_D12; real AXI DMA/DDR/cache, GLOBAL_PERMIT physical

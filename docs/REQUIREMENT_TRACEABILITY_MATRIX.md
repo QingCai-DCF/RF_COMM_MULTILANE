@@ -320,7 +320,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `rtl/ir_data_plane_top.sv` — `65d6b2325a2321ad29ee387f07eda8cc13189f19305f9dce9c2e01a45c55d614`
+- `rtl/ir_data_plane_top.sv` — `cfbbc31d9a521d7c3acf3d2e015625eb7115460ae91de368811960719fab9217`
 - `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` — `ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b`
 
 ### `L2-SEQ-001`
@@ -517,13 +517,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `RESOURCE-001`
 
 - `config/p8e_build_matrix.yaml` — `5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502`
-- `rtl/ir_p8d_resource_tops.sv` — `bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c`
+- `rtl/ir_p8d_resource_tops.sv` — `ef32ee89fa2fceb43c34294976bb2166bf61c49cb601c2a698af8208851ac110`
 - `evidence/generated/p8e_resource_margin_summary.json` — `c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8`
 
 ### `RESOURCE-002`
 
 - `rtl/top/z7010_2lane_dev_top.sv` — `fc937858f269a6db06ab5088e4a193df37f7c772171191391c3d569eaef619a4`
-- `rtl/ir_p8d_resource_tops.sv` — `bc7ee056f76f2d02027db10fc35276dd25b98ae748c38a257d87752d903cd71c`
+- `rtl/ir_p8d_resource_tops.sv` — `ef32ee89fa2fceb43c34294976bb2166bf61c49cb601c2a698af8208851ac110`
 - `evidence/generated/p8e_resource_margin_summary.json` — `c759b29fbf1907567c2a98e26de0695223d01845f58306ea47db32e5f117c4f8`
 
 ### `RESOURCE-003`
