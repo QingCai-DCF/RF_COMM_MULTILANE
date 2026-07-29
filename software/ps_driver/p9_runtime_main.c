@@ -95,6 +95,9 @@ static uint32_t g_ring_depth;
 static uint32_t g_cache_enabled;
 static p9_metrics_t g_metrics;
 
+static int p9_reset_stream_path(uint32_t depth, uint32_t count_pl_reset,
+                                uint32_t count_dma_reset);
+
 static void p9_write_u16_le(uint8_t *output, uint16_t value) {
   output[0] = (uint8_t)value;
   output[1] = (uint8_t)(value >> 8);
@@ -1125,12 +1128,15 @@ static int p9_command_abort_outstanding(volatile p9_mailbox_t *m) {
   g_metrics.rx_completed++;
   p9_advance_consumer(1U);
   p9_advance_consumer(0U);
-  status = p9_dma_initialize(m->ring_depth, 1U);
+  status = P9_RUNTIME_OK;
 
 abort_exit:
   {
     int shutdown_status = p9_shutdown();
-    if (status == P9_RUNTIME_OK) status = shutdown_status;
+    int recovery_status = shutdown_status;
+    if (shutdown_status == P9_RUNTIME_OK)
+      recovery_status = p9_reset_stream_path(m->ring_depth, 1U, 1U);
+    if (status == P9_RUNTIME_OK) status = recovery_status;
   }
   return status;
 }

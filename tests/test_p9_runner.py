@@ -311,14 +311,14 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
         self.assertIn("P9_BUILD_ID = 32'h5009_000A", peripheral)
         self.assertIn("m->pl_build_id != UINT32_C(0x5009000a)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x5009000b)", protocol)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x5009000c)", protocol)
         self.assertIn("P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)", protocol)
         self.assertIn("terminal_window_command_sequence", protocol)
         self.assertIn("p9_capture_terminal_window(m);", firmware)
         self.assertIn("if (object_fail && !object_fail_d_q)", peripheral)
         self.assertIn("clear_counters_i && !object_active_q", core)
         self.assertEqual(0x5009000A, P9_HW.P9_PL_BUILD_ID)
-        self.assertEqual(0x5009000B, P9_HW.P9_FIRMWARE_BUILD_ID)
+        self.assertEqual(0x5009000C, P9_HW.P9_FIRMWARE_BUILD_ID)
 
     def test_scheduler_plan_forces_real_retry_migration_and_explicit_all_down_fault(self):
         plan = {case.label: case for case in P9_HW.build_plans()["P9-20"]}
@@ -390,6 +390,24 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("p9_reset_stream_path(8U, 0U, 0U)", firmware)
         self.assertIn("P9_STREAM_RESET_DOMAINS", freeze)
         self.assertIn("P9_STREAM_AUX_RESET_ACTIVE_HIGH", freeze)
+
+    def test_rfap_abort_resets_pl_stream_domains_and_rebuilds_dma(self):
+        firmware = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(
+            encoding="utf-8"
+        )
+        start = firmware.index("static int p9_command_abort_outstanding")
+        end = firmware.index("static int p9_reset_stream_path", start)
+        abort = firmware[start:end]
+        abort_pulse = abort.index("IR_P9_CONTROL_ABORT_OBJECT_MASK")
+        shutdown = abort.index("int shutdown_status = p9_shutdown();", abort_pulse)
+        recovery = abort.index(
+            "p9_reset_stream_path(m->ring_depth, 1U, 1U)", shutdown
+        )
+        self.assertLess(abort_pulse, shutdown)
+        self.assertLess(shutdown, recovery)
+        self.assertNotIn("p9_dma_initialize", abort[abort_pulse:shutdown])
+        self.assertIn("if (shutdown_status == P9_RUNTIME_OK)", abort)
+        self.assertIn("if (status == P9_RUNTIME_OK) status = recovery_status;", abort)
 
     def test_terminal_window_capture_precedes_shutdown_and_is_command_bound(self):
         firmware = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(
