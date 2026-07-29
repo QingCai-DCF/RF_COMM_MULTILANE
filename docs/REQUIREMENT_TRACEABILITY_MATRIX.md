@@ -320,7 +320,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `rtl/ir_data_plane_top.sv` — `ccf5d0915eab5b9340a88a28a8c2d09619387c9d6fbd16e4fc9537458531b150`
+- `rtl/ir_data_plane_top.sv` — `65d6b2325a2321ad29ee387f07eda8cc13189f19305f9dce9c2e01a45c55d614`
 - `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` — `ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b`
 
 ### `L2-SEQ-001`
@@ -356,7 +356,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-MIG-001`
 
 - `rtl/ir_retry_migration.sv` — `53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951`
-- `sim/tb/tb_ir_scheduler_migration.sv` — `13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `L2-RETRY-001`
@@ -367,19 +367,19 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `SCHED-001`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236`
+- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
 - `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `SCHED-002`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236`
-- `sim/tb/tb_ir_scheduler_migration.sv` — `13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7`
+- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 
 ### `SCHED-003`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236`
+- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
 - `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
 

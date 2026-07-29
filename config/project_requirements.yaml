@@ -726,7 +726,7 @@ requirements:
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - path: rtl/ir_data_plane_top.sv
-    sha256: ccf5d0915eab5b9340a88a28a8c2d09619387c9d6fbd16e4fc9537458531b150
+    sha256: 65d6b2325a2321ad29ee387f07eda8cc13189f19305f9dce9c2e01a45c55d614
   - path: evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json
     sha256: ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
@@ -881,7 +881,7 @@ requirements:
   - path: rtl/ir_retry_migration.sv
     sha256: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: 13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7
+    sha256: a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d
   - path: evidence/generated/p8e_precompletion_reverification_summary.json
     sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
@@ -941,14 +941,14 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   - path: tools/p8d_data_plane_reference.py
     sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
   - path: evidence/generated/p8e_precompletion_reverification_summary.json
     sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
@@ -968,14 +968,14 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: 13d002591719507d5940ad98d9079f1fbba755f1d686a2e14db93ba1706bbfa7
+    sha256: a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d
   - path: evidence/generated/p8e_precompletion_reverification_summary.json
     sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
@@ -995,14 +995,14 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - path: evidence/generated/p8e_precompletion_reverification_summary.json
     sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: f4b25acaf44ce3728abd0d51c6b7c509f695221d11a623cf3b02ae54d515d236
+  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
