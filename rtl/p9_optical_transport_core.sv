@@ -387,11 +387,13 @@ module p9_optical_transport_core #(
   reg [5:0] dp_peer_ack_width_q;
   // The RX window commits metadata through a synchronous staging cycle.  A
   // control event asserted with dp_rx_frame_valid_q would therefore snapshot
-  // the previous ACK/SACK state and force a needless RTO/retransmission for
-  // every clean frame.  Delay the physical-frame event until both the RX
-  // metadata and registered SACK bitmap are observable.  Duplicates take the
-  // same path, so a lost ACK still causes a bounded re-ACK of stable state.
+  // the previous ACK/SACK state.  Delay the physical-frame classification
+  // until both the registered SACK bitmap and rx_accept_pulse are observable.
+  // Newly accepted DATA must remain subject to the bounded ACK aggregator;
+  // only a valid frame that was not newly accepted (for example a duplicate
+  // after ACK loss) forces an immediate cumulative re-ACK of stable state.
   reg [1:0] dp_ack_control_pipe_q;
+  reg dp_rx_accept_delayed_q;
   reg dp_rx_frame_valid_q;
   reg dp_rx_l1_valid_q;
   reg [31:0] dp_rx_session_q;
@@ -479,10 +481,11 @@ module p9_optical_transport_core #(
     .rx_delivery_sequence_o(dp_delivery_sequence),
     .rx_delivery_payload_ref_o(dp_delivery_payload_ref),
     .rx_delivery_payload_length_o(dp_delivery_payload_length),
-    // Every validated physical DATA receive event can force a cumulative
-    // response.  New frames still participate in aggregation; duplicates
-    // force a re-ACK so reverse-path ACK loss is recoverable.
-    .ack_control_event_i(dp_ack_control_pipe_q[1]),
+    // A validated physical DATA event that was not newly accepted forces a
+    // cumulative response.  New frames participate in bounded aggregation;
+    // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
+    .ack_control_event_i(dp_ack_control_pipe_q[1] &&
+                         !dp_rx_accept_delayed_q),
     .ack_direction_boundary_i(1'b0),
     .ack_explicit_request_i(input_complete_q && tx_outstanding_count_o != 0),
     .local_ack_valid_o(dp_local_ack_valid), .local_ack_ready_i(dp_local_ack_ready_q),
@@ -525,14 +528,17 @@ module p9_optical_transport_core #(
   always @(posedge clk or negedge rst_n) begin : ack_control_alignment
     if (!rst_n) begin
       dp_ack_control_pipe_q <= 2'b00;
+      dp_rx_accept_delayed_q <= 1'b0;
     end else if (start_object_i || abort_object_i || disarm_request_i ||
                  full_shutdown_request_i || any_safety_fault) begin
       dp_ack_control_pipe_q <= 2'b00;
+      dp_rx_accept_delayed_q <= 1'b0;
     end else begin
       dp_ack_control_pipe_q <= {
           dp_ack_control_pipe_q[0],
           dp_rx_frame_valid_q && dp_rx_l1_valid_q
       };
+      dp_rx_accept_delayed_q <= rx_accept_pulse;
     end
   end
 

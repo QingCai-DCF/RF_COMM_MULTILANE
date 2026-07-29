@@ -480,6 +480,9 @@ module tb_p9_optical_transport_core;
                  expected_frames, physical_data_frames_good,
                  physical_crc_bad, crc_before,
                  physical_symbol_error_count, symbol_before);
+        if (expected_frames >= 8 && ack_frames_sent >= expected_frames)
+          $fatal(1, "bounded ACK aggregation absent data=%0d ack=%0d",
+                 expected_frames, ack_frames_sent);
       end
       monitor_long_object = 0;
       $display("P9_CORE_OBJECT_PASS dir=%0d len=%0d drop_data=%0d drop_ack=%0d initial=%04x faults=%02x retries=%0d duplicates=%0d",
