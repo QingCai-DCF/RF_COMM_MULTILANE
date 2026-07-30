@@ -92,6 +92,16 @@ class P10HardwareRuntimeTests(unittest.TestCase):
                 "P10-J", [self.runtime.P10_J_SOAK_PLAN], rows),
         )
 
+    def test_reboot_directives_do_not_create_mailbox_observations(self) -> None:
+        plan = self.runtime.build_plans()["P10-G"]
+        rows = [{"label": item.label} for item in plan
+                if isinstance(item, self.runtime.Case)]
+        rows.append({"label": "P10-G_endpoint_shutdown"})
+        self.assertEqual(
+            self.runtime.validate_observation_shape("P10-G", plan, rows),
+            [],
+        )
+
     def test_shutdown_tcl_requires_both_exact_roles(self) -> None:
         text = SHUTDOWN_TCL.read_text(encoding="utf-8")
         for marker in (

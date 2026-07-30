@@ -963,7 +963,7 @@ def validate_observation_shape(stage: str, plan_items: list[PlanItem],
         errors.append("exactly one final endpoint-shutdown observation required")
 
     case_items = [item for item in plan_items if isinstance(item, Case)]
-    if len(case_items) == len(plan_items):
+    if stage != "P10-J":
         expected_cases = len(case_items) + 1
         if len(rows) != expected_cases:
             errors.append(f"observation count {len(rows)} != {expected_cases}")
@@ -974,7 +974,7 @@ def validate_observation_shape(stage: str, plan_items: list[PlanItem],
             errors.append("observed case labels differ from immutable plan")
         return errors
 
-    if stage != "P10-J" or plan_items != [P10_J_SOAK_PLAN]:
+    if plan_items != [P10_J_SOAK_PLAN]:
         errors.append("unsupported dynamic hardware plan")
         return errors
 
