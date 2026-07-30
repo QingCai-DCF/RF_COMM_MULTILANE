@@ -984,11 +984,19 @@ module p9_optical_transport_core #(
           end
           PH_ACK_WAIT_DONE: if (serializer_done[ack_lane_q]) begin
             if (endpoint_mode) begin
-              // The independent receiver node owns the ACK transmitter.  Its
-              // peer consumes that ACK; this node must not wait to receive its
-              // own reverse frame through an internal fixture loopback.
-              phase_q <= PH_DATA_GUARD;
-              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+              // The independent receiver node owns the ACK transmitter. For
+              // the bounded duplicate-ACK injection, repeat the retained ACK
+              // metadata on the real reverse optical path exactly once. The
+              // sender must consume and reject that second cumulative ACK.
+              if (fault_flags_remaining_q[5]) begin
+                fault_flags_remaining_q[5] <= 0;
+                phase_q <= PH_ACK_REPEAT_WAIT;
+              end else begin
+                // The peer consumes the ACK; this node must not wait to
+                // receive its own reverse frame through a fixture loopback.
+                phase_q <= PH_DATA_GUARD;
+                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+              end
             end else begin
               phase_q <= PH_ACK_WAIT_RX;
               ack_wait_q <= 0;

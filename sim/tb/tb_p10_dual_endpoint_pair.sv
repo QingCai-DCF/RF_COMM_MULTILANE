@@ -616,6 +616,9 @@ module tb_p10_dual_endpoint_pair;
     run_object(600, 8'h53, 1'b0, 2'b11, 16'h1000, 32'h40, 0, 0);
     if (r_rx_out_of_order == 0 || r_rx_gap == 0)
       $fatal(1, "P10 receiver SACK reorder path was not exercised");
+    run_object(600, 8'h54, 1'b1, 2'b11, 16'h1800, 32'h20, 0, 0);
+    if (rotating_endpoint.tx_duplicate_ack_count_o == 0)
+      $fatal(1, "P10 endpoint duplicate ACK path was not exercised");
     run_object(600, 8'h64, 1'b1, 2'b11, 16'h2000, 0, 1, 1);
     if (r_retry_count == 0)
       $fatal(1, "P10 bounded DATA/ACK loss did not exercise retry");
