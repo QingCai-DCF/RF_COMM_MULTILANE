@@ -1371,7 +1371,14 @@ module p9_optical_transport_core #(
       dp_rx_frame_valid_q <= 0;
       dp_rx_turnaround_q <= 0;
       for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
-        data_event = rx_frame_valid[rx_lane] && !rx_frame_ack[rx_lane];
+        // A deployed endpoint can optically observe its own transmitter.
+        // Preserve that observation in the physical counters, but only the
+        // endpoint that owns the receive role for this object may admit DATA
+        // into the selective-repeat RX window.  Otherwise a sender-side
+        // self-echo creates a local ACK snapshot that this role cannot emit
+        // and permanently backpressures the next DATA attempt.
+        data_event = rx_frame_valid[rx_lane] && !rx_frame_ack[rx_lane] &&
+            (!endpoint_mode || local_receiver);
         event_crc = rx_frame_crc[rx_lane];
         event_session = rx_frame_session[rx_lane];
         event_path = rx_frame_path[rx_lane];
@@ -1496,7 +1503,11 @@ module p9_optical_transport_core #(
       if (start_object_i)
         dp_peer_ack_credit_q <= WINDOW_SIZE;
       for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
-        ack_event = rx_frame_valid[rx_lane] && rx_frame_ack[rx_lane];
+        // Symmetrically, only the object sender consumes reverse-path ACKs in
+        // independent-endpoint mode.  The monolithic P9 role retains its
+        // original bidirectional behavior.
+        ack_event = rx_frame_valid[rx_lane] && rx_frame_ack[rx_lane] &&
+            (!endpoint_mode || local_sender);
         ack_crc = rx_frame_crc[rx_lane];
         ack_session_value = rx_frame_session[rx_lane];
         ack_base_value = rx_ack_base[rx_lane];

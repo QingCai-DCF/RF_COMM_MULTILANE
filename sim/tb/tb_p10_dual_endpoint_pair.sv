@@ -77,8 +77,11 @@ module tb_p10_dual_endpoint_pair;
   logic [1:0] r_txd_d;
   wire [1:0] f_recovery_clear = {f_recovery[1] == 0, f_recovery[0] == 0};
   wire [1:0] r_recovery_clear = {r_recovery[1] == 0, r_recovery[0] == 0};
-  wire [1:0] f_a_rxd = ~(r_b_txd & f_recovery_clear);
-  wire [1:0] r_b_rxd = ~(f_a_txd & r_recovery_clear);
+  // The real stationary fixture can expose each module to a reflection of
+  // its own Txd.  Inject that self-echo independently of the cross-endpoint
+  // recovery guard so the endpoint-role filter is exercised directly.
+  wire [1:0] f_a_rxd = ~((r_b_txd & f_recovery_clear) | f_a_txd);
+  wire [1:0] r_b_rxd = ~((f_a_txd & r_recovery_clear) | r_b_txd);
 
   wire f_armed;
   wire r_armed;
