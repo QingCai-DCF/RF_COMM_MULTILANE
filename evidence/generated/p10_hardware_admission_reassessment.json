@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "test_id": "P10-HARDWARE-ADMISSION-REASSESSMENT",
+  "status": "PASS_POWER_STATE_RECLASSIFIED_ROLE_BINDING_REQUIRED",
+  "generated_at_utc": "2026-07-30T13:29:35.819747+00:00",
+  "power_state_finding_id": "P10-SAFETY-POWERUP-001",
+  "power_state_finding_status": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
+  "power_state_finding_blocking_for_p10": false,
+  "p10_hardware_admission": false,
+  "blocking_condition": "P10-ROLE-BINDING-001",
+  "role_binding_status": "ENUMERATED_UNASSIGNED: 210249855178, 210512180081",
+  "scope": "ALREADY_POWERED_STATIC_DUAL_AX7020_NO_ETHERNET_NO_MOVEMENT_NO_REWIRING_NO_INTENTIONAL_POWER_CYCLE_LANE_MASK_MAX_0X3",
+  "scope_guards": [
+    "No intentional AX7020 or TFDU power cycle during the P10 hardware campaign.",
+    "Explicit JTAG serial-to-role binding before any programming.",
+    "Program both role-matched shutdown images before functional images or ELF execution.",
+    "Abort on target loss, unexpected rail transition, safe-state mismatch, or autonomous emission evidence.",
+    "Use shutdown-before, bounded stage runtime, shutdown-on-error, and shutdown-after for every active hardware stage.",
+    "Do not report FPGA-unconfigured/partial-power fail-low, physical GLOBAL_PERMIT, or product safety PASS from P10."
+  ],
+  "canonical_alignment": [
+    "docs/tfdu6102_safety_contract.md assigns external power-up/open/unconfigured/partial-power fail-low to PENDING_D17.",
+    "config/project_state.json keeps global_permit_physical_implementation=PENDING_D17 while P9 status is PASS.",
+    "The canonical P9 final summary is PASS and preserves GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION=PENDING_D17.",
+    "The P10 fast-track explicitly requires PHYSICAL_GLOBAL_PERMIT to remain PENDING_D17 after any P10 PASS.",
+    "No D17, partial-power, physical GLOBAL_PERMIT, external duty, or product-final PASS is created by this reassessment."
+  ],
+  "supersedes_admission_annotations_in": [
+    "The build-time HARDWARE_ADMISSION comment in both frozen role-specific XDC files.",
+    "The admission fields in the frozen shutdown, functional, PS-runtime, and offline-architecture build summaries.",
+    "The admission field in the repository-intake snapshot created before this reassessment.",
+    "Only admission classification is superseded; build results, hashes, source commits, limitations, and all hardware-not-run fields remain unchanged."
+  ],
+  "configured_safety_evidence": {
+    "shutdown_build_status": "PASS",
+    "shutdown_roles": [
+      {
+        "role": "fixed",
+        "status": "PASS",
+        "mode_intent": "0x3",
+        "sd_intent": "0x3",
+        "txd_intent": "0x0",
+        "bitstream": {
+          "bytes": 369073,
+          "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+          "read_only": true,
+          "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3"
+        }
+      },
+      {
+        "role": "rotating",
+        "status": "PASS",
+        "mode_intent": "0x3",
+        "sd_intent": "0x3",
+        "txd_intent": "0x0",
+        "bitstream": {
+          "bytes": 369073,
+          "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+          "read_only": true,
+          "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+        }
+      }
+    ],
+    "functional_build_status": "PASS",
+    "dual_endpoint_regression_status": "PASS",
+    "configured_reset_fault_behavior": "ENDPOINT_UNARMED_SHUTDOWN_LATCHED_TXD_LOW_SD_HIGH"
+  },
+  "ordinary_configuration_interval": {
+    "expected_mode": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+    "expected_sd": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+    "expected_txd": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+    "optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE",
+    "txd_low_claim": false
+  },
+  "unchanged_pending": [
+    "PHYSICAL_GLOBAL_PERMIT=PENDING_D17",
+    "FPGA_UNCONFIGURED_FAIL_LOW=PENDING_D17",
+    "PARTIAL_POWER_FAIL_LOW=PENDING_D17",
+    "EXTERNAL_TFDU_DUTY=PENDING",
+    "PRODUCT_FINAL=PENDING"
+  ],
+  "input_sha256": {
+    "docs/tfdu6102_safety_contract.md": "b8f2010da33b4c5af19db3e7f22cc2025d44e7f0aca94bf467ec5335fe8f8237",
+    "config/project_state.json": "3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f",
+    "evidence/generated/p9_final_summary.json": "c57ca47169f9d53178ed3dde9d8ddc0bb334b5cd79f05b43f8777fb98596bcef",
+    "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
+    "evidence/generated/p10_ax7020_shutdown_build_summary.json": "1e5f6cc2499d5c902af9dde0310ab9c48cb4fc5021c80faa91f5a70e92fe48f3",
+    "evidence/generated/p10_ax7020_functional_build_summary.json": "8f09b9467bc4819e26fee485fc47f3e6717a8846a13bf12e04bf7404d01b182a",
+    "evidence/generated/p10_dual_endpoint_regression/summary.json": "59622c7a0b4f56a5575651f427f90653be307c1d76d367ab76a78dcf52dd03fd",
+    "evidence/generated/p10_jtag_identity_latest.json": "81d09969fee9ad8166a2e0c2014301cd2137b8379d9cb836f2342b78f26772dd",
+    "rtl/p10_ax7020_shutdown_top.v": "2cf65beaaf3e2728437cf17c85b4f1da3aeff367b5e4f7bdada1a8d00985a79b",
+    "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
+    "rtl/p9_optical_transport_core.sv": "b890145b8d9a3bab49cdeb2e1652c446e40965059b63d67d614bd242c955d78f"
+  }
+}

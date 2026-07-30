@@ -1,13 +1,15 @@
 schema_version: 1
 configuration_id: "P10_AX7020_DUAL_NODE_2LANE_J10_CONFIRMED"
-status: "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING_HARDWARE_ADMISSION_BLOCKED"
-generated_at_utc: "2026-07-30T13:07:12.403905+00:00"
+status: "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
+generated_at_utc: "2026-07-30T13:29:35.819747+00:00"
 goal: "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"
 current_run_hardware_authorization: true
 hardware_actions_executed: true
 hardware_action_scope: "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY"
 hardware_admission: false
-blocking_condition: "P10-SAFETY-POWERUP-001"
+blocking_condition: "P10-ROLE-BINDING-001"
+power_state_scope: "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN"
+physical_global_permit_status: "PENDING_D17"
 network_used: false
 movement_allowed: false
 rewiring_allowed: false
@@ -51,7 +53,10 @@ power_sequence:
   - "Do not alter any existing VCC/GND wiring under this authorization."
   - "Any future connector work requires all boards and TFDU supplies powered off."
   - "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts."
-  - "Ordinary powered configuration is expected optically inhibited by SD high; hardware admission still requires physical Txd-low/full-shutdown compliance and partial-power TX-disabled evidence."
+  - "Do not intentionally power-cycle either AX7020 or any TFDU rail during this scoped P10 campaign."
+  - "After explicit JTAG role binding, program the role-matched shutdown images before any functional image or ELF."
+  - "Abort without further hardware action if a target disappears, a rail changes state, or the no-power-cycle scope cannot be maintained."
+  - "FPGA-unconfigured/open-circuit/partial-power fail-low and the physical final-kill implementation remain PENDING_D17 and are not claimed by P10."
 jtag_role: "JTAG cable serial is the authoritative P10 F/R role key. Observed serials are 210249855178, 210512180081; each must be explicitly bound to AX7020-F or AX7020-R before programming."
 uart_role: "Role-local PS diagnostic log only; UART cannot arm or bypass the physical TX kill."
 signal_lines:

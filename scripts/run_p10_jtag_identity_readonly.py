@@ -33,6 +33,7 @@ XSCT = Path(r"D:\Xilinx\Vitis\2023.1\bin\xsct.bat")
 TCL = ROOT / "scripts/hw/p10_jtag_identity_readonly.tcl"
 XSDB_URL = "tcp:localhost:3121"
 AUTH_MARKER = "P10_FASTTRACK_READ_ONLY_IDENTITY"
+ROLE_BINDING_BLOCKER_ID = "P10-ROLE-BINDING-001"
 RUN_ID_RE = re.compile(r"^p10_jtag_identity_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}$")
 
 BOUND_INPUTS = (
@@ -383,7 +384,7 @@ def main() -> int:
         "fixed_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING" if topology_pass else "NOT_AVAILABLE",
         "rotating_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING" if topology_pass else "NOT_AVAILABLE",
         "target_order_used_for_role_binding": False,
-        "blocking_condition_for_programming": "P10-SAFETY-POWERUP-001",
+        "blocking_condition_for_programming": ROLE_BINDING_BLOCKER_ID,
     }
     write_json(summary_path, summary)
 
@@ -401,7 +402,7 @@ def main() -> int:
         "- FPGA programming/reset/memory/ELF/UART/TFDU action: `false`\n"
         "- Shutdown: not required for this read-only enumeration.\n"
         f"- Raw evidence: `{rel(summary_path)}`\n"
-        "- Programming remains blocked by `P10-SAFETY-POWERUP-001`.\n",
+        f"- Programming remains blocked pending stable serial-to-role binding (`{ROLE_BINDING_BLOCKER_ID}`).\n",
         encoding="utf-8",
     )
 

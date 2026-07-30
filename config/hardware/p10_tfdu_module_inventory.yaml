@@ -1,6 +1,6 @@
 schema_version: 1
 inventory_id: "P10_TFDU_FOUR_MODULE_INVENTORY"
-document_set_status: "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_SAFETY_GAP_SEPARATE"
+document_set_status: "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_POWER_STATE_PENDING_D17"
 functional_identity_status: "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010"
 identity_reconfirmation_required_for_p10: false
 user_clarification:
@@ -27,9 +27,9 @@ on_board_bias:
 power_state_electrical_audit:
   ordinary_powered_configuration: "EXPECTED_SD_HIGH_TXD_HIGH_FROM_PUDC_B_ENABLED_INTERNAL_PULLUPS_POWER_SEQUENCE_DEPENDENT"
   ordinary_powered_configuration_optical_tx: "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE_IF_PULLUPS_ACTIVE"
-  canonical_physical_txd_default_low: "NOT_ESTABLISHED"
-  canonical_full_shutdown_sd_high_txd_low: "NOT_ESTABLISHED_DURING_CONFIGURATION"
-  partial_power: "NOT_ESTABLISHED_NO_DISCRETE_FAIL_SAFE_BIAS"
+  configured_reset_fault_txd_low: "PASS_FROM_ROLE_SEPARATED_RTL_AND_SHUTDOWN_IMAGES"
+  ordinary_configuration_interval_optical_tx_disabled: "SUPPORTED_BY_SD_HIGH_DOMINATING_TXD"
+  fpga_unconfigured_and_partial_power_fail_low: "PENDING_D17_NOT_CLAIMED_BY_P10"
   source_locations:
     - "PDF page 4 / printed page 3, Pin Description: Txd is active HIGH and SD is active-high shutdown"
     - "PDF page 8 / printed page 7, Transmitter Characteristics: SD=HIGH or Txd=LOW limits emitted intensity to 0.04 mW/sr maximum at the stated 5-V conditions"

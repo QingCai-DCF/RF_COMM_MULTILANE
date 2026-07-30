@@ -60,10 +60,10 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8e_p0_p8d_regression_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
 | `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
-| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-CANONICAL-CONFIG` | `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` | The shared global outstanding window supports at least 32 frames. |
+| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10-P8D-SOURCE-BINDING-REVERIFICATION` | `evidence/generated/p10_p8d_source_reverification/summary.json` | The shared global outstanding window supports at least 32 frames. |
 | `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
 | `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10-P8D-SOURCE-BINDING-REVERIFICATION` | `evidence/generated/p10_p8d_source_reverification/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
 | `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A duplicate logical frame never commits or completes twice. |
 | `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Stale session/path data and ACK records are rejected. |
 | `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
@@ -321,8 +321,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `rtl/ir_data_plane_top.sv` — `cfbbc31d9a521d7c3acf3d2e015625eb7115460ae91de368811960719fab9217`
-- `evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json` — `ac6a9d8d9dbc93de68c32ce733630909d379cd3ec17f2934eeb3fd293bde603b`
+- `rtl/ir_data_plane_top.sv` — `a3c1441f98539cd3bcc1e646e27de1c8d06559e269c1035235ec82bf90d355af`
+- `evidence/generated/p10_p8d_source_reverification/summary.json` — `cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f`
 
 ### `L2-SEQ-001`
 
@@ -338,9 +338,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-SACK-002`
 
-- `rtl/ir_ack_aggregator.sv` — `1d7c3d27b10943468ead9e7673efca72306e4e5a5844ded160d5f2a827c18ae7`
-- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `2009bac05b4c73de6cabef28d60f8320d5d9f0fb459411cce9b538f13412a310`
-- `evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json` — `b142e95471e822aa97f635333cb54287324831e27ee289815523a0d0b589eb35`
+- `rtl/ir_ack_aggregator.sv` — `bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa`
+- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075`
+- `evidence/generated/p10_p8d_source_reverification/summary.json` — `cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f`
 
 ### `L2-DUP-001`
 

@@ -4,18 +4,16 @@
     "0x2",
     "0x3"
   ],
-  "blocking_condition": "P10-SAFETY-POWERUP-001",
+  "blocking_condition": "P10-ROLE-BINDING-001",
   "branch": "p10/ax7020-dual-node-2lane",
   "current_run_hardware_authorization": true,
   "evidence_checkpoint": "COMMIT_CONTAINING_THIS_SUMMARY",
   "fail": [
-    "P10-SAFETY-POWERUP-001: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established",
-    "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context",
-    "Two JTAG serials were enumerated (210249855178, 210512180081) but are not yet explicitly assigned to F/R roles",
+    "P10-ROLE-BINDING-001: two JTAG serials were enumerated (210249855178, 210512180081) but are not explicitly assigned to F/R roles",
     "All mandatory active-hardware acceptance stages are not run"
   ],
   "fixed_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
-  "generated_at_utc": "2026-07-30T13:07:12.602103+00:00",
+  "generated_at_utc": "2026-07-30T13:29:35.959330+00:00",
   "generated_evidence": [
     "evidence/generated/p10_fasttrack_concise_preflight.json",
     "evidence/generated/p10_dual_endpoint_regression/summary.json",
@@ -36,7 +34,9 @@
     "evidence/generated/p10_jtag_identity_latest.json",
     "evidence/generated/p10_jtag_identity_latest.md",
     "evidence/generated/p10_fasttrack_identity_amendment.json",
-    "evidence/generated/p10_fasttrack_identity_amendment.md"
+    "evidence/generated/p10_fasttrack_identity_amendment.md",
+    "evidence/generated/p10_hardware_admission_reassessment.json",
+    "evidence/generated/p10_hardware_admission_reassessment.md"
   ],
   "hardware_actions_executed": true,
   "hardware_admission": false,
@@ -47,28 +47,28 @@
   "mandatory_results": {
     "application_goodput_f_to_r_bps": "NOT_MEASURED_NO_HARDWARE_RUN",
     "application_goodput_r_to_f_bps": "NOT_MEASURED_NO_HARDWARE_RUN",
-    "dma_ddr_cache_fixed": "NOT_RUN_SEVERE_BLOCKER",
-    "dma_ddr_cache_rotating": "NOT_RUN_SEVERE_BLOCKER",
+    "dma_ddr_cache_fixed": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "dma_ddr_cache_rotating": "NOT_RUN_ROLE_BINDING_REQUIRED",
     "dual_independent_ps": "PASS_OFFLINE_BUILD_ONLY_HARDWARE_NOT_RUN",
-    "endpoint_reboot_recovery": "NOT_RUN_SEVERE_BLOCKER",
-    "f_to_r_object": "NOT_RUN_SEVERE_BLOCKER",
-    "four_direction_raw": "NOT_RUN_SEVERE_BLOCKER",
-    "lane0_4mbps": "NOT_RUN_SEVERE_BLOCKER",
-    "lane1_4mbps": "NOT_RUN_SEVERE_BLOCKER",
+    "endpoint_reboot_recovery": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "f_to_r_object": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "four_direction_raw": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "lane0_4mbps": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "lane1_4mbps": "NOT_RUN_ROLE_BINDING_REQUIRED",
     "no_shared_ram": "PASS_OFFLINE_ARCHITECTURE_AND_SIMULATION_HARDWARE_NOT_RUN",
     "object_sha256": "NONE_NO_HARDWARE_RUN",
-    "r_to_f_object": "NOT_RUN_SEVERE_BLOCKER",
+    "r_to_f_object": "NOT_RUN_ROLE_BINDING_REQUIRED",
     "selective_repeat_sack": "PASS_OFFLINE_SIMULATION_ONLY_HARDWARE_NOT_RUN",
-    "shutdown_fixed": "NOT_EXECUTED_SEVERE_BLOCKER_OFFLINE_IMAGE_BUILD_PASS",
-    "shutdown_rotating": "NOT_EXECUTED_SEVERE_BLOCKER_OFFLINE_IMAGE_BUILD_PASS",
-    "stationary_30min": "NOT_RUN_SEVERE_BLOCKER",
-    "two_lane_8mbps_raw": "NOT_RUN_SEVERE_BLOCKER"
+    "shutdown_fixed": "NOT_EXECUTED_ROLE_BINDING_REQUIRED_OFFLINE_IMAGE_BUILD_PASS",
+    "shutdown_rotating": "NOT_EXECUTED_ROLE_BINDING_REQUIRED_OFFLINE_IMAGE_BUILD_PASS",
+    "stationary_30min": "NOT_RUN_ROLE_BINDING_REQUIRED",
+    "two_lane_8mbps_raw": "NOT_RUN_ROLE_BINDING_REQUIRED"
   },
   "max_lane_mask_used": "NONE_NO_HARDWARE_RUN",
   "network_used": false,
-  "next_recommended_stage": "P10_REMEDIATION",
+  "next_recommended_stage": "P10_EXPLICIT_JTAG_ROLE_BINDING",
   "no_hardware_movement": true,
-  "nonblocking_extensions": "NOT_RUN_BECAUSE_MANDATORY_HARDWARE_ADMISSION_FAILED",
+  "nonblocking_extensions": "NOT_RUN_BECAUSE_MANDATORY_ROLE_BINDING_PENDING",
   "offline_build_environment": {
     "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
     "NO_HARDWARE": 1
@@ -86,8 +86,7 @@
     "Offline independent-node/no-shared-RAM architecture audit"
   ],
   "required_user_resolution": [
-    "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R.",
-    "Provide existing as-built bias/circuit evidence plus sequence-bounded Txd/SD measurements for reset/fault, FPGA-unconfigured, and relevant partial-power states; or separately authorize a documented fail-safe rewire."
+    "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R."
   ],
   "rotating_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
   "schema_version": 2,
@@ -138,5 +137,14 @@
     "tfdu_module_identity_reconfirmation_required_for_p10": false,
     "tfdu_modules_previously_operational_on_ax7010": true,
     "ax7020_role_binding_method": "JTAG_CABLE_SERIAL"
-  }
+  },
+  "power_state_scope": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
+  "hardware_admission_reassessment": {
+    "path": "evidence/generated/p10_hardware_admission_reassessment.json",
+    "sha256": "4eba5044a053cb58e7eab4ad8dc41f78b4e3e1f34722bd001f32c5e78a87d00c"
+  },
+  "nonblocking_findings": [
+    "P10-SAFETY-POWERUP-001: PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN; FPGA-unconfigured/partial-power fail-low remains PENDING_D17 and is not claimed by P10",
+    "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context"
+  ]
 }

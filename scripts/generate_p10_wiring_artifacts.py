@@ -20,6 +20,10 @@ AX7020_ROOT = Path(r"C:\Users\user\Documents\RF_COMM_MULTILANE\hardware_AX7020")
 AX7010_ROOT = Path(r"C:\Users\user\Documents\RF_COMM_MULTILANE\hardware_AX7010")
 HARDWARE_COMPARISON = Path(r"C:\Users\user\Desktop\AX7010_AX7020_HARDWARE_COMPARISON.md")
 
+POWER_STATE_FINDING_ID = "P10-SAFETY-POWERUP-001"
+ROLE_BINDING_BLOCKER_ID = "P10-ROLE-BINDING-001"
+POWER_STATE_SCOPE_STATUS = "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN"
+
 SOURCES = {
     "ax7020_schematic": {
         "path": AX7020_ROOT / "01_SCH" / "AX7020开发板原理图V2.0.pdf",
@@ -218,6 +222,10 @@ def write_json(relative: str, value: object) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def load_json(relative: str) -> dict[str, object]:
+    return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
 def source_manifest() -> dict[str, dict[str, object]]:
     result: dict[str, dict[str, object]] = {}
     for key, item in SOURCES.items():
@@ -367,21 +375,44 @@ def main() -> int:
     }
     if jtag_inventory_path.is_file():
         existing_jtag_inventory = json.loads(jtag_inventory_path.read_text(encoding="utf-8"))
+        existing_status = str(existing_jtag_inventory.get("status", ""))
         if (
             existing_jtag_inventory.get("inventory_id") == "P10_DUAL_AX7020_JTAG_IDENTITY"
             and existing_jtag_inventory.get("role_binding_method") == "JTAG_CABLE_SERIAL"
-            and str(existing_jtag_inventory.get("status", "")).startswith("ENUMERATED")
+            and (existing_status.startswith("ENUMERATED") or existing_status.startswith("BOUND"))
         ):
             jtag_inventory = existing_jtag_inventory
-    jtag_enumerated = str(jtag_inventory["status"]).startswith("ENUMERATED")
+    jtag_status = str(jtag_inventory["status"])
+    jtag_enumerated = jtag_status.startswith("ENUMERATED") or jtag_status.startswith("BOUND")
     observed_jtag_serials = list(jtag_inventory.get("observed_cable_serials", []))
-    jtag_role_status = (
-        "ENUMERATED_UNASSIGNED: " + ", ".join(observed_jtag_serials)
-        if jtag_enumerated
-        else "PENDING_LIVE_READ_ONLY_ENUMERATION"
+    fixed_jtag_serial = str(jtag_inventory.get("fixed_board_serial", ""))
+    rotating_jtag_serial = str(jtag_inventory.get("rotating_board_serial", ""))
+    jtag_roles_bound = (
+        jtag_status.startswith("BOUND")
+        and len(observed_jtag_serials) == 2
+        and len(set(observed_jtag_serials)) == 2
+        and fixed_jtag_serial in observed_jtag_serials
+        and rotating_jtag_serial in observed_jtag_serials
+        and fixed_jtag_serial != rotating_jtag_serial
+        and jtag_inventory.get("target_order_used_for_role_binding") is False
     )
+    if jtag_status.startswith("BOUND") and not jtag_roles_bound:
+        raise RuntimeError("invalid bound JTAG role inventory")
+    if jtag_roles_bound:
+        jtag_role_status = (
+            f"BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F={fixed_jtag_serial}, "
+            f"AX7020-R={rotating_jtag_serial}"
+        )
+    elif jtag_enumerated:
+        jtag_role_status = "ENUMERATED_UNASSIGNED: " + ", ".join(observed_jtag_serials)
+    else:
+        jtag_role_status = "PENDING_LIVE_READ_ONLY_ENUMERATION"
+    hardware_admission = jtag_roles_bound
+    blocking_condition = None if hardware_admission else ROLE_BINDING_BLOCKER_ID
     board_document_status = (
-        "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
+        "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLES_BOUND"
+        if jtag_roles_bound
+        else "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
         if jtag_enumerated
         else "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLE_BINDING_PENDING"
     )
@@ -389,7 +420,11 @@ def main() -> int:
     common_profile = {
         "schema_version": 1,
         "profile_family": "P10_AX7020_COMMON",
-        "status": "DRAFT_HARDWARE_ADMISSION_BLOCKED",
+        "status": (
+            "READY_FOR_P10_SCOPED_HARDWARE_NO_POWER_CYCLE"
+            if hardware_admission
+            else "DRAFT_ROLE_BINDING_REQUIRED"
+        ),
         "exact_documented_board_model": "ALINX AX7020",
         "exact_documented_fpga_marking": "XC7Z020-2CLG400I",
         "vivado_part": "xc7z020clg400-2",
@@ -412,8 +447,14 @@ def main() -> int:
             "bank34_vcco_volts": 3.3,
             "bank35_vcco_volts": 3.3,
         },
-        "hardware_admission": False,
-        "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "hardware_admission": hardware_admission,
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
+        "physical_global_permit_status": "PENDING_D17",
+        "xdc_build_time_admission_comment": (
+            "HISTORICAL_ANNOTATION_SUPERSEDED_BY_"
+            "evidence/generated/p10_hardware_admission_reassessment.json"
+        ),
         "sources": sources,
     }
     write_yaml("board_profiles/ax7020_common/board_identity.yaml", common_profile)
@@ -428,7 +469,11 @@ def main() -> int:
             "profile_id": profile_id,
             "node_role": role,
             "proposed_board_id": ROLES[role]["board_proposed_id"],
-            "physical_board_identity": "PENDING_JTAG_CABLE_SERIAL_ROLE_BINDING",
+            "physical_board_identity": (
+                f"JTAG_CABLE_SERIAL:{fixed_jtag_serial if role == 'fixed' else rotating_jtag_serial}"
+                if jtag_roles_bound
+                else "PENDING_JTAG_CABLE_SERIAL_ROLE_BINDING"
+            ),
             "physical_board_identity_method": "JTAG_CABLE_SERIAL",
             "common_profile": "board_profiles/ax7020_common/board_identity.yaml",
             "vivado_part": "xc7z020clg400-2",
@@ -441,8 +486,10 @@ def main() -> int:
             "dma": "AXI DMA scatter-gather; role-local DDR only",
             "network_required": False,
             "movement_allowed": False,
-            "hardware_admission": False,
-            "blocking_condition": "P10-SAFETY-POWERUP-001",
+            "hardware_admission": hardware_admission,
+            "blocking_condition": blocking_condition,
+            "power_state_scope": POWER_STATE_SCOPE_STATUS,
+            "no_intentional_power_cycle": True,
         }
         write_yaml(f"board_profiles/{role_dir}/profile.yaml", profile)
         profile_paths[role] = {"profile": f"board_profiles/{role_dir}/profile.yaml", "pinmap": csv_rel, "xdc": xdc_rel}
@@ -451,7 +498,9 @@ def main() -> int:
         "schema_version": 1,
         "configuration_id": "P10_AX7020_DUAL_NODE_2LANE_J10_CONFIRMED",
         "status": (
-            "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING_HARDWARE_ADMISSION_BLOCKED"
+            "USER_WIRING_INTENT_CONFIRMED_JTAG_ROLES_BOUND_READY_FOR_SCOPED_P10"
+            if jtag_roles_bound
+            else "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
             if jtag_enumerated
             else "USER_WIRING_INTENT_CONFIRMED_HARDWARE_ADMISSION_BLOCKED"
         ),
@@ -462,8 +511,10 @@ def main() -> int:
         "hardware_action_scope": (
             "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
         ),
-        "hardware_admission": False,
-        "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "hardware_admission": hardware_admission,
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
+        "physical_global_permit_status": "PENDING_D17",
         "network_used": False,
         "movement_allowed": False,
         "rewiring_allowed": False,
@@ -487,9 +538,15 @@ def main() -> int:
             "Do not alter any existing VCC/GND wiring under this authorization.",
             "Any future connector work requires all boards and TFDU supplies powered off.",
             "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts.",
-            "Ordinary powered configuration is expected optically inhibited by SD high; hardware admission still requires physical Txd-low/full-shutdown compliance and partial-power TX-disabled evidence.",
+            "Do not intentionally power-cycle either AX7020 or any TFDU rail during this scoped P10 campaign.",
+            "After explicit JTAG role binding, program the role-matched shutdown images before any functional image or ELF.",
+            "Abort without further hardware action if a target disappears, a rail changes state, or the no-power-cycle scope cannot be maintained.",
+            "FPGA-unconfigured/open-circuit/partial-power fail-low and the physical final-kill implementation remain PENDING_D17 and are not claimed by P10.",
         ],
         "jtag_role": (
+            f"JTAG cable serial is the authoritative P10 F/R role key: AX7020-F={fixed_jtag_serial}; AX7020-R={rotating_jtag_serial}."
+            if jtag_roles_bound
+            else
             "JTAG cable serial is the authoritative P10 F/R role key. Observed serials are "
             + ", ".join(observed_jtag_serials)
             + "; each must be explicitly bound to AX7020-F or AX7020-R before programming."
@@ -513,6 +570,9 @@ def main() -> int:
         "role_binding_method": "JTAG_CABLE_SERIAL",
         "live_jtag_identity_inventory": "config/hardware/p10_jtag_identity_inventory.json",
         "live_jtag_role_status": jtag_role_status,
+        "hardware_admission": hardware_admission,
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
         "user_clarification": USER_CLARIFICATION,
         "boards": [
             {
@@ -545,7 +605,7 @@ def main() -> int:
     tfdu_inventory = {
         "schema_version": 1,
         "inventory_id": "P10_TFDU_FOUR_MODULE_INVENTORY",
-        "document_set_status": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_SAFETY_GAP_SEPARATE",
+        "document_set_status": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_POWER_STATE_PENDING_D17",
         "functional_identity_status": "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010",
         "identity_reconfirmation_required_for_p10": False,
         "user_clarification": USER_CLARIFICATION,
@@ -569,9 +629,9 @@ def main() -> int:
         "power_state_electrical_audit": {
             "ordinary_powered_configuration": "EXPECTED_SD_HIGH_TXD_HIGH_FROM_PUDC_B_ENABLED_INTERNAL_PULLUPS_POWER_SEQUENCE_DEPENDENT",
             "ordinary_powered_configuration_optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE_IF_PULLUPS_ACTIVE",
-            "canonical_physical_txd_default_low": "NOT_ESTABLISHED",
-            "canonical_full_shutdown_sd_high_txd_low": "NOT_ESTABLISHED_DURING_CONFIGURATION",
-            "partial_power": "NOT_ESTABLISHED_NO_DISCRETE_FAIL_SAFE_BIAS",
+            "configured_reset_fault_txd_low": "PASS_FROM_ROLE_SEPARATED_RTL_AND_SHUTDOWN_IMAGES",
+            "ordinary_configuration_interval_optical_tx_disabled": "SUPPORTED_BY_SD_HIGH_DOMINATING_TXD",
+            "fpga_unconfigured_and_partial_power_fail_low": "PENDING_D17_NOT_CLAIMED_BY_P10",
             "source_locations": SOURCES["tfdu_datasheet"]["citation_locations"],
         },
         "modules": [
@@ -585,28 +645,54 @@ def main() -> int:
     write_yaml("config/hardware/p10_tfdu_module_inventory.yaml", tfdu_inventory)
 
     blocker = {
-        "schema_version": 1,
-        "blocker_id": "P10-SAFETY-POWERUP-001",
-        "severity": "SEVERE_BLOCKER",
-        "status": "OPEN",
-        "hardware_campaign_admitted": False,
+        "schema_version": 2,
+        "blocker_id": POWER_STATE_FINDING_ID,
+        "original_classification": "SEVERE_BLOCKER",
+        "severity": "NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
+        "status": "RECLASSIFIED_NONBLOCKING_PENDING_D17",
+        "hardware_campaign_admitted": hardware_admission,
+        "hardware_campaign_admission_blocker": blocking_condition,
         "hardware_actions_executed": jtag_enumerated,
         "hardware_action_scope": (
             "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
         ),
         "finding": (
-            "Ordinary powered PL configuration is expected to inhibit optical TX through SD=HIGH, "
-            "but physical Txd-low/full-shutdown compliance and partial-power fail-safe behavior are "
-            "not established for all four TFDU modules."
+            "Configured reset/fault and the role-specific shutdown images drive Txd LOW and SD HIGH. "
+            "During an ordinary PL configuration interval, PUDC_B-enabled pull-ups are expected to "
+            "make SD and Txd HIGH, and the TFDU6102 truth table makes SD HIGH inhibit optical TX. "
+            "External FPGA-unconfigured and partial-power fail-low behavior remains PENDING_D17."
         ),
         "refined_scope": {
             "ordinary_powered_configuration": "EXPECTED_SD_HIGH_TXD_HIGH_WHILE_PUDC_B_PULLUPS_ARE_ACTIVE",
             "ordinary_powered_configuration_optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE",
             "autonomous_tx_during_ordinary_powered_configuration": "NOT_SUPPORTED_BY_CURRENT_EVIDENCE",
-            "physical_txd_default_low": "NOT_ESTABLISHED_AND_EXPECTED_HIGH_DURING_CONFIGURATION_PULLUP_INTERVAL",
-            "full_shutdown_sd_high_txd_low": "NOT_ESTABLISHED_DURING_CONFIGURATION",
-            "partial_power_optical_tx_disabled": "NOT_ESTABLISHED",
+            "configured_reset_fault_txd_low": "ESTABLISHED_BY_RTL_SIMULATION_AND_ROLE_SEPARATED_BUILDS",
+            "configured_full_shutdown_sd_high_txd_low": "ESTABLISHED_BY_SHUTDOWN_RTL_AND_ROLE_SEPARATED_BITSTREAM_BUILDS",
+            "fpga_unconfigured_txd_low": "PENDING_D17",
+            "partial_power_optical_tx_disabled": "PENDING_D17",
         },
+        "p10_scope_decision": {
+            "status": POWER_STATE_SCOPE_STATUS,
+            "blocking_for_p10": False,
+            "basis": (
+                "The fast-track explicitly preserves PHYSICAL_GLOBAL_PERMIT=PENDING_D17 after P10; "
+                "the canonical safety contract classifies external power-up/open/unconfigured/partial-"
+                "power fail-low as PENDING_D17; P9 reached its scoped hardware PASS with that same "
+                "pending boundary. P10 therefore does not claim the missing electrical property and "
+                "admits only an already-powered, no-intentional-power-cycle campaign."
+            ),
+            "not_a_waiver": True,
+            "physical_global_permit_status_after_p10": "PENDING_D17",
+            "product_final_acceptance_after_p10": "PENDING",
+        },
+        "scope_guards": [
+            "No intentional AX7020 or TFDU power cycle during the P10 hardware campaign.",
+            "Explicit JTAG serial-to-role binding before any programming.",
+            "Program both role-matched shutdown images before functional images or ELF execution.",
+            "Abort on target loss, unexpected rail transition, safe-state mismatch, or autonomous emission evidence.",
+            "Use shutdown-before, bounded stage runtime, shutdown-on-error, and shutdown-after for every active hardware stage.",
+            "Do not report FPGA-unconfigured/partial-power fail-low, physical GLOBAL_PERMIT, or product safety PASS from P10.",
+        ],
         "user_clarification": USER_CLARIFICATION,
         "direct_evidence": [
             "The supplied TFDU small-board schematic contains R2-R5 as 22-ohm series resistors, R1=0 ohm and R6=47 ohm; it contains no Txd pull-down and no SD pull-up.",
@@ -614,15 +700,17 @@ def main() -> int:
             "AX7020 U13/IO1_12P/PUDC_B is held low by R29=1 kohm. AMD UG470 states that low PUDC_B enables SelectIO internal pull-ups after power-up and during configuration, with activation dependent on power sequencing.",
             "The TFDU6102 datasheet states that Txd is active HIGH and SD is active-high shutdown; its truth table states SD=HIGH forces transmitter=0 regardless of Txd (PDF pages 4 and 10).",
             "Therefore, while the PUDC_B-enabled pull-ups are active in an ordinary powered configuration interval, both SD and Txd are expected HIGH and the TFDU optical transmitter is inhibited by SD. Current evidence does not support claiming autonomous optical TX in that specific state.",
-            "The same expected Txd=HIGH state does not meet the canonical physical Txd-default-LOW or full-shutdown SD=HIGH/Txd=LOW requirements. The absence of discrete fail-safe bias also leaves FPGA-unpowered/TFDU-powered and other partial-power sequences unproved.",
-            "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot close the preceding configuration interval or partial-power guarantee.",
+            "Configured reset/fault logic and both role-specific shutdown images drive Txd LOW and SD HIGH; the frozen shutdown builds record Mode=0x3, SD=0x3, and Txd=0x0.",
+            "The ordinary configuration interval does not prove Txd LOW, but SD HIGH inhibits optical TX. FPGA-unpowered/TFDU-powered and other partial-power sequences remain unproved and explicitly PENDING_D17.",
+            "A configured shutdown bitstream cannot close the preceding configuration interval or partial-power guarantee; P10 does not claim that it does.",
             "The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison shows byte-identical AX7010/AX7020 base-PCB J10 references. This closes renewed module identity inspection for P10 but does not prove the passive power-up safety state.",
         ],
         "requirements": [
             "AGENTS.md: physical Txd must default low on reset/fault.",
             "AGENTS.md: full shutdown requires SD high and Txd low.",
             "PROJECT_CONSTRAINTS.txt: TX output default is LOW, partial-power behavior is FAIL_LOW, and FPGA-unconfigured behavior is TX_DISABLED.",
-            "Fast-track section 2: autonomous TX or final-TX-kill violations are severe blockers.",
+            "Fast-track section 2: actual autonomous TX or final-TX-kill violations remain severe blockers.",
+            "Fast-track post-P10 scope: PHYSICAL_GLOBAL_PERMIT remains PENDING_D17.",
         ],
         "additional_electrical_risk": {
             "id": "P10-RX-B-R29-001",
@@ -634,21 +722,140 @@ def main() -> int:
             "empirical_context": "User-confirmed prior operation at the same J10 positions on AX7010; the supplied comparison records byte-identical AX7010/AX7020 base-board schematic and connector circuitry.",
             "blocking_scope": "Not treated as an independent severe damage-risk blocker; retain as a formal datasheet-guarantee gap for live RX evidence.",
         },
-        "required_user_resolution": [
-            "Provide existing as-built bias/circuit evidence proving physical Txd LOW and SD HIGH for every module during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence; renewed TFDU module identity/photos are not requested.",
-            "Alternatively issue a new explicit authorization permitting a documented fail-safe hardware revision/rewire; the current fast-track explicitly sets REWIRING_ALLOWED=false.",
-            "Provide or authorize a bounded external measurement plan for Txd and SD across the relevant power sequences; measurement alone must not be generalized beyond the sequences actually observed.",
+        "required_user_resolution_for_p10": [],
+        "d17_followup": [
+            "Freeze the physical GLOBAL_PERMIT/final-kill circuit and fail-low bias before D17 closure.",
+            "Prove or measure FPGA-unconfigured, open-circuit, and relevant partial-power sequences without generalizing beyond tested sequences.",
+            "Retain physical Txd LOW, SD HIGH, external kill latency, and residual-risk evidence for final hardware acceptance.",
         ],
         "sources": sources,
     }
     write_json("evidence/generated/p10_severe_hardware_blocker.json", blocker)
 
+    reassessment_input_paths = [
+        "docs/tfdu6102_safety_contract.md",
+        "config/project_state.json",
+        "evidence/generated/p9_final_summary.json",
+        "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
+        "evidence/generated/p10_ax7020_shutdown_build_summary.json",
+        "evidence/generated/p10_ax7020_functional_build_summary.json",
+        "evidence/generated/p10_dual_endpoint_regression/summary.json",
+        "evidence/generated/p10_jtag_identity_latest.json",
+        "rtl/p10_ax7020_shutdown_top.v",
+        "rtl/tfdu_lane_phy.sv",
+        "rtl/p9_optical_transport_core.sv",
+    ]
+    for relative in reassessment_input_paths:
+        if not (ROOT / relative).is_file():
+            raise RuntimeError(f"missing reassessment input: {relative}")
+    shutdown_summary = load_json("evidence/generated/p10_ax7020_shutdown_build_summary.json")
+    functional_summary = load_json("evidence/generated/p10_ax7020_functional_build_summary.json")
+    regression_summary = load_json("evidence/generated/p10_dual_endpoint_regression/summary.json")
+    if shutdown_summary.get("status") != "PASS":
+        raise RuntimeError("shutdown build summary is not PASS")
+    if functional_summary.get("status") != "PASS":
+        raise RuntimeError("functional build summary is not PASS")
+    if regression_summary.get("status") != "PASS":
+        raise RuntimeError("dual-endpoint regression summary is not PASS")
+    shutdown_roles = shutdown_summary.get("roles", [])
+    if len(shutdown_roles) != 2:
+        raise RuntimeError("shutdown summary does not contain two roles")
+    for role_summary in shutdown_roles:
+        markers = role_summary.get("markers", {})
+        if not (
+            role_summary.get("status") == "PASS"
+            and markers.get("P10_SHUTDOWN_MODE_INTENT") == "0x3"
+            and markers.get("P10_SHUTDOWN_SD_INTENT") == "0x3"
+            and markers.get("P10_SHUTDOWN_TXD_INTENT") == "0x0"
+        ):
+            raise RuntimeError(f"shutdown intent mismatch for {role_summary.get('role')}")
+
+    reassessment = {
+        "schema_version": 1,
+        "test_id": "P10-HARDWARE-ADMISSION-REASSESSMENT",
+        "status": "PASS_POWER_STATE_RECLASSIFIED_ROLE_BINDING_REQUIRED" if not hardware_admission else "PASS_READY_FOR_SCOPED_P10_HARDWARE",
+        "generated_at_utc": generated_at,
+        "power_state_finding_id": POWER_STATE_FINDING_ID,
+        "power_state_finding_status": POWER_STATE_SCOPE_STATUS,
+        "power_state_finding_blocking_for_p10": False,
+        "p10_hardware_admission": hardware_admission,
+        "blocking_condition": blocking_condition,
+        "role_binding_status": jtag_role_status,
+        "scope": "ALREADY_POWERED_STATIC_DUAL_AX7020_NO_ETHERNET_NO_MOVEMENT_NO_REWIRING_NO_INTENTIONAL_POWER_CYCLE_LANE_MASK_MAX_0X3",
+        "scope_guards": blocker["scope_guards"],
+        "canonical_alignment": [
+            "docs/tfdu6102_safety_contract.md assigns external power-up/open/unconfigured/partial-power fail-low to PENDING_D17.",
+            "config/project_state.json keeps global_permit_physical_implementation=PENDING_D17 while P9 status is PASS.",
+            "The canonical P9 final summary is PASS and preserves GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION=PENDING_D17.",
+            "The P10 fast-track explicitly requires PHYSICAL_GLOBAL_PERMIT to remain PENDING_D17 after any P10 PASS.",
+            "No D17, partial-power, physical GLOBAL_PERMIT, external duty, or product-final PASS is created by this reassessment.",
+        ],
+        "supersedes_admission_annotations_in": [
+            "The build-time HARDWARE_ADMISSION comment in both frozen role-specific XDC files.",
+            "The admission fields in the frozen shutdown, functional, PS-runtime, and offline-architecture build summaries.",
+            "The admission field in the repository-intake snapshot created before this reassessment.",
+            "Only admission classification is superseded; build results, hashes, source commits, limitations, and all hardware-not-run fields remain unchanged.",
+        ],
+        "configured_safety_evidence": {
+            "shutdown_build_status": shutdown_summary["status"],
+            "shutdown_roles": [
+                {
+                    "role": item["role"],
+                    "status": item["status"],
+                    "mode_intent": item["markers"]["P10_SHUTDOWN_MODE_INTENT"],
+                    "sd_intent": item["markers"]["P10_SHUTDOWN_SD_INTENT"],
+                    "txd_intent": item["markers"]["P10_SHUTDOWN_TXD_INTENT"],
+                    "bitstream": item["artifact"],
+                }
+                for item in shutdown_roles
+            ],
+            "functional_build_status": functional_summary["status"],
+            "dual_endpoint_regression_status": regression_summary["status"],
+            "configured_reset_fault_behavior": "ENDPOINT_UNARMED_SHUTDOWN_LATCHED_TXD_LOW_SD_HIGH",
+        },
+        "ordinary_configuration_interval": {
+            "expected_mode": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+            "expected_sd": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+            "expected_txd": "HIGH_IF_PUDC_B_PULLUPS_ACTIVE",
+            "optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE",
+            "txd_low_claim": False,
+        },
+        "unchanged_pending": [
+            "PHYSICAL_GLOBAL_PERMIT=PENDING_D17",
+            "FPGA_UNCONFIGURED_FAIL_LOW=PENDING_D17",
+            "PARTIAL_POWER_FAIL_LOW=PENDING_D17",
+            "EXTERNAL_TFDU_DUTY=PENDING",
+            "PRODUCT_FINAL=PENDING",
+        ],
+        "input_sha256": {
+            relative: sha256_file(ROOT / relative) for relative in reassessment_input_paths
+        },
+    }
+    write_json("evidence/generated/p10_hardware_admission_reassessment.json", reassessment)
+    reassessment_md = f"""# P10 hardware-admission reassessment
+
+- Result: `{reassessment['status']}`.
+- `{POWER_STATE_FINDING_ID}`: `{POWER_STATE_SCOPE_STATUS}`; it is not a P10 blocker in the already-powered, no-intentional-power-cycle scope.
+- Current P10 hardware admission: `{str(hardware_admission).lower()}`.
+- Current blocker: `{blocking_condition or 'NONE'}`.
+- JTAG role state: `{jtag_role_status}`.
+
+Configured reset/fault and the two frozen shutdown builds drive `Mode=0x3`, `SD=0x3`, and `Txd=0x0`. During the ordinary configuration interval, PUDC_B-enabled pull-ups are expected to make both SD and Txd high; the TFDU6102 truth table makes SD high inhibit optical TX. This does not prove Txd-low, FPGA-unconfigured fail-low, or partial-power fail-low.
+
+The missing external fail-low and physical final-kill properties remain `PENDING_D17`, exactly as recorded by the canonical safety contract, project state, P9 final PASS boundary, and P10 fast-track unchanged-pending scope. This reassessment neither waives those requirements nor creates a hardware/product safety PASS.
+
+Scoped guards: no intentional power cycle, explicit serial-to-role binding before programming, role-matched shutdown images first, abort on target/rail/safe-state anomaly, and shutdown-before/on-error/after for every active stage.
+"""
+    (ROOT / "evidence/generated/p10_hardware_admission_reassessment.md").write_text(
+        reassessment_md, encoding="utf-8"
+    )
+
     board_doc = {
         "schema_version": 1,
         "test_id": "P10-BOARD-DOCUMENT-INTAKE",
-        "status": "PASS_WITH_DOCUMENTATION_GAPS_NONBLOCKING_AND_SEPARATE_SAFETY_BLOCKER",
+        "status": "PASS_WITH_DOCUMENTATION_GAPS_AND_D17_FOLLOWUP_NONBLOCKING",
         "board_document_set": "PASS_FOR_J10_MAPPING_PHYSICAL_REVISION_GAPS_NONBLOCKING",
-        "tfdu_document_set": "PASS_FOR_USER_ACCEPTED_FUNCTIONAL_IDENTITY_SAFETY_SEPARATELY_OPEN",
+        "tfdu_document_set": "PASS_FOR_USER_ACCEPTED_FUNCTIONAL_IDENTITY_POWER_STATE_PENDING_D17",
         "official_board_sources_sufficient_for_j10_pin_mapping": True,
         "official_board_sources_sufficient_for_physical_board_revision": False,
         "official_tfdu_datasheet_available": True,
@@ -657,19 +864,21 @@ def main() -> int:
         "tfdu_module_identity_reconfirmation_required_for_p10": False,
         "tfdu_historical_functionality": "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010",
         "ordinary_powered_configuration_optical_tx": "INHIBITED_IF_PUDC_B_PULLUPS_ACTIVE_SD_HIGH_DOMINATES_TXD",
-        "canonical_physical_txd_default_low": "NOT_ESTABLISHED",
-        "partial_power_tx_disabled": "NOT_ESTABLISHED",
+        "configured_reset_fault_txd_low": "PASS_FROM_RTL_AND_ROLE_SEPARATED_SHUTDOWN_BUILDS",
+        "partial_power_tx_disabled": "PENDING_D17_NOT_CLAIMED_BY_P10",
         "user_clarification": USER_CLARIFICATION,
         "reference_file_inventory": "evidence/generated/p10_board_reference_file_inventory.json",
         "sources": sources,
-        "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "hardware_admission": hardware_admission,
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
     }
     write_json("evidence/generated/p10_board_document_intake.json", board_doc)
 
     audit = {
         "schema_version": 1,
         "test_id": "P10-WIRING-DESIGN-AUDIT",
-        "status": "FAIL_CLOSED_SEVERE_BLOCKER",
+        "status": "PASS_MAPPING_ROLE_BINDING_REQUIRED" if not hardware_admission else "PASS_READY_FOR_SCOPED_P10_HARDWARE",
         "mapping_complete": True,
         "signal_line_count": len(rows),
         "pinmap_independently_derived_for_ax7020": True,
@@ -679,16 +888,18 @@ def main() -> int:
         "connector_series_resistors": "PASS: 33 ohm on all selected J10 signal nets",
         "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
         "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
-        "powerup_reset_default": "FAIL_CLOSED: ordinary powered configuration is optically inhibited by expected SD high, but Txd-low/full-shutdown and partial-power guarantees are not established",
+        "powerup_reset_default": "PENDING_D17_NONBLOCKING_FOR_SCOPED_P10: configured reset/fault is Txd-low/SD-high; ordinary configuration is optically inhibited by SD-high; unconfigured/partial-power fail-low is not claimed",
         "power_state_analysis": blocker["refined_scope"],
         "physical_board_role_binding": jtag_role_status,
         "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
-        "hardware_admission": False,
+        "hardware_admission": hardware_admission,
         "hardware_actions_executed": jtag_enumerated,
         "hardware_action_scope": (
             "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
         ),
-        "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
+        "hardware_admission_reassessment": "evidence/generated/p10_hardware_admission_reassessment.json",
         "signal_lines": rows,
         "sources": sources,
     }
@@ -697,7 +908,11 @@ def main() -> int:
     proposal_lines = [
         "# P10 AX7020 dual-board J10 wiring proposal and audit",
         "",
-        "> Mapping status: user-confirmed. Hardware admission: **blocked** by `P10-SAFETY-POWERUP-001`.",
+        (
+            "> Mapping status: user-confirmed. Hardware admission: **ready for the scoped no-power-cycle P10 campaign**."
+            if hardware_admission
+            else f"> Mapping status: user-confirmed. Hardware admission: **blocked only by `{ROLE_BINDING_BLOCKER_ID}`**."
+        ),
         "",
         "The fixed-role board is proposed as `AX7020-F` with `F0/F1`; the stationary rotating-role board is proposed as `AX7020-R` with `R0/R1`. Lane 0 is `F0 ↔ R0` (A-to-A) and lane 1 is `F1 ↔ R1` (B-to-B). A/B cross-pairing is prohibited.",
         "",
@@ -725,40 +940,53 @@ def main() -> int:
             "",
             "- Existing TFDU VCC/GND wiring remains user-owned and must not be altered under the current authorization.",
             "- Any future connector change requires both AX7020 boards and all TFDU rails to be powered off.",
-            "- Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and the documented Txd/SD fail-safe state for every relevant power sequence.",
+            "- This P10 campaign does not intentionally power-cycle either AX7020 or any TFDU rail. Any future power-up remains outside this scoped admission and requires the applicable electrical checks.",
             (
                 f"- JTAG cable serial is the authoritative F/R role key. Read-only enumeration observed {', '.join(observed_jtag_serials)}; explicitly bind each to AX7020-F or AX7020-R before programming."
                 if jtag_enumerated
                 else "- Use JTAG cable serial as the authoritative F/R role key. A bounded read-only enumeration may run now; bind each serial to AX7020-F or AX7020-R before programming."
             ),
             "- UART is role-local diagnostic output only; it cannot arm TX or bypass the final TX kill.",
-            "- A shutdown bitstream must drive both Txd outputs low and both SD outputs high, but it does not cure an unconfigured/partial-power electrical gap.",
+            "- After explicit role binding, program the role-matched shutdown bitstream on both boards before any functional image or ELF. It drives both Txd outputs low and both SD outputs high after configuration.",
+            "- Abort without further hardware action if a target disappears, a rail changes state, or the no-power-cycle scope cannot be maintained.",
             "",
             "## Open items",
             "",
-            "- Refined severe blocker: the ordinary powered configuration state is expected to be optically inhibited because SD and Txd both pull high and SD dominates. However, Txd is not low, the canonical full-shutdown pair is not met during configuration, and partial-power behavior has no discrete fail-safe guarantee.",
+            f"- `{POWER_STATE_FINDING_ID}` is reclassified as `{POWER_STATE_SCOPE_STATUS}`: configured reset/fault and shutdown images are Txd-low/SD-high; the ordinary configuration interval is optically inhibited because SD high dominates; FPGA-unconfigured/partial-power fail-low remains PENDING_D17 and is not claimed by P10.",
             "- J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.",
-            f"- AX7020-F/AX7020-R JTAG cable serial role binding remains pending (`{jtag_role_status}`); physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
+            f"- AX7020-F/AX7020-R JTAG cable role state: `{jtag_role_status}`. Physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
             "- Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.",
             "",
             "## Hardware admission decision",
             "",
-            "`FAIL_CLOSED_FOR_ACTIVE_HARDWARE`: bounded read-only JTAG serial enumeration is admitted. Programming, ELF execution, UART writes, TFDU drive, and any configuration-changing action remain blocked by `P10-SAFETY-POWERUP-001`.",
+            (
+                "`READY_FOR_SCOPED_P10_HARDWARE`: role binding is explicit. Continue only with the no-power-cycle guards, shutdown images first, bounded stages, and shutdown-on-error/after."
+                if hardware_admission
+                else f"`FAIL_CLOSED_PENDING_ROLE_BINDING`: programming, ELF execution, UART writes, TFDU drive, and configuration-changing actions remain blocked by `{ROLE_BINDING_BLOCKER_ID}`."
+            ),
         ]
     )
     proposal_path = ROOT / "docs/hardware/P10_AX7020_DUAL_BOARD_WIRING_PROPOSAL.md"
     proposal_path.parent.mkdir(parents=True, exist_ok=True)
     proposal_path.write_text("\n".join(proposal_lines) + "\n", encoding="utf-8")
 
-    required_docs = """# P10 remaining board and safety evidence
+    required_docs = f"""# P10 remaining board and safety evidence
 
 The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, connector orientation, and independent AX7020 XDCs. The user confirms that all four TFDU small boards previously operated on AX7010 and does not require renewed small-board identity inspection. The supplied comparison records byte-identical AX7010/AX7020 base-PCB J10 design files.
 
-Required before any programming or TFDU-driving hardware action:
+Required before any programming or TFDU-driving hardware action in P10:
 
 - explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
-- existing as-built circuit/bias evidence that every physical Txd is LOW and every SD is HIGH during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence;
-- a bounded external Txd/SD measurement plan for those sequences, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring). Measurements must not be generalized beyond tested sequences.
+
+Current role state: `{jtag_role_status}`.
+
+Retained for D17/final-hardware closure, but not required to start the already-powered no-intentional-power-cycle P10 campaign:
+
+- as-built fail-low circuit/bias evidence for open-circuit, FPGA-unconfigured, and relevant partial-power sequences;
+- bounded external Txd/SD measurements for those sequences;
+- physical GLOBAL_PERMIT/final-kill circuit, readback, and deassertion-latency evidence.
+
+These items remain `PENDING_D17`; P10 does not claim they pass. No rewire is authorized by the fast-track.
 
 Nonblocking documentation gaps retained for provenance:
 
@@ -793,9 +1021,9 @@ Supporting comparison input: `C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_C
     clarification_path = ROOT / "docs/hardware/P10_USER_HARDWARE_CLARIFICATIONS.md"
     clarification_path.write_text(clarification_md, encoding="utf-8")
 
-    blocker_md = """# P10 severe hardware blocker: TFDU partial-power and canonical Txd-low state are not established
+    blocker_md = f"""# P10 power-state finding reassessment
 
-`P10-SAFETY-POWERUP-001` is an open severe blocker. The current fast-track authorizes hardware actions, but it also requires Codex to stop for autonomous-TX/final-TX-kill safety violations.
+`{POWER_STATE_FINDING_ID}` was originally classified as severe. It is now `{POWER_STATE_SCOPE_STATUS}` and is not a blocker for the already-powered, no-intentional-power-cycle P10 campaign. This does not waive or pass the D17 requirement.
 
 Direct evidence:
 
@@ -804,19 +1032,22 @@ Direct evidence:
 - AX7020 R29 holds U13/`PUDC_B` low with 1 kohm. AMD UG470 states that low `PUDC_B` enables SelectIO internal pull-ups after power-up and during configuration, subject to power sequencing.
 - The TFDU6102 pin description states Txd is active HIGH and SD is active-high shutdown (PDF page 4 / printed page 3). Its truth table states SD=HIGH forces transmitter=0 regardless of Txd (PDF page 10 / printed page 9).
 - Consequently, during an ordinary powered configuration interval in which the internal pull-ups are active, SD and Txd are both expected HIGH and SD inhibits optical TX. Current evidence does **not** support claiming autonomous optical emission in that specific state.
-- That state still violates the canonical physical Txd-default-LOW/full-shutdown SD=HIGH+Txd=LOW contract, and the lack of discrete bias does not guarantee any FPGA-unpowered/TFDU-powered or other partial-power sequence.
-- A shutdown image controls pins only after PL configuration and cannot close the preceding configuration interval or partial-power guarantee.
+- Configured reset/fault logic and both frozen role-specific shutdown images drive Txd LOW and SD HIGH. Their build evidence records Mode=0x3, SD=0x3, and Txd=0x0.
+- The configuration state does not establish Txd LOW, and the lack of discrete bias does not guarantee any FPGA-unpowered/TFDU-powered or other partial-power sequence. Those external properties remain `PENDING_D17`.
+- A shutdown image controls pins only after PL configuration and does not close the preceding configuration interval or partial-power guarantee; P10 makes no such claim.
 
 The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison records byte-identical AX7010/AX7020 base-PCB schematic and J10 circuitry. That is accepted as empirical module/circuit compatibility and removes any P10 request to re-inspect the four module markings, revisions, or photos. It does not establish canonical physical Txd-low/full-shutdown compliance or partial-power TX-disabled behavior.
 
 The same schematic also places R29=1 kohm to ground on the requested B-position Rxd (`J10-26/U13`). This is not an output-to-output connection, but its approximately 3.3 mA high-state load exceeds the TFDU6102 datasheet's 250/500-uA VOH guarantee points. User-confirmed prior operation on the identical AX7010 base/J10 circuit makes this an empirical-operability-backed datasheet gap, not an independent damage-risk blocker.
 
-The only hardware action recorded is bounded read-only JTAG cable-serial enumeration; it did not configure or reset the FPGA or drive TFDU pins. FPGA programming, ELF execution, UART writes, TFDU drive, reset, and configuration-changing actions remain blocked. Resolution requires existing as-built fail-safe circuit evidence plus sequence-bounded measurements, or a new authorization that permits a documented fail-safe hardware revision because the current goal prohibits rewiring.
+The canonical safety contract assigns external power-up/open/unconfigured/partial-power fail-low and physical final-kill measurement to `PENDING_D17`. The canonical P9 result is PASS while preserving that boundary, and the P10 fast-track explicitly preserves `PHYSICAL_GLOBAL_PERMIT: PENDING_D17` after P10. Therefore this finding is nonblocking only within a no-intentional-power-cycle campaign that programs role-matched shutdown images first and aborts on target, rail, safe-state, or autonomous-emission anomalies.
+
+The remaining P10 blocker is `{blocking_condition or 'NONE'}`. The only hardware action recorded so far is bounded read-only JTAG cable-serial enumeration; it did not configure or reset the FPGA or drive TFDU pins.
 """
     blocker_path = ROOT / "docs/hardware/P10_SEVERE_HARDWARE_BLOCKER.md"
     blocker_path.write_text(blocker_md, encoding="utf-8")
 
-    board_md = """# P10 board-document intake
+    board_md = f"""# P10 board-document intake
 
 - Board reference file inventory: `PASS` (71 files, every file SHA256-hashed).
 - Official AX7020 J10 pin mapping source set: `PASS` for the documented AX7020 reference design.
@@ -826,7 +1057,9 @@ The only hardware action recorded is bounded read-only JTAG cable-serial enumera
 - TFDU functional identity: `USER_ACCEPTED`; the user confirms all four modules previously operated on AX7010 and requires no renewed module marking/revision/photo check.
 - AX7010/AX7020 base/J10 comparison: `PASS`; the supplied comparison reports byte-identical reference design files.
 - Ordinary powered configuration optical inhibition: `SUPPORTED_IF_PUDC_B_PULLUPS_ACTIVE` (SD high dominates Txd high per the TFDU truth table).
-- Canonical physical Txd-low/full-shutdown and partial-power fail-safe network: `INCOMPLETE` and safety-blocking.
+- Configured reset/fault and shutdown-image Txd-low/SD-high state: `PASS_OFFLINE_BUILD_AND_SIMULATION`.
+- FPGA-unconfigured/partial-power fail-low network: `PENDING_D17`, not claimed by P10 and nonblocking only for the scoped no-power-cycle campaign.
+- Current hardware-admission blocker: `{blocking_condition or 'NONE'}`.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.
 """
@@ -836,14 +1069,14 @@ See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_R
 
 The confirmed J10 A/B mapping is independently supported by the AX7020 manual, schematic, and pin workbook. Both role-specific pinmaps/XDC files use `xc7z020clg400-2`, LVCMOS33, bank 34/35 at documented 3.3 V, and do not source the AX7010 XDC.
 
-Mapping is complete, but hardware admission fails closed:
+Mapping is complete. Current admission findings:
 
-- `P10-SAFETY-POWERUP-001`: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown compliance and partial-power TX-disabled behavior are not established.
+- `{POWER_STATE_FINDING_ID}`: `{POWER_STATE_SCOPE_STATUS}`. Configured reset/fault and shutdown images are Txd-low/SD-high; ordinary configuration is optically inhibited by SD-high; FPGA-unconfigured/partial-power fail-low stays PENDING_D17.
 - `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
-- physical F/R role binding by JTAG cable serial is pending: `{jtag_role_status}`.
+- physical F/R role binding by JTAG cable serial: `{jtag_role_status}`.
 - TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.
 
-Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounded read-only JTAG identity enumeration is allowed. Artifact-generation hardware actions executed: `false`.
+Result: `{'READY_FOR_SCOPED_P10_HARDWARE' if hardware_admission else 'FAIL_CLOSED_PENDING_ROLE_BINDING'}`. Artifact generation itself executed no hardware action. Every active stage still requires shutdown-before/on-error/after and the no-intentional-power-cycle scope.
 """
     (ROOT / "evidence/generated/p10_wiring_design_audit.md").write_text(audit_md, encoding="utf-8")
 
@@ -859,6 +1092,8 @@ Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounde
         "docs/hardware/P10_USER_HARDWARE_CLARIFICATIONS.md",
         "docs/hardware/P10_SEVERE_HARDWARE_BLOCKER.md",
         "evidence/generated/p10_severe_hardware_blocker.json",
+        "evidence/generated/p10_hardware_admission_reassessment.json",
+        "evidence/generated/p10_hardware_admission_reassessment.md",
         "evidence/generated/p10_board_document_intake.json",
         "evidence/generated/p10_board_document_intake.md",
         "evidence/generated/p10_wiring_design_audit.json",
@@ -867,14 +1102,19 @@ Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounde
     manifest = {
         "schema_version": 1,
         "test_id": "P10-WIRING-ARTIFACT-GENERATION",
-        "status": "PASS_OFFLINE_GENERATION_HARDWARE_BLOCKED",
+        "status": (
+            "PASS_OFFLINE_GENERATION_READY_FOR_SCOPED_P10_HARDWARE"
+            if hardware_admission
+            else "PASS_OFFLINE_GENERATION_ROLE_BINDING_REQUIRED"
+        ),
         "generated_at_utc": generated_at,
         "outputs": [
             {"path": item, "bytes": (ROOT / item).stat().st_size, "sha256": sha256_file(ROOT / item)}
             for item in sorted(set(outputs))
         ],
         "hardware_actions_executed": False,
-        "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "blocking_condition": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
     }
     write_json("evidence/generated/p10_wiring_artifact_manifest.json", manifest)
     print(json.dumps({"status": manifest["status"], "outputs": len(manifest["outputs"])}))

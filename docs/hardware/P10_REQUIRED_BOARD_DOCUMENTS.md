@@ -2,11 +2,19 @@
 
 The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, connector orientation, and independent AX7020 XDCs. The user confirms that all four TFDU small boards previously operated on AX7010 and does not require renewed small-board identity inspection. The supplied comparison records byte-identical AX7010/AX7020 base-PCB J10 design files.
 
-Required before any programming or TFDU-driving hardware action:
+Required before any programming or TFDU-driving hardware action in P10:
 
 - explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
-- existing as-built circuit/bias evidence that every physical Txd is LOW and every SD is HIGH during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence;
-- a bounded external Txd/SD measurement plan for those sequences, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring). Measurements must not be generalized beyond tested sequences.
+
+Current role state: `ENUMERATED_UNASSIGNED: 210249855178, 210512180081`.
+
+Retained for D17/final-hardware closure, but not required to start the already-powered no-intentional-power-cycle P10 campaign:
+
+- as-built fail-low circuit/bias evidence for open-circuit, FPGA-unconfigured, and relevant partial-power sequences;
+- bounded external Txd/SD measurements for those sequences;
+- physical GLOBAL_PERMIT/final-kill circuit, readback, and deassertion-latency evidence.
+
+These items remain `PENDING_D17`; P10 does not claim they pass. No rewire is authorized by the fast-track.
 
 Nonblocking documentation gaps retained for provenance:
 

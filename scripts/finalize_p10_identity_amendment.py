@@ -19,6 +19,11 @@ FINAL_MD = ROOT / "evidence/generated/p10_fasttrack_final_summary.md"
 AMENDMENT_JSON = ROOT / "evidence/generated/p10_fasttrack_identity_amendment.json"
 AMENDMENT_MD = ROOT / "evidence/generated/p10_fasttrack_identity_amendment.md"
 IDENTITY_CONFIG = ROOT / "config/hardware/p10_jtag_identity_inventory.json"
+REASSESSMENT = ROOT / "evidence/generated/p10_hardware_admission_reassessment.json"
+
+POWER_STATE_FINDING_ID = "P10-SAFETY-POWERUP-001"
+ROLE_BINDING_BLOCKER_ID = "P10-ROLE-BINDING-001"
+POWER_STATE_SCOPE_STATUS = "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN"
 
 
 def sha256(path: Path) -> str:
@@ -47,7 +52,7 @@ def main() -> int:
         errors.append("NO_HARDWARE=1 is required for summary reconciliation")
     if os.environ.get("CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         errors.append("CURRENT_RUN_HARDWARE_AUTHORIZATION=false is required for summary reconciliation")
-    for path in (LATEST, FINAL_JSON):
+    for path in (LATEST, FINAL_JSON, REASSESSMENT):
         if not path.is_file():
             errors.append(f"missing input: {path}")
     if errors:
@@ -73,6 +78,27 @@ def main() -> int:
             print(f"P10_IDENTITY_AMENDMENT_ERROR: {error}", file=sys.stderr)
         return 1
 
+    current_inventory = load(IDENTITY_CONFIG) if IDENTITY_CONFIG.is_file() else {}
+    current_status = str(current_inventory.get("status", ""))
+    fixed_serial = str(current_inventory.get("fixed_board_serial", ""))
+    rotating_serial = str(current_inventory.get("rotating_board_serial", ""))
+    roles_bound = (
+        current_status.startswith("BOUND")
+        and fixed_serial in serials
+        and rotating_serial in serials
+        and fixed_serial != rotating_serial
+        and current_inventory.get("target_order_used_for_role_binding") is False
+    )
+    if current_status.startswith("BOUND") and not roles_bound:
+        print("P10_IDENTITY_AMENDMENT_ERROR: invalid bound role inventory", file=sys.stderr)
+        return 1
+    role_binding_status = (
+        f"BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F={fixed_serial}, AX7020-R={rotating_serial}"
+        if roles_bound
+        else "ENUMERATED_UNASSIGNED"
+    )
+    blocking_condition = None if roles_bound else ROLE_BINDING_BLOCKER_ID
+
     generated_at = datetime.now(timezone.utc).isoformat()
     action = {
         "test_id": identity["test_id"],
@@ -83,7 +109,7 @@ def main() -> int:
         "latest_summary": "evidence/generated/p10_jtag_identity_latest.json",
         "latest_summary_sha256": sha256(LATEST),
         "observed_cable_serials": serials,
-        "role_binding_status": "ENUMERATED_UNASSIGNED",
+        "role_binding_status": role_binding_status,
         "read_only": True,
         "programming_executed": False,
         "reset_executed": False,
@@ -96,7 +122,7 @@ def main() -> int:
     amendment = {
         "schema_version": 1,
         "test_id": "P10-FASTTRACK-IDENTITY-AMENDMENT",
-        "status": "PARTIAL_ROLE_ASSIGNMENT_REQUIRED",
+        "status": "READY_FOR_SCOPED_P10_HARDWARE" if roles_bound else "PARTIAL_ROLE_ASSIGNMENT_REQUIRED",
         "generated_at_utc": generated_at,
         "user_clarification": {
             "tfdu_module_identity_reconfirmation_required_for_p10": False,
@@ -104,34 +130,42 @@ def main() -> int:
             "ax7020_role_binding_method": "JTAG_CABLE_SERIAL",
         },
         "hardware_action": action,
-        "blocking_condition_for_programming": "P10-SAFETY-POWERUP-001",
+        "blocking_condition_for_programming": blocking_condition,
+        "power_state_scope": POWER_STATE_SCOPE_STATUS,
+        "hardware_admission_reassessment": {
+            "path": "evidence/generated/p10_hardware_admission_reassessment.json",
+            "sha256": sha256(REASSESSMENT),
+        },
         "next_required_user_action": (
-            f"Map serial {serials[0]} and serial {serials[1]} to AX7020-F and AX7020-R; "
-            "target order will not be used."
+            None
+            if roles_bound
+            else f"State which of serial {serials[0]} and serial {serials[1]} is AX7020-F; the other will be AX7020-R."
         ),
     }
     write_json(AMENDMENT_JSON, amendment)
-    write_json(IDENTITY_CONFIG, {
-        "schema_version": 1,
-        "inventory_id": "P10_DUAL_AX7020_JTAG_IDENTITY",
-        "status": "ENUMERATED_UNASSIGNED",
-        "role_binding_method": "JTAG_CABLE_SERIAL",
-        "observed_cable_serials": serials,
-        "fixed_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
-        "rotating_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
-        "target_order_used_for_role_binding": False,
-        "evidence": "evidence/generated/p10_jtag_identity_latest.json",
-        "evidence_sha256": sha256(LATEST),
-    })
+    if not roles_bound:
+        write_json(IDENTITY_CONFIG, {
+            "schema_version": 1,
+            "inventory_id": "P10_DUAL_AX7020_JTAG_IDENTITY",
+            "status": "ENUMERATED_UNASSIGNED",
+            "role_binding_method": "JTAG_CABLE_SERIAL",
+            "observed_cable_serials": serials,
+            "fixed_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
+            "rotating_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
+            "target_order_used_for_role_binding": False,
+            "evidence": "evidence/generated/p10_jtag_identity_latest.json",
+            "evidence_sha256": sha256(LATEST),
+        })
     AMENDMENT_MD.write_text(
         "# P10 fast-track identity amendment\n\n"
         "- TFDU module identity reinspection: `NOT_REQUIRED_PER_USER`.\n"
         f"- Read-only JTAG run: `{identity['run_id']}`.\n"
         f"- Distinct AX7020 cable serials: `{serials[0]}`, `{serials[1]}`.\n"
-        "- Serial-to-role assignment: `PENDING_USER_MAPPING`; target order is prohibited.\n"
+        f"- Serial-to-role assignment: `{role_binding_status}`; target order is prohibited.\n"
         "- Programming/reset/memory/ELF/UART/TFDU drive: `false`.\n"
         "- Shutdown: `NOT_REQUIRED_READ_ONLY_ENUMERATION`.\n"
-        "- Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.\n",
+        f"- `{POWER_STATE_FINDING_ID}`: `{POWER_STATE_SCOPE_STATUS}`; D17 remains pending.\n"
+        f"- Active-hardware admission: `{'READY_FOR_SCOPED_P10_HARDWARE' if roles_bound else 'FAIL_CLOSED_PENDING_ROLE_BINDING'}` (`{blocking_condition or 'NONE'}`).\n",
         encoding="utf-8",
     )
 
@@ -142,25 +176,51 @@ def main() -> int:
     summary["programming_executed"] = False
     summary["tfdu_drive_executed"] = False
     summary["jtag_identity"] = action
-    summary["fixed_board_id"] = "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT"
-    summary["rotating_board_id"] = "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT"
+    summary["fixed_board_id"] = f"AX7020-F/JTAG:{fixed_serial}" if roles_bound else "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT"
+    summary["rotating_board_id"] = f"AX7020-R/JTAG:{rotating_serial}" if roles_bound else "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT"
     summary["user_clarification"] = amendment["user_clarification"]
-    summary["fail"] = [
-        "P10-SAFETY-POWERUP-001: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established",
+    summary["hardware_admission"] = roles_bound
+    summary["blocking_condition"] = blocking_condition
+    summary["power_state_scope"] = POWER_STATE_SCOPE_STATUS
+    summary["hardware_admission_reassessment"] = amendment["hardware_admission_reassessment"]
+    summary["fail"] = []
+    if not roles_bound:
+        summary["fail"].append(
+            f"{ROLE_BINDING_BLOCKER_ID}: two JTAG serials were enumerated ({serials[0]}, {serials[1]}) but are not explicitly assigned to F/R roles"
+        )
+    summary["fail"].append("All mandatory active-hardware acceptance stages are not run")
+    summary["nonblocking_findings"] = [
+        f"{POWER_STATE_FINDING_ID}: {POWER_STATE_SCOPE_STATUS}; FPGA-unconfigured/partial-power fail-low remains PENDING_D17 and is not claimed by P10",
         "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context",
-        f"Two JTAG serials were enumerated ({serials[0]}, {serials[1]}) but are not yet explicitly assigned to F/R roles",
-        "All mandatory active-hardware acceptance stages are not run",
     ]
-    summary["required_user_resolution"] = [
-        f"State which of {serials[0]} and {serials[1]} is AX7020-F; the other will be bound as AX7020-R.",
-        "Provide existing as-built bias/circuit evidence plus sequence-bounded Txd/SD measurements for reset/fault, FPGA-unconfigured, and relevant partial-power states; or separately authorize a documented fail-safe rewire.",
-    ]
+    summary["required_user_resolution"] = (
+        [f"State which of {serials[0]} and {serials[1]} is AX7020-F; the other will be bound as AX7020-R."]
+        if not roles_bound
+        else []
+    )
+    mandatory_results = summary.get("mandatory_results", {})
+    for key, value in list(mandatory_results.items()):
+        if isinstance(value, str):
+            mandatory_results[key] = value.replace("SEVERE_BLOCKER", "ROLE_BINDING_REQUIRED")
+    summary["mandatory_results"] = mandatory_results
+    summary["nonblocking_extensions"] = (
+        "NOT_RUN_BECAUSE_MANDATORY_ROLE_BINDING_PENDING"
+        if not roles_bound
+        else "READY_AFTER_SCOPED_HARDWARE_PREFLIGHT"
+    )
+    summary["next_recommended_stage"] = (
+        "P10_EXPLICIT_JTAG_ROLE_BINDING"
+        if not roles_bound
+        else "P10_SCOPED_HARDWARE_RUN"
+    )
     generated = list(summary.get("generated_evidence", []))
     generated.extend([
         "evidence/generated/p10_jtag_identity_latest.json",
         "evidence/generated/p10_jtag_identity_latest.md",
         "evidence/generated/p10_fasttrack_identity_amendment.json",
         "evidence/generated/p10_fasttrack_identity_amendment.md",
+        "evidence/generated/p10_hardware_admission_reassessment.json",
+        "evidence/generated/p10_hardware_admission_reassessment.md",
     ])
     summary["generated_evidence"] = unique(generated)
     write_json(FINAL_JSON, summary)
@@ -179,8 +239,8 @@ def main() -> int:
         "PROGRAMMING_EXECUTED: false\nTFDU_DRIVE_EXECUTED: false\n"
         "NETWORK_USED: false\nNO_HARDWARE_MOVEMENT: true\nMAX_LANE_MASK_USED: NONE_NO_ACTIVE_HARDWARE_RUN\n\n"
         f"ENUMERATED_JTAG_SERIALS:\n{serials[0]}, {serials[1]}\n\n"
-        "FIXED_BOARD_ID:\nPENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT\n\n"
-        "ROTATING_BOARD_ID:\nPENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT\n\n"
+        f"FIXED_BOARD_ID:\n{summary['fixed_board_id']}\n\n"
+        f"ROTATING_BOARD_ID:\n{summary['rotating_board_id']}\n\n"
         f"FOUR_DIRECTION_RAW:\n{mandatory['four_direction_raw']}\n"
         f"LANE0_4MBPS:\n{mandatory['lane0_4mbps']}\n"
         f"LANE1_4MBPS:\n{mandatory['lane1_4mbps']}\n"
@@ -200,13 +260,13 @@ def main() -> int:
         f"SHUTDOWN_FIXED:\n{mandatory['shutdown_fixed']}\n"
         f"SHUTDOWN_ROTATING:\n{mandatory['shutdown_rotating']}\n\n"
         "PASS:\nOFFLINE_BUILD_SIMULATION_ARCHITECTURE_AND_READ_ONLY_IDENTITY_ENUMERATION\n"
-        "FAIL:\nP10-SAFETY-POWERUP-001; JTAG_SERIAL_ROLE_ASSIGNMENT_PENDING; MANDATORY_ACTIVE_HARDWARE_NOT_RUN\n"
-        "NONBLOCKING_EXTENSIONS:\nNOT_RUN_BECAUSE_MANDATORY_HARDWARE_ADMISSION_FAILED\n"
+        f"FAIL:\n{('P10-ROLE-BINDING-001; ' if not roles_bound else '')}MANDATORY_ACTIVE_HARDWARE_NOT_RUN\n"
+        f"NONBLOCKING_EXTENSIONS:\n{summary['nonblocking_extensions']}\n"
         "GENERATED_EVIDENCE:\nevidence/generated/p10_fasttrack_final_summary.json\n"
         "UNCHANGED_PENDING_SCOPES:\nETHERNET; SPI; PHYSICAL_GLOBAL_PERMIT; EXTERNAL_TFDU_DUTY; HANDOVER; 8X32; 600RPM; PRODUCT_FINAL\n\n"
-        "NEXT_RECOMMENDED_STAGE:\nP10_REMEDIATION\n"
+        f"NEXT_RECOMMENDED_STAGE:\n{summary['next_recommended_stage']}\n"
         "```\n\n"
-        "The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only, but explicit serial-to-F/R mapping is still required. Official schematic/configuration and TFDU truth-table evidence indicates the ordinary powered configuration interval is optically inhibited by SD high; physical Txd-low/full-shutdown compliance and partial-power behavior remain unproved. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.\n",
+        f"The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only; role state is `{role_binding_status}`. Configured reset/fault and shutdown builds drive Txd low and SD high. The ordinary configuration interval is optically inhibited by SD high; FPGA-unconfigured/partial-power fail-low remains `PENDING_D17` and is not claimed by P10. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Current active-hardware blocker: `{blocking_condition or 'NONE'}`.\n",
         encoding="utf-8",
     )
     print(json.dumps({"status": amendment["status"], "serials": serials}))

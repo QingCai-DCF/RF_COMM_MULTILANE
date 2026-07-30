@@ -2,7 +2,7 @@
   "schema_version": 1,
   "test_id": "P10-FASTTRACK-IDENTITY-AMENDMENT",
   "status": "PARTIAL_ROLE_ASSIGNMENT_REQUIRED",
-  "generated_at_utc": "2026-07-30T13:07:12.602103+00:00",
+  "generated_at_utc": "2026-07-30T13:29:35.959330+00:00",
   "user_clarification": {
     "tfdu_module_identity_reconfirmation_required_for_p10": false,
     "tfdu_modules_previously_operational_on_ax7010": true,
@@ -30,6 +30,11 @@
     "tfdu_drive_executed": false,
     "shutdown_required": false
   },
-  "blocking_condition_for_programming": "P10-SAFETY-POWERUP-001",
-  "next_required_user_action": "Map serial 210249855178 and serial 210512180081 to AX7020-F and AX7020-R; target order will not be used."
+  "blocking_condition_for_programming": "P10-ROLE-BINDING-001",
+  "power_state_scope": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
+  "hardware_admission_reassessment": {
+    "path": "evidence/generated/p10_hardware_admission_reassessment.json",
+    "sha256": "4eba5044a053cb58e7eab4ad8dc41f78b4e3e1f34722bd001f32c5e78a87d00c"
+  },
+  "next_required_user_action": "State which of serial 210249855178 and serial 210512180081 is AX7020-F; the other will be AX7020-R."
 }

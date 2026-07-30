@@ -1,6 +1,6 @@
 schema_version: 1
 profile_family: "P10_AX7020_COMMON"
-status: "DRAFT_HARDWARE_ADMISSION_BLOCKED"
+status: "DRAFT_ROLE_BINDING_REQUIRED"
 exact_documented_board_model: "ALINX AX7020"
 exact_documented_fpga_marking: "XC7Z020-2CLG400I"
 vivado_part: "xc7z020clg400-2"
@@ -28,7 +28,10 @@ j10:
   bank34_vcco_volts: 3.3
   bank35_vcco_volts: 3.3
 hardware_admission: false
-blocking_condition: "P10-SAFETY-POWERUP-001"
+blocking_condition: "P10-ROLE-BINDING-001"
+power_state_scope: "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN"
+physical_global_permit_status: "PENDING_D17"
+xdc_build_time_admission_comment: "HISTORICAL_ANNOTATION_SUPERSEDED_BY_evidence/generated/p10_hardware_admission_reassessment.json"
 sources:
   ax7020_schematic:
     path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7020开发板原理图V2.0.pdf"
