@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import hashlib
+import functools
 import json
 import re
+import subprocess
 from collections import Counter
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -99,6 +101,8 @@ P9_REQUIREMENT_IDS = {
     "P9-PERF-001", "P9-SOAK-001", "P9-EVID-001",
 }
 
+P9_CLOSEOUT_REQUIREMENT_IDS = {"P9-CLOSEOUT-001"}
+
 P9_SCOPE = "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
 
 REQUIRED_REQUIREMENT_FIELDS = {
@@ -148,6 +152,33 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+@functools.lru_cache(maxsize=None)
+def sha256_artifact(path: Path, root: Path) -> str:
+    """Hash canonical Git bytes for a clean tracked file, otherwise working bytes."""
+    try:
+        relative = path.resolve().relative_to(root.resolve()).as_posix()
+        tracked = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", "--", relative],
+            cwd=root,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode == 0
+        clean = subprocess.run(
+            ["git", "diff", "--quiet", "--", relative],
+            cwd=root,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode == 0
+        if tracked and clean:
+            canonical = subprocess.check_output(["git", "show", f":{relative}"], cwd=root)
+            return hashlib.sha256(canonical).hexdigest()
+    except (OSError, subprocess.SubprocessError, ValueError):
+        pass
+    return sha256_file(path)
+
+
 def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -188,7 +219,7 @@ def hash_record_errors(record: Any, root: Path, label: str) -> list[str]:
         return errors
     if not path.is_file():
         errors.append(f"{label}: missing artifact {path_value}")
-    elif SHA256_RE.fullmatch(digest) and sha256_file(path) != digest:
+    elif SHA256_RE.fullmatch(digest) and sha256_artifact(path, root) != digest:
         errors.append(f"{label}: SHA256 mismatch for {path_value}")
     return errors
 
@@ -284,7 +315,11 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.append("p8e_status must match stage_status.P8E_DUAL_TARGET_BUILD_TIMING_CDC")
     if state.get("p9_status") != p9_stage:
         errors.append("p9_status must match the P9 hardware-validation stage")
-    expected_authorization = p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+    authorization_consumed = state.get("last_hardware_authorization_consumed") is True
+    expected_authorization = (
+        p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+        and not authorization_consumed
+    )
     if state.get("current_run_hardware_authorization") is not expected_authorization:
         errors.append(
             "current_run_hardware_authorization must match the validated P9 run lifecycle"
@@ -335,6 +370,20 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         if not required_exclusions.issubset(exclusions):
             errors.append("AB_L1 current resolution must exclude Z7020/sector-bank/rotation/final product")
 
+    if p9_stage == "PASS" and authorization_consumed:
+        p9_lane1 = state.get("ab_l1_status", {})
+        if not isinstance(p9_lane1, dict):
+            errors.append("ab_l1_status must be a mapping after P9 closeout")
+        else:
+            if p9_lane1.get("legacy_status") != "BAD_DIR":
+                errors.append("ab_l1_status.legacy_status must retain BAD_DIR")
+            if p9_lane1.get("current_p9_stationary_status") != "PASS":
+                errors.append("ab_l1_status.current_p9_stationary_status must be PASS")
+            exclusions = set(p9_lane1.get("not_extrapolated_to", []))
+            required_exclusions = {"Z7020", "SECTOR_BANK", "ROTATION", "FINAL_PRODUCT"}
+            if not required_exclusions.issubset(exclusions):
+                errors.append("P9 AB_L1 PASS must not be extrapolated beyond stationary Z7010 scope")
+
     p7 = state.get("p7_evidence", {})
     if not isinstance(p7, dict):
         errors.append("p7_evidence must be a mapping")
@@ -380,9 +429,16 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         for key, value in expected_arch.items():
             if architecture.get(key) != value:
                 errors.append(f"architecture_status.{key} must be {value}")
+        if p9_stage == "PASS" and authorization_consumed:
+            if architecture.get("global_permit_physical_implementation") != "PENDING_D17":
+                errors.append("global permit physical implementation must remain PENDING_D17")
+            if architecture.get("external_tfdu_duty_measurement") != "PENDING_EXTERNAL_MEASUREMENT":
+                errors.append("external TFDU duty measurement must remain pending external measurement")
 
     if p8c_pass:
         expected_program_stage = (
+            "P9_COMPLETE_P10_NOT_STARTED"
+            if p9_stage == "PASS" and authorization_consumed else (
             "P10A_Z7020_SINGLE_BOARD_MIGRATION"
             if p9_stage == "PASS" else (
                 "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
@@ -390,7 +446,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
                 if p8d_pass else "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
                 )
-            )
+            ))
         )
         if state.get("current_program_stage") != expected_program_stage:
             errors.append(f"current_program_stage must be {expected_program_stage}")
@@ -526,6 +582,27 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
                 errors.append("p8b_acceptance.source_commit must be a full Git commit hash")
 
+    if p9_stage == "PASS" and authorization_consumed:
+        closeout = state.get("p9_post_checkpoint_closeout", {})
+        if not isinstance(closeout, dict) or closeout.get("status") != "PASS":
+            errors.append("P9 post-checkpoint closeout metadata must be PASS")
+        else:
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P9 closeout evidence"),
+                ("git_metadata_path", "git_metadata_sha256", "P9 Git checkpoint metadata"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, closeout.get(path_key))
+                    digest = str(closeout.get(hash_key, "")).lower()
+                    if not artifact.is_file() or not SHA256_RE.fullmatch(digest) or sha256_file(artifact) != digest:
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            if closeout.get("hardware_actions_executed") is not False:
+                errors.append("P9 closeout must not execute hardware actions")
+            if closeout.get("p10_started") is not False:
+                errors.append("P9 closeout must not start P10")
+
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         errors.append("last_verified_commit must be a full Git commit hash")
@@ -556,6 +633,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     missing_p8a = sorted(P8A_REQUIREMENT_IDS - present)
     missing_p8d = sorted(P8D_REQUIREMENT_IDS - present)
     missing_p9 = sorted(P9_REQUIREMENT_IDS - present)
+    missing_p9_closeout = sorted(P9_CLOSEOUT_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -564,6 +642,8 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         errors.append(f"missing P8D requirement IDs: {', '.join(missing_p8d)}")
     if missing_p9:
         errors.append(f"missing P9 requirement IDs: {', '.join(missing_p9)}")
+    if missing_p9_closeout:
+        errors.append(f"missing P9 closeout requirement IDs: {', '.join(missing_p9_closeout)}")
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}
     by_id: dict[str, dict[str, Any]] = {}
@@ -679,6 +759,12 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must retain broader-hardware follow-up")
             if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
                 errors.append(f"{req_id} must declare a primary artifact_hash")
+        for req_id in P9_CLOSEOUT_REQUIREMENT_IDS:
+            item = by_id.get(req_id, {})
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P9 post-checkpoint closeout")
+            if item.get("verification_scope") != "P9_POST_CHECKPOINT_METADATA_ONLY_NO_HARDWARE":
+                errors.append(f"{req_id} must declare the no-hardware closeout scope")
     return errors
 
 
@@ -708,6 +794,7 @@ def render_project_status(state: dict[str, Any]) -> str:
         f"P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: {state['p9_status']}",
         f"CURRENT_PROGRAM_STAGE: {state['current_program_stage']}",
         f"CURRENT_RUN_HARDWARE_AUTHORIZATION: {str(state['current_run_hardware_authorization']).lower()}",
+        f"LAST_HARDWARE_AUTHORIZATION_CONSUMED: {str(state.get('last_hardware_authorization_consumed', False)).lower()}",
         "```",
         "",
         "The P7 PASS is limited to the stationary two-lane application path on the current Z7010 development platform. It is not Z7020, sector-bank, rotating, Ethernet, 8-lane, or final-product acceptance.",
@@ -779,9 +866,30 @@ def render_project_status(state: dict[str, Any]) -> str:
             "- Real AXI DMA, DDR/cache coherency, Z7020 hardware, rotation, and final timing/CDC remain pending.",
         ]
 
+    if isinstance(state.get("p9_post_checkpoint_closeout"), dict):
+        closeout = state["p9_post_checkpoint_closeout"]
+        lane1 = state["ab_l1_status"]
+        architecture = state["architecture_status"]
+        p9 = state["p9_acceptance"]
+        lines += [
+            "",
+            "## P9 post-checkpoint closeout",
+            "",
+            f"- P9 run: `{p9['run_id']}`",
+            f"- P9 source commit: `{p9['source_commit']}`",
+            f"- P9 annotated tag: `{p9['evidence_checkpoint_tag']}`",
+            f"- P9 evidence checkpoint: `{p9['evidence_checkpoint_commit']}`",
+            f"- Closeout evidence: `{closeout['evidence_path']}`",
+            f"- Current-run authorization: `{str(state['current_run_hardware_authorization']).lower()}`",
+            f"- Last authorization consumed: `{str(state['last_hardware_authorization_consumed']).lower()}`",
+            f"- External TFDU duty measurement: `{architecture['external_tfdu_duty_measurement']}`",
+            f"- Physical GLOBAL_PERMIT implementation: `{architecture['global_permit_physical_implementation']}`",
+            f"- AB_L1 legacy/current P9 stationary: `{lane1['legacy_status']}` / `{lane1['current_p9_stationary_status']}`",
+            "- P10 remains not started; Z7020, rotation, and final-product hardware acceptance remain pending.",
+        ]
     lines += [
         "",
-        "`AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named P7 stationary Z7010 two-lane scope and is not extrapolated to future hardware.",
+        "`AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.",
         "",
         "## Architecture and pending gates",
         "",

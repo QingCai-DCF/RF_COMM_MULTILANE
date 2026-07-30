@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P9-1",
+  "state_revision": "P9-POST-CHECKPOINT-CLOSEOUT-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -12,11 +12,12 @@
   "rotation_status": "PENDING_FINAL_MECHANICAL",
   "final_product_status": "PENDING_HW",
   "product_final_acceptance": "PENDING",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
+  "last_hardware_authorization_consumed": true,
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P10A_Z7020_SINGLE_BOARD_MIGRATION",
+  "current_program_stage": "P9_COMPLETE_P10_NOT_STARTED",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -135,6 +136,20 @@
       "superseded_for_current_scope_by": "P7_R74_FORMAL_FULL"
     }
   ],
+  "ab_l1_status": {
+    "legacy_status": "BAD_DIR",
+    "legacy_record_status": "HISTORICAL_RETAINED",
+    "current_p9_stationary_status": "PASS",
+    "current_scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+    "current_evidence_path": "evidence/generated/p9_raw_lane_matrix_summary.json",
+    "current_evidence_sha256": "6e0a485539625bb9fb3a5a0c10414fdb2756d4c551e70584161bec37ec5120ac",
+    "not_extrapolated_to": [
+      "Z7020",
+      "SECTOR_BANK",
+      "ROTATION",
+      "FINAL_PRODUCT"
+    ]
+  },
   "architecture_status": {
     "global_permit_architecture": "SINGLE_ACTIVE_HIGH_PER_ENDPOINT",
     "fixed_endpoint_global_permit_count": 1,
@@ -144,9 +159,10 @@
     "dual_channel_safety_claimed": false,
     "single_global_permit_rtl_architecture": "PASS",
     "global_permit_physical_implementation": "PENDING_D17",
-    "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE",
+    "z7010_global_permit_pin_freeze": "PENDING_D17",
     "exact_rolling_duty_rtl_property": "PASS",
-    "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER"
+    "tfdu_duty_hardware_measurement": "PENDING_EXTERNAL_MEASUREMENT",
+    "external_tfdu_duty_measurement": "PENDING_EXTERNAL_MEASUREMENT"
   },
   "p8b_acceptance": {
     "status": "PASS",
@@ -237,7 +253,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "last_verified_commit": "818d335c229d7b92223c279159aab84a5207ef92",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -322,9 +338,12 @@
     ]
   },
   "p9_current_run_authorization": {
-    "status": "VALIDATED_PHASE1_SCOPE_AUTHORIZATION",
+    "status": "CONSUMED_AFTER_P9_ACCEPTANCE",
     "path": "config/p9_current_run_authorization.json",
-    "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697"
+    "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697",
+    "consumed": true,
+    "consumed_by_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+    "reusable_for_future_run": false
   },
   "p9_acceptance": {
     "status": "PASS",
@@ -333,6 +352,10 @@
     "test_id": "P9-FINAL",
     "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
     "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+    "evidence_checkpoint_tag": "p9-z7010-2lane-pass",
+    "evidence_checkpoint_tag_object": "5bc9493071b9ea3446ac27cdd117bc3d3f67bd91",
+    "evidence_checkpoint_commit": "818d335c229d7b92223c279159aab84a5207ef92",
+    "evidence_checkpoint_tree": "d92ae2b97d30590dca634ac3032e1c6dabb40ca4",
     "evidence_path": "evidence/generated/p9_evidence_consistency_summary.json",
     "evidence_sha256": "6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6",
     "phase2_authorization_path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/authorization/phase2_immutable_artifacts.json",
@@ -350,5 +373,15 @@
       "PHYSICAL_GLOBAL_PERMIT_D17",
       "FINAL_PRODUCT"
     ]
+  },
+  "p9_post_checkpoint_closeout": {
+    "status": "PASS",
+    "test_id": "P9-CLOSEOUT-001",
+    "evidence_path": "evidence/generated/p9_post_checkpoint_closeout.json",
+    "evidence_sha256": "c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4",
+    "git_metadata_path": "evidence/generated/p9_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116",
+    "hardware_actions_executed": false,
+    "p10_started": false
   }
 }

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P9-GIT-CHECKPOINT-METADATA",
+  "generated_utc": "2026-07-30T05:32:47.8607192Z",
+  "scope": "POST_CHECKPOINT_METADATA_ONLY_NO_HARDWARE",
+  "p9_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+  "p9_source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "p9_evidence_checkpoint": {
+    "tag": "p9-z7010-2lane-pass",
+    "tag_type": "tag",
+    "tag_object": "5bc9493071b9ea3446ac27cdd117bc3d3f67bd91",
+    "target_commit": "818d335c229d7b92223c279159aab84a5207ef92",
+    "target_tree": "d92ae2b97d30590dca634ac3032e1c6dabb40ca4"
+  },
+  "p8e_checkpoint": {
+    "tag": "p8e-pass",
+    "tag_type": "tag",
+    "tag_object": "a0c32296eea2fdeb333a313bb28fe4efbb60bea2",
+    "target_commit": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+    "target_tree": "44932c17cbfba98fcd7d67a04ffea7faf926c7a8"
+  },
+  "mainline_consolidation": {
+    "main_start_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
+    "fast_forward_target": "818d335c229d7b92223c279159aab84a5207ef92",
+    "fast_forward_only": true,
+    "p8_separate_merge_executed": false
+  },
+  "frozen_files": [
+    {
+      "path": "evidence/generated/p9_final_summary.json",
+      "sha256": "c57ca47169f9d53178ed3dde9d8ddc0bb334b5cd79f05b43f8777fb98596bcef"
+    },
+    {
+      "path": "evidence/generated/p9_evidence_consistency_summary.json",
+      "sha256": "6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6"
+    },
+    {
+      "path": "evidence/generated/p9_artifact_freeze_summary.json",
+      "sha256": "ed030b098778bc9a5b8300cdeaecf6415e82d138a50b5955fcd4e2d0625b6bf6"
+    },
+    {
+      "path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/final/run_evidence_sha256_manifest.json",
+      "sha256": "39c23a34ac553167691e323ee48f39c3e813f05dd93dfc6e6fa33a4a2fac70ea"
+    }
+  ],
+  "hardware_actions_executed": false,
+  "p10_actions_executed": false,
+  "errors": []
+}

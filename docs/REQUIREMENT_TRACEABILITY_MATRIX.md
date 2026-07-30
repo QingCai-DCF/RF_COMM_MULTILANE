@@ -5,8 +5,8 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 112
-PASS: 101
+REQUIREMENT_COUNT: 113
+PASS: 102
 PENDING: 11
 FAIL: 0
 WAIVED: 0
@@ -128,6 +128,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P9-PERF-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-PERF-001` | `evidence/generated/p9_performance_summary.json` | PS preparation, DMA, PL completion, integrity, frame, and application throughput are characterized. |
 | `P9-SOAK-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SOAK-001` | `evidence/generated/p9_stationary_30min_summary.json` | The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation. |
 | `P9-EVID-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-EVID-001` | `evidence/generated/p9_evidence_consistency_summary.json` | The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries. |
+| `P9-CLOSEOUT-001` | `PASS` | REPOSITORY_POST_CHECKPOINT_CLOSEOUT | `P9_POST_CHECKPOINT_CLOSEOUT` | `P9-CLOSEOUT-001` | `evidence/generated/p9_post_checkpoint_closeout.json` | A completed P9 hardware run must have its current-run authorization marked consumed and false without changing the frozen P9 evidence checkpoint. |
 
 ## PASS artifact bindings
 
@@ -201,13 +202,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
-- `PROJECT_STATUS.md` — `d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17`
+- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
+- `PROJECT_STATUS.md` — `fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
+- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
 
 ### `P8A-EVID-001`
 
@@ -217,8 +218,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94`
-- `PROJECT_STATUS.md` — `d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17`
+- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
+- `PROJECT_STATUS.md` — `fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -749,3 +750,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308/ir_p9_z7010_2lane_candidate.bit` — `ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308`
 - `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8/ir_p9_shutdown_z7010.bit` — `a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8`
 - `artifacts/p9/6d88b7854219c8b514ef36109a456ffbda4972d8/2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1/p9_runtime.elf` — `2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1`
+
+### `P9-CLOSEOUT-001`
+
+- `evidence/generated/p9_post_checkpoint_closeout.json` — `c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4`
+- `evidence/generated/p9_git_checkpoint_metadata.json` — `28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116`

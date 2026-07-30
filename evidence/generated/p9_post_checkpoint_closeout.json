@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P9-CLOSEOUT-001",
+  "generated_utc": "2026-07-30T05:32:47.8607192Z",
+  "scope": "P9_POST_CHECKPOINT_METADATA_ONLY_NO_HARDWARE",
+  "p9_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+  "p9_source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+  "p9_evidence_checkpoint_tag": "p9-z7010-2lane-pass",
+  "p9_evidence_checkpoint_commit": "818d335c229d7b92223c279159aab84a5207ef92",
+  "authorization_closeout": {
+    "current_run_hardware_authorization": false,
+    "last_hardware_authorization_consumed": true,
+    "reusable_for_future_run": false,
+    "original_authorization_record": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/authorization/authorization_record.json",
+    "original_authorization_record_sha256": "1b9e166c596bf68cda218089d5dd8abd47486290790ea78aa00bc3883e6135fe"
+  },
+  "final_shutdown": {
+    "status": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true,
+    "endpoint_armed": false,
+    "active_tx_mask": 0,
+    "path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/shutdown/p9_26_final/shutdown_summary.json",
+    "sha256": "7fe6ccdf626b78b0fad2eda8975e819d02fc96910c61b13bf3633c18e27ef2b2"
+  },
+  "scoped_status": {
+    "p9_status": "PASS",
+    "current_z7010_platform": "PLATFORM_LIMITED_PASS",
+    "external_tfdu_duty_measurement": "PENDING_EXTERNAL_MEASUREMENT",
+    "global_permit_physical_implementation": "PENDING_D17",
+    "ab_l1_legacy_status": "BAD_DIR",
+    "ab_l1_current_p9_stationary_status": "PASS",
+    "z7020_target": "PENDING_Z7020_HW",
+    "rotation": "PENDING_FINAL_MECHANICAL",
+    "final_product_hardware": "PENDING_HW"
+  },
+  "preservation": {
+    "p8_frozen_history_modified": false,
+    "p9_frozen_history_modified": false,
+    "p9_raw_evidence_modified": false,
+    "p9_authorization_original_modified": false,
+    "p10_started": false
+  },
+  "hardware_actions_executed": false,
+  "errors": []
+}

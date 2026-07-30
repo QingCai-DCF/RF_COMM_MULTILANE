@@ -1,5 +1,5 @@
 schema_version: 1
-document_version: '7.0'
+document_version: '7.1'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
+    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
   - path: PROJECT_STATUS.md
-    sha256: d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17
-  artifact_hash: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
+    sha256: fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb
+  artifact_hash: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
+    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
+    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
   - path: PROJECT_STATUS.md
-    sha256: d83014bc00c70e9017af9c076605299cf11077c7e2730df14928596626769a17
+    sha256: fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 898c0bb0f45d6442d95e30b283293435a9049c3c26fed10650fb4c5230ef4d94
+  artifact_hash: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -2254,3 +2254,20 @@ requirements:
     external duty/optical measurements, the physical GLOBAL_PERMIT implementation, Ethernet, and product-final acceptance
     remain pending.
   artifact_hash: 6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6
+- requirement_id: P9-CLOSEOUT-001
+  requirement_text: A completed P9 hardware run must have its current-run authorization marked consumed and false without changing the frozen P9 evidence checkpoint.
+  profile: REPOSITORY_POST_CHECKPOINT_CLOSEOUT
+  verification_method: Verify the annotated P9 tag, frozen evidence hashes, final shutdown record, and current machine-state closeout metadata with hardware access disabled.
+  verification_stage: P9_POST_CHECKPOINT_CLOSEOUT
+  verification_scope: P9_POST_CHECKPOINT_METADATA_ONLY_NO_HARDWARE
+  test_id: P9-CLOSEOUT-001
+  evidence_path: evidence/generated/p9_post_checkpoint_closeout.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p9_post_checkpoint_closeout.json
+    sha256: c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4
+  - path: evidence/generated/p9_git_checkpoint_metadata.json
+    sha256: 28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116
+  hardware_followup: This metadata-only PASS does not authorize or promote Z7020, eight-lane, rotating, physical GLOBAL_PERMIT, external duty/optical measurement, or final-product hardware scope.
+  artifact_hash: c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4

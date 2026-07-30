@@ -12,8 +12,9 @@ ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
 FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
 PRODUCT_FINAL_ACCEPTANCE: PENDING
 P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
-CURRENT_PROGRAM_STAGE: P10A_Z7020_SINGLE_BOARD_MIGRATION
-CURRENT_RUN_HARDWARE_AUTHORIZATION: true
+CURRENT_PROGRAM_STAGE: P9_COMPLETE_P10_NOT_STARTED
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 ```
 
 The P7 PASS is limited to the stationary two-lane application path on the current Z7010 development platform. It is not Z7020, sector-bank, rotating, Ethernet, 8-lane, or final-product acceptance.
@@ -79,7 +80,21 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - 19.2 Mbit/s stretch model: `FAIL`
 - Real AXI DMA, DDR/cache coherency, Z7020 hardware, rotation, and final timing/CDC remain pending.
 
-`AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named P7 stationary Z7010 two-lane scope and is not extrapolated to future hardware.
+## P9 post-checkpoint closeout
+
+- P9 run: `p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc`
+- P9 source commit: `6d88b7854219c8b514ef36109a456ffbda4972d8`
+- P9 annotated tag: `p9-z7010-2lane-pass`
+- P9 evidence checkpoint: `818d335c229d7b92223c279159aab84a5207ef92`
+- Closeout evidence: `evidence/generated/p9_post_checkpoint_closeout.json`
+- Current-run authorization: `false`
+- Last authorization consumed: `true`
+- External TFDU duty measurement: `PENDING_EXTERNAL_MEASUREMENT`
+- Physical GLOBAL_PERMIT implementation: `PENDING_D17`
+- AB_L1 legacy/current P9 stationary: `BAD_DIR` / `PASS`
+- P10 remains not started; Z7020, rotation, and final-product hardware acceptance remain pending.
+
+`AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 
 ## Architecture and pending gates
 
@@ -100,6 +115,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `6d88b7854219c8b514ef36109a456ffbda4972d8`.
+Last verified evidence commit: `818d335c229d7b92223c279159aab84a5207ef92`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.
