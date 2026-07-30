@@ -90,4 +90,4 @@ NEXT_RECOMMENDED_STAGE:
 P10_REMEDIATION
 ```
 
-The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only, but explicit serial-to-F/R mapping is still required. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.
+The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only, but explicit serial-to-F/R mapping is still required. Official schematic/configuration and TFDU truth-table evidence indicates the ordinary powered configuration interval is optically inhibited by SD high; physical Txd-low/full-shutdown compliance and partial-power behavior remain unproved. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.

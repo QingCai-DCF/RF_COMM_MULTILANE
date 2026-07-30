@@ -7,6 +7,7 @@
 - Supplied TFDU small-board schematic: `PRESENT`; its library symbol/footprint says TFDU6108-TT3.
 - TFDU functional identity: `USER_ACCEPTED`; the user confirms all four modules previously operated on AX7010 and requires no renewed module marking/revision/photo check.
 - AX7010/AX7020 base/J10 comparison: `PASS`; the supplied comparison reports byte-identical reference design files.
-- As-built passive Txd-low/SD-high safety network: `INCOMPLETE` and safety-blocking.
+- Ordinary powered configuration optical inhibition: `SUPPORTED_IF_PUDC_B_PULLUPS_ACTIVE` (SD high dominates Txd high per the TFDU truth table).
+- Canonical physical Txd-low/full-shutdown and partial-power fail-safe network: `INCOMPLETE` and safety-blocking.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.

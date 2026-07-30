@@ -25,6 +25,10 @@ SOURCES = {
         "path": AX7020_ROOT / "01_SCH" / "AX7020开发板原理图V2.0.pdf",
         "sha256": "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e",
         "authority": "ALINX official board schematic",
+        "citation_locations": [
+            "PDF page 5 / schematic sheet 5: U13 is IO_L3P_T0_DQS_PUDC_B_34; R29=1 kohm to GND; bank 34/35 rail labels",
+            "PDF page 15 / schematic sheet 15: J10 numbering and 33-ohm series resistor arrays",
+        ],
     },
     "ax7020_manual": {
         "path": AX7020_ROOT / "AX7020UserManualV2.2" / "AX7020UserManualV2.2.rst",
@@ -40,6 +44,11 @@ SOURCES = {
         "path": AX7010_ROOT / "TFDU6102datasheet.pdf",
         "sha256": "54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef",
         "authority": "Vishay TFDU6102 datasheet",
+        "citation_locations": [
+            "PDF page 4 / printed page 3, Pin Description: Txd is active HIGH and SD is active-high shutdown",
+            "PDF page 8 / printed page 7, Transmitter Characteristics: SD=HIGH or Txd=LOW limits emitted intensity to 0.04 mW/sr maximum at the stated 5-V conditions",
+            "PDF page 10 / printed page 9, Truth Table: SD=HIGH forces transmitter=0 regardless of Txd",
+        ],
     },
     "tfdu_small_board_schematic": {
         "path": AX7010_ROOT / "TFDU6102电路" / "ir_comm_TFDU6102" / "TFDU6102_subb.SchDoc",
@@ -221,6 +230,8 @@ def source_manifest() -> dict[str, dict[str, object]]:
             "authority": item["authority"],
             "read_only": True,
         }
+        if "citation_locations" in item:
+            result[key]["citation_locations"] = item["citation_locations"]
     result["official_alinx_ax7020_2023_1_ps_config"] = dict(OFFICIAL_ALINX_REPO)
     result["amd_ug470_pudc_b"] = dict(AMD_UG470)
     return result
@@ -249,7 +260,23 @@ def signal_rows() -> list[dict[str, object]]:
                         "confirms prior operation on the byte-identical AX7010 base/J10 circuit."
                     )
                 if signal in {"Txd", "SD", "Mode"}:
-                    reset_default += "; FPGA-unconfigured/partial-power level not guaranteed by supplied schematics"
+                    reset_default += (
+                        "; ordinary FPGA configuration interval: internal pull-up expected while "
+                        "PUDC_B is low (power-sequence dependent); partial-power level not guaranteed"
+                    )
+                if signal == "SD":
+                    notes = (
+                        "TFDU6102 SD is active-high and dominates Txd in the datasheet truth table. "
+                        "If the configuration pull-up is active, SD high inhibits optical TX; "
+                        "partial-power behavior remains unproved."
+                    )
+                if signal == "Txd":
+                    notes = (
+                        "The configuration pull-up is expected to make Txd high, but the paired SD "
+                        "pull-up inhibits optical TX in the ordinary powered configuration state. "
+                        "This does not satisfy the physical Txd-low/full-shutdown contract and does "
+                        "not establish partial-power safety."
+                    )
                 rows.append(
                     {
                         "board_role": role,
@@ -460,7 +487,7 @@ def main() -> int:
             "Do not alter any existing VCC/GND wiring under this authorization.",
             "Any future connector work requires all boards and TFDU supplies powered off.",
             "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts.",
-            "Hardware admission additionally requires passive Txd-low and SD-high evidence in FPGA-unconfigured and partial-power states.",
+            "Ordinary powered configuration is expected optically inhibited by SD high; hardware admission still requires physical Txd-low/full-shutdown compliance and partial-power TX-disabled evidence.",
         ],
         "jtag_role": (
             "JTAG cable serial is the authoritative P10 F/R role key. Observed serials are "
@@ -539,6 +566,14 @@ def main() -> int:
             "SD_pull_up": "NOT_PRESENT_IN_SUPPLIED_SCHEMATIC",
             "Mode_pull": "NOT_PRESENT_IN_SUPPLIED_SCHEMATIC",
         },
+        "power_state_electrical_audit": {
+            "ordinary_powered_configuration": "EXPECTED_SD_HIGH_TXD_HIGH_FROM_PUDC_B_ENABLED_INTERNAL_PULLUPS_POWER_SEQUENCE_DEPENDENT",
+            "ordinary_powered_configuration_optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE_IF_PULLUPS_ACTIVE",
+            "canonical_physical_txd_default_low": "NOT_ESTABLISHED",
+            "canonical_full_shutdown_sd_high_txd_low": "NOT_ESTABLISHED_DURING_CONFIGURATION",
+            "partial_power": "NOT_ESTABLISHED_NO_DISCRETE_FAIL_SAFE_BIAS",
+            "source_locations": SOURCES["tfdu_datasheet"]["citation_locations"],
+        },
         "modules": [
             {"module_id": "F0", "board": "AX7020-F", "position": "J10-A", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
             {"module_id": "F1", "board": "AX7020-F", "position": "J10-B", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
@@ -559,13 +594,28 @@ def main() -> int:
         "hardware_action_scope": (
             "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
         ),
-        "finding": "Passive fail-safe levels for all four TFDU Txd and SD inputs are not established.",
+        "finding": (
+            "Ordinary powered PL configuration is expected to inhibit optical TX through SD=HIGH, "
+            "but physical Txd-low/full-shutdown compliance and partial-power fail-safe behavior are "
+            "not established for all four TFDU modules."
+        ),
+        "refined_scope": {
+            "ordinary_powered_configuration": "EXPECTED_SD_HIGH_TXD_HIGH_WHILE_PUDC_B_PULLUPS_ARE_ACTIVE",
+            "ordinary_powered_configuration_optical_tx": "INHIBITED_BY_SD_HIGH_PER_TFDU6102_TRUTH_TABLE",
+            "autonomous_tx_during_ordinary_powered_configuration": "NOT_SUPPORTED_BY_CURRENT_EVIDENCE",
+            "physical_txd_default_low": "NOT_ESTABLISHED_AND_EXPECTED_HIGH_DURING_CONFIGURATION_PULLUP_INTERVAL",
+            "full_shutdown_sd_high_txd_low": "NOT_ESTABLISHED_DURING_CONFIGURATION",
+            "partial_power_optical_tx_disabled": "NOT_ESTABLISHED",
+        },
         "user_clarification": USER_CLARIFICATION,
         "direct_evidence": [
             "The supplied TFDU small-board schematic contains R2-R5 as 22-ohm series resistors, R1=0 ohm and R6=47 ohm; it contains no Txd pull-down and no SD pull-up.",
             "The selected AX7020 J10 Txd and SD nets have 33-ohm series resistor arrays but no discrete fail-safe pulls in the official schematic.",
-            "AX7020 U13/IO1_12P/PUDC_B is held low by R29=1 kohm, which enables 7-series SelectIO internal pull-ups during configuration; activation is power-sequence dependent and cannot prove the required Txd-low/SD-high state.",
-            "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot prove FPGA-unconfigured, reset/fault, or partial-power behavior.",
+            "AX7020 U13/IO1_12P/PUDC_B is held low by R29=1 kohm. AMD UG470 states that low PUDC_B enables SelectIO internal pull-ups after power-up and during configuration, with activation dependent on power sequencing.",
+            "The TFDU6102 datasheet states that Txd is active HIGH and SD is active-high shutdown; its truth table states SD=HIGH forces transmitter=0 regardless of Txd (PDF pages 4 and 10).",
+            "Therefore, while the PUDC_B-enabled pull-ups are active in an ordinary powered configuration interval, both SD and Txd are expected HIGH and the TFDU optical transmitter is inhibited by SD. Current evidence does not support claiming autonomous optical TX in that specific state.",
+            "The same expected Txd=HIGH state does not meet the canonical physical Txd-default-LOW or full-shutdown SD=HIGH/Txd=LOW requirements. The absence of discrete fail-safe bias also leaves FPGA-unpowered/TFDU-powered and other partial-power sequences unproved.",
+            "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot close the preceding configuration interval or partial-power guarantee.",
             "The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison shows byte-identical AX7010/AX7020 base-PCB J10 references. This closes renewed module identity inspection for P10 but does not prove the passive power-up safety state.",
         ],
         "requirements": [
@@ -585,9 +635,9 @@ def main() -> int:
             "blocking_scope": "Not treated as an independent severe damage-risk blocker; retain as a formal datasheet-guarantee gap for live RX evidence.",
         },
         "required_user_resolution": [
-            "Provide existing circuit or measurement evidence proving a fail-low physical Txd state for every module during reset/fault, FPGA-unconfigured, and partial-power conditions; renewed TFDU module identity/photos are not requested.",
+            "Provide existing as-built bias/circuit evidence proving physical Txd LOW and SD HIGH for every module during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence; renewed TFDU module identity/photos are not requested.",
             "Alternatively issue a new explicit authorization permitting a documented fail-safe hardware revision/rewire; the current fast-track explicitly sets REWIRING_ALLOWED=false.",
-            "Provide or authorize safe external measurement evidence for Txd and SD during FPGA-unconfigured and partial-power states before JTAG programming is attempted.",
+            "Provide or authorize a bounded external measurement plan for Txd and SD across the relevant power sequences; measurement alone must not be generalized beyond the sequences actually observed.",
         ],
         "sources": sources,
     }
@@ -606,6 +656,9 @@ def main() -> int:
         "supplied_tfdu_small_board_schematic_exact_part_mismatch": "symbol is TFDU6108-TT3 while intended mounted part is TFDU6102",
         "tfdu_module_identity_reconfirmation_required_for_p10": False,
         "tfdu_historical_functionality": "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010",
+        "ordinary_powered_configuration_optical_tx": "INHIBITED_IF_PUDC_B_PULLUPS_ACTIVE_SD_HIGH_DOMINATES_TXD",
+        "canonical_physical_txd_default_low": "NOT_ESTABLISHED",
+        "partial_power_tx_disabled": "NOT_ESTABLISHED",
         "user_clarification": USER_CLARIFICATION,
         "reference_file_inventory": "evidence/generated/p10_board_reference_file_inventory.json",
         "sources": sources,
@@ -626,7 +679,8 @@ def main() -> int:
         "connector_series_resistors": "PASS: 33 ohm on all selected J10 signal nets",
         "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
         "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
-        "powerup_reset_default": "FAIL: passive Txd-low and SD-high are not established",
+        "powerup_reset_default": "FAIL_CLOSED: ordinary powered configuration is optically inhibited by expected SD high, but Txd-low/full-shutdown and partial-power guarantees are not established",
+        "power_state_analysis": blocker["refined_scope"],
         "physical_board_role_binding": jtag_role_status,
         "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
         "hardware_admission": False,
@@ -671,7 +725,7 @@ def main() -> int:
             "",
             "- Existing TFDU VCC/GND wiring remains user-owned and must not be altered under the current authorization.",
             "- Any future connector change requires both AX7020 boards and all TFDU rails to be powered off.",
-            "- Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and all four passive Txd-low/SD-high states.",
+            "- Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and the documented Txd/SD fail-safe state for every relevant power sequence.",
             (
                 f"- JTAG cable serial is the authoritative F/R role key. Read-only enumeration observed {', '.join(observed_jtag_serials)}; explicitly bind each to AX7020-F or AX7020-R before programming."
                 if jtag_enumerated
@@ -682,7 +736,7 @@ def main() -> int:
             "",
             "## Open items",
             "",
-            "- Severe blocker: no documented passive Txd pull-down or SD pull-up on any supplied TFDU small-board schematic.",
+            "- Refined severe blocker: the ordinary powered configuration state is expected to be optically inhibited because SD and Txd both pull high and SD dominates. However, Txd is not low, the canonical full-shutdown pair is not met during configuration, and partial-power behavior has no discrete fail-safe guarantee.",
             "- J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.",
             f"- AX7020-F/AX7020-R JTAG cable serial role binding remains pending (`{jtag_role_status}`); physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
             "- Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.",
@@ -703,8 +757,8 @@ The official AX7020 reference set is sufficient to derive the J10 package pins, 
 Required before any programming or TFDU-driving hardware action:
 
 - explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
-- existing circuit or measurement evidence that every physical Txd remains LOW during reset/fault, FPGA-unconfigured, and partial-power conditions;
-- safe external measurement evidence for the Txd/SD states above, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring).
+- existing as-built circuit/bias evidence that every physical Txd is LOW and every SD is HIGH during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence;
+- a bounded external Txd/SD measurement plan for those sequences, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring). Measurements must not be generalized beyond tested sequences.
 
 Nonblocking documentation gaps retained for provenance:
 
@@ -739,7 +793,7 @@ Supporting comparison input: `C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_C
     clarification_path = ROOT / "docs/hardware/P10_USER_HARDWARE_CLARIFICATIONS.md"
     clarification_path.write_text(clarification_md, encoding="utf-8")
 
-    blocker_md = """# P10 severe hardware blocker: TFDU power-up fail-safe is not established
+    blocker_md = """# P10 severe hardware blocker: TFDU partial-power and canonical Txd-low state are not established
 
 `P10-SAFETY-POWERUP-001` is an open severe blocker. The current fast-track authorizes hardware actions, but it also requires Codex to stop for autonomous-TX/final-TX-kill safety violations.
 
@@ -747,14 +801,17 @@ Direct evidence:
 
 - The supplied TFDU small-board `SchDoc` contains four 22-ohm signal series resistors, a 0-ohm VCC2 path, and a 47-ohm VCC1 filter. It contains no Txd pull-down and no SD pull-up.
 - The official AX7020 schematic shows only 33-ohm series arrays on the selected J10 Txd/SD nets; it shows no discrete fail-safe bias on those nets.
-- AX7020 R29 holds U13/`PUDC_B` low with 1 kohm. The 7-series configuration contract therefore enables internal SelectIO pull-ups during configuration, subject to power sequencing. That cannot establish the required physical Txd-low/SD-high state in every power/reset/fault/partial-power condition.
-- A shutdown image controls pins only after PL configuration and cannot prove FPGA-unconfigured or partial-power behavior.
+- AX7020 R29 holds U13/`PUDC_B` low with 1 kohm. AMD UG470 states that low `PUDC_B` enables SelectIO internal pull-ups after power-up and during configuration, subject to power sequencing.
+- The TFDU6102 pin description states Txd is active HIGH and SD is active-high shutdown (PDF page 4 / printed page 3). Its truth table states SD=HIGH forces transmitter=0 regardless of Txd (PDF page 10 / printed page 9).
+- Consequently, during an ordinary powered configuration interval in which the internal pull-ups are active, SD and Txd are both expected HIGH and SD inhibits optical TX. Current evidence does **not** support claiming autonomous optical emission in that specific state.
+- That state still violates the canonical physical Txd-default-LOW/full-shutdown SD=HIGH+Txd=LOW contract, and the lack of discrete bias does not guarantee any FPGA-unpowered/TFDU-powered or other partial-power sequence.
+- A shutdown image controls pins only after PL configuration and cannot close the preceding configuration interval or partial-power guarantee.
 
-The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison records byte-identical AX7010/AX7020 base-PCB schematic and J10 circuitry. That is accepted as empirical module/circuit compatibility and removes any P10 request to re-inspect the four module markings, revisions, or photos. It does not establish the passive unconfigured/reset/partial-power safety state required by the canonical project constraints.
+The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison records byte-identical AX7010/AX7020 base-PCB schematic and J10 circuitry. That is accepted as empirical module/circuit compatibility and removes any P10 request to re-inspect the four module markings, revisions, or photos. It does not establish canonical physical Txd-low/full-shutdown compliance or partial-power TX-disabled behavior.
 
 The same schematic also places R29=1 kohm to ground on the requested B-position Rxd (`J10-26/U13`). This is not an output-to-output connection, but its approximately 3.3 mA high-state load exceeds the TFDU6102 datasheet's 250/500-uA VOH guarantee points. User-confirmed prior operation on the identical AX7010 base/J10 circuit makes this an empirical-operability-backed datasheet gap, not an independent damage-risk blocker.
 
-At artifact-generation time no hardware action was performed. A bounded read-only JTAG cable-serial enumeration is allowed because it neither configures the FPGA nor drives TFDU pins. FPGA programming, ELF execution, UART writes, TFDU drive, reset, and configuration-changing actions remain blocked. Resolution requires existing fail-low circuit/measurement evidence, or a new authorization that permits a documented fail-safe hardware revision because the current goal prohibits rewiring.
+The only hardware action recorded is bounded read-only JTAG cable-serial enumeration; it did not configure or reset the FPGA or drive TFDU pins. FPGA programming, ELF execution, UART writes, TFDU drive, reset, and configuration-changing actions remain blocked. Resolution requires existing as-built fail-safe circuit evidence plus sequence-bounded measurements, or a new authorization that permits a documented fail-safe hardware revision because the current goal prohibits rewiring.
 """
     blocker_path = ROOT / "docs/hardware/P10_SEVERE_HARDWARE_BLOCKER.md"
     blocker_path.write_text(blocker_md, encoding="utf-8")
@@ -768,7 +825,8 @@ At artifact-generation time no hardware action was performed. A bounded read-onl
 - Supplied TFDU small-board schematic: `PRESENT`; its library symbol/footprint says TFDU6108-TT3.
 - TFDU functional identity: `USER_ACCEPTED`; the user confirms all four modules previously operated on AX7010 and requires no renewed module marking/revision/photo check.
 - AX7010/AX7020 base/J10 comparison: `PASS`; the supplied comparison reports byte-identical reference design files.
-- As-built passive Txd-low/SD-high safety network: `INCOMPLETE` and safety-blocking.
+- Ordinary powered configuration optical inhibition: `SUPPORTED_IF_PUDC_B_PULLUPS_ACTIVE` (SD high dominates Txd high per the TFDU truth table).
+- Canonical physical Txd-low/full-shutdown and partial-power fail-safe network: `INCOMPLETE` and safety-blocking.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.
 """
@@ -780,7 +838,7 @@ The confirmed J10 A/B mapping is independently supported by the AX7020 manual, s
 
 Mapping is complete, but hardware admission fails closed:
 
-- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in reset/fault, unconfigured, or partial-power states.
+- `P10-SAFETY-POWERUP-001`: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown compliance and partial-power TX-disabled behavior are not established.
 - `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
 - physical F/R role binding by JTAG cable serial is pending: `{jtag_role_status}`.
 - TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.

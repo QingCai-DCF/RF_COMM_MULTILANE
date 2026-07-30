@@ -4,7 +4,7 @@ The confirmed J10 A/B mapping is independently supported by the AX7020 manual, s
 
 Mapping is complete, but hardware admission fails closed:
 
-- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in reset/fault, unconfigured, or partial-power states.
+- `P10-SAFETY-POWERUP-001`: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown compliance and partial-power TX-disabled behavior are not established.
 - `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
 - physical F/R role binding by JTAG cable serial is pending: `ENUMERATED_UNASSIGNED: 210249855178, 210512180081`.
 - TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.

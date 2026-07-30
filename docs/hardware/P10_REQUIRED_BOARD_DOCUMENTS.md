@@ -5,8 +5,8 @@ The official AX7020 reference set is sufficient to derive the J10 package pins, 
 Required before any programming or TFDU-driving hardware action:
 
 - explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
-- existing circuit or measurement evidence that every physical Txd remains LOW during reset/fault, FPGA-unconfigured, and partial-power conditions;
-- safe external measurement evidence for the Txd/SD states above, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring).
+- existing as-built circuit/bias evidence that every physical Txd is LOW and every SD is HIGH during reset/fault, FPGA-unconfigured, and every relevant partial-power sequence;
+- a bounded external Txd/SD measurement plan for those sequences, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring). Measurements must not be generalized beyond tested sequences.
 
 Nonblocking documentation gaps retained for provenance:
 

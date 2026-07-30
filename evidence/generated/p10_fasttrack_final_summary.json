@@ -9,13 +9,13 @@
   "current_run_hardware_authorization": true,
   "evidence_checkpoint": "COMMIT_CONTAINING_THIS_SUMMARY",
   "fail": [
-    "P10-SAFETY-POWERUP-001: physical Txd fail-low is not established for reset/fault, FPGA-unconfigured, and partial-power states",
+    "P10-SAFETY-POWERUP-001: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established",
     "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context",
     "Two JTAG serials were enumerated (210249855178, 210512180081) but are not yet explicitly assigned to F/R roles",
     "All mandatory active-hardware acceptance stages are not run"
   ],
   "fixed_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
-  "generated_at_utc": "2026-07-30T12:51:00.433882+00:00",
+  "generated_at_utc": "2026-07-30T13:07:12.602103+00:00",
   "generated_evidence": [
     "evidence/generated/p10_fasttrack_concise_preflight.json",
     "evidence/generated/p10_dual_endpoint_regression/summary.json",
@@ -87,7 +87,7 @@
   ],
   "required_user_resolution": [
     "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R.",
-    "Provide existing fail-low circuit/measurement evidence for reset/fault, FPGA-unconfigured, and partial-power states; or separately authorize a documented fail-safe rewire."
+    "Provide existing as-built bias/circuit evidence plus sequence-bounded Txd/SD measurements for reset/fault, FPGA-unconfigured, and relevant partial-power states; or separately authorize a documented fail-safe rewire."
   ],
   "rotating_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
   "schema_version": 2,

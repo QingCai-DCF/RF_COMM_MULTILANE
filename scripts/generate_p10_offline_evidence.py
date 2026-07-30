@@ -606,7 +606,7 @@ def main() -> int:
             "No physical fixed/rotating board identity was bound.",
             "No FPGA was programmed and no ELF was run.",
             "No real DDR, DMA, optical, reset-recovery, throughput, or duration result exists.",
-            "No passive power-up Txd-low/SD-high guarantee is established.",
+            "Ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established.",
             "External TFDU input/output delay constraints remain undefined.",
         ],
     }
@@ -701,7 +701,7 @@ def main() -> int:
             "Offline independent-node/no-shared-RAM architecture audit",
         ],
         "fail": [
-            "P10-SAFETY-POWERUP-001: passive Txd-low and SD-high are not established for unconfigured/reset/open/partial-power states",
+            "P10-SAFETY-POWERUP-001: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established",
             "P10-RX-B-R29-001: J10-26/U13 1-kohm pull-down exceeds the supplied TFDU VOH guaranteed test load",
             "Physical board/module revision identity and unique F/R JTAG binding remain unverified",
             "All mandatory hardware acceptance stages are not run",
@@ -715,7 +715,7 @@ def main() -> int:
             "PRODUCT_FINAL: PENDING",
         ],
         "required_user_resolution": [
-            "Provide as-built evidence and component values proving a passive pull-down on every Txd and passive pull-up on every SD, including any existing harness bias; or authorize a documented fail-safe hardware revision/rewire.",
+            "Provide as-built bias/circuit evidence plus sequence-bounded Txd/SD measurements proving the canonical reset/fault, FPGA-unconfigured, and relevant partial-power states; or authorize a documented fail-safe hardware revision/rewire.",
             "Resolve or electrically validate the J10-26/U13 Rxd 1-kohm pull-down against the exact TFDU small-board output.",
             "Provide physical revision/marking evidence that uniquely binds AX7020-F and AX7020-R before any programming.",
         ],

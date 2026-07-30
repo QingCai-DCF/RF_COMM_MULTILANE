@@ -35,6 +35,9 @@ sources:
     sha256: "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e"
     authority: "ALINX official board schematic"
     read_only: true
+    citation_locations:
+      - "PDF page 5 / schematic sheet 5: U13 is IO_L3P_T0_DQS_PUDC_B_34; R29=1 kohm to GND; bank 34/35 rail labels"
+      - "PDF page 15 / schematic sheet 15: J10 numbering and 33-ohm series resistor arrays"
   ax7020_manual:
     path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\AX7020UserManualV2.2\\AX7020UserManualV2.2.rst"
     sha256: "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16"
@@ -50,6 +53,10 @@ sources:
     sha256: "54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef"
     authority: "Vishay TFDU6102 datasheet"
     read_only: true
+    citation_locations:
+      - "PDF page 4 / printed page 3, Pin Description: Txd is active HIGH and SD is active-high shutdown"
+      - "PDF page 8 / printed page 7, Transmitter Characteristics: SD=HIGH or Txd=LOW limits emitted intensity to 0.04 mW/sr maximum at the stated 5-V conditions"
+      - "PDF page 10 / printed page 9, Truth Table: SD=HIGH forces transmitter=0 regardless of Txd"
   tfdu_small_board_schematic:
     path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc"
     sha256: "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a"

@@ -146,14 +146,14 @@ def main() -> int:
     summary["rotating_board_id"] = "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT"
     summary["user_clarification"] = amendment["user_clarification"]
     summary["fail"] = [
-        "P10-SAFETY-POWERUP-001: physical Txd fail-low is not established for reset/fault, FPGA-unconfigured, and partial-power states",
+        "P10-SAFETY-POWERUP-001: ordinary powered configuration is expected optically inhibited by SD high, but physical Txd-low/full-shutdown and partial-power guarantees are not established",
         "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context",
         f"Two JTAG serials were enumerated ({serials[0]}, {serials[1]}) but are not yet explicitly assigned to F/R roles",
         "All mandatory active-hardware acceptance stages are not run",
     ]
     summary["required_user_resolution"] = [
         f"State which of {serials[0]} and {serials[1]} is AX7020-F; the other will be bound as AX7020-R.",
-        "Provide existing fail-low circuit/measurement evidence for reset/fault, FPGA-unconfigured, and partial-power states; or separately authorize a documented fail-safe rewire.",
+        "Provide existing as-built bias/circuit evidence plus sequence-bounded Txd/SD measurements for reset/fault, FPGA-unconfigured, and relevant partial-power states; or separately authorize a documented fail-safe rewire.",
     ]
     generated = list(summary.get("generated_evidence", []))
     generated.extend([
@@ -206,7 +206,7 @@ def main() -> int:
         "UNCHANGED_PENDING_SCOPES:\nETHERNET; SPI; PHYSICAL_GLOBAL_PERMIT; EXTERNAL_TFDU_DUTY; HANDOVER; 8X32; 600RPM; PRODUCT_FINAL\n\n"
         "NEXT_RECOMMENDED_STAGE:\nP10_REMEDIATION\n"
         "```\n\n"
-        "The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only, but explicit serial-to-F/R mapping is still required. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.\n",
+        "The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only, but explicit serial-to-F/R mapping is still required. Official schematic/configuration and TFDU truth-table evidence indicates the ordinary powered configuration interval is optically inhibited by SD high; physical Txd-low/full-shutdown compliance and partial-power behavior remain unproved. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Active hardware remains blocked by `P10-SAFETY-POWERUP-001`.\n",
         encoding="utf-8",
     )
     print(json.dumps({"status": amendment["status"], "serials": serials}))
