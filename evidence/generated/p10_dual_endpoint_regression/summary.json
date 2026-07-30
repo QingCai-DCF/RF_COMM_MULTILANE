@@ -1,15 +1,15 @@
 {
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-07-30T15:44:39+00:00",
+  "generated_at_utc": "2026-07-30T15:50:28+00:00",
   "hardware_actions_executed": false,
   "no_hardware": true,
   "results": [
     {
       "fatal_detected": false,
-      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154013.162559Z/p10_dual_endpoint_pair.log",
-      "log_sha256": "b18d24b548ec639caa95c4f4ffffb3e7b05dfff905c66a8407e2e0d8d88bd69a",
+      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154545.758867Z/p10_dual_endpoint_pair.log",
+      "log_sha256": "65402de96d34761219593d4601f8cb7e0d7df1cde013241a175c4fbefb6507ed",
       "metrics": {
-        "object_pass_count": 8,
+        "object_pass_count": 10,
         "p10_final_marker_count": 1,
         "p9_final_marker_count": 0,
         "raw_pass_count": 4
@@ -22,8 +22,8 @@
     },
     {
       "fatal_detected": false,
-      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154013.162559Z/p9_legacy_transport.log",
-      "log_sha256": "064e75b18352bbbe8390b6f1b69b75b625a051921fc98b4b02cc2baf5a8f45f5",
+      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154545.758867Z/p9_legacy_transport.log",
+      "log_sha256": "ce24252c45bba7e09354ee6b8f2ddc021fb2cb490fe723951a8afc6e74577be1",
       "metrics": {
         "object_pass_count": 0,
         "p10_final_marker_count": 0,
@@ -37,14 +37,14 @@
       "timed_out": false
     },
     {
-      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154013.162559Z/p9_runner_unit_tests.log",
+      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154545.758867Z/p9_runner_unit_tests.log",
       "log_sha256": "b2b79a07d7fef7a7659d2aabe7ebef19d06d5491c8be7e2de0096954ed3797bd",
       "returncode": 0,
       "status": "PASS",
       "test_id": "P10-REGRESSION-P9-RUNNER-UNIT"
     },
     {
-      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154013.162559Z/register_map_verify.log",
+      "log": "evidence/generated/p10_dual_endpoint_regression/raw/20260730T154545.758867Z/register_map_verify.log",
       "log_sha256": "44ff822f0db7dcf055aab9b4546c9cfeb6a8786a3f2b881874b84cf46a617ac8",
       "missing_markers": [],
       "returncode": 0,
@@ -53,7 +53,7 @@
     }
   ],
   "schema_version": 1,
-  "source_commit": "aed5e5353fcdecfc2d90d34946131f1581c2123b",
+  "source_commit": "a8256a9bf494877fccc7c4efbeae4e05345117d7",
   "source_sha256": {
     "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
     "rtl/ir_ack_aggregator.sv": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa",
@@ -69,7 +69,7 @@
     "rtl/p9_optical_transport_core.sv": "3e380f8ecc267c7775c7fc7cd9261c5479aad8589dc2227a0e5568614c93438b",
     "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
     "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
-    "sim/tb/tb_p10_dual_endpoint_pair.sv": "0ca4a16a37426c3fe70c2b3c67bd8491d7c7546f8caf502531e8768327564df9",
+    "sim/tb/tb_p10_dual_endpoint_pair.sv": "bca86b86c90c20e3b9f1623477450bf53bf1a03768682ac90606158f8412b268",
     "sim/tb/tb_p9_optical_transport_core.sv": "a7b9d13c2ba9139cd85b368685f4811c8fa705f325e780ea1db08b3bf0a43507"
   },
   "source_worktree_dirty": false,
