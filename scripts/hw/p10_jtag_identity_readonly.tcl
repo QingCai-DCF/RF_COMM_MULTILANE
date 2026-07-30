@@ -1,8 +1,10 @@
 # P10 read-only dual-AX7020 JTAG identity inventory.
 # require-user-hw-authorization --allow-hardware
 #
-# The only target-side operation in this script is
+# The only target-side operations in this script are the read-only inventory
+# commands
 #   jtag targets -target-properties
+#   targets -target-properties
 # after a local hw_server connection.  It never selects a debug target,
 # changes reset state, configures PL, accesses memory, starts an ELF, or writes
 # UART/TFDU state.
@@ -57,11 +59,13 @@ set p10_connected 0
 set p10_status INCOMPLETE
 set p10_error ""
 set p10_records {}
+set p10_debug_records {}
 
 set p10_catch_code [catch {
   connect -url $p10_xsdb_url
   set p10_connected 1
   set p10_records [jtag targets -target-properties]
+  set p10_debug_records [targets -target-properties]
 } p10_error p10_options]
 
 if {$p10_catch_code != 0} {
@@ -139,6 +143,13 @@ p10_emit P10_JTAG_RECORD_COUNT $p10_record_count
 p10_emit P10_JTAG_CABLE_COUNT $p10_cable_count
 p10_emit P10_JTAG_DISTINCT_CABLE_COUNT [llength $p10_distinct_serials]
 p10_emit P10_JTAG_DEVICE_COUNT $p10_device_count
+
+set p10_debug_record_count 0
+foreach p10_props $p10_debug_records {
+  incr p10_debug_record_count
+  p10_emit P10_JTAG_DEBUG_RECORD_${p10_debug_record_count} $p10_props
+}
+p10_emit P10_JTAG_DEBUG_RECORD_COUNT $p10_debug_record_count
 
 foreach p10_serial $p10_distinct_serials {
   if {![info exists p10_zynq_counts($p10_serial)]} {

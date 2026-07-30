@@ -27,6 +27,7 @@ class P10JtagIdentityReadonlyTests(unittest.TestCase):
             if line.strip() and not line.lstrip().startswith("#")
         ).lower()
         self.assertEqual(executable.count("jtag targets -target-properties"), 1)
+        self.assertEqual(executable.count("targets -target-properties"), 2)
         self.assertIn("connect -url", executable)
         self.assertIn("disconnect", executable)
         for forbidden in (
