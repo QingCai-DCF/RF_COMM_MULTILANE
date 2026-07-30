@@ -1,7 +1,7 @@
 {
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-07-30T15:28:03.308330+00:00",
+  "generated_at_utc": "2026-07-30T16:02:20.166001+00:00",
   "hardware_actions_executed": false,
   "hardware_admission": false,
   "network_used": false,
@@ -12,20 +12,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10/aeadfd26b0839c31952893760358da9777fc6240830738b69b6378702cf9708c/8e2f854c007a3bdd49f0c9d367bfc63c2dad8b129566d086ce0e53dafafb4839/p10_ax7020_fixed_functional.bit",
+          "path": "artifacts/p10/794ff11ad54f3d10ee3bd3f13345a315cc5654ded8f357ed3ce71c765a4de303/44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37/p10_ax7020_fixed_functional.bit",
           "read_only": true,
-          "sha256": "8e2f854c007a3bdd49f0c9d367bfc63c2dad8b129566d086ce0e53dafafb4839"
+          "sha256": "44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37"
         },
         "xsa": {
-          "bytes": 789297,
-          "path": "artifacts/p10/aeadfd26b0839c31952893760358da9777fc6240830738b69b6378702cf9708c/9923d4c9bdbb884bdef1c4d65cd7c3f7b6e4f92adbc05c1d2232a212fa104f01/p10_ax7020_fixed_functional.xsa",
+          "bytes": 788115,
+          "path": "artifacts/p10/794ff11ad54f3d10ee3bd3f13345a315cc5654ded8f357ed3ce71c765a4de303/f54d9508b49ff7bf44bd7903ac646a5dce3ab033ff051dd2117594ccd555b735/p10_ax7020_fixed_functional.xsa",
           "read_only": true,
-          "sha256": "9923d4c9bdbb884bdef1c4d65cd7c3f7b6e4f92adbc05c1d2232a212fa104f01"
+          "sha256": "f54d9508b49ff7bf44bd7903ac646a5dce3ab033ff051dd2117594ccd555b735"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_ax7020_functional/fixed/vivado_stdout_stderr.txt",
-      "log_sha256": "233f48dc307bfd40dddcf00c18b10d5a54e1539c5af3e39a3690c7cd5192278f",
+      "log_sha256": "0e696b390564513de218912ddff0ff1b9e207be6e7ef1b2670e262047e5adf5a",
       "markers": {
         "P10_AXIL_CLOCK_HZ": "50000000",
         "P10_AXI_BASE": "0x43C00000",
@@ -52,44 +52,44 @@
         "P10_REQP_1839_COUNT": "0",
         "P10_TNS_NS": "0.0",
         "P10_TOP": "p10_ps_system_wrapper",
-        "P10_WHS_NS": "0.053",
-        "P10_WNS_NS": "0.99"
+        "P10_WHS_NS": "0.019",
+        "P10_WNS_NS": "0.583"
       },
       "profile": "P10_AX7020_FIXED_2LANE",
       "reports": [
         {
           "bytes": 10590,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_drc.rpt",
-          "sha256": "f5f241962bf0c756a8023e5c1dd039157a6062a82d4210e1b6701a75926962f5"
+          "sha256": "f867900ac3f49326dbdea0dda48f75947e60535a76875ffc88f51be137f513d1"
         },
         {
           "bytes": 35299,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_methodology.rpt",
-          "sha256": "21c52f777574f1ee893f20aee45e1048a052fa22519349bbd413dd5d11b46c17"
+          "sha256": "81a724a33da126cdb95dced87a221754851c67f3656db726683f57d65fe8a4e0"
         },
         {
-          "bytes": 219702,
+          "bytes": 218061,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_timing_summary.rpt",
-          "sha256": "7e3d54c864d069c50f1d3261e654e6c33bcee813424136a681b42957218a7782"
+          "sha256": "056aab46ee5857b57e7ffecbd03eeee5ec66cad636b24bfbe356e36e20000bb2"
         },
         {
           "bytes": 171546,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_utilization.rpt",
-          "sha256": "6e8758af6ab6565dd62be25c421546f768d94c66a38d1658c7ac8ec3c81d26bb"
+          "sha256": "52f101b2153ece00a8b5843c3e358d825b4c795a09f94d2fa90d409685fe1283"
         },
         {
           "bytes": 77394,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_cdc.rpt",
-          "sha256": "6b044dc7d03600f1c7448006aaae640e8bc8482e87dc950624a5294273a0dbb4"
+          "sha256": "1ba4d7e35b78eec08c756c200d00ea8c222e6dbc940b634dde53955afd163174"
         },
         {
           "bytes": 2909,
           "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_clock_interaction.rpt",
-          "sha256": "4e945cc28f9b11a6306a87cd5afa8e148048900c95cd7ce08093e42118907a25"
+          "sha256": "9dd73517c78efa8155d00328af6eb9374b3c02e411517598d1226c0df638f592"
         }
       ],
       "role": "fixed",
-      "source_bundle_sha256": "aeadfd26b0839c31952893760358da9777fc6240830738b69b6378702cf9708c",
+      "source_bundle_sha256": "794ff11ad54f3d10ee3bd3f13345a315cc5654ded8f357ed3ce71c765a4de303",
       "source_sha256": {
         "board_profiles/ax7020_common/p10_ps7_config.tcl": "b094c0ba2a1f832143e230c4561d2f0861c5f3d150dc53b86cddd0b1d2ce0d01",
         "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc": "36c8691cb19f184af981a4bcdce300ab3734d8831e59b480fe042e3e1080a26a",
@@ -111,7 +111,7 @@
         "rtl/p9_4ppm_frame_rx.sv": "7af59cddbddd99c0e6dbb5a0807327eddd0842a731d39762632c54b5c672d571",
         "rtl/p9_4ppm_frame_tx.sv": "24e430366581b3a43b3c03c573beab5876455d69bfefc231a358ff621cc627c9",
         "rtl/p9_axi_dma_peripheral.sv": "27b47c75b4c9ab325082e1dddff16d2cd447d76927eeff793b731a2197830a3f",
-        "rtl/p9_optical_transport_core.sv": "8d403e5cd7e825096cbe1178d1fce02a540d33c2b490a9de7e79e39b17f4bf19",
+        "rtl/p9_optical_transport_core.sv": "3e380f8ecc267c7775c7fc7cd9261c5479aad8589dc2227a0e5568614c93438b",
         "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
         "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
         "scripts/build_p10_ax7020_functional.py": "fb57330d252ae00a01bd00e530feaba04450e98903057811e63e05c5162ddb1e",
@@ -138,20 +138,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10/ba7bd668eb6a794ae085d445df48536efc94b1dd9aa56ade23db5b36eed40446/fc3a22efeee1da15e0c01b5be2194da16b17ba2e233ccb6d406ad92099108e92/p10_ax7020_rotating_functional.bit",
+          "path": "artifacts/p10/9c13a1047fba6c0c5ca32811be3f437ce19dac86cecb032ed889f721beb664e7/d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc/p10_ax7020_rotating_functional.bit",
           "read_only": true,
-          "sha256": "fc3a22efeee1da15e0c01b5be2194da16b17ba2e233ccb6d406ad92099108e92"
+          "sha256": "d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc"
         },
         "xsa": {
-          "bytes": 777182,
-          "path": "artifacts/p10/ba7bd668eb6a794ae085d445df48536efc94b1dd9aa56ade23db5b36eed40446/b8a6b03792302614bb5bae0dffd5fbca52fceaa8957f639ce3ce1a5b7dc8675a/p10_ax7020_rotating_functional.xsa",
+          "bytes": 780578,
+          "path": "artifacts/p10/9c13a1047fba6c0c5ca32811be3f437ce19dac86cecb032ed889f721beb664e7/1f0e3c11de55f7a12ce886c4138c119f646f94565d6cb94b9770b0bff4d658a0/p10_ax7020_rotating_functional.xsa",
           "read_only": true,
-          "sha256": "b8a6b03792302614bb5bae0dffd5fbca52fceaa8957f639ce3ce1a5b7dc8675a"
+          "sha256": "1f0e3c11de55f7a12ce886c4138c119f646f94565d6cb94b9770b0bff4d658a0"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_ax7020_functional/rotating/vivado_stdout_stderr.txt",
-      "log_sha256": "6fb59a8c8509c119fe58d4fae33e4abcdd0d6ed32dfc4f8ddddcca9962925b34",
+      "log_sha256": "c806d8bc4ed481257ba9c0c08fa47f860333cfebb926711608fb55a43e2ea11c",
       "markers": {
         "P10_AXIL_CLOCK_HZ": "50000000",
         "P10_AXI_BASE": "0x43C00000",
@@ -179,43 +179,43 @@
         "P10_TNS_NS": "0.0",
         "P10_TOP": "p10_ps_system_wrapper",
         "P10_WHS_NS": "0.036",
-        "P10_WNS_NS": "0.522"
+        "P10_WNS_NS": "0.824"
       },
       "profile": "P10_AX7020_ROTATING_2LANE",
       "reports": [
         {
           "bytes": 10599,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_drc.rpt",
-          "sha256": "f1d6abfa2824b2e64c21f0f8d0d9f0f6224422a51adf662f417fd58dc30077ec"
+          "sha256": "fe5a5732cfe50c11d508add1799d2c30be0f1336cba1dff1e0d12ed9f9ebc6d7"
         },
         {
           "bytes": 35308,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_methodology.rpt",
-          "sha256": "2690a33a213896b921445929ce4f75e56bf04ec9d34dcd82cbace55991d97f09"
+          "sha256": "1f702a6b95e671cf18c55be487fc5c9b11469611038c785a43aff157f569775f"
         },
         {
-          "bytes": 218931,
+          "bytes": 211997,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_timing_summary.rpt",
-          "sha256": "338c792bde2ce5424eebe3a0f0818d36e71e80514b9484f1e64563c4b5ada3a1"
+          "sha256": "b62fcabe16ded0747ce83e3c1b0e158227f90fb707527b141082d22bfa829b24"
         },
         {
           "bytes": 171555,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_utilization.rpt",
-          "sha256": "26b313f8202674136c1b48817d42a6d48d7bdfc0b19e4181030175ac2d9c697c"
+          "sha256": "3367760a5f7fcafdcab42896aaaefb9cceea27da304d500f2ecf245a68f0f63e"
         },
         {
           "bytes": 77403,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_cdc.rpt",
-          "sha256": "a87b424b3531127a80433715086cd863557ccf46aa0451de0a718fe3c55b53cd"
+          "sha256": "dac8b09c9f45d9ed8ef0af37ed0cdd0f365fd2286879e8e7dea9cde33f3a37d2"
         },
         {
           "bytes": 2918,
           "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_clock_interaction.rpt",
-          "sha256": "da5ec52da0a477fdbe10c9e39c142326702a0358ba84e237d235ecb97c4a59f3"
+          "sha256": "69454c89c158caa79135a0e2d4553924b53d0a206aa8816703c14be7560ac3f9"
         }
       ],
       "role": "rotating",
-      "source_bundle_sha256": "ba7bd668eb6a794ae085d445df48536efc94b1dd9aa56ade23db5b36eed40446",
+      "source_bundle_sha256": "9c13a1047fba6c0c5ca32811be3f437ce19dac86cecb032ed889f721beb664e7",
       "source_sha256": {
         "board_profiles/ax7020_common/p10_ps7_config.tcl": "b094c0ba2a1f832143e230c4561d2f0861c5f3d150dc53b86cddd0b1d2ce0d01",
         "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc": "0f10dcfc2dbcf7433dae8e034c52e2d89d37b2205ffcd8d6f0263f52a2f8cb13",
@@ -237,7 +237,7 @@
         "rtl/p9_4ppm_frame_rx.sv": "7af59cddbddd99c0e6dbb5a0807327eddd0842a731d39762632c54b5c672d571",
         "rtl/p9_4ppm_frame_tx.sv": "24e430366581b3a43b3c03c573beab5876455d69bfefc231a358ff621cc627c9",
         "rtl/p9_axi_dma_peripheral.sv": "27b47c75b4c9ab325082e1dddff16d2cd447d76927eeff793b731a2197830a3f",
-        "rtl/p9_optical_transport_core.sv": "8d403e5cd7e825096cbe1178d1fce02a540d33c2b490a9de7e79e39b17f4bf19",
+        "rtl/p9_optical_transport_core.sv": "3e380f8ecc267c7775c7fc7cd9261c5479aad8589dc2227a0e5568614c93438b",
         "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
         "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
         "scripts/build_p10_ax7020_functional.py": "fb57330d252ae00a01bd00e530feaba04450e98903057811e63e05c5162ddb1e",
@@ -262,7 +262,7 @@
     }
   ],
   "schema_version": 1,
-  "source_commit": "bb0b4c9676f34d8b9784ddfb3c2c611e66dd8b0b",
+  "source_commit": "20cd572f4e8ef67e61a79f15c0d039482f7eafd2",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10-AX7020-DUAL-FUNCTIONAL-BUILD"

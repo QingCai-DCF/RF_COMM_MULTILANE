@@ -7,5 +7,5 @@
 
 | Role | Build | WNS (ns) | WHS (ns) | TNS (ns) | Bitstream SHA256 | XSA SHA256 |
 |---|---|---:|---:|---:|---|---|
-| fixed | PASS | 0.99 | 0.053 | 0.0 | `8e2f854c007a3bdd49f0c9d367bfc63c2dad8b129566d086ce0e53dafafb4839` | `9923d4c9bdbb884bdef1c4d65cd7c3f7b6e4f92adbc05c1d2232a212fa104f01` |
-| rotating | PASS | 0.522 | 0.036 | 0.0 | `fc3a22efeee1da15e0c01b5be2194da16b17ba2e233ccb6d406ad92099108e92` | `b8a6b03792302614bb5bae0dffd5fbca52fceaa8957f639ce3ce1a5b7dc8675a` |
+| fixed | PASS | 0.583 | 0.019 | 0.0 | `44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37` | `f54d9508b49ff7bf44bd7903ac646a5dce3ab033ff051dd2117594ccd555b735` |
+| rotating | PASS | 0.824 | 0.036 | 0.0 | `d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc` | `1f0e3c11de55f7a12ce886c4138c119f646f94565d6cb94b9770b0bff4d658a0` |
