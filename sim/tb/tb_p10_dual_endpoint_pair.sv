@@ -607,6 +607,11 @@ module tb_p10_dual_endpoint_pair;
     run_object(600, 8'h22, 1'b1, 2'b10, 16'h0100, 0, 0, 0);
     run_object(600, 8'h21, 1'b0, 2'b01, 16'h0000, 0, 0, 0);
     run_object(247*40, 8'h31, 1'b0, 2'b11, 16'h0200, 0, 0, 0);
+    // Losing sequence zero while the following 31 entries fill the receive
+    // window must not leave the sender parked on a stale zero-credit ACK.
+    run_object(247*40, 8'h32, 1'b1, 2'b11, 16'h0300, 0, 1, 0);
+    if (r_retry_count == 0)
+      $fatal(1, "P10 full-window DATA loss did not exercise retry");
     run_object(600, 8'h42, 1'b1, 2'b11, 16'hfffe, 0, 0, 0);
     run_object(600, 8'h53, 1'b0, 2'b11, 16'h1000, 32'h40, 0, 0);
     if (r_rx_out_of_order == 0 || r_rx_gap == 0)

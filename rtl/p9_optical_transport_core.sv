@@ -459,6 +459,10 @@ module p9_optical_transport_core #(
   wire [5:0] dp_local_ack_width;
   wire [15:0] dp_local_ack_credit;
   wire [5:0] dp_rx_credit;
+  wire dp_local_ack_snapshot_stale = endpoint_mode &&
+      (dp_local_ack_base != rx_base_sequence_o ||
+       dp_local_ack_bitmap != rx_sack_bitmap_o ||
+       dp_local_ack_credit != {10'd0, dp_rx_credit});
   wire [3:0] dp_scheduler_defer;
   wire [1:0] lane_runtime_ready;
   wire [1:0] effective_lane_mask = object_lane_mask_q & ~cfg_lane_unavailable_i;
@@ -934,11 +938,10 @@ module p9_optical_transport_core #(
               phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
             end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
                          (!endpoint_mode || endpoint_turnaround_pending_q)) begin
-              if (endpoint_mode &&
-                  (dp_local_ack_base != rx_base_sequence_o ||
-                   dp_local_ack_bitmap != rx_sack_bitmap_o)) begin
+              if (dp_local_ack_snapshot_stale) begin
                 // A timer may have frozen an ACK snapshot while the bounded
-                // DATA burst was still arriving. Consume that stale local
+                // DATA burst was still arriving or while an in-order delivery
+                // run was releasing receiver credit. Consume that stale local
                 // snapshot without transmitting it; the held direction
                 // boundary immediately requests a fresh cumulative ACK.
                 dp_local_ack_ready_q <= 1;
@@ -954,7 +957,14 @@ module p9_optical_transport_core #(
           end
           PH_ACK_GUARD: if (lanes_idle && ack_schedulable_lane_mask != 0) begin
             if (phase_guard_q != 0) phase_guard_q <= phase_guard_q - 1'b1;
-            else begin
+            else if (dp_local_ack_snapshot_stale) begin
+              // Credit, base, or SACK state can change during the physical
+              // turnaround guard. Never advertise that frozen state after the
+              // guard: keep the direction boundary pending and recapture the
+              // cumulative ACK before serialization.
+              dp_local_ack_ready_q <= 1;
+              phase_q <= PH_DATA;
+            end else begin
               ack_lane_q <= ack_schedulable_lane_mask[0] ? 1'b0 : 1'b1;
               lane_frame_ack[ack_schedulable_lane_mask[0] ? 0 : 1] <= 1;
               lane_session[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_session;
