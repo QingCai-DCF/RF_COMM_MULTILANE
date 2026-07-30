@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "test_id": "P10-REPO-INTAKE",
-  "status": "PASS",
+  "status": "FAIL",
   "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10",
   "branch": "p10/ax7020-dual-node-2lane",
-  "base_commit": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
+  "base_commit": "d68bbca1bfb8e95fbb24278f953f8d56de24b910",
   "main_commit": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
   "branch_match": true,
   "ancestors": {
@@ -17,7 +17,7 @@
     "PROJECT_CONSTRAINTS.txt": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
     "AGENTS.md": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb",
     "config/project_state.json": "3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f",
-    "config/project_requirements.yaml": "83f44cec516a8925fc6b5b4ab22563f86bb4c17796242e7850c3644b4649dcc0",
+    "config/project_requirements.yaml": "71d3ccfd09210b0bbe2b6ec4433d1a97435f1e7b7208a5239d37a731c3816d10",
     "config/register_map/ir_axi_regs.yaml": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
   },
   "goal_hashes": {
@@ -27,7 +27,7 @@
   "concise_preflight": "evidence/generated/p10_fasttrack_concise_preflight.json",
   "midrun_transition": {
     "path": "evidence/generated/p10_fasttrack_midrun_transition.json",
-    "sha256": "111824616de13726d3a8f053dc619710654323f1bc53e30fda94b609a622480f"
+    "sha256": "6f6ac25114a4b12db4153d51086b3ff194c4ed76f774222bc7373e8573b169c5"
   },
   "hardware_actions_executed": false,
   "current_run_hardware_authorization": true,
