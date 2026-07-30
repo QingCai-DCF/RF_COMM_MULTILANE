@@ -1,0 +1,112 @@
+STARTED_UTC=2026-07-30T14:27:53+00:00
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_seq_math_pkg.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_health_weighted_scheduler.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_selective_repeat_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_selective_repeat_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_ack_aggregator.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_data_plane_top.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_tfdu_exact_duty_accountant.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_tfdu_physical_module_safety.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\tfdu_lane_phy.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\ir_4ppm_codec.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\p9_rate_4ppm_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\p9_4ppm_frame_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\p9_4ppm_frame_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\rtl\p9_optical_transport_core.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10\sim\tb\tb_p10_dual_endpoint_pair.sv
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_seq_math_pkg.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_health_weighted_scheduler.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_health_weighted_scheduler
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_selective_repeat_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_selective_repeat_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_ack_aggregator.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_ack_aggregator
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_data_plane_top.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_data_plane_top
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/p9_rate_4ppm_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_rate_4ppm_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/p9_4ppm_frame_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/p9_4ppm_frame_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/rtl/p9_optical_transport_core.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_optical_transport_core
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/sim/tb/tb_p10_dual_endpoint_pair.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p10_dual_endpoint_pair
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_p10_dual_endpoint_pair -debug typical -s p10_dual_endpoint_pair_snapshot
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p10_dual_endpoint_pair -debug typical -s p10_dual_endpoint_pair_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3645] port 'tx_next_sequence_o' remains unconnected for this instance [C:/Users/user/Documents/RF_COMM_MULTILANE_P10/sim/tb/tb_p10_dual_endpoint_pair.sv:239]
+WARNING: [VRFC 10-3645] port 'tx_next_sequence_o' remains unconnected for this instance [C:/Users/user/Documents/RF_COMM_MULTILANE_P10/sim/tb/tb_p10_dual_endpoint_pair.sv:281]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package work.ir_seq_math_pkg
+Compiling module work.ir_selective_repeat_tx(SACK_BITS...
+Compiling module work.ir_health_weighted_scheduler(LAN...
+Compiling module work.ir_selective_repeat_rx(WINDOW_SI...
+Compiling module work.ir_ack_aggregator(SACK_BITS=32)
+Compiling module work.ir_data_plane_top(LANE_COUNT=2,W...
+Compiling module work.p9_4ppm_frame_tx
+Compiling module work.ir_tfdu_exact_duty_accountant_de...
+Compiling module work.ir_tfdu_physical_module_safety_d...
+Compiling module work.tfdu_lane_phy(CLEAR_STICKY_INVAL...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,DE...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=15,DE...
+Compiling module work.ir_4ppm_codec(DETECT_START_CYCLE...
+Compiling module work.p9_rate_4ppm_rx
+Compiling module work.p9_4ppm_frame_rx
+Compiling module work.p9_optical_transport_core(RTO_CY...
+Compiling module work.tb_p10_dual_endpoint_pair
+Built simulation snapshot p10_dual_endpoint_pair_snapshot
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat p10_dual_endpoint_pair_snapshot -runall
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl
+# xsim {p10_dual_endpoint_pair_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_DUAL_RAW_PASS direction=0 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=0 lane=1 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=1 pulses=64
+P10_DUAL_OBJECT_PASS direction=1 lanes=2 length=600 initial=0100 faults=00000000 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=1 length=600 initial=0000 faults=00000000 drops=0/0 hwm=3/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=9880 initial=0200 faults=00000000 drops=0/0 hwm=32/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=fffe faults=00000000 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=600 initial=1000 faults=00000040 drops=0/0 hwm=3/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=2000 faults=00000000 drops=1/1 hwm=0/3 retries=0/4
+TB_P10_DUAL_ENDPOINT_PAIR=PASS
+$finish called at time : 73718445241 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/sim/tb/tb_p10_dual_endpoint_pair.sv" Line 632
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:01:00 . Memory (MB): peak = 208.082 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 14004 KB (Peak: 14004 KB), Simulation CPU Usage: 59577 ms
+INFO: [Common 17-206] Exiting xsim at Thu Jul 30 22:28:59 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+FINISHED_UTC=2026-07-30T14:28:59+00:00
+RETURN_CODE=0
