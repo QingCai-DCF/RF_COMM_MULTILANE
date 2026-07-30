@@ -1,7 +1,7 @@
 # P10 fast-track identity amendment
 
 - TFDU module identity reinspection: `NOT_REQUIRED_PER_USER`.
-- Read-only JTAG run: `p10_jtag_identity_20260730T134149Z_d6fcb2af`.
+- Read-only JTAG run: `p10_jtag_identity_20260730T135006Z_1167fb31`.
 - Distinct AX7020 cable serials: `210249855178`, `210512180081`.
 - Serial-to-role assignment: `BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081`; target order is prohibited.
 - Programming/reset/memory/ELF/UART/TFDU drive: `false`.
