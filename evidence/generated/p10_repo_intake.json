@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "test_id": "P10-REPO-INTAKE",
+  "status": "PASS",
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10",
+  "branch": "p10/ax7020-dual-node-2lane",
+  "base_commit": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
+  "main_commit": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
+  "branch_match": true,
+  "ancestors": {
+    "main": true,
+    "p8e-pass": true,
+    "p9-z7010-2lane-pass": true
+  },
+  "tracked_worktree_clean_at_concise_preflight_start": true,
+  "canonical_hashes": {
+    "PROJECT_CONSTRAINTS.txt": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+    "AGENTS.md": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb",
+    "config/project_state.json": "3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f",
+    "config/project_requirements.yaml": "83f44cec516a8925fc6b5b4ab22563f86bb4c17796242e7850c3644b4649dcc0",
+    "config/register_map/ir_axi_regs.yaml": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
+  },
+  "goal_hashes": {
+    "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
+    "goals/P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET_GOAL.md": "5a81eeea8cf5bb0ff9d41c237a2af097f58cf71d1d208825dfb6144b5d6e23a3"
+  },
+  "concise_preflight": "evidence/generated/p10_fasttrack_concise_preflight.json",
+  "midrun_transition": {
+    "path": "evidence/generated/p10_fasttrack_midrun_transition.json",
+    "sha256": "111824616de13726d3a8f053dc619710654323f1bc53e30fda94b609a622480f"
+  },
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": true,
+  "hardware_admission": false,
+  "blocking_condition": "P10-SAFETY-POWERUP-001"
+}

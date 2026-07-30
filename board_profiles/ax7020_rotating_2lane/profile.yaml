@@ -1,0 +1,23 @@
+schema_version: 1
+profile_id: "P10_AX7020_ROTATING_2LANE"
+node_role: "rotating_role"
+proposed_board_id: "AX7020-R"
+physical_board_identity: "PENDING_UNIQUE_JTAG_CABLE_AND_PHYSICAL_MARKING_BINDING"
+common_profile: "board_profiles/ax7020_common/board_identity.yaml"
+vivado_part: "xc7z020clg400-2"
+pinmap: "board_profiles/ax7020_rotating_2lane/pinmap.csv"
+xdc: "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+lane_count: 2
+allowed_lane_masks:
+  - 1
+  - 2
+  - 3
+modules:
+  A: "R0"
+  B: "R1"
+register_map: "config/register_map/ir_axi_regs.yaml"
+dma: "AXI DMA scatter-gather; role-local DDR only"
+network_required: false
+movement_allowed: false
+hardware_admission: false
+blocking_condition: "P10-SAFETY-POWERUP-001"

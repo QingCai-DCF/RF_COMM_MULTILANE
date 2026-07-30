@@ -1,0 +1,66 @@
+schema_version: 1
+inventory_id: "P10_AX7020_DUAL_BOARD_INVENTORY"
+document_set_status: "INCOMPLETE_PHYSICAL_IDENTITY"
+documented_model: "ALINX AX7020"
+documented_fpga: "XC7Z020-2CLG400I"
+vivado_part: "xc7z020clg400-2"
+boards:
+  -
+    proposed_id: "AX7020-F"
+    role: "fixed"
+    full_model_from_physical_board: "PENDING_PHYSICAL_PHOTO"
+    pcb_revision: "PENDING_PHYSICAL_SILKSCREEN_OR_PHOTO"
+    fpga_marking_from_physical_board: "PENDING_PHYSICAL_PHOTO"
+    front_photo: "PENDING_USER_DOCUMENT"
+    back_photo: "PENDING_USER_DOCUMENT"
+    jtag_cable_identity: "PENDING_ROLE_BINDING"
+  -
+    proposed_id: "AX7020-R"
+    role: "rotating_role_stationary_for_p10"
+    full_model_from_physical_board: "PENDING_PHYSICAL_PHOTO"
+    pcb_revision: "PENDING_PHYSICAL_SILKSCREEN_OR_PHOTO"
+    fpga_marking_from_physical_board: "PENDING_PHYSICAL_PHOTO"
+    front_photo: "PENDING_USER_DOCUMENT"
+    back_photo: "PENDING_USER_DOCUMENT"
+    jtag_cable_identity: "PENDING_ROLE_BINDING"
+reference_file_inventory: "evidence/generated/p10_board_reference_file_inventory.json"
+sources:
+  ax7020_schematic:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7020开发板原理图V2.0.pdf"
+    sha256: "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e"
+    authority: "ALINX official board schematic"
+    read_only: true
+  ax7020_manual:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\AX7020UserManualV2.2\\AX7020UserManualV2.2.rst"
+    sha256: "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16"
+    authority: "ALINX official AX7020 user-manual source"
+    read_only: true
+  ax7020_pin_workbook:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7010_AX7020管脚.xlsx"
+    sha256: "2113ac32317262b681b2f54f63e77fced28f99c233c456e030b03cf77941ccbb"
+    authority: "ALINX official package-pin workbook"
+    read_only: true
+  tfdu_datasheet:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102datasheet.pdf"
+    sha256: "54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef"
+    authority: "Vishay TFDU6102 datasheet"
+    read_only: true
+  tfdu_small_board_schematic:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc"
+    sha256: "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a"
+    authority: "user-supplied TFDU small-board design source"
+    read_only: true
+  official_alinx_ax7020_2023_1_ps_config:
+    url: "https://github.com/alinxalinx/AX7020_2023.1"
+    commit: "fcf1e4a239b0f47e8ee95dfde7c2eedc5685c327"
+    path: "course_s2_vitis/01_ps_hello/Vivado/auto_create_project/ps_config.tcl"
+    git_blob: "8cd9d3600f65af43afe1ade8b8b63b24a31a090c"
+    sha256: "b9212817e1333a73c9a317217e0636b6a1636e2306095296fbe6eff6bf10f217"
+    bytes: 24915
+  amd_ug470_pudc_b:
+    url: "https://docs.amd.com/api/khub/documents/FOs3lXmlcWxBhTIFxVKyGA/content"
+    document: "UG470 7 Series FPGAs Configuration User Guide"
+    version: "1.17"
+    date: "2023-12-05"
+    location: "page 22, PUDC_B configuration-pin definition"
+    claim: "Active-low PUDC_B enables internal pull-ups on SelectIO pins after power-up and during configuration; low enables and high disables them."

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "test_id": "P10-FASTTRACK-CONCISE-PREFLIGHT",
+  "status": "PASS",
+  "generated_at_utc": "2026-07-30T08:51:45.395721+00:00",
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10",
+  "branch": "p10/ax7020-dual-node-2lane",
+  "head": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
+  "main": "1c06dfba97f40d8a3a568832c29a7bb1ac166340",
+  "expected_branch": "p10/ax7020-dual-node-2lane",
+  "branch_match": true,
+  "tracked_worktree_clean_before_checks": true,
+  "tracked_dirty_before_checks": [],
+  "ancestors": {
+    "main": true,
+    "p8e-pass": true,
+    "p9-z7010-2lane-pass": true
+  },
+  "canonical_hashes": {
+    "PROJECT_CONSTRAINTS.txt": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
+    "AGENTS.md": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb",
+    "config/project_state.json": "3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f",
+    "config/project_requirements.yaml": "83f44cec516a8925fc6b5b4ab22563f86bb4c17796242e7850c3644b4649dcc0",
+    "config/register_map/ir_axi_regs.yaml": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
+  },
+  "goal_hashes": {
+    "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
+    "goals/P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET_GOAL.md": "5a81eeea8cf5bb0ff9d41c237a2af097f58cf71d1d208825dfb6144b5d6e23a3"
+  },
+  "checks": [
+    {
+      "name": "p8a_consistency",
+      "command": [
+        "python",
+        "scripts/check_p8a_consistency.py"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "timed_out": false,
+      "started_at_utc": "2026-07-30T08:51:29.620038+00:00",
+      "ended_at_utc": "2026-07-30T08:51:42.189286+00:00",
+      "duration_seconds": 12.569248,
+      "log": "evidence/generated/p10_preflight_raw/p8a_consistency.txt",
+      "log_sha256": "24d12a51584416b63be62817ddda6823a78eb448edc514eaa72312bd13c86ded"
+    },
+    {
+      "name": "p8e_verify_existing",
+      "command": [
+        "python",
+        "scripts/run_p8e_dual_target_gate.py",
+        "--verify-existing",
+        "--json-summary"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "timed_out": false,
+      "started_at_utc": "2026-07-30T08:51:42.190762+00:00",
+      "ended_at_utc": "2026-07-30T08:51:44.521777+00:00",
+      "duration_seconds": 2.331015,
+      "log": "evidence/generated/p10_preflight_raw/p8e_verify_existing.txt",
+      "log_sha256": "35dd8906ccbea1680046625361b099db375041509ca76595d950d6b6e4a8b019"
+    },
+    {
+      "name": "p9_verify_existing",
+      "command": [
+        "python",
+        "scripts/verify_p9_existing.py",
+        "--json-summary"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "timed_out": false,
+      "started_at_utc": "2026-07-30T08:51:44.523685+00:00",
+      "ended_at_utc": "2026-07-30T08:51:45.350244+00:00",
+      "duration_seconds": 0.826559,
+      "log": "evidence/generated/p10_preflight_raw/p9_verify_existing.txt",
+      "log_sha256": "684ae1260208ae141bbd10c9af9bb1947d6e8f4a26d0550402ef9bbda3a95ef3"
+    },
+    {
+      "name": "no_hardware_static_scan",
+      "command": [
+        "python",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "timed_out": false,
+      "started_at_utc": "2026-07-30T08:51:45.352312+00:00",
+      "ended_at_utc": "2026-07-30T08:51:45.394243+00:00",
+      "duration_seconds": 0.041931,
+      "log": "evidence/generated/p10_preflight_raw/no_hardware_static_scan.txt",
+      "log_sha256": "29682cf318bc798b44db0e598a4ed31a3f2cf2a1ecf47deb585d850d67fbbda2"
+    }
+  ],
+  "no_hardware_environment": {
+    "NO_HARDWARE": "1",
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": "false"
+  },
+  "overall_fasttrack_hardware_authorization": true,
+  "hardware_actions_executed": false
+}

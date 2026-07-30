@@ -1,0 +1,587 @@
+{
+  "schema_version": 1,
+  "test_id": "P10-BOARD-DOC-FILE-INVENTORY",
+  "generated_at_utc": "2026-07-30T08:41:53.165343+00:00",
+  "source_root": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020",
+  "source_root_read_only": true,
+  "file_count": 71,
+  "total_bytes": 100010433,
+  "all_files_hashed_sha256": true,
+  "reference_files": [
+    {
+      "relative_path": "01_SCH/AX7010_AX7020管脚.xlsx",
+      "bytes": 15338,
+      "sha256": "2113ac32317262b681b2f54f63e77fced28f99c233c456e030b03cf77941ccbb",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7010/AX7020 package-pin workbook",
+      "model_match": "EXACT_AX7020_FAMILY_MAPPING"
+    },
+    {
+      "relative_path": "01_SCH/AX7020_sch_lib_orcad_16_5.OLB",
+      "bytes": 121344,
+      "sha256": "eabfd74deacc55fd31be2bf1da775760517d517bb9fb9d095802ae2fab6f62f8",
+      "official_status": "OFFICIAL_VENDOR_DESIGN_ASSET",
+      "document_role": "ALINX AX7020 OrCAD library",
+      "model_match": "SUPPORTING_ASSET_NOT_IDENTITY_PROOF"
+    },
+    {
+      "relative_path": "01_SCH/AX7020开发板原理图V2.0.pdf",
+      "bytes": 329858,
+      "sha256": "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7010/AX7020 board schematic distributed as AX7020 V2.0",
+      "model_match": "EXACT_AX7020_REFERENCE_NOT_PHYSICAL_REVISION_PROOF"
+    },
+    {
+      "relative_path": "02_PCB/AX7020_Allegro_lib.zip",
+      "bytes": 730372,
+      "sha256": "29fce3d387b138cd04d4683831918115d38b163eb06ec8fe34ed4c3a3408f8f7",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 PCB design package",
+      "model_match": "EXACT_AX7020_REFERENCE_NOT_PHYSICAL_REVISION_PROOF"
+    },
+    {
+      "relative_path": "02_PCB/AX7020开发板PCB设计图.pdf",
+      "bytes": 963203,
+      "sha256": "d55cef2b52e42d1f84d46b60f313b9644d0077847143ef52b431b16f5c12c6bb",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 PCB design package",
+      "model_match": "EXACT_AX7020_REFERENCE_NOT_PHYSICAL_REVISION_PROOF"
+    },
+    {
+      "relative_path": "03_structure size/AX7020尺寸结构.dxf",
+      "bytes": 22725899,
+      "sha256": "9e577dc0ef27e64c8427db49a75cf6daefd80857a6c43f7d6f46d0da3b0bfb5f",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 mechanical drawing",
+      "model_match": "EXACT_AX7020_REFERENCE"
+    },
+    {
+      "relative_path": "03_structure size/AX7020尺寸结构.pdf",
+      "bytes": 312634,
+      "sha256": "95f6165a1dce0450a9199874ff64a955cbc6f2d5ea56b47f62971e85315d1749",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 mechanical drawing",
+      "model_match": "EXACT_AX7020_REFERENCE"
+    },
+    {
+      "relative_path": "04_datasheet/DDR3/H5TQ2G63FFR.pdf",
+      "bytes": 408695,
+      "sha256": "737d21025686ad968b5a797f8f3372b675e068e5f69ea55f0bbd0dfeca729ae0",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "ALTERNATE_DDR_DEVICE_NOT_AX7020_IDENTITY_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/DDR3/H5TQ4G63AFR.pdf",
+      "bytes": 469205,
+      "sha256": "9446944df2b86d1c28ae8f97249c10ed9199d1e2ebfb3a965689dfa22ff1933d",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "EXACT_DOCUMENTED_DDR_DEVICE"
+    },
+    {
+      "relative_path": "04_datasheet/GPHY/RTL8211E(G)-VB(VL)-CG_DataSheet_1 8.pdf",
+      "bytes": 1848372,
+      "sha256": "8f51f1b64416d0d0542d498f2b28ba09a9714002ded8704484e4fd5d8b64cfe2",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/POWER/TLV62130RGT.pdf",
+      "bytes": 1610155,
+      "sha256": "c5a7699e43d68148710f6850ab57cf57f46e79960ec2fae3ad0ad6da7164d568",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/QSPI FLASH/W25Q256FV.pdf",
+      "bytes": 1120174,
+      "sha256": "4673d508da5ca596052a082b900108dd5bcf1f7237e63db7a68b238585b54553",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/RTC/DS1302.pdf",
+      "bytes": 224178,
+      "sha256": "4e32b297d286ceab2cdb7cb1b8272c7107a3ba2a99e9b70ebc49f0b59c84d83f",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/UART/cp2102.pdf",
+      "bytes": 207755,
+      "sha256": "3d04f8743416a7bf64b59c24b8f7dfd5175d54fcf6e20f624fdc1a0e71b30f6b",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/USB/USB3320.pdf",
+      "bytes": 1430678,
+      "sha256": "e7a45ec9e0517390b2aafa3582f4e504597911cc1ecf5adcad00202934fcaaaf",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "COMPONENT_REFERENCE_NOT_BOARD_REVISION_PROOF"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ds187-XC7Z010-XC7Z020-Data-Sheet.pdf",
+      "bytes": 1290475,
+      "sha256": "b6a8d881f9c739bd94b57bbfd9ec541d2b6e67a6ae5a3209bad18fa92b331a6b",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "EXACT_FPGA_FAMILY_DOCUMENT"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ug480_7Series_XADC.pdf",
+      "bytes": 3044793,
+      "sha256": "77ac298cdfe9d15a20a97cbf4a4ff92ee922e0a91a29fb1f8726c2be9189112f",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "OFFICIAL_FPGA_FAMILY_REFERENCE"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ug585-Zynq-7000-TRM.pdf",
+      "bytes": 44432450,
+      "sha256": "f90fbd56019fc7ccfc5e68c780453d0805439cdb0e5b459b2acbfda7d75be5ad",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "OFFICIAL_FPGA_FAMILY_REFERENCE"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ug821-zynq-7000-swdev.pdf",
+      "bytes": 1432831,
+      "sha256": "a6b9e68616353fa20c8944f150229ea4929146fbf7a0f93e20cb106a4b4be789",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "OFFICIAL_FPGA_FAMILY_REFERENCE"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ug865-Zynq-7000-Pkg-Pinout.pdf",
+      "bytes": 7483609,
+      "sha256": "4cd2346c58ee3a77d4c3a1d2fe7ba31c54d99d2bef9be5ec7e674c328d8614a5",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "OFFICIAL_FPGA_FAMILY_REFERENCE"
+    },
+    {
+      "relative_path": "04_datasheet/ZYNQ7000/ug933-Zynq-7000-PCB.pdf",
+      "bytes": 2779534,
+      "sha256": "af7e39c8bde989fb6bebd69d704026e5c67560ba53e57ac33648af2e49cc1fc9",
+      "official_status": "OFFICIAL_COMPONENT_MANUFACTURER_DOCUMENT",
+      "document_role": "Component-manufacturer datasheet bundled with AX7020 references",
+      "model_match": "OFFICIAL_FPGA_FAMILY_REFERENCE"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/AX7020UserManualV2.2.rst",
+      "bytes": 71403,
+      "sha256": "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image1.png",
+      "bytes": 22266,
+      "sha256": "35ea74e4733a5648e91c80989d3edbd4333b973f34132d87aa8b6ce8a3245b96",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image10.png",
+      "bytes": 78904,
+      "sha256": "555d7036cbc7164dafa758095c1eb632daf398c4b079567be79f6f02735e2201",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image11.png",
+      "bytes": 451933,
+      "sha256": "294cfac99deac3efba1186a5490f3a5d4461ace8b0d0b9f2f65962a317b1fa47",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image12.png",
+      "bytes": 56557,
+      "sha256": "154a1c306c8dfbf1e4b7f62483480ff2ee0479356acdac021a28653c39f5fb2a",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image13.png",
+      "bytes": 15351,
+      "sha256": "eef2bb6385b4d5102ad4270f5df052c8d68ef8a934e25126036ea9b308ba33d6",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image14.png",
+      "bytes": 117193,
+      "sha256": "eb640a77af37f062e51b8f2bc7361d0484f83205e8b66247648932a576a3baf5",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image15.png",
+      "bytes": 8127,
+      "sha256": "f765a8dcc5ebeefedb0be0bdc071341c17212042c790b5fe839eaa765d20b370",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image16.png",
+      "bytes": 60954,
+      "sha256": "ffb972816f25492e9de3775bb304ead55fcc574cfed47c453ab5fabce5c75d3a",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image17.png",
+      "bytes": 17424,
+      "sha256": "c1fa132558216b306e270e9c055e5b00b3a23fdd9406fa802c13bb7626af65f0",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image18.png",
+      "bytes": 26491,
+      "sha256": "b0fb2445b4e9721fa01d63f20287fbb2ed99c955968dde32da1e6760beaddc21",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image19.png",
+      "bytes": 310670,
+      "sha256": "ef2c44528e658be6d5046c96f9b972d8c2e8ef614bb42ee672a4d3db06d86104",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image2.png",
+      "bytes": 1352879,
+      "sha256": "5807a9f8cbd307abae244e53c04fe2bba1a8513aa2e9aef4d7522d3ac79b7f20",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image20.png",
+      "bytes": 21903,
+      "sha256": "eebaa55c053772614d8f4b49033893de9aa8f7036f9f3ff35c039cdaa92a1dd0",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image21.png",
+      "bytes": 372742,
+      "sha256": "b1ca5d0e6a03b1233fbf60e6d98ffa95711c107ef1343f5cb1cadeb7a19fd309",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image22.png",
+      "bytes": 28723,
+      "sha256": "eb37b451ed16b56941c2de3c8a00eeddd1ed1f7ecea5a547ad5255345da0bc93",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image23.png",
+      "bytes": 303071,
+      "sha256": "ebd3dd518b8855c278ea801a357d83147c3c256443106e48f5e29eb46b70e11f",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image24.png",
+      "bytes": 21495,
+      "sha256": "fe2f7d1e43a9b9d2035f171ed6ec6bdad63030933176bd944613145b5a60ee42",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image25.png",
+      "bytes": 321977,
+      "sha256": "8fcb719626c7c50eec0ed1b6ecc496fba3d3ae666fb123634348e5e31eea876e",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image26.png",
+      "bytes": 35771,
+      "sha256": "900f1819f08c19cd21fe1994fcc0024a9504783bfa4a925d36768298ca30ba29",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image27.png",
+      "bytes": 133733,
+      "sha256": "59f7599db810d5411a59a62ddcea451ce52555dbd792cb11ed406942a3118b4b",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image28.png",
+      "bytes": 61174,
+      "sha256": "16adbb12f24c694e35aa2541763300af8511656e408da220a2112405d8ff9162",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image29.png",
+      "bytes": 188758,
+      "sha256": "8fe59098ca4578d0b4639751e40bcf7dc3acedc64a9b7c6f79724febfb09fecb",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image3.png",
+      "bytes": 519301,
+      "sha256": "161707fcdfc1c8218595ef1a46cb32a2c54b19e92b4ac06dc3ab41bcc7e62934",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image30.png",
+      "bytes": 8453,
+      "sha256": "c6ce671c40f578ef66e00f561aab300d36a7746a089bab28d82e81daa4cc8469",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image31.png",
+      "bytes": 32303,
+      "sha256": "9e0c80b871275a2a6a68a8f4710b1fb9788a096e65ae20a67473c5436b24bf53",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image32.png",
+      "bytes": 10089,
+      "sha256": "c8de141d288b18e1e2999a6a1f3a71f22566875cc760dc384ff0ad5be8101b74",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image33.png",
+      "bytes": 60978,
+      "sha256": "536d0c4b11d941ca9d4032b2f6e88723685468ddb27a4fd397063b444ffcc2ba",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image34.png",
+      "bytes": 53575,
+      "sha256": "e6dadd0b599295794a82068d79d048c443b676d784cf4906dc43fb503ce2d237",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image35.png",
+      "bytes": 14704,
+      "sha256": "7540574d8a40c6b969fd7af01ba8e83e4e88490708a01f8c2c1f83c8b66dcab5",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image36.png",
+      "bytes": 18458,
+      "sha256": "7b7126d948a722469f9c07e8b8c1f48d6f181aaf01b6c7e8bdb092fc4478948a",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image37.png",
+      "bytes": 168870,
+      "sha256": "b096b543bfe88225fe45dfee0ee4b88c6125b5a1524c5ad82fe44397f8340a67",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image38.png",
+      "bytes": 14743,
+      "sha256": "0be56a4b4e6fa5a5e11b1159be1b5ddadd5d0d11e8422036e0b07f8d4ea20b3a",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image39.png",
+      "bytes": 55102,
+      "sha256": "e13dae622b7a9b8ca0aefe4c52eedc2b93e6dbb9c8ee8571d84446542aedcb9e",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image4.png",
+      "bytes": 184368,
+      "sha256": "659ff67b871c16fd8cc7b793b8b4df15e5c71569e554e7ce682a74d220bc77ff",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image40.png",
+      "bytes": 31870,
+      "sha256": "ec8a382b6c448fdb2c72bb13cc544548924d00c3e2ed8db375e8660539e010b0",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image41.png",
+      "bytes": 448977,
+      "sha256": "8047b1d1f5cf603dadee95fa4a6cbe5cc6aaf7437b2cd551e92026680c1573f4",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image42.png",
+      "bytes": 25344,
+      "sha256": "c624fc6b1a68cf1f3306607e3025533d4fdc8e543a16d20929b7da18125a60d7",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image43.png",
+      "bytes": 157992,
+      "sha256": "3951991f13a01de3957b504930dded4cc066be34012f35f6680ead35b26f2fbe",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image44.png",
+      "bytes": 50485,
+      "sha256": "52aa35c7b41c5b0be6410436daf27f9238be850b7da8293bc7f722aa96c2f11c",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image45.png",
+      "bytes": 292202,
+      "sha256": "bba85b93f7e225e895c96feb878d71ab60ec8840db28f5fbf9f9166cbec18a4d",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image46.png",
+      "bytes": 24717,
+      "sha256": "ca31b979ef8612b12f5073143d4578d9160dc378962a7e43a2c6e99fc1299185",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image47.png",
+      "bytes": 56371,
+      "sha256": "0e2a03a034dc0e52d884c2539055152becdda94da3a28401acd325703e236071",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image48.png",
+      "bytes": 29974,
+      "sha256": "bc340d717467b02ea8edb255c135dc83bdfb78a7c50efbf71e5be5678110ebcd",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image49.png",
+      "bytes": 103981,
+      "sha256": "71f38a5ca169c1326351d6e9cfcbb436eecfd9a64b55c8f9ffb9aa079ed6cf9b",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image5.png",
+      "bytes": 78716,
+      "sha256": "d71a24da908037345f65159dc64764cc132a6c75b9c16db5ff40316688da9dfc",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image6.png",
+      "bytes": 113823,
+      "sha256": "5b8f11b43b8551acdc85680a70fce3e95c86d1b096e58225d92dbedb222dc200",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image7.png",
+      "bytes": 44380,
+      "sha256": "2d954381634480cf3c634d49d541061a261a62d5d777197044b7a00e5f08f9d6",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image8.png",
+      "bytes": 251032,
+      "sha256": "7f850eecac301ce2b175e071d4a60571cc2b0bf2615dc87185fb74e2216e72b5",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    },
+    {
+      "relative_path": "AX7020UserManualV2.2/images/media/image9.jpeg",
+      "bytes": 98574,
+      "sha256": "acf8b2cfb338efd80fbc0b330ce6904438fb85ecc53453acc638e4307a56cf13",
+      "official_status": "OFFICIAL_VENDOR_BOARD_DOCUMENT",
+      "document_role": "ALINX AX7020 User Manual V2.2 source bundle",
+      "model_match": "EXACT_AX7020_DOCUMENT_SET"
+    }
+  ],
+  "secondary_comparison": {
+    "path": "C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_COMPARISON.md",
+    "bytes": 13547,
+    "sha256": "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13",
+    "official_status": "USER_SUPPLIED_SECONDARY_COMPARISON",
+    "model_match": "CORROBORATION_ONLY_NOT_PIN_AUTHORITY"
+  }
+}
