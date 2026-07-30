@@ -622,6 +622,12 @@ module tb_p10_dual_endpoint_pair;
     run_object(600, 8'h64, 1'b1, 2'b11, 16'h2000, 0, 1, 1);
     if (r_retry_count == 0)
       $fatal(1, "P10 bounded DATA/ACK loss did not exercise retry");
+    run_object(600, 8'h65, 1'b1, 2'b11, 16'h2800, 32'h01, 0, 0);
+    if (fixed_endpoint.rx_stale_session_count_o == 0 || r_retry_count == 0)
+      $fatal(1, "P10 endpoint stale-session recovery was not exercised");
+    run_object(600, 8'h66, 1'b0, 2'b11, 16'h3000, 32'h02, 0, 0);
+    if (rotating_endpoint.rx_stale_path_count_o == 0 || f_retry_count == 0)
+      $fatal(1, "P10 endpoint stale-path recovery was not exercised");
 
     if (f_tx_high_max[31:0] > 64 || f_tx_high_max[63:32] > 64 ||
         r_tx_high_max[95:64] > 64 || r_tx_high_max[127:96] > 64)

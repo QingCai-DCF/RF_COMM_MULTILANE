@@ -54,6 +54,8 @@ TESTS = [
             "P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=600 initial=1000 faults=00000040",
             "P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=1800 faults=00000020",
             "P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=2000 faults=00000000 drops=1/1",
+            "P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=2800 faults=00000001",
+            "P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=600 initial=3000 faults=00000002",
         ],
     },
     {
