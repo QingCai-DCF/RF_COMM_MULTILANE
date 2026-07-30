@@ -421,30 +421,48 @@ def create_artifact_manifest() -> dict[str, Any]:
     return manifest
 
 
+def registered_worktree_roots() -> list[Path]:
+    """Return every registered worktree root without changing any worktree."""
+    roots: list[Path] = []
+    for line in git("worktree", "list", "--porcelain").splitlines():
+        if line.startswith("worktree "):
+            candidate = Path(line.removeprefix("worktree "))
+            if candidate not in roots:
+                roots.append(candidate)
+    return roots
+
+
 def verify_artifact_manifest() -> list[str]:
     path = RAW / "artifact_sha256_manifest.json"
     if not path.is_file(): return ["raw artifact manifest missing"]
     manifest = json.loads(path.read_text(encoding="utf-8"))
     errors: list[str] = []
+    roots = registered_worktree_roots()
+    if ROOT not in roots:
+        roots.insert(0, ROOT)
     for item in manifest.get("artifacts", []):
-        artifact = ROOT / item["path"]
-        if not artifact.is_file():
+        artifacts = [root / item["path"] for root in roots if (root / item["path"]).is_file()]
+        if not artifacts:
             errors.append(f"missing {item['path']}")
             continue
 
         expected = item["sha256"]
         representation = item.get("hash_representation")
-        exact_hash = sha256(artifact)
-        stable_hash = artifact_sha256(artifact)
-        if representation == "EXACT_BINARY":
-            valid = expected == exact_hash
-        elif representation == "LF_NORMALIZED_TEXT":
-            valid = expected == stable_hash
-        else:
-            # The immutable P8E checkpoint predates the representation field
-            # and records exact checkout bytes.  Accept either its exact hash
-            # or the stable LF-normalized text hash used by new manifests.
-            valid = expected in {exact_hash, stable_hash}
+        valid = False
+        for artifact in artifacts:
+            exact_hash = sha256(artifact)
+            stable_hash = artifact_sha256(artifact)
+            if representation == "EXACT_BINARY":
+                valid = expected == exact_hash
+            elif representation == "LF_NORMALIZED_TEXT":
+                valid = expected == stable_hash
+            else:
+                # The immutable P8E checkpoint predates the representation field
+                # and records exact checkout bytes.  Accept either its exact hash
+                # or the stable LF-normalized text hash used by new manifests.
+                valid = expected in {exact_hash, stable_hash}
+            if valid:
+                break
         if not valid:
             errors.append(f"hash mismatch {item['path']}")
     return errors

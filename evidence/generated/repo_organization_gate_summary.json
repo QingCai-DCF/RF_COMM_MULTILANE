@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "REPOSITORY-ORGANIZATION-FINAL-GATE",
+  "generated_utc": "2026-07-30T07:28:14.023775+00:00",
+  "scope": "REPOSITORY_ORGANIZATION_AND_MAINLINE_CONSOLIDATION_BEFORE_P10",
+  "commands": [
+    {
+      "command": "python scripts/audit_repository_structure.py --json-summary",
+      "status": "PASS"
+    },
+    {
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/audit_repository_structure.ps1 -JsonSummary",
+      "status": "PASS"
+    },
+    {
+      "command": "python scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary",
+      "status": "PASS",
+      "artifact_count": 1970
+    },
+    {
+      "command": "python scripts/verify_p9_existing.py --json-summary",
+      "status": "PASS",
+      "verified_unique_file_count": 1632,
+      "verified_bytes": 51752466
+    },
+    {
+      "command": "python scripts/run_offline_gates.py --verify-existing-vivado",
+      "status": "PASS",
+      "note": "The complete fresh 12-stage Vivado build ran once; the successful final orchestration directly rehashed and marker-checked those routed outputs after repairing postprocessing."
+    },
+    {
+      "command": "python tools/summarize_gate.py",
+      "status": "PASS",
+      "note": "Canonical entry discovered at tools/summarize_gate.py; scripts/summarize_gate.py is absent."
+    },
+    {
+      "command": "python scripts/generate_project_status.py --check",
+      "status": "PASS"
+    },
+    {
+      "command": "python scripts/generate_requirement_traceability.py --check",
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASS"
+    }
+  ],
+  "topology": {
+    "main": "189d530b86e676c65d883f578298f7c2148bd2f8",
+    "p8_branch": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+    "p8e_tag_target": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+    "p9_branch": "818d335c229d7b92223c279159aab84a5207ef92",
+    "p9_tag_target": "818d335c229d7b92223c279159aab84a5207ef92",
+    "p10_branch_absent": true,
+    "p10_worktree_absent": true
+  },
+  "untracked_input_audit": {
+    "file_count": 252,
+    "total_bytes": 357919375,
+    "classification_counts": {
+      "AMBIGUOUS_HOLD": 51,
+      "DUPLICATE_OF_TRACKED_FILE": 1,
+      "GENERATED_CACHE_DO_NOT_TRACK": 54,
+      "LOCAL_ONLY_WITH_TRACKED_MANIFEST": 146
+    },
+    "single_hash_inventory_reused": true
+  },
+  "p8_frozen_history_modified": false,
+  "p9_frozen_history_modified": false,
+  "sparse_checkout_preserved": true,
+  "auxiliary_worktrees_modified": false,
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "p10_actions_executed": false,
+  "remote_push_executed": false,
+  "errors": []
+}

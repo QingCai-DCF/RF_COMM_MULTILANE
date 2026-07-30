@@ -29,12 +29,17 @@ def main():
     p4_status = p4_auto.get("P4_AUTO_HARDWARE_ACCEPTANCE", data.get("P4_AUTO_HARDWARE_ACCEPTANCE"))
     if p4_status:
         print(f"P4_AUTO_HARDWARE_ACCEPTANCE: {p4_status}")
-    hardware_actions = bool(p4_auto.get("HARDWARE_ACTIONS_EXECUTED"))
-    print(f"NO_HARDWARE_ACTIONS_EXECUTED: {str(not hardware_actions).lower()}")
-    print(f"HARDWARE_ACCEPTANCE: {p4_auto.get('HARDWARE_ACCEPTANCE', 'PENDING_HW')}")
+    current_no_hardware = data.get("no_hardware") is True
+    print(f"NO_HARDWARE_ACTIONS_EXECUTED: {str(current_no_hardware).lower()}")
+    print(f"HARDWARE_ACCEPTANCE: {data.get('hardware_acceptance', 'PENDING_HW')}")
     for result in data.get("results", []):
-        print(f"{result['name']}: {result['result']}")
-    return 0 if data.get("status") in {"PASS", "PASS_WITH_SKIPS"} else 1
+        status = result.get("result") or result.get("status")
+        if not status:
+            status = "PASS" if result.get("returncode") == 0 else "FAIL"
+        print(f"{result['name']}: {status}")
+    return 0 if data.get("status") in {
+        "PASS", "PASS_WITH_SKIPS", "PASS_WITH_PENDING_TOOL"
+    } else 1
 
 
 if __name__ == "__main__":

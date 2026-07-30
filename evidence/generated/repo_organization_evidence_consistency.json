@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "REPOSITORY-ORGANIZATION-EVIDENCE-CONSISTENCY",
+  "generated_utc": "2026-07-30T07:28:14.023775+00:00",
+  "file_count": 33,
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 2722,
+      "sha256": "ac5b04e1896e7ca40223bb4ed70a56adead79107b6ca3958b09f1199b4fa1369"
+    },
+    {
+      "path": "config/project_requirements.yaml",
+      "bytes": 126183,
+      "sha256": "83f44cec516a8925fc6b5b4ab22563f86bb4c17796242e7850c3644b4649dcc0"
+    },
+    {
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "bytes": 73136,
+      "sha256": "41240e569abdcb951438b9664b66713425e3ebfbc52ba21532b08fe364462134"
+    },
+    {
+      "path": "docs/hardware/boards/AX7010/reference/README.md",
+      "bytes": 910,
+      "sha256": "78d8a0f7a3ff7c92224d324b88ab1552028ac629c33598e985df05867c52b26b"
+    },
+    {
+      "path": "docs/hardware/boards/AX7010/reference/manifest.json",
+      "bytes": 55275,
+      "sha256": "ef3a3a9a7d34caf61f5f7a602ffc98015c0d88a3719c9d577446c3b35b9146de"
+    },
+    {
+      "path": "docs/hardware/boards/AX7020/reference/README.md",
+      "bytes": 677,
+      "sha256": "830af1f0eff87cbcc30f2c7becf5982509ef4cf5a377ea421eeb015fd97910c9"
+    },
+    {
+      "path": "docs/hardware/boards/AX7020/reference/manifest.json",
+      "bytes": 20912,
+      "sha256": "a8463e4435501382d88c2f1365e5378b0fe2fc0f54d5e82ed1dd89e73aa612ad"
+    },
+    {
+      "path": "docs/repository/GIT_BRANCH_AND_WORKTREE_STRUCTURE.md",
+      "bytes": 3085,
+      "sha256": "6159444137980defc821e54eab4c0866f19be9e3b2a85a21b368f8156c418253"
+    },
+    {
+      "path": "docs/repository/REPOSITORY_LAYOUT.md",
+      "bytes": 1759,
+      "sha256": "653a3221774c1cd9a7cfdd29e15b015b4c07a9d6ab978ab275ee8c181f72b3b9"
+    },
+    {
+      "path": "docs/repository/UNTRACKED_CONTENT_DISPOSITION.md",
+      "bytes": 1930,
+      "sha256": "1dc166c89e40d2e1871a597a09147851fca6e3867df5329095950d2c625158bd"
+    },
+    {
+      "path": "docs/repository/WORKTREE_POLICY.md",
+      "bytes": 1998,
+      "sha256": "443f0fd147c447ee93dc5b941fff35a01d2e1ff7dc179d12b71c1ebc5bebf01e"
+    },
+    {
+      "path": "evidence/generated/repo_aux_worktree_untracked_audit.json",
+      "bytes": 2423,
+      "sha256": "1a64225f30f6a0b893c82483b496b18b7d8cb69bf710b8a5e7a1e41090db4007"
+    },
+    {
+      "path": "evidence/generated/repo_aux_worktree_untracked_audit.md",
+      "bytes": 1275,
+      "sha256": "0f337f0a52bfa46c3a62a494fbdaddc833c4b5b4fe201bce59bcb559295a2b12"
+    },
+    {
+      "path": "evidence/generated/repo_branch_graph_raw.txt",
+      "bytes": 17370,
+      "sha256": "353b7da7ae83be712a9d5a7362789c1b8eddca42a91c95e04b39adb93f7b143c"
+    },
+    {
+      "path": "evidence/generated/repo_organization_intake.json",
+      "bytes": 22679,
+      "sha256": "9f3eb5facc3137c4c79a012a4f252f3fa9dccc8cadaf93640165c5ba3892a0c2"
+    },
+    {
+      "path": "evidence/generated/repo_organization_intake.md",
+      "bytes": 17042,
+      "sha256": "560bfd562412c1eea9ec44f6c62b25ee71d720b746e4a053dd9552d1c5733fe9"
+    },
+    {
+      "path": "evidence/generated/repo_untracked_content_audit.json",
+      "bytes": 294317,
+      "sha256": "b3348957b70a81785f4075755ab93e326f93fa7929104ab89bf5e187943d6870"
+    },
+    {
+      "path": "evidence/generated/repo_untracked_content_audit.md",
+      "bytes": 53416,
+      "sha256": "dca5f87080b636cc4fa9d94ce117357f433e3e4ce1483046a433e7ecb2449686"
+    },
+    {
+      "path": "evidence/generated/repo_untracked_sha256_manifest.json",
+      "bytes": 53426,
+      "sha256": "8e409f5301ab6c837b53a08b1f7e19fea74e862b4f241a7e3e08112cfb9eaabf"
+    },
+    {
+      "path": "evidence/generated/repo_worktree_status_raw.txt",
+      "bytes": 17429,
+      "sha256": "7b438dec669f69e78ac5400202fce6eac2572329ad4cdc7508f1bcc6e9c6667e"
+    },
+    {
+      "path": "legacy/RF_COMM/README.md",
+      "bytes": 602,
+      "sha256": "e124e9a4fc21f8792a5863ed7a9341f4217ecd79be260025697fd2ad297dd1e4"
+    },
+    {
+      "path": "legacy/RF_COMM/docs/LOCAL_ONLY_MANIFEST.json",
+      "bytes": 651,
+      "sha256": "97f0c6b5ae0f10dc4e1518add70f89fbcbdeb8f5f44190fdcefe5611e3be1289"
+    },
+    {
+      "path": "scripts/audit_repository_structure.py",
+      "bytes": 32392,
+      "sha256": "e731128059b5bbcd25f32117542b1e2ed8219f661b28c07b69dfad25e32e2b3c"
+    },
+    {
+      "path": "scripts/finalize_repository_organization_evidence.py",
+      "bytes": 14855,
+      "sha256": "6bf880fc12f5fc406a78ec0c873c60ffb9f934614206567146def9dcbaf7c7bb"
+    },
+    {
+      "path": "scripts/reconcile_p0_p7_evidence.py",
+      "bytes": 18671,
+      "sha256": "e8885f88e3e46bcfae87efc30fc953cc329aee16408f638cc5a18a67c8cc6660"
+    },
+    {
+      "path": "scripts/run_offline_gates.py",
+      "bytes": 20301,
+      "sha256": "466782b5c075f5f29fa7d52a4925d352040c638c8d0f5c7b9c770bcffc9cfa6a"
+    },
+    {
+      "path": "scripts/run_p8e_dual_target_gate.py",
+      "bytes": 56790,
+      "sha256": "95d39ae4681019b1e00e4bccbc39d4ea492361cba5fd52cf4aabe04ad42047b5"
+    },
+    {
+      "path": "scripts/run_vivado_nonhardware_build.py",
+      "bytes": 15100,
+      "sha256": "52e3213a857675c882b1210cf600f1de8445fc8133f67ece11ab23c2ccb1e200"
+    },
+    {
+      "path": "scripts/verify_p9_existing.py",
+      "bytes": 22029,
+      "sha256": "fb5916daf3f649126e18f1263e0b53aa4be511a1532a421493a766e16a7a9989"
+    },
+    {
+      "path": "tools/audit_repository_structure.ps1",
+      "bytes": 262,
+      "sha256": "5042e9310ea838c5f0a9df22d9c5df526774d68bc50452c51c034a2acd171b10"
+    },
+    {
+      "path": "tools/summarize_gate.py",
+      "bytes": 1854,
+      "sha256": "a9ecd9d67a35dbabb76f44450fa817ffbbcd1fdaf77fcbafac9e75fcf03cde8e"
+    },
+    {
+      "path": "evidence/generated/repo_organization_gate_summary.json",
+      "bytes": 2705,
+      "sha256": "c20bae4e63fb196c0dcc05ef9321d8781c0861f34f96a0636f67a321d6a43432"
+    },
+    {
+      "path": "evidence/generated/repo_organization_gate_summary.md",
+      "bytes": 946,
+      "sha256": "8098e01b04477cd804ecfd5a84156b97b554d092775fd206701162c25a3d316e"
+    }
+  ],
+  "raw_local_input_manifest": "evidence/generated/repo_untracked_sha256_manifest.json",
+  "raw_local_inputs_rehashed": false,
+  "self_reference_exclusion": [
+    "evidence/generated/repo_organization_evidence_consistency.json",
+    "evidence/generated/repo_organization_evidence_consistency.md"
+  ],
+  "hardware_actions_executed": false,
+  "errors": []
+}

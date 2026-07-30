@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "REPOSITORY-AUX-WORKTREE-UNTRACKED-AUDIT",
+  "generated_utc": "2026-07-30T05:46:09.588199+00:00",
+  "snapshot_expected_tmp_path": "C:/Users/user/.codex/worktrees/6780/RF_COMM_MULTILANE/tmp",
+  "snapshot_tmp_files_found": 0,
+  "actual_snapshot_deviations": [
+    "The 6780 worktree has no untracked tmp/ file; it has one untracked docs/design comparison file.",
+    "The 7ae5 worktree has an untracked historical Git/worktree structure document."
+  ],
+  "files": [
+    {
+      "worktree": "C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE",
+      "worktree_head": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+      "worktree_branch": "p8/integration",
+      "detached_head": false,
+      "path": "docs/audit/P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING_AUDIT.md",
+      "size_bytes": 23273,
+      "sha256": "8567d1b99e27b9b964430788bd70314ee9cee76240c4af94f93d044a4bad63bf",
+      "disposition": "KEEP_IN_AUX_WORKTREE_ONLY",
+      "reason": "Useful derived P8E narrative, but canonical P8E summaries already exist; avoid creating a second acceptance authority.",
+      "modified": false
+    },
+    {
+      "worktree": "C:\\Users\\user\\.codex\\worktrees\\6780\\RF_COMM_MULTILANE",
+      "worktree_head": "451d79164ea0033f3905b06a905f11b5cab33c00",
+      "worktree_branch": null,
+      "detached_head": true,
+      "path": "docs/design/AX7010_AX7020_HARDWARE_COMPARISON.md",
+      "size_bytes": 13547,
+      "sha256": "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13",
+      "disposition": "AMBIGUOUS_HOLD_NO_CONTENT_ANALYSIS",
+      "reason": "Unexpected unique file outside the snapshot; retained untouched and not analyzed because wiring work is out of scope.",
+      "modified": false
+    },
+    {
+      "worktree": "C:\\Users\\user\\.codex\\worktrees\\7ae5\\RF_COMM_MULTILANE",
+      "worktree_head": "57ff1079b10a5c0de156b621820774bbb111c5ee",
+      "worktree_branch": null,
+      "detached_head": true,
+      "path": "docs/GIT_BRANCH_AND_WORKTREE_STRUCTURE.md",
+      "size_bytes": 4651,
+      "sha256": "d6b86623b14b55a2d6d25b40728915123113c07d13fa8c08d542ccd5f8901c20",
+      "disposition": "HISTORICAL_INPUT_KEEP_IN_AUX_WORKTREE",
+      "reason": "Read as historical input; the canonical live snapshot is regenerated on main.",
+      "modified": false
+    }
+  ],
+  "aux_worktrees_modified": false,
+  "aux_worktrees_deleted": false
+}

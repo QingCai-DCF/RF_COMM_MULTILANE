@@ -46,6 +46,11 @@ def build_parser():
     # preserving the existing always-on P0-P7 simulation and P8A checks.
     parser.add_argument("--include-simulation", action="store_true")
     parser.add_argument("--include-p8a", action="store_true")
+    parser.add_argument(
+        "--verify-existing-vivado",
+        action="store_true",
+        help="Verify the current complete 12-stage routed output set instead of rerunning Vivado.",
+    )
     parser.add_argument("--json-summary", action="store_true")
     return parser
 
@@ -315,7 +320,16 @@ def write_summary(outdir, results):
         "OFFLINE_CACHE_STATUS": "BYPASS",
         "OFFLINE_CACHE_KEY": None,
         "OFFLINE_CACHE_VALIDATED_OUTPUT_HASHES": {},
-        "OFFLINE_REAL_BUILD_PROCESS_RAN": True,
+        "OFFLINE_REAL_BUILD_PROCESS_RAN": not any(
+            result.get("name") == "m5_vivado_nonhardware_build"
+            and "VIVADO_VERIFY_EXISTING=1" in result.get("stdout", "")
+            for result in results
+        ),
+        "OFFLINE_VIVADO_VERIFY_EXISTING": any(
+            result.get("name") == "m5_vivado_nonhardware_build"
+            and "VIVADO_VERIFY_EXISTING=1" in result.get("stdout", "")
+            for result in results
+        ),
         "results": results,
     }
     (outdir / "offline_gate_summary.json").write_text(
@@ -336,7 +350,8 @@ def write_summary(outdir, results):
         "ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL",
         "FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW",
         "OFFLINE_CACHE_STATUS: BYPASS",
-        "OFFLINE_REAL_BUILD_PROCESS_RAN: true",
+        f"OFFLINE_REAL_BUILD_PROCESS_RAN: {str(summary['OFFLINE_REAL_BUILD_PROCESS_RAN']).lower()}",
+        f"OFFLINE_VIVADO_VERIFY_EXISTING: {str(summary['OFFLINE_VIVADO_VERIFY_EXISTING']).lower()}",
         "",
     ]
     for r in results:
@@ -374,7 +389,10 @@ def main(argv=None):
     outdir = ROOT / "evidence/generated"
     outdir.mkdir(parents=True, exist_ok=True)
     results.append(run_ps_driver_c_compile(outdir))
-    m5_result = run("m5_vivado_nonhardware_build", [py, "scripts/run_vivado_nonhardware_build.py"])
+    m5_command = [py, "scripts/run_vivado_nonhardware_build.py"]
+    if args.verify_existing_vivado:
+        m5_command.append("--verify-existing")
+    m5_result = run("m5_vivado_nonhardware_build", m5_command)
     if "PENDING_TOOL" in m5_result["stdout"]:
         m5_result["status"] = "PENDING_TOOL"
     results.append(m5_result)

@@ -4,9 +4,11 @@ from __future__ import annotations
 import json
 import argparse
 import hashlib
+import os
 import shutil
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -24,7 +26,17 @@ def trim_trailing_space(path: Path) -> None:
     lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
     while lines and not lines[-1].strip():
         lines.pop()
-    path.write_text("\n".join(line.rstrip() for line in lines) + "\n", encoding="utf-8")
+    normalized = ("\n".join(line.rstrip() for line in lines) + "\n").encode("utf-8")
+    if path.read_bytes() == normalized:
+        return
+    for attempt in range(5):
+        try:
+            path.write_bytes(normalized)
+            return
+        except OSError:
+            if attempt == 4:
+                raise
+            time.sleep(0.25 * (attempt + 1))
 
 
 def sanitize_generated_reports() -> None:
@@ -188,12 +200,110 @@ def write_summary(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run Vivado non-hardware builds for generated RF_COMM stages.")
     parser.add_argument("--stage", action="append", choices=STAGES, help="Build only this stage. May be repeated.")
+    parser.add_argument(
+        "--verify-existing",
+        action="store_true",
+        help="Hash and validate existing routed outputs without starting Vivado.",
+    )
     return parser
+
+
+def verify_existing(selected_stages: list[str]) -> int:
+    vivado, discovery = resolve_vivado_executable()
+    errors: list[str] = []
+    if os.environ.get("NO_HARDWARE") != "1":
+        errors.append("NO_HARDWARE must be 1")
+    if os.environ.get("CURRENT_RUN_HARDWARE_AUTHORIZATION", "").lower() != "false":
+        errors.append("CURRENT_RUN_HARDWARE_AUTHORIZATION must be false")
+    sanitize_generated_reports()
+    stage_results: list[dict] = []
+    for stage in selected_stages:
+        marker_path = OUT_DIR / f"nonhardware_build_markers_{stage}.txt"
+        debug_path = OUT_DIR / f"p4_auto_{stage}_debug_instrumentation.txt"
+        timing_path = OUT_DIR / f"post_route_timing_summary_{stage}.rpt"
+        required = [
+            marker_path,
+            debug_path,
+            OUT_DIR / f"p4_auto_{stage}_debug.ltx",
+            OUT_DIR / f"post_synth_{stage}.dcp",
+            OUT_DIR / f"post_synth_drc_{stage}.rpt",
+            OUT_DIR / f"post_route_{stage}.dcp",
+            OUT_DIR / f"post_route_drc_{stage}.rpt",
+            timing_path,
+            OUT_DIR / f"post_route_utilization_{stage}.rpt",
+            OUT_DIR / f"ir_top_new_{stage}.bit",
+        ]
+        stage_errors: list[str] = []
+        for path in required:
+            if not path.is_file() or path.stat().st_size == 0:
+                stage_errors.append(f"missing or empty {path.relative_to(ROOT).as_posix()}")
+        marker = parse_key_value_file(marker_path)
+        debug = parse_key_value_file(debug_path)
+        expected_marker = {
+            "VIVADO_NONHARDWARE_BUILD_STARTED": "1",
+            "VIVADO_NONHARDWARE_BUILD_DONE": "1",
+            "NO_HARDWARE_ACTIONS_EXECUTED": "1",
+            "P4_AUTO_BUILD_STAGE": stage,
+        }
+        for key, value in expected_marker.items():
+            if marker.get(key) != value:
+                stage_errors.append(f"{stage} marker {key}={marker.get(key)!r}, expected {value!r}")
+        expected_debug = {
+            "NO_HARDWARE_ACTIONS_EXECUTED": "1",
+            "P4_AUTO_BUILD_STAGE": stage,
+            "P4_AUTO_DBG_HUB_CLOCK": "PASS",
+            "P4_AUTO_ILA_CORE_INSERTION": "PASS",
+        }
+        for key, value in expected_debug.items():
+            if debug.get(key) != value:
+                stage_errors.append(f"{stage} debug marker {key}={debug.get(key)!r}, expected {value!r}")
+        if timing_path.is_file() and "All user specified timing constraints are met." not in timing_path.read_text(
+            encoding="utf-8", errors="ignore"
+        ):
+            stage_errors.append(f"{stage} routed timing report does not state that constraints are met")
+        artifacts = []
+        for path in required:
+            if path.is_file():
+                artifacts.append(
+                    {
+                        "path": path.relative_to(ROOT).as_posix(),
+                        "bytes": path.stat().st_size,
+                        "sha256": sha256_or_missing(path),
+                    }
+                )
+        errors.extend(stage_errors)
+        stage_results.append(
+            {
+                "stage": stage,
+                "cmd": "VERIFY_EXISTING_SHA256_AND_MARKERS",
+                "returncode": 0 if not stage_errors else 1,
+                "verification": "DIRECT_EXISTING_ROUTED_OUTPUT_HASH_AND_MARKER_CHECK",
+                "artifacts": artifacts,
+                "errors": stage_errors,
+            }
+        )
+    status = "PASS" if not errors else "FAIL"
+    write_summary(
+        status,
+        vivado,
+        0 if not errors else 1,
+        stdout="VIVADO_VERIFY_EXISTING=1\nNO_HARDWARE_ACTIONS_EXECUTED=1\n",
+        stderr="\n".join(errors),
+        discovery=discovery,
+        stage_results=stage_results,
+    )
+    print(f"M5_VIVADO_NONHARDWARE_BUILD={status}")
+    print("VIVADO_VERIFY_EXISTING=1")
+    print(f"VERIFIED_STAGE_COUNT={len(stage_results)}")
+    print("NO_HARDWARE_ACTIONS_EXECUTED=1")
+    return 0 if not errors else 1
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     selected_stages = args.stage or STAGES
+    if args.verify_existing:
+        return verify_existing(selected_stages)
     vivado, discovery = resolve_vivado_executable()
     if not vivado:
         write_summary("PENDING_TOOL", None, discovery=discovery)

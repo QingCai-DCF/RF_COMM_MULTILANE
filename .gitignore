@@ -59,3 +59,20 @@ evidence/generated/hw_preflight/
 /evidence/generated/p8e_raw/**/project/
 /evidence/generated/p8e_raw/**/work/
 /evidence/generated/p8e_raw/**/post_synth_funcsim.v
+
+# Audited local-only board/vendor input packages.  Tracked per-file SHA256
+# manifests live under docs/hardware/boards; these exact raw package paths are
+# not canonical board profiles, XDC, evidence, or hardware design documents.
+/hardware_AX7010/01_SCH/
+/hardware_AX7010/02_PCB/
+/hardware_AX7010/03_structure size/
+/hardware_AX7010/04_datasheet/
+/hardware_AX7010/AX7010_UserManual/
+/hardware_AX7010/TFDU6102datasheet.pdf
+/hardware_AX7010/TFDU6102电路/
+/hardware_AX7020/01_SCH/
+/hardware_AX7020/02_PCB/
+/hardware_AX7020/03_structure size/
+/hardware_AX7020/04_datasheet/
+/hardware_AX7020/AX7020UserManualV2.2/
+/legacy/RF_COMM/docs/cource_s1_ALINX_ZYNQ(AX7020)2023开发平台FPGA教程V1.01.pdf

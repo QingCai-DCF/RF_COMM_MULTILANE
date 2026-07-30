@@ -1,0 +1,298 @@
+INITIAL_MAIN_HEAD=451d79164ea0033f3905b06a905f11b5cab33c00
+CURRENT_RESCAN
+$ git rev-parse --show-toplevel
+C:/Users/user/Documents/RF_COMM_MULTILANE
+
+$ git rev-parse --git-common-dir
+.git
+
+$ git worktree list --porcelain
+worktree C:/Users/user/Documents/RF_COMM_MULTILANE
+HEAD 189d530b86e676c65d883f578298f7c2148bd2f8
+branch refs/heads/main
+
+worktree C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE
+HEAD 57ff1079b10a5c0de156b621820774bbb111c5ee
+branch refs/heads/p8/integration
+
+worktree C:/Users/user/.codex/worktrees/6780/RF_COMM_MULTILANE
+HEAD 451d79164ea0033f3905b06a905f11b5cab33c00
+detached
+
+worktree C:/Users/user/.codex/worktrees/7ae5/RF_COMM_MULTILANE
+HEAD 57ff1079b10a5c0de156b621820774bbb111c5ee
+detached
+
+worktree C:/Users/user/Documents/RF_COMM_MULTILANE_P9
+HEAD 818d335c229d7b92223c279159aab84a5207ef92
+branch refs/heads/p9/z7010-stationary-2lane
+
+$ git branch -vv --all
+  codex/tech-grill          451d7916 docs: establish V3.1 project constraints
+* main                      189d530b [origin/main: ahead 73] chore: consolidate main at the P9 accepted baseline
++ p8/integration            57ff1079 (C:/Users/user/.codex/worktrees/3765/RF_COMM_MULTILANE) test: freeze P8E offline implementation evidence
++ p9/z7010-stationary-2lane 818d335c (C:/Users/user/Documents/RF_COMM_MULTILANE_P9) chore: record P9 tag-resolved checkpoint metadata
+  remotes/origin/main       50067312 P7: finalize r74 formal stationary acceptance evidence
+
+$ git tag --list --sort=creatordate
+p8a-pass
+p8b-pass
+p8c-pass
+p8d-pass
+p8e-pass
+p9-z7010-2lane-pass
+
+$ git log --graph --decorate --oneline --all --date-order -n 200
+* 189d530b (HEAD -> main) chore: consolidate main at the P9 accepted baseline
+* 818d335c (tag: p9-z7010-2lane-pass, p9/z7010-stationary-2lane) chore: record P9 tag-resolved checkpoint metadata
+* f6d2bc05 test: freeze P9 platform-limited acceptance checkpoint
+* 6d88b785 p9: bind ack aggregation interface sources
+* 8ecf71c2 test: isolate two-lane ack aggregation burst
+* cfe9606b test: require ack aggregation across a full window
+* 9b4f429f p9: expose receive acceptance to ack control
+* 1f2b4adf p9: preserve bounded ack aggregation
+* 5eb60e87 p9: reset stream path after object abort
+* 528556b5 p9: inject lane fault after object activation
+* be888165 p9: bind repaired scheduler sources
+* 9260a419 p9: reserve exact duty before weighted frames
+* 7134c0fc p9: recover scheduler state and honor lane weights
+* 7adbd8fb p9: release stream reset and harden live xsdb access
+* f57d21d2 p9: force live xsdb mailbox reads
+* 19fa3234 p9: refresh selective repeat requirement bindings
+* 19bdeced p9: preserve immediate occupancy watermark
+* cac64c78 p9: break ack telemetry timing path
+* 7226c295 fix: register P9 stream reset request CDC source
+* 6ad641b7 fix: reset DMA stream domains across PS restart
+* 8157716a fix: classify P9 fault recovery control cases
+* a2bd5c12 fix: isolate P9 fault recovery telemetry
+* 1f2935ca fix: validate cumulative ACK recovery and old-sequence faults
+* 3716024e fix: preserve pre-shutdown selective-repeat telemetry
+* 49844ad3 fix: guard AXI beat fragment boundary at window full
+* bbc085b9 fix: honor TFDU FIR timing at 4 Mbps
+* 5097ef02 fix: acquire delayed P9 optical frames
+* 48c22199 fix: guard both TFDU direction turnarounds
+* b5085085 chore: bind ACK/SACK requirements to current evidence
+* 871a7bb7 fix: align ACK snapshots and idempotent SACK recovery
+* 622388f5 fix: pack optical fragments for AXI DMA
+* c0d0e120 fix: realign each optical frame burst
+* b42d4b2d fix: disable unused AXI DMA status stream
+* aa07bac1 fix: wait for stable authorized JTAG chain
+* 212c2afe fix: honor TFDU ACK turnaround on stationary hardware
+* 2849850a fix: bind P9 raw RX to stationary profile
+* dd4a4786 fix: correct P9 duty telemetry and counter clear
+* fe206ad5 fix: bind P9 XSDB to the exact Zynq TAP
+* 4a3b8e35 fix: select exact P9 FPGA hardware object
+* 3284dfcf fix: audit only loaded P9 XDC inputs
+* 85f88c4d fix: preserve offline regressions during authorized P9
+* 4a7c0b22 feat: complete P9 Z7010 hardware validation runtime
+* 36e7ecd0 fix: remove redundant P9 counter saturation logic
+* 5e570109 fix: fit P9 telemetry counters on Z7010
+* 339567f0 feat: implement P9 Z7010 optical DMA candidate
+* 0e3aca77 test: pass complete P8E descendant regression
+* 56fbf427 test: restore P8E artifacts and pass P9 offline intake
+* d2c3db43 feat: add P9 fail-closed intake orchestration
+* 57ff1079 (tag: p8e-pass, p8/integration) test: freeze P8E offline implementation evidence
+* 0c67e771 fix: validate P8E canonical closure
+* 7b6787d4 fix: preserve porcelain status columns
+* 77296d24 fix: bind P8E precompletion reverification
+* 9327e186 fix: preserve P8E regression provenance
+* 55fe5750 feat: close P8E dual-target timing and CDC
+* 435ca10b (tag: p8d-pass) test: freeze P8D offline acceptance evidence
+* d28eef6a feat: implement P8D selective-repeat and aggregate data plane
+* f76b477c test: freeze P8D baseline full-regression evidence
+* 95baa247 test: preserve interrupted P8D baseline regression evidence
+* cff54f94 test: preserve P8D fail-closed intake evidence
+* 26a85e28 docs: add P8C completion summary
+* c44b0d45 (tag: p8c-pass) test: checkpoint P8C safety evidence
+* e8be6ffd fix: preserve immutable P8B checkpoint evidence
+* 9612b474 fix: declare static mode as SystemVerilog logic
+* cca4dcff fix: preserve P0-P7 static safety regression
+* b9d6af42 fix: extend bounded P8C full regression timeout
+* e0a5f10e feat: implement P8C TFDU safety and single permit
+* 80c8433e (tag: p8b-pass) feat: complete P8B geometry mapping and handover model
+* 57141fc9 feat: complete P8B geometry mapping and handover model
+* 6a723405 fix: make P8B evidence hashes checkout-stable
+* 114e1dea feat: complete P8B geometry mapping and handover model
+* e47e89be feat: implement P8B geometry mapping and handover model
+* 3ed79e02 (tag: p8a-pass) chore: freeze P8A canonical baseline
+* 451d7916 (codex/tech-grill) docs: establish V3.1 project constraints
+* 50067312 (origin/main) P7: finalize r74 formal stationary acceptance evidence
+* 911e1a30 chore(p7): refresh formal offline build baseline
+* d3eb4a65 fix(p7): gate formal build materialization after campaign pass
+* 1ca54d2c fix(p7): reconcile frozen Stage66 stationary evidence
+* 0b376c91 evidence(p7): freeze r73 Stage66 diagnostic pass
+* c516302d test(p7): sync Stage66 Tcl audit metadata
+* 4df34e2a fix(p7): bind Stage66 terminal evidence windows
+* 81fe4afa evidence(p7): freeze r72 Stage66 postprocess failure
+* 3f7cd27b fix(p7): preserve r71 evidence bytes
+* ee78111e test(p7): retire r71 prelaunch auth failure
+* e8122f8f fix(p7): refresh Tcl audit after r70 retirement
+* f224b936 fix(p7): drain stationary READY ring before cutoff
+* ee3dace1 evidence(p7): freeze r69 Stage66 late-admission failure
+* 8414b5b6 test(p7): refresh R37 current Tcl binding
+* 9bab39b8 evidence(p7): retire r68 after suite binding regression
+* 8c60c111 fix(p7): accelerate stationary evidence harvesting
+* d49b720c evidence(p7): freeze r67 Stage66 runtime-limit failure
+* ed417a34 evidence(p7): retire r66 prelaunch auth mismatch
+* 361c5447 evidence(p7): make r65 package byte-stable
+* 5998ad8b evidence(p7): include r65 suite logs
+* c11232fa evidence(p7): retire r65 generator preflight
+* 40ac8d28 fix(p7): retry reaped log publication
+* aebae76b evidence(p7): retire r64 after suite handle race
+* a63bca8a test(p7): bind historical audits to exact source
+* 446e6a73 evidence(p7): retire r63 after suite regression
+* 3afb3481 fix(p7): restore stationary requeue canaries
+* 6872caba evidence(p7): freeze r62 Stage66 canary failure
+* dd768f5c test(p7): retire r61 after suite timeout
+* 35e4a4af fix(p7): retire r60 and guard offline help
+* 9227087b fix(p7): retire r59 and isolate ephemeral evidence
+* 71987bd6 fix(p7): retire r58 and harden build materialization
+* 05d7968d fix(p7): fail closed before Stage66 campaign launch
+* f4913949 evidence(p7): retire r56 before authorization generation
+* f2dfac64 evidence(p7): retire r55 before materialization
+* e6aaee9d evidence(p7): retire r54 before wrapper launch
+* a98286b5 evidence(p7): retire r53 before hardware launch
+* 25ed642d evidence(p7): retire r52 before worktree creation
+* 4df899b3 evidence(p7): retire r51 before materialization
+* 5085d7e5 evidence(p7): retire r50 after noncanonical gate start
+* c2a8c860 evidence(p7): retire r49 after suite interruption
+* 24fa2d38 evidence(p7): record r48 prehardware retirement
+* e26a9224 fix(p7): refresh r37 audit after Stage66 repair
+* 483d23ac evidence(p7): record r47 independent recovery
+* 12ad5aaf fix(p7): propagate Stage66 diagnostic scope
+* 1a88b40e evidence(p7): retire blocked r46 preparation
+* 56326f51 fix(p7): bind post-gate content-addressed outputs
+* 237b87e4 evidence(p7): freeze r45 materialization precondition failure
+* e6ab408d evidence(p7): preserve blocked r44 campaign checkpoint
+* 82184bf1 build(p7): freeze r44 campaign cache-bypass artifacts
+* 137b6d84 fix(p7): admit validated Stage 66 campaign ledger
+* 78710880 evidence(p7): freeze r43 Stage 66 campaign checkpoint
+* c26c3aca build(p7): freeze r43 campaign cache-bypass artifacts
+* f3d7cbbb fix(p7): defer Stage 66 campaign ledger dry check
+* 418cf0f4 evidence(p7): retire blocked Stage 66 campaign c01 plan
+* f7527399 evidence(p7): freeze r42 Stage 66 campaign checkpoint
+* 5ead7d1d build(p7): freeze r42 campaign cache-bypass artifacts
+* 5893e063 fix(p7): repair Stage 66 campaign regression blockers
+* 1ec5ac12 evidence(p7): preserve Stage 66 campaign suite precondition
+* 306c30cc feat(p7): govern bounded Stage 66 diagnostic campaign
+* 87711c09 fix(p7): freeze r41 formal stationary failure
+* 37e8eab9 evidence(p7): prepare r41 formal full run
+* b2113440 evidence(p7): freeze r41 formal checkpoint
+* 946ccbad build(p7): freeze r41 cache-bypass artifacts
+* b6a934de evidence(p7): preserve r41 suite precondition failure
+* 9cbea83c evidence(p7): retire interrupted r41 checkpoint
+* 1daa8920 fix(evidence): make r40 package checkout-complete
+* 680f0c7e evidence(p7): freeze r40 diagnostic pass
+* ae07723e evidence(p7): prepare r40 diagnostic suffix
+* fb25ab25 evidence(p7): record post-r39 clean checkpoint
+* 37182768 p7: preserve suite failure and rebind core checker
+* 6999166b evidence(p7): preserve r40 precondition bytes
+* 1eb2ff82 p7: preserve r40 gate failure and scope wipe ordering
+* 5a99b98c p7: rebuild output-wipe repair artifacts
+* 6d56b312 p7: preserve r39 failure and fix reject output wipe
+* 0c41654d evidence(p7): prepare r39 diagnostic suffix
+* 8f13ba56 evidence(p7): record post-r34 clean checkpoint
+* 1d0c30fa fix(p7): preserve explicit PS scope contracts
+* 7c6b50ff evidence(p7): repair r34 package and record suite precondition
+* 229299db fix(p7): bind PS authorization execution scope
+* 7a6e2fc8 evidence(p7): freeze r34 authorization failure
+* d268e775 evidence(p7): freeze r34 formal dry-validated plan
+* 3192e468 docs(p7): disambiguate generated ps7_init provenance
+* 036f8bd6 docs(p7): bind main integration commit mapping
+* ced03b68 evidence(p7): finalize Campaign D main integration
+* 45cc017e evidence(p7): record integration precondition repair
+* 0949df45 evidence(p7): package canonical ignored artifacts
+* 69afe046 build(p7): freeze main-thread cache-bypass artifacts
+* 38789d21 integrate(p7): import reviewed Stage62 Campaign D specialist tree
+* a4735166 evidence(p7): preserve r32 main-thread handoff
+| * 73dc23a1 docs(ddr): hand off Campaign D closure
+| * 1e6b5185 evidence(ddr): record Campaign D Stage 62 streak
+| * 6e804371 fix(p7): bound Stage 62 evidence harvesting
+| * a7bc060a build(ddr): freeze corrected AX7010 PS artifacts
+| * cbf874b6 test(board-contract): enforce AX7010 PS7 and DDR configuration
+| * e657cfc4 fix(ps7): set AX7010 MIO Bank 1 voltage to 1.8V
+| * 2ceb5fa6 evidence(ddr): retire pre-authorization Campaign C
+| * 66614d2e fix(ddr): bind rebuilt PS artifacts to source commit
+| * c384f8a9 evidence(p7): preserve DDR root-fix offline checkpoint
+| * 6f9e87ec build(ddr): refresh source-bound P7 readiness
+| * 0f425285 build(ddr): freeze AX7010 PS DDR artifacts
+| * 46560a11 fix(vivado): select AX7010 PS DDR topology
+| * 614cfc66 evidence(ddr): close Campaign B and isolate DDR topology mismatch
+| * c93b85ea evidence(ddr): close Campaign A after runner change
+| * 6d69289b fix(hw-runner): use supported XSDB unaligned-access option
+| * 6685b18a evidence(ddr): preserve Campaign A diagnostics
+| * 516a9243 build(ddr): refresh source-bound runtime artifacts
+| * 9c1056af feat(ddr): add authorization-bound external master diagnostic
+| * e447ef21 evidence(ddr): materialize exact diagnostic artifacts
+| * a068d299 docs(ddr): return blocked authorization boundary
+| * af7b5bb6 test(ddr): bind external-master prestart evidence
+| * 53571e30 docs(stage62): return blocked DDR boundary to main
+| * 054f31fe evidence(stage62): freeze r36 control and r37 DDR boundary
+| * 16d621d4 evidence(stage62): preserve pre-r35 offline checkpoint
+| * 140a12d4 evidence(stage62): freeze invalid r35 and recovery
+| * 84669e68 fix(stage62): initialize microtest copy-ok metadata
+| * 5199c0f2 fix(stage62): complete microtest host postprocessing
+| * 5fe5b67e test(stage62): align isolated microtest gate consumers
+| * 2aa32fcc chore(stage62): bind isolated microtest build evidence
+| * bbddba38 diag(stage62): add isolated OCM DDR microtest harness
+| * 2884d561 fix(stage62): clear complete diagnostic OCM record
+| * 0f4dd6e3 chore(stage62): preserve pre-specialist offline evidence
+| * b062fce5 chore(stage62): exclude aborted r34 evidence
+| * 3a633af7 test(stage62): preserve imported r33 dry-generation failure
+| * f9dbbec7 fix(stage62): validate split diagnostic OCM layout
+| * 82c6ff76 fix(stage62): bind computed diagnostic CRC publication
+| * cf7b8a7e fix(p7): validate history from linked worktrees
+| * 6f379e37 diag(stage62): capture first OCM-to-DDR copy failure
+
+$ git status --short --branch
+## main...origin/main [ahead 73]
+ M .gitignore
+?? docs/hardware/
+?? docs/repository/
+?? evidence/generated/repo_organization_intake.json
+?? evidence/generated/repo_organization_intake.md
+?? evidence/generated/repo_worktree_status_raw.txt
+?? legacy/RF_COMM/README.md
+?? scripts/audit_repository_structure.py
+?? scripts/verify_p9_existing.py
+?? tools/audit_repository_structure.ps1
+
+$ git sparse-checkout list
+/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r10_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r11_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r12_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r14_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r16_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r2/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r3/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r4/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r5/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r7/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r8/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r9/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r18_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r21_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r22_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r23_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r24_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r25_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r26_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r27_diag_suffix62/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r28_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r29_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r30_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r62_diag_stage66_c03/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r67_diag_stage66_c04/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r69_diag_stage66_c05/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r72_diag_stage66_c06/**
+!/evidence/hardware/p7/authorized_sequence/p7_20260717_stationary_app_r73_diag_stage66_c07/**
+!/evidence/hardware/p7/ddr_external_master/**
+!/evidence/hardware/p7/stage62_functional/**
+!/evidence/hardware/p7/stage62_microtest/**
+!/evidence/hardware/p7/stage66_diagnostic_campaign/**

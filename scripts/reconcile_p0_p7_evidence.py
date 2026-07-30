@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +15,6 @@ from p8a_common import (
     RECONCILIATION_MD_PATH,
     ROOT,
     dump_json,
-    sha256_file,
 )
 
 
@@ -69,8 +70,23 @@ def evidence_record(root: Path, rel: str) -> dict[str, Any]:
     path = root / rel
     record: dict[str, Any] = {"path": rel}
     if path.is_file():
-        record["sha256"] = sha256_file(path)
-        record["size_bytes"] = path.stat().st_size
+        data: bytes | None = None
+        try:
+            tracked = subprocess.run(
+                ["git", "ls-files", "--error-unmatch", "--", rel],
+                cwd=root,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            ).returncode == 0
+            if tracked:
+                data = subprocess.check_output(["git", "show", f":{rel}"], cwd=root)
+        except (OSError, subprocess.SubprocessError):
+            data = None
+        if data is None:
+            data = path.read_bytes()
+        record["sha256"] = hashlib.sha256(data).hexdigest()
+        record["size_bytes"] = len(data)
     else:
         record["sha256"] = None
         record["size_bytes"] = None
