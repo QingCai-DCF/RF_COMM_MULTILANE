@@ -1,0 +1,3743 @@
+{
+  "details": [
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0x181069B5",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "28b45c33a36a1f37b7a3cd906e69a5be692384ac598e76b7ecb4410df0033642",
+        "transfer_bytes": 31616
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 1,
+        "cache_invalidate": 1,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 106505073,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 403728821,
+        "input_sha256": "28b45c33a36a1f37b7a3cd906e69a5be692384ac598e76b7ecb4410df0033642",
+        "last_error_detail": 0,
+        "memory_barriers": 21,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          134411,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          137431,
+          0,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 0,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 0,
+        "scheduler_bytes": [
+          34432,
+          0
+        ],
+        "scheduler_frames": [
+          128,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 3,
+        "shutdown_verified": 3,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 8388736,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 128,
+        "tx_completed": 1,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 1,
+        "tx_timeouts": 0
+      },
+      "label": "sr_lane0_f_to_r",
+      "lane_mask": 1,
+      "rate_select": 2,
+      "requested_size": 31616,
+      "rotating": {
+        "ack_aggregation": 128,
+        "ack_frames": 96,
+        "actual_rx_length": 31616,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 1,
+        "cache_invalidate": 2,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 165910850,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 403728821,
+        "input_sha256": "28b45c33a36a1f37b7a3cd906e69a5be692384ac598e76b7ecb4410df0033642",
+        "last_error_detail": 0,
+        "memory_barriers": 23,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 403728821,
+        "output_sha256": "28b45c33a36a1f37b7a3cd906e69a5be692384ac598e76b7ecb4410df0033642",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          0,
+          3020,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          137431,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 1,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 1,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 3,
+        "shutdown_verified": 3,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 0,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 0,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0x5A1F3A2C",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "21ce54b94e92d24402639d04833313c7051f868fd8a99fd191948bf3f89f359c",
+        "transfer_bytes": 31616
+      },
+      "fixed": {
+        "ack_aggregation": 128,
+        "ack_frames": 96,
+        "actual_rx_length": 31616,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 2,
+        "cache_invalidate": 3,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          768,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 172042436,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1511995948,
+        "input_sha256": "21ce54b94e92d24402639d04833313c7051f868fd8a99fd191948bf3f89f359c",
+        "last_error_detail": 0,
+        "memory_barriers": 42,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 1511995948,
+        "output_sha256": "21ce54b94e92d24402639d04833313c7051f868fd8a99fd191948bf3f89f359c",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          3024,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          137383,
+          0,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 1,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 1,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 5,
+        "shutdown_verified": 5,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 1,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 1,
+        "tx_timeouts": 0
+      },
+      "label": "sr_lane0_r_to_f",
+      "lane_mask": 1,
+      "rate_select": 2,
+      "requested_size": 31616,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 2,
+        "cache_invalidate": 3,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          8928,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 106462399,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1511995948,
+        "input_sha256": "21ce54b94e92d24402639d04833313c7051f868fd8a99fd191948bf3f89f359c",
+        "last_error_detail": 0,
+        "memory_barriers": 42,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          0,
+          134359,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          137383,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 1,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 1,
+        "scheduler_bytes": [
+          34432,
+          0
+        ],
+        "scheduler_frames": [
+          128,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 5,
+        "shutdown_verified": 5,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 8388736,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 128,
+        "tx_completed": 1,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 1,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0xD7AE0660",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "bceb260e18456d6eab4767d117477d5644cc153acce7db4800974a36e0076b73",
+        "transfer_bytes": 31616
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 3,
+        "cache_invalidate": 4,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 106477121,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3618506336,
+        "input_sha256": "bceb260e18456d6eab4767d117477d5644cc153acce7db4800974a36e0076b73",
+        "last_error_detail": 0,
+        "memory_barriers": 61,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          134411,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          137431,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 1,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 1,
+        "scheduler_bytes": [
+          0,
+          34432
+        ],
+        "scheduler_frames": [
+          0,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 7,
+        "shutdown_verified": 7,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 8388736,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 128,
+        "tx_completed": 2,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 2,
+        "tx_timeouts": 0
+      },
+      "label": "sr_lane1_f_to_r",
+      "lane_mask": 2,
+      "rate_select": 2,
+      "requested_size": 31616,
+      "rotating": {
+        "ack_aggregation": 128,
+        "ack_frames": 96,
+        "actual_rx_length": 31616,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 3,
+        "cache_invalidate": 5,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          0,
+          768
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 168980516,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3618506336,
+        "input_sha256": "bceb260e18456d6eab4767d117477d5644cc153acce7db4800974a36e0076b73",
+        "last_error_detail": 0,
+        "memory_barriers": 63,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 3618506336,
+        "output_sha256": "bceb260e18456d6eab4767d117477d5644cc153acce7db4800974a36e0076b73",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          0,
+          0,
+          3020
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          0,
+          137431
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 2,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 2,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 7,
+        "shutdown_verified": 7,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 1,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          0,
+          16
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 1,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0x6D6C6D15",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "3b270a1d03b77e100ecb9bda02b323fe79144566652ad845ed1f61b70c2aac8b",
+        "transfer_bytes": 31616
+      },
+      "fixed": {
+        "ack_aggregation": 128,
+        "ack_frames": 96,
+        "actual_rx_length": 31616,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 4,
+        "cache_invalidate": 6,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          768,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 175985271,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1835822357,
+        "input_sha256": "3b270a1d03b77e100ecb9bda02b323fe79144566652ad845ed1f61b70c2aac8b",
+        "last_error_detail": 0,
+        "memory_barriers": 82,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 1835822357,
+        "output_sha256": "3b270a1d03b77e100ecb9bda02b323fe79144566652ad845ed1f61b70c2aac8b",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          3024,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          137255,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 2,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 2,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 9,
+        "shutdown_verified": 9,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 2,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 2,
+        "tx_timeouts": 0
+      },
+      "label": "sr_lane1_r_to_f",
+      "lane_mask": 2,
+      "rate_select": 2,
+      "requested_size": 31616,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 4,
+        "cache_invalidate": 6,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          0,
+          8928
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 106480881,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1835822357,
+        "input_sha256": "3b270a1d03b77e100ecb9bda02b323fe79144566652ad845ed1f61b70c2aac8b",
+        "last_error_detail": 0,
+        "memory_barriers": 82,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 32,
+        "physical_crc_bad": 0,
+        "physical_data_good": 128,
+        "physical_tx": [
+          0,
+          0,
+          0,
+          134231
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          0,
+          137255
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 2,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 2,
+        "scheduler_bytes": [
+          0,
+          34432
+        ],
+        "scheduler_frames": [
+          0,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 9,
+        "shutdown_verified": 9,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 8388736,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 128,
+        "tx_completed": 2,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          0,
+          16
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 2,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0x087DB102",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "a2a07ad6f7e8b12595e87d3b13046e0e53e3669a9ff7e35996ef97b730e28a4e",
+        "transfer_bytes": 23712
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 5,
+        "cache_invalidate": 7,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 57716108,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 142455042,
+        "input_sha256": "a2a07ad6f7e8b12595e87d3b13046e0e53e3669a9ff7e35996ef97b730e28a4e",
+        "last_error_detail": 0,
+        "memory_barriers": 101,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 24,
+        "physical_crc_bad": 0,
+        "physical_data_good": 96,
+        "physical_tx": [
+          50365,
+          50345,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          52628,
+          50345,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 2,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 2,
+        "scheduler_bytes": [
+          12912,
+          12912
+        ],
+        "scheduler_frames": [
+          48,
+          48
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 11,
+        "shutdown_verified": 11,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 6160478,
+        "terminal_window_status": 134283262,
+        "terminal_window_valid": true,
+        "tx_attempts": 96,
+        "tx_completed": 3,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 3,
+        "tx_timeouts": 0
+      },
+      "label": "sr_wrap_f_to_r",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 23712,
+      "rotating": {
+        "ack_aggregation": 96,
+        "ack_frames": 72,
+        "actual_rx_length": 23712,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 5,
+        "cache_invalidate": 8,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 102913355,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 142455042,
+        "input_sha256": "a2a07ad6f7e8b12595e87d3b13046e0e53e3669a9ff7e35996ef97b730e28a4e",
+        "last_error_detail": 0,
+        "memory_barriers": 103,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 142455042,
+        "output_sha256": "a2a07ad6f7e8b12595e87d3b13046e0e53e3669a9ff7e35996ef97b730e28a4e",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 24,
+        "physical_crc_bad": 0,
+        "physical_data_good": 96,
+        "physical_tx": [
+          0,
+          0,
+          2263,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          52628,
+          50345
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 3,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 3,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 11,
+        "shutdown_verified": 11,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 2,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 2,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0xDF7C52A6",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "ae9ef38f176d4c3d4daf3e34e54369407dc810c30f3ffbb75535a40d7e031703",
+        "transfer_bytes": 23712
+      },
+      "fixed": {
+        "ack_aggregation": 96,
+        "ack_frames": 72,
+        "actual_rx_length": 23712,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 6,
+        "cache_invalidate": 9,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          768,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 105791097,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3749466790,
+        "input_sha256": "ae9ef38f176d4c3d4daf3e34e54369407dc810c30f3ffbb75535a40d7e031703",
+        "last_error_detail": 0,
+        "memory_barriers": 122,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 3749466790,
+        "output_sha256": "ae9ef38f176d4c3d4daf3e34e54369407dc810c30f3ffbb75535a40d7e031703",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 24,
+        "physical_crc_bad": 0,
+        "physical_data_good": 96,
+        "physical_tx": [
+          2268,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          52654,
+          50357,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 3,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 3,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 13,
+        "shutdown_verified": 13,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 3,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 3,
+        "tx_timeouts": 0
+      },
+      "label": "sr_wrap_r_to_f",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 23712,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 6,
+        "cache_invalidate": 9,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          8928,
+          8928
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 57710991,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3749466790,
+        "input_sha256": "ae9ef38f176d4c3d4daf3e34e54369407dc810c30f3ffbb75535a40d7e031703",
+        "last_error_detail": 0,
+        "memory_barriers": 122,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 24,
+        "physical_crc_bad": 0,
+        "physical_data_good": 96,
+        "physical_tx": [
+          0,
+          0,
+          50386,
+          50357
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          52654,
+          50357
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 3,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 3,
+        "scheduler_bytes": [
+          12912,
+          12912
+        ],
+        "scheduler_frames": [
+          48,
+          48
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 13,
+        "shutdown_verified": 13,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 6160478,
+        "terminal_window_status": 134283262,
+        "terminal_window_valid": true,
+        "tx_attempts": 96,
+        "tx_completed": 3,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 3,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0xA50E7BA8",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "811254ab6db456d6764861b3cc76af8c7b43cc2048c7cb5eac8a74ced79940ae",
+        "transfer_bytes": 63232
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 7,
+        "cache_invalidate": 10,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 153409298,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 2769189800,
+        "input_sha256": "811254ab6db456d6764861b3cc76af8c7b43cc2048c7cb5eac8a74ced79940ae",
+        "last_error_detail": 0,
+        "memory_barriers": 141,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          134212,
+          134216,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          140239,
+          134216,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 3,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 3,
+        "scheduler_bytes": [
+          34432,
+          34432
+        ],
+        "scheduler_frames": [
+          128,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 15,
+        "shutdown_verified": 15,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 16777472,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 256,
+        "tx_completed": 4,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 4,
+        "tx_timeouts": 0
+      },
+      "label": "sack_ack_aggregation",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 63232,
+      "rotating": {
+        "ack_aggregation": 256,
+        "ack_frames": 192,
+        "actual_rx_length": 63232,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 7,
+        "cache_invalidate": 11,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 271948385,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 2769189800,
+        "input_sha256": "811254ab6db456d6764861b3cc76af8c7b43cc2048c7cb5eac8a74ced79940ae",
+        "last_error_detail": 0,
+        "memory_barriers": 143,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 2769189800,
+        "output_sha256": "811254ab6db456d6764861b3cc76af8c7b43cc2048c7cb5eac8a74ced79940ae",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          0,
+          0,
+          6027,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          140239,
+          134216
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 4,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 4,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 15,
+        "shutdown_verified": 15,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 3,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 3,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0xECB6D79D",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "d08196a43a70becc5d9fae9056965e67c90a92aae11858a961b61059c7160c4e",
+        "transfer_bytes": 63232
+      },
+      "fixed": {
+        "ack_aggregation": 256,
+        "ack_frames": 189,
+        "actual_rx_length": 63232,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 8,
+        "cache_invalidate": 12,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          768,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 283476720,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3971405725,
+        "input_sha256": "d08196a43a70becc5d9fae9056965e67c90a92aae11858a961b61059c7160c4e",
+        "last_error_detail": 0,
+        "memory_barriers": 162,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 3971405725,
+        "output_sha256": "d08196a43a70becc5d9fae9056965e67c90a92aae11858a961b61059c7160c4e",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          6036,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          140274,
+          134248,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 4,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 4,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 17,
+        "shutdown_verified": 17,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 4,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 4,
+        "tx_timeouts": 0
+      },
+      "label": "loss_recovery_data",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 63232,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 8,
+        "cache_invalidate": 12,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          8928,
+          8928
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 167160104,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3971405725,
+        "input_sha256": "d08196a43a70becc5d9fae9056965e67c90a92aae11858a961b61059c7160c4e",
+        "last_error_detail": 0,
+        "memory_barriers": 162,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          0,
+          0,
+          134238,
+          134248
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          140274,
+          134248
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 4,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 4,
+        "scheduler_bytes": [
+          34701,
+          34432
+        ],
+        "scheduler_frames": [
+          129,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          1,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 17,
+        "shutdown_verified": 17,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 16777472,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 257,
+        "tx_completed": 4,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 1,
+        "tx_submitted": 4,
+        "tx_timeouts": 1
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0x6E90F18E",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "456cca16e669b0e9331e4a184ef84e745727308ddbd9c746b5cf9f1551db8d33",
+        "transfer_bytes": 63232
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 9,
+        "cache_invalidate": 13,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 153410346,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1854992782,
+        "input_sha256": "456cca16e669b0e9331e4a184ef84e745727308ddbd9c746b5cf9f1551db8d33",
+        "last_error_detail": 0,
+        "memory_barriers": 181,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          134331,
+          134278,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          140358,
+          134278,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 4,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 4,
+        "scheduler_bytes": [
+          34432,
+          34432
+        ],
+        "scheduler_frames": [
+          128,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 19,
+        "shutdown_verified": 19,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 16777472,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 256,
+        "tx_completed": 5,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 5,
+        "tx_timeouts": 0
+      },
+      "label": "loss_recovery_ack",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 63232,
+      "rotating": {
+        "ack_aggregation": 256,
+        "ack_frames": 193,
+        "actual_rx_length": 63232,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 9,
+        "cache_invalidate": 14,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 274095143,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 1854992782,
+        "input_sha256": "456cca16e669b0e9331e4a184ef84e745727308ddbd9c746b5cf9f1551db8d33",
+        "last_error_detail": 0,
+        "memory_barriers": 183,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 1854992782,
+        "output_sha256": "456cca16e669b0e9331e4a184ef84e745727308ddbd9c746b5cf9f1551db8d33",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          0,
+          0,
+          6027,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          140358,
+          134278
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 5,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 5,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 19,
+        "shutdown_verified": 19,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 4,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 4,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0x9E79A4D5",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "2328cbd5eb23f01d717d52dc6c86c26113e8a15b63825edae2f8f8dc82403515",
+        "transfer_bytes": 63232
+      },
+      "fixed": {
+        "ack_aggregation": 256,
+        "ack_frames": 192,
+        "actual_rx_length": 63232,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 10,
+        "cache_invalidate": 15,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          1536,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 276871026,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 2658772181,
+        "input_sha256": "2328cbd5eb23f01d717d52dc6c86c26113e8a15b63825edae2f8f8dc82403515",
+        "last_error_detail": 0,
+        "memory_barriers": 202,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 2658772181,
+        "output_sha256": "2328cbd5eb23f01d717d52dc6c86c26113e8a15b63825edae2f8f8dc82403515",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 65,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          6130,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          140399,
+          134146,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 5,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 5,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 21,
+        "shutdown_verified": 21,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 5,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 5,
+        "tx_timeouts": 0
+      },
+      "label": "duplicate_recovery",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 63232,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 10,
+        "cache_invalidate": 15,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          8928,
+          8928
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 153356268,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 2658772181,
+        "input_sha256": "2328cbd5eb23f01d717d52dc6c86c26113e8a15b63825edae2f8f8dc82403515",
+        "last_error_detail": 0,
+        "memory_barriers": 202,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 65,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          0,
+          0,
+          134269,
+          134146
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          140399,
+          134146
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 5,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 5,
+        "scheduler_bytes": [
+          34432,
+          34432
+        ],
+        "scheduler_frames": [
+          128,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 21,
+        "shutdown_verified": 21,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 16777472,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 256,
+        "tx_completed": 5,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 5,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0x1A930DC7",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "cf41904f2e6cebbf81d1b6c497d717af533197e13d5de4f34c8a4e64093f294f",
+        "transfer_bytes": 63232
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 11,
+        "cache_invalidate": 16,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 153350498,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 445844935,
+        "input_sha256": "cf41904f2e6cebbf81d1b6c497d717af533197e13d5de4f34c8a4e64093f294f",
+        "last_error_detail": 0,
+        "memory_barriers": 221,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          134222,
+          134203,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          140249,
+          134203,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 5,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 5,
+        "scheduler_bytes": [
+          34432,
+          34432
+        ],
+        "scheduler_frames": [
+          128,
+          128
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 23,
+        "shutdown_verified": 23,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 16777472,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 256,
+        "tx_completed": 6,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 6,
+        "tx_timeouts": 0
+      },
+      "label": "reorder_recovery",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 63232,
+      "rotating": {
+        "ack_aggregation": 256,
+        "ack_frames": 192,
+        "actual_rx_length": 63232,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 11,
+        "cache_invalidate": 17,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 267662801,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 445844935,
+        "input_sha256": "cf41904f2e6cebbf81d1b6c497d717af533197e13d5de4f34c8a4e64093f294f",
+        "last_error_detail": 0,
+        "memory_barriers": 223,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 445844935,
+        "output_sha256": "cf41904f2e6cebbf81d1b6c497d717af533197e13d5de4f34c8a4e64093f294f",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 64,
+        "physical_crc_bad": 0,
+        "physical_data_good": 256,
+        "physical_tx": [
+          0,
+          0,
+          6027,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          140249,
+          134203
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 6,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 6,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 23,
+        "shutdown_verified": 23,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 5,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 5,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 1,
+      "end_to_end": {
+        "crc32": "0x0D62C7DA",
+        "receiver_role": "fixed",
+        "sender_role": "rotating",
+        "sha256": "8710cbef34670fa028b50d945dae96a711ee605ed9a6610479e3f77c498ef325",
+        "transfer_bytes": 23712
+      },
+      "fixed": {
+        "ack_aggregation": 96,
+        "ack_frames": 60,
+        "actual_rx_length": 23712,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 12,
+        "cache_invalidate": 18,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          768,
+          0,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 220431734,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 224577498,
+        "input_sha256": "8710cbef34670fa028b50d945dae96a711ee605ed9a6610479e3f77c498ef325",
+        "last_error_detail": 0,
+        "memory_barriers": 242,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 224577498,
+        "output_sha256": "8710cbef34670fa028b50d945dae96a711ee605ed9a6610479e3f77c498ef325",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          2443,
+          0,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          56999,
+          54530,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 6,
+        "rx_duplicates": 5,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 6,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 25,
+        "shutdown_verified": 25,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 3,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 6,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          0,
+          0,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 6,
+        "tx_timeouts": 0
+      },
+      "label": "stale_session_rejection",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 23712,
+      "rotating": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 12,
+        "cache_invalidate": 18,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          8928,
+          8928
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 168357578,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 224577498,
+        "input_sha256": "8710cbef34670fa028b50d945dae96a711ee605ed9a6610479e3f77c498ef325",
+        "last_error_detail": 0,
+        "memory_barriers": 242,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          0,
+          0,
+          54556,
+          54530
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          0,
+          0,
+          56999,
+          54530
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 6,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 6,
+        "scheduler_bytes": [
+          13988,
+          13988
+        ],
+        "scheduler_frames": [
+          52,
+          52
+        ],
+        "scheduler_migrations": [
+          2,
+          3
+        ],
+        "scheduler_retries": [
+          5,
+          4
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 25,
+        "shutdown_verified": 25,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 6291552,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 104,
+        "tx_completed": 6,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "tx_migrations": 4,
+        "tx_retries": 9,
+        "tx_submitted": 6,
+        "tx_timeouts": 9
+      },
+      "window": "NA"
+    },
+    {
+      "command": 3,
+      "direction": 0,
+      "end_to_end": {
+        "crc32": "0xBD846AAF",
+        "receiver_role": "rotating",
+        "sender_role": "fixed",
+        "sha256": "6d5978aaf25d3286b7490d2b06a47bd253a229bfc7e2ca8f49030466fd8cf54a",
+        "transfer_bytes": 23712
+      },
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 13,
+        "cache_invalidate": 19,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 168368219,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3179571887,
+        "input_sha256": "6d5978aaf25d3286b7490d2b06a47bd253a229bfc7e2ca8f49030466fd8cf54a",
+        "last_error_detail": 0,
+        "memory_barriers": 261,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          54401,
+          54441,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          56837,
+          54441,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 6,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 6,
+        "scheduler_bytes": [
+          13988,
+          13988
+        ],
+        "scheduler_frames": [
+          52,
+          52
+        ],
+        "scheduler_migrations": [
+          2,
+          3
+        ],
+        "scheduler_retries": [
+          5,
+          4
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 27,
+        "shutdown_verified": 27,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 6291552,
+        "terminal_window_status": 134217728,
+        "terminal_window_valid": true,
+        "tx_attempts": 104,
+        "tx_completed": 7,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 4,
+        "tx_retries": 9,
+        "tx_submitted": 7,
+        "tx_timeouts": 9
+      },
+      "label": "stale_path_rejection",
+      "lane_mask": 3,
+      "rate_select": 2,
+      "requested_size": 23712,
+      "rotating": {
+        "ack_aggregation": 96,
+        "ack_frames": 60,
+        "actual_rx_length": 23712,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 13,
+        "cache_invalidate": 20,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 220142964,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 3179571887,
+        "input_sha256": "6d5978aaf25d3286b7490d2b06a47bd253a229bfc7e2ca8f49030466fd8cf54a",
+        "last_error_detail": 0,
+        "memory_barriers": 263,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 3179571887,
+        "output_sha256": "6d5978aaf25d3286b7490d2b06a47bd253a229bfc7e2ca8f49030466fd8cf54a",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          0,
+          0,
+          2436,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          56837,
+          54441
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 7,
+        "rx_duplicates": 5,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 7,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 4,
+        "shutdown_attempts": 27,
+        "shutdown_verified": 27,
+        "stale_ack": 0,
+        "stale_path": 3,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 6,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 6,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    },
+    {
+      "command": 10,
+      "direction": 0,
+      "fixed": {
+        "ack_aggregation": 0,
+        "ack_frames": 0,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 13,
+        "cache_invalidate": 19,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          8928,
+          8928,
+          0,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 1555,
+        "firmware_build_id": "0x50313046",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 0,
+        "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "last_error_detail": 0,
+        "memory_barriers": 263,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          54401,
+          54441,
+          0,
+          0
+        ],
+        "pl_build_id": "0x50313046",
+        "pl_profile_id": "0x702000F0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000002A",
+        "raw_rx": [
+          56837,
+          54441,
+          0,
+          0
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "fixed",
+        "rx_completed": 6,
+        "rx_duplicates": 0,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 6,
+        "scheduler_bytes": [
+          13988,
+          13988
+        ],
+        "scheduler_frames": [
+          52,
+          52
+        ],
+        "scheduler_migrations": [
+          2,
+          3
+        ],
+        "scheduler_retries": [
+          5,
+          4
+        ],
+        "service_state": 6,
+        "shutdown_attempts": 28,
+        "shutdown_verified": 28,
+        "stale_ack": 0,
+        "stale_path": 0,
+        "stale_session": 0,
+        "starvation_max": 1,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 104,
+        "tx_completed": 7,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          16,
+          16,
+          0,
+          0
+        ],
+        "tx_migrations": 4,
+        "tx_retries": 9,
+        "tx_submitted": 7,
+        "tx_timeouts": 9
+      },
+      "label": "P10-D_endpoint_shutdown",
+      "lane_mask": 0,
+      "rate_select": 0,
+      "requested_size": 0,
+      "rotating": {
+        "ack_aggregation": 96,
+        "ack_frames": 60,
+        "actual_rx_length": 0,
+        "cache_disabled": 0,
+        "cache_enabled": 1,
+        "cache_flush": 13,
+        "cache_invalidate": 20,
+        "command_status": 0,
+        "counts_per_second": 333333343,
+        "descriptor_leak": 0,
+        "dma_reset_queued": 0,
+        "dma_resets": 1,
+        "duty_hard_faults": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "duty_max_cycles": [
+          0,
+          0,
+          768,
+          0
+        ],
+        "duty_parameters": [
+          64000,
+          12799,
+          11520
+        ],
+        "elapsed_ticks": 1575,
+        "firmware_build_id": "0x50313052",
+        "first_mismatch_offset": 4294967295,
+        "input_crc32": 0,
+        "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "last_error_detail": 0,
+        "memory_barriers": 265,
+        "misaligned": 0,
+        "object_aborts": 0,
+        "output_crc32": 0,
+        "output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phy_status": "0x00000000",
+        "physical_ack_good": 26,
+        "physical_crc_bad": 0,
+        "physical_data_good": 104,
+        "physical_tx": [
+          0,
+          0,
+          2436,
+          0
+        ],
+        "pl_build_id": "0x50313052",
+        "pl_profile_id": "0x702000A0",
+        "pl_soft_resets": 0,
+        "pl_status": "0x0000004A",
+        "raw_rx": [
+          0,
+          0,
+          56837,
+          54441
+        ],
+        "retry_exhausted": 0,
+        "ring_empty": [
+          1,
+          1
+        ],
+        "ring_full": [
+          0,
+          0
+        ],
+        "role": "rotating",
+        "rx_completed": 7,
+        "rx_duplicates": 5,
+        "rx_generations": [
+          0,
+          0
+        ],
+        "rx_submitted": 7,
+        "scheduler_bytes": [
+          0,
+          0
+        ],
+        "scheduler_frames": [
+          0,
+          0
+        ],
+        "scheduler_migrations": [
+          0,
+          0
+        ],
+        "scheduler_retries": [
+          0,
+          0
+        ],
+        "service_state": 6,
+        "shutdown_attempts": 28,
+        "shutdown_verified": 28,
+        "stale_ack": 0,
+        "stale_path": 3,
+        "stale_session": 0,
+        "starvation_max": 0,
+        "terminal_tx_sequence_base": 0,
+        "terminal_window_status": 0,
+        "terminal_window_valid": false,
+        "tx_attempts": 0,
+        "tx_completed": 6,
+        "tx_generations": [
+          0,
+          0
+        ],
+        "tx_high_max_cycles": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "tx_migrations": 0,
+        "tx_retries": 0,
+        "tx_submitted": 6,
+        "tx_timeouts": 0
+      },
+      "window": "NA"
+    }
+  ],
+  "errors": [],
+  "markers": {
+    "P10_CANDIDATE_PROGRAMMED_FIXED": "1",
+    "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
+    "P10_CASE_PASS": "P10-D_endpoint_shutdown",
+    "P10_ENDPOINT_SHUTDOWN_FIXED": "PASS",
+    "P10_ENDPOINT_SHUTDOWN_ROTATING": "PASS",
+    "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/evidence/hardware/p10/p10_formal_20260730T175330Z_02/stages/p10_d/dumps/P10-D_ready.fixed.bin",
+    "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/evidence/hardware/p10/p10_formal_20260730T175330Z_02/stages/p10_d/dumps/P10-D_ready.rotating.bin",
+    "P10_PAIRED_LAUNCH": "stale_path_rejection:receiver=rotating,sender=fixed",
+    "P10_PS7_INITIALIZED_FIXED": "1",
+    "P10_PS7_INITIALIZED_ROTATING": "1",
+    "P10_PS_ELF_DOWNLOADED_FIXED": "1",
+    "P10_PS_ELF_DOWNLOADED_ROTATING": "1",
+    "P10_SAFE_BOOT": "PASS",
+    "P10_SAFE_STATE_FIXED_PREBOOT": "id:0x5031305A,build:0x50313046,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_FIXED_SAFE_BOOT": "id:0x5031305A,build:0x50313046,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_PREBOOT": "id:0x5031305A,build:0x50313052,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_SAFE_BOOT": "id:0x5031305A,build:0x50313052,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SERVICE_READY_FIXED": "initial_boot",
+    "P10_SERVICE_READY_ROTATING": "initial_boot",
+    "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+    "P10_XSDB_FIXED_SERIAL": "210249855178",
+    "P10_XSDB_FIXED_TARGETS": "APU:5,CPU0:6,FPGA:8",
+    "P10_XSDB_IDENTITY": "PASS",
+    "P10_XSDB_ROTATING_SERIAL": "210512180081",
+    "P10_XSDB_ROTATING_TARGETS": "APU:1,CPU0:2,FPGA:4",
+    "P10_XSDB_RUN_ID": "p10_formal_20260730T175330Z_02",
+    "P10_XSDB_STAGE": "P10-D",
+    "P10_XSDB_STAGE_RESULT": "PASS"
+  },
+  "observation_count": 14,
+  "observations": "evidence/hardware/p10/p10_formal_20260730T175330Z_02/stages/p10_d/dumps/observations.psv",
+  "performance": [
+    {
+      "application_goodput_bps": 791599.2487822998,
+      "direction": 0,
+      "label": "sr_lane0_f_to_r"
+    },
+    {
+      "application_goodput_bps": 791916.550540102,
+      "direction": 1,
+      "label": "sr_lane0_r_to_f"
+    },
+    {
+      "application_goodput_bps": 791807.0566380547,
+      "direction": 0,
+      "label": "sr_lane1_f_to_r"
+    },
+    {
+      "application_goodput_bps": 791779.0967404186,
+      "direction": 1,
+      "label": "sr_lane1_r_to_f"
+    },
+    {
+      "application_goodput_bps": 1095569.4003782792,
+      "direction": 0,
+      "label": "sr_wrap_f_to_r"
+    },
+    {
+      "application_goodput_bps": 1095666.5400829455,
+      "direction": 1,
+      "label": "sr_wrap_r_to_f"
+    },
+    {
+      "application_goodput_bps": 1099142.4493488523,
+      "direction": 0,
+      "label": "sack_ack_aggregation"
+    },
+    {
+      "application_goodput_bps": 1008725.5722011755,
+      "direction": 1,
+      "label": "loss_recovery_data"
+    },
+    {
+      "application_goodput_bps": 1099134.9407204126,
+      "direction": 0,
+      "label": "loss_recovery_ack"
+    },
+    {
+      "application_goodput_bps": 1099522.5285255897,
+      "direction": 1,
+      "label": "duplicate_recovery"
+    },
+    {
+      "application_goodput_bps": 1099563.8994051914,
+      "direction": 0,
+      "label": "reorder_recovery"
+    },
+    {
+      "application_goodput_bps": 375581.5603009447,
+      "direction": 1,
+      "label": "stale_session_rejection"
+    },
+    {
+      "application_goodput_bps": 375557.8232595547,
+      "direction": 0,
+      "label": "stale_path_rejection"
+    }
+  ],
+  "process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\scripts\\hw\\p10_dual_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\artifacts\\p10\\794ff11ad54f3d10ee3bd3f13345a315cc5654ded8f357ed3ce71c765a4de303\\44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37\\p10_ax7020_fixed_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\artifacts\\p10\\9c13a1047fba6c0c5ca32811be3f437ce19dac86cecb032ed889f721beb664e7\\d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc\\p10_ax7020_rotating_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\artifacts\\p10\\3ef0899ea216e868e84f78173aea880196835c0d987e11d76fb0ae34be78f8ef\\80d55b5dbe267320cf984907f99269650e6fdc8017b3d65b0f2142f034c9c3ce\\p10_fixed_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\artifacts\\p10\\d025e1413e63a8d994ddca527e62149eefd15002121288f4ecbcda407a3d58a6\\89dabc952a55af4d4b4a85d7026c2bf54280201ac02bffac720759a7846b3c7f\\p10_rotating_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\artifacts\\fixed\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\artifacts\\rotating\\ps7_init.tcl",
+      "evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\plans\\p10_d.plan",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\stages\\p10_d\\dumps",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\evidence\\hardware\\p10\\p10_formal_20260730T175330Z_02\\stages\\p10_d\\xsdb.result.txt",
+      "P10-D",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10\\config\\p10_fasttrack_current_run_authorization.json",
+      "p10_formal_20260730T175330Z_02"
+    ],
+    "elapsed_seconds": 33.53512450004928,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10/p10_formal_20260730T175330Z_02/stages/p10_d/xsdb.stderr.log",
+    "stdout": "evidence/hardware/p10/p10_formal_20260730T175330Z_02/stages/p10_d/xsdb.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 1500
+  },
+  "raw_matrix": [],
+  "schema_version": 1,
+  "stage": "P10-D",
+  "status": "PASS",
+  "test_id": "P10-D-HARDWARE"
+}
