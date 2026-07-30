@@ -8,11 +8,12 @@ Zynq PS, DDR controller, AXI DMA, descriptor state, transport state, payload
 storage, clocks, resets, and two physical TFDU interfaces.  There is no shared
 RAM, AXI link, Ethernet link, or control wire between the two endpoints.
 
-This is an offline design/build result for existing requirement
-`SYS-ARCH-001`.  That requirement remains `PENDING` because independent
-physical-board identity, real DDR/DMA operation, optical transfer, and reset
-recovery have not been measured.  No Z7020 hardware or product scope is
-promoted by this document.
+This architecture and its content-addressed artifacts are ready for the
+current, stationary P10 FastTrack hardware campaign.  The hardware results
+remain `PENDING` until one complete evidence run directly measures independent
+DDR/DMA operation, optical transfer, reset recovery, and the 1800-second
+stationary interval.  No later Z7020 geometry, rotation, Ethernet, or product
+scope is promoted by this document.
 
 ## Role binding
 
@@ -20,6 +21,15 @@ promoted by this document.
 |---|---:|---:|---:|---|---:|
 | AX7020-F | `DEPLOYMENT_ROLE=1` | `0x50313046` | `0x702000F0` | F0, F1 | `0` (F to R) |
 | AX7020-R | `DEPLOYMENT_ROLE=2` | `0x50313052` | `0x702000A0` | R0, R1 | `1` (R to F) |
+
+The current physical binding is keyed only by the stable JTAG cable serial:
+
+- AX7020-F: `210249855178`;
+- AX7020-R: `210512180081`.
+
+The binding rule is independent of transient XSDB target order.  Each active
+stage must rediscover one `xc7z020`, one APU, and one Cortex-A9 #0 beneath each
+authorized serial before it can reset, program, download, or access memory.
 
 Both roles expose identity magic `0x5031305A`, register-map version `P9-3`,
 AXI-Lite registers at `0x43C00000`, and a role-local scatter-gather AXI DMA at
@@ -86,7 +96,7 @@ entirely below the `0x00020000` OCM boundary so the software image can start and
 verify identity without relying on an already-tested DDR data path.  Content
 addresses cover every RTL/profile/build input and the produced artifact bytes.
 
-## Safety boundary and hardware admission
+## Safety boundary and scoped hardware admission
 
 The functional RTL retains the existing exact 1 ms rolling-duty accountant,
 continuous-high guard, stuck-high guard, shutdown latch, and final TX kill.
@@ -94,16 +104,29 @@ Endpoint mode observes and arms only the two role-local physical modules.  A
 separate shutdown image drives `Mode=HIGH`, `SD=HIGH`, and `Txd=LOW` after PL
 configuration.
 
-Hardware admission is nevertheless `false`.  Open severe blocker
-`P10-SAFETY-POWERUP-001` establishes that the supplied board/module schematics
-do not guarantee passive `Txd=LOW` and `SD=HIGH` while the FPGA is unconfigured,
-reset, open-circuit, or partially powered.  `P10-RX-B-R29-001` also leaves the
-TFDU Rxd high level at J10 pin 26 outside the supplied datasheet's guaranteed
-load point.  A configured shutdown image cannot close either electrical gap.
+The FastTrack goal grants current-run hardware authorization for this exact
+already-wired, already-powered, stationary two-board fixture.  The configured
+shutdown images, role-specific artifacts, immutable hashes, and stable JTAG
+serial binding therefore admit the scoped P10 run without an intentional power
+cycle.  Every stage is bracketed by independent programming of both shutdown
+images; normal exit, failure, timeout, Ctrl+C, and wrapper failure all execute
+the same dual-shutdown path.  A stage cannot arm until both role runtimes report
+safe boot with `Txd request=0`, `endpoint armed=0`, active TX mask zero, final
+TX kill active, no autonomous physical TX count, and no sticky safety fault.
 
-Accordingly, the offline bitstreams and ELFs are build artifacts only.  They
-must not be programmed or executed until the blocker is resolved and the two
-physical boards can be uniquely bound to the fixed and rotating roles.
+`P10-SAFETY-POWERUP-001` is not erased or promoted.  Passive fail-low behavior
+while the FPGA is unconfigured, open-circuit, or partially powered remains
+`PENDING_D17`; this campaign neither intentionally power-cycles a board nor
+claims that requirement.  `P10-RX-B-R29-001` likewise remains a documented
+electrical-guarantee gap.  The user's prior successful use of the same TFDU
+small boards on the byte-identical AX7010 J10 circuit is accepted as fixture
+compatibility context, not as a replacement for later product evidence.
+
+The active wrapper is `scripts/p10_hardware_runtime.py`.  Its machine-readable
+authorization binds the two serials, all eight bit/XSA/ELF inputs, every SHA256,
+the exact stage plans, lane masks `0x1/0x2/0x3`, the 1800-second bound, and the
+prohibitions on Ethernet, movement, rotation, rewiring, and intentional power
+cycling.
 
 ## Offline verification records
 

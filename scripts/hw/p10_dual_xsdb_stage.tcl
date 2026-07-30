@@ -1,0 +1,641 @@
+# P10 AX7020 two-board XSDB stage executor.
+#
+# Each invocation discovers both boards by their immutable JTAG cable serial,
+# resets/programs/boots the two role-specific artifacts, verifies a safe boot,
+# executes one immutable paired plan, requests shutdown in both endpoint
+# runtimes, and exits.  The outer wrapper independently programs both frozen
+# shutdown images before and after this process and on every failure, timeout,
+# or Ctrl+C path.
+# require-user-hw-authorization: reached only through the committed P10
+# FastTrack current-run authorization and fail-closed outer wrapper.
+
+proc p10_sanitize {value} {
+  return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
+}
+
+proc p10_say {line} {
+  global p10_result_handle
+  puts $p10_result_handle $line
+  flush $p10_result_handle
+  puts $line
+  flush stdout
+}
+
+proc p10_select_target {target_id} {
+  global p10_active_target_id
+  if {![string is integer -strict $target_id] || $target_id < 0} {
+    error "invalid P10 debug target id"
+  }
+  if {$p10_active_target_id != $target_id} {
+    targets $target_id
+    set p10_active_target_id $target_id
+  }
+}
+
+proc p10_unique_target_ids {records} {
+  set result {}
+  set seen [dict create]
+  foreach props $records {
+    if {![dict exists $props target_id]} { continue }
+    set id [dict get $props target_id]
+    if {[dict exists $seen $id]} { continue }
+    dict set seen $id 1
+    lappend result $props
+  }
+  return $result
+}
+
+proc p10_classify_debug_targets {records serial} {
+  set apu {}; set cpu0 {}; set fpga {}
+  foreach props $records {
+    if {![dict exists $props name] ||
+        ![dict exists $props target_id] ||
+        ![dict exists $props jtag_cable_serial] ||
+        ![string equal -nocase [dict get $props jtag_cable_serial] $serial]} {
+      continue
+    }
+    set name [dict get $props name]
+    if {[string equal -nocase $name APU]} { lappend apu $props }
+    if {[string match -nocase "*Cortex-A9*#0" $name]} { lappend cpu0 $props }
+    if {[string equal -nocase $name xc7z020]} { lappend fpga $props }
+  }
+  return [dict create \
+      apu [p10_unique_target_ids $apu] \
+      cpu0 [p10_unique_target_ids $cpu0] \
+      fpga [p10_unique_target_ids $fpga]]
+}
+
+proc p10_wait_debug_targets {{max_attempts 51} {delay_ms 100}} {
+  global p10_fixed_serial p10_rotating_serial
+  global p10_apu p10_cpu p10_fpga
+  set started [clock milliseconds]
+  set last "none"
+  for {set attempt 1} {$attempt <= $max_attempts} {incr attempt} {
+    set records [targets -target-properties]
+    set fixed [p10_classify_debug_targets $records $p10_fixed_serial]
+    set rotating [p10_classify_debug_targets $records $p10_rotating_serial]
+    set counts [list \
+        fixed_apu [llength [dict get $fixed apu]] \
+        fixed_cpu0 [llength [dict get $fixed cpu0]] \
+        fixed_fpga [llength [dict get $fixed fpga]] \
+        rotating_apu [llength [dict get $rotating apu]] \
+        rotating_cpu0 [llength [dict get $rotating cpu0]] \
+        rotating_fpga [llength [dict get $rotating fpga]]]
+    set last $counts
+    set ambiguous 0
+    foreach key {apu cpu0 fpga} {
+      if {[llength [dict get $fixed $key]] > 1 ||
+          [llength [dict get $rotating $key]] > 1} { set ambiguous 1 }
+    }
+    set all_fpga {}
+    foreach props $records {
+      if {[dict exists $props name] &&
+          [string equal -nocase [dict get $props name] xc7z020] &&
+          [dict exists $props jtag_cable_serial]} {
+        lappend all_fpga [dict get $props jtag_cable_serial]
+      }
+    }
+    set unique_fpga_serials [lsort -unique $all_fpga]
+    if {$ambiguous || [llength $unique_fpga_serials] > 2} {
+      error "P10 ambiguous or unauthorized debug topology: $counts FPGA_SERIALS=$unique_fpga_serials"
+    }
+    if {[llength [dict get $fixed apu]] == 1 &&
+        [llength [dict get $fixed cpu0]] == 1 &&
+        [llength [dict get $fixed fpga]] == 1 &&
+        [llength [dict get $rotating apu]] == 1 &&
+        [llength [dict get $rotating cpu0]] == 1 &&
+        [llength [dict get $rotating fpga]] == 1 &&
+        $unique_fpga_serials eq [lsort [list $p10_fixed_serial $p10_rotating_serial]]} {
+      set p10_apu(fixed) [dict get [lindex [dict get $fixed apu] 0] target_id]
+      set p10_cpu(fixed) [dict get [lindex [dict get $fixed cpu0] 0] target_id]
+      set p10_fpga(fixed) [dict get [lindex [dict get $fixed fpga] 0] target_id]
+      set p10_apu(rotating) [dict get [lindex [dict get $rotating apu] 0] target_id]
+      set p10_cpu(rotating) [dict get [lindex [dict get $rotating cpu0] 0] target_id]
+      set p10_fpga(rotating) [dict get [lindex [dict get $rotating fpga] 0] target_id]
+      p10_say "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS=$attempt"
+      p10_say "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS=[expr {[clock milliseconds] - $started}]"
+      p10_say "P10_XSDB_FIXED_TARGETS=APU:$p10_apu(fixed),CPU0:$p10_cpu(fixed),FPGA:$p10_fpga(fixed)"
+      p10_say "P10_XSDB_ROTATING_TARGETS=APU:$p10_apu(rotating),CPU0:$p10_cpu(rotating),FPGA:$p10_fpga(rotating)"
+      return
+    }
+    if {$attempt < $max_attempts && $delay_ms > 0} { after $delay_ms }
+  }
+  error "P10 debug target discovery timeout: $last"
+}
+
+proc p10_select_apu {role} {
+  global p10_apu
+  p10_select_target $p10_apu($role)
+}
+
+proc p10_select_cpu {role} {
+  global p10_cpu
+  p10_select_target $p10_cpu($role)
+}
+
+proc p10_read32 {role address} {
+  p10_select_apu $role
+  return [expr {[mrd -address-space AP0 -force -value $address] & 0xFFFFFFFF}]
+}
+
+proc p10_write32 {role address value} {
+  p10_select_apu $role
+  mwr -address-space AP0 -force -bypass-cache-sync $address $value
+}
+
+proc p10_check_abort {} {
+  global p10_abort_file
+  if {[file exists $p10_abort_file]} {
+    foreach role {fixed rotating} {
+      catch {p10_write32 $role 0x43C00718 0x0000001A}
+    }
+    error "P10 abort sentinel observed"
+  }
+}
+
+proc p10_verify_pl_safe {role expected_build expected_profile label} {
+  set identity [p10_read32 $role 0x43C00700]
+  set build [p10_read32 $role 0x43C00704]
+  set profile [p10_read32 $role 0x43C00708]
+  set version [p10_read32 $role 0x43C0070C]
+  set hash_low [p10_read32 $role 0x43C00710]
+  set capabilities [p10_read32 $role 0x43C00714]
+  p10_write32 $role 0x43C00718 0x0000001A
+  after 10
+  set status [p10_read32 $role 0x43C0071C]
+  set phy [p10_read32 $role 0x43C00720]
+  set physical_tx {}
+  foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+    lappend physical_tx [p10_read32 $role $address]
+  }
+  if {$identity != 0x5031305A || $build != $expected_build ||
+      $profile != $expected_profile || $version != 0x09000003 ||
+      $hash_low != 0xCF35F13A || $capabilities != 0xF7204221} {
+    error [format "P10 %s identity mismatch id=0x%08X build=0x%08X profile=0x%08X version=0x%08X hash=0x%08X caps=0x%08X" \
+        $role $identity $build $profile $version $hash_low $capabilities]
+  }
+  if {($status & 0x00000285) != 0 || ($status & 0x2) == 0} {
+    error [format "P10 %s unsafe %s status=0x%08X" $role $label $status]
+  }
+  if {($phy & 0x00000F00) != 0} {
+    error [format "P10 %s sticky PHY safety fault during %s phy=0x%08X" $role $label $phy]
+  }
+  foreach count $physical_tx {
+    if {$count != 0} {
+      error "P10 $role autonomous physical TX observed during $label: $physical_tx"
+    }
+  }
+  p10_say [format "P10_SAFE_STATE_%s_%s=id:0x%08X,build:0x%08X,profile:0x%08X,status:0x%08X,phy:0x%08X,physical_tx:%s" \
+      [string toupper $role] $label $identity $build $profile $status $phy [join $physical_tx ,]]
+}
+
+proc p10_wait_ready {role label} {
+  set deadline [expr {[clock milliseconds] + 20000}]
+  set magic 0; set state 0; set status 0
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set magic [p10_read32 $role 0x00020000]
+    set state [p10_read32 $role 0x0002000C]
+    set status [p10_read32 $role 0x00020020]
+    if {$magic == 0x424D3950 && $state == 1 && $status == 0} {
+      p10_say "P10_SERVICE_READY_[string toupper $role]=$label"
+      return
+    }
+    if {$state == 5} {
+      error "P10 $role service entered FAULT during $label status=$status"
+    }
+    after 10
+  }
+  error [format "P10 %s service ready timeout label=%s magic=0x%08X state=0x%08X status=0x%08X" \
+      $role $label $magic $state $status]
+}
+
+proc p10_dump_mailbox {role label} {
+  global p10_dump_dir
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label]} { error "unsafe P10 dump label" }
+  set final [file join $p10_dump_dir "${label}.${role}.bin"]
+  set partial "${final}.partial"
+  catch {file delete -force $partial}
+  p10_select_cpu $role
+  catch {stop}
+  p10_select_apu $role
+  mrd -address-space AP0 -force -size b -bin -file $partial 0x00020000 1024
+  if {![file isfile $partial] || [file size $partial] != 1024} {
+    error "P10 $role mailbox dump is not exactly 1024 bytes for $label"
+  }
+  file rename -force $partial $final
+  return $final
+}
+
+proc p10_resume {role} {
+  p10_select_cpu $role
+  con
+}
+
+proc p10_case_dict {fields} {
+  if {[llength $fields] != 29 || [lindex $fields 0] ne "CASE"} {
+    error "P10 CASE requires exactly 29 fields"
+  }
+  set names {kind label command expected_status flags lane direction rate weights size ring cache txoff rxoff timeout session path object dropdata dropack unavailable rawtarget spacing stale initialseq faultflags idle injectmask injectdelay}
+  set d [dict create]
+  for {set index 0} {$index < [llength $names]} {incr index} {
+    set name [lindex $names $index]
+    set value [lindex $fields $index]
+    if {$name eq "kind" || $name eq "label"} {
+      dict set d $name $value
+    } else {
+      if {![string is integer -strict $value]} { error "P10 CASE $name is not an integer" }
+      dict set d $name $value
+    }
+  }
+  if {![regexp {^[A-Za-z0-9_.-]+$} [dict get $d label]]} { error "invalid P10 CASE label" }
+  if {[dict get $d lane] < 0 || [dict get $d lane] > 3 ||
+      [dict get $d unavailable] < 0 || [dict get $d unavailable] > 3 ||
+      [dict get $d injectmask] < 0 || [dict get $d injectmask] > 3} {
+    error "P10 lane mask outside 0x0..0x3"
+  }
+  if {[dict get $d direction] < 0 || [dict get $d direction] > 1 ||
+      [dict get $d rate] < 0 || [dict get $d rate] > 2} {
+    error "P10 direction/rate outside authorization"
+  }
+  if {[dict get $d timeout] < 1 || [dict get $d timeout] > 1800000} {
+    error "P10 case timeout outside authorization"
+  }
+  if {[dict get $d command] in {2 3 12} && [dict get $d lane] == 0} {
+    error "P10 transmit-capable command has an empty lane mask"
+  }
+  return $d
+}
+
+proc p10_publish_case {role d sequence} {
+  p10_write32 $role 0x0002000C 2
+  foreach spec {
+    {0x00020014 command} {0x00020024 flags} {0x00020028 lane}
+    {0x0002002C direction} {0x00020030 rate} {0x00020034 weights}
+    {0x00020038 size} {0x0002003C ring} {0x00020040 cache}
+    {0x00020044 txoff} {0x00020048 rxoff} {0x0002004C timeout}
+    {0x00020050 session} {0x00020054 path} {0x00020058 object}
+    {0x0002005C dropdata} {0x00020060 dropack} {0x00020064 unavailable}
+    {0x00020068 rawtarget} {0x0002006C spacing} {0x00020070 stale}
+    {0x00020074 initialseq} {0x00020078 faultflags} {0x0002007C idle}
+  } {
+    p10_write32 $role [lindex $spec 0] [dict get $d [lindex $spec 1]]
+  }
+  p10_write32 $role 0x00020018 $sequence
+}
+
+proc p10_sender_role {direction} {
+  return [expr {$direction == 0 ? "fixed" : "rotating"}]
+}
+
+proc p10_receiver_role {direction} {
+  return [expr {$direction == 0 ? "rotating" : "fixed"}]
+}
+
+proc p10_wait_receiver_primed {role d} {
+  set command [dict get $d command]
+  set timeout [dict get $d timeout]
+  set bounded [expr {$timeout < 30000 ? $timeout : 30000}]
+  set deadline [expr {[clock milliseconds] + $bounded}]
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set state [p10_read32 $role 0x0002000C]
+    set pl_status [p10_read32 $role 0x43C0071C]
+    set phy [p10_read32 $role 0x43C00720]
+    if {$state == 5} { error "P10 $role receiver faulted before source launch" }
+    if {($phy & 0x00000F00) != 0} { error "P10 $role receiver safety fault before source launch" }
+    if {$command == 3 && $state == 3 && ($pl_status & 0x4) != 0} { return }
+    if {$command == 2 && $state == 3 && ($pl_status & 0x201) == 0x201 &&
+        ($pl_status & 0x2) == 0} { return }
+    after 1
+  }
+  error "P10 $role receiver did not prime before paired source launch"
+}
+
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_status rotating_status fixed_state rotating_state window} {
+  global p10_observation_handle
+  set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
+      [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
+      [dict get $d weights] [dict get $d size] [dict get $d ring] [dict get $d cache] \
+      [dict get $d txoff] [dict get $d rxoff] [dict get $d timeout] [dict get $d session] \
+      [dict get $d path] [dict get $d object] [dict get $d dropdata] [dict get $d dropack] \
+      [dict get $d unavailable] [dict get $d rawtarget] [dict get $d spacing] [dict get $d stale] \
+      [dict get $d initialseq] [dict get $d faultflags] [dict get $d idle] \
+      [dict get $d injectmask] [dict get $d injectdelay] $window $started $finished $sequence \
+      $fixed_status $rotating_status $fixed_state $rotating_state $fixed_dump $rotating_dump]
+  puts $p10_observation_handle [join $values "|"]
+  flush $p10_observation_handle
+}
+
+proc p10_wait_pair_terminal {sequence timeout_ms} {
+  set deadline [expr {[clock milliseconds] + $timeout_ms + 5000}]
+  set fixed_done 0; set rotating_done 0
+  set fixed_state 0; set rotating_state 0
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set fixed_response [p10_read32 fixed 0x0002001C]
+    set fixed_state [p10_read32 fixed 0x0002000C]
+    set rotating_response [p10_read32 rotating 0x0002001C]
+    set rotating_state [p10_read32 rotating 0x0002000C]
+    if {$fixed_response == $sequence && $fixed_state in {4 5 6}} { set fixed_done 1 }
+    if {$rotating_response == $sequence && $rotating_state in {4 5 6}} { set rotating_done 1 }
+    if {$fixed_done && $rotating_done} {
+      return [list $fixed_state $rotating_state]
+    }
+    after 5
+  }
+  error "P10 paired command timeout sequence=$sequence fixed_state=$fixed_state rotating_state=$rotating_state"
+}
+
+proc p10_execute_case {d {window "NA"}} {
+  global p10_command_sequence
+  p10_check_abort
+  incr p10_command_sequence
+  set sequence $p10_command_sequence
+  set started [clock milliseconds]
+  set command [dict get $d command]
+
+  if {$command in {2 3}} {
+    set receiver [p10_receiver_role [dict get $d direction]]
+    set sender [p10_sender_role [dict get $d direction]]
+    p10_publish_case $receiver $d $sequence
+    p10_wait_receiver_primed $receiver $d
+    p10_publish_case $sender $d $sequence
+    p10_say "P10_PAIRED_LAUNCH=[dict get $d label]:receiver=$receiver,sender=$sender"
+    if {$command == 3 && [dict get $d injectmask] != 0} {
+      set injection_deadline [expr {[clock milliseconds] + 10000}]
+      set active_seen 0
+      while {[clock milliseconds] < $injection_deadline} {
+        p10_check_abort
+        set injection_state [p10_read32 $sender 0x0002000C]
+        set injection_status [p10_read32 $sender 0x43C0071C]
+        if {$injection_state in {4 5 6}} {
+          error "P10 source completed before requested lane-fault injection"
+        }
+        if {$injection_state == 3 && ($injection_status & 0x4) != 0} {
+          set active_seen 1
+          break
+        }
+        after 1
+      }
+      if {!$active_seen} { error "P10 source never became active for lane-fault injection" }
+      after [dict get $d injectdelay]
+      p10_check_abort
+      set pre_state [p10_read32 $sender 0x0002000C]
+      set pre_status [p10_read32 $sender 0x43C0071C]
+      if {$pre_state != 3 || ($pre_status & 0x4) == 0} {
+        error "P10 source completed before lane-fault injection write"
+      }
+      set injected [expr {([dict get $d dropdata] & 0xFF) |
+          (([dict get $d dropack] & 0xFF) << 8) |
+          (([dict get $d injectmask] & 3) << 16)}]
+      p10_write32 $sender 0x43C0073C $injected
+      set readback [p10_read32 $sender 0x43C0073C]
+      if {($readback & 0x0003FFFF) != $injected} {
+        error "P10 asynchronous lane-fault injection readback mismatch"
+      }
+      p10_say [format "P10_ASYNC_LANE_INJECTION=%s:sender=%s,mask=0x%X,readback=0x%08X" \
+          [dict get $d label] $sender [dict get $d injectmask] $readback]
+    }
+  } else {
+    p10_publish_case fixed $d $sequence
+    p10_publish_case rotating $d $sequence
+  }
+
+  set terminal [p10_wait_pair_terminal $sequence [dict get $d timeout]]
+  set fixed_status [p10_read32 fixed 0x00020020]
+  set rotating_status [p10_read32 rotating 0x00020020]
+  set fixed_state [lindex $terminal 0]
+  set rotating_state [lindex $terminal 1]
+  set fixed_dump [p10_dump_mailbox fixed [dict get $d label]]
+  set rotating_dump [p10_dump_mailbox rotating [dict get $d label]]
+  set finished [clock milliseconds]
+  p10_record_observation $d $sequence $started $finished $fixed_dump $rotating_dump \
+      $fixed_status $rotating_status $fixed_state $rotating_state $window
+
+  set expected [dict get $d expected_status]
+  set expected_state [expr {$command == 10 ? 6 : ($expected == 0 ? 4 : 5)}]
+  if {$fixed_status != $expected || $rotating_status != $expected ||
+      $fixed_state != $expected_state || $rotating_state != $expected_state} {
+    error "P10 paired result mismatch label=[dict get $d label] expected_status=$expected fixed=$fixed_status/$fixed_state rotating=$rotating_status/$rotating_state"
+  }
+  p10_say "P10_CASE_PASS=[dict get $d label]"
+  if {$command != 10} {
+    p10_resume fixed
+    p10_resume rotating
+  }
+}
+
+proc p10_reboot_role {role label} {
+  global p10_elf
+  p10_write32 $role 0x43C00718 0x0000001A
+  after 10
+  p10_select_cpu $role
+  catch {stop}
+  rst -processor
+  dow $p10_elf($role)
+  con
+  p10_wait_ready $role $label
+  set dump [p10_dump_mailbox $role $label]
+  p10_say "P10_REBOOT_PASS_[string toupper $role]=$label:$dump"
+  p10_resume $role
+}
+
+proc p10_soak_case {label object_id size direction timeout_ms} {
+  set fields [list CASE $label 3 0 2 3 $direction 2 257 $size 32 1 0 0 \
+      $timeout_ms 0xA0100001 10 $object_id 0 0 0 0 1024 0 0 0 0 0 0]
+  return [p10_case_dict $fields]
+}
+
+proc p10_run_soak {label duration_sec} {
+  if {$duration_sec != 1800} { error "formal P10 soak must be exactly 1800 seconds" }
+  set start [clock milliseconds]
+  set deadline [expr {$start + 1800000}]
+  set index 0
+  p10_say "P10_SOAK_ACTIVE_START_MS=$start"
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set now [clock milliseconds]
+    set remaining [expr {$deadline - $now}]
+    if {$remaining <= 10000} { after $remaining; break }
+    set choice [expr {$index % 3}]
+    set size [lindex {4096 65536 1048576} $choice]
+    set direction [expr {$index & 1}]
+    set timeout [expr {min(120000, max(1000, $remaining - 8000))}]
+    set case_label [format "soak_%05d_%d_d%d" $index $size $direction]
+    set d [p10_soak_case $case_label [expr {0x3A000000 + $index}] $size $direction $timeout]
+    p10_execute_case $d ACCEPTANCE
+    incr index
+  }
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $start}]
+  p10_say "P10_SOAK_CASE_COUNT=$index"
+  p10_say "P10_SOAK_ACTIVE_END_MS=$finished"
+  p10_say "P10_SOAK_ACTIVE_ELAPSED_MS=$elapsed"
+  if {$elapsed < 1800000 || $elapsed > 1800500} {
+    error "P10 soak active window was not bounded to 1800 seconds: $elapsed ms"
+  }
+}
+
+if {[llength $argv] != 16} {
+  error "usage: p10_dual_xsdb_stage.tcl <xsdb-url> <fixed-serial> <rotating-serial> <fixed-bit> <rotating-bit> <fixed-elf> <rotating-elf> <fixed-ps7-init> <rotating-ps7-init> <plan> <dump-dir> <abort-file> <result> <stage> <authorization> <run-id>"
+}
+set p10_xsdb_url [lindex $argv 0]
+set p10_fixed_serial [lindex $argv 1]
+set p10_rotating_serial [lindex $argv 2]
+set p10_bit(fixed) [file normalize [lindex $argv 3]]
+set p10_bit(rotating) [file normalize [lindex $argv 4]]
+set p10_elf(fixed) [file normalize [lindex $argv 5]]
+set p10_elf(rotating) [file normalize [lindex $argv 6]]
+set p10_ps7(fixed) [file normalize [lindex $argv 7]]
+set p10_ps7(rotating) [file normalize [lindex $argv 8]]
+set p10_plan_file [file normalize [lindex $argv 9]]
+set p10_dump_dir [file normalize [lindex $argv 10]]
+set p10_abort_file [file normalize [lindex $argv 11]]
+set p10_result_file [file normalize [lindex $argv 12]]
+set p10_stage [lindex $argv 13]
+set p10_authorization_file [file normalize [lindex $argv 14]]
+set p10_run_id [lindex $argv 15]
+set p10_connected 0
+set p10_active_target_id -1
+set p10_command_sequence 1000
+file mkdir $p10_dump_dir
+file mkdir [file dirname $p10_result_file]
+set p10_result_handle [open $p10_result_file w]
+set p10_observation_file [file join $p10_dump_dir observations.psv]
+set p10_observation_handle [open $p10_observation_file w]
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path"
+flush $p10_observation_handle
+
+set rc [catch {
+  if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
+      $::env(RF_COMM_P10_HW_AUTH) ne "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"} {
+    error "P10 immutable current-run environment marker required"
+  }
+  if {![regexp {^P10-([A-J]|DIAG)$} $p10_stage]} { error "unsupported P10 XSDB stage" }
+  if {![regexp {^p10_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10 run id" }
+  if {$p10_fixed_serial eq $p10_rotating_serial} { error "ambiguous P10 role serials" }
+  foreach required [list $p10_bit(fixed) $p10_bit(rotating) $p10_elf(fixed) \
+      $p10_elf(rotating) $p10_ps7(fixed) $p10_ps7(rotating) $p10_plan_file \
+      $p10_authorization_file] {
+    if {![file isfile $required]} { error "missing immutable P10 input: $required" }
+  }
+  if {[file exists $p10_abort_file]} { error "P10 abort sentinel exists before launch" }
+
+  set plan_handle [open $p10_plan_file r]
+  set plan_text [read $plan_handle]
+  close $plan_handle
+  set parsed_plan {}
+  foreach raw_line [split $plan_text "\n"] {
+    set line [string trim $raw_line]
+    if {$line eq "" || [string match "#*" $line]} { continue }
+    if {![regexp {^[ -~]+$} $line]} { error "non-ASCII P10 plan line" }
+    set fields [split $line]
+    set kind [lindex $fields 0]
+    if {$kind eq "CASE"} {
+      lappend parsed_plan [list CASE [p10_case_dict $fields]]
+    } elseif {$kind eq "REBOOT"} {
+      if {[llength $fields] != 3 || [lindex $fields 1] ni {fixed rotating} ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 2]]} {
+        error "invalid P10 REBOOT record"
+      }
+      lappend parsed_plan [list REBOOT [lindex $fields 1] [lindex $fields 2]]
+    } elseif {$kind eq "SOAK"} {
+      if {[llength $fields] != 3 || ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] || [lindex $fields 2] != 1800} {
+        error "invalid P10 SOAK record"
+      }
+      lappend parsed_plan [list SOAK [lindex $fields 1] [lindex $fields 2]]
+    } else {
+      error "unknown P10 plan record: $kind"
+    }
+  }
+  if {[llength $parsed_plan] == 0} { error "empty P10 stage plan" }
+
+  connect -url $p10_xsdb_url
+  set p10_connected 1
+  p10_wait_debug_targets
+  p10_say "P10_XSDB_IDENTITY=PASS"
+  p10_say "P10_XSDB_FIXED_SERIAL=$p10_fixed_serial"
+  p10_say "P10_XSDB_ROTATING_SERIAL=$p10_rotating_serial"
+  p10_say "P10_XSDB_STAGE=$p10_stage"
+  p10_say "P10_XSDB_RUN_ID=$p10_run_id"
+
+  foreach role {fixed rotating} {
+    p10_select_apu $role
+    rst -system
+    after 1000
+    p10_wait_debug_targets
+  }
+
+  foreach role {fixed rotating} {
+    p10_select_target $p10_fpga($role)
+    fpga -file $p10_bit($role)
+    p10_say "P10_CANDIDATE_PROGRAMMED_[string toupper $role]=1"
+    after 1000
+    p10_select_cpu $role
+    source $p10_ps7($role)
+    configparams force-mem-accesses 1
+    set init_rc [catch { ps7_init; ps7_post_config } init_error]
+    catch {configparams force-mem-accesses 0}
+    if {$init_rc != 0} { error "P10 $role PS7 initialization failed: $init_error" }
+    p10_say "P10_PS7_INITIALIZED_[string toupper $role]=1"
+  }
+
+  p10_verify_pl_safe fixed 0x50313046 0x702000F0 PREBOOT
+  p10_verify_pl_safe rotating 0x50313052 0x702000A0 PREBOOT
+
+  foreach role {fixed rotating} {
+    p10_select_cpu $role
+    rst -processor
+    dow $p10_elf($role)
+    p10_say "P10_PS_ELF_DOWNLOADED_[string toupper $role]=1"
+    con
+  }
+  p10_wait_ready fixed initial_boot
+  p10_wait_ready rotating initial_boot
+  set fixed_ready [p10_dump_mailbox fixed "${p10_stage}_ready"]
+  set rotating_ready [p10_dump_mailbox rotating "${p10_stage}_ready"]
+  p10_say "P10_INITIAL_READY_DUMP_FIXED=$fixed_ready"
+  p10_say "P10_INITIAL_READY_DUMP_ROTATING=$rotating_ready"
+  p10_resume fixed
+  p10_resume rotating
+  p10_verify_pl_safe fixed 0x50313046 0x702000F0 SAFE_BOOT
+  p10_verify_pl_safe rotating 0x50313052 0x702000A0 SAFE_BOOT
+  p10_say "P10_SAFE_BOOT=PASS"
+
+  foreach record $parsed_plan {
+    set kind [lindex $record 0]
+    if {$kind eq "CASE"} {
+      p10_execute_case [lindex $record 1]
+    } elseif {$kind eq "REBOOT"} {
+      p10_reboot_role [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "SOAK"} {
+      p10_run_soak [lindex $record 1] [lindex $record 2]
+    }
+  }
+
+  set shutdown_fields [list CASE "${p10_stage}_endpoint_shutdown" 10 0 0 0 0 0 0 0 \
+      8 0 0 0 10000 0 0 0 0 0 0 0 1024 0 0 0 0 0 0]
+  p10_execute_case [p10_case_dict $shutdown_fields]
+  p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
+  p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
+  p10_say "P10_XSDB_STAGE_RESULT=PASS"
+} error_text error_options]
+
+if {$rc != 0} {
+  foreach role {fixed rotating} {
+    catch {p10_write32 $role 0x43C00718 0x0000001A}
+  }
+  p10_say "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR=1"
+  p10_say "P10_XSDB_STAGE_RESULT=FAIL"
+  p10_say "P10_XSDB_STAGE_ERROR=[p10_sanitize $error_text]"
+}
+catch {close $p10_observation_handle}
+catch {close $p10_result_handle}
+if {$p10_connected} { catch {disconnect} }
+if {$rc != 0} {
+  puts stderr $error_text
+  exit 41
+}
+exit 0
