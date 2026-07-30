@@ -688,7 +688,7 @@ def extract_ps7_init(xsa: Path, destination: Path) -> dict[str, Any]:
 
 def invoke_shutdown(run_root: Path, auth: Path,
                     artifacts: dict[str, Path], label: str,
-                    env: dict[str, str], retry_limit: int = 2) -> dict[str, Any]:
+                    env: dict[str, str], retry_limit: int = 1) -> dict[str, Any]:
     shutdown_dir = run_root / "shutdown" / label
     shutdown_dir.mkdir(parents=True, exist_ok=True)
     attempts: list[dict[str, Any]] = []
@@ -1086,9 +1086,14 @@ def invoke_stage(stage: str, run_root: Path, auth: Path,
 
 def evidence_manifest(run_root: Path) -> dict[str, Any]:
     output = run_root / "final/run_evidence_sha256_manifest.json"
+    orchestrator = run_root / "final/orchestrator_result.json"
     files = []
     for path in sorted(item for item in run_root.rglob("*") if item.is_file()):
-        if path == output:
+        # The manifest and the orchestrator summary refer to one another.  Both
+        # are immutable evidence, but including either self-referential file
+        # here would make the recorded digest stale when the final manifest
+        # metadata is inserted into the summary.
+        if path in {output, orchestrator}:
             continue
         files.append({"path": path.relative_to(run_root).as_posix(),
                       "bytes": path.stat().st_size, "sha256": sha256(path)})

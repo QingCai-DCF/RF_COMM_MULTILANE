@@ -62,6 +62,7 @@ class P10HardwareRuntimeTests(unittest.TestCase):
         for marker in (
             "RF_COMM_P10_HW_AUTH", "P10_FASTTRACK_IMMUTABLE_AUTHORIZED",
             "xc7z020clg400-2", "23727093", "4BA00477",
+            "^xc7z020_1(_[0-9]+)?$", "^arm_dap_0(_[0-9]+)?$",
             "SHUTDOWN_FIXED", "SHUTDOWN_ROTATING",
             "TFDU_SHUTDOWN_PROGRAMMED=1", "SHUTDOWN_EXIT=0",
             "P10_SHUTDOWN_${role}_TXD_OUTPUT_INTENT=0",

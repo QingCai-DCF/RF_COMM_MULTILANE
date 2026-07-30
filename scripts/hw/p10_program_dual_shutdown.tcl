@@ -64,12 +64,17 @@ proc p10_program_one_shutdown {role expected_target expected_serial bit_file} {
     set normalized [p10_normal_idcode $idcode]
     lappend p10_result_lines "P10_SHUTDOWN_${role}_ENUM_DEVICE_${record_index}=$candidate|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
     incr record_index
+    # Hardware Manager appends a process-local numeric suffix when the same
+    # canonical device name is instantiated under a second open target (for
+    # example xc7z020_1_1).  The exact target is already bound to one JTAG
+    # serial above, so accept only that canonical generated-name family while
+    # retaining the exact part and IDCODE checks.
     if {[string equal -nocase $part "xc7z020"] &&
-        [string equal -nocase $name "xc7z020_1"] &&
+        [regexp -nocase {^xc7z020_1(_[0-9]+)?$} $name] &&
         $normalized eq "23727093"} {
       lappend exact_devices $candidate
     } elseif {[string equal -nocase $part "arm_dap"] &&
-              [string equal -nocase $name "arm_dap_0"] &&
+              [regexp -nocase {^arm_dap_0(_[0-9]+)?$} $name] &&
               $normalized eq "4BA00477"} {
       lappend auxiliary_devices $candidate
     } else {
