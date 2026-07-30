@@ -173,8 +173,98 @@ def artifact_records(inputs: dict[str, dict[str, Any]], errors: list[str]) -> li
     return records
 
 
+def validate_artifact_source_summary(name: str, summary: dict[str, Any],
+                                     current_commit: str,
+                                     errors: list[str]) -> None:
+    """Validate an ancestor build summary against the current source bytes.
+
+    Evidence-only commits can legitimately follow an immutable build.  The
+    summary therefore need not name HEAD exactly, but its commit must be an
+    ancestor and every recorded source byte must still match.
+    """
+    require(summary.get("status") == "PASS", f"{name} status is not PASS", errors)
+    summary_commit = summary.get("source_commit")
+    require(isinstance(summary_commit, str) and
+            is_ancestor(summary_commit, current_commit),
+            f"{name} source commit is not an ancestor of HEAD", errors)
+    require(summary.get("source_worktree_dirty") is False,
+            f"{name} was generated from tracked-dirty source", errors)
+    require(summary.get("hardware_actions_executed") is False,
+            f"{name} reports a hardware action", errors)
+    for role in summary.get("roles", []):
+        for source_name, expected in role.get("source_sha256", {}).items():
+            source = ROOT / source_name
+            require(source.is_file(),
+                    f"{name} source missing: {source_name}", errors)
+            if source.is_file():
+                require(sha256(source) == expected,
+                        f"{name} source hash mismatch: {source_name}", errors)
+
+
+def write_artifact_manifest_only(source_commit: str,
+                                 inputs: dict[str, dict[str, Any]],
+                                 errors: list[str]) -> int:
+    for name in ("shutdown", "functional", "runtime"):
+        validate_artifact_source_summary(
+            name, inputs[name], source_commit, errors)
+    records = artifact_records(inputs, errors)
+    require(len(records) == 10,
+            f"expected 10 frozen artifacts, got {len(records)}", errors)
+    require(len({item["path"] for item in records}) == len(records),
+            "artifact paths are not unique", errors)
+    if errors:
+        for error in errors:
+            print(f"P10_ARTIFACT_MANIFEST_ERROR: {error}", file=sys.stderr)
+        return 1
+
+    current_paths = {item["path"] for item in records}
+    superseded = []
+    for path in sorted(p for p in (ROOT / "artifacts/p10").rglob("*")
+                       if p.is_file()):
+        relative = rel(path)
+        if relative not in current_paths:
+            superseded.append({
+                "path": relative,
+                "sha256": sha256(path),
+                "bytes": path.stat().st_size,
+                "classification":
+                    "SUPERSEDED_INTERMEDIATE_OFFLINE_ARTIFACT_NOT_AUTHORIZED",
+            })
+    manifest = {
+        "schema_version": 1,
+        "manifest_id": "P10-OFFLINE-CONTENT-ADDRESSED-ARTIFACTS",
+        "status": "PASS",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "source_commit": source_commit,
+        "source_worktree_dirty": False,
+        "hardware_actions_executed": False,
+        "artifacts": records,
+        "source_summaries": {
+            name: {
+                "path": rel(INPUTS[name]),
+                "sha256": sha256(INPUTS[name]),
+                "source_commit": inputs[name].get("source_commit"),
+            }
+            for name in ("shutdown", "functional", "runtime")
+        },
+        "superseded_intermediate_artifacts": superseded,
+    }
+    MANIFEST_JSON.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8", newline="\n")
+    print("P10_ARTIFACT_MANIFEST_REFRESH=PASS")
+    print(f"P10_ARTIFACT_MANIFEST_SHA256={sha256(MANIFEST_JSON)}")
+    print("HARDWARE_ACTIONS_EXECUTED=false")
+    return 0
+
+
 def main() -> int:
     errors: list[str] = []
+    manifest_only = sys.argv[1:] == ["--artifact-manifest-only"]
+    if sys.argv[1:] and not manifest_only:
+        print("usage: generate_p10_offline_evidence.py "
+              "[--artifact-manifest-only]", file=sys.stderr)
+        return 2
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_EVIDENCE_REFUSED: offline environment required", file=sys.stderr)
@@ -187,6 +277,19 @@ def main() -> int:
     require(is_ancestor("p8e-pass", source_commit), "p8e-pass is not an ancestor", errors)
     require(is_ancestor("p9-z7010-2lane-pass", source_commit),
             "p9-z7010-2lane-pass is not an ancestor", errors)
+    if manifest_only:
+        for name in ("shutdown", "functional", "runtime"):
+            require(INPUTS[name].is_file(),
+                    f"missing input summary: {name}", errors)
+        if errors:
+            for error in errors:
+                print(f"P10_ARTIFACT_MANIFEST_ERROR: {error}", file=sys.stderr)
+            return 1
+        inputs = {
+            name: load(INPUTS[name])
+            for name in ("shutdown", "functional", "runtime")
+        }
+        return write_artifact_manifest_only(source_commit, inputs, errors)
     require(ARCH_DOC.is_file(), "architecture document missing", errors)
     for name, path in INPUTS.items():
         require(path.is_file(), f"missing input summary: {name}", errors)
