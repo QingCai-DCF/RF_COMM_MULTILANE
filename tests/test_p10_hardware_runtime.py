@@ -79,6 +79,7 @@ class P10HardwareRuntimeTests(unittest.TestCase):
             "P10_SAFE_BOOT=PASS", "P10_ENDPOINT_SHUTDOWN_FIXED=PASS",
             "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS",
             "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR=1",
+            "p10_prime_base_ms", "p10_prime_per_mib_ms",
             "0x0000001A", "0x00000F00", "0x0003FFFF",
         ):
             self.assertIn(marker, text)

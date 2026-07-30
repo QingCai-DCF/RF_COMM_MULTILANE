@@ -295,7 +295,16 @@ proc p10_receiver_role {direction} {
 proc p10_wait_receiver_primed {role d} {
   set command [dict get $d command]
   set timeout [dict get $d timeout]
-  set bounded [expr {$timeout < 30000 ? $timeout : 30000}]
+  # Payload generation, zeroing, CRC32, and SHA256 all happen before the
+  # receiver publishes RUNNING. Scale this bounded pre-launch wait with the
+  # immutable object size so the mandatory 16 MiB RFAP case is not mistaken
+  # for a dead endpoint while retaining a finite failure deadline.
+  set p10_prime_base_ms 30000
+  set p10_prime_per_mib_ms 8000
+  set size_mib [expr {([dict get $d size] + 1048575) / 1048576}]
+  set prepare_budget [expr {$p10_prime_base_ms +
+                            $p10_prime_per_mib_ms * $size_mib}]
+  set bounded [expr {$timeout < $prepare_budget ? $timeout : $prepare_budget}]
   set deadline [expr {[clock milliseconds] + $bounded}]
   while {[clock milliseconds] < $deadline} {
     p10_check_abort
