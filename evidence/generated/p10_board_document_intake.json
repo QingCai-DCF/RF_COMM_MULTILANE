@@ -85,7 +85,7 @@
       "claim": "Active-low PUDC_B enables internal pull-ups on SelectIO pins after power-up and during configuration; low enables and high disables them."
     }
   },
-  "hardware_admission": false,
-  "blocking_condition": "P10-ROLE-BINDING-001",
+  "hardware_admission": true,
+  "blocking_condition": null,
   "power_state_scope": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN"
 }

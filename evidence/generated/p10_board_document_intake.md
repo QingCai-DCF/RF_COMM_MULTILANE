@@ -10,6 +10,6 @@
 - Ordinary powered configuration optical inhibition: `SUPPORTED_IF_PUDC_B_PULLUPS_ACTIVE` (SD high dominates Txd high per the TFDU truth table).
 - Configured reset/fault and shutdown-image Txd-low/SD-high state: `PASS_OFFLINE_BUILD_AND_SIMULATION`.
 - FPGA-unconfigured/partial-power fail-low network: `PENDING_D17`, not claimed by P10 and nonblocking only for the scoped no-power-cycle campaign.
-- Current hardware-admission blocker: `P10-ROLE-BINDING-001`.
+- Current hardware-admission blocker: `NONE`.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.

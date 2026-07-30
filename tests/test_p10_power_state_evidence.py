@@ -30,8 +30,8 @@ class P10PowerStateEvidenceTests(unittest.TestCase):
             "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
             reassessment["power_state_finding_status"],
         )
-        self.assertEqual("P10-ROLE-BINDING-001", reassessment["blocking_condition"])
-        self.assertFalse(reassessment["p10_hardware_admission"])
+        self.assertIsNone(reassessment["blocking_condition"])
+        self.assertTrue(reassessment["p10_hardware_admission"])
         self.assertIn("PHYSICAL_GLOBAL_PERMIT=PENDING_D17", reassessment["unchanged_pending"])
         self.assertIn(
             "PDF page 10 / printed page 9",
@@ -66,7 +66,7 @@ class P10PowerStateEvidenceTests(unittest.TestCase):
             for key in required:
                 self.assertNotEqual("", str(row[key]).strip(), f"{row['module_id']} {key}")
 
-    def test_programming_and_tfdu_drive_remain_unexecuted_and_roles_unassigned(self) -> None:
+    def test_programming_and_tfdu_drive_remain_unexecuted_and_roles_are_serial_bound(self) -> None:
         summary = load_json("evidence/generated/p10_fasttrack_final_summary.json")
         identity = load_json("config/hardware/p10_jtag_identity_inventory.json")
 
@@ -74,18 +74,25 @@ class P10PowerStateEvidenceTests(unittest.TestCase):
         self.assertFalse(summary["programming_executed"])
         self.assertFalse(summary["tfdu_drive_executed"])
         self.assertFalse(summary["network_used"])
-        self.assertEqual("P10-ROLE-BINDING-001", summary["blocking_condition"])
-        self.assertEqual(
-            [
-                "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R."
-            ],
-            summary["required_user_resolution"],
-        )
-        self.assertEqual("ENUMERATED_UNASSIGNED", identity["status"])
+        self.assertIsNone(summary["blocking_condition"])
+        self.assertTrue(summary["hardware_admission"])
+        self.assertEqual([], summary["required_user_resolution"])
+        self.assertEqual("BOUND_EXPLICIT_SERIAL_TO_ROLE", identity["status"])
         self.assertEqual(
             ["210249855178", "210512180081"],
             identity["observed_cable_serials"],
         )
+        self.assertEqual("210249855178", identity["fixed_board_serial"])
+        self.assertEqual("210512180081", identity["rotating_board_serial"])
+        self.assertEqual(
+            "USER_AUTHORIZED_AGENT_SELECTED_STABLE_JTAG_SERIAL_BINDING",
+            identity["role_binding_source"],
+        )
+        self.assertEqual(
+            "LEXICOGRAPHICALLY_SMALLEST_OBSERVED_SERIAL_AS_FIXED",
+            identity["role_binding_selection_rule"],
+        )
+        self.assertFalse(identity["target_order_used_for_role_binding"])
 
 
 if __name__ == "__main__":

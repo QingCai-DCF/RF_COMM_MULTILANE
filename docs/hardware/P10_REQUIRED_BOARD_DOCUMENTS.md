@@ -6,7 +6,7 @@ Required before any programming or TFDU-driving hardware action in P10:
 
 - explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
 
-Current role state: `ENUMERATED_UNASSIGNED: 210249855178, 210512180081`.
+Current role state: `BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081`.
 
 Retained for D17/final-hardware closure, but not required to start the already-powered no-intentional-power-cycle P10 campaign:
 

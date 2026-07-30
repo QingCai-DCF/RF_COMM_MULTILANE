@@ -1,6 +1,6 @@
 # P10 AX7020 dual-board J10 wiring proposal and audit
 
-> Mapping status: user-confirmed. Hardware admission: **blocked only by `P10-ROLE-BINDING-001`**.
+> Mapping status: user-confirmed. Hardware admission: **ready for the scoped no-power-cycle P10 campaign**.
 
 The fixed-role board is proposed as `AX7020-F` with `F0/F1`; the stationary rotating-role board is proposed as `AX7020-R` with `R0/R1`. Lane 0 is `F0 ↔ R0` (A-to-A) and lane 1 is `F1 ↔ R1` (B-to-B). A/B cross-pairing is prohibited.
 
@@ -43,9 +43,9 @@ With J10 board silkscreen readable and the keyed shroud as photographed, pin 1 i
 
 - `P10-SAFETY-POWERUP-001` is reclassified as `PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN`: configured reset/fault and shutdown images are Txd-low/SD-high; the ordinary configuration interval is optically inhibited because SD high dominates; FPGA-unconfigured/partial-power fail-low remains PENDING_D17 and is not claimed by P10.
 - J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
-- AX7020-F/AX7020-R JTAG cable role state: `ENUMERATED_UNASSIGNED: 210249855178, 210512180081`. Physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.
+- AX7020-F/AX7020-R JTAG cable role state: `BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081`. Physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.
 - Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.
 
 ## Hardware admission decision
 
-`FAIL_CLOSED_PENDING_ROLE_BINDING`: programming, ELF execution, UART writes, TFDU drive, and configuration-changing actions remain blocked by `P10-ROLE-BINDING-001`.
+`READY_FOR_SCOPED_P10_HARDWARE`: role binding is explicit. Continue only with the no-power-cycle guards, shutdown images first, bounded stages, and shutdown-on-error/after.

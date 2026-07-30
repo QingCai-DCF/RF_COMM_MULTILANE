@@ -4,16 +4,15 @@
     "0x2",
     "0x3"
   ],
-  "blocking_condition": "P10-ROLE-BINDING-001",
+  "blocking_condition": null,
   "branch": "p10/ax7020-dual-node-2lane",
   "current_run_hardware_authorization": true,
   "evidence_checkpoint": "COMMIT_CONTAINING_THIS_SUMMARY",
   "fail": [
-    "P10-ROLE-BINDING-001: two JTAG serials were enumerated (210249855178, 210512180081) but are not explicitly assigned to F/R roles",
     "All mandatory active-hardware acceptance stages are not run"
   ],
-  "fixed_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
-  "generated_at_utc": "2026-07-30T13:29:35.959330+00:00",
+  "fixed_board_id": "AX7020-F/JTAG:210249855178",
+  "generated_at_utc": "2026-07-30T13:42:04.348128+00:00",
   "generated_evidence": [
     "evidence/generated/p10_fasttrack_concise_preflight.json",
     "evidence/generated/p10_dual_endpoint_regression/summary.json",
@@ -39,7 +38,7 @@
     "evidence/generated/p10_hardware_admission_reassessment.md"
   ],
   "hardware_actions_executed": true,
-  "hardware_admission": false,
+  "hardware_admission": true,
   "logical_image_roles": {
     "fixed": "AX7020-F",
     "rotating": "AX7020-R"
@@ -66,9 +65,9 @@
   },
   "max_lane_mask_used": "NONE_NO_HARDWARE_RUN",
   "network_used": false,
-  "next_recommended_stage": "P10_EXPLICIT_JTAG_ROLE_BINDING",
+  "next_recommended_stage": "P10_SCOPED_HARDWARE_RUN",
   "no_hardware_movement": true,
-  "nonblocking_extensions": "NOT_RUN_BECAUSE_MANDATORY_ROLE_BINDING_PENDING",
+  "nonblocking_extensions": "READY_AFTER_SCOPED_HARDWARE_PREFLIGHT",
   "offline_build_environment": {
     "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
     "NO_HARDWARE": 1
@@ -85,10 +84,8 @@
     "Role-bound fixed and rotating XSA/BSP/ELF builds",
     "Offline independent-node/no-shared-RAM architecture audit"
   ],
-  "required_user_resolution": [
-    "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R."
-  ],
-  "rotating_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
+  "required_user_resolution": [],
+  "rotating_board_id": "AX7020-R/JTAG:210512180081",
   "schema_version": 2,
   "source_commit": "2d2dd379afaf6587d0ae6e7f16cc61709143da37",
   "stage": "P10_FASTTRACK_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
@@ -114,16 +111,16 @@
   "jtag_identity": {
     "test_id": "P10-JTAG-IDENTITY-READONLY",
     "status": "PASS_ENUMERATED_UNASSIGNED",
-    "run_id": "p10_jtag_identity_20260730T124937Z_94b34096",
-    "source_commit": "48dde7bbcd23fd03dc5d608739101b5f6ea79381",
-    "summary_path": "evidence/hardware/p10/p10_jtag_identity_20260730T124937Z_94b34096/identity/summary.json",
+    "run_id": "p10_jtag_identity_20260730T134149Z_d6fcb2af",
+    "source_commit": "2c96cf5fb2a8a6fe8b3adefe077a9e1eb02bc8bb",
+    "summary_path": "evidence/hardware/p10/p10_jtag_identity_20260730T134149Z_d6fcb2af/identity/summary.json",
     "latest_summary": "evidence/generated/p10_jtag_identity_latest.json",
-    "latest_summary_sha256": "81d09969fee9ad8166a2e0c2014301cd2137b8379d9cb836f2342b78f26772dd",
+    "latest_summary_sha256": "30f1848e05c54256152ebf077e59758930609747bb70d175a9c7d95a3a6ae02b",
     "observed_cable_serials": [
       "210249855178",
       "210512180081"
     ],
-    "role_binding_status": "ENUMERATED_UNASSIGNED",
+    "role_binding_status": "BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081",
     "read_only": true,
     "programming_executed": false,
     "reset_executed": false,
@@ -141,7 +138,7 @@
   "power_state_scope": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
   "hardware_admission_reassessment": {
     "path": "evidence/generated/p10_hardware_admission_reassessment.json",
-    "sha256": "4eba5044a053cb58e7eab4ad8dc41f78b4e3e1f34722bd001f32c5e78a87d00c"
+    "sha256": "ab5371f5d4cbbe7ec6475a47e42a73502ba71eda11b0fe43425a80a46bc09540"
   },
   "nonblocking_findings": [
     "P10-SAFETY-POWERUP-001: PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN; FPGA-unconfigured/partial-power fail-low remains PENDING_D17 and is not claimed by P10",

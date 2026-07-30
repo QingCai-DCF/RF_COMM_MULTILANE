@@ -19,4 +19,4 @@ The same schematic also places R29=1 kohm to ground on the requested B-position 
 
 The canonical safety contract assigns external power-up/open/unconfigured/partial-power fail-low and physical final-kill measurement to `PENDING_D17`. The canonical P9 result is PASS while preserving that boundary, and the P10 fast-track explicitly preserves `PHYSICAL_GLOBAL_PERMIT: PENDING_D17` after P10. Therefore this finding is nonblocking only within a no-intentional-power-cycle campaign that programs role-matched shutdown images first and aborts on target, rail, safe-state, or autonomous-emission anomalies.
 
-The remaining P10 blocker is `P10-ROLE-BINDING-001`. The only hardware action recorded so far is bounded read-only JTAG cable-serial enumeration; it did not configure or reset the FPGA or drive TFDU pins.
+The remaining P10 blocker is `NONE`. The only hardware action recorded so far is bounded read-only JTAG cable-serial enumeration; it did not configure or reset the FPGA or drive TFDU pins.

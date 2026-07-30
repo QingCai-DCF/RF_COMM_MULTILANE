@@ -30,10 +30,10 @@ ENUMERATED_JTAG_SERIALS:
 210249855178, 210512180081
 
 FIXED_BOARD_ID:
-PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT
+AX7020-F/JTAG:210249855178
 
 ROTATING_BOARD_ID:
-PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT
+AX7020-R/JTAG:210512180081
 
 FOUR_DIRECTION_RAW:
 NOT_RUN_ROLE_BINDING_REQUIRED
@@ -78,16 +78,16 @@ NOT_EXECUTED_ROLE_BINDING_REQUIRED_OFFLINE_IMAGE_BUILD_PASS
 PASS:
 OFFLINE_BUILD_SIMULATION_ARCHITECTURE_AND_READ_ONLY_IDENTITY_ENUMERATION
 FAIL:
-P10-ROLE-BINDING-001; MANDATORY_ACTIVE_HARDWARE_NOT_RUN
+MANDATORY_ACTIVE_HARDWARE_NOT_RUN
 NONBLOCKING_EXTENSIONS:
-NOT_RUN_BECAUSE_MANDATORY_ROLE_BINDING_PENDING
+READY_AFTER_SCOPED_HARDWARE_PREFLIGHT
 GENERATED_EVIDENCE:
 evidence/generated/p10_fasttrack_final_summary.json
 UNCHANGED_PENDING_SCOPES:
 ETHERNET; SPI; PHYSICAL_GLOBAL_PERMIT; EXTERNAL_TFDU_DUTY; HANDOVER; 8X32; 600RPM; PRODUCT_FINAL
 
 NEXT_RECOMMENDED_STAGE:
-P10_EXPLICIT_JTAG_ROLE_BINDING
+P10_SCOPED_HARDWARE_RUN
 ```
 
-The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only; role state is `ENUMERATED_UNASSIGNED`. Configured reset/fault and shutdown builds drive Txd low and SD high. The ordinary configuration interval is optically inhibited by SD high; FPGA-unconfigured/partial-power fail-low remains `PENDING_D17` and is not claimed by P10. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Current active-hardware blocker: `P10-ROLE-BINDING-001`.
+The four TFDU modules are accepted without renewed identity inspection. Two AX7020 JTAG cable serials were enumerated read-only; role state is `BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081`. Configured reset/fault and shutdown builds drive Txd low and SD high. The ordinary configuration interval is optically inhibited by SD high; FPGA-unconfigured/partial-power fail-low remains `PENDING_D17` and is not claimed by P10. No FPGA programming, reset, memory access, ELF execution, UART write, TFDU drive, Ethernet use, movement, or optical test occurred. Current active-hardware blocker: `NONE`.

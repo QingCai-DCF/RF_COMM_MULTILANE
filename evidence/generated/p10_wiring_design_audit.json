@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "test_id": "P10-WIRING-DESIGN-AUDIT",
-  "status": "PASS_MAPPING_ROLE_BINDING_REQUIRED",
+  "status": "PASS_READY_FOR_SCOPED_P10_HARDWARE",
   "mapping_complete": true,
   "signal_line_count": 16,
   "pinmap_independently_derived_for_ax7020": true,
@@ -21,12 +21,12 @@
     "fpga_unconfigured_txd_low": "PENDING_D17",
     "partial_power_optical_tx_disabled": "PENDING_D17"
   },
-  "physical_board_role_binding": "ENUMERATED_UNASSIGNED: 210249855178, 210512180081",
+  "physical_board_role_binding": "BOUND_EXPLICIT_SERIAL_TO_ROLE: AX7020-F=210249855178, AX7020-R=210512180081",
   "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
-  "hardware_admission": false,
+  "hardware_admission": true,
   "hardware_actions_executed": true,
   "hardware_action_scope": "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY",
-  "blocking_condition": "P10-ROLE-BINDING-001",
+  "blocking_condition": null,
   "power_state_scope": "PENDING_D17_NONBLOCKING_FOR_P10_SCOPED_NO_POWER_CYCLE_RUN",
   "hardware_admission_reassessment": "evidence/generated/p10_hardware_admission_reassessment.json",
   "signal_lines": [
