@@ -1,0 +1,15 @@
+# Immutable P10 paired hardware plan
+CASE reboot_baseline 3 0 2 3 0 2 257 65536 32 1 0 0 120000 2685403137 10 65536 0 0 0 0 1024 0 0 0 0 0 0
+REBOOT fixed fixed_ps_reboot
+CASE fixed_reboot_identity 1 0 0 0 0 0 257 0 8 0 0 0 10000 2685403137 10 1 0 0 0 0 1024 0 0 0 0 0 0
+CASE fixed_reboot_clean 3 0 2 3 1 2 257 65536 32 1 0 0 120000 2685403137 10 65537 0 0 0 0 1024 0 0 0 0 0 0
+REBOOT rotating rotating_ps_reboot
+CASE rotating_reboot_identity 1 0 0 0 0 0 257 0 8 0 0 0 10000 2685403137 10 1 0 0 0 0 1024 0 0 0 0 0 0
+CASE rotating_reboot_clean 3 0 2 3 0 2 257 65536 32 1 0 0 120000 2685403137 10 65538 0 0 0 0 1024 0 0 0 0 0 0
+REBOOT rotating rotating_first_order
+REBOOT fixed fixed_second_order
+CASE reverse_reboot_order_clean 3 0 2 3 1 2 257 65536 32 1 0 0 120000 2685403137 10 65539 0 0 0 0 1024 0 0 0 0 0 0
+CASE recovery_pl_soft_reset 8 0 0 0 0 0 257 0 8 0 0 0 10000 2685403137 10 1 0 0 0 0 1024 0 0 0 0 0 0
+CASE post_pl_reset_clean 3 0 2 3 0 2 257 65536 32 1 0 0 120000 2685403137 10 65540 0 0 0 0 1024 0 0 0 0 0 0
+CASE recovery_dma_reset 5 0 0 0 0 0 257 0 32 0 0 0 10000 2685403137 10 1 0 0 0 0 1024 0 0 0 0 0 0
+CASE post_dma_reset_clean 3 0 2 3 1 2 257 65536 32 1 0 0 120000 2685403137 10 65541 0 0 0 0 1024 0 0 0 0 0 0
