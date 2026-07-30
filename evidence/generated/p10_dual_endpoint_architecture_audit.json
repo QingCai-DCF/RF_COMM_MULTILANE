@@ -1,0 +1,87 @@
+{
+  "architecture_document": "docs/hardware/P10_AX7020_DUAL_ENDPOINT_ARCHITECTURE.md",
+  "architecture_document_sha256": "28a5da0820eafe58a78ddd358aa4966576a9b5ee5df4333a774f7b999dcb963d",
+  "artifact_manifest": "evidence/generated/p10_offline_artifact_manifest.json",
+  "artifact_manifest_sha256": "96690c9d2671b30bb29cc01d7c234619dbfbcaa899fd2cee857ecf846ec11c27",
+  "blocking_condition": "P10-SAFETY-POWERUP-001",
+  "cdc_methodology_audit": {
+    "all_bus_skew_constraints_met": true,
+    "external_io_timing_closed": false,
+    "path": "evidence/generated/p10_cdc_methodology_audit.json",
+    "sha256": "d6179c708519adb51b4e46c75f8831058ecaa12c04b196e0a5b9169430672f31",
+    "status": "PASS_WITH_DOCUMENTED_VENDOR_WARNINGS_AND_EXTERNAL_IO_GAP",
+    "unsafe_cdc_count": 0
+  },
+  "cross_node_transport": "OPTICAL_DATA_AND_ACK_FRAMES_ONLY",
+  "ethernet": false,
+  "final_no_hardware_static_scan": {
+    "path": "evidence/generated/p10_final_no_hardware_static_scan.txt",
+    "sha256": "268b983fe121219dbda29a6357e70a0147459e25125bb57ec0e305b405747b42",
+    "status": "PASS"
+  },
+  "functional_build": "evidence/generated/p10_ax7020_functional_build_summary.json",
+  "generated_at_utc": "2026-07-30T11:38:25.141219+00:00",
+  "hardware_actions_executed": false,
+  "hardware_admission": false,
+  "hardware_scope_promoted": false,
+  "independent_local_resources": [
+    "PS",
+    "DDR controller and DDR",
+    "scatter-gather AXI DMA",
+    "descriptor/session/retry state",
+    "payload storage",
+    "two TFDU paths"
+  ],
+  "lanes": {
+    "lane0": "F0-R0",
+    "lane1": "F1-R1"
+  },
+  "limitations": [
+    "No physical fixed/rotating board identity was bound.",
+    "No FPGA was programmed and no ELF was run.",
+    "No real DDR, DMA, optical, reset-recovery, throughput, or duration result exists.",
+    "No passive power-up Txd-low/SD-high guarantee is established.",
+    "External TFDU input/output delay constraints remain undefined."
+  ],
+  "portable_regression": "evidence/generated/p10_dual_endpoint_regression/summary.json",
+  "requirement": {
+    "canonical_status": "PENDING",
+    "hardware_followup": "PENDING_P10_REMEDIATION_AND_HARDWARE_RUN",
+    "offline_design_evidence": "PASS",
+    "requirement_id": "SYS-ARCH-001"
+  },
+  "role_binding": {
+    "fixed": {
+      "deployment_role": 1,
+      "logical_board_id": "AX7020-F",
+      "modules": [
+        "F0",
+        "F1"
+      ]
+    },
+    "rotating": {
+      "deployment_role": 2,
+      "logical_board_id": "AX7020-R",
+      "modules": [
+        "R0",
+        "R1"
+      ]
+    }
+  },
+  "runtime_build": "evidence/generated/p10_ax7020_ps_runtime_build_summary.json",
+  "schema_version": 1,
+  "scope": "OFFLINE_RTL_SIMULATION_AND_ROLE_BOUND_BUILD_ONLY",
+  "shared_ram": false,
+  "source_checks": {
+    "ethernet_disabled": true,
+    "local_dma_per_xsa": true,
+    "role_build_ids_differ": true,
+    "role_separated_wrapper": true,
+    "runtime_artifacts_role_distinct": true,
+    "two_endpoint_testbench": true
+  },
+  "source_commit": "2d2dd379afaf6587d0ae6e7f16cc61709143da37",
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10-DUAL-INDEPENDENT-ENDPOINT-ARCHITECTURE-AUDIT"
+}

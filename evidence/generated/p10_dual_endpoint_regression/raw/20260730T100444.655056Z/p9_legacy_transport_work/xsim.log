@@ -1,0 +1,42 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Thu Jul 30 18:05:51 2026
+# Process ID: 39584
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10/evidence/generated/p10_dual_endpoint_regression/raw/20260730T100444.655056Z/p9_legacy_transport_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p9_legacy_transport_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10/evidence/generated/p10_dual_endpoint_regression/raw/20260730T100444.655056Z/p9_legacy_transport_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10/evidence/generated/p10_dual_endpoint_regression/raw/20260730T100444.655056Z/p9_legacy_transport_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p9_legacy_transport_snapshot/xsim_script.tcl
+# xsim {p9_legacy_transport_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P9_CORE_OBJECT_PASS dir=0 len=600 drop_data=0 drop_ack=0 initial=0000 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=15808 drop_data=0 drop_ack=0 initial=0010 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=3952 drop_data=0 drop_ack=0 initial=0030 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=1 len=3952 drop_data=0 drop_ack=0 initial=0040 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=600 drop_data=1 drop_ack=0 initial=0100 faults=00 retries=1 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=93 drop_data=0 drop_ack=1 initial=0200 faults=00 retries=1 duplicates=1
+P9_CORE_OBJECT_PASS dir=1 len=600 drop_data=0 drop_ack=0 initial=fffe faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=91 drop_data=0 drop_ack=0 initial=1000 faults=01 retries=3 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=91 drop_data=0 drop_ack=0 initial=1100 faults=02 retries=3 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=91 drop_data=0 drop_ack=0 initial=1200 faults=04 retries=3 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=494 drop_data=0 drop_ack=0 initial=1300 faults=08 retries=3 duplicates=3
+P9_CORE_OBJECT_PASS dir=0 len=91 drop_data=0 drop_ack=0 initial=1400 faults=10 retries=3 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=91 drop_data=0 drop_ack=0 initial=1500 faults=20 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=600 drop_data=0 drop_ack=0 initial=1600 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=600 drop_data=0 drop_ack=0 initial=2000 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=24700 drop_data=0 drop_ack=0 initial=0000 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=4940 drop_data=0 drop_ack=0 initial=3000 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=0 len=600 drop_data=0 drop_ack=0 initial=2100 faults=00 retries=0 duplicates=0
+P9_CORE_OBJECT_PASS dir=1 len=600 drop_data=0 drop_ack=0 initial=2200 faults=00 retries=0 duplicates=0
+TB_P9_OPTICAL_TRANSPORT_CORE=PASS
+$finish called at time : 389193149955 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10/sim/tb/tb_p9_optical_transport_core.sv" Line 713
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:02:49 . Memory (MB): peak = 206.590 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 13452 KB (Peak: 13452 KB), Simulation CPU Usage: 166593 ms
+INFO: [Common 17-206] Exiting xsim at Thu Jul 30 18:08:42 2026...

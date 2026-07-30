@@ -1,0 +1,229 @@
+{
+  "all_bus_skew_constraints_met": true,
+  "boundary": "All detailed CDC warnings are confined to generated AXI-Stream clock-converter XPM asynchronous FIFOs, and all routed bus-skew constraints have positive slack. Generated HP0 interconnect and AXI DMA methodology warnings are retained. TFDU external input/output delays remain undefined, so this audit does not admit hardware or close external I/O timing.",
+  "external_io_timing_closed": false,
+  "generated_at_utc": "2026-07-30T11:38:25.141219+00:00",
+  "hardware_actions_executed": false,
+  "hardware_scope_promoted": false,
+  "roles": {
+    "fixed": {
+      "bus_skew": {
+        "all_constraints_met": true,
+        "constraint_count": 9,
+        "entries": [
+          {
+            "result": "MET",
+            "slack_ns": 9.493
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.374
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.376
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.346
+          },
+          {
+            "result": "MET",
+            "slack_ns": 45.533
+          },
+          {
+            "result": "MET",
+            "slack_ns": 45.473
+          },
+          {
+            "result": "MET",
+            "slack_ns": 59.527
+          },
+          {
+            "result": "MET",
+            "slack_ns": 58.473
+          },
+          {
+            "result": "MET",
+            "slack_ns": 46.053
+          }
+        ],
+        "minimum_slack_ns": 9.346,
+        "report": {
+          "bytes": 169113,
+          "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_bus_skew.rpt",
+          "sha256": "3f9b187fb8d7244caf8cc4c85e270fafbe7bc0b12b9c901cd77aea87554cb36c"
+        },
+        "scratch_source_path": "C:\\p10_vivado\\fixed\\project\\p10_ax7020_fixed_functional.runs\\impl_1\\p10_ps_system_wrapper_bus_skew_routed.rpt"
+      },
+      "cdc": {
+        "cdc_15_detail_count": 74,
+        "cdc_15_vendor_axis_clock_converter_xpm_fifo_count": 74,
+        "critical_or_error_count": 0,
+        "non_vendor_cdc_15_count": 0,
+        "report": {
+          "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_cdc.rpt",
+          "sha256": "b42c00e310e06b4063eccaac903abc6347e8a30d2d4b21d5b1f37d5c73d96fba"
+        },
+        "summary": {
+          "CDC-15": {
+            "count": 74,
+            "severity": "Warning"
+          },
+          "CDC-3": {
+            "count": 68,
+            "severity": "Info"
+          }
+        },
+        "unexpected_warning_count": 0,
+        "unsafe_cdc_count": 0
+      },
+      "external_io_timing_closed": false,
+      "hardware_timing_admission": false,
+      "methodology": {
+        "critical_count": 0,
+        "external_io_ports_without_delay_constraints": [
+          "tfdu_rxd_i[0]",
+          "tfdu_rxd_i[1]",
+          "tfdu_sd_o[0]",
+          "tfdu_sd_o[1]",
+          "tfdu_txd_o[0]",
+          "tfdu_txd_o[1]"
+        ],
+        "lutar_1_classification": "AMD_HP0_AXI4_TO_AXI3_INTERCONNECT_GENERATED_STRUCTURE",
+        "lutar_1_vendor_only": true,
+        "p10_endpoint_lutar_1_count": 0,
+        "pdrc_190_classification": "AMD_AXI_DMA_GENERATED_STRUCTURE",
+        "pdrc_190_vendor_only": true,
+        "report": {
+          "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_methodology.rpt",
+          "sha256": "b0ed3b2d0ee339ddeb43ccaf2c78374f9af9f389170d867a7628c04b6134682b"
+        },
+        "reqp_1839_count": 0,
+        "timing_18_classification": "OPEN_EXTERNAL_TFDU_IO_TIMING_GAP",
+        "timing_9_classification": "COVERED_BY_DETAILED_REPORT_CDC_AUDIT",
+        "warning_counts": {
+          "LUTAR-1": 3,
+          "PDRC-190": 32,
+          "TIMING-18": 6,
+          "TIMING-9": 1
+        },
+        "warning_total": 42
+      },
+      "status": "PASS_WITH_DOCUMENTED_VENDOR_WARNINGS_AND_EXTERNAL_IO_GAP"
+    },
+    "rotating": {
+      "bus_skew": {
+        "all_constraints_met": true,
+        "constraint_count": 9,
+        "entries": [
+          {
+            "result": "MET",
+            "slack_ns": 9.291
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.069
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.21
+          },
+          {
+            "result": "MET",
+            "slack_ns": 9.439
+          },
+          {
+            "result": "MET",
+            "slack_ns": 45.854
+          },
+          {
+            "result": "MET",
+            "slack_ns": 45.881
+          },
+          {
+            "result": "MET",
+            "slack_ns": 59.612
+          },
+          {
+            "result": "MET",
+            "slack_ns": 58.859
+          },
+          {
+            "result": "MET",
+            "slack_ns": 46.018
+          }
+        ],
+        "minimum_slack_ns": 9.069,
+        "report": {
+          "bytes": 169104,
+          "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_bus_skew.rpt",
+          "sha256": "22cb69b59b90f71417a93d2fa107ed8462dd254b1822e66f8fd5880b62d07b07"
+        },
+        "scratch_source_path": "C:\\p10_vivado\\rotating\\project\\p10_ax7020_rotating_functional.runs\\impl_1\\p10_ps_system_wrapper_bus_skew_routed.rpt"
+      },
+      "cdc": {
+        "cdc_15_detail_count": 74,
+        "cdc_15_vendor_axis_clock_converter_xpm_fifo_count": 74,
+        "critical_or_error_count": 0,
+        "non_vendor_cdc_15_count": 0,
+        "report": {
+          "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_cdc.rpt",
+          "sha256": "f6de178a0b8b81011d14fcc03f6bd90239a6db0a02686f15b40c6edecbe6c5fd"
+        },
+        "summary": {
+          "CDC-15": {
+            "count": 74,
+            "severity": "Warning"
+          },
+          "CDC-3": {
+            "count": 68,
+            "severity": "Info"
+          }
+        },
+        "unexpected_warning_count": 0,
+        "unsafe_cdc_count": 0
+      },
+      "external_io_timing_closed": false,
+      "hardware_timing_admission": false,
+      "methodology": {
+        "critical_count": 0,
+        "external_io_ports_without_delay_constraints": [
+          "tfdu_rxd_i[0]",
+          "tfdu_rxd_i[1]",
+          "tfdu_sd_o[0]",
+          "tfdu_sd_o[1]",
+          "tfdu_txd_o[0]",
+          "tfdu_txd_o[1]"
+        ],
+        "lutar_1_classification": "AMD_HP0_AXI4_TO_AXI3_INTERCONNECT_GENERATED_STRUCTURE",
+        "lutar_1_vendor_only": true,
+        "p10_endpoint_lutar_1_count": 0,
+        "pdrc_190_classification": "AMD_AXI_DMA_GENERATED_STRUCTURE",
+        "pdrc_190_vendor_only": true,
+        "report": {
+          "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_methodology.rpt",
+          "sha256": "9f3535fe3015ce5894e7006951609a91e84cd368575fe0adb1de9c117474a673"
+        },
+        "reqp_1839_count": 0,
+        "timing_18_classification": "OPEN_EXTERNAL_TFDU_IO_TIMING_GAP",
+        "timing_9_classification": "COVERED_BY_DETAILED_REPORT_CDC_AUDIT",
+        "warning_counts": {
+          "LUTAR-1": 3,
+          "PDRC-190": 32,
+          "TIMING-18": 6,
+          "TIMING-9": 1
+        },
+        "warning_total": 42
+      },
+      "status": "PASS_WITH_DOCUMENTED_VENDOR_WARNINGS_AND_EXTERNAL_IO_GAP"
+    }
+  },
+  "schema_version": 1,
+  "scope": "OFFLINE_POST_ROUTE_REPORT_AUDIT_ONLY",
+  "source_commit": "2d2dd379afaf6587d0ae6e7f16cc61709143da37",
+  "source_worktree_dirty": false,
+  "status": "PASS_WITH_DOCUMENTED_VENDOR_WARNINGS_AND_EXTERNAL_IO_GAP",
+  "test_id": "P10-CDC-METHODOLOGY-BUS-SKEW-AUDIT",
+  "unsafe_cdc_count": 0
+}
