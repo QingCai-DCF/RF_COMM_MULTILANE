@@ -1,10 +1,15 @@
 {
   "schema_version": 1,
   "inventory_id": "P10_DUAL_AX7020_JTAG_IDENTITY",
-  "status": "PENDING_LIVE_READ_ONLY_ENUMERATION",
+  "status": "ENUMERATED_UNASSIGNED",
   "role_binding_method": "JTAG_CABLE_SERIAL",
-  "observed_cable_serials": [],
-  "fixed_board_serial": "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING",
-  "rotating_board_serial": "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING",
-  "target_order_used_for_role_binding": false
+  "observed_cable_serials": [
+    "210249855178",
+    "210512180081"
+  ],
+  "fixed_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
+  "rotating_board_serial": "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING",
+  "target_order_used_for_role_binding": false,
+  "evidence": "evidence/generated/p10_jtag_identity_latest.json",
+  "evidence_sha256": "81d09969fee9ad8166a2e0c2014301cd2137b8379d9cb836f2342b78f26772dd"
 }

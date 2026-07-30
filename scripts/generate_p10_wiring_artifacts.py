@@ -346,6 +346,18 @@ def main() -> int:
             and str(existing_jtag_inventory.get("status", "")).startswith("ENUMERATED")
         ):
             jtag_inventory = existing_jtag_inventory
+    jtag_enumerated = str(jtag_inventory["status"]).startswith("ENUMERATED")
+    observed_jtag_serials = list(jtag_inventory.get("observed_cable_serials", []))
+    jtag_role_status = (
+        "ENUMERATED_UNASSIGNED: " + ", ".join(observed_jtag_serials)
+        if jtag_enumerated
+        else "PENDING_LIVE_READ_ONLY_ENUMERATION"
+    )
+    board_document_status = (
+        "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
+        if jtag_enumerated
+        else "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLE_BINDING_PENDING"
+    )
 
     common_profile = {
         "schema_version": 1,
@@ -411,11 +423,18 @@ def main() -> int:
     wiring = {
         "schema_version": 1,
         "configuration_id": "P10_AX7020_DUAL_NODE_2LANE_J10_CONFIRMED",
-        "status": "USER_WIRING_INTENT_CONFIRMED_HARDWARE_ADMISSION_BLOCKED",
+        "status": (
+            "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING_HARDWARE_ADMISSION_BLOCKED"
+            if jtag_enumerated
+            else "USER_WIRING_INTENT_CONFIRMED_HARDWARE_ADMISSION_BLOCKED"
+        ),
         "generated_at_utc": generated_at,
         "goal": "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
         "current_run_hardware_authorization": True,
-        "hardware_actions_executed": False,
+        "hardware_actions_executed": jtag_enumerated,
+        "hardware_action_scope": (
+            "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
+        ),
         "hardware_admission": False,
         "blocking_condition": "P10-SAFETY-POWERUP-001",
         "network_used": False,
@@ -443,7 +462,13 @@ def main() -> int:
             "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts.",
             "Hardware admission additionally requires passive Txd-low and SD-high evidence in FPGA-unconfigured and partial-power states.",
         ],
-        "jtag_role": "JTAG cable serial is the authoritative P10 F/R role key. Read-only enumeration is allowed; each observed serial must be explicitly bound to AX7020-F or AX7020-R before programming.",
+        "jtag_role": (
+            "JTAG cable serial is the authoritative P10 F/R role key. Observed serials are "
+            + ", ".join(observed_jtag_serials)
+            + "; each must be explicitly bound to AX7020-F or AX7020-R before programming."
+            if jtag_enumerated
+            else "JTAG cable serial is the authoritative P10 F/R role key. Read-only enumeration is allowed; each observed serial must be explicitly bound to AX7020-F or AX7020-R before programming."
+        ),
         "uart_role": "Role-local PS diagnostic log only; UART cannot arm or bypass the physical TX kill.",
         "signal_lines": rows,
         "profiles": profile_paths,
@@ -454,12 +479,13 @@ def main() -> int:
     board_inventory = {
         "schema_version": 1,
         "inventory_id": "P10_AX7020_DUAL_BOARD_INVENTORY",
-        "document_set_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLE_BINDING_PENDING",
+        "document_set_status": board_document_status,
         "documented_model": "ALINX AX7020",
         "documented_fpga": "XC7Z020-2CLG400I",
         "vivado_part": "xc7z020clg400-2",
         "role_binding_method": "JTAG_CABLE_SERIAL",
         "live_jtag_identity_inventory": "config/hardware/p10_jtag_identity_inventory.json",
+        "live_jtag_role_status": jtag_role_status,
         "user_clarification": USER_CLARIFICATION,
         "boards": [
             {
@@ -529,7 +555,10 @@ def main() -> int:
         "severity": "SEVERE_BLOCKER",
         "status": "OPEN",
         "hardware_campaign_admitted": False,
-        "hardware_actions_executed": False,
+        "hardware_actions_executed": jtag_enumerated,
+        "hardware_action_scope": (
+            "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
+        ),
         "finding": "Passive fail-safe levels for all four TFDU Txd and SD inputs are not established.",
         "user_clarification": USER_CLARIFICATION,
         "direct_evidence": [
@@ -598,10 +627,13 @@ def main() -> int:
         "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
         "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
         "powerup_reset_default": "FAIL: passive Txd-low and SD-high are not established",
-        "physical_board_role_binding": "PENDING_LIVE_JTAG_CABLE_SERIAL_ENUMERATION",
+        "physical_board_role_binding": jtag_role_status,
         "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
         "hardware_admission": False,
-        "hardware_actions_executed": False,
+        "hardware_actions_executed": jtag_enumerated,
+        "hardware_action_scope": (
+            "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY" if jtag_enumerated else "NONE"
+        ),
         "blocking_condition": "P10-SAFETY-POWERUP-001",
         "signal_lines": rows,
         "sources": sources,
@@ -640,7 +672,11 @@ def main() -> int:
             "- Existing TFDU VCC/GND wiring remains user-owned and must not be altered under the current authorization.",
             "- Any future connector change requires both AX7020 boards and all TFDU rails to be powered off.",
             "- Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and all four passive Txd-low/SD-high states.",
-            "- Use JTAG cable serial as the authoritative F/R role key. A bounded read-only enumeration may run now; bind each serial to AX7020-F or AX7020-R before programming.",
+            (
+                f"- JTAG cable serial is the authoritative F/R role key. Read-only enumeration observed {', '.join(observed_jtag_serials)}; explicitly bind each to AX7020-F or AX7020-R before programming."
+                if jtag_enumerated
+                else "- Use JTAG cable serial as the authoritative F/R role key. A bounded read-only enumeration may run now; bind each serial to AX7020-F or AX7020-R before programming."
+            ),
             "- UART is role-local diagnostic output only; it cannot arm TX or bypass the final TX kill.",
             "- A shutdown bitstream must drive both Txd outputs low and both SD outputs high, but it does not cure an unconfigured/partial-power electrical gap.",
             "",
@@ -648,7 +684,7 @@ def main() -> int:
             "",
             "- Severe blocker: no documented passive Txd pull-down or SD pull-up on any supplied TFDU small-board schematic.",
             "- J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.",
-            "- AX7020-F/AX7020-R JTAG cable serial role binding remains pending; physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
+            f"- AX7020-F/AX7020-R JTAG cable serial role binding remains pending (`{jtag_role_status}`); physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
             "- Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.",
             "",
             "## Hardware admission decision",
@@ -666,7 +702,7 @@ The official AX7020 reference set is sufficient to derive the J10 package pins, 
 
 Required before any programming or TFDU-driving hardware action:
 
-- two distinct live JTAG cable serials, each explicitly bound to AX7020-F or AX7020-R;
+- explicit F/R role assignment for the two read-only-enumerated JTAG cable serials recorded in `config/hardware/p10_jtag_identity_inventory.json`;
 - existing circuit or measurement evidence that every physical Txd remains LOW during reset/fault, FPGA-unconfigured, and partial-power conditions;
 - safe external measurement evidence for the Txd/SD states above, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring).
 
@@ -738,7 +774,7 @@ See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_R
 """
     (ROOT / "evidence/generated/p10_board_document_intake.md").write_text(board_md, encoding="utf-8")
 
-    audit_md = """# P10 wiring design audit
+    audit_md = f"""# P10 wiring design audit
 
 The confirmed J10 A/B mapping is independently supported by the AX7020 manual, schematic, and pin workbook. Both role-specific pinmaps/XDC files use `xc7z020clg400-2`, LVCMOS33, bank 34/35 at documented 3.3 V, and do not source the AX7010 XDC.
 
@@ -746,7 +782,7 @@ Mapping is complete, but hardware admission fails closed:
 
 - `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in reset/fault, unconfigured, or partial-power states.
 - `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
-- physical F/R role binding by live JTAG cable serial is pending.
+- physical F/R role binding by JTAG cable serial is pending: `{jtag_role_status}`.
 - TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.
 
 Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounded read-only JTAG identity enumeration is allowed. Artifact-generation hardware actions executed: `false`.

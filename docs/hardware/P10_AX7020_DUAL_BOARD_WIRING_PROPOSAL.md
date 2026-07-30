@@ -34,7 +34,7 @@ With J10 board silkscreen readable and the keyed shroud as photographed, pin 1 i
 - Existing TFDU VCC/GND wiring remains user-owned and must not be altered under the current authorization.
 - Any future connector change requires both AX7020 boards and all TFDU rails to be powered off.
 - Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and all four passive Txd-low/SD-high states.
-- Use JTAG cable serial as the authoritative F/R role key. A bounded read-only enumeration may run now; bind each serial to AX7020-F or AX7020-R before programming.
+- JTAG cable serial is the authoritative F/R role key. Read-only enumeration observed 210249855178, 210512180081; explicitly bind each to AX7020-F or AX7020-R before programming.
 - UART is role-local diagnostic output only; it cannot arm TX or bypass the final TX kill.
 - A shutdown bitstream must drive both Txd outputs low and both SD outputs high, but it does not cure an unconfigured/partial-power electrical gap.
 
@@ -42,7 +42,7 @@ With J10 board silkscreen readable and the keyed shroud as photographed, pin 1 i
 
 - Severe blocker: no documented passive Txd pull-down or SD pull-up on any supplied TFDU small-board schematic.
 - J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
-- AX7020-F/AX7020-R JTAG cable serial role binding remains pending; physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.
+- AX7020-F/AX7020-R JTAG cable serial role binding remains pending (`ENUMERATED_UNASSIGNED: 210249855178, 210512180081`); physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.
 - Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.
 
 ## Hardware admission decision

@@ -9,13 +9,13 @@
   "current_run_hardware_authorization": true,
   "evidence_checkpoint": "COMMIT_CONTAINING_THIS_SUMMARY",
   "fail": [
-    "P10-SAFETY-POWERUP-001: passive Txd-low and SD-high are not established for unconfigured/reset/open/partial-power states",
-    "P10-RX-B-R29-001: J10-26/U13 1-kohm pull-down exceeds the supplied TFDU VOH guaranteed test load",
-    "Physical board/module revision identity and unique F/R JTAG binding remain unverified",
-    "All mandatory hardware acceptance stages are not run"
+    "P10-SAFETY-POWERUP-001: physical Txd fail-low is not established for reset/fault, FPGA-unconfigured, and partial-power states",
+    "P10-RX-B-R29-001: formal VOH guarantee gap retained; user-confirmed prior operation on the byte-identical AX7010 base/J10 circuit provides empirical compatibility context",
+    "Two JTAG serials were enumerated (210249855178, 210512180081) but are not yet explicitly assigned to F/R roles",
+    "All mandatory active-hardware acceptance stages are not run"
   ],
-  "fixed_board_id": "PENDING_PHYSICAL_ROLE_BINDING",
-  "generated_at_utc": "2026-07-30T11:38:25.141219+00:00",
+  "fixed_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
+  "generated_at_utc": "2026-07-30T12:51:00.433882+00:00",
   "generated_evidence": [
     "evidence/generated/p10_fasttrack_concise_preflight.json",
     "evidence/generated/p10_dual_endpoint_regression/summary.json",
@@ -32,9 +32,13 @@
     "evidence/generated/p10_severe_hardware_blocker.json",
     "evidence/generated/p10_final_no_hardware_static_scan.txt",
     "evidence/generated/p10_fasttrack_final_summary.md",
-    "evidence/generated/p10_fasttrack_final_summary.json"
+    "evidence/generated/p10_fasttrack_final_summary.json",
+    "evidence/generated/p10_jtag_identity_latest.json",
+    "evidence/generated/p10_jtag_identity_latest.md",
+    "evidence/generated/p10_fasttrack_identity_amendment.json",
+    "evidence/generated/p10_fasttrack_identity_amendment.md"
   ],
-  "hardware_actions_executed": false,
+  "hardware_actions_executed": true,
   "hardware_admission": false,
   "logical_image_roles": {
     "fixed": "AX7020-F",
@@ -82,11 +86,10 @@
     "Offline independent-node/no-shared-RAM architecture audit"
   ],
   "required_user_resolution": [
-    "Provide as-built evidence and component values proving a passive pull-down on every Txd and passive pull-up on every SD, including any existing harness bias; or authorize a documented fail-safe hardware revision/rewire.",
-    "Resolve or electrically validate the J10-26/U13 Rxd 1-kohm pull-down against the exact TFDU small-board output.",
-    "Provide physical revision/marking evidence that uniquely binds AX7020-F and AX7020-R before any programming."
+    "State which of 210249855178 and 210512180081 is AX7020-F; the other will be bound as AX7020-R.",
+    "Provide existing fail-low circuit/measurement evidence for reset/fault, FPGA-unconfigured, and partial-power states; or separately authorize a documented fail-safe rewire."
   ],
-  "rotating_board_id": "PENDING_PHYSICAL_ROLE_BINDING",
+  "rotating_board_id": "PENDING_EXPLICIT_JTAG_SERIAL_ROLE_ASSIGNMENT",
   "schema_version": 2,
   "source_commit": "2d2dd379afaf6587d0ae6e7f16cc61709143da37",
   "stage": "P10_FASTTRACK_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
@@ -105,5 +108,35 @@
   ],
   "wiring_already_confirmed": true,
   "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10",
-  "worktree_clean_after_evidence_commit_expected": true
+  "worktree_clean_after_evidence_commit_expected": true,
+  "hardware_action_scope": "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY",
+  "programming_executed": false,
+  "tfdu_drive_executed": false,
+  "jtag_identity": {
+    "test_id": "P10-JTAG-IDENTITY-READONLY",
+    "status": "PASS_ENUMERATED_UNASSIGNED",
+    "run_id": "p10_jtag_identity_20260730T124937Z_94b34096",
+    "source_commit": "48dde7bbcd23fd03dc5d608739101b5f6ea79381",
+    "summary_path": "evidence/hardware/p10/p10_jtag_identity_20260730T124937Z_94b34096/identity/summary.json",
+    "latest_summary": "evidence/generated/p10_jtag_identity_latest.json",
+    "latest_summary_sha256": "81d09969fee9ad8166a2e0c2014301cd2137b8379d9cb836f2342b78f26772dd",
+    "observed_cable_serials": [
+      "210249855178",
+      "210512180081"
+    ],
+    "role_binding_status": "ENUMERATED_UNASSIGNED",
+    "read_only": true,
+    "programming_executed": false,
+    "reset_executed": false,
+    "memory_access_executed": false,
+    "elf_executed": false,
+    "uart_write_executed": false,
+    "tfdu_drive_executed": false,
+    "shutdown_required": false
+  },
+  "user_clarification": {
+    "tfdu_module_identity_reconfirmation_required_for_p10": false,
+    "tfdu_modules_previously_operational_on_ax7010": true,
+    "ax7020_role_binding_method": "JTAG_CABLE_SERIAL"
+  }
 }

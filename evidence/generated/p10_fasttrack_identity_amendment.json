@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "test_id": "P10-FASTTRACK-IDENTITY-AMENDMENT",
+  "status": "PARTIAL_ROLE_ASSIGNMENT_REQUIRED",
+  "generated_at_utc": "2026-07-30T12:51:00.433882+00:00",
+  "user_clarification": {
+    "tfdu_module_identity_reconfirmation_required_for_p10": false,
+    "tfdu_modules_previously_operational_on_ax7010": true,
+    "ax7020_role_binding_method": "JTAG_CABLE_SERIAL"
+  },
+  "hardware_action": {
+    "test_id": "P10-JTAG-IDENTITY-READONLY",
+    "status": "PASS_ENUMERATED_UNASSIGNED",
+    "run_id": "p10_jtag_identity_20260730T124937Z_94b34096",
+    "source_commit": "48dde7bbcd23fd03dc5d608739101b5f6ea79381",
+    "summary_path": "evidence/hardware/p10/p10_jtag_identity_20260730T124937Z_94b34096/identity/summary.json",
+    "latest_summary": "evidence/generated/p10_jtag_identity_latest.json",
+    "latest_summary_sha256": "81d09969fee9ad8166a2e0c2014301cd2137b8379d9cb836f2342b78f26772dd",
+    "observed_cable_serials": [
+      "210249855178",
+      "210512180081"
+    ],
+    "role_binding_status": "ENUMERATED_UNASSIGNED",
+    "read_only": true,
+    "programming_executed": false,
+    "reset_executed": false,
+    "memory_access_executed": false,
+    "elf_executed": false,
+    "uart_write_executed": false,
+    "tfdu_drive_executed": false,
+    "shutdown_required": false
+  },
+  "blocking_condition_for_programming": "P10-SAFETY-POWERUP-001",
+  "next_required_user_action": "Map serial 210249855178 and serial 210512180081 to AX7020-F and AX7020-R; target order will not be used."
+}

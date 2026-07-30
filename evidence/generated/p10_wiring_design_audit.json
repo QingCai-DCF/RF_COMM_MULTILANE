@@ -12,10 +12,11 @@
   "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
   "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
   "powerup_reset_default": "FAIL: passive Txd-low and SD-high are not established",
-  "physical_board_role_binding": "PENDING_LIVE_JTAG_CABLE_SERIAL_ENUMERATION",
+  "physical_board_role_binding": "ENUMERATED_UNASSIGNED: 210249855178, 210512180081",
   "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
   "hardware_admission": false,
-  "hardware_actions_executed": false,
+  "hardware_actions_executed": true,
+  "hardware_action_scope": "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY",
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "signal_lines": [
     {

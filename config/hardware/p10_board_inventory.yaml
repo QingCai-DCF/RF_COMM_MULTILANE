@@ -1,11 +1,12 @@
 schema_version: 1
 inventory_id: "P10_AX7020_DUAL_BOARD_INVENTORY"
-document_set_status: "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLE_BINDING_PENDING"
+document_set_status: "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING"
 documented_model: "ALINX AX7020"
 documented_fpga: "XC7Z020-2CLG400I"
 vivado_part: "xc7z020clg400-2"
 role_binding_method: "JTAG_CABLE_SERIAL"
 live_jtag_identity_inventory: "config/hardware/p10_jtag_identity_inventory.json"
+live_jtag_role_status: "ENUMERATED_UNASSIGNED: 210249855178, 210512180081"
 user_clarification:
   date: "2026-07-30"
   tfdu_modules_previously_operational_on_ax7010: true
@@ -21,7 +22,7 @@ boards:
     fpga_marking_from_physical_board: "DOCUMENTATION_GAP_NONBLOCKING"
     front_photo: "NOT_REQUIRED_FOR_P10_ROLE_BINDING"
     back_photo: "NOT_REQUIRED_FOR_P10_ROLE_BINDING"
-    jtag_cable_identity: "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING"
+    jtag_cable_identity: "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING"
   -
     proposed_id: "AX7020-R"
     role: "rotating_role_stationary_for_p10"
@@ -30,7 +31,7 @@ boards:
     fpga_marking_from_physical_board: "DOCUMENTATION_GAP_NONBLOCKING"
     front_photo: "NOT_REQUIRED_FOR_P10_ROLE_BINDING"
     back_photo: "NOT_REQUIRED_FOR_P10_ROLE_BINDING"
-    jtag_cable_identity: "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING"
+    jtag_cable_identity: "PENDING_EXPLICIT_SERIAL_TO_ROLE_BINDING"
 reference_file_inventory: "evidence/generated/p10_board_reference_file_inventory.json"
 sources:
   ax7020_schematic:

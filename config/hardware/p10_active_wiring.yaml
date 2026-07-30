@@ -1,10 +1,11 @@
 schema_version: 1
 configuration_id: "P10_AX7020_DUAL_NODE_2LANE_J10_CONFIRMED"
-status: "USER_WIRING_INTENT_CONFIRMED_HARDWARE_ADMISSION_BLOCKED"
-generated_at_utc: "2026-07-30T12:49:06.770387+00:00"
+status: "USER_WIRING_INTENT_CONFIRMED_JTAG_SERIALS_ENUMERATED_ROLE_ASSIGNMENT_PENDING_HARDWARE_ADMISSION_BLOCKED"
+generated_at_utc: "2026-07-30T12:51:00.209627+00:00"
 goal: "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"
 current_run_hardware_authorization: true
-hardware_actions_executed: false
+hardware_actions_executed: true
+hardware_action_scope: "READ_ONLY_JTAG_CABLE_SERIAL_ENUMERATION_ONLY"
 hardware_admission: false
 blocking_condition: "P10-SAFETY-POWERUP-001"
 network_used: false
@@ -51,7 +52,7 @@ power_sequence:
   - "Any future connector work requires all boards and TFDU supplies powered off."
   - "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts."
   - "Hardware admission additionally requires passive Txd-low and SD-high evidence in FPGA-unconfigured and partial-power states."
-jtag_role: "JTAG cable serial is the authoritative P10 F/R role key. Read-only enumeration is allowed; each observed serial must be explicitly bound to AX7020-F or AX7020-R before programming."
+jtag_role: "JTAG cable serial is the authoritative P10 F/R role key. Observed serials are 210249855178, 210512180081; each must be explicitly bound to AX7020-F or AX7020-R before programming."
 uart_role: "Role-local PS diagnostic log only; UART cannot arm or bypass the physical TX kill."
 signal_lines:
   -
