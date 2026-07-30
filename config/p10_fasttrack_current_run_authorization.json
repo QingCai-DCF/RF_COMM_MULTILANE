@@ -62,7 +62,7 @@
   "authorization_id": "P10-FASTTRACK-CURRENT-RUN-IMMUTABLE",
   "authorization_source": "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
   "authorized_stages": [
-    "P10-F"
+    "P10-G"
   ],
   "branch": "p10/ax7020-dual-node-2lane",
   "current_run_hardware_authorization": true,
@@ -73,7 +73,7 @@
     "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
   },
   "formal_campaign": false,
-  "generated_at_utc": "2026-07-30T16:12:36+00:00",
+  "generated_at_utc": "2026-07-30T16:25:29+00:00",
   "goal": "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
   "goal_sha256": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
   "intentional_power_cycle_allowed": false,
@@ -88,7 +88,7 @@
   "network_used": false,
   "part": "xc7z020clg400-2",
   "plan_sha256": {
-    "P10-F": "aeaa973189fa79897685f9f8814ec2990f0347c4dea3fc768b16f23e80e11364"
+    "P10-G": "b88eecac0f91f29f984fd7c408df46f185aaf83621c2745f9e43cb8be742174c"
   },
   "rewiring_allowed": false,
   "rotating_board": {
@@ -97,7 +97,7 @@
     "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
   },
   "rotation_allowed": false,
-  "run_id": "p10_diag_f_20260730T161236Z_02",
+  "run_id": "p10_diag_g_20260730T162529Z_01",
   "runner_input_sha256": {
     "config/hardware/p10_active_wiring.yaml": "a818331c5e8b471283c8269b5935e541e0456e6a18a0719e44cfe8817da5b165",
     "config/hardware/p10_jtag_identity_inventory.json": "93ffedae01931d6205ba03437602502b5c7a1ad438ee3e546c61ba0e2b1239e6",
@@ -111,6 +111,6 @@
   },
   "schema_version": 1,
   "scope": "P10_FASTTRACK_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
-  "source_commit": "d64f0350d90b420034589082ba151863c1d9c57f",
+  "source_commit": "f1e4d7649dccd765871c7b261bfca74726902c2e",
   "status": "AUTHORIZED"
 }
