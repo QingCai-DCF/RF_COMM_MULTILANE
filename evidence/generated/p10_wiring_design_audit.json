@@ -10,9 +10,10 @@
   "bank_vcco_iostandard": "PASS_FOR_DOCUMENTED_AX7020_REFERENCE: bank34/bank35 3.3 V, LVCMOS33",
   "connector_series_resistors": "PASS: 33 ohm on all selected J10 signal nets",
   "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
-  "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP",
+  "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
   "powerup_reset_default": "FAIL: passive Txd-low and SD-high are not established",
-  "physical_board_role_binding": "PENDING",
+  "physical_board_role_binding": "PENDING_LIVE_JTAG_CABLE_SERIAL_ENUMERATION",
+  "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
   "hardware_admission": false,
   "hardware_actions_executed": false,
   "blocking_condition": "P10-SAFETY-POWERUP-001",
@@ -204,7 +205,7 @@
       "pull": "AX7020 R29 1 kohm pull-down to GND on IO1_12P, plus TFDU shutdown weak pull-up",
       "source_document": "AX7020 schematic + AX7020 manual/table 7.4 + AX7020 pin workbook + TFDU small-board schematic + TFDU6102 datasheet",
       "source_page_table": "AX7020 schematic sheets 5 and 15; manual section 7.4 J10 table; TFDU datasheet pin table and electrical characteristics; SchDoc FileHeader records",
-      "notes": "Electrical guarantee gap: a 1 kohm pull-down requires about 3.3 mA at 3.3 V, outside the TFDU6102 guaranteed VOH test currents of 250/500 uA."
+      "notes": "Electrical guarantee gap: a 1 kohm pull-down requires about 3.3 mA at 3.3 V, outside the TFDU6102 guaranteed VOH test currents of 250/500 uA. The user confirms prior operation on the byte-identical AX7010 base/J10 circuit."
     },
     {
       "board_role": "fixed",
@@ -420,7 +421,7 @@
       "pull": "AX7020 R29 1 kohm pull-down to GND on IO1_12P, plus TFDU shutdown weak pull-up",
       "source_document": "AX7020 schematic + AX7020 manual/table 7.4 + AX7020 pin workbook + TFDU small-board schematic + TFDU6102 datasheet",
       "source_page_table": "AX7020 schematic sheets 5 and 15; manual section 7.4 J10 table; TFDU datasheet pin table and electrical characteristics; SchDoc FileHeader records",
-      "notes": "Electrical guarantee gap: a 1 kohm pull-down requires about 3.3 mA at 3.3 V, outside the TFDU6102 guaranteed VOH test currents of 250/500 uA."
+      "notes": "Electrical guarantee gap: a 1 kohm pull-down requires about 3.3 mA at 3.3 V, outside the TFDU6102 guaranteed VOH test currents of 250/500 uA. The user confirms prior operation on the byte-identical AX7010 base/J10 circuit."
     },
     {
       "board_role": "rotating_role",
@@ -479,6 +480,12 @@
       "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc",
       "sha256": "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a",
       "authority": "user-supplied TFDU small-board design source",
+      "read_only": true
+    },
+    "ax7010_ax7020_hardware_comparison": {
+      "path": "C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_COMPARISON.md",
+      "sha256": "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13",
+      "authority": "user-supplied cross-board comparison with per-file hashes",
       "read_only": true
     },
     "official_alinx_ax7020_2023_1_ps_config": {

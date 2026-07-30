@@ -4,8 +4,9 @@ The confirmed J10 A/B mapping is independently supported by the AX7020 manual, s
 
 Mapping is complete, but hardware admission fails closed:
 
-- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in unconfigured/open-circuit/partial-power states.
-- `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load.
-- physical F/R board identity and JTAG cable binding are pending.
+- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in reset/fault, unconfigured, or partial-power states.
+- `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
+- physical F/R role binding by live JTAG cable serial is pending.
+- TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.
 
-Result: `FAIL_CLOSED_SEVERE_BLOCKER`; hardware actions executed: `false`.
+Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounded read-only JTAG identity enumeration is allowed. Artifact-generation hardware actions executed: `false`.

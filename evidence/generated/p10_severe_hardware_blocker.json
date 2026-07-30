@@ -6,27 +6,38 @@
   "hardware_campaign_admitted": false,
   "hardware_actions_executed": false,
   "finding": "Passive fail-safe levels for all four TFDU Txd and SD inputs are not established.",
+  "user_clarification": {
+    "date": "2026-07-30",
+    "tfdu_modules_previously_operational_on_ax7010": true,
+    "tfdu_module_identity_reconfirmation_required_for_p10": false,
+    "ax7020_role_binding_method": "JTAG_CABLE_SERIAL",
+    "evidence_boundary": "Prior operation on AX7010 and byte-identical AX7010/AX7020 base-board J10 references establish empirical module/circuit compatibility. They do not constitute a fresh AX7020 hardware PASS or prove the canonical reset/fault, FPGA-unconfigured, or partial-power TX-disabled requirement."
+  },
   "direct_evidence": [
     "The supplied TFDU small-board schematic contains R2-R5 as 22-ohm series resistors, R1=0 ohm and R6=47 ohm; it contains no Txd pull-down and no SD pull-up.",
     "The selected AX7020 J10 Txd and SD nets have 33-ohm series resistor arrays but no discrete fail-safe pulls in the official schematic.",
     "AX7020 U13/IO1_12P/PUDC_B is held low by R29=1 kohm, which enables 7-series SelectIO internal pull-ups during configuration; activation is power-sequence dependent and cannot prove the required Txd-low/SD-high state.",
-    "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot prove FPGA-unconfigured, open-circuit or partial-power behavior."
+    "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot prove FPGA-unconfigured, reset/fault, or partial-power behavior.",
+    "The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison shows byte-identical AX7010/AX7020 base-PCB J10 references. This closes renewed module identity inspection for P10 but does not prove the passive power-up safety state."
   ],
   "requirements": [
     "AGENTS.md: physical Txd must default low on reset/fault.",
     "AGENTS.md: full shutdown requires SD high and Txd low.",
-    "AGENTS.md: fail-low behavior is required at power-up, open circuit, undriven input, FPGA-unconfigured and partial-power states.",
+    "PROJECT_CONSTRAINTS.txt: TX output default is LOW, partial-power behavior is FAIL_LOW, and FPGA-unconfigured behavior is TX_DISABLED.",
     "Fast-track section 2: autonomous TX or final-TX-kill violations are severe blockers."
   ],
   "additional_electrical_risk": {
     "id": "P10-RX-B-R29-001",
+    "classification": "DATASHEET_GUARANTEE_GAP_EMPIRICALLY_OPERABLE_ON_IDENTICAL_AX7010_BASE_CIRCUIT",
     "signal": "F1/R1 Rxd at J10-26 / U13",
     "finding": "AX7020 R29 is a 1-kohm pull-down on this receiver input.",
     "datasheet_gap": "TFDU6102 VOH is guaranteed only at 250/500-uA test currents; a 1-kohm load at 3.3 V demands approximately 3.3 mA.",
-    "damage_risk": "No output-to-output connection found; functional high-level compliance is not guaranteed."
+    "damage_risk": "No output-to-output connection found; functional high-level compliance is not guaranteed.",
+    "empirical_context": "User-confirmed prior operation at the same J10 positions on AX7010; the supplied comparison records byte-identical AX7010/AX7020 base-board schematic and connector circuitry.",
+    "blocking_scope": "Not treated as an independent severe damage-risk blocker; retain as a formal datasheet-guarantee gap for live RX evidence."
   },
   "required_user_resolution": [
-    "Provide the as-built schematic/photo and resistor values proving a passive pull-down on every Txd and passive pull-up on every SD, including the actual external harness if the bias is not on the small board.",
+    "Provide existing circuit or measurement evidence proving a fail-low physical Txd state for every module during reset/fault, FPGA-unconfigured, and partial-power conditions; renewed TFDU module identity/photos are not requested.",
     "Alternatively issue a new explicit authorization permitting a documented fail-safe hardware revision/rewire; the current fast-track explicitly sets REWIRING_ALLOWED=false.",
     "Provide or authorize safe external measurement evidence for Txd and SD during FPGA-unconfigured and partial-power states before JTAG programming is attempted."
   ],
@@ -59,6 +70,12 @@
       "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc",
       "sha256": "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a",
       "authority": "user-supplied TFDU small-board design source",
+      "read_only": true
+    },
+    "ax7010_ax7020_hardware_comparison": {
+      "path": "C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_COMPARISON.md",
+      "sha256": "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13",
+      "authority": "user-supplied cross-board comparison with per-file hashes",
       "read_only": true
     },
     "official_alinx_ax7020_2023_1_ps_config": {

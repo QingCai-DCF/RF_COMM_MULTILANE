@@ -1,8 +1,16 @@
 schema_version: 1
 inventory_id: "P10_TFDU_FOUR_MODULE_INVENTORY"
-document_set_status: "INCOMPLETE_AS_BUILT_IDENTITY_AND_FAILSAFE"
+document_set_status: "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_SAFETY_GAP_SEPARATE"
+functional_identity_status: "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010"
+identity_reconfirmation_required_for_p10: false
+user_clarification:
+  date: "2026-07-30"
+  tfdu_modules_previously_operational_on_ax7010: true
+  tfdu_module_identity_reconfirmation_required_for_p10: false
+  ax7020_role_binding_method: "JTAG_CABLE_SERIAL"
+  evidence_boundary: "Prior operation on AX7010 and byte-identical AX7010/AX7020 base-board J10 references establish empirical module/circuit compatibility. They do not constitute a fresh AX7020 hardware PASS or prove the canonical reset/fault, FPGA-unconfigured, or partial-power TX-disabled requirement."
 intended_device: "TFDU6102"
-schematic_symbol_identity: "TFDU6108-TT3 symbol/footprint used in supplied SchDoc; actual mounted marking not photographed"
+schematic_symbol_identity: "TFDU6108-TT3 symbol/footprint used in supplied SchDoc; user accepts the four historically operational modules without renewed marking/revision inspection"
 small_board_header:
   pin1: "VCC2; R1=0 ohm to device pin1; R6=47 ohm onward to VCC1/device pin6"
   pin2: "GND"
@@ -21,26 +29,30 @@ modules:
     module_id: "F0"
     board: "AX7020-F"
     position: "J10-A"
-    actual_marking: "PENDING_PHOTO"
-    pcb_revision: "PENDING_PHOTO"
+    actual_marking: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    pcb_revision: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    functional_history: "USER_CONFIRMED_OPERATIONAL_ON_AX7010"
   -
     module_id: "F1"
     board: "AX7020-F"
     position: "J10-B"
-    actual_marking: "PENDING_PHOTO"
-    pcb_revision: "PENDING_PHOTO"
+    actual_marking: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    pcb_revision: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    functional_history: "USER_CONFIRMED_OPERATIONAL_ON_AX7010"
   -
     module_id: "R0"
     board: "AX7020-R"
     position: "J10-A"
-    actual_marking: "PENDING_PHOTO"
-    pcb_revision: "PENDING_PHOTO"
+    actual_marking: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    pcb_revision: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    functional_history: "USER_CONFIRMED_OPERATIONAL_ON_AX7010"
   -
     module_id: "R1"
     board: "AX7020-R"
     position: "J10-B"
-    actual_marking: "PENDING_PHOTO"
-    pcb_revision: "PENDING_PHOTO"
+    actual_marking: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    pcb_revision: "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10"
+    functional_history: "USER_CONFIRMED_OPERATIONAL_ON_AX7010"
 sources:
   ax7020_schematic:
     path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7020开发板原理图V2.0.pdf"
@@ -66,6 +78,11 @@ sources:
     path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc"
     sha256: "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a"
     authority: "user-supplied TFDU small-board design source"
+    read_only: true
+  ax7010_ax7020_hardware_comparison:
+    path: "C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_COMPARISON.md"
+    sha256: "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13"
+    authority: "user-supplied cross-board comparison with per-file hashes"
     read_only: true
   official_alinx_ax7020_2023_1_ps_config:
     url: "https://github.com/alinxalinx/AX7020_2023.1"

@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 AX7020_ROOT = Path(r"C:\Users\user\Documents\RF_COMM_MULTILANE\hardware_AX7020")
 AX7010_ROOT = Path(r"C:\Users\user\Documents\RF_COMM_MULTILANE\hardware_AX7010")
+HARDWARE_COMPARISON = Path(r"C:\Users\user\Desktop\AX7010_AX7020_HARDWARE_COMPARISON.md")
 
 SOURCES = {
     "ax7020_schematic": {
@@ -45,6 +46,24 @@ SOURCES = {
         "sha256": "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a",
         "authority": "user-supplied TFDU small-board design source",
     },
+    "ax7010_ax7020_hardware_comparison": {
+        "path": HARDWARE_COMPARISON,
+        "sha256": "a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13",
+        "authority": "user-supplied cross-board comparison with per-file hashes",
+    },
+}
+
+USER_CLARIFICATION = {
+    "date": "2026-07-30",
+    "tfdu_modules_previously_operational_on_ax7010": True,
+    "tfdu_module_identity_reconfirmation_required_for_p10": False,
+    "ax7020_role_binding_method": "JTAG_CABLE_SERIAL",
+    "evidence_boundary": (
+        "Prior operation on AX7010 and byte-identical AX7010/AX7020 base-board J10 "
+        "references establish empirical module/circuit compatibility. They do not constitute "
+        "a fresh AX7020 hardware PASS or prove the canonical reset/fault, "
+        "FPGA-unconfigured, or partial-power TX-disabled requirement."
+    ),
 }
 
 OFFICIAL_ALINX_REPO = {
@@ -226,7 +245,8 @@ def signal_rows() -> list[dict[str, object]]:
                     pull = "AX7020 R29 1 kohm pull-down to GND on IO1_12P, plus TFDU shutdown weak pull-up"
                     notes = (
                         "Electrical guarantee gap: a 1 kohm pull-down requires about 3.3 mA at 3.3 V, "
-                        "outside the TFDU6102 guaranteed VOH test currents of 250/500 uA."
+                        "outside the TFDU6102 guaranteed VOH test currents of 250/500 uA. The user "
+                        "confirms prior operation on the byte-identical AX7010 base/J10 circuit."
                     )
                 if signal in {"Txd", "SD", "Mode"}:
                     reset_default += "; FPGA-unconfigured/partial-power level not guaranteed by supplied schematics"
@@ -307,6 +327,25 @@ def main() -> int:
     generated_at = datetime.now(timezone.utc).isoformat()
     sources = source_manifest()
     rows = signal_rows()
+    jtag_inventory_path = ROOT / "config/hardware/p10_jtag_identity_inventory.json"
+    jtag_inventory = {
+        "schema_version": 1,
+        "inventory_id": "P10_DUAL_AX7020_JTAG_IDENTITY",
+        "status": "PENDING_LIVE_READ_ONLY_ENUMERATION",
+        "role_binding_method": "JTAG_CABLE_SERIAL",
+        "observed_cable_serials": [],
+        "fixed_board_serial": "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING",
+        "rotating_board_serial": "PENDING_LIVE_READ_ONLY_ENUMERATION_AND_ROLE_BINDING",
+        "target_order_used_for_role_binding": False,
+    }
+    if jtag_inventory_path.is_file():
+        existing_jtag_inventory = json.loads(jtag_inventory_path.read_text(encoding="utf-8"))
+        if (
+            existing_jtag_inventory.get("inventory_id") == "P10_DUAL_AX7020_JTAG_IDENTITY"
+            and existing_jtag_inventory.get("role_binding_method") == "JTAG_CABLE_SERIAL"
+            and str(existing_jtag_inventory.get("status", "")).startswith("ENUMERATED")
+        ):
+            jtag_inventory = existing_jtag_inventory
 
     common_profile = {
         "schema_version": 1,
@@ -350,7 +389,8 @@ def main() -> int:
             "profile_id": profile_id,
             "node_role": role,
             "proposed_board_id": ROLES[role]["board_proposed_id"],
-            "physical_board_identity": "PENDING_UNIQUE_JTAG_CABLE_AND_PHYSICAL_MARKING_BINDING",
+            "physical_board_identity": "PENDING_JTAG_CABLE_SERIAL_ROLE_BINDING",
+            "physical_board_identity_method": "JTAG_CABLE_SERIAL",
             "common_profile": "board_profiles/ax7020_common/board_identity.yaml",
             "vivado_part": "xc7z020clg400-2",
             "pinmap": csv_rel,
@@ -381,6 +421,7 @@ def main() -> int:
         "network_used": False,
         "movement_allowed": False,
         "rewiring_allowed": False,
+        "user_clarification": USER_CLARIFICATION,
         "roles": ROLES,
         "lanes": {
             "lane0": {"fixed": "F0", "rotating_role": "R0", "physical_pair": "A-to-A", "cross_pairing": False},
@@ -402,7 +443,7 @@ def main() -> int:
             "Before power-up verify ground continuity, rail voltage, rail polarity, and absence of shorts.",
             "Hardware admission additionally requires passive Txd-low and SD-high evidence in FPGA-unconfigured and partial-power states.",
         ],
-        "jtag_role": "Two independent JTAG cable identities must be bound to AX7020-F and AX7020-R before any programming.",
+        "jtag_role": "JTAG cable serial is the authoritative P10 F/R role key. Read-only enumeration is allowed; each observed serial must be explicitly bound to AX7020-F or AX7020-R before programming.",
         "uart_role": "Role-local PS diagnostic log only; UART cannot arm or bypass the physical TX kill.",
         "signal_lines": rows,
         "profiles": profile_paths,
@@ -413,43 +454,50 @@ def main() -> int:
     board_inventory = {
         "schema_version": 1,
         "inventory_id": "P10_AX7020_DUAL_BOARD_INVENTORY",
-        "document_set_status": "INCOMPLETE_PHYSICAL_IDENTITY",
+        "document_set_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING_JTAG_ROLE_BINDING_PENDING",
         "documented_model": "ALINX AX7020",
         "documented_fpga": "XC7Z020-2CLG400I",
         "vivado_part": "xc7z020clg400-2",
+        "role_binding_method": "JTAG_CABLE_SERIAL",
+        "live_jtag_identity_inventory": "config/hardware/p10_jtag_identity_inventory.json",
+        "user_clarification": USER_CLARIFICATION,
         "boards": [
             {
                 "proposed_id": "AX7020-F",
                 "role": "fixed",
-                "full_model_from_physical_board": "PENDING_PHYSICAL_PHOTO",
-                "pcb_revision": "PENDING_PHYSICAL_SILKSCREEN_OR_PHOTO",
-                "fpga_marking_from_physical_board": "PENDING_PHYSICAL_PHOTO",
-                "front_photo": "PENDING_USER_DOCUMENT",
-                "back_photo": "PENDING_USER_DOCUMENT",
-                "jtag_cable_identity": "PENDING_ROLE_BINDING",
+                "full_model_from_physical_board": "DOCUMENTATION_GAP_NONBLOCKING",
+                "pcb_revision": "DOCUMENTATION_GAP_NONBLOCKING",
+                "fpga_marking_from_physical_board": "DOCUMENTATION_GAP_NONBLOCKING",
+                "front_photo": "NOT_REQUIRED_FOR_P10_ROLE_BINDING",
+                "back_photo": "NOT_REQUIRED_FOR_P10_ROLE_BINDING",
+                "jtag_cable_identity": jtag_inventory["fixed_board_serial"],
             },
             {
                 "proposed_id": "AX7020-R",
                 "role": "rotating_role_stationary_for_p10",
-                "full_model_from_physical_board": "PENDING_PHYSICAL_PHOTO",
-                "pcb_revision": "PENDING_PHYSICAL_SILKSCREEN_OR_PHOTO",
-                "fpga_marking_from_physical_board": "PENDING_PHYSICAL_PHOTO",
-                "front_photo": "PENDING_USER_DOCUMENT",
-                "back_photo": "PENDING_USER_DOCUMENT",
-                "jtag_cable_identity": "PENDING_ROLE_BINDING",
+                "full_model_from_physical_board": "DOCUMENTATION_GAP_NONBLOCKING",
+                "pcb_revision": "DOCUMENTATION_GAP_NONBLOCKING",
+                "fpga_marking_from_physical_board": "DOCUMENTATION_GAP_NONBLOCKING",
+                "front_photo": "NOT_REQUIRED_FOR_P10_ROLE_BINDING",
+                "back_photo": "NOT_REQUIRED_FOR_P10_ROLE_BINDING",
+                "jtag_cable_identity": jtag_inventory["rotating_board_serial"],
             },
         ],
         "reference_file_inventory": "evidence/generated/p10_board_reference_file_inventory.json",
         "sources": sources,
     }
     write_yaml("config/hardware/p10_board_inventory.yaml", board_inventory)
+    write_json("config/hardware/p10_jtag_identity_inventory.json", jtag_inventory)
 
     tfdu_inventory = {
         "schema_version": 1,
         "inventory_id": "P10_TFDU_FOUR_MODULE_INVENTORY",
-        "document_set_status": "INCOMPLETE_AS_BUILT_IDENTITY_AND_FAILSAFE",
+        "document_set_status": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_SAFETY_GAP_SEPARATE",
+        "functional_identity_status": "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010",
+        "identity_reconfirmation_required_for_p10": False,
+        "user_clarification": USER_CLARIFICATION,
         "intended_device": "TFDU6102",
-        "schematic_symbol_identity": "TFDU6108-TT3 symbol/footprint used in supplied SchDoc; actual mounted marking not photographed",
+        "schematic_symbol_identity": "TFDU6108-TT3 symbol/footprint used in supplied SchDoc; user accepts the four historically operational modules without renewed marking/revision inspection",
         "small_board_header": {
             "pin1": "VCC2; R1=0 ohm to device pin1; R6=47 ohm onward to VCC1/device pin6",
             "pin2": "GND",
@@ -466,10 +514,10 @@ def main() -> int:
             "Mode_pull": "NOT_PRESENT_IN_SUPPLIED_SCHEMATIC",
         },
         "modules": [
-            {"module_id": "F0", "board": "AX7020-F", "position": "J10-A", "actual_marking": "PENDING_PHOTO", "pcb_revision": "PENDING_PHOTO"},
-            {"module_id": "F1", "board": "AX7020-F", "position": "J10-B", "actual_marking": "PENDING_PHOTO", "pcb_revision": "PENDING_PHOTO"},
-            {"module_id": "R0", "board": "AX7020-R", "position": "J10-A", "actual_marking": "PENDING_PHOTO", "pcb_revision": "PENDING_PHOTO"},
-            {"module_id": "R1", "board": "AX7020-R", "position": "J10-B", "actual_marking": "PENDING_PHOTO", "pcb_revision": "PENDING_PHOTO"},
+            {"module_id": "F0", "board": "AX7020-F", "position": "J10-A", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
+            {"module_id": "F1", "board": "AX7020-F", "position": "J10-B", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
+            {"module_id": "R0", "board": "AX7020-R", "position": "J10-A", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
+            {"module_id": "R1", "board": "AX7020-R", "position": "J10-B", "actual_marking": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "pcb_revision": "NOT_RECONFIRMED_PER_USER_NOT_REQUIRED_FOR_P10", "functional_history": "USER_CONFIRMED_OPERATIONAL_ON_AX7010"},
         ],
         "sources": sources,
     }
@@ -483,27 +531,32 @@ def main() -> int:
         "hardware_campaign_admitted": False,
         "hardware_actions_executed": False,
         "finding": "Passive fail-safe levels for all four TFDU Txd and SD inputs are not established.",
+        "user_clarification": USER_CLARIFICATION,
         "direct_evidence": [
             "The supplied TFDU small-board schematic contains R2-R5 as 22-ohm series resistors, R1=0 ohm and R6=47 ohm; it contains no Txd pull-down and no SD pull-up.",
             "The selected AX7020 J10 Txd and SD nets have 33-ohm series resistor arrays but no discrete fail-safe pulls in the official schematic.",
             "AX7020 U13/IO1_12P/PUDC_B is held low by R29=1 kohm, which enables 7-series SelectIO internal pull-ups during configuration; activation is power-sequence dependent and cannot prove the required Txd-low/SD-high state.",
-            "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot prove FPGA-unconfigured, open-circuit or partial-power behavior.",
+            "A configured shutdown bitstream can drive Txd low and SD high only after PL configuration; it cannot prove FPGA-unconfigured, reset/fault, or partial-power behavior.",
+            "The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison shows byte-identical AX7010/AX7020 base-PCB J10 references. This closes renewed module identity inspection for P10 but does not prove the passive power-up safety state.",
         ],
         "requirements": [
             "AGENTS.md: physical Txd must default low on reset/fault.",
             "AGENTS.md: full shutdown requires SD high and Txd low.",
-            "AGENTS.md: fail-low behavior is required at power-up, open circuit, undriven input, FPGA-unconfigured and partial-power states.",
+            "PROJECT_CONSTRAINTS.txt: TX output default is LOW, partial-power behavior is FAIL_LOW, and FPGA-unconfigured behavior is TX_DISABLED.",
             "Fast-track section 2: autonomous TX or final-TX-kill violations are severe blockers.",
         ],
         "additional_electrical_risk": {
             "id": "P10-RX-B-R29-001",
+            "classification": "DATASHEET_GUARANTEE_GAP_EMPIRICALLY_OPERABLE_ON_IDENTICAL_AX7010_BASE_CIRCUIT",
             "signal": "F1/R1 Rxd at J10-26 / U13",
             "finding": "AX7020 R29 is a 1-kohm pull-down on this receiver input.",
             "datasheet_gap": "TFDU6102 VOH is guaranteed only at 250/500-uA test currents; a 1-kohm load at 3.3 V demands approximately 3.3 mA.",
             "damage_risk": "No output-to-output connection found; functional high-level compliance is not guaranteed.",
+            "empirical_context": "User-confirmed prior operation at the same J10 positions on AX7010; the supplied comparison records byte-identical AX7010/AX7020 base-board schematic and connector circuitry.",
+            "blocking_scope": "Not treated as an independent severe damage-risk blocker; retain as a formal datasheet-guarantee gap for live RX evidence.",
         },
         "required_user_resolution": [
-            "Provide the as-built schematic/photo and resistor values proving a passive pull-down on every Txd and passive pull-up on every SD, including the actual external harness if the bias is not on the small board.",
+            "Provide existing circuit or measurement evidence proving a fail-low physical Txd state for every module during reset/fault, FPGA-unconfigured, and partial-power conditions; renewed TFDU module identity/photos are not requested.",
             "Alternatively issue a new explicit authorization permitting a documented fail-safe hardware revision/rewire; the current fast-track explicitly sets REWIRING_ALLOWED=false.",
             "Provide or authorize safe external measurement evidence for Txd and SD during FPGA-unconfigured and partial-power states before JTAG programming is attempted.",
         ],
@@ -514,14 +567,17 @@ def main() -> int:
     board_doc = {
         "schema_version": 1,
         "test_id": "P10-BOARD-DOCUMENT-INTAKE",
-        "status": "INCOMPLETE",
-        "board_document_set": "INCOMPLETE_PHYSICAL_REVISION_IDENTITY",
-        "tfdu_document_set": "INCOMPLETE_AS_BUILT_IDENTITY_AND_FAILSAFE",
+        "status": "PASS_WITH_DOCUMENTATION_GAPS_NONBLOCKING_AND_SEPARATE_SAFETY_BLOCKER",
+        "board_document_set": "PASS_FOR_J10_MAPPING_PHYSICAL_REVISION_GAPS_NONBLOCKING",
+        "tfdu_document_set": "PASS_FOR_USER_ACCEPTED_FUNCTIONAL_IDENTITY_SAFETY_SEPARATELY_OPEN",
         "official_board_sources_sufficient_for_j10_pin_mapping": True,
         "official_board_sources_sufficient_for_physical_board_revision": False,
         "official_tfdu_datasheet_available": True,
         "supplied_tfdu_small_board_schematic_available": True,
         "supplied_tfdu_small_board_schematic_exact_part_mismatch": "symbol is TFDU6108-TT3 while intended mounted part is TFDU6102",
+        "tfdu_module_identity_reconfirmation_required_for_p10": False,
+        "tfdu_historical_functionality": "USER_CONFIRMED_PREVIOUSLY_OPERATIONAL_ON_AX7010",
+        "user_clarification": USER_CLARIFICATION,
         "reference_file_inventory": "evidence/generated/p10_board_reference_file_inventory.json",
         "sources": sources,
         "blocking_condition": "P10-SAFETY-POWERUP-001",
@@ -540,9 +596,10 @@ def main() -> int:
         "bank_vcco_iostandard": "PASS_FOR_DOCUMENTED_AX7020_REFERENCE: bank34/bank35 3.3 V, LVCMOS33",
         "connector_series_resistors": "PASS: 33 ohm on all selected J10 signal nets",
         "board_peripheral_conflict": "PASS_FOR_SELECTED_NETS_EXCEPT_R29_B_RXD",
-        "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP",
+        "r29_b_rxd_loading": "ELECTRICAL_GUARANTEE_GAP_WITH_USER_CONFIRMED_PRIOR_OPERATION_ON_IDENTICAL_BASE_CIRCUIT",
         "powerup_reset_default": "FAIL: passive Txd-low and SD-high are not established",
-        "physical_board_role_binding": "PENDING",
+        "physical_board_role_binding": "PENDING_LIVE_JTAG_CABLE_SERIAL_ENUMERATION",
+        "tfdu_module_identity": "USER_ACCEPTED_HISTORICAL_FUNCTIONAL_IDENTITY_NO_RECONFIRMATION_REQUIRED",
         "hardware_admission": False,
         "hardware_actions_executed": False,
         "blocking_condition": "P10-SAFETY-POWERUP-001",
@@ -583,49 +640,68 @@ def main() -> int:
             "- Existing TFDU VCC/GND wiring remains user-owned and must not be altered under the current authorization.",
             "- Any future connector change requires both AX7020 boards and all TFDU rails to be powered off.",
             "- Before power-up: verify ground continuity, supply polarity, actual VCC1/VCC2 voltage/topology, no shorts, and all four passive Txd-low/SD-high states.",
-            "- Bind two distinct JTAG cable identities to AX7020-F and AX7020-R before programming either board.",
+            "- Use JTAG cable serial as the authoritative F/R role key. A bounded read-only enumeration may run now; bind each serial to AX7020-F or AX7020-R before programming.",
             "- UART is role-local diagnostic output only; it cannot arm TX or bypass the final TX kill.",
             "- A shutdown bitstream must drive both Txd outputs low and both SD outputs high, but it does not cure an unconfigured/partial-power electrical gap.",
             "",
             "## Open items",
             "",
             "- Severe blocker: no documented passive Txd pull-down or SD pull-up on any supplied TFDU small-board schematic.",
-            "- J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground; TFDU6102 high-level compliance is not guaranteed at that load.",
-            "- Actual AX7020-F/AX7020-R PCB revisions, FPGA markings, and unique JTAG identities remain unbound.",
-            "- Actual four-module markings/revisions and as-built VCC1/VCC2/harness bias remain undocumented.",
+            "- J10-26/U13 (F1/R1 Rxd) has AX7020 R29=1 kohm to ground. This remains a datasheet-guarantee gap, while user-confirmed AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.",
+            "- AX7020-F/AX7020-R JTAG cable serial role binding remains pending; physical PCB revision/marking photos are nonblocking documentation gaps for this fast-track.",
+            "- Per user direction, the four historically operational TFDU modules do not require renewed marking/revision/photo confirmation for P10.",
             "",
             "## Hardware admission decision",
             "",
-            "`FAIL_CLOSED`: no hw_server/JTAG/program/ELF/UART/TFDU action is admitted until `P10-SAFETY-POWERUP-001` is resolved.",
+            "`FAIL_CLOSED_FOR_ACTIVE_HARDWARE`: bounded read-only JTAG serial enumeration is admitted. Programming, ELF execution, UART writes, TFDU drive, and any configuration-changing action remain blocked by `P10-SAFETY-POWERUP-001`.",
         ]
     )
     proposal_path = ROOT / "docs/hardware/P10_AX7020_DUAL_BOARD_WIRING_PROPOSAL.md"
     proposal_path.parent.mkdir(parents=True, exist_ok=True)
     proposal_path.write_text("\n".join(proposal_lines) + "\n", encoding="utf-8")
 
-    required_docs = """# P10 required physical board/module evidence
+    required_docs = """# P10 remaining board and safety evidence
 
-The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, and connector orientation. It does not identify the two physical boards or prove the as-built TFDU fail-safe network.
+The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, connector orientation, and independent AX7020 XDCs. The user confirms that all four TFDU small boards previously operated on AX7010 and does not require renewed small-board identity inspection. The supplied comparison records byte-identical AX7010/AX7020 base-PCB J10 design files.
 
-Required from the user before hardware admission:
+Required before any programming or TFDU-driving hardware action:
 
-- full model marking for both physical AX7020 boards;
-- PCB revision/silkscreen for both boards;
-- full FPGA top marking for both boards;
-- clear front/back photographs of both boards, including J10 pin-1 markings;
-- the official user manual and schematic revision that matches each physical PCB (the current local copies remain reference candidates);
-- physical confirmation that J10 bank 34 and bank 35 VCCO are 3.3 V on both boards;
-- clear front/back photographs and revision markings for F0, F1, R0, and R1;
-- an as-built TFDU small-board schematic/pinout that identifies the mounted device as TFDU6102 rather than only a TFDU6108 library symbol;
-- exact VCC1/VCC2 rail voltage and the actual R1/R6/decoupling population;
-- exact Mode and SD structure;
-- passive fail-safe component values and locations proving Txd LOW and SD HIGH for every module at reset, FPGA-unconfigured, open-circuit, and partial-power states;
-- unique JTAG cable/target identifiers that bind the physical fixed and rotating-role boards.
+- two distinct live JTAG cable serials, each explicitly bound to AX7020-F or AX7020-R;
+- existing circuit or measurement evidence that every physical Txd remains LOW during reset/fault, FPGA-unconfigured, and partial-power conditions;
+- safe external measurement evidence for the Txd/SD states above, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring).
 
-Do not substitute zero, `unknown`, a similar board revision, or the AX7010 XDC for any missing item.
+Nonblocking documentation gaps retained for provenance:
+
+- physical AX7020 PCB revision/silkscreen and FPGA top marking;
+- front/back photographs of the two AX7020 boards;
+- direct physical confirmation of bank 34/35 VCCO and VCC1/VCC2 rail values.
+
+Not requested again for P10 per the user's 2026-07-30 clarification:
+
+- TFDU module front/back photographs;
+- renewed TFDU module marking or PCB-revision confirmation;
+- renewed proof that the modules functioned on AX7010.
+
+Do not substitute zero, `unknown`, target order, a similar board revision, or the AX7010 XDC for a missing identity or electrical value.
 """
     required_path = ROOT / "docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md"
     required_path.write_text(required_docs, encoding="utf-8")
+
+    clarification_md = """# P10 user hardware clarifications
+
+Recorded from the current user instructions on 2026-07-30:
+
+- all four TFDU small boards previously operated on AX7010;
+- renewed TFDU module hardware identity, marking, PCB-revision, and photo confirmation is not required for P10;
+- the two AX7020 boards are to be distinguished and role-bound by JTAG cable serial;
+- this clarification does not authorize target-order role assignment;
+- this clarification does not convert historical AX7010 operation into fresh AX7020 hardware acceptance;
+- this clarification does not waive the canonical TX-disabled requirements for reset/fault, FPGA-unconfigured, or partial-power states.
+
+Supporting comparison input: `C:\\Users\\user\\Desktop\\AX7010_AX7020_HARDWARE_COMPARISON.md`, SHA256 `a8c47064d725b28f7679aa208a1195b4075b3a0ba3a8bbe335c3c0fbea98cb13`. It records byte-identical AX7010/AX7020 base-PCB schematic, connector, and pin-workbook design files. It is compatibility context, not fresh hardware evidence.
+"""
+    clarification_path = ROOT / "docs/hardware/P10_USER_HARDWARE_CLARIFICATIONS.md"
+    clarification_path.write_text(clarification_md, encoding="utf-8")
 
     blocker_md = """# P10 severe hardware blocker: TFDU power-up fail-safe is not established
 
@@ -635,12 +711,14 @@ Direct evidence:
 
 - The supplied TFDU small-board `SchDoc` contains four 22-ohm signal series resistors, a 0-ohm VCC2 path, and a 47-ohm VCC1 filter. It contains no Txd pull-down and no SD pull-up.
 - The official AX7020 schematic shows only 33-ohm series arrays on the selected J10 Txd/SD nets; it shows no discrete fail-safe bias on those nets.
-- AX7020 R29 holds U13/`PUDC_B` low with 1 kohm. The 7-series configuration contract therefore enables internal SelectIO pull-ups during configuration, subject to power sequencing. That cannot establish the required physical Txd-low/SD-high state in every power/reset/open-circuit condition.
+- AX7020 R29 holds U13/`PUDC_B` low with 1 kohm. The 7-series configuration contract therefore enables internal SelectIO pull-ups during configuration, subject to power sequencing. That cannot establish the required physical Txd-low/SD-high state in every power/reset/fault/partial-power condition.
 - A shutdown image controls pins only after PL configuration and cannot prove FPGA-unconfigured or partial-power behavior.
 
-The same schematic also places R29=1 kohm to ground on the requested B-position Rxd (`J10-26/U13`). This is not an output-to-output connection, but its approximately 3.3 mA high-state load exceeds the TFDU6102 datasheet's 250/500-uA VOH guarantee points.
+The user confirms that all four TFDU small boards previously operated on AX7010. The supplied comparison records byte-identical AX7010/AX7020 base-PCB schematic and J10 circuitry. That is accepted as empirical module/circuit compatibility and removes any P10 request to re-inspect the four module markings, revisions, or photos. It does not establish the passive unconfigured/reset/partial-power safety state required by the canonical project constraints.
 
-No hw_server connection, JTAG enumeration, FPGA programming, ELF execution, UART write, or TFDU drive was performed. Resolution requires as-built passive-bias evidence, or a new authorization that permits a documented fail-safe hardware revision because the current goal prohibits rewiring.
+The same schematic also places R29=1 kohm to ground on the requested B-position Rxd (`J10-26/U13`). This is not an output-to-output connection, but its approximately 3.3 mA high-state load exceeds the TFDU6102 datasheet's 250/500-uA VOH guarantee points. User-confirmed prior operation on the identical AX7010 base/J10 circuit makes this an empirical-operability-backed datasheet gap, not an independent damage-risk blocker.
+
+At artifact-generation time no hardware action was performed. A bounded read-only JTAG cable-serial enumeration is allowed because it neither configures the FPGA nor drives TFDU pins. FPGA programming, ELF execution, UART writes, TFDU drive, reset, and configuration-changing actions remain blocked. Resolution requires existing fail-low circuit/measurement evidence, or a new authorization that permits a documented fail-safe hardware revision because the current goal prohibits rewiring.
 """
     blocker_path = ROOT / "docs/hardware/P10_SEVERE_HARDWARE_BLOCKER.md"
     blocker_path.write_text(blocker_md, encoding="utf-8")
@@ -649,9 +727,11 @@ No hw_server connection, JTAG enumeration, FPGA programming, ELF execution, UART
 
 - Board reference file inventory: `PASS` (71 files, every file SHA256-hashed).
 - Official AX7020 J10 pin mapping source set: `PASS` for the documented AX7020 reference design.
-- Physical board revision/marking identity: `INCOMPLETE` for both boards.
+- Physical board revision/marking: retained as a nonblocking documentation gap; P10 role identity uses JTAG cable serial.
 - TFDU6102 manufacturer datasheet: `PASS`.
-- Supplied TFDU small-board schematic: `PRESENT`, but its library symbol/footprint says TFDU6108-TT3 and the four actual module markings/revisions are not photographed.
+- Supplied TFDU small-board schematic: `PRESENT`; its library symbol/footprint says TFDU6108-TT3.
+- TFDU functional identity: `USER_ACCEPTED`; the user confirms all four modules previously operated on AX7010 and requires no renewed module marking/revision/photo check.
+- AX7010/AX7020 base/J10 comparison: `PASS`; the supplied comparison reports byte-identical reference design files.
 - As-built passive Txd-low/SD-high safety network: `INCOMPLETE` and safety-blocking.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.
@@ -664,22 +744,25 @@ The confirmed J10 A/B mapping is independently supported by the AX7020 manual, s
 
 Mapping is complete, but hardware admission fails closed:
 
-- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in unconfigured/open-circuit/partial-power states.
-- `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load.
-- physical F/R board identity and JTAG cable binding are pending.
+- `P10-SAFETY-POWERUP-001`: no passive Txd-low/SD-high guarantee in reset/fault, unconfigured, or partial-power states.
+- `P10-RX-B-R29-001`: J10-26/U13 Rxd is loaded by R29=1 kohm to ground, outside the TFDU6102 guaranteed VOH test load; user-confirmed prior AX7010 operation on the byte-identical base/J10 circuit supplies empirical compatibility context.
+- physical F/R role binding by live JTAG cable serial is pending.
+- TFDU small-board identity is accepted from user-confirmed prior operation; renewed marking/revision/photo checks are not required.
 
-Result: `FAIL_CLOSED_SEVERE_BLOCKER`; hardware actions executed: `false`.
+Result: `FAIL_CLOSED_SEVERE_BLOCKER` for programming and active hardware; bounded read-only JTAG identity enumeration is allowed. Artifact-generation hardware actions executed: `false`.
 """
     (ROOT / "evidence/generated/p10_wiring_design_audit.md").write_text(audit_md, encoding="utf-8")
 
     outputs = [
         "config/hardware/p10_active_wiring.yaml",
         "config/hardware/p10_board_inventory.yaml",
+        "config/hardware/p10_jtag_identity_inventory.json",
         "config/hardware/p10_tfdu_module_inventory.yaml",
         "board_profiles/ax7020_common/board_identity.yaml",
         *[item for value in profile_paths.values() for item in value.values()],
         "docs/hardware/P10_AX7020_DUAL_BOARD_WIRING_PROPOSAL.md",
         "docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md",
+        "docs/hardware/P10_USER_HARDWARE_CLARIFICATIONS.md",
         "docs/hardware/P10_SEVERE_HARDWARE_BLOCKER.md",
         "evidence/generated/p10_severe_hardware_blocker.json",
         "evidence/generated/p10_board_document_intake.json",

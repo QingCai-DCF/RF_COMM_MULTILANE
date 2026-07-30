@@ -2,9 +2,11 @@
 
 - Board reference file inventory: `PASS` (71 files, every file SHA256-hashed).
 - Official AX7020 J10 pin mapping source set: `PASS` for the documented AX7020 reference design.
-- Physical board revision/marking identity: `INCOMPLETE` for both boards.
+- Physical board revision/marking: retained as a nonblocking documentation gap; P10 role identity uses JTAG cable serial.
 - TFDU6102 manufacturer datasheet: `PASS`.
-- Supplied TFDU small-board schematic: `PRESENT`, but its library symbol/footprint says TFDU6108-TT3 and the four actual module markings/revisions are not photographed.
+- Supplied TFDU small-board schematic: `PRESENT`; its library symbol/footprint says TFDU6108-TT3.
+- TFDU functional identity: `USER_ACCEPTED`; the user confirms all four modules previously operated on AX7010 and requires no renewed module marking/revision/photo check.
+- AX7010/AX7020 base/J10 comparison: `PASS`; the supplied comparison reports byte-identical reference design files.
 - As-built passive Txd-low/SD-high safety network: `INCOMPLETE` and safety-blocking.
 
 See `evidence/generated/p10_board_document_intake.json` and `docs/hardware/P10_REQUIRED_BOARD_DOCUMENTS.md`.

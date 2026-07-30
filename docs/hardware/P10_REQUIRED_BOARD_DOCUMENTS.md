@@ -1,20 +1,23 @@
-# P10 required physical board/module evidence
+# P10 remaining board and safety evidence
 
-The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, and connector orientation. It does not identify the two physical boards or prove the as-built TFDU fail-safe network.
+The official AX7020 reference set is sufficient to derive the J10 package pins, banks, documented VCCO, connector orientation, and independent AX7020 XDCs. The user confirms that all four TFDU small boards previously operated on AX7010 and does not require renewed small-board identity inspection. The supplied comparison records byte-identical AX7010/AX7020 base-PCB J10 design files.
 
-Required from the user before hardware admission:
+Required before any programming or TFDU-driving hardware action:
 
-- full model marking for both physical AX7020 boards;
-- PCB revision/silkscreen for both boards;
-- full FPGA top marking for both boards;
-- clear front/back photographs of both boards, including J10 pin-1 markings;
-- the official user manual and schematic revision that matches each physical PCB (the current local copies remain reference candidates);
-- physical confirmation that J10 bank 34 and bank 35 VCCO are 3.3 V on both boards;
-- clear front/back photographs and revision markings for F0, F1, R0, and R1;
-- an as-built TFDU small-board schematic/pinout that identifies the mounted device as TFDU6102 rather than only a TFDU6108 library symbol;
-- exact VCC1/VCC2 rail voltage and the actual R1/R6/decoupling population;
-- exact Mode and SD structure;
-- passive fail-safe component values and locations proving Txd LOW and SD HIGH for every module at reset, FPGA-unconfigured, open-circuit, and partial-power states;
-- unique JTAG cable/target identifiers that bind the physical fixed and rotating-role boards.
+- two distinct live JTAG cable serials, each explicitly bound to AX7020-F or AX7020-R;
+- existing circuit or measurement evidence that every physical Txd remains LOW during reset/fault, FPGA-unconfigured, and partial-power conditions;
+- safe external measurement evidence for the Txd/SD states above, or a separately authorized documented fail-safe hardware revision (the current goal prohibits rewiring).
 
-Do not substitute zero, `unknown`, a similar board revision, or the AX7010 XDC for any missing item.
+Nonblocking documentation gaps retained for provenance:
+
+- physical AX7020 PCB revision/silkscreen and FPGA top marking;
+- front/back photographs of the two AX7020 boards;
+- direct physical confirmation of bank 34/35 VCCO and VCC1/VCC2 rail values.
+
+Not requested again for P10 per the user's 2026-07-30 clarification:
+
+- TFDU module front/back photographs;
+- renewed TFDU module marking or PCB-revision confirmation;
+- renewed proof that the modules functioned on AX7010.
+
+Do not substitute zero, `unknown`, target order, a similar board revision, or the AX7010 XDC for a missing identity or electrical value.
