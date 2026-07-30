@@ -5,7 +5,12 @@
 // P9 Z7010 peripheral boundary.  The AXI DMA owns DDR movement; this block
 // owns only AXI-Stream framing, the optical transport, fail-closed controls,
 // and read-only telemetry.  All logic is in the 64 MHz protocol domain.
-module p9_axi_dma_peripheral (
+module p9_axi_dma_peripheral #(
+  parameter integer DEPLOYMENT_ROLE = 0,
+  parameter logic [31:0] BUILD_ID = 32'h5009_000B,
+  parameter logic [31:0] PROFILE_ID = 32'h0070_1022,
+  parameter logic [31:0] IDENTITY_MAGIC = 32'h5039_5A10
+) (
   input  logic         s_axi_aclk,
   input  logic         s_axi_aresetn,
   input  logic [11:0]  s_axi_awaddr,
@@ -52,6 +57,9 @@ module p9_axi_dma_peripheral (
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
   localparam logic [31:0] P9_BUILD_ID = 32'h5009_000B;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
+  wire [31:0] effective_magic = DEPLOYMENT_ROLE == 0 ? P9_MAGIC : IDENTITY_MAGIC;
+  wire [31:0] effective_build_id = DEPLOYMENT_ROLE == 0 ? P9_BUILD_ID : BUILD_ID;
+  wire [31:0] effective_profile_id = DEPLOYMENT_ROLE == 0 ? P9_PROFILE_ID : PROFILE_ID;
 
   logic reg_wr_en;
   logic [11:0] reg_wr_addr;
@@ -70,6 +78,13 @@ module p9_axi_dma_peripheral (
   logic abort_pulse_q;
   logic raw_start_pulse_q;
   logic [5:0] stream_reset_hold_q;
+  logic transport_resetn_q;
+  logic [1:0] core_a_mode;
+  logic [1:0] core_a_sd;
+  logic [1:0] core_a_txd;
+  logic [1:0] core_b_mode;
+  logic [1:0] core_b_sd;
+  logic [1:0] core_b_txd;
   logic [1:0] cfg_lane_mask_q;
   logic [15:0] cfg_lane_weights_q;
   logic [1:0] cfg_rate_q;
@@ -259,6 +274,11 @@ module p9_axi_dma_peripheral (
             if (reg_wr_data[9]) begin
               receiver_enable_q <= 0;
               cfg_lane_mask_q <= 0;
+              // Kill the physical transmitter before the registered local
+              // transport reset is asserted on the following clock.  This
+              // avoids deriving a high-fanout asynchronous reset through a
+              // combinational LUT while preserving fail-closed behavior.
+              shutdown_pulse_q <= 1;
               // Hold the request long enough for each proc_sys_reset instance
               // to observe it and synchronously release the 64/100/50 MHz
               // protocol-stream/DMA domains.  The transport core shares this
@@ -299,12 +319,29 @@ module p9_axi_dma_peripheral (
     end
   end
 
+  // Keep the transport/BRAM reset source free of an asynchronous set/reset so
+  // RAMB control timing remains analyzable (REQP-1839=0). The physical output
+  // boundary below independently gates reset to Txd-low/SD-high/Mode-high.
+  always_ff @(posedge s_axi_aclk) begin
+    if (!s_axi_aresetn)
+      transport_resetn_q <= 1'b0;
+    else
+      transport_resetn_q <= !stream_reset_request_o;
+  end
+
+  assign ir_mode_out_0 = s_axi_aresetn ? core_a_mode : 2'b11;
+  assign ir_sd_0       = s_axi_aresetn ? core_a_sd   : 2'b11;
+  assign ir_tx_out_0   = s_axi_aresetn ? core_a_txd  : 2'b00;
+  assign loop_mode_b0  = s_axi_aresetn ? core_b_mode : 2'b11;
+  assign loop_sd_b0    = s_axi_aresetn ? core_b_sd   : 2'b11;
+  assign loop_tx_b0    = s_axi_aresetn ? core_b_txd  : 2'b00;
+
   always_comb begin
     reg_rd_data = 32'h0000_0000;
     unique case (reg_rd_addr)
-      12'h700: reg_rd_data = P9_MAGIC;
-      12'h704: reg_rd_data = P9_BUILD_ID;
-      12'h708: reg_rd_data = P9_PROFILE_ID;
+      12'h700: reg_rd_data = effective_magic;
+      12'h704: reg_rd_data = effective_build_id;
+      12'h708: reg_rd_data = effective_profile_id;
       12'h70C: reg_rd_data = `IR_REGISTER_MAP_VERSION;
       12'h710: reg_rd_data = `IR_REGISTER_MAP_HASH_LOW;
       12'h714: reg_rd_data = {8'd247, 8'd32, 4'd4, 4'd2, 4'd2, 4'd1};
@@ -410,9 +447,10 @@ module p9_axi_dma_peripheral (
 
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
-    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000)
+    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000),
+    .DEPLOYMENT_ROLE(DEPLOYMENT_ROLE)
   ) u_transport (
-    .clk(s_axi_aclk), .rst_n(s_axi_aresetn && !stream_reset_request_o),
+    .clk(s_axi_aclk), .rst_n(transport_resetn_q),
     .receiver_enable_i(receiver_enable_q), .arm_request_i(arm_pulse_q),
     .disarm_request_i(disarm_pulse_q), .full_shutdown_request_i(shutdown_pulse_q),
     .clear_counters_i(clear_pulse_q), .start_object_i(start_pulse_q),
@@ -432,9 +470,9 @@ module p9_axi_dma_peripheral (
     .s_axis_tlast_i(s_axis_tlast), .m_axis_tvalid_o(m_axis_tvalid),
     .m_axis_tready_i(m_axis_tready), .m_axis_tdata_o(m_axis_tdata),
     .m_axis_tkeep_o(m_axis_tkeep), .m_axis_tlast_o(m_axis_tlast),
-    .a_rxd_i(ir_rx_in_0), .a_txd_o(ir_tx_out_0), .a_sd_o(ir_sd_0),
-    .a_mode_o(ir_mode_out_0), .b_rxd_i(loop_rx_b0), .b_txd_o(loop_tx_b0),
-    .b_sd_o(loop_sd_b0), .b_mode_o(loop_mode_b0),
+    .a_rxd_i(ir_rx_in_0), .a_txd_o(core_a_txd), .a_sd_o(core_a_sd),
+    .a_mode_o(core_a_mode), .b_rxd_i(loop_rx_b0), .b_txd_o(core_b_txd),
+    .b_sd_o(core_b_sd), .b_mode_o(core_b_mode),
     .endpoint_armed_o(endpoint_armed), .tx_kill_active_o(tx_kill_active),
     .phy_ready_mask_o(phy_ready_mask), .startup_done_mask_o(startup_done_mask),
     .safety_fault_mask_o(safety_fault_mask), .object_active_o(object_active),

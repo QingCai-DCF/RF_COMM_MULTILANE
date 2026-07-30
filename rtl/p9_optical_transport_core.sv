@@ -19,7 +19,17 @@ module p9_optical_transport_core #(
   // frame for 320 us after completion.  Even if ACK generation is suppressed
   // by a fault-injection case, any clock-aligned 1 ms window then contains at
   // most 680 us of frame activity (170 us Txd high), below the 18% target.
-  parameter integer FRAME_DUTY_GUARD_CYCLES = 20_480
+  parameter integer FRAME_DUTY_GUARD_CYCLES = 20_480,
+  // 0 keeps the frozen P9 single-FPGA fixture behavior. P10 instantiates one
+  // physical endpoint per AX7020: 1 owns side A (fixed), 2 owns side B
+  // (rotating role). The two instances exchange DATA and ACK frames only
+  // through independent TFDU pins; no payload RAM is shared between nodes.
+  parameter integer DEPLOYMENT_ROLE = 0,
+  // Independent endpoints use a bounded DATA burst followed by an explicit
+  // turnaround-request flag. The receiver suppresses timer ACK transmission
+  // until that boundary, preventing DATA/ACK optical collisions without a
+  // shared scheduler or shared memory between the two FPGAs.
+  parameter integer ENDPOINT_BURST_FRAMES = 4
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -143,6 +153,16 @@ module p9_optical_transport_core #(
   localparam integer ENTRY_WIDTH = $clog2(WINDOW_SIZE);
   localparam integer FRAME_DUTY_GUARD_WIDTH =
       (FRAME_DUTY_GUARD_CYCLES < 1) ? 1 : $clog2(FRAME_DUTY_GUARD_CYCLES + 1);
+  localparam integer ROLE_P9_DUAL = 0;
+  localparam integer ROLE_FIXED_A = 1;
+  localparam integer ROLE_ROTATING_B = 2;
+
+  initial begin
+    if (DEPLOYMENT_ROLE < ROLE_P9_DUAL || DEPLOYMENT_ROLE > ROLE_ROTATING_B)
+      $error("DEPLOYMENT_ROLE must be 0 (P9 dual), 1 (fixed A), or 2 (rotating B)");
+    if (ENDPOINT_BURST_FRAMES < 1 || ENDPOINT_BURST_FRAMES > WINDOW_SIZE)
+      $error("ENDPOINT_BURST_FRAMES must be within the selective-repeat window");
+  end
 
   function automatic [31:0] crc32_next_byte(
     input [7:0] data, input [31:0] crc_in
@@ -206,18 +226,37 @@ module p9_optical_transport_core #(
   wire [1:0] b_txd_internal;
   wire [1:0] a_rx_pulse;
   wire [1:0] b_rx_pulse;
-  wire any_safety_fault = |a_fault_stuck | |b_fault_stuck | |a_fault_duty | |b_fault_duty;
+  wire endpoint_mode = DEPLOYMENT_ROLE != ROLE_P9_DUAL;
+  wire local_is_a = DEPLOYMENT_ROLE != ROLE_ROTATING_B;
+  wire [1:0] local_phy_ready = local_is_a ? a_phy_ready : b_phy_ready;
+  wire [1:0] local_startup_done = local_is_a ? a_startup_done : b_startup_done;
+  wire [1:0] local_fault_stuck = local_is_a ? a_fault_stuck : b_fault_stuck;
+  wire [1:0] local_fault_duty = local_is_a ? a_fault_duty : b_fault_duty;
+  wire any_safety_fault = endpoint_mode ?
+      (|local_fault_stuck | |local_fault_duty) :
+      (|a_fault_stuck | |b_fault_stuck | |a_fault_duty | |b_fault_duty);
   wire tx_kill = !endpoint_armed_q || shutdown_latched_q || any_safety_fault;
+  wire local_sender = !endpoint_mode ||
+      (local_is_a ? !object_direction_q : object_direction_q);
+  wire local_receiver = !endpoint_mode || !local_sender;
+  wire endpoint_phy_ready_all = endpoint_mode ? &local_phy_ready :
+      (&a_phy_ready && &b_phy_ready);
 
   assign endpoint_armed_o = endpoint_armed_q;
   assign tx_kill_active_o = tx_kill;
-  assign phy_ready_mask_o = {b_phy_ready[1], b_phy_ready[0], a_phy_ready[1], a_phy_ready[0]};
-  assign startup_done_mask_o = {b_startup_done[1], b_startup_done[0],
-                                a_startup_done[1], a_startup_done[0]};
-  assign safety_fault_mask_o = {b_fault_stuck[1] | b_fault_duty[1],
-                                b_fault_stuck[0] | b_fault_duty[0],
-                                a_fault_stuck[1] | a_fault_duty[1],
-                                a_fault_stuck[0] | a_fault_duty[0]};
+  assign phy_ready_mask_o = endpoint_mode ?
+      (local_is_a ? {2'b00, local_phy_ready} : {local_phy_ready, 2'b00}) :
+      {b_phy_ready[1], b_phy_ready[0], a_phy_ready[1], a_phy_ready[0]};
+  assign startup_done_mask_o = endpoint_mode ?
+      (local_is_a ? {2'b00, local_startup_done} : {local_startup_done, 2'b00}) :
+      {b_startup_done[1], b_startup_done[0], a_startup_done[1], a_startup_done[0]};
+  assign safety_fault_mask_o = endpoint_mode ?
+      (local_is_a ? {2'b00, (local_fault_stuck | local_fault_duty)} :
+                    {(local_fault_stuck | local_fault_duty), 2'b00}) :
+      {b_fault_stuck[1] | b_fault_duty[1],
+       b_fault_stuck[0] | b_fault_duty[0],
+       a_fault_stuck[1] | a_fault_duty[1],
+       a_fault_stuck[0] | a_fault_duty[0]};
   assign object_active_o = object_active_q;
   assign object_done_o = object_done_q;
   assign object_fail_o = object_fail_q;
@@ -291,7 +330,8 @@ module p9_optical_transport_core #(
     end
   end
 
-  assign s_axis_tready_o = object_active_q && !object_fail_q && !disarm_request_i &&
+  assign s_axis_tready_o = object_active_q && local_sender &&
+      !object_fail_q && !disarm_request_i &&
       !input_complete_q &&
       !beat_valid_q && !allocate_pending_q && ingress_can_start_frame;
   assign input_complete_o = input_complete_q;
@@ -385,6 +425,7 @@ module p9_optical_transport_core #(
   reg [15:0] dp_peer_ack_base_q;
   reg [31:0] dp_peer_ack_bitmap_q;
   reg [5:0] dp_peer_ack_width_q;
+  reg [15:0] dp_peer_ack_credit_q;
   // The RX window commits metadata through a synchronous staging cycle.  A
   // control event asserted with dp_rx_frame_valid_q would therefore snapshot
   // the previous ACK/SACK state.  Delay the physical-frame classification
@@ -393,9 +434,11 @@ module p9_optical_transport_core #(
   // only a valid frame that was not newly accepted (for example a duplicate
   // after ACK loss) forces an immediate cumulative re-ACK of stable state.
   reg [1:0] dp_ack_control_pipe_q;
+  reg [1:0] dp_turnaround_pipe_q;
   reg dp_rx_accept_delayed_q;
   reg dp_rx_frame_valid_q;
   reg dp_rx_l1_valid_q;
+  reg dp_rx_turnaround_q;
   reg [31:0] dp_rx_session_q;
   reg [15:0] dp_rx_sequence_q;
   reg [15:0] dp_rx_path_q;
@@ -424,9 +467,14 @@ module p9_optical_transport_core #(
   // headroom.  Physical target-duty headroom remains independently enforced.
   wire [1:0] mapping_valid_mask = ~cfg_fault_flags_i[9:8];
   wire [1:0] injected_duty_headroom_mask = ~cfg_fault_flags_i[11:10];
-  wire [1:0] physical_duty_headroom_mask =
+  wire [1:0] physical_duty_headroom_mask = endpoint_mode ?
+      ~local_fault_duty :
       ~{a_fault_duty[1] | b_fault_duty[1],
         a_fault_duty[0] | b_fault_duty[0]};
+  wire [1:0] physical_fault_free_mask = endpoint_mode ?
+      ~local_fault_stuck :
+      ~{a_fault_stuck[1] | b_fault_stuck[1],
+        a_fault_stuck[0] | b_fault_stuck[0]};
   wire [1:0] schedulable_lane_mask = effective_lane_mask &
       mapping_valid_mask & injected_duty_headroom_mask &
       physical_duty_headroom_mask;
@@ -448,11 +496,11 @@ module p9_optical_transport_core #(
     .frame_admission_i(2'b11), .lane_tx_permit_i({2{endpoint_armed_q}}),
     .duty_headroom_i(physical_duty_headroom_mask &
                      injected_duty_headroom_mask),
-    .fault_free_i(~{a_fault_stuck[1] | b_fault_stuck[1],
-                    a_fault_stuck[0] | b_fault_stuck[0]}),
+    .fault_free_i(physical_fault_free_mask),
     .global_permit_effective_i(endpoint_armed_q), .endpoint_armed_i(endpoint_armed_q),
     .tx_kill_active_i(tx_kill),
-    .peer_receiver_credit_i({10'd0, dp_rx_credit}),
+    .peer_receiver_credit_i(endpoint_mode ? dp_peer_ack_credit_q :
+                            {10'd0, dp_rx_credit}),
     .tx_allocate_valid_i(allocate_pending_q), .tx_allocate_ready_o(dp_allocate_ready),
     .tx_allocate_payload_ref_i(allocate_slot_q),
     .tx_allocate_payload_length_i(allocate_length_q),
@@ -488,8 +536,9 @@ module p9_optical_transport_core #(
     // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
     .ack_control_event_i(dp_ack_control_pipe_q[1] &&
                          !dp_rx_accept_delayed_q),
-    .ack_direction_boundary_i(1'b0),
-    .ack_explicit_request_i(input_complete_q && tx_outstanding_count_o != 0),
+    .ack_direction_boundary_i(endpoint_mode && endpoint_turnaround_pending_q),
+    .ack_explicit_request_i(!endpoint_mode && input_complete_q &&
+                            tx_outstanding_count_o != 0),
     .local_ack_valid_o(dp_local_ack_valid), .local_ack_ready_i(dp_local_ack_ready_q),
     .local_ack_session_epoch_o(dp_local_ack_session),
     .local_ack_base_o(dp_local_ack_base), .local_ack_bitmap_o(dp_local_ack_bitmap),
@@ -530,15 +579,21 @@ module p9_optical_transport_core #(
   always @(posedge clk or negedge rst_n) begin : ack_control_alignment
     if (!rst_n) begin
       dp_ack_control_pipe_q <= 2'b00;
+      dp_turnaround_pipe_q <= 2'b00;
       dp_rx_accept_delayed_q <= 1'b0;
     end else if (start_object_i || abort_object_i || disarm_request_i ||
                  full_shutdown_request_i || any_safety_fault) begin
       dp_ack_control_pipe_q <= 2'b00;
+      dp_turnaround_pipe_q <= 2'b00;
       dp_rx_accept_delayed_q <= 1'b0;
     end else begin
       dp_ack_control_pipe_q <= {
           dp_ack_control_pipe_q[0],
           dp_rx_frame_valid_q && dp_rx_l1_valid_q
+      };
+      dp_turnaround_pipe_q <= {
+          dp_turnaround_pipe_q[0],
+          dp_rx_frame_valid_q && dp_rx_l1_valid_q && dp_rx_turnaround_q
       };
       dp_rx_accept_delayed_q <= dp_rx_accept_pulse;
     end
@@ -589,6 +644,16 @@ module p9_optical_transport_core #(
   reg ack_lane_q;
   reg [31:0] ack_wait_q;
   reg ack_received_pulse_q;
+  reg [5:0] endpoint_tx_burst_count_q;
+  reg endpoint_waiting_for_ack_q;
+  reg [31:0] endpoint_wait_ack_timer_q;
+  reg endpoint_turnaround_pending_q;
+  wire endpoint_turnaround_request_pulse;
+  wire endpoint_valid_ack_pulse = ack_received_pulse_q &&
+      dp_peer_ack_session_q == object_session_q;
+  wire endpoint_data_boundary = endpoint_mode && local_sender &&
+      ((endpoint_tx_burst_count_q >= ENDPOINT_BURST_FRAMES-1) ||
+       dp_attempt_descriptor[0]);
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
   // Admit an entire encoded frame against the exact physical-module duty
@@ -618,12 +683,16 @@ module p9_optical_transport_core #(
       ack_lane0_headroom >= 32'd768
   };
   wire [1:0] ack_schedulable_lane_mask =
-      schedulable_lane_mask & ack_frame_duty_ready;
-  assign lane_runtime_ready[0] = schedulable_lane_mask[0] && !serializer_busy[0] &&
+      schedulable_lane_mask & ack_frame_duty_ready & {2{local_receiver}};
+  assign lane_runtime_ready[0] = local_sender && !endpoint_waiting_for_ack_q &&
+      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[0] &&
+      !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] &&
       frame_duty_guard_q[0] == 0 && data_frame_duty_ready[0] &&
       phase_q == PH_DATA;
-  assign lane_runtime_ready[1] = schedulable_lane_mask[1] && !serializer_busy[1] &&
+  assign lane_runtime_ready[1] = local_sender && !endpoint_waiting_for_ack_q &&
+      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[1] &&
+      !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] &&
       frame_duty_guard_q[1] == 0 && data_frame_duty_ready[1] &&
       phase_q == PH_DATA;
@@ -673,6 +742,10 @@ module p9_optical_transport_core #(
       duplicate_ack_validation_start_q <= 0;
       dropped_data_count_q <= 0;
       dropped_ack_count_q <= 0;
+      endpoint_tx_burst_count_q <= 0;
+      endpoint_waiting_for_ack_q <= 0;
+      endpoint_wait_ack_timer_q <= 0;
+      endpoint_turnaround_pending_q <= 0;
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
         lane_payload_base[copy_lane] <= 0;
         lane_start_pending[copy_lane] <= 0;
@@ -715,6 +788,7 @@ module p9_optical_transport_core #(
               object_direction_q : !object_direction_q;
           if (phase_q == PH_ACK_START && copy_lane == ack_lane_q) begin
             dp_local_ack_ready_q <= 1;
+            endpoint_turnaround_pending_q <= 0;
             phase_q <= PH_ACK_WAIT_DONE;
           end
         end
@@ -735,6 +809,10 @@ module p9_optical_transport_core #(
         fault_attempt_budget_q <= (cfg_fault_flags_i[4:0] != 0) ? 3 : 0;
         duplicate_ack_validation_pending_q <= cfg_fault_flags_i[5];
         duplicate_ack_validation_start_q <= tx_duplicate_ack_count_o;
+        endpoint_tx_burst_count_q <= 0;
+        endpoint_waiting_for_ack_q <= 0;
+        endpoint_wait_ack_timer_q <= 0;
+        endpoint_turnaround_pending_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
@@ -744,6 +822,10 @@ module p9_optical_transport_core #(
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
         duplicate_ack_validation_pending_q <= 0;
+        endpoint_tx_burst_count_q <= 0;
+        endpoint_waiting_for_ack_q <= 0;
+        endpoint_wait_ack_timer_q <= 0;
+        endpoint_turnaround_pending_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
         end
@@ -754,7 +836,32 @@ module p9_optical_transport_core #(
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
         duplicate_ack_validation_pending_q <= 0;
+        endpoint_tx_burst_count_q <= 0;
+        endpoint_waiting_for_ack_q <= 0;
+        endpoint_wait_ack_timer_q <= 0;
+        endpoint_turnaround_pending_q <= 0;
       end else begin
+        if (endpoint_turnaround_request_pulse)
+          endpoint_turnaround_pending_q <= 1;
+        if (endpoint_mode && local_sender) begin
+          if (endpoint_valid_ack_pulse) begin
+            endpoint_tx_burst_count_q <= 0;
+            endpoint_waiting_for_ack_q <= 0;
+            endpoint_wait_ack_timer_q <= 0;
+          end else if (endpoint_waiting_for_ack_q) begin
+            if (endpoint_wait_ack_timer_q >= RTO_CYCLES-1) begin
+              // Allow the selective-repeat window to present its bounded
+              // retry after an absent DATA or ACK frame.
+              endpoint_tx_burst_count_q <= 0;
+              endpoint_waiting_for_ack_q <= 0;
+              endpoint_wait_ack_timer_q <= 0;
+            end else begin
+              endpoint_wait_ack_timer_q <= endpoint_wait_ack_timer_q + 1'b1;
+            end
+          end else begin
+            endpoint_wait_ack_timer_q <= 0;
+          end
+        end
         if (duplicate_ack_validation_pending_q &&
             tx_duplicate_ack_count_o != duplicate_ack_validation_start_q)
           duplicate_ack_validation_pending_q <= 0;
@@ -791,9 +898,20 @@ module p9_optical_transport_core #(
                 (fault_attempt_budget_q != 0 && fault_flags_remaining_q[4]) ?
                 tx_slot_crc[dp_attempt_payload_ref] ^ 32'h0000_0001 :
                 tx_slot_crc[dp_attempt_payload_ref];
-            lane_flags[dp_attempt_lane] <= {7'd0, tx_slot_final[dp_attempt_payload_ref]};
+            lane_flags[dp_attempt_lane] <= {
+                6'd0, endpoint_data_boundary,
+                tx_slot_final[dp_attempt_payload_ref]};
             lane_object[dp_attempt_lane] <= object_id_q;
             lane_fragment[dp_attempt_lane] <= tx_slot_fragment_offset[dp_attempt_payload_ref];
+            if (endpoint_mode && local_sender) begin
+              if (endpoint_data_boundary) begin
+                endpoint_tx_burst_count_q <= 0;
+                endpoint_waiting_for_ack_q <= 1;
+                endpoint_wait_ack_timer_q <= 0;
+              end else begin
+                endpoint_tx_burst_count_q <= endpoint_tx_burst_count_q + 1'b1;
+              end
+            end
             if (fault_attempt_budget_q != 0) begin
               fault_attempt_budget_q <= fault_attempt_budget_q - 1'b1;
               if (fault_attempt_budget_q == 1)
@@ -807,14 +925,31 @@ module p9_optical_transport_core #(
           // ACK, do not consume the same held VALID again on the following
           // handshake cycle and accidentally serialize an ACK that was meant
           // to be lost.
-          PH_DATA: if (dp_local_ack_valid && !dp_local_ack_ready_q) begin
-            if (drop_ack_remaining_q != 0) begin
-              drop_ack_remaining_q <= drop_ack_remaining_q - 1'b1;
-              dropped_ack_count_q <= dropped_ack_count_q + 1'b1;
-              dp_local_ack_ready_q <= 1;
-            end else begin
-              phase_q <= PH_ACK_GUARD;
-              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
+          PH_DATA: begin
+            if (endpoint_mode && local_sender && endpoint_valid_ack_pulse) begin
+              // The DATA sender has just received the reverse ACK. Hold the
+              // next DATA frame until the peer ACK transmitter's local TFDU
+              // receiver has completed the same bounded recovery interval.
+              phase_q <= PH_DATA_GUARD;
+              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+            end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
+                         (!endpoint_mode || endpoint_turnaround_pending_q)) begin
+              if (endpoint_mode &&
+                  (dp_local_ack_base != rx_base_sequence_o ||
+                   dp_local_ack_bitmap != rx_sack_bitmap_o)) begin
+                // A timer may have frozen an ACK snapshot while the bounded
+                // DATA burst was still arriving. Consume that stale local
+                // snapshot without transmitting it; the held direction
+                // boundary immediately requests a fresh cumulative ACK.
+                dp_local_ack_ready_q <= 1;
+              end else if (drop_ack_remaining_q != 0) begin
+                drop_ack_remaining_q <= drop_ack_remaining_q - 1'b1;
+                dropped_ack_count_q <= dropped_ack_count_q + 1'b1;
+                dp_local_ack_ready_q <= 1;
+              end else begin
+                phase_q <= PH_ACK_GUARD;
+                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
+              end
             end
           end
           PH_ACK_GUARD: if (lanes_idle && ack_schedulable_lane_mask != 0) begin
@@ -838,8 +973,16 @@ module p9_optical_transport_core #(
             end
           end
           PH_ACK_WAIT_DONE: if (serializer_done[ack_lane_q]) begin
-            phase_q <= PH_ACK_WAIT_RX;
-            ack_wait_q <= 0;
+            if (endpoint_mode) begin
+              // The independent receiver node owns the ACK transmitter.  Its
+              // peer consumes that ACK; this node must not wait to receive its
+              // own reverse frame through an internal fixture loopback.
+              phase_q <= PH_DATA_GUARD;
+              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+            end else begin
+              phase_q <= PH_ACK_WAIT_RX;
+              ack_wait_q <= 0;
+            end
           end
           PH_ACK_WAIT_RX: begin
             if (ack_received_pulse_q) begin
@@ -1062,18 +1205,28 @@ module p9_optical_transport_core #(
   wire [31:0] rx_frame_bad [0:1];
   wire [31:0] rx_preamble_count [0:1];
   wire [31:0] rx_symbol_error_count [0:1];
+  assign endpoint_turnaround_request_pulse = endpoint_mode && local_receiver &&
+      dp_turnaround_pipe_q[1];
   (* ram_style="block" *) reg [7:0] rx_temp_lane0 [0:MAX_PAYLOAD_BYTES-1];
   (* ram_style="block" *) reg [7:0] rx_temp_lane1 [0:MAX_PAYLOAD_BYTES-1];
 
   generate
     for (tx_lane = 0; tx_lane < 2; tx_lane = tx_lane + 1) begin : g_receive
-      wire receive_window = serializer_busy[tx_lane] || receive_tail[tx_lane] != 0;
-      wire selected_phy_ready = receive_tail_destination_b[tx_lane] ?
-          b_phy_ready[tx_lane] : a_phy_ready[tx_lane];
-      wire selected_rx_pulse = receive_tail_destination_b[tx_lane] ?
-          b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane];
+      // P9 time-shares a parser with the selected internal destination.  P10
+      // instead keeps each independent node's local receiver open for the
+      // complete object so DATA and reverse ACK frames cross the optical link.
       wire serializer_busy_rise = serializer_busy[tx_lane] &&
           !serializer_busy_d[tx_lane];
+      wire receive_window = endpoint_mode ?
+          (object_active_q && !serializer_busy_rise) :
+          (serializer_busy[tx_lane] || receive_tail[tx_lane] != 0);
+      wire selected_phy_ready = endpoint_mode ? local_phy_ready[tx_lane] :
+          (receive_tail_destination_b[tx_lane] ?
+           b_phy_ready[tx_lane] : a_phy_ready[tx_lane]);
+      wire selected_rx_pulse = endpoint_mode ?
+          (local_is_a ? a_rx_pulse[tx_lane] : b_rx_pulse[tx_lane]) :
+          (receive_tail_destination_b[tx_lane] ?
+           b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane]);
       // Keep the decoder alive through the bounded post-frame receive tail:
       // the final optical symbol reaches Rxd after serializer busy falls.
       // A one-cycle align at every busy rising edge still prevents the
@@ -1150,6 +1303,7 @@ module p9_optical_transport_core #(
   reg [15:0] rx_pending_sequence [0:1];
   reg [15:0] rx_pending_length [0:1];
   reg rx_pending_final [0:1];
+  reg rx_pending_turnaround [0:1];
   reg [31:0] rx_pending_object [0:1];
   (* ram_style="block" *) reg [7:0] rx_store [0:STORE_BYTES-1];
   reg rx_final_slot [0:WINDOW_SIZE-1];
@@ -1201,16 +1355,21 @@ module p9_optical_transport_core #(
       rxc_base_q <= 0;
       dp_rx_frame_valid_q <= 0;
       dp_rx_l1_valid_q <= 0;
+      dp_rx_turnaround_q <= 0;
       dp_rx_session_q <= 0;
       dp_rx_sequence_q <= 0;
       dp_rx_path_q <= 0;
       dp_rx_payload_ref_q <= 0;
       dp_rx_payload_length_q <= 0;
       reorder_hold_q <= 0;
-      for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) rx_pending[rx_lane] <= 0;
+      for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
+        rx_pending[rx_lane] <= 0;
+        rx_pending_turnaround[rx_lane] <= 0;
+      end
       for (rx_lane = 0; rx_lane < WINDOW_SIZE; rx_lane = rx_lane + 1) rx_final_slot[rx_lane] <= 0;
     end else begin
       dp_rx_frame_valid_q <= 0;
+      dp_rx_turnaround_q <= 0;
       for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
         data_event = rx_frame_valid[rx_lane] && !rx_frame_ack[rx_lane];
         event_crc = rx_frame_crc[rx_lane];
@@ -1228,6 +1387,10 @@ module p9_optical_transport_core #(
           rx_pending_sequence[rx_lane] <= event_sequence;
           rx_pending_length[rx_lane] <= event_length;
           rx_pending_final[rx_lane] <= event_final;
+          // DATA headers do not encode direction; endpoint role and the
+          // physical A/B link establish it. Bit 1 is the explicit burst
+          // turnaround request carried in the DATA flags byte.
+          rx_pending_turnaround[rx_lane] <= rx_frame_flags[rx_lane][1];
           rx_pending_object[rx_lane] <= event_object;
         end
       end
@@ -1235,12 +1398,18 @@ module p9_optical_transport_core #(
       if (start_object_i) begin
         rxc_state_q <= RXC_IDLE;
         reorder_hold_q <= cfg_fault_flags_i[6];
-        for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) rx_pending[rx_lane] <= 0;
+        for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
+          rx_pending[rx_lane] <= 0;
+          rx_pending_turnaround[rx_lane] <= 0;
+        end
         for (rx_lane = 0; rx_lane < WINDOW_SIZE; rx_lane = rx_lane + 1) rx_final_slot[rx_lane] <= 0;
       end else if (abort_object_i || disarm_request_i || full_shutdown_request_i) begin
         rxc_state_q <= RXC_IDLE;
         reorder_hold_q <= 0;
-        for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) rx_pending[rx_lane] <= 0;
+        for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
+          rx_pending[rx_lane] <= 0;
+          rx_pending_turnaround[rx_lane] <= 0;
+        end
       end else begin
         case (rxc_state_q)
           RXC_IDLE: begin
@@ -1294,6 +1463,7 @@ module p9_optical_transport_core #(
             dp_rx_path_q <= rx_pending_path[rxc_lane_q];
             dp_rx_payload_ref_q <= rx_pending_sequence[rxc_lane_q][ENTRY_WIDTH-1:0];
             dp_rx_payload_length_q <= rx_pending_length[rxc_lane_q];
+            dp_rx_turnaround_q <= rx_pending_turnaround[rxc_lane_q];
             rx_pending[rxc_lane_q] <= 0;
             rxc_state_q <= RXC_IDLE;
           end
@@ -1318,10 +1488,13 @@ module p9_optical_transport_core #(
       dp_peer_ack_base_q <= 0;
       dp_peer_ack_bitmap_q <= 0;
       dp_peer_ack_width_q <= 6'd32;
+      dp_peer_ack_credit_q <= WINDOW_SIZE;
       ack_received_pulse_q <= 0;
     end else begin
       dp_peer_ack_valid_q <= 0;
       ack_received_pulse_q <= 0;
+      if (start_object_i)
+        dp_peer_ack_credit_q <= WINDOW_SIZE;
       for (rx_lane = 0; rx_lane < 2; rx_lane = rx_lane + 1) begin
         ack_event = rx_frame_valid[rx_lane] && rx_frame_ack[rx_lane];
         ack_crc = rx_frame_crc[rx_lane];
@@ -1329,12 +1502,14 @@ module p9_optical_transport_core #(
         ack_base_value = rx_ack_base[rx_lane];
         ack_bitmap_value = rx_ack_bitmap[rx_lane];
         ack_direction_value = rx_ack_direction[rx_lane];
-        if (ack_event && ack_crc && ack_direction_value == object_direction_q) begin
+        if (ack_event && ack_crc && ack_direction_value == object_direction_q &&
+            (!endpoint_mode || ack_session_value == object_session_q)) begin
           dp_peer_ack_valid_q <= 1;
           dp_peer_ack_session_q <= ack_session_value;
           dp_peer_ack_base_q <= ack_base_value;
           dp_peer_ack_bitmap_q <= ack_bitmap_value;
           dp_peer_ack_width_q <= 6'd32;
+          dp_peer_ack_credit_q <= rx_ack_credit[rx_lane];
           ack_received_pulse_q <= 1;
         end
       end
@@ -1547,7 +1722,7 @@ module p9_optical_transport_core #(
             object_fail_q <= 1;
             object_error_q <= 32'h5009_0008;
           end
-        end else if (arm_request_i && receiver_enable_q && &phy_ready_mask_o)
+        end else if (arm_request_i && receiver_enable_q && endpoint_phy_ready_all)
           endpoint_armed_q <= 1;
         if (abort_object_i) begin
           endpoint_armed_q <= 0;
@@ -1590,9 +1765,18 @@ module p9_optical_transport_core #(
           object_fail_q <= 1;
           object_error_q <= 32'h5009_0007;
         end
-        if (object_active_q && input_complete_q && output_complete_q &&
-            tx_outstanding_count_o == 0 && !allocate_pending_q &&
-            !duplicate_ack_validation_pending_q) begin
+        if (object_active_q &&
+            ((!endpoint_mode && input_complete_q && output_complete_q &&
+              tx_outstanding_count_o == 0 && !allocate_pending_q &&
+              !duplicate_ack_validation_pending_q) ||
+             (endpoint_mode && local_sender && input_complete_q &&
+              tx_outstanding_count_o == 0 && !allocate_pending_q &&
+              !duplicate_ack_validation_pending_q && lanes_idle &&
+              phase_q == PH_DATA) ||
+             (endpoint_mode && local_receiver && output_complete_q &&
+              !dp_local_ack_valid && lanes_idle && phase_q == PH_DATA &&
+              !endpoint_turnaround_pending_q &&
+              !rx_pending[0] && !rx_pending[1] && rxc_state_q == RXC_IDLE))) begin
           object_active_q <= 0;
           object_done_q <= 1;
         end

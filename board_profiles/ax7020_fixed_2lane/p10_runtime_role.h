@@ -1,0 +1,8 @@
+#ifndef P10_RUNTIME_ROLE_H
+#define P10_RUNTIME_ROLE_H
+
+#define P10_ENDPOINT_ROLE 1
+#define P9_RUNTIME_BUILD_ID 0x50313046U
+#define P10_RUNTIME_ROLE_NAME "fixed"
+
+#endif

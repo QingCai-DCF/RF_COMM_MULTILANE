@@ -1,0 +1,107 @@
+`timescale 1ns/1ps
+`default_nettype wire
+
+// Vivado IP Integrator boundary for one independent P10 AX7020 endpoint.
+// ENDPOINT_ROLE=1 is AX7020-F (logical side A); ENDPOINT_ROLE=2 is AX7020-R
+// (logical side B). Only the role-local two TFDU modules reach package pins.
+module p10_axi_dma_endpoint_peripheral_bd #(
+  parameter integer ENDPOINT_ROLE = 1
+) (
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 s_axi_aclk CLK" *)
+  (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF s_axi:s_axis:m_axis, ASSOCIATED_RESET s_axi_aresetn, FREQ_HZ 64000000" *)
+  input         s_axi_aclk,
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 s_axi_aresetn RST" *)
+  (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_LOW" *)
+  input         s_axi_aresetn,
+  input  [11:0] s_axi_awaddr,
+  input  [2:0]  s_axi_awprot,
+  input         s_axi_awvalid,
+  output        s_axi_awready,
+  input  [31:0] s_axi_wdata,
+  input  [3:0]  s_axi_wstrb,
+  input         s_axi_wvalid,
+  output        s_axi_wready,
+  output [1:0]  s_axi_bresp,
+  output        s_axi_bvalid,
+  input         s_axi_bready,
+  input  [11:0] s_axi_araddr,
+  input  [2:0]  s_axi_arprot,
+  input         s_axi_arvalid,
+  output        s_axi_arready,
+  output [31:0] s_axi_rdata,
+  output [1:0]  s_axi_rresp,
+  output        s_axi_rvalid,
+  input         s_axi_rready,
+
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 s_axis TVALID" *) input s_axis_tvalid,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 s_axis TREADY" *) output s_axis_tready,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 s_axis TDATA" *) input [31:0] s_axis_tdata,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 s_axis TKEEP" *) input [3:0] s_axis_tkeep,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 s_axis TLAST" *) input s_axis_tlast,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TVALID" *) output m_axis_tvalid,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TREADY" *) input m_axis_tready,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TDATA" *) output [31:0] m_axis_tdata,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TKEEP" *) output [3:0] m_axis_tkeep,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TLAST" *) output m_axis_tlast,
+  output stream_reset_request_o,
+
+  output [1:0] tfdu_mode_o,
+  input  [1:0] tfdu_rxd_i,
+  output [1:0] tfdu_sd_o,
+  output [1:0] tfdu_txd_o
+);
+  localparam [31:0] P10_MAGIC = 32'h5031_305A;
+  localparam [31:0] P10_BUILD_ID = ENDPOINT_ROLE == 1 ?
+      32'h5031_3046 : 32'h5031_3052;
+  localparam [31:0] P10_PROFILE_ID = ENDPOINT_ROLE == 1 ?
+      32'h7020_00F0 : 32'h7020_00A0;
+
+  wire [1:0] a_mode;
+  wire [1:0] a_sd;
+  wire [1:0] a_txd;
+  wire [1:0] b_mode;
+  wire [1:0] b_sd;
+  wire [1:0] b_txd;
+  wire [1:0] a_rxd = ENDPOINT_ROLE == 1 ? tfdu_rxd_i : 2'b11;
+  wire [1:0] b_rxd = ENDPOINT_ROLE == 2 ? tfdu_rxd_i : 2'b11;
+
+  assign tfdu_mode_o = ENDPOINT_ROLE == 1 ? a_mode : b_mode;
+  assign tfdu_sd_o = ENDPOINT_ROLE == 1 ? a_sd : b_sd;
+  assign tfdu_txd_o = ENDPOINT_ROLE == 1 ? a_txd : b_txd;
+
+  initial begin
+    if (ENDPOINT_ROLE != 1 && ENDPOINT_ROLE != 2)
+      $error("P10 ENDPOINT_ROLE must be 1 (fixed) or 2 (rotating)");
+  end
+
+  p9_axi_dma_peripheral #(
+    .DEPLOYMENT_ROLE(ENDPOINT_ROLE),
+    .BUILD_ID(P10_BUILD_ID),
+    .PROFILE_ID(P10_PROFILE_ID),
+    .IDENTITY_MAGIC(P10_MAGIC)
+  ) impl (
+    .s_axi_aclk(s_axi_aclk), .s_axi_aresetn(s_axi_aresetn),
+    .s_axi_awaddr(s_axi_awaddr), .s_axi_awprot(s_axi_awprot),
+    .s_axi_awvalid(s_axi_awvalid), .s_axi_awready(s_axi_awready),
+    .s_axi_wdata(s_axi_wdata), .s_axi_wstrb(s_axi_wstrb),
+    .s_axi_wvalid(s_axi_wvalid), .s_axi_wready(s_axi_wready),
+    .s_axi_bresp(s_axi_bresp), .s_axi_bvalid(s_axi_bvalid),
+    .s_axi_bready(s_axi_bready), .s_axi_araddr(s_axi_araddr),
+    .s_axi_arprot(s_axi_arprot), .s_axi_arvalid(s_axi_arvalid),
+    .s_axi_arready(s_axi_arready), .s_axi_rdata(s_axi_rdata),
+    .s_axi_rresp(s_axi_rresp), .s_axi_rvalid(s_axi_rvalid),
+    .s_axi_rready(s_axi_rready),
+    .s_axis_tvalid(s_axis_tvalid), .s_axis_tready(s_axis_tready),
+    .s_axis_tdata(s_axis_tdata), .s_axis_tkeep(s_axis_tkeep),
+    .s_axis_tlast(s_axis_tlast), .m_axis_tvalid(m_axis_tvalid),
+    .m_axis_tready(m_axis_tready), .m_axis_tdata(m_axis_tdata),
+    .m_axis_tkeep(m_axis_tkeep), .m_axis_tlast(m_axis_tlast),
+    .stream_reset_request_o(stream_reset_request_o),
+    .ir_mode_out_0(a_mode), .ir_rx_in_0(a_rxd),
+    .ir_sd_0(a_sd), .ir_tx_out_0(a_txd),
+    .loop_mode_b0(b_mode), .loop_rx_b0(b_rxd),
+    .loop_sd_b0(b_sd), .loop_tx_b0(b_txd)
+  );
+endmodule
+
+`default_nettype wire

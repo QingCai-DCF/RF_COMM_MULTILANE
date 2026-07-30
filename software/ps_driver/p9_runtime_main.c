@@ -14,6 +14,14 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifndef P10_ENDPOINT_ROLE
+#define P10_ENDPOINT_ROLE 0
+#endif
+
+#if P10_ENDPOINT_ROLE < 0 || P10_ENDPOINT_ROLE > 2
+#error "P10_ENDPOINT_ROLE must be 0 (legacy P9), 1 (fixed), or 2 (rotating)"
+#endif
+
 #ifndef IR_PL_BASEADDR
 #define IR_PL_BASEADDR UINT32_C(0x43C00000)
 #endif
@@ -94,6 +102,36 @@ static uint32_t g_rx_started;
 static uint32_t g_ring_depth;
 static uint32_t g_cache_enabled;
 static p9_metrics_t g_metrics;
+
+static uint32_t p9_local_sender(uint32_t direction) {
+  if (P10_ENDPOINT_ROLE == 0) return 1U;
+  return P10_ENDPOINT_ROLE == 1 ? (direction == 0U) : (direction == 1U);
+}
+
+static uint32_t p9_expected_phy_mask(void) {
+  if (P10_ENDPOINT_ROLE == 1) return 0x3U;
+  if (P10_ENDPOINT_ROLE == 2) return 0xcU;
+  return 0xfU;
+}
+
+static uint32_t p9_expected_pl_id(void) {
+  return P10_ENDPOINT_ROLE == 0 ? UINT32_C(0x50395a10) :
+                                 UINT32_C(0x5031305a);
+}
+
+#if P10_ENDPOINT_ROLE != 0
+static uint32_t p9_expected_pl_build_id(void) {
+  if (P10_ENDPOINT_ROLE == 1) return UINT32_C(0x50313046);
+  if (P10_ENDPOINT_ROLE == 2) return UINT32_C(0x50313052);
+  return UINT32_C(0x5009000b);
+}
+
+static uint32_t p9_expected_pl_profile_id(void) {
+  if (P10_ENDPOINT_ROLE == 1) return UINT32_C(0x702000f0);
+  if (P10_ENDPOINT_ROLE == 2) return UINT32_C(0x702000a0);
+  return UINT32_C(0x00701022);
+}
+#endif
 
 static int p9_reset_stream_path(uint32_t depth, uint32_t count_pl_reset,
                                 uint32_t count_dma_reset);
@@ -349,20 +387,23 @@ static int p9_shutdown(void) {
 }
 
 static int p9_enable_and_arm(void) {
+  uint32_t expected = p9_expected_phy_mask();
+  uint32_t expected_startup = expected << 4;
+  uint32_t expected_safety = expected << 8;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_RECEIVER_ENABLE_MASK);
   usleep(600U);
   uint64_t deadline = p9_deadline_ms(100U);
   do {
     uint32_t phy = p9_pl_read(IR_REG_P9_PHY_STATUS);
-    if ((phy & P9_PHY_SAFETY_MASK) != 0U) return P9_RUNTIME_PHY_NOT_READY;
-    if ((phy & (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK)) ==
-        (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK))
+    if ((phy & expected_safety) != 0U) return P9_RUNTIME_PHY_NOT_READY;
+    if ((phy & (expected | expected_startup)) ==
+        (expected | expected_startup))
       break;
     usleep(P9_POLL_DELAY_US);
   } while (p9_time_now() < deadline);
   uint32_t phy = p9_pl_read(IR_REG_P9_PHY_STATUS);
-  if ((phy & (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK)) !=
-      (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK))
+  if ((phy & (expected | expected_startup)) !=
+      (expected | expected_startup))
     return P9_RUNTIME_PHY_NOT_READY;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_ARM_REQUEST_MASK);
   deadline = p9_deadline_ms(20U);
@@ -507,10 +548,13 @@ static int p9_submit_tx(UINTPTR address, uint32_t bytes, uint32_t token) {
 }
 
 static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
-                              uint32_t timeout_ms) {
+                              uint32_t timeout_ms, uint32_t require_tx,
+                              uint32_t require_rx) {
   XAxiDma_BdRing *tx = XAxiDma_GetTxRing(&g_dma);
   XAxiDma_BdRing *rx = XAxiDma_GetRxRing(&g_dma);
-  uint32_t tx_done = 0U, rx_done = 0U, pl_done = 0U;
+  uint32_t tx_done = require_tx == 0U;
+  uint32_t rx_done = require_rx == 0U;
+  uint32_t pl_done = 0U;
   uint64_t poll_start = p9_time_now();
   uint64_t deadline = p9_deadline_ms(timeout_ms);
   while (p9_time_now() < deadline) {
@@ -574,6 +618,9 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
   int status = p9_shutdown();
   p9_fill_identity(m);
   if (status != P9_RUNTIME_OK) return status;
+#if P10_ENDPOINT_ROLE == 0
+  /* Keep the frozen P9 identity literals explicit for source-level contract
+   * checks and compile the P10 role identities only in their role-bound ELF. */
   if (m->pl_id != UINT32_C(0x50395a10) ||
       m->pl_build_id != UINT32_C(0x5009000b) ||
       m->pl_profile_id != UINT32_C(0x00701022) ||
@@ -582,6 +629,16 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
       m->pl_capabilities != UINT32_C(0xf7204221) ||
       m->dma_has_sg != 1U || m->dma_base_address != UINT32_C(0x40400000))
     return P9_RUNTIME_PL_IDENTITY;
+#else
+  if (m->pl_id != p9_expected_pl_id() ||
+      m->pl_build_id != p9_expected_pl_build_id() ||
+      m->pl_profile_id != p9_expected_pl_profile_id() ||
+      m->pl_register_map_version != IR_REGISTER_MAP_VERSION ||
+      m->pl_register_map_hash_low != IR_REGISTER_MAP_HASH_LOW ||
+      m->pl_capabilities != UINT32_C(0xf7204221) ||
+      m->dma_has_sg != 1U || m->dma_base_address != UINT32_C(0x40400000))
+    return P9_RUNTIME_PL_IDENTITY;
+#endif
   return P9_RUNTIME_OK;
 }
 
@@ -598,16 +655,30 @@ static int p9_command_raw(volatile p9_mailbox_t *m) {
               (m->lane_mask & 3U) | ((m->direction & 1U) << 8));
   p9_pl_write(IR_REG_P9_RAW_TARGET, m->raw_target);
   p9_pl_write(IR_REG_P9_RAW_SPACING, m->raw_spacing_cycles);
-  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_RAW_MASK);
+  uint32_t local_source = p9_local_sender(m->direction);
+  if (P10_ENDPOINT_ROLE == 0 || local_source != 0U)
+    p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_RAW_MASK);
   uint64_t deadline = p9_deadline_ms(m->timeout_ms == 0U ? 10000U :
                                                             m->timeout_ms);
   status = P9_RUNTIME_RAW_TIMEOUT;
   while (p9_time_now() < deadline) {
     uint32_t value = p9_pl_read(IR_REG_P9_STATUS);
-    if ((value & P9_STATUS_RAW_DONE) != 0U &&
-        p9_pl_read(IR_REG_P9_RAW_SENT_COUNT) == m->raw_target) {
-      status = P9_RUNTIME_OK;
-      break;
+    if (P10_ENDPOINT_ROLE == 0 || local_source != 0U) {
+      if ((value & P9_STATUS_RAW_DONE) != 0U &&
+          p9_pl_read(IR_REG_P9_RAW_SENT_COUNT) == m->raw_target) {
+        status = P9_RUNTIME_OK;
+        break;
+      }
+    } else {
+      uint32_t lane0 = p9_pl_read(P10_ENDPOINT_ROLE == 1 ?
+          IR_REG_P9_RAW_RX_A0 : IR_REG_P9_RAW_RX_B0);
+      uint32_t lane1 = p9_pl_read(P10_ENDPOINT_ROLE == 1 ?
+          IR_REG_P9_RAW_RX_A1 : IR_REG_P9_RAW_RX_B1);
+      if (((m->lane_mask & 1U) == 0U || lane0 >= m->raw_target) &&
+          ((m->lane_mask & 2U) == 0U || lane1 >= m->raw_target)) {
+        status = P9_RUNTIME_OK;
+        break;
+      }
     }
     if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U) {
       status = P9_RUNTIME_PL_OBJECT;
@@ -901,6 +972,8 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
   uint32_t tx_completed_before = g_metrics.tx_completed;
   uint32_t rx_submitted_before = g_metrics.rx_submitted;
   uint32_t rx_completed_before = g_metrics.rx_completed;
+  uint32_t local_tx = P10_ENDPOINT_ROLE == 0 || p9_local_sender(m->direction);
+  uint32_t local_rx = P10_ENDPOINT_ROLE == 0 || !p9_local_sender(m->direction);
   int status = p9_validate_object_args(m, &tx_address, &rx_address,
                                        &transfer_bytes);
   if (status != P9_RUNTIME_OK) {
@@ -943,8 +1016,10 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) goto object_exit;
   p9_configure_object(m);
   uint32_t token = m->command_sequence ^ m->object_id ^ UINT32_C(0x50390000);
-  status = p9_submit_rx(rx_address, transfer_bytes, token);
-  if (status != P9_RUNTIME_OK) goto object_exit;
+  if (local_rx != 0U) {
+    status = p9_submit_rx(rx_address, transfer_bytes, token);
+    if (status != P9_RUNTIME_OK) goto object_exit;
+  }
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
   usleep(10U);
   if ((p9_pl_read(IR_REG_P9_STATUS) & P9_STATUS_OBJECT_ACTIVE) == 0U) {
@@ -952,7 +1027,7 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
     status = ((m->command_flags & P9_FLAG_ALLOW_EXPECTED_OBJECT_FAILURE) != 0U)
                  ? P9_RUNTIME_OK
                  : P9_RUNTIME_PL_OBJECT;
-    if (g_metrics.rx_submitted - rx_submitted_before >
+    if (local_rx != 0U && g_metrics.rx_submitted - rx_submitted_before >
         g_metrics.rx_completed - rx_completed_before) {
       g_metrics.rx_completed++;
       p9_advance_consumer(0U);
@@ -960,47 +1035,51 @@ static int p9_command_object(volatile p9_mailbox_t *m) {
     (void)p9_dma_initialize(m->ring_depth, 1U);
     goto object_exit;
   }
-  status = p9_submit_tx(tx_address, transfer_bytes, token);
-  if (status != P9_RUNTIME_OK) goto object_exit;
-  status = p9_poll_completion(m, token, m->timeout_ms);
+  if (local_tx != 0U) {
+    status = p9_submit_tx(tx_address, transfer_bytes, token);
+    if (status != P9_RUNTIME_OK) goto object_exit;
+  }
+  status = p9_poll_completion(m, token, m->timeout_ms, local_tx, local_rx);
   if (status == P9_RUNTIME_OK) {
-    p9_capture_terminal_window(m);
-    if (m->cache_mode != 0U)
-      p9_cache_invalidate(rx_address, transfer_bytes);
-    dsb();
-    g_metrics.memory_barrier_count++;
-    uint64_t integrity_start = p9_time_now();
-    m->output_crc32 = p9_crc32(rx_buffer, transfer_bytes);
-    p9_sha256(rx_buffer, transfer_bytes, output_sha);
-    p9_copy_digest(m->output_sha256, output_sha);
-    m->first_mismatch_offset = UINT32_C(0xffffffff);
-    for (uint32_t index = 0U; index < transfer_bytes; ++index) {
-      if (tx_buffer[index] != rx_buffer[index]) {
-        m->first_mismatch_offset = index;
-        status = P9_RUNTIME_PAYLOAD_MISMATCH;
-        break;
+    if (local_tx != 0U) p9_capture_terminal_window(m);
+    if (local_rx != 0U) {
+      if (m->cache_mode != 0U)
+        p9_cache_invalidate(rx_address, transfer_bytes);
+      dsb();
+      g_metrics.memory_barrier_count++;
+      uint64_t integrity_start = p9_time_now();
+      m->output_crc32 = p9_crc32(rx_buffer, transfer_bytes);
+      p9_sha256(rx_buffer, transfer_bytes, output_sha);
+      p9_copy_digest(m->output_sha256, output_sha);
+      m->first_mismatch_offset = UINT32_C(0xffffffff);
+      for (uint32_t index = 0U; index < transfer_bytes; ++index) {
+        if (tx_buffer[index] != rx_buffer[index]) {
+          m->first_mismatch_offset = index;
+          status = P9_RUNTIME_PAYLOAD_MISMATCH;
+          break;
+        }
       }
+      if (m->actual_rx_length != transfer_bytes ||
+          m->input_crc32 != m->output_crc32 ||
+          memcmp(input_sha, output_sha, sizeof(input_sha)) != 0)
+        status = P9_RUNTIME_PAYLOAD_MISMATCH;
+      if (status == P9_RUNTIME_OK)
+        status = p9_validate_rfap(m, rx_buffer, transfer_bytes);
+      p9_store_u64(&m->integrity_verify_ticks_low,
+                   &m->integrity_verify_ticks_high,
+                   p9_time_now() - integrity_start);
     }
-    if (m->actual_rx_length != transfer_bytes ||
-        m->input_crc32 != m->output_crc32 ||
-        memcmp(input_sha, output_sha, sizeof(input_sha)) != 0)
-      status = P9_RUNTIME_PAYLOAD_MISMATCH;
-    if (status == P9_RUNTIME_OK)
-      status = p9_validate_rfap(m, rx_buffer, transfer_bytes);
-    p9_store_u64(&m->integrity_verify_ticks_low,
-                 &m->integrity_verify_ticks_high,
-                 p9_time_now() - integrity_start);
   }
 
 object_exit:
   p9_cache_disable();
   if (status != P9_RUNTIME_OK) {
-    if (g_metrics.tx_submitted - tx_submitted_before >
+    if (local_tx != 0U && g_metrics.tx_submitted - tx_submitted_before >
         g_metrics.tx_completed - tx_completed_before) {
       g_metrics.tx_completed++;
       p9_advance_consumer(1U);
     }
-    if (g_metrics.rx_submitted - rx_submitted_before >
+    if (local_rx != 0U && g_metrics.rx_submitted - rx_submitted_before >
         g_metrics.rx_completed - rx_completed_before) {
       g_metrics.rx_completed++;
       p9_advance_consumer(0U);
@@ -1150,7 +1229,7 @@ static int p9_reset_stream_path(uint32_t depth, uint32_t count_pl_reset,
    * clock domain.  Wait well past that bound before rebuilding the real SG
    * rings whose hardware ownership was discarded by the reset. */
   usleep(100U);
-  if (p9_pl_read(IR_REG_P9_ID) != UINT32_C(0x50395a10))
+  if (p9_pl_read(IR_REG_P9_ID) != p9_expected_pl_id())
     return P9_RUNTIME_PL_IDENTITY;
   int status = p9_verify_safe_idle();
   if (status != P9_RUNTIME_OK) return status;
@@ -1281,10 +1360,11 @@ static int p9_command_idle_noise(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) return status;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_RECEIVER_ENABLE_MASK);
+  uint32_t expected = p9_expected_phy_mask();
+  uint32_t expected_startup = expected << 4;
   uint64_t ready_deadline = p9_deadline_ms(100U);
   while ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
-          (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK)) !=
-         (P9_PHY_READY_MASK | P9_PHY_STARTUP_MASK)) {
+          (expected | expected_startup)) != (expected | expected_startup)) {
     if (p9_time_now() >= ready_deadline) {
       status = P9_RUNTIME_PHY_NOT_READY;
       goto idle_exit;

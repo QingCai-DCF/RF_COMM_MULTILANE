@@ -19,7 +19,8 @@ module tb_ir_sack_ack_aggregation;
     .SACK_BITS(32), .FRAME_THRESHOLD(4), .MAX_DELAY_CYCLES(6),
     .CREDIT_LOW_WATERMARK(2)
   ) aggregator (
-    .clk, .rst_n, .clear_counters_i(clear_counters), .rx_accept_i(rx_accept),
+    .clk, .rst_n, .clear_counters_i(clear_counters), .state_reset_i(1'b0),
+    .rx_accept_i(rx_accept),
     .session_epoch_i(session_epoch), .ack_base_i(ack_base_in),
     .sack_bitmap_i(bitmap_in), .sack_width_i(width_in), .receiver_credit_i(credit_in),
     .gap_blocked_i(gap_blocked), .control_event_i(control_event),

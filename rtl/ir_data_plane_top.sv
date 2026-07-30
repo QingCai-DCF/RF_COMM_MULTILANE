@@ -344,7 +344,9 @@ module ir_data_plane_top #(
   ir_ack_aggregator #(
     .SACK_BITS(SACK_BITS)
   ) u_ack_aggregator (
-    .clk, .rst_n, .clear_counters_i, .rx_accept_i(rx_accept_pulse),
+    .clk, .rst_n, .clear_counters_i,
+    .state_reset_i(session_reset_i || abort_all_i),
+    .rx_accept_i(rx_accept_pulse),
     .session_epoch_i, .ack_base_i(rx_base_sequence_o),
     .sack_bitmap_i(rx_sack_bitmap_o), .sack_width_i(CONFIGURED_SACK_WIDTH),
     .receiver_credit_i({{(16-$clog2(WINDOW_SIZE+1)){1'b0}}, rx_receiver_credit_o}),

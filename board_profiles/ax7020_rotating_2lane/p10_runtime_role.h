@@ -1,0 +1,8 @@
+#ifndef P10_RUNTIME_ROLE_H
+#define P10_RUNTIME_ROLE_H
+
+#define P10_ENDPOINT_ROLE 2
+#define P9_RUNTIME_BUILD_ID 0x50313052U
+#define P10_RUNTIME_ROLE_NAME "rotating"
+
+#endif

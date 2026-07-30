@@ -16,6 +16,13 @@ build/
 *.xsa
 *.elf
 *.obj
+
+# P10 content-addressed deliverables are intentionally versioned. Vivado
+# scratch outputs remain ignored; only immutable copies below artifacts/p10
+# are admitted by the P10 artifact manifest.
+!artifacts/p10/**/*.bit
+!artifacts/p10/**/*.xsa
+!artifacts/p10/**/*.elf
 .Xil/
 xsim.dir/
 sim_work/
