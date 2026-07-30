@@ -78,6 +78,8 @@ RUN_RE = re.compile(r"^p10_[A-Za-z0-9_.-]+$")
 STAGE_RE = re.compile(r"^P10-(?:[A-J]|DIAG)$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 ALL_FORMAL_STAGES = tuple(f"P10-{letter}" for letter in "ABCDEFGHIJ")
+P10_J_SOAK_PLAN = ("SOAK", "stationary_30min", "1800")
+P10_J_SOAK_SIZES = (4096, 65536, 1048576)
 
 
 def utc_now() -> str:
@@ -950,6 +952,63 @@ def load_observations(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def validate_observation_shape(stage: str, plan_items: list[PlanItem],
+                               rows: list[dict[str, Any]]) -> list[str]:
+    """Validate static CASE plans and the dynamic P10-J soak expansion."""
+    errors: list[str] = []
+    shutdown_label = f"{stage}_endpoint_shutdown"
+    shutdown_positions = [index for index, row in enumerate(rows)
+                          if row.get("label") == shutdown_label]
+    if shutdown_positions != [len(rows) - 1]:
+        errors.append("exactly one final endpoint-shutdown observation required")
+
+    case_items = [item for item in plan_items if isinstance(item, Case)]
+    if len(case_items) == len(plan_items):
+        expected_cases = len(case_items) + 1
+        if len(rows) != expected_cases:
+            errors.append(f"observation count {len(rows)} != {expected_cases}")
+        expected_labels = [item.label for item in case_items]
+        observed_labels = [row.get("label") for row in rows
+                           if row.get("label") != shutdown_label]
+        if expected_labels != observed_labels:
+            errors.append("observed case labels differ from immutable plan")
+        return errors
+
+    if stage != "P10-J" or plan_items != [P10_J_SOAK_PLAN]:
+        errors.append("unsupported dynamic hardware plan")
+        return errors
+
+    soak_rows = [row for row in rows if row.get("label") != shutdown_label]
+    if len(soak_rows) < 6:
+        errors.append("stationary soak did not cover all size/direction pairs")
+    for index, row in enumerate(soak_rows):
+        size = P10_J_SOAK_SIZES[index % len(P10_J_SOAK_SIZES)]
+        direction = index & 1
+        expected_label = f"soak_{index:05d}_{size}_d{direction}"
+        if row.get("label") != expected_label:
+            errors.append(f"stationary soak sequence mismatch at index {index}")
+            break
+        expected_fields = {
+            "command": 3,
+            "expected_status": 0,
+            "flags": 2,
+            "lane": 3,
+            "direction": direction,
+            "rate": 2,
+            "size": size,
+            "ring": 32,
+            "cache": 1,
+            "session": 0xA0100001,
+            "path": 10,
+            "object": 0x3A000000 + index,
+            "window": "ACCEPTANCE",
+        }
+        if any(row.get(key) != value for key, value in expected_fields.items()):
+            errors.append(f"stationary soak fields mismatch at index {index}")
+            break
+    return errors
+
+
 def evaluate_stage(stage: str, stage_dir: Path,
                    process: dict[str, Any], plan_items: list[PlanItem]) -> dict[str, Any]:
     result_file = stage_dir / "xsdb.result.txt"
@@ -963,9 +1022,7 @@ def evaluate_stage(stage: str, stage_dir: Path,
         errors.append("dual safe-boot marker missing")
     observation_path = stage_dir / "dumps/observations.psv"
     rows = load_observations(observation_path) if observation_path.is_file() else []
-    expected_cases = sum(isinstance(item, Case) for item in plan_items) + 1
-    if len(rows) != expected_cases:
-        errors.append(f"observation count {len(rows)} != {expected_cases}")
+    errors.extend(validate_observation_shape(stage, plan_items, rows))
     details: list[dict[str, Any]] = []
     raw_matrix: list[dict[str, Any]] = []
     for row in rows:
@@ -983,12 +1040,6 @@ def evaluate_stage(stage: str, stage_dir: Path,
                                    **detail["raw_matrix"]})
         except (OSError, ValueError, KeyError, struct.error) as exc:
             errors.append(f"{row.get('label', 'unknown')}: mailbox evaluation: {exc}")
-    labels = {item.label for item in plan_items if isinstance(item, Case)}
-    observed_labels = {row["label"] for row in rows
-                       if not row["label"].endswith("_endpoint_shutdown")}
-    if labels != observed_labels:
-        errors.append("observed case labels differ from immutable plan")
-
     # Stage-specific direct gates.  These are additive to per-mailbox safety,
     # identity, DMA balance, CRC, and SHA checks above.
     non_shutdown = [item for item in details
@@ -1033,6 +1084,10 @@ def evaluate_stage(stage: str, stage_dir: Path,
         elapsed = int(elapsed_text) if elapsed_text.isdigit() else 0
         if not 1_800_000 <= elapsed <= 1_800_500:
             errors.append("stationary active window is not exactly 1800 seconds")
+        case_count_text = markers.get("P10_SOAK_CASE_COUNT", "")
+        case_count = int(case_count_text) if case_count_text.isdigit() else -1
+        if case_count != len(non_shutdown):
+            errors.append("stationary soak marker/observation count mismatch")
         if not any(item.get("window") == "ACCEPTANCE" for item in non_shutdown):
             errors.append("stationary acceptance window has no objects")
 

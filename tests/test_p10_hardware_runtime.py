@@ -57,6 +57,41 @@ class P10HardwareRuntimeTests(unittest.TestCase):
             self.assertRegex(digest, r"^[0-9a-f]{64}$")
             self.runtime.plan_text(self.runtime.build_plans()[stage]).encode("ascii")
 
+    def test_dynamic_soak_observations_expand_the_immutable_plan(self) -> None:
+        rows = []
+        for index in range(6):
+            size = self.runtime.P10_J_SOAK_SIZES[index % 3]
+            direction = index & 1
+            rows.append({
+                "label": f"soak_{index:05d}_{size}_d{direction}",
+                "command": 3,
+                "expected_status": 0,
+                "flags": 2,
+                "lane": 3,
+                "direction": direction,
+                "rate": 2,
+                "size": size,
+                "ring": 32,
+                "cache": 1,
+                "session": 0xA0100001,
+                "path": 10,
+                "object": 0x3A000000 + index,
+                "window": "ACCEPTANCE",
+            })
+        rows.append({"label": "P10-J_endpoint_shutdown"})
+        self.assertEqual(
+            self.runtime.validate_observation_shape(
+                "P10-J", [self.runtime.P10_J_SOAK_PLAN], rows),
+            [],
+        )
+
+        rows[2] = {**rows[2], "direction": 1}
+        self.assertIn(
+            "stationary soak fields mismatch at index 2",
+            self.runtime.validate_observation_shape(
+                "P10-J", [self.runtime.P10_J_SOAK_PLAN], rows),
+        )
+
     def test_shutdown_tcl_requires_both_exact_roles(self) -> None:
         text = SHUTDOWN_TCL.read_text(encoding="utf-8")
         for marker in (
