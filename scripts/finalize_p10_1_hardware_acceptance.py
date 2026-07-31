@@ -301,15 +301,60 @@ def generate_artifact_summary() -> dict[str, Any]:
     return payload
 
 
-def common_context(
-    run_id: str, authorization: dict[str, Any], artifacts: dict[str, Any]
-) -> dict[str, Any]:
+def authorized_artifact_map(
+    authorization: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Return the artifacts captured for this run, never the latest build."""
+    kind_aliases = {"functional_bitstream": "performance_bitstream"}
     artifact_map = {
-        f"{item['role']}:{item['kind']}": {
+        f"{item['role']}:{kind_aliases.get(item['kind'], item['kind'])}": {
             key: item[key] for key in ("path", "sha256", "bytes")
         }
-        for item in artifacts.get("artifacts", [])
+        for item in authorization.get("artifacts", [])
     }
+    if not artifact_map:
+        raise ValueError("captured authorization has no immutable artifacts")
+    return artifact_map
+
+
+def validate_authorized_artifacts(
+    authorization: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for index, item in enumerate(authorization.get("artifacts", [])):
+        try:
+            role = str(item["role"])
+            kind = str(item["kind"])
+            identity = (role, kind)
+            if identity in seen:
+                errors.append(f"duplicate authorized artifact: {role}:{kind}")
+                continue
+            seen.add(identity)
+            path = (ROOT / str(item["path"])).resolve()
+            path.relative_to(ROOT.resolve())
+            if not path.is_file():
+                errors.append(f"authorized artifact missing: {item['path']}")
+                continue
+            if path.stat().st_size != int(item["bytes"]):
+                errors.append(f"authorized artifact byte mismatch: {item['path']}")
+            if sha256(path) != item["sha256"]:
+                errors.append(f"authorized artifact SHA256 mismatch: {item['path']}")
+        except (KeyError, OSError, TypeError, ValueError) as exc:
+            errors.append(f"invalid authorized artifact {index}: {exc}")
+    if not seen:
+        errors.append("captured authorization has no immutable artifacts")
+    return errors
+
+
+def common_context(
+    run_id: str,
+    authorization: dict[str, Any],
+    _latest_artifacts: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    # `_latest_artifacts` is intentionally ignored.  A historical hardware run
+    # must remain bound to the artifacts frozen into its own authorization.
+    artifact_map = authorized_artifact_map(authorization)
     inputs = authorization.get("input_hashes", {})
     return {
         "run_id": run_id,
@@ -320,6 +365,7 @@ def common_context(
         "goal_sha256": GOAL_SHA256,
         "board_identities": authorization.get("board_identities"),
         "artifact_hashes": artifact_map,
+        "artifact_provenance": "CAPTURED_IMMUTABLE_CURRENT_RUN_AUTHORIZATION",
         "wiring": inputs.get("wiring"),
         "measurement_contract": inputs.get("measurement_contract"),
         "pipeline_config": inputs.get("pipeline_model"),
@@ -355,9 +401,52 @@ def pair_payload(
     }
 
 
-def stage_record(run_root: Path, stage: str) -> tuple[dict[str, Any], dict[str, Any]]:
+def stage_record(
+    run_root: Path,
+    stage: str,
+    orchestrator: dict[str, Any] | None = None,
+    orchestrator_path: Path | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     path = run_root / "stages" / stage / "stage_summary.json"
-    return load_json(path), record(path)
+    if path.is_file():
+        return load_json(path), record(path)
+
+    declared = (orchestrator or {}).get("stages", {}).get(stage)
+    disposition = (
+        "NOT_RUN_DUE_PRIOR_STAGE_FAILURE"
+        if declared == "NOT_RUN"
+        else "MISSING_STAGE_EVIDENCE"
+    )
+    payload = {
+        "schema_version": 1,
+        "test_id": f"P10_1-HW-{stage.upper()}",
+        "stage": stage,
+        "status": "FAIL",
+        "execution_status": declared or "MISSING",
+        "disposition": disposition,
+        "markers": {},
+        "details": [],
+        "semantics": {},
+        "errors": [
+            (
+                f"{stage} was not run because the campaign stopped after "
+                "an earlier stage failure"
+                if declared == "NOT_RUN"
+                else f"{stage} stage summary is missing"
+            )
+        ],
+    }
+    if orchestrator_path is None or not orchestrator_path.is_file():
+        raise ValueError(f"{stage} stage summary and orchestrator evidence are missing")
+    source = record(orchestrator_path)
+    source.update(
+        {
+            "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
+            "stage": stage,
+            "declared_status": declared,
+        }
+    )
+    return payload, source
 
 
 def verify_run_manifest(run_root: Path) -> tuple[list[str], dict[str, Any]]:
@@ -398,6 +487,18 @@ def cross_board_timer_errors(details: list[dict[str, Any]]) -> list[dict[str, An
     results: list[dict[str, Any]] = []
     for detail in details:
         if detail.get("recovery_case"):
+            continue
+        required = (
+            "ps_elapsed_ticks",
+            "ps_timer_frequency_hz",
+            "pl_elapsed_ticks",
+            "pl_timer_frequency_hz",
+        )
+        if any(
+            key not in detail[role]
+            for role in ("fixed", "rotating")
+            for key in required
+        ):
             continue
         item: dict[str, Any] = {"label": detail.get("label")}
         for timer, ticks, frequency in (
@@ -471,10 +572,16 @@ def crosstalk_classification(stage: dict[str, Any]) -> dict[str, Any]:
     false_frames = sum(
         int(item.get("non_target_crc_valid_frames", 0)) for item in frame_matrix
     )
-    near_class = classify_ratio(max(near_ratios, default=0.0))
-    cross_class = classify_ratio(max(cross_ratios, default=0.0))
+    near_class = (
+        classify_ratio(max(near_ratios)) if near_ratios else "NOT_MEASURED"
+    )
+    cross_class = (
+        classify_ratio(max(cross_ratios)) if cross_ratios else "NOT_MEASURED"
+    )
     if false_frames:
         risk = "BLOCKED"
+    elif not rows:
+        risk = "NOT_MEASURED"
     elif cross_class == "HIGH":
         risk = "NEEDS_OPTICAL_BAFFLE"
     elif cross_class == "MODERATE" or near_class == "HIGH":
@@ -533,11 +640,22 @@ def update_canonical_state(
             "run_id": final["run_id"],
             "source_commit": final["source_commit"],
             "current_run_hardware_authorization": False,
-            "authorization_was_valid": True,
+            "authorization_was_valid": (
+                summary_by_stem["p10_1_hw_authorization_summary"].get("status")
+                == "PASS"
+            ),
             "hardware_actions_executed": True,
             "network_used": False,
             "hardware_movement": False,
             "maximum_lane_mask": "0x3",
+            "artifact_provenance": final.get("artifact_provenance"),
+            "complete_run_id": final.get("complete_run_id"),
+            "campaign_disposition": final.get("campaign_disposition"),
+            "retry_run_id_count": final.get("retry_run_id_count"),
+            "retry_run_id_limit": final.get("retry_run_id_limit"),
+            "next_required_user_action": final.get(
+                "next_required_user_action"
+            ),
             "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
             "final_evidence_sha256": sha256(
                 GENERATED / "p10_1_hw_final_summary.json"
@@ -603,6 +721,12 @@ def update_canonical_state(
                 "sha256": final["wiring"]["sha256"],
             }
         )
+    artifact_summary_hashes = [
+        {"path": item["path"], "sha256": item["sha256"]}
+        for item in summary_by_stem["p10_1_hw_artifact_summary"].get(
+            "artifacts", []
+        )
+    ]
     state_hash = sha256(STATE)
     status_hash = sha256(STATUS)
     for requirement in requirements["requirements"]:
@@ -621,9 +745,14 @@ def update_canonical_state(
                 else "IMMUTABLE_LED_ENABLED_ARTIFACTS"
             )
             requirement["artifact_hash"] = sha256(path)
+            bound_hashes = (
+                artifact_summary_hashes
+                if stem == "p10_1_hw_artifact_summary"
+                else common_hashes
+            )
             requirement["artifact_hashes"] = [
                 {"path": rel(path), "sha256": sha256(path)},
-                *common_hashes,
+                *bound_hashes,
             ]
             requirement["hardware_followup"] = (
                 "Scoped stationary dual-AX7020 two-lane evidence only; "
@@ -673,12 +802,17 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     stage_payloads: dict[str, dict[str, Any]] = {}
     stage_records: dict[str, dict[str, Any]] = {}
     for stage in REQUIRED_STAGES:
-        stage_payloads[stage], stage_records[stage] = stage_record(run_root, stage)
+        stage_payloads[stage], stage_records[stage] = stage_record(
+            run_root,
+            stage,
+            orchestrator=orchestrator,
+            orchestrator_path=orchestrator_path,
+        )
 
     summaries: dict[str, dict[str, Any]] = {
         "p10_1_hw_artifact_summary": artifacts
     }
-    auth_errors = []
+    auth_errors = validate_authorized_artifacts(authorization)
     if (
         auth_record.get("status") != "PASS"
         or authorization.get("status") != "AUTHORIZED"
@@ -703,7 +837,7 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     preflight = stage_payloads["preflight"]
     identity_errors = []
     if (
-        preflight.get("status") != "PASS"
+        preflight.get("markers", {}).get("P10_XSDB_IDENTITY") != "PASS"
         or preflight.get("markers", {}).get("P10_XSDB_FIXED_SERIAL")
         != "210249855178"
         or preflight.get("markers", {}).get("P10_XSDB_ROTATING_SERIAL")
@@ -763,6 +897,13 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         if item["ps_cross_board_error_percent"] > 1.0
         or item["pl_cross_board_error_percent"] > 1.0
     ]
+    if not timer_rows:
+        timer_errors.append("no complete PS/PL timer crosscheck row was captured")
+    timer_errors.extend(
+        f"{stage}: complete timer coverage unavailable because stage is not PASS"
+        for stage, payload in stage_payloads.items()
+        if payload.get("status") != "PASS"
+    )
     for detail in all_details:
         if detail.get("recovery_case"):
             continue
@@ -785,6 +926,8 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     )
 
     metric_errors = []
+    if preflight.get("status") != "PASS":
+        metric_errors.append("preflight did not complete")
     preflight_labels = {
         detail.get("label"): detail for detail in preflight.get("details", [])
     }
@@ -890,11 +1033,38 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     for direction in (0, 1):
         if direction not in half_by_direction:
             half_errors.append(f"missing half-duplex direction {direction}")
-    f_goodput = float(
-        half_by_direction.get(0, {}).get("wall_application_goodput_bps", 0.0)
+    f_value = half_by_direction.get(0, {}).get(
+        "wall_application_goodput_bps"
     )
-    r_goodput = float(
-        half_by_direction.get(1, {}).get("wall_application_goodput_bps", 0.0)
+    r_value = half_by_direction.get(1, {}).get(
+        "wall_application_goodput_bps"
+    )
+    f_goodput = float(f_value) if f_value is not None else None
+    r_goodput = float(r_value) if r_value is not None else None
+    f_4mbps = (
+        "PASS"
+        if f_goodput is not None and f_goodput >= 4_000_000
+        else "FAIL"
+    )
+    r_4mbps = (
+        "PASS"
+        if r_goodput is not None and r_goodput >= 4_000_000
+        else "FAIL"
+    )
+    f_4p8mbps = (
+        "PASS"
+        if f_goodput is not None and f_goodput >= 4_800_000
+        else "FAIL"
+    )
+    r_4p8mbps = (
+        "PASS"
+        if r_goodput is not None and r_goodput >= 4_800_000
+        else "FAIL"
+    )
+    measured_bottleneck = (
+        "PL_PHY_AIRTIME_RECONCILED"
+        if not half_errors and f_goodput is not None and r_goodput is not None
+        else "NOT_MEASURED"
     )
     model = load_json(GENERATED / "p10_1_hw_model_sanity_summary.json")
     modeled = float(model.get("corrected_modeled_application_goodput_bps", 0.0))
@@ -909,17 +1079,25 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         directions=half_windows,
         f_to_r_application_goodput_bps=f_goodput,
         r_to_f_application_goodput_bps=r_goodput,
-        f_to_r_4mbps_target="PASS" if f_goodput >= 4_000_000 else "FAIL",
-        r_to_f_4mbps_target="PASS" if r_goodput >= 4_000_000 else "FAIL",
-        f_to_r_4p8mbps_stretch="PASS" if f_goodput >= 4_800_000 else "FAIL",
-        r_to_f_4p8mbps_stretch="PASS" if r_goodput >= 4_800_000 else "FAIL",
+        f_to_r_4mbps_target=f_4mbps,
+        r_to_f_4mbps_target=r_4mbps,
+        f_to_r_4p8mbps_stretch=f_4p8mbps,
+        r_to_f_4p8mbps_stretch=r_4p8mbps,
         modeled_application_goodput_bps=modeled,
         airtime_ceiling_bps=ceiling,
-        measured_to_model_ratio_f_to_r=f_goodput / modeled if modeled else None,
-        measured_to_model_ratio_r_to_f=r_goodput / modeled if modeled else None,
-        measured_to_airtime_ratio_f_to_r=f_goodput / ceiling if ceiling else None,
-        measured_to_airtime_ratio_r_to_f=r_goodput / ceiling if ceiling else None,
-        primary_measured_bottleneck="PL_PHY_AIRTIME_RECONCILED",
+        measured_to_model_ratio_f_to_r=(
+            f_goodput / modeled if f_goodput is not None and modeled else None
+        ),
+        measured_to_model_ratio_r_to_f=(
+            r_goodput / modeled if r_goodput is not None and modeled else None
+        ),
+        measured_to_airtime_ratio_f_to_r=(
+            f_goodput / ceiling if f_goodput is not None and ceiling else None
+        ),
+        measured_to_airtime_ratio_r_to_f=(
+            r_goodput / ceiling if r_goodput is not None and ceiling else None
+        ),
+        primary_measured_bottleneck=measured_bottleneck,
         errors=half_errors,
     )
 
@@ -965,8 +1143,20 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         int(item["direction"]): item for item in formal_windows
     }
     formal_errors = list(formal.get("errors", []))
-    if formal.get("semantics", {}).get("formal_elapsed_ms") != 1_800_000:
+    formal_elapsed_ms = formal.get("semantics", {}).get("formal_elapsed_ms")
+    if formal_elapsed_ms != 1_800_000:
         formal_errors.append("formal runtime is not exactly 1800 seconds")
+    formal_runtime_seconds = (
+        float(formal_elapsed_ms) / 1000.0
+        if formal_elapsed_ms is not None
+        else None
+    )
+    formal_f_committed = None
+    formal_r_committed = None
+    if 0 in formal_by_direction:
+        formal_f_committed = formal_by_direction[0].get("committed_bytes")
+    if 1 in formal_by_direction:
+        formal_r_committed = formal_by_direction[1].get("committed_bytes")
     summaries["p10_1_hw_stationary_30min_summary"] = write_hardware_pair(
         "p10_1_hw_stationary_30min_summary",
         "P10.1 stationary 30-minute acceptance",
@@ -974,16 +1164,10 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         "PASS" if not formal_errors else "FAIL",
         context,
         [stage_records["formal"]],
-        runtime_seconds=(
-            formal.get("semantics", {}).get("formal_elapsed_ms", 0) / 1000.0
-        ),
+        runtime_seconds=formal_runtime_seconds,
         directions=formal_windows,
-        committed_bytes_f_to_r=formal_by_direction.get(0, {}).get(
-            "committed_bytes", 0
-        ),
-        committed_bytes_r_to_f=formal_by_direction.get(1, {}).get(
-            "committed_bytes", 0
-        ),
+        committed_bytes_f_to_r=formal_f_committed,
+        committed_bytes_r_to_f=formal_r_committed,
         errors=formal_errors,
     )
 
@@ -1082,6 +1266,10 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     best = stage_payloads["tuning"].get("semantics", {}).get(
         "best_candidate", {}
     )
+    retry_audit_path = GENERATED / "p10_1_hw_preflight_retry_audit.json"
+    retry_audit = (
+        load_json(retry_audit_path) if retry_audit_path.is_file() else {}
+    )
     final = pair_payload(
         "P10_1-HW-FINAL-ACCEPTANCE",
         final_status,
@@ -1106,13 +1294,17 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         best_outstanding=best.get("outstanding_frames"),
         f_to_r_application_goodput_bps=f_goodput,
         r_to_f_application_goodput_bps=r_goodput,
-        f_to_r_4mbps_target="PASS" if f_goodput >= 4_000_000 else "FAIL",
-        r_to_f_4mbps_target="PASS" if r_goodput >= 4_000_000 else "FAIL",
-        f_to_r_4p8mbps_stretch="PASS" if f_goodput >= 4_800_000 else "FAIL",
-        r_to_f_4p8mbps_stretch="PASS" if r_goodput >= 4_800_000 else "FAIL",
-        measured_to_model_ratio_f_to_r=f_goodput / modeled if modeled else None,
-        measured_to_model_ratio_r_to_f=r_goodput / modeled if modeled else None,
-        primary_measured_bottleneck="PL_PHY_AIRTIME_RECONCILED",
+        f_to_r_4mbps_target=f_4mbps,
+        r_to_f_4mbps_target=r_4mbps,
+        f_to_r_4p8mbps_stretch=f_4p8mbps,
+        r_to_f_4p8mbps_stretch=r_4p8mbps,
+        measured_to_model_ratio_f_to_r=(
+            f_goodput / modeled if f_goodput is not None and modeled else None
+        ),
+        measured_to_model_ratio_r_to_f=(
+            r_goodput / modeled if r_goodput is not None and modeled else None
+        ),
+        primary_measured_bottleneck=measured_bottleneck,
         streaming_64m_f_to_r=summaries[
             "p10_1_hw_streaming_64m_summary"
         ]["status"],
@@ -1134,14 +1326,20 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         stationary_30min=summaries[
             "p10_1_hw_stationary_30min_summary"
         ]["status"],
-        runtime_seconds=(
-            formal.get("semantics", {}).get("formal_elapsed_ms", 0) / 1000.0
-        ),
-        committed_bytes_f_to_r=formal_by_direction.get(0, {}).get(
-            "committed_bytes", 0
-        ),
-        committed_bytes_r_to_f=formal_by_direction.get(1, {}).get(
-            "committed_bytes", 0
+        runtime_seconds=formal_runtime_seconds,
+        committed_bytes_f_to_r=formal_f_committed,
+        committed_bytes_r_to_f=formal_r_committed,
+        executed_stage_status={
+            stage: orchestrator.get("stages", {}).get(stage, "MISSING")
+            for stage in REQUIRED_STAGES
+        },
+        complete_run_id=(
+            run_id
+            if all(
+                orchestrator.get("stages", {}).get(stage) == "PASS"
+                for stage in REQUIRED_STAGES
+            )
+            else None
         ),
         integrity_totals={
             "crc_bad": sum(
@@ -1219,10 +1417,21 @@ def finalize_run(run_id: str) -> dict[str, Any]:
             "streaming_128m": "SKIP_WITH_REASON",
             "oneplusone": one_semantics.get("outcome"),
             "stretch_4p8mbps": {
-                "f_to_r": "PASS" if f_goodput >= 4_800_000 else "FAIL",
-                "r_to_f": "PASS" if r_goodput >= 4_800_000 else "FAIL",
+                "f_to_r": f_4p8mbps,
+                "r_to_f": r_4p8mbps,
             },
         },
+        retry_limit_audit=record(retry_audit_path) if retry_audit else None,
+        campaign_disposition=retry_audit.get("campaign_disposition"),
+        retry_run_id_count=retry_audit.get(
+            "preflight_retry_ledger", {}
+        ).get("new_run_id_count"),
+        retry_run_id_limit=retry_audit.get("goal", {}).get(
+            "diagnostic_stage_new_run_id_limit"
+        ),
+        next_required_user_action=retry_audit.get(
+            "next_required_user_action"
+        ),
         generated_evidence=[
             f"evidence/generated/{stem}.json"
             for stem in (

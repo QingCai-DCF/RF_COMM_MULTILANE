@@ -101,6 +101,77 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
         )
         self.assertEqual(result["all_rx_ready_risk"], "BLOCKED")
 
+    def test_empty_crosstalk_matrix_is_not_measured(self) -> None:
+        result = self.module.crosstalk_classification(
+            {"raw_matrix": [], "semantics": {"frame_matrix": []}}
+        )
+        self.assertEqual(result["near_end_echo_class"], "NOT_MEASURED")
+        self.assertEqual(result["cross_lane_crosstalk_class"], "NOT_MEASURED")
+        self.assertEqual(result["all_rx_ready_risk"], "NOT_MEASURED")
+
+    def test_common_context_uses_run_authorization_artifacts(self) -> None:
+        authorization = {
+            "source_commit": "authorized-source",
+            "artifacts": [
+                {
+                    "role": "fixed",
+                    "kind": "functional_bitstream",
+                    "path": "authorized-fixed.bit",
+                    "sha256": "a" * 64,
+                    "bytes": 123,
+                },
+                {
+                    "role": "fixed",
+                    "kind": "elf",
+                    "path": "authorized-fixed.elf",
+                    "sha256": "b" * 64,
+                    "bytes": 456,
+                },
+            ],
+            "input_hashes": {},
+        }
+        latest = {
+            "artifacts": [
+                {
+                    "role": "fixed",
+                    "kind": "performance_bitstream",
+                    "path": "newer-fixed.bit",
+                    "sha256": "c" * 64,
+                    "bytes": 789,
+                }
+            ]
+        }
+        context = self.module.common_context("run-1", authorization, latest)
+        self.assertEqual(
+            context["artifact_hashes"]["fixed:performance_bitstream"]["path"],
+            "authorized-fixed.bit",
+        )
+        self.assertEqual(
+            context["artifact_hashes"]["fixed:elf"]["path"],
+            "authorized-fixed.elf",
+        )
+        self.assertNotIn(
+            "newer-fixed.bit",
+            {
+                item["path"]
+                for item in context["artifact_hashes"].values()
+            },
+        )
+
+    def test_missing_stage_is_fail_with_not_run_disposition(self) -> None:
+        run_root = ROOT / "does-not-exist"
+        orchestrator_path = ROOT / "PROJECT_STATUS.md"
+        payload, source = self.module.stage_record(
+            run_root,
+            "formal",
+            orchestrator={"stages": {"formal": "NOT_RUN"}},
+            orchestrator_path=orchestrator_path,
+        )
+        self.assertEqual(payload["status"], "FAIL")
+        self.assertEqual(payload["execution_status"], "NOT_RUN")
+        self.assertEqual(payload["disposition"], "NOT_RUN_DUE_PRIOR_STAGE_FAILURE")
+        self.assertEqual(source["stage"], "formal")
+
 
 if __name__ == "__main__":
     unittest.main()
