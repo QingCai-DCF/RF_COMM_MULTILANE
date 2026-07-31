@@ -25,6 +25,9 @@ OUT = ROOT / "evidence/generated/vivado/p10_ax7020_functional"
 ARTIFACTS = ROOT / "artifacts/p10"
 SUMMARY_JSON = ROOT / "evidence/generated/p10_ax7020_functional_build_summary.json"
 SUMMARY_MD = ROOT / "evidence/generated/p10_ax7020_functional_build_summary.md"
+CAMPAIGN = "p10"
+TEST_ID = "P10-AX7020-DUAL-FUNCTIONAL-BUILD"
+SUMMARY_TITLE = "P10 AX7020 dual functional build"
 GOAL_HASH = "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603"
 
 RTL = [
@@ -50,6 +53,7 @@ RTL = [
     "rtl/p10_1_event_fifo.sv",
     "rtl/p10_1_perf_monitor.sv",
     "rtl/p9_axi_dma_peripheral.sv",
+    "rtl/p10_lane_activity_leds.sv",
     "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
 ]
 
@@ -57,11 +61,13 @@ ROLES = {
     "fixed": {
         "role_value": "1",
         "profile": "P10_AX7020_FIXED_2LANE",
+        "profile_path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
         "xdc": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
     },
     "rotating": {
         "role_value": "2",
         "profile": "P10_AX7020_ROTATING_2LANE",
+        "profile_path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
         "xdc": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
     },
 }
@@ -77,6 +83,22 @@ def sha256(path: Path) -> str:
 
 def rel(path: Path) -> str:
     return path.resolve().relative_to(ROOT.resolve()).as_posix()
+
+
+def configure_campaign(campaign: str) -> None:
+    global OUT, ARTIFACTS, SUMMARY_JSON, SUMMARY_MD
+    global CAMPAIGN, TEST_ID, SUMMARY_TITLE
+    CAMPAIGN = campaign
+    if campaign == "p10":
+        return
+    if campaign != "p10_1_led":
+        raise ValueError(f"unsupported campaign: {campaign}")
+    OUT = ROOT / "evidence/generated/vivado/p10_1_ax7020_pl_activity_led"
+    ARTIFACTS = ROOT / "artifacts/p10_1_led"
+    SUMMARY_JSON = ROOT / "evidence/generated/p10_1_ax7020_pl_activity_led_build_summary.json"
+    SUMMARY_MD = ROOT / "evidence/generated/p10_1_ax7020_pl_activity_led_build_summary.md"
+    TEST_ID = "P10_1-AX7020-PL-ACTIVITY-LED-DUAL-ROUTED-BUILD"
+    SUMMARY_TITLE = "P10.1 AX7020 PL activity LED dual routed build"
 
 
 def tracked_source_dirty(paths: list[str]) -> bool:
@@ -113,10 +135,13 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
 def source_bundle(role: str, cfg: dict[str, str]) -> tuple[str, dict[str, str]]:
     sources = [*RTL, rel(Path(__file__).resolve()), rel(TCL),
                "board_profiles/ax7020_common/p10_ps7_config.tcl",
-               cfg["xdc"], "config/register_map/ir_axi_regs.yaml",
+               cfg["profile_path"], cfg["xdc"],
+               "config/register_map/ir_axi_regs.yaml",
+               "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
                "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"]
     hashes = {item: sha256(ROOT / item) for item in sources}
-    payload = json.dumps({"role": role, "part": "xc7z020clg400-2",
+    payload = json.dumps({"campaign": CAMPAIGN, "role": role,
+                          "part": "xc7z020clg400-2",
                           "inputs": hashes}, sort_keys=True,
                          separators=(",", ":")).encode()
     return hashlib.sha256(payload).hexdigest(), hashes
@@ -148,6 +173,7 @@ def audit_xsa(path: Path, role_value: str) -> dict[str, Any]:
         "ethernet_disabled": '<PARAMETER NAME="PCW_EN_ENET0" VALUE="0"/>' in hwh,
         "dma_base": 'VALUE="0x40400000"' in hwh,
         "peripheral_base": 'VALUE="0x43C00000"' in hwh,
+        "activity_led_port": "pl_activity_led_n_o" in hwh.lower(),
     }
     errors.extend(f"XSA contract check failed: {key}" for key, ok in checks.items() if not ok)
     return {"status": "PASS" if not errors else "FAIL", "checks": checks,
@@ -198,6 +224,9 @@ def run_role(role: str, cfg: dict[str, str], reuse: bool) -> dict[str, Any]:
         "P10_REQP_1839_COUNT": "0", "P10_METHODOLOGY_CRITICAL_COUNT": "0",
         "P10_CDC_CRITICAL_COUNT": "0", "P10_HARDWARE_ADMISSION": "false",
         "P10_BLOCKING_CONDITION": "P10-SAFETY-POWERUP-001",
+        "P10_PL_ACTIVITY_LED_ACTIVE_LOW": "true",
+        "P10_PL_ACTIVITY_LED_HOLD_MS": "200",
+        "P10_PL_ACTIVITY_LED_SAFETY_ROLE": "MONITOR_ONLY",
     }
     for key, value in expected.items():
         if key not in markers or (value is not None and markers[key] != value):
@@ -232,7 +261,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-existing", action="store_true",
                         help="audit/freeze existing outputs without rerunning Vivado")
+    parser.add_argument(
+        "--campaign",
+        choices=("p10", "p10_1_led"),
+        default="p10",
+        help="Use a separate output/evidence namespace for a follow-up campaign.",
+    )
     args = parser.parse_args()
+    configure_campaign(args.campaign)
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_FUNCTIONAL_BUILD_REFUSED: offline environment required", file=sys.stderr)
@@ -247,8 +283,10 @@ def main() -> int:
     source_paths = sorted({
         *RTL, rel(Path(__file__).resolve()), rel(TCL),
         "board_profiles/ax7020_common/p10_ps7_config.tcl",
+        *(cfg["profile_path"] for cfg in ROLES.values()),
         *(cfg["xdc"] for cfg in ROLES.values()),
         "config/register_map/ir_axi_regs.yaml",
+        "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
         "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
     })
     source_worktree_dirty = tracked_source_dirty(source_paths)
@@ -256,7 +294,7 @@ def main() -> int:
                for role, cfg in ROLES.items()]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
     summary = {
-        "schema_version": 1, "test_id": "P10-AX7020-DUAL-FUNCTIONAL-BUILD",
+        "schema_version": 1, "test_id": TEST_ID, "campaign": CAMPAIGN,
         "status": status, "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
@@ -269,7 +307,7 @@ def main() -> int:
     }
     SUMMARY_JSON.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n",
                             encoding="utf-8", newline="\n")
-    lines = ["# P10 AX7020 dual functional build", "", f"- Status: `{status}`",
+    lines = [f"# {SUMMARY_TITLE}", "", f"- Status: `{status}`",
              "- Hardware actions executed: `false`", "- Ethernet enabled: `false`",
              "- Hardware admission remains blocked by `P10-SAFETY-POWERUP-001`.", "",
              "| Role | Build | WNS (ns) | WHS (ns) | TNS (ns) | Bitstream SHA256 | XSA SHA256 |",

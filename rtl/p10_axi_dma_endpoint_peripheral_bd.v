@@ -48,7 +48,8 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   output [1:0] tfdu_mode_o,
   input  [1:0] tfdu_rxd_i,
   output [1:0] tfdu_sd_o,
-  output [1:0] tfdu_txd_o
+  output [1:0] tfdu_txd_o,
+  output [3:0] pl_activity_led_n_o
 );
   localparam [31:0] P10_MAGIC = 32'h5031_305A;
   localparam [31:0] P10_BUILD_ID = ENDPOINT_ROLE == 1 ?
@@ -62,6 +63,8 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   wire [1:0] b_mode;
   wire [1:0] b_sd;
   wire [1:0] b_txd;
+  wire [1:0] valid_rx_frame_activity;
+  wire effective_full_shutdown;
   wire [1:0] a_rxd = ENDPOINT_ROLE == 1 ? tfdu_rxd_i : 2'b11;
   wire [1:0] b_rxd = ENDPOINT_ROLE == 2 ? tfdu_rxd_i : 2'b11;
 
@@ -100,7 +103,23 @@ module p10_axi_dma_endpoint_peripheral_bd #(
     .ir_mode_out_0(a_mode), .ir_rx_in_0(a_rxd),
     .ir_sd_0(a_sd), .ir_tx_out_0(a_txd),
     .loop_mode_b0(b_mode), .loop_rx_b0(b_rxd),
-    .loop_sd_b0(b_sd), .loop_tx_b0(b_txd)
+    .loop_sd_b0(b_sd), .loop_tx_b0(b_txd),
+    .monitor_valid_rx_frame_o(valid_rx_frame_activity),
+    .monitor_effective_full_shutdown_o(effective_full_shutdown)
+  );
+
+  p10_lane_activity_leds #(
+    .CLK_HZ(64_000_000),
+    .TICK_HZ(1_000),
+    .HOLD_MS(200)
+  ) u_activity_leds (
+    .clk(s_axi_aclk),
+    .rst_n(s_axi_aresetn),
+    .effective_full_shutdown_i(
+        effective_full_shutdown || (&tfdu_sd_o)),
+    .final_txd_activity_i(tfdu_txd_o),
+    .valid_rx_frame_activity_i(valid_rx_frame_activity),
+    .pl_led_n_o(pl_activity_led_n_o)
   );
 endmodule
 

@@ -46,6 +46,7 @@ set rtl_sources [list \
   "$root_dir/rtl/p10_1_event_fifo.sv" \
   "$root_dir/rtl/p10_1_perf_monitor.sv" \
   "$root_dir/rtl/p9_axi_dma_peripheral.sv" \
+  "$root_dir/rtl/p10_lane_activity_leds.sv" \
   "$root_dir/rtl/p10_axi_dma_endpoint_peripheral_bd.v" \
 ]
 add_files -fileset sources_1 $rtl_sources
@@ -177,7 +178,7 @@ connect_bd_net [get_bd_pins axi_dma_0/mm2s_introut] [get_bd_pins dma_irq_concat/
 connect_bd_net [get_bd_pins axi_dma_0/s2mm_introut] [get_bd_pins dma_irq_concat/In1]
 connect_bd_net [get_bd_pins dma_irq_concat/dout] [get_bd_pins processing_system7_0/IRQ_F2P]
 
-foreach pin_name [list tfdu_mode_o tfdu_rxd_i tfdu_sd_o tfdu_txd_o] {
+foreach pin_name [list tfdu_mode_o tfdu_rxd_i tfdu_sd_o tfdu_txd_o pl_activity_led_n_o] {
   set pin [get_bd_pins "p10_endpoint_0/$pin_name"]
   make_bd_pins_external $pin
   set generated [get_bd_ports "${pin_name}_0"]
@@ -276,6 +277,10 @@ puts $marker "P10_DMA_CLOCK_HZ=100000000"
 puts $marker "P10_AXIL_CLOCK_HZ=50000000"
 puts $marker "P10_NETWORK_USED=false"
 puts $marker "P10_ETHERNET_ENABLED=false"
+puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX"
+puts $marker "P10_PL_ACTIVITY_LED_ACTIVE_LOW=true"
+puts $marker "P10_PL_ACTIVITY_LED_HOLD_MS=200"
+puts $marker "P10_PL_ACTIVITY_LED_SAFETY_ROLE=MONITOR_ONLY"
 puts $marker "P10_CANONICAL_XDC=[file normalize $xdc_file]"
 puts $marker "P10_WNS_NS=$wns"
 puts $marker "P10_WHS_NS=$whs"

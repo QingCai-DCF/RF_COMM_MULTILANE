@@ -8,6 +8,7 @@ common_profile: "board_profiles/ax7020_common/board_identity.yaml"
 vivado_part: "xc7z020clg400-2"
 pinmap: "board_profiles/ax7020_fixed_2lane/pinmap.csv"
 xdc: "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+pl_activity_leds: "config/hardware/p10_1_ax7020_pl_activity_leds.yaml"
 lane_count: 2
 allowed_lane_masks:
   - 1

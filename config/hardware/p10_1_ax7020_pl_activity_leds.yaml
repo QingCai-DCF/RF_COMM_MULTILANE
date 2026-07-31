@@ -1,0 +1,118 @@
+schema_version: 1
+design_id: "P10_1_AX7020_PL_ACTIVITY_LEDS"
+verification_scope: "OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION"
+no_hardware: true
+current_run_hardware_authorization: false
+hardware_actions_executed: false
+
+electrical:
+  fpga_bank: 35
+  vcco_volts: 3.3
+  iostandard: "LVCMOS33"
+  output_drive_ma: 4
+  slew: "SLOW"
+  active_level: "LOW"
+  inactive_level: "HIGH"
+  configured_reset_default: "HIGH_ALL_OFF"
+  effective_full_shutdown_default: "HIGH_ALL_OFF"
+  fpga_unconfigured_state: "LED_OFF_EXPECTED_FROM_BOARD_ACTIVE_LOW_LED_LOAD_AND_CONFIGURATION_PULLUP; NOT_A_FUNCTIONAL_STATUS_GUARANTEE"
+
+timing:
+  protocol_clock_hz: 64000000
+  shared_tick_hz: 1000
+  shared_tick_period_ms: 1
+  visual_hold_ms: 200
+  continuous_activity_behavior: "RELOAD_HOLD_WHILE_ACTIVITY_EVENT_IS_ASSERTED"
+
+pins:
+  - led: "LED1"
+    rtl_bit: 0
+    package_pin: "M14"
+    fpga_pin_name: "IO_L23P_T3_35"
+    role_independent_meaning: "lane0 TX"
+    fixed_role_meaning: "F0 TX"
+    rotating_role_meaning: "R0 TX"
+  - led: "LED2"
+    rtl_bit: 1
+    package_pin: "M15"
+    fpga_pin_name: "IO_L23N_T3_35"
+    role_independent_meaning: "lane0 RX"
+    fixed_role_meaning: "F0 RX"
+    rotating_role_meaning: "R0 RX"
+  - led: "LED3"
+    rtl_bit: 2
+    package_pin: "K16"
+    fpga_pin_name: "IO_L24P_T3_35"
+    role_independent_meaning: "lane1 TX"
+    fixed_role_meaning: "F1 TX"
+    rotating_role_meaning: "R1 TX"
+  - led: "LED4"
+    rtl_bit: 3
+    package_pin: "J16"
+    fpga_pin_name: "IO_L24N_T3_35"
+    role_independent_meaning: "lane1 RX"
+    fixed_role_meaning: "F1 RX"
+    rotating_role_meaning: "R1 RX"
+
+event_semantics:
+  tx:
+    source: "ROLE-LOCAL tfdu_txd_o AFTER endpoint arm, shutdown latch, safety fault, and final TX-kill gating"
+    interpretation: "A high cycle at the final role-local physical Txd output reloads the corresponding visual hold."
+  rx:
+    source: "ROLE-LOCAL p9_4ppm_frame_rx frame_valid_o AND frame_crc_valid_o"
+    interpretation: "A completed CRC-valid frame, data or ACK, reloads the corresponding visual hold."
+    exclusions:
+      - "asynchronous TFDU Rxd pin level"
+      - "synchronized raw pulse activity without a valid frame"
+      - "preamble-only or CRC-invalid traffic"
+  clear_priority:
+    - "s_axi_aresetn=0"
+    - "transport shutdown_latched"
+    - "any role-local TFDU safety fault"
+    - "both role-local TFDU SD outputs high (effective full shutdown)"
+  global_permit_behavior: "GLOBAL_PERMIT/endpoint arm is not an LED-clear input; RX remains observable in receive-only operation."
+
+isolation:
+  classification: "PURE_MONITOR_TAP"
+  transport_feedback: false
+  backpressure: false
+  control_path_influence: false
+  safety_path_influence: false
+  forbidden_uses:
+    - "Txd control"
+    - "SD control"
+    - "Mode control"
+    - "GLOBAL_PERMIT"
+    - "TX kill"
+    - "frame admission"
+    - "hardware or optical PASS evidence"
+
+role_profiles:
+  fixed:
+    profile: "P10_AX7020_FIXED_2LANE"
+    xdc: "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+  rotating:
+    profile: "P10_AX7020_ROTATING_2LANE"
+    xdc: "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+
+source_documents:
+  official_ax7020_user_manual:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\AX7020UserManualV2.2\\AX7020UserManualV2.2.rst"
+    sha256: "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16"
+    authority: "ALINX official AX7020 user-manual source"
+    location: "section 7.6, lines 1250-1285: four PL user LEDs, Bank 35, active-low, LED1=M14, LED2=M15, LED3=K16, LED4=J16"
+  official_ax7020_schematic:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7020开发板原理图V2.0.pdf"
+    sha256: "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e"
+    authority: "ALINX official AX7020 schematic V2.0"
+    location: "PL LED circuit and Bank 35 VCCO rail; cross-referenced by manual section 7.6"
+  official_package_pin_workbook:
+    path: "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7010_AX7020管脚.xlsx"
+    sha256: "2113ac32317262b681b2f54f63e77fced28f99c233c456e030b03cf77941ccbb"
+    authority: "ALINX official AX7010/AX7020 package-pin workbook"
+
+evidence_boundary:
+  old_p10_p10_1_artifacts_revalidated: false
+  new_bitstreams_require_new_hardware_evidence: true
+  offline_results_may_promote_hardware_status: false
+  statement: "LED indications are human observability only and are not safety, electrical, protocol-integrity, or optical-link acceptance evidence."

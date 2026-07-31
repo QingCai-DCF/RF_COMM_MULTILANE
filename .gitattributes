@@ -76,3 +76,9 @@ evidence/hardware/p10/** -text -whitespace
 # SHA256 records, so source whitespace normalization must not rewrite them.
 evidence/generated/p10_1_* -text -whitespace
 evidence/generated/p10_1_*/** -text -whitespace
+
+# Preserve the LED follow-up's content-addressed deliverables and byte-exact
+# Vivado/Vitis reports.  Vendor output spacing is provenance covered by SHA256.
+artifacts/p10_1_led/** -text -whitespace
+evidence/generated/vivado/p10_1_ax7020_pl_activity_led/** -text -whitespace
+evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime/** -text -whitespace

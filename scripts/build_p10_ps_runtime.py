@@ -7,6 +7,7 @@ driver.  This script contains no target connection, download, or run command.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -30,6 +31,10 @@ OUT = ROOT / "evidence/generated/vitis/p10_ax7020_runtime"
 ARTIFACTS = ROOT / "artifacts/p10"
 SUMMARY_JSON = ROOT / "evidence/generated/p10_ax7020_ps_runtime_build_summary.json"
 SUMMARY_MD = ROOT / "evidence/generated/p10_ax7020_ps_runtime_build_summary.md"
+FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_ax7020_functional"
+CAMPAIGN = "p10"
+TEST_ID = "P10-AX7020-DUAL-PS-RUNTIME-BUILD"
+SUMMARY_TITLE = "P10 AX7020 role-bound PS runtime build"
 
 ROLES = {
     "fixed": {
@@ -54,6 +59,23 @@ SOURCES = [
     ROOT / "software/ps_driver/ir_regs.h",
     TCL,
 ]
+
+
+def configure_campaign(campaign: str) -> None:
+    global OUT, ARTIFACTS, SUMMARY_JSON, SUMMARY_MD, FUNCTIONAL_OUT
+    global CAMPAIGN, TEST_ID, SUMMARY_TITLE
+    CAMPAIGN = campaign
+    if campaign == "p10":
+        return
+    if campaign != "p10_1_led":
+        raise ValueError(f"unsupported campaign: {campaign}")
+    OUT = ROOT / "evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime"
+    ARTIFACTS = ROOT / "artifacts/p10_1_led"
+    SUMMARY_JSON = ROOT / "evidence/generated/p10_1_ax7020_pl_activity_led_runtime_build_summary.json"
+    SUMMARY_MD = ROOT / "evidence/generated/p10_1_ax7020_pl_activity_led_runtime_build_summary.md"
+    FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_1_ax7020_pl_activity_led"
+    TEST_ID = "P10_1-AX7020-PL-ACTIVITY-LED-DUAL-PS-RUNTIME-BUILD"
+    SUMMARY_TITLE = "P10.1 AX7020 PL activity LED role-bound PS runtime build"
 
 
 def sha256(path: Path) -> str:
@@ -112,7 +134,8 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
     hashes = {rel(path): sha256(path) for path in paths}
-    payload = json.dumps({"role": role, "inputs": hashes}, sort_keys=True,
+    payload = json.dumps({"campaign": CAMPAIGN, "role": role, "inputs": hashes},
+                         sort_keys=True,
                          separators=(",", ":")).encode()
     return hashlib.sha256(payload).hexdigest(), hashes
 
@@ -149,7 +172,7 @@ def inspect_elf(role: str, elf: Path, out: Path) -> tuple[dict[str, Any], list[s
 def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     role_out = OUT / role
     role_out.mkdir(parents=True, exist_ok=True)
-    xsa = ROOT / f"evidence/generated/vivado/p10_ax7020_functional/{role}/p10_ax7020_{role}_functional.xsa"
+    xsa = FUNCTIONAL_OUT / role / f"p10_ax7020_{role}_functional.xsa"
     workspace = Path(f"C:/p10_vitis/{role}")
     platform = workspace / f"p10_{role}_platform"
     app = workspace / f"p10_{role}_runtime"
@@ -224,6 +247,15 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--campaign",
+        choices=("p10", "p10_1_led"),
+        default="p10",
+        help="Use a separate source-XSA, artifact, and evidence namespace.",
+    )
+    args = parser.parse_args()
+    configure_campaign(args.campaign)
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_RUNTIME_BUILD_REFUSED: offline environment required", file=sys.stderr)
@@ -244,7 +276,7 @@ def main() -> int:
     results = [run_role(role, cfg) for role, cfg in ROLES.items()]
     status = "PASS" if native_pass and all(item["status"] == "PASS" for item in results) else "FAIL"
     summary = {
-        "schema_version": 1, "test_id": "P10-AX7020-DUAL-PS-RUNTIME-BUILD",
+        "schema_version": 1, "test_id": TEST_ID, "campaign": CAMPAIGN,
         "status": status, "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
@@ -257,7 +289,7 @@ def main() -> int:
     }
     SUMMARY_JSON.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n",
                             encoding="utf-8", newline="\n")
-    lines = ["# P10 AX7020 role-bound PS runtime build", "",
+    lines = [f"# {SUMMARY_TITLE}", "",
              f"- Status: `{status}`", "- Hardware actions executed: `false`",
              "- Runtime transport: JTAG/OCM mailbox plus independent local AXI DMA; Ethernet is disabled.",
              "- Hardware admission remains blocked by `P10-SAFETY-POWERUP-001`.", "",

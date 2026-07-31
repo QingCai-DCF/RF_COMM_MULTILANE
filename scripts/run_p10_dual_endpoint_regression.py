@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -205,6 +206,22 @@ def run_register_map_verify(raw: Path) -> dict[str, Any]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output-dir",
+        default="evidence/generated/p10_dual_endpoint_regression",
+        help="Repository-relative evidence directory; use a new path for a follow-up campaign.",
+    )
+    args = parser.parse_args()
+    global OUT
+    candidate_out = (ROOT / args.output_dir).resolve()
+    try:
+        candidate_out.relative_to(ROOT.resolve())
+    except ValueError:
+        print("P10_REGRESSION_REFUSED: output directory is outside repository",
+              file=sys.stderr)
+        return 2
+    OUT = candidate_out
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_REGRESSION_REFUSED: offline environment required", file=sys.stderr)

@@ -58,6 +58,30 @@ def repo_path(path: Path) -> str:
     return path.resolve().relative_to(ROOT.resolve()).as_posix()
 
 
+def normalize_checkout_text(text: str, root: Path = ROOT) -> str:
+    """Remove checkout-location variance from hash-bound simulator evidence."""
+    resolved = root.resolve()
+    variants = {
+        str(resolved),
+        resolved.as_posix(),
+        str(resolved).replace("\\", "/"),
+    }
+    normalized = text
+    for variant in sorted(variants, key=len, reverse=True):
+        normalized = re.sub(
+            re.escape(variant),
+            "<REPO_ROOT>",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+    normalized = re.sub(
+        r"(?m)^(INFO: \[Common 17-206\] Exiting xsim at ).*$",
+        r"\1<TIMESTAMP>",
+        normalized,
+    )
+    return normalized
+
+
 def run(cmd: list[str], cwd: Path = ROOT, env: dict[str, str] | None = None) -> dict[str, Any]:
     proc = subprocess.run(cmd, cwd=cwd, text=True, capture_output=True, env=env)
     return {
@@ -123,14 +147,17 @@ def xsim_test(name: str, top: str, files: list[str], marker: str) -> dict[str, A
     returncode = 0
     for command in commands:
         result = run(command, cwd=work)
-        records.append({"command": result["command"], "returncode": result["returncode"]})
+        records.append({
+            "command": normalize_checkout_text(result["command"]),
+            "returncode": result["returncode"],
+        })
         outputs.append(result["stdout"])
         errors.append(result["stderr"])
         if result["returncode"]:
             returncode = result["returncode"]
             break
-    output = "".join(outputs)
-    stderr = "".join(errors)
+    output = normalize_checkout_text("".join(outputs))
+    stderr = normalize_checkout_text("".join(errors))
     log_path = XSIM_OUT / f"{name}.log"
     log_path.write_text(
         output + ("\nSTDERR\n" + stderr if stderr else ""),
@@ -244,8 +271,11 @@ def check_requirements() -> tuple[bool, dict[str, Any]]:
     return not missing and not errors, {"required_ids": sorted(EXPECTED_REQUIREMENTS), "missing": missing, "errors": errors}
 
 
-def check_state() -> tuple[bool, dict[str, Any]]:
-    state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
+def check_state(state: dict[str, Any] | None = None) -> tuple[bool, dict[str, Any]]:
+    if state is None:
+        state = json.loads(
+            (ROOT / "config/project_state.json").read_text(encoding="utf-8")
+        )
     p9_stage_key = "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
     p9_stage = state.get("stage_status", {}).get(p9_stage_key)
     p9_authorized_lifecycle = (
@@ -266,6 +296,7 @@ def check_state() -> tuple[bool, dict[str, Any]]:
             p9_stage_key,
             "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
             "P10_POST_ACCEPTANCE_ANALYSIS",
+            "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
         }
         if p8c_pass

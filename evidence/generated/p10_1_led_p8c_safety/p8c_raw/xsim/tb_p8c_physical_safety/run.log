@@ -1,0 +1,27 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p8c_physical_safety_sim -runall
+RETURNCODE=0
+
+STDOUT
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p8c_physical_safety_sim/xsim_script.tcl
+# xsim {tb_p8c_physical_safety_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8C_MAX_CONTINUOUS_TXD_HIGH_LE_1US_PASS=1
+P8C_STUCK_HIGH_LATCH_KILL_PASS=1
+P8C_TARGET_SHAPER_PASS=1
+P8C_CONTINUOUS_VECTOR_MATRIX_PASS=1
+P8C_SD_HISTORY_PRESERVED_PASS=1
+TB_P8C_PHYSICAL_SAFETY_PASS=1
+$finish called at time : 70647 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_LED/sim/tb/tb_p8c_physical_safety.sv" Line 180
+exit
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 17:11:10 2026...
+
+STDERR

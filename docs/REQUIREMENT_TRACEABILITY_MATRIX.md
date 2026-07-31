@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 147
-PASS: 132
-PENDING: 15
+REQUIREMENT_COUNT: 152
+PASS: 136
+PENDING: 16
 FAIL: 0
 WAIVED: 0
 ```
@@ -163,6 +163,11 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P11-READY-001` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIVE_MODULE_INVENTORY_PLAN.md` | P11 shall have a fifth compatible and fully inventoried TFDU6102 small board. |
 | `P11-READY-002` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIXTURE_REQUIREMENTS.md` | P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry. |
 | `P11-READY-003` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_ABZ_INPUT_REQUIREMENTS.md` | P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition budget. |
+| `OBS-LED-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-MAPPING-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins. |
+| `OBS-LED-002` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-EVENT-SEMANTICS-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | TX indication shall tap the final role-local physical Txd output, while RX indication shall use only a completed CRC-valid per-lane frame event and shall remain available during receive-only operation. |
+| `OBS-LED-003` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-HOLD-SHUTDOWN-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold. |
+| `OBS-LED-004` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-NONINTERFERENCE-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling. |
+| `OBS-LED-HW-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP | `PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION` | — | `docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md` | The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS. |
 
 ## PASS artifact bindings
 
@@ -236,13 +241,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `ad2c79cfea4a0283acf4f5c8070abfced74cf955fb3a042e8ac52cec7092ed32`
+- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
 - `PROJECT_STATUS.md` — `f95645cdc583a67bd3312b92c7cb5bff81f390fe5fa06a63c0328458cd3f3066`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `ad2c79cfea4a0283acf4f5c8070abfced74cf955fb3a042e8ac52cec7092ed32`
+- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
 
 ### `P8A-EVID-001`
 
@@ -252,7 +257,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `ad2c79cfea4a0283acf4f5c8070abfced74cf955fb3a042e8ac52cec7092ed32`
+- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
 - `PROJECT_STATUS.md` — `f95645cdc583a67bd3312b92c7cb5bff81f390fe5fa06a63c0328458cd3f3066`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
@@ -271,7 +276,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_path_mapping_engine.sv` — `248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c`
 - `sim/tb/tb_p8b_mapping_unit.sv` — `7d7baaa638ebd81da3a44ada810d324252b47602472de493e5a1dad5eae5e30a`
-- `evidence/generated/p8b_simulation_gate_summary.json` — `c9debf536967242b5776159574936154e943726c2782909c787308985369ab12`
+- `evidence/generated/p8b_simulation_gate_summary.json` — `fe58521eb5dd9052ff6a65df3af1b875392d1044a0c8c5e16bf65167d5f2b863`
 
 ### `MAP-006`
 
@@ -946,3 +951,19 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `HWPREP-P10_1-001`
 
 - `evidence/generated/p10_1_hardware_dry_run.json` — `1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d`
+
+### `OBS-LED-001`
+
+- `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
+
+### `OBS-LED-002`
+
+- `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
+
+### `OBS-LED-003`
+
+- `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
+
+### `OBS-LED-004`
+
+- `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
