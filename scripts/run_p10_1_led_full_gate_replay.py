@@ -254,6 +254,13 @@ def main() -> int:
                 "evidence": [
                     "evidence/generated/offline_gate_summary.json",
                     "evidence/generated/offline_gate_summary.md",
+                    "evidence/generated/vivado/nonhardware_build_summary.json",
+                    "evidence/generated/vivado/nonhardware_build_summary.md",
+                    "evidence/generated/p8b_final_summary.json",
+                    "evidence/generated/p8b_final_summary.md",
+                    "evidence/generated/plan_completion_audit.md",
+                    "evidence/generated/p8b_state_consistency_summary.json",
+                    "evidence/generated/p8b_state_consistency_summary.md",
                 ],
             },
         ]

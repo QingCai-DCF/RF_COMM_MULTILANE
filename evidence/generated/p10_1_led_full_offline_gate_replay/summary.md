@@ -1,18 +1,18 @@
 # P10.1 AX7020 PL activity LED full offline gate replay
 
 - Status: `FAIL`
-- Detached source commit: `None`
+- Detached source commit: `85c923f1940969644891100f68caaaeb0d537a67`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Replay environment: disposable detached Git worktree
 
 ## Commands
 
+- `p10_1_full_offline_gate`: `PASS` (`883.839 s`, `evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate.log`)
+- `canonical_p0_p8b_offline_regression`: `FAIL` (`329.242 s`, `evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression.log`)
 
 ## Errors
 
-- invalid source commit: fatal: ambiguous argument 'a5aeb90e70c1cf05849ab0ffcf3f0b52f5b6c38e^{commit}': unknown revision or path not in the working tree.
-Use '--' to separate paths from revisions, like this:
-'git <command> [<revision>...] -- [<file>...]'
+- canonical_p0_p8b_offline_regression returned 1
 
 This replay is offline evidence only. It does not reuse or promote any historical hardware result for the LED-enabled artifacts.

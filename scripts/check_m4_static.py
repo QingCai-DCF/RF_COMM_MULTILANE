@@ -99,6 +99,13 @@ def main() -> int:
     p9_rtl = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
         encoding="utf-8", errors="ignore"
     )
+    p10_1_rtl = "\n".join(
+        (ROOT / path).read_text(encoding="utf-8", errors="ignore")
+        for path in (
+            "rtl/p10_1_perf_monitor.sv",
+            "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
+        )
+    )
     hdr = (ROOT / "config/register_map/generated/ir_regs.h").read_text(encoding="utf-8", errors="ignore")
     py = (ROOT / "config/register_map/generated/ir_regs.py").read_text(encoding="utf-8", errors="ignore")
     md = (ROOT / "docs/design/REGISTER_CONTRACT.md").read_text(encoding="utf-8", errors="ignore")
@@ -115,6 +122,11 @@ def main() -> int:
         require(f"`{name}`" in md and f"`0x{off:04X}`" in md, f"M4_DOC_OFFSET_{name}", errors)
         if name.startswith("P9_"):
             rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
+        elif name.startswith("P10_1_"):
+            # P10.1 owns an additive monitor/control window decoded by the
+            # performance monitor and its endpoint integration wrapper.  It is
+            # intentionally not duplicated in the legacy M4 register block.
+            rtl_consumes_register = f"`IR_REG_{name}" in p10_1_rtl
         elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:
