@@ -191,6 +191,46 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
             )
         )
 
+    def test_failed_run_consumes_current_authorization(self) -> None:
+        active = {
+            "run_id": "run-2",
+            "status": "AUTHORIZED",
+            "current_run_hardware_authorization": True,
+        }
+        result = self.module.consumed_authorization_payload(
+            active,
+            run_id="run-2",
+            campaign_status="FAIL",
+            consumed_at_utc="2026-07-31T22:30:00+00:00",
+            final_evidence_sha256="d" * 64,
+            campaign_disposition="STOPPED_AT_GOAL_RETRY_LIMIT",
+            next_required_user_action="explicit retry-limit override",
+            shutdown_fixed="PASS",
+            shutdown_rotating="PASS",
+        )
+        self.assertEqual(
+            result["status"], "CONSUMED_AFTER_P10_1_HARDWARE_FAIL"
+        )
+        self.assertFalse(result["current_run_hardware_authorization"])
+        self.assertTrue(result["consumed"])
+        self.assertEqual(result["consumed_by_run_id"], "run-2")
+        self.assertFalse(result["reusable_for_future_run"])
+        repeated = self.module.consumed_authorization_payload(
+            result,
+            run_id="run-2",
+            campaign_status="FAIL",
+            consumed_at_utc="2026-07-31T22:31:00+00:00",
+            final_evidence_sha256="e" * 64,
+            campaign_disposition="STOPPED_AT_GOAL_RETRY_LIMIT",
+            next_required_user_action="explicit retry-limit override",
+            shutdown_fixed="PASS",
+            shutdown_rotating="PASS",
+        )
+        self.assertEqual(
+            repeated["consumed_at_utc"], "2026-07-31T22:30:00+00:00"
+        )
+        self.assertEqual(repeated["final_evidence_sha256"], "e" * 64)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import copy
 import hashlib
 import json
 import re
@@ -474,6 +475,87 @@ def generate_p10_runtime_source_reverification() -> dict[str, Any]:
     return payload
 
 
+def consumed_authorization_payload(
+    authorization: dict[str, Any],
+    *,
+    run_id: str,
+    campaign_status: str,
+    consumed_at_utc: str,
+    final_evidence_sha256: str,
+    campaign_disposition: str | None,
+    next_required_user_action: str | None,
+    shutdown_fixed: str,
+    shutdown_rotating: str,
+) -> dict[str, Any]:
+    result = copy.deepcopy(authorization)
+    if result.get("run_id") != run_id:
+        raise ValueError("current authorization run_id does not match final run")
+    if result.get("current_run_hardware_authorization") is False:
+        if (
+            result.get("consumed") is True
+            and result.get("consumed_by_run_id") == run_id
+            and result.get("reusable_for_future_run") is False
+        ):
+            result.update(
+                {
+                    "campaign_status": campaign_status,
+                    "campaign_disposition": campaign_disposition,
+                    "shutdown_fixed": shutdown_fixed,
+                    "shutdown_rotating": shutdown_rotating,
+                    "final_evidence_sha256": final_evidence_sha256,
+                    "next_required_user_action": next_required_user_action,
+                }
+            )
+            return result
+        raise ValueError("current authorization has an invalid consumed state")
+    if (
+        result.get("status") != "AUTHORIZED"
+        or result.get("current_run_hardware_authorization") is not True
+    ):
+        raise ValueError("current authorization was not active for this run")
+    result.update(
+        {
+            "status": f"CONSUMED_AFTER_P10_1_HARDWARE_{campaign_status}",
+            "authorization_status_at_run_start": "AUTHORIZED",
+            "current_run_hardware_authorization": False,
+            "consumed": True,
+            "consumed_by_run_id": run_id,
+            "consumed_at_utc": consumed_at_utc,
+            "reusable_for_future_run": False,
+            "campaign_status": campaign_status,
+            "campaign_disposition": campaign_disposition,
+            "hardware_actions_executed": True,
+            "shutdown_fixed": shutdown_fixed,
+            "shutdown_rotating": shutdown_rotating,
+            "final_evidence_path": rel(
+                GENERATED / "p10_1_hw_final_summary.json"
+            ),
+            "final_evidence_sha256": final_evidence_sha256,
+            "next_required_user_action": next_required_user_action,
+        }
+    )
+    return result
+
+
+def consume_current_authorization(final: dict[str, Any]) -> dict[str, Any]:
+    current = load_json(AUTHORIZATION)
+    consumed = consumed_authorization_payload(
+        current,
+        run_id=final["run_id"],
+        campaign_status=final["status"],
+        consumed_at_utc=final["generated_at_utc"],
+        final_evidence_sha256=sha256(
+            GENERATED / "p10_1_hw_final_summary.json"
+        ),
+        campaign_disposition=final.get("campaign_disposition"),
+        next_required_user_action=final.get("next_required_user_action"),
+        shutdown_fixed=final["SHUTDOWN_FIXED"],
+        shutdown_rotating=final["SHUTDOWN_ROTATING"],
+    )
+    write_json(AUTHORIZATION, consumed)
+    return consumed
+
+
 def common_context(
     run_id: str,
     authorization: dict[str, Any],
@@ -750,6 +832,7 @@ def update_canonical_state(
     final: dict[str, Any],
     summary_by_stem: dict[str, dict[str, Any]],
 ) -> None:
+    current_authorization = consume_current_authorization(final)
     state = load_json(STATE)
     status = final["status"]
     state["current_run_hardware_authorization"] = False
@@ -762,6 +845,20 @@ def update_canonical_state(
     state["p11_status"] = "NOT_STARTED"
     state["p11_hardware_ready"] = False
     state["p10_1_no_hardware_actions_executed"] = False
+    state["last_hardware_stage"] = "P10_1"
+    state["last_hardware_run_id"] = final["run_id"]
+    state["last_shutdown_fixed"] = final["SHUTDOWN_FIXED"]
+    state["last_shutdown_rotating"] = final["SHUTDOWN_ROTATING"]
+    state["p10_1_current_run_authorization"] = {
+        "status": current_authorization["status"],
+        "path": rel(AUTHORIZATION),
+        "sha256": sha256(AUTHORIZATION),
+        "consumed": current_authorization["consumed"],
+        "consumed_by_run_id": current_authorization["consumed_by_run_id"],
+        "reusable_for_future_run": current_authorization[
+            "reusable_for_future_run"
+        ],
+    }
     campaign = state.setdefault("p10_1_hardware_campaign", {})
     campaign.update(
         {
