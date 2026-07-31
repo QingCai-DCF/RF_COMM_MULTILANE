@@ -48,6 +48,9 @@ SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 AUTH_GENERATOR = ROOT / "scripts/create_p10_fasttrack_authorization.py"
 DEFAULT_AUTH = ROOT / "config/p10_fasttrack_current_run_authorization.json"
+REGISTER_MAP_MANIFEST = (
+    ROOT / "config/register_map/generated/ir_regs_manifest.json"
+)
 
 EXPECTED_SCOPE = "P10_FASTTRACK_AX7020_DUAL_NODE_2LANE_NO_ETHERNET"
 EXPECTED_BRANCH = "p10/ax7020-dual-node-2lane"
@@ -57,8 +60,13 @@ EXPECTED_ROTATING_SERIAL = "210512180081"
 EXPECTED_FIXED_TARGET = "localhost:3121/xilinx_tcf/Digilent/210249855178"
 EXPECTED_ROTATING_TARGET = "localhost:3121/xilinx_tcf/Digilent/210512180081"
 EXPECTED_GOAL_SHA256 = "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603"
-EXPECTED_REGISTER_MAP_VERSION = 0x09000003
-EXPECTED_REGISTER_MAP_HASH_LOW = 0xCF35F13A
+_REGISTER_MAP_IDENTITY = json.loads(
+    REGISTER_MAP_MANIFEST.read_text(encoding="utf-8")
+)
+EXPECTED_REGISTER_MAP_VERSION = int(
+    _REGISTER_MAP_IDENTITY["register_map_version_value"], 0
+)
+EXPECTED_REGISTER_MAP_HASH_LOW = int(_REGISTER_MAP_IDENTITY["hash_low"], 0)
 EXPECTED_CAPABILITIES = 0xF7204221
 EXPECTED_MAILBOX_MAGIC = 0x424D3950
 EXPECTED_MAILBOX_SCHEMA = 5

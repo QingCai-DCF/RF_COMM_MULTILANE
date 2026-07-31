@@ -9,6 +9,9 @@
 # require-user-hw-authorization: reached only through the committed P10
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
+set p10_expected_register_map_version 0x0A000001
+set p10_expected_register_map_hash_low 0x792A01C8
+
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
 }
@@ -154,6 +157,7 @@ proc p10_check_abort {} {
 }
 
 proc p10_verify_pl_safe {role expected_build expected_profile label} {
+  global p10_expected_register_map_version p10_expected_register_map_hash_low
   set identity [p10_read32 $role 0x43C00700]
   set build [p10_read32 $role 0x43C00704]
   set profile [p10_read32 $role 0x43C00708]
@@ -169,8 +173,10 @@ proc p10_verify_pl_safe {role expected_build expected_profile label} {
     lappend physical_tx [p10_read32 $role $address]
   }
   if {$identity != 0x5031305A || $build != $expected_build ||
-      $profile != $expected_profile || $version != 0x09000003 ||
-      $hash_low != 0xCF35F13A || $capabilities != 0xF7204221} {
+      $profile != $expected_profile ||
+      $version != $p10_expected_register_map_version ||
+      $hash_low != $p10_expected_register_map_hash_low ||
+      $capabilities != 0xF7204221} {
     error [format "P10 %s identity mismatch id=0x%08X build=0x%08X profile=0x%08X version=0x%08X hash=0x%08X caps=0x%08X" \
         $role $identity $build $profile $version $hash_low $capabilities]
   }

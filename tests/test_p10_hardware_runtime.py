@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import sys
 import unittest
@@ -131,6 +132,32 @@ class P10HardwareRuntimeTests(unittest.TestCase):
         self.assertNotIn("socket", text.lower())
         self.assertNotIn("ethernet", text.lower())
         self.assertNotRegex(text.lower(), r"lane[^\n]*0x[4-9a-f]")
+
+    def test_hardware_identity_uses_canonical_register_map(self) -> None:
+        manifest = json.loads(
+            (
+                ROOT / "config/register_map/generated/ir_regs_manifest.json"
+            ).read_text(encoding="utf-8")
+        )
+        expected_version = int(manifest["register_map_version_value"], 0)
+        expected_hash = int(manifest["hash_low"], 0)
+        self.assertEqual(
+            self.runtime.EXPECTED_REGISTER_MAP_VERSION, expected_version
+        )
+        self.assertEqual(
+            self.runtime.EXPECTED_REGISTER_MAP_HASH_LOW, expected_hash
+        )
+        text = STAGE_TCL.read_text(encoding="utf-8")
+        self.assertIn(
+            f"set p10_expected_register_map_version 0x{expected_version:08X}",
+            text,
+        )
+        self.assertIn(
+            f"set p10_expected_register_map_hash_low 0x{expected_hash:08X}",
+            text,
+        )
+        self.assertNotIn("0x09000003", text)
+        self.assertNotIn("0xCF35F13A", text)
 
     def test_runtime_requires_explicit_hardware_enable_and_finally_shutdown(self) -> None:
         text = RUNTIME.read_text(encoding="utf-8")
