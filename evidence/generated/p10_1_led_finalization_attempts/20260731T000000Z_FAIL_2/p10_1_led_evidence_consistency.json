@@ -1,0 +1,105 @@
+{
+  "artifact_manifest": {
+    "bytes": 5119,
+    "path": "evidence/generated/p10_1_led_artifact_manifest.json",
+    "sha256": "770c3d44a8aeb13c22da50a11000b333b2454f28aa10c31ab1fc42c0406244da"
+  },
+  "canonical_files": [
+    {
+      "bytes": 178439,
+      "path": "config/project_requirements.yaml",
+      "sha256": "660418c3a01a40fc0283123cc97d42ffca47edaee79b69e3ff720e5346e6438b"
+    },
+    {
+      "bytes": 27223,
+      "path": "config/project_state.json",
+      "sha256": "fe4bda509fd57473c185e4cbf270917dd26505b45add7ffa73a89d87c86f7c16"
+    },
+    {
+      "bytes": 96878,
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "966ddea498897077e26402c296fa545c8a21e49f70112496fb2b77e968309cf4"
+    },
+    {
+      "bytes": 8129,
+      "path": "PROJECT_STATUS.md",
+      "sha256": "a1a26048c8b868d2bd6c39583b4a67cc68d4e00ac4fc57a0b6c795e57253a21c"
+    }
+  ],
+  "checks": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --write",
+      "return_code": 1,
+      "status": "FAIL",
+      "stderr_tail": "",
+      "stdout_tail": "ERROR: P8A-STATE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nERROR: P8A-TRACE-001.artifact_hashes[1]: SHA256 mismatch for config/project_state.json\nERROR: P8A-SCOPE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nREQUIREMENT_TRACEABILITY_GENERATION=FAIL\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --write",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --check",
+      "return_code": 1,
+      "status": "FAIL",
+      "stderr_tail": "",
+      "stdout_tail": "ERROR: P8A-STATE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nERROR: P8A-STATE-001.artifact_hashes[1]: SHA256 mismatch for PROJECT_STATUS.md\nERROR: P8A-TRACE-001.artifact_hashes[1]: SHA256 mismatch for config/project_state.json\nERROR: P8A-SCOPE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nERROR: P8A-SCOPE-001.artifact_hashes[1]: SHA256 mismatch for PROJECT_STATUS.md\nERROR: requirement traceability matrix is stale\nREQUIREMENT_TRACEABILITY_GENERATION=FAIL\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "return_code": 1,
+      "status": "FAIL",
+      "stderr_tail": "",
+      "stdout_tail": "CANONICAL_CONSTRAINT_GATE=PASS\nPROJECT_STATE_CONSISTENCY=PASS\nREQUIREMENT_TRACEABILITY_BASELINE=FAIL\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: P8A-STATE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: P8A-STATE-001.artifact_hashes[1]: SHA256 mismatch for PROJECT_STATUS.md\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: P8A-TRACE-001.artifact_hashes[1]: SHA256 mismatch for config/project_state.json\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: P8A-SCOPE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: P8A-SCOPE-001.artifact_hashes[1]: SHA256 mismatch for PROJECT_STATUS.md\nERROR[REQUIREMENT_TRACEABILITY_BASELINE]: docs/REQUIREMENT_TRACEABILITY_MATRIX.md is stale or not generator-owned\nP0_P7_EVIDENCE_RECONCILIATION=PASS\nNO_HARDWARE_ACTIONS_EXECUTED=1\nP8A_STATUS=FAIL\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "NO_HARDWARE_ACTIONS_EXECUTED=1\n"
+    },
+    {
+      "command": "git diff --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "consistency command failed: C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --write",
+    "consistency command failed: C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --check",
+    "consistency command failed: C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check"
+  ],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "hardware_requirement": {
+    "OBS-LED-HW-001": "PENDING"
+  },
+  "leaf": {
+    "bytes": 5373,
+    "path": "evidence/generated/p10_1_led_offline_acceptance_leaf.json",
+    "sha256": "d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422"
+  },
+  "offline_requirements": {
+    "OBS-LED-001": "PASS",
+    "OBS-LED-002": "PASS",
+    "OBS-LED-003": "PASS",
+    "OBS-LED-004": "PASS"
+  },
+  "schema_version": 1,
+  "status": "FAIL",
+  "test_id": "P10_1-LED-EVIDENCE-CONSISTENCY"
+}

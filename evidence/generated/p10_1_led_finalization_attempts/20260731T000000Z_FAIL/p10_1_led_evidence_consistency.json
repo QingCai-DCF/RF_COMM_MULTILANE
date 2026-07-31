@@ -1,0 +1,90 @@
+{
+  "artifact_manifest": {
+    "bytes": 5270,
+    "path": "evidence/generated/p10_1_led_artifact_manifest.json",
+    "sha256": "09f95b89cd9271375a43e6d3c5268fa5cff056aae70d8f5381a4325d40e843ce"
+  },
+  "canonical_files": [
+    {
+      "bytes": 177425,
+      "path": "config/project_requirements.yaml",
+      "sha256": "51edec7d265eabc272852f7d228b7f4c8143845ad72f2bdfeae6dacefbc1c559"
+    },
+    {
+      "bytes": 22893,
+      "path": "config/project_state.json",
+      "sha256": "39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4"
+    },
+    {
+      "bytes": 96878,
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "966ddea498897077e26402c296fa545c8a21e49f70112496fb2b77e968309cf4"
+    },
+    {
+      "bytes": 8129,
+      "path": "PROJECT_STATUS.md",
+      "sha256": "92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2"
+    }
+  ],
+  "checks": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "REQUIREMENT_TRACEABILITY_GENERATION=PASS\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "CANONICAL_CONSTRAINT_GATE=PASS\nPROJECT_STATE_CONSISTENCY=PASS\nREQUIREMENT_TRACEABILITY_BASELINE=PASS\nP0_P7_EVIDENCE_RECONCILIATION=PASS\nNO_HARDWARE_ACTIONS_EXECUTED=1\nP8A_STATUS=PASS\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "NO_HARDWARE_ACTIONS_EXECUTED=1\n"
+    },
+    {
+      "command": "git diff --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "tfdu_safety_regression: hardware_actions_executed is not false",
+    "tfdu_safety_regression: current_run_hardware_authorization is not false"
+  ],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "hardware_requirement": {
+    "OBS-LED-HW-001": "PENDING"
+  },
+  "leaf": {
+    "bytes": 5524,
+    "path": "evidence/generated/p10_1_led_offline_acceptance_leaf.json",
+    "sha256": "40e46932a259d86028de4c8d7a53b2a1bebc5cf08fb5e443ff0a190fa8a972b6"
+  },
+  "offline_requirements": {
+    "OBS-LED-001": "PASS",
+    "OBS-LED-002": "PASS",
+    "OBS-LED-003": "PASS",
+    "OBS-LED-004": "PASS"
+  },
+  "schema_version": 1,
+  "status": "FAIL",
+  "test_id": "P10_1-LED-EVIDENCE-CONSISTENCY"
+}

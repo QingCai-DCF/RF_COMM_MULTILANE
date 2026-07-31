@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
+    sha256: bc97b310ac6c768772675f2d3424bef1d78fee2c99663fa3942359da63af1662
   - path: PROJECT_STATUS.md
     sha256: 92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2
-  artifact_hash: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
+  artifact_hash: bc97b310ac6c768772675f2d3424bef1d78fee2c99663fa3942359da63af1662
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
+    sha256: bc97b310ac6c768772675f2d3424bef1d78fee2c99663fa3942359da63af1662
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
+    sha256: bc97b310ac6c768772675f2d3424bef1d78fee2c99663fa3942359da63af1662
   - path: PROJECT_STATUS.md
     sha256: 92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
+  artifact_hash: bc97b310ac6c768772675f2d3424bef1d78fee2c99663fa3942359da63af1662
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -1194,7 +1194,8 @@ requirements:
   source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
   reverification_stage: P8E
 - requirement_id: PERF-MODEL-001
-  requirement_text: The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension also closes a complete dual-node streaming sensitivity model without changing the original P8D scope.
+  requirement_text: The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension
+    also closes a complete dual-node streaming sensitivity model without changing the original P8D scope.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
@@ -1218,7 +1219,8 @@ requirements:
   source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
   reverification_stage: P8E
 - requirement_id: PERF-MODEL-002
-  requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty.
+  requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension
+    directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
@@ -2618,7 +2620,6 @@ requirements:
   hardware_followup: This PASS remains limited to the frozen stationary dual-AX7020 two-lane campaign. New performance experiments,
     P10.2 crosstalk/full-duplex work, P10.3 large-object/FreeRTOS work, and every P11-or-later hardware action require a new
     current-run authorization and bounded safe wrapper.
-# BEGIN GENERATED P10.1 REQUIREMENTS
 - requirement_id: PERF-MEAS-001
   requirement_text: Metric names, numerators, windows, units, classes, and provenance shall be explicit and schema-validated.
   profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
@@ -2956,58 +2957,78 @@ requirements:
   waiver: null
   artifact_hashes: []
   hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
-# END GENERATED P10.1 REQUIREMENTS
-# BEGIN GENERATED P10.1 AX7020 PL ACTIVITY LED REQUIREMENTS
 - requirement_id: OBS-LED-001
-  requirement_text: Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins.
+  requirement_text: Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and
+    LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins.
   profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
   verification_method: Dedicated XSIM, exact XDC/static source audit, and independent fixed/rotating routed implementation.
   verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
-  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  verification_scope: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE
   test_id: P10_1-LED-MAPPING-001
-  evidence_path: evidence/generated/p10_1_led_final_summary.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: New LED-enabled bitstreams require direct, newly authorized hardware validation; existing P10/P10.1 hardware PASS evidence is not reused.
+  artifact_hashes:
+  - path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+    sha256: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
+  hardware_followup: The LED-enabled artifacts still require direct current-run hardware validation; LED indication remains
+    monitor-only and is not safety or optical-success evidence.
+  artifact_hash: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
 - requirement_id: OBS-LED-002
-  requirement_text: TX indication shall tap the final role-local physical Txd output, while RX indication shall use only a completed CRC-valid per-lane frame event and shall remain available during receive-only operation.
+  requirement_text: TX indication shall tap the final role-local physical Txd output, while RX indication shall use only a
+    completed CRC-valid per-lane frame event and shall remain available during receive-only operation.
   profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
   verification_method: RTL connectivity audit, dedicated XSIM, P10 dual-endpoint regression, and safety regression.
   verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
-  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  verification_scope: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE
   test_id: P10_1-LED-EVENT-SEMANTICS-001
-  evidence_path: evidence/generated/p10_1_led_final_summary.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: LED state is human observability only and is not proof of electrical, protocol, or optical success.
+  artifact_hashes:
+  - path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+    sha256: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
+  hardware_followup: The LED-enabled artifacts still require direct current-run hardware validation; LED indication remains
+    monitor-only and is not safety or optical-success evidence.
+  artifact_hash: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
 - requirement_id: OBS-LED-003
-  requirement_text: A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold.
+  requirement_text: A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining
+    lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold.
   profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
-  verification_method: Dedicated cycle-accurate XSIM plus fixed/rotating implementation timing, DRC, CDC, and methodology signoff.
+  verification_method: Dedicated cycle-accurate XSIM plus fixed/rotating implementation timing, DRC, CDC, and methodology
+    signoff.
   verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
-  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  verification_scope: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE
   test_id: P10_1-LED-HOLD-SHUTDOWN-001
-  evidence_path: evidence/generated/p10_1_led_final_summary.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Hardware-visible hold duration and LED polarity remain pending direct validation with the new artifacts.
+  artifact_hashes:
+  - path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+    sha256: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
+  hardware_followup: The LED-enabled artifacts still require direct current-run hardware validation; LED indication remains
+    monitor-only and is not safety or optical-success evidence.
+  artifact_hash: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
 - requirement_id: OBS-LED-004
-  requirement_text: The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling.
+  requirement_text: The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on
+    Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling.
   profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
   verification_method: Structural source audit, complete RTL/safety regression, and post-route timing/resource/CDC/DRC review.
   verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
-  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  verification_scope: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE
   test_id: P10_1-LED-NONINTERFERENCE-001
-  evidence_path: evidence/generated/p10_1_led_final_summary.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Offline noninterference evidence does not convert the LED into a safety mechanism or hardware acceptance signal.
+  artifact_hashes:
+  - path: evidence/generated/p10_1_led_offline_acceptance_leaf.json
+    sha256: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
+  hardware_followup: The LED-enabled artifacts still require direct current-run hardware validation; LED indication remains
+    monitor-only and is not safety or optical-success evidence.
+  artifact_hash: d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422
 - requirement_id: OBS-LED-HW-001
-  requirement_text: The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS.
+  requirement_text: The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before
+    their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS.
   profile: P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP
   verification_method: Future bounded, newly authorized dual-board hardware run using immutable LED-enabled artifacts.
   verification_stage: PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
@@ -3018,4 +3039,3 @@ requirements:
   waiver: null
   artifact_hashes: []
   hardware_followup: Remains pending; this offline follow-up performs no JTAG, programming, UART, or TFDU drive.
-# END GENERATED P10.1 AX7020 PL ACTIVITY LED REQUIREMENTS

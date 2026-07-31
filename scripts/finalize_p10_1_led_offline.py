@@ -7,6 +7,8 @@ import argparse
 import hashlib
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -44,6 +46,15 @@ INPUTS = {
 
 OFFLINE_REQUIREMENTS = ("OBS-LED-001", "OBS-LED-002", "OBS-LED-003", "OBS-LED-004")
 HARDWARE_REQUIREMENT = "OBS-LED-HW-001"
+FINALIZATION_OUTPUTS = (
+    "p10_1_led_artifact_manifest.json",
+    "p10_1_led_offline_acceptance_leaf.json",
+    "p10_1_led_offline_acceptance_leaf.md",
+    "p10_1_led_evidence_consistency.json",
+    "p10_1_led_evidence_consistency.md",
+    "p10_1_led_final_summary.json",
+    "p10_1_led_final_summary.md",
+)
 
 
 def sha256(path: Path) -> str:
@@ -67,6 +78,48 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"{rel(path)} must contain a JSON object")
     return value
+
+
+def offline_execution_fields(payload: dict[str, Any]) -> tuple[Any, Any]:
+    hardware_actions = payload.get("hardware_actions_executed")
+    if (
+        hardware_actions is None
+        and payload.get("NO_HARDWARE_ACTIONS_EXECUTED") is True
+    ):
+        hardware_actions = False
+    current_authorization = payload.get("current_run_hardware_authorization")
+    if current_authorization is None:
+        current_authorization = payload.get("CURRENT_RUN_HARDWARE_AUTHORIZATION")
+    return hardware_actions, current_authorization
+
+
+def archive_existing_finalization() -> str | None:
+    final_path = GENERATED / "p10_1_led_final_summary.json"
+    if not final_path.is_file():
+        return None
+    try:
+        previous = load_json(final_path)
+    except (OSError, ValueError, json.JSONDecodeError):
+        previous = {}
+    stamp = re.sub(
+        r"[^0-9A-Za-z]+",
+        "",
+        str(previous.get("generated_at_utc", "undated")),
+    )
+    status = re.sub(r"[^0-9A-Za-z]+", "", str(previous.get("status", "UNKNOWN")))
+    archive_root = GENERATED / "p10_1_led_finalization_attempts"
+    archive_root.mkdir(parents=True, exist_ok=True)
+    destination = archive_root / f"{stamp}_{status}"
+    suffix = 1
+    while destination.exists():
+        suffix += 1
+        destination = archive_root / f"{stamp}_{status}_{suffix}"
+    destination.mkdir()
+    for name in FINALIZATION_OUTPUTS:
+        source = GENERATED / name
+        if source.exists():
+            shutil.move(str(source), str(destination / name))
+    return rel(destination)
 
 
 def write_json(path: Path, value: Any) -> None:
@@ -179,6 +232,28 @@ def update_requirements(leaf: Path) -> None:
     hardware["status"] = "PENDING"
     hardware["test_id"] = None
     hardware["artifact_hashes"] = []
+    mutable_canonical_hashes = {
+        rel(STATE): sha256(STATE),
+        rel(PROJECT_STATUS): sha256(PROJECT_STATUS),
+    }
+    for item in document["requirements"]:
+        if not isinstance(item, dict):
+            continue
+        artifact_hashes = item.get("artifact_hashes")
+        if not isinstance(artifact_hashes, list):
+            continue
+        for artifact in artifact_hashes:
+            if not isinstance(artifact, dict):
+                continue
+            path_value = artifact.get("path")
+            if path_value in mutable_canonical_hashes:
+                artifact["sha256"] = mutable_canonical_hashes[path_value]
+        if (
+            artifact_hashes
+            and isinstance(artifact_hashes[0], dict)
+            and artifact_hashes[0].get("path") in mutable_canonical_hashes
+        ):
+            item["artifact_hash"] = artifact_hashes[0]["sha256"]
     REQUIREMENTS.write_text(
         yaml.safe_dump(document, sort_keys=False, allow_unicode=True, width=120),
         encoding="utf-8",
@@ -230,7 +305,11 @@ def update_state(leaf: Path, manifest: Path, payloads: dict[str, dict[str, Any]]
         "new_hardware_validation_status": "PENDING",
         "roles": roles,
     }
-    write_json(STATE, state)
+    STATE.write_text(
+        json.dumps(state, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def main() -> int:
@@ -242,6 +321,7 @@ def main() -> int:
         errors.append("NO_HARDWARE must be 1")
     if os.environ.get("CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         errors.append("CURRENT_RUN_HARDWARE_AUTHORIZATION must be false")
+    archived_previous = archive_existing_finalization()
 
     payloads: dict[str, dict[str, Any]] = {}
     for name, path in INPUTS.items():
@@ -256,9 +336,10 @@ def main() -> int:
         payloads[name] = payload
         if payload.get("status") != "PASS":
             errors.append(f"{name}: status is not PASS")
-        if payload.get("hardware_actions_executed") is not False:
+        hardware_actions, current_authorization = offline_execution_fields(payload)
+        if hardware_actions is not False:
             errors.append(f"{name}: hardware_actions_executed is not false")
-        if payload.get("current_run_hardware_authorization") is not False:
+        if current_authorization is not False:
             errors.append(f"{name}: current_run_hardware_authorization is not false")
         if payload.get("source_worktree_dirty") not in (False, None):
             errors.append(f"{name}: source worktree was dirty")
@@ -445,12 +526,22 @@ def main() -> int:
     )
 
     if not errors:
-        update_requirements(leaf_path)
         update_state(leaf_path, manifest_path, payloads)
-        generation_checks = [
-            run_check([sys.executable, "scripts/generate_requirement_traceability.py", "--write"]),
-            run_check([sys.executable, "scripts/generate_project_status.py", "--write"]),
-        ]
+        project_status_write = run_check(
+            [sys.executable, "scripts/generate_project_status.py", "--write"]
+        )
+        generation_checks = [project_status_write]
+        if project_status_write["status"] == "PASS":
+            update_requirements(leaf_path)
+            generation_checks.append(
+                run_check(
+                    [
+                        sys.executable,
+                        "scripts/generate_requirement_traceability.py",
+                        "--write",
+                    ]
+                )
+            )
     else:
         generation_checks = []
 
@@ -519,6 +610,7 @@ def main() -> int:
         "offline_requirement_status": "PASS",
         "new_bitstream_hardware_status": "PENDING",
         "old_p10_p10_1_hardware_results_applicable_to_new_artifacts": False,
+        "archived_previous_finalization": archived_previous,
         "next_stage": (
             "CREATE_HASH_BOUND_CURRENT_RUN_AUTHORIZATION_THEN_RUN_DIRECT_HARDWARE"
         ),

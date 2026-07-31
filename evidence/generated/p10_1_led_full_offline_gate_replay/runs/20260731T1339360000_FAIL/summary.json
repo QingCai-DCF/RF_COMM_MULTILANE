@@ -1,13 +1,13 @@
 {
-  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1339360000_FAIL",
+  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1228560000_FAIL",
   "cleanup_status": "PASS",
   "commands": [
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_offline_gate.py --full --json-summary",
-      "duration_seconds": 870.846,
-      "finished_utc": "2026-07-31T14:05:46+00:00",
+      "duration_seconds": 850.696,
+      "finished_utc": "2026-07-31T12:44:13+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate.log",
-      "log_sha256": "e9fdf95bd344801dc44ac25ccafdef4ea103cfe30a2b47fec2be643fa63bac71",
+      "log_sha256": "d904049613490f36c78533f245bf49857730ac635400645b6be76d0bd7eac82d",
       "markers": {
         "current_authorization_false": true,
         "hardware_actions_false": true,
@@ -18,32 +18,32 @@
         {
           "bytes": 4116,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_final_summary.json",
-          "sha256": "dec80688a065c371953a689d18ddd7147fdfb18f8b018730bca9137d7b5e3f35",
+          "sha256": "a4fe0b0883fb669b5e20be67d04b423d41a5daca60ae57111b36c8216e53c7b4",
           "source_path": "evidence/generated/p10_1_final_summary.json"
         },
         {
           "bytes": 1204,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_consistency.json",
-          "sha256": "df8fc9e1a7d4c03b6061f582205f5a9913c25648091b352538e264c72c736a57",
+          "sha256": "f44e0a120a9931bba0d3c1561e3367561265b08b22987cbc33a2b73acc978b19",
           "source_path": "evidence/generated/p10_1_evidence_consistency.json"
         },
         {
-          "bytes": 13431,
+          "bytes": 13181,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_sha256_manifest.json",
-          "sha256": "b13b29472cf444aaa4a219ffb9cf898ccd13a747580e08cbd129ffe3723e0fdc",
+          "sha256": "b19b09c09d68715193196fd6b1f4f858862d91538a53d132801efdb95c2924c6",
           "source_path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json"
         }
       ],
       "return_code": 0,
-      "started_utc": "2026-07-31T13:51:15+00:00",
+      "started_utc": "2026-07-31T12:30:03+00:00",
       "status": "PASS"
     },
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_offline_gates.py --include-p8b --json-summary",
-      "duration_seconds": 3341.734,
-      "finished_utc": "2026-07-31T15:01:44+00:00",
+      "duration_seconds": 3303.72,
+      "finished_utc": "2026-07-31T13:39:32+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression.log",
-      "log_sha256": "21938de18c5172befb6199ee6e2869f7a411c160e212dc8e0f59a16ef36dc80d",
+      "log_sha256": "dff64bba5194d3c3a3f1b4e47f4a81ffd109c3aaee86794bb6cbb33e65e43d66",
       "markers": {
         "current_authorization_false": false,
         "hardware_actions_false": false,
@@ -54,37 +54,37 @@
         {
           "bytes": 88336,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.json",
-          "sha256": "0693fc554e2f79f7c5796ff9ea3d0a941698e6da8de3c54e42f75347392297e4",
+          "sha256": "fdba98cf2a64584739992c0e68e271a1c11299c16aee8619f8a29514ac135654",
           "source_path": "evidence/generated/offline_gate_summary.json"
         },
         {
           "bytes": 76051,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.md",
-          "sha256": "2059d2d1b287f8d28c552b68aaea66784c5fda42b4eee63efef7d0d06ceb8c46",
+          "sha256": "46d999d6620a013e7051eaca9c22a5181a28539f487b35c2639597622b831c1b",
           "source_path": "evidence/generated/offline_gate_summary.md"
         },
         {
-          "bytes": 892073,
+          "bytes": 891956,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.json",
-          "sha256": "7d69a7703d9ac8840ac839babfee2ddbea33dfa24f42c8cbcd430521687dd0f4",
+          "sha256": "0ae3d8402a628aedbf99c6b9bd3e633fddb1ece4363796a80df5d4d0894b3d9c",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.json"
         },
         {
           "bytes": 7883,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.md",
-          "sha256": "b0a0b34789430aaaeae02e0ee3ab8fac8500f6815f0c32f8c7361f4be8c2ac56",
+          "sha256": "db92d3bc92d4ef12c9e7121e03d742d74bce628e37d63694918ac56d7e50b19c",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.md"
         },
         {
-          "bytes": 10566,
+          "bytes": 11309,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.json",
-          "sha256": "d29740ae218211f20cf53c902b1f3664cc3a0fa887bd4e60149f62b604568b73",
+          "sha256": "7d09b65d08965c2427e3788c1160073c208a13e2b81fbc770a590c0688fd8f90",
           "source_path": "evidence/generated/p8b_final_summary.json"
         },
         {
-          "bytes": 11930,
+          "bytes": 12697,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.md",
-          "sha256": "db8939e77c3d3f1c7ea3a8322f5be5f67ff7081494665e7436c7eafaf4da60ad",
+          "sha256": "a659b9011331dad012bac193954efc61e5322b8ccd199b51a1d457e2584d3405",
           "source_path": "evidence/generated/p8b_final_summary.md"
         },
         {
@@ -94,45 +94,21 @@
           "source_path": "evidence/generated/plan_completion_audit.md"
         },
         {
-          "bytes": 950,
+          "bytes": 1422,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_state_consistency_summary.json",
-          "sha256": "904d8474b957d4fc8be30be6b5cb818f7adc5265f6b782a5cbdc326351336c6d",
+          "sha256": "f76fca83c4816295d1fd850490a6532752447466ab8826fd0e239659c6df550e",
           "source_path": "evidence/generated/p8b_state_consistency_summary.json"
         },
         {
-          "bytes": 1092,
+          "bytes": 1564,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_state_consistency_summary.md",
-          "sha256": "b733a72aacedb194d2b98d77ccb0817ad21810bdf32779cea1fd31d275df9fcb",
+          "sha256": "1a57e9e83eafcf1c8cf4bfd58743d33c82cf5abc734f818155d13611e2991398",
           "source_path": "evidence/generated/p8b_state_consistency_summary.md"
-        },
-        {
-          "bytes": 2159,
-          "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_simulation_gate_summary.json",
-          "sha256": "fe58521eb5dd9052ff6a65df3af1b875392d1044a0c8c5e16bf65167d5f2b863",
-          "source_path": "evidence/generated/p8b_simulation_gate_summary.json"
-        },
-        {
-          "bytes": 2375,
-          "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_simulation_gate_summary.md",
-          "sha256": "45fe9335913a23c6d5dcfd5ffb02e33142beef8da7ed861d5880314c449e0be6",
-          "source_path": "evidence/generated/p8b_simulation_gate_summary.md"
-        },
-        {
-          "bytes": 18318,
-          "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/mapping_unit.log",
-          "sha256": "49db8751192d8513119305393dfc4cf51817a6c23217e01835042ad3a868cace",
-          "source_path": "evidence/generated/p8b_xsim/mapping_unit.log"
-        },
-        {
-          "bytes": 2404,
-          "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/phase_trajectory.log",
-          "sha256": "22495b96fa0eb71a11df4d2dfa24194fd96347f31c3a84bb807e728e1c625907",
-          "source_path": "evidence/generated/p8b_xsim/phase_trajectory.log"
         }
       ],
-      "return_code": 0,
-      "started_utc": "2026-07-31T14:06:02+00:00",
-      "status": "PASS"
+      "return_code": 1,
+      "started_utc": "2026-07-31T12:44:29+00:00",
+      "status": "FAIL"
     }
   ],
   "current_run_hardware_authorization": false,
@@ -156,6 +132,8 @@
       " M evidence/generated/p8b_acceptance_core.md",
       " M evidence/generated/p8b_final_summary.json",
       " M evidence/generated/p8b_final_summary.md",
+      " M evidence/generated/p8b_simulation_gate_summary.json",
+      " M evidence/generated/p8b_simulation_gate_summary.md",
       " M evidence/generated/p8b_state_consistency_summary.json",
       " M evidence/generated/p8b_state_consistency_summary.md",
       " M evidence/generated/plan_completion_audit.md",
@@ -234,6 +212,7 @@
       " M evidence/generated/p10_1_final_summary.json",
       " M evidence/generated/p10_1_fixed_build.json",
       " M evidence/generated/p10_1_host_native.json",
+      " M evidence/generated/p10_1_raw/offline_gate/finalizer_unit_tests.log",
       " M evidence/generated/p10_1_raw/offline_gate/p8c_current_unit_regression.log",
       " M evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
       " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/compile.log",
@@ -292,14 +271,16 @@
       "?? artifacts/p10/f0ec970470956805e930462186fb49974ca37e3d7483f777bde55a5981c18564/"
     ]
   },
-  "errors": [],
-  "generated_at_utc": "2026-07-31T15:01:48+00:00",
+  "errors": [
+    "canonical_p0_p8b_offline_regression returned 1"
+  ],
+  "generated_at_utc": "2026-07-31T13:39:36+00:00",
   "hardware_actions_executed": false,
   "network_used": false,
   "no_hardware": true,
   "schema_version": 1,
   "source_branch": "codex/p10.1-ax7020-pl-led-activity",
-  "source_commit": "cc29bd50e617a9639ddc92f271b3638a804439b7",
-  "status": "PASS",
+  "source_commit": "527c29303adc10d7bfc72c794e4a70c5dd3b0ed6",
+  "status": "FAIL",
   "test_id": "P10_1-LED-FULL-OFFLINE-GATE-REPLAY"
 }

@@ -1,0 +1,46 @@
+{
+  "archived_previous_finalization": "evidence/generated/p10_1_led_finalization_attempts/20260731T000000Z_FAIL_2",
+  "artifact_manifest": {
+    "bytes": 5119,
+    "path": "evidence/generated/p10_1_led_artifact_manifest.json",
+    "sha256": "770c3d44a8aeb13c22da50a11000b333b2454f28aa10c31ab1fc42c0406244da"
+  },
+  "branch": "codex/p10.1-ax7020-pl-led-activity",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "evidence_consistency": {
+    "bytes": 3756,
+    "path": "evidence/generated/p10_1_led_evidence_consistency.json",
+    "sha256": "3a396ce6664ff66427afc71ca4f7581132c2bbb275bb7d4cbc66a2999c2b094e"
+  },
+  "full_offline_gate_replay": {
+    "bytes": 19325,
+    "path": "evidence/generated/p10_1_led_full_offline_gate_replay/summary.json",
+    "sha256": "ec33f7fac183c1300014f237775ac25f75209212349858c4bcff8a3c50c84e76"
+  },
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "new_bitstream_hardware_status": "PENDING",
+  "next_stage": "CREATE_HASH_BOUND_CURRENT_RUN_AUTHORIZATION_THEN_RUN_DIRECT_HARDWARE",
+  "no_hardware": true,
+  "offline_acceptance_leaf": {
+    "bytes": 5373,
+    "path": "evidence/generated/p10_1_led_offline_acceptance_leaf.json",
+    "sha256": "d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422"
+  },
+  "offline_requirement_status": "PASS",
+  "old_p10_p10_1_hardware_results_applicable_to_new_artifacts": false,
+  "routed_build": {
+    "bytes": 17083,
+    "path": "evidence/generated/p10_1_ax7020_pl_activity_led_build_summary.json",
+    "sha256": "9b2c29337e44a88604772f9d7fe0d32f38a23ad6d7363f39ef0b08c2b62e0890"
+  },
+  "runtime_build": {
+    "bytes": 8309,
+    "path": "evidence/generated/p10_1_ax7020_pl_activity_led_runtime_build_summary.json",
+    "sha256": "8793f0a05a713a48828b90385d64cf6139725cbff9ff51ad217526372105bfdd"
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-LED-FINAL-OFFLINE-CHECKPOINT"
+}

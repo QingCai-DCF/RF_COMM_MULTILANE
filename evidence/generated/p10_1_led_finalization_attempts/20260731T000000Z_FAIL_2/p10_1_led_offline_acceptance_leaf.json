@@ -1,0 +1,113 @@
+{
+  "artifact_manifest": {
+    "bytes": 5119,
+    "path": "evidence/generated/p10_1_led_artifact_manifest.json",
+    "sha256": "770c3d44a8aeb13c22da50a11000b333b2454f28aa10c31ab1fc42c0406244da"
+  },
+  "base_checkpoint_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "branch": "codex/p10.1-ax7020-pl-led-activity",
+  "current_run_hardware_authorization": false,
+  "durable_artifacts": [
+    {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83/p10_ax7020_fixed_functional.bit",
+      "sha256": "aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83"
+    },
+    {
+      "bytes": 844456,
+      "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3/p10_ax7020_fixed_functional.xsa",
+      "sha256": "6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3"
+    },
+    {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a/p10_ax7020_rotating_functional.bit",
+      "sha256": "7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a"
+    },
+    {
+      "bytes": 844074,
+      "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1/p10_ax7020_rotating_functional.xsa",
+      "sha256": "d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1"
+    },
+    {
+      "bytes": 1855896,
+      "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+    },
+    {
+      "bytes": 378640,
+      "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174/p10_fixed_runtime.elf",
+      "sha256": "55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174"
+    },
+    {
+      "bytes": 1856209,
+      "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+    },
+    {
+      "bytes": 378684,
+      "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c/p10_rotating_runtime.elf",
+      "sha256": "790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c"
+    }
+  ],
+  "errors": [],
+  "evidence_foundation_commit": "cc29bd50e617a9639ddc92f271b3638a804439b7",
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "historical_hardware_results_reused": false,
+  "implementation_source_commit": "5d1aeea2ba93b8ef69817f6ef4c8694dff49273b",
+  "input_evidence": {
+    "dual_endpoint_regression": {
+      "bytes": 3887,
+      "path": "evidence/generated/p10_1_led_dual_endpoint_regression/summary.json",
+      "sha256": "430675d7b9080279eaa78d1b42b1e4b99479a5f81bba8e7639e955f591a08fcf"
+    },
+    "fixed_rotating_routed_build": {
+      "bytes": 17083,
+      "path": "evidence/generated/p10_1_ax7020_pl_activity_led_build_summary.json",
+      "sha256": "9b2c29337e44a88604772f9d7fe0d32f38a23ad6d7363f39ef0b08c2b62e0890"
+    },
+    "fixed_rotating_runtime_build": {
+      "bytes": 8309,
+      "path": "evidence/generated/p10_1_ax7020_pl_activity_led_runtime_build_summary.json",
+      "sha256": "8793f0a05a713a48828b90385d64cf6139725cbff9ff51ad217526372105bfdd"
+    },
+    "full_offline_gate_replay": {
+      "bytes": 19325,
+      "path": "evidence/generated/p10_1_led_full_offline_gate_replay/summary.json",
+      "sha256": "ec33f7fac183c1300014f237775ac25f75209212349858c4bcff8a3c50c84e76"
+    },
+    "led_xsim_and_static": {
+      "bytes": 7155,
+      "path": "evidence/generated/p10_1_led_offline/summary.json",
+      "sha256": "49c21efb8e5194ad26a42fab0ff56ff2432e60e37a7d02d3c5e14b07a01e1bec"
+    },
+    "tfdu_safety_regression": {
+      "bytes": 4409,
+      "path": "evidence/generated/p10_1_led_p8c_safety/p8c_final_summary.json",
+      "sha256": "556e4660e82ac98f00284f462e5b77a71d3150d305935f808f7a7629f0e087f4"
+    }
+  },
+  "mapping": {
+    "LED1": "lane0 TX / F0 or R0 TX",
+    "LED2": "lane0 RX / F0 or R0 RX",
+    "LED3": "lane1 TX / F1 or R1 TX",
+    "LED4": "lane1 RX / F1 or R1 RX"
+  },
+  "network_used": false,
+  "new_hardware_validation_required": true,
+  "no_hardware": true,
+  "runtime_build_source_commit": "a07f218434e2fb3000f1d7c086917169fb500163",
+  "schema_version": 1,
+  "semantics": {
+    "active_low": true,
+    "monitor_only": true,
+    "receive_only_observable": true,
+    "reset_fault_full_shutdown_all_off": true,
+    "rx_source": "completed CRC-valid role-local frame event",
+    "shared_tick_ms": 1,
+    "tx_source": "final role-local physical Txd event",
+    "visual_hold_ms": 200
+  },
+  "status": "PASS",
+  "test_id": "P10_1-LED-OFFLINE-ACCEPTANCE-LEAF"
+}
