@@ -482,6 +482,9 @@ def main() -> int:
             "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
             "P10_POST_ACCEPTANCE_ANALYSIS",
             "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+            "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+            "P10_1_PERFORMANCE_REMEDIATION",
+            "P11_PREREQUISITE_ACQUISITION",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
         }
         if state.get("current_program_stage") not in allowed_program_stages:

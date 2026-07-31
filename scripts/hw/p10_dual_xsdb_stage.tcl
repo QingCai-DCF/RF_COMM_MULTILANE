@@ -227,6 +227,25 @@ proc p10_dump_mailbox {role label} {
   return $final
 }
 
+proc p10_dump_p10_1_result {role label} {
+  global p10_dump_dir
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label]} {
+    error "unsafe P10.1 result dump label"
+  }
+  set final [file join $p10_dump_dir "${label}.${role}.p10_1.bin"]
+  set partial "${final}.partial"
+  catch {file delete -force $partial}
+  p10_select_cpu $role
+  catch {stop}
+  p10_select_apu $role
+  mrd -address-space AP0 -force -size b -bin -file $partial 0x00020400 2048
+  if {![file isfile $partial] || [file size $partial] != 2048} {
+    error "P10.1 $role result dump is not exactly 2048 bytes for $label"
+  }
+  file rename -force $partial $final
+  return $final
+}
+
 proc p10_resume {role} {
   p10_select_cpu $role
   con
@@ -261,7 +280,7 @@ proc p10_case_dict {fields} {
   if {[dict get $d timeout] < 1 || [dict get $d timeout] > 1800000} {
     error "P10 case timeout outside authorization"
   }
-  if {[dict get $d command] in {2 3 12} && [dict get $d lane] == 0} {
+  if {[dict get $d command] in {2 3 12 13} && [dict get $d lane] == 0} {
     error "P10 transmit-capable command has an empty lane mask"
   }
   return $d
@@ -314,6 +333,17 @@ proc p10_wait_receiver_primed {role d} {
     if {$state == 5} { error "P10 $role receiver faulted before source launch" }
     if {($phy & 0x00000F00) != 0} { error "P10 $role receiver safety fault before source launch" }
     if {$command == 3 && $state == 3 && ($pl_status & 0x4) != 0} { return }
+    if {$command == 13} {
+      set p10_1_magic [p10_read32 $role 0x00020400]
+      set p10_1_state [p10_read32 $role 0x00020410]
+      if {$p10_1_magic == 0x31303150 && $p10_1_state == 3 &&
+          ($pl_status & 0x4) != 0} {
+        return
+      }
+      if {$p10_1_state == 8} {
+        error "P10.1 $role receiver faulted before source launch"
+      }
+    }
     if {$command == 2 && $state == 3 && ($pl_status & 0x201) == 0x201 &&
         ($pl_status & 0x2) == 0} { return }
     after 1
@@ -321,7 +351,7 @@ proc p10_wait_receiver_primed {role d} {
   error "P10 $role receiver did not prime before paired source launch"
 }
 
-proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_status rotating_status fixed_state rotating_state window} {
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_status rotating_status fixed_state rotating_state window} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
       [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
@@ -331,7 +361,8 @@ proc p10_record_observation {d sequence started finished fixed_dump rotating_dum
       [dict get $d unavailable] [dict get $d rawtarget] [dict get $d spacing] [dict get $d stale] \
       [dict get $d initialseq] [dict get $d faultflags] [dict get $d idle] \
       [dict get $d injectmask] [dict get $d injectdelay] $window $started $finished $sequence \
-      $fixed_status $rotating_status $fixed_state $rotating_state $fixed_dump $rotating_dump]
+      $fixed_status $rotating_status $fixed_state $rotating_state $fixed_dump $rotating_dump \
+      $fixed_p10_1_dump $rotating_p10_1_dump]
   puts $p10_observation_handle [join $values "|"]
   flush $p10_observation_handle
 }
@@ -364,7 +395,7 @@ proc p10_execute_case {d {window "NA"}} {
   set started [clock milliseconds]
   set command [dict get $d command]
 
-  if {$command in {2 3}} {
+  if {$command in {2 3 13}} {
     set receiver [p10_receiver_role [dict get $d direction]]
     set sender [p10_sender_role [dict get $d direction]]
     p10_publish_case $receiver $d $sequence
@@ -418,8 +449,15 @@ proc p10_execute_case {d {window "NA"}} {
   set rotating_state [lindex $terminal 1]
   set fixed_dump [p10_dump_mailbox fixed [dict get $d label]]
   set rotating_dump [p10_dump_mailbox rotating [dict get $d label]]
+  set fixed_p10_1_dump ""
+  set rotating_p10_1_dump ""
+  if {$command == 13} {
+    set fixed_p10_1_dump [p10_dump_p10_1_result fixed [dict get $d label]]
+    set rotating_p10_1_dump [p10_dump_p10_1_result rotating [dict get $d label]]
+  }
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump $rotating_dump \
+      $fixed_p10_1_dump $rotating_p10_1_dump \
       $fixed_status $rotating_status $fixed_state $rotating_state $window
 
   set expected [dict get $d expected_status]
@@ -433,6 +471,187 @@ proc p10_execute_case {d {window "NA"}} {
     p10_resume fixed
     p10_resume rotating
   }
+}
+
+proc p10_p101_case {label object_id size direction lane timeout_ms {flags 0}} {
+  set fields [list CASE $label 13 0 $flags $lane $direction 2 257 $size 16 1 0 0 \
+      $timeout_ms 0xA1010001 0x101 $object_id 8 32 0 262144 65536 4 4 0 0 0 0]
+  return [p10_case_dict $fields]
+}
+
+proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      ![string is integer -strict $duration_sec] ||
+      $duration_sec < 10 || $duration_sec > 750 ||
+      $direction ni {0 1} || $lane ni {1 2 3} ||
+      $maximum_chunk ni {1048576 16777216 67108864}} {
+    error "invalid P10.1 bounded window"
+  }
+  set started [clock milliseconds]
+  set deadline [expr {$started + $duration_sec * 1000}]
+  set index 0
+  set object_id [expr {0x51000000 ^ (($direction & 1) << 27) ^
+      (($lane & 3) << 24) ^ ($duration_sec << 8)}]
+  set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
+  p10_say "P10_1_WINDOW_START_${marker_label}=$started"
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set remaining [expr {$deadline - [clock milliseconds]}]
+    if {$remaining <= 6000} {
+      after $remaining
+      break
+    }
+    set candidate 1048576
+    set candidate_budget 5000
+    if {$maximum_chunk >= 16777216 && $remaining > 45000 &&
+        ($index % 3) != 0} {
+      set candidate 16777216
+      set candidate_budget 42000
+    }
+    if {$maximum_chunk == 67108864 && $remaining > 150000 &&
+        ($index % 3) == 2} {
+      set candidate 67108864
+      set candidate_budget 145000
+    }
+    if {$candidate_budget + 3000 >= $remaining} {
+      set candidate 1048576
+      set candidate_budget 5000
+    }
+    if {$candidate_budget + 1000 >= $remaining} {
+      after $remaining
+      break
+    }
+    set timeout [expr {min(1800000, max(10000, $remaining - 1000))}]
+    set case_label [format "%s_%04d_%d" $label $index $candidate]
+    set pattern_flags [expr {($index % 5) << 8}]
+    set d [p10_p101_case $case_label [expr {$object_id + $index}] \
+        $candidate $direction $lane $timeout $pattern_flags]
+    p10_execute_case $d $label
+    if {[clock milliseconds] > $deadline} {
+      error "P10.1 window $label exceeded its bounded deadline"
+    }
+    incr index
+  }
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$elapsed < $duration_sec * 1000 ||
+      $elapsed > $duration_sec * 1000 + 500} {
+    error "P10.1 window $label elapsed bound failed: $elapsed ms"
+  }
+  if {$index == 0} {
+    error "P10.1 window $label completed no autonomous stream"
+  }
+  p10_say "P10_1_WINDOW_PASS_${marker_label}=cases:$index,elapsed_ms:$elapsed"
+}
+
+proc p10_wait_p101_active {sequence timeout_ms} {
+  set deadline [expr {[clock milliseconds] + $timeout_ms}]
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set ready 1
+    foreach role {fixed rotating} {
+      set response [p10_read32 $role 0x0002001C]
+      set state [p10_read32 $role 0x0002000C]
+      set p101_state [p10_read32 $role 0x00020410]
+      set pl_status [p10_read32 $role 0x43C0071C]
+      if {$response == $sequence || $state == 5 || $p101_state == 8} {
+        error "P10.1 service-reset case terminated before reset"
+      }
+      if {$state != 3 || $p101_state ni {3 4} ||
+          ($pl_status & 0x4) == 0} {
+        set ready 0
+      }
+    }
+    if {$ready} { return }
+    after 1
+  }
+  error "P10.1 service-reset case never became active"
+}
+
+proc p10_execute_ps_service_reset {label reset_role direction lane size object_id} {
+  global p10_command_sequence
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $reset_role ni {fixed rotating} || $direction ni {0 1} ||
+      $lane ni {1 2 3} || $size != 67108864} {
+    error "invalid P10.1 PS service-reset vector"
+  }
+  set sender [p10_sender_role $direction]
+  set receiver [p10_receiver_role $direction]
+  set flag [expr {$reset_role eq $sender ? (1 << 22) : (1 << 23)}]
+  set d [p10_p101_case $label $object_id $size $direction $lane 600000 $flag]
+  incr p10_command_sequence
+  set sequence $p10_command_sequence
+  set started [clock milliseconds]
+  p10_publish_case $receiver $d $sequence
+  p10_wait_receiver_primed $receiver $d
+  p10_publish_case $sender $d $sequence
+  p10_wait_p101_active $sequence 30000
+  after 100
+
+  set fixed_status [p10_read32 fixed 0x00020020]
+  set rotating_status [p10_read32 rotating 0x00020020]
+  set fixed_state [p10_read32 fixed 0x0002000C]
+  set rotating_state [p10_read32 rotating 0x0002000C]
+  foreach role {fixed rotating} {
+    if {[p10_read32 $role 0x000204B0] != 0 ||
+        [p10_read32 $role 0x000204B4] != 0 ||
+        [p10_read32 $role 0x000204D8] != 0 ||
+        [p10_read32 $role 0x000204E4] != 0} {
+      error "P10.1 service-reset precondition observed a commit"
+    }
+  }
+  set fixed_dump [p10_dump_mailbox fixed $label]
+  set rotating_dump [p10_dump_mailbox rotating $label]
+  set fixed_p101 [p10_dump_p10_1_result fixed $label]
+  set rotating_p101 [p10_dump_p10_1_result rotating $label]
+
+  p10_select_cpu $reset_role
+  rst -processor
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00718 0x0000001A
+  }
+  after 10
+  p10_reboot_role $reset_role "${label}_selected_reboot"
+  set peer [expr {$reset_role eq "fixed" ? "rotating" : "fixed"}]
+  p10_reboot_role $peer "${label}_peer_recovery_reboot"
+  p10_verify_pl_safe fixed 0x50313046 0x702000F0 "${label}_RECOVERED"
+  p10_verify_pl_safe rotating 0x50313052 0x702000A0 "${label}_RECOVERED"
+  set finished [clock milliseconds]
+  p10_record_observation $d $sequence $started $finished $fixed_dump \
+      $rotating_dump $fixed_p101 $rotating_p101 $fixed_status \
+      $rotating_status $fixed_state $rotating_state PS_SERVICE_RESET
+  p10_say "P10_1_PS_SERVICE_RESET_PASS=$label:reset_role=$reset_role"
+}
+
+proc p10_run_p101_formal {label duration_sec} {
+  if {$duration_sec != 1800} {
+    error "formal P10.1 run must be exactly 1800 seconds"
+  }
+  set started [clock milliseconds]
+  p10_say "P10_1_FORMAL_START_MS=$started"
+  p10_run_p101_window "${label}_warmup_f2r" 150 0 3 16777216
+  p10_run_p101_window "${label}_warmup_r2f" 150 1 3 16777216
+  p10_run_p101_window "${label}_formal_f2r" 750 0 3 67108864
+  p10_run_p101_window "${label}_formal_r2f" 750 1 3 67108864
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$elapsed < 1800000 || $elapsed > 1800500} {
+    error "P10.1 formal active window was not 1800 seconds: $elapsed ms"
+  }
+  p10_say "P10_1_FORMAL_END_MS=$finished"
+  p10_say "P10_1_FORMAL_ELAPSED_MS=$elapsed"
+  p10_say "P10_1_FORMAL_RESULT=PASS"
+}
+
+proc p10_probe_1plus1 {label} {
+  set fixed_config [p10_read32 fixed 0x43C00728]
+  set rotating_config [p10_read32 rotating 0x43C00728]
+  set fixed_caps [p10_read32 fixed 0x43C00714]
+  set rotating_caps [p10_read32 rotating 0x43C00714]
+  p10_say [format "P10_1_1PLUS1_CAPABILITY_READBACK=%s:fixed_cfg=0x%08X,rotating_cfg=0x%08X,fixed_caps=0x%08X,rotating_caps=0x%08X" \
+      $label $fixed_config $rotating_config $fixed_caps $rotating_caps]
+  p10_say "P10_1_1PLUS1_OUTCOME=SKIP_WITH_REASON"
+  p10_say "P10_1_1PLUS1_REASON=single_endpoint_direction_bit_no_independent_per_lane_direction"
 }
 
 proc p10_reboot_role {role label} {
@@ -513,7 +732,7 @@ file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
 set p10_observation_file [file join $p10_dump_dir observations.psv]
 set p10_observation_handle [open $p10_observation_file w]
-puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path"
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path"
 flush $p10_observation_handle
 
 set rc [catch {
@@ -555,6 +774,42 @@ set rc [catch {
         error "invalid P10 SOAK record"
       }
       lappend parsed_plan [list SOAK [lindex $fields 1] [lindex $fields 2]]
+    } elseif {$kind eq "P101_WINDOW"} {
+      if {[llength $fields] != 6 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] ||
+          ![string is integer -strict [lindex $fields 3]] ||
+          ![string is integer -strict [lindex $fields 4]] ||
+          ![string is integer -strict [lindex $fields 5]]} {
+        error "invalid P10.1 WINDOW record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P101_PSRESET"} {
+      if {[llength $fields] != 7 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          [lindex $fields 2] ni {fixed rotating}} {
+        error "invalid P10.1 PSRESET record"
+      }
+      foreach index {3 4 5 6} {
+        if {![string is integer -strict [lindex $fields $index]]} {
+          error "invalid numeric P10.1 PSRESET field"
+        }
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P101_FORMAL"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] ||
+          [lindex $fields 2] != 1800} {
+        error "invalid P10.1 FORMAL record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P101_1PLUS1_PROBE"} {
+      if {[llength $fields] != 2 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
+        error "invalid P10.1 1PLUS1 probe record"
+      }
+      lappend parsed_plan $fields
     } else {
       error "unknown P10 plan record: $kind"
     }
@@ -621,6 +876,17 @@ set rc [catch {
       p10_reboot_role [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "SOAK"} {
       p10_run_soak [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P101_WINDOW"} {
+      p10_run_p101_window [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5]
+    } elseif {$kind eq "P101_PSRESET"} {
+      p10_execute_ps_service_reset [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5] \
+          [lindex $record 6]
+    } elseif {$kind eq "P101_FORMAL"} {
+      p10_run_p101_formal [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P101_1PLUS1_PROBE"} {
+      p10_probe_1plus1 [lindex $record 1]
     }
   }
 

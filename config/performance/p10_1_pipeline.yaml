@@ -2,13 +2,13 @@ schema_version: 1
 config_id: P10_1_DUAL_NODE_PIPELINE
 profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
 defaults:
-  buffer_count: 8
-  buffer_size_bytes: 1048576
-  descriptor_ring_depth: 64
-  descriptor_batch: 16
+  buffer_count: 4
+  buffer_size_bytes: 262144
+  descriptor_ring_depth: 16
+  descriptor_batch: 4
   interrupt_coalescing: 16
   outstanding_frames: 32
-  ack_aggregation_threshold: 16
+  ack_aggregation_threshold: 8
   ack_max_delay_us: 200
   direction_window_us: 250000
   lane_mask: 3

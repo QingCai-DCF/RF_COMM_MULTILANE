@@ -640,14 +640,21 @@ def performance_model(pipeline: dict[str, Any]) -> dict[str, Any]:
         pipeline["sweeps"]["buffer_count"],
         pipeline["sweeps"]["descriptor_ring_depth"],
         pipeline["sweeps"]["descriptor_batch"],
-        (32, 64),
-        (8, 16, 32),
+        (32,),
+        (8,),
     ):
-        buffer_factor = min(1.0, 0.68 + 0.04 * buffer_count)
-        ring_factor = min(1.0, 0.82 + 0.006 * ring_depth)
-        batch_factor = min(1.0, 0.78 + 0.025 * batch)
-        outstanding_factor = min(1.0, 0.88 + 0.00375 * outstanding)
-        ack_factor = min(1.0, 0.94 + 0.004 * ack_threshold)
+        # The old sweep multiplied the physical ceiling by arbitrary linear
+        # "more is faster" factors.  That selected ring/ACK values which the
+        # deployed endpoint does not implement.  The actual pipeline has a
+        # threshold behavior: once four buffers, sixteen ring entries, a
+        # four-descriptor object batch, the 32-frame SR window, and the fixed
+        # eight-frame ACK aggregator are present, PS/DMA work is hidden under
+        # the slower optical cadence.  Extra entries cannot exceed airtime.
+        buffer_factor = 1.0 if buffer_count >= 4 else 0.90
+        ring_factor = 1.0 if ring_depth >= 16 else 0.92
+        batch_factor = 1.0 if batch >= 4 else 0.93
+        outstanding_factor = 1.0 if outstanding >= 32 else 0.0
+        ack_factor = 1.0 if ack_threshold == 8 else 0.0
         modeled = min(ceilings.values()) * min(
             buffer_factor, ring_factor, batch_factor, outstanding_factor, ack_factor
         )

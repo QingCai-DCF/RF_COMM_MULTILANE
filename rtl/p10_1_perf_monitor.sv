@@ -21,6 +21,7 @@ module p10_1_perf_monitor #(
   input  logic         descriptor_complete_i,
   input  logic         application_commit_i,
   input  logic [31:0]  application_commit_bytes_i,
+  input  logic [127:0] physical_tx_symbols_flat_i,
   input  logic [5:0]   queue_occupancy_i,
   input  logic         ack_wait_i,
   input  logic         direction_quiet_i,
@@ -51,7 +52,6 @@ module p10_1_perf_monitor #(
   logic [63:0] application_accepted_live_q;
   logic [63:0] application_committed_live_q;
   logic [63:0] frame_acked_live_q;
-  logic [63:0] wire_bytes_live_q;
   logic [63:0] descriptor_submitted_live_q;
   logic [63:0] descriptor_completed_live_q;
   logic [63:0] dma_stall_live_q;
@@ -79,6 +79,23 @@ module p10_1_perf_monitor #(
   logic [63:0] descriptor_leak_snapshot_q;
   logic [63:0] double_completion_snapshot_q;
   logic [5:0] queue_occupancy_snapshot_q;
+  logic [33:0] physical_tx_symbol_sum;
+
+  /*
+   * tfdu_lane_phy counts actual rising-edge pulses at the final, killed
+   * physical Txd boundary.  One 4PPM symbol carries two wire bits, so four
+   * transmitted symbols are one byte-equivalent on the optical wire.  Sum
+   * all four module counters before dividing; this preserves any remainder
+   * shared across lanes and includes DATA, ACK, retry, and bounded
+   * inter-object signalling that was really driven.
+   */
+  always_comb begin
+    physical_tx_symbol_sum =
+        {2'b00, physical_tx_symbols_flat_i[31:0]} +
+        {2'b00, physical_tx_symbols_flat_i[63:32]} +
+        {2'b00, physical_tx_symbols_flat_i[95:64]} +
+        {2'b00, physical_tx_symbols_flat_i[127:96]};
+  end
 
   logic event_push;
   logic [63:0] event_data;
@@ -171,7 +188,6 @@ module p10_1_perf_monitor #(
       application_accepted_live_q <= '0;
       application_committed_live_q <= '0;
       frame_acked_live_q <= '0;
-      wire_bytes_live_q <= '0;
       descriptor_submitted_live_q <= '0;
       descriptor_completed_live_q <= '0;
       dma_stall_live_q <= '0;
@@ -250,7 +266,6 @@ module p10_1_perf_monitor #(
         application_accepted_live_q <= '0;
         application_committed_live_q <= '0;
         frame_acked_live_q <= '0;
-        wire_bytes_live_q <= '0;
         descriptor_submitted_live_q <= '0;
         descriptor_completed_live_q <= '0;
         dma_stall_live_q <= '0;
@@ -266,7 +281,6 @@ module p10_1_perf_monitor #(
         if (axis_accept_i) begin
           application_accepted_live_q <=
               application_accepted_live_q + axis_accept_bytes_i;
-          wire_bytes_live_q <= wire_bytes_live_q + axis_accept_bytes_i;
         end
         if (application_commit_i) begin
           application_committed_live_q <= application_committed_live_q +
@@ -298,7 +312,7 @@ module p10_1_perf_monitor #(
         application_accepted_snapshot_q <= application_accepted_live_q;
         application_committed_snapshot_q <= application_committed_live_q;
         frame_acked_snapshot_q <= frame_acked_live_q;
-        wire_bytes_snapshot_q <= wire_bytes_live_q;
+        wire_bytes_snapshot_q <= physical_tx_symbol_sum >> 2;
         descriptor_submitted_snapshot_q <= descriptor_submitted_live_q;
         descriptor_completed_snapshot_q <= descriptor_completed_live_q;
         dma_stall_snapshot_q <= dma_stall_live_q;

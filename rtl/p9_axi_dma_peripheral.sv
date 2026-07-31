@@ -376,6 +376,7 @@ module p9_axi_dma_peripheral #(
     .descriptor_complete_i(m_axis_tvalid && m_axis_tready && m_axis_tlast),
     .application_commit_i(output_complete && !output_complete_d_q),
     .application_commit_bytes_i(output_byte_count),
+    .physical_tx_symbols_flat_i(physical_tx_counts_flat),
     .queue_occupancy_i(tx_outstanding_count),
     .ack_wait_i(object_active && tx_outstanding_count != 0),
     .direction_quiet_i(!object_active),

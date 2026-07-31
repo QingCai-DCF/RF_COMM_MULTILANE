@@ -142,7 +142,9 @@ P10_NEXT_STAGE = "P10_POST_ACCEPTANCE_ANALYSIS"
 P10_1_OFFLINE_STAGE = (
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS"
 )
-P10_1_NEXT_STAGE = "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE"
+P10_1_NEXT_STAGE = (
+    "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE"
+)
 P10_1_OFFLINE_SCOPE = (
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
 )
@@ -515,7 +517,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     if p8c_pass:
         if p10_stage == "PASS" and p10_authorization_consumed:
             if state.get("p10_1_offline_status") == "PASS":
-                expected_program_stage = P10_1_NEXT_STAGE
+                p10_1_hardware_status = state.get("p10_1_hardware_status")
+                if p10_1_hardware_status == "PASS":
+                    expected_program_stage = "P11_PREREQUISITE_ACQUISITION"
+                elif p10_1_hardware_status in {"PARTIAL", "FAIL"}:
+                    expected_program_stage = "P10_1_PERFORMANCE_REMEDIATION"
+                else:
+                    expected_program_stage = P10_1_NEXT_STAGE
             elif state.get("p10_1_offline_status") == "IN_PROGRESS":
                 expected_program_stage = P10_1_OFFLINE_STAGE
             else:
@@ -853,17 +861,40 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     p10_1_offline = state.get("p10_1_offline_status")
     if p10_1_offline not in {"IN_PROGRESS", "PASS"}:
         errors.append("p10_1_offline_status must be IN_PROGRESS or PASS")
-    if state.get("p10_1_hardware_status") != "PENDING_CURRENT_RUN_AUTHORIZATION":
+    if state.get("p10_1_hardware_status") not in {
+        "PENDING_CURRENT_RUN_AUTHORIZATION",
+        "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
+        "AUTHORIZED_NOT_STARTED",
+        "IN_PROGRESS",
+        "PASS",
+        "PARTIAL",
+        "FAIL",
+    }:
         errors.append(
-            "p10_1_hardware_status must remain PENDING_CURRENT_RUN_AUTHORIZATION"
+            "p10_1_hardware_status has an invalid scoped campaign state"
         )
     if state.get("p11_status") != "NOT_STARTED":
         errors.append("p11_status must remain NOT_STARTED")
     if state.get("p11_hardware_ready") is not False:
         errors.append("p11_hardware_ready must remain false")
     if p10_1_offline == "PASS":
-        if state.get("p10_1_no_hardware_actions_executed") is not True:
-            errors.append("P10.1 offline PASS requires no hardware actions")
+        p10_1_hardware_status = state.get("p10_1_hardware_status")
+        hardware_campaign = state.get("p10_1_hardware_campaign", {})
+        if p10_1_hardware_status in {
+            "PENDING_CURRENT_RUN_AUTHORIZATION",
+            "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
+            "AUTHORIZED_NOT_STARTED",
+        }:
+            if state.get("p10_1_no_hardware_actions_executed") is not True:
+                errors.append(
+                    "P10.1 pre-hardware state requires no hardware actions"
+                )
+        elif not isinstance(hardware_campaign, dict) or (
+            hardware_campaign.get("hardware_actions_executed") is not True
+        ):
+            errors.append(
+                "P10.1 hardware state requires scoped hardware-action evidence"
+            )
         if stage_status.get(P10_1_OFFLINE_STAGE) != "PASS":
             errors.append(f"stage_status.{P10_1_OFFLINE_STAGE} must be PASS")
         acceptance = state.get("p10_1_performance_and_observability", {})
@@ -874,7 +905,6 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 "status": "PASS",
                 "verification_scope": P10_1_OFFLINE_SCOPE,
                 "scale_equivalent_4mbps_feasibility": "PASS",
-                "real_hardware_goodput_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
                 "hardware_experiments_authorized": False,
                 "hardware_actions_executed": False,
             }
@@ -883,6 +913,19 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                     errors.append(
                         f"p10_1_performance_and_observability.{key} must be {value}"
                     )
+            if acceptance.get("real_hardware_goodput_status") not in {
+                "PENDING_CURRENT_RUN_AUTHORIZATION",
+                "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
+                "AUTHORIZED_NOT_STARTED",
+                "IN_PROGRESS",
+                "PASS",
+                "PARTIAL",
+                "FAIL",
+            }:
+                errors.append(
+                    "p10_1_performance_and_observability."
+                    "real_hardware_goodput_status has an invalid scoped state"
+                )
             for path_key, hash_key, label in (
                 ("evidence_path", "evidence_sha256", "P10.1 offline evidence"),
                 (
@@ -1330,9 +1373,25 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- Modeled application goodput: `{p10_1.get('modeled_application_goodput_bps')} bit/s`",
             f"- 4.0 Mbit/s scale-equivalent feasibility: `{p10_1.get('scale_equivalent_4mbps_feasibility')}`",
             f"- Real hardware goodput: `{p10_1.get('real_hardware_goodput_status')}`",
-            f"- Hardware actions executed: `{str(p10_1.get('hardware_actions_executed')).lower()}`",
+            f"- Offline sub-scope hardware actions executed: `{str(p10_1.get('hardware_actions_executed')).lower()}`",
             f"- P11 official stage / hardware ready: `{state['p11_status']}` / `{str(state['p11_hardware_ready']).lower()}`",
-            "- The P10.1 PASS is offline feasibility, routed implementation, software, simulation, and dry-run evidence. It is not real AX7020 performance acceptance.",
+            "- This offline PASS remains limited to feasibility, routed implementation, software, simulation, and dry-run evidence; any real AX7020 result is recorded separately below.",
+        ]
+    if isinstance(state.get("p10_1_hardware_campaign"), dict):
+        campaign = state["p10_1_hardware_campaign"]
+        lines += [
+            "",
+            "## P10.1 scoped AX7020 hardware performance campaign",
+            "",
+            f"- Status: `{campaign.get('status')}`",
+            f"- Run ID: `{campaign.get('run_id', 'NOT_RUN')}`",
+            f"- Source commit: `{campaign.get('source_commit', 'NOT_FROZEN')}`",
+            f"- Fixed / rotating-role IDs: `{campaign.get('fixed_board_id')}` / `{campaign.get('rotating_board_id')}`",
+            f"- Final evidence: `{campaign.get('final_evidence_path', 'PENDING')}`",
+            f"- F→R / R→F application goodput: `{campaign.get('f_to_r_application_goodput_bps', 'PENDING')}` / `{campaign.get('r_to_f_application_goodput_bps', 'PENDING')}` bit/s",
+            f"- Shutdown fixed / rotating: `{campaign.get('shutdown_fixed', 'PENDING')}` / `{campaign.get('shutdown_rotating', 'PENDING')}`",
+            f"- Hardware actions / network / movement: `{str(campaign.get('hardware_actions_executed', False)).lower()}` / `{str(campaign.get('network_used', False)).lower()}` / `{str(campaign.get('hardware_movement', False)).lower()}`",
+            "- Scope remains stationary dual AX7020, two lanes, no Ethernet and no movement; it does not promote P11, 8x32, 600 rpm, physical GLOBAL_PERMIT, external duty, or product-final acceptance.",
         ]
     lines += [
         "",

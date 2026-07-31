@@ -17,7 +17,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+  "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -513,13 +513,22 @@
     "verification_scope": "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE",
     "source_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
     "evidence_path": "evidence/generated/p10_1_performance_model.json",
-    "evidence_sha256": "5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d",
+    "evidence_sha256": "bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9",
     "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
     "measurement_contract_sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1",
-    "modeled_application_goodput_bps": 6688299.301,
+    "prior_modeled_application_goodput_bps": 6688299.301296164,
+    "prior_model_classification": "MODEL_INVALID_OR_SCOPE_MISMATCH",
+    "modeled_application_goodput_bps": 4189709.129513542,
     "scale_equivalent_4mbps_feasibility": "PASS",
-    "stretch_4p8mbps": "PASS",
-    "real_hardware_goodput_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+    "stretch_4p8mbps": "PENDING_WITH_EXPLICIT_GAP",
+    "selected_pipeline": {
+      "buffer_count": 4,
+      "descriptor_ring_depth": 16,
+      "descriptor_batch": 4,
+      "outstanding_frames": 32,
+      "ack_aggregation_threshold": 8
+    },
+    "real_hardware_goodput_status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
     "hardware_experiments_authorized": false,
     "hardware_actions_executed": false
   },
@@ -543,7 +552,21 @@
     ]
   },
   "p10_1_offline_status": "PASS",
-  "p10_1_hardware_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+  "p10_1_hardware_status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
+  "p10_1_hardware_campaign": {
+    "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+    "status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
+    "offline_base_tag": "p10.1-offline-performance-ready",
+    "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+    "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+    "fixed_board_id": "AX7020-F/JTAG:210249855178",
+    "rotating_board_id": "AX7020-R/JTAG:210512180081",
+    "current_run_hardware_authorization": false,
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "hardware_movement": false,
+    "maximum_lane_mask": "0x3"
+  },
   "p11_status": "NOT_STARTED",
   "p11_hardware_ready": false,
   "p10_1_no_hardware_actions_executed": true,

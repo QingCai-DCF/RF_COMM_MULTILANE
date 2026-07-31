@@ -236,7 +236,12 @@ def main(argv: list[str] | None = None) -> int:
     p10_1_supersedes_closeout_generator = (
         current_state.get("p10_1_offline_status") == "PASS"
         and current_state.get("current_program_stage")
-        == "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE"
+        in {
+            "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+            "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+            "P10_1_PERFORMANCE_REMEDIATION",
+            "P11_PREREQUISITE_ACQUISITION",
+        }
     )
     if p10_1_supersedes_closeout_generator:
         verify_superseded_closeout(current_state, errors)

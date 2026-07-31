@@ -1,0 +1,291 @@
+{
+  "baseline_log": {
+    "path": "evidence/generated/p10_1_hw_repo_intake_commands.log",
+    "sha256": "66e3faca8f88cb4f708401d1cd2ad58d9ae0134f980281f71a1b3f2dfe01b654"
+  },
+  "baseline_rechecks": [
+    {
+      "checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+      "errors": [],
+      "git_blob_sha256": "0fedc6f2917e2622f6586706a873a49aa694055bdace393ea23e453e2169b9fd",
+      "name": "p10_1_offline_verify_existing",
+      "path": "evidence/generated/p10_1_final_summary.json",
+      "status": "PASS",
+      "test_id": "P10_1-FINAL-OFFLINE-CHECKPOINT"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p10_existing.py --json-summary",
+      "name": "p10_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p9_existing.py --json-summary",
+      "name": "p9_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary",
+      "name": "p8e_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p8c_existing.py --json-summary",
+      "name": "p8c_safety_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "name": "state_requirements_consistency",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "name": "no_hardware_static_scan",
+      "return_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "branch": "p10.1/hardware-performance-acceptance",
+  "canonical_inputs": [
+    {
+      "bytes": 77090,
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    {
+      "bytes": 9946,
+      "path": "AGENTS.md",
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    {
+      "bytes": 28259,
+      "path": "config/project_state.json",
+      "sha256": "31409d4940d2e923b46c1f67fcaf77517ac6964ef61bd7610856e0efc7f30b5d"
+    },
+    {
+      "bytes": 189774,
+      "path": "config/project_requirements.yaml",
+      "sha256": "a74228666fa313169a95d79b6a306bcdb151bc80bb7fdce7578adbf2ef9badcc"
+    },
+    {
+      "bytes": 52873,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8"
+    },
+    {
+      "bytes": 4098,
+      "path": "config/performance/p10_1_measurement_contract.yaml",
+      "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
+    },
+    {
+      "bytes": 2525,
+      "path": "config/performance/p10_1_pipeline.yaml",
+      "sha256": "8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d"
+    },
+    {
+      "bytes": 1085,
+      "path": "config/performance/p10_1_streaming.yaml",
+      "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
+    },
+    {
+      "bytes": 1786,
+      "path": "config/performance/p10_1_hardware_runtime.yaml",
+      "sha256": "6402e97f5d83aed23693223626f1b712ba4fb00c075b38aecbd8fe5510df4384"
+    },
+    {
+      "bytes": 27452,
+      "path": "config/hardware/p10_active_wiring.yaml",
+      "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
+    },
+    {
+      "bytes": 4567,
+      "path": "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
+      "sha256": "dfe12a845a31cf71e57b3cef390bf6cc4799c28fc9998743562199b8993fc0a6"
+    },
+    {
+      "bytes": 907,
+      "path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "sha256": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d"
+    },
+    {
+      "bytes": 2679,
+      "path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+      "sha256": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184"
+    },
+    {
+      "bytes": 927,
+      "path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "sha256": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407"
+    },
+    {
+      "bytes": 2682,
+      "path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+      "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "environment": {
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": "false",
+    "NO_HARDWARE": "1"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-31T17:10:34.701082+00:00",
+  "git_status": [
+    "M .gitignore",
+    " M PROJECT_STATUS.md",
+    " M config/performance/generated/p10_1_contract.json",
+    " M config/performance/p10_1_pipeline.yaml",
+    " M config/project_requirements.yaml",
+    " M config/project_state.json",
+    " M docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    " M docs/design/P10_1_GENERATED_CONTRACT.md",
+    " M evidence/generated/p10_1_buffer_pipeline.json",
+    " M evidence/generated/p10_1_descriptor_batching.json",
+    " M evidence/generated/p10_1_hw_model_sanity_summary.json",
+    " M evidence/generated/p10_1_led_offline/summary.json",
+    " M evidence/generated/p10_1_led_offline/summary.md",
+    " M evidence/generated/p10_1_measurement_contract.json",
+    " M evidence/generated/p10_1_performance_model.json",
+    " M evidence/generated/p10_1_raw/p10_1_performance_model_sweep.json",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_buffer_pool/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_buffer_pool/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_buffer_pool/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_descriptor_batch/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_descriptor_batch/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_descriptor_batch/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_dual_endpoint_perf/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_dual_endpoint_perf/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_dual_endpoint_perf/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_metric_counter/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_metric_counter/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_metric_counter/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_perf_command/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_perf_command/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_perf_command/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_stream_abort_reset/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_stream_abort_reset/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_stream_abort_reset/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_streaming_chain/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_streaming_chain/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_streaming_chain/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_timer_snapshot/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_timer_snapshot/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_timer_snapshot/run.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_trace_fifo/compile.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_trace_fifo/elaborate.log",
+    " M evidence/generated/p10_1_raw/xsim/tb_p10_1_trace_fifo/run.log",
+    " M evidence/generated/p10_1_xsim.json",
+    " M evidence/generated/p8a_consistency_summary.json",
+    " M rtl/generated/p10_1_contract_pkg.sv",
+    " M rtl/p10_1_perf_monitor.sv",
+    " M rtl/p9_axi_dma_peripheral.sv",
+    " M rtl/p9_optical_transport_core.sv",
+    " M scripts/build_p10_ax7020_functional.py",
+    " M scripts/build_p10_ps_runtime.py",
+    " M scripts/generated/p10_1_contract.py",
+    " M scripts/hw/p10_dual_xsdb_stage.tcl",
+    " M scripts/model_p10_1_dual_node_pipeline.py",
+    " M scripts/p10_hardware_runtime.py",
+    " M scripts/p8a_common.py",
+    " M scripts/verify_p10_existing.py",
+    " M scripts/verify_p9_existing.py",
+    " M sim/tb/tb_p10_1_suite.sv",
+    " M sim/tb/tb_p10_dual_endpoint_pair.sv",
+    " M software/ps_driver/p10_1_contract.h",
+    " M software/ps_driver/p10_1_runtime_extension.inc",
+    " M software/ps_driver/p10_1_runtime_protocol.h",
+    " M software/ps_driver/p9_runtime_main.c",
+    "?? config/performance/p10_1_hardware_runtime.yaml",
+    "?? evidence/generated/p10_1_hw_parallel_lane_coverage/",
+    "?? evidence/generated/p10_1_hw_parallel_lane_trial/",
+    "?? evidence/generated/p10_1_hw_repo_intake.json",
+    "?? evidence/generated/p10_1_hw_repo_intake.md",
+    "?? evidence/generated/p10_1_led_offline/raw/20260731T163253.676113Z/",
+    "?? evidence/generated/p10_1_led_offline/raw/20260731T164821.505496Z/",
+    "?? scripts/finalize_p10_1_hardware_acceptance.py",
+    "?? scripts/generate_p10_1_hw_repo_intake.py",
+    "?? scripts/p10_1_hardware_acceptance.py",
+    "?? scripts/vivado/report_tool_version.tcl",
+    "?? tests/test_finalize_p10_1_hardware_acceptance.py",
+    "?? tests/test_p10_1_hardware_acceptance.py"
+  ],
+  "goal": {
+    "path": "C:\\Users\\user\\Downloads\\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md",
+    "sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+  },
+  "hardware_actions_executed": false,
+  "head": "287b6b2a12e4a8d8c6a6f72e117047cb2a70ca15",
+  "network_used": false,
+  "offline_base_tag": {
+    "name": "p10.1-offline-performance-ready",
+    "object": "ba76957c7f33afa8a3e369630a5fce161c39f59c",
+    "object_type": "tag",
+    "target": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f"
+  },
+  "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "offline_evidence_is_ancestor": true,
+  "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "p10_tags": {
+    "closed": {
+      "name": "p10-ax7020-dual-node-2lane-closed",
+      "object": "de64a1e8fd21931015b01f0f48c91bf0ba3b5040",
+      "object_type": "tag",
+      "target": "b212f81bd0a8114e309fb821025fa17f0484b255"
+    },
+    "pass": {
+      "name": "p10-ax7020-dual-node-2lane-pass",
+      "object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb",
+      "object_type": "tag",
+      "target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0"
+    }
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-HW-REPOSITORY-INTAKE",
+  "tools": {
+    "python": {
+      "path": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "status": "PASS",
+      "version": [
+        "Python 3.14.3"
+      ]
+    },
+    "vivado": {
+      "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "status": "PASS",
+      "version": [
+        "",
+        "****** Vivado v2023.1 (64-bit)",
+        "  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023",
+        "  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023",
+        "  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023",
+        "    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.",
+        "    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.",
+        ""
+      ]
+    },
+    "xsct": {
+      "path": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat",
+      "status": "PASS",
+      "version": [
+        "Usage: xsct [options] [tclscript] [tclargs]",
+        "Options:",
+        "  -interactive",
+        "\tEnter interactive mode after -eval or running script.",
+        "  -help",
+        "\tDisplay this help message.",
+        "  -no-ini",
+        "\tDo not load xsct.ini"
+      ]
+    }
+  },
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW"
+}

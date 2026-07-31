@@ -427,7 +427,8 @@ static int p9_dma_wait_reset(void) {
 
 static int p9_dma_initialize(uint32_t depth, uint32_t count_reset) {
   XAxiDma_Bd template_bd;
-  if (depth != 8U && depth != 32U) return P9_RUNTIME_BAD_ARGUMENT;
+  if (depth != 8U && depth != 16U && depth != 32U)
+    return P9_RUNTIME_BAD_ARGUMENT;
   if (g_ring_depth != depth) {
     g_metrics.tx_producer_index = 0U;
     g_metrics.tx_consumer_index = 0U;
@@ -949,7 +950,9 @@ static int p9_validate_object_args(volatile p9_mailbox_t *m,
                                    UINTPTR *rx_address,
                                    uint32_t *transfer_bytes) {
   if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
-      m->rate_select > 2U || (m->ring_depth != 8U && m->ring_depth != 32U) ||
+      m->rate_select > 2U ||
+      (m->ring_depth != 8U && m->ring_depth != 16U &&
+       m->ring_depth != 32U) ||
       m->cache_mode > 1U || m->object_size == 0U ||
       m->object_size > P9_MAX_OBJECT_BYTES || m->tx_offset > 63U ||
       m->rx_offset > 63U)
@@ -1097,7 +1100,8 @@ object_exit:
 }
 
 static int p9_command_ring_diagnostic(volatile p9_mailbox_t *m) {
-  if (m->ring_depth != 8U && m->ring_depth != 32U)
+  if (m->ring_depth != 8U && m->ring_depth != 16U &&
+      m->ring_depth != 32U)
     return P9_RUNTIME_BAD_ARGUMENT;
   int status = p9_shutdown();
   if (status != P9_RUNTIME_OK) return status;
@@ -1222,7 +1226,7 @@ abort_exit:
 
 static int p9_reset_stream_path(uint32_t depth, uint32_t count_pl_reset,
                                 uint32_t count_dma_reset) {
-  if (depth != 8U && depth != 32U) depth = 8U;
+  if (depth != 8U && depth != 16U && depth != 32U) depth = 8U;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_DATA_PLANE_SOFT_RESET_MASK);
   if (count_pl_reset != 0U) g_metrics.pl_soft_reset_count++;
   /* The PL request is stretched and synchronously released in every stream

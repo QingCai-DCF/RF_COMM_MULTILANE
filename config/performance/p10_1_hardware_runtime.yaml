@@ -1,0 +1,55 @@
+schema_version: 1
+config_id: P10_1_AX7020_HARDWARE_RUNTIME
+scope: P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE
+transport:
+  host_in_per_object_fast_path: false
+  host_in_per_segment_fast_path: false
+  board_autonomous_command: 13
+  cache_mode: write_back_enabled
+  dma_completion_mode: polling
+mandatory_candidate:
+  buffer_count: 4
+  object_bytes: 262144
+  descriptor_bytes: 65536
+  descriptor_ring_depth: 16
+  descriptor_batch: 4
+  ack_threshold: 8
+  outstanding_frames: 32
+  lane_mask: 3
+  rate_select: 2
+  lane_weights: 0x0101
+pipeline:
+  initial_objects_queued: 4
+  refill_rule: refill_released_buffer_after_next_object_starts
+  counter_clear_scope: once_per_logical_stream
+  commit_scope: once_per_logical_stream
+  incremental_crc32: true
+  incremental_sha256: true
+  maximum_stream_bytes: 67108864
+supported:
+  buffer_count: [2, 4, 8, 16]
+  descriptor_ring_depth: [8, 16, 32]
+  descriptor_batch: [1, 4, 8, 16, 32]
+  lane_mask: [1, 2, 3]
+  ack_threshold: [8]
+  outstanding_frames: [32]
+admission_constraints:
+  - active_buffer_count_times_descriptors_per_object_lte_ring_depth
+  - buffer_count_times_object_bytes_lte_64_mib
+  - descriptor_batch_lte_ring_depth
+  - stream_bytes_lte_64_mib
+unsupported:
+  descriptor_ring_depth_64: runtime_dma_ring_not_allocated
+  ack_threshold_other_than_8: endpoint_aggregator_is_fixed_in_current_bitstream
+  outstanding_frames_64: selective_repeat_window_is_32
+  streaming_128_mib: runtime_address_and_mailbox_contract_is_64_mib
+safety:
+  maximum_lane_mask: 3
+  continuous_txd_high_cycles_at_64mhz: 64
+  rolling_duty_hard_high_cycles_per_64000: 12799
+  rolling_duty_target_high_cycles_per_64000: 11520
+  shutdown_before: true
+  shutdown_on_error: true
+  shutdown_on_timeout: true
+  shutdown_on_interrupt: true
+  shutdown_after: true

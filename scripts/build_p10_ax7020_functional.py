@@ -29,6 +29,20 @@ CAMPAIGN = "p10"
 TEST_ID = "P10-AX7020-DUAL-FUNCTIONAL-BUILD"
 SUMMARY_TITLE = "P10 AX7020 dual functional build"
 GOAL_HASH = "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603"
+P10_1_HW_GOAL = Path(
+    r"C:\Users\user\Downloads"
+    r"\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md"
+)
+P10_1_HW_GOAL_SHA256 = (
+    "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+)
+P10_1_PROVENANCE = [
+    "config/performance/p10_1_measurement_contract.yaml",
+    "config/performance/p10_1_pipeline.yaml",
+    "config/performance/p10_1_streaming.yaml",
+    "config/performance/p10_1_hardware_runtime.yaml",
+    "config/hardware/p10_active_wiring.yaml",
+]
 
 RTL = [
     "rtl/generated/tfdu_safety_config.svh",
@@ -91,6 +105,18 @@ def configure_campaign(campaign: str) -> None:
     CAMPAIGN = campaign
     if campaign == "p10":
         return
+    if campaign == "p10_1":
+        OUT = ROOT / "evidence/generated/vivado/p10_1_hw_performance"
+        ARTIFACTS = ROOT / "artifacts/p10_1"
+        SUMMARY_JSON = (
+            ROOT / "evidence/generated/p10_1_hw_functional_build_summary.json"
+        )
+        SUMMARY_MD = (
+            ROOT / "evidence/generated/p10_1_hw_functional_build_summary.md"
+        )
+        TEST_ID = "P10_1-HW-AX7020-DUAL-FUNCTIONAL-BUILD"
+        SUMMARY_TITLE = "P10.1 hardware-performance AX7020 functional build"
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vivado/p10_1_ax7020_pl_activity_led"
@@ -119,7 +145,14 @@ def parse_markers(path: Path) -> dict[str, str]:
 
 def freeze(path: Path, bundle: str) -> dict[str, Any]:
     digest = sha256(path)
-    destination = ARTIFACTS / bundle / digest / path.name
+    namespace = (
+        subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+        if CAMPAIGN == "p10_1"
+        else bundle
+    )
+    destination = ARTIFACTS / namespace / digest / path.name
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists() and sha256(destination) != digest:
         raise RuntimeError(f"content-address collision: {destination}")
@@ -139,7 +172,11 @@ def source_bundle(role: str, cfg: dict[str, str]) -> tuple[str, dict[str, str]]:
                "config/register_map/ir_axi_regs.yaml",
                "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
                "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"]
+    if CAMPAIGN == "p10_1":
+        sources.extend(P10_1_PROVENANCE)
     hashes = {item: sha256(ROOT / item) for item in sources}
+    if CAMPAIGN == "p10_1":
+        hashes[str(P10_1_HW_GOAL)] = sha256(P10_1_HW_GOAL)
     payload = json.dumps({"campaign": CAMPAIGN, "role": role,
                           "part": "xc7z020clg400-2",
                           "inputs": hashes}, sort_keys=True,
@@ -263,7 +300,7 @@ def main() -> int:
                         help="audit/freeze existing outputs without rerunning Vivado")
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led"),
+        choices=("p10", "p10_1_led", "p10_1"),
         default="p10",
         help="Use a separate output/evidence namespace for a follow-up campaign.",
     )
@@ -277,6 +314,15 @@ def main() -> int:
     if not goal.is_file() or sha256(goal) != GOAL_HASH:
         print("P10_FUNCTIONAL_BUILD_REFUSED: goal hash mismatch", file=sys.stderr)
         return 2
+    if CAMPAIGN == "p10_1" and (
+        not P10_1_HW_GOAL.is_file()
+        or sha256(P10_1_HW_GOAL) != P10_1_HW_GOAL_SHA256
+    ):
+        print(
+            "P10_FUNCTIONAL_BUILD_REFUSED: P10.1 hardware goal hash mismatch",
+            file=sys.stderr,
+        )
+        return 2
     if not args.reuse_existing and not VIVADO.is_file():
         print(f"Vivado not found: {VIVADO}", file=sys.stderr)
         return 2
@@ -289,6 +335,8 @@ def main() -> int:
         "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
         "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md",
     })
+    if CAMPAIGN == "p10_1":
+        source_paths.extend(P10_1_PROVENANCE)
     source_worktree_dirty = tracked_source_dirty(source_paths)
     results = [run_role(role, cfg, args.reuse_existing)
                for role, cfg in ROLES.items()]
@@ -303,6 +351,20 @@ def main() -> int:
         "current_run_hardware_authorization": False,
         "hardware_actions_executed": False, "network_used": False,
         "hardware_admission": False, "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "artifact_provenance": {
+            "hardware_goal": {
+                "path": str(P10_1_HW_GOAL),
+                "sha256": sha256(P10_1_HW_GOAL)
+                if CAMPAIGN == "p10_1"
+                else None,
+            },
+            "required_inputs": {
+                item: sha256(ROOT / item)
+                for item in P10_1_PROVENANCE
+            }
+            if CAMPAIGN == "p10_1"
+            else {},
+        },
         "roles": results,
     }
     SUMMARY_JSON.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n",

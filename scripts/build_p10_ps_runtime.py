@@ -59,6 +59,22 @@ SOURCES = [
     ROOT / "software/ps_driver/ir_regs.h",
     TCL,
 ]
+P10_1_HW_GOAL = Path(
+    r"C:\Users\user\Downloads"
+    r"\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md"
+)
+P10_1_HW_GOAL_SHA256 = (
+    "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+)
+P10_1_PROVENANCE = [
+    ROOT / "config/performance/p10_1_measurement_contract.yaml",
+    ROOT / "config/performance/p10_1_pipeline.yaml",
+    ROOT / "config/performance/p10_1_streaming.yaml",
+    ROOT / "config/performance/p10_1_hardware_runtime.yaml",
+    ROOT / "config/hardware/p10_active_wiring.yaml",
+    ROOT / "scripts/p10_1_hardware_acceptance.py",
+    ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl",
+]
 
 
 def configure_campaign(campaign: str) -> None:
@@ -66,6 +82,21 @@ def configure_campaign(campaign: str) -> None:
     global CAMPAIGN, TEST_ID, SUMMARY_TITLE
     CAMPAIGN = campaign
     if campaign == "p10":
+        return
+    if campaign == "p10_1":
+        OUT = ROOT / "evidence/generated/vitis/p10_1_hw_performance_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_1"
+        SUMMARY_JSON = (
+            ROOT / "evidence/generated/p10_1_hw_ps_runtime_build_summary.json"
+        )
+        SUMMARY_MD = (
+            ROOT / "evidence/generated/p10_1_hw_ps_runtime_build_summary.md"
+        )
+        FUNCTIONAL_OUT = (
+            ROOT / "evidence/generated/vivado/p10_1_hw_performance"
+        )
+        TEST_ID = "P10_1-HW-AX7020-DUAL-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.1 hardware-performance AX7020 PS runtime build"
         return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
@@ -110,7 +141,14 @@ def deterministic_zip(source: Path, destination: Path) -> None:
 
 def freeze(path: Path, bundle: str) -> dict[str, Any]:
     digest = sha256(path)
-    destination = ARTIFACTS / bundle / digest / path.name
+    namespace = (
+        subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+        if CAMPAIGN == "p10_1"
+        else bundle
+    )
+    destination = ARTIFACTS / namespace / digest / path.name
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists() and sha256(destination) != digest:
         raise RuntimeError(f"content-address collision: {destination}")
@@ -133,7 +171,11 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
+    if CAMPAIGN == "p10_1":
+        paths.extend(P10_1_PROVENANCE)
     hashes = {rel(path): sha256(path) for path in paths}
+    if CAMPAIGN == "p10_1":
+        hashes[str(P10_1_HW_GOAL)] = sha256(P10_1_HW_GOAL)
     payload = json.dumps({"campaign": CAMPAIGN, "role": role, "inputs": hashes},
                          sort_keys=True,
                          separators=(",", ":")).encode()
@@ -250,7 +292,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led"),
+        choices=("p10", "p10_1_led", "p10_1"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -263,8 +305,20 @@ def main() -> int:
     if not XSCT.is_file():
         print(f"XSCT not found: {XSCT}", file=sys.stderr)
         return 2
+    if CAMPAIGN == "p10_1" and (
+        not P10_1_HW_GOAL.is_file()
+        or sha256(P10_1_HW_GOAL) != P10_1_HW_GOAL_SHA256
+    ):
+        print(
+            "P10_RUNTIME_BUILD_REFUSED: P10.1 hardware goal hash mismatch",
+            file=sys.stderr,
+        )
+        return 2
     source_worktree_dirty = tracked_source_dirty([
-        *SOURCES, *(cfg["header"] for cfg in ROLES.values())])
+        *SOURCES,
+        *(P10_1_PROVENANCE if CAMPAIGN == "p10_1" else []),
+        *(cfg["header"] for cfg in ROLES.values()),
+    ])
     OUT.mkdir(parents=True, exist_ok=True)
     native = run([
         str(HOST_GCC), "-std=c11", "-Wall", "-Wextra", "-Werror",
@@ -285,6 +339,20 @@ def main() -> int:
         "hardware_actions_executed": False, "network_used": False,
         "native_crypto_protocol_test": "PASS" if native_pass else "FAIL",
         "hardware_admission": False, "blocking_condition": "P10-SAFETY-POWERUP-001",
+        "artifact_provenance": {
+            "hardware_goal": {
+                "path": str(P10_1_HW_GOAL),
+                "sha256": sha256(P10_1_HW_GOAL)
+                if CAMPAIGN == "p10_1"
+                else None,
+            },
+            "required_inputs": {
+                rel(path): sha256(path)
+                for path in P10_1_PROVENANCE
+            }
+            if CAMPAIGN == "p10_1"
+            else {},
+        },
         "roles": results,
     }
     SUMMARY_JSON.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n",

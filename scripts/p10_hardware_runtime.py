@@ -180,9 +180,9 @@ class Case:
             raise ValueError(f"direction/rate invalid: {self.label}")
         if not 1 <= self.timeout <= 1_800_000:
             raise ValueError(f"timeout outside authorization: {self.label}")
-        if self.command in {2, 3, 12} and self.lane not in {1, 2, 3}:
+        if self.command in {2, 3, 12, 13} and self.lane not in {1, 2, 3}:
             raise ValueError(f"transmit-capable command lacks lane mask: {self.label}")
-        if self.command == 3 and not 1 <= self.size <= 0x04000000:
+        if self.command in {3, 13} and not 1 <= self.size <= 0x04000000:
             raise ValueError(f"object size invalid: {self.label}")
 
     def plan_line(self) -> str:

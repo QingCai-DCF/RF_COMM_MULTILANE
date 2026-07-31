@@ -50,10 +50,18 @@ enum p10_1_runtime_flags {
   P10_1_RUNTIME_FLAG_PATTERN_MASK = 0x0fU << 8,
   P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 = 1U << 16,
   P10_1_RUNTIME_FLAG_EXPECT_ABORT_75 = 1U << 17,
-  P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET = 1U << 18,
+  P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER = 1U << 18,
   P10_1_RUNTIME_FLAG_EXPECT_PL_RESET = 1U << 19,
   P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT = 1U << 20,
   P10_1_RUNTIME_FLAG_STALE_SEGMENT = 1U << 21,
+  /*
+   * Bits 22 and 23 are host-orchestrated service-reset vectors. Firmware
+   * records them, while the XSDB executor resets the selected Cortex-A9
+   * during the active stream.
+   */
+  P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_SENDER = 1U << 22,
+  P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_RECEIVER = 1U << 23,
+  P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER = 1U << 24,
 };
 
 typedef struct p10_1_runtime_result {
@@ -189,7 +197,14 @@ typedef struct p10_1_runtime_result {
   volatile uint32_t shutdown_verified_count;
   volatile uint32_t final_pl_status;
   volatile uint32_t final_phy_status;
-  volatile uint32_t reserved[64];
+  /*
+   * These consume the first two words of the schema-v1 reserved tail. Existing
+   * word offsets remain stable and old readers may still treat them as
+   * reserved.
+   */
+  volatile uint32_t descriptors_reclaimed_by_reset;
+  volatile uint32_t injected_fault_observed_count;
+  volatile uint32_t reserved[62];
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -197,6 +212,12 @@ _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
 _Static_assert(offsetof(p10_1_runtime_result_t, ps_start_ticks_low) ==
                    26U * 4U,
                "P10.1 timer word moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        descriptors_reclaimed_by_reset) == 164U * 4U,
+               "P10.1 recovery word moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        injected_fault_observed_count) == 165U * 4U,
+               "P10.1 injected-fault word moved");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 

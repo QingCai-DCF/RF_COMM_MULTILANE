@@ -82,6 +82,7 @@ module tb_p10_1_perf_command;
   logic [2:0] axis_bytes;
   logic [5:0] occupancy;
   logic [63:0] timer;
+  logic [127:0] physical_tx_symbols;
   always #5 clk = ~clk;
   p10_1_perf_monitor dut(
     .clk, .rst_n, .object_reset_i(object_reset),
@@ -90,7 +91,9 @@ module tb_p10_1_perf_command;
     .axis_accept_i(axis_accept), .axis_accept_bytes_i(axis_bytes),
     .axis_stall_i(axis_stall), .descriptor_submit_i(desc_submit),
     .descriptor_complete_i(desc_complete), .application_commit_i(commit),
-    .application_commit_bytes_i(commit_bytes), .queue_occupancy_i(occupancy),
+    .application_commit_bytes_i(commit_bytes),
+    .physical_tx_symbols_flat_i(physical_tx_symbols),
+    .queue_occupancy_i(occupancy),
     .ack_wait_i(ack_wait), .direction_quiet_i(quiet), .retry_i(retry),
     .integrity_error_i(integrity), .perf_active_o(active), .timer_o(timer),
     .snapshot_generation_o(generation));
@@ -104,7 +107,7 @@ module tb_p10_1_perf_command;
     object_reset=0; wr=0; rd=0; wr_addr=0; rd_addr=0; wr_data=0;
     axis_accept=0; axis_stall=0; desc_submit=0; desc_complete=0;
     commit=0; commit_bytes=0; occupancy=0; ack_wait=0; quiet=0;
-    retry=0; integrity=0; axis_bytes=4;
+    retry=0; integrity=0; axis_bytes=4; physical_tx_symbols=0;
     repeat (3) @(posedge clk); @(negedge clk); rst_n=1;
     write_reg(12'h908, 32'h0001_0003);
     if (!active) $fatal(1, "PERF_START failed");
@@ -114,9 +117,12 @@ module tb_p10_1_perf_command;
     end
     @(negedge clk); axis_accept=0; desc_submit=0; desc_complete=0;
     commit=1; commit_bytes=40; @(posedge clk); @(negedge clk); commit=0;
+    physical_tx_symbols={32'd16,32'd32,32'd48,32'd64};
     write_reg(12'h934, 1); repeat (3) @(posedge clk);
     rd=1; rd_addr=12'h94C; #1;
     if (rd_data != 40 || generation[0]) $fatal(1, "snapshot data");
+    rd_addr=12'h95C; #1;
+    if (rd_data != 40) $fatal(1, "physical wire byte accounting");
     rd_addr=12'h900; #1;
     if (rd_data != 32'h50313031) $fatal(1, "capability identity");
     rd=0; write_reg(12'h908, 32'h0002_0006);

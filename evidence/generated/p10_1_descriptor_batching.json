@@ -8,12 +8,12 @@
   "current_run_hardware_authorization": false,
   "descriptor_audit": {
     "completed": 94699,
-    "consumer_generation": 1479,
-    "depth": 64,
+    "consumer_generation": 5918,
+    "depth": 16,
     "descriptor_leak_count": 0,
     "double_completion_count": 0,
     "outstanding": 0,
-    "producer_generation": 1479,
+    "producer_generation": 5918,
     "submitted": 94699
   },
   "descriptor_batch_sweep": [
@@ -42,10 +42,10 @@
   "schema_version": 1,
   "selected": {
     "cache_strategy": "per_batch",
-    "descriptor_batch": 16,
+    "descriptor_batch": 4,
     "interrupt_coalescing": 16,
     "interrupt_strategy": "coalesced_interrupt",
-    "ring_depth": 64
+    "ring_depth": 16
   },
   "status": "PASS",
   "test_id": "P10_1-DESCRIPTOR-BATCHING"

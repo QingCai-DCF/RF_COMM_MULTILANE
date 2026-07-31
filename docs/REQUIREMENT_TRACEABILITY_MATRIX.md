@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 152
+REQUIREMENT_COUNT: 168
 PASS: 136
-PENDING: 16
+PENDING: 32
 FAIL: 0
 WAIVED: 0
 ```
@@ -163,6 +163,22 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P11-READY-001` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIVE_MODULE_INVENTORY_PLAN.md` | P11 shall have a fifth compatible and fully inventoried TFDU6102 small board. |
 | `P11-READY-002` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIXTURE_REQUIREMENTS.md` | P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry. |
 | `P11-READY-003` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_ABZ_INPUT_REQUIREMENTS.md` | P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition budget. |
+| `P10_1_HW-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_authorization_summary.json` | The P10.1 hardware campaign shall use a new immutable current-run authorization bound to the exact Goal, source, board identities, artifacts, limits, and shutdown policy. |
+| `P10_1_HW-002` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_artifact_summary.json` | Both AX7020 roles shall use independently routed, content-addressed performance bitstreams, XSA, BSP, and ELF built from one clean source commit. |
+| `P10_1_TIME-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_timer_summary.json` | PS and PL elapsed-time measurements for every sustained hardware stream shall cross-check within one percent, with host time retained only as an orchestration view. |
+| `P10_1_METRIC-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Hardware application goodput shall count only remotely verified, atomically committed application bytes and shall exclude diagnostic microtransfers and host staging time. |
+| `P10_1_AUTO-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Sustained performance shall execute autonomously on the two boards, with the host absent from per-object and per-segment fast paths. |
+| `P10_1_PIPE-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_pipeline_summary.json` | The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline in both directions without per-object drain. |
+| `P10_1_STREAM-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained F-to-R stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
+| `P10_1_STREAM-002` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained R-to-F stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
+| `P10_1_STREAM-003` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | Abort, PS reset, DMA reset, PL reset, duplicate, and stale-stream vectors shall never commit and shall be followed by a clean 64 MiB recovery stream without descriptor leakage. |
+| `P10_1_PERF-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_half_duplex_summary.json` | F-to-R two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least 300 seconds and 150 MiB committed. |
+| `P10_1_PERF-002` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_half_duplex_summary.json` | R-to-F two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least 300 seconds and 150 MiB committed. |
+| `P10_1_PERF-003` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_half_duplex_summary.json` | Measured sustained goodput and its primary bottleneck shall be reconciled with the corrected physical-airtime model without exceeding the same-protocol ceiling. |
+| `P10_1_XTALK-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_crosstalk_summary.json` | The stationary two-board setup shall produce a direct 4-by-4 TX-to-RX raw and framed crosstalk matrix with zero non-target CRC-valid false frames. |
+| `P10_1_FD-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_1plus1_summary.json` | The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it. |
+| `P10_1_SOAK-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_stationary_30min_summary.json` | One complete 1800-second stationary performance run shall retain at least 4 Mbit/s in both formal directions with zero integrity, resource, retry, deadlock, or internal safety violations. |
+| `P10_1_SAFE-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | — | `evidence/generated/p10_1_hw_shutdown_summary.json` | Every stage and all error, timeout, interrupt, and normal exits shall end with independently verified shutdown of both bound AX7020 endpoints. |
 | `OBS-LED-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-MAPPING-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins. |
 | `OBS-LED-002` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-EVENT-SEMANTICS-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | TX indication shall tap the final role-local physical Txd output, while RX indication shall use only a completed CRC-valid per-lane frame event and shall remain available during receive-only operation. |
 | `OBS-LED-003` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-HOLD-SHUTDOWN-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold. |
@@ -241,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
-- `PROJECT_STATUS.md` — `f95645cdc583a67bd3312b92c7cb5bff81f390fe5fa06a63c0328458cd3f3066`
+- `config/project_state.json` — `31409d4940d2e923b46c1f67fcaf77517ac6964ef61bd7610856e0efc7f30b5d`
+- `PROJECT_STATUS.md` — `7966acae245aba303dff1f6cb4033cb7aa532142f44255f05771f5e8e68310c3`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
+- `config/project_state.json` — `31409d4940d2e923b46c1f67fcaf77517ac6964ef61bd7610856e0efc7f30b5d`
 
 ### `P8A-EVID-001`
 
@@ -257,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `9653ff1840db443aebbcd0befeb1d50ba015ed00f12c900679a8f7f50f297fa3`
-- `PROJECT_STATUS.md` — `f95645cdc583a67bd3312b92c7cb5bff81f390fe5fa06a63c0328458cd3f3066`
+- `config/project_state.json` — `31409d4940d2e923b46c1f67fcaf77517ac6964ef61bd7610856e0efc7f30b5d`
+- `PROJECT_STATUS.md` — `7966acae245aba303dff1f6cb4033cb7aa532142f44255f05771f5e8e68310c3`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -470,13 +486,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
 - `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
-- `evidence/generated/p10_1_performance_model.json` — `5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d`
+- `evidence/generated/p10_1_performance_model.json` — `bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9`
 
 ### `PERF-MODEL-002`
 
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
 - `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
-- `evidence/generated/p10_1_performance_model.json` — `5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d`
+- `evidence/generated/p10_1_performance_model.json` — `bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9`
 
 ### `BUILD-001`
 
@@ -883,14 +899,14 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/generated/p10_goodput_measurement_audit.json` — `e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14`
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` — `ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc`
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` — `f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3`
-- `scripts/p10_hardware_runtime.py` — `0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24`
-- `software/ps_driver/p9_runtime_main.c` — `9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a`
+- `scripts/p10_hardware_runtime.py` — `33f11e8ae3070cce7e915c2af31dd5a0aad8cb8a9999a2a1feb7d133744d5da1`
+- `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
 
 ### `PERF-MEAS-001`
 
-- `evidence/generated/p10_1_measurement_contract.json` — `65204a3821017e8fc07906c6cf94972d06a14476ca5294e5ba0122e49159eaba`
+- `evidence/generated/p10_1_measurement_contract.json` — `749c3a1b4dc726c0b9150fcee92ac85b7dcb467ff75f2a062e704854c8f8e9e9`
 
 ### `PERF-MEAS-002`
 
@@ -930,15 +946,15 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `PERF-PIPE-001`
 
-- `evidence/generated/p10_1_buffer_pipeline.json` — `a5a573cfb5f6e3f3da6a569543b955385ef094809cb2d29c5d64fa8801f57c11`
+- `evidence/generated/p10_1_buffer_pipeline.json` — `a11b0c745e64a7a74bbc4f9c70e7b70d9ea32ea79db98d0e727e006bc6ae0f5c`
 
 ### `PERF-PIPE-002`
 
-- `evidence/generated/p10_1_descriptor_batching.json` — `ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4`
+- `evidence/generated/p10_1_descriptor_batching.json` — `51c578bd5e711a1679a448508d49500065cf2c5eabecd3fbdf177967e8c330e1`
 
 ### `PERF-PIPE-003`
 
-- `evidence/generated/p10_1_descriptor_batching.json` — `ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4`
+- `evidence/generated/p10_1_descriptor_batching.json` — `51c578bd5e711a1679a448508d49500065cf2c5eabecd3fbdf177967e8c330e1`
 
 ### `PERF-STREAM-001`
 

@@ -1,9 +1,9 @@
 {
   "canonical_values": {
-    "ACK_AGGREGATION_THRESHOLD": 16,
-    "BUFFER_COUNT": 8,
-    "BUFFER_SIZE_BYTES": 1048576,
-    "DESCRIPTOR_BATCH": 16,
+    "ACK_AGGREGATION_THRESHOLD": 8,
+    "BUFFER_COUNT": 4,
+    "BUFFER_SIZE_BYTES": 262144,
+    "DESCRIPTOR_BATCH": 4,
     "DIRECTION_WINDOW_US": 250000,
     "HARD_TARGET_BPS": 4000000,
     "INTERRUPT_COALESCING": 16,
@@ -18,7 +18,7 @@
     "PL_TIMER_FREQUENCY_HZ": 64000000,
     "PS_TIMER_FREQUENCY_HZ": 333333343,
     "PS_TRACE_DEPTH_RECORDS": 1024,
-    "RING_DEPTH": 64,
+    "RING_DEPTH": 16,
     "SEGMENT_SIZE_BYTES": 65536,
     "STRETCH_TARGET_BPS": 4800000
   },
@@ -29,7 +29,7 @@
     },
     {
       "path": "config/performance/p10_1_pipeline.yaml",
-      "sha256": "87b33b461fc2e87f0092e2ad2dd021965aa06d89a21b4efa1878c7b9b3deb4d8"
+      "sha256": "8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d"
     },
     {
       "path": "config/performance/p10_1_streaming.yaml",
@@ -46,23 +46,23 @@
   "generated_files": [
     {
       "path": "rtl/generated/p10_1_contract_pkg.sv",
-      "sha256": "e81f0ca281028de86f4b016695d177ad40c8a04686e866c8d72f45fabf7032eb"
+      "sha256": "e2059498f1a746e402fc8ad4f133d2b94e5c614d5e2830e034de20fb3d73f72e"
     },
     {
       "path": "software/ps_driver/p10_1_contract.h",
-      "sha256": "aab30e08e733ff58367229cd3d51a75221b1ab7ff7a3d7eb2a3074d2ff96ceb9"
+      "sha256": "1f3b05adbf8efab783d647b60258bffb30c0bc7438eaa2048cf060da494ec626"
     },
     {
       "path": "scripts/generated/p10_1_contract.py",
-      "sha256": "92c36effcb77cd9fc8b0c154eddd53eb5c93b50b3d166394b3ac74bf14cb61a7"
+      "sha256": "f9ce5395bdb092cad94b687edb72cd36e2265d2ebd841de91a461401f42d7088"
     },
     {
       "path": "config/performance/generated/p10_1_contract.json",
-      "sha256": "d3849af93acf2736904cd3728584e2eb369bba6e77d68fb856818e4d844df306"
+      "sha256": "57289124d3ab528efee7be594977d7e4378cb1485e01acfc1ca855fd8a87b702"
     },
     {
       "path": "docs/design/P10_1_GENERATED_CONTRACT.md",
-      "sha256": "63e28353949928aeb93feb66536b8ddb81190a27591cb790ad49546f9c64cdc9"
+      "sha256": "99584b7fd550da7ad4edcf4876c2a65fc6193771121ca3c802a829d2699b94ec"
     }
   ],
   "hardware_actions_executed": false,

@@ -31,15 +31,11 @@
     "pool": {
       "all_single_owner": true,
       "allocations": 100000,
-      "buffer_count": 8,
+      "buffer_count": 4,
       "descriptor_leak_count": 0,
       "double_reclaim_count": 0,
       "generations": [
         100000,
-        0,
-        0,
-        0,
-        0,
         0,
         0,
         0
@@ -49,12 +45,12 @@
     },
     "ring": {
       "completed": 94699,
-      "consumer_generation": 1479,
-      "depth": 64,
+      "consumer_generation": 5918,
+      "depth": 16,
       "descriptor_leak_count": 0,
       "double_completion_count": 0,
       "outstanding": 0,
-      "producer_generation": 1479,
+      "producer_generation": 5918,
       "submitted": 94699
     },
     "status": "PASS"

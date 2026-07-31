@@ -148,6 +148,7 @@ module tb_p10_dual_endpoint_pair;
   logic r_done_seen;
   integer f_capture_count;
   integer r_capture_count;
+  integer parallel_lane_busy_cycles;
   logic f_capture_last;
   logic r_capture_last;
   logic [7:0] f_received [0:MAX_OBJECT_BYTES-1];
@@ -201,7 +202,13 @@ module tb_p10_dual_endpoint_pair;
       r_capture_last <= 0;
       f_done_seen <= 0;
       r_done_seen <= 0;
+      parallel_lane_busy_cycles <= 0;
     end else begin
+      if ((fixed_endpoint.serializer_busy[0] &&
+           fixed_endpoint.serializer_busy[1]) ||
+          (rotating_endpoint.serializer_busy[0] &&
+           rotating_endpoint.serializer_busy[1]))
+        parallel_lane_busy_cycles <= parallel_lane_busy_cycles + 1;
       if (capture_clear) begin
         f_capture_count <= 0;
         r_capture_count <= 0;
@@ -635,6 +642,8 @@ module tb_p10_dual_endpoint_pair;
     if (f_duty_high_max[31:0] > 11520 || f_duty_high_max[63:32] > 11520 ||
         r_duty_high_max[95:64] > 11520 || r_duty_high_max[127:96] > 11520)
       $fatal(1, "P10 rolling-duty design target exceeded");
+    if (parallel_lane_busy_cycles == 0)
+      $fatal(1, "P10 two-lane cases never exercised concurrent serializers");
 
     receiver_enable = 0;
     @(negedge clk); full_shutdown_request = 1;
