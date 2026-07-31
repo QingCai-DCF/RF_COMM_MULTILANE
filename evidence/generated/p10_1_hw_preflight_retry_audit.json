@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-PREFLIGHT-RETRY-AUDIT",
+  "status": "FAIL",
+  "campaign_boundary": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+  "campaign_disposition": "STOPPED_AT_GOAL_RETRY_LIMIT",
+  "goal": {
+    "path": "C:\\Users\\user\\Downloads\\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md",
+    "sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+    "diagnostic_stage_new_run_id_limit": 2,
+    "formal_pass_requires_one_complete_run_id": true
+  },
+  "board_identities": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "preflight_retry_ledger": {
+    "run_ids": [
+      "p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5",
+      "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f"
+    ],
+    "new_run_id_count": 2,
+    "remaining_under_goal": 0,
+    "third_preflight_attempt_authorized": false
+  },
+  "attempts": [
+    {
+      "ordinal": 1,
+      "run_id": "p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5",
+      "source_commit": "fd40629d939cbf1c573be6ece9ab3f54405c262b",
+      "stage": "preflight",
+      "status": "FAIL",
+      "failure": "stale XSDB register-map identity constants rejected the current version/hash before any case observation",
+      "case_observation_count": 0,
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "evidence": {
+        "xsdb_result": {
+          "path": "evidence/hardware/p10_1/p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5/stages/preflight/xsdb.result.txt",
+          "sha256": "5059862a9042785068b5517b4918e04f1eedf6783cfae6e2f86d057710a979b0"
+        },
+        "orchestrator_result": {
+          "path": "evidence/hardware/p10_1/p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5/final/orchestrator_result.json",
+          "sha256": "aef107b416049b858cabe4427690b0c192f34825f9aeffd6bd530f93c53d5ae9"
+        },
+        "checkpoint_commit": "f8d673b4236d5d92ad2e91a67f60be061865c33e"
+      }
+    },
+    {
+      "ordinal": 2,
+      "run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+      "source_commit": "ddf4a064680677c6421d6e2a25f52352900d8880",
+      "stage": "preflight",
+      "status": "FAIL",
+      "passed_cases": [
+        "preflight_identity",
+        "diagnostic_only_1byte",
+        "short_ring_wrap",
+        "idle_heavy_5s"
+      ],
+      "failure_case": "pattern_prbs_1m",
+      "failure": "rotating receiver did not publish an XSDB-observable P10.1 PRIMED state before the bounded paired-source launch deadline",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "evidence": {
+        "xsdb_result": {
+          "path": "evidence/hardware/p10_1/p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f/stages/preflight/xsdb.result.txt",
+          "sha256": "4709a8f160df7fd638e46b7cdb5ab3cf66b13c9837814829bc4a0ac09fd593dc"
+        },
+        "stage_summary": {
+          "path": "evidence/hardware/p10_1/p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
+          "sha256": "48172660d457e3047bf5274ef4094dd3ffc55746ac15ca0f94bb6487818bafc4"
+        },
+        "orchestrator_result": {
+          "path": "evidence/hardware/p10_1/p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+          "sha256": "6619eee659c86062d404cf7069a02dfaa31180a89c6b7125de43ebd9347eb217"
+        },
+        "checkpoint_commit": "6f274003"
+      }
+    }
+  ],
+  "causal_defect_audit": {
+    "classification": "SUFFICIENT_CAUSAL_DEFECT_CONFIRMED_OFFLINE",
+    "sole_hardware_cause_confirmed": false,
+    "reason_sole_cause_is_not_claimed": "the failed run did not capture the live P10.1 result page before fail-closed shutdown",
+    "facts": [
+      "P10.1 publishes its host-polled result page at 0x00020400.",
+      "The frozen Cortex-A9 BSP maps 0x00000000 through 0x3fffffff as normal write-back cacheable memory.",
+      "command 13 enables D-cache before publishing PRIMING, PRIMED, RUNNING, VERIFYING, COMPLETE, or FAULT.",
+      "the failed firmware publication helper wrote service_state and executed DSB but did not clean the cacheable result page.",
+      "DSB orders memory operations but does not by itself clean a dirty write-back cache line for XSDB physical-memory polling.",
+      "therefore XSDB had no guarantee of observing the PRIMED transition required to launch the paired source."
+    ],
+    "frozen_bsp_proof": {
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8",
+      "member": "libsrc/standalone_v8_1/src/arm/cortexa9/gcc/translation_table.S",
+      "member_sha256": "7ccfa42671763772fbee72b2bb6073a7d8839118bba0d00d2a59577c634c72f3",
+      "member_bytes": 8023,
+      "mapping": "0x00000000-0x3fffffff normal write-back cacheable"
+    }
+  },
+  "offline_remediation": {
+    "status": "PASS",
+    "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
+    "changes": [
+      "service_state is written as the release word and the complete P10.1 result record is cleaned with Xil_DCacheFlushRange before the final DSB whenever D-cache is enabled",
+      "receiver-prime failures now record bounded wait, main mailbox state/response, PL status, PHY status, P10.1 magic/state/status, and P10.1 sequence"
+    ],
+    "source_files": [
+      {
+        "path": "software/ps_driver/p10_1_runtime_extension.inc",
+        "sha256": "c92be5ed2a4295f1305730d6121d6c59c46f87a4a73af362eac2f7c7722eb605"
+      },
+      {
+        "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+        "sha256": "ca22607892a4c70a96e4c922e1cdcdb4a623bb01915dd07e195f7a91c2eb9226"
+      },
+      {
+        "path": "tests/test_p10_1_hardware_acceptance.py",
+        "sha256": "d10553bca2fc1c9396ec6718a4c1af1b726d57b3116f23bd7386bb59a3fa32c0"
+      }
+    ],
+    "verification": {
+      "focused_unit_tests": "PASS",
+      "dual_role_vitis_build": "PASS",
+      "immutable_artifact_finalizer": "PASS",
+      "fixed_elf_disassembly_contains_result_page_flush": true,
+      "rotating_elf_disassembly_contains_result_page_flush": true,
+      "hardware_retest": "NOT_RUN_RETRY_LIMIT"
+    },
+    "artifacts": {
+      "fixed_elf": {
+        "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf",
+        "sha256": "5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6"
+      },
+      "rotating_elf": {
+        "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf",
+        "sha256": "9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0"
+      },
+      "artifact_summary": {
+        "path": "evidence/generated/p10_1_hw_artifact_summary.json",
+        "sha256": "0b80e47c14e12bc56416534e9be687fc136761b3ad7f815cf0add74ff1b8161f"
+      }
+    }
+  },
+  "acceptance": {
+    "p10_1_hardware_acceptance": "FAIL",
+    "formal_complete_run_id": null,
+    "hardware_pass_claimed": false,
+    "remediated_artifact_hardware_pass_claimed": false,
+    "p11_promotion_allowed": false
+  },
+  "safety": {
+    "all_attempt_final_shutdown_fixed": "PASS",
+    "all_attempt_final_shutdown_rotating": "PASS",
+    "ethernet_used": false,
+    "movement_executed": false,
+    "rotation_executed": false,
+    "rewiring_executed": false,
+    "maximum_lane_mask_used": "0x3"
+  },
+  "hardware_actions_executed_for_this_offline_remediation": false,
+  "historical_campaign_hardware_actions_executed": true,
+  "current_run_hardware_authorization": false,
+  "next_required_user_action": "provide a new explicit authorization that extends or overrides the Goal limit of two preflight run IDs before any third hardware preflight"
+}
