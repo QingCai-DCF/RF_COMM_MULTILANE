@@ -5,8 +5,8 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 113
-PASS: 102
+REQUIREMENT_COUNT: 125
+PASS: 114
 PENDING: 11
 FAIL: 0
 WAIVED: 0
@@ -129,6 +129,18 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P9-SOAK-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-SOAK-001` | `evidence/generated/p9_stationary_30min_summary.json` | The exact 1800-second stationary two-lane formal soak completes without mandatory-gate violation. |
 | `P9-EVID-001` | `PASS` | Z7010_2LANE_DEV | `P9` | `P9-EVID-001` | `evidence/generated/p9_evidence_consistency_summary.json` | The complete formal run has raw logs, immutable hashes, shutdown evidence, and consistent summaries. |
 | `P9-CLOSEOUT-001` | `PASS` | REPOSITORY_POST_CHECKPOINT_CLOSEOUT | `P9_POST_CHECKPOINT_CLOSEOUT` | `P9-CLOSEOUT-001` | `evidence/generated/p9_post_checkpoint_closeout.json` | A completed P9 hardware run must have its current-run authorization marked consumed and false without changing the frozen P9 evidence checkpoint. |
+| `P10-HW-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-A-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_a/stage_summary.json` | Role-bound fixed and rotating AX7020 artifacts complete safe boot and bounded shutdown. |
+| `P10-PHY-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-B-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_b/stage_summary.json` | All four physical optical directions pass fresh raw-lane transfer and crosstalk isolation. |
+| `P10-PHY-002` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-C-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_c/stage_summary.json` | Lane 0 and lane 1 each pass bidirectional 4 Mbit/s operation and concurrent 8 Mbit/s raw capability. |
+| `P10-L2-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-D-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_d/stage_summary.json` | Selective repeat, 32-bit SACK, ACK aggregation, wrap, loss, reorder, duplicate, stale, and retry behavior pass. |
+| `P10-DMA-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-E-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_e/stage_summary.json` | Both endpoints pass real AXI DMA scatter-gather, role-local DDR, cache ownership, reset, and descriptor accounting. |
+| `P10-SYS-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-F-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json` | Two independent PS runtimes and resets operate without shared RAM across the optical PS-PL-PHY-PL-PS path. |
+| `P10-OBJ-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-F-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json` | Fresh fixed-to-rotating and rotating-to-fixed objects preserve CRC32, SHA-256, and atomic exactly-once publication. |
+| `P10-REC-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-G-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_g/stage_summary.json` | Endpoint reboot and reset recovery reject stale completion and deliver a fresh post-recovery object. |
+| `P10-SCHED-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-H-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_h/stage_summary.json` | Lane selection, equal weighting, lane fault isolation, retry migration, and acknowledged-frame immobility pass. |
+| `P10-PERF-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-I-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` | P10 characterizes PHY, frame, application, DMA, PS, and airtime performance without promoting the final-product threshold. |
+| `P10-SOAK-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-J-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` | The single formal stationary two-lane run remains clean for at least 1800 active seconds with no Ethernet or motion. |
+| `P10-EVID-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-FASTTRACK-FINAL` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` | One complete formal A-J run has consistent summaries, raw logs, SHA-256 manifest, and double final shutdown evidence. |
 
 ## PASS artifact bindings
 
@@ -202,13 +214,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
-- `PROJECT_STATUS.md` — `fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb`
+- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
+- `PROJECT_STATUS.md` — `640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
+- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
 
 ### `P8A-EVID-001`
 
@@ -218,8 +230,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f`
-- `PROJECT_STATUS.md` — `fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb`
+- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
+- `PROJECT_STATUS.md` — `640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -755,3 +767,76 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/generated/p9_post_checkpoint_closeout.json` — `c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4`
 - `evidence/generated/p9_git_checkpoint_metadata.json` — `28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116`
+
+### `P10-HW-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_a/stage_summary.json` — `0660b549af14f4e0e21c424dfc92e3f15958f288d43501df75b6c7bc97fa4ebc`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+- `config/p10_fasttrack_current_run_authorization.json` — `850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83`
+
+### `P10-PHY-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_b/stage_summary.json` — `839b5c6bec674dabc1787021cd45fcf70477d23ac2e97d0dd78fdabf6e959a0f`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-PHY-002`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_c/stage_summary.json` — `3a10f3ff157b21084f68934996b837947d00117888cbdc38a00fb6ef2e3d2c06`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-L2-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_d/stage_summary.json` — `622d8ed1be39346c9275d0e9e16291d875ade8941c72c28ba453cae6b066949d`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-DMA-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_e/stage_summary.json` — `60a21256df4c353eb50dcfd3f5000aa17ddcfec30fdb21346126e1320e0e182f`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-SYS-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json` — `44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+- `evidence/generated/p10_dual_endpoint_architecture_audit.json` — `70a2aa0925d33a730d3d76c7e1c7b0cda13a079ad119e990ff32908aeb05e653`
+
+### `P10-OBJ-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json` — `44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-REC-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_g/stage_summary.json` — `231654f44dfa300848aaeba2ddddde499b40e4ad956895da78da047b8787954d`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-SCHED-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_h/stage_summary.json` — `820e6a1bb0615f730231e24635fe0ce3ca0dda8a036dd5ec55dbda27dd78daec`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-PERF-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` — `ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-SOAK-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` — `f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-EVID-001`
+
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`

@@ -49,6 +49,20 @@ class P8AConsistencyTests(unittest.TestCase):
         self.assertTrue(any("final_product_status" in error for error in errors))
         self.assertTrue(any("product_final_acceptance" in error for error in errors))
 
+    def test_p10_scoped_pass_does_not_promote_final_z7020_or_rotation(self) -> None:
+        self.assertEqual("PASS", self.state["p10_status"])
+        self.assertEqual("PENDING_Z7020_HW", self.state["z7020_target_status"])
+        self.assertEqual("PENDING_FINAL_MECHANICAL", self.state["rotation_status"])
+        self.assertEqual("PENDING_HW", self.state["final_product_status"])
+
+    def test_p10_acceptance_rejects_network_or_pending_scope_promotion(self) -> None:
+        state = copy.deepcopy(self.state)
+        state["p10_acceptance"]["network_used"] = True
+        state["p10_acceptance"]["unchanged_pending_scopes"]["PRODUCT_FINAL"] = "PASS"
+        errors = validate_state(state, ROOT)
+        self.assertTrue(any("p10_acceptance.network_used" in error for error in errors))
+        self.assertTrue(any("PRODUCT_FINAL" in error for error in errors))
+
     def test_state_requires_legacy_ab_l1_record(self) -> None:
         state = copy.deepcopy(self.state)
         state["legacy_known_failures"] = []

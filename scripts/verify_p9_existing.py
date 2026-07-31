@@ -432,10 +432,6 @@ def main() -> int:
                 state.get("last_hardware_authorization_consumed"),
                 True,
             ),
-            "state.current_program_stage": (
-                state.get("current_program_stage"),
-                "P9_COMPLETE_P10_NOT_STARTED",
-            ),
             "state.z7020_target_status": (
                 state.get("z7020_target_status"),
                 "PENDING_Z7020_HW",
@@ -481,6 +477,16 @@ def main() -> int:
         }
         for label, (actual, wanted) in checks.items():
             require_equal(errors, label, actual, wanted)
+        allowed_program_stages = {
+            "P9_COMPLETE_P10_NOT_STARTED",
+            "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+            "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
+        }
+        if state.get("current_program_stage") not in allowed_program_stages:
+            errors.append(
+                "state.current_program_stage: expected a P9-or-later compatible stage, "
+                f"observed {state.get('current_program_stage')!r}"
+            )
         closeout_checks = len(checks)
         require_equal(
             errors,

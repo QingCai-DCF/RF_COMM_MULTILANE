@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P9-POST-CHECKPOINT-CLOSEOUT-1",
+  "state_revision": "P10-AX7020-DUAL-NODE-2LANE-CLOSEOUT-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -17,7 +17,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P9_COMPLETE_P10_NOT_STARTED",
+  "current_program_stage": "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -46,6 +46,28 @@
       "available_physical_lanes": 8,
       "part": "xc7z020clg400-2",
       "board_inputs": "PENDING_D12"
+    },
+    {
+      "profile": "P10_AX7020_FIXED_2LANE",
+      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
+      "active_profile_path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "pinmap_path": "board_profiles/ax7020_fixed_2lane/pinmap.csv",
+      "xdc_path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+      "available_physical_lanes": 2,
+      "part": "xc7z020clg400-2",
+      "jtag_cable_serial": "210249855178",
+      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING"
+    },
+    {
+      "profile": "P10_AX7020_ROTATING_2LANE",
+      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
+      "active_profile_path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "pinmap_path": "board_profiles/ax7020_rotating_2lane/pinmap.csv",
+      "xdc_path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+      "available_physical_lanes": 2,
+      "part": "xc7z020clg400-2",
+      "jtag_cable_serial": "210512180081",
+      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING"
     }
   ],
   "stage_status": {
@@ -62,7 +84,8 @@
     "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
     "P8D_SELECTIVE_REPEAT_DMA": "PASS",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
-    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
+    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS",
+    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS"
   },
   "p7_evidence": {
     "status": "PASS",
@@ -213,6 +236,10 @@
     {
       "gate_id": "P9",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P10",
+      "status": "PASS"
     }
   ],
   "pending_gates": [
@@ -253,7 +280,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "818d335c229d7b92223c279159aab84a5207ef92",
+  "last_verified_commit": "16684884708223bf7fb9b05145164e6155496cc8",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -383,5 +410,71 @@
     "git_metadata_sha256": "28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116",
     "hardware_actions_executed": false,
     "p10_started": false
+  },
+  "p10_status": "PASS",
+  "p10_current_run_authorization": {
+    "status": "CONSUMED_AFTER_P10_ACCEPTANCE",
+    "path": "config/p10_fasttrack_current_run_authorization.json",
+    "sha256": "850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83",
+    "authorization_commit": "5e5f34bb7410c5fa4b27007a6458d90b12cfdb02",
+    "consumed": true,
+    "consumed_by_run_id": "p10_formal_20260730T181535Z_03",
+    "reusable_for_future_run": false
+  },
+  "p10_acceptance": {
+    "status": "PASS",
+    "profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+    "scope": "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION",
+    "test_id": "P10-FASTTRACK-FINAL",
+    "run_id": "p10_formal_20260730T181535Z_03",
+    "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+    "formal_evidence_freeze_commit": "16684884708223bf7fb9b05145164e6155496cc8",
+    "evidence_checkpoint_tag": "p10-ax7020-dual-node-2lane-pass",
+    "evidence_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json",
+    "evidence_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
+    "evidence_manifest_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json",
+    "evidence_manifest_sha256": "2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281",
+    "evidence_manifest_file_count": 1276,
+    "generated_summary_path": "evidence/generated/p10_fasttrack_final_summary.json",
+    "generated_summary_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
+    "fixed_board_id": "AX7020-F/JTAG:210249855178",
+    "rotating_board_id": "AX7020-R/JTAG:210512180081",
+    "hardware_actions_executed": true,
+    "network_used": false,
+    "no_hardware_movement": true,
+    "rotation_executed": false,
+    "rewiring_executed": false,
+    "maximum_lane_mask_used": "0x3",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "application_goodput_f_to_r_bps": 5767.861069534447,
+    "application_goodput_r_to_f_bps": 5785.116365442897,
+    "mandatory_claims": {
+      "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
+      "DUAL_Z7020_INDEPENDENT_ENDPOINTS": "PASS",
+      "DUAL_Z7020_2LANE_OPTICAL_LINK": "PASS",
+      "DUAL_Z7020_PS_PL_PHY_PL_PS": "PASS",
+      "STATIONARY_2LANE_30MIN": "PASS"
+    },
+    "unchanged_pending_scopes": {
+      "ETHERNET": "DEFERRED",
+      "SPI": "PENDING",
+      "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
+      "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
+      "HANDOVER": "PENDING_P11",
+      "8X32": "PENDING_P12",
+      "600RPM": "PENDING_P13",
+      "PRODUCT_FINAL": "PENDING"
+    },
+    "scope_exclusions": [
+      "ETHERNET",
+      "SPI",
+      "PHYSICAL_GLOBAL_PERMIT_D17",
+      "EXTERNAL_TFDU_DUTY_MEASUREMENT",
+      "HANDOVER",
+      "EIGHT_LANE_8X32",
+      "ROTATION_600RPM",
+      "PRODUCT_FINAL"
+    ]
   }
 }

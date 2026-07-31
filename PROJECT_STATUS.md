@@ -12,7 +12,8 @@ ROTATION_ACCEPTANCE: PENDING_FINAL_MECHANICAL
 FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
 PRODUCT_FINAL_ACCEPTANCE: PENDING
 P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
-CURRENT_PROGRAM_STAGE: P9_COMPLETE_P10_NOT_STARTED
+P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
+CURRENT_PROGRAM_STAGE: P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 ```
@@ -37,6 +38,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P8D_SELECTIVE_REPEAT_DMA` | `PASS` |
 | `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PASS` |
 | `P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION` | `PASS` |
+| `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
 
 ## P7 canonical evidence
 
@@ -92,7 +94,21 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - External TFDU duty measurement: `PENDING_EXTERNAL_MEASUREMENT`
 - Physical GLOBAL_PERMIT implementation: `PENDING_D17`
 - AB_L1 legacy/current P9 stationary: `BAD_DIR` / `PASS`
-- P10 remains not started; Z7020, rotation, and final-product hardware acceptance remain pending.
+- This P9 closeout record is historical; P10 later completed its explicitly scoped stationary AX7020 two-lane run.
+
+## P10 scoped AX7020 dual-node hardware acceptance
+
+- Status: `PASS` (`AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION` only)
+- Formal run: `p10_formal_20260730T181535Z_03`
+- Hardware source commit: `8aa3879c5a8a5a4ed327b1084575bcfcc953f06b`
+- Formal evidence freeze commit: `16684884708223bf7fb9b05145164e6155496cc8`
+- Evidence: `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json`
+- Evidence SHA256: `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- Evidence manifest: `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json`
+- Fixed / rotating-role IDs: `AX7020-F/JTAG:210249855178` / `AX7020-R/JTAG:210512180081`
+- Shutdown fixed / rotating: `PASS` / `PASS`
+- Scope: stationary, two independent AX7020 endpoints, two optical lanes, no Ethernet, no motion.
+- Ethernet, SPI, physical GLOBAL_PERMIT D17, external TFDU duty measurement, handover, 8x32, 600 rpm, and product-final acceptance remain pending.
 
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 
@@ -115,6 +131,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `818d335c229d7b92223c279159aab84a5207ef92`.
+Last verified evidence commit: `16684884708223bf7fb9b05145164e6155496cc8`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

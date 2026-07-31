@@ -66,17 +66,23 @@ class P10PowerStateEvidenceTests(unittest.TestCase):
             for key in required:
                 self.assertNotEqual("", str(row[key]).strip(), f"{row['module_id']} {key}")
 
-    def test_programming_and_tfdu_drive_remain_unexecuted_and_roles_are_serial_bound(self) -> None:
+    def test_formal_hardware_run_is_scoped_and_roles_are_serial_bound(self) -> None:
         summary = load_json("evidence/generated/p10_fasttrack_final_summary.json")
         identity = load_json("config/hardware/p10_jtag_identity_inventory.json")
 
-        self.assertEqual("PARTIAL", summary["status"])
-        self.assertFalse(summary["programming_executed"])
-        self.assertFalse(summary["tfdu_drive_executed"])
+        self.assertEqual("PASS", summary["status"])
+        self.assertTrue(summary["formal_campaign"])
+        self.assertTrue(summary["current_run_hardware_authorization"])
+        self.assertTrue(summary["hardware_actions_executed"])
         self.assertFalse(summary["network_used"])
-        self.assertIsNone(summary["blocking_condition"])
-        self.assertTrue(summary["hardware_admission"])
-        self.assertEqual([], summary["required_user_resolution"])
+        self.assertFalse(summary["hardware_movement"])
+        self.assertFalse(summary["rotation_executed"])
+        self.assertFalse(summary["rewiring_executed"])
+        self.assertEqual("0x3", summary["maximum_lane_mask_used"])
+        self.assertEqual("PASS", summary["SHUTDOWN_FIXED"])
+        self.assertEqual("PASS", summary["SHUTDOWN_ROTATING"])
+        self.assertEqual("AX7020-F/JTAG:210249855178", summary["fixed_board_id"])
+        self.assertEqual("AX7020-R/JTAG:210512180081", summary["rotating_board_id"])
         self.assertEqual("BOUND_EXPLICIT_SERIAL_TO_ROLE", identity["status"])
         self.assertEqual(
             ["210249855178", "210512180081"],

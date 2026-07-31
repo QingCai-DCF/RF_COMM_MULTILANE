@@ -105,6 +105,24 @@ P9_CLOSEOUT_REQUIREMENT_IDS = {"P9-CLOSEOUT-001"}
 
 P9_SCOPE = "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
 
+P10_REQUIREMENT_IDS = {
+    "P10-HW-001",
+    "P10-PHY-001", "P10-PHY-002",
+    "P10-L2-001",
+    "P10-DMA-001",
+    "P10-SYS-001",
+    "P10-OBJ-001",
+    "P10-REC-001",
+    "P10-SCHED-001",
+    "P10-PERF-001",
+    "P10-SOAK-001",
+    "P10-EVID-001",
+}
+
+P10_SCOPE = "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION"
+P10_STAGE = "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET"
+P10_NEXT_STAGE = "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER"
+
 REQUIRED_REQUIREMENT_FIELDS = {
     "requirement_id",
     "requirement_text",
@@ -248,6 +266,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         "p8d_status",
         "p8e_status",
         "p9_status",
+        "p10_status",
     }
     missing = sorted(required - set(state))
     if missing:
@@ -284,6 +303,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     p9_stage = stage_status.get(
         "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
     ) if isinstance(stage_status, dict) else None
+    p10_stage = stage_status.get(P10_STAGE) if isinstance(stage_status, dict) else None
     if not isinstance(stage_status, dict):
         errors.append("stage_status must be a mapping")
     else:
@@ -298,6 +318,8 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             expected_stages[
                 "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
             ] = p9_stage
+        if p10_stage is not None:
+            expected_stages[P10_STAGE] = p10_stage
         for key, expected in expected_stages.items():
             if stage_status.get(key) != expected:
                 errors.append(f"stage_status.{key} must be {expected}")
@@ -309,16 +331,30 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             "PENDING_CURRENT_RUN_AUTHORIZATION", "IN_PROGRESS", "PASS", "PARTIAL", "FAIL"
         }:
             errors.append("P9 hardware-validation stage has invalid status")
+        if p10_stage not in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}:
+            errors.append("P10 hardware-validation stage has invalid status")
     if state.get("p8d_status") != p8d_stage:
         errors.append("p8d_status must match stage_status.P8D_SELECTIVE_REPEAT_DMA")
     if state.get("p8e_status") != p8e_stage:
         errors.append("p8e_status must match stage_status.P8E_DUAL_TARGET_BUILD_TIMING_CDC")
     if state.get("p9_status") != p9_stage:
         errors.append("p9_status must match the P9 hardware-validation stage")
+    if state.get("p10_status") != p10_stage:
+        errors.append("p10_status must match the P10 hardware-validation stage")
     authorization_consumed = state.get("last_hardware_authorization_consumed") is True
+    p10_authorization = state.get("p10_current_run_authorization", {})
+    p10_authorization_consumed = (
+        isinstance(p10_authorization, dict)
+        and p10_authorization.get("consumed") is True
+    )
     expected_authorization = (
-        p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
-        and not authorization_consumed
+        p10_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+        and not p10_authorization_consumed
+        if p10_stage is not None
+        else (
+            p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+            and not authorization_consumed
+        )
     )
     if state.get("current_run_hardware_authorization") is not expected_authorization:
         errors.append(
@@ -341,6 +377,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append("current_profiles must include both P8E exact-part Z7020 core profiles")
         elif "Z7020_8LANE_TARGET" not in profile_names:
             errors.append("current_profiles must include pending Z7020_8LANE_TARGET")
+        if p10_stage == "PASS":
+            required_p10_profiles = {
+                "P10_AX7020_FIXED_2LANE",
+                "P10_AX7020_ROTATING_2LANE",
+            }
+            if not required_p10_profiles.issubset(profile_names):
+                errors.append("current_profiles must include both scoped P10 AX7020 profiles")
 
     legacy = state.get("legacy_known_failures", [])
     legacy_by_id = {
@@ -436,18 +479,22 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append("external TFDU duty measurement must remain pending external measurement")
 
     if p8c_pass:
-        expected_program_stage = (
-            "P9_COMPLETE_P10_NOT_STARTED"
-            if p9_stage == "PASS" and authorization_consumed else (
-            "P10A_Z7020_SINGLE_BOARD_MIGRATION"
-            if p9_stage == "PASS" else (
+        if p10_stage == "PASS" and p10_authorization_consumed:
+            expected_program_stage = P10_NEXT_STAGE
+        elif p10_stage in {"IN_PROGRESS", "PARTIAL", "FAIL"}:
+            expected_program_stage = P10_STAGE
+        elif p9_stage == "PASS" and authorization_consumed:
+            expected_program_stage = "P9_COMPLETE_P10_NOT_STARTED"
+        elif p9_stage == "PASS":
+            expected_program_stage = "P10A_Z7020_SINGLE_BOARD_MIGRATION"
+        elif p8e_pass:
+            expected_program_stage = (
                 "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
-                if p8e_pass else (
-                "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
-                if p8d_pass else "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
-                )
-            ))
-        )
+            )
+        elif p8d_pass:
+            expected_program_stage = "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"
+        else:
+            expected_program_stage = "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE"
         if state.get("current_program_stage") != expected_program_stage:
             errors.append(f"current_program_stage must be {expected_program_stage}")
         if state.get("p8c_no_hardware_actions_executed") is not True:
@@ -603,6 +650,98 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             if closeout.get("p10_started") is not False:
                 errors.append("P9 closeout must not start P10")
 
+    if p10_stage == "PASS":
+        if not p10_authorization_consumed:
+            errors.append("P10 current-run authorization must be consumed after P10 PASS")
+        else:
+            expected_auth = {
+                "status": "CONSUMED_AFTER_P10_ACCEPTANCE",
+                "consumed": True,
+                "reusable_for_future_run": False,
+            }
+            for key, value in expected_auth.items():
+                if p10_authorization.get(key) != value:
+                    errors.append(f"p10_current_run_authorization.{key} must be {value}")
+            errors.extend(
+                hash_record_errors(
+                    {
+                        "path": p10_authorization.get("path"),
+                        "sha256": p10_authorization.get("sha256"),
+                    },
+                    root,
+                    "p10_current_run_authorization",
+                )
+            )
+
+        p10 = state.get("p10_acceptance", {})
+        if not isinstance(p10, dict):
+            errors.append("p10_acceptance must be a mapping after P10 PASS")
+        else:
+            expected_p10 = {
+                "status": "PASS",
+                "profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+                "scope": P10_SCOPE,
+                "test_id": "P10-FASTTRACK-FINAL",
+                "hardware_actions_executed": True,
+                "network_used": False,
+                "no_hardware_movement": True,
+                "rotation_executed": False,
+                "rewiring_executed": False,
+                "maximum_lane_mask_used": "0x3",
+                "shutdown_fixed": "PASS",
+                "shutdown_rotating": "PASS",
+            }
+            for key, value in expected_p10.items():
+                if p10.get(key) != value:
+                    errors.append(f"p10_acceptance.{key} must be {value}")
+            mandatory_claims = p10.get("mandatory_claims", {})
+            for claim in (
+                "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+                "DUAL_Z7020_INDEPENDENT_ENDPOINTS",
+                "DUAL_Z7020_2LANE_OPTICAL_LINK",
+                "DUAL_Z7020_PS_PL_PHY_PL_PS",
+                "STATIONARY_2LANE_30MIN",
+            ):
+                if not isinstance(mandatory_claims, dict) or mandatory_claims.get(claim) != "PASS":
+                    errors.append(f"p10_acceptance.mandatory_claims.{claim} must be PASS")
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P10 final evidence"),
+                ("evidence_manifest_path", "evidence_manifest_sha256", "P10 evidence manifest"),
+                ("generated_summary_path", "generated_summary_sha256", "P10 generated summary"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, p10.get(path_key))
+                    digest = str(p10.get(hash_key, "")).lower()
+                    if (
+                        not artifact.is_file()
+                        or not SHA256_RE.fullmatch(digest)
+                        or sha256_artifact(artifact, root) != digest
+                    ):
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            if not re.fullmatch(r"[0-9a-f]{40}", str(p10.get("source_commit", "")).lower()):
+                errors.append("p10_acceptance.source_commit must be a full Git commit hash")
+            if not re.fullmatch(
+                r"[0-9a-f]{40}",
+                str(p10.get("formal_evidence_freeze_commit", "")).lower(),
+            ):
+                errors.append("p10_acceptance.formal_evidence_freeze_commit must be a full Git commit hash")
+            pending = p10.get("unchanged_pending_scopes", {})
+            expected_pending = {
+                "ETHERNET": "DEFERRED",
+                "SPI": "PENDING",
+                "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
+                "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
+                "HANDOVER": "PENDING_P11",
+                "8X32": "PENDING_P12",
+                "600RPM": "PENDING_P13",
+                "PRODUCT_FINAL": "PENDING",
+            }
+            for key, value in expected_pending.items():
+                if not isinstance(pending, dict) or pending.get(key) != value:
+                    errors.append(f"p10_acceptance.unchanged_pending_scopes.{key} must be {value}")
+
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         errors.append("last_verified_commit must be a full Git commit hash")
@@ -634,6 +773,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     missing_p8d = sorted(P8D_REQUIREMENT_IDS - present)
     missing_p9 = sorted(P9_REQUIREMENT_IDS - present)
     missing_p9_closeout = sorted(P9_CLOSEOUT_REQUIREMENT_IDS - present)
+    missing_p10 = sorted(P10_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -644,6 +784,8 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         errors.append(f"missing P9 requirement IDs: {', '.join(missing_p9)}")
     if missing_p9_closeout:
         errors.append(f"missing P9 closeout requirement IDs: {', '.join(missing_p9_closeout)}")
+    if missing_p10:
+        errors.append(f"missing P10 requirement IDs: {', '.join(missing_p10)}")
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}
     by_id: dict[str, dict[str, Any]] = {}
@@ -700,6 +842,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     p8d_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8D_REQUIREMENT_IDS)
     p8e_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8E_REQUIREMENT_IDS)
     p9_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P9_REQUIREMENT_IDS)
+    p10_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P10_REQUIREMENT_IDS)
     for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS - P8C_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PENDING":
             errors.append(f"{req_id} must remain PENDING until its scoped verification closes")
@@ -765,6 +908,17 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must be PASS after P9 post-checkpoint closeout")
             if item.get("verification_scope") != "P9_POST_CHECKPOINT_METADATA_ONLY_NO_HARDWARE":
                 errors.append(f"{req_id} must declare the no-hardware closeout scope")
+    if p10_closed:
+        for req_id in P10_REQUIREMENT_IDS:
+            item = by_id.get(req_id, {})
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P10 hardware closure")
+            if item.get("verification_scope") != P10_SCOPE:
+                errors.append(f"{req_id} must declare the exact scoped P10 hardware scope")
+            if not item.get("hardware_followup"):
+                errors.append(f"{req_id} must retain broader-hardware follow-up")
+            if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
+                errors.append(f"{req_id} must declare a primary artifact_hash")
     return errors
 
 
@@ -792,6 +946,7 @@ def render_project_status(state: dict[str, Any]) -> str:
         f"FINAL_PRODUCT_HARDWARE_ACCEPTANCE: {state['final_product_status']}",
         f"PRODUCT_FINAL_ACCEPTANCE: {state['product_final_acceptance']}",
         f"P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: {state['p9_status']}",
+        f"P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: {state['p10_status']}",
         f"CURRENT_PROGRAM_STAGE: {state['current_program_stage']}",
         f"CURRENT_RUN_HARDWARE_AUTHORIZATION: {str(state['current_run_hardware_authorization']).lower()}",
         f"LAST_HARDWARE_AUTHORIZATION_CONSUMED: {str(state.get('last_hardware_authorization_consumed', False)).lower()}",
@@ -885,7 +1040,30 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- External TFDU duty measurement: `{architecture['external_tfdu_duty_measurement']}`",
             f"- Physical GLOBAL_PERMIT implementation: `{architecture['global_permit_physical_implementation']}`",
             f"- AB_L1 legacy/current P9 stationary: `{lane1['legacy_status']}` / `{lane1['current_p9_stationary_status']}`",
-            "- P10 remains not started; Z7020, rotation, and final-product hardware acceptance remain pending.",
+            (
+                "- This P9 closeout record is historical; P10 later completed its explicitly scoped "
+                "stationary AX7020 two-lane run."
+                if state.get("p10_status") == "PASS"
+                else "- P10 remains not started; Z7020, rotation, and final-product hardware acceptance remain pending."
+            ),
+        ]
+    if isinstance(state.get("p10_acceptance"), dict):
+        p10 = state["p10_acceptance"]
+        lines += [
+            "",
+            "## P10 scoped AX7020 dual-node hardware acceptance",
+            "",
+            f"- Status: `{p10['status']}` (`{p10['scope']}` only)",
+            f"- Formal run: `{p10['run_id']}`",
+            f"- Hardware source commit: `{p10['source_commit']}`",
+            f"- Formal evidence freeze commit: `{p10['formal_evidence_freeze_commit']}`",
+            f"- Evidence: `{p10['evidence_path']}`",
+            f"- Evidence SHA256: `{p10['evidence_sha256']}`",
+            f"- Evidence manifest: `{p10['evidence_manifest_path']}`",
+            f"- Fixed / rotating-role IDs: `{p10['fixed_board_id']}` / `{p10['rotating_board_id']}`",
+            f"- Shutdown fixed / rotating: `{p10['shutdown_fixed']}` / `{p10['shutdown_rotating']}`",
+            "- Scope: stationary, two independent AX7020 endpoints, two optical lanes, no Ethernet, no motion.",
+            "- Ethernet, SPI, physical GLOBAL_PERMIT D17, external TFDU duty measurement, handover, 8x32, 600 rpm, and product-final acceptance remain pending.",
         ]
     lines += [
         "",

@@ -1,5 +1,5 @@
 schema_version: 1
-document_version: '7.1'
+document_version: '8.0'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
+    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
   - path: PROJECT_STATUS.md
-    sha256: fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb
-  artifact_hash: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
+    sha256: 640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160
+  artifact_hash: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
+    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
+    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
   - path: PROJECT_STATUS.md
-    sha256: fbc52a2ce311bd9b9396dca600503d310a555a499157e5a4e9c1f5c173989eeb
+    sha256: 640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 3cadafdb8d0c884fba053e821aa5afe4a2dd3e08a2db26bb1bc483f0ab18451f
+  artifact_hash: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -2283,3 +2283,276 @@ requirements:
   hardware_followup: This metadata-only PASS does not authorize or promote Z7020, eight-lane, rotating, physical GLOBAL_PERMIT,
     external duty/optical measurement, or final-product hardware scope.
   artifact_hash: c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4
+- requirement_id: P10-HW-001
+  requirement_text: Role-bound fixed and rotating AX7020 artifacts complete safe boot and bounded shutdown.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-A-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_a/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 0660b549af14f4e0e21c424dfc92e3f15958f288d43501df75b6c7bc97fa4ebc
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_a/stage_summary.json
+    sha256: 0660b549af14f4e0e21c424dfc92e3f15958f288d43501df75b6c7bc97fa4ebc
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  - path: config/p10_fasttrack_current_run_authorization.json
+    sha256: 850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-PHY-001
+  requirement_text: All four physical optical directions pass fresh raw-lane transfer and crosstalk isolation.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-B-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_b/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 839b5c6bec674dabc1787021cd45fcf70477d23ac2e97d0dd78fdabf6e959a0f
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_b/stage_summary.json
+    sha256: 839b5c6bec674dabc1787021cd45fcf70477d23ac2e97d0dd78fdabf6e959a0f
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-PHY-002
+  requirement_text: Lane 0 and lane 1 each pass bidirectional 4 Mbit/s operation and concurrent 8 Mbit/s raw capability.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-C-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_c/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 3a10f3ff157b21084f68934996b837947d00117888cbdc38a00fb6ef2e3d2c06
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_c/stage_summary.json
+    sha256: 3a10f3ff157b21084f68934996b837947d00117888cbdc38a00fb6ef2e3d2c06
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-L2-001
+  requirement_text: Selective repeat, 32-bit SACK, ACK aggregation, wrap, loss, reorder, duplicate, stale, and retry behavior
+    pass.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-D-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_d/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 622d8ed1be39346c9275d0e9e16291d875ade8941c72c28ba453cae6b066949d
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_d/stage_summary.json
+    sha256: 622d8ed1be39346c9275d0e9e16291d875ade8941c72c28ba453cae6b066949d
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-DMA-001
+  requirement_text: Both endpoints pass real AXI DMA scatter-gather, role-local DDR, cache ownership, reset, and descriptor
+    accounting.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-E-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_e/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 60a21256df4c353eb50dcfd3f5000aa17ddcfec30fdb21346126e1320e0e182f
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_e/stage_summary.json
+    sha256: 60a21256df4c353eb50dcfd3f5000aa17ddcfec30fdb21346126e1320e0e182f
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-SYS-001
+  requirement_text: Two independent PS runtimes and resets operate without shared RAM across the optical PS-PL-PHY-PL-PS path.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-F-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json
+    sha256: 44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  - path: evidence/generated/p10_dual_endpoint_architecture_audit.json
+    sha256: 70a2aa0925d33a730d3d76c7e1c7b0cda13a079ad119e990ff32908aeb05e653
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-OBJ-001
+  requirement_text: Fresh fixed-to-rotating and rotating-to-fixed objects preserve CRC32, SHA-256, and atomic exactly-once
+    publication.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-F-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_f/stage_summary.json
+    sha256: 44b6e42a043445ab9f1de8ee66bb8eb66d84662a02bcb2009bef0940d2cc0e8d
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-REC-001
+  requirement_text: Endpoint reboot and reset recovery reject stale completion and deliver a fresh post-recovery object.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-G-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_g/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 231654f44dfa300848aaeba2ddddde499b40e4ad956895da78da047b8787954d
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_g/stage_summary.json
+    sha256: 231654f44dfa300848aaeba2ddddde499b40e4ad956895da78da047b8787954d
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-SCHED-001
+  requirement_text: Lane selection, equal weighting, lane fault isolation, retry migration, and acknowledged-frame immobility
+    pass.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-H-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_h/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: 820e6a1bb0615f730231e24635fe0ce3ca0dda8a036dd5ec55dbda27dd78daec
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_h/stage_summary.json
+    sha256: 820e6a1bb0615f730231e24635fe0ce3ca0dda8a036dd5ec55dbda27dd78daec
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-PERF-001
+  requirement_text: P10 characterizes PHY, frame, application, DMA, PS, and airtime performance without promoting the final-product
+    threshold.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-I-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json
+    sha256: ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-SOAK-001
+  requirement_text: The single formal stationary two-lane run remains clean for at least 1800 active seconds with no Ethernet
+    or motion.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-J-HARDWARE
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json
+    sha256: f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-EVID-001
+  requirement_text: One complete formal A-J run has consistent summaries, raw logs, SHA-256 manifest, and double final shutdown
+    evidence.
+  profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+  verification_method: Fresh direct dual-AX7020/JTAG/AXI-DMA/DDR/optical evidence from one immutable formal P10 A-J run, bound
+    to the role-separated architecture and authorization artifacts.
+  verification_stage: P10
+  verification_scope: AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION
+  test_id: P10-FASTTRACK-FINAL
+  evidence_path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+  status: PASS
+  waiver: null
+  artifact_hash: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  artifact_hashes:
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
+    and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
+    handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
