@@ -45,6 +45,7 @@ REQUIRED_STEMS = [
     "p10_1_p11_readiness",
 ]
 EXCLUDE_FROM_MANIFEST = {
+    "p10_1_evidence_sha256_manifest.json",
     "p10_1_evidence_consistency.json",
     "p10_1_evidence_consistency.md",
     "p10_1_final_summary.json",
