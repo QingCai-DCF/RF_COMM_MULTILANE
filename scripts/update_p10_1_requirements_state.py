@@ -13,6 +13,12 @@ from typing import Any
 import yaml
 
 from p10_1_common import ROOT, rel, sha256
+from p8a_common import (
+    STATUS_PATH,
+    TRACEABILITY_PATH,
+    render_project_status,
+    render_traceability,
+)
 
 
 REQUIREMENTS = ROOT / "config/project_requirements.yaml"
@@ -274,6 +280,76 @@ def update_state() -> None:
     )
 
 
+def bind_requirement_artifact(
+    text: str,
+    requirement_id: str,
+    artifact_path: str,
+    digest: str,
+) -> str:
+    start = text.index(f"- requirement_id: {requirement_id}")
+    next_start = text.find("\n- requirement_id:", start + 1)
+    if next_start < 0:
+        next_start = len(text)
+    record = text[start:next_start]
+    pattern = re.compile(
+        rf"(  - path: {re.escape(artifact_path)}\n"
+        r"    sha256: )[0-9a-f]{64}"
+    )
+    record, count = pattern.subn(rf"\g<1>{digest}", record, count=1)
+    if count != 1:
+        raise RuntimeError(
+            f"{requirement_id} does not bind canonical artifact {artifact_path}"
+        )
+    primary = re.search(
+        r"  artifact_hashes:\n"
+        r"  - path: [^\n]+\n"
+        r"    sha256: ([0-9a-f]{64})",
+        record,
+    )
+    if primary is None:
+        raise RuntimeError(f"{requirement_id} has no primary artifact binding")
+    record = re.sub(
+        r"(  artifact_hash: )[0-9a-f]{64}",
+        rf"\g<1>{primary.group(1)}",
+        record,
+        count=1,
+    )
+    return text[:start] + record + text[next_start:]
+
+
+def update_generated_canonical_views() -> None:
+    state = json.loads(STATE.read_text(encoding="utf-8"))
+    STATUS_PATH.write_text(
+        render_project_status(state),
+        encoding="utf-8",
+        newline="\n",
+    )
+
+    state_hash = sha256(STATE)
+    status_hash = sha256(STATUS_PATH)
+    text = REQUIREMENTS.read_text(encoding="utf-8")
+    for requirement_id, path, digest in (
+        ("P8A-STATE-001", "config/project_state.json", state_hash),
+        ("P8A-STATE-001", "PROJECT_STATUS.md", status_hash),
+        ("P8A-TRACE-001", "config/project_state.json", state_hash),
+        ("P8A-SCOPE-001", "config/project_state.json", state_hash),
+        ("P8A-SCOPE-001", "PROJECT_STATUS.md", status_hash),
+    ):
+        text = bind_requirement_artifact(
+            text,
+            requirement_id,
+            path,
+            digest,
+        )
+    REQUIREMENTS.write_text(text, encoding="utf-8", newline="\n")
+    document = yaml.safe_load(text)
+    TRACEABILITY_PATH.write_text(
+        render_traceability(document),
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--write", action="store_true")
@@ -284,6 +360,7 @@ def main() -> int:
     if args.write:
         update_requirements()
         update_state()
+        update_generated_canonical_views()
     document = yaml.safe_load(REQUIREMENTS.read_text(encoding="utf-8"))
     ids = [item["requirement_id"] for item in document["requirements"]]
     required = {item[0] for item in PASS_REQUIREMENTS} | {

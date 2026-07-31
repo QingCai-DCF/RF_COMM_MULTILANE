@@ -22,6 +22,7 @@ from p8a_common import (
     TRACEABILITY_PATH,
     render_project_status,
     render_traceability,
+    sha256_artifact,
     validate_requirements,
     validate_state,
 )
@@ -32,8 +33,12 @@ RUN_ROOT = ROOT / "evidence/hardware/p10" / RUN_ID
 PASS_TAG = "p10-ax7020-dual-node-2lane-pass"
 PASS_TAG_OBJECT = "0b8f4fd41b98978ae3c036d0f057990b947e3cdb"
 PASS_TAG_TARGET = "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0"
+CLOSED_TAG = "p10-ax7020-dual-node-2lane-closed"
+CLOSED_TAG_OBJECT = "de64a1e8fd21931015b01f0f48c91bf0ba3b5040"
+CLOSED_TAG_TARGET = "b212f81bd0a8114e309fb821025fa17f0484b255"
 FINAL_PATH = RUN_ROOT / "final/orchestrator_result.json"
 MANIFEST_PATH = RUN_ROOT / "final/run_evidence_sha256_manifest.json"
+CLOSEOUT_PATH = ROOT / "evidence/generated/p10_closeout_summary.json"
 
 
 def sha256(path: Path) -> str:
@@ -106,6 +111,65 @@ def exact_generated_checks(errors: list[str]) -> None:
         errors.append("requirement traceability matrix is stale")
 
 
+def verify_superseded_closeout(state: dict[str, Any], errors: list[str]) -> None:
+    require(
+        git("cat-file", "-t", CLOSED_TAG) == "tag",
+        "P10 closed tag type changed",
+        errors,
+    )
+    require(
+        git("rev-parse", CLOSED_TAG) == CLOSED_TAG_OBJECT,
+        "P10 closed tag object changed",
+        errors,
+    )
+    require(
+        git("rev-list", "-n", "1", CLOSED_TAG) == CLOSED_TAG_TARGET,
+        "P10 closed tag target changed",
+        errors,
+    )
+    require(CLOSEOUT_PATH.is_file(), "P10 closeout summary is missing", errors)
+    if not CLOSEOUT_PATH.is_file():
+        return
+    closeout = json.loads(CLOSEOUT_PATH.read_text(encoding="utf-8"))
+    require(closeout.get("status") == "PASS", "P10 closeout status is not PASS", errors)
+    require(
+        closeout.get("authorization", {}).get(
+            "current_run_hardware_authorization"
+        )
+        is False,
+        "P10 closeout authorization is not false",
+        errors,
+    )
+    require(
+        state.get("last_hardware_authorization_consumed") is True,
+        "P10 authorization is not recorded as consumed",
+        errors,
+    )
+    require(
+        state.get("p10_acceptance", {}).get("status") == "PASS",
+        "P10 scoped acceptance is not preserved",
+        errors,
+    )
+    state_closeout = state.get("p10_post_acceptance_closeout", {})
+    require(
+        state_closeout.get("status") == "PASS",
+        "P10 post-acceptance closeout state is not PASS",
+        errors,
+    )
+    require(
+        state_closeout.get("evidence_path")
+        == CLOSEOUT_PATH.relative_to(ROOT).as_posix(),
+        "P10 closeout state path mismatch",
+        errors,
+    )
+    require(
+        state_closeout.get("evidence_sha256")
+        == sha256_artifact(CLOSEOUT_PATH, ROOT),
+        "P10 closeout state SHA256 mismatch",
+        errors,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-summary", action="store_true")
@@ -168,15 +232,28 @@ def main(argv: list[str] | None = None) -> int:
     env = dict(os.environ)
     env["NO_HARDWARE"] = "1"
     env["CURRENT_RUN_HARDWARE_AUTHORIZATION"] = "false"
-    closeout_check = run(
-        [sys.executable, "scripts/generate_p10_closeout.py", "--check"], env
+    current_state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+    p10_1_supersedes_closeout_generator = (
+        current_state.get("p10_1_offline_status") == "PASS"
+        and current_state.get("current_program_stage")
+        == "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE"
     )
-    require(
-        closeout_check.returncode == 0
-        and "P10_CLOSEOUT_GENERATION=PASS" in closeout_check.stdout,
-        "P10 closeout generator check failed",
-        errors,
-    )
+    if p10_1_supersedes_closeout_generator:
+        verify_superseded_closeout(current_state, errors)
+        closeout_check_status = "PASS_CURRENT_CANONICAL_SUPERSESSION"
+    else:
+        closeout_check = run(
+            [sys.executable, "scripts/generate_p10_closeout.py", "--check"], env
+        )
+        require(
+            closeout_check.returncode == 0
+            and "P10_CLOSEOUT_GENERATION=PASS" in closeout_check.stdout,
+            "P10 closeout generator check failed",
+            errors,
+        )
+        closeout_check_status = (
+            "PASS" if closeout_check.returncode == 0 else "FAIL"
+        )
     no_hardware_scan = run(
         [sys.executable, "scripts/check_no_hardware_calls.py"], env
     )
@@ -201,9 +278,7 @@ def main(argv: list[str] | None = None) -> int:
         "run_id": RUN_ID,
         "verified_manifest_file_count": checked_files,
         "verified_manifest_bytes": checked_bytes,
-        "closeout_generator_check": (
-            "PASS" if closeout_check.returncode == 0 else "FAIL"
-        ),
+        "closeout_generator_check": closeout_check_status,
         "no_hardware_static_scan": (
             "PASS" if no_hardware_scan.returncode == 0 else "FAIL"
         ),
