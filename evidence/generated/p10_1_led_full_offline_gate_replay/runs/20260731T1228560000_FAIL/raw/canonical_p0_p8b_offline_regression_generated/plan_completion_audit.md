@@ -1,9 +1,9 @@
 # Plan Completion Audit
 
-PLAN_COMPLETION_AUDIT_STATUS=PASS
+PLAN_COMPLETION_AUDIT_STATUS=FAIL
 PLAN_COMPLETION_STATIC=PASS
 OFFLINE_GATES_RAN=1
-OFFLINE_GATE_STATUS=PASS
+OFFLINE_GATE_STATUS=FAIL
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 ## Section 14 Markers
@@ -25,7 +25,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | `TFDU_SAFETY_DOC_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
 | `NEW_RTL_SKELETON_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
 | `REGISTER_MAP_SINGLE_SOURCE_CREATED=1` | `evidence/generated/bootstrap_markers.md` | PROVEN |
-| `OFFLINE_GATES_RAN=1` | `evidence/generated/offline_gate_summary.md` | PROVEN |
+| `OFFLINE_GATES_RAN=1` | `evidence/generated/offline_gate_summary.md` | MISSING |
 | `NO_HARDWARE_ACTIONS_EXECUTED=1` | `evidence/generated/offline_gate_summary.md` | PROVEN |
 
 ## Milestone Evidence
@@ -42,7 +42,7 @@ NO_HARDWARE_ACTIONS_EXECUTED=1
 | M4 AXI register contract | register_map_generation:PASS, m4_ps_driver_trace:PASS, m4_static_reference_checks:PASS, m4_axi_regs_sim:PASS | IMPLEMENTED_TRACE_PASS_SIM_PASS |
 | PS driver fixed initialization sequence | m4_ps_driver_trace:PASS, ps_driver_c_compile:PASS | TRACE_PASS_C_COMPILE_PASS |
 | Multilane scheduler requirement | scheduler_static_checks:PASS, scheduler_sim:PASS | IMPLEMENTED_STATIC_PASS_SIM_PASS |
-| M5 Vivado non-hardware build | m5_static_nonhardware_build_checks:PASS, m5_vivado_nonhardware_build:PASS | SCRIPTED_STATIC_PASS_VIVADO_PASS |
+| M5 Vivado non-hardware build | m5_static_nonhardware_build_checks:PASS, m5_vivado_nonhardware_build:FAIL | FAIL |
 | M6 hardware prep scripts | m6_static_hardware_prep_checks:PASS, m6_refusal_runtime:PASS | PREPARED_REFUSAL_RUNTIME_PASS_NO_HARDWARE |
 | Host client offline protocol | host_client_unit_tests:PASS | OFFLINE_PASS_REAL_ETHERNET_PENDING_HW |
 

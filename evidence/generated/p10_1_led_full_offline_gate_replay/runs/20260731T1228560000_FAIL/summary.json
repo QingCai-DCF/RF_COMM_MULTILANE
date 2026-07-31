@@ -1,13 +1,13 @@
 {
-  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1228560000_FAIL",
+  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1111020000_FAIL",
   "cleanup_status": "PASS",
   "commands": [
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_offline_gate.py --full --json-summary",
-      "duration_seconds": 850.696,
-      "finished_utc": "2026-07-31T12:44:13+00:00",
+      "duration_seconds": 873.103,
+      "finished_utc": "2026-07-31T12:23:11+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate.log",
-      "log_sha256": "d904049613490f36c78533f245bf49857730ac635400645b6be76d0bd7eac82d",
+      "log_sha256": "52bd4a5a99caea2b1a2296c391b1255c40ee6cdc022b07930df16a5ea9f5c068",
       "markers": {
         "current_authorization_false": true,
         "hardware_actions_false": true,
@@ -18,32 +18,32 @@
         {
           "bytes": 4116,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_final_summary.json",
-          "sha256": "a4fe0b0883fb669b5e20be67d04b423d41a5daca60ae57111b36c8216e53c7b4",
+          "sha256": "3bd5ccf3be3e49ea93c71c4dfc254db36428358a64702a73513c3b3d06b76962",
           "source_path": "evidence/generated/p10_1_final_summary.json"
         },
         {
           "bytes": 1204,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_consistency.json",
-          "sha256": "f44e0a120a9931bba0d3c1561e3367561265b08b22987cbc33a2b73acc978b19",
+          "sha256": "f519f3459c5b9617ab70e5b778ae3fc5a019308efdd19eaccf24d56546db2dbd",
           "source_path": "evidence/generated/p10_1_evidence_consistency.json"
         },
         {
-          "bytes": 13181,
+          "bytes": 12931,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_sha256_manifest.json",
-          "sha256": "b19b09c09d68715193196fd6b1f4f858862d91538a53d132801efdb95c2924c6",
+          "sha256": "bd466e8919b48b186fd67558e679764ca1d007d9c30b04de3b517d477a9aeb8b",
           "source_path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json"
         }
       ],
       "return_code": 0,
-      "started_utc": "2026-07-31T12:30:03+00:00",
+      "started_utc": "2026-07-31T12:08:38+00:00",
       "status": "PASS"
     },
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_offline_gates.py --include-p8b --json-summary",
-      "duration_seconds": 3303.72,
-      "finished_utc": "2026-07-31T13:39:32+00:00",
+      "duration_seconds": 325.64,
+      "finished_utc": "2026-07-31T12:28:52+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression.log",
-      "log_sha256": "dff64bba5194d3c3a3f1b4e47f4a81ffd109c3aaee86794bb6cbb33e65e43d66",
+      "log_sha256": "aeb3131367984b12be5d237c327bae4f73f48fb5e53234a581af05426af9d738",
       "markers": {
         "current_authorization_false": false,
         "hardware_actions_false": false,
@@ -52,45 +52,45 @@
       "name": "canonical_p0_p8b_offline_regression",
       "preserved_generated_evidence": [
         {
-          "bytes": 88336,
+          "bytes": 91441,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.json",
-          "sha256": "fdba98cf2a64584739992c0e68e271a1c11299c16aee8619f8a29514ac135654",
+          "sha256": "80f001d58aec20fa09c26f0f22de135483045d08fb2181290ae1ac8ab0589c84",
           "source_path": "evidence/generated/offline_gate_summary.json"
         },
         {
-          "bytes": 76051,
+          "bytes": 77429,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.md",
-          "sha256": "46d999d6620a013e7051eaca9c22a5181a28539f487b35c2639597622b831c1b",
+          "sha256": "ae79d3cdd4cf102b431d5f90d0c5ea2e024783c86ac570dc134f4f267a0e3239",
           "source_path": "evidence/generated/offline_gate_summary.md"
         },
         {
-          "bytes": 891956,
+          "bytes": 109839,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.json",
-          "sha256": "0ae3d8402a628aedbf99c6b9bd3e633fddb1ece4363796a80df5d4d0894b3d9c",
+          "sha256": "d615625604b13fea4d6740c9de99d5856e8b8c34f849ed82790556ba90cf316b",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.json"
         },
         {
-          "bytes": 7883,
+          "bytes": 5468,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.md",
-          "sha256": "db92d3bc92d4ef12c9e7121e03d742d74bce628e37d63694918ac56d7e50b19c",
+          "sha256": "f2b3e0b4665543bbfdf339b80b496ff2ce4c8db30029d86ba1050fa5e6c96c0a",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.md"
         },
         {
-          "bytes": 11309,
+          "bytes": 11459,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.json",
-          "sha256": "7d09b65d08965c2427e3788c1160073c208a13e2b81fbc770a590c0688fd8f90",
+          "sha256": "1dbbee486bacc515a93c6b6785234b9b01aed6dac8c6d2d9cc3fb75e2f56339e",
           "source_path": "evidence/generated/p8b_final_summary.json"
         },
         {
-          "bytes": 12697,
+          "bytes": 12900,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.md",
-          "sha256": "a659b9011331dad012bac193954efc61e5322b8ccd199b51a1d457e2584d3405",
+          "sha256": "fb3f5e5b4514a1c4d587f0f59eaf69fccc5448a94e7b41c8fb9d1a90b74292ff",
           "source_path": "evidence/generated/p8b_final_summary.md"
         },
         {
-          "bytes": 5541,
+          "bytes": 5514,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/plan_completion_audit.md",
-          "sha256": "c4009f48153e193130b9d849817a3f6d1f989ef4013ff8d116c2e5a3e0582b0c",
+          "sha256": "0ead405c514f98e4d3540e80a8e5b37bf88b27dbd4b4b75ff703db767879cbeb",
           "source_path": "evidence/generated/plan_completion_audit.md"
         },
         {
@@ -107,7 +107,7 @@
         }
       ],
       "return_code": 1,
-      "started_utc": "2026-07-31T12:44:29+00:00",
+      "started_utc": "2026-07-31T12:23:26+00:00",
       "status": "FAIL"
     }
   ],
@@ -140,66 +140,13 @@
       " M evidence/generated/sv_port_contracts.json",
       " M evidence/generated/sv_port_contracts.md",
       " M evidence/generated/vivado/nonhardware_build_markers.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_p6_local_transport.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_lane0.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_ack.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_lane0_soak.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_lane1.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_lane1_ack.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_minimal.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_protocol_two_lane_soak.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_raw_lane_matrix.txt",
-      " M evidence/generated/vivado/nonhardware_build_markers_raw_pulse.txt",
       " M evidence/generated/vivado/nonhardware_build_markers_safe_idle.txt",
       " M evidence/generated/vivado/nonhardware_build_markers_tfdu_control_idle.txt",
       " M evidence/generated/vivado/nonhardware_build_summary.json",
       " M evidence/generated/vivado/nonhardware_build_summary.md",
-      " M evidence/generated/vivado/post_route_drc_p6_local_transport.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_lane0.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_lane0_ack.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_lane0_soak.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_lane1.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_lane1_ack.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_two_lane_minimal.rpt",
-      " M evidence/generated/vivado/post_route_drc_protocol_two_lane_soak.rpt",
-      " M evidence/generated/vivado/post_route_drc_raw_lane_matrix.rpt",
-      " M evidence/generated/vivado/post_route_drc_raw_pulse.rpt",
       " M evidence/generated/vivado/post_route_drc_safe_idle.rpt",
-      " M evidence/generated/vivado/post_route_drc_tfdu_control_idle.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_p6_local_transport.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_lane0.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_lane0_ack.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_lane0_soak.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_lane1.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_lane1_ack.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_minimal.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_protocol_two_lane_soak.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_raw_lane_matrix.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_raw_pulse.rpt",
       " M evidence/generated/vivado/post_route_timing_summary_safe_idle.rpt",
-      " M evidence/generated/vivado/post_route_timing_summary_tfdu_control_idle.rpt",
-      " M evidence/generated/vivado/post_route_utilization_p6_local_transport.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_lane0.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_lane0_ack.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_lane0_soak.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_lane1.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_lane1_ack.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_two_lane_minimal.rpt",
-      " M evidence/generated/vivado/post_route_utilization_protocol_two_lane_soak.rpt",
-      " M evidence/generated/vivado/post_route_utilization_raw_lane_matrix.rpt",
-      " M evidence/generated/vivado/post_route_utilization_raw_pulse.rpt",
       " M evidence/generated/vivado/post_route_utilization_safe_idle.rpt",
-      " M evidence/generated/vivado/post_route_utilization_tfdu_control_idle.rpt",
-      " M evidence/generated/vivado/post_synth_drc_p6_local_transport.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_lane0.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_lane0_ack.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_lane0_soak.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_lane1.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_lane1_ack.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_two_lane_minimal.rpt",
-      " M evidence/generated/vivado/post_synth_drc_protocol_two_lane_soak.rpt",
-      " M evidence/generated/vivado/post_synth_drc_raw_lane_matrix.rpt",
-      " M evidence/generated/vivado/post_synth_drc_raw_pulse.rpt",
       " M evidence/generated/vivado/post_synth_drc_safe_idle.rpt",
       " M evidence/generated/vivado/post_synth_drc_tfdu_control_idle.rpt"
     ],
@@ -274,13 +221,13 @@
   "errors": [
     "canonical_p0_p8b_offline_regression returned 1"
   ],
-  "generated_at_utc": "2026-07-31T13:39:36+00:00",
+  "generated_at_utc": "2026-07-31T12:28:56+00:00",
   "hardware_actions_executed": false,
   "network_used": false,
   "no_hardware": true,
   "schema_version": 1,
   "source_branch": "codex/p10.1-ax7020-pl-led-activity",
-  "source_commit": "527c29303adc10d7bfc72c794e4a70c5dd3b0ed6",
+  "source_commit": "6fb4e57e4f90a9d75ac141587352d902a6efe296",
   "status": "FAIL",
   "test_id": "P10_1-LED-FULL-OFFLINE-GATE-REPLAY"
 }

@@ -4,9 +4,9 @@
 - `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
 - `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
 - `status`: `FAIL`
-- `source_commit`: `6fb4e57e4f90a9d75ac141587352d902a6efe296`
+- `source_commit`: `527c29303adc10d7bfc72c794e4a70c5dd3b0ed6`
 - `branch`: ``
-- `worktree`: `C:\Users\user\Documents\RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00`
+- `worktree`: `C:\Users\user\Documents\P10L2_av9enec9`
 - `profile`: `D200_D600_8X32`
 - `no_hardware`: `True`
 - `hardware_authorized`: `False`
@@ -17,7 +17,7 @@
 - `p8a_checkpoint_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
 - `p8a_checkpoint_tag`: `p8a-pass`
 - `acceptance_core_path`: `evidence/generated/p8b_acceptance_core.json`
-- `acceptance_core_sha256`: `4f48fdb9d634f3d334949b8425b51d103790f899eb1987f636b2dec531331e86`
+- `acceptance_core_sha256`: `b23a33290518bcc3780910274e7b88f509de45cfbef1bf6b37f6dada86c5bd30`
 - `worst_case_geometry_acceptance`: `PENDING_WITH_EXPLICIT_GAPS`
 - `logic_model_timing_target`: `PASS`
 - `simulator_tool_version`: `Vivado Simulator/xsim 2023.1`
@@ -28,7 +28,7 @@
 ```json
 {
   "acceptance_core_path": "evidence/generated/p8b_acceptance_core.json",
-  "acceptance_core_sha256": "4f48fdb9d634f3d334949b8425b51d103790f899eb1987f636b2dec531331e86",
+  "acceptance_core_sha256": "b23a33290518bcc3780910274e7b88f509de45cfbef1bf6b37f6dada86c5bd30",
   "branch": "",
   "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
   "failures": [
@@ -69,10 +69,7 @@
   },
   "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
   "p8a_checkpoint_tag": "p8a-pass",
-  "pending": [
-    "P8B-P0-P7-REGRESSION",
-    "P8B-OFFLINE-FULL-REGRESSION"
-  ],
+  "pending": [],
   "preserved_scope": {
     "CURRENT_Z7010_PLATFORM_ACCEPTANCE": "PLATFORM_LIMITED_PASS",
     "FINAL_PRODUCT_HARDWARE_ACCEPTANCE": "PENDING_HW",
@@ -160,7 +157,7 @@
   },
   "schema_version": 1,
   "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "6fb4e57e4f90a9d75ac141587352d902a6efe296",
+  "source_commit": "527c29303adc10d7bfc72c794e4a70c5dd3b0ed6",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
   "status": "FAIL",
   "tests": [
@@ -340,24 +337,24 @@
     },
     {
       "details": {
-        "parent_offline_gate": false
+        "parent_offline_gate": true
       },
       "evidence_path": "evidence/generated/offline_gate_summary.json",
       "profile": "P8B_OFFLINE_LOGIC_MODEL",
-      "status": "PENDING_FOCUSED_RUN",
+      "status": "PASS",
       "test_id": "P8B-P0-P7-REGRESSION"
     },
     {
       "details": {
-        "parent_offline_gate": false
+        "parent_offline_gate": true
       },
       "evidence_path": "evidence/generated/offline_gate_summary.json",
       "profile": "P8B_OFFLINE_LOGIC_MODEL",
-      "status": "PENDING_FOCUSED_RUN",
+      "status": "PASS",
       "test_id": "P8B-OFFLINE-FULL-REGRESSION"
     }
   ],
-  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00",
+  "worktree": "C:\\Users\\user\\Documents\\P10L2_av9enec9",
   "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
 }
 ```

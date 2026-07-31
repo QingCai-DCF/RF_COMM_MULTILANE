@@ -53,7 +53,7 @@ test_state_rejects_p7_regression (tests.test_p8a_consistency.P8AConsistencyTests
 test_state_requires_legacy_ab_l1_record (tests.test_p8a_consistency.P8AConsistencyTests.test_state_requires_legacy_ab_l1_record) ... ok
 
 ----------------------------------------------------------------------
-Ran 12 tests in 15.378s
+Ran 12 tests in 15.413s
 
 OK
 ```
@@ -1508,10 +1508,10 @@ M4_PS_DRIVER_C_COMPILE=PASS
 
 ```
 
-## m5_vivado_nonhardware_build: PASS
+## m5_vivado_nonhardware_build: FAIL
 
 ```text
-M5_VIVADO_NONHARDWARE_BUILD=PASS
+M5_VIVADO_NONHARDWARE_BUILD=FAIL
 VIVADO_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BAT_AVAILABLE=1
 VIVADO_EXECUTABLE=D:\Xilinx\Vivado\2023.1\bin\vivado.bat
@@ -1530,15 +1530,15 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_tfdu_physical_module_safety.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/tfdu_lane_phy.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1572,9 +1572,9 @@ source xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
-$finish called at time : 605 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
+$finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:38:47 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:27:59 2026...
 
 ```
 
@@ -1589,11 +1589,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1623,9 +1623,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
-$finish called at time : 1685 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
+$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:38:51 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:04 2026...
 
 ```
 
@@ -1640,9 +1640,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_frame_l1.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_frame_l1.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_frame_l1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_lane0_frame_crc.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_lane0_frame_crc.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1671,9 +1671,9 @@ source xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_FRAME_CRC_PASS=1
-$finish called at time : 145 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_lane0_frame_crc.sv" Line 195
+$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:38:55 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:08 2026...
 
 ```
 
@@ -1688,11 +1688,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1723,9 +1723,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
-$finish called at time : 11705 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
+$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:39:00 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:13 2026...
 
 ```
 
@@ -1740,9 +1740,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_arq_l2.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_arq_l2.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_arq_l2
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_lane0_ack_only.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_lane0_ack_only.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_ack_only
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1771,9 +1771,9 @@ source xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_ACK_ONLY_PASS=1
-$finish called at time : 425 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_lane0_ack_only.sv" Line 181
+$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:39:04 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:17 2026...
 
 ```
 
@@ -1788,9 +1788,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_axi_regs_new
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1819,9 +1819,9 @@ source xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_AXI_REGS_NEW_PASS=1
-$finish called at time : 266 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_ir_axi_regs_new.sv" Line 177
+$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:39:09 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:22 2026...
 
 ```
 
@@ -1836,9 +1836,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/rtl/ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/rtl/ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_multilane_scheduler
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1867,23 +1867,23 @@ source xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
-$finish called at time : 146 ns : File "C:/Users/user/Documents/P10L2_av9enec9/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
+$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_P10_1_LED_GATE_canonical_p0_p8b_offline_regression_0wjlfx00/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Fri Jul 31 21:39:13 2026...
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 20:28:26 2026...
 
 ```
 
-## generate_plan_completion_audit: PASS
+## generate_plan_completion_audit: FAIL
 
 ```text
 PLAN_COMPLETION_AUDIT_GENERATED=1
-PLAN_COMPLETION_AUDIT_STATUS=PASS
-PLAN_COMPLETION_AUDIT_HARD_FAILS=0
+PLAN_COMPLETION_AUDIT_STATUS=FAIL
+PLAN_COMPLETION_AUDIT_HARD_FAILS=1
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 ```
 
-## plan_completion_static: PASS
+## plan_completion_static: FAIL
 
 ```text
 PLAN_MARKER_PROJECT_BOOTSTRAP_DONE=1
@@ -1902,9 +1902,9 @@ PLAN_MARKER_TFDU_SAFETY_DOC_CREATED=1
 PLAN_MARKER_NEW_RTL_SKELETON_CREATED=1
 PLAN_MARKER_REGISTER_MAP_SINGLE_SOURCE_CREATED=1
 PLAN_MARKER_NO_HARDWARE_ACTIONS_EXECUTED=1
-PLAN_OFFLINE_GATES_RAN_WITHOUT_HARD_FAIL=1
+PLAN_OFFLINE_GATES_RAN_WITHOUT_HARD_FAIL=0
 PLAN_OFFLINE_SUMMARY_NO_HARDWARE_TRUE=1
-PLAN_OFFLINE_RESULTS_NO_HARD_FAIL=1
+PLAN_OFFLINE_RESULTS_NO_HARD_FAIL=0
 PLAN_NO_HARDWARE_SCAN_PASS=1
 PLAN_GATE_PROJECT_INTEGRITY_PASS=1
 PLAN_GATE_P8A_UNIT_TESTS_PASS=1
@@ -1926,9 +1926,9 @@ PLAN_GATE_SCHEDULER_STATIC_CHECKS_PASS=1
 PLAN_GATE_M5_STATIC_NONHARDWARE_BUILD_CHECKS_PASS=1
 PLAN_GATE_M6_STATIC_HARDWARE_PREP_CHECKS_PASS=1
 PLAN_GATE_M6_REFUSAL_RUNTIME_PASS=1
-PLAN_GATE_GENERATE_PLAN_COMPLETION_AUDIT_PASS=1
+PLAN_GATE_GENERATE_PLAN_COMPLETION_AUDIT_PASS=0
 PLAN_GATE_PS_DRIVER_C_COMPILE_PASS_OR_PENDING_TOOL=1
-PLAN_GATE_M5_VIVADO_NONHARDWARE_BUILD_PASS_OR_PENDING_TOOL=1
+PLAN_GATE_M5_VIVADO_NONHARDWARE_BUILD_PASS_OR_PENDING_TOOL=0
 PLAN_GATE_LANE_PHY_SIM_PASS_OR_PENDING_TOOL=1
 PLAN_GATE_M2_4PPM_CODEC_SIM_PASS_OR_PENDING_TOOL=1
 PLAN_GATE_M2_FRAME_L1_SIM_PASS_OR_PENDING_TOOL=1
@@ -1946,8 +1946,8 @@ PLAN_FORBIDDEN_CLAIM_ROTATION_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_TWO_HOUR_SOAK_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_EIGHT_LANE_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_AB_L1_FIXED_ABSENT=1
-PLAN_AUDIT_STATUS_RECORDED=1
-PLAN_AUDIT_OFFLINE_STATUS_RECORDED=1
+PLAN_AUDIT_STATUS_RECORDED=0
+PLAN_AUDIT_OFFLINE_STATUS_RECORDED=0
 PLAN_AUDIT_P8A_BASELINE_RECORDED=1
 PLAN_AUDIT_SV_PORT_CONTRACT_RECORDED=1
 PLAN_AUDIT_M4_PS_DRIVER_TRACE_RECORDED=1
@@ -1965,7 +1965,7 @@ PLAN_AUDIT_IVERILOG_ABSENCE_RECORDED=1
 PLAN_AUDIT_VERILATOR_ABSENCE_RECORDED=1
 PLAN_AUDIT_VITIS_CROSS_GCC_RECORDED=1
 PLAN_AUDIT_PS_DRIVER_CROSS_COMPILE_RECORDED=1
-PLAN_COMPLETION_STATIC=PASS
+PLAN_COMPLETION_STATIC=FAIL
 
 ```
 

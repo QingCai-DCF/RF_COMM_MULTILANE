@@ -263,6 +263,10 @@ def main() -> int:
                     "evidence/generated/plan_completion_audit.md",
                     "evidence/generated/p8b_state_consistency_summary.json",
                     "evidence/generated/p8b_state_consistency_summary.md",
+                    "evidence/generated/p8b_simulation_gate_summary.json",
+                    "evidence/generated/p8b_simulation_gate_summary.md",
+                    "evidence/generated/p8b_xsim/mapping_unit.log",
+                    "evidence/generated/p8b_xsim/phase_trajectory.log",
                 ],
             },
         ]

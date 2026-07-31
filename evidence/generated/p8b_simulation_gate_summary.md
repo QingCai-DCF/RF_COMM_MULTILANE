@@ -12,7 +12,7 @@
   "mapping_unit": {
     "commands": [
       {
-        "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_path_mapping_pkg.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_path_mapping_engine.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_bank_lane_crossbar.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_path_epoch_commit.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\sim\\tb\\tb_p8b_mapping_unit.sv",
+        "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i <REPO_ROOT>\\rtl <REPO_ROOT>\\rtl\\ir_path_mapping_pkg.sv <REPO_ROOT>\\rtl\\ir_path_mapping_engine.sv <REPO_ROOT>\\rtl\\ir_bank_lane_crossbar.sv <REPO_ROOT>\\rtl\\ir_path_epoch_commit.sv <REPO_ROOT>\\sim\\tb\\tb_p8b_mapping_unit.sv",
         "returncode": 0
       },
       {
@@ -25,7 +25,7 @@
       }
     ],
     "log_path": "evidence/generated/p8b_xsim/mapping_unit.log",
-    "log_sha256": "cbe4471f803b4a13f7680fe9fd9d2d30c4ac76b4ebd168df8a8bed50140da969",
+    "log_sha256": "49db8751192d8513119305393dfc4cf51817a6c23217e01835042ad3a868cace",
     "marker": "TB_P8B_MAPPING_UNIT_PASS=1",
     "marker_seen": true,
     "name": "mapping_unit",
@@ -35,7 +35,7 @@
   "phase_trajectory": {
     "commands": [
       {
-        "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_path_mapping_pkg.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_phase_validity_guard.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\rtl\\ir_handover_metrics.sv C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE\\sim\\tb\\tb_p8b_phase_trajectory.sv",
+        "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat -sv -i <REPO_ROOT>\\rtl <REPO_ROOT>\\rtl\\ir_path_mapping_pkg.sv <REPO_ROOT>\\rtl\\ir_phase_validity_guard.sv <REPO_ROOT>\\rtl\\ir_handover_metrics.sv <REPO_ROOT>\\sim\\tb\\tb_p8b_phase_trajectory.sv",
         "returncode": 0
       },
       {
@@ -48,7 +48,7 @@
       }
     ],
     "log_path": "evidence/generated/p8b_xsim/phase_trajectory.log",
-    "log_sha256": "e99f810fbf227389846b88e3483efb294560de9069db6d951fc09300d4c24309",
+    "log_sha256": "22495b96fa0eb71a11df4d2dfa24194fd96347f31c3a84bb807e728e1c625907",
     "marker": "TB_P8B_PHASE_TRAJECTORY_PASS=1",
     "marker_seen": true,
     "name": "phase_trajectory",

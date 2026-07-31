@@ -276,7 +276,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_path_mapping_engine.sv` — `248691b1186dfcd4524e8a988aa2424e4b2853852fea2fb645c0ac4c66613d2c`
 - `sim/tb/tb_p8b_mapping_unit.sv` — `7d7baaa638ebd81da3a44ada810d324252b47602472de493e5a1dad5eae5e30a`
-- `evidence/generated/p8b_simulation_gate_summary.json` — `c9debf536967242b5776159574936154e943726c2782909c787308985369ab12`
+- `evidence/generated/p8b_simulation_gate_summary.json` — `fe58521eb5dd9052ff6a65df3af1b875392d1044a0c8c5e16bf65167d5f2b863`
 
 ### `MAP-006`
 
