@@ -1,0 +1,67 @@
+{
+  "abz_candidate_ppr": [
+    1024,
+    2048,
+    4096
+  ],
+  "current_run_hardware_authorization": false,
+  "current_tfdu_module_count": 4,
+  "documents": [
+    {
+      "bytes": 1369,
+      "path": "docs/P11_HARDWARE_PREREQUISITES.md",
+      "sha256": "f58a1318c19accbac283f5ac95b56b387f759bbcb0d614aeaf623242a08da334"
+    },
+    {
+      "bytes": 1140,
+      "path": "docs/P11_FIXTURE_REQUIREMENTS.md",
+      "sha256": "b6e769ffb5db946288a2832d581cfa7e931e4c174a040525ab35ebdd3c60281c"
+    },
+    {
+      "bytes": 1500,
+      "path": "docs/P11_ABZ_INPUT_REQUIREMENTS.md",
+      "sha256": "f34a65ba9532105395a3a8ada8810b7259d4e7e3de9d8f5239423f433a3ee311"
+    },
+    {
+      "bytes": 1218,
+      "path": "docs/P11_FIVE_MODULE_INVENTORY_PLAN.md",
+      "sha256": "3d05ecf89ea208f061125de0e50642c0d4d1ca5f9cb78536424a3a20369962f5"
+    },
+    {
+      "bytes": 954,
+      "path": "docs/plans/P10_2_CROSSTALK_AND_1PLUS1_PLAN.md",
+      "sha256": "471a15e17f293e6f2ab892f63fb72fabaf31fe99effbf4d24283b371e7370a6c"
+    },
+    {
+      "bytes": 997,
+      "path": "config/p10_2_crosstalk_matrix.yaml",
+      "sha256": "7b2df4feb95563fa237e6363ef107cb3beef39e2bb8597783ac7687bdba40ee0"
+    }
+  ],
+  "errors": [],
+  "fixture_definition": {
+    "fixed_modules": 4,
+    "fixed_spacing_degrees": 11.25,
+    "geometry": "canonical nominal D200/D600",
+    "rotating_modules": 1
+  },
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "hardware_scope_promoted": false,
+  "minimum_required_tfdu_module_count": 5,
+  "missing_prerequisites": [
+    "one additional compatible TFDU6102 small board",
+    "as-built four-fixed-module fixture",
+    "as-built one-rotating-module fixture",
+    "selected and electrically verified ABZ/phase input",
+    "bounded controllable bidirectional motion source",
+    "P11-specific wiring/profile/pinmap/XDC",
+    "new current-run hardware authorization"
+  ],
+  "no_hardware": true,
+  "p11_hardware_ready": false,
+  "p11_official_stage_status": "NOT_STARTED",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-P11-READINESS-PACKAGE"
+}

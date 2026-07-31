@@ -1,0 +1,122 @@
+{
+  "arm_compiler": "D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe",
+  "artifacts": [
+    {
+      "bytes": 346012,
+      "path": "evidence/generated/p10_1_software/p10_1_host_native_test.exe",
+      "sha256": "373f87088a4fd4a1faefc408f768f0ee82a5d72375c4b6262ac4d53f1aec0a2c"
+    },
+    {
+      "bytes": 66264,
+      "path": "evidence/generated/p10_1_software/p10_1_fixed_performance.elf",
+      "sha256": "603f7bb4a2302d141ae12f75f5ca6444071061463de25f595ef5612c85fc791e"
+    },
+    {
+      "bytes": 66264,
+      "path": "evidence/generated/p10_1_software/p10_1_rotating_performance.elf",
+      "sha256": "35a8c04c3ff750a6702773c8784e564c3e9754ff1474a2576960507a549660f7"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "ethernet_dependency": false,
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "generated_header_consistent": true,
+  "hal_ports": [
+    "bare_metal",
+    "FreeRTOS",
+    "host_native"
+  ],
+  "hardware_actions_executed": false,
+  "host_compiler": "D:\\Xilinx\\Vivado\\2023.1\\tps\\mingw\\9.3.0\\win64.o\\nt\\bin\\gcc.exe",
+  "jtag_target_order_assumption": false,
+  "logs": [
+    {
+      "path": "evidence/generated/p10_1_software/host_native_build.log",
+      "sha256": "a5fbe509864a75d1d2464f5e32ac13e7acf8b0cd95c2acb3a90c2801877734de"
+    },
+    {
+      "path": "evidence/generated/p10_1_software/host_native_run.log",
+      "sha256": "280008b0d23fda583634752048f6fedf64b8b670c62d1a934d3f230c6ff74e4b"
+    },
+    {
+      "path": "evidence/generated/p10_1_software/fixed_arm_build.log",
+      "sha256": "d7ec2e2f50b57814ad215782ef66514e405b190ff1a29370710c604bed51de2c"
+    },
+    {
+      "path": "evidence/generated/p10_1_software/fixed_arm_readelf.log",
+      "sha256": "d34491a0e417d74abf948f10244e665922845743d45ce765540e83faadf69333"
+    },
+    {
+      "path": "evidence/generated/p10_1_software/rotating_arm_build.log",
+      "sha256": "2467deda721a346e7f4be488f206bc6198f055c0811c8e838d9b12703cfa4df8"
+    },
+    {
+      "path": "evidence/generated/p10_1_software/rotating_arm_readelf.log",
+      "sha256": "5d5755f059efbcf1d0f55accbeb7c691e5054f03e3eb81876eba633b4b19a6ac"
+    }
+  ],
+  "no_hardware": true,
+  "os_independent_core": true,
+  "role_fixed_at_compile_time": true,
+  "schema_version": 1,
+  "source_sha256": [
+    {
+      "path": "software/ps_driver/p10_1_service.c",
+      "sha256": "469434e42f7d6f818d67517bf90c69fd9fae0ef65fa94d47ec623529c9915282"
+    },
+    {
+      "path": "software/ps_driver/p10_1_trace.c",
+      "sha256": "18b7613a2e7f0c38319fced81db418ab86fc4fecc9efa7af9bdf32bab8a7a202"
+    },
+    {
+      "path": "software/ps_driver/p10_1_hal_baremetal.c",
+      "sha256": "bbcd201f788795e1b95d9ec3e5a703e5cb7bfa61e59a56084f2116ab3870daa9"
+    },
+    {
+      "path": "software/ps_driver/p10_1_hal_freertos.c",
+      "sha256": "a27dedf169c75006bda25299504682f02750bf9f663dd828f8d09b3d89a1d4c9"
+    },
+    {
+      "path": "software/ps_driver/p10_1_hal_host.c",
+      "sha256": "fce3d31ef853b6aee17970dd6dd0bd2f63310c1ffaa42d89ebc9b681a010a32b"
+    },
+    {
+      "path": "software/ps_driver/p10_1_service.h",
+      "sha256": "25ab064a235de4a77221eef8b82ab74fd1ab19eef879794e595d77e66e69ecfd"
+    },
+    {
+      "path": "software/ps_driver/p10_1_hal.h",
+      "sha256": "5c52129cb4e24c03a860f53535cc910d26d077a1efcfb728adf89be489247ef1"
+    },
+    {
+      "path": "software/ps_driver/p10_1_contract.h",
+      "sha256": "aab30e08e733ff58367229cd3d51a75221b1ab7ff7a3d7eb2a3074d2ff96ceb9"
+    },
+    {
+      "path": "scripts/p10_1_host_control.py",
+      "sha256": "4192fabbf58625f99758443deeb8f0efb1ce4f6d25075f46863c2291135c154f"
+    },
+    {
+      "path": "scripts/decode_p10_1_trace.py",
+      "sha256": "55da43abf456e5a8191929488152672d432745706bee390424262085f910fad8"
+    },
+    {
+      "path": "scripts/report_p10_1_performance.py",
+      "sha256": "b7012f106e88573afebb5d76950bbd92fc11d2a992d72e6e752132fb8956a488"
+    },
+    {
+      "path": "scripts/recompute_p10_performance.py",
+      "sha256": "4dee78fbfcbc17f69b44d4a1ff65e3972fa2b7992521ebc7fda2e3dd1e623fa4"
+    }
+  ],
+  "status": "PASS",
+  "task_interfaces": [
+    "DMA completion task",
+    "performance control task",
+    "trace drain task",
+    "watchdog",
+    "telemetry"
+  ],
+  "test_id": "P10_1-DUAL-ROLE-SOFTWARE-BUILD"
+}

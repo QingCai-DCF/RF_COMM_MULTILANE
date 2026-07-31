@@ -1,0 +1,7 @@
+COMMAND=D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe -std=c11 -Wall -Wextra -Werror -Os -ffreestanding -mcpu=cortex-a9 -marm -Isoftware/ps_driver -DP10_1_ENDPOINT_ROLE=2 software/ps_driver/p10_1_service.c software/ps_driver/p10_1_trace.c software/ps_driver/p10_1_hal_baremetal.c software/ps_driver/p10_1_hal_freertos.c software/ps_driver/p10_1_performance_entry.c software/ps_driver/p10_1_minicrt.c -nostdlib -Wl,-T,software/ps_driver/p10_1_offline.ld -Wl,-Map,C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1\evidence\generated\p10_1_software\p10_1_rotating_performance.map -Wl,--gc-sections -lgcc -o C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1\evidence\generated\p10_1_software\p10_1_rotating_performance.elf
+RETURN_CODE=0
+STDOUT_BEGIN
+STDOUT_END
+STDERR_BEGIN
+d:/xilinx/vitis/2023.1/gnu/aarch32/nt/gcc-arm-none-eabi/x86_64-oesdk-mingw32/usr/bin/arm-xilinx-eabi/../../libexec/arm-xilinx-eabi/gcc/arm-xilinx-eabi/12.2.0/ld.exe: warning: .note.gnu.build-id section discarded, --build-id ignored
+STDERR_END

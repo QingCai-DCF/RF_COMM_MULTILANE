@@ -1,0 +1,168 @@
+{
+  "commands": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_config.py --write",
+      "log": "evidence/generated/p10_1_raw/offline_gate/config_generation.log",
+      "name": "config_generation",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/recompute_p10_performance.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/historical_recompute.log",
+      "name": "historical_recompute",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m unittest discover -s tests/p10_1 -p test_*.py -v",
+      "log": "evidence/generated/p10_1_raw/offline_gate/finalizer_unit_tests.log",
+      "name": "finalizer_unit_tests",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/model_p10_1_dual_node_pipeline.py --full",
+      "log": "evidence/generated/p10_1_raw/offline_gate/pipeline_model.log",
+      "name": "pipeline_model",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_software.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/software_build.log",
+      "name": "software_build",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_xsim.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/xsim.log",
+      "name": "xsim",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_ax7020.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/ax7020_dual_build.log",
+      "name": "ax7020_dual_build",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_hardware_performance.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/hardware_runner_dry_run.log",
+      "name": "hardware_runner_dry_run",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_readiness.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p11_readiness.log",
+      "name": "p11_readiness",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/update_p10_1_requirements_state.py --write",
+      "log": "evidence/generated/p10_1_raw/offline_gate/requirements_state_update.log",
+      "name": "requirements_state_update",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --write",
+      "log": "evidence/generated/p10_1_raw/offline_gate/project_status_generation.log",
+      "name": "project_status_generation",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --write",
+      "log": "evidence/generated/p10_1_raw/offline_gate/requirement_traceability_generation.log",
+      "name": "requirement_traceability_generation",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_intake.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/repo_intake.log",
+      "name": "repo_intake",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p10_existing.py --json-summary",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p10_verify_existing.log",
+      "name": "p10_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p9_existing.py --json-summary",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p9_verify_existing.log",
+      "name": "p9_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p8e_verify_existing.log",
+      "name": "p8e_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p8c_existing.py --json-summary",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p8c_verify_existing.log",
+      "name": "p8c_verify_existing",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m unittest discover -s tests/p8c -p test_*.py -v",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p8c_current_unit_regression.log",
+      "name": "p8c_current_unit_regression",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8c_safety_static.py --json",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p8c_current_static_regression.log",
+      "name": "p8c_current_static_regression",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_register_headers.py --verify",
+      "log": "evidence/generated/p10_1_raw/offline_gate/register_map_consistency.log",
+      "name": "register_map_consistency",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "log": "evidence/generated/p10_1_raw/offline_gate/p8a_state_requirements_consistency.log",
+      "name": "p8a_state_requirements_consistency",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "log": "evidence/generated/p10_1_raw/offline_gate/no_hardware_static_scan.log",
+      "name": "no_hardware_static_scan",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "log": "evidence/generated/p10_1_raw/offline_gate/git_diff_check.log",
+      "name": "git_diff_check",
+      "return_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "schema_version": 1
+}

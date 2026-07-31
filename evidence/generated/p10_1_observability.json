@@ -1,0 +1,519 @@
+{
+  "counter_snapshot": {
+    "atomic_versioned": true,
+    "counter_width_bits": 64,
+    "counters": [
+      "bytes",
+      "frames",
+      "descriptors",
+      "stalls",
+      "retries",
+      "acks",
+      "queue_occupancy",
+      "scheduler_idle",
+      "duty_defer",
+      "direction_quiet"
+    ],
+    "generation": 9
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "pl_event_fifo": {
+    "depth": 256,
+    "events": [
+      "AXIS_ACCEPT",
+      "DESC_START",
+      "DESC_COMPLETE",
+      "FRAME_FIRST",
+      "FRAME_LAST",
+      "ACK_RX",
+      "SACK_RX",
+      "RETRY",
+      "QUEUE_EMPTY",
+      "QUEUE_FULL",
+      "LANE_SELECT",
+      "DUTY_DEFER",
+      "PERMIT_DEFER",
+      "DIRECTION_SWITCH",
+      "REMOTE_COMMIT_NOTIFY"
+    ],
+    "nonblocking_overflow": true
+  },
+  "ps_trace_ring": {
+    "depth": 1024,
+    "event_count": 25000,
+    "fixed_record_size_bytes": 32,
+    "overflow_blocks_fast_path": false,
+    "overflow_count": 23976,
+    "preallocated": true,
+    "snapshot": {
+      "clear_generation": 0,
+      "overflow_count": 23976,
+      "read_count": 0,
+      "records": [
+        {
+          "arg0": 0,
+          "arg1": 0,
+          "event": "PERF_START",
+          "generation": 0,
+          "timestamp": 0
+        },
+        {
+          "arg0": 1,
+          "arg1": 0,
+          "event": "OBJECT_ALLOC",
+          "generation": 0,
+          "timestamp": 1
+        },
+        {
+          "arg0": 2,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_START",
+          "generation": 0,
+          "timestamp": 2
+        },
+        {
+          "arg0": 3,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_END",
+          "generation": 0,
+          "timestamp": 3
+        },
+        {
+          "arg0": 4,
+          "arg1": 0,
+          "event": "CRC_START",
+          "generation": 0,
+          "timestamp": 4
+        },
+        {
+          "arg0": 5,
+          "arg1": 0,
+          "event": "CRC_END",
+          "generation": 0,
+          "timestamp": 5
+        },
+        {
+          "arg0": 6,
+          "arg1": 0,
+          "event": "SHA_START",
+          "generation": 0,
+          "timestamp": 6
+        },
+        {
+          "arg0": 7,
+          "arg1": 0,
+          "event": "SHA_END",
+          "generation": 0,
+          "timestamp": 7
+        },
+        {
+          "arg0": 8,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_START",
+          "generation": 0,
+          "timestamp": 8
+        },
+        {
+          "arg0": 9,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_END",
+          "generation": 0,
+          "timestamp": 9
+        },
+        {
+          "arg0": 10,
+          "arg1": 0,
+          "event": "DESC_SUBMIT",
+          "generation": 0,
+          "timestamp": 10
+        },
+        {
+          "arg0": 11,
+          "arg1": 0,
+          "event": "DMA_TX_START",
+          "generation": 0,
+          "timestamp": 11
+        },
+        {
+          "arg0": 12,
+          "arg1": 0,
+          "event": "DMA_TX_END",
+          "generation": 0,
+          "timestamp": 12
+        },
+        {
+          "arg0": 13,
+          "arg1": 0,
+          "event": "REMOTE_RX_COMPLETE",
+          "generation": 0,
+          "timestamp": 13
+        },
+        {
+          "arg0": 14,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_START",
+          "generation": 0,
+          "timestamp": 14
+        },
+        {
+          "arg0": 15,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_END",
+          "generation": 0,
+          "timestamp": 15
+        },
+        {
+          "arg0": 16,
+          "arg1": 0,
+          "event": "REASSEMBLY_COMPLETE",
+          "generation": 0,
+          "timestamp": 16
+        },
+        {
+          "arg0": 17,
+          "arg1": 0,
+          "event": "HASH_VERIFY_COMPLETE",
+          "generation": 0,
+          "timestamp": 17
+        },
+        {
+          "arg0": 18,
+          "arg1": 0,
+          "event": "ATOMIC_COMMIT",
+          "generation": 0,
+          "timestamp": 18
+        },
+        {
+          "arg0": 19,
+          "arg1": 0,
+          "event": "OBJECT_FAIL",
+          "generation": 0,
+          "timestamp": 19
+        },
+        {
+          "arg0": 20,
+          "arg1": 0,
+          "event": "PERF_STOP",
+          "generation": 0,
+          "timestamp": 20
+        },
+        {
+          "arg0": 21,
+          "arg1": 0,
+          "event": "PERF_START",
+          "generation": 0,
+          "timestamp": 21
+        },
+        {
+          "arg0": 22,
+          "arg1": 0,
+          "event": "OBJECT_ALLOC",
+          "generation": 0,
+          "timestamp": 22
+        },
+        {
+          "arg0": 23,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_START",
+          "generation": 0,
+          "timestamp": 23
+        },
+        {
+          "arg0": 24,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_END",
+          "generation": 0,
+          "timestamp": 24
+        },
+        {
+          "arg0": 25,
+          "arg1": 0,
+          "event": "CRC_START",
+          "generation": 0,
+          "timestamp": 25
+        },
+        {
+          "arg0": 26,
+          "arg1": 0,
+          "event": "CRC_END",
+          "generation": 0,
+          "timestamp": 26
+        },
+        {
+          "arg0": 27,
+          "arg1": 0,
+          "event": "SHA_START",
+          "generation": 0,
+          "timestamp": 27
+        },
+        {
+          "arg0": 28,
+          "arg1": 0,
+          "event": "SHA_END",
+          "generation": 0,
+          "timestamp": 28
+        },
+        {
+          "arg0": 29,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_START",
+          "generation": 0,
+          "timestamp": 29
+        },
+        {
+          "arg0": 30,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_END",
+          "generation": 0,
+          "timestamp": 30
+        },
+        {
+          "arg0": 31,
+          "arg1": 0,
+          "event": "DESC_SUBMIT",
+          "generation": 0,
+          "timestamp": 31
+        },
+        {
+          "arg0": 32,
+          "arg1": 0,
+          "event": "DMA_TX_START",
+          "generation": 0,
+          "timestamp": 32
+        },
+        {
+          "arg0": 33,
+          "arg1": 0,
+          "event": "DMA_TX_END",
+          "generation": 0,
+          "timestamp": 33
+        },
+        {
+          "arg0": 34,
+          "arg1": 0,
+          "event": "REMOTE_RX_COMPLETE",
+          "generation": 0,
+          "timestamp": 34
+        },
+        {
+          "arg0": 35,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_START",
+          "generation": 0,
+          "timestamp": 35
+        },
+        {
+          "arg0": 36,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_END",
+          "generation": 0,
+          "timestamp": 36
+        },
+        {
+          "arg0": 37,
+          "arg1": 0,
+          "event": "REASSEMBLY_COMPLETE",
+          "generation": 0,
+          "timestamp": 37
+        },
+        {
+          "arg0": 38,
+          "arg1": 0,
+          "event": "HASH_VERIFY_COMPLETE",
+          "generation": 0,
+          "timestamp": 38
+        },
+        {
+          "arg0": 39,
+          "arg1": 0,
+          "event": "ATOMIC_COMMIT",
+          "generation": 0,
+          "timestamp": 39
+        },
+        {
+          "arg0": 40,
+          "arg1": 0,
+          "event": "OBJECT_FAIL",
+          "generation": 0,
+          "timestamp": 40
+        },
+        {
+          "arg0": 41,
+          "arg1": 0,
+          "event": "PERF_STOP",
+          "generation": 0,
+          "timestamp": 41
+        },
+        {
+          "arg0": 42,
+          "arg1": 0,
+          "event": "PERF_START",
+          "generation": 0,
+          "timestamp": 42
+        },
+        {
+          "arg0": 43,
+          "arg1": 0,
+          "event": "OBJECT_ALLOC",
+          "generation": 0,
+          "timestamp": 43
+        },
+        {
+          "arg0": 44,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_START",
+          "generation": 0,
+          "timestamp": 44
+        },
+        {
+          "arg0": 45,
+          "arg1": 0,
+          "event": "PAYLOAD_PREP_END",
+          "generation": 0,
+          "timestamp": 45
+        },
+        {
+          "arg0": 46,
+          "arg1": 0,
+          "event": "CRC_START",
+          "generation": 0,
+          "timestamp": 46
+        },
+        {
+          "arg0": 47,
+          "arg1": 0,
+          "event": "CRC_END",
+          "generation": 0,
+          "timestamp": 47
+        },
+        {
+          "arg0": 48,
+          "arg1": 0,
+          "event": "SHA_START",
+          "generation": 0,
+          "timestamp": 48
+        },
+        {
+          "arg0": 49,
+          "arg1": 0,
+          "event": "SHA_END",
+          "generation": 0,
+          "timestamp": 49
+        },
+        {
+          "arg0": 50,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_START",
+          "generation": 0,
+          "timestamp": 50
+        },
+        {
+          "arg0": 51,
+          "arg1": 0,
+          "event": "CACHE_FLUSH_END",
+          "generation": 0,
+          "timestamp": 51
+        },
+        {
+          "arg0": 52,
+          "arg1": 0,
+          "event": "DESC_SUBMIT",
+          "generation": 0,
+          "timestamp": 52
+        },
+        {
+          "arg0": 53,
+          "arg1": 0,
+          "event": "DMA_TX_START",
+          "generation": 0,
+          "timestamp": 53
+        },
+        {
+          "arg0": 54,
+          "arg1": 0,
+          "event": "DMA_TX_END",
+          "generation": 0,
+          "timestamp": 54
+        },
+        {
+          "arg0": 55,
+          "arg1": 0,
+          "event": "REMOTE_RX_COMPLETE",
+          "generation": 0,
+          "timestamp": 55
+        },
+        {
+          "arg0": 56,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_START",
+          "generation": 0,
+          "timestamp": 56
+        },
+        {
+          "arg0": 57,
+          "arg1": 0,
+          "event": "CACHE_INVALIDATE_END",
+          "generation": 0,
+          "timestamp": 57
+        },
+        {
+          "arg0": 58,
+          "arg1": 0,
+          "event": "REASSEMBLY_COMPLETE",
+          "generation": 0,
+          "timestamp": 58
+        },
+        {
+          "arg0": 59,
+          "arg1": 0,
+          "event": "HASH_VERIFY_COMPLETE",
+          "generation": 0,
+          "timestamp": 59
+        },
+        {
+          "arg0": 60,
+          "arg1": 0,
+          "event": "ATOMIC_COMMIT",
+          "generation": 0,
+          "timestamp": 60
+        },
+        {
+          "arg0": 61,
+          "arg1": 0,
+          "event": "OBJECT_FAIL",
+          "generation": 0,
+          "timestamp": 61
+        },
+        {
+          "arg0": 62,
+          "arg1": 0,
+          "event": "PERF_STOP",
+          "generation": 0,
+          "timestamp": 62
+        },
+        {
+          "arg0": 63,
+          "arg1": 0,
+          "event": "PERF_START",
+          "generation": 0,
+          "timestamp": 63
+        }
+      ],
+      "snapshot_generation": 1,
+      "write_count": 1024
+    },
+    "status": "PASS",
+    "stored_record_count": 1024
+  },
+  "raw_trace": {
+    "path": "evidence/generated/p10_1_raw/p10_1_trace_samples.json",
+    "sha256": "47bcb61e1486cb592ae5d7580fa81d74f855ae4e8d3d8ba35b695f872d4d5045"
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-OBSERVABILITY"
+}

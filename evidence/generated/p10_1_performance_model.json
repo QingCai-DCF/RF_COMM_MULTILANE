@@ -1,0 +1,68 @@
+{
+  "bottleneck_share": 0.8360374126620206,
+  "ceilings_bps": {
+    "CACHE": 4000000000.0,
+    "CRC": 2560000000.0,
+    "DMA": 1600000000.0,
+    "FRAME": 7185454.545454546,
+    "PHY_RAW": 8000000.0,
+    "PL_PHY": 6688299.301296164,
+    "PS_GENERATION": 1600000000.0,
+    "REMOTE_VERIFY": 1200000000.0,
+    "RFAP_USEFUL": 7180195.613120717,
+    "SHA": 1440000000.0
+  },
+  "current_run_hardware_authorization": false,
+  "efficiencies": {
+    "ack": 0.965,
+    "axis": 0.995,
+    "direction": 0.985,
+    "frame_payload": 0.8981818181818182,
+    "retry": 0.9999,
+    "rfap_useful": 0.9992681141741888,
+    "scheduler": 0.985
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hard_target_bps": 4000000.0,
+  "hard_target_status": "PASS",
+  "hardware_actions_executed": false,
+  "input_profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+  "minimum_hard_target_parameters": {
+    "ack_threshold": 8,
+    "buffer_count": 4,
+    "descriptor_batch": 4,
+    "hard_target_pass": true,
+    "modeled_application_goodput_bps": 5618171.413088779,
+    "outstanding": 32,
+    "ring_depth": 16,
+    "stretch_target_pass": true
+  },
+  "model_scope": "OFFLINE_FEASIBILITY_NOT_REAL_HARDWARE_GOODPUT",
+  "modeled_application_goodput_bps": 6688299.301296164,
+  "no_hardware": true,
+  "primary_modeled_bottleneck": "PL_PHY",
+  "required_buffer_count": 4,
+  "required_descriptor_batch": 4,
+  "required_outstanding": 32,
+  "required_ring_depth": 16,
+  "schema_version": 1,
+  "selected": {
+    "ack_threshold": 16,
+    "buffer_count": 8,
+    "descriptor_batch": 16,
+    "hard_target_pass": true,
+    "modeled_application_goodput_bps": 6688299.301296164,
+    "outstanding": 32,
+    "ring_depth": 64,
+    "stretch_target_pass": true
+  },
+  "sensitivity_record": {
+    "path": "evidence/generated/p10_1_raw/p10_1_performance_model_sweep.json",
+    "sha256": "2af7a86f6272fb9dd98b9e2c4d1609e9c391778eb2522488354839a756b38cee"
+  },
+  "status": "PASS",
+  "stretch_target_bps": 4800000.0,
+  "stretch_target_status": "PASS",
+  "test_id": "P10_1-DUAL-NODE-PERFORMANCE-MODEL"
+}

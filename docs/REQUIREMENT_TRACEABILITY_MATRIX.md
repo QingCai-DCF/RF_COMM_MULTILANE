@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 127
-PASS: 116
-PENDING: 11
+REQUIREMENT_COUNT: 147
+PASS: 132
+PENDING: 15
 FAIL: 0
 WAIVED: 0
 ```
@@ -78,8 +78,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `DMA-004` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Descriptor generation rejects stale completions after wrap or reset. |
 | `RFAP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` | RFAP v1/P7 vectors and legacy fallback remain compatible. |
 | `RFAP-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` | RFAP vNext streaming validates large objects with bounded memory and atomic publish. |
-| `PERF-MODEL-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. |
-| `PERF-MODEL-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. |
+| `PERF-MODEL-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension also closes a complete dual-node streaming sensitivity model without changing the original P8D scope. |
+| `PERF-MODEL-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty. |
 | `BUILD-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-DUAL-TARGET-BUILD-MATRIX` | `evidence/generated/p8e_build_matrix_summary.json` | Z7010 and exact-part Z7020 use a common-source reproducible build matrix. |
 | `BUILD-002` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-SOURCE-MANIFEST-COMMON-CORE` | `evidence/generated/p8e_source_manifest_summary.json` | Fixed and rotating endpoint role wrappers remain thin consumers of one common core. |
 | `TIMING-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-DUAL-TARGET-BUILD-MATRIX` | `evidence/generated/p8e_build_matrix_summary.json` | All formal core clocks have nonnegative routed setup and hold slack with zero TNS. |
@@ -143,6 +143,26 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10-EVID-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-FASTTRACK-FINAL` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` | One complete formal A-J run has consistent summaries, raw logs, SHA-256 manifest, and double final shutdown evidence. |
 | `P10-CLOSEOUT-001` | `PASS` | P10_POST_ACCEPTANCE_CLOSEOUT | `P10_POST_ACCEPTANCE_CLOSEOUT` | `P10-CLOSEOUT-001` | `evidence/generated/p10_closeout_summary.json` | P10 post-acceptance closeout shall consume the current-run authorization, freeze Git/remote checkpoint metadata, preserve the scoped PASS, and execute no hardware action. |
 | `P10-PERF-MEAS-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY | `P10_POST_ACCEPTANCE_ANALYSIS` | `P10-GOODPUT-MEASUREMENT-AUDIT` | `evidence/generated/p10_goodput_measurement_audit.json` | P10 performance fields shall have reproducible units, numerator, denominator, window, and provenance; unsuitable fields shall not be used for 8-lane or final-product projection. |
+| `PERF-MEAS-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-MEASUREMENT-CONTRACT` | `evidence/generated/p10_1_measurement_contract.json` | Metric names, numerators, windows, units, classes, and provenance shall be explicit and schema-validated. |
+| `PERF-MEAS-002` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-FINALIZER-FIX` | `evidence/generated/p10_1_finalizer_fix.json` | Diagnostic microtransfers shall never be selected as sustained application goodput or scaling evidence. |
+| `PERF-MEAS-003` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-HISTORICAL-RECOMPUTE` | `evidence/generated/p10_1_historical_recompute.json` | Frozen P10 performance evidence shall be reproducibly recomputed without rewriting its historical summary. |
+| `PERF-MEAS-004` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-TIMER-CROSSCHECK` | `evidence/generated/p10_1_timer_crosscheck.json` | Every formal case shall cross-check independent timer sources within the frozen tolerance or report a fixed boundary. |
+| `PERF-FINAL-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-FINALIZER-FIX` | `evidence/generated/p10_1_finalizer_fix.json` | The metric finalizer shall deterministically select by metric, class, direction, eligibility, run, and aggregation rule. |
+| `PERF-OBS-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-OBSERVABILITY` | `evidence/generated/p10_1_observability.json` | The PS service shall provide a preallocated nonblocking trace ring with generation, overflow, snapshot, and clear semantics. |
+| `PERF-OBS-002` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-OBSERVABILITY` | `evidence/generated/p10_1_observability.json` | The PL data path shall provide a nonblocking event FIFO whose overflow cannot stall the fast path. |
+| `PERF-OBS-003` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-OBSERVABILITY` | `evidence/generated/p10_1_observability.json` | Per-stage bytes, descriptors, stalls, queue, ACK, retry, duty, and direction counters shall use coherent snapshots. |
+| `PERF-AUTO-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-AUTONOMOUS-PERF-MODE` | `evidence/generated/p10_1_autonomous_perf_mode.json` | Each endpoint shall support a target-resident deterministic performance data generator controlled at low frequency by the host. |
+| `PERF-AUTO-002` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-AUTONOMOUS-PERF-MODE` | `evidence/generated/p10_1_autonomous_perf_mode.json` | The remote endpoint shall verify length, pattern, CRC32, SHA256, identity, generation, and exactly-once atomic commit. |
+| `PERF-PIPE-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-MULTI-BUFFER-PIPELINE` | `evidence/generated/p10_1_buffer_pipeline.json` | The target service shall support multi-buffer staged ownership with explicit generation and no leak or double reclaim. |
+| `PERF-PIPE-002` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-DESCRIPTOR-BATCHING` | `evidence/generated/p10_1_descriptor_batching.json` | Descriptor rings shall support bounded batching, wrap, exactly-once completion, and zero descriptor leaks. |
+| `PERF-PIPE-003` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-DESCRIPTOR-BATCHING` | `evidence/generated/p10_1_descriptor_batching.json` | Cache maintenance shall be modeled and implemented as a batchable ownership boundary; non-cacheable mode is diagnostic only. |
+| `PERF-STREAM-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-STREAMING-64M` | `evidence/generated/p10_1_streaming_64m.json` | The offline architecture shall stream a 64 MiB object across descriptors with incremental integrity and atomic publication. |
+| `PERF-STREAM-002` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-STREAMING-64M` | `evidence/generated/p10_1_streaming_64m.json` | Abort, reset, duplicate, missing, stale, out-of-order, and wrap cases shall produce no partial, wrong, duplicate, or stale publication. |
+| `HWPREP-P10_1-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `P10_1-HARDWARE-RUNNER-DRY-RUN` | `evidence/generated/p10_1_hardware_dry_run.json` | The future P10.1 hardware runner shall fail closed on authorization, identity, artifact, shutdown, lane, network, motion, and runtime errors. |
+| `PERF-HW-001` | `PENDING` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE` | — | `docs/plans/P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE_PLAN.md` | Real AX7020 sustained application goodput shall meet at least 4.0 Mbit/s in each tested half-duplex direction under the frozen measurement contract. |
+| `P11-READY-001` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIVE_MODULE_INVENTORY_PLAN.md` | P11 shall have a fifth compatible and fully inventoried TFDU6102 small board. |
+| `P11-READY-002` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIXTURE_REQUIREMENTS.md` | P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry. |
+| `P11-READY-003` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_ABZ_INPUT_REQUIREMENTS.md` | P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition budget. |
 
 ## PASS artifact bindings
 
@@ -216,13 +236,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
-- `PROJECT_STATUS.md` — `dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4`
+- `config/project_state.json` — `39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4`
+- `PROJECT_STATUS.md` — `92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
+- `config/project_state.json` — `39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4`
 
 ### `P8A-EVID-001`
 
@@ -232,8 +252,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
-- `PROJECT_STATUS.md` — `dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4`
+- `config/project_state.json` — `39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4`
+- `PROJECT_STATUS.md` — `92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -445,11 +465,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
 - `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
 - `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
+- `evidence/generated/p10_1_performance_model.json` — `5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d`
 
 ### `PERF-MODEL-002`
 
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
 - `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
+- `evidence/generated/p10_1_performance_model.json` — `5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d`
 
 ### `BUILD-001`
 
@@ -858,5 +880,69 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` — `f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3`
 - `scripts/p10_hardware_runtime.py` — `0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24`
 - `software/ps_driver/p9_runtime_main.c` — `9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a`
-- `config/performance/p10_1_measurement_contract.yaml` — `d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559`
+- `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
+
+### `PERF-MEAS-001`
+
+- `evidence/generated/p10_1_measurement_contract.json` — `65204a3821017e8fc07906c6cf94972d06a14476ca5294e5ba0122e49159eaba`
+
+### `PERF-MEAS-002`
+
+- `evidence/generated/p10_1_finalizer_fix.json` — `8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e`
+
+### `PERF-MEAS-003`
+
+- `evidence/generated/p10_1_historical_recompute.json` — `2505a0ade4eb36c2318ce7831153557fb569f344027aa1729d16965a22ff1755`
+
+### `PERF-MEAS-004`
+
+- `evidence/generated/p10_1_timer_crosscheck.json` — `6fa0c12bf125dc9031ce20a39599ce59bbeaf18135bbc38c6436e888e9ec624e`
+
+### `PERF-FINAL-001`
+
+- `evidence/generated/p10_1_finalizer_fix.json` — `8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e`
+
+### `PERF-OBS-001`
+
+- `evidence/generated/p10_1_observability.json` — `3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92`
+
+### `PERF-OBS-002`
+
+- `evidence/generated/p10_1_observability.json` — `3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92`
+
+### `PERF-OBS-003`
+
+- `evidence/generated/p10_1_observability.json` — `3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92`
+
+### `PERF-AUTO-001`
+
+- `evidence/generated/p10_1_autonomous_perf_mode.json` — `fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e`
+
+### `PERF-AUTO-002`
+
+- `evidence/generated/p10_1_autonomous_perf_mode.json` — `fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e`
+
+### `PERF-PIPE-001`
+
+- `evidence/generated/p10_1_buffer_pipeline.json` — `a5a573cfb5f6e3f3da6a569543b955385ef094809cb2d29c5d64fa8801f57c11`
+
+### `PERF-PIPE-002`
+
+- `evidence/generated/p10_1_descriptor_batching.json` — `ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4`
+
+### `PERF-PIPE-003`
+
+- `evidence/generated/p10_1_descriptor_batching.json` — `ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4`
+
+### `PERF-STREAM-001`
+
+- `evidence/generated/p10_1_streaming_64m.json` — `d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a`
+
+### `PERF-STREAM-002`
+
+- `evidence/generated/p10_1_streaming_64m.json` — `d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a`
+
+### `HWPREP-P10_1-001`
+
+- `evidence/generated/p10_1_hardware_dry_run.json` — `1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d`

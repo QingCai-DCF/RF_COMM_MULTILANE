@@ -1,0 +1,40 @@
+COMMAND=D:\Xilinx\Vitis\2023.1\gnu\aarch32\nt\gcc-arm-none-eabi\bin\arm-none-eabi-readelf.exe -h -s C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1\evidence\generated\p10_1_software\p10_1_rotating_performance.elf
+RETURN_CODE=0
+STDOUT_BEGIN
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x100000
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          65984 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         1
+  Size of section headers:           40 (bytes)
+  Number of section headers:         7
+  Section header string table index: 6
+
+Symbol table '.symtab' contains 11 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00100000     0 SECTION LOCAL  DEFAULT    1 
+     2: 00100008     0 SECTION LOCAL  DEFAULT    2 
+     3: 00000000     0 SECTION LOCAL  DEFAULT    3 
+     4: 00000000     0 FILE    LOCAL  DEFAULT  ABS p10_1_performance_entry.c
+     5: 00100000     0 NOTYPE  LOCAL  DEFAULT    1 $a
+     6: 00100008     0 NOTYPE  LOCAL  DEFAULT    2 $d
+     7: 00100008     8 OBJECT  GLOBAL DEFAULT    2 p10_1_max_stream_size
+     8: 00100014     4 OBJECT  GLOBAL DEFAULT    2 p10_1_endpoint_role
+     9: 00100000     8 FUNC    GLOBAL DEFAULT    1 p10_1_performance_entry
+    10: 00100010     4 OBJECT  GLOBAL DEFAULT    2 p10_1_performance_capabil
+STDOUT_END
+STDERR_BEGIN
+STDERR_END

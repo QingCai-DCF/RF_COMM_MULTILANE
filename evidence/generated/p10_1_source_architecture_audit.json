@@ -1,0 +1,137 @@
+{
+  "audited_sources": [
+    {
+      "bytes": 68977,
+      "path": "scripts/p10_hardware_runtime.py",
+      "sha256": "0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24"
+    },
+    {
+      "bytes": 26766,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "56240991cf2e395ab86c4d8acdc5f9fb3fbdcdc7ac7d271c91d6483c1e2364b1"
+    },
+    {
+      "bytes": 12934,
+      "path": "scripts/build_p10_ps_runtime.py",
+      "sha256": "8a6d40c7f4a97ef519b2da67ab67f3bc1099d0708beaf1c82b6641edd2e1eb33"
+    },
+    {
+      "bytes": 289,
+      "path": "software/ps_driver/p10_runtime_main.c",
+      "sha256": "52406eb2e4b20e2da6d4396e31176819f56a959d473acd878615f11706ae501a"
+    },
+    {
+      "bytes": 27021,
+      "path": "rtl/ir_selective_repeat_tx.sv",
+      "sha256": "48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f"
+    },
+    {
+      "bytes": 10841,
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    {
+      "bytes": 5687,
+      "path": "rtl/ir_ack_aggregator.sv",
+      "sha256": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa"
+    },
+    {
+      "bytes": 18777,
+      "path": "rtl/ir_data_plane_top.sv",
+      "sha256": "a3c1441f98539cd3bcc1e646e27de1c8d06559e269c1035235ec82bf90d355af"
+    },
+    {
+      "bytes": 25353,
+      "path": "rtl/p9_axi_dma_peripheral.sv",
+      "sha256": "41dbb3197826c1114b48259b45ac41bc14c5991ba8baf227cd6d10de6acf35b6"
+    },
+    {
+      "bytes": 4614,
+      "path": "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
+      "sha256": "c0db77b1c49e95cc5b36a10213f0600d6a5c9c69a7a07020e29a2e841f9f7e89"
+    },
+    {
+      "bytes": 9117,
+      "path": "scripts/generate_register_headers.py",
+      "sha256": "5b52026aeee3df36ce51a10fcde361810bfd1a5705ecc8f5edf48ddb2f972771"
+    },
+    {
+      "bytes": 13600,
+      "path": "scripts/p10_1_metrics.py",
+      "sha256": "a70e2e3eefd60f64f7e12863a96e3d05f122f99b9f9b6ed5562a087f117ddd27"
+    },
+    {
+      "bytes": 37537,
+      "path": "scripts/model_p10_1_dual_node_pipeline.py",
+      "sha256": "0d4f3c640b5161f0aca5ba8b318701e6d40118c395ebdb11df314df955cf8552"
+    },
+    {
+      "bytes": 15359,
+      "path": "software/ps_driver/p10_1_service.c",
+      "sha256": "469434e42f7d6f818d67517bf90c69fd9fae0ef65fa94d47ec623529c9915282"
+    }
+  ],
+  "bottleneck_candidates": [
+    "host_serialization",
+    "PS_payload_preparation",
+    "memory_copy",
+    "CRC_SHA",
+    "cache_maintenance",
+    "descriptor_submission",
+    "ring_depth",
+    "DMA_burst",
+    "AXIS_backpressure",
+    "PL_queue_starvation",
+    "direction_switching",
+    "ACK_aggregation",
+    "remote_verification",
+    "logging"
+  ],
+  "current_p10_1_path": {
+    "atomic_stream_publish": true,
+    "cache_batching_model": true,
+    "descriptor_batching": true,
+    "fixed_rotating_independent_service_instances": true,
+    "host_commands_per_segment": 0,
+    "host_in_fast_path": false,
+    "multi_buffer_owner_generation": true,
+    "target_resident_generator": true,
+    "target_resident_remote_verifier": true
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "historical_path": {
+    "artificial_inter_object_idle": true,
+    "five_point_seven_k_fields_origin": "one-byte DMA/ring diagnostic global minima",
+    "host_serialization": true,
+    "per_object_mailbox_dump": true,
+    "per_object_ps_command": true,
+    "per_object_receiver_priming": true,
+    "sustained_multi_object_pipeline": false
+  },
+  "immutable_board_bindings": {
+    "fixed": {
+      "jtag_identity": "210249855178",
+      "profile": "P10_AX7020_FIXED_2LANE",
+      "xdc": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+    },
+    "rotating": {
+      "jtag_identity": "210512180081",
+      "profile": "P10_AX7020_ROTATING_2LANE",
+      "xdc": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+    }
+  },
+  "no_hardware": true,
+  "optional_or_renamed_source_candidates": [
+    "software/ps_driver/ir_axi_dma.c",
+    "software/ps_driver/ir_object_service.c",
+    "rtl/ir_axis_dma_adapter.sv"
+  ],
+  "schema_version": 1,
+  "selected_modeled_bottleneck": "PL_PHY",
+  "status": "PASS",
+  "test_id": "P10_1-SOURCE-ARCHITECTURE-AUDIT",
+  "z7010_xdc_reused": false
+}

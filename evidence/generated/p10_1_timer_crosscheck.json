@@ -1,0 +1,49 @@
+{
+  "atomic_snapshot": true,
+  "cases": [
+    {
+      "endpoint": "fixed",
+      "fixed_host_boundary_seconds": 0.0012499999999988631,
+      "host_clock_id": "HOST_MONOTONIC",
+      "host_ps_error_percent": 0.004166666666662877,
+      "host_seconds": 30.00125,
+      "pl_clock_id": "P10_PROTOCOL_FCLK0",
+      "pl_elapsed_ticks": 1920000000,
+      "pl_ps_error_percent": 0.0,
+      "pl_start": 1000,
+      "pl_timer_frequency_hz": 64000000,
+      "ps_clock_id": "ZYNQ_GLOBAL_TIMER",
+      "ps_elapsed_ticks": 10000000290,
+      "ps_timer_frequency_hz": 333333343,
+      "status": "PASS"
+    },
+    {
+      "endpoint": "rotating",
+      "fixed_host_boundary_seconds": 0.0012499992499996893,
+      "host_clock_id": "HOST_MONOTONIC",
+      "host_ps_error_percent": 0.0026455010582004004,
+      "host_seconds": 47.25125,
+      "pl_clock_id": "P10_PROTOCOL_FCLK0",
+      "pl_elapsed_ticks": 3024000000,
+      "pl_ps_error_percent": 1.5872998388928225e-09,
+      "pl_start": 18446744073709551516,
+      "pl_timer_frequency_hz": 64000000,
+      "ps_clock_id": "ZYNQ_GLOBAL_TIMER",
+      "ps_elapsed_ticks": 15750000457,
+      "ps_timer_frequency_hz": 333333343,
+      "status": "PASS"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "maximum_error_percent": 0.004166666666662877,
+  "no_hardware": true,
+  "object_reset_clears_free_running_timer": false,
+  "schema_version": 1,
+  "snapshot_generation": 7,
+  "status": "PASS",
+  "test_id": "P10_1-TIMER-CROSSCHECK",
+  "wrap_semantics": "unsigned modulo-2^64 delta extended by snapshot generation"
+}

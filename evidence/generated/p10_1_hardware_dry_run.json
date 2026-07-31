@@ -1,0 +1,106 @@
+{
+  "current_run_hardware_authorization": false,
+  "default_mode": "DRY_RUN",
+  "errors": [],
+  "future_sequence": [
+    "identity",
+    "shutdown",
+    "safe_boot",
+    "short_raw_smoke",
+    "short_object_smoke",
+    "timer_calibration",
+    "F_TO_R_sustained",
+    "R_TO_F_sustained",
+    "64_MiB",
+    "30_minute_performance",
+    "shutdown"
+  ],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "hardware_server_started": false,
+  "jtag_accessed": false,
+  "manifest_result": null,
+  "no_authorization_fail_closed": true,
+  "no_hardware": true,
+  "programmable_artifact_used": false,
+  "raw_cases": {
+    "path": "evidence/generated/p10_1_raw/p10_1_hardware_dry_run_cases.json",
+    "sha256": "2357baa4e34af8967800609cb269ab8237fc1397bd05c660809b07117d048385"
+  },
+  "rejection_case_count": 8,
+  "rejection_cases": [
+    {
+      "case_id": "valid_dry_run",
+      "expected": "ACCEPT_DRY_RUN",
+      "status": "PASS",
+      "validation_errors": []
+    },
+    {
+      "case_id": "no_authorization",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "current-run hardware authorization is absent"
+      ]
+    },
+    {
+      "case_id": "wrong_board_id",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "fixed board identity mismatch"
+      ]
+    },
+    {
+      "case_id": "wrong_artifact_hash",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "artifacts[0] artifact hash mismatch"
+      ]
+    },
+    {
+      "case_id": "missing_shutdown",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "complete shutdown-before/on-exit/after policy is required"
+      ]
+    },
+    {
+      "case_id": "lane_mask_above_0x3",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "lane mask must be within 0x1..0x3"
+      ]
+    },
+    {
+      "case_id": "ethernet_requested",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "Ethernet is forbidden in P10.1"
+      ]
+    },
+    {
+      "case_id": "movement_requested",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "movement is forbidden in P10.1"
+      ]
+    },
+    {
+      "case_id": "runtime_missing",
+      "expected": "REJECT",
+      "status": "PASS",
+      "validation_errors": [
+        "artifacts[1] runtime artifact is missing"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-HARDWARE-RUNNER-DRY-RUN"
+}

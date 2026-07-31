@@ -70,3 +70,9 @@ evidence/generated/p8d_raw/** -text -whitespace
 artifacts/p10/** -text -whitespace
 evidence/generated/vivado/p10_*/** -text -whitespace
 evidence/hardware/p10/** -text -whitespace
+
+# Preserve byte-exact P10.1 generated summaries, raw tool logs, and software
+# artifacts. Vendor logs contain significant trailing spacing and are bound by
+# SHA256 records, so source whitespace normalization must not rewrite them.
+evidence/generated/p10_1_* -text -whitespace
+evidence/generated/p10_1_*/** -text -whitespace

@@ -1,0 +1,40 @@
+{
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "p10_1_hardware_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+  "p11_hardware_ready": false,
+  "p11_status": "NOT_STARTED",
+  "required_pair_count": 20,
+  "schema_version": 1,
+  "sha256_manifest": {
+    "path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
+    "sha256": "26940122798e19fec6adfcee7e152750ba15b13e490061fe81e562321e6105ed"
+  },
+  "status": "PASS",
+  "test_id": "P10_1-EVIDENCE-CONSISTENCY",
+  "verified_stems": [
+    "p10_1_repo_intake",
+    "p10_1_source_architecture_audit",
+    "p10_1_measurement_contract",
+    "p10_1_historical_recompute",
+    "p10_1_finalizer_fix",
+    "p10_1_timer_crosscheck",
+    "p10_1_observability",
+    "p10_1_autonomous_perf_mode",
+    "p10_1_buffer_pipeline",
+    "p10_1_descriptor_batching",
+    "p10_1_streaming_64m",
+    "p10_1_performance_model",
+    "p10_1_host_native",
+    "p10_1_xsim",
+    "p10_1_fixed_build",
+    "p10_1_rotating_build",
+    "p10_1_software_build",
+    "p10_1_hardware_dry_run",
+    "p10_1_p11_readiness",
+    "p10_1_regression"
+  ]
+}

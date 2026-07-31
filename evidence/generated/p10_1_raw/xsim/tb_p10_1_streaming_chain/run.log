@@ -1,0 +1,22 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p10_1_streaming_chain_f1deb3c006240273 -runall
+RETURN_CODE=0
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p10_1_streaming_chain_f1deb3c006240273/xsim_script.tcl
+# xsim {tb_p10_1_streaming_chain_f1deb3c006240273} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_1_STREAMING_CHAIN=PASS
+$finish called at time : 206 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1/sim/tb/tb_p10_1_suite.sv" Line 252
+exit
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 14:14:39 2026...
+STDOUT_END
+STDERR_BEGIN
+STDERR_END

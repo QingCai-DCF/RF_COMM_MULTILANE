@@ -1,0 +1,291 @@
+{
+  "base_main_commit": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
+  "baseline_log": {
+    "path": "evidence/generated/p10_1_raw/p10_1_repo_intake_baseline.log",
+    "sha256": "2466a1468e6238be29474d1014b3ca60c9c1bb65ed351e398676ebf753b6ebea"
+  },
+  "baseline_verification": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p10_existing.py --json-summary",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p9_existing.py --json-summary",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p8c_existing.py --json-summary",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "return_code": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "return_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "branch": "p10.1/performance-streaming-observability-offline",
+  "branch_base_is_ancestor": true,
+  "current_git_status": [
+    "M PROJECT_STATUS.md",
+    " M config/project_requirements.yaml",
+    " M config/project_state.json",
+    " M docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    " M evidence/generated/p10_ax7020_functional_build_summary.json",
+    " M evidence/generated/p10_ax7020_functional_build_summary.md",
+    " M evidence/generated/p8a_consistency_summary.json",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/p10_functional_build_markers.txt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_cdc.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_clock_interaction.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_drc.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_methodology.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_timing_summary.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_utilization.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/fixed/vivado_stdout_stderr.txt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/p10_functional_build_markers.txt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_cdc.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_clock_interaction.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_drc.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_methodology.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_timing_summary.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_utilization.rpt",
+    " M evidence/generated/vivado/p10_ax7020_functional/rotating/vivado_stdout_stderr.txt",
+    "?? artifacts/p10/4a005b8961798de24a51b27f7e71ce948d25aad248e6744508c83a61dc7a5fe7/",
+    "?? artifacts/p10/665130daeb305b1e70d6fe2ee22cadf4f93ae514945019f8ec55ed70308f74ac/",
+    "?? evidence/generated/p10_1_autonomous_perf_mode.json",
+    "?? evidence/generated/p10_1_autonomous_perf_mode.md",
+    "?? evidence/generated/p10_1_buffer_pipeline.json",
+    "?? evidence/generated/p10_1_buffer_pipeline.md",
+    "?? evidence/generated/p10_1_descriptor_batching.json",
+    "?? evidence/generated/p10_1_descriptor_batching.md",
+    "?? evidence/generated/p10_1_evidence_consistency.json",
+    "?? evidence/generated/p10_1_evidence_consistency.md",
+    "?? evidence/generated/p10_1_final_summary.json",
+    "?? evidence/generated/p10_1_final_summary.md",
+    "?? evidence/generated/p10_1_finalizer_fix.json",
+    "?? evidence/generated/p10_1_finalizer_fix.md",
+    "?? evidence/generated/p10_1_finalizer_fix_summary.json",
+    "?? evidence/generated/p10_1_finalizer_fix_summary.md",
+    "?? evidence/generated/p10_1_fixed_build.json",
+    "?? evidence/generated/p10_1_fixed_build.md",
+    "?? evidence/generated/p10_1_hardware_dry_run.json",
+    "?? evidence/generated/p10_1_hardware_dry_run.md",
+    "?? evidence/generated/p10_1_historical_metrics.csv",
+    "?? evidence/generated/p10_1_historical_recompute.json",
+    "?? evidence/generated/p10_1_historical_recompute.md",
+    "?? evidence/generated/p10_1_historical_recompute_summary.json",
+    "?? evidence/generated/p10_1_historical_recompute_summary.md",
+    "?? evidence/generated/p10_1_host_native.json",
+    "?? evidence/generated/p10_1_host_native.md",
+    "?? evidence/generated/p10_1_host_native_test.exe",
+    "?? evidence/generated/p10_1_measurement_contract.json",
+    "?? evidence/generated/p10_1_measurement_contract.md",
+    "?? evidence/generated/p10_1_observability.json",
+    "?? evidence/generated/p10_1_observability.md",
+    "?? evidence/generated/p10_1_p11_readiness.json",
+    "?? evidence/generated/p10_1_p11_readiness.md",
+    "?? evidence/generated/p10_1_performance_model.json",
+    "?? evidence/generated/p10_1_performance_model.md",
+    "?? evidence/generated/p10_1_raw/",
+    "?? evidence/generated/p10_1_regression.json",
+    "?? evidence/generated/p10_1_regression.md",
+    "?? evidence/generated/p10_1_repo_intake.json",
+    "?? evidence/generated/p10_1_repo_intake.md",
+    "?? evidence/generated/p10_1_rotating_build.json",
+    "?? evidence/generated/p10_1_rotating_build.md",
+    "?? evidence/generated/p10_1_software/",
+    "?? evidence/generated/p10_1_software_build.json",
+    "?? evidence/generated/p10_1_software_build.md",
+    "?? evidence/generated/p10_1_source_architecture_audit.json",
+    "?? evidence/generated/p10_1_source_architecture_audit.md",
+    "?? evidence/generated/p10_1_streaming_64m.json",
+    "?? evidence/generated/p10_1_streaming_64m.md",
+    "?? evidence/generated/p10_1_timer_crosscheck.json",
+    "?? evidence/generated/p10_1_timer_crosscheck.md",
+    "?? evidence/generated/p10_1_xsim.json",
+    "?? evidence/generated/p10_1_xsim.md"
+  ],
+  "current_run_hardware_authorization": false,
+  "environment": {
+    "CURRENT_RUN_HARDWARE_AUTHORIZATION": "false",
+    "NO_HARDWARE": "1"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "goal": {
+    "path": "C:\\Users\\user\\Downloads\\P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS_GOAL.md",
+    "sha256": "9afbc717407a910524cc758851eb7b78abe59c0419f02777855694476a035c60"
+  },
+  "hardware_actions_executed": false,
+  "head": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "initial_worktree_clean": true,
+  "input_sha256": [
+    {
+      "bytes": 77090,
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    {
+      "bytes": 9946,
+      "path": "AGENTS.md",
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    {
+      "bytes": 22893,
+      "path": "config/project_state.json",
+      "sha256": "39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4"
+    },
+    {
+      "bytes": 173125,
+      "path": "config/project_requirements.yaml",
+      "sha256": "32346edb9bb29a01371913ace8c9dffb730b2573dd8c64bf103f71838fa47d9b"
+    },
+    {
+      "bytes": 51131,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "9ed3e2cdc0ff20769361f0f10a0c54a45853785524c8e5411410445795e55c59"
+    },
+    {
+      "bytes": 3980,
+      "path": "evidence/generated/p10_closeout_summary.json",
+      "sha256": "fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b"
+    },
+    {
+      "bytes": 22284,
+      "path": "evidence/generated/p10_goodput_measurement_audit.json",
+      "sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14"
+    }
+  ],
+  "no_hardware": true,
+  "p10_evidence_checkpoint": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+  "p10_formal_run_id": "p10_formal_20260730T181535Z_03",
+  "p10_source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+  "p10_tags": {
+    "closed": {
+      "name": "p10-ax7020-dual-node-2lane-closed",
+      "object": "de64a1e8fd21931015b01f0f48c91bf0ba3b5040",
+      "object_type": "tag",
+      "target": "b212f81bd0a8114e309fb821025fa17f0484b255"
+    },
+    "pass": {
+      "name": "p10-ax7020-dual-node-2lane-pass",
+      "object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb",
+      "object_type": "tag",
+      "target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0"
+    }
+  },
+  "schema_version": 1,
+  "sparse_checkout_enabled": true,
+  "sparse_checkout_entries": [
+    "/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r10_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r11_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r12_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r13_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r14_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r15_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r16_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r2/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r3/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r4/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r5/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r6/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r7/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r8/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260711_stationary_app_r9/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r18_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r21_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r22_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r23_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r24_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r25_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r26_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r27_diag_suffix62/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r28_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r29_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260712_stationary_app_r30_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260713_stationary_app_r31_diag_suffix55/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r62_diag_stage66_c03/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r67_diag_stage66_c04/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r69_diag_stage66_c05/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260716_stationary_app_r72_diag_stage66_c06/**",
+    "!/evidence/hardware/p7/authorized_sequence/p7_20260717_stationary_app_r73_diag_stage66_c07/**",
+    "!/evidence/hardware/p7/ddr_external_master/**",
+    "!/evidence/hardware/p7/stage62_functional/**",
+    "!/evidence/hardware/p7/stage62_microtest/**",
+    "!/evidence/hardware/p7/stage66_diagnostic_campaign/**"
+  ],
+  "start_timestamp_utc": "2026-07-31T05:16:32.452347+00:00",
+  "status": "PASS",
+  "test_id": "P10_1-REPOSITORY-INTAKE",
+  "tools": {
+    "arm_gcc": {
+      "path": "D:\\Xilinx\\Vitis\\2023.1\\gnu\\aarch32\\nt\\gcc-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe",
+      "status": "PASS",
+      "version_output": [
+        "arm-xilinx-eabi-gcc.exe (GCC) 12.2.0",
+        "Copyright (C) 2022 Free Software Foundation, Inc.",
+        "This is free software; see the source for copying conditions.  There is NO",
+        "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      ]
+    },
+    "host_gcc": {
+      "path": "D:\\Xilinx\\Vivado\\2023.1\\tps\\mingw\\9.3.0\\win64.o\\nt\\bin\\gcc.exe",
+      "status": "PASS",
+      "version_output": [
+        "gcc.exe (MinGW-W64 x86_64-posix-seh, built by Brecht Sanders) 9.3.0",
+        "Copyright (C) 2019 Free Software Foundation, Inc.",
+        "This is free software; see the source for copying conditions.  There is NO",
+        "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      ]
+    },
+    "python": {
+      "path": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "status": "PASS",
+      "version_output": [
+        "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]"
+      ]
+    },
+    "vitis": {
+      "path": "D:\\Xilinx\\Vitis\\2023.1",
+      "status": "PASS",
+      "version_output": [
+        "2023.1 (installation path; target tool not invoked)"
+      ]
+    },
+    "vivado": {
+      "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+      "status": "PASS",
+      "version_output": [
+        "2023.1 (installation path)"
+      ]
+    },
+    "xsim": {
+      "path": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat",
+      "status": "PASS",
+      "version_output": [
+        "Vivado Simulator v2023.1",
+        "Copyright 1986-2023 Xilinx, Inc. All Rights Reserved."
+      ]
+    }
+  },
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1"
+}

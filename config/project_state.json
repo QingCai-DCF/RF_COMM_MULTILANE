@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P10-POST-ACCEPTANCE-CLOSEOUT-2",
+  "state_revision": "P10-1-OFFLINE-PERFORMANCE-READY-1",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -17,7 +17,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P10_POST_ACCEPTANCE_ANALYSIS",
+  "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -85,7 +85,8 @@
     "P8D_SELECTIVE_REPEAT_DMA": "PASS",
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS",
-    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS"
+    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
+    "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS"
   },
   "p7_evidence": {
     "status": "PASS",
@@ -280,7 +281,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+  "last_verified_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -508,12 +509,19 @@
     "hardware_actions_executed": false
   },
   "p10_1_performance_and_observability": {
-    "status": "OFFLINE_PLAN_ONLY",
-    "plan_path": "docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md",
-    "plan_sha256": "3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74",
+    "status": "PASS",
+    "verification_scope": "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE",
+    "source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+    "evidence_path": "evidence/generated/p10_1_performance_model.json",
+    "evidence_sha256": "5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d",
     "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
-    "measurement_contract_sha256": "d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559",
-    "hardware_experiments_authorized": false
+    "measurement_contract_sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1",
+    "modeled_application_goodput_bps": 6688299.301,
+    "scale_equivalent_4mbps_feasibility": "PASS",
+    "stretch_4p8mbps": "PASS",
+    "real_hardware_goodput_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+    "hardware_experiments_authorized": false,
+    "hardware_actions_executed": false
   },
   "p11_readiness": {
     "status": "NOT_READY",
@@ -522,8 +530,8 @@
     "current_run_hardware_authorization": false,
     "current_tfdu_module_count": 4,
     "minimum_required_tfdu_module_count": 5,
-    "evidence_path": "docs/plans/P11_HARDWARE_READINESS.md",
-    "evidence_sha256": "44c04c54f631701f3c379feb6b2688a95a556e8d330426264a4af51d8fcedfb5",
+    "evidence_path": "evidence/generated/p10_1_p11_readiness.json",
+    "evidence_sha256": "716c55b9cc60c70843a634451b3ebb9347e6bcf79b71d00aaaf63be19432ae8a",
     "missing_prerequisites": [
       "one additional compatible TFDU module",
       "four-fixed-module fixture",
@@ -533,5 +541,10 @@
       "P11-specific board profile/wiring/XDC",
       "new current-run hardware authorization"
     ]
-  }
+  },
+  "p10_1_offline_status": "PASS",
+  "p10_1_hardware_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+  "p11_status": "NOT_STARTED",
+  "p11_hardware_ready": false,
+  "p10_1_no_hardware_actions_executed": true
 }

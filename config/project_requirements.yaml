@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
+    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
   - path: PROJECT_STATUS.md
-    sha256: dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4
-  artifact_hash: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
+    sha256: 92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2
+  artifact_hash: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
+    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
+    sha256: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
   - path: PROJECT_STATUS.md
-    sha256: dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4
+    sha256: 92e45601dff6db084c1866bac196299416921cc9a1ed2a82babde9024fd668a2
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
+  artifact_hash: 39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -1194,7 +1194,7 @@ requirements:
   source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
   reverification_stage: P8E
 - requirement_id: PERF-MODEL-001
-  requirement_text: The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead.
+  requirement_text: The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension also closes a complete dual-node streaming sensitivity model without changing the original P8D scope.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
@@ -1210,13 +1210,15 @@ requirements:
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - path: evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json
     sha256: 9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75
+  - path: evidence/generated/p10_1_performance_model.json
+    sha256: 5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
   source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
   reverification_stage: P8E
 - requirement_id: PERF-MODEL-002
-  requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty.
+  requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
@@ -1230,6 +1232,8 @@ requirements:
     sha256: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
   - path: evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json
     sha256: 9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75
+  - path: evidence/generated/p10_1_performance_model.json
+    sha256: 5302d7766dd83c3bfaf5ab3c86bfb18cf849ca9235cf3ac4f3eb160962afdc0d
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
@@ -2608,9 +2612,348 @@ requirements:
   - path: software/ps_driver/p9_runtime_main.c
     sha256: 9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a
   - path: config/performance/p10_1_measurement_contract.yaml
-    sha256: d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559
+    sha256: 5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1
   - path: docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md
     sha256: 3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74
   hardware_followup: This PASS remains limited to the frozen stationary dual-AX7020 two-lane campaign. New performance experiments,
     P10.2 crosstalk/full-duplex work, P10.3 large-object/FreeRTOS work, and every P11-or-later hardware action require a new
     current-run authorization and bounded safe wrapper.
+# BEGIN GENERATED P10.1 REQUIREMENTS
+- requirement_id: PERF-MEAS-001
+  requirement_text: Metric names, numerators, windows, units, classes, and provenance shall be explicit and schema-validated.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-MEASUREMENT-CONTRACT
+  evidence_path: evidence/generated/p10_1_measurement_contract.json
+  status: PASS
+  waiver: null
+  artifact_hash: 65204a3821017e8fc07906c6cf94972d06a14476ca5294e5ba0122e49159eaba
+  artifact_hashes:
+  - path: evidence/generated/p10_1_measurement_contract.json
+    sha256: 65204a3821017e8fc07906c6cf94972d06a14476ca5294e5ba0122e49159eaba
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-MEAS-002
+  requirement_text: Diagnostic microtransfers shall never be selected as sustained application goodput or scaling evidence.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-FINALIZER-FIX
+  evidence_path: evidence/generated/p10_1_finalizer_fix.json
+  status: PASS
+  waiver: null
+  artifact_hash: 8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e
+  artifact_hashes:
+  - path: evidence/generated/p10_1_finalizer_fix.json
+    sha256: 8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-MEAS-003
+  requirement_text: Frozen P10 performance evidence shall be reproducibly recomputed without rewriting its historical summary.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-HISTORICAL-RECOMPUTE
+  evidence_path: evidence/generated/p10_1_historical_recompute.json
+  status: PASS
+  waiver: null
+  artifact_hash: 2505a0ade4eb36c2318ce7831153557fb569f344027aa1729d16965a22ff1755
+  artifact_hashes:
+  - path: evidence/generated/p10_1_historical_recompute.json
+    sha256: 2505a0ade4eb36c2318ce7831153557fb569f344027aa1729d16965a22ff1755
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-MEAS-004
+  requirement_text: Every formal case shall cross-check independent timer sources within the frozen tolerance or report a
+    fixed boundary.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-TIMER-CROSSCHECK
+  evidence_path: evidence/generated/p10_1_timer_crosscheck.json
+  status: PASS
+  waiver: null
+  artifact_hash: 6fa0c12bf125dc9031ce20a39599ce59bbeaf18135bbc38c6436e888e9ec624e
+  artifact_hashes:
+  - path: evidence/generated/p10_1_timer_crosscheck.json
+    sha256: 6fa0c12bf125dc9031ce20a39599ce59bbeaf18135bbc38c6436e888e9ec624e
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-FINAL-001
+  requirement_text: The metric finalizer shall deterministically select by metric, class, direction, eligibility, run, and
+    aggregation rule.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-FINALIZER-FIX
+  evidence_path: evidence/generated/p10_1_finalizer_fix.json
+  status: PASS
+  waiver: null
+  artifact_hash: 8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e
+  artifact_hashes:
+  - path: evidence/generated/p10_1_finalizer_fix.json
+    sha256: 8655b9d0848c8fd9a9609af660f368208b0555ffd35f3d48c2da9bdcc59dfd0e
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-OBS-001
+  requirement_text: The PS service shall provide a preallocated nonblocking trace ring with generation, overflow, snapshot,
+    and clear semantics.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-OBSERVABILITY
+  evidence_path: evidence/generated/p10_1_observability.json
+  status: PASS
+  waiver: null
+  artifact_hash: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  artifact_hashes:
+  - path: evidence/generated/p10_1_observability.json
+    sha256: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-OBS-002
+  requirement_text: The PL data path shall provide a nonblocking event FIFO whose overflow cannot stall the fast path.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-OBSERVABILITY
+  evidence_path: evidence/generated/p10_1_observability.json
+  status: PASS
+  waiver: null
+  artifact_hash: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  artifact_hashes:
+  - path: evidence/generated/p10_1_observability.json
+    sha256: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-OBS-003
+  requirement_text: Per-stage bytes, descriptors, stalls, queue, ACK, retry, duty, and direction counters shall use coherent
+    snapshots.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-OBSERVABILITY
+  evidence_path: evidence/generated/p10_1_observability.json
+  status: PASS
+  waiver: null
+  artifact_hash: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  artifact_hashes:
+  - path: evidence/generated/p10_1_observability.json
+    sha256: 3feb851e0c8f724a0e8e801baaafe557667d2cb1d1db1945023f108b84657c92
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-AUTO-001
+  requirement_text: Each endpoint shall support a target-resident deterministic performance data generator controlled at low
+    frequency by the host.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-AUTONOMOUS-PERF-MODE
+  evidence_path: evidence/generated/p10_1_autonomous_perf_mode.json
+  status: PASS
+  waiver: null
+  artifact_hash: fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e
+  artifact_hashes:
+  - path: evidence/generated/p10_1_autonomous_perf_mode.json
+    sha256: fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-AUTO-002
+  requirement_text: The remote endpoint shall verify length, pattern, CRC32, SHA256, identity, generation, and exactly-once
+    atomic commit.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-AUTONOMOUS-PERF-MODE
+  evidence_path: evidence/generated/p10_1_autonomous_perf_mode.json
+  status: PASS
+  waiver: null
+  artifact_hash: fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e
+  artifact_hashes:
+  - path: evidence/generated/p10_1_autonomous_perf_mode.json
+    sha256: fa30f67bf016890a7b4590fde588a555101d4d6a662196af908c142e4021a19e
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-PIPE-001
+  requirement_text: The target service shall support multi-buffer staged ownership with explicit generation and no leak or
+    double reclaim.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-MULTI-BUFFER-PIPELINE
+  evidence_path: evidence/generated/p10_1_buffer_pipeline.json
+  status: PASS
+  waiver: null
+  artifact_hash: a5a573cfb5f6e3f3da6a569543b955385ef094809cb2d29c5d64fa8801f57c11
+  artifact_hashes:
+  - path: evidence/generated/p10_1_buffer_pipeline.json
+    sha256: a5a573cfb5f6e3f3da6a569543b955385ef094809cb2d29c5d64fa8801f57c11
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-PIPE-002
+  requirement_text: Descriptor rings shall support bounded batching, wrap, exactly-once completion, and zero descriptor leaks.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-DESCRIPTOR-BATCHING
+  evidence_path: evidence/generated/p10_1_descriptor_batching.json
+  status: PASS
+  waiver: null
+  artifact_hash: ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4
+  artifact_hashes:
+  - path: evidence/generated/p10_1_descriptor_batching.json
+    sha256: ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-PIPE-003
+  requirement_text: Cache maintenance shall be modeled and implemented as a batchable ownership boundary; non-cacheable mode
+    is diagnostic only.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-DESCRIPTOR-BATCHING
+  evidence_path: evidence/generated/p10_1_descriptor_batching.json
+  status: PASS
+  waiver: null
+  artifact_hash: ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4
+  artifact_hashes:
+  - path: evidence/generated/p10_1_descriptor_batching.json
+    sha256: ae1653ce9291438955f230d9906dc065857145a6020edb4f881e02f6bda1bdf4
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-STREAM-001
+  requirement_text: The offline architecture shall stream a 64 MiB object across descriptors with incremental integrity and
+    atomic publication.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-STREAMING-64M
+  evidence_path: evidence/generated/p10_1_streaming_64m.json
+  status: PASS
+  waiver: null
+  artifact_hash: d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a
+  artifact_hashes:
+  - path: evidence/generated/p10_1_streaming_64m.json
+    sha256: d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-STREAM-002
+  requirement_text: Abort, reset, duplicate, missing, stale, out-of-order, and wrap cases shall produce no partial, wrong,
+    duplicate, or stale publication.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-STREAMING-64M
+  evidence_path: evidence/generated/p10_1_streaming_64m.json
+  status: PASS
+  waiver: null
+  artifact_hash: d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a
+  artifact_hashes:
+  - path: evidence/generated/p10_1_streaming_64m.json
+    sha256: d7e8406389acec94ad2e082bc0ffd8b536d64a65a3f03c14429d5065978f722a
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: HWPREP-P10_1-001
+  requirement_text: The future P10.1 hardware runner shall fail closed on authorization, identity, artifact, shutdown, lane,
+    network, motion, and runtime errors.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY
+  verification_method: Direct offline config generation, production-source host-native tests, Python campaigns, XSIM, routed
+    AX7020 implementation, and hash-bound evidence.
+  verification_stage: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS
+  verification_scope: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE
+  test_id: P10_1-HARDWARE-RUNNER-DRY-RUN
+  evidence_path: evidence/generated/p10_1_hardware_dry_run.json
+  status: PASS
+  waiver: null
+  artifact_hash: 1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d
+  artifact_hashes:
+  - path: evidence/generated/p10_1_hardware_dry_run.json
+    sha256: 1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d
+  hardware_followup: Offline PASS only. Real AX7020 application goodput, real 64 MiB streaming, rotation, handover, 8x32,
+    600 rpm, and product-final acceptance remain pending direct authorized hardware evidence.
+- requirement_id: PERF-HW-001
+  requirement_text: Real AX7020 sustained application goodput shall meet at least 4.0 Mbit/s in each tested half-duplex direction
+    under the frozen measurement contract.
+  profile: P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE
+  verification_method: Direct inspection and hardware acceptance after the named prerequisite, immutable artifacts, and a
+    new current-run authorization exist.
+  verification_stage: P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE
+  verification_scope: PENDING_CURRENT_RUN_AUTHORIZATION
+  test_id: null
+  evidence_path: docs/plans/P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE_PLAN.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
+- requirement_id: P11-READY-001
+  requirement_text: P11 shall have a fifth compatible and fully inventoried TFDU6102 small board.
+  profile: P11_HARDWARE_READINESS
+  verification_method: Direct inspection and hardware acceptance after the named prerequisite, immutable artifacts, and a
+    new current-run authorization exist.
+  verification_stage: P11_NOT_STARTED
+  verification_scope: P11_PREREQUISITE_PENDING
+  test_id: null
+  evidence_path: docs/P11_FIVE_MODULE_INVENTORY_PLAN.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
+- requirement_id: P11-READY-002
+  requirement_text: P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry.
+  profile: P11_HARDWARE_READINESS
+  verification_method: Direct inspection and hardware acceptance after the named prerequisite, immutable artifacts, and a
+    new current-run authorization exist.
+  verification_stage: P11_NOT_STARTED
+  verification_scope: P11_PREREQUISITE_PENDING
+  test_id: null
+  evidence_path: docs/P11_FIXTURE_REQUIREMENTS.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
+- requirement_id: P11-READY-003
+  requirement_text: P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition
+    budget.
+  profile: P11_HARDWARE_READINESS
+  verification_method: Direct inspection and hardware acceptance after the named prerequisite, immutable artifacts, and a
+    new current-run authorization exist.
+  verification_stage: P11_NOT_STARTED
+  verification_scope: P11_PREREQUISITE_PENDING
+  test_id: null
+  evidence_path: docs/P11_ABZ_INPUT_REQUIREMENTS.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
+# END GENERATED P10.1 REQUIREMENTS

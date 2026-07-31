@@ -1,0 +1,159 @@
+{
+  "artifacts": {
+    "bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10/4a005b8961798de24a51b27f7e71ce948d25aad248e6744508c83a61dc7a5fe7/367bc8d72eb7a4b169f661b1bc8bb077a85784a3c66f2927a46e3d5b30009628/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "sha256": "367bc8d72eb7a4b169f661b1bc8bb077a85784a3c66f2927a46e3d5b30009628"
+    },
+    "xsa": {
+      "bytes": 850435,
+      "path": "artifacts/p10/4a005b8961798de24a51b27f7e71ce948d25aad248e6744508c83a61dc7a5fe7/d54d5c3a5fcd4c2b7f3c64e2d2e84b6cf5bb7c4b6023f4ca2e6a798dbf0c2cbb/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "sha256": "d54d5c3a5fcd4c2b7f3c64e2d2e84b6cf5bb7c4b6023f4ca2e6a798dbf0c2cbb"
+    }
+  },
+  "buffer_delta": "PS_DDR_BUFFERS_NO_PL_BRAM_ALLOCATION",
+  "build_log": "evidence/generated/vivado/p10_ax7020_functional/rotating/vivado_stdout_stderr.txt",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "instrumentation_delta": {
+    "bram36_equivalent": 0.0,
+    "dsp": 0.0,
+    "ff": 1481.0,
+    "lut": 943.0
+  },
+  "large_ila_default_enabled": false,
+  "markers": {
+    "P10_AXIL_CLOCK_HZ": "50000000",
+    "P10_AXI_BASE": "0x43C00000",
+    "P10_BLOCKING_CONDITION": "P10-SAFETY-POWERUP-001",
+    "P10_CANONICAL_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+    "P10_CDC_CRITICAL_COUNT": "0",
+    "P10_DMA_AXI_BASE": "0x40400000",
+    "P10_DMA_CLOCK_HZ": "100000000",
+    "P10_DMA_HP_PORT": "S_AXI_HP0",
+    "P10_DMA_MODE": "SCATTER_GATHER",
+    "P10_DMA_SG_STSCNTRL_STREAM": "DISABLED",
+    "P10_DRC_CRITICAL_COUNT": "0",
+    "P10_DRC_ERROR_COUNT": "0",
+    "P10_ENDPOINT_ROLE": "rotating",
+    "P10_ENDPOINT_ROLE_VALUE": "2",
+    "P10_ETHERNET_ENABLED": "false",
+    "P10_FUNCTIONAL_BUILD": "PASS",
+    "P10_HARDWARE_ADMISSION": "false",
+    "P10_METHODOLOGY_CRITICAL_COUNT": "0",
+    "P10_NETWORK_USED": "false",
+    "P10_PART": "xc7z020clg400-2",
+    "P10_PROFILE_ID": "P10_AX7020_ROTATING_2LANE",
+    "P10_PROTOCOL_CLOCK_HZ": "64000000",
+    "P10_REQP_1839_COUNT": "0",
+    "P10_TNS_NS": "0.0",
+    "P10_TOP": "p10_ps_system_wrapper",
+    "P10_WHS_NS": "0.04",
+    "P10_WNS_NS": "1.113"
+  },
+  "no_hardware": true,
+  "part": "xc7z020clg400-2",
+  "preinstrumentation_resource": {
+    "capacity": {
+      "bram36_equivalent": 140.0,
+      "dsp": 220,
+      "ff": 106400,
+      "lut": 53200
+    },
+    "limits_percent": {
+      "bram36_equivalent": 75.0,
+      "dsp": 50.0,
+      "ff": 70.0,
+      "lut": 70.0
+    },
+    "percent": {
+      "bram36_equivalent": 12.142857142857142,
+      "dsp": 0.0,
+      "ff": 14.56203007518797,
+      "lut": 27.580827067669173
+    },
+    "status": "PASS",
+    "used": {
+      "bram36_equivalent": 17.0,
+      "dsp": 0,
+      "ff": 15494,
+      "lut": 14673
+    },
+    "within_limits": true
+  },
+  "profile": "P10_AX7020_ROTATING_2LANE",
+  "register_map_consistency": "PASS",
+  "reports": [
+    {
+      "bytes": 10605,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_drc.rpt",
+      "sha256": "3c9bcbab2c2ac6870b8d527f374bbcd2649d0b72ab3c89a751dd2e7282c3511b"
+    },
+    {
+      "bytes": 35314,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_methodology.rpt",
+      "sha256": "82515cd6ddcb25a8aa77000d0623c959ce69967c40cfc7b177938df559c03477"
+    },
+    {
+      "bytes": 212744,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_timing_summary.rpt",
+      "sha256": "38e780edd678d76da67b557176fdd494969ac79973361e8ec735f379948348a0"
+    },
+    {
+      "bytes": 172637,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_utilization.rpt",
+      "sha256": "b5e63e1ecf971ef2eab97eb3e24c3752b9f09e1585f852945c3388d84fe6ee64"
+    },
+    {
+      "bytes": 77409,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_cdc.rpt",
+      "sha256": "1ab18e7d758c208ec1baa6d17986b9c6cf2768805207569ac48b24823c209b8e"
+    },
+    {
+      "bytes": 2924,
+      "path": "evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_clock_interaction.rpt",
+      "sha256": "807b44293549a2c8236087682e669d92e9fe17419c7f66b9c6f5a08850da317a"
+    }
+  ],
+  "resource": {
+    "capacity": {
+      "bram36_equivalent": 140.0,
+      "dsp": 220,
+      "ff": 106400,
+      "lut": 53200
+    },
+    "limits_percent": {
+      "bram36_equivalent": 75.0,
+      "dsp": 50.0,
+      "ff": 70.0,
+      "lut": 70.0
+    },
+    "percent": {
+      "bram36_equivalent": 12.142857142857142,
+      "dsp": 0.0,
+      "ff": 15.953947368421053,
+      "lut": 29.353383458646615
+    },
+    "status": "PASS",
+    "used": {
+      "bram36_equivalent": 17.0,
+      "dsp": 0,
+      "ff": 16975,
+      "lut": 15616
+    },
+    "within_limits": true
+  },
+  "resource_status": "PASS",
+  "role": "rotating",
+  "schema_version": 1,
+  "source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_1-AX7020-ROTATING-ROUTED-BUILD",
+  "tfdu_safety_architecture_unchanged": true,
+  "timing_cdc_drc_reqp_status": "PASS"
+}

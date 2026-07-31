@@ -1,0 +1,129 @@
+{
+  "axis_sustained": {
+    "accepted_beats": 200000,
+    "accepted_bytes": 800000,
+    "back_to_back_tlast": "PASS",
+    "beat_duplication_count": 0,
+    "beat_loss_count": 0,
+    "first_beat_latency_cycles": 1,
+    "last_beat_latency_cycles": 273944,
+    "metadata_stable_while_stalled": true,
+    "seed": 64000000,
+    "source_beats": 200000,
+    "stall_cycles": 73945,
+    "status": "PASS"
+  },
+  "buffer_states": [
+    "FREE",
+    "FILLING",
+    "READY",
+    "DMA_OWNED",
+    "IN_FLIGHT",
+    "REMOTE_RECEIVED",
+    "VERIFYING",
+    "COMMITTED",
+    "ERROR",
+    "RECLAIMABLE"
+  ],
+  "campaign": {
+    "abort_count": 5301,
+    "event_count": 100000,
+    "pool": {
+      "all_single_owner": true,
+      "allocations": 100000,
+      "buffer_count": 8,
+      "descriptor_leak_count": 0,
+      "double_reclaim_count": 0,
+      "generations": [
+        100000,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "illegal_transition_count": 0,
+      "reclaims": 100000
+    },
+    "ring": {
+      "completed": 94699,
+      "consumer_generation": 1479,
+      "depth": 64,
+      "descriptor_leak_count": 0,
+      "double_completion_count": 0,
+      "outstanding": 0,
+      "producer_generation": 1479,
+      "submitted": 94699
+    },
+    "status": "PASS"
+  },
+  "current_run_hardware_authorization": false,
+  "dual_endpoint_digital_twin": {
+    "axis": {
+      "accepted_beats": 200000,
+      "accepted_bytes": 800000,
+      "back_to_back_tlast": "PASS",
+      "beat_duplication_count": 0,
+      "beat_loss_count": 0,
+      "first_beat_latency_cycles": 1,
+      "last_beat_latency_cycles": 273944,
+      "metadata_stable_while_stalled": true,
+      "seed": 64000000,
+      "source_beats": 200000,
+      "stall_cycles": 73945,
+      "status": "PASS"
+    },
+    "fixed_endpoint": {
+      "clock_id": "fixed_pl_64mhz",
+      "dma_ring_id": "fixed_dma_ring",
+      "memory_id": "fixed_ddr",
+      "ps_service_id": "fixed_ps_service",
+      "reset_id": "fixed_reset_generation"
+    },
+    "integrity_errors": 0,
+    "rotating_endpoint": {
+      "clock_id": "rotating_pl_64mhz_ppm_offset",
+      "dma_ring_id": "rotating_dma_ring",
+      "memory_id": "rotating_ddr",
+      "ps_service_id": "rotating_ps_service",
+      "reset_id": "rotating_reset_generation"
+    },
+    "shared_ram": false,
+    "status": "PASS",
+    "stream_case_count": 13,
+    "tested": [
+      "sustained_F_TO_R",
+      "sustained_R_TO_F",
+      "direction_switching",
+      "endpoint_reset",
+      "dma_reset",
+      "trace_overflow",
+      "timer_wrap",
+      "64_MiB",
+      "backpressure"
+    ]
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "pipeline_overlap": [
+    "segment_n_plus_2_generating",
+    "segment_n_plus_1_waiting_dma",
+    "segment_n_in_dma",
+    "segment_n_minus_1_in_pl_phy",
+    "segment_n_minus_2_remote_dma",
+    "segment_n_minus_3_remote_verify"
+  ],
+  "schema_version": 1,
+  "status": "PASS",
+  "sweep": [
+    2,
+    4,
+    8,
+    16
+  ],
+  "test_id": "P10_1-MULTI-BUFFER-PIPELINE"
+}

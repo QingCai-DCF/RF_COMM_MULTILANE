@@ -1,0 +1,68 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/verify_p10_existing.py --json-summary
+RETURN_CODE=0
+STDOUT_BEGIN
+{"closeout_generator_check": "PASS_CURRENT_CANONICAL_SUPERSESSION", "current_run_hardware_authorization": false, "errors": [], "hardware_actions_executed": false, "mode": "READ_ONLY_TAGGED_EVIDENCE_AND_OFFLINE_CLOSEOUT", "no_hardware_static_scan": "PASS", "run_id": "p10_formal_20260730T181535Z_03", "status": "PASS", "tag": "p10-ax7020-dual-node-2lane-pass", "tag_object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb", "tag_target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0", "test_id": "P10-VERIFY-EXISTING", "verified_manifest_bytes": 5332100, "verified_manifest_file_count": 1276}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/verify_p9_existing.py --json-summary
+RETURN_CODE=0
+STDOUT_BEGIN
+{"closeout_check_count": 16, "errors": [], "hardware_actions_executed": false, "mode": "READ_ONLY_TAGGED_EVIDENCE", "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc", "status": "PASS", "tag": "p9-z7010-2lane-pass", "tag_object": "5bc9493071b9ea3446ac27cdd117bc3d3f67bd91", "tag_target": "818d335c229d7b92223c279159aab84a5207ef92", "tag_tree": "d92ae2b97d30590dca634ac3032e1c6dabb40ca4", "test_id": "P9-VERIFY-EXISTING", "verified_bytes": 51752466, "verified_unique_file_count": 1632}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary
+RETURN_CODE=0
+STDOUT_BEGIN
+P8E_VERIFY_EXISTING=PASS
+{"CURRENT_RUN_HARDWARE_AUTHORIZATION": false, "NO_HARDWARE_ACTIONS_EXECUTED": true, "artifact_count": 1970, "errors": [], "hardware_scope_promoted": false, "schema_version": 1, "source_commit": "56fbf42788dc90779f7580ad86855ea935a3542c", "status": "PASS", "test_id": "P8E-VERIFY-EXISTING"}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/verify_p8c_existing.py --json-summary
+RETURN_CODE=0
+STDOUT_BEGIN
+{"current_run_hardware_authorization": false, "errors": [], "hardware_actions_executed": false, "status": "PASS", "tag": "p8c-pass", "tag_object": "6b3aebe4552836639f1a72f29311c62c29985129", "tag_target": "c44b0d45133bf75c9c71f53dde77f3dc186ad131", "test_id": "P8C-VERIFY-EXISTING", "verified_safety_gates": ["EXACT_1000US_SLIDING_DUTY", "LE18_PERCENT_DESIGN_TARGET", "MAX_CONTINUOUS_TXD_HIGH_LE_1US", "PARTIAL_FRAME_NOT_RESUMED", "PERMIT_ASYNC_DROP_FINAL_RTL_KILL", "PERMIT_LOW_ALL_TX_OFF_PROPERTY", "PERMIT_REASSERT_REQUIRES_EXPLICIT_REARM", "SINGLE_GLOBAL_PERMIT_PER_ENDPOINT", "STRICT_LT20_PERCENT_HARD_LIMIT", "STUCK_HIGH_FAULT_LATCH_AND_KILL", "TFDU_STARTUP_500US_REGRESSION"]}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/check_p8a_consistency.py --check
+RETURN_CODE=0
+STDOUT_BEGIN
+CANONICAL_CONSTRAINT_GATE=PASS
+PROJECT_STATE_CONSISTENCY=PASS
+REQUIREMENT_TRACEABILITY_BASELINE=PASS
+P0_P7_EVIDENCE_RECONCILIATION=PASS
+NO_HARDWARE_ACTIONS_EXECUTED=1
+P8A_STATUS=PASS
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/check_no_hardware_calls.py
+RETURN_CODE=0
+STDOUT_BEGIN
+NO_HARDWARE_ACTIONS_EXECUTED=1
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=git diff --check
+RETURN_CODE=0
+STDOUT_BEGIN
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

@@ -1,0 +1,7 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/verify_p8c_existing.py --json-summary
+RETURN_CODE=0
+STDOUT_BEGIN
+{"current_run_hardware_authorization": false, "errors": [], "hardware_actions_executed": false, "status": "PASS", "tag": "p8c-pass", "tag_object": "6b3aebe4552836639f1a72f29311c62c29985129", "tag_target": "c44b0d45133bf75c9c71f53dde77f3dc186ad131", "test_id": "P8C-VERIFY-EXISTING", "verified_safety_gates": ["EXACT_1000US_SLIDING_DUTY", "LE18_PERCENT_DESIGN_TARGET", "MAX_CONTINUOUS_TXD_HIGH_LE_1US", "PARTIAL_FRAME_NOT_RESUMED", "PERMIT_ASYNC_DROP_FINAL_RTL_KILL", "PERMIT_LOW_ALL_TX_OFF_PROPERTY", "PERMIT_REASSERT_REQUIRES_EXPLICIT_REARM", "SINGLE_GLOBAL_PERMIT_PER_ENDPOINT", "STRICT_LT20_PERCENT_HARD_LIMIT", "STUCK_HIGH_FAULT_LATCH_AND_KILL", "TFDU_STARTUP_500US_REGRESSION"]}
+STDOUT_END
+STDERR_BEGIN
+STDERR_END

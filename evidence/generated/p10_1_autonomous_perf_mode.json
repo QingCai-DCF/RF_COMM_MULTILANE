@@ -1,0 +1,53 @@
+{
+  "commands": [
+    "PERF_CAPS",
+    "PERF_CONFIG",
+    "PERF_START",
+    "PERF_STATUS",
+    "PERF_SNAPSHOT",
+    "PERF_STOP",
+    "PERF_ABORT",
+    "PERF_CLEAR"
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "generator": {
+    "incremental_crc32": "d65ed587",
+    "incremental_sha256": "a3e54211c584fab26568bf2161740404abfce287b56cba228ff1980bcbc04ea8",
+    "pattern": "counter",
+    "seed": 20260731,
+    "segments_generated": 1024,
+    "target_resident": true
+  },
+  "hardware_actions_executed": false,
+  "host_commands_per_segment": 0,
+  "host_control_operations": [
+    "configure",
+    "start",
+    "low_frequency_query",
+    "stop",
+    "collect"
+  ],
+  "host_in_fast_path": false,
+  "no_hardware": true,
+  "payload_patterns": [
+    "zero",
+    "one",
+    "counter",
+    "prbs",
+    "deterministic_pseudorandom"
+  ],
+  "remote_verifier": {
+    "atomic_commit_count": 1,
+    "crc32_verified": true,
+    "length_verified": true,
+    "pattern_verified": true,
+    "session_verified": true,
+    "sha256_verified": true,
+    "stream_object_id_verified": true
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-AUTONOMOUS-PERF-MODE"
+}

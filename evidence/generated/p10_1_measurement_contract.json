@@ -1,0 +1,73 @@
+{
+  "canonical_values": {
+    "ACK_AGGREGATION_THRESHOLD": 16,
+    "BUFFER_COUNT": 8,
+    "BUFFER_SIZE_BYTES": 1048576,
+    "DESCRIPTOR_BATCH": 16,
+    "DIRECTION_WINDOW_US": 250000,
+    "HARD_TARGET_BPS": 4000000,
+    "INTERRUPT_COALESCING": 16,
+    "LANE_MASK": 3,
+    "MANDATORY_STREAM_SIZE_BYTES": 67108864,
+    "MAX_STREAM_SIZE_BYTES": 134217728,
+    "MEASUREMENT_DURATION_SECONDS": 30,
+    "OPTIONAL_STREAM_SIZE_BYTES": 134217728,
+    "OUTSTANDING_FRAMES": 32,
+    "PL_EVENT_FIFO_DEPTH_RECORDS": 256,
+    "PL_TIMER_COUNTER_WIDTH_BITS": 64,
+    "PL_TIMER_FREQUENCY_HZ": 64000000,
+    "PS_TIMER_FREQUENCY_HZ": 333333343,
+    "PS_TRACE_DEPTH_RECORDS": 1024,
+    "RING_DEPTH": 64,
+    "SEGMENT_SIZE_BYTES": 65536,
+    "STRETCH_TARGET_BPS": 4800000
+  },
+  "config_files": [
+    {
+      "path": "config/performance/p10_1_measurement_contract.yaml",
+      "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
+    },
+    {
+      "path": "config/performance/p10_1_pipeline.yaml",
+      "sha256": "87b33b461fc2e87f0092e2ad2dd021965aa06d89a21b4efa1878c7b9b3deb4d8"
+    },
+    {
+      "path": "config/performance/p10_1_streaming.yaml",
+      "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
+    },
+    {
+      "path": "config/performance/p10_1_test_matrix.yaml",
+      "sha256": "b8920714cac0874f128581a3184c5c66c2be4b3521243859ec16b0772dd76c24"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "generated_files": [
+    {
+      "path": "rtl/generated/p10_1_contract_pkg.sv",
+      "sha256": "e81f0ca281028de86f4b016695d177ad40c8a04686e866c8d72f45fabf7032eb"
+    },
+    {
+      "path": "software/ps_driver/p10_1_contract.h",
+      "sha256": "aab30e08e733ff58367229cd3d51a75221b1ab7ff7a3d7eb2a3074d2ff96ceb9"
+    },
+    {
+      "path": "scripts/generated/p10_1_contract.py",
+      "sha256": "92c36effcb77cd9fc8b0c154eddd53eb5c93b50b3d166394b3ac74bf14cb61a7"
+    },
+    {
+      "path": "config/performance/generated/p10_1_contract.json",
+      "sha256": "d3849af93acf2736904cd3728584e2eb369bba6e77d68fb856818e4d844df306"
+    },
+    {
+      "path": "docs/design/P10_1_GENERATED_CONTRACT.md",
+      "sha256": "63e28353949928aeb93feb66536b8ddb81190a27591cb790ad49546f9c64cdc9"
+    }
+  ],
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-MEASUREMENT-CONTRACT-SCHEMA"
+}

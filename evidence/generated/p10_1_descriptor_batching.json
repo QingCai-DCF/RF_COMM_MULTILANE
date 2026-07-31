@@ -1,0 +1,52 @@
+{
+  "cache_strategy_sweep": [
+    "per_segment",
+    "per_batch",
+    "whole_buffer",
+    "non_cacheable_diagnostic"
+  ],
+  "current_run_hardware_authorization": false,
+  "descriptor_audit": {
+    "completed": 94699,
+    "consumer_generation": 1479,
+    "depth": 64,
+    "descriptor_leak_count": 0,
+    "double_completion_count": 0,
+    "outstanding": 0,
+    "producer_generation": 1479,
+    "submitted": 94699
+  },
+  "descriptor_batch_sweep": [
+    1,
+    4,
+    8,
+    16,
+    32
+  ],
+  "descriptor_ring_sweep": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "errors": [],
+  "generated_at_utc": "2026-07-31T00:00:00Z",
+  "hardware_actions_executed": false,
+  "interrupt_strategy_sweep": [
+    "polling",
+    "interrupt",
+    "coalesced_interrupt",
+    "hybrid"
+  ],
+  "no_hardware": true,
+  "schema_version": 1,
+  "selected": {
+    "cache_strategy": "per_batch",
+    "descriptor_batch": 16,
+    "interrupt_coalescing": 16,
+    "interrupt_strategy": "coalesced_interrupt",
+    "ring_depth": 64
+  },
+  "status": "PASS",
+  "test_id": "P10_1-DESCRIPTOR-BATCHING"
+}
