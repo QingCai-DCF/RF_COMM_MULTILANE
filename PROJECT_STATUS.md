@@ -14,14 +14,14 @@ PRODUCT_FINAL_ACCEPTANCE: PENDING
 P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
 P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
 P10_1_OFFLINE_STATUS: PASS
-P10_1_HARDWARE_STATUS: IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE
+P10_1_HARDWARE_STATUS: FAIL
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
-CURRENT_PROGRAM_STAGE: P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE
+CURRENT_PROGRAM_STAGE: P10_1_PERFORMANCE_REMEDIATION
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
-LAST_HARDWARE_STAGE: P10
-LAST_HARDWARE_RUN_ID: p10_formal_20260730T181535Z_03
+LAST_HARDWARE_STAGE: P10_1
+LAST_HARDWARE_RUN_ID: p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -33,6 +33,9 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | Stage | Status |
 |---|---|
 | `P0_BOOTSTRAP` | `PASS` |
+| `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `PASS` |
+| `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `FAIL` |
+| `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
 | `P1_OFFLINE_HARDENING` | `PASS` |
 | `P2_SIMULATION_BASELINE` | `PASS` |
 | `P3_PRE_HW_ACCEPTANCE_PACKAGE` | `PASS` |
@@ -46,8 +49,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P8D_SELECTIVE_REPEAT_DMA` | `PASS` |
 | `P8E_DUAL_TARGET_BUILD_TIMING_CDC` | `PASS` |
 | `P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION` | `PASS` |
-| `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
-| `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `PASS` |
 
 ## P7 canonical evidence
 
@@ -138,21 +139,21 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Evidence: `evidence/generated/p10_1_performance_model.json`
 - Modeled application goodput: `4189709.129513542 bit/s`
 - 4.0 Mbit/s scale-equivalent feasibility: `PASS`
-- Real hardware goodput: `IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE`
+- Real hardware goodput: `FAIL`
 - Offline sub-scope hardware actions executed: `false`
 - P11 official stage / hardware ready: `NOT_STARTED` / `false`
 - This offline PASS remains limited to feasibility, routed implementation, software, simulation, and dry-run evidence; any real AX7020 result is recorded separately below.
 
 ## P10.1 scoped AX7020 hardware performance campaign
 
-- Status: `IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE`
-- Run ID: `NOT_RUN`
-- Source commit: `NOT_FROZEN`
+- Status: `FAIL`
+- Run ID: `p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f`
+- Source commit: `ddf4a064680677c6421d6e2a25f52352900d8880`
 - Fixed / rotating-role IDs: `AX7020-F/JTAG:210249855178` / `AX7020-R/JTAG:210512180081`
-- Final evidence: `PENDING`
-- F→R / R→F application goodput: `PENDING` / `PENDING` bit/s
-- Shutdown fixed / rotating: `PENDING` / `PENDING`
-- Hardware actions / network / movement: `false` / `false` / `false`
+- Final evidence: `evidence/generated/p10_1_hw_final_summary.json`
+- F→R / R→F application goodput: `None` / `None` bit/s
+- Shutdown fixed / rotating: `PASS` / `PASS`
+- Hardware actions / network / movement: `true` / `false` / `false`
 - Scope remains stationary dual AX7020, two lanes, no Ethernet and no movement; it does not promote P11, 8x32, 600 rpm, physical GLOBAL_PERMIT, external duty, or product-final acceptance.
 
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.

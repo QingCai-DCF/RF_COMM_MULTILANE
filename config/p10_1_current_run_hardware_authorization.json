@@ -73,6 +73,7 @@
   ],
   "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "a463e5c665c6e7a40abd03a7ab4cae08cef10069",
+  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "preflight",
     "smoke",
@@ -113,10 +114,18 @@
       "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
     }
   },
-  "current_run_hardware_authorization": true,
+  "campaign_disposition": "STOPPED_AT_GOAL_RETRY_LIMIT",
+  "campaign_status": "FAIL",
+  "consumed": true,
+  "consumed_at_utc": "2026-07-31T22:28:38+00:00",
+  "consumed_by_run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+  "current_run_hardware_authorization": false,
   "ethernet_allowed": false,
+  "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
+  "final_evidence_sha256": "d4f771932b242e55f248aabfb00e1707a5ae6b09d6790740d979cb4d62e5bba9",
   "generated_at_utc": "2026-07-31T21:49:55+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "hardware_actions_executed": true,
   "input_hashes": {
     "fixed_profile": {
       "bytes": 907,
@@ -197,6 +206,7 @@
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
   "movement_allowed": false,
+  "next_required_user_action": "provide a new explicit authorization that extends or overrides the Goal limit of two preflight run IDs before any third hardware preflight",
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
@@ -214,6 +224,7 @@
     "streaming": "14b63da4def687025b73e3e83f33357b62790d2167567e221f6a1cd02be26d3e",
     "tuning": "e6f454013e68069fc52068290f5b1b4ec5f7f8bfa6b25b7ab0c00718d3810184"
   },
+  "reusable_for_future_run": false,
   "rewiring_allowed": false,
   "rotation_allowed": false,
   "run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
@@ -228,7 +239,9 @@
     "on_timeout": true,
     "program_role_bound_shutdown_bitstreams": true
   },
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
   "source_commit": "ddf4a064680677c6421d6e2a25f52352900d8880",
-  "status": "AUTHORIZED",
+  "status": "CONSUMED_AFTER_P10_1_HARDWARE_FAIL",
   "user_authorization_received_at": "2026-07-31"
 }

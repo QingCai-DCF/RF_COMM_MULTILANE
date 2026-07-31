@@ -1,0 +1,33 @@
+{
+  "audited_change_class": "REGISTER_MAP_IDENTITY_BINDING_ONLY",
+  "audited_diff_sha256": "2915c5b74dc877b120dbf6fd69ed18c7d484ea3cd48cfcfb040821a5cb9597c4",
+  "campaign_minimum_aggregation_changed": false,
+  "current_run_hardware_authorization": false,
+  "current_runtime_sha256": "1cf329ec479636369ba3c0c2bb2248c12b4ebab82d3c849cf86f7c6f53209a76",
+  "current_runtime_worktree_clean": true,
+  "current_source_commit": "660b4f2f4169db4588c10b24a9201d71fed6f9eb",
+  "errors": [],
+  "function_source_sha256": {
+    "evaluate_stage": {
+      "current": "8e108e8c55b53df6d49ee0e406b19600eacc566bda2ee861e63a5370f5a38ea1",
+      "historical": "8e108e8c55b53df6d49ee0e406b19600eacc566bda2ee861e63a5370f5a38ea1",
+      "identical": true
+    },
+    "summarize_campaign": {
+      "current": "b38ab6dfdca6a99cb8050569c0478a34158e6c4862d7aee40f725f2f0d2c0aad",
+      "historical": "b38ab6dfdca6a99cb8050569c0478a34158e6c4862d7aee40f725f2f0d2c0aad",
+      "identical": true
+    }
+  },
+  "generated_at_utc": "2026-07-31T22:31:00+00:00",
+  "goodput_formula_changed": false,
+  "hardware_actions_executed": false,
+  "historical_goodput_audit_invalidated": false,
+  "historical_runtime_sha256": "33f11e8ae3070cce7e915c2af31dd5a0aad8cb8a9999a2a1feb7d133744d5da1",
+  "historical_source_commit": "201a05e199a56e785a06d61910d42139fa0248e5",
+  "runtime_path": "scripts/p10_hardware_runtime.py",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10-GOODPUT-RUNTIME-SOURCE-REVERIFICATION",
+  "verification_scope": "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
+}

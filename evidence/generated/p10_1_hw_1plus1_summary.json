@@ -1,0 +1,136 @@
+{
+  "artifact_hashes": {
+    "fixed:bsp": {
+      "bytes": 1855896,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+    },
+    "fixed:elf": {
+      "bytes": 548636,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/5770083941b14e80be1cd6ff29ab7aeff0d57a349e726e52b7dcddbe0464f60b/p10_fixed_runtime.elf",
+      "sha256": "5770083941b14e80be1cd6ff29ab7aeff0d57a349e726e52b7dcddbe0464f60b"
+    },
+    "fixed:performance_bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e"
+    },
+    "fixed:shutdown_bitstream": {
+      "bytes": 369073,
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3"
+    },
+    "fixed:xsa": {
+      "bytes": 848595,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1"
+    },
+    "rotating:bsp": {
+      "bytes": 1856209,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+    },
+    "rotating:elf": {
+      "bytes": 549004,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/a179ed02f5b5001df47db972a70463a3f9d75014c8bc80e2bce05a49b2c89e46/p10_rotating_runtime.elf",
+      "sha256": "a179ed02f5b5001df47db972a70463a3f9d75014c8bc80e2bce05a49b2c89e46"
+    },
+    "rotating:performance_bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f"
+    },
+    "rotating:shutdown_bitstream": {
+      "bytes": 369073,
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+    },
+    "rotating:xsa": {
+      "bytes": 849469,
+      "path": "artifacts/p10_1/ddf4a064680677c6421d6e2a25f52352900d8880/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea"
+    }
+  },
+  "artifact_provenance": "CAPTURED_IMMUTABLE_CURRENT_RUN_AUTHORIZATION",
+  "authorization_lifecycle": "CONSUMED_AFTER_RUN",
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "boundary": "NOT_A_4PLUS4_FULL_DUPLEX_PASS",
+  "captured_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "oneplusone was not run because the campaign stopped after an earlier stage failure",
+    "frozen endpoint direction capability was not explicit"
+  ],
+  "ethernet_used": false,
+  "experiment_outcome": null,
+  "full_duplex_f_to_r_bps": null,
+  "full_duplex_r_to_f_bps": null,
+  "generated_at_utc": "2026-07-31T22:31:00+00:00",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "hardware_runtime_config": {
+    "bytes": 1786,
+    "path": "config/performance/p10_1_hardware_runtime.yaml",
+    "sha256": "6402e97f5d83aed23693223626f1b712ba4fb00c075b38aecbd8fe5510df4384"
+  },
+  "maximum_lane_mask_used": "0x3",
+  "measurement_contract": {
+    "bytes": 4098,
+    "path": "config/performance/p10_1_measurement_contract.yaml",
+    "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
+  },
+  "network_used": false,
+  "offline_base_tag": "p10.1-offline-performance-ready",
+  "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "pipeline_config": {
+    "bytes": 2525,
+    "path": "config/performance/p10_1_pipeline.yaml",
+    "sha256": "8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d"
+  },
+  "raw_evidence": [
+    {
+      "bytes": 53479,
+      "declared_status": "NOT_RUN",
+      "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "6619eee659c86062d404cf7069a02dfaa31180a89c6b7125de43ebd9347eb217",
+      "stage": "oneplusone"
+    }
+  ],
+  "reason": null,
+  "register_map": {
+    "bytes": 52873,
+    "path": "config/register_map/ir_axi_regs.yaml",
+    "sha256": "ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8"
+  },
+  "rewiring_executed": false,
+  "rotation_executed": false,
+  "run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "source_commit": "ddf4a064680677c6421d6e2a25f52352900d8880",
+  "status": "FAIL",
+  "streaming_contract": {
+    "bytes": 1085,
+    "path": "config/performance/p10_1_streaming.yaml",
+    "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
+  },
+  "test_id": "P10_1-HW-1PLUS1-DIRECT-CAPABILITY",
+  "wiring": {
+    "bytes": 27452,
+    "path": "config/hardware/p10_active_wiring.yaml",
+    "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
+  }
+}

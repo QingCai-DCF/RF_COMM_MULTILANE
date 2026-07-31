@@ -1,172 +1,11 @@
 {
-  "schema_version": 1,
-  "state_revision": "P10-1-OFFLINE-PERFORMANCE-READY-1",
-  "project": "RF_COMM_MULTILANE",
-  "canonical_constraint": {
-    "path": "PROJECT_CONSTRAINTS.txt",
-    "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
-  },
-  "p7_status": "PASS",
-  "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
-  "z7020_target_status": "PENDING_Z7020_HW",
-  "rotation_status": "PENDING_FINAL_MECHANICAL",
-  "final_product_status": "PENDING_HW",
-  "product_final_acceptance": "PENDING",
-  "current_run_hardware_authorization": false,
-  "last_hardware_authorization_consumed": true,
-  "no_hardware_default": true,
-  "p8a_no_hardware_actions_executed": true,
-  "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
-  "current_profiles": [
-    {
-      "profile": "Z7010_2LANE_DEV",
-      "status": "PLATFORM_LIMITED_HARDWARE_PASS",
-      "active_profile_path": "board_profiles/ACTIVE_PROFILE.json",
-      "pinmap_path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
-      "xdc_path": "constraints/active/PORT1.generated.xdc",
-      "available_physical_lanes": 2
-    },
-    {
-      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE",
-      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
-      "active_profile_path": null,
-      "pinmap_path": null,
-      "xdc_path": null,
-      "available_physical_lanes": 8,
-      "part": "xc7z020clg400-2",
-      "board_inputs": "PENDING_D12"
-    },
-    {
-      "profile": "Z7020_ROTATING_8LANE_CORE",
-      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
-      "active_profile_path": null,
-      "pinmap_path": null,
-      "xdc_path": null,
-      "available_physical_lanes": 8,
-      "part": "xc7z020clg400-2",
-      "board_inputs": "PENDING_D12"
-    },
-    {
-      "profile": "P10_AX7020_FIXED_2LANE",
-      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
-      "active_profile_path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
-      "pinmap_path": "board_profiles/ax7020_fixed_2lane/pinmap.csv",
-      "xdc_path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
-      "available_physical_lanes": 2,
-      "part": "xc7z020clg400-2",
-      "jtag_cable_serial": "210249855178",
-      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING"
-    },
-    {
-      "profile": "P10_AX7020_ROTATING_2LANE",
-      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
-      "active_profile_path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
-      "pinmap_path": "board_profiles/ax7020_rotating_2lane/pinmap.csv",
-      "xdc_path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
-      "available_physical_lanes": 2,
-      "part": "xc7z020clg400-2",
-      "jtag_cable_serial": "210512180081",
-      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING"
-    }
-  ],
-  "stage_status": {
-    "P0_BOOTSTRAP": "PASS",
-    "P1_OFFLINE_HARDENING": "PASS",
-    "P2_SIMULATION_BASELINE": "PASS",
-    "P3_PRE_HW_ACCEPTANCE_PACKAGE": "PASS",
-    "P4_AUTO_HARDWARE_ACCEPTANCE": "PASS_WITH_PROXY_ILA_EVIDENCE",
-    "P5_2LANE_PROTOCOL_STABILIZATION": "PASS_WITH_NOTES",
-    "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET": "PASS",
-    "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
-    "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
-    "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
-    "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
-    "P8D_SELECTIVE_REPEAT_DMA": "PASS",
-    "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
-    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS",
-    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
-    "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS"
-  },
-  "p7_evidence": {
-    "status": "PASS",
-    "profile": "Z7010_2LANE_DEV",
-    "test_id": "P7-R74-FORMAL-FULL",
-    "run_id": "p7_20260717_stationary_app_r74_formal_full",
-    "source_commit": "911e1a303ff58593cac5ff4c4b70150d17f9a26b",
-    "evidence_commit": "5006731277e49d9f2ddaa04a4726949674be5b27",
-    "evidence_path": "evidence/generated/p7_final_acceptance_summary.json",
-    "evidence_sha256": "a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b",
-    "markdown_path": "evidence/generated/p7_final_acceptance_summary.md",
-    "markdown_sha256": "702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624",
-    "raw_ledger_path": "evidence/hardware/p7/p7_run_sequence_ledger.json",
-    "raw_ledger_sha256": "ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4",
-    "artifact_hashes": {
-      "bitstream": "756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a",
-      "ps_elf": "2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949",
-      "stationary_profile": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94",
-      "functional_profile": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0"
-    },
-    "shutdown_before": "PASS",
-    "shutdown_after": "PASS",
-    "shutdown_exit": 0,
-    "scope": [
-      "STATIONARY",
-      "LOCAL_NO_ETHERNET",
-      "Z7010_2LANE_DEV",
-      "APPLICATION_PATH"
-    ],
-    "scope_exclusions": [
-      "Z7020",
-      "SECTOR_BANK",
-      "ROTATION",
-      "ETHERNET",
-      "EIGHT_LANE",
-      "FINAL_PRODUCT"
-    ]
-  },
-  "legacy_known_failures": [
-    {
-      "failure_id": "AB_L1_BAD_DIR",
-      "status": "HISTORICAL_RETAINED",
-      "evidence_path": "evidence/imported/evidence/final/BAD_DIR_fault_report.md",
-      "evidence_sha256": "e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7",
-      "current_authority": false
-    },
-    {
-      "failure_id": "P7_R41_FORMAL_STAGE66_FAIL",
-      "status": "HISTORICAL_IMMUTABLE_FAIL_RETAINED",
-      "evidence_path": "evidence/generated/p7_r41_formal_failure.json",
-      "current_authority": false
-    }
-  ],
-  "resolved_failures": [
-    {
-      "failure_id": "AB_L1_CURRENT_P7_SCOPE",
-      "status": "RESOLVED_FOR_P7_STATIONARY_2LANE_ONLY",
-      "evidence_path": "evidence/generated/p7_lane1_promotion_summary.json",
-      "evidence_sha256": "6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363",
-      "not_extrapolated_to": [
-        "Z7020",
-        "SECTOR_BANK",
-        "ROTATION",
-        "FINAL_PRODUCT"
-      ]
-    },
-    {
-      "failure_id": "P7_R41_HOST_SORT_OVERFLOW",
-      "status": "SOURCE_FIX_OFFLINE_VALIDATED_R41_REMAINS_FAILED",
-      "evidence_path": "evidence/generated/p7_r41_postfailure_validation.json",
-      "superseded_for_current_scope_by": "P7_R74_FORMAL_FULL"
-    }
-  ],
   "ab_l1_status": {
-    "legacy_status": "BAD_DIR",
-    "legacy_record_status": "HISTORICAL_RETAINED",
-    "current_p9_stationary_status": "PASS",
-    "current_scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
     "current_evidence_path": "evidence/generated/p9_raw_lane_matrix_summary.json",
     "current_evidence_sha256": "6e0a485539625bb9fb3a5a0c10414fdb2756d4c551e70584161bec37ec5120ac",
+    "current_p9_stationary_status": "PASS",
+    "current_scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+    "legacy_record_status": "HISTORICAL_RETAINED",
+    "legacy_status": "BAD_DIR",
     "not_extrapolated_to": [
       "Z7020",
       "SECTOR_BANK",
@@ -175,43 +14,22 @@
     ]
   },
   "architecture_status": {
-    "global_permit_architecture": "SINGLE_ACTIVE_HIGH_PER_ENDPOINT",
-    "fixed_endpoint_global_permit_count": 1,
-    "rotating_endpoint_global_permit_count": 1,
-    "implementation_status": "RTL_PORTABLE_FUNCTION_PASS_PHYSICAL_PENDING_D17",
-    "stuck_high_detection_claimed": false,
     "dual_channel_safety_claimed": false,
-    "single_global_permit_rtl_architecture": "PASS",
-    "global_permit_physical_implementation": "PENDING_D17",
-    "z7010_global_permit_pin_freeze": "PENDING_D17",
     "exact_rolling_duty_rtl_property": "PASS",
+    "external_tfdu_duty_measurement": "PENDING_EXTERNAL_MEASUREMENT",
+    "fixed_endpoint_global_permit_count": 1,
+    "global_permit_architecture": "SINGLE_ACTIVE_HIGH_PER_ENDPOINT",
+    "global_permit_physical_implementation": "PENDING_D17",
+    "implementation_status": "RTL_PORTABLE_FUNCTION_PASS_PHYSICAL_PENDING_D17",
+    "rotating_endpoint_global_permit_count": 1,
+    "single_global_permit_rtl_architecture": "PASS",
+    "stuck_high_detection_claimed": false,
     "tfdu_duty_hardware_measurement": "PENDING_EXTERNAL_MEASUREMENT",
-    "external_tfdu_duty_measurement": "PENDING_EXTERNAL_MEASUREMENT"
+    "z7010_global_permit_pin_freeze": "PENDING_D17"
   },
-  "p8b_acceptance": {
-    "status": "PASS",
-    "profile": "D200_D600_8X32",
-    "scope": "OFFLINE_GEOMETRY_MAPPING_CROSSBAR_EPOCH_PHASE_HANDOVER_LOGIC_MODEL",
-    "test_id": "P8B-OFFLINE-FULL-REGRESSION",
-    "evidence_path": "evidence/generated/p8b_checkpoint_acceptance_core.json",
-    "evidence_sha256": "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870",
-    "source_commit": "6a723405c1be5328aaaa55ebf472fabc0aea991e",
-    "full_regression_path": "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
-    "full_regression_sha256": "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470",
-    "geometry_config_path": "config/geometry/optical_geometry.yaml",
-    "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
-    "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
-    "p8a_checkpoint_tag": "p8a-pass",
-    "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS",
-    "logic_model_timing_target": "PASS",
-    "hardware_actions_executed": false,
-    "scope_exclusions": [
-      "REAL_600RPM_HANDOVER",
-      "FINAL_SECTOR_BANK_ELECTRICAL_SETTLE",
-      "Z7020_HARDWARE",
-      "ROTATION_HARDWARE",
-      "FINAL_PRODUCT_HARDWARE"
-    ]
+  "canonical_constraint": {
+    "path": "PROJECT_CONSTRAINTS.txt",
+    "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
   },
   "completed_gates": [
     {
@@ -243,6 +61,535 @@
       "status": "PASS"
     }
   ],
+  "current_profiles": [
+    {
+      "active_profile_path": "board_profiles/ACTIVE_PROFILE.json",
+      "available_physical_lanes": 2,
+      "pinmap_path": "board_profiles/ax7010_tfdu_j10_j11_pinmap.csv",
+      "profile": "Z7010_2LANE_DEV",
+      "status": "PLATFORM_LIMITED_HARDWARE_PASS",
+      "xdc_path": "constraints/active/PORT1.generated.xdc"
+    },
+    {
+      "active_profile_path": null,
+      "available_physical_lanes": 8,
+      "board_inputs": "PENDING_D12",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": null,
+      "profile": "Z7020_FIXED_8LANE_32MODULE_CORE",
+      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
+      "xdc_path": null
+    },
+    {
+      "active_profile_path": null,
+      "available_physical_lanes": 8,
+      "board_inputs": "PENDING_D12",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": null,
+      "profile": "Z7020_ROTATING_8LANE_CORE",
+      "status": "EXACT_PART_CORE_OFFLINE_PASS_HARDWARE_PENDING",
+      "xdc_path": null
+    },
+    {
+      "active_profile_path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "available_physical_lanes": 2,
+      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING",
+      "jtag_cable_serial": "210249855178",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": "board_profiles/ax7020_fixed_2lane/pinmap.csv",
+      "profile": "P10_AX7020_FIXED_2LANE",
+      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
+      "xdc_path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+    },
+    {
+      "active_profile_path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "available_physical_lanes": 2,
+      "board_document_status": "REFERENCE_PASS_PHYSICAL_REVISION_GAPS_NONBLOCKING",
+      "jtag_cable_serial": "210512180081",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": "board_profiles/ax7020_rotating_2lane/pinmap.csv",
+      "profile": "P10_AX7020_ROTATING_2LANE",
+      "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
+      "xdc_path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+    }
+  ],
+  "current_program_stage": "P10_1_PERFORMANCE_REMEDIATION",
+  "current_run_hardware_authorization": false,
+  "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
+  "final_product_status": "PENDING_HW",
+  "last_hardware_authorization_consumed": true,
+  "last_hardware_authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
+  "last_hardware_run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+  "last_hardware_stage": "P10_1",
+  "last_shutdown_fixed": "PASS",
+  "last_shutdown_rotating": "PASS",
+  "last_verified_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "legacy_known_failures": [
+    {
+      "current_authority": false,
+      "evidence_path": "evidence/imported/evidence/final/BAD_DIR_fault_report.md",
+      "evidence_sha256": "e24245750107dd4fede13650bd3a796f4d8de97c37a9b13356b06c7ba5f7ebf7",
+      "failure_id": "AB_L1_BAD_DIR",
+      "status": "HISTORICAL_RETAINED"
+    },
+    {
+      "current_authority": false,
+      "evidence_path": "evidence/generated/p7_r41_formal_failure.json",
+      "failure_id": "P7_R41_FORMAL_STAGE66_FAIL",
+      "status": "HISTORICAL_IMMUTABLE_FAIL_RETAINED"
+    }
+  ],
+  "no_hardware_default": true,
+  "p10_1_current_run_authorization": {
+    "consumed": true,
+    "consumed_by_run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+    "path": "config/p10_1_current_run_hardware_authorization.json",
+    "reusable_for_future_run": false,
+    "sha256": "e5d0f8e2e4dd07dc61dc42d85620316543be6b1b880b0b7e397fccb0e82f8d11",
+    "status": "CONSUMED_AFTER_P10_1_HARDWARE_FAIL"
+  },
+  "p10_1_hardware_campaign": {
+    "artifact_provenance": "CAPTURED_IMMUTABLE_CURRENT_RUN_AUTHORIZATION",
+    "authorization_was_valid": true,
+    "campaign_disposition": "STOPPED_AT_GOAL_RETRY_LIMIT",
+    "complete_run_id": null,
+    "current_run_hardware_authorization": false,
+    "f_to_r_application_goodput_bps": null,
+    "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
+    "final_evidence_sha256": "d4f771932b242e55f248aabfb00e1707a5ae6b09d6790740d979cb4d62e5bba9",
+    "fixed_board_id": "AX7020-F/JTAG:210249855178",
+    "hardware_actions_executed": true,
+    "hardware_movement": false,
+    "maximum_lane_mask": "0x3",
+    "network_used": false,
+    "next_required_user_action": "provide a new explicit authorization that extends or overrides the Goal limit of two preflight run IDs before any third hardware preflight",
+    "offline_base_tag": "p10.1-offline-performance-ready",
+    "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+    "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+    "r_to_f_application_goodput_bps": null,
+    "retry_run_id_count": 2,
+    "retry_run_id_limit": 2,
+    "rotating_board_id": "AX7020-R/JTAG:210512180081",
+    "run_id": "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
+    "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "source_commit": "ddf4a064680677c6421d6e2a25f52352900d8880",
+    "status": "FAIL"
+  },
+  "p10_1_hardware_status": "FAIL",
+  "p10_1_no_hardware_actions_executed": false,
+  "p10_1_offline_status": "PASS",
+  "p10_1_performance_and_observability": {
+    "evidence_path": "evidence/generated/p10_1_performance_model.json",
+    "evidence_sha256": "bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9",
+    "hardware_actions_executed": false,
+    "hardware_experiments_authorized": false,
+    "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
+    "measurement_contract_sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1",
+    "modeled_application_goodput_bps": 4189709.129513542,
+    "prior_model_classification": "MODEL_INVALID_OR_SCOPE_MISMATCH",
+    "prior_modeled_application_goodput_bps": 6688299.301296164,
+    "real_hardware_goodput_status": "FAIL",
+    "scale_equivalent_4mbps_feasibility": "PASS",
+    "selected_pipeline": {
+      "ack_aggregation_threshold": 8,
+      "buffer_count": 4,
+      "descriptor_batch": 4,
+      "descriptor_ring_depth": 16,
+      "outstanding_frames": 32
+    },
+    "source_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+    "status": "PASS",
+    "stretch_4p8mbps": "PENDING_WITH_EXPLICIT_GAP",
+    "verification_scope": "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
+  },
+  "p10_1_pl_activity_leds": {
+    "active_low": true,
+    "artifact_manifest_path": "evidence/generated/p10_1_led_artifact_manifest.json",
+    "artifact_manifest_sha256": "770c3d44a8aeb13c22da50a11000b333b2454f28aa10c31ab1fc42c0406244da",
+    "current_run_hardware_authorization": false,
+    "evidence_foundation_commit": "cc29bd50e617a9639ddc92f271b3638a804439b7",
+    "evidence_path": "evidence/generated/p10_1_led_offline_acceptance_leaf.json",
+    "evidence_sha256": "d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422",
+    "hardware_actions_executed": false,
+    "implementation_source_commit": "5d1aeea2ba93b8ef69817f6ef4c8694dff49273b",
+    "mapping": "LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX",
+    "monitor_only": true,
+    "new_hardware_validation_status": "PENDING",
+    "roles": {
+      "fixed": {
+        "bitstream": {
+          "bytes": 4045681,
+          "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83/p10_ax7020_fixed_functional.bit",
+          "read_only": true,
+          "sha256": "aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83"
+        },
+        "bsp": {
+          "bytes": 1855896,
+          "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+          "read_only": true,
+          "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+        },
+        "elf": {
+          "bytes": 378640,
+          "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174/p10_fixed_runtime.elf",
+          "read_only": true,
+          "sha256": "55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174"
+        },
+        "profile": "P10_AX7020_FIXED_2LANE",
+        "tns_ns": 0.0,
+        "whs_ns": 0.035,
+        "wns_ns": 1.139,
+        "xsa": {
+          "bytes": 844456,
+          "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3/p10_ax7020_fixed_functional.xsa",
+          "read_only": true,
+          "sha256": "6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3"
+        }
+      },
+      "rotating": {
+        "bitstream": {
+          "bytes": 4045681,
+          "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a/p10_ax7020_rotating_functional.bit",
+          "read_only": true,
+          "sha256": "7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a"
+        },
+        "bsp": {
+          "bytes": 1856209,
+          "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+          "read_only": true,
+          "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+        },
+        "elf": {
+          "bytes": 378684,
+          "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c/p10_rotating_runtime.elf",
+          "read_only": true,
+          "sha256": "790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c"
+        },
+        "profile": "P10_AX7020_ROTATING_2LANE",
+        "tns_ns": 0.0,
+        "whs_ns": 0.036,
+        "wns_ns": 1.219,
+        "xsa": {
+          "bytes": 844074,
+          "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1/p10_ax7020_rotating_functional.xsa",
+          "read_only": true,
+          "sha256": "d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1"
+        }
+      }
+    },
+    "runtime_build_source_commit": "a07f218434e2fb3000f1d7c086917169fb500163",
+    "status": "OFFLINE_PASS_HARDWARE_PENDING",
+    "verification_scope": "P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE"
+  },
+  "p10_acceptance": {
+    "application_goodput_f_to_r_bps": 5767.861069534447,
+    "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
+    "application_goodput_r_to_f_bps": 5785.116365442897,
+    "evidence_checkpoint_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+    "evidence_checkpoint_tag": "p10-ax7020-dual-node-2lane-pass",
+    "evidence_manifest_file_count": 1276,
+    "evidence_manifest_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json",
+    "evidence_manifest_sha256": "2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281",
+    "evidence_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json",
+    "evidence_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
+    "fixed_board_id": "AX7020-F/JTAG:210249855178",
+    "formal_evidence_freeze_commit": "16684884708223bf7fb9b05145164e6155496cc8",
+    "generated_summary_path": "evidence/generated/p10_fasttrack_final_summary.json",
+    "generated_summary_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
+    "goodput_measurement_audit_path": "evidence/generated/p10_goodput_measurement_audit.json",
+    "goodput_measurement_audit_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14",
+    "goodput_scaling_eligible": false,
+    "hardware_actions_executed": true,
+    "mandatory_claims": {
+      "DUAL_Z7020_2LANE_OPTICAL_LINK": "PASS",
+      "DUAL_Z7020_INDEPENDENT_ENDPOINTS": "PASS",
+      "DUAL_Z7020_PS_PL_PHY_PL_PS": "PASS",
+      "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
+      "STATIONARY_2LANE_30MIN": "PASS"
+    },
+    "maximum_lane_mask_used": "0x3",
+    "network_used": false,
+    "no_hardware_movement": true,
+    "profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+    "rewiring_executed": false,
+    "rotating_board_id": "AX7020-R/JTAG:210512180081",
+    "rotation_executed": false,
+    "run_id": "p10_formal_20260730T181535Z_03",
+    "scope": "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION",
+    "scope_exclusions": [
+      "ETHERNET",
+      "SPI",
+      "PHYSICAL_GLOBAL_PERMIT_D17",
+      "EXTERNAL_TFDU_DUTY_MEASUREMENT",
+      "HANDOVER",
+      "EIGHT_LANE_8X32",
+      "ROTATION_600RPM",
+      "PRODUCT_FINAL"
+    ],
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+    "status": "PASS",
+    "test_id": "P10-FASTTRACK-FINAL",
+    "unchanged_pending_scopes": {
+      "600RPM": "PENDING_P13",
+      "8X32": "PENDING_P12",
+      "ETHERNET": "DEFERRED_NO_NETWORK_CABLE",
+      "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
+      "HANDOVER": "PENDING_P11",
+      "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
+      "PRODUCT_FINAL": "PENDING",
+      "SPI": "PENDING"
+    }
+  },
+  "p10_current_run_authorization": {
+    "authorization_commit": "5e5f34bb7410c5fa4b27007a6458d90b12cfdb02",
+    "consumed": true,
+    "consumed_by_run_id": "p10_formal_20260730T181535Z_03",
+    "path": "config/p10_fasttrack_current_run_authorization.json",
+    "reusable_for_future_run": false,
+    "sha256": "850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83",
+    "status": "CONSUMED_AFTER_P10_ACCEPTANCE"
+  },
+  "p10_goodput_measurement_audit": {
+    "eligible_for_final_8lane_projection": false,
+    "evidence_path": "evidence/generated/p10_goodput_measurement_audit.json",
+    "evidence_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14",
+    "hardware_actions_executed": false,
+    "outcome": "CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING",
+    "status": "PASS",
+    "test_id": "P10-GOODPUT-MEASUREMENT-AUDIT"
+  },
+  "p10_post_acceptance_closeout": {
+    "evidence_path": "evidence/generated/p10_closeout_summary.json",
+    "evidence_sha256": "fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b",
+    "git_metadata_path": "evidence/generated/p10_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18",
+    "hardware_actions_executed": false,
+    "p11_started": false,
+    "remote_push_path": "evidence/generated/p10_remote_push_summary.json",
+    "remote_push_sha256": "56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062",
+    "status": "PASS",
+    "test_id": "P10-CLOSEOUT-001"
+  },
+  "p10_status": "PASS",
+  "p11_hardware_ready": false,
+  "p11_readiness": {
+    "current_run_hardware_authorization": false,
+    "current_tfdu_module_count": 4,
+    "evidence_path": "evidence/generated/p10_1_p11_readiness.json",
+    "evidence_sha256": "716c55b9cc60c70843a634451b3ebb9347e6bcf79b71d00aaaf63be19432ae8a",
+    "hardware_ready": false,
+    "minimum_required_tfdu_module_count": 5,
+    "missing_prerequisites": [
+      "one additional compatible TFDU module",
+      "four-fixed-module fixture",
+      "rotating-module fixture",
+      "verified ABZ/phase input",
+      "bounded controllable motion source",
+      "P11-specific board profile/wiring/XDC",
+      "new current-run hardware authorization"
+    ],
+    "official_stage_status": "NOT_STARTED",
+    "status": "NOT_READY"
+  },
+  "p11_status": "NOT_STARTED",
+  "p7_evidence": {
+    "artifact_hashes": {
+      "bitstream": "756c318e6393d765ecac89db46e2d5f98fefe5bf44871804a9b5a0545f42207a",
+      "functional_profile": "eb0192a27d115a5b70730746982e16b954ed754f8e1a57961091a31c4d6afcd0",
+      "ps_elf": "2efe94a236b8c287b8287ada06505253f455447cb88492b3f61e87accebf9949",
+      "stationary_profile": "65a36a8318e7fd1e3b647997aceca773c69e76eee85cb8fae922148ccd8f3c94"
+    },
+    "evidence_commit": "5006731277e49d9f2ddaa04a4726949674be5b27",
+    "evidence_path": "evidence/generated/p7_final_acceptance_summary.json",
+    "evidence_sha256": "a47b77e7c0ea0843eddaa0657408fe536af52fca3f7aa8395ba0902f4f01bc3b",
+    "markdown_path": "evidence/generated/p7_final_acceptance_summary.md",
+    "markdown_sha256": "702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624",
+    "profile": "Z7010_2LANE_DEV",
+    "raw_ledger_path": "evidence/hardware/p7/p7_run_sequence_ledger.json",
+    "raw_ledger_sha256": "ab6138a0d6229985f127cf24fd418d2d4026a02a21b7776bdbb6be2fc608a2c4",
+    "run_id": "p7_20260717_stationary_app_r74_formal_full",
+    "scope": [
+      "STATIONARY",
+      "LOCAL_NO_ETHERNET",
+      "Z7010_2LANE_DEV",
+      "APPLICATION_PATH"
+    ],
+    "scope_exclusions": [
+      "Z7020",
+      "SECTOR_BANK",
+      "ROTATION",
+      "ETHERNET",
+      "EIGHT_LANE",
+      "FINAL_PRODUCT"
+    ],
+    "shutdown_after": "PASS",
+    "shutdown_before": "PASS",
+    "shutdown_exit": 0,
+    "source_commit": "911e1a303ff58593cac5ff4c4b70150d17f9a26b",
+    "status": "PASS",
+    "test_id": "P7-R74-FORMAL-FULL"
+  },
+  "p7_status": "PASS",
+  "p8_portable_architecture_status": "PASS",
+  "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
+  "p8a_no_hardware_actions_executed": true,
+  "p8b_acceptance": {
+    "evidence_path": "evidence/generated/p8b_checkpoint_acceptance_core.json",
+    "evidence_sha256": "33ef5c0eaea36ae79ca7753374966af4caed6af022adc512955b6619c5ec6870",
+    "full_regression_path": "evidence/generated/p8b_checkpoint_offline_gate_summary.json",
+    "full_regression_sha256": "669fb52ee5c5506bca06a77e39fc9700c42fb600f165eb1a1ee4ab413ab78470",
+    "geometry_config_path": "config/geometry/optical_geometry.yaml",
+    "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
+    "hardware_actions_executed": false,
+    "logic_model_timing_target": "PASS",
+    "p8a_checkpoint_commit": "3ed79e02baa2c60af86e752c79ad1d0c44e37fb4",
+    "p8a_checkpoint_tag": "p8a-pass",
+    "profile": "D200_D600_8X32",
+    "scope": "OFFLINE_GEOMETRY_MAPPING_CROSSBAR_EPOCH_PHASE_HANDOVER_LOGIC_MODEL",
+    "scope_exclusions": [
+      "REAL_600RPM_HANDOVER",
+      "FINAL_SECTOR_BANK_ELECTRICAL_SETTLE",
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ],
+    "source_commit": "6a723405c1be5328aaaa55ebf472fabc0aea991e",
+    "status": "PASS",
+    "test_id": "P8B-OFFLINE-FULL-REGRESSION",
+    "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
+  },
+  "p8b_no_hardware_actions_executed": true,
+  "p8c_acceptance": {
+    "evidence_path": "evidence/generated/p8c_final_summary.json",
+    "evidence_sha256": "161d89e30eb6bcc607cbb1732fcccd739519e5d92e014e3530199d8b92dc819e",
+    "exact_rolling_duty_rtl_property": "PASS",
+    "global_permit_physical_implementation": "PENDING_D17",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "profile": "P8C_MULTI_PROFILE_OFFLINE",
+    "safety_config_path": "config/tfdu_safety.yaml",
+    "safety_config_sha256": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06",
+    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL",
+    "scope_exclusions": [
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "SECTOR_BANK_HARDWARE",
+      "DUTY_EXTERNAL_MEASUREMENT",
+      "FINAL_PRODUCT_HARDWARE"
+    ],
+    "single_global_permit_rtl_architecture": "PASS",
+    "source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+    "status": "PASS",
+    "test_id": "P8C-FINAL-ACCEPTANCE",
+    "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER",
+    "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE"
+  },
+  "p8c_no_hardware_actions_executed": true,
+  "p8d_acceptance": {
+    "architecture_16mbps_feasibility": "PASS",
+    "data_plane_config_path": "config/p8d_data_plane.yaml",
+    "data_plane_config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+    "evidence_path": "evidence/generated/p8d_acceptance_core.json",
+    "evidence_sha256": "f288344ca63331d04e28d3cb8a03d72b2e556f0a6b8c8b89c2fea89d636b1f2e",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "profile": "P8D_MULTI_PROFILE_OFFLINE",
+    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL",
+    "scope_exclusions": [
+      "REAL_AXI_DMA",
+      "DDR_HARDWARE",
+      "Z7020_HARDWARE",
+      "ROTATION_HARDWARE",
+      "THROUGHPUT_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ],
+    "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
+    "status": "PASS",
+    "stretch_19p2mbps_feasibility": "FAIL",
+    "test_id": "P8D-ACCEPTANCE-CORE"
+  },
+  "p8d_no_hardware_actions_executed": true,
+  "p8d_status": "PASS",
+  "p8e_acceptance": {
+    "artifact_manifest_path": "evidence/generated/p8e_raw/artifact_sha256_manifest.json",
+    "artifact_manifest_sha256": "e331b36a8d3138b36eac969b4dbf395c7c0b8565c882d80e83f0fcda02593308",
+    "build_matrix_path": "config/p8e_build_matrix.yaml",
+    "build_matrix_sha256": "5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502",
+    "clock_reset_path": "config/p8e_clock_reset.yaml",
+    "clock_reset_sha256": "0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2",
+    "evidence_path": "evidence/generated/p8e_final_summary.json",
+    "evidence_sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88",
+    "hardware_actions_executed": false,
+    "hardware_scope_promoted": false,
+    "profile": "P8E_MULTI_PROFILE_OFFLINE",
+    "scope": "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION",
+    "scope_exclusions": [
+      "REAL_AXI_DMA_DDR",
+      "Z7020_BOARD_IO",
+      "Z7010_HARDWARE_RERUN",
+      "GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION",
+      "TFDU_EXTERNAL_MEASUREMENT",
+      "ROTATION_HARDWARE",
+      "FINAL_PRODUCT_HARDWARE"
+    ],
+    "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
+    "status": "PASS",
+    "test_id": "P8E-DUAL-TARGET-BUILD-CDC-RESOURCE-TIMING-FINAL"
+  },
+  "p8e_no_hardware_actions_executed": true,
+  "p8e_status": "PASS",
+  "p9_acceptance": {
+    "candidate_bitstream_sha256": "ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308",
+    "evidence_checkpoint_commit": "818d335c229d7b92223c279159aab84a5207ef92",
+    "evidence_checkpoint_tag": "p9-z7010-2lane-pass",
+    "evidence_checkpoint_tag_object": "5bc9493071b9ea3446ac27cdd117bc3d3f67bd91",
+    "evidence_checkpoint_tree": "d92ae2b97d30590dca634ac3032e1c6dabb40ca4",
+    "evidence_path": "evidence/generated/p9_evidence_consistency_summary.json",
+    "evidence_sha256": "6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6",
+    "hardware_actions_executed": true,
+    "no_hardware_movement": true,
+    "phase2_authorization_path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/authorization/phase2_immutable_artifacts.json",
+    "phase2_authorization_sha256": "5428fc875492d54511484a13ca177d74037156b088f8358bebdb0bbc081ed004",
+    "profile": "Z7010_2LANE_DEV",
+    "ps_elf_sha256": "2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1",
+    "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+    "scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+    "scope_exclusions": [
+      "Z7020",
+      "EIGHT_LANE",
+      "ROTATION",
+      "ETHERNET",
+      "PHYSICAL_GLOBAL_PERMIT_D17",
+      "FINAL_PRODUCT"
+    ],
+    "shutdown_bitstream_sha256": "a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8",
+    "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
+    "status": "PASS",
+    "test_id": "P9-FINAL"
+  },
+  "p9_current_run_authorization": {
+    "consumed": true,
+    "consumed_by_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
+    "path": "config/p9_current_run_authorization.json",
+    "reusable_for_future_run": false,
+    "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697",
+    "status": "CONSUMED_AFTER_P9_ACCEPTANCE"
+  },
+  "p9_post_checkpoint_closeout": {
+    "evidence_path": "evidence/generated/p9_post_checkpoint_closeout.json",
+    "evidence_sha256": "c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4",
+    "git_metadata_path": "evidence/generated/p9_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116",
+    "hardware_actions_executed": false,
+    "p10_started": false,
+    "status": "PASS",
+    "test_id": "P9-CLOSEOUT-001"
+  },
+  "p9_status": "PASS",
   "pending_gates": [
     {
       "gate_id": "D12_CORE_BOARD",
@@ -281,372 +628,50 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
-  "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
+  "product_final_acceptance": "PENDING",
+  "project": "RF_COMM_MULTILANE",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
-  "p8c_no_hardware_actions_executed": true,
-  "p8c_acceptance": {
-    "status": "PASS",
-    "profile": "P8C_MULTI_PROFILE_OFFLINE",
-    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL",
-    "test_id": "P8C-FINAL-ACCEPTANCE",
-    "source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
-    "evidence_path": "evidence/generated/p8c_final_summary.json",
-    "evidence_sha256": "161d89e30eb6bcc607cbb1732fcccd739519e5d92e014e3530199d8b92dc819e",
-    "safety_config_path": "config/tfdu_safety.yaml",
-    "safety_config_sha256": "e9069e49c1fd835ac7d1aee7e75b8e5b5cb13533fd703ddddf2ac3d8da61fb06",
-    "single_global_permit_rtl_architecture": "PASS",
-    "global_permit_physical_implementation": "PENDING_D17",
-    "z7010_global_permit_pin_freeze": "PENDING_P9_PIN_FREEZE",
-    "exact_rolling_duty_rtl_property": "PASS",
-    "tfdu_duty_hardware_measurement": "PENDING_P9_OR_LATER",
-    "hardware_actions_executed": false,
-    "hardware_scope_promoted": false,
-    "scope_exclusions": [
-      "Z7020_HARDWARE",
-      "ROTATION_HARDWARE",
-      "SECTOR_BANK_HARDWARE",
-      "DUTY_EXTERNAL_MEASUREMENT",
-      "FINAL_PRODUCT_HARDWARE"
-    ]
-  },
-  "p8d_status": "PASS",
-  "p8d_no_hardware_actions_executed": true,
-  "p8e_status": "PASS",
-  "p8d_acceptance": {
-    "status": "PASS",
-    "profile": "P8D_MULTI_PROFILE_OFFLINE",
-    "scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL",
-    "test_id": "P8D-ACCEPTANCE-CORE",
-    "source_commit": "d28eef6aea8f545282076dd1a19a344adb12ccd9",
-    "evidence_path": "evidence/generated/p8d_acceptance_core.json",
-    "evidence_sha256": "f288344ca63331d04e28d3cb8a03d72b2e556f0a6b8c8b89c2fea89d636b1f2e",
-    "data_plane_config_path": "config/p8d_data_plane.yaml",
-    "data_plane_config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
-    "architecture_16mbps_feasibility": "PASS",
-    "stretch_19p2mbps_feasibility": "FAIL",
-    "hardware_actions_executed": false,
-    "hardware_scope_promoted": false,
-    "scope_exclusions": [
-      "REAL_AXI_DMA",
-      "DDR_HARDWARE",
-      "Z7020_HARDWARE",
-      "ROTATION_HARDWARE",
-      "THROUGHPUT_HARDWARE",
-      "FINAL_PRODUCT_HARDWARE"
-    ]
-  },
-  "p8_portable_architecture_status": "PASS",
-  "p9_status": "PASS",
-  "p8e_no_hardware_actions_executed": true,
-  "p8e_acceptance": {
-    "status": "PASS",
-    "profile": "P8E_MULTI_PROFILE_OFFLINE",
-    "scope": "PORTABLE_ARCHITECTURE_PASS / OFFLINE_ROUTED_IMPLEMENTATION",
-    "test_id": "P8E-DUAL-TARGET-BUILD-CDC-RESOURCE-TIMING-FINAL",
-    "source_commit": "0c67e7717a5a0fb594a237a05184be65cf748f4f",
-    "evidence_path": "evidence/generated/p8e_final_summary.json",
-    "evidence_sha256": "175aff5c200f3edfd2b00a93aba9bbfea256a1ac34bd27b636459e8a36680c88",
-    "artifact_manifest_path": "evidence/generated/p8e_raw/artifact_sha256_manifest.json",
-    "artifact_manifest_sha256": "e331b36a8d3138b36eac969b4dbf395c7c0b8565c882d80e83f0fcda02593308",
-    "build_matrix_path": "config/p8e_build_matrix.yaml",
-    "build_matrix_sha256": "5835f796b3d81f5eccf52d06151f432414dc241437ae176328484e8cf7edc502",
-    "clock_reset_path": "config/p8e_clock_reset.yaml",
-    "clock_reset_sha256": "0b22a8073d494bdb78dc04b9832d55e27bd772572d1dad5c1b95b1010af769f2",
-    "hardware_actions_executed": false,
-    "hardware_scope_promoted": false,
-    "scope_exclusions": [
-      "REAL_AXI_DMA_DDR",
-      "Z7020_BOARD_IO",
-      "Z7010_HARDWARE_RERUN",
-      "GLOBAL_PERMIT_PHYSICAL_IMPLEMENTATION",
-      "TFDU_EXTERNAL_MEASUREMENT",
-      "ROTATION_HARDWARE",
-      "FINAL_PRODUCT_HARDWARE"
-    ]
-  },
-  "p9_current_run_authorization": {
-    "status": "CONSUMED_AFTER_P9_ACCEPTANCE",
-    "path": "config/p9_current_run_authorization.json",
-    "sha256": "b994e171a7f5cb59cae388ff91afc12370f27883ad7ba3fb35a60073f3feb697",
-    "consumed": true,
-    "consumed_by_run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
-    "reusable_for_future_run": false
-  },
-  "p9_acceptance": {
-    "status": "PASS",
-    "profile": "Z7010_2LANE_DEV",
-    "scope": "Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION",
-    "test_id": "P9-FINAL",
-    "run_id": "p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc",
-    "source_commit": "6d88b7854219c8b514ef36109a456ffbda4972d8",
-    "evidence_checkpoint_tag": "p9-z7010-2lane-pass",
-    "evidence_checkpoint_tag_object": "5bc9493071b9ea3446ac27cdd117bc3d3f67bd91",
-    "evidence_checkpoint_commit": "818d335c229d7b92223c279159aab84a5207ef92",
-    "evidence_checkpoint_tree": "d92ae2b97d30590dca634ac3032e1c6dabb40ca4",
-    "evidence_path": "evidence/generated/p9_evidence_consistency_summary.json",
-    "evidence_sha256": "6d0ac181bb47cafdc7906319784f46275407030a52144ab9a48dc16994eacfd6",
-    "phase2_authorization_path": "evidence/hardware/p9/p9_20260729T134551Z_6d88b7854219_ac75bfe61bfc/authorization/phase2_immutable_artifacts.json",
-    "phase2_authorization_sha256": "5428fc875492d54511484a13ca177d74037156b088f8358bebdb0bbc081ed004",
-    "candidate_bitstream_sha256": "ac75bfe61bfc639d6411462980ad2406293bd3054d8d5f2063879a78bb75d308",
-    "shutdown_bitstream_sha256": "a116b0153c0001d0d881b404f09ab33e689693c379bbccc4daa36f17f5d82ed8",
-    "ps_elf_sha256": "2e235a0ccc365133985f2d569784500f23ea57a8a0470c9c732ad0efdf2637b1",
-    "hardware_actions_executed": true,
-    "no_hardware_movement": true,
-    "scope_exclusions": [
-      "Z7020",
-      "EIGHT_LANE",
-      "ROTATION",
-      "ETHERNET",
-      "PHYSICAL_GLOBAL_PERMIT_D17",
-      "FINAL_PRODUCT"
-    ]
-  },
-  "p9_post_checkpoint_closeout": {
-    "status": "PASS",
-    "test_id": "P9-CLOSEOUT-001",
-    "evidence_path": "evidence/generated/p9_post_checkpoint_closeout.json",
-    "evidence_sha256": "c886c3ee1d402f6c992190b0651edad388923ad625210f4c4b1afe933fb184a4",
-    "git_metadata_path": "evidence/generated/p9_git_checkpoint_metadata.json",
-    "git_metadata_sha256": "28e6becb22d548d17957f78e0eb793a0022e9c25816619def4ddcf7b1f4d6116",
-    "hardware_actions_executed": false,
-    "p10_started": false
-  },
-  "p10_status": "PASS",
-  "p10_current_run_authorization": {
-    "status": "CONSUMED_AFTER_P10_ACCEPTANCE",
-    "path": "config/p10_fasttrack_current_run_authorization.json",
-    "sha256": "850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83",
-    "authorization_commit": "5e5f34bb7410c5fa4b27007a6458d90b12cfdb02",
-    "consumed": true,
-    "consumed_by_run_id": "p10_formal_20260730T181535Z_03",
-    "reusable_for_future_run": false
-  },
-  "p10_acceptance": {
-    "status": "PASS",
-    "profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
-    "scope": "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION",
-    "test_id": "P10-FASTTRACK-FINAL",
-    "run_id": "p10_formal_20260730T181535Z_03",
-    "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
-    "formal_evidence_freeze_commit": "16684884708223bf7fb9b05145164e6155496cc8",
-    "evidence_checkpoint_tag": "p10-ax7020-dual-node-2lane-pass",
-    "evidence_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json",
-    "evidence_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
-    "evidence_manifest_path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json",
-    "evidence_manifest_sha256": "2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281",
-    "evidence_manifest_file_count": 1276,
-    "generated_summary_path": "evidence/generated/p10_fasttrack_final_summary.json",
-    "generated_summary_sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
-    "fixed_board_id": "AX7020-F/JTAG:210249855178",
-    "rotating_board_id": "AX7020-R/JTAG:210512180081",
-    "hardware_actions_executed": true,
-    "network_used": false,
-    "no_hardware_movement": true,
-    "rotation_executed": false,
-    "rewiring_executed": false,
-    "maximum_lane_mask_used": "0x3",
-    "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS",
-    "application_goodput_f_to_r_bps": 5767.861069534447,
-    "application_goodput_r_to_f_bps": 5785.116365442897,
-    "mandatory_claims": {
-      "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
-      "DUAL_Z7020_INDEPENDENT_ENDPOINTS": "PASS",
-      "DUAL_Z7020_2LANE_OPTICAL_LINK": "PASS",
-      "DUAL_Z7020_PS_PL_PHY_PL_PS": "PASS",
-      "STATIONARY_2LANE_30MIN": "PASS"
+  "resolved_failures": [
+    {
+      "evidence_path": "evidence/generated/p7_lane1_promotion_summary.json",
+      "evidence_sha256": "6cc4cb4141133c7381874873137bfe78d5d73d337cf9c663b51ce5d1851a6363",
+      "failure_id": "AB_L1_CURRENT_P7_SCOPE",
+      "not_extrapolated_to": [
+        "Z7020",
+        "SECTOR_BANK",
+        "ROTATION",
+        "FINAL_PRODUCT"
+      ],
+      "status": "RESOLVED_FOR_P7_STATIONARY_2LANE_ONLY"
     },
-    "unchanged_pending_scopes": {
-      "ETHERNET": "DEFERRED_NO_NETWORK_CABLE",
-      "SPI": "PENDING",
-      "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
-      "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
-      "HANDOVER": "PENDING_P11",
-      "8X32": "PENDING_P12",
-      "600RPM": "PENDING_P13",
-      "PRODUCT_FINAL": "PENDING"
-    },
-    "scope_exclusions": [
-      "ETHERNET",
-      "SPI",
-      "PHYSICAL_GLOBAL_PERMIT_D17",
-      "EXTERNAL_TFDU_DUTY_MEASUREMENT",
-      "HANDOVER",
-      "EIGHT_LANE_8X32",
-      "ROTATION_600RPM",
-      "PRODUCT_FINAL"
-    ],
-    "evidence_checkpoint_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
-    "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
-    "goodput_scaling_eligible": false,
-    "goodput_measurement_audit_path": "evidence/generated/p10_goodput_measurement_audit.json",
-    "goodput_measurement_audit_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14"
-  },
-  "last_hardware_stage": "P10",
-  "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
-  "last_shutdown_fixed": "PASS",
-  "last_shutdown_rotating": "PASS",
-  "p10_post_acceptance_closeout": {
-    "status": "PASS",
-    "test_id": "P10-CLOSEOUT-001",
-    "evidence_path": "evidence/generated/p10_closeout_summary.json",
-    "evidence_sha256": "fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b",
-    "git_metadata_path": "evidence/generated/p10_git_checkpoint_metadata.json",
-    "git_metadata_sha256": "4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18",
-    "remote_push_path": "evidence/generated/p10_remote_push_summary.json",
-    "remote_push_sha256": "56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062",
-    "hardware_actions_executed": false,
-    "p11_started": false
-  },
-  "p10_goodput_measurement_audit": {
-    "status": "PASS",
-    "test_id": "P10-GOODPUT-MEASUREMENT-AUDIT",
-    "evidence_path": "evidence/generated/p10_goodput_measurement_audit.json",
-    "evidence_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14",
-    "outcome": "CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING",
-    "eligible_for_final_8lane_projection": false,
-    "hardware_actions_executed": false
-  },
-  "p10_1_performance_and_observability": {
-    "status": "PASS",
-    "verification_scope": "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE",
-    "source_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
-    "evidence_path": "evidence/generated/p10_1_performance_model.json",
-    "evidence_sha256": "bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9",
-    "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
-    "measurement_contract_sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1",
-    "prior_modeled_application_goodput_bps": 6688299.301296164,
-    "prior_model_classification": "MODEL_INVALID_OR_SCOPE_MISMATCH",
-    "modeled_application_goodput_bps": 4189709.129513542,
-    "scale_equivalent_4mbps_feasibility": "PASS",
-    "stretch_4p8mbps": "PENDING_WITH_EXPLICIT_GAP",
-    "selected_pipeline": {
-      "buffer_count": 4,
-      "descriptor_ring_depth": 16,
-      "descriptor_batch": 4,
-      "outstanding_frames": 32,
-      "ack_aggregation_threshold": 8
-    },
-    "real_hardware_goodput_status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
-    "hardware_experiments_authorized": false,
-    "hardware_actions_executed": false
-  },
-  "p11_readiness": {
-    "status": "NOT_READY",
-    "official_stage_status": "NOT_STARTED",
-    "hardware_ready": false,
-    "current_run_hardware_authorization": false,
-    "current_tfdu_module_count": 4,
-    "minimum_required_tfdu_module_count": 5,
-    "evidence_path": "evidence/generated/p10_1_p11_readiness.json",
-    "evidence_sha256": "716c55b9cc60c70843a634451b3ebb9347e6bcf79b71d00aaaf63be19432ae8a",
-    "missing_prerequisites": [
-      "one additional compatible TFDU module",
-      "four-fixed-module fixture",
-      "rotating-module fixture",
-      "verified ABZ/phase input",
-      "bounded controllable motion source",
-      "P11-specific board profile/wiring/XDC",
-      "new current-run hardware authorization"
-    ]
-  },
-  "p10_1_offline_status": "PASS",
-  "p10_1_hardware_status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
-  "p10_1_hardware_campaign": {
-    "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
-    "status": "IN_PROGRESS_OFFLINE_ARTIFACT_FREEZE",
-    "offline_base_tag": "p10.1-offline-performance-ready",
-    "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
-    "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
-    "fixed_board_id": "AX7020-F/JTAG:210249855178",
-    "rotating_board_id": "AX7020-R/JTAG:210512180081",
-    "current_run_hardware_authorization": false,
-    "hardware_actions_executed": false,
-    "network_used": false,
-    "hardware_movement": false,
-    "maximum_lane_mask": "0x3"
-  },
-  "p11_status": "NOT_STARTED",
-  "p11_hardware_ready": false,
-  "p10_1_no_hardware_actions_executed": true,
-  "p10_1_pl_activity_leds": {
-    "status": "OFFLINE_PASS_HARDWARE_PENDING",
-    "verification_scope": "P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE",
-    "implementation_source_commit": "5d1aeea2ba93b8ef69817f6ef4c8694dff49273b",
-    "runtime_build_source_commit": "a07f218434e2fb3000f1d7c086917169fb500163",
-    "evidence_foundation_commit": "cc29bd50e617a9639ddc92f271b3638a804439b7",
-    "evidence_path": "evidence/generated/p10_1_led_offline_acceptance_leaf.json",
-    "evidence_sha256": "d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422",
-    "artifact_manifest_path": "evidence/generated/p10_1_led_artifact_manifest.json",
-    "artifact_manifest_sha256": "770c3d44a8aeb13c22da50a11000b333b2454f28aa10c31ab1fc42c0406244da",
-    "mapping": "LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX",
-    "active_low": true,
-    "monitor_only": true,
-    "hardware_actions_executed": false,
-    "current_run_hardware_authorization": false,
-    "new_hardware_validation_status": "PENDING",
-    "roles": {
-      "fixed": {
-        "profile": "P10_AX7020_FIXED_2LANE",
-        "bitstream": {
-          "bytes": 4045681,
-          "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83/p10_ax7020_fixed_functional.bit",
-          "read_only": true,
-          "sha256": "aa0ab3cfd91f1ef646e90c8650b508b6cb8e8b916740aa91f87d398dbab07c83"
-        },
-        "xsa": {
-          "bytes": 844456,
-          "path": "artifacts/p10_1_led/78f0ab0c356a92ce1b9ae55247ee3f404cc5856f6a366291dec11ce186a1ac1d/6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3/p10_ax7020_fixed_functional.xsa",
-          "read_only": true,
-          "sha256": "6f3b1021cc925aae0f199e44ca9eddd34f1d7522a10c81c2e61a02cfe54e4fd3"
-        },
-        "wns_ns": 1.139,
-        "whs_ns": 0.035,
-        "tns_ns": 0.0,
-        "bsp": {
-          "bytes": 1855896,
-          "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
-          "read_only": true,
-          "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
-        },
-        "elf": {
-          "bytes": 378640,
-          "path": "artifacts/p10_1_led/d318c2ca7b92fdabb518236739a5e6ea71006ec6fc3df64a5857a8f9facdccaf/55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174/p10_fixed_runtime.elf",
-          "read_only": true,
-          "sha256": "55a80767f92e9fccb310cbac7c977df17f118fc2af8f41f8d2b1820ea70d4174"
-        }
-      },
-      "rotating": {
-        "profile": "P10_AX7020_ROTATING_2LANE",
-        "bitstream": {
-          "bytes": 4045681,
-          "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a/p10_ax7020_rotating_functional.bit",
-          "read_only": true,
-          "sha256": "7f5c7f4c65d80d3ff03864ddc6f1453f4a43557aff904d267786a8ed32d92f9a"
-        },
-        "xsa": {
-          "bytes": 844074,
-          "path": "artifacts/p10_1_led/35122e069e9cc715f199b814e05d5930758c65c821e9eb6e7976d3ac001af8a8/d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1/p10_ax7020_rotating_functional.xsa",
-          "read_only": true,
-          "sha256": "d7037cbc6ad2ed385f3d6ee2485e5c91aa714d72342863673d13d5179c5283b1"
-        },
-        "wns_ns": 1.219,
-        "whs_ns": 0.036,
-        "tns_ns": 0.0,
-        "bsp": {
-          "bytes": 1856209,
-          "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
-          "read_only": true,
-          "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
-        },
-        "elf": {
-          "bytes": 378684,
-          "path": "artifacts/p10_1_led/1521b3899295bbaa4ef4cfa29e63e52bfce74299d93983c79b87ffd721c36cf4/790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c/p10_rotating_runtime.elf",
-          "read_only": true,
-          "sha256": "790058d1e4fe98ef976d51a75795ef442f80505570d60f386778735222f14b8c"
-        }
-      }
+    {
+      "evidence_path": "evidence/generated/p7_r41_postfailure_validation.json",
+      "failure_id": "P7_R41_HOST_SORT_OVERFLOW",
+      "status": "SOURCE_FIX_OFFLINE_VALIDATED_R41_REMAINS_FAILED",
+      "superseded_for_current_scope_by": "P7_R74_FORMAL_FULL"
     }
-  }
+  ],
+  "rotation_status": "PENDING_FINAL_MECHANICAL",
+  "schema_version": 1,
+  "stage_status": {
+    "P0_BOOTSTRAP": "PASS",
+    "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS",
+    "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE": "FAIL",
+    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
+    "P1_OFFLINE_HARDENING": "PASS",
+    "P2_SIMULATION_BASELINE": "PASS",
+    "P3_PRE_HW_ACCEPTANCE_PACKAGE": "PASS",
+    "P4_AUTO_HARDWARE_ACCEPTANCE": "PASS_WITH_PROXY_ILA_EVIDENCE",
+    "P5_2LANE_PROTOCOL_STABILIZATION": "PASS_WITH_NOTES",
+    "P6_LOCAL_TRANSPORT_AND_PS_DRIVER_STABILIZATION_NO_ETHERNET": "PASS",
+    "P7_STATIONARY_2LANE_APPLICATION_ACCEPTANCE": "PASS",
+    "P8A_CANONICAL_REQUIREMENTS_STATE": "PASS",
+    "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
+    "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
+    "P8D_SELECTIVE_REPEAT_DMA": "PASS",
+    "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
+    "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
+  },
+  "state_revision": "P10-1-OFFLINE-PERFORMANCE-READY-1",
+  "z7020_target_status": "PENDING_Z7020_HW"
 }
