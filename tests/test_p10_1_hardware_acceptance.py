@@ -302,6 +302,38 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertNotIn("ethernet", tcl.lower())
         self.assertIn("if (recovery_flags != 0U &&", extension)
 
+    def test_cacheable_runtime_state_is_cleaned_before_xsdb_polling(self) -> None:
+        extension = RUNTIME_EXTENSION.read_text(encoding="utf-8")
+        publish_start = extension.index("static void p10_1_publish_state")
+        publish_end = extension.index(
+            "static void p10_1_store64", publish_start
+        )
+        publish = extension[publish_start:publish_end]
+        state_write = publish.index("result->service_state = state;")
+        cache_clean = publish.index(
+            "Xil_DCacheFlushRange((UINTPTR)result, sizeof(*result));"
+        )
+        self.assertIn("if (g_cache_enabled != 0U)", publish)
+        self.assertLess(state_write, cache_clean)
+        self.assertGreaterEqual(publish.count("dsb();"), 2)
+
+    def test_receiver_prime_timeout_preserves_machine_diagnostics(self) -> None:
+        tcl = STAGE_TCL.read_text(encoding="utf-8")
+        wait_start = tcl.index("proc p10_wait_receiver_primed")
+        wait_end = tcl.index("proc p10_record_observation", wait_start)
+        wait = tcl[wait_start:wait_end]
+        for marker in (
+            "main_state=0x%08X",
+            "response=0x%08X",
+            "pl_status=0x%08X",
+            "phy=0x%08X",
+            "p10_1_magic=0x%08X",
+            "p10_1_state=0x%08X",
+            "p10_1_status=0x%08X",
+            "p10_1_sequence=0x%08X",
+        ):
+            self.assertIn(marker, wait)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -41,8 +41,19 @@ static volatile p10_1_runtime_result_t *p10_1_result(void) {
 
 static void p10_1_publish_state(volatile p10_1_runtime_result_t *result,
                                 uint32_t state) {
+  /*
+   * The P10.1 result page is at 0x00020400.  The Cortex-A9 standalone BSP
+   * maps the containing 1-MiB section as normal write-back cacheable memory.
+   * Once the payload path enables D-cache, a DSB alone does not make this
+   * host-polled publication record visible to XSDB.  Treat service_state as
+   * the release word for the complete record: write it last, clean every
+   * preceding result field plus the state itself to the point of coherency,
+   * then complete the publication barrier.
+   */
   dsb();
   result->service_state = state;
+  if (g_cache_enabled != 0U)
+    Xil_DCacheFlushRange((UINTPTR)result, sizeof(*result));
   dsb();
 }
 

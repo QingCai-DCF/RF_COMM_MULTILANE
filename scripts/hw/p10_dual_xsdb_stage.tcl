@@ -331,30 +331,54 @@ proc p10_wait_receiver_primed {role d} {
                             $p10_prime_per_mib_ms * $size_mib}]
   set bounded [expr {$timeout < $prepare_budget ? $timeout : $prepare_budget}]
   set deadline [expr {[clock milliseconds] + $bounded}]
+  set last_state 0
+  set last_response 0
+  set last_pl_status 0
+  set last_phy 0
+  set last_p10_1_magic 0
+  set last_p10_1_state 0
+  set last_p10_1_status 0
+  set last_p10_1_sequence 0
   while {[clock milliseconds] < $deadline} {
     p10_check_abort
     set state [p10_read32 $role 0x0002000C]
+    set response [p10_read32 $role 0x0002001C]
     set pl_status [p10_read32 $role 0x43C0071C]
     set phy [p10_read32 $role 0x43C00720]
+    set last_state $state
+    set last_response $response
+    set last_pl_status $pl_status
+    set last_phy $phy
     if {$state == 5} { error "P10 $role receiver faulted before source launch" }
     if {($phy & 0x00000F00) != 0} { error "P10 $role receiver safety fault before source launch" }
     if {$command == 3 && $state == 3 && ($pl_status & 0x4) != 0} { return }
     if {$command == 13} {
       set p10_1_magic [p10_read32 $role 0x00020400]
       set p10_1_state [p10_read32 $role 0x00020410]
+      set p10_1_status [p10_read32 $role 0x00020414]
+      set p10_1_sequence [p10_read32 $role 0x00020418]
+      set last_p10_1_magic $p10_1_magic
+      set last_p10_1_state $p10_1_state
+      set last_p10_1_status $p10_1_status
+      set last_p10_1_sequence $p10_1_sequence
       if {$p10_1_magic == 0x31303150 && $p10_1_state == 3 &&
           ($pl_status & 0x4) != 0} {
         return
       }
       if {$p10_1_state == 8} {
-        error "P10.1 $role receiver faulted before source launch"
+        error [format "P10.1 %s receiver faulted before source launch: main_state=0x%08X response=0x%08X pl_status=0x%08X phy=0x%08X p10_1_magic=0x%08X p10_1_state=0x%08X p10_1_status=0x%08X p10_1_sequence=0x%08X" \
+            $role $state $response $pl_status $phy $p10_1_magic \
+            $p10_1_state $p10_1_status $p10_1_sequence]
       }
     }
     if {$command == 2 && $state == 3 && ($pl_status & 0x201) == 0x201 &&
         ($pl_status & 0x2) == 0} { return }
     after 1
   }
-  error "P10 $role receiver did not prime before paired source launch"
+  error [format "P10 %s receiver did not prime before paired source launch: wait_ms=%d main_state=0x%08X response=0x%08X pl_status=0x%08X phy=0x%08X p10_1_magic=0x%08X p10_1_state=0x%08X p10_1_status=0x%08X p10_1_sequence=0x%08X" \
+      $role $bounded $last_state $last_response $last_pl_status $last_phy \
+      $last_p10_1_magic $last_p10_1_state $last_p10_1_status \
+      $last_p10_1_sequence]
 }
 
 proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_status rotating_status fixed_state rotating_state window} {
