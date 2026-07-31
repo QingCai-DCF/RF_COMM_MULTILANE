@@ -1,49 +1,49 @@
 {
-  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1826120000_FAIL",
+  "archived_previous_replay": "evidence/generated/p10_1_led_full_offline_gate_replay/runs/20260731T1501480000_PASS",
   "cleanup_status": "PASS",
   "commands": [
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_offline_gate.py --full --json-summary",
-      "duration_seconds": 875.606,
-      "finished_utc": "2026-07-31T18:49:45+00:00",
+      "duration_seconds": 903.981,
+      "finished_utc": "2026-07-31T17:30:39+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate.log",
-      "log_sha256": "01111b74a2fa867bef23909d4febdba114010b04e028061c24a9a2eeca2a73ff",
+      "log_sha256": "07e6f13724fedb027b0bf5f6a119cab80bf13843ca4211a568db2e8d85fb9d0c",
       "markers": {
         "current_authorization_false": true,
         "hardware_actions_false": true,
-        "p10_1_offline_gate_pass": true
+        "p10_1_offline_gate_pass": false
       },
       "name": "p10_1_full_offline_gate",
       "preserved_generated_evidence": [
         {
-          "bytes": 4138,
+          "bytes": 4737,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_final_summary.json",
-          "sha256": "74259883b28c83449d6980a4f2deaf688a20be8029e02dc09ba4a143fc5afe7a",
+          "sha256": "acb5abd1027a50896ef791933c87623128a83ada7cbede9b9d91852ecbf9ec84",
           "source_path": "evidence/generated/p10_1_final_summary.json"
         },
         {
-          "bytes": 1204,
+          "bytes": 1293,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_consistency.json",
-          "sha256": "3d96a09c88225f2b58d3fd6351a252b0ebf8af6e518b98d10548612b3483ed80",
+          "sha256": "9e60675d4bbee628f896df6ec3a5a0dc7c294c27ad4c2acca1ef44a923de62a0",
           "source_path": "evidence/generated/p10_1_evidence_consistency.json"
         },
         {
           "bytes": 19488,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/p10_1_full_offline_gate_generated/p10_1_evidence_sha256_manifest.json",
-          "sha256": "722b7c0513aa714d2444ea2e4ffdc65550e0df663e08b2608fb800744ccb5001",
+          "sha256": "1ef3459ef058a7a5aab7a27a2d164673eeea35eafd5ad764da79661f1bbb34e6",
           "source_path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json"
         }
       ],
-      "return_code": 0,
-      "started_utc": "2026-07-31T18:35:10+00:00",
-      "status": "PASS"
+      "return_code": 1,
+      "started_utc": "2026-07-31T17:15:35+00:00",
+      "status": "FAIL"
     },
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_offline_gates.py --include-p8b --json-summary",
-      "duration_seconds": 3312.115,
-      "finished_utc": "2026-07-31T19:45:14+00:00",
+      "duration_seconds": 3310.131,
+      "finished_utc": "2026-07-31T18:26:07+00:00",
       "log": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression.log",
-      "log_sha256": "333277bc4102aa4b077ac4a51801130f34b443faa3ee515b42afb3f8069d7f25",
+      "log_sha256": "91a94c902518bc09eddab0ac04f20089e7dc98648945bb6fcc78c8da12d0c84d",
       "markers": {
         "current_authorization_false": false,
         "hardware_actions_false": false,
@@ -52,45 +52,45 @@
       "name": "canonical_p0_p8b_offline_regression",
       "preserved_generated_evidence": [
         {
-          "bytes": 90130,
+          "bytes": 90108,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.json",
-          "sha256": "42bc97d4695e192177dd02de9469cbb68e69d49bc101b79f859323d3a70d2cdc",
+          "sha256": "29a2db669f150d00d57a1156ca07dd27934b78b0cd742d47594b4fb59af428d3",
           "source_path": "evidence/generated/offline_gate_summary.json"
         },
         {
           "bytes": 77809,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/offline_gate_summary.md",
-          "sha256": "5c5a19fe1a0bbfd5a08306ddf7d140ca81e4fe457b964c746df5d8f3d615ae28",
+          "sha256": "0162b1717a1a183920a48b0457e9c56c7db33e436a5eaa15b15e21bc57eea676",
           "source_path": "evidence/generated/offline_gate_summary.md"
         },
         {
-          "bytes": 891895,
+          "bytes": 891859,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.json",
-          "sha256": "bbe474fe132ce04699bc496596153909b4474ac48b5610c152b643bcbb39a1b2",
+          "sha256": "c2e81fff0b1a6f2f608dce3bbecb38f9879c668907115e8e09918b84d687d97a",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.json"
         },
         {
           "bytes": 7883,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/nonhardware_build_summary.md",
-          "sha256": "85bccb3e7e1a989c46a0990d34f44309d1352d5c38e5c8af978f4bb3f984dd3a",
+          "sha256": "ffd1424e812d27efaf6f8f45045bd57155fe13be2655784445e420ff1bc82c56",
           "source_path": "evidence/generated/vivado/nonhardware_build_summary.md"
         },
         {
-          "bytes": 11290,
+          "bytes": 11387,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.json",
-          "sha256": "bc62d77b61e377efd14e82917179ad16d2631de4099792d15758937b7103fe8e",
+          "sha256": "556d0ce3e5b8262b2b071e334658082a33f8aa3e99249a07acdf0cfc57eaea27",
           "source_path": "evidence/generated/p8b_final_summary.json"
         },
         {
-          "bytes": 12672,
+          "bytes": 12769,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/p8b_final_summary.md",
-          "sha256": "d4f1c6d1f739d2510115983ff4af0f3637a083f337d434b50014437a8e009bf1",
+          "sha256": "ef45ace6c14001cdaf9cc0174362bd7bc28696f18ca2f27e9bcf3a61e2219702",
           "source_path": "evidence/generated/p8b_final_summary.md"
         },
         {
-          "bytes": 5541,
+          "bytes": 5515,
           "path": "evidence/generated/p10_1_led_full_offline_gate_replay/raw/canonical_p0_p8b_offline_regression_generated/plan_completion_audit.md",
-          "sha256": "c4009f48153e193130b9d849817a3f6d1f989ef4013ff8d116c2e5a3e0582b0c",
+          "sha256": "3c733bb5dfdbe406c7adbfc4dcd748e9fcaa1be66aec1f073e35047a9bd11584",
           "source_path": "evidence/generated/plan_completion_audit.md"
         },
         {
@@ -131,7 +131,7 @@
         }
       ],
       "return_code": 1,
-      "started_utc": "2026-07-31T18:50:02+00:00",
+      "started_utc": "2026-07-31T17:30:57+00:00",
       "status": "FAIL"
     }
   ],
@@ -237,16 +237,21 @@
       " M evidence/generated/p10_1_host_native.json",
       " M evidence/generated/p10_1_raw/offline_gate/ax7020_dual_build.log",
       " M evidence/generated/p10_1_raw/offline_gate/config_generation.log",
-      " M evidence/generated/p10_1_raw/offline_gate/final_evidence.log",
       " M evidence/generated/p10_1_raw/offline_gate/finalizer_unit_tests.log",
+      " M evidence/generated/p10_1_raw/offline_gate/p10_verify_existing.log",
+      " M evidence/generated/p10_1_raw/offline_gate/p8a_state_requirements_consistency.log",
       " M evidence/generated/p10_1_raw/offline_gate/p8c_current_unit_regression.log",
       " M evidence/generated/p10_1_raw/offline_gate/pipeline_model.log",
+      " M evidence/generated/p10_1_raw/offline_gate/project_status_generation.log",
       " M evidence/generated/p10_1_raw/offline_gate/register_map_consistency.log",
       " M evidence/generated/p10_1_raw/offline_gate/repo_intake.log",
+      " M evidence/generated/p10_1_raw/offline_gate/requirement_traceability_generation.log",
+      " M evidence/generated/p10_1_raw/offline_gate/requirements_state_update.log",
       " M evidence/generated/p10_1_raw/offline_gate/software_build.log",
       " M evidence/generated/p10_1_raw/offline_gate/xsim.log",
       " M evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
       " M evidence/generated/p10_1_raw/p10_1_regression_commands.json",
+      " M evidence/generated/p10_1_raw/p10_1_repo_intake_baseline.log",
       " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/compile.log",
       " M evidence/generated/p10_1_raw/xsim/tb_p10_1_axis_sustained/run.log",
       " M evidence/generated/p10_1_raw/xsim/tb_p10_1_buffer_pool/compile.log",
@@ -270,6 +275,7 @@
       " M evidence/generated/p10_1_regression.json",
       " M evidence/generated/p10_1_regression.md",
       " M evidence/generated/p10_1_repo_intake.json",
+      " M evidence/generated/p10_1_repo_intake.md",
       " M evidence/generated/p10_1_rotating_build.json",
       " M evidence/generated/p10_1_software/fixed_arm_build.log",
       " M evidence/generated/p10_1_software/fixed_arm_readelf.log",
@@ -306,15 +312,17 @@
     ]
   },
   "errors": [
-    "canonical_p0_p8b_offline_regression returned 1"
+    "p10_1_full_offline_gate returned 1",
+    "canonical_p0_p8b_offline_regression returned 1",
+    "missing P10.1 full-gate marker: p10_1_offline_gate_pass"
   ],
-  "generated_at_utc": "2026-07-31T19:45:19+00:00",
+  "generated_at_utc": "2026-07-31T18:26:12+00:00",
   "hardware_actions_executed": false,
   "network_used": false,
   "no_hardware": true,
   "schema_version": 1,
   "source_branch": "p10.1/hardware-performance-acceptance",
-  "source_commit": "c44766eb5365ba6d01dc472e917a303e18cf442a",
+  "source_commit": "201a05e199a56e785a06d61910d42139fa0248e5",
   "status": "FAIL",
   "test_id": "P10_1-LED-FULL-OFFLINE-GATE-REPLAY"
 }

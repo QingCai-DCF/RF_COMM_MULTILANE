@@ -31,9 +31,11 @@ class P8BCheckoutStabilityTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertTrue(first.endswith("<TIMESTAMP>"))
 
-    def test_p10_1_offline_hardware_stage_preserves_p8b_scope(self) -> None:
+    def test_p10_1_streaming_hardware_stage_preserves_p8b_scope(self) -> None:
         state = {
-            "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+            "current_program_stage": (
+                "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE"
+            ),
             "current_run_hardware_authorization": False,
             "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
             "final_product_status": "PENDING_HW",

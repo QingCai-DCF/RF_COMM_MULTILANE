@@ -2,7 +2,19 @@
   "base_main_commit": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
   "branch": "p10.1/performance-streaming-observability-offline",
   "current_run_hardware_authorization": false,
-  "errors": [],
+  "errors": [
+    "regression command failed: requirements_state_update",
+    "regression command failed: project_status_generation",
+    "regression command failed: requirement_traceability_generation",
+    "regression command failed: repo_intake",
+    "regression command failed: p10_verify_existing",
+    "regression command failed: p8a_state_requirements_consistency",
+    "p10_1_repo_intake status is not PASS",
+    "p10_1_regression status is not PASS",
+    "mandatory gate failed: P10_BASELINE_RECHECK",
+    "mandatory gate failed: OFFLINE_REGRESSION",
+    "mandatory gate failed: EVIDENCE_CONSISTENCY"
+  ],
   "exit_gates": {
     "AX7020_FIXED_BUILD": "PASS",
     "AX7020_ROTATING_BUILD": "PASS",
@@ -14,7 +26,7 @@
     "DESCRIPTOR_LEAK_ZERO": "PASS",
     "DIAGNOSTIC_EXCLUSION": "PASS",
     "DOUBLE_COMPLETION_ZERO": "PASS",
-    "EVIDENCE_CONSISTENCY": "PASS",
+    "EVIDENCE_CONSISTENCY": "FAIL",
     "GOODPUT_FINALIZER_FIX": "PASS",
     "HARDWARE_RUNNER_DRY_RUN": "PASS",
     "HISTORICAL_RECOMPUTE": "PASS",
@@ -23,11 +35,11 @@
     "MULTI_BUFFER_PIPELINE": "PASS",
     "NO_AUTH_FAIL_CLOSED": "PASS",
     "NO_HARDWARE_STATIC_SCAN": "PASS",
-    "OFFLINE_REGRESSION": "PASS",
+    "OFFLINE_REGRESSION": "FAIL",
     "P10_1_4MBPS_SCALE_EQUIVALENT_FEASIBILITY": "PASS",
     "P10_1_PERFORMANCE_MODEL": "PASS",
     "P10_AUTHORIZATION_CLOSED": "PASS",
-    "P10_BASELINE_RECHECK": "PASS",
+    "P10_BASELINE_RECHECK": "FAIL",
     "P10_CLOSED_TAG_IMMUTABLE": "PASS",
     "P10_PASS_TAG_IMMUTABLE": "PASS",
     "P11_READINESS_PACKAGE": "PASS",
@@ -92,10 +104,10 @@
   "schema_version": 1,
   "sha256_manifest": {
     "path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
-    "sha256": "722b7c0513aa714d2444ea2e4ffdc65550e0df663e08b2608fb800744ccb5001"
+    "sha256": "1ef3459ef058a7a5aab7a27a2d164673eeea35eafd5ad764da79661f1bbb34e6"
   },
-  "source_commit": "c44766eb5365ba6d01dc472e917a303e18cf442a",
-  "status": "PASS",
+  "source_commit": "201a05e199a56e785a06d61910d42139fa0248e5",
+  "status": "FAIL",
   "stretch_4p8mbps": "PENDING_WITH_EXPLICIT_GAP",
   "test_id": "P10_1-FINAL-OFFLINE-CHECKPOINT"
 }
