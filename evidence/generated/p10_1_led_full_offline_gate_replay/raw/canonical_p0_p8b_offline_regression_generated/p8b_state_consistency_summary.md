@@ -1,7 +1,7 @@
 # P8B state consistency summary
 
 - `test_id`: `P8B-STATE-NONPROMOTION`
-- `status`: `PASS`
+- `status`: `FAIL`
 - `hardware_actions_executed`: `False`
 
 ```json
@@ -27,8 +27,22 @@
     "z7020_target_status": "PENDING_Z7020_HW"
   },
   "hardware_actions_executed": false,
-  "mismatches": {},
-  "status": "PASS",
+  "mismatches": {
+    "current_program_stage": {
+      "actual": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+      "expected_one_of": [
+        "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+        "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+        "P10_POST_ACCEPTANCE_ANALYSIS",
+        "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
+        "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+        "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+        "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+        "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+      ]
+    }
+  },
+  "status": "FAIL",
   "test_id": "P8B-STATE-NONPROMOTION"
 }
 ```

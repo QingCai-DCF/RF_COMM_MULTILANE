@@ -124,9 +124,15 @@ def main() -> int:
             rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
         elif name.startswith("P10_1_"):
             # P10.1 owns an additive monitor/control window decoded by the
-            # performance monitor and its endpoint integration wrapper.  It is
-            # intentionally not duplicated in the legacy M4 register block.
-            rtl_consumes_register = f"`IR_REG_{name}" in p10_1_rtl
+            # performance monitor and its endpoint integration wrapper.  The
+            # per-lane physical attribution counters are intentionally exposed
+            # beside the existing P9 physical counters by the P9 peripheral's
+            # exact literal decoder.  Accept either implementation location,
+            # but never a mere comment/offset occurrence.
+            rtl_consumes_register = (
+                f"`IR_REG_{name}" in p10_1_rtl
+                or p9_rtl_consumes_register(name, off, p9_rtl)
+            )
         elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:

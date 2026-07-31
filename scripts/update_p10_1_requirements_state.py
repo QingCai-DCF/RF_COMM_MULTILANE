@@ -28,6 +28,7 @@ END = "# END GENERATED P10.1 REQUIREMENTS"
 PROFILE = "P10_1_DUAL_NODE_PERFORMANCE_STREAMING_OBSERVABILITY"
 SCOPE = "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
 STAGE = "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS"
+HARDWARE_STAGE = "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE"
 
 PASS_REQUIREMENTS = [
     ("PERF-MEAS-001", "Metric names, numerators, windows, units, classes, and provenance shall be explicit and schema-validated.", "p10_1_measurement_contract", "P10_1-MEASUREMENT-CONTRACT"),
@@ -47,6 +48,16 @@ PASS_REQUIREMENTS = [
     ("PERF-STREAM-002", "Abort, reset, duplicate, missing, stale, out-of-order, and wrap cases shall produce no partial, wrong, duplicate, or stale publication.", "p10_1_streaming_64m", "P10_1-STREAMING-64M"),
     ("HWPREP-P10_1-001", "The future P10.1 hardware runner shall fail closed on authorization, identity, artifact, shutdown, lane, network, motion, and runtime errors.", "p10_1_hardware_dry_run", "P10_1-HARDWARE-RUNNER-DRY-RUN"),
 ]
+
+PENDING_REQUIREMENT_IDS = {
+    "PERF-HW-001",
+    "P11-READY-001",
+    "P11-READY-002",
+    "P11-READY-003",
+}
+GENERATED_REQUIREMENT_IDS = {
+    requirement_id for requirement_id, *_ in PASS_REQUIREMENTS
+} | PENDING_REQUIREMENT_IDS
 
 
 def evidence_path(stem: str) -> Path:
@@ -114,6 +125,32 @@ def replace_generated_block(text: str, block: str) -> str:
     return clean + "\n" + block
 
 
+def remove_requirement_records(text: str, requirement_ids: set[str]) -> str:
+    """Remove exact top-level requirement records while preserving all others.
+
+    Older generated P10.1 files predate the BEGIN/END sentinels.  A later
+    canonical YAML rewrite can also discard comments while retaining those
+    records.  Removing by exact requirement ID before appending the generated
+    block makes the updater idempotent in both cases without reformatting or
+    weakening unrelated requirements.
+    """
+
+    lines = text.splitlines(keepends=True)
+    output: list[str] = []
+    index = 0
+    marker = re.compile(r"^- requirement_id:\s*([^\s#]+)\s*(?:#.*)?(?:\r?\n)?$")
+    while index < len(lines):
+        match = marker.match(lines[index])
+        if match is None or match.group(1) not in requirement_ids:
+            output.append(lines[index])
+            index += 1
+            continue
+        index += 1
+        while index < len(lines) and marker.match(lines[index]) is None:
+            index += 1
+    return "".join(output)
+
+
 def bind_existing_model_requirements(text: str, model_hash: str) -> str:
     for requirement_id, extra_text in (
         (
@@ -170,8 +207,8 @@ def update_requirements() -> None:
             pending_item(
                 "PERF-HW-001",
                 "Real AX7020 sustained application goodput shall meet at least 4.0 Mbit/s in each tested half-duplex direction under the frozen measurement contract.",
-                "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
-                "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+                HARDWARE_STAGE,
+                HARDWARE_STAGE,
                 "PENDING_CURRENT_RUN_AUTHORIZATION",
                 "docs/plans/P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE_PLAN.md",
             ),
@@ -209,6 +246,7 @@ def update_requirements() -> None:
     )
     block = f"{BEGIN}\n{body}{END}\n"
     text = REQUIREMENTS.read_text(encoding="utf-8")
+    text = remove_requirement_records(text, GENERATED_REQUIREMENT_IDS)
     text = bind_existing_model_requirements(text, sha256(model))
     # P10-PERF-MEAS-001 already binds the contract; keep that historical
     # analysis requirement aligned with the extended schema.
@@ -235,8 +273,14 @@ def update_state() -> None:
     p11 = evidence_path("p10_1_p11_readiness")
     if not p11.is_file():
         raise SystemExit("p10_1_p11_readiness evidence is missing")
+    model_path = evidence_path("p10_1_performance_model")
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    if model.get("status") != "PASS":
+        raise SystemExit("p10_1_performance_model evidence is not PASS")
+    existing_performance = state.get("p10_1_performance_and_observability", {})
+    selected = model.get("selected", {})
     state["state_revision"] = "P10-1-OFFLINE-PERFORMANCE-READY-1"
-    state["current_program_stage"] = "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE"
+    state["current_program_stage"] = HARDWARE_STAGE
     state["p10_1_offline_status"] = "PASS"
     state["p10_1_hardware_status"] = "PENDING_CURRENT_RUN_AUTHORIZATION"
     state["p11_status"] = "NOT_STARTED"
@@ -244,7 +288,7 @@ def update_state() -> None:
     state["current_run_hardware_authorization"] = False
     state["p10_1_no_hardware_actions_executed"] = True
     state["stage_status"][STAGE] = "PASS"
-    evidence = evidence_path("p10_1_performance_model")
+    evidence = model_path
     state["p10_1_performance_and_observability"] = {
         "status": "PASS",
         "verification_scope": SCOPE,
@@ -255,9 +299,26 @@ def update_state() -> None:
         "measurement_contract_sha256": sha256(
             ROOT / "config/performance/p10_1_measurement_contract.yaml"
         ),
-        "modeled_application_goodput_bps": 6688299.301,
-        "scale_equivalent_4mbps_feasibility": "PASS",
-        "stretch_4p8mbps": "PASS",
+        "prior_modeled_application_goodput_bps": existing_performance.get(
+            "prior_modeled_application_goodput_bps"
+        ),
+        "prior_model_classification": existing_performance.get(
+            "prior_model_classification"
+        ),
+        "modeled_application_goodput_bps": model.get(
+            "modeled_application_goodput_bps"
+        ),
+        "scale_equivalent_4mbps_feasibility": model.get("hard_target_status"),
+        "stretch_4p8mbps": model.get("stretch_target_status"),
+        "selected_pipeline": {
+            "buffer_count": model.get("required_buffer_count"),
+            "descriptor_ring_depth": model.get("required_ring_depth"),
+            "descriptor_batch": model.get("required_descriptor_batch"),
+            "outstanding_frames": selected.get(
+                "outstanding", model.get("required_outstanding")
+            ),
+            "ack_aggregation_threshold": selected.get("ack_threshold"),
+        },
         "real_hardware_goodput_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
         "hardware_experiments_authorized": False,
         "hardware_actions_executed": False,

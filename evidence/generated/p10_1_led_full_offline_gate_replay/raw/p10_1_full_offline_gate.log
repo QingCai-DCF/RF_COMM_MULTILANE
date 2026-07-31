@@ -1,8 +1,8 @@
 COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/run_p10_1_offline_gate.py --full --json-summary
-WORKTREE=C:\Users\user\Documents\P10L1_hfj7afue
-STARTED_UTC=2026-07-31T13:51:15+00:00
-FINISHED_UTC=2026-07-31T14:05:46+00:00
-RETURN_CODE=0
+WORKTREE=C:\Users\user\Documents\P10L1_zct2icd_
+STARTED_UTC=2026-07-31T17:15:35+00:00
+FINISHED_UTC=2026-07-31T17:30:39+00:00
+RETURN_CODE=1
 STDOUT_BEGIN
 config_generation=PASS
 historical_recompute=PASS
@@ -13,25 +13,25 @@ xsim=PASS
 ax7020_dual_build=PASS
 hardware_runner_dry_run=PASS
 p11_readiness=PASS
-requirements_state_update=PASS
-project_status_generation=PASS
-requirement_traceability_generation=PASS
-repo_intake=PASS
-p10_verify_existing=PASS
+requirements_state_update=FAIL
+project_status_generation=FAIL
+requirement_traceability_generation=FAIL
+repo_intake=FAIL
+p10_verify_existing=FAIL
 p9_verify_existing=PASS
 p8e_verify_existing=PASS
 p8c_verify_existing=PASS
 p8c_current_unit_regression=PASS
 p8c_current_static_regression=PASS
 register_map_consistency=PASS
-p8a_state_requirements_consistency=PASS
+p8a_state_requirements_consistency=FAIL
 no_hardware_static_scan=PASS
 git_diff_check=PASS
-final_evidence=PASS
-P10_1_OFFLINE_GATE=PASS
+final_evidence=FAIL
+P10_1_OFFLINE_GATE=FAIL
 HARDWARE_ACTIONS_EXECUTED=false
 CURRENT_RUN_HARDWARE_AUTHORIZATION=false
-{"command_count": 24, "current_run_hardware_authorization": false, "failures": [], "final_summary": "evidence/generated/p10_1_final_summary.json", "hardware_actions_executed": false, "status": "PASS"}
+{"command_count": 24, "current_run_hardware_authorization": false, "failures": ["requirements_state_update", "project_status_generation", "requirement_traceability_generation", "repo_intake", "p10_verify_existing", "p8a_state_requirements_consistency", "final_evidence"], "final_summary": "evidence/generated/p10_1_final_summary.json", "hardware_actions_executed": false, "status": "FAIL"}
 STDOUT_END
 STDERR_BEGIN
 STDERR_END
