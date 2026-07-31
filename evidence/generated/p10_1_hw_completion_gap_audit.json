@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-COMPLETION-GAP-AUDIT",
+  "status": "FAIL",
+  "generated_at_utc": "2026-07-31T22:44:31Z",
+  "audit_checkpoint": "4294b33b2bc99f16798535f6af72de4bf716c108",
+  "branch": "p10.1/hardware-performance-acceptance",
+  "goal": {
+    "path": "C:\\Users\\user\\Downloads\\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md",
+    "bytes": 28113,
+    "sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+  },
+  "authoritative_inputs": {
+    "final_summary": {
+      "path": "evidence/generated/p10_1_hw_final_summary.json",
+      "bytes": 11397,
+      "sha256": "d4f771932b242e55f248aabfb00e1707a5ae6b09d6790740d979cb4d62e5bba9"
+    },
+    "preflight_retry_audit": {
+      "path": "evidence/generated/p10_1_hw_preflight_retry_audit.json",
+      "bytes": 7938,
+      "sha256": "2de4d8428710402e557fb4d1007a171b09e92d3ae997e3fd0751ce6f53267d41"
+    },
+    "consumed_authorization": {
+      "path": "config/p10_1_current_run_hardware_authorization.json",
+      "bytes": 10501,
+      "sha256": "e5d0f8e2e4dd07dc61dc42d85620316543be6b1b880b0b7e397fccb0e82f8d11"
+    },
+    "remediated_artifact_summary": {
+      "path": "evidence/generated/p10_1_hw_artifact_summary.json",
+      "bytes": 19218,
+      "sha256": "0b80e47c14e12bc56416534e9be687fc136761b3ad7f815cf0add74ff1b8161f"
+    }
+  },
+  "campaign": {
+    "disposition": "STOPPED_AT_GOAL_RETRY_LIMIT",
+    "complete_run_id": null,
+    "hardware_acceptance": "FAIL",
+    "current_run_hardware_authorization": false,
+    "captured_run_hardware_authorization": true,
+    "authorization_lifecycle": "CONSUMED_AFTER_RUN",
+    "p11_promotion_allowed": false
+  },
+  "preflight_retry_budget": {
+    "goal_section": 23,
+    "limit": 2,
+    "run_ids": [
+      "p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5",
+      "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f"
+    ],
+    "used": 2,
+    "remaining": 0,
+    "retry_limit_override_present": false,
+    "third_preflight_run_authorized": false
+  },
+  "offline_remediation": {
+    "status": "PASS",
+    "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
+    "hardware_retest": "NOT_RUN_RETRY_LIMIT",
+    "fixed_elf": {
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf",
+      "sha256": "5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6"
+    },
+    "rotating_elf": {
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf",
+      "sha256": "9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0"
+    },
+    "hardware_pass_claimed": false
+  },
+  "mandatory_gates": [
+    {"gate": "P10_1_OFFLINE_BASE_RECHECK", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_final_summary.json"},
+    {"gate": "MODEL_SANITY_AND_AIRTIME_RECONCILIATION", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_model_sanity_summary.json"},
+    {"gate": "CURRENT_RUN_AUTHORIZATION", "status": "PASS_CAPTURED_CONSUMED", "evidence": "evidence/generated/p10_1_hw_authorization_summary.json", "note": "The failed run had immutable authorization; no authorization is active now."},
+    {"gate": "ARTIFACT_PROVENANCE", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_artifact_summary.json"},
+    {"gate": "TARGET_ROLE_BINDING", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_target_identity_summary.json"},
+    {"gate": "SAFE_BOOT_BOTH", "status": "FAIL", "evidence": "evidence/generated/p10_1_hw_safe_boot_summary.json"},
+    {"gate": "SHUTDOWN_BEFORE_BOTH", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_shutdown_summary.json"},
+    {"gate": "SHUTDOWN_AFTER_BOTH", "status": "PASS", "evidence": "evidence/generated/p10_1_hw_shutdown_summary.json"},
+    {"gate": "TIMER_CROSSCHECK", "status": "FAIL", "evidence": "evidence/generated/p10_1_hw_timer_summary.json"},
+    {"gate": "HARDWARE_METRIC_SEMANTICS", "status": "FAIL", "evidence": "evidence/generated/p10_1_hw_metric_semantics_summary.json"},
+    {"gate": "DIAGNOSTIC_EXCLUSION", "status": "INCOMPLETE", "evidence": "evidence/generated/p10_1_hw_metric_semantics_summary.json", "note": "The real 1-byte transfer passed, but the preflight semantics stage did not complete."},
+    {"gate": "BOARD_AUTONOMOUS_FAST_PATH", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_metric_semantics_summary.json"},
+    {"gate": "HOST_NOT_IN_FAST_PATH", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_metric_semantics_summary.json"},
+    {"gate": "BASELINE_SINGLE_LANE", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_baseline_summary.json"},
+    {"gate": "BASELINE_TWO_LANE", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_baseline_summary.json"},
+    {"gate": "ADAPTIVE_TUNING", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_tuning_summary.json"},
+    {"gate": "SUSTAINED_PIPELINE", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_pipeline_summary.json"},
+    {"gate": "STREAMING_64M_F_TO_R", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_streaming_64m_summary.json"},
+    {"gate": "STREAMING_64M_R_TO_F", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_streaming_64m_summary.json"},
+    {"gate": "STREAM_ABORT_RESET_RECOVERY", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_streaming_64m_summary.json"},
+    {"gate": "DESCRIPTOR_LEAK_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_streaming_64m_summary.json", "note": "Zero counters from incomplete preflight do not prove the formal gate."},
+    {"gate": "DOUBLE_COMPLETION_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_streaming_64m_summary.json", "note": "Zero counters from incomplete preflight do not prove the formal gate."},
+    {"gate": "F_TO_R_APPLICATION_GOODPUT_4MBPS", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_half_duplex_summary.json"},
+    {"gate": "R_TO_F_APPLICATION_GOODPUT_4MBPS", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_half_duplex_summary.json"},
+    {"gate": "MEASURED_MODEL_RECONCILIATION", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_half_duplex_summary.json"},
+    {"gate": "CROSSTALK_4X4_MATRIX", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_crosstalk_summary.json"},
+    {"gate": "NON_TARGET_CRC_VALID_FALSE_FRAME_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_crosstalk_summary.json"},
+    {"gate": "STATIONARY_30MIN", "status": "NOT_RUN", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "CRC_BAD_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "SHA_MISMATCH_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "PARTIAL_DUPLICATE_STALE_COMMIT_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "RETRY_EXHAUSTED_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "DEADLOCK_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "DUTY_VIOLATION_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "CONTINUOUS_HIGH_VIOLATION_ZERO", "status": "NOT_MEASURED", "evidence": "evidence/generated/p10_1_hw_stationary_30min_summary.json"},
+    {"gate": "EVIDENCE_CONSISTENCY", "status": "FAIL", "evidence": "evidence/generated/p10_1_hw_evidence_consistency.json"}
+  ],
+  "nonblocking_results": {
+    "STREAMING_128M": "SKIP_WITH_REASON",
+    "P10_1_1PLUS1_EXPERIMENT": "NOT_RUN",
+    "STRETCH_4P8MBPS": "NOT_MEASURED"
+  },
+  "remaining_hardware_stage_order": [
+    "preflight",
+    "smoke",
+    "baseline",
+    "tuning",
+    "pipeline",
+    "streaming",
+    "faults",
+    "crosstalk",
+    "half_duplex",
+    "oneplusone",
+    "formal"
+  ],
+  "fail_closed_guard": {
+    "status": "PASS",
+    "checkpoint": "4294b33b2bc99f16798535f6af72de4bf716c108",
+    "runner": {
+      "path": "scripts/p10_1_hardware_acceptance.py",
+      "bytes": 85571,
+      "sha256": "37b3913b2c390a4c3e8fb71450f209488dc95ab90d8e788632092e44019a7961"
+    },
+    "tests": {
+      "path": "tests/test_p10_1_hardware_acceptance.py",
+      "bytes": 18257,
+      "sha256": "f0691042b85a5c94309ab6644a0be1e4e47e495f83e720a097a0a74529d7f8cd"
+    },
+    "focused_tests": "33 PASS",
+    "project_consistency": "PASS",
+    "requirement_traceability": "PASS",
+    "properties": [
+      "counts prior stage-entering run IDs from immutable hardware evidence",
+      "refuses authorization generation when the two-run budget is exhausted",
+      "requires an explicit override bound to one new run ID, exact stages, boards, Goal SHA, and shutdown policy",
+      "rejects reuse after the additional run enters the stage",
+      "does not create the override record"
+    ]
+  },
+  "safety": {
+    "hardware_actions_executed_for_this_audit": false,
+    "no_hardware": 1,
+    "current_run_hardware_authorization": false,
+    "network_used_for_this_audit": false,
+    "ethernet_used_for_this_audit": false,
+    "hardware_movement_for_this_audit": false,
+    "rewiring_for_this_audit": false
+  },
+  "blockers": [
+    "Goal section 23 preflight new-run-ID budget is exhausted at 2 of 2.",
+    "The previous current-run authorization is consumed and not reusable.",
+    "The cache-coherent remediated ELF pair has no direct hardware evidence.",
+    "No single complete run ID covers the mandatory acceptance gates."
+  ],
+  "next_required_user_action": "explicitly override Goal section 23 for exactly one additional preflight run ID and provide a fresh current-run hardware authorization for that uniquely bound run"
+}
