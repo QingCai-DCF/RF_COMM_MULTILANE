@@ -1,5 +1,5 @@
 schema_version: 1
-document_version: '8.0'
+document_version: '8.1'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
+    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
   - path: PROJECT_STATUS.md
-    sha256: 640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160
-  artifact_hash: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
+    sha256: dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4
+  artifact_hash: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
+    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
+    sha256: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
   - path: PROJECT_STATUS.md
-    sha256: 640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160
+    sha256: dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546
+  artifact_hash: 7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -2556,3 +2556,61 @@ requirements:
   hardware_followup: This PASS is limited to two stationary AX7020 endpoints, two optical lanes, lane masks at or below 0x3,
     and no Ethernet or motion. Ethernet, SPI, the physical GLOBAL_PERMIT D17 implementation, external TFDU duty measurement,
     handover, 8x32 hardware, 600 rpm operation, and product-final acceptance remain pending.
+- requirement_id: P10-CLOSEOUT-001
+  requirement_text: P10 post-acceptance closeout shall consume the current-run authorization, freeze Git/remote checkpoint
+    metadata, preserve the scoped PASS, and execute no hardware action.
+  profile: P10_POST_ACCEPTANCE_CLOSEOUT
+  verification_method: Offline cross-check of the immutable PASS tag, remote refs, formal-run artifacts, shutdown results,
+    authorization lifecycle, and generated canonical state.
+  verification_stage: P10_POST_ACCEPTANCE_CLOSEOUT
+  verification_scope: P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE
+  test_id: P10-CLOSEOUT-001
+  evidence_path: evidence/generated/p10_closeout_summary.json
+  status: PASS
+  waiver: null
+  artifact_hash: fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b
+  artifact_hashes:
+  - path: evidence/generated/p10_closeout_summary.json
+    sha256: fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b
+  - path: evidence/generated/p10_git_checkpoint_metadata.json
+    sha256: 4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18
+  - path: evidence/generated/p10_remote_push_summary.json
+    sha256: 56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json
+    sha256: ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json
+    sha256: 2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281
+  hardware_followup: This PASS remains limited to the frozen stationary dual-AX7020 two-lane campaign. New performance experiments,
+    P10.2 crosstalk/full-duplex work, P10.3 large-object/FreeRTOS work, and every P11-or-later hardware action require a new
+    current-run authorization and bounded safe wrapper.
+- requirement_id: P10-PERF-MEAS-001
+  requirement_text: P10 performance fields shall have reproducible units, numerator, denominator, window, and provenance;
+    unsuitable fields shall not be used for 8-lane or final-product projection.
+  profile: P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY
+  verification_method: Offline recomputation from P10-E/I/J summaries, observation timestamps, immutable mailbox dumps, and
+    the frozen runtime formula; compare PS-command, XSDB-wall, and full-soak windows.
+  verification_stage: P10_POST_ACCEPTANCE_ANALYSIS
+  verification_scope: P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE
+  test_id: P10-GOODPUT-MEASUREMENT-AUDIT
+  evidence_path: evidence/generated/p10_goodput_measurement_audit.json
+  status: PASS
+  waiver: null
+  artifact_hash: e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14
+  artifact_hashes:
+  - path: evidence/generated/p10_goodput_measurement_audit.json
+    sha256: e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json
+    sha256: ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc
+  - path: evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json
+    sha256: f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3
+  - path: scripts/p10_hardware_runtime.py
+    sha256: 0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24
+  - path: software/ps_driver/p9_runtime_main.c
+    sha256: 9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a
+  - path: config/performance/p10_1_measurement_contract.yaml
+    sha256: d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559
+  - path: docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md
+    sha256: 3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74
+  hardware_followup: This PASS remains limited to the frozen stationary dual-AX7020 two-lane campaign. New performance experiments,
+    P10.2 crosstalk/full-duplex work, P10.3 large-object/FreeRTOS work, and every P11-or-later hardware action require a new
+    current-run authorization and bounded safe wrapper.

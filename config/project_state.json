@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state_revision": "P10-AX7020-DUAL-NODE-2LANE-CLOSEOUT-1",
+  "state_revision": "P10-POST-ACCEPTANCE-CLOSEOUT-2",
   "project": "RF_COMM_MULTILANE",
   "canonical_constraint": {
     "path": "PROJECT_CONSTRAINTS.txt",
@@ -17,7 +17,7 @@
   "no_hardware_default": true,
   "p8a_no_hardware_actions_executed": true,
   "p8b_no_hardware_actions_executed": true,
-  "current_program_stage": "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
+  "current_program_stage": "P10_POST_ACCEPTANCE_ANALYSIS",
   "current_profiles": [
     {
       "profile": "Z7010_2LANE_DEV",
@@ -280,7 +280,7 @@
       "status": "PENDING"
     }
   ],
-  "last_verified_commit": "16684884708223bf7fb9b05145164e6155496cc8",
+  "last_verified_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
   "p8a_baseline_input_commit": "451d79164ea0033f3905b06a905f11b5cab33c00",
   "reconciliation_path": "evidence/generated/p8a_p0_p7_reconciliation.json",
   "p8c_no_hardware_actions_executed": true,
@@ -457,7 +457,7 @@
       "STATIONARY_2LANE_30MIN": "PASS"
     },
     "unchanged_pending_scopes": {
-      "ETHERNET": "DEFERRED",
+      "ETHERNET": "DEFERRED_NO_NETWORK_CABLE",
       "SPI": "PENDING",
       "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
       "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
@@ -475,6 +475,63 @@
       "EIGHT_LANE_8X32",
       "ROTATION_600RPM",
       "PRODUCT_FINAL"
+    ],
+    "evidence_checkpoint_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+    "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
+    "goodput_scaling_eligible": false,
+    "goodput_measurement_audit_path": "evidence/generated/p10_goodput_measurement_audit.json",
+    "goodput_measurement_audit_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14"
+  },
+  "last_hardware_stage": "P10",
+  "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
+  "last_shutdown_fixed": "PASS",
+  "last_shutdown_rotating": "PASS",
+  "p10_post_acceptance_closeout": {
+    "status": "PASS",
+    "test_id": "P10-CLOSEOUT-001",
+    "evidence_path": "evidence/generated/p10_closeout_summary.json",
+    "evidence_sha256": "fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b",
+    "git_metadata_path": "evidence/generated/p10_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18",
+    "remote_push_path": "evidence/generated/p10_remote_push_summary.json",
+    "remote_push_sha256": "56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062",
+    "hardware_actions_executed": false,
+    "p11_started": false
+  },
+  "p10_goodput_measurement_audit": {
+    "status": "PASS",
+    "test_id": "P10-GOODPUT-MEASUREMENT-AUDIT",
+    "evidence_path": "evidence/generated/p10_goodput_measurement_audit.json",
+    "evidence_sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14",
+    "outcome": "CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING",
+    "eligible_for_final_8lane_projection": false,
+    "hardware_actions_executed": false
+  },
+  "p10_1_performance_and_observability": {
+    "status": "OFFLINE_PLAN_ONLY",
+    "plan_path": "docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md",
+    "plan_sha256": "3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74",
+    "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
+    "measurement_contract_sha256": "d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559",
+    "hardware_experiments_authorized": false
+  },
+  "p11_readiness": {
+    "status": "NOT_READY",
+    "official_stage_status": "NOT_STARTED",
+    "hardware_ready": false,
+    "current_run_hardware_authorization": false,
+    "current_tfdu_module_count": 4,
+    "minimum_required_tfdu_module_count": 5,
+    "evidence_path": "docs/plans/P11_HARDWARE_READINESS.md",
+    "evidence_sha256": "44c04c54f631701f3c379feb6b2688a95a556e8d330426264a4af51d8fcedfb5",
+    "missing_prerequisites": [
+      "one additional compatible TFDU module",
+      "four-fixed-module fixture",
+      "rotating-module fixture",
+      "verified ABZ/phase input",
+      "bounded controllable motion source",
+      "P11-specific board profile/wiring/XDC",
+      "new current-run hardware authorization"
     ]
   }
 }

@@ -265,6 +265,7 @@ def check_state() -> tuple[bool, dict[str, Any]]:
             "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
             p9_stage_key,
             "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+            "P10_POST_ACCEPTANCE_ANALYSIS",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
         }
         if p8c_pass

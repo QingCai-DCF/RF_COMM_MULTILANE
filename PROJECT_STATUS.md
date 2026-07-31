@@ -13,9 +13,13 @@ FINAL_PRODUCT_HARDWARE_ACCEPTANCE: PENDING_HW
 PRODUCT_FINAL_ACCEPTANCE: PENDING
 P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
 P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
-CURRENT_PROGRAM_STAGE: P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER
+CURRENT_PROGRAM_STAGE: P10_POST_ACCEPTANCE_ANALYSIS
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
+LAST_HARDWARE_STAGE: P10
+LAST_HARDWARE_RUN_ID: p10_formal_20260730T181535Z_03
+LAST_SHUTDOWN_FIXED: PASS
+LAST_SHUTDOWN_ROTATING: PASS
 ```
 
 The P7 PASS is limited to the stationary two-lane application path on the current Z7010 development platform. It is not Z7020, sector-bank, rotating, Ethernet, 8-lane, or final-product acceptance.
@@ -110,6 +114,19 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Scope: stationary, two independent AX7020 endpoints, two optical lanes, no Ethernet, no motion.
 - Ethernet, SPI, physical GLOBAL_PERMIT D17, external TFDU duty measurement, handover, 8x32, 600 rpm, and product-final acceptance remain pending.
 
+## P10 post-acceptance closeout and analysis
+
+- Closeout status: `PASS`
+- Closeout evidence: `evidence/generated/p10_closeout_summary.json`
+- Remote checkpoint evidence: `evidence/generated/p10_remote_push_summary.json`
+- Current-run authorization: `false`
+- Last authorization consumed: `true`
+- Goodput audit: `PASS` (`CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING`)
+- Current final goodput eligible for 8-lane projection: `false`
+- P11 official stage: `NOT_STARTED`
+- P11 hardware ready: `false`
+- P10 remains a scoped PASS; the post-acceptance metric audit does not promote or revoke hardware scope.
+
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 
 ## Architecture and pending gates
@@ -131,6 +148,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `16684884708223bf7fb9b05145164e6155496cc8`.
+Last verified evidence commit: `35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

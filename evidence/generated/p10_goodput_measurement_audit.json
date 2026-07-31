@@ -1,0 +1,546 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10-GOODPUT-MEASUREMENT-AUDIT",
+  "generated_at_utc": "2026-07-31T03:04:46Z",
+  "scope": "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE",
+  "run_id": "p10_formal_20260730T181535Z_03",
+  "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+  "outcome": "CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING",
+  "eligible_for_final_8lane_projection": false,
+  "p10_scoped_hardware_acceptance_changed": false,
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "input_artifacts": [
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json",
+      "sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0"
+    },
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_e/stage_summary.json",
+      "sha256": "60a21256df4c353eb50dcfd3f5000aa17ddcfec30fdb21346126e1320e0e182f"
+    },
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json",
+      "sha256": "ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc"
+    },
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/dumps/observations.psv",
+      "sha256": "9d579e69d5f5f6cc937ed362912995498761362be9e9ea4d46ffa7cc3509c484"
+    },
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json",
+      "sha256": "f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3"
+    },
+    {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/dumps/observations.psv",
+      "sha256": "62b968eccb9ab013c732f7dedc45a7fa739394dce89dc89469afd3a3e718c271"
+    },
+    {
+      "path": "scripts/p10_hardware_runtime.py",
+      "sha256": "0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24"
+    },
+    {
+      "path": "software/ps_driver/p9_runtime_main.c",
+      "sha256": "9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a"
+    },
+    {
+      "path": "software/ps_driver/p9_runtime_protocol.h",
+      "sha256": "dcdfad1cb60d2cc6ab51e1cc29882c938ff0cbf9f267f5b811265572d6407774"
+    }
+  ],
+  "final_summary_fields": {
+    "application_goodput_f_to_r_bps": 5767.861069534447,
+    "application_goodput_r_to_f_bps": 5785.116365442897,
+    "aggregation": "minimum application_goodput_bps over every command-3 performance row from every P10 stage",
+    "f_to_r_minimum_provenance": {
+      "stage": "P10-E",
+      "application_goodput_bps": 5767.861069534447,
+      "direction": 0,
+      "label": "dma_size_1"
+    },
+    "r_to_f_minimum_provenance": {
+      "stage": "P10-E",
+      "application_goodput_bps": 5785.116365442897,
+      "direction": 1,
+      "label": "dma_ring32_wrap_23"
+    },
+    "semantic_classification": "worst single-object encoded-transfer throughput, dominated by one-byte P10-E DMA/ring diagnostics"
+  },
+  "formula_audit": {
+    "implemented_formula": "8 * encoded_transfer_bytes * counts_per_second / sender_ps_command_elapsed_ticks",
+    "bit_byte_conversion": "PASS",
+    "timer_frequency": 333333343,
+    "timer_frequency_semantics": "XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ/2",
+    "unit_conversion_error_found": false,
+    "application_useful_bytes_used_in_all_cases": false,
+    "reason": "RFAP cases use encoded bytes including headers; P10-E minima use one useful/encoded byte."
+  },
+  "denominator_audit": {
+    "sender_ps_command_elapsed_ticks": {
+      "included": [
+        "sender payload generation",
+        "CRC32 and SHA-256",
+        "cache preparation",
+        "DMA/PL/object execution",
+        "integrity-independent sender completion",
+        "full shutdown"
+      ],
+      "excluded": [
+        "host/JTAG command staging before sender dispatch",
+        "receiver priming wait before sender dispatch",
+        "post-case JTAG mailbox dumps",
+        "inter-object idle time",
+        "the full 1800-second soak denominator"
+      ]
+    },
+    "entire_30min_denominator_used_by_final_fields": false,
+    "host_or_jtag_blocking_included_by_final_fields": false
+  },
+  "execution_model_audit": {
+    "objects_in_flight_across_application_pipeline": 1,
+    "objects_launched_serially_by_xsdb": true,
+    "receiver_primed_before_sender_launch": true,
+    "mailboxes_dumped_after_each_object": true,
+    "pipeline_throughput_demonstrated": false,
+    "sg_dma_present": true,
+    "sg_dma_pipeline_across_objects_demonstrated": false
+  },
+  "stage_i_characterization": {
+    "row_count": 12,
+    "rows": [
+      {
+        "label": "perf_m1_d0_4k",
+        "lane_mask": 1,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.05103556951996848,
+        "xsdb_case_wall_seconds": 0.22,
+        "reported_encoded_ps_command_bps": 649586.1672912017,
+        "recomputed_useful_ps_command_bps": 642062.0031913036,
+        "recomputed_useful_xsdb_case_wall_bps": 148945.45454545456,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.02710886621384288,
+          "dma_tx_completion_from_poll_start": 0.00010480199696074209,
+          "pl_completion_from_poll_start": 0.022949012334478644,
+          "object_runtime": 0.05103402152001338
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.02708203721462092,
+          "dma_rx_completion_from_poll_start": 0.06675055906423379,
+          "pl_completion_from_poll_start": 0.06700518105684974,
+          "integrity_verify": 0.004698431863745476,
+          "object_runtime": 0.09976838710671677
+        }
+      },
+      {
+        "label": "perf_m1_d0_1m",
+        "lane_mask": 1,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 12.815138748360976,
+        "xsdb_case_wall_seconds": 21.049,
+        "reported_encoded_ps_command_bps": 655065.2446953544,
+        "recomputed_useful_ps_command_bps": 654585.8117277803,
+        "recomputed_useful_xsdb_case_wall_bps": 398527.6260154877,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.87998863648033,
+          "dma_tx_completion_from_poll_start": 5.885744205313418,
+          "pl_completion_from_poll_start": 5.931228871994363,
+          "object_runtime": 12.81513720336102
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.879333562499327,
+          "dma_rx_completion_from_poll_start": 12.838627847679792,
+          "pl_completion_from_poll_start": 12.838882484672409,
+          "integrity_verify": 1.2011478341667128,
+          "object_runtime": 20.924905757177733
+        }
+      },
+      {
+        "label": "perf_m1_d1_4k",
+        "lane_mask": 1,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.050927263523109355,
+        "xsdb_case_wall_seconds": 0.234,
+        "reported_encoded_ps_command_bps": 650967.6292533675,
+        "recomputed_useful_ps_command_bps": 643427.4636635602,
+        "recomputed_useful_xsdb_case_wall_bps": 140034.18803418803,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.027090722214369055,
+          "dma_tx_completion_from_poll_start": 0.00010472999696283009,
+          "pl_completion_from_poll_start": 0.02294852033449291,
+          "object_runtime": 0.05092571552315425
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.02707939721469748,
+          "dma_rx_completion_from_poll_start": 0.06826080402043669,
+          "pl_completion_from_poll_start": 0.06846470501452355,
+          "integrity_verify": 0.004723253863025638,
+          "object_runtime": 0.10116053406634451
+        }
+      },
+      {
+        "label": "perf_m1_d1_1m",
+        "lane_mask": 1,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 12.815303502356198,
+        "xsdb_case_wall_seconds": 21.039,
+        "reported_encoded_ps_command_bps": 655056.8231533929,
+        "recomputed_useful_ps_command_bps": 654577.396349426,
+        "recomputed_useful_xsdb_case_wall_bps": 398717.0492894149,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.880114243476687,
+          "dma_tx_completion_from_poll_start": 5.885784405312252,
+          "pl_completion_from_poll_start": 5.93126792599323,
+          "object_runtime": 12.815301939356244
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.877576252550289,
+          "dma_rx_completion_from_poll_start": 12.833456330829767,
+          "pl_completion_from_poll_start": 12.833710973822381,
+          "integrity_verify": 1.1998605582040438,
+          "object_runtime": 20.916689651416
+        }
+      },
+      {
+        "label": "perf_m2_d0_4k",
+        "lane_mask": 2,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.05092561952315704,
+        "xsdb_case_wall_seconds": 0.225,
+        "reported_encoded_ps_command_bps": 650988.6440345617,
+        "recomputed_useful_ps_command_bps": 643448.2350303003,
+        "recomputed_useful_xsdb_case_wall_bps": 145635.55555555556,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.027093053214301457,
+          "dma_tx_completion_from_poll_start": 0.00010473899696256909,
+          "pl_completion_from_poll_start": 0.022948985334479425,
+          "object_runtime": 0.05092407152320193
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.027078014214737586,
+          "dma_rx_completion_from_poll_start": 0.0655487620990859,
+          "pl_completion_from_poll_start": 0.06575263309317364,
+          "integrity_verify": 0.004680560864263735,
+          "object_runtime": 0.09840017114639504
+        }
+      },
+      {
+        "label": "perf_m2_d0_1m",
+        "lane_mask": 2,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 12.818378703267017,
+        "xsdb_case_wall_seconds": 21.027,
+        "reported_encoded_ps_command_bps": 654899.671349266,
+        "recomputed_useful_ps_command_bps": 654420.3595624771,
+        "recomputed_useful_xsdb_case_wall_bps": 398944.5950444666,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.883199008387229,
+          "dma_tx_completion_from_poll_start": 5.8857738393125585,
+          "pl_completion_from_poll_start": 5.931258460993504,
+          "object_runtime": 12.818377158267062
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.877844719542503,
+          "dma_rx_completion_from_poll_start": 12.834619892796024,
+          "pl_completion_from_poll_start": 12.834823757790112,
+          "integrity_verify": 1.190980453461567,
+          "object_runtime": 20.909190878633463
+        }
+      },
+      {
+        "label": "perf_m2_d1_4k",
+        "lane_mask": 2,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.05092714952311266,
+        "xsdb_case_wall_seconds": 0.226,
+        "reported_encoded_ps_command_bps": 650969.086438941,
+        "recomputed_useful_ps_command_bps": 643428.9039705363,
+        "recomputed_useful_xsdb_case_wall_bps": 144991.15044247787,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.027094652214255086,
+          "dma_tx_completion_from_poll_start": 0.00010505399695343409,
+          "pl_completion_from_poll_start": 0.022948814334484383,
+          "object_runtime": 0.05092560152315755
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.027082250214614745,
+          "dma_rx_completion_from_poll_start": 0.0640140101435937,
+          "pl_completion_from_poll_start": 0.06421793513767989,
+          "integrity_verify": 0.004689881863993426,
+          "object_runtime": 0.09687900619050882
+        }
+      },
+      {
+        "label": "perf_m2_d1_1m",
+        "lane_mask": 2,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 12.813756792401053,
+        "xsdb_case_wall_seconds": 21.028,
+        "reported_encoded_ps_command_bps": 655135.8930878369,
+        "recomputed_useful_ps_command_bps": 654656.4084137058,
+        "recomputed_useful_xsdb_case_wall_bps": 398925.6229788853,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.878574970521326,
+          "dma_tx_completion_from_poll_start": 5.8857771243124635,
+          "pl_completion_from_poll_start": 5.931260701993439,
+          "object_runtime": 12.813755244401097
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.883127833389293,
+          "dma_rx_completion_from_poll_start": 12.826039773044847,
+          "pl_completion_from_poll_start": 12.826294434037461,
+          "integrity_verify": 1.1997556632070858,
+          "object_runtime": 20.91471994447312
+        }
+      },
+      {
+        "label": "perf_m3_d0_4k",
+        "lane_mask": 3,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.03986588584388931,
+        "xsdb_case_wall_seconds": 0.223,
+        "reported_encoded_ps_command_bps": 831588.193720812,
+        "recomputed_useful_ps_command_bps": 821955.8980406482,
+        "recomputed_useful_xsdb_case_wall_bps": 146941.70403587443,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.027099620214111015,
+          "dma_tx_completion_from_poll_start": 0.00010472399696300409,
+          "pl_completion_from_poll_start": 0.011882672655402493,
+          "object_runtime": 0.0398643378439342
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.02707878521471523,
+          "dma_rx_completion_from_poll_start": 0.0549579104062206,
+          "pl_completion_from_poll_start": 0.05521251139883717,
+          "integrity_verify": 0.004693850863878325,
+          "object_runtime": 0.08787428745164566
+        }
+      },
+      {
+        "label": "perf_m3_d0_1m",
+        "lane_mask": 3,
+        "direction": 0,
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 9.848762000385902,
+        "xsdb_case_wall_seconds": 18.063,
+        "reported_encoded_ps_command_bps": 852366.216146869,
+        "recomputed_useful_ps_command_bps": 851742.3813948708,
+        "recomputed_useful_xsdb_case_wall_bps": 464408.34855782543,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.87880932151453,
+          "dma_tx_completion_from_poll_start": 2.9431362886490477,
+          "pl_completion_from_poll_start": 2.9660313579850905,
+          "object_runtime": 9.848760452385946
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.881387866439752,
+          "dma_rx_completion_from_poll_start": 9.862201759996148,
+          "pl_completion_from_poll_start": 9.862456441988764,
+          "integrity_verify": 1.1952436423379345,
+          "object_runtime": 17.94463003060573
+        }
+      },
+      {
+        "label": "perf_m3_d1_4k",
+        "lane_mask": 3,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 4096,
+        "encoded_transfer_bytes": 4144,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 0.03983771884470615,
+        "xsdb_case_wall_seconds": 0.205,
+        "reported_encoded_ps_command_bps": 832176.162727385,
+        "recomputed_useful_ps_command_bps": 822537.0565954075,
+        "recomputed_useful_xsdb_case_wall_bps": 159843.9024390244,
+        "sender_timing_seconds": {
+          "payload_prepare": 0.027071333214931336,
+          "dma_tx_completion_from_poll_start": 0.00010474799696230808,
+          "pl_completion_from_poll_start": 0.011882381655410931,
+          "object_runtime": 0.039836170844751044
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 0.027080990214651282,
+          "dma_rx_completion_from_poll_start": 0.059715586268248,
+          "pl_completion_from_poll_start": 0.0599702862608617,
+          "integrity_verify": 0.004694291863865536,
+          "object_runtime": 0.09263463931359546
+        }
+      },
+      {
+        "label": "perf_m3_d1_1m",
+        "lane_mask": 3,
+        "direction": 1,
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+        "requested_useful_bytes": 1048576,
+        "encoded_transfer_bytes": 1049344,
+        "counts_per_second": 333333343,
+        "ps_command_seconds": 9.850344779340002,
+        "xsdb_case_wall_seconds": 18.058,
+        "reported_encoded_ps_command_bps": 852229.2557319471,
+        "recomputed_useful_ps_command_bps": 851605.5212193353,
+        "recomputed_useful_xsdb_case_wall_bps": 464536.9365378226,
+        "sender_timing_seconds": {
+          "payload_prepare": 6.8804308154675065,
+          "dma_tx_completion_from_poll_start": 2.9431490146486787,
+          "pl_completion_from_poll_start": 2.9659926819862124,
+          "object_runtime": 9.850343231340046
+        },
+        "receiver_timing_seconds": {
+          "payload_prepare": 6.88318414038766,
+          "dma_rx_completion_from_poll_start": 9.861928034004087,
+          "pl_completion_from_poll_start": 9.862131844998176,
+          "integrity_verify": 1.2033232571036256,
+          "object_runtime": 17.954180995328752
+        }
+      }
+    ],
+    "statistics": {
+      "reported_encoded_ps_command_bps": {
+        "count": 12,
+        "mean": 715919.0823025779,
+        "min": 649586.1672912017,
+        "p50": 655061.0339243736,
+        "p95": 852290.8879186619,
+        "p99": 852351.1505012276,
+        "max": 852366.216146869
+      },
+      "useful_ps_command_bps": {
+        "count": 12,
+        "mean": 711537.2865966127,
+        "min": 642062.0031913036,
+        "p50": 654581.6040386031,
+        "p95": 851667.1082983263,
+        "p99": 851727.3267755619,
+        "max": 851742.3813948708
+      },
+      "useful_xsdb_case_wall_bps": {
+        "count": 12,
+        "mean": 284204.34445637313,
+        "min": 140034.18803418803,
+        "p50": 279185.76422725606,
+        "p95": 464466.2131488242,
+        "p99": 464522.79186002293,
+        "max": 464536.9365378226
+      }
+    }
+  },
+  "stationary_30min_recomputation": {
+    "active_window_seconds": 1800.003,
+    "objects": 396,
+    "directions": [
+      {
+        "direction": 0,
+        "objects": 198,
+        "useful_bytes": 73801728,
+        "full_1800s_window_application_goodput_bps": 328007.1333214445,
+        "per_object_internal_bps": {
+          "count": 198,
+          "mean": 1145769.7678128006,
+          "min": 1111212.199618577,
+          "p50": 1159821.940819797,
+          "p95": 1163042.6249227354,
+          "p99": 1163047.3714229816,
+          "max": 1163048.196488362
+        }
+      },
+      {
+        "direction": 1,
+        "objects": 198,
+        "useful_bytes": 73801728,
+        "full_1800s_window_application_goodput_bps": 328007.1333214445,
+        "per_object_internal_bps": {
+          "count": 198,
+          "mean": 1145780.757545147,
+          "min": 1114132.4387589963,
+          "p50": 1159819.3391653826,
+          "p95": 1163037.5691577739,
+          "p99": 1163039.177436961,
+          "max": 1163039.8464282735
+        }
+      }
+    ],
+    "aggregate_useful_bytes": 147603456,
+    "aggregate_full_window_application_goodput_bps": 656014.266642889,
+    "idle_and_xsdb_orchestration_included": true,
+    "interpretation": "workload-level full-window useful throughput for the serialized P10-J soak, not a saturated pipeline benchmark"
+  },
+  "closed_questions": [
+    {
+      "question": "Are the final 5.7 kbit/s values caused by a bit/byte or timer unit error?",
+      "answer": "No. The calculation reproduces exactly with bits and a 333333343-count/s timer."
+    },
+    {
+      "question": "Why are the final values so low?",
+      "answer": "The campaign finalizer takes a global minimum across all command-3 cases; the minima are one-byte P10-E diagnostics."
+    },
+    {
+      "question": "Do the final values represent the 30-minute window?",
+      "answer": "No. They use one sender PS command interval."
+    },
+    {
+      "question": "Was a multi-object PS/DMA pipeline measured?",
+      "answer": "No. The XSDB campaign serialized one object at a time."
+    }
+  ],
+  "open_measurement_questions": [
+    "Saturated multi-object pipeline application goodput in each direction",
+    "True concurrent full-duplex application goodput",
+    "Per-segment mean/p50/p95/p99/max with one common clock contract",
+    "Host/JTAG staging separated from target-resident application work",
+    "Digital-only versus real-optical delta using identical workload",
+    "CPU load and FreeRTOS scheduling impact if FreeRTOS is introduced"
+  ],
+  "decision": "Keep P10 scoped PASS. Do not project the current final goodput fields to eight lanes or final-product performance. Execute P10.1 hardware experiments only after a new explicit current-run authorization."
+}

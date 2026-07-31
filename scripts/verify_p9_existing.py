@@ -480,6 +480,7 @@ def main() -> int:
         allowed_program_stages = {
             "P9_COMPLETE_P10_NOT_STARTED",
             "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+            "P10_POST_ACCEPTANCE_ANALYSIS",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
         }
         if state.get("current_program_stage") not in allowed_program_stages:

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10-GIT-CHECKPOINT-METADATA",
+  "generated_at_utc": "2026-07-31T03:04:46Z",
+  "scope": "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE",
+  "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+  "formal_evidence_freeze_commit": "16684884708223bf7fb9b05145164e6155496cc8",
+  "evidence_checkpoint": {
+    "branch": "p10/ax7020-dual-node-2lane",
+    "commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+    "tree": "89ed42dc6947ed76687bee81c6dee0a60450f08a",
+    "pass_tag": "p10-ax7020-dual-node-2lane-pass",
+    "pass_tag_type": "tag",
+    "pass_tag_object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb",
+    "pass_tag_target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0"
+  },
+  "formal_run_id": "p10_formal_20260730T181535Z_03",
+  "fixed_board_id": "AX7020-F/JTAG:210249855178",
+  "rotating_board_id": "AX7020-R/JTAG:210512180081",
+  "artifacts": {
+    "fixed_functional_bitstream": {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10/794ff11ad54f3d10ee3bd3f13345a315cc5654ded8f357ed3ce71c765a4de303/44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37/p10_ax7020_fixed_functional.bit",
+      "role": "fixed",
+      "sha256": "44759521966e62801e79cad952ced1b485fbb2a7f38d7aa196f8c37204465a37"
+    },
+    "rotating_functional_bitstream": {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10/9c13a1047fba6c0c5ca32811be3f437ce19dac86cecb032ed889f721beb664e7/d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc/p10_ax7020_rotating_functional.bit",
+      "role": "rotating",
+      "sha256": "d6baea70a371ad19485d0aaf0dcf87dff8fb32677d5945977384c28787ba55bc"
+    },
+    "fixed_elf": {
+      "bytes": 375912,
+      "kind": "elf",
+      "path": "artifacts/p10/3ef0899ea216e868e84f78173aea880196835c0d987e11d76fb0ae34be78f8ef/80d55b5dbe267320cf984907f99269650e6fdc8017b3d65b0f2142f034c9c3ce/p10_fixed_runtime.elf",
+      "role": "fixed",
+      "sha256": "80d55b5dbe267320cf984907f99269650e6fdc8017b3d65b0f2142f034c9c3ce"
+    },
+    "rotating_elf": {
+      "bytes": 375956,
+      "kind": "elf",
+      "path": "artifacts/p10/d025e1413e63a8d994ddca527e62149eefd15002121288f4ecbcda407a3d58a6/89dabc952a55af4d4b4a85d7026c2bf54280201ac02bffac720759a7846b3c7f/p10_rotating_runtime.elf",
+      "role": "rotating",
+      "sha256": "89dabc952a55af4d4b4a85d7026c2bf54280201ac02bffac720759a7846b3c7f"
+    },
+    "fixed_shutdown_bitstream": {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "role": "fixed",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3"
+    },
+    "rotating_shutdown_bitstream": {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "role": "rotating",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+    },
+    "wiring": {
+      "path": "config/hardware/p10_active_wiring.yaml",
+      "sha256": "a818331c5e8b471283c8269b5935e541e0456e6a18a0719e44cfe8817da5b165"
+    },
+    "evidence_manifest": {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json",
+      "sha256": "2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281",
+      "file_count": 1276
+    },
+    "final_orchestrator": {
+      "path": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json",
+      "sha256": "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0"
+    }
+  },
+  "shutdown_results": {
+    "fixed": "PASS",
+    "rotating": "PASS"
+  },
+  "authorization": {
+    "record_path": "config/p10_fasttrack_current_run_authorization.json",
+    "record_sha256": "850c4fa46f38d32745585bf5c3bc3643b4f069f68a1b1bc571eb0c98fac69c83",
+    "consumed": true,
+    "reusable_for_future_run": false,
+    "current_run_hardware_authorization": false
+  },
+  "hardware_actions_executed": false
+}

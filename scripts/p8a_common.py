@@ -119,9 +119,14 @@ P10_REQUIREMENT_IDS = {
     "P10-EVID-001",
 }
 
+P10_CLOSEOUT_REQUIREMENT_IDS = {"P10-CLOSEOUT-001"}
+P10_POST_ACCEPTANCE_ANALYSIS_REQUIREMENT_IDS = {"P10-PERF-MEAS-001"}
+
 P10_SCOPE = "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION"
 P10_STAGE = "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET"
-P10_NEXT_STAGE = "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER"
+P10_NEXT_STAGE = "P10_POST_ACCEPTANCE_ANALYSIS"
+P10_CLOSEOUT_SCOPE = "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE"
+P10_ANALYSIS_SCOPE = "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
 
 REQUIRED_REQUIREMENT_FIELDS = {
     "requirement_id",
@@ -267,6 +272,10 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         "p8e_status",
         "p9_status",
         "p10_status",
+        "last_hardware_stage",
+        "last_hardware_run_id",
+        "last_shutdown_fixed",
+        "last_shutdown_rotating",
     }
     missing = sorted(required - set(state))
     if missing:
@@ -729,7 +738,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append("p10_acceptance.formal_evidence_freeze_commit must be a full Git commit hash")
             pending = p10.get("unchanged_pending_scopes", {})
             expected_pending = {
-                "ETHERNET": "DEFERRED",
+                "ETHERNET": "DEFERRED_NO_NETWORK_CABLE",
                 "SPI": "PENDING",
                 "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
                 "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",
@@ -741,6 +750,75 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             for key, value in expected_pending.items():
                 if not isinstance(pending, dict) or pending.get(key) != value:
                     errors.append(f"p10_acceptance.unchanged_pending_scopes.{key} must be {value}")
+
+        expected_last_hardware = {
+            "last_hardware_stage": "P10",
+            "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
+            "last_shutdown_fixed": "PASS",
+            "last_shutdown_rotating": "PASS",
+        }
+        for key, value in expected_last_hardware.items():
+            if state.get(key) != value:
+                errors.append(f"{key} must be {value} after P10 closeout")
+
+        closeout = state.get("p10_post_acceptance_closeout", {})
+        if not isinstance(closeout, dict) or closeout.get("status") != "PASS":
+            errors.append("P10 post-acceptance closeout metadata must be PASS")
+        else:
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P10 closeout evidence"),
+                ("git_metadata_path", "git_metadata_sha256", "P10 Git checkpoint metadata"),
+                ("remote_push_path", "remote_push_sha256", "P10 remote push evidence"),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, closeout.get(path_key))
+                    digest = str(closeout.get(hash_key, "")).lower()
+                    if (
+                        not artifact.is_file()
+                        or not SHA256_RE.fullmatch(digest)
+                        or sha256_artifact(artifact, root) != digest
+                    ):
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+            if closeout.get("hardware_actions_executed") is not False:
+                errors.append("P10 closeout must not execute hardware actions")
+            if closeout.get("p11_started") is not False:
+                errors.append("P10 closeout must not start P11")
+
+        audit = state.get("p10_goodput_measurement_audit", {})
+        if not isinstance(audit, dict) or audit.get("status") != "PASS":
+            errors.append("P10 goodput measurement audit must be PASS")
+        else:
+            try:
+                artifact = resolve_repo_path(root, audit.get("evidence_path"))
+                digest = str(audit.get("evidence_sha256", "")).lower()
+                if (
+                    not artifact.is_file()
+                    or not SHA256_RE.fullmatch(digest)
+                    or sha256_artifact(artifact, root) != digest
+                ):
+                    errors.append("P10 goodput audit path/hash mismatch")
+            except (TypeError, ValueError) as exc:
+                errors.append(f"P10 goodput audit path invalid: {exc}")
+            if audit.get("eligible_for_final_8lane_projection") is not False:
+                errors.append("P10 current goodput fields must not be eligible for final 8-lane projection")
+            if audit.get("hardware_actions_executed") is not False:
+                errors.append("P10 goodput audit must be offline")
+
+        p11 = state.get("p11_readiness", {})
+        if not isinstance(p11, dict):
+            errors.append("p11_readiness must be a mapping")
+        else:
+            expected_p11 = {
+                "status": "NOT_READY",
+                "official_stage_status": "NOT_STARTED",
+                "hardware_ready": False,
+                "current_run_hardware_authorization": False,
+            }
+            for key, value in expected_p11.items():
+                if p11.get(key) != value:
+                    errors.append(f"p11_readiness.{key} must be {value}")
 
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
@@ -774,6 +852,8 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     missing_p9 = sorted(P9_REQUIREMENT_IDS - present)
     missing_p9_closeout = sorted(P9_CLOSEOUT_REQUIREMENT_IDS - present)
     missing_p10 = sorted(P10_REQUIREMENT_IDS - present)
+    missing_p10_closeout = sorted(P10_CLOSEOUT_REQUIREMENT_IDS - present)
+    missing_p10_analysis = sorted(P10_POST_ACCEPTANCE_ANALYSIS_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -786,6 +866,13 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         errors.append(f"missing P9 closeout requirement IDs: {', '.join(missing_p9_closeout)}")
     if missing_p10:
         errors.append(f"missing P10 requirement IDs: {', '.join(missing_p10)}")
+    if missing_p10_closeout:
+        errors.append(f"missing P10 closeout requirement IDs: {', '.join(missing_p10_closeout)}")
+    if missing_p10_analysis:
+        errors.append(
+            "missing P10 post-acceptance analysis requirement IDs: "
+            + ", ".join(missing_p10_analysis)
+        )
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}
     by_id: dict[str, dict[str, Any]] = {}
@@ -919,6 +1006,18 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must retain broader-hardware follow-up")
             if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
                 errors.append(f"{req_id} must declare a primary artifact_hash")
+        for req_id in P10_CLOSEOUT_REQUIREMENT_IDS:
+            item = by_id.get(req_id, {})
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P10 post-acceptance closeout")
+            if item.get("verification_scope") != P10_CLOSEOUT_SCOPE:
+                errors.append(f"{req_id} must declare the no-hardware P10 closeout scope")
+        for req_id in P10_POST_ACCEPTANCE_ANALYSIS_REQUIREMENT_IDS:
+            item = by_id.get(req_id, {})
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after the offline P10 metric audit")
+            if item.get("verification_scope") != P10_ANALYSIS_SCOPE:
+                errors.append(f"{req_id} must declare the no-hardware P10 analysis scope")
     return errors
 
 
@@ -950,6 +1049,10 @@ def render_project_status(state: dict[str, Any]) -> str:
         f"CURRENT_PROGRAM_STAGE: {state['current_program_stage']}",
         f"CURRENT_RUN_HARDWARE_AUTHORIZATION: {str(state['current_run_hardware_authorization']).lower()}",
         f"LAST_HARDWARE_AUTHORIZATION_CONSUMED: {str(state.get('last_hardware_authorization_consumed', False)).lower()}",
+        f"LAST_HARDWARE_STAGE: {state['last_hardware_stage']}",
+        f"LAST_HARDWARE_RUN_ID: {state['last_hardware_run_id']}",
+        f"LAST_SHUTDOWN_FIXED: {state['last_shutdown_fixed']}",
+        f"LAST_SHUTDOWN_ROTATING: {state['last_shutdown_rotating']}",
         "```",
         "",
         "The P7 PASS is limited to the stationary two-lane application path on the current Z7010 development platform. It is not Z7020, sector-bank, rotating, Ethernet, 8-lane, or final-product acceptance.",
@@ -1064,6 +1167,25 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- Shutdown fixed / rotating: `{p10['shutdown_fixed']}` / `{p10['shutdown_rotating']}`",
             "- Scope: stationary, two independent AX7020 endpoints, two optical lanes, no Ethernet, no motion.",
             "- Ethernet, SPI, physical GLOBAL_PERMIT D17, external TFDU duty measurement, handover, 8x32, 600 rpm, and product-final acceptance remain pending.",
+        ]
+    if isinstance(state.get("p10_post_acceptance_closeout"), dict):
+        closeout = state["p10_post_acceptance_closeout"]
+        audit = state["p10_goodput_measurement_audit"]
+        p11 = state["p11_readiness"]
+        lines += [
+            "",
+            "## P10 post-acceptance closeout and analysis",
+            "",
+            f"- Closeout status: `{closeout['status']}`",
+            f"- Closeout evidence: `{closeout['evidence_path']}`",
+            f"- Remote checkpoint evidence: `{closeout['remote_push_path']}`",
+            f"- Current-run authorization: `{str(state['current_run_hardware_authorization']).lower()}`",
+            f"- Last authorization consumed: `{str(state['last_hardware_authorization_consumed']).lower()}`",
+            f"- Goodput audit: `{audit['status']}` (`{audit['outcome']}`)",
+            f"- Current final goodput eligible for 8-lane projection: `{str(audit['eligible_for_final_8lane_projection']).lower()}`",
+            f"- P11 official stage: `{p11['official_stage_status']}`",
+            f"- P11 hardware ready: `{str(p11['hardware_ready']).lower()}`",
+            "- P10 remains a scoped PASS; the post-acceptance metric audit does not promote or revoke hardware scope.",
         ]
     lines += [
         "",

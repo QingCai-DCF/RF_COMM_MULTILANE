@@ -288,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     final_path = run_root / "final/orchestrator_result.json"
     manifest_path = run_root / "final/run_evidence_sha256_manifest.json"
     unchanged_pending = {
-        "ETHERNET": "DEFERRED",
+        "ETHERNET": "DEFERRED_NO_NETWORK_CABLE",
         "SPI": "PENDING",
         "PHYSICAL_GLOBAL_PERMIT": "PENDING_D17",
         "EXTERNAL_TFDU_DUTY": "PENDING_EXTERNAL_MEASUREMENT",

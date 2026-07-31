@@ -1,0 +1,88 @@
+schema_version: 1
+contract_id: P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY
+status: OFFLINE_PLAN_ONLY
+profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+current_run_hardware_authorization: false
+hardware_experiments_authorized: false
+hardware_authorization_required_before_execution: true
+metrics:
+  PHY_RAW_BPS:
+    unit: bit/s
+    definition: configured raw symbol bit rate per active lane times active lane count
+    measured_application_metric: false
+  FRAME_GOODPUT_BPS:
+    unit: bit/s
+    numerator: 8 * deduplicated accepted protocol-frame payload bytes
+    denominator: explicit frame measurement end minus start
+  APPLICATION_GOODPUT_BPS:
+    unit: bit/s
+    numerator: 8 * exactly-once atomically published application-useful bytes
+    denominator: explicit application measurement end minus start
+    excludes:
+    - RFAP headers
+    - link headers
+    - ACKs
+    - retries
+    - duplicates
+  OBJECT_COMPLETION_BPS:
+    unit: bit/s
+    numerator: 8 * useful bytes in completed atomically published objects
+    denominator: first admitted object start through final atomic publish
+    companion_metric: OBJECTS_PER_SECOND
+required_dimensions:
+- measurement_start_timestamp
+- measurement_end_timestamp
+- clock_source
+- numerator_bytes
+- warmup_policy
+- idle_included
+- host_jtag_staging_included
+- direction
+- lane_mask
+- active_lane_count
+- object_size_bytes
+- fragment_size_bytes
+- raw_log_path
+- raw_log_sha256
+required_timing_segments:
+- host_load
+- ps_generation
+- crc32
+- sha256
+- cache_flush
+- descriptor_submit
+- dma_tx
+- pl_queue
+- on_air
+- ack_sack
+- dma_rx
+- cache_invalidate
+- reassembly
+- receive_sha256
+- atomic_publish
+- host_readback
+required_statistics:
+- count
+- mean
+- p50
+- p95
+- p99
+- max
+comparison_modes:
+  A: local DDR/DMA path
+  B: dual-board digital path without optical, only if explicitly supported
+  C: real optical path
+comparison_rule: Mode B may diagnose but never substitute for Mode C hardware evidence.
+integrity_and_safety_invariants:
+- CRC32 and SHA-256 remain enabled
+- exactly-once atomic publication remains enabled
+- selective-repeat/SACK remains enabled
+- TFDU continuous-high and rolling-duty guards remain enabled
+- single GLOBAL_PERMIT architecture is not changed
+- shutdown-before/on-error/timeout/interrupt/normal-exit/after remains mandatory
+acceptance_goals:
+- all four metric names have exact reproducible units and windows
+- JSON and Markdown derive from the same raw log
+- scaling behavior is explained without extrapolation beyond evidence
+- dominant bottlenecks have segmented timing evidence
+- no integrity or safety regression

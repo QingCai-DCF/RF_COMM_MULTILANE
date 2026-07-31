@@ -5,8 +5,8 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 125
-PASS: 114
+REQUIREMENT_COUNT: 127
+PASS: 116
 PENDING: 11
 FAIL: 0
 WAIVED: 0
@@ -141,6 +141,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10-PERF-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-I-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` | P10 characterizes PHY, frame, application, DMA, PS, and airtime performance without promoting the final-product threshold. |
 | `P10-SOAK-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-J-HARDWARE` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` | The single formal stationary two-lane run remains clean for at least 1800 active seconds with no Ethernet or motion. |
 | `P10-EVID-001` | `PASS` | P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET | `P10` | `P10-FASTTRACK-FINAL` | `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` | One complete formal A-J run has consistent summaries, raw logs, SHA-256 manifest, and double final shutdown evidence. |
+| `P10-CLOSEOUT-001` | `PASS` | P10_POST_ACCEPTANCE_CLOSEOUT | `P10_POST_ACCEPTANCE_CLOSEOUT` | `P10-CLOSEOUT-001` | `evidence/generated/p10_closeout_summary.json` | P10 post-acceptance closeout shall consume the current-run authorization, freeze Git/remote checkpoint metadata, preserve the scoped PASS, and execute no hardware action. |
+| `P10-PERF-MEAS-001` | `PASS` | P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY | `P10_POST_ACCEPTANCE_ANALYSIS` | `P10-GOODPUT-MEASUREMENT-AUDIT` | `evidence/generated/p10_goodput_measurement_audit.json` | P10 performance fields shall have reproducible units, numerator, denominator, window, and provenance; unsuitable fields shall not be used for 8-lane or final-product projection. |
 
 ## PASS artifact bindings
 
@@ -214,13 +216,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
-- `PROJECT_STATUS.md` — `640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160`
+- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
+- `PROJECT_STATUS.md` — `dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
+- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
 
 ### `P8A-EVID-001`
 
@@ -230,8 +232,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `a960990628f8451c35b60efe31aa5e8ecd32ea642090143ae8e4da36a96bb546`
-- `PROJECT_STATUS.md` — `640aa136f266c5a5791474d026b09b6c420077134258d78266e8d26325441160`
+- `config/project_state.json` — `7cc8780be4cbfe53f084003d096d79d37803f49733b10665636c4045f5312c1a`
+- `PROJECT_STATUS.md` — `dc6108af564d554cb1115afe07509cee4e645673c09726174770b6fe7d1fc5d4`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -840,3 +842,21 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-CLOSEOUT-001`
+
+- `evidence/generated/p10_closeout_summary.json` — `fce819b60643705399a6318536c2f11a828bdfb1318c71794f0e212fdacc170b`
+- `evidence/generated/p10_git_checkpoint_metadata.json` — `4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18`
+- `evidence/generated/p10_remote_push_summary.json` — `56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/orchestrator_result.json` — `ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/final/run_evidence_sha256_manifest.json` — `2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281`
+
+### `P10-PERF-MEAS-001`
+
+- `evidence/generated/p10_goodput_measurement_audit.json` — `e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` — `ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc`
+- `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` — `f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3`
+- `scripts/p10_hardware_runtime.py` — `0be4eb6cbfe05f94cee1a401376f7cfec6a5c6bc5296abeb623b96d7a13c8a24`
+- `software/ps_driver/p9_runtime_main.c` — `9dc6e41dd2a3f39ac674ce1b9265ddcb5b815b75f6a32197cf1ba69009efcb0a`
+- `config/performance/p10_1_measurement_contract.yaml` — `d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559`
+- `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`

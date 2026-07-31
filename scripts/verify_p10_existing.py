@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Read-only verification of the frozen P10 PASS and offline closeout."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from p8a_common import (
+    REQUIREMENTS_PATH,
+    ROOT,
+    STATE_PATH,
+    STATUS_PATH,
+    TRACEABILITY_PATH,
+    render_project_status,
+    render_traceability,
+    validate_requirements,
+    validate_state,
+)
+
+
+RUN_ID = "p10_formal_20260730T181535Z_03"
+RUN_ROOT = ROOT / "evidence/hardware/p10" / RUN_ID
+PASS_TAG = "p10-ax7020-dual-node-2lane-pass"
+PASS_TAG_OBJECT = "0b8f4fd41b98978ae3c036d0f057990b947e3cdb"
+PASS_TAG_TARGET = "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0"
+FINAL_PATH = RUN_ROOT / "final/orchestrator_result.json"
+MANIFEST_PATH = RUN_ROOT / "final/run_evidence_sha256_manifest.json"
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git(*args: str) -> str:
+    return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
+
+
+def run(command: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        cwd=ROOT,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+
+
+def require(condition: bool, message: str, errors: list[str]) -> None:
+    if not condition:
+        errors.append(message)
+
+
+def verify_manifest(errors: list[str]) -> tuple[int, int]:
+    if not MANIFEST_PATH.is_file():
+        errors.append("P10 evidence manifest is missing")
+        return 0, 0
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    require(manifest.get("status") == "PASS", "P10 evidence manifest is not PASS", errors)
+    require(manifest.get("run_id") == RUN_ID, "P10 evidence manifest run ID mismatch", errors)
+    entries = manifest.get("files", [])
+    if not isinstance(entries, list):
+        errors.append("P10 evidence manifest files is not a list")
+        return 0, 0
+    checked = 0
+    checked_bytes = 0
+    for entry in entries:
+        path = RUN_ROOT / str(entry.get("path", ""))
+        if not path.is_file():
+            errors.append(f"manifest file missing: {entry.get('path')}")
+            continue
+        expected_size = int(entry.get("bytes", -1))
+        if path.stat().st_size != expected_size:
+            errors.append(f"manifest byte count mismatch: {entry.get('path')}")
+            continue
+        if sha256(path) != entry.get("sha256"):
+            errors.append(f"manifest SHA256 mismatch: {entry.get('path')}")
+            continue
+        checked += 1
+        checked_bytes += expected_size
+    return checked, checked_bytes
+
+
+def exact_generated_checks(errors: list[str]) -> None:
+    state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+    requirements = yaml.safe_load(REQUIREMENTS_PATH.read_text(encoding="utf-8"))
+    errors.extend(validate_state(state, ROOT))
+    errors.extend(validate_requirements(requirements, ROOT))
+    if STATUS_PATH.read_bytes() != render_project_status(state).encode("utf-8"):
+        errors.append("PROJECT_STATUS.md is stale")
+    if TRACEABILITY_PATH.read_bytes() != render_traceability(requirements).encode("utf-8"):
+        errors.append("requirement traceability matrix is stale")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--json-summary", action="store_true")
+    args = parser.parse_args(argv)
+    errors: list[str] = []
+
+    no_hardware = os.environ.get("NO_HARDWARE") == "1"
+    authorization_false = os.environ.get(
+        "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false"
+    ).lower() in {"0", "false", "no"}
+    require(no_hardware, "NO_HARDWARE must be 1", errors)
+    require(
+        authorization_false,
+        "CURRENT_RUN_HARDWARE_AUTHORIZATION must be false",
+        errors,
+    )
+
+    try:
+        require(git("cat-file", "-t", PASS_TAG) == "tag", "P10 PASS tag type changed", errors)
+        require(git("rev-parse", PASS_TAG) == PASS_TAG_OBJECT, "P10 PASS tag object changed", errors)
+        require(
+            git("rev-list", "-n", "1", PASS_TAG) == PASS_TAG_TARGET,
+            "P10 PASS tag target changed",
+            errors,
+        )
+        tag_diff = subprocess.run(
+            [
+                "git",
+                "diff",
+                "--quiet",
+                PASS_TAG,
+                "--",
+                str(RUN_ROOT.relative_to(ROOT)).replace("\\", "/"),
+                "evidence/generated/p10_fasttrack_final_summary.json",
+                "evidence/generated/p10_fasttrack_final_summary.md",
+            ],
+            cwd=ROOT,
+            check=False,
+        )
+        require(
+            tag_diff.returncode == 0,
+            "frozen P10 run/final summary differs from the PASS tag",
+            errors,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        errors.append(f"P10 Git topology verification failed: {exc}")
+
+    checked_files, checked_bytes = verify_manifest(errors)
+    if FINAL_PATH.is_file():
+        final = json.loads(FINAL_PATH.read_text(encoding="utf-8"))
+        require(final.get("status") == "PASS", "P10 final status is not PASS", errors)
+        require(final.get("run_id") == RUN_ID, "P10 final run ID mismatch", errors)
+        require(final.get("SHUTDOWN_FIXED") == "PASS", "fixed shutdown is not PASS", errors)
+        require(final.get("SHUTDOWN_ROTATING") == "PASS", "rotating shutdown is not PASS", errors)
+        require(final.get("network_used") is False, "P10 final evidence used network", errors)
+        require(final.get("hardware_movement") is False, "P10 final evidence used motion", errors)
+    else:
+        errors.append("P10 final orchestrator evidence is missing")
+
+    env = dict(os.environ)
+    env["NO_HARDWARE"] = "1"
+    env["CURRENT_RUN_HARDWARE_AUTHORIZATION"] = "false"
+    closeout_check = run(
+        [sys.executable, "scripts/generate_p10_closeout.py", "--check"], env
+    )
+    require(
+        closeout_check.returncode == 0
+        and "P10_CLOSEOUT_GENERATION=PASS" in closeout_check.stdout,
+        "P10 closeout generator check failed",
+        errors,
+    )
+    no_hardware_scan = run(
+        [sys.executable, "scripts/check_no_hardware_calls.py"], env
+    )
+    require(
+        no_hardware_scan.returncode == 0
+        and "NO_HARDWARE_ACTIONS_EXECUTED=1" in no_hardware_scan.stdout,
+        "no-hardware static scan failed",
+        errors,
+    )
+    try:
+        exact_generated_checks(errors)
+    except (OSError, ValueError, TypeError, json.JSONDecodeError, yaml.YAMLError) as exc:
+        errors.append(f"canonical generated-file validation failed: {exc}")
+
+    summary: dict[str, Any] = {
+        "status": "PASS" if not errors else "FAIL",
+        "test_id": "P10-VERIFY-EXISTING",
+        "mode": "READ_ONLY_TAGGED_EVIDENCE_AND_OFFLINE_CLOSEOUT",
+        "tag": PASS_TAG,
+        "tag_object": PASS_TAG_OBJECT,
+        "tag_target": PASS_TAG_TARGET,
+        "run_id": RUN_ID,
+        "verified_manifest_file_count": checked_files,
+        "verified_manifest_bytes": checked_bytes,
+        "closeout_generator_check": (
+            "PASS" if closeout_check.returncode == 0 else "FAIL"
+        ),
+        "no_hardware_static_scan": (
+            "PASS" if no_hardware_scan.returncode == 0 else "FAIL"
+        ),
+        "hardware_actions_executed": False,
+        "current_run_hardware_authorization": False,
+        "errors": errors,
+    }
+    if args.json_summary:
+        print(json.dumps(summary, sort_keys=True))
+    else:
+        print(f"P10_VERIFY_EXISTING={summary['status']}")
+        print(f"P10_TAG_TARGET={summary['tag_target']}")
+        print(f"VERIFIED_MANIFEST_FILE_COUNT={checked_files}")
+        print(f"VERIFIED_MANIFEST_BYTES={checked_bytes}")
+        print("HARDWARE_ACTIONS_EXECUTED=false")
+        print("CURRENT_RUN_HARDWARE_AUTHORIZATION=false")
+        for error in errors:
+            print(f"ERROR: {error}")
+    return 0 if not errors else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

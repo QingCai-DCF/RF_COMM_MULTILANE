@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10-CLOSEOUT-001",
+  "generated_at_utc": "2026-07-31T03:04:46Z",
+  "scope": "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE",
+  "p10_status": "PASS",
+  "current_program_stage": "P10_POST_ACCEPTANCE_ANALYSIS",
+  "formal_run_id": "p10_formal_20260730T181535Z_03",
+  "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+  "evidence_checkpoint_commit": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+  "pass_tag": "p10-ax7020-dual-node-2lane-pass",
+  "pass_tag_object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb",
+  "pass_tag_target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+  "closed_tag_to_create": "p10-ax7020-dual-node-2lane-closed",
+  "formal_stage_gates_preserved": {
+    "values": {
+      "DMA_DDR_CACHE_FIXED": "PASS",
+      "DMA_DDR_CACHE_ROTATING": "PASS",
+      "DUAL_INDEPENDENT_PS": "PASS",
+      "ENDPOINT_REBOOT_RECOVERY": "PASS",
+      "FOUR_DIRECTION_RAW": "PASS",
+      "F_R_BUILD_ROLE_SAFE_BOOT_SHUTDOWN": "PASS",
+      "F_TO_R_OBJECT": "PASS",
+      "LANE0_4MBPS": "PASS",
+      "LANE1_4MBPS": "PASS",
+      "PERFORMANCE": "PASS",
+      "R_TO_F_OBJECT": "PASS",
+      "SCHEDULER_LANE_FAULT": "PASS",
+      "SELECTIVE_REPEAT_SACK": "PASS",
+      "STATIONARY_30MIN": "PASS",
+      "TWO_LANE_8MBPS_RAW": "PASS"
+    },
+    "interpretation": "internal gates of the frozen P10 scope; they are not additional product, scaling, rotation, handover, or final-hardware claims"
+  },
+  "canonical_scoped_claims": {
+    "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
+    "DUAL_Z7020_INDEPENDENT_ENDPOINTS": "PASS",
+    "DUAL_Z7020_2LANE_OPTICAL_LINK": "PASS",
+    "DUAL_Z7020_PS_PL_PHY_PL_PS": "PASS",
+    "STATIONARY_2LANE_30MIN": "PASS"
+  },
+  "authorization": {
+    "current_run_hardware_authorization": false,
+    "last_hardware_authorization_consumed": true,
+    "last_hardware_stage": "P10",
+    "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
+    "last_shutdown_fixed": "PASS",
+    "last_shutdown_rotating": "PASS"
+  },
+  "checkpoint_metadata": {
+    "path": "evidence/generated/p10_git_checkpoint_metadata.json",
+    "sha256": "4f7d41b033372dd77aa41b23698a66b0c5c8616684b1a4debafacc550cc96a18"
+  },
+  "remote_push": {
+    "path": "evidence/generated/p10_remote_push_summary.json",
+    "sha256": "56228b0a867d2360b6d85d4f68b2657230c5fc5b63a53e51533ce076c6f3b062"
+  },
+  "goodput_measurement_audit": {
+    "path": "evidence/generated/p10_goodput_measurement_audit.json",
+    "sha256": "e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14",
+    "status": "PASS",
+    "outcome": "CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING",
+    "eligible_for_final_8lane_projection": false
+  },
+  "p10_1_plan": {
+    "path": "docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md",
+    "sha256": "3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74",
+    "measurement_contract_path": "config/performance/p10_1_measurement_contract.yaml",
+    "measurement_contract_sha256": "d0b01d859c9da61e8efc66e2e44ea3a82601c8b4a3caafb69b00ebb45dc76559",
+    "status": "OFFLINE_PLAN_ONLY"
+  },
+  "p11_readiness": {
+    "path": "docs/plans/P11_HARDWARE_READINESS.md",
+    "sha256": "44c04c54f631701f3c379feb6b2688a95a556e8d330426264a4af51d8fcedfb5",
+    "official_stage_status": "NOT_STARTED",
+    "hardware_ready": false,
+    "current_tfdu_module_count": 4,
+    "minimum_required_tfdu_module_count": 5
+  },
+  "unchanged_pending_scopes": {
+    "ethernet": "DEFERRED_NO_NETWORK_CABLE",
+    "spi": "PENDING",
+    "physical_global_permit": "PENDING_D17",
+    "external_tfdu_duty": "PENDING_EXTERNAL_MEASUREMENT",
+    "handover": "PENDING_P11",
+    "8x32": "PENDING_P12",
+    "600rpm": "PENDING_P13",
+    "product_final": "PENDING"
+  },
+  "hardware_actions_executed": false,
+  "network_hardware_used": false,
+  "jtag_connected": false,
+  "fpga_programmed": false,
+  "ps_elf_run": false,
+  "uart_written": false,
+  "tfdu_driven": false,
+  "p11_started": false,
+  "p11_hold": true
+}

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from typing import Any
@@ -252,15 +253,23 @@ def render_summary(summary: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def main() -> int:
-    summary = build_summary()
-    SUMMARY_JSON.parent.mkdir(parents=True, exist_ok=True)
-    SUMMARY_JSON.write_text(
-        json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-        newline="\n",
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="validate current inputs without rewriting the generated P8A summary",
     )
-    SUMMARY_MD.write_text(render_summary(summary), encoding="utf-8", newline="\n")
+    args = parser.parse_args(argv)
+    summary = build_summary()
+    if not args.check:
+        SUMMARY_JSON.parent.mkdir(parents=True, exist_ok=True)
+        SUMMARY_JSON.write_text(
+            json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        SUMMARY_MD.write_text(render_summary(summary), encoding="utf-8", newline="\n")
     for name, gate in summary["gates"].items():
         if name == "NO_HARDWARE_ACTIONS_EXECUTED":
             print(f"{name}={1 if gate['status'] == 'PASS' else 0}")
