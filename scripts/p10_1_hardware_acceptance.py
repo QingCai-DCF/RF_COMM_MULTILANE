@@ -56,6 +56,9 @@ OFFLINE_TAG = "p10.1-offline-performance-ready"
 OFFLINE_SOURCE = "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183"
 OFFLINE_EVIDENCE_CHECKPOINT = "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f"
 AUTH_PATH = ROOT / "config/p10_1_current_run_hardware_authorization.json"
+RETRY_OVERRIDE_PATH = (
+    ROOT / "config/p10_1_retry_limit_override_authorization.json"
+)
 FUNCTIONAL_SUMMARY = (
     ROOT / "evidence/generated/p10_1_hw_functional_build_summary.json"
 )
@@ -98,6 +101,10 @@ HW_ROOT = ROOT / "evidence/hardware/p10_1"
 GENERATED = ROOT / "evidence/generated"
 RUN_RE = re.compile(r"^p10_1_[A-Za-z0-9_.-]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
+DIAGNOSTIC_STAGE_NEW_RUN_ID_LIMIT = 2
+RETRY_OVERRIDE_AUTHORIZATION_ID = (
+    "P10_1-HARDWARE-DIAGNOSTIC-RETRY-LIMIT-OVERRIDE"
+)
 FLAG_ABORT_25 = 1 << 16
 FLAG_ABORT_75 = 1 << 17
 FLAG_DMA_RESET_SENDER = 1 << 18
@@ -670,7 +677,164 @@ def plan_hashes(stages: list[str]) -> dict[str, str]:
 
 
 def _load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return value
+
+
+def attempted_stage_run_ids(
+    stage: str, *, hardware_root: Path = HW_ROOT
+) -> list[str]:
+    """Return run IDs that actually entered a hardware stage.
+
+    ``stages/<stage>`` is created only after hardware execution begins. Merely
+    preparing an authorization or running a dry-run cannot consume the Goal's
+    diagnostic-stage run-ID budget.
+    """
+
+    if not hardware_root.is_dir():
+        return []
+    run_ids: list[str] = []
+    run_roots = sorted(
+        item for item in hardware_root.iterdir() if item.is_dir()
+    )
+    for run_root in run_roots:
+        if not RUN_RE.fullmatch(run_root.name):
+            continue
+        stage_root = run_root / "stages" / stage
+        if stage_root.is_dir() and any(
+            item.is_file() for item in stage_root.rglob("*")
+        ):
+            run_ids.append(run_root.name)
+    return run_ids
+
+
+def diagnostic_retry_budget(
+    stages: list[str], *, hardware_root: Path = HW_ROOT
+) -> dict[str, dict[str, Any]]:
+    return {
+        stage: {
+            "limit": DIAGNOSTIC_STAGE_NEW_RUN_ID_LIMIT,
+            "run_ids": attempted_stage_run_ids(
+                stage, hardware_root=hardware_root
+            ),
+        }
+        for stage in stages
+    }
+
+
+def _expected_board_identities() -> dict[str, dict[str, str]]:
+    return {
+        "fixed": {
+            "id": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
+            "serial": EXPECTED_FIXED_SERIAL,
+            "target": EXPECTED_FIXED_TARGET,
+        },
+        "rotating": {
+            "id": f"AX7020-R/JTAG:{EXPECTED_ROTATING_SERIAL}",
+            "serial": EXPECTED_ROTATING_SERIAL,
+            "target": EXPECTED_ROTATING_TARGET,
+        },
+    }
+
+
+def validate_retry_limit_override(
+    path: Path,
+    run_id: str,
+    stages: list[str],
+    *,
+    hardware_root: Path = HW_ROOT,
+) -> tuple[dict[str, Any] | None, dict[str, dict[str, Any]], list[str]]:
+    """Require a run-bound user override after the Goal section 23 limit.
+
+    This runner intentionally has no command that creates the override record.
+    It may only be materialized after the user explicitly extends the limit.
+    """
+
+    budget = diagnostic_retry_budget(stages, hardware_root=hardware_root)
+    exhausted = {
+        stage: item
+        for stage, item in budget.items()
+        if len(item["run_ids"]) >= int(item["limit"])
+    }
+    if not exhausted:
+        return None, budget, []
+    if not path.is_file():
+        names = ", ".join(sorted(exhausted))
+        return None, budget, [
+            "Goal section 23 diagnostic-stage run-ID limit exhausted for "
+            f"{names}; explicit run-bound retry-limit override is absent"
+        ]
+    try:
+        record = _load_json(path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return None, budget, [f"retry-limit override unreadable: {exc}"]
+
+    exhausted_names = sorted(exhausted)
+    historical = {
+        stage: exhausted[stage]["run_ids"] for stage in exhausted_names
+    }
+    expected = {
+        "schema_version": 1,
+        "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+        "status": "AUTHORIZED",
+        "scope": EXPECTED_SCOPE,
+        "goal_sha256": EXPECTED_GOAL_SHA256,
+        "current_run_hardware_authorization": True,
+        "authorized_run_id": run_id,
+        "authorized_campaign_stages": stages,
+        "retry_limit_override_stages": exhausted_names,
+        "historical_stage_run_ids": historical,
+        "additional_new_run_ids_by_stage": {
+            stage: 1 for stage in exhausted_names
+        },
+        "board_identities": _expected_board_identities(),
+        "maximum_single_formal_run_seconds": 1800,
+        "maximum_lane_mask": 3,
+        "ethernet_allowed": False,
+        "movement_allowed": False,
+        "rotation_allowed": False,
+        "rewiring_allowed": False,
+        "reusable_for_future_run": False,
+    }
+    errors = [
+        f"retry-limit override {key} mismatch"
+        for key, value in expected.items()
+        if record.get(key) != value
+    ]
+    statement = record.get("user_authorization_statement")
+    statement_hash = record.get("user_authorization_statement_sha256")
+    if not isinstance(statement, str) or not statement.strip():
+        errors.append("retry-limit override user authorization statement missing")
+    elif (
+        not isinstance(statement_hash, str)
+        or not SHA_RE.fullmatch(statement_hash)
+        or hashlib.sha256(statement.encode("utf-8")).hexdigest()
+        != statement_hash
+    ):
+        errors.append("retry-limit override user authorization statement hash mismatch")
+    timestamp = record.get("user_authorization_received_at")
+    if not isinstance(timestamp, str) or not timestamp.strip():
+        errors.append("retry-limit override authorization timestamp missing")
+    reason = record.get("override_reason")
+    if not isinstance(reason, str) or not reason.strip():
+        errors.append("retry-limit override reason missing")
+    shutdown = record.get("shutdown", {})
+    if any(
+        shutdown.get(key) is not True
+        for key in (
+            "before",
+            "on_error",
+            "on_timeout",
+            "on_interrupt",
+            "normal_exit",
+            "after",
+            "program_role_bound_shutdown_bitstreams",
+        )
+    ):
+        errors.append("retry-limit override shutdown policy is incomplete")
+    return record, budget, errors
 
 
 def _record(
@@ -737,6 +901,20 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         raise RuntimeError("wrong P10.1 hardware branch")
     if git("status", "--porcelain"):
         raise RuntimeError("authorization requires a clean worktree")
+    retry_override, retry_budget, retry_errors = validate_retry_limit_override(
+        RETRY_OVERRIDE_PATH, run_id, stages
+    )
+    if retry_errors:
+        raise RuntimeError("; ".join(retry_errors))
+    try:
+        prior_authorization = _load_json(AUTH_PATH)
+    except (OSError, ValueError, json.JSONDecodeError):
+        prior_authorization = {}
+    if prior_authorization.get("consumed") is True and retry_override is None:
+        raise RuntimeError(
+            "prior current-run hardware authorization is consumed; a fresh "
+            "explicit run-bound authorization is required"
+        )
     authorization_parent = git("rev-parse", "HEAD")
     if (
         git("rev-list", "-n", "1", OFFLINE_TAG)
@@ -809,18 +987,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "current_run_hardware_authorization": True,
         "user_authorization_received_at": "2026-07-31",
-        "board_identities": {
-            "fixed": {
-                "id": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
-                "serial": EXPECTED_FIXED_SERIAL,
-                "target": EXPECTED_FIXED_TARGET,
-            },
-            "rotating": {
-                "id": f"AX7020-R/JTAG:{EXPECTED_ROTATING_SERIAL}",
-                "serial": EXPECTED_ROTATING_SERIAL,
-                "target": EXPECTED_ROTATING_TARGET,
-            },
-        },
+        "board_identities": _expected_board_identities(),
         "part": EXPECTED_PART,
         "authorized_stages": stages,
         "plan_sha256": plan_hashes(stages),
@@ -856,6 +1023,16 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
             },
         },
         "artifacts": artifacts,
+        "diagnostic_stage_retry_budget": retry_budget,
+        "retry_limit_override": (
+            {
+                "path": rel(RETRY_OVERRIDE_PATH),
+                "sha256": sha256(RETRY_OVERRIDE_PATH),
+                "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+            }
+            if retry_override is not None
+            else None
+        ),
         "generated_at_utc": utc_now(),
     }
     write_json(AUTH_PATH, payload)
@@ -896,6 +1073,23 @@ def validate_authorization(
     for key, value in expected.items():
         if record.get(key) != value:
             errors.append(f"authorization {key} mismatch")
+    retry_override, retry_budget, retry_errors = validate_retry_limit_override(
+        RETRY_OVERRIDE_PATH, run_id, stages
+    )
+    errors.extend(retry_errors)
+    if record.get("diagnostic_stage_retry_budget") != retry_budget:
+        errors.append("authorization diagnostic-stage retry budget mismatch")
+    expected_retry_override = (
+        {
+            "path": rel(RETRY_OVERRIDE_PATH),
+            "sha256": sha256(RETRY_OVERRIDE_PATH),
+            "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+        }
+        if retry_override is not None and RETRY_OVERRIDE_PATH.is_file()
+        else None
+    )
+    if record.get("retry_limit_override") != expected_retry_override:
+        errors.append("authorization retry-limit override binding mismatch")
     head = git("rev-parse", "HEAD")
     source = record.get("source_commit")
     parent = record.get("authorization_parent_commit")

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
+import json
 import struct
 import sys
 import tempfile
@@ -170,6 +172,115 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         ]
         self.assertEqual({item.size for item in streaming}, {64 * 1024 * 1024})
         self.assertEqual({item.direction for item in streaming}, {0, 1})
+
+    def test_retry_budget_counts_only_entered_hardware_stages(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            hardware_root = Path(temporary)
+            entered = hardware_root / "p10_1_entered" / "stages" / "preflight"
+            entered.mkdir(parents=True)
+            (entered / "xsdb.stdout.log").write_text("started", encoding="utf-8")
+            dry_run = hardware_root / "p10_1_dry" / "stages"
+            dry_run.mkdir(parents=True)
+            unrelated = hardware_root / "not_a_p10_run" / "stages" / "preflight"
+            unrelated.mkdir(parents=True)
+            (unrelated / "log.txt").write_text("ignored", encoding="utf-8")
+
+            self.assertEqual(
+                self.runner.attempted_stage_run_ids(
+                    "preflight", hardware_root=hardware_root
+                ),
+                ["p10_1_entered"],
+            )
+
+    def test_third_preflight_requires_explicit_run_bound_override(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for run_id in ("p10_1_attempt_1", "p10_1_attempt_2"):
+                stage = root / run_id / "stages" / "preflight"
+                stage.mkdir(parents=True)
+                (stage / "xsdb.result.txt").write_text("FAIL", encoding="utf-8")
+            override = root / "missing_override.json"
+            record, budget, errors = self.runner.validate_retry_limit_override(
+                override,
+                "p10_1_attempt_3",
+                ["preflight", "smoke"],
+                hardware_root=root,
+            )
+            self.assertIsNone(record)
+            self.assertEqual(len(budget["preflight"]["run_ids"]), 2)
+            self.assertTrue(any("limit exhausted" in item for item in errors))
+
+    def test_retry_override_is_exact_and_one_run_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            historical = ["p10_1_attempt_1", "p10_1_attempt_2"]
+            for run_id in historical:
+                stage = root / run_id / "stages" / "preflight"
+                stage.mkdir(parents=True)
+                (stage / "xsdb.result.txt").write_text("FAIL", encoding="utf-8")
+            statement = (
+                "I explicitly override Goal section 23 for exactly one additional "
+                "preflight run ID p10_1_attempt_3."
+            )
+            payload = {
+                "schema_version": 1,
+                "authorization_id": self.runner.RETRY_OVERRIDE_AUTHORIZATION_ID,
+                "status": "AUTHORIZED",
+                "scope": self.runner.EXPECTED_SCOPE,
+                "goal_sha256": self.runner.EXPECTED_GOAL_SHA256,
+                "current_run_hardware_authorization": True,
+                "authorized_run_id": "p10_1_attempt_3",
+                "authorized_campaign_stages": ["preflight", "smoke"],
+                "retry_limit_override_stages": ["preflight"],
+                "historical_stage_run_ids": {"preflight": historical},
+                "additional_new_run_ids_by_stage": {"preflight": 1},
+                "board_identities": self.runner._expected_board_identities(),
+                "maximum_single_formal_run_seconds": 1800,
+                "maximum_lane_mask": 3,
+                "ethernet_allowed": False,
+                "movement_allowed": False,
+                "rotation_allowed": False,
+                "rewiring_allowed": False,
+                "reusable_for_future_run": False,
+                "user_authorization_statement": statement,
+                "user_authorization_statement_sha256": hashlib.sha256(
+                    statement.encode("utf-8")
+                ).hexdigest(),
+                "user_authorization_received_at": "2026-08-01T00:00:00+08:00",
+                "override_reason": "cache-coherency remediation requires retest",
+                "shutdown": {
+                    "before": True,
+                    "on_error": True,
+                    "on_timeout": True,
+                    "on_interrupt": True,
+                    "normal_exit": True,
+                    "after": True,
+                    "program_role_bound_shutdown_bitstreams": True,
+                },
+            }
+            override = root / "override.json"
+            override.write_text(
+                json.dumps(payload, sort_keys=True), encoding="utf-8"
+            )
+            record, _, errors = self.runner.validate_retry_limit_override(
+                override,
+                "p10_1_attempt_3",
+                ["preflight", "smoke"],
+                hardware_root=root,
+            )
+            self.assertEqual(errors, [])
+            self.assertEqual(record, payload)
+
+            third = root / "p10_1_attempt_3" / "stages" / "preflight"
+            third.mkdir(parents=True)
+            (third / "xsdb.result.txt").write_text("PASS", encoding="utf-8")
+            _, _, reused_errors = self.runner.validate_retry_limit_override(
+                override,
+                "p10_1_attempt_4",
+                ["preflight", "smoke"],
+                hardware_root=root,
+            )
+            self.assertTrue(reused_errors)
 
     def test_binary_parser_uses_frozen_schema_offsets(self) -> None:
         words = [0] * 512
