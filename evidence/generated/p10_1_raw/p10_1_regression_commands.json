@@ -1,7 +1,7 @@
 {
   "commands": [
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_config.py --write",
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_config.py --check",
       "log": "evidence/generated/p10_1_raw/offline_gate/config_generation.log",
       "name": "config_generation",
       "return_code": 0,
@@ -29,25 +29,25 @@
       "status": "PASS"
     },
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_software.py",
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_software.py --verify-existing",
       "log": "evidence/generated/p10_1_raw/offline_gate/software_build.log",
       "name": "software_build",
       "return_code": 0,
       "status": "PASS"
     },
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_xsim.py",
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_xsim.py --verify-existing",
       "log": "evidence/generated/p10_1_raw/offline_gate/xsim.log",
       "name": "xsim",
       "return_code": 0,
       "status": "PASS"
     },
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_ax7020.py",
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_p10_1_ax7020.py --reuse-existing",
       "log": "evidence/generated/p10_1_raw/offline_gate/ax7020_dual_build.log",
       "name": "ax7020_dual_build",
-      "return_code": 0,
-      "status": "PASS"
+      "return_code": 1,
+      "status": "FAIL"
     },
     {
       "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p10_1_hardware_performance.py",
@@ -85,7 +85,7 @@
       "status": "PASS"
     },
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_intake.py",
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p10_1_intake.py --verify-existing",
       "log": "evidence/generated/p10_1_raw/offline_gate/repo_intake.log",
       "name": "repo_intake",
       "return_code": 0,

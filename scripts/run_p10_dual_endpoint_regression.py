@@ -186,9 +186,12 @@ def run_register_map_verify(raw: Path) -> dict[str, Any]:
         f"STDERR_BEGIN\n{result.stderr}\nSTDERR_END\n"
     )
     log.write_text(content, encoding="utf-8", errors="replace", newline="\n")
+    register_map = json.loads(
+        (ROOT / "config/register_map/ir_axi_regs.yaml").read_text(encoding="utf-8")
+    )
     required = (
         "REGISTER_MAP_SINGLE_SOURCE_CREATED=1",
-        "REGISTER_MAP_VERSION=P9-3",
+        f"REGISTER_MAP_VERSION={register_map['register_map_version']}",
     )
     missing = [marker for marker in required if marker not in content]
     return {

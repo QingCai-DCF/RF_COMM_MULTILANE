@@ -1,0 +1,203 @@
+#ifndef P10_1_RUNTIME_PROTOCOL_H
+#define P10_1_RUNTIME_PROTOCOL_H
+
+#include <stddef.h>
+#include <stdint.h>
+
+/*
+ * The P9/P10 control mailbox occupies 0x00020000..0x000203ff.  The role-bound
+ * P10.1 runtime publishes a second, append-only result page immediately after
+ * it.  Every field is a 32-bit word so XSDB can take an unambiguous binary
+ * snapshot while either Cortex-A9 is stopped.
+ */
+#define P10_1_RUNTIME_MAILBOX_BASEADDR UINT32_C(0x00020400)
+#define P10_1_RUNTIME_MAGIC UINT32_C(0x31303150) /* P101, little endian */
+#define P10_1_RUNTIME_SCHEMA_VERSION UINT32_C(1)
+#define P10_1_RUNTIME_PL_TIMER_HZ UINT32_C(64000000)
+#define P10_1_RUNTIME_MAX_TIMEOUT_MS UINT32_C(1800000)
+#define P10_1_RUNTIME_MAX_OBJECT_BYTES UINT32_C(0x04000000)
+#define P10_1_RUNTIME_SIGNAL_PULSES UINT32_C(16)
+#define P10_1_RUNTIME_SIGNAL_SPACING_CYCLES UINT32_C(1024)
+
+enum p10_1_runtime_state {
+  P10_1_RUNTIME_EMPTY = 0,
+  P10_1_RUNTIME_INITIALIZING = 1,
+  P10_1_RUNTIME_PRIMING = 2,
+  P10_1_RUNTIME_PRIMED = 3,
+  P10_1_RUNTIME_RUNNING = 4,
+  P10_1_RUNTIME_VERIFYING = 5,
+  P10_1_RUNTIME_COMPLETE = 6,
+  P10_1_RUNTIME_EXPECTED_ABORT = 7,
+  P10_1_RUNTIME_FAULT = 8,
+  P10_1_RUNTIME_SHUTDOWN = 9,
+};
+
+enum p10_1_runtime_status {
+  P10_1_RUNTIME_STATUS_OK = 0,
+  P10_1_RUNTIME_STATUS_BAD_ARGUMENT = 0x101,
+  P10_1_RUNTIME_STATUS_DMA_CHAIN = 0x102,
+  P10_1_RUNTIME_STATUS_DMA_COMPLETION = 0x103,
+  P10_1_RUNTIME_STATUS_PL_OBJECT = 0x104,
+  P10_1_RUNTIME_STATUS_INTEGRITY = 0x105,
+  P10_1_RUNTIME_STATUS_SIGNAL_TIMEOUT = 0x106,
+  P10_1_RUNTIME_STATUS_TIMER = 0x107,
+  P10_1_RUNTIME_STATUS_REMOTE_COMMIT = 0x108,
+  P10_1_RUNTIME_STATUS_ABORT_RECOVERY = 0x109,
+};
+
+enum p10_1_runtime_flags {
+  P10_1_RUNTIME_FLAG_PATTERN_SHIFT = 8,
+  P10_1_RUNTIME_FLAG_PATTERN_MASK = 0x0fU << 8,
+  P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 = 1U << 16,
+  P10_1_RUNTIME_FLAG_EXPECT_ABORT_75 = 1U << 17,
+  P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET = 1U << 18,
+  P10_1_RUNTIME_FLAG_EXPECT_PL_RESET = 1U << 19,
+  P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT = 1U << 20,
+  P10_1_RUNTIME_FLAG_STALE_SEGMENT = 1U << 21,
+};
+
+typedef struct p10_1_runtime_result {
+  volatile uint32_t magic;
+  volatile uint32_t schema_version;
+  volatile uint32_t firmware_build_id;
+  volatile uint32_t endpoint_role;
+  volatile uint32_t service_state;
+  volatile uint32_t status;
+  volatile uint32_t command_sequence;
+  volatile uint32_t flags;
+
+  volatile uint32_t lane_mask;
+  volatile uint32_t direction;
+  volatile uint32_t rate_select;
+  volatile uint32_t total_bytes;
+  volatile uint32_t object_bytes;
+  volatile uint32_t descriptor_bytes;
+  volatile uint32_t descriptor_count_per_object;
+  volatile uint32_t object_count;
+  volatile uint32_t ring_depth;
+  volatile uint32_t descriptor_batch;
+  volatile uint32_t buffer_count;
+  volatile uint32_t ack_threshold;
+  volatile uint32_t outstanding_frames;
+  volatile uint32_t timeout_ms;
+  volatile uint32_t session_epoch;
+  volatile uint32_t path_epoch;
+  volatile uint32_t first_object_id;
+  volatile uint32_t payload_pattern;
+
+  volatile uint32_t ps_start_ticks_low;
+  volatile uint32_t ps_start_ticks_high;
+  volatile uint32_t ps_end_ticks_low;
+  volatile uint32_t ps_end_ticks_high;
+  volatile uint32_t ps_elapsed_ticks_low;
+  volatile uint32_t ps_elapsed_ticks_high;
+  volatile uint32_t pl_start_ticks_low;
+  volatile uint32_t pl_start_ticks_high;
+  volatile uint32_t pl_end_ticks_low;
+  volatile uint32_t pl_end_ticks_high;
+  volatile uint32_t pl_elapsed_ticks_low;
+  volatile uint32_t pl_elapsed_ticks_high;
+  volatile uint32_t ps_timer_frequency_hz;
+  volatile uint32_t pl_timer_frequency_hz;
+  volatile uint32_t timer_error_ppm;
+  volatile uint32_t timer_crosscheck_pass;
+
+  volatile uint32_t application_bytes_accepted_low;
+  volatile uint32_t application_bytes_accepted_high;
+  volatile uint32_t application_bytes_committed_low;
+  volatile uint32_t application_bytes_committed_high;
+  volatile uint32_t wire_bytes_low;
+  volatile uint32_t wire_bytes_high;
+  volatile uint32_t descriptors_submitted_low;
+  volatile uint32_t descriptors_submitted_high;
+  volatile uint32_t descriptors_completed_low;
+  volatile uint32_t descriptors_completed_high;
+  volatile uint32_t objects_submitted;
+  volatile uint32_t objects_completed;
+  volatile uint32_t atomic_commit_count;
+  volatile uint32_t host_command_count;
+  volatile uint32_t fast_path_segment_count;
+  volatile uint32_t remote_commit_confirmed;
+
+  volatile uint32_t partial_commit_count;
+  volatile uint32_t duplicate_commit_count;
+  volatile uint32_t stale_commit_count;
+  volatile uint32_t descriptor_leak_count;
+  volatile uint32_t double_completion_count;
+  volatile uint32_t integrity_error_count;
+  volatile uint32_t crc_bad_count;
+  volatile uint32_t sha_mismatch_count;
+  volatile uint32_t retry_exhausted_count;
+  volatile uint32_t abort_count;
+  volatile uint32_t dma_reset_count;
+  volatile uint32_t pl_reset_count;
+  volatile uint32_t first_mismatch_offset;
+  volatile uint32_t last_error_detail;
+
+  volatile uint32_t input_crc32;
+  volatile uint32_t output_crc32;
+  volatile uint32_t input_sha256[8];
+  volatile uint32_t output_sha256[8];
+
+  volatile uint32_t payload_prepare_ticks_low;
+  volatile uint32_t payload_prepare_ticks_high;
+  volatile uint32_t integrity_verify_ticks_low;
+  volatile uint32_t integrity_verify_ticks_high;
+  volatile uint32_t inter_object_signal_ticks_low;
+  volatile uint32_t inter_object_signal_ticks_high;
+
+  volatile uint32_t perf_snapshot_generation;
+  volatile uint32_t perf_application_accepted_low;
+  volatile uint32_t perf_application_accepted_high;
+  volatile uint32_t perf_application_committed_low;
+  volatile uint32_t perf_application_committed_high;
+  volatile uint32_t perf_frame_acked_low;
+  volatile uint32_t perf_frame_acked_high;
+  volatile uint32_t perf_wire_bytes_low;
+  volatile uint32_t perf_wire_bytes_high;
+  volatile uint32_t perf_descriptor_submitted;
+  volatile uint32_t perf_descriptor_completed;
+  volatile uint32_t perf_dma_stall_low;
+  volatile uint32_t perf_dma_stall_high;
+  volatile uint32_t perf_axis_stall_low;
+  volatile uint32_t perf_axis_stall_high;
+  volatile uint32_t perf_queue_occupancy;
+  volatile uint32_t perf_ack_wait_low;
+  volatile uint32_t perf_ack_wait_high;
+  volatile uint32_t perf_direction_quiet_low;
+  volatile uint32_t perf_direction_quiet_high;
+  volatile uint32_t perf_integrity_error_count;
+  volatile uint32_t perf_retry_exhausted_count;
+  volatile uint32_t perf_descriptor_leak_count;
+  volatile uint32_t perf_double_completion_count;
+
+  volatile uint32_t raw_rx_before[4];
+  volatile uint32_t raw_rx_after[4];
+  volatile uint32_t physical_tx_before[4];
+  volatile uint32_t physical_tx_after[4];
+  volatile uint32_t duty_high_max_after[4];
+  volatile uint32_t duty_hard_fault_after[4];
+  volatile uint32_t tx_high_max_after[4];
+  volatile uint32_t physical_data_good_by_lane_after[2];
+  volatile uint32_t physical_ack_good_by_lane_after[2];
+  volatile uint32_t physical_crc_bad_by_lane_after[2];
+  volatile uint32_t physical_frame_bad_by_lane_after[2];
+  volatile uint32_t physical_preamble_by_lane_after[2];
+  volatile uint32_t physical_symbol_error_by_lane_after[2];
+
+  volatile uint32_t shutdown_attempt_count;
+  volatile uint32_t shutdown_verified_count;
+  volatile uint32_t final_pl_status;
+  volatile uint32_t final_phy_status;
+  volatile uint32_t reserved[64];
+} p10_1_runtime_result_t;
+
+_Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
+               "P10.1 service-state word moved");
+_Static_assert(offsetof(p10_1_runtime_result_t, ps_start_ticks_low) ==
+                   26U * 4U,
+               "P10.1 timer word moved");
+_Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
+               "P10.1 result must fit the reserved two-KiB OCM window");
+
+#endif

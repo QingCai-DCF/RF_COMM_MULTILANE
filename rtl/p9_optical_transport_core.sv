@@ -29,7 +29,7 @@ module p9_optical_transport_core #(
   // turnaround-request flag. The receiver suppresses timer ACK transmission
   // until that boundary, preventing DATA/ACK optical collisions without a
   // shared scheduler or shared memory between the two FPGAs.
-  parameter integer ENDPOINT_BURST_FRAMES = 32
+  parameter integer ENDPOINT_BURST_FRAMES = 8
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -135,6 +135,12 @@ module p9_optical_transport_core #(
   output wire [31:0]  physical_frame_bad_o,
   output wire [31:0]  physical_preamble_count_o,
   output wire [31:0]  physical_symbol_error_count_o,
+  output wire [63:0]  physical_data_good_by_lane_o,
+  output wire [63:0]  physical_ack_good_by_lane_o,
+  output wire [63:0]  physical_crc_bad_by_lane_o,
+  output wire [63:0]  physical_frame_bad_by_lane_o,
+  output wire [63:0]  physical_preamble_by_lane_o,
+  output wire [63:0]  physical_symbol_error_by_lane_o,
   output wire [31:0]  physical_drop_data_count_o,
   output wire [31:0]  physical_drop_ack_count_o,
   output wire [127:0] raw_rx_counts_flat_o,
@@ -689,16 +695,16 @@ module p9_optical_transport_core #(
   wire [1:0] ack_schedulable_lane_mask =
       schedulable_lane_mask & ack_frame_duty_ready & {2{local_receiver}};
   assign lane_runtime_ready[0] = local_sender && !endpoint_waiting_for_ack_q &&
-      schedulable_lane_mask[0] &&
+      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[0] &&
       !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] &&
-      frame_duty_guard_q[0] == 0 &&
+      frame_duty_guard_q[0] == 0 && data_frame_duty_ready[0] &&
       phase_q == PH_DATA;
   assign lane_runtime_ready[1] = local_sender && !endpoint_waiting_for_ack_q &&
-      schedulable_lane_mask[1] &&
+      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[1] &&
       !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] &&
-      frame_duty_guard_q[1] == 0 &&
+      frame_duty_guard_q[1] == 0 && data_frame_duty_ready[1] &&
       phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);
@@ -1287,6 +1293,8 @@ module p9_optical_transport_core #(
 
   reg [31:0] physical_data_good_q;
   reg [31:0] physical_ack_good_q;
+  reg [31:0] physical_data_good_lane_q [0:1];
+  reg [31:0] physical_ack_good_lane_q [0:1];
   wire [1:0] physical_data_good_increment =
       {1'b0, (rx_frame_valid[0] && rx_frame_crc[0] && !rx_frame_ack[0])} +
       {1'b0, (rx_frame_valid[1] && rx_frame_crc[1] && !rx_frame_ack[1])};
@@ -1297,12 +1305,28 @@ module p9_optical_transport_core #(
     if (!rst_n) begin
       physical_data_good_q <= 0;
       physical_ack_good_q <= 0;
+      physical_data_good_lane_q[0] <= 0;
+      physical_data_good_lane_q[1] <= 0;
+      physical_ack_good_lane_q[0] <= 0;
+      physical_ack_good_lane_q[1] <= 0;
     end else if (clear_counters_i) begin
       physical_data_good_q <= 0;
       physical_ack_good_q <= 0;
+      physical_data_good_lane_q[0] <= 0;
+      physical_data_good_lane_q[1] <= 0;
+      physical_ack_good_lane_q[0] <= 0;
+      physical_ack_good_lane_q[1] <= 0;
     end else begin
       physical_data_good_q <= physical_data_good_q + physical_data_good_increment;
       physical_ack_good_q <= physical_ack_good_q + physical_ack_good_increment;
+      if (rx_frame_valid[0] && rx_frame_crc[0] && !rx_frame_ack[0])
+        physical_data_good_lane_q[0] <= physical_data_good_lane_q[0] + 1'b1;
+      if (rx_frame_valid[1] && rx_frame_crc[1] && !rx_frame_ack[1])
+        physical_data_good_lane_q[1] <= physical_data_good_lane_q[1] + 1'b1;
+      if (rx_frame_valid[0] && rx_frame_crc[0] && rx_frame_ack[0])
+        physical_ack_good_lane_q[0] <= physical_ack_good_lane_q[0] + 1'b1;
+      if (rx_frame_valid[1] && rx_frame_crc[1] && rx_frame_ack[1])
+        physical_ack_good_lane_q[1] <= physical_ack_good_lane_q[1] + 1'b1;
     end
   end
   assign physical_data_frames_good_o = physical_data_good_q;
@@ -1312,6 +1336,17 @@ module p9_optical_transport_core #(
   assign physical_preamble_count_o = rx_preamble_count[0] + rx_preamble_count[1];
   assign physical_symbol_error_count_o =
       rx_symbol_error_count[0] + rx_symbol_error_count[1];
+  assign physical_data_good_by_lane_o =
+      {physical_data_good_lane_q[1], physical_data_good_lane_q[0]};
+  assign physical_ack_good_by_lane_o =
+      {physical_ack_good_lane_q[1], physical_ack_good_lane_q[0]};
+  assign physical_crc_bad_by_lane_o = {rx_crc_bad[1], rx_crc_bad[0]};
+  assign physical_frame_bad_by_lane_o =
+      {rx_frame_bad[1], rx_frame_bad[0]};
+  assign physical_preamble_by_lane_o =
+      {rx_preamble_count[1], rx_preamble_count[0]};
+  assign physical_symbol_error_by_lane_o =
+      {rx_symbol_error_count[1], rx_symbol_error_count[0]};
 
   // Receive completion queues and copy into the reorder-window store.
   reg rx_pending [0:1];

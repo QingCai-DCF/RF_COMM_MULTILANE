@@ -3,7 +3,7 @@
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
 - Register map version: `P10-1` (`0x0A000001`)
-- Canonical source SHA256: `9ed3e2cdc0ff20769361f0f10a0c54a45853785524c8e5411410445795e55c59`
+- Canonical source SHA256: `ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8`
 - Compatibility: P0-P9 offsets and meanings are preserved; P10.1 performance/streaming observability is additive from 0x0900.
 
 | Name | Offset | Access | Description |
@@ -317,6 +317,18 @@
 | `P9_PHYSICAL_FRAME_BAD_COUNT` | `0x0880` | `RO` | Current-run physical parser rejected-frame count |
 | `P9_PHYSICAL_PREAMBLE_COUNT` | `0x0884` | `RO` | Current-run physical preamble count |
 | `P9_PHYSICAL_SYMBOL_ERROR_COUNT` | `0x0888` | `RO` | Current-run physical symbol error count |
+| `P10_1_PHYSICAL_DATA_GOOD_LANE0` | `0x088C` | `RO` | P10.1 lane0 CRC-valid DATA frame count for crosstalk attribution |
+| `P10_1_PHYSICAL_DATA_GOOD_LANE1` | `0x0890` | `RO` | P10.1 lane1 CRC-valid DATA frame count for crosstalk attribution |
+| `P10_1_PHYSICAL_ACK_GOOD_LANE0` | `0x0894` | `RO` | P10.1 lane0 CRC-valid ACK frame count |
+| `P10_1_PHYSICAL_ACK_GOOD_LANE1` | `0x0898` | `RO` | P10.1 lane1 CRC-valid ACK frame count |
+| `P10_1_PHYSICAL_CRC_BAD_LANE0` | `0x089C` | `RO` | P10.1 lane0 physical CRC failure count |
+| `P10_1_PHYSICAL_CRC_BAD_LANE1` | `0x08A0` | `RO` | P10.1 lane1 physical CRC failure count |
+| `P10_1_PHYSICAL_FRAME_BAD_LANE0` | `0x08A4` | `RO` | P10.1 lane0 rejected physical frame count |
+| `P10_1_PHYSICAL_FRAME_BAD_LANE1` | `0x08A8` | `RO` | P10.1 lane1 rejected physical frame count |
+| `P10_1_PHYSICAL_PREAMBLE_LANE0` | `0x08AC` | `RO` | P10.1 lane0 physical preamble count |
+| `P10_1_PHYSICAL_PREAMBLE_LANE1` | `0x08B0` | `RO` | P10.1 lane1 physical preamble count |
+| `P10_1_PHYSICAL_SYMBOL_ERROR_LANE0` | `0x08B4` | `RO` | P10.1 lane0 physical symbol error count |
+| `P10_1_PHYSICAL_SYMBOL_ERROR_LANE1` | `0x08B8` | `RO` | P10.1 lane1 physical symbol error count |
 | `P10_1_PERF_CAPS` | `0x0900` | `RO` | P10.1 autonomous performance capability identity |
 | `P10_1_PERF_VERSION` | `0x0904` | `RO` | P10.1 performance command and metric schema version |
 | `P10_1_PERF_COMMAND` | `0x0908` | `RW` | Versioned PERF_CAPS/CONFIG/START/STATUS/SNAPSHOT/STOP/ABORT/CLEAR command |

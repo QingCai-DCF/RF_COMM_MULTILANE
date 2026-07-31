@@ -1,6 +1,10 @@
 {
   "current_run_hardware_authorization": false,
-  "errors": [],
+  "errors": [
+    "p10_1_fixed_build status is not PASS",
+    "p10_1_rotating_build status is not PASS",
+    "p10_1_regression status is not PASS"
+  ],
   "generated_at_utc": "2026-07-31T00:00:00Z",
   "hardware_actions_executed": false,
   "no_hardware": true,
@@ -11,9 +15,9 @@
   "schema_version": 1,
   "sha256_manifest": {
     "path": "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
-    "sha256": "6a798234066f6117a60466cf1f3f75255d7b2da0d6075b850dd3720fc0b83e8a"
+    "sha256": "5193d824314460b4d6edd89c4e38d9650cf1d194a13092740223efc509accbf1"
   },
-  "status": "PASS",
+  "status": "FAIL",
   "test_id": "P10_1-EVIDENCE-CONSISTENCY",
   "verified_stems": [
     "p10_1_repo_intake",

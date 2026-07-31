@@ -1,9 +1,9 @@
-COMMAND=D:\Xilinx\Vitis\2023.1\bin\xsct.bat C:\Users\user\Documents\RF_COMM_MULTILANE_P10\scripts\vitis\build_p10_ax7020_runtime.tcl C:\Users\user\Documents\RF_COMM_MULTILANE_P10 fixed C:\Users\user\Documents\RF_COMM_MULTILANE_P10\evidence\generated\vivado\p10_ax7020_functional\fixed\p10_ax7020_fixed_functional.xsa
+COMMAND=D:\Xilinx\Vitis\2023.1\bin\xsct.bat C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1_HW\scripts\vitis\build_p10_ax7020_runtime.tcl C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1_HW fixed C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1_HW\evidence\generated\vivado\p10_ax7020_functional\fixed\p10_ax7020_fixed_functional.xsa
 RETURN_CODE=0
 STDOUT_BEGIN
 Starting vitis.bat. This could take few seconds...done
 Opening the hardware design, this may take few seconds.
-INFO: [Hsi 55-2053] elapsed time for repository (D:/Xilinx/Vitis/2023.1/data/embeddedsw) loading 0 seconds
+INFO: [Hsi 55-2053] elapsed time for repository (D:/Xilinx/Vitis/2023.1/data/embeddedsw) loading 1 seconds
 WARNING : No interface that uses file system is available 
 
 INFO: Populating the default qemu data for the domain "standalone_domain" from the install location D:/Xilinx/Vitis/2023.1/data/emulation/platforms/zynq/sw/a9_standalone/qemu/
@@ -1032,6 +1032,16 @@ elftest.o ps7_cortexa9_0/lib/xuartps_sinit.o
 'Finished building libraries'
 
 make: Entering directory 'C:/p10_vitis/fixed/p10_fixed_runtime/Debug'
+'Building file: ../src/p10_runtime_main.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/p10_runtime_main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -IC:/p10_vitis/fixed/p10_fixed_platform/export/p10_fixed_platform/sw/p10_fixed_platform/standalone_domain/bspinclude/include -MMD -MP -MF"src/p10_runtime_main.d" -MT"src/p10_runtime_main.o" -o "src/p10_runtime_main.o" "../src/p10_runtime_main.c"
+'Finished building: ../src/p10_runtime_main.c'
+' '
+'Building file: ../src/p9_crypto.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/p9_crypto.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -IC:/p10_vitis/fixed/p10_fixed_platform/export/p10_fixed_platform/sw/p10_fixed_platform/standalone_domain/bspinclude/include -MMD -MP -MF"src/p9_crypto.d" -MT"src/p9_crypto.o" -o "src/p9_crypto.o" "../src/p9_crypto.c"
+'Finished building: ../src/p9_crypto.c'
+' '
 'Building target: p10_fixed_runtime.elf'
 'Invoking: ARM v7 gcc linker'
 arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -Wl,-Map=C:/p10_vitis/fixed/p10_fixed_runtime/Debug/p10_fixed_runtime.map -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -LC:/p10_vitis/fixed/p10_fixed_platform/export/p10_fixed_platform/sw/p10_fixed_platform/standalone_domain/bsplib/lib -o "p10_fixed_runtime.elf"  ./src/p10_runtime_main.o ./src/p9_crypto.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group

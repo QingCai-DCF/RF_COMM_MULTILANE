@@ -1,0 +1,31 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Jul 31 15:49:53 2026
+# Process ID: 20644
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p10_dual_endpoint_pair_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p10_dual_endpoint_pair_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p10_dual_endpoint_pair_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl
+# xsim {p10_dual_endpoint_pair_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_DUAL_RAW_PASS direction=0 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=0 lane=1 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=1 pulses=64
+P10_DUAL_DIAG dir=1 active=1/0 done=0/0 fail=0/1 error=00000000/50090004 in=0/600 out=600/0 capture=600/0 data=8/10 ack=1/1 retry=0/9 phase=0/0 outstanding=0/0
+P10_FIXED_SCHED local_sender=0 ready=00 sched=10 duty=11 attempt=0/0 lane=0 waiting=0 lanes_idle=1 frame_guard=0/0 credit=32 phy=11 fault=00
+P10_ROTATING_SCHED local_sender=1 ready=10 sched=10 duty=11 attempt=0/1 lane=1 waiting=0 lanes_idle=1 frame_guard=0/0 credit=31 phy=11 fault=00
+Fatal: P10 independent endpoint object failed or timed out
+Time: 66329066101 ps  Iteration: 0  Process: /tb_p10_dual_endpoint_pair/run_object  Scope: tb_p10_dual_endpoint_pair.run_object  File: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/sim/tb/tb_p10_dual_endpoint_pair.sv Line: 523
+$finish called at time : 66329066101 ps
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:01:43 . Memory (MB): peak = 208.121 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 14304 KB (Peak: 14304 KB), Simulation CPU Usage: 99234 ms
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 15:51:39 2026...

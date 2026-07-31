@@ -48,6 +48,8 @@ file copy -force "$root_dir/software/ps_driver/p9_runtime_main.c" \
 file copy -force $role_header "$src_dir/p10_runtime_role.h"
 foreach source_path [list \
     software/ps_driver/p9_runtime_protocol.h \
+    software/ps_driver/p10_1_runtime_protocol.h \
+    software/ps_driver/p10_1_runtime_extension.inc \
     software/ps_driver/p9_crypto.c \
     software/ps_driver/p9_crypto.h \
     software/ps_driver/ir_regs.h] {
@@ -57,11 +59,23 @@ foreach source_path [list \
 app build -name $app_name
 set debug_dir [file normalize "$workspace/$app_name/Debug"]
 set makefile "$debug_dir/Makefile"
+set source_makefile "$debug_dir/src/subdir.mk"
 set map_file [file normalize "$debug_dir/${app_name}.map"]
+foreach generated_makefile [list $makefile $source_makefile] {
+  if {![file exists $generated_makefile]} {
+    error "P10 generated makefile missing: $generated_makefile"
+  }
+  set make_handle [open $generated_makefile r]
+  set make_text [read $make_handle]
+  close $make_handle
+  set make_text [string map [list "-O0" "-O3"] $make_text]
+  set make_handle [open $generated_makefile w]
+  puts -nonewline $make_handle $make_text
+  close $make_handle
+}
 set make_handle [open $makefile r]
 set make_text [read $make_handle]
 close $make_handle
-set make_text [string map [list "-O0" "-O3"] $make_text]
 set map_flag "-Wl,-Map=$map_file"
 if {[string first $map_flag $make_text] < 0} {
   set make_text [string map [list \
@@ -71,13 +85,17 @@ if {[string first $map_flag $make_text] < 0} {
   puts -nonewline $make_handle $make_text
   close $make_handle
 }
-set make_handle [open $makefile w]
-puts -nonewline $make_handle $make_text
-close $make_handle
 exec make -C $debug_dir clean
 file delete -force "$debug_dir/${app_name}.elf"
 set make_output [exec make -C $debug_dir "${app_name}.elf" 2>@1]
 puts $make_output
+set verify_handle [open $source_makefile r]
+set verify_text [read $verify_handle]
+close $verify_handle
+if {[string first "-O0" $verify_text] >= 0 ||
+    [string first "-O3" $verify_text] < 0} {
+  error "P10 runtime optimization flags were not frozen to -O3"
+}
 set elf_file [file normalize "$debug_dir/${app_name}.elf"]
 if {![file exists $elf_file]} { error "P10 runtime ELF missing: $elf_file" }
 if {![file exists $map_file]} { error "P10 runtime linker map missing: $map_file" }

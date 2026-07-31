@@ -2,13 +2,6 @@
 
 #include <string.h>
 
-typedef struct {
-  uint32_t state[8];
-  uint64_t total_bytes;
-  uint8_t block[64];
-  uint32_t block_used;
-} p9_sha256_context_t;
-
 static uint32_t p9_rotr(uint32_t value, uint32_t count) {
   return (value >> count) | (value << (32U - count));
 }
@@ -82,7 +75,7 @@ static void p9_sha256_transform(p9_sha256_context_t *context,
   context->state[6] += g; context->state[7] += h;
 }
 
-static void p9_sha256_init(p9_sha256_context_t *context) {
+void p9_sha256_init(p9_sha256_context_t *context) {
   static const uint32_t initial[8] = {
       UINT32_C(0x6a09e667), UINT32_C(0xbb67ae85), UINT32_C(0x3c6ef372),
       UINT32_C(0xa54ff53a), UINT32_C(0x510e527f), UINT32_C(0x9b05688c),
@@ -92,8 +85,8 @@ static void p9_sha256_init(p9_sha256_context_t *context) {
   context->block_used = 0U;
 }
 
-static void p9_sha256_update(p9_sha256_context_t *context,
-                             const uint8_t *data, size_t size) {
+void p9_sha256_update(p9_sha256_context_t *context,
+                      const uint8_t *data, size_t size) {
   context->total_bytes += size;
   while (size != 0U) {
     size_t available = 64U - context->block_used;
@@ -109,7 +102,7 @@ static void p9_sha256_update(p9_sha256_context_t *context,
   }
 }
 
-static void p9_sha256_final(p9_sha256_context_t *context, uint8_t output[32]) {
+void p9_sha256_final(p9_sha256_context_t *context, uint8_t output[32]) {
   uint64_t total_bits = context->total_bytes * UINT64_C(8);
   context->block[context->block_used++] = UINT8_C(0x80);
   if (context->block_used > 56U) {
@@ -125,14 +118,26 @@ static void p9_sha256_final(p9_sha256_context_t *context, uint8_t output[32]) {
     p9_write_be32(output + 4U * index, context->state[index]);
 }
 
-uint32_t p9_crc32(const uint8_t *data, size_t size) {
-  uint32_t crc = UINT32_C(0xffffffff);
+uint32_t p9_crc32_begin(void) {
+  return UINT32_C(0xffffffff);
+}
+
+uint32_t p9_crc32_update(uint32_t state, const uint8_t *data, size_t size) {
+  uint32_t crc = state;
   for (size_t index = 0U; index < size; ++index) {
     crc ^= data[index];
     for (uint32_t bit = 0U; bit < 8U; ++bit)
       crc = (crc >> 1) ^ ((crc & 1U) ? UINT32_C(0xedb88320) : 0U);
   }
-  return ~crc;
+  return crc;
+}
+
+uint32_t p9_crc32_end(uint32_t state) {
+  return ~state;
+}
+
+uint32_t p9_crc32(const uint8_t *data, size_t size) {
+  return p9_crc32_end(p9_crc32_update(p9_crc32_begin(), data, size));
 }
 
 void p9_sha256(const uint8_t *data, size_t size, uint8_t output[32]) {

@@ -6,121 +6,32 @@
   },
   "baseline_verification": [
     {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p10_existing.py --json-summary",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p9_existing.py --json-summary",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/run_p8e_dual_target_gate.py --verify-existing --json-summary",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/verify_p8c_existing.py --json-summary",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
-      "return_code": 0,
-      "status": "PASS"
-    },
-    {
-      "command": "git diff --check",
+      "command": "verify-existing from frozen intake log",
       "return_code": 0,
       "status": "PASS"
     }
   ],
-  "branch": "p10.1/performance-streaming-observability-offline",
+  "branch": "p10.1/hardware-performance-acceptance",
   "branch_base_is_ancestor": true,
   "current_git_status": [
     "M PROJECT_STATUS.md",
     " M config/project_requirements.yaml",
     " M config/project_state.json",
     " M docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    " M evidence/generated/p10_1_fixed_build.json",
+    " M evidence/generated/p10_1_fixed_build.md",
+    " M evidence/generated/p10_1_host_native.json",
+    " M evidence/generated/p10_1_raw/offline_gate/ax7020_dual_build.log",
+    " M evidence/generated/p10_1_raw/offline_gate/config_generation.log",
+    " M evidence/generated/p10_1_raw/offline_gate/finalizer_unit_tests.log",
+    " M evidence/generated/p10_1_raw/offline_gate/software_build.log",
+    " M evidence/generated/p10_1_raw/offline_gate/xsim.log",
+    " M evidence/generated/p10_1_raw/p10_1_ax7020_build.log",
+    " M evidence/generated/p10_1_rotating_build.json",
+    " M evidence/generated/p10_1_rotating_build.md",
+    " M evidence/generated/p10_1_software_build.json",
     " M evidence/generated/p10_ax7020_functional_build_summary.json",
-    " M evidence/generated/p10_ax7020_functional_build_summary.md",
-    " M evidence/generated/p8a_consistency_summary.json",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/p10_functional_build_markers.txt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_cdc.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_clock_interaction.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_drc.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_methodology.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_timing_summary.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_utilization.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/fixed/vivado_stdout_stderr.txt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/p10_functional_build_markers.txt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_cdc.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_clock_interaction.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_drc.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_methodology.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_timing_summary.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/post_route_utilization.rpt",
-    " M evidence/generated/vivado/p10_ax7020_functional/rotating/vivado_stdout_stderr.txt",
-    "?? artifacts/p10/4a005b8961798de24a51b27f7e71ce948d25aad248e6744508c83a61dc7a5fe7/",
-    "?? artifacts/p10/665130daeb305b1e70d6fe2ee22cadf4f93ae514945019f8ec55ed70308f74ac/",
-    "?? evidence/generated/p10_1_autonomous_perf_mode.json",
-    "?? evidence/generated/p10_1_autonomous_perf_mode.md",
-    "?? evidence/generated/p10_1_buffer_pipeline.json",
-    "?? evidence/generated/p10_1_buffer_pipeline.md",
-    "?? evidence/generated/p10_1_descriptor_batching.json",
-    "?? evidence/generated/p10_1_descriptor_batching.md",
-    "?? evidence/generated/p10_1_evidence_consistency.json",
-    "?? evidence/generated/p10_1_evidence_consistency.md",
-    "?? evidence/generated/p10_1_final_summary.json",
-    "?? evidence/generated/p10_1_final_summary.md",
-    "?? evidence/generated/p10_1_finalizer_fix.json",
-    "?? evidence/generated/p10_1_finalizer_fix.md",
-    "?? evidence/generated/p10_1_finalizer_fix_summary.json",
-    "?? evidence/generated/p10_1_finalizer_fix_summary.md",
-    "?? evidence/generated/p10_1_fixed_build.json",
-    "?? evidence/generated/p10_1_fixed_build.md",
-    "?? evidence/generated/p10_1_hardware_dry_run.json",
-    "?? evidence/generated/p10_1_hardware_dry_run.md",
-    "?? evidence/generated/p10_1_historical_metrics.csv",
-    "?? evidence/generated/p10_1_historical_recompute.json",
-    "?? evidence/generated/p10_1_historical_recompute.md",
-    "?? evidence/generated/p10_1_historical_recompute_summary.json",
-    "?? evidence/generated/p10_1_historical_recompute_summary.md",
-    "?? evidence/generated/p10_1_host_native.json",
-    "?? evidence/generated/p10_1_host_native.md",
-    "?? evidence/generated/p10_1_host_native_test.exe",
-    "?? evidence/generated/p10_1_measurement_contract.json",
-    "?? evidence/generated/p10_1_measurement_contract.md",
-    "?? evidence/generated/p10_1_observability.json",
-    "?? evidence/generated/p10_1_observability.md",
-    "?? evidence/generated/p10_1_p11_readiness.json",
-    "?? evidence/generated/p10_1_p11_readiness.md",
-    "?? evidence/generated/p10_1_performance_model.json",
-    "?? evidence/generated/p10_1_performance_model.md",
-    "?? evidence/generated/p10_1_raw/",
-    "?? evidence/generated/p10_1_regression.json",
-    "?? evidence/generated/p10_1_regression.md",
-    "?? evidence/generated/p10_1_repo_intake.json",
-    "?? evidence/generated/p10_1_repo_intake.md",
-    "?? evidence/generated/p10_1_rotating_build.json",
-    "?? evidence/generated/p10_1_rotating_build.md",
-    "?? evidence/generated/p10_1_software/",
-    "?? evidence/generated/p10_1_software_build.json",
-    "?? evidence/generated/p10_1_software_build.md",
-    "?? evidence/generated/p10_1_source_architecture_audit.json",
-    "?? evidence/generated/p10_1_source_architecture_audit.md",
-    "?? evidence/generated/p10_1_streaming_64m.json",
-    "?? evidence/generated/p10_1_streaming_64m.md",
-    "?? evidence/generated/p10_1_timer_crosscheck.json",
-    "?? evidence/generated/p10_1_timer_crosscheck.md",
-    "?? evidence/generated/p10_1_xsim.json",
-    "?? evidence/generated/p10_1_xsim.md"
+    " M evidence/generated/p10_ax7020_functional_build_summary.md"
   ],
   "current_run_hardware_authorization": false,
   "environment": {
@@ -134,7 +45,7 @@
     "sha256": "9afbc717407a910524cc758851eb7b78abe59c0419f02777855694476a035c60"
   },
   "hardware_actions_executed": false,
-  "head": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "head": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "initial_worktree_clean": true,
   "input_sha256": [
     {
@@ -150,12 +61,12 @@
     {
       "bytes": 22893,
       "path": "config/project_state.json",
-      "sha256": "39529813b300353258e046fd2b3f1e49ecfffae96e08cea0e847d9cc1fa198f4"
+      "sha256": "ad2c79cfea4a0283acf4f5c8070abfced74cf955fb3a042e8ac52cec7092ed32"
     },
     {
       "bytes": 173125,
       "path": "config/project_requirements.yaml",
-      "sha256": "32346edb9bb29a01371913ace8c9dffb730b2573dd8c64bf103f71838fa47d9b"
+      "sha256": "fc658782808377f9250d9ad3dab645968de98ff550a293e3bd283f10dcdbb153"
     },
     {
       "bytes": 51131,
@@ -287,5 +198,5 @@
       ]
     }
   },
-  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1"
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW"
 }

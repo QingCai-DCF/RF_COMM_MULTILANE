@@ -47,6 +47,8 @@ SOURCES = [
     ROOT / "software/ps_driver/p10_runtime_main.c",
     ROOT / "software/ps_driver/p9_runtime_main.c",
     ROOT / "software/ps_driver/p9_runtime_protocol.h",
+    ROOT / "software/ps_driver/p10_1_runtime_protocol.h",
+    ROOT / "software/ps_driver/p10_1_runtime_extension.inc",
     ROOT / "software/ps_driver/p9_crypto.c",
     ROOT / "software/ps_driver/p9_crypto.h",
     ROOT / "software/ps_driver/ir_regs.h",

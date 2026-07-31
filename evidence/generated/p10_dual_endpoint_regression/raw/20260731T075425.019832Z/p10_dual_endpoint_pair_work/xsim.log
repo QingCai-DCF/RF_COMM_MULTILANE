@@ -1,0 +1,33 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Jul 31 15:54:28 2026
+# Process ID: 30936
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T075425.019832Z/p10_dual_endpoint_pair_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T075425.019832Z/p10_dual_endpoint_pair_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T075425.019832Z/p10_dual_endpoint_pair_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl
+# xsim {p10_dual_endpoint_pair_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_DUAL_RAW_PASS direction=0 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=0 lane=1 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=1 pulses=64
+P10_DUAL_OBJECT_PASS direction=1 lanes=2 length=600 initial=0100 faults=00000000 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=1 length=600 initial=0000 faults=00000000 drops=0/0 hwm=3/0 retries=0/0
+P10_DUAL_DIAG dir=0 active=0/1 done=0/0 fail=1/0 error=50090004/00000000 in=9880/0 out=0/9880 capture=0/9880 data=81/81 ack=3/3 retry=49/0 phase=0/0 outstanding=0/0
+P10_FIXED_SCHED local_sender=1 ready=11 sched=11 duty=11 attempt=0/1 lane=0 waiting=0 lanes_idle=1 frame_guard=0/0 credit=23 phy=11 fault=00
+P10_ROTATING_SCHED local_sender=0 ready=00 sched=11 duty=11 attempt=0/0 lane=0 waiting=0 lanes_idle=1 frame_guard=0/0 credit=32 phy=11 fault=00
+Fatal: P10 independent endpoint object failed or timed out
+Time: 116496698499 ps  Iteration: 0  Process: /tb_p10_dual_endpoint_pair/run_object  Scope: tb_p10_dual_endpoint_pair.run_object  File: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/sim/tb/tb_p10_dual_endpoint_pair.sv Line: 523
+$finish called at time : 116496698499 ps
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:01:36 . Memory (MB): peak = 207.320 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 14256 KB (Peak: 14256 KB), Simulation CPU Usage: 94858 ms
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 15:56:06 2026...

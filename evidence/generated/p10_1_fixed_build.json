@@ -2,15 +2,15 @@
   "artifacts": {
     "bitstream": {
       "bytes": 4045681,
-      "path": "artifacts/p10/665130daeb305b1e70d6fe2ee22cadf4f93ae514945019f8ec55ed70308f74ac/1f2314f65e6eb321fcb5b81608dfa1247270c8209b037ee3de2d87204e8f8a6d/p10_ax7020_fixed_functional.bit",
+      "path": "artifacts/p10/a2a5271be91426925c5fb0a01372029a6decad02876b68a0ded3434691d7e85b/db5d01cb36d2bf06ab9c2af55869eb1026ddfef5ddd94d8ff2b4f217137215d9/p10_ax7020_fixed_functional.bit",
       "read_only": true,
-      "sha256": "1f2314f65e6eb321fcb5b81608dfa1247270c8209b037ee3de2d87204e8f8a6d"
+      "sha256": "db5d01cb36d2bf06ab9c2af55869eb1026ddfef5ddd94d8ff2b4f217137215d9"
     },
     "xsa": {
-      "bytes": 823901,
-      "path": "artifacts/p10/665130daeb305b1e70d6fe2ee22cadf4f93ae514945019f8ec55ed70308f74ac/9bafda7006ae7a99c097500391933f96f377541e450463e0fd1400436f88c2aa/p10_ax7020_fixed_functional.xsa",
+      "bytes": 836351,
+      "path": "artifacts/p10/a2a5271be91426925c5fb0a01372029a6decad02876b68a0ded3434691d7e85b/056d4b26f71705cc7c087a78261b861f6137c4cd1ff201ccfa0e838df9bc9908/p10_ax7020_fixed_functional.xsa",
       "read_only": true,
-      "sha256": "9bafda7006ae7a99c097500391933f96f377541e450463e0fd1400436f88c2aa"
+      "sha256": "056d4b26f71705cc7c087a78261b861f6137c4cd1ff201ccfa0e838df9bc9908"
     }
   },
   "buffer_delta": "PS_DDR_BUFFERS_NO_PL_BRAM_ALLOCATION",
@@ -22,15 +22,15 @@
   "instrumentation_delta": {
     "bram36_equivalent": 0.0,
     "dsp": 0.0,
-    "ff": 1481.0,
-    "lut": 979.0
+    "ff": 1485.0,
+    "lut": 961.0
   },
   "large_ila_default_enabled": false,
   "markers": {
     "P10_AXIL_CLOCK_HZ": "50000000",
     "P10_AXI_BASE": "0x43C00000",
     "P10_BLOCKING_CONDITION": "P10-SAFETY-POWERUP-001",
-    "P10_CANONICAL_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+    "P10_CANONICAL_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
     "P10_CDC_CRITICAL_COUNT": "0",
     "P10_DMA_AXI_BASE": "0x40400000",
     "P10_DMA_CLOCK_HZ": "100000000",
@@ -52,8 +52,8 @@
     "P10_REQP_1839_COUNT": "0",
     "P10_TNS_NS": "0.0",
     "P10_TOP": "p10_ps_system_wrapper",
-    "P10_WHS_NS": "0.059",
-    "P10_WNS_NS": "1.181"
+    "P10_WHS_NS": "0.027",
+    "P10_WNS_NS": "1.533"
   },
   "no_hardware": true,
   "part": "xc7z020clg400-2",
@@ -89,34 +89,34 @@
   "register_map_consistency": "PASS",
   "reports": [
     {
-      "bytes": 10596,
+      "bytes": 10605,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_drc.rpt",
-      "sha256": "2f4434a7ba2d4bbcc7996212ebfeec3148b09c40cf2e508b1192ee16d34a7e72"
+      "sha256": "3a24a9c8a9bd83e5c25410e4a00ad4aa0fe14d5c0f7af6bd7b5bdc16f2b3d33c"
     },
     {
-      "bytes": 35305,
+      "bytes": 35314,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_methodology.rpt",
-      "sha256": "4d91aba9afb2c7a8b54ba1c86ccd6f0b4cd3c2c87a4991c9e70221e4243fa3f0"
+      "sha256": "5d4881c83a52a20b615972f73b09050d8dfcc279870fe8d10692c1f0479241e6"
     },
     {
-      "bytes": 207792,
+      "bytes": 216894,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_timing_summary.rpt",
-      "sha256": "b3bfd31b225897f946a4fc03730f9083d0b78335e6cef353ac53e2d74f3a1f68"
+      "sha256": "271339622319128aff340b57b3b90c0e9673a6b8d806fd8089af121ecea8bf6c"
     },
     {
-      "bytes": 172628,
+      "bytes": 172637,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_utilization.rpt",
-      "sha256": "cc70ccbcfae5ac83ff2f870377de6b8799e8677c5731da16ec8a85377378a482"
+      "sha256": "5f752c339dd7a75a3e4c0e77ff81c147cfbf7eaa0acabfdc821433775c66fece"
     },
     {
-      "bytes": 77400,
+      "bytes": 77409,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_cdc.rpt",
-      "sha256": "800c509b6520291838c94991110f74c1f37f2d67280a0b66eb7967141acc79f8"
+      "sha256": "dc767d416390b0bdbd7c6219ff08f62231059c6176a52ed0cbbfe36c4514c4c3"
     },
     {
-      "bytes": 2915,
+      "bytes": 2924,
       "path": "evidence/generated/vivado/p10_ax7020_functional/fixed/post_route_clock_interaction.rpt",
-      "sha256": "ef1a903bd1cf0bc8aa6752519fa5bb9facac0b26de48f84c9a69bde31cee862d"
+      "sha256": "ad1d3dc9e11f8c2e71c48872eee55135484df94dd9e3fc666fc8c659f63b496a"
     }
   ],
   "resource": {
@@ -135,22 +135,22 @@
     "percent": {
       "bram36_equivalent": 12.142857142857142,
       "dsp": 0.0,
-      "ff": 15.954887218045114,
-      "lut": 29.343984962406015
+      "ff": 15.958646616541353,
+      "lut": 29.31015037593985
     },
     "status": "PASS",
     "used": {
       "bram36_equivalent": 17.0,
       "dsp": 0,
-      "ff": 16976,
-      "lut": 15611
+      "ff": 16980,
+      "lut": 15593
     },
     "within_limits": true
   },
   "resource_status": "PASS",
   "role": "fixed",
   "schema_version": 1,
-  "source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "source_commit": "7cd1b100f42a70722814fb6f230ea0e50794f341",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_1-AX7020-FIXED-ROUTED-BUILD",

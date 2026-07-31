@@ -1,0 +1,22 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Jul 31 15:51:42 2026
+# Process ID: 6904
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p9_legacy_transport_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p9_legacy_transport_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p9_legacy_transport_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_dual_endpoint_regression/raw/20260731T074949.565387Z/p9_legacy_transport_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p9_legacy_transport_snapshot/xsim_script.tcl
+# xsim {p9_legacy_transport_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+Fatal: integrity/safety counter failure crc=0 safety=0 exhausted=0 duty_throttle=00000000000000000000000000000720
+Time: 10269416013 ps  Iteration: 0  Process: /tb_p9_optical_transport_core/run_object  Scope: tb_p9_optical_transport_core.run_object  File: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/sim/tb/tb_p9_optical_transport_core.sv Line: 463
+$finish called at time : 10269416013 ps
+exit
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 15:51:49 2026...

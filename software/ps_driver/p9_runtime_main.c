@@ -1396,6 +1396,10 @@ idle_exit:
   return status;
 }
 
+#if P10_ENDPOINT_ROLE != 0
+#include "p10_1_runtime_extension.inc"
+#endif
+
 static void p9_clear_result_fields(volatile p9_mailbox_t *m) {
   m->command_status = P9_RUNTIME_OK;
   m->start_ticks_low = 0U; m->start_ticks_high = 0U;
@@ -1429,6 +1433,10 @@ static int p9_dispatch(volatile p9_mailbox_t *m) {
     case P9_COMMAND_IDLE_NOISE: return p9_command_idle_noise(m);
     case P9_COMMAND_PERMIT_DROP_DIAGNOSTIC:
       return p9_command_permit_drop(m);
+#if P10_ENDPOINT_ROLE != 0
+    case P9_COMMAND_P10_1_AUTONOMOUS_STREAM:
+      return p10_1_command_autonomous_stream(m);
+#endif
     default: return P9_RUNTIME_BAD_COMMAND;
   }
 }
@@ -1447,6 +1455,9 @@ int main(void) {
   mailbox->firmware_build_id = P9_RUNTIME_BUILD_ID;
   mailbox->boot_count = boot_count;
   mailbox->service_state = P9_SERVICE_BOOT;
+#if P10_ENDPOINT_ROLE != 0
+  p10_1_runtime_boot_init();
+#endif
   int startup_status = p9_shutdown();
   if (startup_status == P9_RUNTIME_OK)
     startup_status = p9_reset_stream_path(8U, 0U, 0U);

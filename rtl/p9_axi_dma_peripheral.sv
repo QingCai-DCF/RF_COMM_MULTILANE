@@ -159,6 +159,12 @@ module p9_axi_dma_peripheral #(
   logic [31:0] physical_frame_bad;
   logic [31:0] physical_preamble_count;
   logic [31:0] physical_symbol_error_count;
+  logic [63:0] physical_data_good_by_lane;
+  logic [63:0] physical_ack_good_by_lane;
+  logic [63:0] physical_crc_bad_by_lane;
+  logic [63:0] physical_frame_bad_by_lane;
+  logic [63:0] physical_preamble_by_lane;
+  logic [63:0] physical_symbol_error_by_lane;
   logic [31:0] physical_drop_data_count;
   logic [31:0] physical_drop_ack_count;
   logic [127:0] raw_rx_counts_flat;
@@ -490,6 +496,18 @@ module p9_axi_dma_peripheral #(
       12'h880: reg_rd_data = physical_frame_bad;
       12'h884: reg_rd_data = physical_preamble_count;
       12'h888: reg_rd_data = physical_symbol_error_count;
+      12'h88C: reg_rd_data = physical_data_good_by_lane[31:0];
+      12'h890: reg_rd_data = physical_data_good_by_lane[63:32];
+      12'h894: reg_rd_data = physical_ack_good_by_lane[31:0];
+      12'h898: reg_rd_data = physical_ack_good_by_lane[63:32];
+      12'h89C: reg_rd_data = physical_crc_bad_by_lane[31:0];
+      12'h8A0: reg_rd_data = physical_crc_bad_by_lane[63:32];
+      12'h8A4: reg_rd_data = physical_frame_bad_by_lane[31:0];
+      12'h8A8: reg_rd_data = physical_frame_bad_by_lane[63:32];
+      12'h8AC: reg_rd_data = physical_preamble_by_lane[31:0];
+      12'h8B0: reg_rd_data = physical_preamble_by_lane[63:32];
+      12'h8B4: reg_rd_data = physical_symbol_error_by_lane[31:0];
+      12'h8B8: reg_rd_data = physical_symbol_error_by_lane[63:32];
       default: reg_rd_data =
           (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
           ? p10_1_reg_rd_data : 0;
@@ -562,6 +580,12 @@ module p9_axi_dma_peripheral #(
     .physical_frame_bad_o(physical_frame_bad),
     .physical_preamble_count_o(physical_preamble_count),
     .physical_symbol_error_count_o(physical_symbol_error_count),
+    .physical_data_good_by_lane_o(physical_data_good_by_lane),
+    .physical_ack_good_by_lane_o(physical_ack_good_by_lane),
+    .physical_crc_bad_by_lane_o(physical_crc_bad_by_lane),
+    .physical_frame_bad_by_lane_o(physical_frame_bad_by_lane),
+    .physical_preamble_by_lane_o(physical_preamble_by_lane),
+    .physical_symbol_error_by_lane_o(physical_symbol_error_by_lane),
     .physical_drop_data_count_o(physical_drop_data_count),
     .physical_drop_ack_count_o(physical_drop_ack_count),
     .raw_rx_counts_flat_o(raw_rx_counts_flat),
