@@ -63,6 +63,22 @@ class P8AConsistencyTests(unittest.TestCase):
         self.assertTrue(any("p10_acceptance.network_used" in error for error in errors))
         self.assertTrue(any("PRODUCT_FINAL" in error for error in errors))
 
+    def test_latest_p10_1_hardware_run_owns_last_hardware_fields(self) -> None:
+        self.assertEqual("P10_1", self.state["last_hardware_stage"])
+        self.assertEqual(
+            self.state["p10_1_hardware_campaign"]["run_id"],
+            self.state["last_hardware_run_id"],
+        )
+        state = copy.deepcopy(self.state)
+        state["last_hardware_stage"] = "P10"
+        errors = validate_state(state, ROOT)
+        self.assertTrue(
+            any(
+                "last_hardware_stage must be P10_1" in error
+                for error in errors
+            )
+        )
+
     def test_state_requires_legacy_ab_l1_record(self) -> None:
         state = copy.deepcopy(self.state)
         state["legacy_known_failures"] = []

@@ -789,15 +789,35 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 if not isinstance(pending, dict) or pending.get(key) != value:
                     errors.append(f"p10_acceptance.unchanged_pending_scopes.{key} must be {value}")
 
-        expected_last_hardware = {
-            "last_hardware_stage": "P10",
-            "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
-            "last_shutdown_fixed": "PASS",
-            "last_shutdown_rotating": "PASS",
-        }
+        p10_1_campaign = state.get("p10_1_hardware_campaign", {})
+        p10_1_is_latest_hardware = (
+            isinstance(p10_1_campaign, dict)
+            and p10_1_campaign.get("hardware_actions_executed") is True
+            and state.get("p10_1_hardware_status")
+            in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+        )
+        expected_last_hardware = (
+            {
+                "last_hardware_stage": "P10_1",
+                "last_hardware_run_id": p10_1_campaign.get("run_id"),
+                "last_shutdown_fixed": p10_1_campaign.get("shutdown_fixed"),
+                "last_shutdown_rotating": p10_1_campaign.get(
+                    "shutdown_rotating"
+                ),
+            }
+            if p10_1_is_latest_hardware
+            else {
+                "last_hardware_stage": "P10",
+                "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
+                "last_shutdown_fixed": "PASS",
+                "last_shutdown_rotating": "PASS",
+            }
+        )
         for key, value in expected_last_hardware.items():
             if state.get(key) != value:
-                errors.append(f"{key} must be {value} after P10 closeout")
+                errors.append(
+                    f"{key} must be {value} after the latest hardware campaign"
+                )
 
         closeout = state.get("p10_post_acceptance_closeout", {})
         if not isinstance(closeout, dict) or closeout.get("status") != "PASS":
