@@ -31,6 +31,7 @@ from p8a_common import (
     TRACEABILITY_PATH,
     render_project_status,
     render_traceability,
+    sha256_artifact,
     validate_requirements,
     validate_state,
 )
@@ -73,6 +74,12 @@ EXPECTED_HASHES = {
     FINAL_PATH: "ac7ef63dc4f3ac50b58a36fbeaa99020217673382ad691cb71d9d874436ae4d0",
     MANIFEST_PATH: "2dc576a9a15441ebf67df98e77ca65a8e28b6118c7381dab399507f0474bb281",
     WIRING_PATH: "a818331c5e8b471283c8269b5935e541e0456e6a18a0719e44cfe8817da5b165",
+}
+EXPECTED_GIT_NORMALIZED_HASHES = {
+    # The authorized P10 run hashed the CRLF worktree representation. Git
+    # stores this text file with LF due to .gitattributes, so a clean checkout
+    # may legitimately expose the normalized representation instead.
+    WIRING_PATH: "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f",
 }
 
 P10_HARDWARE_FOLLOWUP = (
@@ -183,7 +190,17 @@ def verify_inputs(errors: list[str]) -> tuple[dict[str, Any], dict[str, Any], di
     for path, expected in EXPECTED_HASHES.items():
         require(path.is_file(), f"missing frozen input: {rel(path)}", errors)
         if path.is_file():
-            require(sha256(path) == expected, f"frozen input SHA256 mismatch: {rel(path)}", errors)
+            raw_matches = sha256(path) == expected
+            normalized_expected = EXPECTED_GIT_NORMALIZED_HASHES.get(path)
+            normalized_matches = (
+                normalized_expected is not None
+                and sha256_artifact(path, ROOT) == normalized_expected
+            )
+            require(
+                raw_matches or normalized_matches,
+                f"frozen input SHA256 mismatch: {rel(path)}",
+                errors,
+            )
 
     final = load_json(FINAL_PATH)
     manifest = load_json(MANIFEST_PATH)
@@ -807,7 +824,10 @@ def build_checkpoint_metadata(
             "rotating_shutdown_bitstream": artifact_from_auth(
                 auth, "rotating", "shutdown_bitstream"
             ),
-            "wiring": {"path": rel(WIRING_PATH), "sha256": sha256(WIRING_PATH)},
+            "wiring": {
+                "path": rel(WIRING_PATH),
+                "sha256": EXPECTED_HASHES[WIRING_PATH],
+            },
             "evidence_manifest": {
                 "path": rel(MANIFEST_PATH),
                 "sha256": sha256(MANIFEST_PATH),
@@ -955,7 +975,7 @@ def refresh_pass_hashes(document: dict[str, Any]) -> None:
         for binding in item.get("artifact_hashes", []):
             path = ROOT / str(binding.get("path", ""))
             if path.is_file():
-                binding["sha256"] = sha256(path)
+                binding["sha256"] = sha256_artifact(path, ROOT)
         if item.get("artifact_hashes"):
             item["artifact_hash"] = item["artifact_hashes"][0]["sha256"]
 
@@ -984,7 +1004,10 @@ def upsert_requirement(
     if item is None:
         item = {"requirement_id": requirement_id}
         document["requirements"].append(item)
-    bindings = [{"path": rel(path), "sha256": sha256(path)} for path in artifact_paths]
+    bindings = [
+        {"path": rel(path), "sha256": sha256_artifact(path, ROOT)}
+        for path in artifact_paths
+    ]
     item.update(
         {
             "requirement_text": requirement_text,
