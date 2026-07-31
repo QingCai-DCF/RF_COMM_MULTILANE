@@ -1,0 +1,21 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Jul 31 23:13:55 2026
+# Process ID: 3132
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_1_led_offline/raw/20260731T151352.933214Z/xsim_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p10_lane_activity_leds_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_1_led_offline/raw/20260731T151352.933214Z/xsim_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/generated/p10_1_led_offline/raw/20260731T151352.933214Z/xsim_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p10_lane_activity_leds_snapshot/xsim_script.tcl
+# xsim {p10_lane_activity_leds_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_P10_LANE_ACTIVITY_LEDS=PASS
+$finish called at time : 586 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/sim/tb/tb_p10_lane_activity_leds.sv" Line 141
+exit
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 23:13:57 2026...
