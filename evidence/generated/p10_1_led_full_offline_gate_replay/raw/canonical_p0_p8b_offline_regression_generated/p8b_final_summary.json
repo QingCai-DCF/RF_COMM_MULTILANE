@@ -1,12 +1,10 @@
 {
   "acceptance_core_path": "evidence/generated/p8b_acceptance_core.json",
-  "acceptance_core_sha256": "05836fe47cd00092ee65bb5944dc5d3bdcb32ed22cba7e5e9e7f40ae434cfa38",
+  "acceptance_core_sha256": "989884befcb8f0d76c3dbd58f6b0f91dbccdc695c82cc87a7a1d55b5827760dd",
   "branch": "",
   "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
-  "failures": [
-    "P8B-STATE-NONPROMOTION"
-  ],
-  "first_failing_case": "P8B-STATE-NONPROMOTION",
+  "failures": [],
+  "first_failing_case": null,
   "geometry_config_path": "config/geometry/optical_geometry.yaml",
   "geometry_config_sha256": "ed047dec336af273d0f56e4c400f7ce7f2e8440a6a04869c367e46e8152824b0",
   "handover_metrics": {
@@ -66,7 +64,7 @@
     },
     {
       "path": "scripts/run_p8b_geometry_gate.py",
-      "sha256": "dd92c3b98f7a49c7d3d8ab19ed39589cd868fd234940a5b63e9d57505b4722a2"
+      "sha256": "cf9fc4bc9dc60be753f85772e03e579e0d6d2b3e87e340d45004f2b2635ac989"
     }
   ],
   "random_seeds": [
@@ -128,9 +126,9 @@
   },
   "schema_version": 1,
   "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "c44766eb5365ba6d01dc472e917a303e18cf442a",
+  "source_commit": "c4d893d95ee387b649ee78392a5ffb930033d7a0",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
-  "status": "FAIL",
+  "status": "PASS",
   "tests": [
     {
       "details": {
@@ -255,6 +253,7 @@
         "expected": {
           "current_program_stage": [
             "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+            "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
             "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
             "P10_POST_ACCEPTANCE_ANALYSIS",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
@@ -273,25 +272,11 @@
           "z7020_target_status": "PENDING_Z7020_HW"
         },
         "hardware_actions_executed": false,
-        "mismatches": {
-          "current_program_stage": {
-            "actual": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
-            "expected_one_of": [
-              "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
-              "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
-              "P10_POST_ACCEPTANCE_ANALYSIS",
-              "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
-              "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
-              "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
-              "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
-              "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
-            ]
-          }
-        }
+        "mismatches": {}
       },
       "evidence_path": "evidence/generated/p8b_state_consistency_summary.json",
       "profile": "P8B_OFFLINE_LOGIC_MODEL",
-      "status": "FAIL",
+      "status": "PASS",
       "test_id": "P8B-STATE-NONPROMOTION"
     },
     {
@@ -325,6 +310,6 @@
       "test_id": "P8B-OFFLINE-FULL-REGRESSION"
     }
   ],
-  "worktree": "C:\\Users\\user\\Documents\\P10L2_i9ake51m",
+  "worktree": "C:\\Users\\user\\Documents\\P10L2_0m67_adl",
   "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
 }
