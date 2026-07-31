@@ -121,10 +121,31 @@ P10_REQUIREMENT_IDS = {
 
 P10_CLOSEOUT_REQUIREMENT_IDS = {"P10-CLOSEOUT-001"}
 P10_POST_ACCEPTANCE_ANALYSIS_REQUIREMENT_IDS = {"P10-PERF-MEAS-001"}
+P10_1_OFFLINE_REQUIREMENT_IDS = {
+    "PERF-MEAS-001", "PERF-MEAS-002", "PERF-MEAS-003", "PERF-MEAS-004",
+    "PERF-FINAL-001",
+    "PERF-OBS-001", "PERF-OBS-002", "PERF-OBS-003",
+    "PERF-AUTO-001", "PERF-AUTO-002",
+    "PERF-PIPE-001", "PERF-PIPE-002", "PERF-PIPE-003",
+    "PERF-STREAM-001", "PERF-STREAM-002",
+    "HWPREP-P10_1-001",
+}
+P10_1_EXTENDED_MODEL_REQUIREMENT_IDS = {"PERF-MODEL-001", "PERF-MODEL-002"}
+P10_1_PENDING_HARDWARE_REQUIREMENT_IDS = {"PERF-HW-001"}
+P11_READINESS_REQUIREMENT_IDS = {
+    "P11-READY-001", "P11-READY-002", "P11-READY-003",
+}
 
 P10_SCOPE = "AX7020_DUAL_NODE_STATIONARY_2LANE_NO_ETHERNET_HARDWARE_VALIDATION"
 P10_STAGE = "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET"
 P10_NEXT_STAGE = "P10_POST_ACCEPTANCE_ANALYSIS"
+P10_1_OFFLINE_STAGE = (
+    "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS"
+)
+P10_1_NEXT_STAGE = "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE"
+P10_1_OFFLINE_SCOPE = (
+    "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
+)
 P10_CLOSEOUT_SCOPE = "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE"
 P10_ANALYSIS_SCOPE = "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
 
@@ -272,6 +293,10 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         "p8e_status",
         "p9_status",
         "p10_status",
+        "p10_1_offline_status",
+        "p10_1_hardware_status",
+        "p11_status",
+        "p11_hardware_ready",
         "last_hardware_stage",
         "last_hardware_run_id",
         "last_shutdown_fixed",
@@ -489,7 +514,12 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
 
     if p8c_pass:
         if p10_stage == "PASS" and p10_authorization_consumed:
-            expected_program_stage = P10_NEXT_STAGE
+            if state.get("p10_1_offline_status") == "PASS":
+                expected_program_stage = P10_1_NEXT_STAGE
+            elif state.get("p10_1_offline_status") == "IN_PROGRESS":
+                expected_program_stage = P10_1_OFFLINE_STAGE
+            else:
+                expected_program_stage = P10_NEXT_STAGE
         elif p10_stage in {"IN_PROGRESS", "PARTIAL", "FAIL"}:
             expected_program_stage = P10_STAGE
         elif p9_stage == "PASS" and authorization_consumed:
@@ -820,6 +850,59 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 if p11.get(key) != value:
                     errors.append(f"p11_readiness.{key} must be {value}")
 
+    p10_1_offline = state.get("p10_1_offline_status")
+    if p10_1_offline not in {"IN_PROGRESS", "PASS"}:
+        errors.append("p10_1_offline_status must be IN_PROGRESS or PASS")
+    if state.get("p10_1_hardware_status") != "PENDING_CURRENT_RUN_AUTHORIZATION":
+        errors.append(
+            "p10_1_hardware_status must remain PENDING_CURRENT_RUN_AUTHORIZATION"
+        )
+    if state.get("p11_status") != "NOT_STARTED":
+        errors.append("p11_status must remain NOT_STARTED")
+    if state.get("p11_hardware_ready") is not False:
+        errors.append("p11_hardware_ready must remain false")
+    if p10_1_offline == "PASS":
+        if state.get("p10_1_no_hardware_actions_executed") is not True:
+            errors.append("P10.1 offline PASS requires no hardware actions")
+        if stage_status.get(P10_1_OFFLINE_STAGE) != "PASS":
+            errors.append(f"stage_status.{P10_1_OFFLINE_STAGE} must be PASS")
+        acceptance = state.get("p10_1_performance_and_observability", {})
+        if not isinstance(acceptance, dict):
+            errors.append("p10_1_performance_and_observability must be a mapping")
+        else:
+            expected_p10_1 = {
+                "status": "PASS",
+                "verification_scope": P10_1_OFFLINE_SCOPE,
+                "scale_equivalent_4mbps_feasibility": "PASS",
+                "real_hardware_goodput_status": "PENDING_CURRENT_RUN_AUTHORIZATION",
+                "hardware_experiments_authorized": False,
+                "hardware_actions_executed": False,
+            }
+            for key, value in expected_p10_1.items():
+                if acceptance.get(key) != value:
+                    errors.append(
+                        f"p10_1_performance_and_observability.{key} must be {value}"
+                    )
+            for path_key, hash_key, label in (
+                ("evidence_path", "evidence_sha256", "P10.1 offline evidence"),
+                (
+                    "measurement_contract_path",
+                    "measurement_contract_sha256",
+                    "P10.1 measurement contract",
+                ),
+            ):
+                try:
+                    artifact = resolve_repo_path(root, acceptance.get(path_key))
+                    digest = str(acceptance.get(hash_key, "")).lower()
+                    if (
+                        not artifact.is_file()
+                        or not SHA256_RE.fullmatch(digest)
+                        or sha256_artifact(artifact, root) != digest
+                    ):
+                        errors.append(f"{label} path/hash mismatch")
+                except (TypeError, ValueError) as exc:
+                    errors.append(f"{label} path invalid: {exc}")
+
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         errors.append("last_verified_commit must be a full Git commit hash")
@@ -854,6 +937,11 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     missing_p10 = sorted(P10_REQUIREMENT_IDS - present)
     missing_p10_closeout = sorted(P10_CLOSEOUT_REQUIREMENT_IDS - present)
     missing_p10_analysis = sorted(P10_POST_ACCEPTANCE_ANALYSIS_REQUIREMENT_IDS - present)
+    missing_p10_1 = sorted(P10_1_OFFLINE_REQUIREMENT_IDS - present)
+    missing_p10_1_hardware = sorted(
+        P10_1_PENDING_HARDWARE_REQUIREMENT_IDS - present
+    )
+    missing_p11_readiness = sorted(P11_READINESS_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -872,6 +960,18 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         errors.append(
             "missing P10 post-acceptance analysis requirement IDs: "
             + ", ".join(missing_p10_analysis)
+        )
+    if missing_p10_1:
+        errors.append("missing P10.1 offline requirement IDs: " + ", ".join(missing_p10_1))
+    if missing_p10_1_hardware:
+        errors.append(
+            "missing P10.1 hardware requirement IDs: "
+            + ", ".join(missing_p10_1_hardware)
+        )
+    if missing_p11_readiness:
+        errors.append(
+            "missing P11 readiness requirement IDs: "
+            + ", ".join(missing_p11_readiness)
         )
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}
@@ -1018,6 +1118,34 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must be PASS after the offline P10 metric audit")
             if item.get("verification_scope") != P10_ANALYSIS_SCOPE:
                 errors.append(f"{req_id} must declare the no-hardware P10 analysis scope")
+    if P10_1_OFFLINE_REQUIREMENT_IDS.issubset(by_id):
+        for req_id in P10_1_OFFLINE_REQUIREMENT_IDS:
+            item = by_id[req_id]
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P10.1 offline closure")
+            if item.get("verification_scope") != P10_1_OFFLINE_SCOPE:
+                errors.append(f"{req_id} must declare the exact P10.1 offline scope")
+            if not item.get("hardware_followup"):
+                errors.append(f"{req_id} must retain direct-hardware follow-up")
+            if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
+                errors.append(f"{req_id} must declare a primary artifact_hash")
+    for req_id in P10_1_EXTENDED_MODEL_REQUIREMENT_IDS:
+        item = by_id.get(req_id, {})
+        bindings = {
+            record.get("path")
+            for record in item.get("artifact_hashes", [])
+            if isinstance(record, dict)
+        }
+        if "evidence/generated/p10_1_performance_model.json" not in bindings:
+            errors.append(f"{req_id} must bind the P10.1 performance model extension")
+    for req_id in P10_1_PENDING_HARDWARE_REQUIREMENT_IDS:
+        item = by_id.get(req_id, {})
+        if item.get("status") != "PENDING":
+            errors.append(f"{req_id} must remain PENDING until a new authorized run")
+    for req_id in P11_READINESS_REQUIREMENT_IDS:
+        item = by_id.get(req_id, {})
+        if item.get("status") != "PENDING":
+            errors.append(f"{req_id} must remain PENDING while P11 is not ready")
     return errors
 
 
@@ -1046,6 +1174,10 @@ def render_project_status(state: dict[str, Any]) -> str:
         f"PRODUCT_FINAL_ACCEPTANCE: {state['product_final_acceptance']}",
         f"P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: {state['p9_status']}",
         f"P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: {state['p10_status']}",
+        f"P10_1_OFFLINE_STATUS: {state['p10_1_offline_status']}",
+        f"P10_1_HARDWARE_STATUS: {state['p10_1_hardware_status']}",
+        f"P11_OFFICIAL_STAGE_STATUS: {state['p11_status']}",
+        f"P11_HARDWARE_READY: {str(state['p11_hardware_ready']).lower()}",
         f"CURRENT_PROGRAM_STAGE: {state['current_program_stage']}",
         f"CURRENT_RUN_HARDWARE_AUTHORIZATION: {str(state['current_run_hardware_authorization']).lower()}",
         f"LAST_HARDWARE_AUTHORIZATION_CONSUMED: {str(state.get('last_hardware_authorization_consumed', False)).lower()}",
@@ -1186,6 +1318,21 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- P11 official stage: `{p11['official_stage_status']}`",
             f"- P11 hardware ready: `{str(p11['hardware_ready']).lower()}`",
             "- P10 remains a scoped PASS; the post-acceptance metric audit does not promote or revoke hardware scope.",
+        ]
+    if isinstance(state.get("p10_1_performance_and_observability"), dict):
+        p10_1 = state["p10_1_performance_and_observability"]
+        lines += [
+            "",
+            "## P10.1 extended offline performance and streaming readiness",
+            "",
+            f"- Offline status: `{state['p10_1_offline_status']}` (`{p10_1.get('verification_scope')}` only)",
+            f"- Evidence: `{p10_1.get('evidence_path')}`",
+            f"- Modeled application goodput: `{p10_1.get('modeled_application_goodput_bps')} bit/s`",
+            f"- 4.0 Mbit/s scale-equivalent feasibility: `{p10_1.get('scale_equivalent_4mbps_feasibility')}`",
+            f"- Real hardware goodput: `{p10_1.get('real_hardware_goodput_status')}`",
+            f"- Hardware actions executed: `{str(p10_1.get('hardware_actions_executed')).lower()}`",
+            f"- P11 official stage / hardware ready: `{state['p11_status']}` / `{str(state['p11_hardware_ready']).lower()}`",
+            "- The P10.1 PASS is offline feasibility, routed implementation, software, simulation, and dry-run evidence. It is not real AX7020 performance acceptance.",
         ]
     lines += [
         "",

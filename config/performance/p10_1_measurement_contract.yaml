@@ -1,88 +1,136 @@
-schema_version: 1
-contract_id: P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY
-status: OFFLINE_PLAN_ONLY
+schema_version: 2
+contract_id: P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY
+status: OFFLINE_IMPLEMENTED_HARDWARE_PENDING
 profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+no_hardware: true
 current_run_hardware_authorization: false
 hardware_experiments_authorized: false
 hardware_authorization_required_before_execution: true
+timer:
+  pl_clock_id: P10_PROTOCOL_FCLK0
+  pl_frequency_hz: 64000000
+  pl_counter_width_bits: 64
+  ps_clock_id: ZYNQ_GLOBAL_TIMER
+  ps_frequency_hz: 333333343
+  ps_counter_width_bits: 64
+  host_clock_id: HOST_MONOTONIC
+  crosscheck_max_error_percent: 1.0
 metrics:
   PHY_RAW_BPS:
     unit: bit/s
-    definition: configured raw symbol bit rate per active lane times active lane count
+    numerator: configured raw lane bit rate multiplied by active lane count
+    denominator: one second by definition
     measured_application_metric: false
   FRAME_GOODPUT_BPS:
     unit: bit/s
     numerator: 8 * deduplicated accepted protocol-frame payload bytes
-    denominator: explicit frame measurement end minus start
+    denominator: FRAME_FIRST through FRAME_LAST elapsed time
+    measured_application_metric: false
   APPLICATION_GOODPUT_BPS:
     unit: bit/s
-    numerator: 8 * exactly-once atomically published application-useful bytes
-    denominator: explicit application measurement end minus start
-    excludes:
-    - RFAP headers
-    - link headers
-    - ACKs
-    - retries
-    - duplicates
+    numerator: 8 * remotely integrity-verified and atomically committed application bytes
+    denominator: first application byte admitted locally through final remote atomic commit
+    measured_application_metric: true
+    excluded_numerator:
+    - headers
+    - CRC
+    - SACK
+    - padding
+    - retry bytes
+    - failed or uncommitted objects
+    excluded_window:
+    - JTAG connection
+    - bitstream or ELF load
+    - pre-test initialization
+    - evidence export
+    - artificial wait
+    - unrelated diagnostics
   OBJECT_COMPLETION_BPS:
     unit: bit/s
     numerator: 8 * useful bytes in completed atomically published objects
-    denominator: first admitted object start through final atomic publish
+    denominator: first admitted object through final atomic publish
+    measured_application_metric: true
     companion_metric: OBJECTS_PER_SECOND
-required_dimensions:
-- measurement_start_timestamp
-- measurement_end_timestamp
-- clock_source
-- numerator_bytes
-- warmup_policy
-- idle_included
-- host_jtag_staging_included
+  ENDPOINT_TO_ENDPOINT_GOODPUT_BPS:
+    unit: bit/s
+    numerator: 8 * remote endpoint committed application bytes
+    denominator: endpoint-local PERF_START through remote COMMIT_NOTIFY
+    measured_application_metric: true
+  HOST_ORCHESTRATED_GOODPUT_BPS:
+    unit: bit/s
+    numerator: 8 * host-requested bytes successfully read back
+    denominator: host monotonic configure/start through final host readback
+    measured_application_metric: false
+    may_include:
+    - host file read
+    - XSDB load
+    - PS command
+    - mailbox dump
+    - host readback
+measurement_classes:
+- PHY_RAW
+- FRAME_SUSTAINED
+- APPLICATION_SUSTAINED
+- OBJECT_SINGLE
+- HOST_ORCHESTRATED
+- DIAGNOSTIC_MICROTRANSFER
+- SOAK_WINDOW
+metric_record_required_fields:
+- metric_name
+- measurement_class
 - direction
 - lane_mask
-- active_lane_count
-- object_size_bytes
-- fragment_size_bytes
-- raw_log_path
-- raw_log_sha256
-required_timing_segments:
-- host_load
-- ps_generation
-- crc32
-- sha256
-- cache_flush
-- descriptor_submit
-- dma_tx
-- pl_queue
-- on_air
-- ack_sack
-- dma_rx
-- cache_invalidate
-- reassembly
-- receive_sha256
-- atomic_publish
-- host_readback
-required_statistics:
-- count
-- mean
-- p50
-- p95
-- p99
-- max
+- committed_application_bytes
+- wire_bytes
+- frame_payload_bytes
+- object_count
+- start_event
+- end_event
+- start_timestamp
+- end_timestamp
+- timer_source
+- timer_frequency
+- elapsed_seconds
+- units
+- warmup_included
+- idle_included
+- host_staging_included
+- diagnostic_only
+- eligible_for_scaling
+- integrity_error_count
+- retry_exhausted_count
+- timer_crosscheck_status
+- run_id
+- case_id
+- artifact_sha256
+scaling_eligibility:
+  required_measurement_class: APPLICATION_SUSTAINED
+  diagnostic_only: false
+  minimum_committed_bytes_per_direction: 16777216
+  alternative_minimum_duration_seconds_per_direction: 30
+  maximum_integrity_error_count: 0
+  maximum_retry_exhausted_count: 0
+  required_timer_crosscheck_status: PASS
+formal_aggregation:
+  group_by:
+  - run_id
+  - metric_name
+  - measurement_class
+  - direction
+  eligible_only: true
+  summary_statistics:
+  - min
+  - median
+  - max
 comparison_modes:
-  A: local DDR/DMA path
-  B: dual-board digital path without optical, only if explicitly supported
+  A: local DDR and DMA diagnostic
+  B: dual-endpoint digital path only when explicitly supported
   C: real optical path
-comparison_rule: Mode B may diagnose but never substitute for Mode C hardware evidence.
+comparison_rule: Mode B is diagnostic and never substitutes for Mode C hardware evidence.
 integrity_and_safety_invariants:
 - CRC32 and SHA-256 remain enabled
 - exactly-once atomic publication remains enabled
-- selective-repeat/SACK remains enabled
+- selective-repeat and SACK remain enabled
 - TFDU continuous-high and rolling-duty guards remain enabled
-- single GLOBAL_PERMIT architecture is not changed
+- the single GLOBAL_PERMIT architecture is unchanged
 - shutdown-before/on-error/timeout/interrupt/normal-exit/after remains mandatory
-acceptance_goals:
-- all four metric names have exact reproducible units and windows
-- JSON and Markdown derive from the same raw log
-- scaling behavior is explained without extrapolation beyond evidence
-- dominant bottlenecks have segmented timing evidence
-- no integrity or safety regression

@@ -172,6 +172,18 @@ module p9_axi_dma_peripheral #(
   logic [31:0] duty_window_cycles;
   logic [31:0] duty_hard_limit_cycles;
   logic [31:0] duty_target_limit_cycles;
+  logic [31:0] p10_1_reg_rd_data;
+  logic [63:0] p10_1_timer;
+  logic [31:0] p10_1_snapshot_generation;
+  logic p10_1_perf_active;
+  logic output_complete_d_q;
+  logic [31:0] retry_exhausted_d_q;
+  logic [2:0] p10_1_axis_bytes;
+
+  always_comb begin
+    p10_1_axis_bytes = s_axis_tkeep[0] + s_axis_tkeep[1] +
+                       s_axis_tkeep[2] + s_axis_tkeep[3];
+  end
 
   p6_axi_lite_bridge u_axi_lite (
     .s_axi_aclk, .s_axi_aresetn, .s_axi_awaddr, .s_axi_awprot, .s_axi_awvalid,
@@ -329,6 +341,43 @@ module p9_axi_dma_peripheral #(
       transport_resetn_q <= !stream_reset_request_o;
   end
 
+  always_ff @(posedge s_axi_aclk) begin
+    if (!s_axi_aresetn) begin
+      output_complete_d_q <= 1'b0;
+      retry_exhausted_d_q <= '0;
+    end else begin
+      output_complete_d_q <= output_complete;
+      retry_exhausted_d_q <= tx_retry_exhausted_count;
+    end
+  end
+
+  p10_1_perf_monitor u_p10_1_perf_monitor (
+    .clk(s_axi_aclk),
+    .rst_n(s_axi_aresetn),
+    .object_reset_i(stream_reset_request_o),
+    .reg_wr_en_i(reg_wr_en),
+    .reg_wr_addr_i(reg_wr_addr),
+    .reg_wr_data_i(reg_wr_data),
+    .reg_rd_en_i(reg_rd_en),
+    .reg_rd_addr_i(reg_rd_addr),
+    .reg_rd_data_o(p10_1_reg_rd_data),
+    .axis_accept_i(s_axis_tvalid && s_axis_tready),
+    .axis_accept_bytes_i(p10_1_axis_bytes),
+    .axis_stall_i(s_axis_tvalid && !s_axis_tready),
+    .descriptor_submit_i(s_axis_tvalid && s_axis_tready && s_axis_tlast),
+    .descriptor_complete_i(m_axis_tvalid && m_axis_tready && m_axis_tlast),
+    .application_commit_i(output_complete && !output_complete_d_q),
+    .application_commit_bytes_i(output_byte_count),
+    .queue_occupancy_i(tx_outstanding_count),
+    .ack_wait_i(object_active && tx_outstanding_count != 0),
+    .direction_quiet_i(!object_active),
+    .retry_i(tx_retry_exhausted_count != retry_exhausted_d_q),
+    .integrity_error_i(object_fail && !object_fail_d_q),
+    .perf_active_o(p10_1_perf_active),
+    .timer_o(p10_1_timer),
+    .snapshot_generation_o(p10_1_snapshot_generation)
+  );
+
   assign ir_mode_out_0 = s_axi_aresetn ? core_a_mode : 2'b11;
   assign ir_sd_0       = s_axi_aresetn ? core_a_sd   : 2'b11;
   assign ir_tx_out_0   = s_axi_aresetn ? core_a_txd  : 2'b00;
@@ -441,7 +490,9 @@ module p9_axi_dma_peripheral #(
       12'h880: reg_rd_data = physical_frame_bad;
       12'h884: reg_rd_data = physical_preamble_count;
       12'h888: reg_rd_data = physical_symbol_error_count;
-      default: reg_rd_data = 0;
+      default: reg_rd_data =
+          (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
+          ? p10_1_reg_rd_data : 0;
     endcase
   end
 

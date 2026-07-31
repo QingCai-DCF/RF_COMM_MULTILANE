@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "register_map_version": "P9-3",
+  "register_map_version": "P10-1",
   "data_width_bits": 32,
-  "compatibility": "P0-P8D offsets and meanings are preserved; P9 Z7010 DMA/optical runtime is additive from 0x0700",
+  "compatibility": "P0-P9 offsets and meanings are preserved; P10.1 performance/streaming observability is additive from 0x0900",
   "registers": [
     {
       "name": "CONTROL",
@@ -670,6 +670,69 @@
     {"name": "P9_RX_PROTOCOL_ERROR_COUNT", "offset": "0x087C", "access": "RO", "description": "Current-run receive protocol error count"},
     {"name": "P9_PHYSICAL_FRAME_BAD_COUNT", "offset": "0x0880", "access": "RO", "description": "Current-run physical parser rejected-frame count"},
     {"name": "P9_PHYSICAL_PREAMBLE_COUNT", "offset": "0x0884", "access": "RO", "description": "Current-run physical preamble count"},
-    {"name": "P9_PHYSICAL_SYMBOL_ERROR_COUNT", "offset": "0x0888", "access": "RO", "description": "Current-run physical symbol error count"}
+    {"name": "P9_PHYSICAL_SYMBOL_ERROR_COUNT", "offset": "0x0888", "access": "RO", "description": "Current-run physical symbol error count"},
+    {"name": "P10_1_PERF_CAPS", "offset": "0x0900", "access": "RO", "description": "P10.1 autonomous performance capability identity"},
+    {"name": "P10_1_PERF_VERSION", "offset": "0x0904", "access": "RO", "description": "P10.1 performance command and metric schema version"},
+    {
+      "name": "P10_1_PERF_COMMAND", "offset": "0x0908", "access": "RW",
+      "description": "Versioned PERF_CAPS/CONFIG/START/STATUS/SNAPSHOT/STOP/ABORT/CLEAR command",
+      "fields": [
+        {"name": "COMMAND", "lsb": 0, "width": 4, "access": "RW"},
+        {"name": "SEQUENCE", "lsb": 16, "width": 16, "access": "RW"}
+      ]
+    },
+    {"name": "P10_1_PERF_STATUS", "offset": "0x090C", "access": "RO", "description": "Autonomous service state, fault, completion, and active flags"},
+    {"name": "P10_1_PERF_CONFIG0", "offset": "0x0910", "access": "RW", "description": "Direction, lane mask, hash mode, and formal-window configuration"},
+    {"name": "P10_1_PERF_DURATION_SECONDS", "offset": "0x0914", "access": "RW", "description": "Formal measurement duration in seconds"},
+    {"name": "P10_1_TOTAL_BYTES_LOW", "offset": "0x0918", "access": "RW", "description": "Configured total application bytes bits 31:0"},
+    {"name": "P10_1_TOTAL_BYTES_HIGH", "offset": "0x091C", "access": "RW", "description": "Configured total application bytes bits 63:32"},
+    {"name": "P10_1_OBJECT_SIZE_BYTES", "offset": "0x0920", "access": "RW", "description": "Configured logical object size"},
+    {"name": "P10_1_SEGMENT_SIZE_BYTES", "offset": "0x0924", "access": "RW", "description": "Configured streaming segment size"},
+    {"name": "P10_1_PATTERN_SEED", "offset": "0x0928", "access": "RW", "description": "Payload pattern and deterministic seed"},
+    {"name": "P10_1_PIPELINE_CONFIG", "offset": "0x092C", "access": "RW", "description": "Buffer count, descriptor ring depth, and descriptor batch"},
+    {"name": "P10_1_PROTOCOL_CONFIG", "offset": "0x0930", "access": "RW", "description": "ACK threshold, outstanding frames, and interrupt coalescing"},
+    {
+      "name": "P10_1_SNAPSHOT_CONTROL", "offset": "0x0934", "access": "RW",
+      "description": "Atomic counter/timer snapshot and explicit clear requests",
+      "fields": [
+        {"name": "SNAPSHOT", "bit": 0, "access": "WO"},
+        {"name": "CLEAR_COUNTERS", "bit": 1, "access": "WO"},
+        {"name": "CLEAR_TRACE", "bit": 2, "access": "WO"}
+      ]
+    },
+    {"name": "P10_1_SNAPSHOT_GENERATION", "offset": "0x0938", "access": "RO", "description": "Even generation denotes one coherent counter snapshot"},
+    {"name": "P10_1_TIMER_SNAPSHOT_LOW", "offset": "0x093C", "access": "RO", "description": "Atomic PL timer snapshot bits 31:0"},
+    {"name": "P10_1_TIMER_SNAPSHOT_HIGH", "offset": "0x0940", "access": "RO", "description": "Atomic PL timer snapshot bits 63:32"},
+    {"name": "P10_1_APPLICATION_ACCEPTED_LOW", "offset": "0x0944", "access": "RO", "description": "Application bytes accepted bits 31:0"},
+    {"name": "P10_1_APPLICATION_ACCEPTED_HIGH", "offset": "0x0948", "access": "RO", "description": "Application bytes accepted bits 63:32"},
+    {"name": "P10_1_APPLICATION_COMMITTED_LOW", "offset": "0x094C", "access": "RO", "description": "Remotely committed application bytes bits 31:0"},
+    {"name": "P10_1_APPLICATION_COMMITTED_HIGH", "offset": "0x0950", "access": "RO", "description": "Remotely committed application bytes bits 63:32"},
+    {"name": "P10_1_FRAME_ACKED_LOW", "offset": "0x0954", "access": "RO", "description": "Deduplicated frame payload bytes acknowledged bits 31:0"},
+    {"name": "P10_1_FRAME_ACKED_HIGH", "offset": "0x0958", "access": "RO", "description": "Deduplicated frame payload bytes acknowledged bits 63:32"},
+    {"name": "P10_1_WIRE_BYTES_LOW", "offset": "0x095C", "access": "RO", "description": "Wire bytes including protocol overhead bits 31:0"},
+    {"name": "P10_1_WIRE_BYTES_HIGH", "offset": "0x0960", "access": "RO", "description": "Wire bytes including protocol overhead bits 63:32"},
+    {"name": "P10_1_DESCRIPTOR_SUBMITTED", "offset": "0x0964", "access": "RO", "description": "Descriptors submitted in the current formal window"},
+    {"name": "P10_1_DESCRIPTOR_COMPLETED", "offset": "0x0968", "access": "RO", "description": "Descriptors completed exactly once in the current formal window"},
+    {"name": "P10_1_DMA_STALL_LOW", "offset": "0x096C", "access": "RO", "description": "DMA stall cycles bits 31:0"},
+    {"name": "P10_1_DMA_STALL_HIGH", "offset": "0x0970", "access": "RO", "description": "DMA stall cycles bits 63:32"},
+    {"name": "P10_1_AXIS_STALL_LOW", "offset": "0x0974", "access": "RO", "description": "AXI-Stream backpressure stall cycles bits 31:0"},
+    {"name": "P10_1_AXIS_STALL_HIGH", "offset": "0x0978", "access": "RO", "description": "AXI-Stream backpressure stall cycles bits 63:32"},
+    {"name": "P10_1_QUEUE_OCCUPANCY", "offset": "0x097C", "access": "RO", "description": "Current and high-water queue occupancy"},
+    {"name": "P10_1_ACK_WAIT_LOW", "offset": "0x0980", "access": "RO", "description": "ACK/SACK wait cycles bits 31:0"},
+    {"name": "P10_1_ACK_WAIT_HIGH", "offset": "0x0984", "access": "RO", "description": "ACK/SACK wait cycles bits 63:32"},
+    {"name": "P10_1_DIRECTION_QUIET_LOW", "offset": "0x0988", "access": "RO", "description": "Direction quiet cycles bits 31:0"},
+    {"name": "P10_1_DIRECTION_QUIET_HIGH", "offset": "0x098C", "access": "RO", "description": "Direction quiet cycles bits 63:32"},
+    {"name": "P10_1_PS_PREPARE_LOW", "offset": "0x0990", "access": "RO", "description": "PS payload-preparation timer ticks bits 31:0"},
+    {"name": "P10_1_PS_PREPARE_HIGH", "offset": "0x0994", "access": "RO", "description": "PS payload-preparation timer ticks bits 63:32"},
+    {"name": "P10_1_CRC_SHA_LOW", "offset": "0x0998", "access": "RO", "description": "CRC/SHA timer ticks bits 31:0"},
+    {"name": "P10_1_CRC_SHA_HIGH", "offset": "0x099C", "access": "RO", "description": "CRC/SHA timer ticks bits 63:32"},
+    {"name": "P10_1_TRACE_STATUS", "offset": "0x09A0", "access": "RO", "description": "PS trace and PL event FIFO occupancy, generation, and overflow"},
+    {"name": "P10_1_STREAM_STATUS", "offset": "0x09A4", "access": "RO", "description": "Stream active, abort, restart, generation, and atomic-publish status"},
+    {"name": "P10_1_EVENT_FIFO_DATA", "offset": "0x09A8", "access": "RO", "description": "Nonblocking PL event FIFO pop data"},
+    {"name": "P10_1_EVENT_FIFO_STATUS", "offset": "0x09AC", "access": "RO", "description": "PL event FIFO occupancy, empty/full, generation, and overflow"},
+    {"name": "P10_1_INTEGRITY_ERROR_COUNT", "offset": "0x09B0", "access": "RO", "description": "CRC/SHA/pattern verification failure count"},
+    {"name": "P10_1_RETRY_EXHAUSTED_COUNT", "offset": "0x09B4", "access": "RO", "description": "Bounded retry exhaustion count in the measurement window"},
+    {"name": "P10_1_DESCRIPTOR_LEAK_COUNT", "offset": "0x09B8", "access": "RO", "description": "Descriptors not reclaimed at terminal state"},
+    {"name": "P10_1_DOUBLE_COMPLETION_COUNT", "offset": "0x09BC", "access": "RO", "description": "Duplicate descriptor completion attempts"}
   ]
 }

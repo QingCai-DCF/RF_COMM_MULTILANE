@@ -1,0 +1,57 @@
+schema_version: 1
+config_id: P10_1_STREAMING
+mandatory_stream_size_bytes: 67108864
+optional_stream_size_bytes: 134217728
+continuous_model_duration_seconds: 300
+segment_size_bytes: 65536
+maximum_stream_size_bytes: 134217728
+descriptor_fields:
+- stream_id
+- object_id
+- generation
+- segment_offset
+- segment_length
+- total_length
+- flags
+- crc32_state
+integrity:
+  incremental_crc32: true
+  incremental_sha256: true
+  atomic_publish: true
+  exactly_once: true
+commands:
+- PERF_CAPS
+- PERF_CONFIG
+- PERF_START
+- PERF_STATUS
+- PERF_SNAPSHOT
+- PERF_STOP
+- PERF_ABORT
+- PERF_CLEAR
+payload_patterns:
+- zero
+- one
+- counter
+- prbs
+- deterministic_pseudorandom
+mandatory_64m_cases:
+- clean
+- abort_25_percent
+- abort_50_percent
+- abort_75_percent
+- ps_service_reset
+- dma_reset
+- pl_soft_reset
+- duplicate_segment
+- missing_segment
+- stale_segment
+- out_of_order_segment
+- descriptor_wrap
+- generation_wrap
+publish_invariants:
+  partial_publish_count: 0
+  wrong_hash_publish_count: 0
+  duplicate_publish_count: 0
+  stale_publish_count: 0
+  descriptor_leak_count: 0
+  double_completion_count: 0

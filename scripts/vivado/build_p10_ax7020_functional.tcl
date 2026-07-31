@@ -41,6 +41,10 @@ set rtl_sources [list \
   "$root_dir/rtl/p9_4ppm_frame_rx.sv" \
   "$root_dir/rtl/p9_optical_transport_core.sv" \
   "$root_dir/rtl/p6_axi_lite_bridge.sv" \
+  "$root_dir/rtl/p10_1_metric_counter.sv" \
+  "$root_dir/rtl/p10_1_timer_snapshot.sv" \
+  "$root_dir/rtl/p10_1_event_fifo.sv" \
+  "$root_dir/rtl/p10_1_perf_monitor.sv" \
   "$root_dir/rtl/p9_axi_dma_peripheral.sv" \
   "$root_dir/rtl/p10_axi_dma_endpoint_peripheral_bd.v" \
 ]

@@ -45,6 +45,10 @@ RTL = [
     "rtl/p9_4ppm_frame_rx.sv",
     "rtl/p9_optical_transport_core.sv",
     "rtl/p6_axi_lite_bridge.sv",
+    "rtl/p10_1_metric_counter.sv",
+    "rtl/p10_1_timer_snapshot.sv",
+    "rtl/p10_1_event_fifo.sv",
+    "rtl/p10_1_perf_monitor.sv",
     "rtl/p9_axi_dma_peripheral.sv",
     "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
 ]

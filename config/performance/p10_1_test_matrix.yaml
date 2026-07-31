@@ -1,0 +1,46 @@
+schema_version: 1
+matrix_id: P10_1_OFFLINE_ACCEPTANCE
+fixed_seeds: [1, 7, 17, 31, 127, 1024, 20260731, 4100000, 64000000]
+random_campaigns:
+  buffer_descriptor_events: 100000
+  stream_abort_reset_events: 50000
+  metric_finalizer_cases: 50000
+  trace_overflow_snapshot_cases: 25000
+reduced_exhaustive:
+  ring_depths: [2, 4]
+  buffer_counts: [2, 3]
+  segment_counts: [2, 4]
+  timer_width_bits: [4, 8]
+  properties:
+  - ownership_transition
+  - wrap
+  - abort
+  - reset
+  - reclaim
+  - timer_wrap
+  - metric_selection
+xsim_testbenches:
+- tb_p10_1_metric_counter
+- tb_p10_1_timer_snapshot
+- tb_p10_1_trace_fifo
+- tb_p10_1_perf_command
+- tb_p10_1_axis_sustained
+- tb_p10_1_buffer_pool
+- tb_p10_1_descriptor_batch
+- tb_p10_1_streaming_chain
+- tb_p10_1_stream_abort_reset
+- tb_p10_1_dual_endpoint_perf
+hardware_runner_rejection_cases:
+- no_authorization
+- wrong_board_id
+- wrong_artifact_hash
+- missing_shutdown
+- lane_mask_above_0x3
+- ethernet_requested
+- movement_requested
+- runtime_missing
+historical_regression:
+- P10_VERIFY_EXISTING
+- P9_VERIFY_EXISTING
+- P8E_VERIFY_EXISTING
+- P8C_SAFETY_VERIFY_EXISTING

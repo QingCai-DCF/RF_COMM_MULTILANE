@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P9-3` (`0x09000003`)
-- Canonical source SHA256: `9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a`
-- Compatibility: P0-P8D offsets and meanings are preserved; P9 Z7010 DMA/optical runtime is additive from 0x0700.
+- Register map version: `P10-1` (`0x0A000001`)
+- Canonical source SHA256: `9ed3e2cdc0ff20769361f0f10a0c54a45853785524c8e5411410445795e55c59`
+- Compatibility: P0-P9 offsets and meanings are preserved; P10.1 performance/streaming observability is additive from 0x0900.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -317,3 +317,51 @@
 | `P9_PHYSICAL_FRAME_BAD_COUNT` | `0x0880` | `RO` | Current-run physical parser rejected-frame count |
 | `P9_PHYSICAL_PREAMBLE_COUNT` | `0x0884` | `RO` | Current-run physical preamble count |
 | `P9_PHYSICAL_SYMBOL_ERROR_COUNT` | `0x0888` | `RO` | Current-run physical symbol error count |
+| `P10_1_PERF_CAPS` | `0x0900` | `RO` | P10.1 autonomous performance capability identity |
+| `P10_1_PERF_VERSION` | `0x0904` | `RO` | P10.1 performance command and metric schema version |
+| `P10_1_PERF_COMMAND` | `0x0908` | `RW` | Versioned PERF_CAPS/CONFIG/START/STATUS/SNAPSHOT/STOP/ABORT/CLEAR command |
+| `P10_1_PERF_STATUS` | `0x090C` | `RO` | Autonomous service state, fault, completion, and active flags |
+| `P10_1_PERF_CONFIG0` | `0x0910` | `RW` | Direction, lane mask, hash mode, and formal-window configuration |
+| `P10_1_PERF_DURATION_SECONDS` | `0x0914` | `RW` | Formal measurement duration in seconds |
+| `P10_1_TOTAL_BYTES_LOW` | `0x0918` | `RW` | Configured total application bytes bits 31:0 |
+| `P10_1_TOTAL_BYTES_HIGH` | `0x091C` | `RW` | Configured total application bytes bits 63:32 |
+| `P10_1_OBJECT_SIZE_BYTES` | `0x0920` | `RW` | Configured logical object size |
+| `P10_1_SEGMENT_SIZE_BYTES` | `0x0924` | `RW` | Configured streaming segment size |
+| `P10_1_PATTERN_SEED` | `0x0928` | `RW` | Payload pattern and deterministic seed |
+| `P10_1_PIPELINE_CONFIG` | `0x092C` | `RW` | Buffer count, descriptor ring depth, and descriptor batch |
+| `P10_1_PROTOCOL_CONFIG` | `0x0930` | `RW` | ACK threshold, outstanding frames, and interrupt coalescing |
+| `P10_1_SNAPSHOT_CONTROL` | `0x0934` | `RW` | Atomic counter/timer snapshot and explicit clear requests |
+| `P10_1_SNAPSHOT_GENERATION` | `0x0938` | `RO` | Even generation denotes one coherent counter snapshot |
+| `P10_1_TIMER_SNAPSHOT_LOW` | `0x093C` | `RO` | Atomic PL timer snapshot bits 31:0 |
+| `P10_1_TIMER_SNAPSHOT_HIGH` | `0x0940` | `RO` | Atomic PL timer snapshot bits 63:32 |
+| `P10_1_APPLICATION_ACCEPTED_LOW` | `0x0944` | `RO` | Application bytes accepted bits 31:0 |
+| `P10_1_APPLICATION_ACCEPTED_HIGH` | `0x0948` | `RO` | Application bytes accepted bits 63:32 |
+| `P10_1_APPLICATION_COMMITTED_LOW` | `0x094C` | `RO` | Remotely committed application bytes bits 31:0 |
+| `P10_1_APPLICATION_COMMITTED_HIGH` | `0x0950` | `RO` | Remotely committed application bytes bits 63:32 |
+| `P10_1_FRAME_ACKED_LOW` | `0x0954` | `RO` | Deduplicated frame payload bytes acknowledged bits 31:0 |
+| `P10_1_FRAME_ACKED_HIGH` | `0x0958` | `RO` | Deduplicated frame payload bytes acknowledged bits 63:32 |
+| `P10_1_WIRE_BYTES_LOW` | `0x095C` | `RO` | Wire bytes including protocol overhead bits 31:0 |
+| `P10_1_WIRE_BYTES_HIGH` | `0x0960` | `RO` | Wire bytes including protocol overhead bits 63:32 |
+| `P10_1_DESCRIPTOR_SUBMITTED` | `0x0964` | `RO` | Descriptors submitted in the current formal window |
+| `P10_1_DESCRIPTOR_COMPLETED` | `0x0968` | `RO` | Descriptors completed exactly once in the current formal window |
+| `P10_1_DMA_STALL_LOW` | `0x096C` | `RO` | DMA stall cycles bits 31:0 |
+| `P10_1_DMA_STALL_HIGH` | `0x0970` | `RO` | DMA stall cycles bits 63:32 |
+| `P10_1_AXIS_STALL_LOW` | `0x0974` | `RO` | AXI-Stream backpressure stall cycles bits 31:0 |
+| `P10_1_AXIS_STALL_HIGH` | `0x0978` | `RO` | AXI-Stream backpressure stall cycles bits 63:32 |
+| `P10_1_QUEUE_OCCUPANCY` | `0x097C` | `RO` | Current and high-water queue occupancy |
+| `P10_1_ACK_WAIT_LOW` | `0x0980` | `RO` | ACK/SACK wait cycles bits 31:0 |
+| `P10_1_ACK_WAIT_HIGH` | `0x0984` | `RO` | ACK/SACK wait cycles bits 63:32 |
+| `P10_1_DIRECTION_QUIET_LOW` | `0x0988` | `RO` | Direction quiet cycles bits 31:0 |
+| `P10_1_DIRECTION_QUIET_HIGH` | `0x098C` | `RO` | Direction quiet cycles bits 63:32 |
+| `P10_1_PS_PREPARE_LOW` | `0x0990` | `RO` | PS payload-preparation timer ticks bits 31:0 |
+| `P10_1_PS_PREPARE_HIGH` | `0x0994` | `RO` | PS payload-preparation timer ticks bits 63:32 |
+| `P10_1_CRC_SHA_LOW` | `0x0998` | `RO` | CRC/SHA timer ticks bits 31:0 |
+| `P10_1_CRC_SHA_HIGH` | `0x099C` | `RO` | CRC/SHA timer ticks bits 63:32 |
+| `P10_1_TRACE_STATUS` | `0x09A0` | `RO` | PS trace and PL event FIFO occupancy, generation, and overflow |
+| `P10_1_STREAM_STATUS` | `0x09A4` | `RO` | Stream active, abort, restart, generation, and atomic-publish status |
+| `P10_1_EVENT_FIFO_DATA` | `0x09A8` | `RO` | Nonblocking PL event FIFO pop data |
+| `P10_1_EVENT_FIFO_STATUS` | `0x09AC` | `RO` | PL event FIFO occupancy, empty/full, generation, and overflow |
+| `P10_1_INTEGRITY_ERROR_COUNT` | `0x09B0` | `RO` | CRC/SHA/pattern verification failure count |
+| `P10_1_RETRY_EXHAUSTED_COUNT` | `0x09B4` | `RO` | Bounded retry exhaustion count in the measurement window |
+| `P10_1_DESCRIPTOR_LEAK_COUNT` | `0x09B8` | `RO` | Descriptors not reclaimed at terminal state |
+| `P10_1_DOUBLE_COMPLETION_COUNT` | `0x09BC` | `RO` | Duplicate descriptor completion attempts |

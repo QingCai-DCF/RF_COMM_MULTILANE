@@ -1,12 +1,76 @@
 {
-  "hash_low": "0xCF35F13A",
+  "hash_low": "0x95E55C59",
   "legacy_compatible": true,
+  "p10_1_64bit_register_pairs": [
+    {
+      "high_offset": "0x091C",
+      "low_offset": "0x0918",
+      "name": "P10_1_TOTAL_BYTES"
+    },
+    {
+      "high_offset": "0x0940",
+      "low_offset": "0x093C",
+      "name": "P10_1_TIMER_SNAPSHOT"
+    },
+    {
+      "high_offset": "0x0948",
+      "low_offset": "0x0944",
+      "name": "P10_1_APPLICATION_ACCEPTED"
+    },
+    {
+      "high_offset": "0x0950",
+      "low_offset": "0x094C",
+      "name": "P10_1_APPLICATION_COMMITTED"
+    },
+    {
+      "high_offset": "0x0958",
+      "low_offset": "0x0954",
+      "name": "P10_1_FRAME_ACKED"
+    },
+    {
+      "high_offset": "0x0960",
+      "low_offset": "0x095C",
+      "name": "P10_1_WIRE_BYTES"
+    },
+    {
+      "high_offset": "0x0970",
+      "low_offset": "0x096C",
+      "name": "P10_1_DMA_STALL"
+    },
+    {
+      "high_offset": "0x0978",
+      "low_offset": "0x0974",
+      "name": "P10_1_AXIS_STALL"
+    },
+    {
+      "high_offset": "0x0984",
+      "low_offset": "0x0980",
+      "name": "P10_1_ACK_WAIT"
+    },
+    {
+      "high_offset": "0x098C",
+      "low_offset": "0x0988",
+      "name": "P10_1_DIRECTION_QUIET"
+    },
+    {
+      "high_offset": "0x0994",
+      "low_offset": "0x0990",
+      "name": "P10_1_PS_PREPARE"
+    },
+    {
+      "high_offset": "0x099C",
+      "low_offset": "0x0998",
+      "name": "P10_1_CRC_SHA"
+    }
+  ],
+  "p10_1_additive_base": "0x0900",
   "p8c_additive_base": "0x0400",
   "p8d_additive_base": "0x0500",
-  "register_count": 309,
-  "register_map_version": "P9-3",
-  "register_map_version_value": "0x09000003",
+  "p9_additive_base": "0x0700",
+  "register_count": 357,
+  "register_map_version": "P10-1",
+  "register_map_version_value": "0x0A000001",
   "schema_version": 1,
   "source_path": "config/register_map/ir_axi_regs.yaml",
-  "source_sha256": "9afd713909fdfc4da15fe342546f161f6d9fc6a6e79e55d2c9cbec9fcf35f13a"
+  "source_sha256": "9ed3e2cdc0ff20769361f0f10a0c54a45853785524c8e5411410445795e55c59"
 }

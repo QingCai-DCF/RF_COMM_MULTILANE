@@ -1,0 +1,93 @@
+schema_version: 1
+config_id: P10_1_DUAL_NODE_PIPELINE
+profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
+defaults:
+  buffer_count: 8
+  buffer_size_bytes: 1048576
+  descriptor_ring_depth: 64
+  descriptor_batch: 16
+  interrupt_coalescing: 16
+  outstanding_frames: 32
+  ack_aggregation_threshold: 16
+  ack_max_delay_us: 200
+  direction_window_us: 250000
+  lane_mask: 3
+  formal_measurement_duration_seconds: 30
+buffer_states:
+- FREE
+- FILLING
+- READY
+- DMA_OWNED
+- IN_FLIGHT
+- REMOTE_RECEIVED
+- VERIFYING
+- COMMITTED
+- ERROR
+- RECLAIMABLE
+ownership_rules:
+  single_owner: true
+  generation_required: true
+  double_reclaim_allowed: false
+  descriptor_leak_allowed: false
+sweeps:
+  buffer_count: [2, 4, 8, 16]
+  descriptor_ring_depth: [8, 16, 32, 64]
+  descriptor_batch: [1, 4, 8, 16, 32]
+  cache_strategy:
+  - per_segment
+  - per_batch
+  - whole_buffer
+  - non_cacheable_diagnostic
+  interrupt_strategy:
+  - polling
+  - interrupt
+  - coalesced_interrupt
+  - hybrid
+pipeline_overlap:
+- segment_n_plus_2_generating
+- segment_n_plus_1_waiting_dma
+- segment_n_in_dma
+- segment_n_minus_1_in_pl_phy
+- segment_n_minus_2_remote_dma
+- segment_n_minus_3_remote_verify
+trace:
+  ps_trace_depth_records: 1024
+  ps_trace_record_bytes: 32
+  pl_event_fifo_depth_records: 256
+  overflow_blocks_fast_path: false
+axis:
+  data_width_bits: 32
+  tkeep_width_bits: 4
+  sustained_random_backpressure: true
+  required_invariants:
+  - no_beat_loss
+  - no_beat_duplication
+  - stable_metadata_while_stalled
+performance_inputs:
+  lane_count: 2
+  raw_lane_bps: 4000000
+  frame_payload_bytes: 247
+  frame_overhead_bytes: 28
+  rfap_useful_chunk_bytes: 1048576
+  rfap_overhead_bytes_per_object: 768
+  duty_target_percent: 18
+  packet_error_rate: 0.0001
+  ps_generation_bytes_per_second: 200000000
+  crc_bytes_per_second: 320000000
+  sha_bytes_per_second: 180000000
+  cache_bytes_per_second: 500000000
+  dma_bytes_per_second: 200000000
+  axis_efficiency: 0.995
+  remote_verify_bytes_per_second: 150000000
+  scheduler_efficiency: 0.985
+  ack_efficiency: 0.965
+  direction_efficiency: 0.985
+performance_targets:
+  scale_equivalent_hard_bps_per_half_duplex_direction: 4000000
+  stretch_bps_per_half_duplex_direction: 4800000
+resource_limits:
+  lut_max_percent: 70
+  ff_max_percent: 70
+  bram_max_percent: 75
+  dsp_max_percent: 50
+  large_ila_default_enabled: false

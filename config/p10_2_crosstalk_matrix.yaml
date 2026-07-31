@@ -1,0 +1,30 @@
+schema_version: 1
+matrix_id: P10_2_FOUR_BY_FOUR_CROSSTALK_AND_ONE_PLUS_ONE
+status: OFFLINE_DEFINITION_ONLY
+current_run_hardware_authorization: false
+transmitters: [TX_F0, TX_F1, TX_R0, TX_R1]
+receivers: [RX_F0, RX_F1, RX_R0, RX_R1]
+measurements:
+  - raw_edge_count
+  - normalized_pulse_count
+  - false_preamble_count
+  - false_frame_count
+  - crc_valid_false_frame_count
+  - local_to_remote_ratio
+  - cross_lane_ratio
+matrix_cases:
+  - {tx: TX_F0, receivers: [RX_F0, RX_F1, RX_R0, RX_R1]}
+  - {tx: TX_F1, receivers: [RX_F0, RX_F1, RX_R0, RX_R1]}
+  - {tx: TX_R0, receivers: [RX_F0, RX_F1, RX_R0, RX_R1]}
+  - {tx: TX_R1, receivers: [RX_F0, RX_F1, RX_R0, RX_R1]}
+one_plus_one:
+  lane0: F0_TO_R0
+  lane1: R1_TO_F1
+  simultaneous_directions: 2
+  full_four_plus_four_duplex_claim_allowed: false
+safety:
+  tfdu_contract_unchanged: true
+  per_module_duty_guard_required: true
+  single_global_permit_per_endpoint_unchanged: true
+  shutdown_before_after_required: true
+hardware_execution_allowed_now: false
