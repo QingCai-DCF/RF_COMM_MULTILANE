@@ -231,6 +231,7 @@ def main() -> int:
         specifications = [
             {
                 "name": "p10_1_full_offline_gate",
+                "worktree_prefix": "P10L1_",
                 "command": [
                     sys.executable,
                     "scripts/run_p10_1_offline_gate.py",
@@ -245,6 +246,7 @@ def main() -> int:
             },
             {
                 "name": "canonical_p0_p8b_offline_regression",
+                "worktree_prefix": "P10L2_",
                 "command": [
                     sys.executable,
                     "scripts/run_offline_gates.py",
@@ -268,7 +270,10 @@ def main() -> int:
             name = str(specification["name"])
             disposable_root = Path(
                 tempfile.mkdtemp(
-                    prefix=f"RF_COMM_P10_1_LED_GATE_{name}_",
+                    # Keep the detached path deliberately short. Vivado nests
+                    # debug-core synthesis paths deeply and fails closed on
+                    # Windows when the fully expanded path exceeds 260 bytes.
+                    prefix=str(specification["worktree_prefix"]),
                     dir=parent,
                 )
             ).resolve()
