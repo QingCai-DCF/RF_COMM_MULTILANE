@@ -71,6 +71,7 @@ module p9_axi_dma_peripheral_bd (
     .ir_mode_out_0(ir_mode_out_0), .ir_rx_in_0(ir_rx_in_0),
     .ir_sd_0(ir_sd_0), .ir_tx_out_0(ir_tx_out_0),
     .loop_mode_b0(loop_mode_b0), .loop_rx_b0(loop_rx_b0),
-    .loop_sd_b0(loop_sd_b0), .loop_tx_b0(loop_tx_b0)
+    .loop_sd_b0(loop_sd_b0), .loop_tx_b0(loop_tx_b0),
+    .monitor_valid_rx_frame_o(), .monitor_effective_full_shutdown_o()
   );
 endmodule

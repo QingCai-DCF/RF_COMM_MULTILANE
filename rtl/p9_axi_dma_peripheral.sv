@@ -52,7 +52,9 @@ module p9_axi_dma_peripheral #(
   output logic [1:0]   loop_mode_b0,
   input  logic [1:0]   loop_rx_b0,
   output logic [1:0]   loop_sd_b0,
-  output logic [1:0]   loop_tx_b0
+  output logic [1:0]   loop_tx_b0,
+  output logic [1:0]   monitor_valid_rx_frame_o,
+  output logic         monitor_effective_full_shutdown_o
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
   localparam logic [31:0] P9_BUILD_ID = 32'h5009_000B;
@@ -562,6 +564,8 @@ module p9_axi_dma_peripheral #(
     .physical_frame_bad_o(physical_frame_bad),
     .physical_preamble_count_o(physical_preamble_count),
     .physical_symbol_error_count_o(physical_symbol_error_count),
+    .valid_rx_frame_activity_o(monitor_valid_rx_frame_o),
+    .effective_full_shutdown_o(monitor_effective_full_shutdown_o),
     .physical_drop_data_count_o(physical_drop_data_count),
     .physical_drop_ack_count_o(physical_drop_ack_count),
     .raw_rx_counts_flat_o(raw_rx_counts_flat),

@@ -2957,3 +2957,65 @@ requirements:
   artifact_hashes: []
   hardware_followup: Remains pending; the P10.1 offline readiness package is not direct hardware evidence.
 # END GENERATED P10.1 REQUIREMENTS
+# BEGIN GENERATED P10.1 AX7020 PL ACTIVITY LED REQUIREMENTS
+- requirement_id: OBS-LED-001
+  requirement_text: Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
+  verification_method: Dedicated XSIM, exact XDC/static source audit, and independent fixed/rotating routed implementation.
+  verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
+  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  test_id: P10_1-LED-MAPPING-001
+  evidence_path: evidence/generated/p10_1_led_final_summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: New LED-enabled bitstreams require direct, newly authorized hardware validation; existing P10/P10.1 hardware PASS evidence is not reused.
+- requirement_id: OBS-LED-002
+  requirement_text: TX indication shall tap the final role-local physical Txd output, while RX indication shall use only a completed CRC-valid per-lane frame event and shall remain available during receive-only operation.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
+  verification_method: RTL connectivity audit, dedicated XSIM, P10 dual-endpoint regression, and safety regression.
+  verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
+  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  test_id: P10_1-LED-EVENT-SEMANTICS-001
+  evidence_path: evidence/generated/p10_1_led_final_summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: LED state is human observability only and is not proof of electrical, protocol, or optical success.
+- requirement_id: OBS-LED-003
+  requirement_text: A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
+  verification_method: Dedicated cycle-accurate XSIM plus fixed/rotating implementation timing, DRC, CDC, and methodology signoff.
+  verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
+  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  test_id: P10_1-LED-HOLD-SHUTDOWN-001
+  evidence_path: evidence/generated/p10_1_led_final_summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Hardware-visible hold duration and LED polarity remain pending direct validation with the new artifacts.
+- requirement_id: OBS-LED-004
+  requirement_text: The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
+  verification_method: Structural source audit, complete RTL/safety regression, and post-route timing/resource/CDC/DRC review.
+  verification_stage: P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE
+  verification_scope: OFFLINE_ONLY_PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  test_id: P10_1-LED-NONINTERFERENCE-001
+  evidence_path: evidence/generated/p10_1_led_final_summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Offline noninterference evidence does not convert the LED into a safety mechanism or hardware acceptance signal.
+- requirement_id: OBS-LED-HW-001
+  requirement_text: The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP
+  verification_method: Future bounded, newly authorized dual-board hardware run using immutable LED-enabled artifacts.
+  verification_stage: PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION
+  verification_scope: HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Remains pending; this offline follow-up performs no JTAG, programming, UART, or TFDU drive.
+# END GENERATED P10.1 AX7020 PL ACTIVITY LED REQUIREMENTS

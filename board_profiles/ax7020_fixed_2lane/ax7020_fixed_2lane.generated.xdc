@@ -45,3 +45,14 @@ set_property PACKAGE_PIN V12 [get_ports {tfdu_txd_o[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {tfdu_txd_o[1]}]
 set_property DRIVE 4 [get_ports {tfdu_txd_o[1]}]
 set_property SLEW SLOW [get_ports {tfdu_txd_o[1]}]
+
+# AX7020 onboard PL user LEDs, official manual section 7.6.
+# All four are Bank 35, VCCO=3.3 V, and active-low through the board LED load.
+# LED1 = F0 TX; LED2 = F0 RX; LED3 = F1 TX; LED4 = F1 RX.
+set_property PACKAGE_PIN M14 [get_ports {pl_activity_led_n_o[0]}]
+set_property PACKAGE_PIN M15 [get_ports {pl_activity_led_n_o[1]}]
+set_property PACKAGE_PIN K16 [get_ports {pl_activity_led_n_o[2]}]
+set_property PACKAGE_PIN J16 [get_ports {pl_activity_led_n_o[3]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {pl_activity_led_n_o[*]}]
+set_property DRIVE 4 [get_ports {pl_activity_led_n_o[*]}]
+set_property SLEW SLOW [get_ports {pl_activity_led_n_o[*]}]

@@ -135,6 +135,8 @@ module p9_optical_transport_core #(
   output wire [31:0]  physical_frame_bad_o,
   output wire [31:0]  physical_preamble_count_o,
   output wire [31:0]  physical_symbol_error_count_o,
+  output wire [1:0]   valid_rx_frame_activity_o,
+  output wire         effective_full_shutdown_o,
   output wire [31:0]  physical_drop_data_count_o,
   output wire [31:0]  physical_drop_ack_count_o,
   output wire [127:0] raw_rx_counts_flat_o,
@@ -244,6 +246,7 @@ module p9_optical_transport_core #(
 
   assign endpoint_armed_o = endpoint_armed_q;
   assign tx_kill_active_o = tx_kill;
+  assign effective_full_shutdown_o = shutdown_latched_q || any_safety_fault;
   assign phy_ready_mask_o = endpoint_mode ?
       (local_is_a ? {2'b00, local_phy_ready} : {local_phy_ready, 2'b00}) :
       {b_phy_ready[1], b_phy_ready[0], a_phy_ready[1], a_phy_ready[0]};
@@ -1312,6 +1315,12 @@ module p9_optical_transport_core #(
   assign physical_preamble_count_o = rx_preamble_count[0] + rx_preamble_count[1];
   assign physical_symbol_error_count_o =
       rx_symbol_error_count[0] + rx_symbol_error_count[1];
+  // Activity indication consumes only completed, CRC-valid parser events.
+  // It never observes asynchronous/raw Rxd and has no return path into RX.
+  assign valid_rx_frame_activity_o = {
+      rx_frame_valid[1] && rx_frame_crc[1],
+      rx_frame_valid[0] && rx_frame_crc[0]
+  };
 
   // Receive completion queues and copy into the reorder-window store.
   reg rx_pending [0:1];
