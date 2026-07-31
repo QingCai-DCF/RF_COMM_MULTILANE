@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -140,6 +141,63 @@ def write_outputs(payload: dict[str, Any]) -> None:
     md_path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
 
 
+def archive_existing_output() -> str | None:
+    """Retain every previous PASS/FAIL replay before writing a new latest result."""
+    summary_path = OUT / "summary.json"
+    if not summary_path.is_file():
+        return None
+    try:
+        previous = json.loads(summary_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        previous = {}
+    stamp = re.sub(
+        r"[^0-9A-Za-z]+",
+        "",
+        str(previous.get("generated_at_utc", "undated")),
+    )
+    status = re.sub(r"[^0-9A-Za-z]+", "", str(previous.get("status", "UNKNOWN")))
+    base_name = f"{stamp}_{status}"
+    archive_root = OUT / "runs"
+    archive_root.mkdir(parents=True, exist_ok=True)
+    destination = archive_root / base_name
+    suffix = 1
+    while destination.exists():
+        suffix += 1
+        destination = archive_root / f"{base_name}_{suffix}"
+    destination.mkdir()
+    for name in ("summary.json", "summary.md", "raw"):
+        source = OUT / name
+        if source.exists():
+            shutil.move(str(source), str(destination / name))
+    return destination.resolve().relative_to(ROOT.resolve()).as_posix()
+
+
+def preserve_detached_evidence(
+    *,
+    name: str,
+    worktree: Path,
+    candidates: list[str],
+) -> list[dict[str, Any]]:
+    preserved: list[dict[str, Any]] = []
+    destination_root = RAW / f"{name}_generated"
+    for candidate in candidates:
+        source = worktree / candidate
+        if not source.is_file():
+            continue
+        destination_root.mkdir(parents=True, exist_ok=True)
+        destination = destination_root / source.name
+        shutil.copy2(source, destination)
+        preserved.append(
+            {
+                "source_path": candidate,
+                "path": destination.resolve().relative_to(ROOT.resolve()).as_posix(),
+                "sha256": sha256(destination),
+                "bytes": destination.stat().st_size,
+            }
+        )
+    return preserved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -164,70 +222,96 @@ def main() -> int:
         errors.append(f"invalid source commit: {exc.stderr.strip()}")
         source_commit = ""
 
+    archived_previous = archive_existing_output() if not errors else None
     commands: list[dict[str, Any]] = []
-    disposable_root: Path | None = None
-    worktree_added = False
     cleanup_errors: list[str] = []
+    detached_status: dict[str, list[str]] = {}
     if not errors:
         parent = ROOT.parent.resolve()
-        disposable_root = Path(
-            tempfile.mkdtemp(prefix="RF_COMM_P10_1_LED_GATE_", dir=parent)
-        ).resolve()
-        # Git requires the worktree destination not to exist.
-        disposable_root.rmdir()
-        try:
-            git("worktree", "add", "--detach", str(disposable_root), source_commit)
-            worktree_added = True
-            commands.append(
-                run_command(
-                    "p10_1_full_offline_gate",
-                    [
-                        sys.executable,
-                        "scripts/run_p10_1_offline_gate.py",
-                        "--full",
-                        "--json-summary",
-                    ],
+        specifications = [
+            {
+                "name": "p10_1_full_offline_gate",
+                "command": [
+                    sys.executable,
+                    "scripts/run_p10_1_offline_gate.py",
+                    "--full",
+                    "--json-summary",
+                ],
+                "evidence": [
+                    "evidence/generated/p10_1_final_summary.json",
+                    "evidence/generated/p10_1_evidence_consistency.json",
+                    "evidence/generated/p10_1_raw/p10_1_evidence_sha256_manifest.json",
+                ],
+            },
+            {
+                "name": "canonical_p0_p8b_offline_regression",
+                "command": [
+                    sys.executable,
+                    "scripts/run_offline_gates.py",
+                    "--include-p8b",
+                    "--json-summary",
+                ],
+                "evidence": [
+                    "evidence/generated/offline_gate_summary.json",
+                    "evidence/generated/offline_gate_summary.md",
+                ],
+            },
+        ]
+        for specification in specifications:
+            name = str(specification["name"])
+            disposable_root = Path(
+                tempfile.mkdtemp(
+                    prefix=f"RF_COMM_P10_1_LED_GATE_{name}_",
+                    dir=parent,
+                )
+            ).resolve()
+            # Git requires the worktree destination not to exist.
+            disposable_root.rmdir()
+            worktree_added = False
+            try:
+                git("worktree", "add", "--detach", str(disposable_root), source_commit)
+                worktree_added = True
+                command_result = run_command(
+                    name,
+                    list(specification["command"]),
                     cwd=disposable_root,
                     timeout_s=10800,
                 )
-            )
-            commands.append(
-                run_command(
-                    "canonical_p0_p8b_offline_regression",
-                    [
-                        sys.executable,
-                        "scripts/run_offline_gates.py",
-                        "--include-p8b",
-                        "--json-summary",
-                    ],
-                    cwd=disposable_root,
-                    timeout_s=10800,
+                command_result["preserved_generated_evidence"] = preserve_detached_evidence(
+                    name=name,
+                    worktree=disposable_root,
+                    candidates=list(specification["evidence"]),
                 )
-            )
-            detached_status = git(
-                "status", "--porcelain", cwd=disposable_root
-            ).stdout.splitlines()
-        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-            errors.append(f"isolated replay execution failed: {exc}")
-            detached_status = []
-        finally:
-            if worktree_added and disposable_root is not None:
-                removal = git(
-                    "worktree",
-                    "remove",
-                    "--force",
-                    str(disposable_root),
-                    check=False,
-                )
-                if removal.returncode != 0:
-                    cleanup_errors.append(removal.stderr.strip() or "git worktree remove failed")
-            git("worktree", "prune", check=False)
-            if disposable_root is not None and disposable_root.exists():
-                # This path was created by this process under the repository
-                # parent and was already detached from Git above.
-                shutil.rmtree(disposable_root)
-    else:
-        detached_status = []
+                commands.append(command_result)
+                detached_status[name] = git(
+                    "status", "--porcelain", cwd=disposable_root
+                ).stdout.splitlines()
+            except (
+                OSError,
+                subprocess.CalledProcessError,
+                subprocess.TimeoutExpired,
+            ) as exc:
+                errors.append(f"{name} isolated replay execution failed: {exc}")
+                detached_status[name] = []
+            finally:
+                if worktree_added:
+                    removal = git(
+                        "worktree",
+                        "remove",
+                        "--force",
+                        str(disposable_root),
+                        check=False,
+                    )
+                    if removal.returncode != 0:
+                        cleanup_errors.append(
+                            removal.stderr.strip()
+                            or f"git worktree remove failed for {name}"
+                        )
+                git("worktree", "prune", check=False)
+                if disposable_root.exists():
+                    # This exact path was created by this process under the
+                    # repository parent and was detached from Git above.
+                    shutil.rmtree(disposable_root)
 
     for item in commands:
         if item["status"] != "PASS":
@@ -252,6 +336,7 @@ def main() -> int:
         "network_used": False,
         "commands": commands,
         "detached_generated_changes": detached_status,
+        "archived_previous_replay": archived_previous,
         "cleanup_status": "PASS" if not cleanup_errors else "FAIL",
         "errors": errors,
     }
