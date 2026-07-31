@@ -1,0 +1,37 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Jul 31 16:21:42 2026
+# Process ID: 46000
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_LED/evidence/generated/p10_1_led_dual_endpoint_regression/raw/20260731T082138.889057Z/p10_dual_endpoint_pair_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_LED/evidence/generated/p10_1_led_dual_endpoint_regression/raw/20260731T082138.889057Z/p10_dual_endpoint_pair_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_LED/evidence/generated/p10_1_led_dual_endpoint_regression/raw/20260731T082138.889057Z/p10_dual_endpoint_pair_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/p10_dual_endpoint_pair_snapshot/xsim_script.tcl
+# xsim {p10_dual_endpoint_pair_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_DUAL_RAW_PASS direction=0 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=0 pulses=64
+P10_DUAL_RAW_PASS direction=0 lane=1 pulses=64
+P10_DUAL_RAW_PASS direction=1 lane=1 pulses=64
+P10_DUAL_OBJECT_PASS direction=1 lanes=2 length=600 initial=0100 faults=00000000 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=1 length=600 initial=0000 faults=00000000 drops=0/0 hwm=3/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=9880 initial=0200 faults=00000000 drops=0/0 hwm=32/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=9880 initial=0300 faults=00000000 drops=1/0 hwm=0/32 retries=0/1
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=fffe faults=00000000 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=600 initial=1000 faults=00000040 drops=0/0 hwm=3/0 retries=0/0
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=1800 faults=00000020 drops=0/0 hwm=0/3 retries=0/0
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=2000 faults=00000000 drops=1/1 hwm=0/3 retries=0/4
+P10_DUAL_OBJECT_PASS direction=1 lanes=3 length=600 initial=2800 faults=00000001 drops=0/0 hwm=0/3 retries=0/3
+P10_DUAL_OBJECT_PASS direction=0 lanes=3 length=600 initial=3000 faults=00000002 drops=0/0 hwm=3/0 retries=3/0
+TB_P10_DUAL_ENDPOINT_PAIR=PASS
+$finish called at time : 124763930693 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_LED/sim/tb/tb_p10_dual_endpoint_pair.sv" Line 646
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:03:21 . Memory (MB): peak = 207.504 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 13988 KB (Peak: 13988 KB), Simulation CPU Usage: 184640 ms
+INFO: [Common 17-206] Exiting xsim at Fri Jul 31 16:25:05 2026...
