@@ -1,23 +1,46 @@
 {
-  "bottleneck_share": 0.8360374126620206,
+  "airtime_reconciliation": {
+    "ack_sack_efficiency": 0.965,
+    "descriptor_ps_overlap_assumption": {
+      "dma_bps": 1600000000.0,
+      "pipeline_factor_applied_after_physical_ceiling": true,
+      "ps_generation_bps": 1600000000.0,
+      "remote_verify_bps": 1200000000.0
+    },
+    "direction_window_efficiency": 0.985,
+    "duty_limited_ceiling_bps": 4501138.952164008,
+    "duty_target_percent": 18,
+    "frame_active_seconds": 0.000558,
+    "frame_guard_seconds": 0.00032,
+    "frame_payload_ceiling_bps": 4501138.952164008,
+    "frame_start_period_seconds": 0.0008780000000000001,
+    "frame_symbols": 1116,
+    "retry_assumption_packet_error_rate": 0.0001,
+    "rfap_application_useful_ceiling_bps": 4497844.632364913,
+    "rolling_duty_average_percent": 15.888382687927106,
+    "rolling_duty_worst_case_percent": 16.999999999999996,
+    "two_lane_raw_ceiling_bps": 8000000.0,
+    "whole_frame_headroom_admission": false
+  },
+  "bottleneck_share": 0.5237136411891927,
   "ceilings_bps": {
     "CACHE": 4000000000.0,
     "CRC": 2560000000.0,
     "DMA": 1600000000.0,
-    "FRAME": 7185454.545454546,
+    "FRAME": 4501138.952164008,
     "PHY_RAW": 8000000.0,
-    "PL_PHY": 6688299.301296164,
+    "PL_PHY": 4189709.1295135417,
     "PS_GENERATION": 1600000000.0,
     "REMOTE_VERIFY": 1200000000.0,
-    "RFAP_USEFUL": 7180195.613120717,
+    "RFAP_USEFUL": 4497844.632364913,
     "SHA": 1440000000.0
   },
-  "config_sha256": "87b33b461fc2e87f0092e2ad2dd021965aa06d89a21b4efa1878c7b9b3deb4d8",
+  "config_sha256": "aa00179594916405825f648e243c347f9e57401b3cef071472db94a6d87ace5d",
   "efficiencies": {
     "ack": 0.965,
     "axis": 0.995,
     "direction": 0.985,
-    "frame_payload": 0.8981818181818182,
+    "frame_payload": 0.562642369020501,
     "retry": 0.9999,
     "rfap_useful": 0.9992681141741888,
     "scheduler": 0.985
@@ -27,4834 +50,4834 @@
   "input_profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
   "minimum_hard_target_parameters": {
     "ack_threshold": 8,
-    "buffer_count": 4,
-    "descriptor_batch": 4,
+    "buffer_count": 8,
+    "descriptor_batch": 8,
     "hard_target_pass": true,
-    "modeled_application_goodput_bps": 5618171.413088779,
+    "modeled_application_goodput_bps": 4072397.2738871626,
     "outstanding": 32,
-    "ring_depth": 16,
-    "stretch_target_pass": true
+    "ring_depth": 32,
+    "stretch_target_pass": false
   },
-  "modeled_application_goodput_bps": 6688299.301296164,
+  "modeled_application_goodput_bps": 4189709.1295135417,
   "primary_modeled_bottleneck": "PL_PHY",
-  "required_buffer_count": 4,
-  "required_descriptor_batch": 4,
+  "required_buffer_count": 8,
+  "required_descriptor_batch": 8,
   "required_outstanding": 32,
-  "required_ring_depth": 16,
+  "required_ring_depth": 32,
   "schema_version": 1,
   "selected": {
     "ack_threshold": 16,
     "buffer_count": 8,
     "descriptor_batch": 16,
     "hard_target_pass": true,
-    "modeled_application_goodput_bps": 6688299.301296164,
+    "modeled_application_goodput_bps": 4189709.1295135417,
     "outstanding": 32,
     "ring_depth": 64,
-    "stretch_target_pass": true
+    "stretch_target_pass": false
   },
   "status": "PASS",
   "stretch_target_bps": 4800000.0,
-  "stretch_target_status": "PASS",
+  "stretch_target_status": "PENDING_WITH_EXPLICIT_GAP",
   "sweep": [
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 2,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5083107.468985085,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3184178.9384302916,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 4,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5618171.413088779,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3519355.6687913756,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 8,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 32,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5805443.793525071,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3636667.5244177543,
       "outstanding": 64,
       "ring_depth": 8,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 32,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6126482.159987286,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3837773.562634404,
       "outstanding": 64,
       "ring_depth": 16,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 32,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 1,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5384080.937543413,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3372715.8492584014,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 4,
-      "hard_target_pass": true,
-      "modeled_application_goodput_bps": 5885703.385140625,
+      "hard_target_pass": false,
+      "modeled_application_goodput_bps": 3686944.033971917,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 8,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6554533.31527024,
+      "modeled_application_goodput_bps": 4105914.946923271,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 16,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 32,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 8,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6501026.920859871,
+      "modeled_application_goodput_bps": 4072397.2738871626,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 16,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     },
     {
       "ack_threshold": 32,
       "buffer_count": 16,
       "descriptor_batch": 32,
       "hard_target_pass": true,
-      "modeled_application_goodput_bps": 6688299.301296164,
+      "modeled_application_goodput_bps": 4189709.1295135417,
       "outstanding": 64,
       "ring_depth": 64,
-      "stretch_target_pass": true
+      "stretch_target_pass": false
     }
   ]
 }

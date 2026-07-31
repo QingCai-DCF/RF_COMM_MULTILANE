@@ -568,14 +568,51 @@ def trace_campaign(event_count: int) -> dict[str, Any]:
 def performance_model(pipeline: dict[str, Any]) -> dict[str, Any]:
     inputs = pipeline["performance_inputs"]
     raw = float(inputs["lane_count"] * inputs["raw_lane_bps"])
-    frame_eff = inputs["frame_payload_bytes"] / (
-        inputs["frame_payload_bytes"] + inputs["frame_overhead_bytes"]
+    payload_bytes = int(inputs["frame_payload_bytes"])
+    frame_symbols = (
+        int(inputs["frame_preamble_symbols"])
+        + (
+            int(inputs["frame_header_bytes"])
+            + payload_bytes
+            + int(inputs["frame_crc_bytes"])
+        )
+        * 8
+        // int(inputs["bits_per_4ppm_symbol"])
     )
-    frame = raw * frame_eff
+    symbol_seconds = (
+        float(inputs["bits_per_4ppm_symbol"])
+        / float(inputs["raw_lane_bps"])
+    )
+    frame_active_seconds = frame_symbols * symbol_seconds
+    frame_guard_seconds = (
+        float(inputs["frame_guard_cycles"])
+        / float(inputs["protocol_clock_hz"])
+    )
+    frame_period_seconds = frame_active_seconds + frame_guard_seconds
+    frame = (
+        float(inputs["lane_count"])
+        * float(payload_bytes * 8)
+        / frame_period_seconds
+    )
+    frame_eff = frame / raw
     rfap_eff = inputs["rfap_useful_chunk_bytes"] / (
-        inputs["rfap_useful_chunk_bytes"] + inputs["rfap_overhead_bytes_per_object"]
+        inputs["rfap_useful_chunk_bytes"]
+        + inputs["rfap_overhead_bytes_per_chunk"]
     )
     rfap = frame * rfap_eff
+    rolling_duty_average_percent = (
+        float(inputs["instantaneous_4ppm_duty_percent"])
+        * frame_active_seconds
+        / frame_period_seconds
+    )
+    rolling_duty_worst_case_percent = (
+        float(inputs["instantaneous_4ppm_duty_percent"])
+        * (
+            frame_active_seconds
+            + max(0.0, 0.001 - frame_period_seconds)
+        )
+        / 0.001
+    )
     protocol_eff = (
         float(inputs["axis_efficiency"])
         * float(inputs["scheduler_efficiency"])
@@ -662,6 +699,37 @@ def performance_model(pipeline: dict[str, Any]) -> dict[str, Any]:
             "ack": inputs["ack_efficiency"],
             "direction": inputs["direction_efficiency"],
             "retry": 1.0 - inputs["packet_error_rate"],
+        },
+        "airtime_reconciliation": {
+            "two_lane_raw_ceiling_bps": raw,
+            "frame_payload_ceiling_bps": frame,
+            "rfap_application_useful_ceiling_bps": rfap,
+            "duty_limited_ceiling_bps": frame,
+            "frame_symbols": frame_symbols,
+            "frame_active_seconds": frame_active_seconds,
+            "frame_guard_seconds": frame_guard_seconds,
+            "frame_start_period_seconds": frame_period_seconds,
+            "rolling_duty_average_percent": rolling_duty_average_percent,
+            "rolling_duty_worst_case_percent": rolling_duty_worst_case_percent,
+            "duty_target_percent": inputs["duty_target_percent"],
+            "ack_sack_efficiency": inputs["ack_efficiency"],
+            "direction_window_efficiency": inputs["direction_efficiency"],
+            "retry_assumption_packet_error_rate": inputs["packet_error_rate"],
+            "descriptor_ps_overlap_assumption": {
+                "ps_generation_bps": float(
+                    inputs["ps_generation_bytes_per_second"]
+                )
+                * 8.0,
+                "dma_bps": float(inputs["dma_bytes_per_second"]) * 8.0,
+                "remote_verify_bps": float(
+                    inputs["remote_verify_bytes_per_second"]
+                )
+                * 8.0,
+                "pipeline_factor_applied_after_physical_ceiling": True,
+            },
+            "whole_frame_headroom_admission": inputs[
+                "whole_frame_headroom_admission"
+            ],
         },
         "selected": selected,
         "modeled_application_goodput_bps": selected["modeled_application_goodput_bps"],
@@ -947,6 +1015,53 @@ def main() -> int:
             "",
             "This PASS is an offline architectural feasibility result. It is not a claim that real "
             "AX7020 hardware has achieved 4.0 Mbit/s application goodput.",
+        ],
+    )
+    sanity = evidence_base(
+        "MODEL_SANITY_AND_AIRTIME_RECONCILIATION",
+        status=(
+            "PASS"
+            if model["modeled_application_goodput_bps"]
+            <= model["ceilings_bps"]["RFAP_USEFUL"]
+            and model["airtime_reconciliation"][
+                "rolling_duty_worst_case_percent"
+            ]
+            <= pipeline["performance_inputs"]["duty_target_percent"]
+            else "FAIL"
+        ),
+        prior_modeled_application_goodput_bps=6688299.301296164,
+        prior_model_classification="MODEL_INVALID_OR_SCOPE_MISMATCH",
+        corrected_modeled_application_goodput_bps=model[
+            "modeled_application_goodput_bps"
+        ],
+        physical_and_airtime_ceiling_bps=model["ceilings_bps"]["RFAP_USEFUL"],
+        hard_target_bps=model["hard_target_bps"],
+        stretch_target_bps=model["stretch_target_bps"],
+        stretch_target_status=model["stretch_target_status"],
+        derivation=model["airtime_reconciliation"],
+        efficiencies=model["efficiencies"],
+        selected_pipeline=model["selected"],
+        minimum_hard_target_parameters=model["minimum_hard_target_parameters"],
+        correction=(
+            "The prior 6.688 Mbit/s model applied byte-ratio overheads to the "
+            "8 Mbit/s aggregate raw rate but omitted the exact 4PPM frame "
+            "duration, the mandatory post-frame safety guard, and the "
+            "finite-frame rolling-duty schedule. The corrected model derives "
+            "the physical cadence from the implemented serializer and guard."
+        ),
+        errors=[],
+    )
+    write_pair(
+        "p10_1_hw_model_sanity_summary",
+        "P10.1 hardware-stage model sanity and airtime reconciliation",
+        sanity,
+        [
+            "## Decision",
+            "",
+            "The historical 6.688 Mbit/s value is classified "
+            "`MODEL_INVALID_OR_SCOPE_MISMATCH`. The corrected hardware target "
+            "configuration remains subject to the unchanged 4.0 Mbit/s hard "
+            "gate; the 4.8 Mbit/s stretch is not predicted to pass.",
         ],
     )
     overall = all(

@@ -61,6 +61,7 @@ set map_file [file normalize "$debug_dir/${app_name}.map"]
 set make_handle [open $makefile r]
 set make_text [read $make_handle]
 close $make_handle
+set make_text [string map [list "-O0" "-O3"] $make_text]
 set map_flag "-Wl,-Map=$map_file"
 if {[string first $map_flag $make_text] < 0} {
   set make_text [string map [list \
@@ -70,6 +71,10 @@ if {[string first $map_flag $make_text] < 0} {
   puts -nonewline $make_handle $make_text
   close $make_handle
 }
+set make_handle [open $makefile w]
+puts -nonewline $make_handle $make_text
+close $make_handle
+exec make -C $debug_dir clean
 file delete -force "$debug_dir/${app_name}.elf"
 set make_output [exec make -C $debug_dir "${app_name}.elf" 2>@1]
 puts $make_output

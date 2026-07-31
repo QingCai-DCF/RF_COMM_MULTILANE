@@ -67,10 +67,17 @@ performance_inputs:
   lane_count: 2
   raw_lane_bps: 4000000
   frame_payload_bytes: 247
-  frame_overhead_bytes: 28
-  rfap_useful_chunk_bytes: 1048576
-  rfap_overhead_bytes_per_object: 768
+  frame_header_bytes: 24
+  frame_crc_bytes: 4
+  frame_preamble_symbols: 16
+  bits_per_4ppm_symbol: 2
+  frame_guard_cycles: 20480
+  protocol_clock_hz: 64000000
+  rfap_useful_chunk_bytes: 65536
+  rfap_overhead_bytes_per_chunk: 48
   duty_target_percent: 18
+  instantaneous_4ppm_duty_percent: 25
+  whole_frame_headroom_admission: false
   packet_error_rate: 0.0001
   ps_generation_bytes_per_second: 200000000
   crc_bytes_per_second: 320000000

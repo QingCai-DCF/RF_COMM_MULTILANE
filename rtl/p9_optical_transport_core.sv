@@ -29,7 +29,7 @@ module p9_optical_transport_core #(
   // turnaround-request flag. The receiver suppresses timer ACK transmission
   // until that boundary, preventing DATA/ACK optical collisions without a
   // shared scheduler or shared memory between the two FPGAs.
-  parameter integer ENDPOINT_BURST_FRAMES = 4
+  parameter integer ENDPOINT_BURST_FRAMES = 32
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -689,16 +689,16 @@ module p9_optical_transport_core #(
   wire [1:0] ack_schedulable_lane_mask =
       schedulable_lane_mask & ack_frame_duty_ready & {2{local_receiver}};
   assign lane_runtime_ready[0] = local_sender && !endpoint_waiting_for_ack_q &&
-      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[0] &&
+      schedulable_lane_mask[0] &&
       !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] &&
-      frame_duty_guard_q[0] == 0 && data_frame_duty_ready[0] &&
+      frame_duty_guard_q[0] == 0 &&
       phase_q == PH_DATA;
   assign lane_runtime_ready[1] = local_sender && !endpoint_waiting_for_ack_q &&
-      (!endpoint_mode || lanes_idle) && schedulable_lane_mask[1] &&
+      schedulable_lane_mask[1] &&
       !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] &&
-      frame_duty_guard_q[1] == 0 && data_frame_duty_ready[1] &&
+      frame_duty_guard_q[1] == 0 &&
       phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);

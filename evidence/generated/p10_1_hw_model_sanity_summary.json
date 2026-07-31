@@ -1,5 +1,8 @@
 {
-  "airtime_reconciliation": {
+  "corrected_modeled_application_goodput_bps": 4189709.1295135417,
+  "correction": "The prior 6.688 Mbit/s model applied byte-ratio overheads to the 8 Mbit/s aggregate raw rate but omitted the exact 4PPM frame duration, the mandatory post-frame safety guard, and the finite-frame rolling-duty schedule. The corrected model derives the physical cadence from the implemented serializer and guard.",
+  "current_run_hardware_authorization": false,
+  "derivation": {
     "ack_sack_efficiency": 0.965,
     "descriptor_ps_overlap_assumption": {
       "dma_bps": 1600000000.0,
@@ -22,20 +25,6 @@
     "two_lane_raw_ceiling_bps": 8000000.0,
     "whole_frame_headroom_admission": false
   },
-  "bottleneck_share": 0.5237136411891927,
-  "ceilings_bps": {
-    "CACHE": 4000000000.0,
-    "CRC": 2560000000.0,
-    "DMA": 1600000000.0,
-    "FRAME": 4501138.952164008,
-    "PHY_RAW": 8000000.0,
-    "PL_PHY": 4189709.1295135417,
-    "PS_GENERATION": 1600000000.0,
-    "REMOTE_VERIFY": 1200000000.0,
-    "RFAP_USEFUL": 4497844.632364913,
-    "SHA": 1440000000.0
-  },
-  "current_run_hardware_authorization": false,
   "efficiencies": {
     "ack": 0.965,
     "axis": 0.995,
@@ -48,9 +37,7 @@
   "errors": [],
   "generated_at_utc": "2026-07-31T00:00:00Z",
   "hard_target_bps": 4000000.0,
-  "hard_target_status": "PASS",
   "hardware_actions_executed": false,
-  "input_profile": "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
   "minimum_hard_target_parameters": {
     "ack_threshold": 8,
     "buffer_count": 8,
@@ -61,16 +48,12 @@
     "ring_depth": 32,
     "stretch_target_pass": false
   },
-  "model_scope": "OFFLINE_FEASIBILITY_NOT_REAL_HARDWARE_GOODPUT",
-  "modeled_application_goodput_bps": 4189709.1295135417,
   "no_hardware": true,
-  "primary_modeled_bottleneck": "PL_PHY",
-  "required_buffer_count": 8,
-  "required_descriptor_batch": 8,
-  "required_outstanding": 32,
-  "required_ring_depth": 32,
+  "physical_and_airtime_ceiling_bps": 4497844.632364913,
+  "prior_model_classification": "MODEL_INVALID_OR_SCOPE_MISMATCH",
+  "prior_modeled_application_goodput_bps": 6688299.301296164,
   "schema_version": 1,
-  "selected": {
+  "selected_pipeline": {
     "ack_threshold": 16,
     "buffer_count": 8,
     "descriptor_batch": 16,
@@ -80,12 +63,8 @@
     "ring_depth": 64,
     "stretch_target_pass": false
   },
-  "sensitivity_record": {
-    "path": "evidence/generated/p10_1_raw/p10_1_performance_model_sweep.json",
-    "sha256": "69231ad4bd9e621de8751841685e80300cf26c20bbbdab0fe2c1faefbc941c68"
-  },
   "status": "PASS",
   "stretch_target_bps": 4800000.0,
   "stretch_target_status": "PENDING_WITH_EXPLICIT_GAP",
-  "test_id": "P10_1-DUAL-NODE-PERFORMANCE-MODEL"
+  "test_id": "MODEL_SANITY_AND_AIRTIME_RECONCILIATION"
 }
