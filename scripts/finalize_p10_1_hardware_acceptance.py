@@ -9,6 +9,7 @@ required generated summaries, and updates canonical scoped state.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -35,6 +36,19 @@ STATE = ROOT / "config/project_state.json"
 REQUIREMENTS = ROOT / "config/project_requirements.yaml"
 STATUS = ROOT / "PROJECT_STATUS.md"
 TRACEABILITY = ROOT / "docs/REQUIREMENT_TRACEABILITY_MATRIX.md"
+P10_RUNTIME = ROOT / "scripts/p10_hardware_runtime.py"
+P10_RUNTIME_REVERIFY_STEM = "p10_goodput_runtime_source_reverification"
+P10_RUNTIME_REVERIFY = GENERATED / f"{P10_RUNTIME_REVERIFY_STEM}.json"
+P10_RUNTIME_BASE_COMMIT = "201a05e199a56e785a06d61910d42139fa0248e5"
+P10_RUNTIME_BASE_SHA256 = (
+    "33f11e8ae3070cce7e915c2af31dd5a0aad8cb8a9999a2a1feb7d133744d5da1"
+)
+P10_RUNTIME_CURRENT_SHA256 = (
+    "1cf329ec479636369ba3c0c2bb2248c12b4ebab82d3c849cf86f7c6f53209a76"
+)
+P10_RUNTIME_ALLOWED_DIFF_SHA256 = (
+    "2915c5b74dc877b120dbf6fd69ed18c7d484ea3cd48cfcfb040821a5cb9597c4"
+)
 GOAL_SHA256 = (
     "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
 )
@@ -345,6 +359,119 @@ def validate_authorized_artifacts(
     if not seen:
         errors.append("captured authorization has no immutable artifacts")
     return errors
+
+
+def function_source_hashes(
+    source: bytes, function_names: tuple[str, ...]
+) -> dict[str, str]:
+    tree = ast.parse(source.decode("utf-8"))
+    lines = source.splitlines(keepends=True)
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    result: dict[str, str] = {}
+    for name in function_names:
+        node = functions.get(name)
+        if node is None or node.end_lineno is None:
+            raise ValueError(f"runtime function missing: {name}")
+        body = b"".join(lines[node.lineno - 1 : node.end_lineno])
+        result[name] = hashlib.sha256(body).hexdigest()
+    return result
+
+
+def audit_p10_runtime_source_binding() -> dict[str, Any]:
+    source_path = rel(P10_RUNTIME)
+    previous = subprocess.run(
+        [
+            "git",
+            "show",
+            f"{P10_RUNTIME_BASE_COMMIT}:{source_path}",
+        ],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    current = P10_RUNTIME.read_bytes()
+    diff = subprocess.run(
+        [
+            "git",
+            "diff",
+            "--unified=0",
+            f"{P10_RUNTIME_BASE_COMMIT}..HEAD",
+            "--",
+            source_path,
+        ],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    worktree_diff = subprocess.run(
+        ["git", "diff", "--name-only", "--", source_path],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    function_names = ("evaluate_stage", "summarize_campaign")
+    previous_functions = function_source_hashes(previous, function_names)
+    current_functions = function_source_hashes(current, function_names)
+    previous_sha = hashlib.sha256(previous).hexdigest()
+    current_sha = hashlib.sha256(current).hexdigest()
+    diff_sha = hashlib.sha256(diff).hexdigest()
+    errors: list[str] = []
+    if previous_sha != P10_RUNTIME_BASE_SHA256:
+        errors.append("historical P10 runtime SHA256 is not the frozen value")
+    if current_sha != P10_RUNTIME_CURRENT_SHA256:
+        errors.append("current P10 runtime SHA256 is outside this audit")
+    if diff_sha != P10_RUNTIME_ALLOWED_DIFF_SHA256:
+        errors.append("P10 runtime diff is outside the audited identity-only change")
+    if worktree_diff:
+        errors.append("P10 runtime has uncommitted changes")
+    if previous_functions != current_functions:
+        errors.append("goodput calculation or campaign aggregation function changed")
+    return {
+        "schema_version": 1,
+        "test_id": "P10-GOODPUT-RUNTIME-SOURCE-REVERIFICATION",
+        "status": "PASS" if not errors else "FAIL",
+        "verification_scope": "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE",
+        "generated_at_utc": utc_now(),
+        "historical_source_commit": P10_RUNTIME_BASE_COMMIT,
+        "current_source_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
+        "runtime_path": source_path,
+        "historical_runtime_sha256": previous_sha,
+        "current_runtime_sha256": current_sha,
+        "audited_diff_sha256": diff_sha,
+        "audited_change_class": "REGISTER_MAP_IDENTITY_BINDING_ONLY",
+        "function_source_sha256": {
+            name: {
+                "historical": previous_functions[name],
+                "current": current_functions[name],
+                "identical": previous_functions[name] == current_functions[name],
+            }
+            for name in function_names
+        },
+        "goodput_formula_changed": False if not errors else None,
+        "campaign_minimum_aggregation_changed": False if not errors else None,
+        "historical_goodput_audit_invalidated": False if not errors else None,
+        "current_runtime_worktree_clean": not bool(worktree_diff),
+        "hardware_actions_executed": False,
+        "current_run_hardware_authorization": False,
+        "errors": errors,
+    }
+
+
+def generate_p10_runtime_source_reverification() -> dict[str, Any]:
+    payload = audit_p10_runtime_source_binding()
+    write_pair(
+        P10_RUNTIME_REVERIFY_STEM,
+        "P10 goodput runtime source re-verification",
+        payload,
+    )
+    return payload
 
 
 def common_context(
@@ -752,7 +879,7 @@ def update_canonical_state(
             )
             requirement["artifact_hashes"] = [
                 {"path": rel(path), "sha256": sha256(path)},
-                *bound_hashes,
+                *[item.copy() for item in bound_hashes],
             ]
             requirement["hardware_followup"] = (
                 "Scoped stationary dual-AX7020 two-lane evidence only; "
@@ -768,6 +895,57 @@ def update_canonical_state(
             requirement["artifact_hash"] = state_hash
         elif requirement.get("evidence_path") == "PROJECT_STATUS.md":
             requirement["artifact_hash"] = status_hash
+    runtime_reverification = load_json(P10_RUNTIME_REVERIFY)
+    if runtime_reverification.get("status") != "PASS":
+        raise ValueError("P10 goodput runtime source re-verification is not PASS")
+    p10_goodput = next(
+        (
+            item
+            for item in requirements["requirements"]
+            if item.get("requirement_id") == "P10-PERF-MEAS-001"
+        ),
+        None,
+    )
+    if p10_goodput is None or p10_goodput.get("status") != "PASS":
+        raise ValueError("P10-PERF-MEAS-001 is missing or not PASS")
+    runtime_bindings = [
+        item
+        for item in p10_goodput.get("artifact_hashes", [])
+        if item.get("path") == rel(P10_RUNTIME)
+    ]
+    if len(runtime_bindings) != 1:
+        raise ValueError("P10-PERF-MEAS-001 runtime binding is ambiguous")
+    runtime_bindings[0]["sha256"] = runtime_reverification[
+        "current_runtime_sha256"
+    ]
+    p10_goodput["artifact_hashes"] = [
+        item
+        for item in p10_goodput["artifact_hashes"]
+        if item.get("path") != rel(P10_RUNTIME_REVERIFY)
+    ]
+    p10_goodput["artifact_hashes"].append(
+        {
+            "path": rel(P10_RUNTIME_REVERIFY),
+            "sha256": sha256(P10_RUNTIME_REVERIFY),
+        }
+    )
+    p10_goodput["source_reverification"] = {
+        "test_id": runtime_reverification["test_id"],
+        "evidence_path": rel(P10_RUNTIME_REVERIFY),
+        "evidence_sha256": sha256(P10_RUNTIME_REVERIFY),
+        "historical_runtime_sha256": runtime_reverification[
+            "historical_runtime_sha256"
+        ],
+        "current_runtime_sha256": runtime_reverification[
+            "current_runtime_sha256"
+        ],
+        "goodput_formula_changed": runtime_reverification[
+            "goodput_formula_changed"
+        ],
+        "campaign_minimum_aggregation_changed": runtime_reverification[
+            "campaign_minimum_aggregation_changed"
+        ],
+    }
     REQUIREMENTS.write_text(
         yaml.safe_dump(
             requirements,
@@ -798,6 +976,9 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     auth_record = load_json(auth_record_path)
     artifacts = load_json(ARTIFACT_SUMMARY)
     manifest_errors, run_manifest = verify_run_manifest(run_root)
+    runtime_reverification = generate_p10_runtime_source_reverification()
+    if runtime_reverification.get("status") != "PASS":
+        raise ValueError("P10 goodput runtime source re-verification failed")
     context = common_context(run_id, authorization, artifacts)
     stage_payloads: dict[str, dict[str, Any]] = {}
     stage_records: dict[str, dict[str, Any]] = {}

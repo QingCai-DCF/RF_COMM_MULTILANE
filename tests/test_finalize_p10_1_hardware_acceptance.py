@@ -172,6 +172,22 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual(payload["disposition"], "NOT_RUN_DUE_PRIOR_STAGE_FAILURE")
         self.assertEqual(source["stage"], "formal")
 
+    def test_p10_goodput_runtime_change_is_identity_only(self) -> None:
+        result = self.module.audit_p10_runtime_source_binding()
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(
+            result["audited_change_class"],
+            "REGISTER_MAP_IDENTITY_BINDING_ONLY",
+        )
+        self.assertFalse(result["goodput_formula_changed"])
+        self.assertFalse(result["campaign_minimum_aggregation_changed"])
+        self.assertTrue(
+            all(
+                item["identical"]
+                for item in result["function_source_sha256"].values()
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
