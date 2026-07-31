@@ -1,23 +1,23 @@
 {
   "current_run_hardware_authorization": false,
   "fpga_programmed": false,
-  "generated_at_utc": "2026-07-31T16:48:30+00:00",
+  "generated_at_utc": "2026-07-31T21:48:41+00:00",
   "hardware_actions_executed": false,
   "jtag_connected": false,
   "no_hardware": true,
-  "raw_run": "evidence/generated/p10_1_led_offline/raw/20260731T164821.505496Z",
+  "raw_run": "evidence/generated/p10_1_led_offline/raw/20260731T214832.492078Z",
   "results": [
     {
-      "log": "evidence/generated/p10_1_led_offline/raw/20260731T164821.505496Z/p10_lane_activity_leds_xsim.log",
-      "log_sha256": "a57c59c7b7d659c9356bac91abf0f18ed56b717c4d9aade2bfa9edeece406249",
+      "log": "evidence/generated/p10_1_led_offline/raw/20260731T214832.492078Z/p10_lane_activity_leds_xsim.log",
+      "log_sha256": "0f4afe55d3284923454cb55ded277718a9eeec6a60dbe328df4e9c43978a181e",
       "required_marker": "TB_P10_LANE_ACTIVITY_LEDS=PASS",
       "returncode": 0,
       "status": "PASS",
       "test_id": "P10_1-LED-XSIM-001"
     },
     {
-      "log": "evidence/generated/p10_1_led_offline/raw/20260731T164821.505496Z/p10_led_full_rtl_elaboration.log",
-      "log_sha256": "f67d88ec748e6790c38299e64844a366f519aa31558eeef133fdef217d7d9ae8",
+      "log": "evidence/generated/p10_1_led_offline/raw/20260731T214832.492078Z/p10_led_full_rtl_elaboration.log",
+      "log_sha256": "60fb7bbb1cf40dc32464cf083b4bbefa6c5e1f7c2ac66a2994fb7b33366d58b2",
       "required_marker": "Built simulation snapshot p10_led_full_rtl_snapshot",
       "returncode": 0,
       "status": "PASS",
@@ -62,22 +62,22 @@
         "tx_taps_final_role_local_output": true
       },
       "errors": [],
-      "log": "evidence/generated/p10_1_led_offline/raw/20260731T164821.505496Z/static_integration_audit.json",
+      "log": "evidence/generated/p10_1_led_offline/raw/20260731T214832.492078Z/static_integration_audit.json",
       "log_sha256": "ef88006f548a4a4c0bc0d47f21de0f2d3d07ec9958eea61eb43a6ab874c99ea1",
       "status": "PASS",
       "test_id": "P10_1-LED-STATIC-INTEGRATION-001"
     }
   ],
   "schema_version": 1,
-  "source_commit": "287b6b2a12e4a8d8c6a6f72e117047cb2a70ca15",
+  "source_commit": "ddf4a064680677c6421d6e2a25f52352900d8880",
   "source_sha256": {
     "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184",
     "board_profiles/ax7020_fixed_2lane/profile.yaml": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d",
     "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345",
     "board_profiles/ax7020_rotating_2lane/profile.yaml": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407",
     "config/hardware/p10_1_ax7020_pl_activity_leds.yaml": "dfe12a845a31cf71e57b3cef390bf6cc4799c28fc9998743562199b8993fc0a6",
-    "config/project_requirements.yaml": "fa2f3c92aeafe0cec5056042c7e67ddbbfa5e5aa55507ab4f1eba8038b37ba27",
-    "docs/REQUIREMENT_TRACEABILITY_MATRIX.md": "bdc23a1ea5626314dbd8bb9b1d4e8064af5110ae21edcd361f2a50d1c0e9152c",
+    "config/project_requirements.yaml": "a74228666fa313169a95d79b6a306bcdb151bc80bb7fdce7578adbf2ef9badcc",
+    "docs/REQUIREMENT_TRACEABILITY_MATRIX.md": "8ba20a3d6bb3282a1e061469f3aeddae8e7b372be33dbc662c762ccdaf949571",
     "docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md": "d4ea3656019241cfb130dfb1a0138a8f9c25fc1d74ac3b4968dd13ee672c2522",
     "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
     "rtl/ir_ack_aggregator.sv": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa",
@@ -90,14 +90,14 @@
     "rtl/ir_tfdu_physical_module_safety.sv": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19",
     "rtl/p10_1_event_fifo.sv": "5e713e9085a16bc5368b581e07bfca3e04266f521d1d4c40676f2f14e468a690",
     "rtl/p10_1_metric_counter.sv": "1c0c95aac970dc3b13ceb79f55b7472011b62f041971eee153bac01da260ac25",
-    "rtl/p10_1_perf_monitor.sv": "bc292f0bc0d2b5f9ec22e3aa445f5a19bf1f66ee6be158d5b7596bac4cb6b378",
+    "rtl/p10_1_perf_monitor.sv": "d27944f4f55fe2945fa321f46d0c503d35e6948de2e3e97b58c9cdd428250ce8",
     "rtl/p10_1_timer_snapshot.sv": "d37a49cfc78d21da3e9c549a5c0487f9d3b9a86a690fda9df597931264172889",
     "rtl/p10_axi_dma_endpoint_peripheral_bd.v": "179f9519706796fdb5e8d1f909672fd32ea06b69d0176245683a825b1ba4bcae",
     "rtl/p10_lane_activity_leds.sv": "da772ecd38b1ff79fdcb34b21b866c75b143b3dfacec99750da4b30681f13e4b",
     "rtl/p6_axi_lite_bridge.sv": "2569233aa9cc985acfd0b7369680d94e11c2cd82d95ea14f0f77b56a5145f432",
     "rtl/p9_4ppm_frame_rx.sv": "7af59cddbddd99c0e6dbb5a0807327eddd0842a731d39762632c54b5c672d571",
     "rtl/p9_4ppm_frame_tx.sv": "24e430366581b3a43b3c03c573beab5876455d69bfefc231a358ff621cc627c9",
-    "rtl/p9_axi_dma_peripheral.sv": "2d49e1dce7dd6e1b33f99d6e5eafd64c8dbc973a40c1d4b744b3c8152a60b66f",
+    "rtl/p9_axi_dma_peripheral.sv": "9ef0ac2c7f51356f457a267856b1d33bb24a97828feeb1a5d1e9e417338073f0",
     "rtl/p9_axi_dma_peripheral_bd.v": "db08aef0bc3ab90c43ffd41fbdca53a3ac353653f399d641daedf39cb06065e7",
     "rtl/p9_optical_transport_core.sv": "f1536cc2011915c664a0bd1b36b06ba25c9ec44a9ab4c7849a7e9d9a11788847",
     "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
@@ -107,7 +107,7 @@
     "scripts/vivado/build_p10_ax7020_functional.tcl": "2774907a53dc99f1e451573e9c0ecd0f1b63aefe87455d769ddf90fe9b5e233c",
     "sim/tb/tb_p10_lane_activity_leds.sv": "7c9f46a3cd7c5542f05489684800044512a153f021f42838f5fcc91560f91890"
   },
-  "source_worktree_dirty": true,
+  "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_1-AX7020-PL-ACTIVITY-LED-OFFLINE"
 }
