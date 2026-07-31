@@ -157,6 +157,9 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
                 for item in context["artifact_hashes"].values()
             },
         )
+        self.assertTrue(context["captured_run_hardware_authorization"])
+        self.assertFalse(context["current_run_hardware_authorization"])
+        self.assertEqual(context["authorization_lifecycle"], "CONSUMED_AFTER_RUN")
 
     def test_missing_stage_is_fail_with_not_run_disposition(self) -> None:
         run_root = ROOT / "does-not-exist"
