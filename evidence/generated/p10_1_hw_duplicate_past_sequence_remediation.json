@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-DUPLICATE-PAST-SEQUENCE-REMEDIATION-FREEZE",
+  "status": "PASS",
+  "generated_at_utc": "2026-08-01T06:26:29.9376404Z",
+  "scope": "offline remediation and immutable artifact freeze only",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "current_run_hardware_authorization": false,
+  "diagnosis": {
+    "json_path": "evidence/generated/p10_1_hw_duplicate_ack_drop_failure_diagnosis.json",
+    "json_sha256": "75605cf7f9b563eb93599da0f109c1487231fe7b30310bcc854e633676615c35",
+    "markdown_path": "evidence/generated/p10_1_hw_duplicate_ack_drop_failure_diagnosis.md",
+    "markdown_sha256": "ce4a0bfe18974f4c5619515f728a54ff733d2a5eda51a201ebef6d4872395d10",
+    "superseded_injection_mechanism": "receiver ACK-drop counter",
+    "failure_mode": "ACK-drop budget could expire before the fixed 62.5 ms DATA retransmission timeout, so duplicate DATA observation was not guaranteed"
+  },
+  "remediation": {
+    "mechanism": "sender-side past-sequence DATA injection",
+    "firmware_flag": "P10_1_DUPLICATE_PAST_SEQUENCE_FLAG = 1U << 3",
+    "injection_role": "DATA sender only",
+    "injected_sequence": "object_initial_sequence_q - 1",
+    "injected_attempts": 3,
+    "receiver_classification": "same-session receive_distance >= 16'h8000 increments duplicate_count_q",
+    "clean_successor": "canonical sequence is restored after the three injected attempts",
+    "safety_impact": "none; lane-mask, GLOBAL_PERMIT, SD/Txd kill, duty guard, and shutdown paths are unchanged"
+  },
+  "source_files": [
+    {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "sha256": "d79279d781eec9814c9a1b0c4686290e322ee072934b4d1a816e4de8eef880b6"
+    },
+    {
+      "path": "tests/test_p10_1_hardware_acceptance.py",
+      "sha256": "ba56c655e06b9c6b413b05aefd6e1cf95604a725cee6d3988f6e556b4d17ba6f"
+    },
+    {
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    {
+      "path": "rtl/p9_optical_transport_core.sv",
+      "sha256": "f1536cc2011915c664a0bd1b36b06ba25c9ec44a9ab4c7849a7e9d9a11788847"
+    }
+  ],
+  "build_evidence": {
+    "functional_summary_path": "evidence/generated/p10_1_hw_functional_build_summary.json",
+    "functional_summary_sha256": "adb609f267355c2699119dda5ac2f42ac9b25290abf949753a72abce12cb17ae",
+    "runtime_summary_path": "evidence/generated/p10_1_hw_ps_runtime_build_summary.json",
+    "runtime_summary_sha256": "11d377568e3eafcdbda2cddfe8af3b797e9947fcf9c56cba1200420040539ce1",
+    "functional_status": "PASS",
+    "runtime_status": "PASS",
+    "source_worktree_dirty": false
+  },
+  "artifacts": [
+    {
+      "role": "fixed",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+      "bytes": 4045681
+    },
+    {
+      "role": "fixed",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1",
+      "bytes": 848595
+    },
+    {
+      "role": "fixed",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8",
+      "bytes": 1855896
+    },
+    {
+      "role": "fixed",
+      "kind": "elf",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf",
+      "sha256": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728",
+      "bytes": 550240
+    },
+    {
+      "role": "rotating",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+      "bytes": 4045681
+    },
+    {
+      "role": "rotating",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea",
+      "bytes": 849469
+    },
+    {
+      "role": "rotating",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5",
+      "bytes": 1856209
+    },
+    {
+      "role": "rotating",
+      "kind": "elf",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf",
+      "sha256": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0",
+      "bytes": 550428
+    },
+    {
+      "role": "fixed",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3",
+      "bytes": 369073
+    },
+    {
+      "role": "rotating",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148",
+      "bytes": 369073
+    }
+  ],
+  "authorization_binding": {
+    "path": "config/p10_1_retry_limit_override_authorization.json",
+    "sha256": "b69cfc00a73f1b91cb00bc2ffcfdb3c723499fe4078b78b9355dcf93adfa036a",
+    "user_retry_limit_override": "不设上限",
+    "fixed_serial": "210249855178",
+    "rotating_serial": "210512180081",
+    "maximum_single_formal_run_seconds": 1800,
+    "maximum_lane_mask": 3,
+    "shutdown_before_and_all_exit_paths": true
+  },
+  "offline_validation": {
+    "hardware_acceptance_unittests": "19/19 PASS",
+    "finalizer_unittests": "10/10 PASS",
+    "artifact_collector": "PASS (10 records)",
+    "retry_override_validator": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "inheritance": {
+    "prior_hardware_pass_inherited": false,
+    "reason": "new ELF hashes require fresh hardware acceptance; historical results remain immutable evidence only"
+  },
+  "next_stage": "fresh run-bound faults authorization and real hardware replay"
+}
