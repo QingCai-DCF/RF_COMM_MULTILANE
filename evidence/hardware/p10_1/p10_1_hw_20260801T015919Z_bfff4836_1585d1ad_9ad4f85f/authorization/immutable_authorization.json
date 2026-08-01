@@ -1,0 +1,327 @@
+{
+  "angle_adjustment_allowed": false,
+  "artifacts": [
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "role": "fixed",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e"
+    },
+    {
+      "bytes": 848595,
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "role": "fixed",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1"
+    },
+    {
+      "bytes": 1855896,
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "role": "fixed",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+    },
+    {
+      "bytes": 550060,
+      "kind": "elf",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf",
+      "role": "fixed",
+      "sha256": "5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6"
+    },
+    {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "role": "fixed",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "role": "rotating",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f"
+    },
+    {
+      "bytes": 849469,
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "role": "rotating",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea"
+    },
+    {
+      "bytes": 1856209,
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "role": "rotating",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+    },
+    {
+      "bytes": 550240,
+      "kind": "elf",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf",
+      "role": "rotating",
+      "sha256": "9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0"
+    },
+    {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "role": "rotating",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+    }
+  ],
+  "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "1e2a6905be9356f1ce0ada7b3ef883c2a71cac61",
+  "authorized_stages": [
+    "preflight",
+    "smoke",
+    "baseline",
+    "tuning",
+    "pipeline",
+    "streaming",
+    "faults",
+    "crosstalk",
+    "half_duplex",
+    "oneplusone",
+    "formal"
+  ],
+  "base_goal_retry_limits_overridden": [
+    "jtag_connect",
+    "program",
+    "diagnostic_stage_new_run_id"
+  ],
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "branch": "p10.1/hardware-performance-acceptance",
+  "build_summaries": {
+    "functional": {
+      "path": "evidence/generated/p10_1_hw_functional_build_summary.json",
+      "sha256": "0384aa552b15dcbfc2a8dbbd04221e7fb74a18d39cce9d06463aa61b0cc8d555"
+    },
+    "runtime": {
+      "path": "evidence/generated/p10_1_hw_ps_runtime_build_summary.json",
+      "sha256": "61902e2e9e37af28a83cfec4c3d788767f7884ea03c801b4697c9e6c0fde8b56"
+    },
+    "shutdown": {
+      "path": "evidence/generated/p10_offline_artifact_manifest.json",
+      "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
+    }
+  },
+  "current_run_hardware_authorization": true,
+  "diagnostic_stage_retry_budget": {
+    "baseline": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "crosstalk": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "faults": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "formal": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "half_duplex": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "oneplusone": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "pipeline": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "preflight": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": [
+        "p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5",
+        "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f"
+      ]
+    },
+    "smoke": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "streaming": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    },
+    "tuning": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": []
+    }
+  },
+  "effective_retry_limits": {
+    "diagnostic_stage_new_run_id": null,
+    "jtag_connect": null,
+    "program": null
+  },
+  "ethernet_allowed": false,
+  "generated_at_utc": "2026-08-01T01:59:19+00:00",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "input_hashes": {
+    "fixed_profile": {
+      "bytes": 907,
+      "path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "sha256": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d"
+    },
+    "fixed_xdc": {
+      "bytes": 2679,
+      "path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+      "sha256": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184"
+    },
+    "goal": {
+      "bytes": 28113,
+      "path": "C:\\Users\\user\\Downloads\\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md",
+      "sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+    },
+    "hardware_runtime": {
+      "bytes": 1786,
+      "path": "config/performance/p10_1_hardware_runtime.yaml",
+      "sha256": "6402e97f5d83aed23693223626f1b712ba4fb00c075b38aecbd8fe5510df4384"
+    },
+    "measurement_contract": {
+      "bytes": 4098,
+      "path": "config/performance/p10_1_measurement_contract.yaml",
+      "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
+    },
+    "pipeline_model": {
+      "bytes": 2525,
+      "path": "config/performance/p10_1_pipeline.yaml",
+      "sha256": "8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d"
+    },
+    "register_map": {
+      "bytes": 52873,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8"
+    },
+    "requirements": {
+      "bytes": 215196,
+      "path": "config/project_requirements.yaml",
+      "sha256": "e14cabad7cfad70a5488714764508d14ee21567df7ba6055fcaaa51745bd2141"
+    },
+    "rotating_profile": {
+      "bytes": 927,
+      "path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "sha256": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407"
+    },
+    "rotating_xdc": {
+      "bytes": 2682,
+      "path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+      "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
+    },
+    "runner": {
+      "bytes": 90756,
+      "path": "scripts/p10_1_hardware_acceptance.py",
+      "sha256": "7749b5283212ba717e775ae7ada03636819bef67fcca4e6083b1ee1b54c6febd"
+    },
+    "streaming_contract": {
+      "bytes": 1085,
+      "path": "config/performance/p10_1_streaming.yaml",
+      "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
+    },
+    "wiring": {
+      "bytes": 27452,
+      "path": "config/hardware/p10_active_wiring.yaml",
+      "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
+    },
+    "xsdb_stage": {
+      "bytes": 38867,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "ca22607892a4c70a96e4c922e1cdcdb4a623bb01915dd07e195f7a91c2eb9226"
+    }
+  },
+  "lane_masks": [
+    1,
+    2,
+    3
+  ],
+  "maximum_lane_mask": 3,
+  "maximum_single_formal_run_seconds": 1800,
+  "module_exchange_allowed": false,
+  "movement_allowed": false,
+  "obscuration_allowed": false,
+  "offline_base_tag": "p10.1-offline-performance-ready",
+  "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "part": "xc7z020clg400-2",
+  "plan_sha256": {
+    "baseline": "edb51d5ac661980d1a136e9c15164420fc5e2e4300d0511c1e33322945640bfa",
+    "crosstalk": "77ae6a4422b56aae8b2aeac12631f7a5fab53f352d2a307acf12ef6eb15a463a",
+    "faults": "8cda8f5c51089ac73729c11b583a71577f7d7eb2632432a4eb9221adca9c2dfb",
+    "formal": "cd24af9425d59f1da42fb3346a0b4d6412d3bb491b4eca4177b0094a3db582f1",
+    "half_duplex": "eea0b43b145beec8afd960205fbaea1630009ca10f63fd5ea13e46ea88a71b72",
+    "oneplusone": "31a8c75e68ce43a1e4c32fcafd6eb4bed008d89e01b92b527eb2d6d9da685c9f",
+    "pipeline": "956c793f22cd384403ab6e3174b24881fa1c8315288532fd54c43c420ac467e7",
+    "preflight": "7ce26ae8d8ddbff5febb22ec44eeec6779e41f9358c64f69651415cd449e5d43",
+    "smoke": "21d892b0f72d208732ee75cdb5bbdc123f10779e7d1c020351707d0f23de8421",
+    "streaming": "14b63da4def687025b73e3e83f33357b62790d2167567e221f6a1cd02be26d3e",
+    "tuning": "e6f454013e68069fc52068290f5b1b4ec5f7f8bfa6b25b7ab0c00718d3810184"
+  },
+  "retry_limit_override": {
+    "authorization_id": "P10_1-HARDWARE-DIAGNOSTIC-RETRY-LIMIT-OVERRIDE",
+    "path": "config/p10_1_retry_limit_override_authorization.json",
+    "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+    "sha256": "7813d23690b226c745bda9c999744647116c5a196b55c8c197b58adb80dd95a3",
+    "user_authorization_statement_sha256": "30215a9e5011712c01379bc81e571204fbf9741db854860c240b65d8ccdc32c6"
+  },
+  "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+  "rewiring_allowed": false,
+  "rotation_allowed": false,
+  "run_id": "p10_1_hw_20260801T015919Z_bfff4836_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+  "shutdown": {
+    "after": true,
+    "before": true,
+    "normal_exit": true,
+    "on_error": true,
+    "on_interrupt": true,
+    "on_timeout": true,
+    "program_role_bound_shutdown_bitstreams": true
+  },
+  "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
+  "status": "AUTHORIZED",
+  "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
+  "user_retry_limit_override": "不设上限"
+}

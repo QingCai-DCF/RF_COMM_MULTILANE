@@ -7,7 +7,11 @@
 
 ## Errors
 
-- no complete PS/PL timer crosscheck row was captured
+- pattern_prbs_1m: timer disagreement exceeds 1%
+- pattern_zero_1m: timer disagreement exceeds 1%
+- pattern_one_1m: timer disagreement exceeds 1%
+- pattern_counter_1m: timer disagreement exceeds 1%
+- pattern_corpus_1m: timer disagreement exceeds 1%
 - preflight: complete timer coverage unavailable because stage is not PASS
 - smoke: complete timer coverage unavailable because stage is not PASS
 - baseline: complete timer coverage unavailable because stage is not PASS
