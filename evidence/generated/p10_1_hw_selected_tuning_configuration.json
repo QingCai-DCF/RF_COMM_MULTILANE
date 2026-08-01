@@ -71,7 +71,55 @@
   "bitstream_or_elf_changed": false,
   "current_run_hardware_authorization": false,
   "hardware_actions_executed_during_selection_file_update": false,
-  "pipeline_hardware_confirmation": "PENDING_NEW_RUN_BOUND_AUTHORIZATION",
+  "pipeline_hardware_confirmation": {
+    "status": "PASS",
+    "run_id": "p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f",
+    "authorization_commit": "21806aab4c6486550b3e58f6dcb48bf0af5c377f",
+    "configuration_readback": {
+      "buffer_count": 4,
+      "object_bytes": 524288,
+      "descriptor_bytes": 65536,
+      "descriptor_ring_depth": 32,
+      "descriptor_batch": 8
+    },
+    "f_to_r": {
+      "duration_seconds": 120,
+      "committed_bytes": 34603008,
+      "case_count": 18,
+      "active_application_goodput_bps": 2590136.688128506,
+      "wall_application_goodput_bps": 2306867.2,
+      "host_not_in_fast_path": true
+    },
+    "r_to_f": {
+      "duration_seconds": 120,
+      "committed_bytes": 34603008,
+      "case_count": 18,
+      "active_application_goodput_bps": 2588652.411522526,
+      "wall_application_goodput_bps": 2306867.2,
+      "host_not_in_fast_path": true
+    },
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "current_run_hardware_authorization": false,
+    "immutable_evidence": {
+      "stage_summary": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f/stages/pipeline/stage_summary.json",
+        "sha256": "70a6a7df0dd5b692ed476827fa8adce058a496f50fe1e0b3fae064ec5cc9fe46"
+      },
+      "xsdb_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f/stages/pipeline/xsdb.result.txt",
+        "sha256": "0b776c5ab3b313f5ae4f09807bca5e2595a489f6fb73bfdb6e7821d65b31bcdf"
+      },
+      "observations": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f/stages/pipeline/dumps/observations.psv",
+        "sha256": "0d2d4fbf43e43924f57ab42bda95bd74ad8272f43e007b265613508d3420997a"
+      },
+      "orchestrator_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+        "sha256": "b44ddfd77c3fbacf43af524ca0d89116335c560614280237e571ff5d7f90092b"
+      }
+    }
+  },
   "acceptance_boundary": {
     "four_mbit_per_second_gate_changed": false,
     "four_mbit_per_second_gate_passed_by_tuning": false,

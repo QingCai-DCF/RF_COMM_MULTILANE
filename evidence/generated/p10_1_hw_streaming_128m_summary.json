@@ -69,14 +69,14 @@
   "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T03:38:01+00:00",
+  "generated_at_utc": "2026-08-01T03:51:02+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "hardware_runtime_config": {
-    "bytes": 1904,
+    "bytes": 2264,
     "path": "config/performance/p10_1_hardware_runtime.yaml",
-    "sha256": "a296d64ed755937eebce2ae6cde6660db9b6aa13e6092ac656511911d2bd786c"
+    "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
   },
   "maximum_lane_mask_used": "0x3",
   "measurement_contract": {
@@ -89,15 +89,15 @@
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
   "pipeline_config": {
-    "bytes": 2522,
+    "bytes": 2861,
     "path": "config/performance/p10_1_pipeline.yaml",
-    "sha256": "02b00d2571a33cf1f076a0ee20ba1eddea8fce706d7e0bd2c5a67f3a1cc88ac5"
+    "sha256": "8091670777af5a02986371a550cbac3ebd85adab9390486c93ce9c32cde45882"
   },
   "raw_evidence": [
     {
-      "bytes": 1904,
+      "bytes": 2264,
       "path": "config/performance/p10_1_hardware_runtime.yaml",
-      "sha256": "a296d64ed755937eebce2ae6cde6660db9b6aa13e6092ac656511911d2bd786c"
+      "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
     }
   ],
   "reason": "The frozen runtime address/mailbox contract supports at most 64 MiB; 128 MiB is nonblocking and was not emulated or misreported as hardware.",
@@ -108,7 +108,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T034449Z_bfff4836_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
   "status": "SKIP_WITH_REASON",

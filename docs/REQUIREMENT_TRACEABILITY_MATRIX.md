@@ -6,9 +6,9 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 168
-PASS: 138
+PASS: 139
 PENDING: 16
-FAIL: 14
+FAIL: 13
 WAIVED: 0
 ```
 
@@ -168,7 +168,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1_TIME-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-TIMER-CROSSCHECK` | `evidence/generated/p10_1_hw_timer_summary.json` | PS and PL elapsed-time measurements for every sustained hardware stream shall cross-check within one percent, with host time retained only as an orchestration view. |
 | `P10_1_METRIC-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Hardware application goodput shall count only remotely verified, atomically committed application bytes and shall exclude diagnostic microtransfers and host staging time. |
 | `P10_1_AUTO-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Sustained performance shall execute autonomously on the two boards, with the host absent from per-object and per-segment fast paths. |
-| `P10_1_PIPE-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SUSTAINED-PIPELINE` | `evidence/generated/p10_1_hw_pipeline_summary.json` | The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline in both directions without per-object drain. |
+| `P10_1_PIPE-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SUSTAINED-PIPELINE` | `evidence/generated/p10_1_hw_pipeline_summary.json` | The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline in both directions without per-object drain. |
 | `P10_1_STREAM-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained F-to-R stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
 | `P10_1_STREAM-002` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained R-to-F stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
 | `P10_1_STREAM-003` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | Abort, PS reset, DMA reset, PL reset, duplicate, and stale-stream vectors shall never commit and shall be followed by a clean 64 MiB recovery stream without descriptor leakage. |
@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `081b900a0104d5b0604a2b5b2f4b30c9e7e64086e572ffcefc714755e0d8435a`
-- `PROJECT_STATUS.md` — `977a4b846b73f82abe66075bba24182d0877421917fb20ebbf20ae4864ed5c5c`
+- `config/project_state.json` — `7c243275f74c2380c2a6af7d45d2a171207e8895d82806572415d99bfecef073`
+- `PROJECT_STATUS.md` — `c2d96ac0d93a9187956307044db73514f63b457e93cb9a7a106b24c3618481e6`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `081b900a0104d5b0604a2b5b2f4b30c9e7e64086e572ffcefc714755e0d8435a`
+- `config/project_state.json` — `7c243275f74c2380c2a6af7d45d2a171207e8895d82806572415d99bfecef073`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `081b900a0104d5b0604a2b5b2f4b30c9e7e64086e572ffcefc714755e0d8435a`
-- `PROJECT_STATUS.md` — `977a4b846b73f82abe66075bba24182d0877421917fb20ebbf20ae4864ed5c5c`
+- `config/project_state.json` — `7c243275f74c2380c2a6af7d45d2a171207e8895d82806572415d99bfecef073`
+- `PROJECT_STATUS.md` — `c2d96ac0d93a9187956307044db73514f63b457e93cb9a7a106b24c3618481e6`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -903,7 +903,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
-- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `22b1eb988f55bc07c60355adfda484ee8b158fee69871c44ff2731044252fec8`
+- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `dcd58cd54d2525b2336580b417e50c05161efa0f384b17bceee3654b1d7ea12f`
 
 ### `PERF-MEAS-001`
 
@@ -983,9 +983,18 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`
 - `artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit` — `cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148`
 
+### `P10_1_PIPE-001`
+
+- `evidence/generated/p10_1_hw_pipeline_summary.json` — `190f4fda489df72357934c19c092f809e579cff49649afef6a8a97747382d877`
+- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf` — `5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6`
+- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`
+- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `21c852475b2491bb9d03058d7eac363aceb7e5ce41aef5846d80d91cc6ff8fff`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `0a86114f3c986e6139687226c4e61f166b3d121d32eddc46f7ec1f5f7557b58c`
 - `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf` — `5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6`
 - `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`

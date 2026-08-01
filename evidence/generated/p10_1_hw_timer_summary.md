@@ -10,7 +10,7 @@
 - preflight: complete timer coverage unavailable because stage is not PASS
 - smoke: complete timer coverage unavailable because stage is not PASS
 - baseline: complete timer coverage unavailable because stage is not PASS
-- pipeline: complete timer coverage unavailable because stage is not PASS
+- tuning: complete timer coverage unavailable because stage is not PASS
 - streaming: complete timer coverage unavailable because stage is not PASS
 - faults: complete timer coverage unavailable because stage is not PASS
 - crosstalk: complete timer coverage unavailable because stage is not PASS

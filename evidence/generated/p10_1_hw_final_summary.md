@@ -13,7 +13,7 @@
 - p10_1_hw_timer_summary
 - p10_1_hw_metric_semantics_summary
 - p10_1_hw_baseline_summary
-- p10_1_hw_pipeline_summary
+- p10_1_hw_tuning_summary
 - p10_1_hw_streaming_64m_summary
 - p10_1_hw_half_duplex_summary
 - p10_1_hw_crosstalk_summary
