@@ -1,0 +1,929 @@
+{
+  "files": [
+    {
+      "bytes": 26867,
+      "path": "artifacts/fixed/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 26867,
+      "path": "artifacts/rotating/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 1201,
+      "path": "authorization/authorization_record.json",
+      "sha256": "367d19df93f5108ebffa37f5385255b97717dff8c4345df69217aeae492dca53"
+    },
+    {
+      "bytes": 10455,
+      "path": "authorization/immutable_authorization.json",
+      "sha256": "7ffd1197adf192ff438d4d326013b0dfb94caaef56592b15167d509a8ede3086"
+    },
+    {
+      "bytes": 609723,
+      "path": "final/orchestrator_result.json",
+      "sha256": "9be4dc1d0185bce4a3a2026cb719f5a573125e8d9f25b94ab97beb63f24dbdd7"
+    },
+    {
+      "bytes": 68,
+      "path": "raw_logs/hw_server.json",
+      "sha256": "45c8044adb4fb019f99fc06b7cab6eb63a75e2c107d8158d586f5432cd49aeb0"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/finally_emergency/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/finally_emergency/attempt_1.stdout.log",
+      "sha256": "54fdf5df3b206ae0bfcf15ced1a648a39cbe8751e67b74dccd3d6f291a54c3de"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/half_duplex_after/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/half_duplex_after/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/half_duplex_after/attempt_1.stdout.log",
+      "sha256": "c862f0fd7feee83915f824bf10e2e8be3b3056c927f215287f35db7c9f4fe25c"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/half_duplex_before/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/half_duplex_before/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/half_duplex_before/attempt_1.stdout.log",
+      "sha256": "6b27b80b1d01042218ab4b69ad8a088df1a8d8fc9b3cec50b89fde802e3ef67e"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/initial_shutdown/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/initial_shutdown/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/initial_shutdown/attempt_1.stdout.log",
+      "sha256": "21efef792fe683c10990ba8d63d614cb5ffb2c09b82748acf4941e5937efc80d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0000_1048576.fixed.bin",
+      "sha256": "ad9dff10c1e20aa775539f773c89fd1a6942499f07de24a169c11969f5fc0531"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0000_1048576.fixed.p10_1.bin",
+      "sha256": "af16ce888cada341a97467886d98ee35cb5e19c49524ff6d6476c026261c33b7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0000_1048576.rotating.bin",
+      "sha256": "38725e706f3884c550114eabc50464d3eec59292b7f0bf7b4aa1d578a1a6f20e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0000_1048576.rotating.p10_1.bin",
+      "sha256": "3dedb09bdc96d34f6c5b4faeafe815572f9bab39af99ce80be3d29b102105287"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0001_16777216.fixed.bin",
+      "sha256": "1e50be942b38385f8cc03f97fd5d2750934e933c13c14c28e5627437088a0339"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0001_16777216.fixed.p10_1.bin",
+      "sha256": "cbb167101b3a991a8bfbe1e787b1a6691953cc91c5f9353bf5ea83ae74afc14b"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0001_16777216.rotating.bin",
+      "sha256": "30992606e30ead0d637fa20bb9d68a2a73194303892a3954977be555632993f6"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0001_16777216.rotating.p10_1.bin",
+      "sha256": "d3f2dde76b0c1fbb954ff2952f7d36d30b636ea42468d8e9b5c5e58523d56ac7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0002_1048576.fixed.bin",
+      "sha256": "7c330d3da85193826f82e8f54cbc56dbd5cd661edebf2f9370d5d3b1a46afdc4"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0002_1048576.fixed.p10_1.bin",
+      "sha256": "6640f71f5c3e00954bf5e61e5dd20743f775bdd46a785cacc363b6c00db0d5c5"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0002_1048576.rotating.bin",
+      "sha256": "c89485ed9eb3e3e29fbe0d3c3abf3999c8b21cbf8d8815cf28a002aa79aac9ba"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0002_1048576.rotating.p10_1.bin",
+      "sha256": "5f5940c1395f5f405496c5e63f59ab3624f306574951d2d8a25744675ae1f10f"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0003_1048576.fixed.bin",
+      "sha256": "b7ccae6e8349b646371a197f9b9a6c0987771e31047f52d541b05c3dc6230f58"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0003_1048576.fixed.p10_1.bin",
+      "sha256": "ed2f10c9e3cc7c453b5bf2ca75bed97cb973eb39d70f1a7058fd322ac741481e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0003_1048576.rotating.bin",
+      "sha256": "070f6819b6a75e94d2c2915c7ab7d4cba6ce01024b311bf66c2c963b7bcf11c6"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0003_1048576.rotating.p10_1.bin",
+      "sha256": "b695b639025bfeacfb408e1a3293911d3268297a82b300ad884ab84881f7a493"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0004_16777216.fixed.bin",
+      "sha256": "78403c0baeee46de478cc4aab9302f31efa83c972609be8ff67873bc644bb356"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0004_16777216.fixed.p10_1.bin",
+      "sha256": "d2ad0bc659a30d930be05b8783e29a7666ae9f6e5c0f95bfb3fbff6431000d2c"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0004_16777216.rotating.bin",
+      "sha256": "fdb61bcf47a3796986d538d7f5abf791d219775e48e271a8f79787a59b526636"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0004_16777216.rotating.p10_1.bin",
+      "sha256": "89a34d6b6638eb7528dd236ca44af2a0dabe271dcb22881726a7b12e32df5561"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0005_1048576.fixed.bin",
+      "sha256": "00bfe24f69ca56e9c50154d1bfbe5f10ed630f6cd23404a1c7fd0ca60805e6a0"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0005_1048576.fixed.p10_1.bin",
+      "sha256": "a7b1ae0d35325def59ee84d989a3d4a6dc5eab69052013341e08ee0c8ded4718"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0005_1048576.rotating.bin",
+      "sha256": "0042a939eba5910281753161ade59dbed320b4bd8a4fd1299441cc84a24953aa"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0005_1048576.rotating.p10_1.bin",
+      "sha256": "b4f9078b9e55dde8802d7dfbfbb742d25a3fd6bd7cb99eb288989f9b0a10fe82"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0006_1048576.fixed.bin",
+      "sha256": "8f85d2175f51fd9e2ef1c5b111b6e94dffabb9018378cd0a435d6ab8f3cc1e8f"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0006_1048576.fixed.p10_1.bin",
+      "sha256": "b5b964000de6c9bf59f8e65a952e2e31ceb45b82dedacfa3cddaa453ea0665a5"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0006_1048576.rotating.bin",
+      "sha256": "c0ea522b53d3838596ee2939a825895cba1d364a8b30c53562839d2751918ad9"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0006_1048576.rotating.p10_1.bin",
+      "sha256": "392c623abc71fecd5efaaf73204a7856d85dc9447962f3d66c4643c4cae86e86"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0007_16777216.fixed.bin",
+      "sha256": "ee0bf56a019f98676d82797d57dbea075db51a0cb794040c00668736c83adbec"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0007_16777216.fixed.p10_1.bin",
+      "sha256": "a2a82d657c1d4857bd11d583d3123fa9e3ff42b0da194dedf94d86c7ce11d8ca"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0007_16777216.rotating.bin",
+      "sha256": "48365820119f5369c5e8835e56dfc8f2288cc05f72761b1a3c3c6137f6369eab"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0007_16777216.rotating.p10_1.bin",
+      "sha256": "3e550d777840407962c6f990339dc28ab3dc354e6750fe9962cb86fe5251e79a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0008_16777216.fixed.bin",
+      "sha256": "eec7094a7d7036149824f270070c2ad4428f5b627ba7e7ea75910638f150c117"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0008_16777216.fixed.p10_1.bin",
+      "sha256": "e74b0eacc2f00aecb61d41a6ee3d5967695eb11fea210ee216ab979a89aa33b9"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0008_16777216.rotating.bin",
+      "sha256": "3baa4b74df18f7b52857cfa15b82eadfa4559b78d0893fab05c11ab397838aa7"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0008_16777216.rotating.p10_1.bin",
+      "sha256": "f074d6bfff3bd8e1e89b23182749cf166bf85c4e1f5002c032b26d5ee0e18e24"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0009_1048576.fixed.bin",
+      "sha256": "673c1690c44d6b74875c90f5a3bd9454adbd86d85dc0cf1fa53208c61d28862f"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0009_1048576.fixed.p10_1.bin",
+      "sha256": "abb0bff3022b889ec8b89b73fc6114bbbfe69789b0610a9e45a788e04fd5d72f"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0009_1048576.rotating.bin",
+      "sha256": "fb63d28d64cfd8e2f99e0e000b74d78c6677c972f92b4e3eefac063c29232cdb"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0009_1048576.rotating.p10_1.bin",
+      "sha256": "0f3add088746067a630565f79f9f5250817b02bca5355f0c127390406a986532"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0010_16777216.fixed.bin",
+      "sha256": "56ed16ab44baf2d72ac347841c08d567cd9ecc409a56ccb0ecb619bbd0c46694"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0010_16777216.fixed.p10_1.bin",
+      "sha256": "ad412fe0725c5cf7afcff7bdb0df2551abef69bbe8db1f7edc3be96a8b998465"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0010_16777216.rotating.bin",
+      "sha256": "4aa65777433709f33b0875d4a7d275037aa8596482b3e64f807e1c4f05449cb8"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0010_16777216.rotating.p10_1.bin",
+      "sha256": "312f8161625e78b79e7e71afceae0345460a70c283a64c2ce9c8c84862028060"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0011_1048576.fixed.bin",
+      "sha256": "77d2c221dceb5bec5eb785c01f3b7384f96164ac1a05ef7d2fc635af3db059a9"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0011_1048576.fixed.p10_1.bin",
+      "sha256": "8c7a33564fe3c0feadc4bbd2ed9b7f96e29b903a290c19a5be0599dc09151b3d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0011_1048576.rotating.bin",
+      "sha256": "bf84e3de7efe50610b1d0592c35f4db02b5ea4bd17e8c5da68530d8501a171a0"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0011_1048576.rotating.p10_1.bin",
+      "sha256": "9b44779d34887ff744b2b05d854c2143103a0f9003abbed5e710b4d644d75fc2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0012_1048576.fixed.bin",
+      "sha256": "648a8c6010262f7f29fd800e9263a2cc20584caa87768100ecce9d323487d884"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0012_1048576.fixed.p10_1.bin",
+      "sha256": "0bc16372ca3198aa842bc7b7b41506e8c581e979a9dc2ee50425be02f7776651"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0012_1048576.rotating.bin",
+      "sha256": "3f7380848bfdd35f6ff73cad6b54f1aa639f421247fc087088609d8d45ec1cca"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0012_1048576.rotating.p10_1.bin",
+      "sha256": "567bc2373b66ccfa435dc8936ad06ad387069d738810eb50dec519a8af88c5a1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0013_1048576.fixed.bin",
+      "sha256": "0efab780bf25c34137f419ce24187a06e0470793e4261351f940f485e2892c6b"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0013_1048576.fixed.p10_1.bin",
+      "sha256": "4fc4c33ac0ab18ced76a947fd0f42ee7b714fabc683135af2d3d84a8b3a1e9d7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0013_1048576.rotating.bin",
+      "sha256": "c04563064496211172c7c3b648c44f237ec78d3770534113f07930dc8e9e2e91"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0013_1048576.rotating.p10_1.bin",
+      "sha256": "4d0e71e46d240cc78451cecaa0f41852c900551a24428d1c2c4437ab230ddf77"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0014_1048576.fixed.bin",
+      "sha256": "2ce14b6bed85cfd3675f6e4340c74211065944a57a605062126f02f14f889da7"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0014_1048576.fixed.p10_1.bin",
+      "sha256": "55a69e2a5e45d04d08fd5c9fbbfcef7c3a6724db147eacef70771963db4847b9"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0014_1048576.rotating.bin",
+      "sha256": "4924b48bce3794c17a004625b661627c7c476722fd5876323653b6fac9afc392"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0014_1048576.rotating.p10_1.bin",
+      "sha256": "b60cf461bbc944c6813353f1770b4e0d45de55343f737c3d52b52bd05aea1a58"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0015_1048576.fixed.bin",
+      "sha256": "f7a0d629ff3c53f708451c745987e19a5afafefbac08888c3cdf74b77763c13b"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0015_1048576.fixed.p10_1.bin",
+      "sha256": "a130fcec7ecb7705db149230f9f3a7a1319ddeb161ae9860bd329ea80a963bb1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0015_1048576.rotating.bin",
+      "sha256": "85157d748aadfed27ffc2414422f10b2eb5726be80337019044dbc9f8594c887"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0015_1048576.rotating.p10_1.bin",
+      "sha256": "bf00294c5085fa43a7efc786e41bd070c464bd7402b6d6920c471a5619d58cf1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0016_1048576.fixed.bin",
+      "sha256": "87c89782fe1fb9837315eab0c2882eb1625dc9ba6e1fecbe4f5f6ef6a8dc5691"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0016_1048576.fixed.p10_1.bin",
+      "sha256": "8c36866ebe9064cb9b17fa85eab12d9deec98a0ac730344ff79e07167c27e32d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0016_1048576.rotating.bin",
+      "sha256": "ad0c34093929fa9c0a6dccbe7c4b71678ffe9531a8a75dea6d74a150b100bf23"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0016_1048576.rotating.p10_1.bin",
+      "sha256": "49c70d35e24e9e703019f262afbea942648d3c2069cf2e6c8c9758cce8d3c84a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0017_1048576.fixed.bin",
+      "sha256": "da65db4e5d85fe5868dd7ceede30452bb239066a0686e61d6ae0b444be99304a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0017_1048576.fixed.p10_1.bin",
+      "sha256": "803d082822c8aa6dfdd7bb3be16317f7a61660e5dc101e4a1beb982bc8d23bdb"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0017_1048576.rotating.bin",
+      "sha256": "46c97ccb69c996b404739cbf26ae203fb19ac59db521e43d8ac28b5bb1364fff"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0017_1048576.rotating.p10_1.bin",
+      "sha256": "3e4617bfcc139ebb993b8fba944b2368f5958992ffb9620e2241d44283a5d89e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0018_1048576.fixed.bin",
+      "sha256": "d726dacabe357df6ba1f76c39d015f3db393c54b68c2653ec00f2d53818404b1"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0018_1048576.fixed.p10_1.bin",
+      "sha256": "f3c0dc147c57d6e466900f1d45b94e0d1f944e74cd0bee2f08cb87a762b49c5c"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0018_1048576.rotating.bin",
+      "sha256": "2f8d2cae42eeda275887ac7d539c4f9925c6d0036e74ad528c25ca959a52b980"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_f_to_r_320s_0018_1048576.rotating.p10_1.bin",
+      "sha256": "124228ca8843b50a6641eb500e96771da44c12972e232b784e5bdfe68a0a1f27"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0000_1048576.fixed.bin",
+      "sha256": "d21bc8dad8529f4d58b36938c11656c12b41486d47a680556854b440446c06c5"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0000_1048576.fixed.p10_1.bin",
+      "sha256": "80de2f262160028af4d44c01eac586ae499ea425adc178a30511626dc57e7402"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0000_1048576.rotating.bin",
+      "sha256": "35c67c49db55cdb54480c2a6710867edcc751b5a58a84021be6c63396df897e5"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0000_1048576.rotating.p10_1.bin",
+      "sha256": "b86261b50a256d90f1d7e3d18cde547cc1356d8820738daf9d867d125d24f469"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0001_16777216.fixed.bin",
+      "sha256": "ffe44a27737a743c021e51c147b77a2a983d5d70de852fa869a3883e48cbc007"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0001_16777216.fixed.p10_1.bin",
+      "sha256": "162b62500d3191cad80573e4f9ac81db2f124e775a2db4b065a7e83491b94ced"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0001_16777216.rotating.bin",
+      "sha256": "8a332453dc3e53085cd467b924b72b7dcda9d40ac2b6c2acaa0ddfd011bbb183"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0001_16777216.rotating.p10_1.bin",
+      "sha256": "22da0893c9fd4a6879503685e1fb7a680a73931d20a85881b38ca5a8699c2e59"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0002_1048576.fixed.bin",
+      "sha256": "bed70fbaa2fcfda40e9bbd80c7ad961bb2453cffd7de6bcac494884873d94318"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0002_1048576.fixed.p10_1.bin",
+      "sha256": "3ab47a223af55503be56341abecdfd546a232b1cc88da3b66c5039d22551d0ff"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0002_1048576.rotating.bin",
+      "sha256": "dc3cb704f62ebb6d8330c23879a0012047140a9f467782a12ffd2a7cb0b25869"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0002_1048576.rotating.p10_1.bin",
+      "sha256": "a4818f4672e3b6b13b191774222a1abf6621a626a552795246c638c45034f0c7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0003_1048576.fixed.bin",
+      "sha256": "cd6dbf2b4edd885a9dae83b518da18a4b936a37cb75d394bc58c55cf2d749d43"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0003_1048576.fixed.p10_1.bin",
+      "sha256": "0ee8cd76b5527f226af12dcce984d87dd168587a33c96a2568ec5e5efe301619"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0003_1048576.rotating.bin",
+      "sha256": "79cc29f9e4b8f673b7b01006bf764bae8f7cd896bd173050436a9a3b6f4a68db"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0003_1048576.rotating.p10_1.bin",
+      "sha256": "860245449606733add5ebe1dd8555445dfcf2087bbcfff8e8544ae7c511504e4"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0004_16777216.fixed.bin",
+      "sha256": "91cefbd87afb765243bbb726dbc91b33d4cceb96d630ab6b67eb38cd4b77dc63"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0004_16777216.fixed.p10_1.bin",
+      "sha256": "74a0ad36130f8bd9b2107a08fde1eb3a3574120584547be5cb213d975bff59d9"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0004_16777216.rotating.bin",
+      "sha256": "187142e230b306b0dd54d0cce1b226e73040b7a9a1adfa6c3f5cbd633a90856d"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0004_16777216.rotating.p10_1.bin",
+      "sha256": "2726e9467e9b61ffb3e4786936bb3c86e56c47f8825c6a04b1a309030e7015e8"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0005_1048576.fixed.bin",
+      "sha256": "a45a71a087654cf9f013c03e18260ed66be4b58150f3a12f8e4eb9b4f95c8cda"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0005_1048576.fixed.p10_1.bin",
+      "sha256": "b9fc2b344493f4c335f8dc5da4d5f1f42626858cf7924a48db3bc6aacb8de28a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0005_1048576.rotating.bin",
+      "sha256": "273cdf4e580adda3cb304e8c3a31d06e522e4cdd5c618f0a4054399b8e086461"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0005_1048576.rotating.p10_1.bin",
+      "sha256": "56a52d332d6af8ad6884bda667d8474a38b858b286aa560bb244247acade730c"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0006_1048576.fixed.bin",
+      "sha256": "362f2a8aa4c47254587259c48cba0185260685b276a5d995b1f15d956e6d77ab"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0006_1048576.fixed.p10_1.bin",
+      "sha256": "988f8c193c76b387542fd7e6275b8d8ee8802e47f18e0fc8be19987b56c1951d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0006_1048576.rotating.bin",
+      "sha256": "f9dbf306863c66592edc6f071a84e15c5c18f74b4d3137b19029468790f4ced2"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0006_1048576.rotating.p10_1.bin",
+      "sha256": "ecdebd076e1cd726d524ceff8d06e74a869ba3433c69e11f252e5e355e2335d4"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0007_16777216.fixed.bin",
+      "sha256": "4ec28117502e1256f5055a658ccde617523e5f6f36d8bbc280cec7bcda8fb4c8"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0007_16777216.fixed.p10_1.bin",
+      "sha256": "a725832c7c61e22080747097acf02c010ab065f99d73470a268ce787c61a555e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0007_16777216.rotating.bin",
+      "sha256": "4ed1b735cabfd2be44a9e01675a3bbd4e97345a5484f5ddd897d3af7bd412b54"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0007_16777216.rotating.p10_1.bin",
+      "sha256": "748b39c609b60a94ceb727c1c583567848aef0692d4a5dccfdc885e97769e000"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0008_16777216.fixed.bin",
+      "sha256": "2729a2611e5d7ddad34ef2da38f434fcd97d2efd21546d9d4e065dbf38f531bc"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0008_16777216.fixed.p10_1.bin",
+      "sha256": "9ce3ca804e8cfdbfd05a60ca548187b50ccdbcc9251fdb5c666337e2fcb40f9a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0008_16777216.rotating.bin",
+      "sha256": "6e085a914279e19394cbdf291694cc847e5470304224c7f69099203011e990a0"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0008_16777216.rotating.p10_1.bin",
+      "sha256": "5bf550182057dbab894c2f9ff2beb4ce0d375fdfb68a6fd265ceda26caa52a53"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0009_1048576.fixed.bin",
+      "sha256": "9c7901ef4ada976366502d6aa2e5fea1abdcf7cbab3d3171e7f7987172221d53"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0009_1048576.fixed.p10_1.bin",
+      "sha256": "f19038a7005f6c19cad77e018b14dbc8cec420bf38d7e8645944f893f0431014"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0009_1048576.rotating.bin",
+      "sha256": "e9081e19b96b6114fadf45d2ece5f500034b9ffb5f133d120d7bd5882f47530a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0009_1048576.rotating.p10_1.bin",
+      "sha256": "77eb64d694cf3e8ac8bcda7f42392055c196d3c477aa8c5d93ad8441dea3c870"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0010_16777216.fixed.bin",
+      "sha256": "3f59fc59cf1bfaa935977de395822340ee3e55f33f5ae90316701fe18d323f45"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0010_16777216.fixed.p10_1.bin",
+      "sha256": "ac6a648306b3760e21daf5f7dbaaecbcb5d0b517c4364d6d7260c35047d1ea6c"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0010_16777216.rotating.bin",
+      "sha256": "b413c13d7eed0ad8183cede06468bd706cdbb739957682ac01497c8fde9fb17c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0010_16777216.rotating.p10_1.bin",
+      "sha256": "396b62c3f0fdfd457a838dfd02292c0383c009abe8f6c53b4913cc9bbde81f44"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0011_1048576.fixed.bin",
+      "sha256": "8ac07315fd3fa1ba6e99b5951563a94d5355304247760b7d6ce2f5734869d785"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0011_1048576.fixed.p10_1.bin",
+      "sha256": "bfe8e9fa9b1356c49f23ba92235bd74db8fdef703c618ef60f338a33719e5901"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0011_1048576.rotating.bin",
+      "sha256": "6f63743325c96e2ce45db18983515098321fa471007bde61ac08d7a8546af1bd"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0011_1048576.rotating.p10_1.bin",
+      "sha256": "bce4a95111ee96a520b69691911099a1a66538a6ebaecfbb72c493d883d70730"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0012_1048576.fixed.bin",
+      "sha256": "d7499ab3293a779583c27264a6dea9bae661a6185e2e6d1b658f885315ecfb5c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0012_1048576.fixed.p10_1.bin",
+      "sha256": "1b84e4a9e941f6873bf7a06ce5f4b7231409536b4aa6afa6bc100eaaf3ddf1c7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0012_1048576.rotating.bin",
+      "sha256": "9990afe70da87c2a74b661cba757a46db1bacc9decc3d2765313a59b36c25733"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0012_1048576.rotating.p10_1.bin",
+      "sha256": "ed5d2847d3542d126aed48399764ca99021d03d9c5b32f1b40a7967f75b538a3"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0013_1048576.fixed.bin",
+      "sha256": "8e375b9711f9d378acf9c918fa1390c26a9f5975cfb0467a153f4ddd3fe43523"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0013_1048576.fixed.p10_1.bin",
+      "sha256": "e7bba181df324d6054409b0270859dbd7df94d860a99e84eefcfdac12a69e2e2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0013_1048576.rotating.bin",
+      "sha256": "f16ef099a011b3f30d6f4cc78e13564a421cd7a414c7ba6ca89d598b989b6f82"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0013_1048576.rotating.p10_1.bin",
+      "sha256": "50cae56d5db8ad01026e501b32edf10eacbe30e543fe1460b2824d5c9a1daec2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0014_1048576.fixed.bin",
+      "sha256": "765052ef9263da0a4913d3dd117efe85adb9018630c053331610b5688ff3ba64"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0014_1048576.fixed.p10_1.bin",
+      "sha256": "9ab407bcdaf3cf355361ebb4170360ad71db4948069aa133d027f6924e58f012"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0014_1048576.rotating.bin",
+      "sha256": "3b7e514e13923b0dc6b31d2181780c85218091f70febd7999bd806f0ca2c5593"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0014_1048576.rotating.p10_1.bin",
+      "sha256": "8c5cb928f479351a2f6f61d89219d977634fd18dc58b543b9a2349920afce4dd"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0015_1048576.fixed.bin",
+      "sha256": "fd7f6e129567410f5be5f070bb42b7eee187bfb87f213e4429ed701807172276"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0015_1048576.fixed.p10_1.bin",
+      "sha256": "bd05dc91878cc87c00d8199b32b541d38b2d3b3f747aa64271538279296d9c2a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0015_1048576.rotating.bin",
+      "sha256": "5797f18d1b33d69da05ef4d7e1a62ad876df480f8b5af587bc387754e9b88e3a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0015_1048576.rotating.p10_1.bin",
+      "sha256": "cab8d2b7a883a2625cafe1f507a203f6d6f0e61b1625ed438c99c2cbdff6f033"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0016_1048576.fixed.bin",
+      "sha256": "4f4265ef27837ae4b863d5304a89b0ac3e8178c9a8e379cfbffdeb8dc9a56731"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0016_1048576.fixed.p10_1.bin",
+      "sha256": "716aef3fdd8221766e80f27fd0e1be99ffa0c8941bdcf01b5e67fc9c18867bf0"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0016_1048576.rotating.bin",
+      "sha256": "930b8d568a2785bdd5552e3a5a3367707284aa4787ba682cae6fb295826976b2"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0016_1048576.rotating.p10_1.bin",
+      "sha256": "a8c3ebc6c495e5d7d87c98d5858b8b5a3e4ed4a9db01ca6ede189468d8d1f707"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0017_1048576.fixed.bin",
+      "sha256": "461b1c055a10e4178b8f227231f72869cb871f12e157085a243d5818e75e02fc"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0017_1048576.fixed.p10_1.bin",
+      "sha256": "113e8094af29ad578c6b52893b4742f403ba6e10de8a9cdf4e6a8424d6c116f9"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0017_1048576.rotating.bin",
+      "sha256": "af69650e328de1dc90e4219cbbdaf935d07cc26fb85efeb6c298211f40363d22"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0017_1048576.rotating.p10_1.bin",
+      "sha256": "ef5c7de3593cedb753b926958796d9b5b54541175590f070ae92a3184987c300"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0018_1048576.fixed.bin",
+      "sha256": "70514ad429c0591faf14fa2c907fdfa838ad08beb72d69e980ff9405e8b6eb1e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0018_1048576.fixed.p10_1.bin",
+      "sha256": "a3dff4de993fd2ab04098d775595bf35f07c56a074e2496f29a2f4f0ea7a0df8"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0018_1048576.rotating.bin",
+      "sha256": "d5458f3b1a240dfcd29fc246a64d079981bafbdf92fabd3244995ba66028ec33"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0018_1048576.rotating.p10_1.bin",
+      "sha256": "857df1e012e9b541996b75e8e548ed43c651fba737f4a346ff1747b86758c572"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0019_1048576.fixed.bin",
+      "sha256": "0a4c4805d04b7a9202f2f3ed0556d7b6662344da8a52519b0de68e3614c4c7dd"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0019_1048576.fixed.p10_1.bin",
+      "sha256": "e6562e11326e260fe51185c5eda682327f9d93bf6135681ab3a6ccf1ff9d7cc3"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0019_1048576.rotating.bin",
+      "sha256": "6f62e1d13973c7d077c84b761367ed43340582e1b71d1b7134975f10f14b63dd"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/half_duplex/dumps/half_duplex_r_to_f_320s_0019_1048576.rotating.p10_1.bin",
+      "sha256": "9472c903ea564a1be3790d055dc6e2728e52012eea9f3c2783d7bcc600c19345"
+    },
+    {
+      "bytes": 40886,
+      "path": "stages/half_duplex/dumps/observations.psv",
+      "sha256": "0f0699f9eb1a332846609af497a0f41654f087ceff08c369002af0781044d44b"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/P10-DIAG_endpoint_shutdown.fixed.bin",
+      "sha256": "7eca464229542e3eec5bdedeb9b29619333e598e9a0f8b8c52ab2ac548b76d5a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/P10-DIAG_endpoint_shutdown.rotating.bin",
+      "sha256": "f6bd1968207293f36a4edd2b921bfaac0f2b991cfcd85ddff72bbb3d163bbe19"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/P10-DIAG_ready.fixed.bin",
+      "sha256": "62e99b3966b80c79910e8a1428dc9b4e98af1795203aee14e7857acdac7ed19e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/half_duplex/dumps/P10-DIAG_ready.rotating.bin",
+      "sha256": "9133bc3b4e16caa74690a483cb3903e3009761a02d33849d1525001a038f6dc2"
+    },
+    {
+      "bytes": 143,
+      "path": "stages/half_duplex/half_duplex.plan",
+      "sha256": "eea0b43b145beec8afd960205fbaea1630009ca10f63fd5ea13e46ea88a71b72"
+    },
+    {
+      "bytes": 516775,
+      "path": "stages/half_duplex/stage_summary.json",
+      "sha256": "366c9342c7106db036243e104dff61b5362cdb8a9d45828537cf4614fab85ef1"
+    },
+    {
+      "bytes": 8230,
+      "path": "stages/half_duplex/xsdb.result.txt",
+      "sha256": "38f63a92e90207db39bbe39d68d5b9684a9915b3b474699b406be816a2523193"
+    },
+    {
+      "bytes": 0,
+      "path": "stages/half_duplex/xsdb.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 8230,
+      "path": "stages/half_duplex/xsdb.stdout.log",
+      "sha256": "38f63a92e90207db39bbe39d68d5b9684a9915b3b474699b406be816a2523193"
+    }
+  ],
+  "generated_at_utc": "2026-08-01T09:01:11+00:00",
+  "run_id": "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-HW-EVIDENCE-MANIFEST"
+}

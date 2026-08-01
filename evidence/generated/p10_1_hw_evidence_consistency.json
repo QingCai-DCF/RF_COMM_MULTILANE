@@ -68,10 +68,11 @@
   "captured_run_hardware_authorization": true,
   "current_run_hardware_authorization": false,
   "errors": [
-    "orchestrator boundary/status is invalid"
+    "orchestrator boundary/status is invalid",
+    "executed stage set differs from authorization"
   ],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T08:41:57+00:00",
+  "generated_at_utc": "2026-08-01T09:01:22+00:00",
   "generated_pair_count": 18,
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
@@ -98,14 +99,14 @@
   },
   "raw_evidence": [
     {
-      "bytes": 136830,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
-      "sha256": "299265193c979c3de36c98af9f2fecda67b932a01fd60095d7bbf416a5b7cdff"
+      "bytes": 38071,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "52271796adea44f946a5f851664ae590f42f47b58b2858ff5e9f2912c81f86f1"
     },
     {
-      "bytes": 150699,
+      "bytes": 46830,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "6826941af08c0660b5944183a1291322a99c7fdf78c28bd06f6f73fd055a96b9"
+      "sha256": "d30df7d0cd18f71b653717616cb218478d6986346e5a2096150f71bbab53d6ef"
     }
   ],
   "register_map": {
@@ -115,8 +116,8 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
-  "run_manifest_file_count": 694,
+  "run_id": "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_manifest_file_count": 184,
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
   "status": "FAIL",

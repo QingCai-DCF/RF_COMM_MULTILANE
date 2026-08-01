@@ -1,9 +1,14 @@
 # P10.1 64 MiB streaming and recovery
 
-- Status: `PASS`
+- Status: `FAIL`
 - Test ID: `P10_1-HW-STREAMING-64M-RECOVERY`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
+
+## Errors
+
+- streaming stage summary is missing
+- faults stage summary is missing
 
 ## Machine-readable evidence
 

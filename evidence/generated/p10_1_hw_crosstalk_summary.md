@@ -7,11 +7,7 @@
 
 ## Errors
 
-- xtalk_tx_f0_frame_10s_0000_1048576: non-target CRC-valid false frame
-- xtalk_tx_f1_frame_10s_0000_1048576: non-target CRC-valid false frame
-- xtalk_tx_r0_frame_10s_0000_1048576: non-target CRC-valid false frame
-- xtalk_tx_r1_frame_10s_0000_1048576: non-target CRC-valid false frame
-- non-target CRC-valid false frame observed
+- crosstalk stage summary is missing
 
 ## Machine-readable evidence
 
