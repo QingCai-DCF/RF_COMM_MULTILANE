@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-CROSSTALK-FAILURE-DIAGNOSIS",
+  "status": "FAIL_PRESERVED_REMEDIATION_REQUIRED",
+  "generated_at_utc": "2026-08-01T22:29:16Z",
+  "run_id": "p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c",
+  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "artifact_freeze_sha256": "4392ecc0c85b53928ed916414d24fe0a9d7134a8cb15df8ddbd09c39b181ee1d",
+  "stage_status": {
+    "preflight": "PASS",
+    "echo_tail": "PASS",
+    "crosstalk": "FAIL",
+    "later_stages": "NOT_RUN"
+  },
+  "direct_receiver_evidence": {
+    "lane0_fixed_to_rotating": {
+      "accepted_data_frames": 4248,
+      "accepted_ack_frames": 136,
+      "cross_lane_counter": 0
+    },
+    "lane0_rotating_to_fixed": {
+      "accepted_data_frames": 4248,
+      "accepted_ack_frames": 136,
+      "cross_lane_counter": 0
+    },
+    "lane1_fixed_to_rotating": {
+      "accepted_data_frames": 4248,
+      "accepted_ack_frames": 136,
+      "cross_lane_counter": 136
+    },
+    "lane1_rotating_to_fixed": {
+      "accepted_data_frames": 4248,
+      "accepted_ack_frames": 136,
+      "cross_lane_counter": 136
+    },
+    "same_module_accepted_data_frames": 0,
+    "other_lane_blanked_count": 0,
+    "local_source_rejected_frames": 0,
+    "sender_side_blanked_raw_pulses": {
+      "lane0_fixed_to_rotating": 4454233,
+      "lane0_rotating_to_fixed": 4455316,
+      "lane1_fixed_to_rotating": 4450433,
+      "lane1_rotating_to_fixed": 4454173
+    }
+  },
+  "root_cause": {
+    "classification": "COUNTER_SEMANTICS_AND_ACK_HEADER_LANE_ID",
+    "finding": "The lane1 cross-lane count exactly equals the accepted lane1 ACK count in both directions, while all accepted DATA frames are on the selected physical lane.",
+    "rtl_mechanism": "ACK decode forces lane_id_o to zero, but the cross-lane counter compares every accepted ACK as well as DATA against the physical lane. Therefore each legitimate lane1 ACK is falsely counted as cross-lane acceptance.",
+    "local_source_observation": "The local-source reject counter remained zero because per-module admission blanked the self echo before frame decode. Goal section 20 permits, but does not require, a positive local-source reject count; the positive blanked-raw counts and zero same-module accepted frames directly show the earlier suppression path."
+  },
+  "required_remediation": [
+    "Encode the ACK logical lane in existing reserved ACK header byte 11 bit 1 without adding airtime, and decode it into lane_id_o.",
+    "Keep the cross-lane counter fail-closed for accepted DATA and ACK frames.",
+    "Require the hardware admission-config readback to prove local-source rejection is enabled, but do not require its counter to be positive when the earlier quarantine path already blocks the frame.",
+    "Rebuild and freeze both endpoints and rerun all offline and hardware acceptance stages under a new authorization."
+  ],
+  "shutdown": {
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "SHUTDOWN_EXIT": 0,
+    "TFDU_SHUTDOWN_PROGRAMMED": true
+  },
+  "evidence": {
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c/final/orchestrator_result.json",
+      "sha256": "f2af98a6b9ef83b60a675b5c64f25862b756d0cf0f1694dea4387611c3f7551c"
+    },
+    "crosstalk_stage_summary": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c/crosstalk_remediation/stage_summary.json",
+      "sha256": "0f83aa3bca9638e7713c2f26d327790aaea2f6903a3a01f7ed152fc88b84a927"
+    },
+    "run_manifest": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c/final/run_evidence_sha256_manifest.json",
+      "sha256": "654b899e908300b397abe5330996f14b1cb057e0d36b2d2d7b335099e4d9881b"
+    },
+    "shutdown_summary": {
+      "path": "evidence/generated/p10_1r_shutdown.json",
+      "sha256": "416eae5ba6b1c261a667a1c2e8476e51dfb38d055e1c6e9314ca3ee21d3b77a8"
+    }
+  },
+  "hardware_actions_executed": true,
+  "network_used": false,
+  "hardware_movement": false,
+  "rewiring_executed": false
+}
