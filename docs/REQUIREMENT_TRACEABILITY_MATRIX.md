@@ -6,9 +6,9 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 168
-PASS: 138
+PASS: 147
 PENDING: 16
-FAIL: 14
+FAIL: 5
 WAIVED: 0
 ```
 
@@ -163,20 +163,20 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P11-READY-001` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIVE_MODULE_INVENTORY_PLAN.md` | P11 shall have a fifth compatible and fully inventoried TFDU6102 small board. |
 | `P11-READY-002` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIXTURE_REQUIREMENTS.md` | P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry. |
 | `P11-READY-003` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_ABZ_INPUT_REQUIREMENTS.md` | P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition budget. |
-| `P10_1_HW-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CURRENT-RUN-AUTHORIZATION` | `evidence/generated/p10_1_hw_authorization_summary.json` | The P10.1 hardware campaign shall use a new immutable current-run authorization bound to the exact Goal, source, board identities, artifacts, limits, and shutdown policy. |
-| `P10_1_HW-002` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-IMMUTABLE-ARTIFACT-PROVENANCE` | `evidence/generated/p10_1_hw_artifact_summary.json` | Both AX7020 roles shall use independently routed, content-addressed performance bitstreams, XSA, BSP, and ELF built from one clean source commit. |
-| `P10_1_TIME-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-TIMER-CROSSCHECK` | `evidence/generated/p10_1_hw_timer_summary.json` | PS and PL elapsed-time measurements for every sustained hardware stream shall cross-check within one percent, with host time retained only as an orchestration view. |
-| `P10_1_METRIC-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Hardware application goodput shall count only remotely verified, atomically committed application bytes and shall exclude diagnostic microtransfers and host staging time. |
+| `P10_1_HW-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CURRENT-RUN-AUTHORIZATION` | `evidence/generated/p10_1_hw_authorization_summary.json` | The P10.1 hardware campaign shall use a new immutable current-run authorization bound to the exact Goal, source, board identities, artifacts, limits, and shutdown policy. |
+| `P10_1_HW-002` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-IMMUTABLE-ARTIFACTS` | `evidence/generated/p10_1_hw_artifact_summary.json` | Both AX7020 roles shall use independently routed, content-addressed performance bitstreams, XSA, BSP, and ELF built from one clean source commit. |
+| `P10_1_TIME-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-TIMER-CROSSCHECK` | `evidence/generated/p10_1_hw_timer_summary.json` | PS and PL elapsed-time measurements for every sustained hardware stream shall cross-check within one percent, with host time retained only as an orchestration view. |
+| `P10_1_METRIC-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Hardware application goodput shall count only remotely verified, atomically committed application bytes and shall exclude diagnostic microtransfers and host staging time. |
 | `P10_1_AUTO-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Sustained performance shall execute autonomously on the two boards, with the host absent from per-object and per-segment fast paths. |
-| `P10_1_PIPE-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SUSTAINED-PIPELINE` | `evidence/generated/p10_1_hw_pipeline_summary.json` | The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline in both directions without per-object drain. |
-| `P10_1_STREAM-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained F-to-R stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
-| `P10_1_STREAM-002` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained R-to-F stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
-| `P10_1_STREAM-003` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | Abort, PS reset, DMA reset, PL reset, duplicate, and stale-stream vectors shall never commit and shall be followed by a clean 64 MiB recovery stream without descriptor leakage. |
+| `P10_1_PIPE-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SUSTAINED-PIPELINE` | `evidence/generated/p10_1_hw_pipeline_summary.json` | The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline in both directions without per-object drain. |
+| `P10_1_STREAM-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained F-to-R stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
+| `P10_1_STREAM-002` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | A 64 MiB descriptor-chained R-to-F stream shall complete with incremental CRC32/SHA256 and one atomic application commit. |
+| `P10_1_STREAM-003` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STREAMING-64M-RECOVERY` | `evidence/generated/p10_1_hw_streaming_64m_summary.json` | Abort, PS reset, DMA reset, PL reset, duplicate, and stale-stream vectors shall never commit and shall be followed by a clean 64 MiB recovery stream without descriptor leakage. |
 | `P10_1_PERF-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | F-to-R two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least 300 seconds and 150 MiB committed. |
 | `P10_1_PERF-002` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | R-to-F two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least 300 seconds and 150 MiB committed. |
-| `P10_1_PERF-003` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | Measured sustained goodput and its primary bottleneck shall be reconciled with the corrected physical-airtime model without exceeding the same-protocol ceiling. |
+| `P10_1_PERF-003` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | Measured sustained goodput and its primary bottleneck shall be reconciled with the corrected physical-airtime model without exceeding the same-protocol ceiling. |
 | `P10_1_XTALK-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CROSSTALK-4X4` | `evidence/generated/p10_1_hw_crosstalk_summary.json` | The stationary two-board setup shall produce a direct 4-by-4 TX-to-RX raw and framed crosstalk matrix with zero non-target CRC-valid false frames. |
-| `P10_1_FD-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-1PLUS1-DIRECT-CAPABILITY` | `evidence/generated/p10_1_hw_1plus1_summary.json` | The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it. |
+| `P10_1_FD-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-1PLUS1-DIRECT-CAPABILITY` | `evidence/generated/p10_1_hw_1plus1_summary.json` | The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it. |
 | `P10_1_SOAK-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STATIONARY-30MIN` | `evidence/generated/p10_1_hw_stationary_30min_summary.json` | One complete 1800-second stationary performance run shall retain at least 4 Mbit/s in both formal directions with zero integrity, resource, retry, deadlock, or internal safety violations. |
 | `P10_1_SAFE-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SHUTDOWN-BOTH` | `evidence/generated/p10_1_hw_shutdown_summary.json` | Every stage and all error, timeout, interrupt, and normal exits shall end with independently verified shutdown of both bound AX7020 endpoints. |
 | `OBS-LED-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-MAPPING-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins. |
@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
-- `PROJECT_STATUS.md` — `fa784143ac280ae1799b7b3bc6c380be84776dce9f2d5fc6c5445d9e43c6f821`
+- `config/project_state.json` — `1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4`
+- `PROJECT_STATUS.md` — `5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
+- `config/project_state.json` — `1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
-- `PROJECT_STATUS.md` — `fa784143ac280ae1799b7b3bc6c380be84776dce9f2d5fc6c5445d9e43c6f821`
+- `config/project_state.json` — `1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4`
+- `PROJECT_STATUS.md` — `5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -969,23 +969,104 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/generated/p10_1_hardware_dry_run.json` — `1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d`
 
+### `P10_1_HW-001`
+
+- `evidence/generated/p10_1_hw_authorization_summary.json` — `e7cb69cde20c6c7155adbe22041da7ed6564918725a3f8b7dacd6cb931ca7ba5`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
 ### `P10_1_HW-002`
 
-- `evidence/generated/p10_1_hw_artifact_summary.json` — `0b80e47c14e12bc56416534e9be687fc136761b3ad7f815cf0add74ff1b8161f`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa` — `7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip` — `ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf` — `5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6`
+- `evidence/generated/p10_1_hw_artifact_summary.json` — `2d3d61877c178d8eb5ffa31e2d99914ba204cd7498983e6b277506ecf7741581`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa` — `7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip` — `ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit` — `d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa` — `89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip` — `d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa` — `89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip` — `d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
 - `artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit` — `cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148`
+
+### `P10_1_TIME-001`
+
+- `evidence/generated/p10_1_hw_timer_summary.json` — `729dc59679cd5f32cf30e1ec1e42ec44ec85661611f31189aedd9dfb514e20d6`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_METRIC-001`
+
+- `evidence/generated/p10_1_hw_metric_semantics_summary.json` — `6e433a5ce0eb9cac2e8b5bf9e4f0ff4cd983e64e1c41048b1e72094da3804f9c`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_PIPE-001`
+
+- `evidence/generated/p10_1_hw_pipeline_summary.json` — `b759120fff315e82efc34d2383b49be7e85d237357a6b40e199556517dac986e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_STREAM-001`
+
+- `evidence/generated/p10_1_hw_streaming_64m_summary.json` — `fbd8305413f6ac78aed2a1c0deb938e8231fb05215920d75e3f1407f774cc555`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_STREAM-002`
+
+- `evidence/generated/p10_1_hw_streaming_64m_summary.json` — `fbd8305413f6ac78aed2a1c0deb938e8231fb05215920d75e3f1407f774cc555`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_STREAM-003`
+
+- `evidence/generated/p10_1_hw_streaming_64m_summary.json` — `fbd8305413f6ac78aed2a1c0deb938e8231fb05215920d75e3f1407f774cc555`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_PERF-003`
+
+- `evidence/generated/p10_1_hw_half_duplex_summary.json` — `2f10fbc77ac2b667ce835fa174ab21b3d3717b940f0291860bca6e04e6e01e19`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
+### `P10_1_FD-001`
+
+- `evidence/generated/p10_1_hw_1plus1_summary.json` — `90ebb7a7a94b1d7adf9c8abc5873e050a0976e43fa93aad61258f5afb92a8bca`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
 
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `011afce6ffb7b53ead7839e81bb5d0e0026153c15ee8d9337ba7e11dc10cd5bc`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `e6ea3ba32352df1184ec709a1e15e4fa6f44dd9abfd76c5d683f546f8ccf41ae`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`

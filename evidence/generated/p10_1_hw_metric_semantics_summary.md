@@ -7,10 +7,8 @@
 
 ## Errors
 
-- preflight did not complete
-- 1-byte diagnostic record missing
-- diagnostic scaling exclusion missing
-- host fast-path exclusion failed
+- formal F-to-R host fast-path exclusion failed: 25 control commands
+- formal R-to-F host fast-path exclusion failed: 25 control commands
 
 ## Machine-readable evidence
 

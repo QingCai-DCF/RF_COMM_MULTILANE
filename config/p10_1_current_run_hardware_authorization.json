@@ -110,7 +110,7 @@
       "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
     }
   },
-  "campaign_disposition": "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
+  "campaign_disposition": "TERMINAL_FAIL_REMEDIATION_REQUIRED",
   "campaign_status": "FAIL",
   "consumed": true,
   "consumed_at_utc": "2026-08-01T09:37:55+00:00",
@@ -131,7 +131,7 @@
   },
   "ethernet_allowed": false,
   "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
-  "final_evidence_sha256": "1f8dc0b0d499240d26465458804a214938ea24e85b1d7b4a716d717834b3368f",
+  "final_evidence_sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68",
   "generated_at_utc": "2026-08-01T09:05:40+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
@@ -216,7 +216,7 @@
   "maximum_single_formal_run_seconds": 1800,
   "module_exchange_allowed": false,
   "movement_allowed": false,
-  "next_required_user_action": "none; continue automatic remediation and retry under the current user-authorized unlimited retry policy",
+  "next_required_user_action": "review the terminal FAIL evidence; any remediation artifact change requires a new immutable bundle and full reacceptance",
   "obscuration_allowed": false,
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
@@ -261,6 +261,11 @@
   "shutdown_rotating": "PASS",
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
   "status": "CONSUMED_AFTER_P10_1_HARDWARE_FAIL",
+  "terminal_campaign_id": "p10_1_hw_terminal_20260801_bb6ce78a_1585d1ad_9ad4f85f",
+  "terminal_campaign_summary": {
+    "path": "evidence/generated/p10_1_hw_campaign_terminal_summary.json",
+    "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
+  },
   "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
   "user_retry_limit_override": "不设上限"
 }

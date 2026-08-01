@@ -1,4 +1,4 @@
-# P10.1 stationary 30-minute acceptance
+# P10.1 1800-second stationary formal run
 
 - Status: `FAIL`
 - Test ID: `P10_1-HW-STATIONARY-30MIN`
@@ -13,7 +13,6 @@
 - stationary_30min_formal_f2r: active application goodput below 4 Mbit/s
 - stationary_30min_formal_r2f: wall application goodput below 4 Mbit/s
 - stationary_30min_formal_r2f: active application goodput below 4 Mbit/s
-- formal runtime is not exactly 1800 seconds
 
 ## Machine-readable evidence
 

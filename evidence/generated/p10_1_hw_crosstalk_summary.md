@@ -1,4 +1,4 @@
-# P10.1 4x4 echo and crosstalk matrix
+# P10.1 four-by-four crosstalk matrix
 
 - Status: `FAIL`
 - Test ID: `P10_1-HW-CROSSTALK-4X4`
@@ -7,7 +7,10 @@
 
 ## Errors
 
-- crosstalk stage summary is missing
+- xtalk_tx_f0_frame_10s_0000_1048576: non-target CRC-valid false frame
+- xtalk_tx_f1_frame_10s_0000_1048576: non-target CRC-valid false frame
+- xtalk_tx_r0_frame_10s_0000_1048576: non-target CRC-valid false frame
+- xtalk_tx_r1_frame_10s_0000_1048576: non-target CRC-valid false frame
 
 ## Machine-readable evidence
 

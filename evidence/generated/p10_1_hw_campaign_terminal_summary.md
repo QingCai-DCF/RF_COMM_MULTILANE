@@ -1,4 +1,4 @@
-# P10.1 hardware performance acceptance
+# P10.1 hardware campaign terminal summary
 
 - Status: `FAIL`
 - Test ID: `P10_1-HW-FINAL-ACCEPTANCE`
@@ -58,4 +58,4 @@
 
 ## Machine-readable evidence
 
-`evidence/generated/p10_1_hw_final_summary.json`
+`evidence/generated/p10_1_hw_campaign_terminal_summary.json`

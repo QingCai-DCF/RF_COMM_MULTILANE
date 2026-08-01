@@ -51,76 +51,59 @@
       "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea"
     }
   },
-  "artifact_provenance": "CAPTURED_IMMUTABLE_CURRENT_RUN_AUTHORIZATION",
-  "authorization_lifecycle": "CONSUMED_AFTER_RUN",
+  "artifact_provenance": "MULTI_RUN_CAPTURED_IMMUTABLE_CURRENT_RUN_AUTHORIZATIONS",
   "board_identities": {
     "fixed": {
       "id": "AX7020-F/JTAG:210249855178",
-      "serial": "210249855178",
-      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+      "serial": "210249855178"
     },
     "rotating": {
       "id": "AX7020-R/JTAG:210512180081",
-      "serial": "210512180081",
-      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+      "serial": "210512180081"
     }
   },
+  "campaign_id": "p10_1_hw_terminal_20260801_bb6ce78a_1585d1ad_9ad4f85f",
   "captured_run_hardware_authorization": true,
   "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T09:37:55+00:00",
+  "generated_at_utc": "2026-08-01T09:48:54Z",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
-  "hardware_runtime_config": {
-    "bytes": 2264,
-    "path": "config/performance/p10_1_hardware_runtime.yaml",
-    "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
-  },
   "maximum_lane_mask_used": "0x3",
-  "measurement_contract": {
-    "bytes": 4098,
-    "path": "config/performance/p10_1_measurement_contract.yaml",
-    "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
-  },
   "network_used": false,
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
-  "pipeline_config": {
-    "bytes": 2861,
-    "path": "config/performance/p10_1_pipeline.yaml",
-    "sha256": "8091670777af5a02986371a550cbac3ebd85adab9390486c93ce9c32cde45882"
-  },
+  "pass_claimed": false,
   "raw_evidence": [
     {
-      "bytes": 2264,
-      "path": "config/performance/p10_1_hardware_runtime.yaml",
-      "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
+      "bytes": 31227,
+      "evidence_role": "SELECTED_STAGE_SUMMARY",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f/stages/streaming/stage_summary.json",
+      "sha256": "faf7514314de839a54d35cd365b785d7692dfc3e27cfa3211723d9272c82cb76"
+    },
+    {
+      "bytes": 116891,
+      "evidence_role": "SELECTED_STAGE_SUMMARY",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f/stages/crosstalk/stage_summary.json",
+      "sha256": "a356939881acbf6259d7a80c5f96f7f575d1a9ff45567bb8612f1697c0ad9306"
     }
   ],
-  "reason": "The frozen runtime address/mailbox contract supports at most 64 MiB; 128 MiB is nonblocking and was not emulated or misreported as hardware.",
-  "register_map": {
-    "bytes": 52873,
-    "path": "config/register_map/ir_axi_regs.yaml",
-    "sha256": "ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8"
-  },
+  "reason": "optional nonblocking extension was not selected by the bounded runner; the main run stopped after the mandatory crosstalk gate failed",
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_ids": [
+    "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f"
+  ],
   "schema_version": 1,
+  "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
   "status": "SKIP_WITH_REASON",
-  "streaming_contract": {
-    "bytes": 1085,
-    "path": "config/performance/p10_1_streaming.yaml",
-    "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
-  },
-  "test_id": "P10_1-HW-STREAMING-128M",
-  "wiring": {
-    "bytes": 27452,
-    "path": "config/hardware/p10_active_wiring.yaml",
-    "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
-  }
+  "test_id": "P10_1-HW-STREAMING-128M-NONBLOCKING"
 }

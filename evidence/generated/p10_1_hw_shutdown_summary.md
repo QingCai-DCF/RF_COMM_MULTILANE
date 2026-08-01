@@ -1,4 +1,4 @@
-# P10.1 dual-endpoint shutdown
+# P10.1 cross-run dual-endpoint shutdown
 
 - Status: `PASS`
 - Test ID: `P10_1-HW-SHUTDOWN-BOTH`

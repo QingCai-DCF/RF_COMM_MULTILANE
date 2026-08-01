@@ -1,13 +1,9 @@
-# P10.1 single/two-lane baseline
+# P10.1 single-lane and two-lane baseline
 
-- Status: `FAIL`
-- Test ID: `P10_1-HW-BASELINE`
+- Status: `PASS`
+- Test ID: `P10_1-HW-BASELINE-SCALING`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- baseline stage summary is missing
 
 ## Machine-readable evidence
 

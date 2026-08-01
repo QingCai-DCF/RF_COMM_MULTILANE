@@ -1,13 +1,9 @@
-# P10.1 bounded adaptive tuning
+# P10.1 adaptive tuning
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_1-HW-ADAPTIVE-TUNING`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- tuning stage summary is missing
 
 ## Machine-readable evidence
 

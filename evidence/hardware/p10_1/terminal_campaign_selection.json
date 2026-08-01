@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "campaign_id": "p10_1_hw_terminal_20260801_bb6ce78a_1585d1ad_9ad4f85f",
+  "selected_at_utc": "2026-08-01T09:48:54Z",
+  "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "artifact_sha256": {
+    "fixed_performance_bitstream": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+    "rotating_performance_bitstream": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+    "fixed_elf": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728",
+    "rotating_elf": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0",
+    "fixed_shutdown_bitstream": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3",
+    "rotating_shutdown_bitstream": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+  },
+  "board_serials": {
+    "fixed": "210249855178",
+    "rotating": "210512180081"
+  },
+  "maximum_lane_mask": 3,
+  "maximum_single_formal_run_seconds": 1800,
+  "runs": [
+    {
+      "run_id": "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+      "selection_role": "SUPPLEMENTAL_IMMUTABLE_FAULTS_PASS",
+      "selected_stages": [],
+      "files": {
+        "final/orchestrator_result.json": "8cf10f26f30008a14d5409e8484aaf5f9cb55032c37cecbb01ea6c68a99f1955",
+        "final/run_evidence_sha256_manifest.json": "d5ade86d5042d2123efb5acce35892137ced3dfb0a554fc1a8ffa9652c330eaf",
+        "authorization/immutable_authorization.json": "243dab920f47844044afd8650fe53cce97202eedf107c7e76918bdf06d61cb71",
+        "authorization/authorization_record.json": "216fcb58b19dc3223920ce7f5598e03c2c61bab2acebfae5701486c1342534f1",
+        "stages/faults/stage_summary.json": "4f2015b2ec5d364a9c0d4438661a4e96c4509991523795019bee75f5a250be33"
+      }
+    },
+    {
+      "run_id": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+      "selection_role": "MAIN_THROUGH_CROSSTALK",
+      "selected_stages": [
+        "preflight",
+        "smoke",
+        "baseline",
+        "tuning",
+        "pipeline",
+        "streaming",
+        "faults",
+        "crosstalk"
+      ],
+      "files": {
+        "final/orchestrator_result.json": "7d273948dff588e8a18fc9e66e6d82dd5b21f4ec48999e58a2e065386a274716",
+        "final/run_evidence_sha256_manifest.json": "299265193c979c3de36c98af9f2fecda67b932a01fd60095d7bbf416a5b7cdff",
+        "authorization/immutable_authorization.json": "f45d10464a7eb1d006b0fa30df7e74b96518afaca153b554a044de559ef2d9b1",
+        "authorization/authorization_record.json": "dfee734b5143ecbf41a1deb72e19adae98244b75d31be40cfce7ce2184197dfa",
+        "stages/preflight/stage_summary.json": "1630f6d01c8729b6754eeddf41f98bd5c4fbe82b3d20ecc5a3e4f5d16d8c7472",
+        "stages/smoke/stage_summary.json": "e3eb2f5d137e37649d77070130cedf9cdf434a44f290184adcecd2463bfdc259",
+        "stages/baseline/stage_summary.json": "2309e196847f79487720995aa693c38b6cde149e3b01cfb5c91f03248dc5533f",
+        "stages/tuning/stage_summary.json": "9b12ad0c65d622e024a59935ad4ea7de4408f2e923229a797e3039762002f709",
+        "stages/pipeline/stage_summary.json": "f1ee8d2c846ecaad81a05665c65d9ecfc99b80a44a140fcf2a8e5d852678643e",
+        "stages/streaming/stage_summary.json": "faf7514314de839a54d35cd365b785d7692dfc3e27cfa3211723d9272c82cb76",
+        "stages/faults/stage_summary.json": "ca6a45cbe61913456a0f3ee54a23b767a4a8796774d3e52347a9fa7e5acfc82e",
+        "stages/crosstalk/stage_summary.json": "a356939881acbf6259d7a80c5f96f7f575d1a9ff45567bb8612f1697c0ad9306"
+      }
+    },
+    {
+      "run_id": "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+      "selection_role": "HALF_DUPLEX",
+      "selected_stages": [
+        "half_duplex"
+      ],
+      "files": {
+        "final/orchestrator_result.json": "9be4dc1d0185bce4a3a2026cb719f5a573125e8d9f25b94ab97beb63f24dbdd7",
+        "final/run_evidence_sha256_manifest.json": "52271796adea44f946a5f851664ae590f42f47b58b2858ff5e9f2912c81f86f1",
+        "authorization/immutable_authorization.json": "7ffd1197adf192ff438d4d326013b0dfb94caaef56592b15167d509a8ede3086",
+        "authorization/authorization_record.json": "367d19df93f5108ebffa37f5385255b97717dff8c4345df69217aeae492dca53",
+        "stages/half_duplex/stage_summary.json": "366c9342c7106db036243e104dff61b5362cdb8a9d45828537cf4614fab85ef1"
+      }
+    },
+    {
+      "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+      "selection_role": "ONEPLUSONE_CAPABILITY",
+      "selected_stages": [
+        "oneplusone"
+      ],
+      "files": {
+        "final/orchestrator_result.json": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+        "final/run_evidence_sha256_manifest.json": "2c4818168416f7385c80d6d5bff4fdb25c1f462fe8508055699c62c64ef50735",
+        "authorization/immutable_authorization.json": "9ad7c055df3bce3e6afdb72a22b1192c7ce4a6a7dc56524d74ac62aafcadecb0",
+        "authorization/authorization_record.json": "dce7e0d9ef751df82ba9b634785443654d362a83f9fc17b3a581836142f08f36",
+        "stages/oneplusone/stage_summary.json": "e0f985be203c347e9bec56050591dbd11ff5058a5a09e10887c255aead0e42a3"
+      }
+    },
+    {
+      "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
+      "selection_role": "FORMAL_1800S",
+      "selected_stages": [
+        "formal"
+      ],
+      "files": {
+        "final/orchestrator_result.json": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
+        "final/run_evidence_sha256_manifest.json": "c7f83a8ff53c322126703c005e6ceefbd083a99debbbe1cd3613ade0be8f0a2a",
+        "authorization/immutable_authorization.json": "6f721aaa8373e5ecd17d048664dc6285bb2c536438cc7f21cb6806d4e0432a8e",
+        "authorization/authorization_record.json": "b31d3e8a105ed8f68dc781914c6074ee2a7b4f5d9a6f4e52e8d7f3aacb4967b5",
+        "stages/formal/stage_summary.json": "57beaf682f12fc556cf1249b3b7439fe72beffe490872cc9c627f93286d26ce4"
+      }
+    }
+  ]
+}

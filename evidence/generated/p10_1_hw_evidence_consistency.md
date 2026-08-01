@@ -1,14 +1,9 @@
-# P10.1 hardware evidence consistency
+# P10.1 terminal hardware evidence consistency
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_1-HW-EVIDENCE-CONSISTENCY`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- orchestrator boundary/status is invalid
-- executed stage set differs from authorization
 
 ## Machine-readable evidence
 

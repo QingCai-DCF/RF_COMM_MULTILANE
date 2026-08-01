@@ -1,19 +1,4 @@
-# P10.1 hardware performance acceptance
-
-- Status: `FAIL`
-- Test ID: `P10_1-HW-FINAL-ACCEPTANCE`
-- Hardware actions executed: `true`
-- Current-run hardware authorization: `false`
-
-## Errors
-
-- BOARD_AUTONOMOUS_FAST_PATH
-- HOST_NOT_IN_FAST_PATH
-- F_TO_R_APPLICATION_GOODPUT_4MBPS
-- R_TO_F_APPLICATION_GOODPUT_4MBPS
-- CROSSTALK_4X4_MATRIX_ACCEPTANCE
-- NON_TARGET_CRC_VALID_FALSE_FRAME_ZERO
-- STATIONARY_30MIN
+# P10.1 Hardware Campaign Terminal Audit
 
 ## Terminal classification
 
@@ -56,6 +41,6 @@
 - Hardware authorization is consumed and currently `false`.
 - No Ethernet, movement, rotation, obscuration, module exchange, or rewiring was used.
 
-## Machine-readable evidence
+## Machine-readable terminal evidence
 
-`evidence/generated/p10_1_hw_final_summary.json`
+`evidence/generated/p10_1_hw_campaign_terminal_summary.json`

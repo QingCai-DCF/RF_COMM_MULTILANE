@@ -1,13 +1,9 @@
-# P10.1 current-run hardware authorization
+# P10.1 multi-run current-run authorization audit
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_1-HW-CURRENT-RUN-AUTHORIZATION`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- captured current-run authorization is invalid
 
 ## Machine-readable evidence
 

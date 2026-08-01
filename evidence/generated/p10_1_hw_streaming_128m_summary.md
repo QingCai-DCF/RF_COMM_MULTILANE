@@ -1,7 +1,7 @@
 # P10.1 optional 128 MiB streaming
 
 - Status: `SKIP_WITH_REASON`
-- Test ID: `P10_1-HW-STREAMING-128M`
+- Test ID: `P10_1-HW-STREAMING-128M-NONBLOCKING`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
 

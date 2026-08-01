@@ -151,7 +151,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Source commit: `bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1`
 - Fixed / rotating-role IDs: `AX7020-F/JTAG:210249855178` / `AX7020-R/JTAG:210512180081`
 - Final evidence: `evidence/generated/p10_1_hw_final_summary.json`
-- F→R / R→F application goodput: `None` / `None` bit/s
+- F→R / R→F application goodput: `2587436.3002872` / `2585671.4991892674` bit/s
 - Shutdown fixed / rotating: `PASS` / `PASS`
 - Hardware actions / network / movement: `true` / `false` / `false`
 - Scope remains stationary dual AX7020, two lanes, no Ethernet and no movement; it does not promote P11, 8x32, 600 rpm, physical GLOBAL_PERMIT, external duty, or product-final acceptance.
