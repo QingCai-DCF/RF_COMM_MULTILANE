@@ -68,19 +68,18 @@
   "captured_run_hardware_authorization": true,
   "current_run_hardware_authorization": false,
   "errors": [
-    "orchestrator boundary/status is invalid",
     "executed stage set differs from authorization"
   ],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T03:27:26+00:00",
+  "generated_at_utc": "2026-08-01T03:38:01+00:00",
   "generated_pair_count": 18,
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "hardware_runtime_config": {
-    "bytes": 1786,
+    "bytes": 1904,
     "path": "config/performance/p10_1_hardware_runtime.yaml",
-    "sha256": "6402e97f5d83aed23693223626f1b712ba4fb00c075b38aecbd8fe5510df4384"
+    "sha256": "a296d64ed755937eebce2ae6cde6660db9b6aa13e6092ac656511911d2bd786c"
   },
   "maximum_lane_mask_used": "0x3",
   "measurement_contract": {
@@ -93,20 +92,20 @@
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
   "pipeline_config": {
-    "bytes": 2525,
+    "bytes": 2522,
     "path": "config/performance/p10_1_pipeline.yaml",
-    "sha256": "8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d"
+    "sha256": "02b00d2571a33cf1f076a0ee20ba1eddea8fce706d7e0bd2c5a67f3a1cc88ac5"
   },
   "raw_evidence": [
     {
-      "bytes": 9062,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T032353Z_bfff4836_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
-      "sha256": "bf693c773edf81bb8cc5b0128e979e9e84b43683c47e05ae9f071ff2cbdbb63a"
+      "bytes": 12151,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "cf560ac90b1fb0d2d46ee11c9ed7f00d70107e519ae29dcd29e57a80190ef423"
     },
     {
-      "bytes": 16482,
+      "bytes": 19742,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "64228a314d6157cfd748b45efca730abfee1c181efd30c542d3dc51d0477b990"
+      "sha256": "6e087cd0a60231c7d67c9074450f868744275a4fda8a1874d8286ecb0a5d2761"
     }
   ],
   "register_map": {
@@ -116,8 +115,8 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T032353Z_bfff4836_1585d1ad_9ad4f85f",
-  "run_manifest_file_count": 50,
+  "run_id": "p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f",
+  "run_manifest_file_count": 67,
   "schema_version": 1,
   "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
   "status": "FAIL",

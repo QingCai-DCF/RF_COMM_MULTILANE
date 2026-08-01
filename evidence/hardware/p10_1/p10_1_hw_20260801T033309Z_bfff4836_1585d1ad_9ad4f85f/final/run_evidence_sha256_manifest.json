@@ -1,0 +1,344 @@
+{
+  "files": [
+    {
+      "bytes": 26867,
+      "path": "artifacts/fixed/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 26867,
+      "path": "artifacts/rotating/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 1201,
+      "path": "authorization/authorization_record.json",
+      "sha256": "df293a048617e7503049eadc74dbca2827548cad9522896974826d844f7ef957"
+    },
+    {
+      "bytes": 9940,
+      "path": "authorization/immutable_authorization.json",
+      "sha256": "fe0d388d8b120015d54465e50b527f2e8f66451eb1fdf8ad27308855adc7081a"
+    },
+    {
+      "bytes": 163349,
+      "path": "final/orchestrator_result.json",
+      "sha256": "2ee9cab6796a1c243126fb7d5a0ee76aa1d3f46f6d56fcc2301a6826ee6586ec"
+    },
+    {
+      "bytes": 68,
+      "path": "raw_logs/hw_server.json",
+      "sha256": "45c8044adb4fb019f99fc06b7cab6eb63a75e2c107d8158d586f5432cd49aeb0"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/final_shutdown/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/final_shutdown/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/final_shutdown/attempt_1.stdout.log",
+      "sha256": "b3541ea5e1571647614c7050899677aa53793ce5a7d6b28bd38ea658f23d1ca9"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/finally_emergency/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/finally_emergency/attempt_1.stdout.log",
+      "sha256": "a049a1bd8f21f1b3dd7d5f7e2d7b3d5bff287245cb6542449bbf7f4a5d9af172"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/initial_shutdown/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/initial_shutdown/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/initial_shutdown/attempt_1.stdout.log",
+      "sha256": "11daf7e3dff2b3955580e1ebcc5c783cba4460868dcde475f258896ce6b48045"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/tuning_after/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/tuning_after/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/tuning_after/attempt_1.stdout.log",
+      "sha256": "10050c1da67f2d61b3359931046b28d731be2d8df48487db8f3fc8c665d00244"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/tuning_before/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/tuning_before/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/tuning_before/attempt_1.stdout.log",
+      "sha256": "f911a931ee373be2e6a1f7e7d6793079fe475bccd29be4f9867bfc0000ead091"
+    },
+    {
+      "bytes": 8594,
+      "path": "stages/tuning/dumps/observations.psv",
+      "sha256": "a322623fe5fff031355d98b58798807d452c0fe52923b9117f997c8c4214f070"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/P10-DIAG_endpoint_shutdown.fixed.bin",
+      "sha256": "1eb65f2a331328ef6b00ca096b599d67a5089f503010230ec8eefe6abbb6b37d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/P10-DIAG_endpoint_shutdown.rotating.bin",
+      "sha256": "d976658332836f4b4d4c93b74344299fe8bd6e2b18981652ee496af65e05ff55"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/P10-DIAG_ready.fixed.bin",
+      "sha256": "62e99b3966b80c79910e8a1428dc9b4e98af1795203aee14e7857acdac7ed19e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/P10-DIAG_ready.rotating.bin",
+      "sha256": "9133bc3b4e16caa74690a483cb3903e3009761a02d33849d1525001a038f6dc2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch16.fixed.bin",
+      "sha256": "bd8964ff8088abffe090f136be2bd6afb1aa0a56896320fe101a0789e6b238ce"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch16.fixed.p10_1.bin",
+      "sha256": "7b03557f8c49603057b7b72ed720b81601c38643d9e455d1cf49de66d748c33a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch16.rotating.bin",
+      "sha256": "c6401877c1ab83bda0a08fb4f16a2e155c7321b2648a0e5da5b8c7095d2281db"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch16.rotating.p10_1.bin",
+      "sha256": "771d691aee35054e932e71f67f8cfd54fdd92f3c2e012442b28a3bfdb2dcbd73"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch4.fixed.bin",
+      "sha256": "3f007eddeb741cc529b129de70a289b9bb1c3ccaf9f536296ef20b6a0289fd9e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch4.fixed.p10_1.bin",
+      "sha256": "7759b0090938627fe419b481104e2b54609d1ce074a1898b413b63b5b06e07d1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch4.rotating.bin",
+      "sha256": "d6b8eca49bf0a55f8e9a36fb97c23063a6e0fcf8e7510de0e61bd7e1b535471f"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch4.rotating.p10_1.bin",
+      "sha256": "b8399591fb5a4f1b33098960ffe875d264b90e8aa2f47e1f455cd7cc6be6a5ca"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch8.fixed.bin",
+      "sha256": "5ef88c6d9a453ef926f623677cc537454bcd2a2e3773cf8198e62f9219b8290e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch8.fixed.p10_1.bin",
+      "sha256": "73619864b3d5307e59f66884f9aaf46e76ebd45cb022b17581d2489f2df63b29"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_batch8.rotating.bin",
+      "sha256": "ccc18206ecf7c00b5d8f165dd5f7827b27ac6d1017187b12f92604b47ded5423"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_batch8.rotating.p10_1.bin",
+      "sha256": "5d24c2826e86b13e6644e89a6f9d0e0e43f06ab76d2eac499504658489e681a6"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer2.fixed.bin",
+      "sha256": "2275385f85175a7e67e32699164d51fa538be291b900c0844276bae004605067"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer2.fixed.p10_1.bin",
+      "sha256": "41bb81432fdaecac5889fd2210679df2d0825a3fa48ad53e5b2f0ca668deb5b1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer2.rotating.bin",
+      "sha256": "7face8bc41dcb0d7b8d514758d1582cb49a1cc5282ac7d55a315b50cced23dab"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer2.rotating.p10_1.bin",
+      "sha256": "8c3482bc067b856d6128d4db70dfea5b14f8f59be12353a5716ede09bdc62203"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer4.fixed.bin",
+      "sha256": "997afc87c0649cc04990424499b2d3621b226cdd80431e58d1b08cf1221a6194"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer4.fixed.p10_1.bin",
+      "sha256": "6c9de1505a86cd91c35ec0b87f2395ff1af7143feac6e6ce2653f81b3ac5a855"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer4.rotating.bin",
+      "sha256": "1250cc329fcd5fb5d6da0892d4a56b991e5ca499ef04c553498844abdc728044"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer4.rotating.p10_1.bin",
+      "sha256": "edd162bab88b5fd0c5066bcfde12514c0b2bd5b366a50e5dafc0023c9a752206"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer8.fixed.bin",
+      "sha256": "c174ffdc828f9b87eee0f3bf68ae22bb621d7af37d380d75cc6793693870fbbc"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer8.fixed.p10_1.bin",
+      "sha256": "59f266ab7dfb1cf7fae19cb532ca518a4e2924c1a6df1a7ac473832538c77da5"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_buffer8.rotating.bin",
+      "sha256": "d8f1d5aaf885c5cf401042c061a03b0162488a13ae6b66d15163ece26ded575c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_buffer8.rotating.p10_1.bin",
+      "sha256": "51c1848e66632cace2373b05299fcfb126cf702c5486da9985c883f2253b9298"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring16.fixed.bin",
+      "sha256": "b0ac2f244ddaaa03c07366e2337c9cca2e90c7a2d7f06584d824d7ddf8ac721a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring16.fixed.p10_1.bin",
+      "sha256": "5005eedb2a009df1f69ad8acd3065e3a8d4d513a6d851f1c3bbecd556c159321"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring16.rotating.bin",
+      "sha256": "340e1bfa0dbd0d72b85c827cffba7a3027fd2aefcd6361aa4ec0592922db9c0f"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring16.rotating.p10_1.bin",
+      "sha256": "47319c6ce1afecaff9e6237be07cf5a2bb59da206846762d152e33c4995dd0bf"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring32.fixed.bin",
+      "sha256": "caeecce546819c9b4f786c538cf95ac4c302a7266d3e3f8b6dc1908bd51a7e45"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring32.fixed.p10_1.bin",
+      "sha256": "1f626c6ee0e2d52ec5059643cac43cf90c26bc8978860009eb87980b6d1f171f"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring32.rotating.bin",
+      "sha256": "1520786bcb5352951e63b69019ab4ee3429cda6e18c2d2cfc6a36010b8f4eede"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring32.rotating.p10_1.bin",
+      "sha256": "1b1bad2673ac6423bef68faf524766130f032d81a054cd48ebd60a4ffceea07f"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring8.fixed.bin",
+      "sha256": "d136b69e60508665da1425e2a82da05da569a2a228c4f0789dc372b4df82e7b7"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring8.fixed.p10_1.bin",
+      "sha256": "6393025ead44d66322c86e466aa5329f3367dd0b25fc564034ee6676fb7a6553"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/tuning/dumps/tune_ring8.rotating.bin",
+      "sha256": "93779814b71570c3718fbd70e9f5976c1f30032521684c1fa05a06472793b902"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/tuning/dumps/tune_ring8.rotating.p10_1.bin",
+      "sha256": "044a850777fb5fde181f1ecfa7fbc22a6ba0b374392e5fb5e2c07caa7a266176"
+    },
+    {
+      "bytes": 122048,
+      "path": "stages/tuning/stage_summary.json",
+      "sha256": "282e56e0d7033d5277b4a14a95ffa55fc608accf43c5c7ba44f1af3f862addb5"
+    },
+    {
+      "bytes": 1067,
+      "path": "stages/tuning/tuning.plan",
+      "sha256": "1e528bb0a2203deb33c74d3f3cd6c3950fb285122690a24654a3e445fc73c9c4"
+    },
+    {
+      "bytes": 2895,
+      "path": "stages/tuning/xsdb.result.txt",
+      "sha256": "ec4ba1eb1663acc931d908c433dc33682f6b175f49ca435a3ae16ae64083a0e8"
+    },
+    {
+      "bytes": 0,
+      "path": "stages/tuning/xsdb.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2895,
+      "path": "stages/tuning/xsdb.stdout.log",
+      "sha256": "ec4ba1eb1663acc931d908c433dc33682f6b175f49ca435a3ae16ae64083a0e8"
+    }
+  ],
+  "generated_at_utc": "2026-08-01T03:37:28+00:00",
+  "run_id": "p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-HW-EVIDENCE-MANIFEST"
+}
