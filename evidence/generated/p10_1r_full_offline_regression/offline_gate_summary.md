@@ -54,7 +54,7 @@ test_state_rejects_p7_regression (tests.test_p8a_consistency.P8AConsistencyTests
 test_state_requires_legacy_ab_l1_record (tests.test_p8a_consistency.P8AConsistencyTests.test_state_requires_legacy_ab_l1_record) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 18.660s
+Ran 13 tests in 18.353s
 
 OK
 ```
@@ -134,7 +134,7 @@ M1_TFDU_MODEL_REFERENCE=PASS
 
 ```text
 REGISTER_MAP_SINGLE_SOURCE_CREATED=1
-REGISTER_MAP_SHA256=2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6
+REGISTER_MAP_SHA256=cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea
 REGISTER_MAP_VERSION=P10-2
 
 ```
@@ -1696,15 +1696,15 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_physical_module_safety.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/tfdu_lane_phy.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1738,9 +1738,9 @@ source xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
-$finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
+$finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:27:57 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:05 2026...
 
 ```
 
@@ -1755,11 +1755,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1789,9 +1789,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
-$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
+$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:02 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:09 2026...
 
 ```
 
@@ -1806,9 +1806,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_frame_l1.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_frame_l1.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_frame_l1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_lane0_frame_crc.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_frame_crc.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1837,9 +1837,9 @@ source xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_FRAME_CRC_PASS=1
-$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_lane0_frame_crc.sv" Line 195
+$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:06 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:13 2026...
 
 ```
 
@@ -1854,11 +1854,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1889,9 +1889,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
-$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
+$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:11 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:18 2026...
 
 ```
 
@@ -1906,9 +1906,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_arq_l2.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_arq_l2.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_arq_l2
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_lane0_ack_only.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_ack_only.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_ack_only
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1937,9 +1937,9 @@ source xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_ACK_ONLY_PASS=1
-$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_lane0_ack_only.sv" Line 181
+$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:15 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:22 2026...
 
 ```
 
@@ -1954,9 +1954,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_axi_regs_new
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1985,9 +1985,9 @@ source xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_AXI_REGS_NEW_PASS=1
-$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_ir_axi_regs_new.sv" Line 177
+$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:20 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:27 2026...
 
 ```
 
@@ -2002,9 +2002,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/rtl/ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_multilane_scheduler
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -2033,9 +2033,9 @@ source xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
-$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
+$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:28:24 2026...
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:31 2026...
 
 ```
 

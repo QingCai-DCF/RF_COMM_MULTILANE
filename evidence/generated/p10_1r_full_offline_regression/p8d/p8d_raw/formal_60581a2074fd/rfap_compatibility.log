@@ -1,0 +1,10 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe tools/p8d_rfap_reference.py --json-summary --output C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\evidence\generated\p10_1r_exact_source_p8d\p8d_raw\formal_60581a2074fd\rfap_compatibility.json
+RETURN_CODE=0
+STARTED_UTC=2026-08-01T21:03:18.330760Z
+FINISHED_UTC=2026-08-01T21:03:18.468919Z
+STDOUT_BEGIN
+{"CURRENT_RUN_HARDWARE_AUTHORIZATION": false, "NO_HARDWARE_ACTIONS_EXECUTED": true, "atomic_publish_count": 1, "capability_mismatch_rejected": true, "legacy_header_bytes": 32, "legacy_useful_chunk_bytes": 215, "maximum_inflight_bytes": 65536, "mixed_version_malformed_rejected": true, "negotiation_matrix": {"legacy_request_vnext_capable_peer": 1, "v1_to_v1": 1, "vnext_request_legacy_peer": 1, "vnext_to_vnext": 2}, "partial_object_publish_count": 0, "profile": "P8D_MULTI_PROFILE_OFFLINE", "reset_during_negotiation": "PASS", "rfap_v1_vector_count": 1200, "rfap_v1_vector_path": "tests/vectors/p7_app_protocol_vectors.json", "rfap_v1_vector_sha256": "b1015c343dec626328a3b5a1295754b065c1d28a681c87ca71dcb533463d36df", "schema_version": 1, "session_renegotiation": "PASS", "stale_replay_rejection": "PASS", "status": "PASS", "streamed_object_bytes": 67108864, "streaming_complete": true, "test_id": "P8D-RFAP-V1-VNEXT-COMPATIBILITY", "vnext_header_bytes": 48}
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

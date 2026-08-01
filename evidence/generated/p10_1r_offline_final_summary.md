@@ -7,4 +7,4 @@
 
 The focused RTL/model regressions, exact-source complete offline regression, fixed/rotating routed builds, shutdown builds, BSPs, and ELFs are complete.
 
-This checkpoint is not a P10.1R hardware PASS. Echo-tail statistics, the final per-module guard, direct admission counters, 4.0 Mbit/s goodput, 5x64 MiB streaming, and the 1800-second run remain PENDING.
+This checkpoint is not a P10.1R hardware PASS. The calibration-selected guard is frozen, but rebuilt-artifact echo-tail verification, direct admission counters, 4.0 Mbit/s goodput, 5x64 MiB streaming, and the 1800-second run remain PENDING.

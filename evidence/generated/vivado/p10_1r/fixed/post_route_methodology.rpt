@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-| Date         : Sun Aug  2 00:18:35 2026
+| Date         : Sun Aug  2 03:48:28 2026
 | Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
 | Command      : report_methodology -file C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/generated/vivado/p10_1r/fixed/post_route_methodology.rpt
 | Design       : p10_ps_system_wrapper
@@ -97,162 +97,162 @@ Related violations: <none>
 
 PDRC-190#1 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[0] in site SLICE_X36Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[0].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[0] in site SLICE_X46Y94 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[0].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#2 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[10] in site SLICE_X37Y60 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[10].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[10] in site SLICE_X50Y92 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[10].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#3 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[11] in site SLICE_X39Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[11].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[11] in site SLICE_X46Y92 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[11].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#4 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[12] in site SLICE_X43Y62 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[12].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[12] in site SLICE_X48Y93 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[12].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#5 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[13] in site SLICE_X38Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[13].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[13] in site SLICE_X49Y94 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[13].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#6 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[14] in site SLICE_X45Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[14].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[14] in site SLICE_X44Y93 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[14].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#7 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[15] in site SLICE_X41Y60 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[15].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[15] in site SLICE_X43Y96 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[15].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#8 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[16] in site SLICE_X44Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[16].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[16] in site SLICE_X48Y95 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[16].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#9 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[17] in site SLICE_X41Y64 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[17].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[17] in site SLICE_X49Y97 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[17].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#10 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[18] in site SLICE_X47Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[18].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[18] in site SLICE_X47Y96 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[18].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#11 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[19] in site SLICE_X37Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[19].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[19] in site SLICE_X45Y96 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[19].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#12 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[1] in site SLICE_X38Y64 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[1].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[1] in site SLICE_X49Y91 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[1].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#13 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[20] in site SLICE_X43Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[20].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[20] in site SLICE_X46Y96 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[20].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#14 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[21] in site SLICE_X46Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[21].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[21] in site SLICE_X44Y97 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[21].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#15 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[22] in site SLICE_X42Y64 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[22].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[22] in site SLICE_X48Y98 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[22].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#16 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[23] in site SLICE_X46Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[23].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[23] in site SLICE_X49Y99 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[23].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#17 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[24] in site SLICE_X42Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[24].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[24] in site SLICE_X44Y103 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[24].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#18 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[25] in site SLICE_X40Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[25].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[25] in site SLICE_X44Y99 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[25].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#19 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[26] in site SLICE_X40Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[26].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[26] in site SLICE_X45Y102 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[26].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#20 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[27] in site SLICE_X47Y64 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[27].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[27] in site SLICE_X45Y100 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[27].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#21 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[28] in site SLICE_X43Y60 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[28].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[28] in site SLICE_X43Y99 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[28].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#22 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[29] in site SLICE_X39Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[29].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[29] in site SLICE_X47Y100 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[29].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#23 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[2] in site SLICE_X42Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[2].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[2] in site SLICE_X45Y93 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[2].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#24 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[30] in site SLICE_X45Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[30].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[30] in site SLICE_X49Y101 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[30].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#25 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[31] in site SLICE_X41Y62 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[31].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[31] in site SLICE_X45Y98 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[31].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#26 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[3] in site SLICE_X36Y61 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[3].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[3] in site SLICE_X48Y91 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[3].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#27 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[4] in site SLICE_X35Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[4].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[4] in site SLICE_X44Y95 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[4].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#28 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[5] in site SLICE_X37Y64 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[5].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[5] in site SLICE_X45Y91 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[5].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#29 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[6] in site SLICE_X35Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[6].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[6] in site SLICE_X47Y94 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[6].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#30 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[7] in site SLICE_X36Y63 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[7].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[7] in site SLICE_X47Y92 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[7].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#31 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[8] in site SLICE_X39Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[8].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[8] in site SLICE_X43Y92 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[8].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 PDRC-190#32 Warning
 Suboptimally placed synchronized register chain  
-The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[9] in site SLICE_X37Y62 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[9].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
+The FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.lite_rdata_cdc_from_reg[9] in site SLICE_X44Y91 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell p10_ps_system_i/axi_dma_0/U0/I_AXI_DMA_REG_MODULE/GEN_AXI_LITE_IF.AXI_LITE_IF_I/GEN_ASYNC_READ.REG_DATA2LITE_CLOCK/GENERATE_LEVEL_P_S_CDC.MULTI_BIT.FOR_IN_cdc_to[9].CROSS2_PLEVEL_IN2SCNDRY_IN_cdc_to is not placed in the same (SLICE) site.
 Related violations: <none>
 
 TIMING-9#1 Warning

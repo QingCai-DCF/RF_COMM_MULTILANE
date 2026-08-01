@@ -1,7 +1,10 @@
-# P10.1R current-run authorization
+# P10.1R current-run authorization readiness
 
-Status: `PASS`
+- Status: `PENDING_NEW_AUTHORIZATION`
+- Test ID: `P10_1R-CURRENT-RUN-AUTHORIZATION-READINESS`
+- Hardware actions executed: `false`
+- Current-run hardware authorization: `false`
 
-Run ID: `p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66`
+The user authorization exists, but no run-bound authorization record has been created or consumed by this offline run.
 
-The adjacent JSON is authoritative.
+Hardware execution must not begin until a fresh immutable current-run record is bound to the exact frozen hashes in this record.

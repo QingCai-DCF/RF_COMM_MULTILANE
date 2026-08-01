@@ -64,11 +64,20 @@ EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
 EXPECTED_ARTIFACT_FREEZE_SHA256 = (
-    "0000000000000000000000000000000000000000000000000000000000000000"
+    "4392ecc0c85b53928ed916414d24fe0a9d7134a8cb15df8ddbd09c39b181ee1d"
 )
-EXPECTED_ARTIFACT_PURPOSE = "NO_ACTIVE_BUNDLE"
-EXPECTED_ACCEPTANCE_ELIGIBLE = False
-EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = ()
+EXPECTED_ARTIFACT_PURPOSE = "FINAL_ACCEPTANCE"
+EXPECTED_ACCEPTANCE_ELIGIBLE = True
+EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = (
+    "preflight",
+    "echo_tail",
+    "crosstalk",
+    "phy_sanity",
+    "ack_tuning",
+    "performance",
+    "streaming_64m",
+    "formal_30min",
+)
 AUTH_PATH = ROOT / "config/p10_1r_current_run_hardware_authorization.json"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"

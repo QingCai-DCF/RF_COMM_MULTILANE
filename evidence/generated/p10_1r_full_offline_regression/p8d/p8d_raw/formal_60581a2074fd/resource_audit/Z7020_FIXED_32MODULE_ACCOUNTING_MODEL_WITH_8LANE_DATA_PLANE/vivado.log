@@ -1,0 +1,624 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -nojournal -nolog -notrace -source C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\scripts\vivado\p8d_resource_audit.tcl -tclargs C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R xc7z020clg400-1 8 64 64 64 32 C:\Users\user\AppData\Local\Temp\p8d_ooc_c8wj64dj\out
+RETURN_CODE=0
+STARTED_UTC=2026-08-01T21:05:50.125139Z
+FINISHED_UTC=2026-08-01T21:08:46.823975Z
+STDOUT_BEGIN
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\scripts\vivado\p8d_resource_audit.tcl} -notrace
+Command: synth_design -mode out_of_context -top ir_p8d_resource_top -part xc7z020clg400-1 -generic {LANE_COUNT=8 WINDOW_SIZE=64 SACK_BITS=64 DATA_WIDTH=64 PHYSICAL_MODULE_COUNT=32}
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 17460
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1827.770 ; gain = 413.691
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ir_p8d_resource_top' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:7]
+	Parameter LANE_COUNT bound to: 8 - type: integer 
+	Parameter WINDOW_SIZE bound to: 64 - type: integer 
+	Parameter SACK_BITS bound to: 64 - type: integer 
+	Parameter DATA_WIDTH bound to: 64 - type: integer 
+	Parameter PHYSICAL_MODULE_COUNT bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_data_plane_top' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_data_plane_top.sv:6]
+	Parameter LANE_COUNT bound to: 8 - type: integer 
+	Parameter WINDOW_SIZE bound to: 64 - type: integer 
+	Parameter SACK_BITS bound to: 64 - type: integer 
+WARNING: [Synth 8-693] zero replication count - replication ignored [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_data_plane_top.sv:193]
+INFO: [Synth 8-6157] synthesizing module 'ir_selective_repeat_tx' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:9]
+	Parameter WINDOW_SIZE bound to: 64 - type: integer 
+	Parameter SACK_BITS bound to: 64 - type: integer 
+	Parameter MAX_RETRY bound to: 32'sb00000000000000000000000000000111 
+	Parameter RTO_CYCLES bound to: 32'sb00000000000000001111101000000000 
+	Parameter PAYLOAD_REF_WIDTH bound to: 32'sb00000000000000000000000000010000 
+	Parameter DESCRIPTOR_WIDTH bound to: 32'sb00000000000000000000000000010000 
+INFO: [Synth 8-226] default block is never used [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:453]
+INFO: [Synth 8-6155] done synthesizing module 'ir_selective_repeat_tx' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'ir_health_weighted_scheduler' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_health_weighted_scheduler.sv:5]
+	Parameter LANE_COUNT bound to: 8 - type: integer 
+	Parameter ENTRY_WIDTH bound to: 32'sb00000000000000000000000000000110 
+INFO: [Synth 8-6155] done synthesizing module 'ir_health_weighted_scheduler' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_health_weighted_scheduler.sv:5]
+INFO: [Synth 8-6157] synthesizing module 'ir_selective_repeat_rx' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:3]
+	Parameter WINDOW_SIZE bound to: 64 - type: integer 
+	Parameter SACK_BITS bound to: 64 - type: integer 
+	Parameter PAYLOAD_REF_WIDTH bound to: 32'sb00000000000000000000000000010000 
+INFO: [Synth 8-6155] done synthesizing module 'ir_selective_repeat_rx' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:3]
+INFO: [Synth 8-6157] synthesizing module 'ir_ack_aggregator' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_ack_aggregator.sv:2]
+	Parameter SACK_BITS bound to: 64 - type: integer 
+	Parameter FRAME_THRESHOLD bound to: 32'sb00000000000000000000000000001000 
+	Parameter MAX_DELAY_CYCLES bound to: 32'sb00000000000000000111110100000000 
+INFO: [Synth 8-6155] done synthesizing module 'ir_ack_aggregator' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_ack_aggregator.sv:2]
+INFO: [Synth 8-6155] done synthesizing module 'ir_data_plane_top' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_data_plane_top.sv:6]
+WARNING: [Synth 8-7071] port 'rx_out_of_order_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7071] port 'rx_old_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7071] port 'rx_future_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7071] port 'rx_gap_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7071] port 'rx_delivery_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7071] port 'rx_protocol_error_count_o' of module 'ir_data_plane_top' is unconnected for instance 'data_plane' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+WARNING: [Synth 8-7023] instance 'data_plane' of module 'ir_data_plane_top' has 102 connections declared, but only 96 given [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:53]
+INFO: [Synth 8-6157] synthesizing module 'ir_axis_tx_frontend' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axis_tx_frontend.sv:2]
+	Parameter DATA_WIDTH bound to: 64 - type: integer 
+	Parameter USER_WIDTH bound to: 32'sb00000000000000000000000001000000 
+INFO: [Synth 8-6155] done synthesizing module 'ir_axis_tx_frontend' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axis_tx_frontend.sv:2]
+INFO: [Synth 8-6157] synthesizing module 'ir_dma_descriptor_model' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_dma_descriptor_model.sv:5]
+	Parameter RING_DEPTH bound to: 32'sb00000000000000000000000001000000 
+INFO: [Synth 8-6155] done synthesizing module 'ir_dma_descriptor_model' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_dma_descriptor_model.sv:5]
+INFO: [Synth 8-6157] synthesizing module 'ir_shared_payload_store' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_shared_payload_store.sv:2]
+	Parameter ENTRY_COUNT bound to: 64 - type: integer 
+	Parameter MAX_FRAME_BYTES bound to: 32'sb00000000000000000000000100100000 
+	Parameter DATA_WIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'ir_shared_payload_store' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_shared_payload_store.sv:2]
+INFO: [Synth 8-6157] synthesizing module 'ir_p8c_resource_top' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:6]
+	Parameter PHYSICAL_MODULE_COUNT bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_safety_endpoint' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_safety_endpoint.sv:8]
+	Parameter PHYSICAL_MODULE_COUNT bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_physical_module_safety' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_physical_module_safety.sv:7]
+	Parameter CLOCK_HZ bound to: 64000000 - type: integer 
+	Parameter STARTUP_US bound to: 500 - type: integer 
+	Parameter WINDOW_US bound to: 1000 - type: integer 
+	Parameter HARD_PERCENT_STRICT_LT bound to: 20 - type: integer 
+	Parameter TARGET_PERCENT_MAX bound to: 18 - type: integer 
+	Parameter MAX_CONTINUOUS_HIGH_US bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ir_tfdu_exact_duty_accountant' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_exact_duty_accountant.sv:8]
+	Parameter CLOCK_HZ bound to: 64000000 - type: integer 
+	Parameter WINDOW_US bound to: 1000 - type: integer 
+	Parameter HARD_PERCENT_STRICT_LT bound to: 20 - type: integer 
+	Parameter TARGET_PERCENT_MAX bound to: 18 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_exact_duty_accountant' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_exact_duty_accountant.sv:8]
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_physical_module_safety' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_physical_module_safety.sv:7]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_safety_endpoint.sv:107]
+INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_safety_endpoint' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_safety_endpoint.sv:8]
+INFO: [Synth 8-6155] done synthesizing module 'ir_p8c_resource_top' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:6]
+INFO: [Synth 8-6155] done synthesizing module 'ir_p8d_resource_top' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8d_resource_tops.sv:7]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.occupancy_delta_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:317]
+WARNING: [Synth 8-6014] Unused sequential element entry_path_epoch_reg was removed. 
+WARNING: [Synth 8-6014] Unused sequential element entry_attempts_reg was removed. 
+WARNING: [Synth 8-6014] Unused sequential element tx_state.malformed_now_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:474]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.captured_distance_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:483]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.captured_back_distance_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:484]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.captured_span_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:485]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.reclaimed_total_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:515]
+WARNING: [Synth 8-6014] Unused sequential element tx_state.allocation_index_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_tx.sv:543]
+WARNING: [Synth 8-4767] Trying to implement RAM 'entry_last_lane_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "entry_last_lane_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'entry_have_lane_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "entry_have_lane_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'entry_expiry_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "entry_expiry_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM ' ' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+	1: Invalid write to RAM. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'entry_retries_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "entry_retries_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'entry_state_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "entry_state_reg" dissolved into registers
+WARNING: [Synth 8-6014] Unused sequential element priority_snapshot_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_health_weighted_scheduler.sv:128]
+WARNING: [Synth 8-6014] Unused sequential element scheduler_state.weight_value_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_health_weighted_scheduler.sv:211]
+WARNING: [Synth 8-6014] Unused sequential element rx_state.occupancy_delta_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:161]
+WARNING: [Synth 8-6014] Unused sequential element rx_state.sack_next_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:162]
+WARNING: [Synth 8-6014] Unused sequential element rx_state.delivery_fire_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:163]
+WARNING: [Synth 8-6014] Unused sequential element rx_state.commit_base_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:192]
+WARNING: [Synth 8-6014] Unused sequential element rx_state.commit_distance_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_selective_repeat_rx.sv:193]
+WARNING: [Synth 8-6014] Unused sequential element pending_last_lane_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_data_plane_top.sv:221]
+WARNING: [Synth 8-6014] Unused sequential element beat_bytes_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axis_tx_frontend.sv:111]
+WARNING: [Synth 8-6014] Unused sequential element malformed_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axis_tx_frontend.sv:112]
+WARNING: [Synth 8-6014] Unused sequential element descriptor_state.next_generation_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_dma_descriptor_model.sv:160]
+WARNING: [Synth 8-6014] Unused sequential element ownership_delta_reg was removed.  [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_shared_payload_store.sv:83]
+WARNING: [Synth 8-7129] Port request_priority_i[2] in module ir_health_weighted_scheduler is either unconnected or has no load
+WARNING: [Synth 8-7129] Port request_priority_i[1] in module ir_health_weighted_scheduler is either unconnected or has no load
+WARNING: [Synth 8-7129] Port request_priority_i[0] in module ir_health_weighted_scheduler is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[15] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[14] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[13] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[12] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[11] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[10] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[9] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[8] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[7] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[6] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[5] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[4] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[3] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[2] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[1] in module ir_selective_repeat_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port selected_path_epoch_i[0] in module ir_selective_repeat_tx is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2055.633 ; gain = 641.555
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2055.633 ; gain = 641.555
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2055.633 ; gain = 641.555
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 2268.098 ; gain = 854.020
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input   33 Bit       Adders := 32    
+	   2 Input   33 Bit       Adders := 32    
+	   3 Input   33 Bit       Adders := 1     
+	   2 Input   32 Bit       Adders := 136   
+	   3 Input   32 Bit       Adders := 1     
+	   3 Input   24 Bit       Adders := 1     
+	   2 Input   20 Bit       Adders := 9     
+	   2 Input   16 Bit       Adders := 38    
+	   3 Input   16 Bit       Adders := 9     
+	   2 Input   14 Bit       Adders := 32    
+	   2 Input    8 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 12    
+	   3 Input    7 Bit       Adders := 4     
+	   2 Input    6 Bit       Adders := 3     
+	   2 Input    5 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 7     
+	   2 Input    3 Bit       Adders := 6     
+	   3 Input    3 Bit       Adders := 1     
+	   2 Input    2 Bit       Adders := 1     
++---XORs : 
+	             1000 Bit    Wide XORs := 3     
+	              756 Bit    Wide XORs := 1     
+	              126 Bit    Wide XORs := 1     
+	              120 Bit    Wide XORs := 1     
+	                2 Bit    Wide XORs := 3     
++---Registers : 
+	             1024 Bit    Registers := 1     
+	               64 Bit    Registers := 12    
+	               32 Bit    Registers := 297   
+	               24 Bit    Registers := 8     
+	               20 Bit    Registers := 9     
+	               16 Bit    Registers := 20    
+	               12 Bit    Registers := 2     
+	                8 Bit    Registers := 67    
+	                7 Bit    Registers := 16    
+	                6 Bit    Registers := 9     
+	                5 Bit    Registers := 3     
+	                4 Bit    Registers := 69    
+	                3 Bit    Registers := 199   
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 305   
++---RAMs : 
+	             162K Bit	(2304 X 72 bit)          RAMs := 1     
+	              62K Bit	(64000 X 1 bit)          RAMs := 32    
+	             1024 Bit	(64 X 16 bit)          RAMs := 1     
+	              192 Bit	(64 X 3 bit)          RAMs := 1     
++---Muxes : 
+	   2 Input 2048 Bit        Muxes := 1     
+	   2 Input  512 Bit        Muxes := 1     
+	   4 Input  256 Bit        Muxes := 1     
+	   2 Input  256 Bit        Muxes := 1     
+	   2 Input  192 Bit        Muxes := 1     
+	   2 Input   64 Bit        Muxes := 23    
+	   4 Input   64 Bit        Muxes := 2     
+	   2 Input   32 Bit        Muxes := 519   
+	   4 Input   32 Bit        Muxes := 7     
+	   2 Input   24 Bit        Muxes := 24    
+	   2 Input   20 Bit        Muxes := 53    
+	   5 Input   20 Bit        Muxes := 2     
+	   2 Input   16 Bit        Muxes := 48    
+	   2 Input   14 Bit        Muxes := 32    
+	   2 Input    9 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 132   
+	   4 Input    7 Bit        Muxes := 3     
+	   2 Input    7 Bit        Muxes := 14    
+	   2 Input    6 Bit        Muxes := 11    
+	   4 Input    5 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 289   
+	   4 Input    4 Bit        Muxes := 1     
+	   5 Input    4 Bit        Muxes := 1     
+	   7 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 916   
+	   7 Input    3 Bit        Muxes := 1     
+	   4 Input    3 Bit        Muxes := 124   
+	   3 Input    3 Bit        Muxes := 4     
+	   4 Input    2 Bit        Muxes := 2     
+	   3 Input    2 Bit        Muxes := 130   
+	   2 Input    2 Bit        Muxes := 4     
+	   2 Input    1 Bit        Muxes := 2608  
+	   4 Input    1 Bit        Muxes := 19    
+	   8 Input    1 Bit        Muxes := 1     
+	   5 Input    1 Bit        Muxes := 2     
+	   3 Input    1 Bit        Muxes := 2     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-6849] Infeasible attribute ram_style = "block" set for RAM "payload_store/memory_reg",trying to implement using LUTRAM
+WARNING: [Synth 8-6849] Infeasible attribute ram_style = "block" set for RAM "payload_store/memory_reg",trying to implement using LUTRAM
+WARNING: [Synth 8-6849] Infeasible attribute ram_style = "block" set for RAM "payload_store/memory_reg",trying to implement using LUTRAM
+WARNING: [Synth 8-6849] Infeasible attribute ram_style = "block" set for RAM "payload_store/memory_reg",trying to implement using LUTRAM
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:19 ; elapsed = 00:02:22 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name                     | RTL Object                              | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ir_tfdu_physical_module_safety: | u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+Distributed RAM: Preliminary Mapping Report (see note below)
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+|Module Name              | RTL Object                     | Inference      | Size (Depth x Width) | Primitives    | 
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+|ir_p8d_resource_top      | entry_sequence_reg             | Implied        | 64 x 16              | RAM64M x 18   | 
+|ir_p8d_resource_top      | entry_payload_memory_reg       | User Attribute | 64 x 48              | RAM64M x 16   | 
+|ir_p8d_resource_top      | u_rx_window/entry_metadata_reg | User Attribute | 64 x 48              | RAM64M x 32   | 
+|ir_dma_descriptor_model: | request_complete_memory_reg    | User Attribute | 64 x 160             | RAM64M x 54   | 
+|ir_dma_descriptor_model: | generation_complete_memory_reg | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | generation_hw_memory_reg       | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | request_hw_memory_reg          | User Attribute | 64 x 160             | RAM64M x 54   | 
+|ir_dma_descriptor_model: | generation_cpu_memory_reg      | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | completion_memory_reg          | User Attribute | 64 x 96              | RAM64M x 32   | 
+|ir_dma_descriptor_model: | request_cpu_memory_reg         | User Attribute | 64 x 160             | RAM64M x 54   | 
+|payload_store            | memory_reg                     | Implied        | 4 K x 72             | RAM64M x 864  | 
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+
+Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:02:20 ; elapsed = 00:02:23 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name                     | RTL Object                              | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ir_tfdu_physical_module_safety: | u_exact_duty_accountant/history_mem_reg | 62 K x 1(READ_FIRST)   | W |   | 62 K x 1(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
++--------------------------------+-----------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+
+Distributed RAM: Final Mapping Report
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+|Module Name              | RTL Object                     | Inference      | Size (Depth x Width) | Primitives    | 
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+|ir_p8d_resource_top      | entry_sequence_reg             | Implied        | 64 x 16              | RAM64M x 18   | 
+|ir_p8d_resource_top      | entry_payload_memory_reg       | User Attribute | 64 x 48              | RAM64M x 16   | 
+|ir_p8d_resource_top      | u_rx_window/entry_metadata_reg | User Attribute | 64 x 48              | RAM64M x 32   | 
+|ir_dma_descriptor_model: | request_complete_memory_reg    | User Attribute | 64 x 160             | RAM64M x 54   | 
+|ir_dma_descriptor_model: | generation_complete_memory_reg | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | generation_hw_memory_reg       | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | request_hw_memory_reg          | User Attribute | 64 x 160             | RAM64M x 54   | 
+|ir_dma_descriptor_model: | generation_cpu_memory_reg      | User Attribute | 64 x 16              | RAM64M x 6    | 
+|ir_dma_descriptor_model: | completion_memory_reg          | User Attribute | 64 x 96              | RAM64M x 32   | 
+|ir_dma_descriptor_model: | request_cpu_memory_reg         | User Attribute | 64 x 160             | RAM64M x 54   | 
+|payload_store            | memory_reg                     | Implied        | 4 K x 72             | RAM64M x 864  | 
++-------------------------+--------------------------------+----------------+----------------------+---------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[0].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[1].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[2].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[3].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[4].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[5].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[6].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[7].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[8].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[9].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[10].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[11].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[12].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[13].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[14].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[15].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[16].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[17].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[18].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[19].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[20].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[21].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[22].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[23].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[24].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[25].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[26].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[27].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[28].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[29].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[30].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance safety_accounting/endpoint/g_physical_safety[31].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:02:24 ; elapsed = 00:02:27 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:02:27 ; elapsed = 00:02:30 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:27 ; elapsed = 00:02:30 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:27 ; elapsed = 00:02:31 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:02:27 ; elapsed = 00:02:31 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:28 ; elapsed = 00:02:32 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:02:28 ; elapsed = 00:02:32 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |CARRY4   |  2001|
+|2     |LUT1     |   249|
+|3     |LUT2     |  4630|
+|4     |LUT3     |  1033|
+|5     |LUT4     |  2012|
+|6     |LUT5     |  4197|
+|7     |LUT6     |  7365|
+|8     |MUXF7    |  1164|
+|9     |MUXF8    |   365|
+|10    |RAM64M   |  1001|
+|11    |RAM64X1D |     7|
+|12    |RAMB36E1 |    64|
+|13    |FDCE     |  5198|
+|14    |FDPE     |     3|
+|15    |FDRE     |  6889|
++------+---------+------+
+
+Report Instance Areas: 
++------+-------------------------------------------------------+----------------------------------+------+
+|      |Instance                                               |Module                            |Cells |
++------+-------------------------------------------------------+----------------------------------+------+
+|1     |top                                                    |                                  | 36178|
+|2     |  axis_frontend                                        |ir_axis_tx_frontend               |   371|
+|3     |  data_plane                                           |ir_data_plane_top                 | 16672|
+|4     |    u_ack_aggregator                                   |ir_ack_aggregator                 |   268|
+|5     |    u_rx_window                                        |ir_selective_repeat_rx            |   605|
+|6     |    u_scheduler                                        |ir_health_weighted_scheduler      |  3733|
+|7     |    u_tx_window                                        |ir_selective_repeat_tx            | 12045|
+|8     |  payload_store                                        |ir_shared_payload_store           |  2677|
+|9     |  rx_ring                                              |ir_dma_descriptor_model           |  2380|
+|10    |  safety_accounting                                    |ir_p8c_resource_top               | 11711|
+|11    |    endpoint                                           |ir_tfdu_safety_endpoint           | 11711|
+|12    |      \g_physical_safety[0].u_physical_module_safety   |ir_tfdu_physical_module_safety    |   364|
+|13    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_62  |   181|
+|14    |      \g_physical_safety[10].u_physical_module_safety  |ir_tfdu_physical_module_safety_1  |   364|
+|15    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_61  |   180|
+|16    |      \g_physical_safety[11].u_physical_module_safety  |ir_tfdu_physical_module_safety_2  |   364|
+|17    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_60  |   180|
+|18    |      \g_physical_safety[12].u_physical_module_safety  |ir_tfdu_physical_module_safety_3  |   365|
+|19    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_59  |   182|
+|20    |      \g_physical_safety[13].u_physical_module_safety  |ir_tfdu_physical_module_safety_4  |   365|
+|21    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_58  |   181|
+|22    |      \g_physical_safety[14].u_physical_module_safety  |ir_tfdu_physical_module_safety_5  |   363|
+|23    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_57  |   180|
+|24    |      \g_physical_safety[15].u_physical_module_safety  |ir_tfdu_physical_module_safety_6  |   365|
+|25    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_56  |   182|
+|26    |      \g_physical_safety[16].u_physical_module_safety  |ir_tfdu_physical_module_safety_7  |   364|
+|27    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_55  |   181|
+|28    |      \g_physical_safety[17].u_physical_module_safety  |ir_tfdu_physical_module_safety_8  |   366|
+|29    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_54  |   181|
+|30    |      \g_physical_safety[18].u_physical_module_safety  |ir_tfdu_physical_module_safety_9  |   367|
+|31    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_53  |   181|
+|32    |      \g_physical_safety[19].u_physical_module_safety  |ir_tfdu_physical_module_safety_10 |   364|
+|33    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_52  |   181|
+|34    |      \g_physical_safety[1].u_physical_module_safety   |ir_tfdu_physical_module_safety_11 |   366|
+|35    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_51  |   182|
+|36    |      \g_physical_safety[20].u_physical_module_safety  |ir_tfdu_physical_module_safety_12 |   364|
+|37    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_50  |   181|
+|38    |      \g_physical_safety[21].u_physical_module_safety  |ir_tfdu_physical_module_safety_13 |   370|
+|39    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_49  |   185|
+|40    |      \g_physical_safety[22].u_physical_module_safety  |ir_tfdu_physical_module_safety_14 |   362|
+|41    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_48  |   179|
+|42    |      \g_physical_safety[23].u_physical_module_safety  |ir_tfdu_physical_module_safety_15 |   365|
+|43    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_47  |   181|
+|44    |      \g_physical_safety[24].u_physical_module_safety  |ir_tfdu_physical_module_safety_16 |   365|
+|45    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_46  |   182|
+|46    |      \g_physical_safety[25].u_physical_module_safety  |ir_tfdu_physical_module_safety_17 |   366|
+|47    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_45  |   182|
+|48    |      \g_physical_safety[26].u_physical_module_safety  |ir_tfdu_physical_module_safety_18 |   364|
+|49    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_44  |   180|
+|50    |      \g_physical_safety[27].u_physical_module_safety  |ir_tfdu_physical_module_safety_19 |   365|
+|51    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_43  |   182|
+|52    |      \g_physical_safety[28].u_physical_module_safety  |ir_tfdu_physical_module_safety_20 |   364|
+|53    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_42  |   181|
+|54    |      \g_physical_safety[29].u_physical_module_safety  |ir_tfdu_physical_module_safety_21 |   366|
+|55    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_41  |   181|
+|56    |      \g_physical_safety[2].u_physical_module_safety   |ir_tfdu_physical_module_safety_22 |   365|
+|57    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_40  |   181|
+|58    |      \g_physical_safety[30].u_physical_module_safety  |ir_tfdu_physical_module_safety_23 |   364|
+|59    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_39  |   181|
+|60    |      \g_physical_safety[31].u_physical_module_safety  |ir_tfdu_physical_module_safety_24 |   369|
+|61    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_38  |   185|
+|62    |      \g_physical_safety[3].u_physical_module_safety   |ir_tfdu_physical_module_safety_25 |   366|
+|63    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_37  |   183|
+|64    |      \g_physical_safety[4].u_physical_module_safety   |ir_tfdu_physical_module_safety_26 |   364|
+|65    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_36  |   181|
+|66    |      \g_physical_safety[5].u_physical_module_safety   |ir_tfdu_physical_module_safety_27 |   368|
+|67    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_35  |   182|
+|68    |      \g_physical_safety[6].u_physical_module_safety   |ir_tfdu_physical_module_safety_28 |   364|
+|69    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_34  |   181|
+|70    |      \g_physical_safety[7].u_physical_module_safety   |ir_tfdu_physical_module_safety_29 |   364|
+|71    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_33  |   181|
+|72    |      \g_physical_safety[8].u_physical_module_safety   |ir_tfdu_physical_module_safety_30 |   364|
+|73    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant_32  |   181|
+|74    |      \g_physical_safety[9].u_physical_module_safety   |ir_tfdu_physical_module_safety_31 |   368|
+|75    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant     |   184|
+|76    |  tx_ring                                              |ir_dma_descriptor_model_0         |  2367|
++------+-------------------------------------------------------+----------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:28 ; elapsed = 00:02:32 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 60 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:02:28 ; elapsed = 00:02:32 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+Synthesis Optimization Complete : Time (s): cpu = 00:02:28 ; elapsed = 00:02:32 . Memory (MB): peak = 3228.434 ; gain = 1814.355
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.194 . Memory (MB): peak = 3228.434 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 4602 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 3228.434 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1008 instances were transformed.
+  RAM64M => RAM64M (RAMD64E(x4)): 1001 instances
+  RAM64X1D => RAM64X1D (RAMD64E(x2)): 7 instances
+
+Synth Design complete | Checksum: 47194f93
+INFO: [Common 17-83] Releasing license: Synthesis
+71 Infos, 60 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:02:32 ; elapsed = 00:02:37 . Memory (MB): peak = 3228.434 ; gain = 1839.184
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
+Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
+report_timing_summary: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 3228.434 ; gain = 0.000
+Command: report_drc -file C:/Users/user/AppData/Local/Temp/p8d_ooc_c8wj64dj/out/drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2023.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/AppData/Local/Temp/p8d_ooc_c8wj64dj/out/drc.rpt.
+report_drc completed successfully
+WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ RAMB18*}'.
+WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ DSP48*}'.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/AppData/Local/Temp/p8d_ooc_c8wj64dj/out/post_synth.dcp' has been generated.
+INFO: [Common 17-206] Exiting Vivado at Sun Aug  2 05:08:45 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

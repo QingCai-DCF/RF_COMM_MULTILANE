@@ -1,59 +1,67 @@
 # P10.1R RX admission design evidence
 
 - Status: `PASS`
-- Source commit: `493955d5788942ac448a9cfd99c97f0c526281fe`
+- Source commit: `60581a2074fd0021af9e2bf2c7cf96ec20cbcf92`
 - Hardware actions executed: `false`
 
 ```json
 {
-  "candidate_guard_cycles": 36864,
-  "candidate_guard_us": 576,
+  "candidate_guard_cycles": 4096,
+  "candidate_guard_us": 64,
   "config": {
-    "bytes": 2565,
+    "bytes": 3443,
     "path": "config/tfdu_rx_admission.yaml",
-    "sha256": "95b43f449b85eef06757d6cbb7b682dfc6d5f8eef9c29680127a6fcb2081f485"
+    "sha256": "2920d482dfbb18d368c012d1d092dd05a5f61ae2efe8b6d621a4bc3a46554e0a"
   },
   "current_run_hardware_authorization": false,
   "direct_hardware_claim": false,
   "focused_xsim": {
     "bytes": 5340,
     "path": "evidence/generated/p10_1r_xsim/summary.json",
-    "sha256": "d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7"
+    "sha256": "6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc"
   },
-  "generated_at_utc": "2026-08-01T16:12:09+00:00",
+  "generated_at_utc": "2026-08-01T19:42:06+00:00",
+  "guard_selection_evidence": {
+    "bytes": 3571,
+    "path": "evidence/generated/p10_1r_echo_guard_selection.json",
+    "sha256": "91219cccda83a7edb68ffc26842c1a081583fa4f68005dd1c95344a7de342fe0"
+  },
   "hardware_actions_executed": false,
-  "hardware_measurement_status": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+  "hardware_measurement_status": "PASS_GUARD_SELECTION_REBUILD_PENDING",
   "idle_qualification_cycles": 256,
   "maximum_quarantine_cycles": 131072,
   "network_used": false,
   "no_hardware": true,
   "register_map": {
-    "bytes": 60070,
+    "bytes": 60093,
     "path": "config/register_map/ir_axi_regs.yaml",
-    "sha256": "2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6"
+    "sha256": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea"
   },
   "rtl": [
     {
-      "bytes": 8497,
+      "bytes": 8608,
       "path": "rtl/p10_1r_rx_admission.sv",
-      "sha256": "7d74307a068183410409ddafbd52c7af98396c3bdc7ecc090cd788852ba17c11"
+      "sha256": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b"
     },
     {
-      "bytes": 98586,
+      "bytes": 98522,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "c296dee8880136c764c108980018e54b9eddfbe5fc9d01c524c4700159cd0cf5"
+      "sha256": "73bad916dbccb24b9ae70504e2a2565962a890cd4b87a52756ef858352c18124"
     }
   ],
   "safety_noninterference": {
     "affects_global_permit": false,
     "affects_txd_kill_or_sd_or_mode": false,
+    "configuration_update_hardware_actions_executed": false,
     "creates_backpressure": false,
     "hardware_authorization": false,
-    "no_hardware": true
+    "no_hardware": true,
+    "selection_evidence_hardware_actions_executed": true
   },
   "schema_version": 1,
   "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
-  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "selected_final_guard_cycles": 4096,
+  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
   "source_identity": {
     "ack_header_encoding": "byte11_bits_7_2",
     "airtime_bytes_added": 0,

@@ -1,0 +1,141 @@
+# P8C OOC resource audit
+
+```text
+STATUS: PASS
+NO_HARDWARE_ACTIONS_EXECUTED: true
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+HARDWARE_SCOPE_PROMOTED: false
+```
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "failures": [],
+  "generated_at_utc": "2026-08-01T22:06:43+00:00",
+  "profile": "P8C_MULTI_PROFILE_OFFLINE",
+  "resources": {
+    "Z7010_2LANE_DEV": {
+      "critical_warning_count": 0,
+      "markers": {
+        "P8C_BRAM18": "0",
+        "P8C_BRAM36": "4",
+        "P8C_FF": "307",
+        "P8C_LUT": "362",
+        "P8C_MAX_INFERRED_RAM_DEPTH": "64000",
+        "P8C_OOC_SYNTHESIS_PASS": "1",
+        "P8C_RESOURCE_PART": "xc7z010clg400-1",
+        "P8C_RESOURCE_TOP": "ir_p8c_resource_top_2",
+        "P8C_SRL": "0"
+      },
+      "ooc_io_delay_gaps_reported": {
+        "no_input_delay": 7,
+        "no_output_delay": 3,
+        "scope": "OOC wrapper ports; not final board timing closure"
+      },
+      "ooc_timing_constraints_met": true,
+      "part": "xc7z010clg400-1",
+      "reports": [
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/resource_markers.txt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/utilization.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/timing_summary.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/drc.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7010_2LANE_DEV/check_timing.rpt"
+      ],
+      "status": "PASS",
+      "timing_checks": {
+        "constant_clock": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 7,
+        "no_output_delay": 3,
+        "unconstrained_internal_endpoints": 0
+      },
+      "top": "ir_p8c_resource_top_2",
+      "unconstrained_clock_or_internal_path_count": 0
+    },
+    "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL": {
+      "critical_warning_count": 0,
+      "markers": {
+        "P8C_BRAM18": "0",
+        "P8C_BRAM36": "64",
+        "P8C_FF": "4777",
+        "P8C_LUT": "5519",
+        "P8C_MAX_INFERRED_RAM_DEPTH": "64000",
+        "P8C_OOC_SYNTHESIS_PASS": "1",
+        "P8C_RESOURCE_PART": "xc7z020clg400-1",
+        "P8C_RESOURCE_TOP": "ir_p8c_resource_top_32",
+        "P8C_SRL": "0"
+      },
+      "ooc_io_delay_gaps_reported": {
+        "no_input_delay": 67,
+        "no_output_delay": 33,
+        "scope": "OOC wrapper ports; not final board timing closure"
+      },
+      "ooc_timing_constraints_met": true,
+      "part": "xc7z020clg400-1",
+      "reports": [
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/resource_markers.txt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/utilization.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/timing_summary.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/drc.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_FIXED_32MODULE_ACCOUNTING_MODEL/check_timing.rpt"
+      ],
+      "status": "PASS",
+      "timing_checks": {
+        "constant_clock": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 67,
+        "no_output_delay": 33,
+        "unconstrained_internal_endpoints": 0
+      },
+      "top": "ir_p8c_resource_top_32",
+      "unconstrained_clock_or_internal_path_count": 0
+    },
+    "Z7020_ROTATING_8LANE_MODEL": {
+      "critical_warning_count": 0,
+      "markers": {
+        "P8C_BRAM18": "0",
+        "P8C_BRAM36": "16",
+        "P8C_FF": "1201",
+        "P8C_LUT": "1402",
+        "P8C_MAX_INFERRED_RAM_DEPTH": "64000",
+        "P8C_OOC_SYNTHESIS_PASS": "1",
+        "P8C_RESOURCE_PART": "xc7z020clg400-1",
+        "P8C_RESOURCE_TOP": "ir_p8c_resource_top_8",
+        "P8C_SRL": "0"
+      },
+      "ooc_io_delay_gaps_reported": {
+        "no_input_delay": 19,
+        "no_output_delay": 9,
+        "scope": "OOC wrapper ports; not final board timing closure"
+      },
+      "ooc_timing_constraints_met": true,
+      "part": "xc7z020clg400-1",
+      "reports": [
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/resource_markers.txt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/utilization.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/timing_summary.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/drc.rpt",
+        "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/regression/p8c/p8c_raw/resource_audit/Z7020_ROTATING_8LANE_MODEL/check_timing.rpt"
+      ],
+      "status": "PASS",
+      "timing_checks": {
+        "constant_clock": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 19,
+        "no_output_delay": 9,
+        "unconstrained_internal_endpoints": 0
+      },
+      "top": "ir_p8c_resource_top_8",
+      "unconstrained_clock_or_internal_path_count": 0
+    }
+  },
+  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "status": "PASS",
+  "test_id": "P8C-OOC-RESOURCE-AUDIT"
+}
+```

@@ -1,0 +1,31 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p8c_endpoint_safety_sim -runall
+RETURNCODE=0
+
+STDOUT
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p8c_endpoint_safety_sim/xsim_script.tcl
+# xsim {tb_p8c_endpoint_safety_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8C_SINGLE_GLOBAL_PERMIT_PASS=1
+P8C_PERMIT_ASYNC_DROP_FINAL_KILL_PASS=1
+P8C_EXPLICIT_REARM_NO_PARTIAL_RESUME_PASS=1
+P8C_RECEIVE_ONLY_PERMIT_LOW_PASS=1
+P8C_ONE_HOT_PATH_EPOCH_KILL_PASS=1
+P8C_PERMIT_VECTOR_MATRIX_PASS=1
+P8C_FAULT_DROP_MID_HIGH_PASS=1
+P8C_HISTORY_PERMIT_LANE_PATH_PRESERVED_PASS=1
+P8C_KILL_REASON_PRIORITY_PASS=1
+TB_P8C_ENDPOINT_SAFETY_PASS=1
+$finish called at time : 3346 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_p8c_endpoint_safety.sv" Line 438
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 06:03:58 2026...
+
+STDERR

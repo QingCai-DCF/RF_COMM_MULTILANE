@@ -9,7 +9,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-01T16:12:09+00:00",
+  "generated_at_utc": "2026-08-01T19:42:06+00:00",
   "goal": {
     "bytes": 30007,
     "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
@@ -29,39 +29,39 @@
       "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
     },
     {
-      "bytes": 31834,
+      "bytes": 35971,
       "path": "config/project_state.json",
-      "sha256": "705eec249789796609e30b6151f27062415735463b2350ef5a883524ec7f3ec3"
+      "sha256": "10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8"
     },
     {
-      "bytes": 224512,
+      "bytes": 227793,
       "path": "config/project_requirements.yaml",
-      "sha256": "e063cbf55345e9addb0e7d28cbd27ee817bb864ed8365ebbdab3795a19184c75"
+      "sha256": "56ca48846aee4a80316c32b8e631f0733efeccd6a5f20580e650ed0dbcda6c00"
     },
     {
-      "bytes": 2565,
+      "bytes": 3443,
       "path": "config/tfdu_rx_admission.yaml",
-      "sha256": "95b43f449b85eef06757d6cbb7b682dfc6d5f8eef9c29680127a6fcb2081f485"
+      "sha256": "2920d482dfbb18d368c012d1d092dd05a5f61ae2efe8b6d621a4bc3a46554e0a"
     },
     {
-      "bytes": 1376,
+      "bytes": 1556,
       "path": "config/performance/p10_1r_hardware_runtime.yaml",
-      "sha256": "bb0da402fe2d0fad60aa2364b48c736e38cbf9ee7f76a2cd0d7907458b564a04"
+      "sha256": "b5626eb3d9e92d3750c2114e0e03efca774703cb04fcbdd88950d2edc229489e"
     },
     {
-      "bytes": 60070,
+      "bytes": 60093,
       "path": "config/register_map/ir_axi_regs.yaml",
-      "sha256": "2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6"
+      "sha256": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea"
     },
     {
-      "bytes": 8497,
+      "bytes": 8608,
       "path": "rtl/p10_1r_rx_admission.sv",
-      "sha256": "7d74307a068183410409ddafbd52c7af98396c3bdc7ecc090cd788852ba17c11"
+      "sha256": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b"
     },
     {
-      "bytes": 98586,
+      "bytes": 98522,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "c296dee8880136c764c108980018e54b9eddfbe5fc9d01c524c4700159cd0cf5"
+      "sha256": "73bad916dbccb24b9ae70504e2a2565962a890cd4b87a52756ef858352c18124"
     },
     {
       "bytes": 15725,
@@ -78,7 +78,7 @@
   "offline_tag_is_ancestor": true,
   "p10_pass_tag_is_ancestor": true,
   "schema_version": 1,
-  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
   "source_worktree_dirty_before_generation": true,
   "status": "PASS",
   "test_id": "P10_1R-REPOSITORY-INTAKE",

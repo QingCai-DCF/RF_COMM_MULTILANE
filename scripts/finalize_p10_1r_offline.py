@@ -433,7 +433,18 @@ def main() -> int:
         errors.append("CURRENT_RUN_HARDWARE_AUTHORIZATION must be false")
     branch = git("branch", "--show-current").stdout.strip()
     head = git("rev-parse", "HEAD").stdout.strip()
-    SOURCE_COMMIT = head
+    try:
+        source_candidate = str(
+            load_json(INPUTS["functional_build"]).get("source_commit", "")
+        )
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        source_candidate = ""
+        errors.append(f"cannot determine immutable artifact source: {exc}")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_candidate):
+        errors.append("functional-build artifact source is not a full Git commit")
+        SOURCE_COMMIT = head
+    else:
+        SOURCE_COMMIT = source_candidate
     source_is_ancestor = (
         git("merge-base", "--is-ancestor", SOURCE_COMMIT, "HEAD", check=False).returncode
         == 0
@@ -511,8 +522,23 @@ def main() -> int:
         if diagnostic_payload:
             if diagnostic_payload.get("status") != "RECORDED_PRECONDITION_FAILURE":
                 errors.append("P8D precondition failure status mismatch")
-            if diagnostic_payload.get("source_commit") != SOURCE_COMMIT:
-                errors.append("P8D precondition failure source commit mismatch")
+            diagnostic_source = str(diagnostic_payload.get("source_commit", ""))
+            diagnostic_source_is_ancestor = (
+                bool(re.fullmatch(r"[0-9a-f]{40}", diagnostic_source))
+                and git(
+                    "merge-base",
+                    "--is-ancestor",
+                    diagnostic_source,
+                    SOURCE_COMMIT,
+                    check=False,
+                ).returncode
+                == 0
+            )
+            if not diagnostic_source_is_ancestor:
+                errors.append(
+                    "P8D precondition failure source is not an ancestor of "
+                    "the final artifact source"
+                )
             if diagnostic_payload.get("hardware_actions_executed") is not False:
                 errors.append("P8D precondition failure claims hardware actions")
             if diagnostic_payload.get("current_run_hardware_authorization") is not False:
@@ -528,7 +554,26 @@ def main() -> int:
                 if isinstance(record, dict)
             )
             for diagnostic_record in diagnostic_records:
-                diagnostic_path = ROOT / diagnostic_record.get("path", "")
+                diagnostic_record_path = diagnostic_record.get("path", "")
+                diagnostic_path = ROOT / diagnostic_record_path
+                if (
+                    diagnostic_source
+                    and diagnostic_source != SOURCE_COMMIT
+                    and diagnostic_record_path.startswith(
+                        "evidence/generated/p10_1r_full_offline_regression/"
+                    )
+                ):
+                    historical_root = (
+                        "evidence/generated/p10_1r_full_offline_regression_"
+                        f"{diagnostic_source[:8]}/"
+                    )
+                    historical_path = ROOT / diagnostic_record_path.replace(
+                        "evidence/generated/p10_1r_full_offline_regression/",
+                        historical_root,
+                        1,
+                    )
+                    if historical_path.is_file():
+                        diagnostic_path = historical_path
                 if not diagnostic_path.is_file():
                     errors.append(
                         "missing P8D diagnostic artifact "

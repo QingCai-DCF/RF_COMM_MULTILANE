@@ -123,7 +123,7 @@
   "last_hardware_stage": "P10_1",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
-  "last_verified_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "last_verified_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
   "legacy_known_failures": [
     {
       "current_authority": false,
@@ -310,90 +310,111 @@
   },
   "p10_1r_remediation": {
     "artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "artifact_freeze_sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19",
+    "artifact_freeze_sha256": "4392ecc0c85b53928ed916414d24fe0a9d7134a8cb15df8ddbd09c39b181ee1d",
     "artifacts": {
       "fixed": {
         "bitstream": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1/p10_ax7020_fixed_functional.bit",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/ac1280323179b4a101a1d2f98b7df1d28e0c4f43714862ec1c7aae66140c1943/p10_ax7020_fixed_functional.bit",
           "read_only": true,
-          "sha256": "080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1"
+          "sha256": "ac1280323179b4a101a1d2f98b7df1d28e0c4f43714862ec1c7aae66140c1943"
         },
         "bsp": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 1855896,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
           "read_only": true,
           "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
         },
         "elf": {
-          "bytes": 553368,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0/p10_fixed_runtime.elf",
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+          "bytes": 553536,
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/d83989db202670707a75d360312ef795ab93b3cf8fa9eae44d5eb344d57b4adb/p10_fixed_runtime.elf",
           "read_only": true,
-          "sha256": "85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0"
+          "sha256": "d83989db202670707a75d360312ef795ab93b3cf8fa9eae44d5eb344d57b4adb"
         },
         "shutdown_bitstream": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 369073,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259/p10_ax7020_fixed_shutdown.bit",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/494f6f7ed4c54c1f0a8d6dbcae5d5a81827a1de0944be75fb4e7f8c96cd38ddc/p10_ax7020_fixed_shutdown.bit",
           "read_only": true,
-          "sha256": "0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259"
+          "sha256": "494f6f7ed4c54c1f0a8d6dbcae5d5a81827a1de0944be75fb4e7f8c96cd38ddc"
         },
         "xsa": {
-          "bytes": 941819,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293/p10_ax7020_fixed_functional.xsa",
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+          "bytes": 925942,
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/c61d863defa22b3b04bcff2776a2b535b0b2e7c180a3820613f14f7b5d6bd0b4/p10_ax7020_fixed_functional.xsa",
           "read_only": true,
-          "sha256": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293"
+          "sha256": "c61d863defa22b3b04bcff2776a2b535b0b2e7c180a3820613f14f7b5d6bd0b4"
         }
       },
       "rotating": {
         "bitstream": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d/p10_ax7020_rotating_functional.bit",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/4b8f569cdc17547ae850e5da0125a87772c17c448b7b68658c84ec7407154a9c/p10_ax7020_rotating_functional.bit",
           "read_only": true,
-          "sha256": "18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d"
+          "sha256": "4b8f569cdc17547ae850e5da0125a87772c17c448b7b68658c84ec7407154a9c"
         },
         "bsp": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 1856209,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
           "read_only": true,
           "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
         },
         "elf": {
-          "bytes": 552888,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55/p10_rotating_runtime.elf",
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+          "bytes": 553228,
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/9c111371ff265e600186589ba932e89a482d890a20324b28be2998c6d5212702/p10_rotating_runtime.elf",
           "read_only": true,
-          "sha256": "01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55"
+          "sha256": "9c111371ff265e600186589ba932e89a482d890a20324b28be2998c6d5212702"
         },
         "shutdown_bitstream": {
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
           "bytes": 369073,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c/p10_ax7020_rotating_shutdown.bit",
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/783c7d38f6b17cbc5002290c90f2e18d5db1a94ad9b9d9bf600be3ff5356eeab/p10_ax7020_rotating_shutdown.bit",
           "read_only": true,
-          "sha256": "00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c"
+          "sha256": "783c7d38f6b17cbc5002290c90f2e18d5db1a94ad9b9d9bf600be3ff5356eeab"
         },
         "xsa": {
-          "bytes": 917077,
-          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101/p10_ax7020_rotating_functional.xsa",
+          "built_source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+          "bytes": 912095,
+          "path": "artifacts/p10_1r/60581a2074fd0021af9e2bf2c7cf96ec20cbcf92/a89089e33b5d4ee84f86eff4b82a680f5446c4da4d7dfbefca08c517a90e15a6/p10_ax7020_rotating_functional.xsa",
           "read_only": true,
-          "sha256": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101"
+          "sha256": "a89089e33b5d4ee84f86eff4b82a680f5446c4da4d7dfbefca08c517a90e15a6"
         }
       }
     },
     "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
     "candidate_guard_cycles": {
-      "F0": 36864,
-      "F1": 36864,
-      "R0": 36864,
-      "R1": 36864
+      "F0": 4096,
+      "F1": 4096,
+      "R0": 4096,
+      "R1": 4096
     },
-    "candidate_guard_hardware_measured": false,
+    "candidate_guard_hardware_measured": true,
     "current_run_hardware_authorization": false,
     "goal_path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
     "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+    "guard_selection": {
+      "bytes": 3571,
+      "path": "evidence/generated/p10_1r_echo_guard_selection.json",
+      "sha256": "91219cccda83a7edb68ffc26842c1a081583fa4f68005dd1c95344a7de342fe0"
+    },
     "hardware_actions_executed": false,
     "network_used": false,
     "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
     "p11_started": false,
+    "selected_guard_cycles": {
+      "F0": 4096,
+      "F1": 4096,
+      "R0": 4096,
+      "R1": 4096
+    },
     "source_artifact_freeze": "PASS",
-    "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+    "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
     "status": "OFFLINE_READY_HARDWARE_PENDING"
   },
   "p10_1r_status": "OFFLINE_READY_HARDWARE_PENDING",

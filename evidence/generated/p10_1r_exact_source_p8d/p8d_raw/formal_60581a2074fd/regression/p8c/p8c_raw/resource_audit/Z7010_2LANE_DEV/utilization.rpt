@@ -1,0 +1,37 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Sun Aug  2 06:04:46 2026
+| Host         : DESKTOP-PU0AECA running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/user/AppData/Local/Temp/p8c_ooc_jx6u5sz_/out/utilization.rpt
+| Design       : ir_p8c_resource_top_2
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|                         Instance                        |              Module              | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| ir_p8c_resource_top_2                                   |                            (top) |        283 |        283 |       0 |    0 | 307 |      4 |      0 |          0 |
+|   impl                                                  |              ir_p8c_resource_top |        283 |        283 |       0 |    0 | 307 |      4 |      0 |          0 |
+|     endpoint                                            |          ir_tfdu_safety_endpoint |        283 |        283 |       0 |    0 | 307 |      4 |      0 |          0 |
+|       (endpoint)                                        |          ir_tfdu_safety_endpoint |          4 |          4 |       0 |    0 |   9 |      0 |      0 |          0 |
+|       g_physical_safety[0].u_physical_module_safety     |   ir_tfdu_physical_module_safety |        137 |        137 |       0 |    0 | 149 |      2 |      0 |          0 |
+|         (g_physical_safety[0].u_physical_module_safety) |   ir_tfdu_physical_module_safety |         33 |         33 |       0 |    0 |  67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                         |  ir_tfdu_exact_duty_accountant_1 |        104 |        104 |       0 |    0 |  82 |      2 |      0 |          0 |
+|       g_physical_safety[1].u_physical_module_safety     | ir_tfdu_physical_module_safety_0 |        142 |        142 |       0 |    0 | 149 |      2 |      0 |          0 |
+|         (g_physical_safety[1].u_physical_module_safety) | ir_tfdu_physical_module_safety_0 |         33 |         33 |       0 |    0 |  67 |      0 |      0 |          0 |
+|         u_exact_duty_accountant                         |    ir_tfdu_exact_duty_accountant |        109 |        109 |       0 |    0 |  82 |      2 |      0 |          0 |
++---------------------------------------------------------+----------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+
+

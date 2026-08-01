@@ -271,13 +271,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8`
-- `PROJECT_STATUS.md` — `cd96c6c08a0517e5caccede008c1a24f8fac9318333a3235d7b540cba5787c55`
+- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
+- `PROJECT_STATUS.md` — `c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8`
+- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
 
 ### `P8A-EVID-001`
 
@@ -287,8 +287,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8`
-- `PROJECT_STATUS.md` — `cd96c6c08a0517e5caccede008c1a24f8fac9318333a3235d7b540cba5787c55`
+- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
+- `PROJECT_STATUS.md` — `c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -913,8 +913,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/generated/p10_goodput_measurement_audit.json` — `e24039778e5aafa8fc59ece1fc699ba33fcbe5d239ff64eea3d25e3ab7a36d14`
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_i/stage_summary.json` — `ed6fdd822e761abee823a2989206fb21bf2549ed3781fb760782afd6beee1bbc`
 - `evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/stage_summary.json` — `f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3`
-- `scripts/p10_hardware_runtime.py` — `1cf329ec479636369ba3c0c2bb2248c12b4ebab82d3c849cf86f7c6f53209a76`
-- `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
+- `scripts/p10_hardware_runtime.py` — `ac13ca787d765207ec5e5e39101e353a38d86d35e065b2bd05d8d026c3acb099`
+- `software/ps_driver/p9_runtime_main.c` — `3839dd4c4c5c4f70adee1f0dd07bf3661a4be32179fff4d1a2ff76c0d22d3679`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
 - `evidence/generated/p10_goodput_runtime_source_reverification.json` — `9eb81c5238ee93d312802200f2581072961de695304c792e6d4d6762b39b7a0f`
@@ -1105,37 +1105,37 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1R-ECHO-001`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `56b1b9c2b7cd32f41eb0f0e3f09eddf244f355076785f8d45447e8f5ac0d887d`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
 
 ### `P10_1R-ECHO-003`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `56b1b9c2b7cd32f41eb0f0e3f09eddf244f355076785f8d45447e8f5ac0d887d`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
 
 ### `P10_1R-ECHO-004`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `f11bf4b98a6ff166b7d8d03de44e03f55c82d2b79c306f1a1576cfd26963d8e5`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `32f4065f995c6101cb4541963cb4afaca975c1c939f665ebffc7a0195cdab534`
 
 ### `P10_1R-ACK-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `6d3636be6633598e3d31075de969b4e76f6e41980d7d08c8182d3031f2bc47eb`
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `56b1b9c2b7cd32f41eb0f0e3f09eddf244f355076785f8d45447e8f5ac0d887d`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
 
 ### `P10_1R-ACK-002`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `0b60daf796a00df8a97a5ef090bcec22cf25fc1570accc9e7e33fa6bb82a7639`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
 
 ### `P10_1R-ACK-003`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `6d3636be6633598e3d31075de969b4e76f6e41980d7d08c8182d3031f2bc47eb`
-- `evidence/generated/p10_1r_xsim/summary.json` — `d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `0b60daf796a00df8a97a5ef090bcec22cf25fc1570accc9e7e33fa6bb82a7639`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
+- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
 
 ### `P10_1R-HOST-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `6d3636be6633598e3d31075de969b4e76f6e41980d7d08c8182d3031f2bc47eb`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `0b60daf796a00df8a97a5ef090bcec22cf25fc1570accc9e7e33fa6bb82a7639`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
