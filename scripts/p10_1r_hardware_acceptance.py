@@ -119,6 +119,24 @@ EXPECTED_IDLE_QUALIFY_CYCLES = 256
 EXPECTED_MAX_QUARANTINE_CYCLES = 131072
 EXPECTED_IDLE_LOW_CYCLES = 4
 EXPECTED_IDLE_HIGH_CYCLES = 3
+EXPECTED_PL_BUILD_IDS = {
+    "fixed": 0x50315246,
+    "rotating": 0x50315252,
+}
+EXPECTED_ROLE_IDENTITIES = {
+    "fixed": {
+        "firmware": 0x50313046,
+        "build": EXPECTED_PL_BUILD_IDS["fixed"],
+        "profile": 0x702000F0,
+        "local_indices": (0, 1),
+    },
+    "rotating": {
+        "firmware": 0x50313052,
+        "build": EXPECTED_PL_BUILD_IDS["rotating"],
+        "profile": 0x702000A0,
+        "local_indices": (2, 3),
+    },
+}
 
 HASHED_INPUTS = {
     "goal": GOAL,
@@ -485,6 +503,10 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "artifact_freeze": rel(ARTIFACT_FREEZE),
         "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
         "artifacts": artifact_records(freeze),
+        "pl_build_identity": {
+            role: f"0x{value:08X}"
+            for role, value in EXPECTED_PL_BUILD_IDS.items()
+        },
         "inputs": inputs,
         "plan_sha256": plan_hashes(stages),
         "current_run_hardware_authorization": True,
@@ -576,6 +598,10 @@ def validate_authorization(
         "maximum_single_formal_run_seconds": 1800,
         "maximum_lane_mask": 3,
         "lane_masks": [1, 2, 3],
+        "pl_build_identity": {
+            role: f"0x{value:08X}"
+            for role, value in EXPECTED_PL_BUILD_IDS.items()
+        },
     }
     errors.extend(
         f"authorization {key} mismatch"
@@ -984,7 +1010,10 @@ def evaluate_stage(
                 if not inside(fixed_path, stage_dir) or not inside(rotating_path, stage_dir):
                     raise ValueError("mailbox dump escaped stage directory")
                 pair_errors, detail = evaluate_pair(
-                    row, parse_mailbox(fixed_path), parse_mailbox(rotating_path)
+                    row,
+                    parse_mailbox(fixed_path),
+                    parse_mailbox(rotating_path),
+                    EXPECTED_ROLE_IDENTITIES,
                 )
             errors.extend(pair_errors)
             errors.extend(
@@ -1213,6 +1242,8 @@ def invoke_stage(
         TCL_STAGE[stage],
         str(auth),
         run_root.name,
+        f"0x{EXPECTED_PL_BUILD_IDS['fixed']:08X}",
+        f"0x{EXPECTED_PL_BUILD_IDS['rotating']:08X}",
     ]
     timeout = {
         "preflight": 900,

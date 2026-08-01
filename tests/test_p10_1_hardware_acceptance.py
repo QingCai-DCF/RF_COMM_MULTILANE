@@ -734,11 +734,15 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("p10_reboot_role fixed", helper)
         self.assertIn("p10_reboot_role rotating", helper)
         self.assertIn(
-            "p10_verify_pl_safe fixed 0x50313046 0x702000F0", helper
+            "p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0",
+            helper,
         )
         self.assertIn(
-            "p10_verify_pl_safe rotating 0x50313052 0x702000A0", helper
+            "p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0",
+            helper,
         )
+        self.assertIn("set p10_expected_build(fixed) 0x50313046", tcl)
+        self.assertIn("set p10_expected_build(rotating) 0x50313052", tcl)
         self.assertIn("P10_1_RESET_RECOVERY_REBOOT_PASS", helper)
 
         # Abort-only recovery flags are bits 16/17 and must not be part of the

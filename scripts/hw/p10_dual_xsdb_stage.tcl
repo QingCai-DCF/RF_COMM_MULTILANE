@@ -763,8 +763,9 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   p10_reboot_role $reset_role "${label}_selected_reboot"
   set peer [expr {$reset_role eq "fixed" ? "rotating" : "fixed"}]
   p10_reboot_role $peer "${label}_peer_recovery_reboot"
-  p10_verify_pl_safe fixed 0x50313046 0x702000F0 "${label}_RECOVERED"
-  p10_verify_pl_safe rotating 0x50313052 0x702000A0 "${label}_RECOVERED"
+  global p10_expected_build
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 "${label}_RECOVERED"
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 "${label}_RECOVERED"
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump \
       $rotating_dump $fixed_p101 $rotating_p101 $fixed_p10_1r \
@@ -931,11 +932,12 @@ proc p10_reboot_role {role label} {
 }
 
 proc p10_rebootstrap_after_reset_recovery {label} {
+  global p10_expected_build
   p10_say "P10_1_RESET_RECOVERY_REBOOT_BEGIN=$label"
   p10_reboot_role fixed "${label}_fixed_reset_recovery_reboot"
   p10_reboot_role rotating "${label}_rotating_reset_recovery_reboot"
-  p10_verify_pl_safe fixed 0x50313046 0x702000F0 "${label}_RESET_RECOVERED"
-  p10_verify_pl_safe rotating 0x50313052 0x702000A0 "${label}_RESET_RECOVERED"
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 "${label}_RESET_RECOVERED"
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 "${label}_RESET_RECOVERED"
   p10_say "P10_1_RESET_RECOVERY_REBOOT_PASS=$label"
 }
 
@@ -975,8 +977,8 @@ proc p10_run_soak {label duration_sec} {
   }
 }
 
-if {[llength $argv] != 16} {
-  error "usage: p10_dual_xsdb_stage.tcl <xsdb-url> <fixed-serial> <rotating-serial> <fixed-bit> <rotating-bit> <fixed-elf> <rotating-elf> <fixed-ps7-init> <rotating-ps7-init> <plan> <dump-dir> <abort-file> <result> <stage> <authorization> <run-id>"
+if {[llength $argv] ni {16 18}} {
+  error "usage: p10_dual_xsdb_stage.tcl <xsdb-url> <fixed-serial> <rotating-serial> <fixed-bit> <rotating-bit> <fixed-elf> <rotating-elf> <fixed-ps7-init> <rotating-ps7-init> <plan> <dump-dir> <abort-file> <result> <stage> <authorization> <run-id> ?<fixed-build-id> <rotating-build-id>?"
 }
 set p10_xsdb_url [lindex $argv 0]
 set p10_fixed_serial [lindex $argv 1]
@@ -994,6 +996,17 @@ set p10_result_file [file normalize [lindex $argv 12]]
 set p10_stage [lindex $argv 13]
 set p10_authorization_file [file normalize [lindex $argv 14]]
 set p10_run_id [lindex $argv 15]
+set p10_expected_build(fixed) 0x50313046
+set p10_expected_build(rotating) 0x50313052
+if {[llength $argv] == 18} {
+  foreach {role index} {fixed 16 rotating 17} {
+    set value [lindex $argv $index]
+    if {![regexp {^0x[0-9A-Fa-f]{8}$} $value]} {
+      error "invalid P10 expected build ID for $role"
+    }
+    set p10_expected_build($role) $value
+  }
+}
 set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
@@ -1121,6 +1134,8 @@ set rc [catch {
   p10_say "P10_XSDB_ROTATING_SERIAL=$p10_rotating_serial"
   p10_say "P10_XSDB_STAGE=$p10_stage"
   p10_say "P10_XSDB_RUN_ID=$p10_run_id"
+  p10_say [format "P10_XSDB_EXPECTED_BUILD_FIXED=0x%08X" $p10_expected_build(fixed)]
+  p10_say [format "P10_XSDB_EXPECTED_BUILD_ROTATING=0x%08X" $p10_expected_build(rotating)]
 
   foreach role {fixed rotating} {
     p10_select_apu $role
@@ -1143,8 +1158,8 @@ set rc [catch {
     p10_say "P10_PS7_INITIALIZED_[string toupper $role]=1"
   }
 
-  p10_verify_pl_safe fixed 0x50313046 0x702000F0 PREBOOT
-  p10_verify_pl_safe rotating 0x50313052 0x702000A0 PREBOOT
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 PREBOOT
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 PREBOOT
 
   foreach role {fixed rotating} {
     p10_select_cpu $role
@@ -1161,8 +1176,8 @@ set rc [catch {
   p10_say "P10_INITIAL_READY_DUMP_ROTATING=$rotating_ready"
   p10_resume fixed
   p10_resume rotating
-  p10_verify_pl_safe fixed 0x50313046 0x702000F0 SAFE_BOOT
-  p10_verify_pl_safe rotating 0x50313052 0x702000A0 SAFE_BOOT
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 SAFE_BOOT
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 SAFE_BOOT
   p10_say "P10_SAFE_BOOT=PASS"
 
   foreach record $parsed_plan {

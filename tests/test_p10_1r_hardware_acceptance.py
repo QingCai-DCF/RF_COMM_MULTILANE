@@ -11,6 +11,9 @@ RUNNER_PATH = ROOT / "scripts/p10_1r_hardware_acceptance.py"
 TCL_PATH = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 PROTOCOL = ROOT / "software/ps_driver/p10_1_runtime_protocol.h"
 EXTENSION = ROOT / "software/ps_driver/p10_1_runtime_extension.inc"
+RUNTIME_MAIN = ROOT / "software/ps_driver/p9_runtime_main.c"
+FIXED_ROLE = ROOT / "board_profiles/ax7020_fixed_2lane/p10_runtime_role.h"
+ROTATING_ROLE = ROOT / "board_profiles/ax7020_rotating_2lane/p10_runtime_role.h"
 
 
 def load_runner():
@@ -195,6 +198,34 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             "P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)",
         ):
             self.assertIn(marker, text)
+
+    def test_p10_1r_pl_build_identity_is_explicit_end_to_end(self) -> None:
+        self.assertEqual(
+            self.runner.EXPECTED_PL_BUILD_IDS,
+            {"fixed": 0x50315246, "rotating": 0x50315252},
+        )
+        self.assertIn(
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50315246U",
+            FIXED_ROLE.read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50315252U",
+            ROTATING_ROLE.read_text(encoding="utf-8"),
+        )
+        runtime = RUNTIME_MAIN.read_text(encoding="utf-8")
+        self.assertIn("return P10_EXPECTED_PL_BUILD_ID;", runtime)
+        self.assertNotIn(
+            "if (P10_ENDPOINT_ROLE == 1) return UINT32_C(0x50313046)",
+            runtime,
+        )
+        tcl = TCL_PATH.read_text(encoding="utf-8")
+        self.assertIn("[llength $argv] ni {16 18}", tcl)
+        self.assertIn("$p10_expected_build(fixed)", tcl)
+        self.assertIn("$p10_expected_build(rotating)", tcl)
+        runner = RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertIn("EXPECTED_ROLE_IDENTITIES", runner)
+        self.assertIn("EXPECTED_PL_BUILD_IDS['fixed']", runner)
+        self.assertIn("EXPECTED_PL_BUILD_IDS['rotating']", runner)
 
 
 if __name__ == "__main__":

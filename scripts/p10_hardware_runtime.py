@@ -754,9 +754,13 @@ def digest(words: list[int], start: int) -> str:
     return "".join(f"{word:08x}" for word in words[start:start + 8])
 
 
-def mailbox_detail(words: list[int], role: str) -> tuple[list[str], dict[str, Any]]:
+def mailbox_detail(
+    words: list[int],
+    role: str,
+    expected_roles: dict[str, dict[str, Any]] | None = None,
+) -> tuple[list[str], dict[str, Any]]:
     errors: list[str] = []
-    expected = EXPECTED_ROLE[role]
+    expected = (expected_roles or EXPECTED_ROLE)[role]
     checks = {
         "mailbox_magic": words[0] == EXPECTED_MAILBOX_MAGIC,
         "mailbox_schema": words[1] == EXPECTED_MAILBOX_SCHEMA,
@@ -863,11 +867,17 @@ def transfer_bytes(row: dict[str, Any]) -> int:
     return useful
 
 
-def evaluate_pair(row: dict[str, Any], fixed_words: list[int],
-                  rotating_words: list[int]) -> tuple[list[str], dict[str, Any]]:
+def evaluate_pair(
+    row: dict[str, Any],
+    fixed_words: list[int],
+    rotating_words: list[int],
+    expected_roles: dict[str, dict[str, Any]] | None = None,
+) -> tuple[list[str], dict[str, Any]]:
     errors: list[str] = []
-    fixed_errors, fixed = mailbox_detail(fixed_words, "fixed")
-    rotating_errors, rotating = mailbox_detail(rotating_words, "rotating")
+    fixed_errors, fixed = mailbox_detail(fixed_words, "fixed", expected_roles)
+    rotating_errors, rotating = mailbox_detail(
+        rotating_words, "rotating", expected_roles
+    )
     errors.extend(f"{row['label']}: {item}" for item in
                   fixed_errors + rotating_errors)
     expected_state = 6 if row["command"] == 10 else \

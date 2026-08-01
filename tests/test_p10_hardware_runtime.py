@@ -159,6 +159,46 @@ class P10HardwareRuntimeTests(unittest.TestCase):
         self.assertNotIn("0x09000003", text)
         self.assertNotIn("0xCF35F13A", text)
 
+    def test_mailbox_identity_can_be_bound_to_a_new_campaign_build(self) -> None:
+        words = [0] * 256
+        words[0] = self.runtime.EXPECTED_MAILBOX_MAGIC
+        words[1] = self.runtime.EXPECTED_MAILBOX_SCHEMA
+        words[2] = 0x50313046
+        words[32] = 0x5031305A
+        words[33] = 0x50315246
+        words[34] = 0x702000F0
+        words[35] = self.runtime.EXPECTED_REGISTER_MAP_VERSION
+        words[36] = self.runtime.EXPECTED_REGISTER_MAP_HASH_LOW
+        words[37] = self.runtime.EXPECTED_CAPABILITIES
+        words[39] = 0x40400000
+        words[40] = 1
+        words[49] = 64
+        words[50] = 32
+        words[self.runtime.PL_SNAPSHOT_START] = 0x5031305A
+        words[self.runtime.PL_SNAPSHOT_START + 7] = 0x2
+        words[self.runtime.PL_SNAPSHOT_START + 85] = (
+            self.runtime.P10_DUTY_WINDOW_CYCLES
+        )
+        words[self.runtime.PL_SNAPSHOT_START + 86] = (
+            self.runtime.P10_DUTY_HARD_MAX_HIGH_CYCLES
+        )
+        words[self.runtime.PL_SNAPSHOT_START + 87] = (
+            self.runtime.P10_DUTY_TARGET_MAX_HIGH_CYCLES
+        )
+        default_errors, _ = self.runtime.mailbox_detail(words, "fixed")
+        self.assertIn("fixed: pl_build", default_errors)
+        identities = {
+            "fixed": {
+                **self.runtime.EXPECTED_ROLE["fixed"],
+                "build": 0x50315246,
+            }
+        }
+        errors, detail = self.runtime.mailbox_detail(
+            words, "fixed", identities
+        )
+        self.assertEqual(errors, [])
+        self.assertEqual(detail["pl_build_id"], "0x50315246")
+
     def test_runtime_requires_explicit_hardware_enable_and_finally_shutdown(self) -> None:
         text = RUNTIME.read_text(encoding="utf-8")
         for marker in (

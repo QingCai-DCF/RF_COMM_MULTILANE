@@ -120,10 +120,11 @@ static uint32_t p9_expected_pl_id(void) {
 }
 
 #if P10_ENDPOINT_ROLE != 0
+#ifndef P10_EXPECTED_PL_BUILD_ID
+#error "P10 role-bound runtime requires P10_EXPECTED_PL_BUILD_ID"
+#endif
 static uint32_t p9_expected_pl_build_id(void) {
-  if (P10_ENDPOINT_ROLE == 1) return UINT32_C(0x50313046);
-  if (P10_ENDPOINT_ROLE == 2) return UINT32_C(0x50313052);
-  return UINT32_C(0x5009000b);
+  return P10_EXPECTED_PL_BUILD_ID;
 }
 
 static uint32_t p9_expected_pl_profile_id(void) {
