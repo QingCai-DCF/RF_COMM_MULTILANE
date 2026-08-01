@@ -179,6 +179,32 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             self.runner.plan_hashes(["tuning"])["tuning"],
             "1e528bb0a2203deb33c74d3f3cd6c3950fb285122690a24654a3e445fc73c9c4",
         )
+
+    def test_selected_streaming_and_abort25_plan_invariants(
+        self,
+    ) -> None:
+        plans = self.runner.build_plans()
+        failed_object = next(
+            item
+            for item in plans["preflight"]
+            if isinstance(item, self.runner.Case)
+            and item.label == "failed_object_diagnostic"
+        )
+        object_count = (
+            failed_object.size + failed_object.rawtarget - 1
+        ) // failed_object.rawtarget
+
+        self.assertEqual(
+            failed_object.flags & self.runner.FLAG_ABORT_25,
+            self.runner.FLAG_ABORT_25,
+        )
+        self.assertEqual(
+            failed_object.rawtarget,
+            self.runner.SELECTED_OBJECT_BYTES,
+        )
+        self.assertEqual(failed_object.size % failed_object.rawtarget, 0)
+        self.assertGreaterEqual(object_count, 4)
+        self.assertGreaterEqual(object_count // 4, 1)
         stream = next(
             item
             for item in plans["streaming"]

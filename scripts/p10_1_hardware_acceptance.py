@@ -299,7 +299,11 @@ def build_plans() -> dict[str, list[PlanItem]]:
         p101_case(
             "failed_object_diagnostic",
             direction=0,
-            total=mib,
+            # The selected 512 KiB object size needs at least four objects for
+            # a 25% recovery vector.  With only two objects, integer division
+            # selects ordinal zero and the receiver can complete recovery
+            # before the host observes PRIMED and launches the sender.
+            total=2 * mib,
             flags=FLAG_ABORT_25,
             object_id=0x10100020,
             timeout=120_000,
