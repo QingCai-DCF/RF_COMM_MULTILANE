@@ -9,8 +9,8 @@
 # require-user-hw-authorization: reached only through the committed P10
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
-set p10_expected_register_map_version 0x0A000001
-set p10_expected_register_map_hash_low 0x792A01C8
+set p10_expected_register_map_version 0x0A000002
+set p10_expected_register_map_hash_low 0x53D711A6
 
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
@@ -252,6 +252,53 @@ proc p10_dump_p10_1_result {role label} {
   return $final
 }
 
+proc p10_read_p10_1r_snapshot {role} {
+  set before [p10_read32 $role 0x43C00A04]
+  p10_write32 $role 0x43C00A00 1
+  after 1
+  set generation [p10_read32 $role 0x43C00A04]
+  set caps [p10_read32 $role 0x43C00A08]
+  if {$generation <= $before || ($generation & 1) != 0 ||
+      $caps != 0x52310101} {
+    error [format "P10.1R %s atomic snapshot invalid before=0x%08X generation=0x%08X caps=0x%08X" \
+        $role $before $generation $caps]
+  }
+  set values {}
+  for {set address 0x43C00A0C} {$address <= 0x43C00AA8} {incr address 4} {
+    lappend values [p10_read32 $role $address]
+  }
+  if {[lindex $values 35] != 36864 || [lindex $values 36] != 256 ||
+      [lindex $values 37] != 131072 || [lindex $values 38] != 4 ||
+      [lindex $values 39] != 3} {
+    error "P10.1R $role admission timing/config readback mismatch"
+  }
+  return [linsert $values 0 $generation $caps]
+}
+
+proc p10_dump_p10_1r_snapshot {role label} {
+  global p10_dump_dir
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label]} {
+    error "unsafe P10.1R snapshot label"
+  }
+  set final [file join $p10_dump_dir "${label}.${role}.p10_1r.psv"]
+  set values [p10_read_p10_1r_snapshot $role]
+  set out [open $final w]
+  puts $out [join $values "|"]
+  close $out
+  return $final
+}
+
+proc p10_record_p10_1r_telemetry {sequence label} {
+  global p10_telemetry_handle
+  set captured [clock milliseconds]
+  foreach role {fixed rotating} {
+    set values [p10_read_p10_1r_snapshot $role]
+    puts $p10_telemetry_handle [join [list $captured $sequence $label $role \
+        [join $values ","]] "|"]
+  }
+  flush $p10_telemetry_handle
+}
+
 proc p10_resume {role} {
   p10_select_cpu $role
   con
@@ -383,7 +430,7 @@ proc p10_wait_receiver_primed {role d} {
       $last_p10_1_sequence]
 }
 
-proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_status rotating_status fixed_state rotating_state window} {
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
       [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
@@ -394,17 +441,24 @@ proc p10_record_observation {d sequence started finished fixed_dump rotating_dum
       [dict get $d initialseq] [dict get $d faultflags] [dict get $d idle] \
       [dict get $d injectmask] [dict get $d injectdelay] $window $started $finished $sequence \
       $fixed_status $rotating_status $fixed_state $rotating_state $fixed_dump $rotating_dump \
-      $fixed_p10_1_dump $rotating_p10_1_dump]
+      $fixed_p10_1_dump $rotating_p10_1_dump $fixed_p10_1r_dump $rotating_p10_1r_dump]
   puts $p10_observation_handle [join $values "|"]
   flush $p10_observation_handle
 }
 
 proc p10_wait_pair_terminal {sequence timeout_ms} {
+  global p10_active_case_label
   set deadline [expr {[clock milliseconds] + $timeout_ms + 5000}]
+  set next_telemetry [expr {[clock milliseconds] + 5000}]
   set fixed_done 0; set rotating_done 0
   set fixed_state 0; set rotating_state 0
   while {[clock milliseconds] < $deadline} {
     p10_check_abort
+    set now [clock milliseconds]
+    if {$now >= $next_telemetry} {
+      p10_record_p10_1r_telemetry $sequence $p10_active_case_label
+      set next_telemetry [expr {$now + 5000}]
+    }
     set fixed_response [p10_read32 fixed 0x0002001C]
     set fixed_state [p10_read32 fixed 0x0002000C]
     set rotating_response [p10_read32 rotating 0x0002001C]
@@ -426,12 +480,18 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
 }
 
 proc p10_execute_case {d {window "NA"}} {
-  global p10_command_sequence
+  global p10_command_sequence p10_active_case_label
   p10_check_abort
   incr p10_command_sequence
   set sequence $p10_command_sequence
+  set p10_active_case_label [dict get $d label]
   set started [clock milliseconds]
   set command [dict get $d command]
+
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00718 0x00000020
+  }
+  after 1
 
   if {$command in {2 3 13}} {
     set receiver [p10_receiver_role [dict get $d direction]]
@@ -493,9 +553,12 @@ proc p10_execute_case {d {window "NA"}} {
     set fixed_p10_1_dump [p10_dump_p10_1_result fixed [dict get $d label]]
     set rotating_p10_1_dump [p10_dump_p10_1_result rotating [dict get $d label]]
   }
+  set fixed_p10_1r_dump [p10_dump_p10_1r_snapshot fixed [dict get $d label]]
+  set rotating_p10_1r_dump [p10_dump_p10_1r_snapshot rotating [dict get $d label]]
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump $rotating_dump \
       $fixed_p10_1_dump $rotating_p10_1_dump \
+      $fixed_p10_1r_dump $rotating_p10_1r_dump \
       $fixed_status $rotating_status $fixed_state $rotating_state $window
 
   set expected [dict get $d expected_status]
@@ -522,23 +585,30 @@ proc p10_execute_case {d {window "NA"}} {
 
 proc p10_p101_case {label object_id size direction lane timeout_ms {flags 0}} {
   # Hardware-selected sustained configuration: buffer=4, ring=32, batch=8,
-  # object=512 KiB.  Source run and hashes are frozen in the selected tuning
+  # object=256 KiB.  Source run and hashes are frozen in the selected tuning
   # configuration evidence; this helper is used by windows and recovery cases.
   set fields [list CASE $label 13 0 $flags $lane $direction 2 257 $size 32 1 0 0 \
-      $timeout_ms 0xA1010001 0x101 $object_id 8 32 0 524288 65536 4 8 0 0 0 0]
+      $timeout_ms 0xA1010001 0x101 $object_id 32 32 0 262144 65536 4 8 0 0 0 0]
   return [p10_case_dict $fields]
 }
 
-proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
+proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
+                          {absolute_deadline 0}} {
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       ![string is integer -strict $duration_sec] ||
-      $duration_sec < 10 || $duration_sec > 750 ||
+      $duration_sec < 10 || $duration_sec > 840 ||
       $direction ni {0 1} || $lane ni {1 2 3} ||
-      $maximum_chunk ni {1048576 16777216 67108864}} {
+      $maximum_chunk ni {1048576 4194304 16777216 67108864} ||
+      ![string is integer -strict $absolute_deadline] ||
+      $absolute_deadline < 0} {
     error "invalid P10.1 bounded window"
   }
   set started [clock milliseconds]
-  set deadline [expr {$started + $duration_sec * 1000}]
+  set deadline [expr {$absolute_deadline == 0 ?
+      $started + $duration_sec * 1000 : $absolute_deadline}]
+  if {$deadline <= $started || $deadline > $started + $duration_sec * 1000} {
+    error "invalid P10.1 absolute window deadline"
+  }
   set index 0
   set last_case_size 0
   set last_case_elapsed_ms 0
@@ -555,6 +625,10 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
     }
     set candidate 1048576
     set candidate_budget 5000
+    if {$maximum_chunk >= 4194304 && $remaining > 15000} {
+      set candidate 4194304
+      set candidate_budget 15000
+    }
     if {$maximum_chunk >= 16777216 && $remaining > 45000 &&
         ($index % 3) != 0} {
       set candidate 16777216
@@ -607,9 +681,8 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
   }
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
-  if {$elapsed < $duration_sec * 1000 ||
-      $elapsed > $duration_sec * 1000 + 500} {
-    error "P10.1 window $label elapsed bound failed: $elapsed ms"
+  if {$finished < $deadline || $finished > $deadline + 500} {
+    error "P10.1 window $label deadline bound failed: elapsed=$elapsed ms"
   }
   if {$index == 0} {
     error "P10.1 window $label completed no autonomous stream"
@@ -642,7 +715,7 @@ proc p10_wait_p101_active {sequence timeout_ms} {
 }
 
 proc p10_execute_ps_service_reset {label reset_role direction lane size object_id} {
-  global p10_command_sequence
+  global p10_command_sequence p10_active_case_label
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $reset_role ni {fixed rotating} || $direction ni {0 1} ||
       $lane ni {1 2 3} || $size != 67108864} {
@@ -654,6 +727,7 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   set d [p10_p101_case $label $object_id $size $direction $lane 600000 $flag]
   incr p10_command_sequence
   set sequence $p10_command_sequence
+  set p10_active_case_label $label
   set started [clock milliseconds]
   p10_publish_case $receiver $d $sequence
   p10_wait_receiver_primed $receiver $d
@@ -677,6 +751,8 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   set rotating_dump [p10_dump_mailbox rotating $label]
   set fixed_p101 [p10_dump_p10_1_result fixed $label]
   set rotating_p101 [p10_dump_p10_1_result rotating $label]
+  set fixed_p10_1r [p10_dump_p10_1r_snapshot fixed $label]
+  set rotating_p10_1r [p10_dump_p10_1r_snapshot rotating $label]
 
   p10_select_cpu $reset_role
   rst -processor
@@ -691,8 +767,9 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   p10_verify_pl_safe rotating 0x50313052 0x702000A0 "${label}_RECOVERED"
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump \
-      $rotating_dump $fixed_p101 $rotating_p101 $fixed_status \
-      $rotating_status $fixed_state $rotating_state PS_SERVICE_RESET
+      $rotating_dump $fixed_p101 $rotating_p101 $fixed_p10_1r \
+      $rotating_p10_1r $fixed_status $rotating_status $fixed_state \
+      $rotating_state PS_SERVICE_RESET
   p10_say "P10_1_PS_SERVICE_RESET_PASS=$label:reset_role=$reset_role"
 }
 
@@ -702,10 +779,14 @@ proc p10_run_p101_formal {label duration_sec} {
   }
   set started [clock milliseconds]
   p10_say "P10_1_FORMAL_START_MS=$started"
-  p10_run_p101_window "${label}_warmup_f2r" 150 0 3 16777216
-  p10_run_p101_window "${label}_warmup_r2f" 150 1 3 16777216
-  p10_run_p101_window "${label}_formal_f2r" 750 0 3 67108864
-  p10_run_p101_window "${label}_formal_r2f" 750 1 3 67108864
+  p10_run_p101_window "${label}_warmup_f2r" 60 0 3 16777216 \
+      [expr {$started + 60000}]
+  p10_run_p101_window "${label}_warmup_r2f" 60 1 3 16777216 \
+      [expr {$started + 120000}]
+  p10_run_p101_window "${label}_formal_f2r" 840 0 3 67108864 \
+      [expr {$started + 960000}]
+  p10_run_p101_window "${label}_formal_r2f" 840 1 3 67108864 \
+      [expr {$started + 1800000}]
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
   if {$elapsed < 1800000 || $elapsed > 1800500} {
@@ -714,6 +795,113 @@ proc p10_run_p101_formal {label duration_sec} {
   p10_say "P10_1_FORMAL_END_MS=$finished"
   p10_say "P10_1_FORMAL_ELAPSED_MS=$elapsed"
   p10_say "P10_1_FORMAL_RESULT=PASS"
+}
+
+proc p10_run_p101r_timed_case {label duration_sec direction lane size object_id} {
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $duration_sec != 30 || $direction ni {0 1} || $lane != 3 ||
+      $size != 16777216 || ![string is integer -strict $object_id]} {
+    error "invalid P10.1R timed case"
+  }
+  set started [clock milliseconds]
+  set deadline [expr {$started + $duration_sec * 1000}]
+  set d [p10_p101_case $label $object_id $size $direction $lane \
+      [expr {$duration_sec * 1000}] 0]
+  p10_execute_case $d $label
+  set completed [clock milliseconds]
+  if {$completed > $deadline} {
+    error "P10.1R timed case exceeded its 30-second window"
+  }
+  after [expr {$deadline - $completed}]
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$elapsed < 30000 || $elapsed > 30500} {
+    error "P10.1R timed case window bound failed: $elapsed ms"
+  }
+  p10_say "P10_1R_TIMED_CASE_PASS=$label:elapsed_ms=$elapsed,size=$size"
+}
+
+proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
+  global p10_command_sequence p10_dump_dir p10_active_case_label
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $direction ni {0 1} || $lane ni {1 2} ||
+      $sample_count != 1000 || $spacing < 1024 || $spacing > 65536} {
+    error "invalid P10.1R echo sweep"
+  }
+  set lane_index [expr {$lane == 1 ? 0 : 1}]
+  set sender [p10_sender_role $direction]
+  set receiver [p10_receiver_role $direction]
+  set output [file join $p10_dump_dir "${label}.echo_tail.psv"]
+  set handle [open $output w]
+  puts $handle "sample|module|direction|lane_mask|tail_cycles|sender_raw|sender_raw_while_tx|sender_blanked_raw|sender_blanked_frame|sender_blanked_crc_valid|sender_local_source_reject|sender_accepted_remote|receiver_raw|receiver_accepted_remote|sender_last_txd_rise|sender_last_txd_fall|sender_first_rxd_after_tx|sender_last_rxd_after_tx|sender_overlap_violation|sender_admission_violation|sender_non_target_accepted|sender_cross_lane_accepted|receiver_overlap_violation|receiver_admission_violation|receiver_non_target_accepted|receiver_cross_lane_accepted"
+  set module [expr {$direction == 0 ? ($lane == 1 ? "F0" : "F1") :
+      ($lane == 1 ? "R0" : "R1")}]
+  for {set sample 0} {$sample < $sample_count} {incr sample} {
+    p10_check_abort
+    foreach role {fixed rotating} {
+      p10_write32 $role 0x43C00718 0x00000020
+    }
+    after 1
+    set fields [list CASE [format "%s_%04d" $label $sample] 2 0 0 $lane \
+        $direction 2 257 0 32 1 0 0 10000 0xA1010001 0x101 \
+        [expr {0x61000000 + $sample}] 0 0 0 1 $spacing 0 0 0 0 0 0]
+    set d [p10_case_dict $fields]
+    incr p10_command_sequence
+    set sequence $p10_command_sequence
+    set p10_active_case_label [format "%s_%04d" $label $sample]
+    p10_publish_case $receiver $d $sequence
+    p10_wait_receiver_primed $receiver $d
+    p10_publish_case $sender $d $sequence
+    set terminal [p10_wait_pair_terminal $sequence 10000]
+    set fixed_status [p10_read32 fixed 0x00020020]
+    set rotating_status [p10_read32 rotating 0x00020020]
+    if {$fixed_status != 0 || $rotating_status != 0 ||
+        [lindex $terminal 0] != 4 || [lindex $terminal 1] != 4} {
+      close $handle
+      error "P10.1R echo sweep command failed $label sample=$sample"
+    }
+    set fixed_snapshot [p10_read_p10_1r_snapshot fixed]
+    set rotating_snapshot [p10_read_p10_1r_snapshot rotating]
+    if {$sender eq "fixed"} {
+      set sender_values $fixed_snapshot
+      set receiver_values $rotating_snapshot
+    } else {
+      set sender_values $rotating_snapshot
+      set receiver_values $fixed_snapshot
+    }
+    # Snapshot list indices 0/1 are generation/capability.  Register A0C is 2.
+    set base 2
+    set row [list $sample $module $direction $lane \
+        [lindex $sender_values [expr {$base + 19 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 1 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 3 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 5 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 7 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 9 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 11 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 13 + $lane_index}]] \
+        [lindex $receiver_values [expr {$base + 1 + $lane_index}]] \
+        [lindex $receiver_values [expr {$base + 13 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 23 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 25 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 27 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 29 + $lane_index}]] \
+        [lindex $sender_values [expr {$base + 31}]] \
+        [lindex $sender_values [expr {$base + 32}]] \
+        [lindex $sender_values [expr {$base + 33}]] \
+        [lindex $sender_values [expr {$base + 34}]] \
+        [lindex $receiver_values [expr {$base + 31}]] \
+        [lindex $receiver_values [expr {$base + 32}]] \
+        [lindex $receiver_values [expr {$base + 33}]] \
+        [lindex $receiver_values [expr {$base + 34}]]]
+    puts $handle [join $row "|"]
+    flush $handle
+    if {(($sample + 1) % 100) == 0} {
+      p10_say "P10_1R_ECHO_SWEEP_PROGRESS=$label:[expr {$sample + 1}]/$sample_count"
+    }
+  }
+  close $handle
+  p10_say "P10_1R_ECHO_SWEEP_PASS=$label:module=$module,samples=$sample_count,path=$output"
 }
 
 proc p10_probe_1plus1 {label} {
@@ -809,21 +997,26 @@ set p10_run_id [lindex $argv 15]
 set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
+set p10_active_case_label "boot"
 file mkdir $p10_dump_dir
 file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
 set p10_observation_file [file join $p10_dump_dir observations.psv]
 set p10_observation_handle [open $p10_observation_file w]
-puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path"
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path"
 flush $p10_observation_handle
+set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
+set p10_telemetry_handle [open $p10_telemetry_file w]
+puts $p10_telemetry_handle "captured_ms|sequence|label|role|snapshot_words_csv"
+flush $p10_telemetry_handle
 
 set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ne "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"} {
     error "P10 immutable current-run environment marker required"
   }
-  if {![regexp {^P10-([A-J]|DIAG)$} $p10_stage]} { error "unsupported P10 XSDB stage" }
-  if {![regexp {^p10_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10 run id" }
+  if {![regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]} { error "unsupported P10.1R XSDB stage" }
+  if {![regexp {^p10_1r_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10.1R run id" }
   if {$p10_fixed_serial eq $p10_rotating_serial} { error "ambiguous P10 role serials" }
   foreach required [list $p10_bit(fixed) $p10_bit(rotating) $p10_elf(fixed) \
       $p10_elf(rotating) $p10_ps7(fixed) $p10_ps7(rotating) $p10_plan_file \
@@ -890,6 +1083,28 @@ set rc [catch {
       if {[llength $fields] != 2 ||
           ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
         error "invalid P10.1 1PLUS1 probe record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P101R_ECHO_SWEEP"} {
+      if {[llength $fields] != 6 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
+        error "invalid P10.1R echo-sweep record"
+      }
+      foreach index {2 3 4 5} {
+        if {![string is integer -strict [lindex $fields $index]]} {
+          error "invalid numeric P10.1R echo-sweep field"
+        }
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P101R_TIMED_CASE"} {
+      if {[llength $fields] != 7 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
+        error "invalid P10.1R timed-case record"
+      }
+      foreach index {2 3 4 5 6} {
+        if {![string is integer -strict [lindex $fields $index]]} {
+          error "invalid numeric P10.1R timed-case field"
+        }
       }
       lappend parsed_plan $fields
     } else {
@@ -969,6 +1184,13 @@ set rc [catch {
       p10_run_p101_formal [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
+    } elseif {$kind eq "P101R_ECHO_SWEEP"} {
+      p10_run_p101r_echo_sweep [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5]
+    } elseif {$kind eq "P101R_TIMED_CASE"} {
+      p10_run_p101r_timed_case [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5] \
+          [lindex $record 6]
     }
   }
 
@@ -989,6 +1211,7 @@ if {$rc != 0} {
   p10_say "P10_XSDB_STAGE_ERROR=[p10_sanitize $error_text]"
 }
 catch {close $p10_observation_handle}
+catch {close $p10_telemetry_handle}
 catch {close $p10_result_handle}
 if {$p10_connected} { catch {disconnect} }
 if {$rc != 0} {

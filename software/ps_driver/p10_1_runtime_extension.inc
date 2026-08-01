@@ -583,7 +583,8 @@ static int p10_1_validate_stream_args(
   uint32_t active_buffer_count;
   uint32_t abort_flags = mailbox->command_flags &
       (P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 |
-       P10_1_RUNTIME_FLAG_EXPECT_ABORT_75);
+       P10_1_RUNTIME_FLAG_EXPECT_ABORT_75 |
+       P10_1_RUNTIME_FLAG_EXPECT_ABORT_50);
   uint32_t reset_flags = mailbox->command_flags &
       (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
        P10_1_RUNTIME_FLAG_EXPECT_PL_RESET |
@@ -609,9 +610,6 @@ static int p10_1_validate_stream_args(
       (descriptor_bytes & 3U) != 0U ||
       mailbox->timeout_ms == 0U ||
       mailbox->timeout_ms > P10_1_RUNTIME_MAX_TIMEOUT_MS ||
-      abort_flags ==
-          (P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 |
-           P10_1_RUNTIME_FLAG_EXPECT_ABORT_75) ||
       reset_flags ==
           (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
            P10_1_RUNTIME_FLAG_EXPECT_PL_RESET) ||
@@ -1122,6 +1120,7 @@ static int p10_1_command_autonomous_stream(
   recovery_flags = flags &
       (P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 |
        P10_1_RUNTIME_FLAG_EXPECT_ABORT_75 |
+       P10_1_RUNTIME_FLAG_EXPECT_ABORT_50 |
        P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
        P10_1_RUNTIME_FLAG_EXPECT_PL_RESET |
        P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |
@@ -1129,6 +1128,9 @@ static int p10_1_command_autonomous_stream(
        P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER);
   if ((recovery_flags & P10_1_RUNTIME_FLAG_EXPECT_ABORT_25) != 0U) {
     recovery_ordinal = result->object_count / 4U;
+  } else if ((recovery_flags &
+              P10_1_RUNTIME_FLAG_EXPECT_ABORT_50) != 0U) {
+    recovery_ordinal = result->object_count / 2U;
   } else if ((recovery_flags &
               P10_1_RUNTIME_FLAG_EXPECT_ABORT_75) != 0U) {
     recovery_ordinal =
@@ -1208,7 +1210,7 @@ static int p10_1_command_autonomous_stream(
               p9_pl_read(IR_REG_P9_RX_STALE_SESSION_COUNT);
       }
       p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal,
-                             local_rx);
+                           local_rx);
       /*
        * P10.1R removes the per-object optical ready round trip.  The receiver
        * opens the next object immediately; the sender uses one deterministic
