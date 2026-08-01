@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-DUPLICATE-FAULT-INJECTION-REMEDIATION",
+  "status": "PASS",
+  "scope": "OFFLINE_VALIDATION_FIRMWARE_REMEDIATION_AND_ARTIFACT_FREEZE",
+  "generated_at_utc": "2026-08-01T05:23:33Z",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "diagnosis": {
+    "path": "evidence/generated/p10_1_hw_duplicate_fault_injection_diagnosis.json",
+    "sha256": "20a3414db13ae087975e721e86895b4c0b109026e56d8cb8f4e7103cb881ca9f"
+  },
+  "source": {
+    "remediation_commit": "a47ac64f408b11798f2e54402c003663be6b8442",
+    "artifact_source_commit": "9b453015fdc9a4c16373ac185099ef87238a142e",
+    "runtime_extension": {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "sha256": "4130f01ae212c524125234306509cf163ea0addd97ae709670e5157641d7d12f"
+    },
+    "acceptance_tests": {
+      "path": "tests/test_p10_1_hardware_acceptance.py",
+      "sha256": "75d5b104bd06024fc33e85bc8b6752eaade6488acad2f4fb1da765fcbfe01637"
+    },
+    "runtime_builder": {
+      "path": "scripts/build_p10_ps_runtime.py",
+      "sha256": "425780b3d9ed3b401e2feaec6f868b323813d96ccb4d1a8dc501af86fda2bc30"
+    }
+  },
+  "remediation_contract": {
+    "fault_vector": "duplicate_segment_f_to_r_64m",
+    "fault_mechanism": "receiver-only bounded cumulative-ACK suppression",
+    "receiver_ack_drop_count": 255,
+    "sender_ack_drop_count": 0,
+    "hardware_rto_cycles": 4000000,
+    "hardware_clock_hz": 64000000,
+    "hardware_rto_ms": 62.5,
+    "observation_timeout_ms": 250,
+    "required_receiver_duplicate_delta_minimum": 1,
+    "required_remote_commit": 0,
+    "normal_runtime_path_changed": false,
+    "rtl_changed": false,
+    "pinmap_changed": false,
+    "global_permit_or_tfdu_safety_path_changed": false
+  },
+  "offline_verification": {
+    "p10_1_hardware_acceptance_unittests": {
+      "status": "PASS",
+      "tests_run": 19
+    },
+    "p10_1_finalizer_unittests": {
+      "status": "PASS",
+      "tests_run": 10
+    },
+    "python_compile": "PASS",
+    "functional_reuse_existing_audit": "PASS",
+    "fixed_runtime_build": "PASS",
+    "rotating_runtime_build": "PASS",
+    "native_crypto_protocol_test": "PASS",
+    "native_pe_reproducibility": "PASS",
+    "hardware_actions_executed": false,
+    "ethernet_used": false
+  },
+  "build_summaries": {
+    "functional": {
+      "path": "evidence/generated/p10_1_hw_functional_build_summary.json",
+      "sha256": "e2e48ca0cb036c81a67ec9f807dfd692773d7423faac9f620b20592577ca20e3"
+    },
+    "runtime": {
+      "path": "evidence/generated/p10_1_hw_ps_runtime_build_summary.json",
+      "sha256": "39672b4aa9af2a58cfbfc9c864546b2ad6bb31a9ab6eb7d050af62ddb4dde9ec"
+    }
+  },
+  "superseded_intermediate_freeze": {
+    "source_commit": "a47ac64f408b11798f2e54402c003663be6b8442",
+    "namespace": "artifacts/p10_1/a47ac64f408b11798f2e54402c003663be6b8442",
+    "content_equivalent_to_final_artifacts": true,
+    "authorization_eligible": false,
+    "disposition": "PRESERVED_AS_UNREFERENCED_INTERMEDIATE_BUILD"
+  },
+  "artifacts": [
+    {
+      "role": "fixed",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+      "bytes": 4045681
+    },
+    {
+      "role": "fixed",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1",
+      "bytes": 848595
+    },
+    {
+      "role": "fixed",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8",
+      "bytes": 1855896
+    },
+    {
+      "role": "fixed",
+      "kind": "elf",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/27177f776520d3266cf7733b4a905d1eceb24a71b871797ae4dfa9f7aab9ac93/p10_fixed_runtime.elf",
+      "sha256": "27177f776520d3266cf7733b4a905d1eceb24a71b871797ae4dfa9f7aab9ac93",
+      "bytes": 550560
+    },
+    {
+      "role": "fixed",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3",
+      "bytes": 369073
+    },
+    {
+      "role": "rotating",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+      "bytes": 4045681
+    },
+    {
+      "role": "rotating",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea",
+      "bytes": 849469
+    },
+    {
+      "role": "rotating",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5",
+      "bytes": 1856209
+    },
+    {
+      "role": "rotating",
+      "kind": "elf",
+      "path": "artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/3f023515e87cad79ec92cbb1353a1079b43356b1656904be7dacf39148c83fee/p10_rotating_runtime.elf",
+      "sha256": "3f023515e87cad79ec92cbb1353a1079b43356b1656904be7dacf39148c83fee",
+      "bytes": 550828
+    },
+    {
+      "role": "rotating",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148",
+      "bytes": 369073
+    }
+  ],
+  "authorization_state": {
+    "current_run_hardware_authorization": false,
+    "prior_authorization_consumed": true,
+    "prior_authorization_path": "config/p10_1_current_run_hardware_authorization.json",
+    "prior_authorization_sha256": "2d5b6461dd441afae4b41f4c191be61f26c5fdfefcec82a5b983fab52d67b6c6",
+    "unlimited_retry_source_path": "config/p10_1_retry_limit_override_authorization.json",
+    "unlimited_retry_source_sha256": "5f4131c3473eb20c8981c5912e5198368d1e1f0d4dd3f91ba0113d639fd4b29c",
+    "new_run_authorization_materialized": false
+  },
+  "acceptance_boundary": {
+    "offline_remediation_pass_claimed": true,
+    "faults_stage_pass_claimed": false,
+    "hardware_pass_claimed": false,
+    "old_elf_hardware_results_inherited": false,
+    "fresh_faults_run_required": true,
+    "fresh_full_campaign_required_for_new_elf_bundle": true
+  }
+}
