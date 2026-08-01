@@ -32,6 +32,14 @@ enum {
   P10_1_PER_LANE_PREAMBLE_1 = 0x08b0U,
   P10_1_PER_LANE_SYMBOL_ERROR_0 = 0x08b4U,
   P10_1_PER_LANE_SYMBOL_ERROR_1 = 0x08b8U,
+  /*
+   * One lost cumulative ACK is not a deterministic duplicate-DATA stimulus:
+   * a later ACK from the four-frame endpoint burst can cover it before the
+   * 62.5 ms RTO.  Suppress a bounded receiver-only run of ACKs so at least
+   * one real DATA retry must cross the optical path within the existing
+   * 250 ms observation interval.
+   */
+  P10_1_DUPLICATE_ACK_DROP_COUNT = 0xffU,
 };
 
 static volatile p10_1_runtime_result_t *p10_1_result(void) {
@@ -473,15 +481,18 @@ static void p10_1_finalize_timer(
  */
 static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
                                    uint32_t command_flags,
-                                   uint32_t inject_fault) {
+                                   uint32_t inject_fault,
+                                   uint32_t local_receiver) {
   uint32_t protocol_fault_flags = mailbox->protocol_fault_flags & 0xfffU;
   uint32_t physical_fault_injection =
       (mailbox->lane_unavailable_mask & 3U) << 16;
   if (inject_fault != 0U) {
     if ((command_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
       protocol_fault_flags |= 1U;
-    if ((command_flags & P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT) != 0U)
-      physical_fault_injection |= 1U << 8;
+    if ((command_flags & P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT) != 0U &&
+        local_receiver != 0U)
+      physical_fault_injection |=
+          (P10_1_DUPLICATE_ACK_DROP_COUNT & 0xffU) << 8;
   }
   p9_pl_write(IR_REG_P9_OBJECT_CONFIG,
               (mailbox->lane_mask & 3U) |
@@ -1196,7 +1207,8 @@ static int p10_1_command_autonomous_stream(
         injected_fault_before =
             p9_pl_read(IR_REG_P9_RX_STALE_SESSION_COUNT);
     }
-    p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal);
+    p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal,
+                           local_rx);
 
     if (ordinal != 0U) {
       if (local_rx != 0U) {

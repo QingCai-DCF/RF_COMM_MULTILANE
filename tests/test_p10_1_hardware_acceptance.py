@@ -565,6 +565,29 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertNotIn("ethernet", tcl.lower())
         self.assertIn("if (recovery_flags != 0U &&", extension)
 
+    def test_duplicate_fault_stimulus_spans_rto_on_receiver_only(self) -> None:
+        extension = RUNTIME_EXTENSION.read_text(encoding="utf-8")
+        configure_start = extension.index(
+            "static void p10_1_configure_object"
+        )
+        configure_end = extension.index(
+            "typedef struct p10_1_runtime_buffer_slot", configure_start
+        )
+        configure = extension[configure_start:configure_end]
+        call = (
+            "p10_1_configure_object(mailbox, flags, "
+            "ordinal == recovery_ordinal,\n                           local_rx);"
+        )
+
+        self.assertIn("P10_1_DUPLICATE_ACK_DROP_COUNT = 0xffU", extension)
+        self.assertIn("uint32_t local_receiver", configure)
+        self.assertIn("local_receiver != 0U", configure)
+        self.assertIn(
+            "(P10_1_DUPLICATE_ACK_DROP_COUNT & 0xffU) << 8", configure
+        )
+        self.assertNotIn("physical_fault_injection |= 1U << 8", configure)
+        self.assertIn(call, extension)
+
     def test_cacheable_runtime_state_is_cleaned_before_xsdb_polling(self) -> None:
         extension = RUNTIME_EXTENSION.read_text(encoding="utf-8")
         publish_start = extension.index("static void p10_1_publish_state")
