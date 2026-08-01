@@ -240,6 +240,9 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
                 "ethernet_allowed": False,
                 "movement_allowed": False,
                 "rotation_allowed": False,
+                "angle_adjustment_allowed": False,
+                "obscuration_allowed": False,
+                "module_exchange_allowed": False,
                 "rewiring_allowed": False,
                 "reusable_for_future_run": False,
                 "user_authorization_statement": statement,
@@ -281,6 +284,109 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
                 hardware_root=root,
             )
             self.assertTrue(reused_errors)
+
+    def test_unlimited_campaign_override_removes_only_retry_counts(self) -> None:
+        override = (
+            ROOT / "config/p10_1_retry_limit_override_authorization.json"
+        )
+        record, budget, errors = self.runner.validate_retry_limit_override(
+            override,
+            "p10_1_unlimited_probe",
+            list(self.runner.build_plans()),
+        )
+        self.assertEqual(errors, [])
+        self.assertIsNotNone(record)
+        assert record is not None
+        self.assertEqual(record["user_retry_limit_override"], "不设上限")
+        self.assertFalse(record["current_run_hardware_authorization"])
+        self.assertTrue(
+            record["current_run_authorization_materialized_per_run"]
+        )
+        self.assertEqual(
+            record["effective_retry_limits"],
+            {
+                "jtag_connect": None,
+                "program": None,
+                "diagnostic_stage_new_run_id": None,
+            },
+        )
+        self.assertEqual(record["maximum_single_formal_run_seconds"], 1800)
+        self.assertEqual(record["maximum_lane_mask"], 3)
+        for prohibited in (
+            "ethernet_allowed",
+            "movement_allowed",
+            "rotation_allowed",
+            "angle_adjustment_allowed",
+            "obscuration_allowed",
+            "module_exchange_allowed",
+            "rewiring_allowed",
+        ):
+            self.assertFalse(record[prohibited])
+        self.assertEqual(budget["preflight"]["base_goal_limit"], 2)
+        self.assertIsNone(budget["preflight"]["effective_limit"])
+        self.assertTrue(budget["preflight"]["override_applied"])
+
+    def test_unlimited_override_remains_valid_after_additional_run_ids(self) -> None:
+        source = json.loads(
+            (
+                ROOT / "config/p10_1_retry_limit_override_authorization.json"
+            ).read_text(encoding="utf-8")
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            override = root / "override.json"
+            override.write_text(
+                json.dumps(source, ensure_ascii=False), encoding="utf-8"
+            )
+            for ordinal in range(1, 5):
+                stage = (
+                    root
+                    / f"p10_1_attempt_{ordinal}"
+                    / "stages"
+                    / "preflight"
+                )
+                stage.mkdir(parents=True)
+                (stage / "xsdb.result.txt").write_text(
+                    "PASS" if ordinal == 4 else "FAIL", encoding="utf-8"
+                )
+            _, budget, errors = self.runner.validate_retry_limit_override(
+                override,
+                "p10_1_attempt_5",
+                list(self.runner.build_plans()),
+                hardware_root=root,
+            )
+            self.assertEqual(errors, [])
+            self.assertEqual(len(budget["preflight"]["run_ids"]), 4)
+            self.assertIsNone(budget["preflight"]["effective_limit"])
+
+    def test_unlimited_override_rejects_artifact_or_scope_expansion(self) -> None:
+        source = json.loads(
+            (
+                ROOT / "config/p10_1_retry_limit_override_authorization.json"
+            ).read_text(encoding="utf-8")
+        )
+        cases = []
+        tampered_artifact = json.loads(json.dumps(source))
+        tampered_artifact["artifacts"][0]["sha256"] = "0" * 64
+        cases.append(tampered_artifact)
+        expanded_lane = json.loads(json.dumps(source))
+        expanded_lane["maximum_lane_mask"] = 7
+        cases.append(expanded_lane)
+        enabled_ethernet = json.loads(json.dumps(source))
+        enabled_ethernet["ethernet_allowed"] = True
+        cases.append(enabled_ethernet)
+        with tempfile.TemporaryDirectory() as temporary:
+            override = Path(temporary) / "override.json"
+            for payload in cases:
+                override.write_text(
+                    json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+                )
+                _, _, errors = self.runner.validate_retry_limit_override(
+                    override,
+                    "p10_1_scope_probe",
+                    list(self.runner.build_plans()),
+                )
+                self.assertTrue(errors)
 
     def test_binary_parser_uses_frozen_schema_offsets(self) -> None:
         words = [0] * 512

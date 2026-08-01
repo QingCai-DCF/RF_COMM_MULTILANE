@@ -105,6 +105,9 @@ DIAGNOSTIC_STAGE_NEW_RUN_ID_LIMIT = 2
 RETRY_OVERRIDE_AUTHORIZATION_ID = (
     "P10_1-HARDWARE-DIAGNOSTIC-RETRY-LIMIT-OVERRIDE"
 )
+UNLIMITED_RETRY_OVERRIDE_POLICY = (
+    "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL"
+)
 FLAG_ABORT_25 = 1 << 16
 FLAG_ABORT_75 = 1 << 17
 FLAG_DMA_RESET_SENDER = 1 << 18
@@ -746,10 +749,12 @@ def validate_retry_limit_override(
     *,
     hardware_root: Path = HW_ROOT,
 ) -> tuple[dict[str, Any] | None, dict[str, dict[str, Any]], list[str]]:
-    """Require a run-bound user override after the Goal section 23 limit.
+    """Validate an explicit user override of the Goal section 23 limits.
 
     This runner intentionally has no command that creates the override record.
-    It may only be materialized after the user explicitly extends the limit.
+    It may only be materialized after the user explicitly extends or removes
+    the limit. An unlimited campaign override is only an authorization source;
+    every actual attempt still receives a new run-bound immutable record.
     """
 
     budget = diagnostic_retry_budget(stages, hardware_root=hardware_root)
@@ -758,9 +763,9 @@ def validate_retry_limit_override(
         for stage, item in budget.items()
         if len(item["run_ids"]) >= int(item["limit"])
     }
-    if not exhausted:
-        return None, budget, []
     if not path.is_file():
+        if not exhausted:
+            return None, budget, []
         names = ", ".join(sorted(exhausted))
         return None, budget, [
             "Goal section 23 diagnostic-stage run-ID limit exhausted for "
@@ -770,6 +775,73 @@ def validate_retry_limit_override(
         record = _load_json(path)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return None, budget, [f"retry-limit override unreadable: {exc}"]
+
+    if record.get("retry_limit_policy") == UNLIMITED_RETRY_OVERRIDE_POLICY:
+        try:
+            artifact_source, artifacts = collect_artifacts()
+        except (OSError, ValueError, RuntimeError, KeyError) as exc:
+            return None, budget, [
+                f"retry-limit override artifact validation failed: {exc}"
+            ]
+        expected_unlimited = {
+            "schema_version": 2,
+            "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+            "status": "AUTHORIZED",
+            "authorization_source_only": True,
+            "scope": EXPECTED_SCOPE,
+            "goal_sha256": EXPECTED_GOAL_SHA256,
+            "user_retry_limit_override": "不设上限",
+            "retry_limit_policy": UNLIMITED_RETRY_OVERRIDE_POLICY,
+            "current_run_hardware_authorization": False,
+            "current_run_authorization_materialized_per_run": True,
+            "authorized_campaign_stages": list(build_plans()),
+            "run_id_policy": "NEW_UNIQUE_IMMUTABLE_AUTHORIZATION_PER_RUN",
+            "board_identities": _expected_board_identities(),
+            "part": EXPECTED_PART,
+            "artifact_source_commit": artifact_source,
+            "artifacts": artifacts,
+            "base_goal_retry_limits": {
+                "jtag_connect": 3,
+                "program": 2,
+                "diagnostic_stage_new_run_id": 2,
+            },
+            "base_goal_retry_limits_overridden": [
+                "jtag_connect",
+                "program",
+                "diagnostic_stage_new_run_id",
+            ],
+            "effective_retry_limits": {
+                "jtag_connect": None,
+                "program": None,
+                "diagnostic_stage_new_run_id": None,
+            },
+            "maximum_single_formal_run_seconds": 1800,
+            "maximum_lane_mask": 3,
+            "lane_masks": [1, 2, 3],
+            "ethernet_allowed": False,
+            "movement_allowed": False,
+            "rotation_allowed": False,
+            "angle_adjustment_allowed": False,
+            "obscuration_allowed": False,
+            "module_exchange_allowed": False,
+            "rewiring_allowed": False,
+            "reusable_for_new_run_id_within_same_campaign": True,
+            "reusable_for_future_campaign": False,
+        }
+        errors = [
+            f"unlimited retry override {key} mismatch"
+            for key, value in expected_unlimited.items()
+            if record.get(key) != value
+        ]
+        for stage, item in budget.items():
+            item["base_goal_limit"] = item.pop("limit")
+            item["effective_limit"] = None
+            item["override_applied"] = True
+        errors.extend(_retry_override_common_errors(record))
+        return record, budget, errors
+
+    if not exhausted:
+        return None, budget, []
 
     exhausted_names = sorted(exhausted)
     historical = {
@@ -795,6 +867,9 @@ def validate_retry_limit_override(
         "ethernet_allowed": False,
         "movement_allowed": False,
         "rotation_allowed": False,
+        "angle_adjustment_allowed": False,
+        "obscuration_allowed": False,
+        "module_exchange_allowed": False,
         "rewiring_allowed": False,
         "reusable_for_future_run": False,
     }
@@ -803,6 +878,12 @@ def validate_retry_limit_override(
         for key, value in expected.items()
         if record.get(key) != value
     ]
+    errors.extend(_retry_override_common_errors(record))
+    return record, budget, errors
+
+
+def _retry_override_common_errors(record: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
     statement = record.get("user_authorization_statement")
     statement_hash = record.get("user_authorization_statement_sha256")
     if not isinstance(statement, str) or not statement.strip():
@@ -834,7 +915,21 @@ def validate_retry_limit_override(
         )
     ):
         errors.append("retry-limit override shutdown policy is incomplete")
-    return record, budget, errors
+    return errors
+
+
+def retry_override_binding(record: dict[str, Any] | None) -> dict[str, Any] | None:
+    if record is None:
+        return None
+    return {
+        "path": rel(RETRY_OVERRIDE_PATH),
+        "sha256": sha256(RETRY_OVERRIDE_PATH),
+        "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+        "retry_limit_policy": record.get("retry_limit_policy"),
+        "user_authorization_statement_sha256": record.get(
+            "user_authorization_statement_sha256"
+        ),
+    }
 
 
 def _record(
@@ -986,7 +1081,11 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "offline_evidence_checkpoint": OFFLINE_EVIDENCE_CHECKPOINT,
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "current_run_hardware_authorization": True,
-        "user_authorization_received_at": "2026-07-31",
+        "user_authorization_received_at": (
+            retry_override.get("user_authorization_received_at")
+            if retry_override is not None
+            else "2026-07-31"
+        ),
         "board_identities": _expected_board_identities(),
         "part": EXPECTED_PART,
         "authorized_stages": stages,
@@ -997,6 +1096,9 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "ethernet_allowed": False,
         "movement_allowed": False,
         "rotation_allowed": False,
+        "angle_adjustment_allowed": False,
+        "obscuration_allowed": False,
+        "module_exchange_allowed": False,
         "rewiring_allowed": False,
         "shutdown": {
             "before": True,
@@ -1024,15 +1126,31 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         },
         "artifacts": artifacts,
         "diagnostic_stage_retry_budget": retry_budget,
-        "retry_limit_override": (
-            {
-                "path": rel(RETRY_OVERRIDE_PATH),
-                "sha256": sha256(RETRY_OVERRIDE_PATH),
-                "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
+        "retry_limit_policy": (
+            retry_override.get("retry_limit_policy")
+            if retry_override is not None
+            else "GOAL_SECTION_23_BOUNDED"
+        ),
+        "base_goal_retry_limits_overridden": (
+            retry_override.get("base_goal_retry_limits_overridden", [])
+            if retry_override is not None
+            else []
+        ),
+        "effective_retry_limits": (
+            retry_override.get("effective_retry_limits")
+            if retry_override is not None
+            else {
+                "jtag_connect": 3,
+                "program": 2,
+                "diagnostic_stage_new_run_id": 2,
             }
+        ),
+        "user_retry_limit_override": (
+            retry_override.get("user_retry_limit_override")
             if retry_override is not None
             else None
         ),
+        "retry_limit_override": retry_override_binding(retry_override),
         "generated_at_utc": utc_now(),
     }
     write_json(AUTH_PATH, payload)
@@ -1047,6 +1165,10 @@ def validate_authorization(
         record = _load_json(path)
     except (OSError, json.JSONDecodeError) as exc:
         return {}, {}, [f"authorization unreadable: {exc}"]
+    retry_override, retry_budget, retry_errors = validate_retry_limit_override(
+        RETRY_OVERRIDE_PATH, run_id, stages
+    )
+    errors.extend(retry_errors)
     expected = {
         "schema_version": 1,
         "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
@@ -1068,28 +1190,40 @@ def validate_authorization(
         "ethernet_allowed": False,
         "movement_allowed": False,
         "rotation_allowed": False,
+        "angle_adjustment_allowed": False,
+        "obscuration_allowed": False,
+        "module_exchange_allowed": False,
         "rewiring_allowed": False,
+        "diagnostic_stage_retry_budget": retry_budget,
+        "retry_limit_policy": (
+            retry_override.get("retry_limit_policy")
+            if retry_override is not None
+            else "GOAL_SECTION_23_BOUNDED"
+        ),
+        "base_goal_retry_limits_overridden": (
+            retry_override.get("base_goal_retry_limits_overridden", [])
+            if retry_override is not None
+            else []
+        ),
+        "effective_retry_limits": (
+            retry_override.get("effective_retry_limits")
+            if retry_override is not None
+            else {
+                "jtag_connect": 3,
+                "program": 2,
+                "diagnostic_stage_new_run_id": 2,
+            }
+        ),
+        "user_retry_limit_override": (
+            retry_override.get("user_retry_limit_override")
+            if retry_override is not None
+            else None
+        ),
+        "retry_limit_override": retry_override_binding(retry_override),
     }
     for key, value in expected.items():
         if record.get(key) != value:
             errors.append(f"authorization {key} mismatch")
-    retry_override, retry_budget, retry_errors = validate_retry_limit_override(
-        RETRY_OVERRIDE_PATH, run_id, stages
-    )
-    errors.extend(retry_errors)
-    if record.get("diagnostic_stage_retry_budget") != retry_budget:
-        errors.append("authorization diagnostic-stage retry budget mismatch")
-    expected_retry_override = (
-        {
-            "path": rel(RETRY_OVERRIDE_PATH),
-            "sha256": sha256(RETRY_OVERRIDE_PATH),
-            "authorization_id": RETRY_OVERRIDE_AUTHORIZATION_ID,
-        }
-        if retry_override is not None and RETRY_OVERRIDE_PATH.is_file()
-        else None
-    )
-    if record.get("retry_limit_override") != expected_retry_override:
-        errors.append("authorization retry-limit override binding mismatch")
     head = git("rev-parse", "HEAD")
     source = record.get("source_commit")
     parent = record.get("authorization_parent_commit")

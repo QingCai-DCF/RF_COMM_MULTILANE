@@ -1,0 +1,168 @@
+{
+  "schema_version": 2,
+  "authorization_id": "P10_1-HARDWARE-DIAGNOSTIC-RETRY-LIMIT-OVERRIDE",
+  "status": "AUTHORIZED",
+  "authorization_source_only": true,
+  "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "user_retry_limit_override": "不设上限",
+  "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+  "current_run_hardware_authorization": false,
+  "current_run_authorization_materialized_per_run": true,
+  "authorized_campaign_stages": [
+    "preflight",
+    "smoke",
+    "baseline",
+    "tuning",
+    "pipeline",
+    "streaming",
+    "faults",
+    "crosstalk",
+    "half_duplex",
+    "oneplusone",
+    "formal"
+  ],
+  "run_id_policy": "NEW_UNIQUE_IMMUTABLE_AUTHORIZATION_PER_RUN",
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "part": "xc7z020clg400-2",
+  "artifact_source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
+  "artifacts": [
+    {
+      "role": "fixed",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+      "bytes": 4045681
+    },
+    {
+      "role": "fixed",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1",
+      "bytes": 848595
+    },
+    {
+      "role": "fixed",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8",
+      "bytes": 1855896
+    },
+    {
+      "role": "fixed",
+      "kind": "elf",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf",
+      "sha256": "5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6",
+      "bytes": 550060
+    },
+    {
+      "role": "fixed",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3",
+      "bytes": 369073
+    },
+    {
+      "role": "rotating",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+      "bytes": 4045681
+    },
+    {
+      "role": "rotating",
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea",
+      "bytes": 849469
+    },
+    {
+      "role": "rotating",
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5",
+      "bytes": 1856209
+    },
+    {
+      "role": "rotating",
+      "kind": "elf",
+      "path": "artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf",
+      "sha256": "9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0",
+      "bytes": 550240
+    },
+    {
+      "role": "rotating",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148",
+      "bytes": 369073
+    }
+  ],
+  "base_goal_retry_limits": {
+    "jtag_connect": 3,
+    "program": 2,
+    "diagnostic_stage_new_run_id": 2
+  },
+  "base_goal_retry_limits_overridden": [
+    "jtag_connect",
+    "program",
+    "diagnostic_stage_new_run_id"
+  ],
+  "effective_retry_limits": {
+    "jtag_connect": null,
+    "program": null,
+    "diagnostic_stage_new_run_id": null
+  },
+  "maximum_single_formal_run_seconds": 1800,
+  "maximum_lane_mask": 3,
+  "lane_masks": [1, 2, 3],
+  "ethernet_allowed": false,
+  "movement_allowed": false,
+  "rotation_allowed": false,
+  "angle_adjustment_allowed": false,
+  "obscuration_allowed": false,
+  "module_exchange_allowed": false,
+  "rewiring_allowed": false,
+  "reusable_for_new_run_id_within_same_campaign": true,
+  "reusable_for_future_campaign": false,
+  "authorization_baseline_retry_snapshot": {
+    "preflight_run_ids": [
+      "p10_1_hw_20260731T211516Z_fd40629d_20ba7ef6_a1e3fbf5",
+      "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f"
+    ],
+    "preflight_new_run_id_count": 2,
+    "goal_limit_at_override_time": 2
+  },
+  "campaign_terminal_conditions": [
+    "COMPLETE_CAMPAIGN_PASS_OR_EVIDENCED_TERMINAL_RESULT",
+    "USER_REVOCATION",
+    "REAL_ELECTRICAL_OR_HARDWARE_SAFETY_BLOCKER",
+    "BOARD_IDENTITY_AMBIGUITY",
+    "UNCONFIRMED_SHUTDOWN"
+  ],
+  "user_authorization_statement": "用户明确授权“不设上限”。针对当前 P10.1 Hardware Goal 第23节，JTAG connect、program和每个diagnostic stage新run_id的重试计数不设上限；其他范围不变。",
+  "user_authorization_statement_sha256": "30215a9e5011712c01379bc81e571204fbf9741db854860c240b65d8ccdc32c6",
+  "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
+  "user_authorization_source_thread_id": "019fbafb-34a3-7223-95dc-7b3982218221",
+  "override_reason": "User explicitly removed the Goal section 23 retry-count ceilings so diagnostics may continue until the campaign terminates.",
+  "shutdown": {
+    "before": true,
+    "on_error": true,
+    "on_timeout": true,
+    "on_interrupt": true,
+    "normal_exit": true,
+    "after": true,
+    "program_role_bound_shutdown_bitstreams": true
+  }
+}
