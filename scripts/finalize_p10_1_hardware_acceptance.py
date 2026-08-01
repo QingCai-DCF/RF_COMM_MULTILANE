@@ -767,13 +767,13 @@ def retry_campaign_fields(
         authorization.get("retry_limit_policy")
         == UNLIMITED_RETRY_OVERRIDE_POLICY
     ):
-        prior = authorization.get("diagnostic_stage_retry_budget", {}).get(
-            "preflight", {}
-        )
+        retry_budget = authorization.get("diagnostic_stage_retry_budget", {})
         run_ids = {
-            str(item)
-            for item in prior.get("run_ids", [])
-            if str(item)
+            str(run_id)
+            for stage_budget in retry_budget.values()
+            if isinstance(stage_budget, dict)
+            for run_id in stage_budget.get("run_ids", [])
+            if str(run_id)
         }
         if authorization.get("run_id"):
             run_ids.add(str(authorization["run_id"]))

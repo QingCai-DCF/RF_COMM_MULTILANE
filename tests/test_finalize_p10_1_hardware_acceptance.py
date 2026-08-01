@@ -141,12 +141,13 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
     def test_unlimited_retry_authorization_supersedes_stale_audit(self) -> None:
         result = self.module.retry_campaign_fields(
             {
-                "run_id": "run-3",
+                "run_id": "run-4",
                 "retry_limit_policy": (
                     self.module.UNLIMITED_RETRY_OVERRIDE_POLICY
                 ),
                 "diagnostic_stage_retry_budget": {
-                    "preflight": {"run_ids": ["run-1", "run-2"]}
+                    "preflight": {"run_ids": ["run-1", "run-2"]},
+                    "baseline": {"run_ids": ["run-2", "run-3"]},
                 },
             },
             "FAIL",
@@ -162,7 +163,7 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
             "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
         )
         self.assertIsNone(result["retry_run_id_limit"])
-        self.assertEqual(result["retry_run_id_count"], 3)
+        self.assertEqual(result["retry_run_id_count"], 4)
         self.assertTrue(result["bounded_retry_audit_superseded"])
         self.assertIn("none", result["next_required_user_action"])
 
