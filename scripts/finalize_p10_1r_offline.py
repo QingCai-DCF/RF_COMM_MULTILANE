@@ -758,8 +758,8 @@ def main() -> int:
             "formal_30min",
         ],
         "pl_build_identity": {
-            "fixed": "0x50315246",
-            "rotating": "0x50315252",
+            "fixed": "0x50325246",
+            "rotating": "0x50325252",
         },
         "guard_selection": record(GUARD_SELECTION),
         "old_hardware_results_inherited": False,

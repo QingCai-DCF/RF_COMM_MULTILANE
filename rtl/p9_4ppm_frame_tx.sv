@@ -142,10 +142,12 @@ module p9_4ppm_frame_tx #(
         8: ack_header_byte_no_crc = active_ack_base[7:0];
         9: ack_header_byte_no_crc = active_ack_base[15:8];
         10: ack_header_byte_no_crc = 8'd32;
-        // ACK byte 11 formerly used only bit 0.  Bits 7:2 now carry the same
-        // source identity; bit 1 remains reserved and zero.
-        11: ack_header_byte_no_crc = {active_source_node, 1'b0,
-                                      active_direction};
+        // ACK byte 11 carries the source identity plus the logical lane in
+        // the existing reserved bit 1.  This keeps ACK airtime unchanged and
+        // lets the receiver distinguish legitimate lane1 ACKs from optical
+        // cross-lane acceptance.  Bit 0 retains the direction field.
+        11: ack_header_byte_no_crc = {active_source_node, active_lane[0],
+                                       active_direction};
         12: ack_header_byte_no_crc = active_ack_credit[7:0];
         13: ack_header_byte_no_crc = active_ack_credit[15:8];
         14: ack_header_byte_no_crc = active_ack_bitmap[7:0];

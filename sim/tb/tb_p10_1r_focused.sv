@@ -120,6 +120,7 @@ module tb_tfdu_rx_admission_remote_ack;
   wire frame_valid;
   wire frame_is_ack;
   wire frame_crc_valid;
+  wire [7:0] decoded_lane;
   wire [5:0] source_node;
   integer timeout;
 
@@ -129,7 +130,7 @@ module tb_tfdu_rx_admission_remote_ack;
     .start_ready_o(start_ready), .frame_is_ack_i(1'b1),
     .session_epoch_i(32'h1234_5678), .path_epoch_i(16'h0012),
     .sequence_i(16'd0), .payload_length_i(16'd0),
-    .payload_crc32_i(32'd0), .flags_i(8'd0), .lane_id_i(8'd0),
+    .payload_crc32_i(32'd0), .flags_i(8'd0), .lane_id_i(8'd1),
     .source_node_id_i(6'd2), .object_id_i(32'd0),
     .fragment_offset_i(32'd0), .ack_base_i(16'h0040),
     .ack_bitmap_i(32'h0000_00ff), .ack_credit_i(16'd24),
@@ -171,7 +172,8 @@ module tb_tfdu_rx_admission_remote_ack;
     .payload_write_data_o(), .frame_valid_o(frame_valid),
     .frame_is_ack_o(frame_is_ack), .frame_crc_valid_o(frame_crc_valid),
     .session_epoch_o(), .path_epoch_o(), .sequence_o(), .payload_length_o(),
-    .flags_o(), .lane_id_o(), .source_node_id_o(source_node), .object_id_o(),
+    .flags_o(), .lane_id_o(decoded_lane), .source_node_id_o(source_node),
+    .object_id_o(),
     .fragment_offset_o(), .ack_base_o(), .ack_bitmap_o(), .ack_credit_o(),
     .direction_o(), .frame_good_count_o(), .frame_bad_count_o(),
     .crc_bad_count_o(), .preamble_count_o(), .symbol_error_count_o()
@@ -191,8 +193,9 @@ module tb_tfdu_rx_admission_remote_ack;
       if (!admission_accept)
         $fatal(1, "remote ACK was blanked without local TX");
     end
-    if (!frame_valid || !frame_is_ack || !frame_crc_valid || source_node != 6'd2)
-      $fatal(1, "remote ACK/source-node decode failed");
+    if (!frame_valid || !frame_is_ack || !frame_crc_valid ||
+        source_node != 6'd2 || decoded_lane != 8'd1)
+      $fatal(1, "remote ACK/source-node/lane decode failed");
     $display("TB_TFDU_RX_ADMISSION_REMOTE_ACK=PASS");
     $finish;
   end

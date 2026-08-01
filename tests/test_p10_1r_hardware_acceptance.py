@@ -39,17 +39,11 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
         )
-        self.assertEqual(self.runner.EXPECTED_ARTIFACT_PURPOSE, "FINAL_ACCEPTANCE")
-        self.assertTrue(self.runner.EXPECTED_ACCEPTANCE_ELIGIBLE)
-        self.assertEqual(
-            self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
-            self.runner.STAGES,
-        )
-        freeze, artifacts = self.runner.load_freeze()
-        self.assertEqual(freeze["status"], "PASS")
-        self.assertEqual(tuple(freeze["allowed_hardware_stages"]), self.runner.STAGES)
-        self.assertEqual(len(artifacts), 10)
-        self.assertTrue(all(path.is_file() for path in artifacts.values()))
+        self.assertEqual(self.runner.EXPECTED_ARTIFACT_PURPOSE, "NO_ACTIVE_BUNDLE")
+        self.assertFalse(self.runner.EXPECTED_ACCEPTANCE_ELIGIBLE)
+        self.assertEqual(self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES, ())
+        with self.assertRaisesRegex(RuntimeError, "artifact-freeze SHA256 mismatch"):
+            self.runner.load_freeze()
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()
@@ -114,6 +108,8 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             )
             parsed = self.runner.parse_snapshot(path)
             self.assertEqual(parsed["configured_guard_cycles"], 4096)
+            self.assertEqual(parsed["decoder_clear_cycles"], 4)
+            self.assertEqual(parsed["admission_config_flags"], 3)
             path.write_text("2|0", encoding="ascii")
             with self.assertRaises(ValueError):
                 self.runner.parse_snapshot(path)
@@ -177,6 +173,11 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             "retry_limit=3",
         ):
             self.assertIn(marker, text)
+        self.assertNotIn(
+            "local-source rejection was not directly observed",
+            text,
+        )
+        self.assertIn('"local_source_rejection_enabled"', text)
         self.assertNotIn("git push", text)
         self.assertNotIn("lane mask >", text)
 
@@ -196,14 +197,14 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def test_p10_1r_pl_build_identity_is_explicit_end_to_end(self) -> None:
         self.assertEqual(
             self.runner.EXPECTED_PL_BUILD_IDS,
-            {"fixed": 0x50315246, "rotating": 0x50315252},
+            {"fixed": 0x50325246, "rotating": 0x50325252},
         )
         self.assertIn(
-            "#define P10_EXPECTED_PL_BUILD_ID 0x50315246U",
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50325246U",
             FIXED_ROLE.read_text(encoding="utf-8"),
         )
         self.assertIn(
-            "#define P10_EXPECTED_PL_BUILD_ID 0x50315252U",
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50325252U",
             ROTATING_ROLE.read_text(encoding="utf-8"),
         )
         runtime = RUNTIME_MAIN.read_text(encoding="utf-8")

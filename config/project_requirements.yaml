@@ -3570,6 +3570,18 @@ requirements:
   artifact_hashes: []
   hardware_followup: The calibration selected 4096 cycles from max tail zero plus a 4096-cycle margin; rebuilt-artifact remeasurement
     and full acceptance remain pending.
+- requirement_id: P10_1R-ECHO-006
+  requirement_text: Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Focused ACK lane encode/decode XSIM plus the direct role-bound four-path hardware crosstalk matrix.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: New immutable artifacts must report zero cross-lane accepted frames in both directions on lane0 and lane1.
 - requirement_id: P10_1R-ACK-001
   requirement_text: The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the
     frozen default.

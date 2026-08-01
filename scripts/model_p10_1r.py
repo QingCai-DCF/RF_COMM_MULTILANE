@@ -53,10 +53,16 @@ def encode_data_lane_byte(source_node_id: int, lane_id: int) -> int:
     return (source_node_id << 2) | lane_id
 
 
-def encode_ack_direction_byte(source_node_id: int, direction: int) -> int:
-    if not 0 <= source_node_id < 64 or direction not in (0, 1):
-        raise ValueError("source node or direction is out of range")
-    return (source_node_id << 2) | direction
+def encode_ack_direction_byte(
+    source_node_id: int, lane_id: int, direction: int
+) -> int:
+    if (
+        not 0 <= source_node_id < 64
+        or lane_id not in (0, 1)
+        or direction not in (0, 1)
+    ):
+        raise ValueError("source node, lane, or direction is out of range")
+    return (source_node_id << 2) | (lane_id << 1) | direction
 
 
 def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:

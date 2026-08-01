@@ -260,7 +260,7 @@ module p9_4ppm_frame_rx #(
               sequence_o <= 16'd0;
               payload_length_o <= 16'd0;
               flags_o <= 8'd0;
-              lane_id_o <= 8'd0;
+              lane_id_o <= {7'd0, header[11][1]};
               source_node_id_o <= header[11][7:2];
               object_id_o <= 32'd0;
               fragment_offset_o <= 32'd0;

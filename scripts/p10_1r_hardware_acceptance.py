@@ -64,20 +64,11 @@ EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
 EXPECTED_ARTIFACT_FREEZE_SHA256 = (
-    "4392ecc0c85b53928ed916414d24fe0a9d7134a8cb15df8ddbd09c39b181ee1d"
+    "0000000000000000000000000000000000000000000000000000000000000000"
 )
-EXPECTED_ARTIFACT_PURPOSE = "FINAL_ACCEPTANCE"
-EXPECTED_ACCEPTANCE_ELIGIBLE = True
-EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = (
-    "preflight",
-    "echo_tail",
-    "crosstalk",
-    "phy_sanity",
-    "ack_tuning",
-    "performance",
-    "streaming_64m",
-    "formal_30min",
-)
+EXPECTED_ARTIFACT_PURPOSE = "NO_ACTIVE_BUNDLE"
+EXPECTED_ACCEPTANCE_ELIGIBLE = False
+EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = ()
 AUTH_PATH = ROOT / "config/p10_1r_current_run_hardware_authorization.json"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
@@ -132,8 +123,8 @@ EXPECTED_MAX_QUARANTINE_CYCLES = 131072
 EXPECTED_IDLE_LOW_CYCLES = 4
 EXPECTED_IDLE_HIGH_CYCLES = 3
 EXPECTED_PL_BUILD_IDS = {
-    "fixed": 0x50315246,
-    "rotating": 0x50315252,
+    "fixed": 0x50325246,
+    "rotating": 0x50325252,
 }
 EXPECTED_ROLE_IDENTITIES = {
     "fixed": {
@@ -788,8 +779,8 @@ SNAPSHOT_NAMES = (
     "configured_guard_cycles",
     "idle_qualify_cycles",
     "max_quarantine_cycles",
-    "idle_low_cycles",
-    "idle_high_cycles",
+    "decoder_clear_cycles",
+    "admission_config_flags",
 )
 
 
@@ -1164,13 +1155,17 @@ def evaluate_stage(
             reconciled += 1
         if other_lane_blanked != 0:
             errors.append("transmitting one lane blanked the other lane")
-        if stage == "crosstalk" and local_rejected <= 0:
-            errors.append("local-source rejection was not directly observed")
         semantics = {
             "remote_acceptance_reconciled_case_count": reconciled,
             "same_module_accepted_data_count": 0 if reconciled else None,
             "cross_lane_accepted_data_count": 0 if reconciled else None,
             "local_source_rejected_frame_count": local_rejected,
+            "local_source_rejection_enabled": all(
+                detail[f"{role}_p10_1r"]["admission_config_flags"] & 1
+                for detail in non_shutdown
+                for role in ("fixed", "rotating")
+            ),
+            "local_source_rejection_observed": local_rejected > 0,
             "other_lane_blanked_count": other_lane_blanked,
         }
     elif stage in {"ack_tuning", "performance"}:

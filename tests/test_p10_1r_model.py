@@ -21,8 +21,8 @@ class P101RModelTests(unittest.TestCase):
     def test_source_identity_encoding_is_airtime_neutral(self) -> None:
         self.assertEqual(MODEL.encode_data_lane_byte(1, 0), 0x04)
         self.assertEqual(MODEL.encode_data_lane_byte(2, 1), 0x09)
-        self.assertEqual(MODEL.encode_ack_direction_byte(1, 1), 0x05)
-        self.assertEqual(MODEL.encode_ack_direction_byte(2, 0), 0x08)
+        self.assertEqual(MODEL.encode_ack_direction_byte(1, 0, 1), 0x05)
+        self.assertEqual(MODEL.encode_ack_direction_byte(2, 1, 0), 0x0A)
 
     def test_performance_model_closes_four_mbit_gate(self) -> None:
         result = MODEL.performance_model()
