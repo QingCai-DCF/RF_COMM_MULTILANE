@@ -643,6 +643,44 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         ):
             self.assertIn(marker, pair_wait)
 
+    def test_reset_recovery_reboot_is_scoped_and_safe(self) -> None:
+        tcl = STAGE_TCL.read_text(encoding="utf-8")
+        execute_start = tcl.index("proc p10_execute_case")
+        execute_end = tcl.index("proc p10_p101_case", execute_start)
+        execute = tcl[execute_start:execute_end]
+
+        self.assertIn(
+            "(1 << 18) | (1 << 19) | (1 << 24)", execute
+        )
+        self.assertIn("$command == 13", execute)
+        self.assertIn(
+            "p10_rebootstrap_after_reset_recovery [dict get $d label]",
+            execute,
+        )
+        self.assertIn("} elseif {$command != 10} {", execute)
+
+        helper_start = tcl.index(
+            "proc p10_rebootstrap_after_reset_recovery"
+        )
+        helper_end = tcl.index("proc p10_soak_case", helper_start)
+        helper = tcl[helper_start:helper_end]
+        self.assertIn("P10_1_RESET_RECOVERY_REBOOT_BEGIN", helper)
+        self.assertIn("p10_reboot_role fixed", helper)
+        self.assertIn("p10_reboot_role rotating", helper)
+        self.assertIn(
+            "p10_verify_pl_safe fixed 0x50313046 0x702000F0", helper
+        )
+        self.assertIn(
+            "p10_verify_pl_safe rotating 0x50313052 0x702000A0", helper
+        )
+        self.assertIn("P10_1_RESET_RECOVERY_REBOOT_PASS", helper)
+
+        # Abort-only recovery flags are bits 16/17 and must not be part of the
+        # reset-class rebootstrap mask; those vectors already proved a clean
+        # immediate successor on the current hardware.
+        self.assertNotIn("1 << 16", execute)
+        self.assertNotIn("1 << 17", execute)
+
 
 if __name__ == "__main__":
     unittest.main()

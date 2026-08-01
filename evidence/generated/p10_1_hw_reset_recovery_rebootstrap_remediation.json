@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-RESET-RECOVERY-REBOOTSTRAP-REMEDIATION",
+  "status": "PASS",
+  "scope": "OFFLINE_ORCHESTRATOR_REMEDIATION_ONLY",
+  "generated_at_utc": "2026-08-01T04:22:45Z",
+  "failure_evidence": {
+    "run_id": "p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f",
+    "checkpoint_commit": "f5c041126f28849bc2ff66419714b5167c222eaa",
+    "stage": "faults",
+    "stage_status": "FAIL",
+    "last_completed_recovery_case": "dma_reset_sender_f_to_r_64m",
+    "last_completed_recovery_case_status": "PASS",
+    "failed_clean_case": "post_dma_reset_clean_f_to_r_64m",
+    "failed_clean_case_fixed": {
+      "main_state": 5,
+      "main_status": 12,
+      "p10_1_state": 8,
+      "p10_1_status": 260,
+      "last_error_detail_hex": "0x50090004",
+      "classification": "TX_RETRY_EXHAUSTED_BEFORE_OBJECT_ACCEPTANCE"
+    },
+    "failed_clean_case_rotating": {
+      "main_state": 5,
+      "main_status": 12,
+      "p10_1_state": 8,
+      "p10_1_status": 259,
+      "classification": "DMA_COMPLETION_FAILURE_BEFORE_OBJECT_COMMIT"
+    },
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "files": {
+      "stage_summary": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/stage_summary.json",
+        "bytes": 82593,
+        "sha256": "00061322525a1be7a26f46b4278946dea9d7722cbc35000d7bcbe9c1e541b37b"
+      },
+      "xsdb_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/xsdb.result.txt",
+        "bytes": 2807,
+        "sha256": "b9ef7d70a1f7f66f80f2a9da4aa97598a97a1f92bd62aeef09bb67693450829a"
+      },
+      "observations": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/dumps/observations.psv",
+        "bytes": 5971,
+        "sha256": "c82d30b7080c5dbd61c647bf4a82804670bca784945d3275c6410ea1b7e9c8e6"
+      },
+      "orchestrator_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+        "bytes": 113551,
+        "sha256": "adb0ee8cd8f4ac5bf125e1acb24ff83018665af3cf45d3fbeff505e3f1c394ba"
+      },
+      "shutdown_after": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.result.txt",
+        "bytes": 1699,
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      }
+    }
+  },
+  "diagnosis": {
+    "directly_observed": [
+      "The reset-injection vector completed with expected-abort, reset-count, descriptor-reclaim, no-commit, and safety checks passing on both endpoints.",
+      "The immediately following clean vector accepted and committed zero bytes, then terminated with divergent transport/DMA failures.",
+      "Abort-at-25-percent and abort-at-75-percent vectors each passed their immediate clean successor without service reboot."
+    ],
+    "inference": "A reset-class fault can leave the independently clocked endpoint services in different transport epochs after the expected-abort snapshot; merely resuming the two stopped CPUs is not sufficient preparation for the required clean successor.",
+    "change_boundary": "Reset-class recovery orchestration only; firmware, RTL, bitstreams, XSAs, BSPs, ELFs, runtime tuning, and acceptance thresholds are unchanged."
+  },
+  "remediation": {
+    "file": "scripts/hw/p10_dual_xsdb_stage.tcl",
+    "sha256_before": "478fd92b73b8ad03563431c0f4020ad7836ebd1d466c603daef0526ddd1afba4",
+    "sha256_after": "d10f018d3e19c160fd3e22d959a2c4de6e154b7a646ca99f9bb1371371e7257d",
+    "reset_class_flag_bits": [18, 19, 24],
+    "reset_class_flags": [
+      "DMA_RESET_SENDER",
+      "PL_RESET",
+      "DMA_RESET_RECEIVER"
+    ],
+    "abort_only_flag_bits_excluded": [16, 17],
+    "sequence": [
+      "capture and validate both endpoint expected-recovery result dumps",
+      "request shutdown before each endpoint reboot",
+      "reboot and redownload the frozen role-bound ELF to fixed",
+      "reboot and redownload the frozen role-bound ELF to rotating",
+      "wait for each role service-ready marker",
+      "verify both PL identities and safe shutdown state",
+      "admit the next immutable clean vector"
+    ],
+    "markers": [
+      "P10_1_RESET_RECOVERY_REBOOT_BEGIN",
+      "P10_1_RESET_RECOVERY_REBOOT_PASS"
+    ],
+    "normal_resume_skipped_after_rebootstrap": true
+  },
+  "validation": {
+    "p10_1_runner_unit_tests": {
+      "status": "PASS",
+      "count": 18
+    },
+    "p10_1_finalizer_unit_tests": {
+      "status": "PASS",
+      "count": 10
+    },
+    "python_compile": "PASS",
+    "xsdb_tcl_parse_to_argument_guard": "PASS",
+    "git_diff_check": "PASS",
+    "test_file": {
+      "path": "tests/test_p10_1_hardware_acceptance.py",
+      "bytes": 27715,
+      "sha256": "a5ba922008baf77265c231572c0ba52378ff13346ea83969772ca0e885e9e337"
+    }
+  },
+  "safety": {
+    "current_run_hardware_authorization": false,
+    "no_hardware": true,
+    "hardware_actions_executed_during_remediation": false,
+    "frozen_hardware_artifacts_changed": false,
+    "ethernet_used": false,
+    "movement_executed": false,
+    "rewiring_executed": false
+  },
+  "acceptance_boundary": {
+    "fault_stage_pass_claimed": false,
+    "hardware_pass_claimed": false,
+    "requires_fresh_faults_only_authorization_and_hardware_retry": true
+  }
+}

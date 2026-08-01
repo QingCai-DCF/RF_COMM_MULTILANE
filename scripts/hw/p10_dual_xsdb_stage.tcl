@@ -505,7 +505,16 @@ proc p10_execute_case {d {window "NA"}} {
     error "P10 paired result mismatch label=[dict get $d label] expected_status=$expected fixed=$fixed_status/$fixed_state rotating=$rotating_status/$rotating_state"
   }
   p10_say "P10_CASE_PASS=[dict get $d label]"
-  if {$command != 10} {
+  set reset_recovery_flags [expr {(1 << 18) | (1 << 19) | (1 << 24)}]
+  set reset_recovery_case [expr {
+      $command == 13 && ([dict get $d flags] & $reset_recovery_flags) != 0}]
+  if {$reset_recovery_case} {
+    # The result dumps above are the immutable recovery evidence.  Reset-class
+    # injection can leave the two independently clocked transport services in
+    # different epochs even after both firmware instances report EXPECTED_ABORT.
+    # Rebootstrap both PS services before admitting the required clean vector.
+    p10_rebootstrap_after_reset_recovery [dict get $d label]
+  } elseif {$command != 10} {
     p10_resume fixed
     p10_resume rotating
   }
@@ -731,6 +740,15 @@ proc p10_reboot_role {role label} {
   set dump [p10_dump_mailbox $role $label]
   p10_say "P10_REBOOT_PASS_[string toupper $role]=$label:$dump"
   p10_resume $role
+}
+
+proc p10_rebootstrap_after_reset_recovery {label} {
+  p10_say "P10_1_RESET_RECOVERY_REBOOT_BEGIN=$label"
+  p10_reboot_role fixed "${label}_fixed_reset_recovery_reboot"
+  p10_reboot_role rotating "${label}_rotating_reset_recovery_reboot"
+  p10_verify_pl_safe fixed 0x50313046 0x702000F0 "${label}_RESET_RECOVERED"
+  p10_verify_pl_safe rotating 0x50313052 0x702000A0 "${label}_RESET_RECOVERED"
+  p10_say "P10_1_RESET_RECOVERY_REBOOT_PASS=$label"
 }
 
 proc p10_soak_case {label object_id size direction timeout_ms} {
