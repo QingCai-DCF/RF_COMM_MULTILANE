@@ -41,6 +41,11 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         )
         freeze, artifacts = self.runner.load_freeze()
         self.assertEqual(freeze["status"], "PASS")
+        self.assertEqual(freeze["purpose"], "ECHO_CALIBRATION_ONLY")
+        self.assertFalse(freeze["acceptance_eligible"])
+        self.assertEqual(
+            freeze["allowed_hardware_stages"], ["preflight", "echo_tail"]
+        )
         self.assertEqual(len(artifacts), 10)
         self.assertEqual(
             set(artifacts),

@@ -64,8 +64,9 @@ EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
 EXPECTED_ARTIFACT_FREEZE_SHA256 = (
-    "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19"
+    "5fcf424a802b2661c1240dcca5e382b34b68f94684f2e4578d65f80dfe3d1c09"
 )
+EXPECTED_ARTIFACT_PURPOSE = "ECHO_CALIBRATION_ONLY"
 AUTH_PATH = ROOT / "config/p10_1r_current_run_hardware_authorization.json"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
@@ -407,8 +408,23 @@ def load_freeze() -> tuple[dict[str, Any], dict[str, Path]]:
     record = json.loads(ARTIFACT_FREEZE.read_text(encoding="utf-8"))
     if record.get("status") != "PASS" or record.get("no_hardware") is not True:
         raise RuntimeError("P10.1R artifact freeze is not an offline PASS")
+    if (
+        record.get("purpose") != EXPECTED_ARTIFACT_PURPOSE
+        or record.get("acceptance_eligible") is not False
+        or record.get("allowed_hardware_stages") != ["preflight", "echo_tail"]
+    ):
+        raise RuntimeError("P10.1R echo-calibration artifact scope mismatch")
     if record.get("goal", {}).get("sha256") != EXPECTED_GOAL_SHA256:
         raise RuntimeError("artifact freeze Goal binding mismatch")
+    for item in record.get("inputs", []):
+        path = (ROOT / item["path"]).resolve()
+        if (
+            not inside(path, ROOT)
+            or not path.is_file()
+            or path.stat().st_size != int(item["bytes"])
+            or sha256(path) != item["sha256"]
+        ):
+            raise RuntimeError(f"artifact-freeze input mismatch: {item['path']}")
     artifacts: dict[str, Path] = {}
     kind_map = {
         "bitstream": "functional_bitstream",
@@ -422,8 +438,19 @@ def load_freeze() -> tuple[dict[str, Any], dict[str, Path]]:
             item = record["roles"][role][freeze_kind]
             path = (ROOT / item["path"]).resolve()
             key = f"{role}:{runtime_kind}"
+            built_source = item.get("built_source_commit", "")
             if not inside(path, ROOT / "artifacts/p10_1r"):
                 raise RuntimeError(f"{key} escaped P10.1R content store")
+            if (
+                not re.fullmatch(r"[0-9a-f]{40}", built_source)
+                or built_source not in path.parts
+                or subprocess.run(
+                    ["git", "merge-base", "--is-ancestor", built_source, "HEAD"],
+                    cwd=ROOT,
+                    capture_output=True,
+                ).returncode
+            ):
+                raise RuntimeError(f"{key} build provenance mismatch")
             if (
                 not path.is_file()
                 or path.stat().st_size != int(item["bytes"])
@@ -447,6 +474,7 @@ def artifact_records(freeze: dict[str, Any]) -> list[dict[str, Any]]:
                     "path": item["path"],
                     "sha256": item["sha256"],
                     "bytes": item["bytes"],
+                    "built_source_commit": item["built_source_commit"],
                 }
             )
     return records
@@ -472,6 +500,9 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
     if git("rev-list", "-n", "1", EXPECTED_BASE_FAILURE_TAG) != EXPECTED_BASE_FAILURE_COMMIT:
         raise RuntimeError("immutable base failure tag mismatch")
     freeze, _ = load_freeze()
+    allowed_stages = freeze["allowed_hardware_stages"]
+    if any(stage not in allowed_stages for stage in stages):
+        raise RuntimeError("requested stage exceeds artifact-bundle purpose")
     timestamp = run_id.split("_")[2]
     if run_id != expected_run_id(freeze, timestamp):
         raise RuntimeError("run_id does not match frozen source/bitstream hashes")
@@ -502,6 +533,8 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "artifact_freeze": rel(ARTIFACT_FREEZE),
         "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
+        "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
+        "acceptance_eligible": False,
         "artifacts": artifact_records(freeze),
         "pl_build_identity": {
             role: f"0x{value:08X}"
@@ -591,6 +624,8 @@ def validate_authorization(
         "branch": EXPECTED_BRANCH,
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
+        "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
+        "acceptance_eligible": False,
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,
