@@ -11,7 +11,7 @@
 - smoke: safe boot or stage failed
 - baseline: safe boot or stage failed
 - tuning: safe boot or stage failed
-- streaming: safe boot or stage failed
+- pipeline: safe boot or stage failed
 - faults: safe boot or stage failed
 - crosstalk: safe boot or stage failed
 - half_duplex: safe boot or stage failed

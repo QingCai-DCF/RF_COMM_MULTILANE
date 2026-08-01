@@ -7,7 +7,6 @@
 
 ## Errors
 
-- streaming stage summary is missing
 - faults stage summary is missing
 
 ## Machine-readable evidence
