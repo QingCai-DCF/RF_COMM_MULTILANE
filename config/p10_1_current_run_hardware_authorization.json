@@ -74,6 +74,7 @@
   ],
   "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "6167a05d6d28634b47483769742740fa201cd9bc",
+  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "tuning"
   ],
@@ -109,7 +110,12 @@
       "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
     }
   },
-  "current_run_hardware_authorization": true,
+  "campaign_disposition": "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
+  "campaign_status": "FAIL",
+  "consumed": true,
+  "consumed_at_utc": "2026-08-01T03:27:26+00:00",
+  "consumed_by_run_id": "p10_1_hw_20260801T032353Z_bfff4836_1585d1ad_9ad4f85f",
+  "current_run_hardware_authorization": false,
   "diagnostic_stage_retry_budget": {
     "tuning": {
       "base_goal_limit": 2,
@@ -126,8 +132,11 @@
     "program": null
   },
   "ethernet_allowed": false,
+  "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
+  "final_evidence_sha256": "0d9268fa645513b8cf55e95043e12508f49facc2e26efb9acbec01dd522a0caa",
   "generated_at_utc": "2026-08-01T03:23:53+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "hardware_actions_executed": true,
   "input_hashes": {
     "fixed_profile": {
       "bytes": 907,
@@ -209,6 +218,7 @@
   "maximum_single_formal_run_seconds": 1800,
   "module_exchange_allowed": false,
   "movement_allowed": false,
+  "next_required_user_action": "none; continue automatic remediation and retry under the current user-authorized unlimited retry policy",
   "obscuration_allowed": false,
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
@@ -225,6 +235,7 @@
     "user_authorization_statement_sha256": "30215a9e5011712c01379bc81e571204fbf9741db854860c240b65d8ccdc32c6"
   },
   "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+  "reusable_for_future_run": false,
   "rewiring_allowed": false,
   "rotation_allowed": false,
   "run_id": "p10_1_hw_20260801T032353Z_bfff4836_1585d1ad_9ad4f85f",
@@ -239,8 +250,10 @@
     "on_timeout": true,
     "program_role_bound_shutdown_bitstreams": true
   },
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
   "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
-  "status": "AUTHORIZED",
+  "status": "CONSUMED_AFTER_P10_1_HARDWARE_FAIL",
   "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
   "user_retry_limit_override": "不设上限"
 }

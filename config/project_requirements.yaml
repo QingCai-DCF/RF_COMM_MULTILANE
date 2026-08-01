@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 659314f3151d66ef26ab0d03dc47ace442098a23d04dca2d5641a0d7bd98955f
+    sha256: e15d388a0fe2280e6130fd179ee2d08f381737e04bb55b3940dd17e628ebed5f
   - path: PROJECT_STATUS.md
-    sha256: da1d04b3714efb3e2700910509005b48342ebe5e19d14c8154d41cb1aef0481a
-  artifact_hash: da1d04b3714efb3e2700910509005b48342ebe5e19d14c8154d41cb1aef0481a
+    sha256: e859652964f5826c5144805278ab634a561077d56e71c7abd747ac94f2eb0fae
+  artifact_hash: e859652964f5826c5144805278ab634a561077d56e71c7abd747ac94f2eb0fae
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 659314f3151d66ef26ab0d03dc47ace442098a23d04dca2d5641a0d7bd98955f
+    sha256: e15d388a0fe2280e6130fd179ee2d08f381737e04bb55b3940dd17e628ebed5f
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 659314f3151d66ef26ab0d03dc47ace442098a23d04dca2d5641a0d7bd98955f
+    sha256: e15d388a0fe2280e6130fd179ee2d08f381737e04bb55b3940dd17e628ebed5f
   - path: PROJECT_STATUS.md
-    sha256: da1d04b3714efb3e2700910509005b48342ebe5e19d14c8154d41cb1aef0481a
+    sha256: e859652964f5826c5144805278ab634a561077d56e71c7abd747ac94f2eb0fae
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: da1d04b3714efb3e2700910509005b48342ebe5e19d14c8154d41cb1aef0481a
+  artifact_hash: e859652964f5826c5144805278ab634a561077d56e71c7abd747ac94f2eb0fae
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -2618,14 +2618,14 @@ requirements:
   - path: docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md
     sha256: 3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74
   - path: evidence/generated/p10_goodput_runtime_source_reverification.json
-    sha256: cacf874d793c15b81adbf326cb4b1f74f733f48c617880101e2aa0dc3bb053aa
+    sha256: 2586d81bca117912fc640f219a1c8a82c168a5318521c334a6e0bf70df4507ce
   hardware_followup: This PASS remains limited to the frozen stationary dual-AX7020 two-lane campaign. New performance experiments,
     P10.2 crosstalk/full-duplex work, P10.3 large-object/FreeRTOS work, and every P11-or-later hardware action require a new
     current-run authorization and bounded safe wrapper.
   source_reverification:
     test_id: P10-GOODPUT-RUNTIME-SOURCE-REVERIFICATION
     evidence_path: evidence/generated/p10_goodput_runtime_source_reverification.json
-    evidence_sha256: cacf874d793c15b81adbf326cb4b1f74f733f48c617880101e2aa0dc3bb053aa
+    evidence_sha256: 2586d81bca117912fc640f219a1c8a82c168a5318521c334a6e0bf70df4507ce
     historical_runtime_sha256: 33f11e8ae3070cce7e915c2af31dd5a0aad8cb8a9999a2a1feb7d133744d5da1
     current_runtime_sha256: 1cf329ec479636369ba3c0c2bb2248c12b4ebab82d3c849cf86f7c6f53209a76
     goodput_formula_changed: false
@@ -2980,7 +2980,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_authorization_summary.json
-    sha256: e9cfb9293bee0579b98bb3f6206536b082d95e87f91a5294ff92b6fb0029d0b2
+    sha256: 35f9339bcf5412c0eeb23ae53464b5c3fb74f1b094e3f01e382487aa179005da
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -2993,7 +2993,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: e9cfb9293bee0579b98bb3f6206536b082d95e87f91a5294ff92b6fb0029d0b2
+  artifact_hash: 35f9339bcf5412c0eeb23ae53464b5c3fb74f1b094e3f01e382487aa179005da
 - requirement_id: P10_1_HW-002
   requirement_text: Both AX7020 roles shall use independently routed, content-addressed performance bitstreams, XSA, BSP,
     and ELF built from one clean source commit.
@@ -3044,7 +3044,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_timer_summary.json
-    sha256: 9eb2b4720a0ff7370c138fb1a5896396b01d3ea7d106b5a447b1a5c800cc264e
+    sha256: 5fa8cd484a9b7b0d5657d12e71f1ca463d79af40b191b45edbe5e353d3a0eab1
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3057,7 +3057,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 9eb2b4720a0ff7370c138fb1a5896396b01d3ea7d106b5a447b1a5c800cc264e
+  artifact_hash: 5fa8cd484a9b7b0d5657d12e71f1ca463d79af40b191b45edbe5e353d3a0eab1
 - requirement_id: P10_1_METRIC-001
   requirement_text: Hardware application goodput shall count only remotely verified, atomically committed application bytes
     and shall exclude diagnostic microtransfers and host staging time.
@@ -3071,7 +3071,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_metric_semantics_summary.json
-    sha256: 2d7b4e116c80a6660523a5b650c4df1b6a5f08b01e9fc101b730a34dbac7df81
+    sha256: f52e259dc88159a7cbf2c850a329061befe4747d56c2d841d2f0bf854b6e91c2
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3084,7 +3084,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 2d7b4e116c80a6660523a5b650c4df1b6a5f08b01e9fc101b730a34dbac7df81
+  artifact_hash: f52e259dc88159a7cbf2c850a329061befe4747d56c2d841d2f0bf854b6e91c2
 - requirement_id: P10_1_AUTO-001
   requirement_text: Sustained performance shall execute autonomously on the two boards, with the host absent from per-object
     and per-segment fast paths.
@@ -3098,7 +3098,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_metric_semantics_summary.json
-    sha256: 2d7b4e116c80a6660523a5b650c4df1b6a5f08b01e9fc101b730a34dbac7df81
+    sha256: f52e259dc88159a7cbf2c850a329061befe4747d56c2d841d2f0bf854b6e91c2
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3111,7 +3111,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 2d7b4e116c80a6660523a5b650c4df1b6a5f08b01e9fc101b730a34dbac7df81
+  artifact_hash: f52e259dc88159a7cbf2c850a329061befe4747d56c2d841d2f0bf854b6e91c2
 - requirement_id: P10_1_PIPE-001
   requirement_text: The target-resident runtime shall sustain a real multi-buffer, descriptor-batched, cache-enabled pipeline
     in both directions without per-object drain.
@@ -3125,7 +3125,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_pipeline_summary.json
-    sha256: 7894fe6543173334732fefd9cd28b01b5a01aab7e1b061425f687b4f4cc1c42f
+    sha256: 6cf7edeeeb599ac8f5b6e1326dd015e41d346caee39ae5a2d4190044ce9b736b
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3138,7 +3138,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 7894fe6543173334732fefd9cd28b01b5a01aab7e1b061425f687b4f4cc1c42f
+  artifact_hash: 6cf7edeeeb599ac8f5b6e1326dd015e41d346caee39ae5a2d4190044ce9b736b
 - requirement_id: P10_1_STREAM-001
   requirement_text: A 64 MiB descriptor-chained F-to-R stream shall complete with incremental CRC32/SHA256 and one atomic
     application commit.
@@ -3152,7 +3152,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_streaming_64m_summary.json
-    sha256: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+    sha256: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3165,7 +3165,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+  artifact_hash: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
 - requirement_id: P10_1_STREAM-002
   requirement_text: A 64 MiB descriptor-chained R-to-F stream shall complete with incremental CRC32/SHA256 and one atomic
     application commit.
@@ -3179,7 +3179,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_streaming_64m_summary.json
-    sha256: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+    sha256: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3192,7 +3192,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+  artifact_hash: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
 - requirement_id: P10_1_STREAM-003
   requirement_text: Abort, PS reset, DMA reset, PL reset, duplicate, and stale-stream vectors shall never commit and shall
     be followed by a clean 64 MiB recovery stream without descriptor leakage.
@@ -3206,7 +3206,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_streaming_64m_summary.json
-    sha256: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+    sha256: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3219,7 +3219,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 22a82ee1b17094a6642087cbdf012c98f57c18e2ef2449aa1f41112ad9bc8878
+  artifact_hash: e17cc1b0693b5686f7e9fad38db87e4c0a18dacff558394b576235330bf39ca6
 - requirement_id: P10_1_PERF-001
   requirement_text: F-to-R two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least
     300 seconds and 150 MiB committed.
@@ -3233,7 +3233,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_half_duplex_summary.json
-    sha256: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+    sha256: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3246,7 +3246,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+  artifact_hash: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
 - requirement_id: P10_1_PERF-002
   requirement_text: R-to-F two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least
     300 seconds and 150 MiB committed.
@@ -3260,7 +3260,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_half_duplex_summary.json
-    sha256: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+    sha256: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3273,7 +3273,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+  artifact_hash: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
 - requirement_id: P10_1_PERF-003
   requirement_text: Measured sustained goodput and its primary bottleneck shall be reconciled with the corrected physical-airtime
     model without exceeding the same-protocol ceiling.
@@ -3287,7 +3287,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_half_duplex_summary.json
-    sha256: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+    sha256: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3300,7 +3300,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: f74d13a36c549eb4b26ce96123468411acc8dfba53827632cf5f665354a2e692
+  artifact_hash: 41a56b6709b1360bb611eda6292d94f7de8166a46163e620236a5304565b9d6e
 - requirement_id: P10_1_XTALK-001
   requirement_text: The stationary two-board setup shall produce a direct 4-by-4 TX-to-RX raw and framed crosstalk matrix
     with zero non-target CRC-valid false frames.
@@ -3314,7 +3314,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_crosstalk_summary.json
-    sha256: 3965963964f218fd693e1dc72b56a6a532af1873594ac1951f680476547e84ed
+    sha256: 5682be708ed94a21e8e9e13443431bda500e87a3a786be6c34ea362a9980accc
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3327,7 +3327,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 3965963964f218fd693e1dc72b56a6a532af1873594ac1951f680476547e84ed
+  artifact_hash: 5682be708ed94a21e8e9e13443431bda500e87a3a786be6c34ea362a9980accc
 - requirement_id: P10_1_FD-001
   requirement_text: The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation
     is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it.
@@ -3341,7 +3341,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_1plus1_summary.json
-    sha256: 27f1fb871195f8908055faff764dafafb0cb91828aa1e821720c7defe37ebfa3
+    sha256: a8e4337a3baccc58e2e736a4911509b3b8b057f1f8ce91e4fbd92b30c05af894
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3354,7 +3354,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 27f1fb871195f8908055faff764dafafb0cb91828aa1e821720c7defe37ebfa3
+  artifact_hash: a8e4337a3baccc58e2e736a4911509b3b8b057f1f8ce91e4fbd92b30c05af894
 - requirement_id: P10_1_SOAK-001
   requirement_text: One complete 1800-second stationary performance run shall retain at least 4 Mbit/s in both formal directions
     with zero integrity, resource, retry, deadlock, or internal safety violations.
@@ -3368,7 +3368,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_stationary_30min_summary.json
-    sha256: 96b683da9d46a7fd12e1c3ab74ed0ea83d867c1c19068a0a404876914a96c6ce
+    sha256: e1b64a2a4b310cbe8e38d57627150e474f3e01d386d646af3aa8706af425ac11
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3381,7 +3381,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 96b683da9d46a7fd12e1c3ab74ed0ea83d867c1c19068a0a404876914a96c6ce
+  artifact_hash: e1b64a2a4b310cbe8e38d57627150e474f3e01d386d646af3aa8706af425ac11
 - requirement_id: P10_1_SAFE-001
   requirement_text: Every stage and all error, timeout, interrupt, and normal exits shall end with independently verified
     shutdown of both bound AX7020 endpoints.
@@ -3395,7 +3395,7 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1_hw_shutdown_summary.json
-    sha256: 83b71f8675c0371ded82178d4abb3939f9c688dfdf1488cf22600dbf67dead12
+    sha256: 721f7ca61d6439f74a74f5e2a3fe17147aac38009b0134c10c648c2cadc7f98f
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf
     sha256: 5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6
   - path: artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit
@@ -3408,7 +3408,7 @@ requirements:
     sha256: 64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f
   hardware_followup: Scoped stationary dual-AX7020 two-lane evidence only; P11 handover, 8x32, rotation, 600 rpm, Ethernet/SPI,
     external duty, physical GLOBAL_PERMIT, and product acceptance remain pending.
-  artifact_hash: 83b71f8675c0371ded82178d4abb3939f9c688dfdf1488cf22600dbf67dead12
+  artifact_hash: 721f7ca61d6439f74a74f5e2a3fe17147aac38009b0134c10c648c2cadc7f98f
 - requirement_id: OBS-LED-001
   requirement_text: Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and
     LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins.

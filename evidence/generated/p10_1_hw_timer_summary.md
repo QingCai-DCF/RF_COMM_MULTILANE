@@ -7,8 +7,6 @@
 
 ## Errors
 
-- tune_batch1:fixed: local PS/PL timer disagreement exceeds 1%
-- tune_batch1:rotating: local PS/PL timer disagreement exceeds 1%
 - preflight: complete timer coverage unavailable because stage is not PASS
 - smoke: complete timer coverage unavailable because stage is not PASS
 - baseline: complete timer coverage unavailable because stage is not PASS
@@ -20,7 +18,6 @@
 - half_duplex: complete timer coverage unavailable because stage is not PASS
 - oneplusone: complete timer coverage unavailable because stage is not PASS
 - formal: complete timer coverage unavailable because stage is not PASS
-- tune_batch1: local PS/PL timer gate failed
 
 ## Machine-readable evidence
 
