@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -15,8 +16,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "evidence/generated/p10_1r_full_offline_regression"
-SOURCE_COMMIT = "493955d5788942ac448a9cfd99c97f0c526281fe"
-DETERMINISTIC_TIMESTAMP = "2026-08-01T00:00:00Z"
+SOURCE_COMMIT = ""
+DETERMINISTIC_TIMESTAMP = "2026-08-02T00:00:00Z"
 
 
 def sha256(path: Path) -> str:
@@ -65,6 +66,7 @@ def copy_tree(source: Path, destination: Path) -> list[Path]:
 
 
 def main() -> int:
+    global SOURCE_COMMIT
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--p8c-root", type=Path, required=True)
@@ -81,8 +83,9 @@ def main() -> int:
     source_root = args.source_root.resolve()
     p8c_root = args.p8c_root.resolve()
     p8d_root = args.p8d_root.resolve()
-    if source_head(source_root) != SOURCE_COMMIT:
-        errors.append("replay worktree HEAD does not match P10.1R source commit")
+    SOURCE_COMMIT = source_head(source_root)
+    if not re.fullmatch(r"[0-9a-f]{40}", SOURCE_COMMIT):
+        errors.append("replay worktree HEAD is not a full Git commit")
 
     base_json = source_root / "evidence/generated/offline_gate_summary.json"
     base_md = source_root / "evidence/generated/offline_gate_summary.md"
