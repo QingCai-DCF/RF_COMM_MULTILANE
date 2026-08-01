@@ -7,7 +7,7 @@
 
 ## Errors
 
-- oneplusone stage summary is missing
+- oneplusone was not run because the campaign stopped after an earlier stage failure
 - frozen endpoint direction capability was not explicit
 
 ## Machine-readable evidence

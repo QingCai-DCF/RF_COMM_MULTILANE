@@ -7,7 +7,7 @@
 
 ## Errors
 
-- baseline stage summary is missing
+- baseline was not run because the campaign stopped after an earlier stage failure
 
 ## Machine-readable evidence
 

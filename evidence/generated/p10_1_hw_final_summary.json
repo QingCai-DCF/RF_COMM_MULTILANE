@@ -84,8 +84,6 @@
   "crosstalk_4x4_matrix": "FAIL",
   "current_run_hardware_authorization": false,
   "errors": [
-    "p10_1_hw_authorization_summary",
-    "p10_1_hw_target_identity_summary",
     "p10_1_hw_safe_boot_summary",
     "p10_1_hw_timer_summary",
     "p10_1_hw_metric_semantics_summary",
@@ -101,24 +99,22 @@
   ],
   "ethernet_used": false,
   "executed_stage_status": {
-    "baseline": "MISSING",
-    "crosstalk": "MISSING",
-    "faults": "PASS",
-    "formal": "MISSING",
-    "half_duplex": "MISSING",
-    "oneplusone": "MISSING",
-    "pipeline": "MISSING",
-    "preflight": "MISSING",
-    "smoke": "MISSING",
-    "streaming": "MISSING",
-    "tuning": "MISSING"
+    "baseline": "NOT_RUN",
+    "crosstalk": "NOT_RUN",
+    "faults": "NOT_RUN",
+    "formal": "NOT_RUN",
+    "half_duplex": "NOT_RUN",
+    "oneplusone": "NOT_RUN",
+    "pipeline": "NOT_RUN",
+    "preflight": "FAIL",
+    "smoke": "NOT_RUN",
+    "streaming": "NOT_RUN",
+    "tuning": "NOT_RUN"
   },
   "f_to_r_4mbps_target": "FAIL",
   "f_to_r_4p8mbps_stretch": "FAIL",
   "f_to_r_application_goodput_bps": null,
   "fail_gates": [
-    "p10_1_hw_authorization_summary",
-    "p10_1_hw_target_identity_summary",
     "p10_1_hw_safe_boot_summary",
     "p10_1_hw_timer_summary",
     "p10_1_hw_metric_semantics_summary",
@@ -134,7 +130,7 @@
   ],
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T07:14:37+00:00",
+  "generated_at_utc": "2026-08-01T07:21:19+00:00",
   "generated_evidence": [
     "evidence/generated/p10_1_hw_repo_intake.json",
     "evidence/generated/p10_1_hw_model_sanity_summary.json",
@@ -218,6 +214,8 @@
   ],
   "pass_gates": [
     "p10_1_hw_artifact_summary",
+    "p10_1_hw_authorization_summary",
+    "p10_1_hw_target_identity_summary",
     "p10_1_hw_shutdown_summary"
   ],
   "pipeline_config": {
@@ -231,14 +229,14 @@
   "r_to_f_application_goodput_bps": null,
   "raw_evidence": [
     {
-      "bytes": 283807,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "8cf10f26f30008a14d5409e8484aaf5f9cb55032c37cecbb01ea6c68a99f1955"
+      "bytes": 127434,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "6eed4c08d9edf9ee6d2bfeced3c5337488f4334bf8be3ec4aaf005e173325172"
     },
     {
-      "bytes": 30136,
+      "bytes": 17486,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "8cff840571612f91106c2ad1a4bb6487ceb37ba0172471e7d038323138f8cc60"
+      "sha256": "9b7c5c7b254c2c493437989232ae8d06be687b16c2d7e2f3fb7c65455f27b959"
     }
   ],
   "register_map": {
@@ -252,11 +250,11 @@
     "sha256": "b69cfc00a73f1b91cb00bc2ffcfdb3c723499fe4078b78b9355dcf93adfa036a"
   },
   "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
-  "retry_run_id_count": 4,
+  "retry_run_id_count": 15,
   "retry_run_id_limit": null,
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
   "runtime_seconds": null,
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",

@@ -7,7 +7,7 @@
 
 ## Errors
 
-- formal stage summary is missing
+- formal was not run because the campaign stopped after an earlier stage failure
 - formal runtime is not exactly 1800 seconds
 
 ## Machine-readable evidence

@@ -6,9 +6,9 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 168
-PASS: 138
+PASS: 139
 PENDING: 16
-FAIL: 14
+FAIL: 13
 WAIVED: 0
 ```
 
@@ -163,7 +163,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P11-READY-001` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIVE_MODULE_INVENTORY_PLAN.md` | P11 shall have a fifth compatible and fully inventoried TFDU6102 small board. |
 | `P11-READY-002` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_FIXTURE_REQUIREMENTS.md` | P11 shall have accepted four-fixed-module and one-rotating-module fixtures bound to as-built geometry. |
 | `P11-READY-003` | `PENDING` | P11_HARDWARE_READINESS | `P11_NOT_STARTED` | — | `docs/P11_ABZ_INPUT_REQUIREMENTS.md` | P11 shall have a selected and electrically verified ABZ source, pin/profile/XDC path, and phase/acquisition budget. |
-| `P10_1_HW-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CURRENT-RUN-AUTHORIZATION` | `evidence/generated/p10_1_hw_authorization_summary.json` | The P10.1 hardware campaign shall use a new immutable current-run authorization bound to the exact Goal, source, board identities, artifacts, limits, and shutdown policy. |
+| `P10_1_HW-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CURRENT-RUN-AUTHORIZATION` | `evidence/generated/p10_1_hw_authorization_summary.json` | The P10.1 hardware campaign shall use a new immutable current-run authorization bound to the exact Goal, source, board identities, artifacts, limits, and shutdown policy. |
 | `P10_1_HW-002` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-IMMUTABLE-ARTIFACT-PROVENANCE` | `evidence/generated/p10_1_hw_artifact_summary.json` | Both AX7020 roles shall use independently routed, content-addressed performance bitstreams, XSA, BSP, and ELF built from one clean source commit. |
 | `P10_1_TIME-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-TIMER-CROSSCHECK` | `evidence/generated/p10_1_hw_timer_summary.json` | PS and PL elapsed-time measurements for every sustained hardware stream shall cross-check within one percent, with host time retained only as an orchestration view. |
 | `P10_1_METRIC-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-METRIC-SEMANTICS-AUTONOMY` | `evidence/generated/p10_1_hw_metric_semantics_summary.json` | Hardware application goodput shall count only remotely verified, atomically committed application bytes and shall exclude diagnostic microtransfers and host staging time. |
@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `aa9c20d3f16647670a6de296830c6c80a0291518501409f8486b863d7f4b7a61`
-- `PROJECT_STATUS.md` — `7cbcbc4035eeeb5332b5ba111cf3bc9e9da4a641a9141027a0a190a12a9d62b7`
+- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
+- `PROJECT_STATUS.md` — `8ea39c806052c7c7f90c368bf43021d256da11405d2bbf1457eca866e920f148`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `aa9c20d3f16647670a6de296830c6c80a0291518501409f8486b863d7f4b7a61`
+- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `aa9c20d3f16647670a6de296830c6c80a0291518501409f8486b863d7f4b7a61`
-- `PROJECT_STATUS.md` — `7cbcbc4035eeeb5332b5ba111cf3bc9e9da4a641a9141027a0a190a12a9d62b7`
+- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
+- `PROJECT_STATUS.md` — `8ea39c806052c7c7f90c368bf43021d256da11405d2bbf1457eca866e920f148`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -903,7 +903,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
-- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `e2502f34f51e87304931e2508a90671bd69d56631114872f22134b932ea762c8`
+- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `85867c60b26fb19e798b8408ebfbd349c727a9c2d7233f09fd6740672a8a8e95`
 
 ### `PERF-MEAS-001`
 
@@ -969,6 +969,15 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/generated/p10_1_hardware_dry_run.json` — `1fe81b4a9222f9b44c2e03b6e237ae250912017a6e1b5083913291021441e27d`
 
+### `P10_1_HW-001`
+
+- `evidence/generated/p10_1_hw_authorization_summary.json` — `8729ca2d38013a01433e9fb20b9def72af0b4b5156becafaa1c6b8f2957346cc`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
+- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
+
 ### `P10_1_HW-002`
 
 - `evidence/generated/p10_1_hw_artifact_summary.json` — `0b80e47c14e12bc56416534e9be687fc136761b3ad7f815cf0add74ff1b8161f`
@@ -985,7 +994,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `a2a74066e2661196c9a383a03a7e7edcd5855e0acb79347dda388dd97edf2e2d`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `a4f1932281b9497ed30f34178652cb4edd5ba07c532ba848c9871cd9958edfbf`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`

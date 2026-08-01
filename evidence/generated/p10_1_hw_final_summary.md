@@ -7,8 +7,6 @@
 
 ## Errors
 
-- p10_1_hw_authorization_summary
-- p10_1_hw_target_identity_summary
 - p10_1_hw_safe_boot_summary
 - p10_1_hw_timer_summary
 - p10_1_hw_metric_semantics_summary

@@ -71,11 +71,11 @@
   "current_run_hardware_authorization": false,
   "directions": [],
   "errors": [
-    "formal stage summary is missing",
+    "formal was not run because the campaign stopped after an earlier stage failure",
     "formal runtime is not exactly 1800 seconds"
   ],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T07:14:37+00:00",
+  "generated_at_utc": "2026-08-01T07:21:19+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -101,11 +101,11 @@
   },
   "raw_evidence": [
     {
-      "bytes": 283807,
-      "declared_status": null,
+      "bytes": 127434,
+      "declared_status": "NOT_RUN",
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "8cf10f26f30008a14d5409e8484aaf5f9cb55032c37cecbb01ea6c68a99f1955",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "6eed4c08d9edf9ee6d2bfeced3c5337488f4334bf8be3ec4aaf005e173325172",
       "stage": "formal"
     }
   ],
@@ -116,7 +116,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
   "runtime_seconds": null,
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",

@@ -7,7 +7,7 @@
 
 ## Errors
 
-- executed stage set differs from authorization
+- orchestrator boundary/status is invalid
 
 ## Machine-readable evidence
 

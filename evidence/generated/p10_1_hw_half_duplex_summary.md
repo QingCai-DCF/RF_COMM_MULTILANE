@@ -7,7 +7,7 @@
 
 ## Errors
 
-- half_duplex stage summary is missing
+- half_duplex was not run because the campaign stopped after an earlier stage failure
 - missing half-duplex direction 0
 - missing half-duplex direction 1
 

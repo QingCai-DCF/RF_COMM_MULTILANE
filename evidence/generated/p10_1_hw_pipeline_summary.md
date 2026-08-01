@@ -7,7 +7,7 @@
 
 ## Errors
 
-- pipeline stage summary is missing
+- pipeline was not run because the campaign stopped after an earlier stage failure
 
 ## Machine-readable evidence
 

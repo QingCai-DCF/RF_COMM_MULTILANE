@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-PREFLIGHT-PRIME-TIMEOUT-DIAGNOSIS",
+  "status": "PASS",
+  "diagnosed_run_status": "FAIL",
+  "run_id": "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "generated_at_utc": "2026-08-01T07:22:24.7980835Z",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "hardware_actions_executed": true,
+  "observed_failure": {
+    "stage": "preflight",
+    "completed_observations": 9,
+    "completed_cases_status": "PASS",
+    "next_case": "failed_object_diagnostic",
+    "failure_class": "receiver command-prime timeout",
+    "receiver": "rotating",
+    "wait_ms": 38000,
+    "main_state": "0x00000004",
+    "response_sequence": "0x000003F2",
+    "pl_status": "0x00000002",
+    "phy_status": "0x00000000",
+    "p10_1_state": "0x00000007",
+    "p10_1_status": "0x00000000",
+    "p10_1_sequence": "0x000003F2",
+    "xsdb_process_returncode": 0,
+    "xsdb_process_timed_out": false,
+    "stage_status": "FAIL"
+  },
+  "completed_cases": [
+    "preflight_identity",
+    "diagnostic_only_1byte",
+    "short_ring_wrap",
+    "idle_heavy_5s",
+    "pattern_prbs_1m",
+    "pattern_zero_1m",
+    "pattern_one_1m",
+    "pattern_counter_1m",
+    "pattern_corpus_1m"
+  ],
+  "artifact_relevance_audit": {
+    "new_firmware_change": "duplicate fault injection selects protocol fault bit 3 only when the duplicate command flag is present and the local endpoint is the DATA sender",
+    "preflight_duplicate_flag_used": false,
+    "deterministic_artifact_mismatch_observed": false,
+    "conclusion": "no direct evidence currently requires an artifact change; retry the immutable bundle with a new run ID before altering source"
+  },
+  "historical_comparison": {
+    "run_id": "p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f",
+    "scope": "historical workflow comparison only; not inherited as current-bundle PASS",
+    "preflight_status": "PASS",
+    "observation_count": 11,
+    "stage_summary_path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
+    "stage_summary_sha256": "7b52f06931d4791d16c8be5813b8beee64c209381e0a0fc16fb5f36bd6541d85"
+  },
+  "safety_exit": {
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "maximum_lane_mask_used": "0x3",
+    "ethernet_used": false,
+    "network_used": false,
+    "hardware_movement": false,
+    "rotation_executed": false,
+    "rewiring_executed": false,
+    "current_run_hardware_authorization": false,
+    "authorization_lifecycle": "CONSUMED_AFTER_RUN"
+  },
+  "raw_evidence": [
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
+      "sha256": "16cdc903c2bc0ec9d3f385120f42aa1ee341c98ef2dd8ed1b93195e73a1f3725"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/xsdb.result.txt",
+      "sha256": "f79ea7ab07e387594928dda883f782aa51d6d47a144a69afb064a32766724b19"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/dumps/observations.psv",
+      "sha256": "6b60ed2d741c7710bec47cffea0904bb43f0477ccfd27f2d23c2f90525eb6e5e"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "6eed4c08d9edf9ee6d2bfeced3c5337488f4334bf8be3ec4aaf005e173325172"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "460a2518708d7345cd385a3b6729fda1909e8445b1b0b6935c0e87087e3277aa"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    }
+  ],
+  "finalizer": {
+    "status": "FAIL",
+    "final_summary_path": "evidence/generated/p10_1_hw_final_summary.json",
+    "final_summary_sha256": "f2277870fc366690a9f8f7a335d10fa566ef51f9ce4632bc938cb37438b7c22e"
+  },
+  "retry_authorization": {
+    "user_statement": "可以，我授权，请帮我告诉主线程",
+    "source_thread_id": "019fbc2e-870c-7a93-94b9-237964bb8b0c",
+    "unlimited_retry_override": "不设上限",
+    "artifacts_must_remain_unchanged": true,
+    "next_action": "new immutable current-run authorization and unique run ID"
+  }
+}
