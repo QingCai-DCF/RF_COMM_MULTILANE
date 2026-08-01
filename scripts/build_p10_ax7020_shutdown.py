@@ -7,6 +7,7 @@ contains no JTAG, programming, ELF, UART, Ethernet, or TFDU runtime action.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -26,12 +27,19 @@ OUT_ROOT = ROOT / "evidence/generated/vivado/p10_ax7020_shutdown"
 ARTIFACT_ROOT = ROOT / "artifacts/p10"
 SUMMARY_JSON = ROOT / "evidence/generated/p10_ax7020_shutdown_build_summary.json"
 SUMMARY_MD = ROOT / "evidence/generated/p10_ax7020_shutdown_build_summary.md"
+CAMPAIGN = "p10"
+TEST_ID = "P10-AX7020-DUAL-SHUTDOWN-BUILD"
+SUMMARY_TITLE = "P10 AX7020 dual shutdown build"
 EXPECTED_GOALS = {
     "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md":
         "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
     "goals/P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET_GOAL.md":
         "5a81eeea8cf5bb0ff9d41c237a2af097f58cf71d1d208825dfb6144b5d6e23a3",
 }
+P10_1R_GOAL = "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md"
+P10_1R_GOAL_SHA256 = (
+    "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
+)
 PROFILES = {
     "fixed": {
         "profile": "P10_AX7020_FIXED_2LANE",
@@ -58,6 +66,29 @@ def relative(path: Path) -> str:
     return path.resolve().relative_to(ROOT.resolve()).as_posix()
 
 
+def configure_campaign(campaign: str) -> None:
+    global OUT_ROOT, ARTIFACT_ROOT, SUMMARY_JSON, SUMMARY_MD
+    global CAMPAIGN, TEST_ID, SUMMARY_TITLE
+    CAMPAIGN = campaign
+    if campaign == "p10":
+        return
+    if campaign != "p10_1r":
+        raise ValueError(f"unsupported campaign: {campaign}")
+    OUT_ROOT = ROOT / "evidence/generated/vivado/p10_1r_shutdown"
+    ARTIFACT_ROOT = ROOT / "artifacts/p10_1r"
+    SUMMARY_JSON = ROOT / "evidence/generated/p10_1r_shutdown_build_summary.json"
+    SUMMARY_MD = ROOT / "evidence/generated/p10_1r_shutdown_build_summary.md"
+    TEST_ID = "P10_1R-AX7020-DUAL-SHUTDOWN-BUILD"
+    SUMMARY_TITLE = "P10.1R AX7020 dual shutdown build"
+
+
+def active_goals() -> dict[str, str]:
+    goals = dict(EXPECTED_GOALS)
+    if CAMPAIGN == "p10_1r":
+        goals[P10_1R_GOAL] = P10_1R_GOAL_SHA256
+    return goals
+
+
 def tracked_source_dirty(paths: list[Path]) -> bool:
     return bool(subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=no", "--",
@@ -75,10 +106,11 @@ def parse_markers(path: Path) -> dict[str, str]:
 
 def bundle_hash(role: str, profile: dict[str, object]) -> tuple[str, dict[str, str]]:
     paths = [Path(__file__).resolve(), TOP, TCL, Path(profile["xdc"]),
-             *[ROOT / item for item in EXPECTED_GOALS]]
+             *[ROOT / item for item in active_goals()]]
     hashes = {relative(path): sha256(path) for path in paths}
     payload = json.dumps(
-        {"role": role, "part": "xc7z020clg400-2", "inputs": hashes},
+        {"campaign": CAMPAIGN, "role": role,
+         "part": "xc7z020clg400-2", "inputs": hashes},
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
@@ -87,7 +119,14 @@ def bundle_hash(role: str, profile: dict[str, object]) -> tuple[str, dict[str, s
 
 def freeze(source: Path, source_bundle: str) -> dict[str, object]:
     digest = sha256(source)
-    destination = ARTIFACT_ROOT / source_bundle / digest / source.name
+    namespace = (
+        subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+        if CAMPAIGN == "p10_1r"
+        else source_bundle
+    )
+    destination = ARTIFACT_ROOT / namespace / digest / source.name
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists() and sha256(destination) != digest:
         raise RuntimeError(f"content-address collision: {destination}")
@@ -177,6 +216,13 @@ def run_role(role: str, profile: dict[str, object]) -> dict[str, object]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--campaign", choices=("p10", "p10_1r"), default="p10",
+        help="Use a separate Goal-bound evidence and artifact namespace.",
+    )
+    args = parser.parse_args()
+    configure_campaign(args.campaign)
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_SHUTDOWN_BUILD_REFUSED: offline environment required", file=sys.stderr)
@@ -184,7 +230,7 @@ def main() -> int:
     if not VIVADO.is_file():
         print(f"Vivado not found: {VIVADO}", file=sys.stderr)
         return 2
-    for item, expected in EXPECTED_GOALS.items():
+    for item, expected in active_goals().items():
         path = ROOT / item
         if not path.is_file() or sha256(path) != expected:
             print(f"P10_SHUTDOWN_BUILD_REFUSED: goal hash mismatch: {item}", file=sys.stderr)
@@ -192,13 +238,14 @@ def main() -> int:
     source_worktree_dirty = tracked_source_dirty([
         Path(__file__).resolve(), TOP, TCL,
         *(Path(profile["xdc"]) for profile in PROFILES.values()),
-        *(ROOT / item for item in EXPECTED_GOALS),
+        *(ROOT / item for item in active_goals()),
     ])
     results = [run_role(role, profile) for role, profile in PROFILES.items()]
     status = "PASS" if all(result["status"] == "PASS" for result in results) else "FAIL"
     summary = {
         "schema_version": 1,
-        "test_id": "P10-AX7020-DUAL-SHUTDOWN-BUILD",
+        "test_id": TEST_ID,
+        "campaign": CAMPAIGN,
         "status": status,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": subprocess.check_output(
@@ -218,7 +265,7 @@ def main() -> int:
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
     )
     lines = [
-        "# P10 AX7020 dual shutdown build",
+        f"# {SUMMARY_TITLE}",
         "",
         f"- Status: `{status}`",
         "- Hardware actions executed: `false`",

@@ -75,6 +75,17 @@ P10_1_PROVENANCE = [
     ROOT / "scripts/p10_1_hardware_acceptance.py",
     ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl",
 ]
+P10_1R_GOAL = ROOT / "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md"
+P10_1R_GOAL_SHA256 = (
+    "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
+)
+P10_1R_PROVENANCE = [
+    ROOT / "config/tfdu_rx_admission.yaml",
+    ROOT / "config/performance/p10_1_pipeline.yaml",
+    ROOT / "config/performance/p10_1r_hardware_runtime.yaml",
+    ROOT / "config/register_map/ir_axi_regs.yaml",
+    ROOT / "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md",
+]
 
 
 def configure_campaign(campaign: str) -> None:
@@ -97,6 +108,15 @@ def configure_campaign(campaign: str) -> None:
         )
         TEST_ID = "P10_1-HW-AX7020-DUAL-PS-RUNTIME-BUILD"
         SUMMARY_TITLE = "P10.1 hardware-performance AX7020 PS runtime build"
+        return
+    if campaign == "p10_1r":
+        OUT = ROOT / "evidence/generated/vitis/p10_1r_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_1r"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_1r_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_1r_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_1r"
+        TEST_ID = "P10_1R-AX7020-DUAL-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.1R AX7020 role-bound PS runtime build"
         return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
@@ -145,7 +165,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN == "p10_1"
+        if CAMPAIGN in {"p10_1", "p10_1r"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -173,6 +193,9 @@ def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]
     paths = [*SOURCES, header, xsa]
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
+    elif CAMPAIGN == "p10_1r":
+        paths.extend(P10_1R_PROVENANCE)
+        paths.append(P10_1R_GOAL)
     hashes = {rel(path): sha256(path) for path in paths}
     if CAMPAIGN == "p10_1":
         hashes[str(P10_1_HW_GOAL)] = sha256(P10_1_HW_GOAL)
@@ -296,7 +319,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -318,9 +341,23 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
+    if CAMPAIGN == "p10_1r" and (
+        not P10_1R_GOAL.is_file()
+        or sha256(P10_1R_GOAL) != P10_1R_GOAL_SHA256
+    ):
+        print(
+            "P10_RUNTIME_BUILD_REFUSED: P10.1R goal hash mismatch",
+            file=sys.stderr,
+        )
+        return 2
     source_worktree_dirty = tracked_source_dirty([
         *SOURCES,
-        *(P10_1_PROVENANCE if CAMPAIGN == "p10_1" else []),
+        *(
+            P10_1_PROVENANCE if CAMPAIGN == "p10_1"
+            else [*P10_1R_PROVENANCE, P10_1R_GOAL]
+            if CAMPAIGN == "p10_1r"
+            else []
+        ),
         *(cfg["header"] for cfg in ROLES.values()),
     ])
     OUT.mkdir(parents=True, exist_ok=True)
@@ -346,16 +383,26 @@ def main() -> int:
         "hardware_admission": False, "blocking_condition": "P10-SAFETY-POWERUP-001",
         "artifact_provenance": {
             "hardware_goal": {
-                "path": str(P10_1_HW_GOAL),
-                "sha256": sha256(P10_1_HW_GOAL)
-                if CAMPAIGN == "p10_1"
-                else None,
+                "path": (
+                    str(P10_1_HW_GOAL) if CAMPAIGN == "p10_1"
+                    else str(P10_1R_GOAL) if CAMPAIGN == "p10_1r"
+                    else None
+                ),
+                "sha256": (
+                    sha256(P10_1_HW_GOAL) if CAMPAIGN == "p10_1"
+                    else sha256(P10_1R_GOAL) if CAMPAIGN == "p10_1r"
+                    else None
+                ),
             },
             "required_inputs": {
                 rel(path): sha256(path)
-                for path in P10_1_PROVENANCE
+                for path in (
+                    P10_1_PROVENANCE if CAMPAIGN == "p10_1"
+                    else P10_1R_PROVENANCE if CAMPAIGN == "p10_1r"
+                    else []
+                )
             }
-            if CAMPAIGN == "p10_1"
+            if CAMPAIGN in {"p10_1", "p10_1r"}
             else {},
         },
         "roles": results,

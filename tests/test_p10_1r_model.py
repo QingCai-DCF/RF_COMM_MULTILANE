@@ -76,6 +76,7 @@ class P101RModelTests(unittest.TestCase):
             rtl,
         )
         self.assertNotIn("GLOBAL_PERMIT", rtl.replace("// it has no path to GLOBAL_PERMIT", ""))
+        self.assertIn("!fail_closed_q && !raw_rise", rtl)
 
     def test_remediation_defaults_are_frozen(self) -> None:
         pipeline = (ROOT / "config/performance/p10_1_pipeline.yaml").read_text(
@@ -99,6 +100,21 @@ class P101RModelTests(unittest.TestCase):
         ):
             self.assertIn(marker, runtime)
         self.assertIn("dp_attempt_descriptor[0] || dp_attempt_retry", core)
+
+    def test_builders_have_goal_bound_p10_1r_namespace(self) -> None:
+        expected_goal_hash = (
+            "299e9b04b824f6bcf77b51398e87a2b7"
+            "dc19272bcc245ef968fc7cdf0e57b35f"
+        )
+        for relative in (
+            "scripts/build_p10_ax7020_functional.py",
+            "scripts/build_p10_ax7020_shutdown.py",
+            "scripts/build_p10_ps_runtime.py",
+        ):
+            text = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn('"p10_1r"', text, relative)
+            self.assertIn("artifacts/p10_1r", text, relative)
+            self.assertIn(expected_goal_hash, text, relative)
 
 
 if __name__ == "__main__":
