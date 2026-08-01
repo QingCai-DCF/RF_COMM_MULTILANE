@@ -1,13 +1,9 @@
 # P10.1 single/two-lane baseline
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_1-HW-BASELINE`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- baseline was not run because the campaign stopped after an earlier stage failure
 
 ## Machine-readable evidence
 

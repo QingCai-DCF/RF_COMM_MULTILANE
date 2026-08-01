@@ -1,13 +1,9 @@
 # P10.1 hardware metric semantics and autonomy
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_1-HW-METRIC-SEMANTICS-AUTONOMY`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
-
-## Errors
-
-- preflight did not complete
 
 ## Machine-readable evidence
 
