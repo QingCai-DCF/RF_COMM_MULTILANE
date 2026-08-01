@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P10-1` (`0x0A000001`)
-- Canonical source SHA256: `ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8`
-- Compatibility: P0-P9 offsets and meanings are preserved; P10.1 performance/streaming observability is additive from 0x0900.
+- Register map version: `P10-2` (`0x0A000002`)
+- Canonical source SHA256: `2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6`
+- Compatibility: P0-P10.1 offsets and meanings are preserved; P10.1R atomic RX-admission observability is additive from 0x0A00.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -377,3 +377,46 @@
 | `P10_1_RETRY_EXHAUSTED_COUNT` | `0x09B4` | `RO` | Bounded retry exhaustion count in the measurement window |
 | `P10_1_DESCRIPTOR_LEAK_COUNT` | `0x09B8` | `RO` | Descriptors not reclaimed at terminal state |
 | `P10_1_DOUBLE_COMPLETION_COUNT` | `0x09BC` | `RO` | Duplicate descriptor completion attempts |
+| `P10_1R_SNAPSHOT_CONTROL` | `0x0A00` | `WO` | Bit 0 atomically snapshots all P10.1R RX-admission counters and timestamps |
+| `P10_1R_SNAPSHOT_GENERATION` | `0x0A04` | `RO` | Even generation incremented by two for each completed atomic P10.1R snapshot |
+| `P10_1R_CAPS` | `0x0A08` | `RO` | P10.1R RX-admission capability and schema identity |
+| `P10_1R_ADMISSION_STATUS` | `0x0A0C` | `RO` | Snapshotted per-lane quarantine, post-TX guard, admission-enable, and local-node identity |
+| `P10_1R_RAW_RX_PULSE_LANE0` | `0x0A10` | `RO` | Snapshotted local module lane0 raw Rxd pulse count |
+| `P10_1R_RAW_RX_PULSE_LANE1` | `0x0A14` | `RO` | Snapshotted local module lane1 raw Rxd pulse count |
+| `P10_1R_RAW_WHILE_LOCAL_TX_LANE0` | `0x0A18` | `RO` | Snapshotted lane0 raw Rxd pulses observed while final physical Txd was high |
+| `P10_1R_RAW_WHILE_LOCAL_TX_LANE1` | `0x0A1C` | `RO` | Snapshotted lane1 raw Rxd pulses observed while final physical Txd was high |
+| `P10_1R_BLANKED_RAW_PULSE_LANE0` | `0x0A20` | `RO` | Snapshotted lane0 raw pulses withheld by receive admission |
+| `P10_1R_BLANKED_RAW_PULSE_LANE1` | `0x0A24` | `RO` | Snapshotted lane1 raw pulses withheld by receive admission |
+| `P10_1R_BLANKED_FRAME_START_LANE0` | `0x0A28` | `RO` | Snapshotted lane0 shadow-decoder preambles observed during quarantine |
+| `P10_1R_BLANKED_FRAME_START_LANE1` | `0x0A2C` | `RO` | Snapshotted lane1 shadow-decoder preambles observed during quarantine |
+| `P10_1R_BLANKED_CRC_VALID_LANE0` | `0x0A30` | `RO` | Snapshotted lane0 CRC-valid shadow frames observed during quarantine; never admitted |
+| `P10_1R_BLANKED_CRC_VALID_LANE1` | `0x0A34` | `RO` | Snapshotted lane1 CRC-valid shadow frames observed during quarantine; never admitted |
+| `P10_1R_LOCAL_SOURCE_REJECT_LANE0` | `0x0A38` | `RO` | Snapshotted lane0 CRC-valid frames rejected because source_node_id equals local_node_id |
+| `P10_1R_LOCAL_SOURCE_REJECT_LANE1` | `0x0A3C` | `RO` | Snapshotted lane1 CRC-valid frames rejected because source_node_id equals local_node_id |
+| `P10_1R_ACCEPTED_REMOTE_LANE0` | `0x0A40` | `RO` | Snapshotted lane0 CRC-valid remote frames accepted for the local object role |
+| `P10_1R_ACCEPTED_REMOTE_LANE1` | `0x0A44` | `RO` | Snapshotted lane1 CRC-valid remote frames accepted for the local object role |
+| `P10_1R_POST_TX_GUARD_TOTAL_LANE0` | `0x0A48` | `RO` | Snapshotted lane0 accumulated post-TX quarantine cycles |
+| `P10_1R_POST_TX_GUARD_TOTAL_LANE1` | `0x0A4C` | `RO` | Snapshotted lane1 accumulated post-TX quarantine cycles |
+| `P10_1R_POST_TX_GUARD_MAX_LANE0` | `0x0A50` | `RO` | Snapshotted lane0 maximum post-TX quarantine duration |
+| `P10_1R_POST_TX_GUARD_MAX_LANE1` | `0x0A54` | `RO` | Snapshotted lane1 maximum post-TX quarantine duration |
+| `P10_1R_ECHO_TAIL_MAX_LANE0` | `0x0A58` | `RO` | Snapshotted lane0 maximum raw echo-tail offset after final local Txd |
+| `P10_1R_ECHO_TAIL_MAX_LANE1` | `0x0A5C` | `RO` | Snapshotted lane1 maximum raw echo-tail offset after final local Txd |
+| `P10_1R_DECODER_CLEAR_COUNT_LANE0` | `0x0A60` | `RO` | Snapshotted lane0 decoder-clear assertion count |
+| `P10_1R_DECODER_CLEAR_COUNT_LANE1` | `0x0A64` | `RO` | Snapshotted lane1 decoder-clear assertion count |
+| `P10_1R_LAST_TXD_RISE_LANE0` | `0x0A68` | `RO` | Snapshotted lane0 last final physical Txd rising-edge timestamp |
+| `P10_1R_LAST_TXD_RISE_LANE1` | `0x0A6C` | `RO` | Snapshotted lane1 last final physical Txd rising-edge timestamp |
+| `P10_1R_LAST_TXD_FALL_LANE0` | `0x0A70` | `RO` | Snapshotted lane0 last final physical Txd falling-edge timestamp |
+| `P10_1R_LAST_TXD_FALL_LANE1` | `0x0A74` | `RO` | Snapshotted lane1 last final physical Txd falling-edge timestamp |
+| `P10_1R_FIRST_RXD_AFTER_TX_LANE0` | `0x0A78` | `RO` | Snapshotted lane0 first local raw Rxd edge timestamp after final Txd |
+| `P10_1R_FIRST_RXD_AFTER_TX_LANE1` | `0x0A7C` | `RO` | Snapshotted lane1 first local raw Rxd edge timestamp after final Txd |
+| `P10_1R_LAST_RXD_AFTER_TX_LANE0` | `0x0A80` | `RO` | Snapshotted lane0 last local raw Rxd edge timestamp after final Txd |
+| `P10_1R_LAST_RXD_AFTER_TX_LANE1` | `0x0A84` | `RO` | Snapshotted lane1 last local raw Rxd edge timestamp after final Txd |
+| `P10_1R_TX_RX_OVERLAP_VIOLATION` | `0x0A88` | `RO` | Snapshotted structural final-Txd and RX-admission overlap violations |
+| `P10_1R_RX_ADMISSION_VIOLATION` | `0x0A8C` | `RO` | Snapshotted fail-closed maximum-quarantine violations |
+| `P10_1R_NON_TARGET_ACCEPTED` | `0x0A90` | `RO` | Snapshotted accepted CRC-valid frames on lanes outside the configured lane mask |
+| `P10_1R_CROSS_LANE_ACCEPTED` | `0x0A94` | `RO` | Snapshotted accepted frames whose encoded logical lane differs from the receiving physical lane |
+| `P10_1R_MIN_POST_TX_GUARD_CYCLES` | `0x0A98` | `RO` | Offline candidate minimum post-TX guard; not hardware-measured |
+| `P10_1R_RXD_IDLE_QUAL_CYCLES` | `0x0A9C` | `RO` | Offline candidate Rxd idle qualification interval |
+| `P10_1R_MAX_ECHO_QUARANTINE_CYCLES` | `0x0AA0` | `RO` | Fail-closed maximum echo quarantine interval |
+| `P10_1R_DECODER_CLEAR_CYCLES` | `0x0AA4` | `RO` | Minimum decoder clear interval in protocol clocks |
+| `P10_1R_ADMISSION_CONFIG_FLAGS` | `0x0AA8` | `RO` | Bit0 local-source rejection enabled; bit1 guard measurement telemetry enabled |

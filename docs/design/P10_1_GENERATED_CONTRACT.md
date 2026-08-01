@@ -11,12 +11,12 @@
 | `P10_1_PL_EVENT_FIFO_DEPTH_RECORDS` | `256` |
 | `P10_1_BUFFER_COUNT` | `4` |
 | `P10_1_BUFFER_SIZE_BYTES` | `262144` |
-| `P10_1_RING_DEPTH` | `16` |
-| `P10_1_DESCRIPTOR_BATCH` | `4` |
+| `P10_1_RING_DEPTH` | `32` |
+| `P10_1_DESCRIPTOR_BATCH` | `8` |
 | `P10_1_INTERRUPT_COALESCING` | `16` |
 | `P10_1_SEGMENT_SIZE_BYTES` | `65536` |
 | `P10_1_MAX_STREAM_SIZE_BYTES` | `134217728` |
-| `P10_1_ACK_AGGREGATION_THRESHOLD` | `8` |
+| `P10_1_ACK_AGGREGATION_THRESHOLD` | `32` |
 | `P10_1_DIRECTION_WINDOW_US` | `250000` |
 | `P10_1_OUTSTANDING_FRAMES` | `32` |
 | `P10_1_LANE_MASK` | `3` |
@@ -29,6 +29,6 @@
 ## Canonical source hashes
 
 - `config/performance/p10_1_measurement_contract.yaml`: `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
-- `config/performance/p10_1_pipeline.yaml`: `8c7e8de92a24e6e13cf844d00da69ab778c6280c1440b1a7506b9631789d040d`
+- `config/performance/p10_1_pipeline.yaml`: `fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30`
 - `config/performance/p10_1_streaming.yaml`: `70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b`
 - `config/performance/p10_1_test_matrix.yaml`: `b8920714cac0874f128581a3184c5c66c2be4b3521243859ec16b0772dd76c24`

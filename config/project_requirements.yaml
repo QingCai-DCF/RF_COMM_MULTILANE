@@ -1,5 +1,5 @@
 schema_version: 1
-document_version: '8.1'
+document_version: '8.2'
 canonical_constraint: PROJECT_CONSTRAINTS.txt
 canonical_constraint_sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 status_vocabulary:
@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4
+    sha256: 705eec249789796609e30b6151f27062415735463b2350ef5a883524ec7f3ec3
   - path: PROJECT_STATUS.md
-    sha256: 5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a
-  artifact_hash: 5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a
+    sha256: 6529be3ad0b3bfa8e5f97ae9c3f13f68c766d1b73ff242b8f19f886dbc29aff7
+  artifact_hash: 6529be3ad0b3bfa8e5f97ae9c3f13f68c766d1b73ff242b8f19f886dbc29aff7
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4
+    sha256: 705eec249789796609e30b6151f27062415735463b2350ef5a883524ec7f3ec3
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 1eaa7e3cb89519cca24f173f79327298e896806e57fc21921a30276a557192a4
+    sha256: 705eec249789796609e30b6151f27062415735463b2350ef5a883524ec7f3ec3
   - path: PROJECT_STATUS.md
-    sha256: 5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a
+    sha256: 6529be3ad0b3bfa8e5f97ae9c3f13f68c766d1b73ff242b8f19f886dbc29aff7
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 5d5b418b2d0a368e3627070fffcd6c65236ae48110af2391b347d03398809f1a
+  artifact_hash: 6529be3ad0b3bfa8e5f97ae9c3f13f68c766d1b73ff242b8f19f886dbc29aff7
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -726,7 +726,7 @@ requirements:
   - path: config/p8d_data_plane.yaml
     sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - path: rtl/ir_data_plane_top.sv
-    sha256: a3c1441f98539cd3bcc1e646e27de1c8d06559e269c1035235ec82bf90d355af
+    sha256: 8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab
   - path: evidence/generated/p10_p8d_source_reverification/summary.json
     sha256: cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
@@ -3491,3 +3491,171 @@ requirements:
   waiver: null
   artifact_hashes: []
   hardware_followup: Remains pending; this offline follow-up performs no JTAG, programming, UART, or TFDU drive.
+- requirement_id: P10_1R-ECHO-001
+  requirement_text: Each TFDU module shall exclude frame admission whenever its own final physical Txd is active.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Focused XSIM assertion plus fixed and rotating implementation audit.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_RTL_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct four-module echo-tail and admission validation requires fresh authorization bound to new artifacts.
+- requirement_id: P10_1R-ECHO-002
+  requirement_text: Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Direct role-bound hardware crosstalk remediation matrix and protocol counters.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Hardware evidence is mandatory; the offline model cannot promote this requirement.
+- requirement_id: P10_1R-ECHO-003
+  requirement_text: Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Register-map generation, source audit, focused XSIM, and future direct trace capture.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_OBSERVABILITY_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Fresh hardware capture must populate maximum, p99, and p99.9 echo-tail statistics.
+- requirement_id: P10_1R-ECHO-004
+  requirement_text: A local transmission on one module shall not blank receive admission on the other lane.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Independent per-lane RTL structure and exact focused XSIM test.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_RTL_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct 4x4 matrix remains pending.
+- requirement_id: P10_1R-ECHO-005
+  requirement_text: The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: At least 1000 direct frames per module with maximum, p99, and p99.9 timestamp analysis.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: The 576 us value is an offline candidate, not a measured acceptance value.
+- requirement_id: P10_1R-ACK-001
+  requirement_text: The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: ACK-window XSIM, randomized model, register/config audit, and future hardware tuning.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_PROTOCOL_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct goodput selection remains pending.
+- requirement_id: P10_1R-ACK-002
+  requirement_text: Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Runtime source audit and continuous multi-object focused XSIM.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_PROTOCOL_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct inter-object timing must confirm the improvement.
+- requirement_id: P10_1R-ACK-003
+  requirement_text: At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Four-buffer/ring model, runtime source audit, reset/fault stress, and future hardware telemetry.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_PIPELINE_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Descriptor leak and double completion remain hardware gates.
+- requirement_id: P10_1R-HOST-001
+  requirement_text: The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Runtime source/unit audit, command-count telemetry, and future sustained hardware window.
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+  verification_scope: OFFLINE_SOFTWARE_PENDING_DIRECT_HARDWARE
+  test_id: null
+  evidence_path: docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct host-command counts remain pending.
+- requirement_id: P10_1R-PERF-001
+  requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Direct 300-second board-autonomous hardware measurement with integrity and timer crosschecks.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Offline model feasibility is not hardware PASS.
+- requirement_id: P10_1R-PERF-002
+  requirement_text: Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Direct 300-second board-autonomous hardware measurement with integrity and timer crosschecks.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Offline model feasibility is not hardware PASS.
+- requirement_id: P10_1R-STREAM-001
+  requirement_text: Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Direct hardware streaming plus abort and reset recovery.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Fresh authorization and new immutable artifacts are required.
+- requirement_id: P10_1R-STREAM-002
+  requirement_text: Rotating-to-fixed transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Direct hardware streaming plus abort and reset recovery.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Fresh authorization and new immutable artifacts are required.
+- requirement_id: P10_1R-SOAK-001
+  requirement_text: One 1800-second stationary run shall retain both directional speed targets with zero integrity, protocol, descriptor, safety, deadlock, or shutdown errors.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: One immutable role-bound direct hardware run with warm-up and two formal windows.
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Maximum formal runtime remains 1800 seconds with verified shutdown on every exit.

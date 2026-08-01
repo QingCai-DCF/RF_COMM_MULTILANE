@@ -21,6 +21,7 @@ set rtl_sources [list \
   "$root_dir/rtl/p9_rate_4ppm_rx.sv" \
   "$root_dir/rtl/p9_4ppm_frame_tx.sv" \
   "$root_dir/rtl/p9_4ppm_frame_rx.sv" \
+  "$root_dir/rtl/p10_1r_rx_admission.sv" \
   "$root_dir/rtl/p9_optical_transport_core.sv" \
 ]
 add_files -fileset sources_1 $rtl_sources

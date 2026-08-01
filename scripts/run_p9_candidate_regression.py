@@ -27,6 +27,7 @@ RTL_SOURCES = [
     "rtl/ir_tfdu_physical_module_safety.sv", "rtl/tfdu_lane_phy.sv",
     "rtl/ir_4ppm_codec.sv", "rtl/p9_rate_4ppm_rx.sv",
     "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
+    "rtl/p10_1r_rx_admission.sv",
     "rtl/p9_optical_transport_core.sv", "sim/tb/tb_p9_optical_transport_core.sv",
 ]
 FRAME_LINK_SOURCES = [

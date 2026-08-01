@@ -3,13 +3,16 @@ config_id: P10_1_DUAL_NODE_PIPELINE
 profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
 defaults:
   buffer_count: 4
-  buffer_size_bytes: 524288
+  buffer_size_bytes: 262144
   descriptor_ring_depth: 32
   descriptor_batch: 8
   interrupt_coalescing: 16
   outstanding_frames: 32
-  ack_aggregation_threshold: 8
-  ack_max_delay_us: 200
+  ack_aggregation_threshold: 32
+  ack_max_delay_us: 1000
+  direction_window_us: 250000
+  lane_mask: 3
+  formal_measurement_duration_seconds: 30
 selected_hardware_tuning:
   run_id: p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f
   stage_summary: evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/stage_summary.json
@@ -18,6 +21,8 @@ selected_hardware_tuning:
   direction_window_us: 250000
   lane_mask: 3
   formal_measurement_duration_seconds: 30
+  historical_result: P10_1_HARDWARE_FAIL_IMMUTABLE
+  superseded_for_new_artifacts_by: P10_1R_REMEDIATION_DEFAULTS
 buffer_states:
 - FREE
 - FILLING
@@ -76,13 +81,13 @@ performance_inputs:
   frame_crc_bytes: 4
   frame_preamble_symbols: 16
   bits_per_4ppm_symbol: 2
-  frame_guard_cycles: 20480
+  frame_guard_cycles: 0
   protocol_clock_hz: 64000000
   rfap_useful_chunk_bytes: 65536
   rfap_overhead_bytes_per_chunk: 48
   duty_target_percent: 18
   instantaneous_4ppm_duty_percent: 25
-  whole_frame_headroom_admission: false
+  whole_frame_headroom_admission: true
   packet_error_rate: 0.0001
   ps_generation_bytes_per_second: 200000000
   crc_bytes_per_second: 320000000

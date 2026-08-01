@@ -298,6 +298,7 @@ def check_state(state: dict[str, Any] | None = None) -> tuple[bool, dict[str, An
             "P10_POST_ACCEPTANCE_ANALYSIS",
             "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
             "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+            "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
             "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
         }
         if p8c_pass

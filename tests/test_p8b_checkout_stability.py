@@ -52,6 +52,27 @@ class P8BCheckoutStabilityTests(unittest.TestCase):
         passed, details = gate.check_state(state)
         self.assertTrue(passed, details)
 
+    def test_p10_1r_remediation_stage_preserves_p8b_scope(self) -> None:
+        state = {
+            "current_program_stage": (
+                "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+            ),
+            "current_run_hardware_authorization": False,
+            "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
+            "final_product_status": "PENDING_HW",
+            "no_hardware_default": True,
+            "p7_status": "PASS",
+            "product_final_acceptance": "PENDING",
+            "rotation_status": "PENDING_FINAL_MECHANICAL",
+            "z7020_target_status": "PENDING_Z7020_HW",
+            "stage_status": {
+                "P8B_GEOMETRY_MAPPING_HANDOVER": "PASS",
+                "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT": "PASS",
+            },
+        }
+        passed, details = gate.check_state(state)
+        self.assertTrue(passed, details)
+
     def test_current_hardware_authorization_still_fails_closed(self) -> None:
         state = {
             "current_program_stage": "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",

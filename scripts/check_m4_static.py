@@ -133,6 +133,12 @@ def main() -> int:
                 f"`IR_REG_{name}" in p10_1_rtl
                 or p9_rtl_consumes_register(name, off, p9_rtl)
             )
+        elif name.startswith("P10_1R_"):
+            # P10.1R extends the endpoint peripheral with an atomic telemetry
+            # snapshot window.  The decoder deliberately uses complete
+            # literal case labels, so apply the same exact-label proof used
+            # for the P9/P10.1 physical-counter windows.
+            rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
         elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:

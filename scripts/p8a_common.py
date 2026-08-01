@@ -132,6 +132,14 @@ P10_1_OFFLINE_REQUIREMENT_IDS = {
 }
 P10_1_EXTENDED_MODEL_REQUIREMENT_IDS = {"PERF-MODEL-001", "PERF-MODEL-002"}
 P10_1_PENDING_HARDWARE_REQUIREMENT_IDS = {"PERF-HW-001"}
+P10_1R_REQUIREMENT_IDS = {
+    "P10_1R-ECHO-001", "P10_1R-ECHO-002", "P10_1R-ECHO-003",
+    "P10_1R-ECHO-004", "P10_1R-ECHO-005",
+    "P10_1R-ACK-001", "P10_1R-ACK-002", "P10_1R-ACK-003",
+    "P10_1R-HOST-001",
+    "P10_1R-PERF-001", "P10_1R-PERF-002",
+    "P10_1R-STREAM-001", "P10_1R-STREAM-002", "P10_1R-SOAK-001",
+}
 P11_READINESS_REQUIREMENT_IDS = {
     "P11-READY-001", "P11-READY-002", "P11-READY-003",
 }
@@ -148,6 +156,7 @@ P10_1_NEXT_STAGE = (
 P10_1_OFFLINE_SCOPE = (
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
 )
+P10_1R_STAGE = "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
 P10_CLOSEOUT_SCOPE = "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE"
 P10_ANALYSIS_SCOPE = "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
 
@@ -520,6 +529,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 p10_1_hardware_status = state.get("p10_1_hardware_status")
                 if p10_1_hardware_status == "PASS":
                     expected_program_stage = "P11_PREREQUISITE_ACQUISITION"
+                elif (
+                    state.get("p10_1r_status") in {
+                        "IN_PROGRESS", "OFFLINE_READY_HARDWARE_PENDING",
+                        "AUTHORIZED", "PARTIAL", "FAIL",
+                    }
+                ):
+                    expected_program_stage = P10_1R_STAGE
                 elif p10_1_hardware_status in {"PARTIAL", "FAIL"}:
                     expected_program_stage = "P10_1_PERFORMANCE_REMEDIATION"
                 else:
@@ -1005,6 +1021,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         P10_1_PENDING_HARDWARE_REQUIREMENT_IDS - present
     )
     missing_p11_readiness = sorted(P11_READINESS_REQUIREMENT_IDS - present)
+    missing_p10_1r = sorted(P10_1R_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -1035,6 +1052,10 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
         errors.append(
             "missing P11 readiness requirement IDs: "
             + ", ".join(missing_p11_readiness)
+        )
+    if missing_p10_1r:
+        errors.append(
+            "missing P10.1R requirement IDs: " + ", ".join(missing_p10_1r)
         )
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}
@@ -1239,6 +1260,7 @@ def render_project_status(state: dict[str, Any]) -> str:
         f"P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: {state['p10_status']}",
         f"P10_1_OFFLINE_STATUS: {state['p10_1_offline_status']}",
         f"P10_1_HARDWARE_STATUS: {state['p10_1_hardware_status']}",
+        f"P10_1R_STATUS: {state.get('p10_1r_status', 'NOT_STARTED')}",
         f"P11_OFFICIAL_STAGE_STATUS: {state['p11_status']}",
         f"P11_HARDWARE_READY: {str(state['p11_hardware_ready']).lower()}",
         f"CURRENT_PROGRAM_STAGE: {state['current_program_stage']}",

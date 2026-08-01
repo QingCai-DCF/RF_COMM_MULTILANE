@@ -245,9 +245,12 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         config = (ROOT / "config/p9_z7010_stationary_2lane.yaml").read_text(
             encoding="utf-8"
         )
-        self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 4_096", core)
+        self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 37_120", core)
+        self.assertIn(
+            "DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 4_096 :", core
+        )
         self.assertEqual(
-            2, core.count("phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;")
+            2, core.count("phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES;")
         )
         self.assertIn("PH_DATA_GUARD", core)
         self.assertIn("both DATA-to-ACK and ACK-to-DATA directions", core)
@@ -297,11 +300,16 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("active_pulse_cycles <= 8'd8", tx)
         self.assertIn(".TX_PULSE_CYCLES(8)", wrapper)
         self.assertIn(".DETECT_START_CYCLES(3), .DETECT_END_CYCLES(4)", wrapper)
-        self.assertIn("FRAME_DUTY_GUARD_CYCLES = 20_480", core)
+        self.assertIn("FRAME_DUTY_GUARD_CYCLES = 0", core)
+        self.assertIn(
+            "DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 20_480 :", core
+        )
         self.assertIn("frame_duty_guard_q[0] == 0", core)
         self.assertIn("frame_duty_guard_q[1] == 0", core)
-        self.assertIn(
-            "frame_duty_guard_q[copy_lane] <= FRAME_DUTY_GUARD_CYCLES", core
+        self.assertRegex(
+            core,
+            r"frame_duty_guard_q\[copy_lane\]\s*<=\s*"
+            r"EFFECTIVE_FRAME_DUTY_GUARD_CYCLES;",
         )
         self.assertIn("frame_admission_duty_guard_cycles: 20480", config)
         self.assertIn("frame_admission_duty_guard_us_at_64mhz: 320", config)
@@ -311,7 +319,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn('"p9_tfdu_fir_frame_link"', regression)
         self.assertIn("P9_BUILD_ID = 32'h5009_000B", peripheral)
         self.assertIn("m->pl_build_id != UINT32_C(0x5009000b)", firmware)
-        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x5009000d)", protocol)
+        self.assertIn("P9_RUNTIME_BUILD_ID UINT32_C(0x5009000e)", protocol)
         self.assertIn("P9_MAILBOX_SCHEMA_VERSION UINT32_C(5)", protocol)
         self.assertIn("terminal_window_command_sequence", protocol)
         self.assertIn("p9_capture_terminal_window(m);", firmware)
@@ -499,7 +507,8 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("wire serializer_busy_rise", core)
         self.assertIn("!receive_window || serializer_busy_rise ||", core)
         self.assertIn("rx_frame_valid[tx_lane]", core)
-        self.assertEqual(1, core.count(".align_i(!receive_window)"))
+        self.assertEqual(2, core.count(".align_i(!receive_window ||"))
+        self.assertIn("rx_decoder_clear[tx_lane]", core)
         self.assertIn("run_object(247*20", testbench)
 
     def test_s2mm_stream_packs_fragment_tails_into_one_contiguous_packet(self):

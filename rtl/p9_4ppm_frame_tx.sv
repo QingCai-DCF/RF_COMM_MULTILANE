@@ -23,6 +23,7 @@ module p9_4ppm_frame_tx #(
   input  logic [31:0]                   payload_crc32_i,
   input  logic [7:0]                    flags_i,
   input  logic [7:0]                    lane_id_i,
+  input  logic [5:0]                    source_node_id_i,
   input  logic [31:0]                   object_id_i,
   input  logic [31:0]                   fragment_offset_i,
   input  logic [15:0]                   ack_base_i,
@@ -50,6 +51,7 @@ module p9_4ppm_frame_tx #(
   logic [31:0] active_payload_crc32;
   logic [7:0] active_flags;
   logic [7:0] active_lane;
+  logic [5:0] active_source_node;
   logic [31:0] active_object;
   logic [31:0] active_fragment_offset;
   logic [15:0] active_ack_base;
@@ -110,7 +112,9 @@ module p9_4ppm_frame_tx #(
         10: data_header_byte_no_crc = active_payload_length[7:0];
         11: data_header_byte_no_crc = active_payload_length[15:8];
         12: data_header_byte_no_crc = active_flags;
-        13: data_header_byte_no_crc = active_lane;
+        // P10.1R reuses formerly-zero lane-id upper bits for the immutable
+        // endpoint source identity without adding any airtime.
+        13: data_header_byte_no_crc = {active_source_node, active_lane[1:0]};
         14: data_header_byte_no_crc = active_object[7:0];
         15: data_header_byte_no_crc = active_object[15:8];
         16: data_header_byte_no_crc = active_object[23:16];
@@ -138,7 +142,10 @@ module p9_4ppm_frame_tx #(
         8: ack_header_byte_no_crc = active_ack_base[7:0];
         9: ack_header_byte_no_crc = active_ack_base[15:8];
         10: ack_header_byte_no_crc = 8'd32;
-        11: ack_header_byte_no_crc = {7'd0, active_direction};
+        // ACK byte 11 formerly used only bit 0.  Bits 7:2 now carry the same
+        // source identity; bit 1 remains reserved and zero.
+        11: ack_header_byte_no_crc = {active_source_node, 1'b0,
+                                      active_direction};
         12: ack_header_byte_no_crc = active_ack_credit[7:0];
         13: ack_header_byte_no_crc = active_ack_credit[15:8];
         14: ack_header_byte_no_crc = active_ack_bitmap[7:0];
@@ -247,6 +254,7 @@ module p9_4ppm_frame_tx #(
       active_payload_crc32 <= 32'd0;
       active_flags <= 8'd0;
       active_lane <= 8'd0;
+      active_source_node <= 6'd0;
       active_object <= 32'd0;
       active_fragment_offset <= 32'd0;
       active_ack_base <= 16'd0;
@@ -299,6 +307,7 @@ module p9_4ppm_frame_tx #(
           active_payload_crc32 <= payload_crc32_i;
           active_flags <= flags_i;
           active_lane <= lane_id_i;
+          active_source_node <= source_node_id_i;
           active_object <= object_id_i;
           active_fragment_offset <= fragment_offset_i;
           active_ack_base <= ack_base_i;

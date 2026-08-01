@@ -34,6 +34,7 @@ COMMON_RTL = [
     "rtl/p9_rate_4ppm_rx.sv",
     "rtl/p9_4ppm_frame_tx.sv",
     "rtl/p9_4ppm_frame_rx.sv",
+    "rtl/p10_1r_rx_admission.sv",
     "rtl/p9_optical_transport_core.sv",
 ]
 
@@ -212,6 +213,11 @@ def main() -> int:
         default="evidence/generated/p10_dual_endpoint_regression",
         help="Repository-relative evidence directory; use a new path for a follow-up campaign.",
     )
+    parser.add_argument(
+        "--only",
+        choices=[spec["name"] for spec in TESTS],
+        help="Run one RTL test while diagnosing; the formal gate omits this option.",
+    )
     args = parser.parse_args()
     global OUT
     candidate_out = (ROOT / args.output_dir).resolve()
@@ -231,7 +237,12 @@ def main() -> int:
         print("P10_REGRESSION_REFUSED: missing tools: " + ", ".join(missing_tools),
               file=sys.stderr)
         return 2
-    source_files = sorted({source for spec in TESTS for source in spec["sources"]})
+    selected_tests = [
+        spec for spec in TESTS if args.only is None or spec["name"] == args.only
+    ]
+    source_files = sorted({
+        source for spec in selected_tests for source in spec["sources"]
+    })
     source_worktree_dirty = tracked_source_dirty([
         *source_files, rel(Path(__file__).resolve()),
         "scripts/generate_register_headers.py", "tests/test_p9_runner.py",
@@ -240,7 +251,7 @@ def main() -> int:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = OUT / "raw" / run_id
     raw.mkdir(parents=True, exist_ok=False)
-    results = [run_test(spec, raw) for spec in TESTS]
+    results = [run_test(spec, raw) for spec in selected_tests]
     results.append(run_python_tests(raw))
     results.append(run_register_map_verify(raw))
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"

@@ -1,0 +1,69 @@
+schema_version: 1
+stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+clock_hz: 64000000
+scope:
+  implementation: per_physical_tfdu_module
+  fixed_modules: [F0, F1]
+  rotating_role_modules: [R0, R1]
+  lane0: F0-R0
+  lane1: F1-R1
+trigger:
+  signal: final_physical_txd
+  location: after_global_permit_tx_kill_and_tfdu_safety_guards
+  requested_or_scheduled_tx_is_not_a_trigger: true
+candidate_timing:
+  status: OFFLINE_CANDIDATE_NOT_HARDWARE_MEASURED
+  minimum_post_tx_guard_cycles: 36864
+  minimum_post_tx_guard_us: 576
+  rxd_idle_qual_cycles: 256
+  rxd_idle_qual_us: 4
+  maximum_echo_quarantine_cycles: 131072
+  maximum_echo_quarantine_us: 2048
+  decoder_clear_cycles: HELD_FOR_LOCAL_TX_AND_FULL_ECHO_QUARANTINE
+  minimum_decoder_clear_cycles_after_txd_fall: 37120
+  local_source_reject_enable: true
+  guard_measurement_mode: timestamp_every_local_txd_and_post_tx_raw_rxd_edge
+  final_value_rule: measured_max_echo_tail_plus_deterministic_margin
+  hardware_measurement_required_before_acceptance: true
+behavior:
+  local_tx_immediately_disables_same_module_rx_admission: true
+  local_tx_does_not_blank_other_lane: true
+  decoder_and_parser_cleared_during_quarantine: true
+  maximum_quarantine_expiry: fail_closed
+  receive_only_allowed_with_global_permit_low: true
+  local_source_filter_is_defense_in_depth: true
+  remote_data_and_ack_remain_admissible: true
+source_identity:
+  fixed_node_id: 1
+  rotating_role_node_id: 2
+  width_bits: 6
+  data_header_encoding: byte13_bits_7_2
+  ack_header_encoding: byte11_bits_7_2
+  airtime_bytes_added: 0
+telemetry:
+  atomic_snapshot_register_base: '0x0A00'
+  snapshot_generation_register: '0x0A04'
+  raw_echo_remains_observable: true
+  blanked_shadow_decoder_is_monitor_only: true
+  blanked_shadow_decoder_feedback_paths: 0
+provenance:
+  tfdu_datasheet:
+    path: 'C:\Users\user\Documents\RF_COMM_MULTILANE\hardware_AX7010\TFDU6102datasheet.pdf'
+    sha256: 54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef
+    authority: Vishay TFDU6102 datasheet
+  behavior_model:
+    path: sim/models/tfdu6102_behavior_model.sv
+    role: offline_model_only
+  historical_failure_evidence:
+    path: evidence/generated/p10_1_hw_campaign_terminal_summary.json
+    role: immutable_failure_baseline
+  fresh_hardware_echo_tail_trace:
+    status: PENDING_NEW_CURRENT_RUN_AUTHORIZATION
+    required_frames_per_module: 1000
+    required_statistics: [maximum, p99, p99_9]
+safety:
+  affects_global_permit: false
+  affects_txd_kill_or_sd_or_mode: false
+  creates_backpressure: false
+  hardware_authorization: false
+  no_hardware: true

@@ -27,6 +27,7 @@ module p9_4ppm_frame_rx #(
   output logic [15:0] payload_length_o,
   output logic [7:0]  flags_o,
   output logic [7:0]  lane_id_o,
+  output logic [5:0]  source_node_id_o,
   output logic [31:0] object_id_o,
   output logic [31:0] fragment_offset_o,
   output logic [15:0] ack_base_o,
@@ -136,6 +137,7 @@ module p9_4ppm_frame_rx #(
       payload_length_o <= 16'd0;
       flags_o <= 8'd0;
       lane_id_o <= 8'd0;
+      source_node_id_o <= 6'd0;
       object_id_o <= 32'd0;
       fragment_offset_o <= 32'd0;
       ack_base_o <= 16'd0;
@@ -259,6 +261,7 @@ module p9_4ppm_frame_rx #(
               payload_length_o <= 16'd0;
               flags_o <= 8'd0;
               lane_id_o <= 8'd0;
+              source_node_id_o <= header[11][7:2];
               object_id_o <= 32'd0;
               fragment_offset_o <= 32'd0;
               ack_base_o <= {header[9], header[8]};
@@ -269,7 +272,8 @@ module p9_4ppm_frame_rx #(
               sequence_o <= {header[9], header[8]};
               payload_length_o <= {header[11], header[10]};
               flags_o <= header[12];
-              lane_id_o <= header[13];
+              lane_id_o <= {6'd0, header[13][1:0]};
+              source_node_id_o <= header[13][7:2];
               object_id_o <= {header[17], header[16], header[15], header[14]};
               fragment_offset_o <= {header[21], header[20], header[19], header[18]};
               ack_base_o <= 16'd0;

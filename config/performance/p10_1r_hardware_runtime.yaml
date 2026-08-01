@@ -1,0 +1,42 @@
+schema_version: 1
+stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+status: OFFLINE_CONFIGURATION_HARDWARE_PENDING
+protocol:
+  global_sequence_space: true
+  bundle_lane_count: 2
+  outstanding_frames: 32
+  endpoint_burst_frames: 32
+  ack_threshold: 32
+  ack_max_delay_cycles: 64000
+  ack_max_delay_us: 1000
+  direction_turnaround_guard_cycles: 37120
+  direction_turnaround_guard_us: 580
+  receiver_credit_low_watermark: 8
+  per_object_direction_turnaround: false
+  per_object_optical_ready_roundtrip: false
+pipeline:
+  buffer_count: 4
+  ring_depth: 32
+  descriptor_batch: 8
+  descriptors_per_256k_object: 4
+  object_bytes: 262144
+  segment_bytes: 65536
+  sender_receiver_lead_us: 2000
+  integrity_verification_overlaps_next_object: true
+  minimum_concurrent_host_objects_or_equivalent: 4
+host:
+  maximum_blocking_commands_per_direction: 4
+  implementation_blocking_commands_per_direction: 1
+  minimum_segments_per_host_command: 1000
+safety:
+  global_permit_count_per_endpoint: 1
+  lane_mask_max: '0x3'
+  exact_rolling_duty_limit_preserved: true
+  redundant_fixed_post_frame_duty_guard_cycles: 0
+  complete_frame_headroom_reservation_required: true
+  tx_kill_sd_mode_preserved: true
+  no_hardware: true
+  current_run_hardware_authorization: false
+hardware_acceptance:
+  status: PENDING_NEW_ARTIFACT_FREEZE_AND_CURRENT_RUN_AUTHORIZATION
+  old_p10_1_results_inherited: false

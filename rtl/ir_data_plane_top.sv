@@ -9,6 +9,8 @@ module ir_data_plane_top #(
   parameter int SACK_BITS = 64,
   parameter int MAX_RETRY = 7,
   parameter int RTO_CYCLES = 64000,
+  parameter int ACK_FRAME_THRESHOLD = 8,
+  parameter int ACK_MAX_DELAY_CYCLES = 32000,
   parameter int PAYLOAD_REF_WIDTH = 16,
   parameter int DESCRIPTOR_WIDTH = 16
 ) (
@@ -342,7 +344,9 @@ module ir_data_plane_top #(
   );
 
   ir_ack_aggregator #(
-    .SACK_BITS(SACK_BITS)
+    .SACK_BITS(SACK_BITS),
+    .FRAME_THRESHOLD(ACK_FRAME_THRESHOLD),
+    .MAX_DELAY_CYCLES(ACK_MAX_DELAY_CYCLES)
   ) u_ack_aggregator (
     .clk, .rst_n, .clear_counters_i,
     .state_reset_i(session_reset_i || abort_all_i),

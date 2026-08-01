@@ -36,6 +36,12 @@ P8C_SOURCE = "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134"
 P8E_TAG = "p8e-pass"
 P8E_CHECKPOINT = "57ff1079b10a5c0de156b621820774bbb111c5ee"
 P9_BRANCH = "p9/z7010-stationary-2lane"
+P10_1R_BRANCH = "p10.1r/2lane-speed-stability-remediation"
+P10_1R_STAGE = "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+P10_1R_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
+P10_1R_BASE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
+P10_1R_GOAL = ROOT / "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md"
+P10_1R_GOAL_SHA256 = "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
 PROJECT_CONSTRAINTS_SHA256 = "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
 
 COMMON = {
@@ -499,6 +505,7 @@ def baseline_checks() -> dict[str, Any]:
     branch = git("branch", "--show-current")
     head = git("rev-parse", "HEAD")
     tag_target = git("rev-list", "-n", "1", P8C_TAG)
+    state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
     p9_descendant_validation = (
         os.environ.get("P9_DESCENDANT_OFFLINE_VALIDATION", "0") == "1"
         and branch == P9_BRANCH
@@ -508,10 +515,28 @@ def baseline_checks() -> dict[str, Any]:
             cwd=ROOT,
         ).returncode == 0
     )
-    if branch != "p8/integration" and not p9_descendant_validation:
+    p10_1r_failure_tag_target = git("rev-parse", f"{P10_1R_FAILURE_TAG}^{{}}")
+    p10_1r_descendant_validation = (
+        branch == P10_1R_BRANCH
+        and state.get("current_program_stage") == P10_1R_STAGE
+        and state.get("current_run_hardware_authorization") is False
+        and P10_1R_GOAL.is_file()
+        and sha256(P10_1R_GOAL) == P10_1R_GOAL_SHA256
+        and p10_1r_failure_tag_target == P10_1R_BASE_COMMIT
+        and subprocess.run(
+            ["git", "merge-base", "--is-ancestor", P10_1R_BASE_COMMIT, head],
+            cwd=ROOT,
+        ).returncode == 0
+    )
+    if (
+        branch != "p8/integration"
+        and not p9_descendant_validation
+        and not p10_1r_descendant_validation
+    ):
         errors.append(
             f"branch is {branch}, expected p8/integration or an explicitly bound "
-            f"{P9_BRANCH} descendant of {P8E_TAG}"
+            f"{P9_BRANCH} descendant of {P8E_TAG}, or the exact Goal/hash-bound "
+            f"{P10_1R_BRANCH} descendant of {P10_1R_FAILURE_TAG}"
         )
     if tag_target != P8C_CHECKPOINT:
         errors.append(f"{P8C_TAG} resolves to {tag_target}, expected {P8C_CHECKPOINT}")
@@ -521,7 +546,6 @@ def baseline_checks() -> dict[str, Any]:
     if constraint_hash != PROJECT_CONSTRAINTS_SHA256:
         errors.append("PROJECT_CONSTRAINTS.txt hash mismatch")
     p8c_final = CANONICAL_OUT / "p8c_final_summary.json"
-    state = json.loads((ROOT / "config/project_state.json").read_text(encoding="utf-8"))
     expected_p8c_hash = state.get("p8c_acceptance", {}).get("evidence_sha256")
     if not p8c_final.is_file() or sha256(p8c_final) != expected_p8c_hash:
         errors.append("immutable P8C final evidence path/hash mismatch")
@@ -529,6 +553,10 @@ def baseline_checks() -> dict[str, Any]:
             "branch": branch, "head": head, "p8c_tag": P8C_TAG,
             "p8c_tag_target": tag_target, "p8c_source_commit": P8C_SOURCE,
             "p9_descendant_validation": p9_descendant_validation,
+            "p10_1r_descendant_validation": p10_1r_descendant_validation,
+            "p10_1r_failure_tag": P10_1R_FAILURE_TAG,
+            "p10_1r_failure_tag_target": p10_1r_failure_tag_target,
+            "p10_1r_goal_sha256": sha256(P10_1R_GOAL) if P10_1R_GOAL.is_file() else None,
             "p8e_tag": P8E_TAG, "p8e_checkpoint": P8E_CHECKPOINT,
             "project_constraints_sha256": constraint_hash,
             "pre_p8d_intake": "evidence/generated/p8d_repo_intake.json"}

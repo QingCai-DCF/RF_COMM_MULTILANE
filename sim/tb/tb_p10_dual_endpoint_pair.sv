@@ -245,7 +245,7 @@ module tb_p10_dual_endpoint_pair;
 
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
-    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(500_000),
+    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000),
     .DEPLOYMENT_ROLE(1)
   ) fixed_endpoint (
     .clk, .rst_n, .receiver_enable_i(receiver_enable), .arm_request_i(arm_request),
@@ -287,7 +287,7 @@ module tb_p10_dual_endpoint_pair;
 
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
-    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(500_000),
+    .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000),
     .DEPLOYMENT_ROLE(2)
   ) rotating_endpoint (
     .clk, .rst_n, .receiver_enable_i(receiver_enable), .arm_request_i(arm_request),
@@ -527,6 +527,38 @@ module tb_p10_dual_endpoint_pair;
                  rotating_endpoint.frame_duty_guard_q[1],
                  rotating_endpoint.dp_peer_ack_credit_q,
                  rotating_endpoint.local_phy_ready, rotating_endpoint.local_fault_duty);
+        $display("P10_FIXED_ACK tx_next=%04x tx_base=%04x rx_base=%04x rx_sack=%08x peer_base=%04x peer_sack=%08x local_valid=%0b local_base=%04x local_sack=%08x lane_base=%04x/%04x lane_sack=%08x/%08x turnaround=%0b pending=%0d",
+                 fixed_endpoint.tx_next_sequence_o,
+                 fixed_endpoint.tx_ack_base_o,
+                 fixed_endpoint.rx_base_sequence_o,
+                 fixed_endpoint.rx_sack_bitmap_o,
+                 fixed_endpoint.dp_peer_ack_base_q,
+                 fixed_endpoint.dp_peer_ack_bitmap_q,
+                 fixed_endpoint.dp_local_ack_valid,
+                 fixed_endpoint.dp_local_ack_base,
+                 fixed_endpoint.dp_local_ack_bitmap,
+                 fixed_endpoint.lane_ack_base[0],
+                 fixed_endpoint.lane_ack_base[1],
+                 fixed_endpoint.lane_ack_bitmap[0],
+                 fixed_endpoint.lane_ack_bitmap[1],
+                 fixed_endpoint.endpoint_turnaround_pending_q,
+                 fixed_endpoint.u_data_plane.u_ack_aggregator.pending_frames);
+        $display("P10_ROTATING_ACK tx_next=%04x tx_base=%04x rx_base=%04x rx_sack=%08x peer_base=%04x peer_sack=%08x local_valid=%0b local_base=%04x local_sack=%08x lane_base=%04x/%04x lane_sack=%08x/%08x turnaround=%0b pending=%0d",
+                 rotating_endpoint.tx_next_sequence_o,
+                 rotating_endpoint.tx_ack_base_o,
+                 rotating_endpoint.rx_base_sequence_o,
+                 rotating_endpoint.rx_sack_bitmap_o,
+                 rotating_endpoint.dp_peer_ack_base_q,
+                 rotating_endpoint.dp_peer_ack_bitmap_q,
+                 rotating_endpoint.dp_local_ack_valid,
+                 rotating_endpoint.dp_local_ack_base,
+                 rotating_endpoint.dp_local_ack_bitmap,
+                 rotating_endpoint.lane_ack_base[0],
+                 rotating_endpoint.lane_ack_base[1],
+                 rotating_endpoint.lane_ack_bitmap[0],
+                 rotating_endpoint.lane_ack_bitmap[1],
+                 rotating_endpoint.endpoint_turnaround_pending_q,
+                 rotating_endpoint.u_data_plane.u_ack_aggregator.pending_frames);
         $fatal(1, "P10 independent endpoint object failed or timed out");
       end
       if (!direction) begin
@@ -605,12 +637,22 @@ module tb_p10_dual_endpoint_pair;
         !f_tx_kill || !r_tx_kill)
       $fatal(1, "P10 reset did not fail closed");
 
+`ifndef P10_1R_DROP_DIAG
     prepare_endpoints();
     run_raw(1'b0, 0);
     run_raw(1'b1, 0);
     run_raw(1'b0, 1);
     run_raw(1'b1, 1);
+`endif
 
+`ifdef P10_1R_DROP_DIAG
+    // Developer diagnostic: isolate the full-window missing-first-frame case
+    // without changing the canonical unqualified regression scenario list.
+    run_object(247*40, 8'h32, 1'b1, 2'b11, 16'h0300, 0, 1, 0);
+`elsif P10_1R_FOCUSED
+    run_object(247*4, 8'h71, 1'b0, 2'b11, 16'h4000, 0, 0, 0);
+    run_object(247*4, 8'h72, 1'b1, 2'b11, 16'h5000, 0, 0, 0);
+`else
     run_object(600, 8'h22, 1'b1, 2'b10, 16'h0100, 0, 0, 0);
     run_object(600, 8'h21, 1'b0, 2'b01, 16'h0000, 0, 0, 0);
     run_object(247*40, 8'h31, 1'b0, 2'b11, 16'h0200, 0, 0, 0);
@@ -635,6 +677,7 @@ module tb_p10_dual_endpoint_pair;
     run_object(600, 8'h66, 1'b0, 2'b11, 16'h3000, 32'h02, 0, 0);
     if (rotating_endpoint.rx_stale_path_count_o == 0 || f_retry_count == 0)
       $fatal(1, "P10 endpoint stale-path recovery was not exercised");
+`endif
 
     if (f_tx_high_max[31:0] > 64 || f_tx_high_max[63:32] > 64 ||
         r_tx_high_max[95:64] > 64 || r_tx_high_max[127:96] > 64)
@@ -652,6 +695,9 @@ module tb_p10_dual_endpoint_pair;
         f_armed || r_armed || !f_tx_kill || !r_tx_kill)
       $fatal(1, "P10 final shutdown did not fail closed");
     $display("TB_P10_DUAL_ENDPOINT_PAIR=PASS");
+`ifdef P10_1R_FOCUSED
+    $display("TB_P10_1R_DUAL_ENDPOINT=PASS");
+`endif
     $finish;
   end
 endmodule

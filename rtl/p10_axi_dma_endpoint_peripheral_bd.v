@@ -53,7 +53,7 @@ module p10_axi_dma_endpoint_peripheral_bd #(
 );
   localparam [31:0] P10_MAGIC = 32'h5031_305A;
   localparam [31:0] P10_BUILD_ID = ENDPOINT_ROLE == 1 ?
-      32'h5031_3046 : 32'h5031_3052;
+      32'h5031_5246 : 32'h5031_5252;
   localparam [31:0] P10_PROFILE_ID = ENDPOINT_ROLE == 1 ?
       32'h7020_00F0 : 32'h7020_00A0;
 

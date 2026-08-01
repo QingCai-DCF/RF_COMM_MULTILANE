@@ -8,18 +8,22 @@ module p9_optical_transport_core #(
   parameter integer MAX_PAYLOAD_BYTES = 247,
   parameter integer STORE_ADDR_WIDTH = 13,
   parameter integer RTO_CYCLES = 4_000_000,
-  // The stationary TFDU fixture directly showed that a short half-duplex
-  // direction change begins the reverse frame before the transmitting
-  // module's receiver has recovered.  Keep a conservative 64 us guard in
-  // both DATA-to-ACK and ACK-to-DATA directions, matching the canonical
-  // 4096-cycle interval at 64 MHz.
-  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_096,
-  // A 4 Mbit/s FIR symbol contains one 125 ns pulse in 500 ns, so the
-  // instantaneous frame duty is 25%.  Prevent a lane from launching another
-  // frame for 320 us after completion.  Even if ACK generation is suppressed
-  // by a fault-injection case, any clock-aligned 1 ms window then contains at
-  // most 680 us of frame activity (170 us Txd high), below the 18% target.
-  parameter integer FRAME_DUTY_GUARD_CYCLES = 20_480,
+  // P10.1R's offline echo sweep reaches 512 us. Keep 64 us deterministic
+  // margin so a reverse frame cannot begin while the peer's same-module RX
+  // admission is still quarantined.  This is an offline candidate pending a
+  // fresh four-module hardware echo-tail measurement.
+  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 37_120,
+  // P10.1R freezes one cumulative ACK per full 32-frame bundle window.  P9
+  // dual-fixture builds retain their historical threshold at the data-plane
+  // parameter boundary below.
+  parameter integer ACK_FRAME_THRESHOLD = 32,
+  parameter integer ACK_MAX_DELAY_CYCLES = 64_000,
+  // P10.1R relies on the existing exact 1 ms sliding accountant and reserves
+  // the complete next frame against its 18% headroom before launch.  A second
+  // fixed post-frame delay would double-count that safety margin and reduce
+  // useful throughput.  P9's historical monolithic role retains 20,480
+  // cycles through EFFECTIVE_FRAME_DUTY_GUARD_CYCLES below.
+  parameter integer FRAME_DUTY_GUARD_CYCLES = 0,
   // 0 keeps the frozen P9 single-FPGA fixture behavior. P10 instantiates one
   // physical endpoint per AX7020: 1 owns side A (fixed), 2 owns side B
   // (rotating role). The two instances exchange DATA and ACK frames only
@@ -29,7 +33,12 @@ module p9_optical_transport_core #(
   // turnaround-request flag. The receiver suppresses timer ACK transmission
   // until that boundary, preventing DATA/ACK optical collisions without a
   // shared scheduler or shared memory between the two FPGAs.
-  parameter integer ENDPOINT_BURST_FRAMES = 4
+  parameter integer ENDPOINT_BURST_FRAMES = 32,
+  // Offline candidate values only.  Hardware acceptance must replace the
+  // candidate with a directly measured echo-tail bound plus margin.
+  parameter integer RX_MIN_POST_TX_GUARD_CYCLES = 36_864,
+  parameter integer RX_IDLE_QUALIFY_CYCLES = 256,
+  parameter integer RX_MAX_QUARANTINE_CYCLES = 131_072
 ) (
   input  wire         clk,
   input  wire         rst_n,
@@ -155,15 +164,40 @@ module p9_optical_transport_core #(
   output wire [127:0] duty_hard_fault_count_flat_o,
   output wire [31:0]  duty_window_cycles_o,
   output wire [31:0]  duty_hard_limit_cycles_o,
-  output wire [31:0]  duty_target_limit_cycles_o
+  output wire [31:0]  duty_target_limit_cycles_o,
+  output wire [31:0]  rx_admission_status_o,
+  output wire [63:0]  rx_raw_while_local_tx_flat_o,
+  output wire [63:0]  rx_blanked_raw_pulse_flat_o,
+  output wire [63:0]  rx_blanked_frame_start_flat_o,
+  output wire [63:0]  rx_blanked_crc_valid_flat_o,
+  output wire [63:0]  rx_local_source_reject_flat_o,
+  output wire [63:0]  rx_accepted_remote_flat_o,
+  output wire [63:0]  rx_guard_total_flat_o,
+  output wire [63:0]  rx_guard_max_flat_o,
+  output wire [63:0]  rx_echo_tail_max_flat_o,
+  output wire [63:0]  rx_last_txd_rise_flat_o,
+  output wire [63:0]  rx_last_txd_fall_flat_o,
+  output wire [63:0]  rx_first_rxd_after_tx_flat_o,
+  output wire [63:0]  rx_last_rxd_after_tx_flat_o,
+  output wire [31:0]  rx_overlap_violation_count_o,
+  output wire [31:0]  rx_admission_violation_count_o,
+  output wire [31:0]  rx_non_target_accepted_count_o,
+  output wire [31:0]  rx_cross_lane_accepted_count_o,
+  output wire [63:0]  rx_decoder_clear_count_flat_o
 );
   localparam integer STORE_BYTES = WINDOW_SIZE * MAX_PAYLOAD_BYTES;
   localparam integer ENTRY_WIDTH = $clog2(WINDOW_SIZE);
-  localparam integer FRAME_DUTY_GUARD_WIDTH =
-      (FRAME_DUTY_GUARD_CYCLES < 1) ? 1 : $clog2(FRAME_DUTY_GUARD_CYCLES + 1);
   localparam integer ROLE_P9_DUAL = 0;
   localparam integer ROLE_FIXED_A = 1;
   localparam integer ROLE_ROTATING_B = 2;
+  localparam integer EFFECTIVE_FRAME_DUTY_GUARD_CYCLES =
+      DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 20_480 : FRAME_DUTY_GUARD_CYCLES;
+  localparam integer EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES =
+      DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 4_096 :
+      ACK_TURNAROUND_GUARD_CYCLES;
+  localparam integer FRAME_DUTY_GUARD_WIDTH =
+      (EFFECTIVE_FRAME_DUTY_GUARD_CYCLES < 1) ? 1 :
+      $clog2(EFFECTIVE_FRAME_DUTY_GUARD_CYCLES + 1);
 
   initial begin
     if (DEPLOYMENT_ROLE < ROLE_P9_DUAL || DEPLOYMENT_ROLE > ROLE_ROTATING_B)
@@ -194,6 +228,32 @@ module p9_optical_transport_core #(
         4'b1111: keep_count = 4;
         default: keep_count = 0;
       endcase
+    end
+  endfunction
+
+  function automatic [31:0] sat_inc32(input [31:0] value);
+    begin
+      sat_inc32 = (&value) ? value : value + 32'd1;
+    end
+  endfunction
+
+  function automatic [31:0] sat_add2_32(
+    input [31:0] value, input [1:0] increment
+  );
+    reg [32:0] sum;
+    begin
+      sum = {1'b0, value} + {{31{1'b0}}, increment};
+      sat_add2_32 = sum[32] ? 32'hFFFF_FFFF : sum[31:0];
+    end
+  endfunction
+
+  function automatic [31:0] sat_add32(
+    input [31:0] left, input [31:0] right
+  );
+    reg [32:0] sum;
+    begin
+      sum = {1'b0, left} + {1'b0, right};
+      sat_add32 = sum[32] ? 32'hFFFF_FFFF : sum[31:0];
     end
   endfunction
 
@@ -236,6 +296,7 @@ module p9_optical_transport_core #(
   wire [1:0] b_rx_pulse;
   wire endpoint_mode = DEPLOYMENT_ROLE != ROLE_P9_DUAL;
   wire local_is_a = DEPLOYMENT_ROLE != ROLE_ROTATING_B;
+  wire [5:0] local_node_id = local_is_a ? 6'd1 : 6'd2;
   wire [1:0] local_phy_ready = local_is_a ? a_phy_ready : b_phy_ready;
   wire [1:0] local_startup_done = local_is_a ? a_startup_done : b_startup_done;
   wire [1:0] local_fault_stuck = local_is_a ? a_fault_stuck : b_fault_stuck;
@@ -495,7 +556,11 @@ module p9_optical_transport_core #(
   ir_data_plane_top #(
     .LANE_COUNT(2), .WINDOW_SIZE(WINDOW_SIZE), .SACK_BITS(SACK_BITS),
     .MAX_RETRY(7), .RTO_CYCLES(RTO_CYCLES), .PAYLOAD_REF_WIDTH(ENTRY_WIDTH),
-    .DESCRIPTOR_WIDTH(16)
+    .DESCRIPTOR_WIDTH(16),
+    .ACK_FRAME_THRESHOLD(DEPLOYMENT_ROLE == ROLE_P9_DUAL ?
+                         8 : ACK_FRAME_THRESHOLD),
+    .ACK_MAX_DELAY_CYCLES(DEPLOYMENT_ROLE == ROLE_P9_DUAL ?
+                          32_000 : ACK_MAX_DELAY_CYCLES)
   ) u_data_plane (
     .clk(clk), .rst_n(rst_n), .clear_counters_i(clear_counters_i),
     .session_reset_i(session_reset_pulse_q),
@@ -631,6 +696,7 @@ module p9_optical_transport_core #(
   reg [15:0] lane_ack_base [0:1];
   reg [31:0] lane_ack_bitmap [0:1];
   reg [15:0] lane_ack_credit [0:1];
+  reg [5:0] lane_source_node [0:1];
   reg lane_source_a [0:1];
   wire [STORE_ADDR_WIDTH-1:0] serializer_payload_address [0:1];
   wire serializer_start_ready [0:1];
@@ -666,7 +732,7 @@ module p9_optical_transport_core #(
       dp_peer_ack_session_q == object_session_q;
   wire endpoint_data_boundary = endpoint_mode && local_sender &&
       ((endpoint_tx_burst_count_q >= ENDPOINT_BURST_FRAMES-1) ||
-       dp_attempt_descriptor[0]);
+       dp_attempt_descriptor[0] || dp_attempt_retry);
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
   // Admit an entire encoded frame against the exact physical-module duty
@@ -724,7 +790,9 @@ module p9_optical_transport_core #(
         .session_epoch_i(lane_session[tx_lane]), .path_epoch_i(lane_path[tx_lane]),
         .sequence_i(lane_sequence[tx_lane]), .payload_length_i(lane_length[tx_lane]),
         .payload_crc32_i(lane_crc[tx_lane]), .flags_i(lane_flags[tx_lane]),
-        .lane_id_i(tx_lane[7:0]), .object_id_i(lane_object[tx_lane]),
+        .lane_id_i(tx_lane[7:0]),
+        .source_node_id_i(lane_source_node[tx_lane]),
+        .object_id_i(lane_object[tx_lane]),
         .fragment_offset_i(lane_fragment[tx_lane]),
         .ack_base_i(lane_ack_base[tx_lane]), .ack_bitmap_i(lane_ack_bitmap[tx_lane]),
         .ack_credit_i(lane_ack_credit[tx_lane]), .direction_i(object_direction_q),
@@ -774,6 +842,7 @@ module p9_optical_transport_core #(
         lane_ack_base[copy_lane] <= 0;
         lane_ack_bitmap[copy_lane] <= 0;
         lane_ack_credit[copy_lane] <= 0;
+        lane_source_node[copy_lane] <= 0;
         lane_source_a[copy_lane] <= 0;
         serializer_busy_d[copy_lane] <= 0;
         receive_tail[copy_lane] <= 0;
@@ -789,7 +858,8 @@ module p9_optical_transport_core #(
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
         serializer_busy_d[copy_lane] <= serializer_busy[copy_lane];
         if (serializer_done[copy_lane]) begin
-          frame_duty_guard_q[copy_lane] <= FRAME_DUTY_GUARD_CYCLES;
+          frame_duty_guard_q[copy_lane] <=
+              EFFECTIVE_FRAME_DUTY_GUARD_CYCLES;
         end else if (frame_duty_guard_q[copy_lane] != 0) begin
           frame_duty_guard_q[copy_lane] <= frame_duty_guard_q[copy_lane] - 1'b1;
         end
@@ -914,6 +984,8 @@ module p9_optical_transport_core #(
             lane_flags[dp_attempt_lane] <= {
                 6'd0, endpoint_data_boundary,
                 tx_slot_final[dp_attempt_payload_ref]};
+            lane_source_node[dp_attempt_lane] <=
+                object_direction_q ? 6'd2 : 6'd1;
             lane_object[dp_attempt_lane] <= object_id_q;
             lane_fragment[dp_attempt_lane] <= tx_slot_fragment_offset[dp_attempt_payload_ref];
             if (endpoint_mode && local_sender) begin
@@ -933,6 +1005,9 @@ module p9_optical_transport_core #(
           end
         end
 
+        // Apply the role-specific recovery window in both DATA-to-ACK and ACK-to-DATA directions;
+        // neither endpoint may begin a reverse frame
+        // while the peer's same-module RX decoder is still quarantined.
         case (phase_q)
           // READY is registered.  Once asserted for a validation-only dropped
           // ACK, do not consume the same held VALID again on the following
@@ -944,7 +1019,7 @@ module p9_optical_transport_core #(
               // next DATA frame until the peer ACK transmitter's local TFDU
               // receiver has completed the same bounded recovery interval.
               phase_q <= PH_DATA_GUARD;
-              phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+              phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES + 0;
             end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
                          (!endpoint_mode || endpoint_turnaround_pending_q)) begin
               if (dp_local_ack_snapshot_stale) begin
@@ -960,7 +1035,7 @@ module p9_optical_transport_core #(
                 dp_local_ack_ready_q <= 1;
               end else begin
                 phase_q <= PH_ACK_GUARD;
-                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
+                phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES;
               end
             end
           end
@@ -982,6 +1057,8 @@ module p9_optical_transport_core #(
               lane_length[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
               lane_crc[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
               lane_flags[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
+              lane_source_node[ack_schedulable_lane_mask[0] ? 0 : 1] <=
+                  object_direction_q ? 6'd1 : 6'd2;
               lane_object[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
               lane_fragment[ack_schedulable_lane_mask[0] ? 0 : 1] <= 0;
               lane_ack_base[ack_schedulable_lane_mask[0] ? 0 : 1] <= dp_local_ack_base;
@@ -1004,7 +1081,7 @@ module p9_optical_transport_core #(
                 // The peer consumes the ACK; this node must not wait to
                 // receive its own reverse frame through a fixture loopback.
                 phase_q <= PH_DATA_GUARD;
-                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES + 0;
+                phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES + 0;
               end
             end else begin
               phase_q <= PH_ACK_WAIT_RX;
@@ -1024,7 +1101,7 @@ module p9_optical_transport_core #(
                 // local receiver must recover before the next DATA frame is
                 // allowed to start in the opposite direction.
                 phase_q <= PH_DATA_GUARD;
-                phase_guard_q <= ACK_TURNAROUND_GUARD_CYCLES;
+                phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES;
               end
               ack_wait_q <= 0;
             end else begin
@@ -1221,8 +1298,10 @@ module p9_optical_transport_core #(
   wire [15:0] rx_frame_sequence [0:1];
   wire [15:0] rx_frame_length [0:1];
   wire [7:0] rx_frame_flags [0:1];
+  wire [7:0] rx_frame_lane_id [0:1];
   wire [31:0] rx_frame_object [0:1];
   wire [31:0] rx_frame_fragment [0:1];
+  wire [5:0] rx_frame_source_node [0:1];
   wire [15:0] rx_ack_base [0:1];
   wire [31:0] rx_ack_bitmap [0:1];
   wire [15:0] rx_ack_credit [0:1];
@@ -1232,6 +1311,31 @@ module p9_optical_transport_core #(
   wire [31:0] rx_frame_bad [0:1];
   wire [31:0] rx_preamble_count [0:1];
   wire [31:0] rx_symbol_error_count [0:1];
+  wire rx_admission_enable [0:1];
+  wire rx_decoder_clear [0:1];
+  wire rx_echo_quarantine [0:1];
+  wire rx_post_tx_guard [0:1];
+  wire [31:0] rx_admission_raw_count [0:1];
+  wire [31:0] rx_raw_while_local_tx [0:1];
+  wire [31:0] rx_blanked_raw_pulse [0:1];
+  wire [31:0] rx_guard_total [0:1];
+  wire [31:0] rx_guard_current [0:1];
+  wire [31:0] rx_guard_max [0:1];
+  wire [31:0] rx_echo_tail_max [0:1];
+  wire [31:0] rx_decoder_clear_count [0:1];
+  wire [31:0] rx_overlap_violation [0:1];
+  wire [31:0] rx_admission_violation [0:1];
+  wire [31:0] rx_last_txd_rise [0:1];
+  wire [31:0] rx_last_txd_fall [0:1];
+  wire [31:0] rx_first_rxd_after_tx [0:1];
+  wire [31:0] rx_last_rxd_after_tx [0:1];
+  wire [31:0] rx_last_raw_timestamp [0:1];
+  wire [1:0] rx_shadow_symbol [0:1];
+  wire rx_shadow_symbol_valid [0:1];
+  wire rx_shadow_symbol_error [0:1];
+  wire rx_shadow_preamble [0:1];
+  wire rx_shadow_frame_valid [0:1];
+  wire rx_shadow_frame_crc [0:1];
   assign endpoint_turnaround_request_pulse = endpoint_mode && local_receiver &&
       dp_turnaround_pipe_q[1];
   (* ram_style="block" *) reg [7:0] rx_temp_lane0 [0:MAX_PAYLOAD_BYTES-1];
@@ -1244,9 +1348,6 @@ module p9_optical_transport_core #(
       // complete object so DATA and reverse ACK frames cross the optical link.
       wire serializer_busy_rise = serializer_busy[tx_lane] &&
           !serializer_busy_d[tx_lane];
-      wire receive_window = endpoint_mode ?
-          (object_active_q && !serializer_busy_rise) :
-          (serializer_busy[tx_lane] || receive_tail[tx_lane] != 0);
       wire selected_phy_ready = endpoint_mode ? local_phy_ready[tx_lane] :
           (receive_tail_destination_b[tx_lane] ?
            b_phy_ready[tx_lane] : a_phy_ready[tx_lane]);
@@ -1254,6 +1355,42 @@ module p9_optical_transport_core #(
           (local_is_a ? a_rx_pulse[tx_lane] : b_rx_pulse[tx_lane]) :
           (receive_tail_destination_b[tx_lane] ?
            b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane]);
+      wire selected_final_txd = local_is_a ?
+          a_txd_o[tx_lane] : b_txd_o[tx_lane];
+
+      p10_1r_rx_admission #(
+        .MIN_POST_TX_GUARD_CYCLES(RX_MIN_POST_TX_GUARD_CYCLES),
+        .IDLE_QUALIFY_CYCLES(RX_IDLE_QUALIFY_CYCLES),
+        .MAX_QUARANTINE_CYCLES(RX_MAX_QUARANTINE_CYCLES)
+      ) u_rx_admission (
+        .clk(clk), .rst_n(rst_n), .clear_counters_i(clear_counters_i),
+        .receiver_enable_i(endpoint_mode && selected_phy_ready),
+        .final_physical_txd_i(selected_final_txd),
+        .raw_rx_pulse_i(selected_rx_pulse),
+        .rx_frame_accept_enable_o(rx_admission_enable[tx_lane]),
+        .rx_decoder_clear_o(rx_decoder_clear[tx_lane]),
+        .echo_quarantine_o(rx_echo_quarantine[tx_lane]),
+        .post_tx_guard_active_o(rx_post_tx_guard[tx_lane]),
+        .raw_pulse_count_o(rx_admission_raw_count[tx_lane]),
+        .raw_while_local_tx_count_o(rx_raw_while_local_tx[tx_lane]),
+        .blanked_raw_pulse_count_o(rx_blanked_raw_pulse[tx_lane]),
+        .guard_total_cycles_o(rx_guard_total[tx_lane]),
+        .guard_current_cycles_o(rx_guard_current[tx_lane]),
+        .guard_max_cycles_o(rx_guard_max[tx_lane]),
+        .echo_tail_max_cycles_o(rx_echo_tail_max[tx_lane]),
+        .decoder_clear_count_o(rx_decoder_clear_count[tx_lane]),
+        .overlap_violation_count_o(rx_overlap_violation[tx_lane]),
+        .admission_violation_count_o(rx_admission_violation[tx_lane]),
+        .last_physical_txd_rise_o(rx_last_txd_rise[tx_lane]),
+        .last_physical_txd_fall_o(rx_last_txd_fall[tx_lane]),
+        .first_local_rxd_edge_after_tx_o(rx_first_rxd_after_tx[tx_lane]),
+        .last_local_rxd_edge_after_tx_o(rx_last_rxd_after_tx[tx_lane]),
+        .last_raw_rx_timestamp_o(rx_last_raw_timestamp[tx_lane])
+      );
+
+      wire receive_window = endpoint_mode ?
+          (object_active_q && rx_admission_enable[tx_lane]) :
+          (serializer_busy[tx_lane] || receive_tail[tx_lane] != 0);
       // Keep the decoder alive through the bounded post-frame receive tail:
       // the final optical symbol reaches Rxd after serializer busy falls.
       // A one-cycle align at every busy rising edge still prevents the
@@ -1266,6 +1403,7 @@ module p9_optical_transport_core #(
         .clk(clk), .rst_n(rst_n), .enable_i(selected_phy_ready),
         .rate_select_i(object_rate_q),
         .align_i(!receive_window || serializer_busy_rise ||
+                 (endpoint_mode && rx_decoder_clear[tx_lane]) ||
                  rx_frame_valid[tx_lane]),
         .rx_pulse_active_i(selected_rx_pulse), .symbol_o(rx_symbol[tx_lane]),
         .symbol_valid_o(rx_symbol_valid[tx_lane]),
@@ -1273,7 +1411,9 @@ module p9_optical_transport_core #(
         .preamble_valid_o(rx_preamble[tx_lane]), .preamble_count_o(), .symbol_chips_o()
       );
       p9_4ppm_frame_rx u_parser (
-        .clk(clk), .rst_n(rst_n), .enable_i(selected_phy_ready), .align_i(!receive_window),
+        .clk(clk), .rst_n(rst_n), .enable_i(selected_phy_ready),
+        .align_i(!receive_window ||
+                 (endpoint_mode && rx_decoder_clear[tx_lane])),
         .symbol_i(rx_symbol[tx_lane]), .symbol_valid_i(rx_symbol_valid[tx_lane]),
         .symbol_error_i(rx_symbol_error[tx_lane]), .preamble_valid_i(rx_preamble[tx_lane]),
         .payload_write_pulse_o(rx_payload_we[tx_lane]),
@@ -1282,7 +1422,10 @@ module p9_optical_transport_core #(
         .frame_is_ack_o(rx_frame_ack[tx_lane]), .frame_crc_valid_o(rx_frame_crc[tx_lane]),
         .session_epoch_o(rx_frame_session[tx_lane]), .path_epoch_o(rx_frame_path[tx_lane]),
         .sequence_o(rx_frame_sequence[tx_lane]), .payload_length_o(rx_frame_length[tx_lane]),
-        .flags_o(rx_frame_flags[tx_lane]), .lane_id_o(), .object_id_o(rx_frame_object[tx_lane]),
+        .flags_o(rx_frame_flags[tx_lane]),
+        .lane_id_o(rx_frame_lane_id[tx_lane]),
+        .source_node_id_o(rx_frame_source_node[tx_lane]),
+        .object_id_o(rx_frame_object[tx_lane]),
         .fragment_offset_o(rx_frame_fragment[tx_lane]), .ack_base_o(rx_ack_base[tx_lane]),
         .ack_bitmap_o(rx_ack_bitmap[tx_lane]), .ack_credit_o(rx_ack_credit[tx_lane]),
         .direction_o(rx_ack_direction[tx_lane]), .frame_good_count_o(rx_good[tx_lane]),
@@ -1291,19 +1434,77 @@ module p9_optical_transport_core #(
         .preamble_count_o(rx_preamble_count[tx_lane]),
         .symbol_error_count_o(rx_symbol_error_count[tx_lane])
       );
+
+      // Read-only shadow decode preserves evidence about a blanked local
+      // echo.  It cannot write the receive window, generate an ACK, light an
+      // activity LED, or affect admission.  Its only consumers are the two
+      // observability counters below.
+      p9_rate_4ppm_rx u_echo_shadow_codec (
+        .clk(clk), .rst_n(rst_n), .enable_i(endpoint_mode && selected_phy_ready),
+        .rate_select_i(object_rate_q),
+        .align_i(rx_shadow_frame_valid[tx_lane]),
+        .rx_pulse_active_i(selected_rx_pulse),
+        .symbol_o(rx_shadow_symbol[tx_lane]),
+        .symbol_valid_o(rx_shadow_symbol_valid[tx_lane]),
+        .symbol_error_o(rx_shadow_symbol_error[tx_lane]),
+        .preamble_valid_o(rx_shadow_preamble[tx_lane]),
+        .preamble_count_o(), .symbol_chips_o()
+      );
+      p9_4ppm_frame_rx u_echo_shadow_parser (
+        .clk(clk), .rst_n(rst_n),
+        .enable_i(endpoint_mode && selected_phy_ready),
+        .align_i(!endpoint_mode || !selected_phy_ready),
+        .symbol_i(rx_shadow_symbol[tx_lane]),
+        .symbol_valid_i(rx_shadow_symbol_valid[tx_lane]),
+        .symbol_error_i(rx_shadow_symbol_error[tx_lane]),
+        .preamble_valid_i(rx_shadow_preamble[tx_lane]),
+        .payload_write_pulse_o(), .payload_write_index_o(),
+        .payload_write_data_o(),
+        .frame_valid_o(rx_shadow_frame_valid[tx_lane]), .frame_is_ack_o(),
+        .frame_crc_valid_o(rx_shadow_frame_crc[tx_lane]),
+        .session_epoch_o(), .path_epoch_o(), .sequence_o(),
+        .payload_length_o(), .flags_o(), .lane_id_o(), .source_node_id_o(),
+        .object_id_o(), .fragment_offset_o(), .ack_base_o(),
+        .ack_bitmap_o(), .ack_credit_o(), .direction_o(),
+        .frame_good_count_o(), .frame_bad_count_o(), .crc_bad_count_o(),
+        .preamble_count_o(), .symbol_error_count_o()
+      );
     end
   endgenerate
+
+  wire rx_role_valid_lane0 = !endpoint_mode ||
+      (rx_frame_ack[0] ? local_sender : local_receiver);
+  wire rx_role_valid_lane1 = !endpoint_mode ||
+      (rx_frame_ack[1] ? local_sender : local_receiver);
+  wire rx_remote_accepted_lane0 = rx_frame_valid[0] && rx_frame_crc[0] &&
+      (!endpoint_mode || (rx_admission_enable[0] &&
+       rx_frame_source_node[0] != local_node_id && rx_role_valid_lane0));
+  wire rx_remote_accepted_lane1 = rx_frame_valid[1] && rx_frame_crc[1] &&
+      (!endpoint_mode || (rx_admission_enable[1] &&
+       rx_frame_source_node[1] != local_node_id && rx_role_valid_lane1));
+  wire rx_local_source_rejected_lane0 = endpoint_mode &&
+      rx_frame_valid[0] && rx_frame_crc[0] &&
+      rx_frame_source_node[0] == local_node_id;
+  wire rx_local_source_rejected_lane1 = endpoint_mode &&
+      rx_frame_valid[1] && rx_frame_crc[1] &&
+      rx_frame_source_node[1] == local_node_id;
 
   reg [31:0] physical_data_good_q;
   reg [31:0] physical_ack_good_q;
   reg [31:0] physical_data_good_lane_q [0:1];
   reg [31:0] physical_ack_good_lane_q [0:1];
+  reg [31:0] rx_local_source_reject_q [0:1];
+  reg [31:0] rx_accepted_remote_q [0:1];
+  reg [31:0] rx_blanked_frame_start_q [0:1];
+  reg [31:0] rx_blanked_crc_valid_q [0:1];
+  reg [31:0] rx_non_target_accepted_q;
+  reg [31:0] rx_cross_lane_accepted_q;
   wire [1:0] physical_data_good_increment =
-      {1'b0, (rx_frame_valid[0] && rx_frame_crc[0] && !rx_frame_ack[0])} +
-      {1'b0, (rx_frame_valid[1] && rx_frame_crc[1] && !rx_frame_ack[1])};
+      {1'b0, (rx_remote_accepted_lane0 && !rx_frame_ack[0])} +
+      {1'b0, (rx_remote_accepted_lane1 && !rx_frame_ack[1])};
   wire [1:0] physical_ack_good_increment =
-      {1'b0, (rx_frame_valid[0] && rx_frame_crc[0] && rx_frame_ack[0])} +
-      {1'b0, (rx_frame_valid[1] && rx_frame_crc[1] && rx_frame_ack[1])};
+      {1'b0, (rx_remote_accepted_lane0 && rx_frame_ack[0])} +
+      {1'b0, (rx_remote_accepted_lane1 && rx_frame_ack[1])};
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       physical_data_good_q <= 0;
@@ -1312,6 +1513,16 @@ module p9_optical_transport_core #(
       physical_data_good_lane_q[1] <= 0;
       physical_ack_good_lane_q[0] <= 0;
       physical_ack_good_lane_q[1] <= 0;
+      rx_local_source_reject_q[0] <= 0;
+      rx_local_source_reject_q[1] <= 0;
+      rx_accepted_remote_q[0] <= 0;
+      rx_accepted_remote_q[1] <= 0;
+      rx_blanked_frame_start_q[0] <= 0;
+      rx_blanked_frame_start_q[1] <= 0;
+      rx_blanked_crc_valid_q[0] <= 0;
+      rx_blanked_crc_valid_q[1] <= 0;
+      rx_non_target_accepted_q <= 0;
+      rx_cross_lane_accepted_q <= 0;
     end else if (clear_counters_i) begin
       physical_data_good_q <= 0;
       physical_ack_good_q <= 0;
@@ -1319,17 +1530,57 @@ module p9_optical_transport_core #(
       physical_data_good_lane_q[1] <= 0;
       physical_ack_good_lane_q[0] <= 0;
       physical_ack_good_lane_q[1] <= 0;
+      rx_local_source_reject_q[0] <= 0;
+      rx_local_source_reject_q[1] <= 0;
+      rx_accepted_remote_q[0] <= 0;
+      rx_accepted_remote_q[1] <= 0;
+      rx_blanked_frame_start_q[0] <= 0;
+      rx_blanked_frame_start_q[1] <= 0;
+      rx_blanked_crc_valid_q[0] <= 0;
+      rx_blanked_crc_valid_q[1] <= 0;
+      rx_non_target_accepted_q <= 0;
+      rx_cross_lane_accepted_q <= 0;
     end else begin
-      physical_data_good_q <= physical_data_good_q + physical_data_good_increment;
-      physical_ack_good_q <= physical_ack_good_q + physical_ack_good_increment;
-      if (rx_frame_valid[0] && rx_frame_crc[0] && !rx_frame_ack[0])
-        physical_data_good_lane_q[0] <= physical_data_good_lane_q[0] + 1'b1;
-      if (rx_frame_valid[1] && rx_frame_crc[1] && !rx_frame_ack[1])
-        physical_data_good_lane_q[1] <= physical_data_good_lane_q[1] + 1'b1;
-      if (rx_frame_valid[0] && rx_frame_crc[0] && rx_frame_ack[0])
-        physical_ack_good_lane_q[0] <= physical_ack_good_lane_q[0] + 1'b1;
-      if (rx_frame_valid[1] && rx_frame_crc[1] && rx_frame_ack[1])
-        physical_ack_good_lane_q[1] <= physical_ack_good_lane_q[1] + 1'b1;
+      physical_data_good_q <=
+          sat_add2_32(physical_data_good_q, physical_data_good_increment);
+      physical_ack_good_q <=
+          sat_add2_32(physical_ack_good_q, physical_ack_good_increment);
+      if (rx_remote_accepted_lane0 && !rx_frame_ack[0])
+        physical_data_good_lane_q[0] <= sat_inc32(physical_data_good_lane_q[0]);
+      if (rx_remote_accepted_lane1 && !rx_frame_ack[1])
+        physical_data_good_lane_q[1] <= sat_inc32(physical_data_good_lane_q[1]);
+      if (rx_remote_accepted_lane0 && rx_frame_ack[0])
+        physical_ack_good_lane_q[0] <= sat_inc32(physical_ack_good_lane_q[0]);
+      if (rx_remote_accepted_lane1 && rx_frame_ack[1])
+        physical_ack_good_lane_q[1] <= sat_inc32(physical_ack_good_lane_q[1]);
+      if (rx_local_source_rejected_lane0)
+        rx_local_source_reject_q[0] <= sat_inc32(rx_local_source_reject_q[0]);
+      if (rx_local_source_rejected_lane1)
+        rx_local_source_reject_q[1] <= sat_inc32(rx_local_source_reject_q[1]);
+      if (rx_remote_accepted_lane0)
+        rx_accepted_remote_q[0] <= sat_inc32(rx_accepted_remote_q[0]);
+      if (rx_remote_accepted_lane1)
+        rx_accepted_remote_q[1] <= sat_inc32(rx_accepted_remote_q[1]);
+      if (rx_shadow_preamble[0] && rx_echo_quarantine[0])
+        rx_blanked_frame_start_q[0] <=
+            sat_inc32(rx_blanked_frame_start_q[0]);
+      if (rx_shadow_preamble[1] && rx_echo_quarantine[1])
+        rx_blanked_frame_start_q[1] <=
+            sat_inc32(rx_blanked_frame_start_q[1]);
+      if (rx_shadow_frame_valid[0] && rx_shadow_frame_crc[0] &&
+          rx_echo_quarantine[0])
+        rx_blanked_crc_valid_q[0] <=
+            sat_inc32(rx_blanked_crc_valid_q[0]);
+      if (rx_shadow_frame_valid[1] && rx_shadow_frame_crc[1] &&
+          rx_echo_quarantine[1])
+        rx_blanked_crc_valid_q[1] <=
+            sat_inc32(rx_blanked_crc_valid_q[1]);
+      if ((rx_remote_accepted_lane0 && !object_lane_mask_q[0]) ||
+          (rx_remote_accepted_lane1 && !object_lane_mask_q[1]))
+        rx_non_target_accepted_q <= sat_inc32(rx_non_target_accepted_q);
+      if ((rx_remote_accepted_lane0 && rx_frame_lane_id[0][1:0] != 2'd0) ||
+          (rx_remote_accepted_lane1 && rx_frame_lane_id[1][1:0] != 2'd1))
+        rx_cross_lane_accepted_q <= sat_inc32(rx_cross_lane_accepted_q);
     end
   end
   assign physical_data_frames_good_o = physical_data_good_q;
@@ -1351,12 +1602,51 @@ module p9_optical_transport_core #(
   assign physical_symbol_error_by_lane_o =
       {rx_symbol_error_count[1], rx_symbol_error_count[0]};
 
-  // Activity indication consumes only completed, CRC-valid parser events.
-  // It never observes asynchronous/raw Rxd and has no return path into RX.
+  // Activity indication consumes only accepted, CRC-valid remote events.  It
+  // never observes raw Rxd/self echo and has no return path into RX.
   assign valid_rx_frame_activity_o = {
-      rx_frame_valid[1] && rx_frame_crc[1],
-      rx_frame_valid[0] && rx_frame_crc[0]
+      rx_remote_accepted_lane1,
+      rx_remote_accepted_lane0
   };
+
+  assign rx_admission_status_o = {
+      18'd0, local_node_id, 2'd0,
+      rx_admission_enable[1], rx_admission_enable[0],
+      rx_post_tx_guard[1], rx_post_tx_guard[0],
+      rx_echo_quarantine[1], rx_echo_quarantine[0]
+  };
+  assign rx_raw_while_local_tx_flat_o = {
+      rx_raw_while_local_tx[1], rx_raw_while_local_tx[0]};
+  assign rx_blanked_raw_pulse_flat_o = {
+      rx_blanked_raw_pulse[1], rx_blanked_raw_pulse[0]};
+  assign rx_blanked_frame_start_flat_o = {
+      rx_blanked_frame_start_q[1], rx_blanked_frame_start_q[0]};
+  assign rx_blanked_crc_valid_flat_o = {
+      rx_blanked_crc_valid_q[1], rx_blanked_crc_valid_q[0]};
+  assign rx_local_source_reject_flat_o = {
+      rx_local_source_reject_q[1], rx_local_source_reject_q[0]};
+  assign rx_accepted_remote_flat_o = {
+      rx_accepted_remote_q[1], rx_accepted_remote_q[0]};
+  assign rx_guard_total_flat_o = {rx_guard_total[1], rx_guard_total[0]};
+  assign rx_guard_max_flat_o = {rx_guard_max[1], rx_guard_max[0]};
+  assign rx_echo_tail_max_flat_o = {
+      rx_echo_tail_max[1], rx_echo_tail_max[0]};
+  assign rx_last_txd_rise_flat_o = {
+      rx_last_txd_rise[1], rx_last_txd_rise[0]};
+  assign rx_last_txd_fall_flat_o = {
+      rx_last_txd_fall[1], rx_last_txd_fall[0]};
+  assign rx_first_rxd_after_tx_flat_o = {
+      rx_first_rxd_after_tx[1], rx_first_rxd_after_tx[0]};
+  assign rx_last_rxd_after_tx_flat_o = {
+      rx_last_rxd_after_tx[1], rx_last_rxd_after_tx[0]};
+  assign rx_overlap_violation_count_o =
+      sat_add32(rx_overlap_violation[0], rx_overlap_violation[1]);
+  assign rx_admission_violation_count_o =
+      sat_add32(rx_admission_violation[0], rx_admission_violation[1]);
+  assign rx_non_target_accepted_count_o = rx_non_target_accepted_q;
+  assign rx_cross_lane_accepted_count_o = rx_cross_lane_accepted_q;
+  assign rx_decoder_clear_count_flat_o = {
+      rx_decoder_clear_count[1], rx_decoder_clear_count[0]};
 
   // Receive completion queues and copy into the reorder-window store.
   reg rx_pending [0:1];
@@ -1441,7 +1731,9 @@ module p9_optical_transport_core #(
         // self-echo creates a local ACK snapshot that this role cannot emit
         // and permanently backpressures the next DATA attempt.
         data_event = rx_frame_valid[rx_lane] && !rx_frame_ack[rx_lane] &&
-            (!endpoint_mode || local_receiver);
+            (!endpoint_mode ||
+             (local_receiver && rx_admission_enable[rx_lane] &&
+              rx_frame_source_node[rx_lane] != local_node_id));
         event_crc = rx_frame_crc[rx_lane];
         event_session = rx_frame_session[rx_lane];
         event_path = rx_frame_path[rx_lane];
@@ -1570,7 +1862,9 @@ module p9_optical_transport_core #(
         // independent-endpoint mode.  The monolithic P9 role retains its
         // original bidirectional behavior.
         ack_event = rx_frame_valid[rx_lane] && rx_frame_ack[rx_lane] &&
-            (!endpoint_mode || local_sender);
+            (!endpoint_mode ||
+             (local_sender && rx_admission_enable[rx_lane] &&
+              rx_frame_source_node[rx_lane] != local_node_id));
         ack_crc = rx_frame_crc[rx_lane];
         ack_session_value = rx_frame_session[rx_lane];
         ack_base_value = rx_ack_base[rx_lane];

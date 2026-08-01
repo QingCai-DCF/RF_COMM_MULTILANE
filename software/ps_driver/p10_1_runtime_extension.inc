@@ -650,7 +650,7 @@ static int p10_1_validate_stream_args(
       4U : mailbox->stale_token;
   result->buffer_count = configured_buffer_count;
   result->ack_threshold = mailbox->drop_data_count == 0U ?
-      8U : mailbox->drop_data_count;
+      32U : mailbox->drop_data_count;
   result->outstanding_frames = mailbox->drop_ack_count == 0U ?
       32U : mailbox->drop_ack_count;
   result->timeout_ms = mailbox->timeout_ms;
@@ -667,7 +667,7 @@ static int p10_1_validate_stream_args(
       result->descriptor_batch > result->ring_depth ||
       result->descriptor_batch < descriptor_count ||
       result->buffer_count < 2U || result->buffer_count > 16U ||
-      result->ack_threshold != 8U ||
+      result->ack_threshold != 32U ||
       result->outstanding_frames != 32U ||
       (uint64_t)result->object_bytes * result->buffer_count >
           P9_MAX_OBJECT_BYTES ||
@@ -1089,6 +1089,7 @@ static int p10_1_command_autonomous_stream(
   uint32_t local_rx;
   uint32_t initial_slot_count;
   uint32_t next_prepare_ordinal;
+  uint32_t next_object_prestarted = 0U;
   uint32_t recovery_flags;
   uint32_t recovery_ordinal = UINT32_MAX;
   uint32_t injected_fault_before = 0U;
@@ -1173,7 +1174,7 @@ static int p10_1_command_autonomous_stream(
   /*
    * Prime a real multi-buffer queue before the first object.  With the Goal
    * configuration this is four 256-KiB buffers, four descriptors per object,
-   * a 16-entry SG ring, and BdRingToHw batches of four.
+   * a 32-entry SG ring, and BdRingToHw batches of up to eight.
    */
   initial_slot_count = result->buffer_count < result->object_count ?
       result->buffer_count : result->object_count;
@@ -1195,39 +1196,31 @@ static int p10_1_command_autonomous_stream(
       status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
       goto stream_fail_v2;
     }
-    mailbox->object_id = result->first_object_id + ordinal;
-    mailbox->initial_sequence = 0U;
-    if (ordinal == recovery_ordinal && local_rx != 0U) {
-      if ((recovery_flags & P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT) != 0U)
-        injected_fault_before =
-            p9_pl_read(IR_REG_P9_RX_DUPLICATE_COUNT);
-      else if ((recovery_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
-        injected_fault_before =
-            p9_pl_read(IR_REG_P9_RX_STALE_SESSION_COUNT);
-    }
-    p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal,
-                           local_rx);
-
-    if (ordinal != 0U) {
-      if (local_rx != 0U) {
-        status = p10_1_send_signal(
-            mailbox->direction, mailbox->lane_mask, 30000U, result);
-      } else {
-        status = p10_1_wait_signal(
-            mailbox->lane_mask, 30000U, result);
-        /*
-         * The ready pulse is completed immediately before the receiver writes
-         * START_OBJECT.  This bounded guard prevents the sender from winning
-         * that cross-board software race.
-         */
-        if (status == P10_1_RUNTIME_STATUS_OK)
-          usleep(600U);
+    if (next_object_prestarted == 0U) {
+      mailbox->object_id = result->first_object_id + ordinal;
+      mailbox->initial_sequence = 0U;
+      if (ordinal == recovery_ordinal && local_rx != 0U) {
+        if ((recovery_flags & P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT) != 0U)
+          injected_fault_before =
+              p9_pl_read(IR_REG_P9_RX_DUPLICATE_COUNT);
+        else if ((recovery_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
+          injected_fault_before =
+              p9_pl_read(IR_REG_P9_RX_STALE_SESSION_COUNT);
       }
-      if (status != P10_1_RUNTIME_STATUS_OK)
-        goto stream_fail_v2;
+      p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal,
+                             local_rx);
+      /*
+       * P10.1R removes the per-object optical ready round trip.  The receiver
+       * opens the next object immediately; the sender uses one deterministic
+       * local lead interval.  No TFDU control pulse is exchanged and this
+       * interval does not depend on object verification or host traffic.
+       */
+      if (ordinal != 0U && local_tx != 0U)
+        usleep(2000U);
+      p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+    } else {
+      next_object_prestarted = 0U;
     }
-
-    p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
     if (ordinal == 0U) {
       uint64_t pl_start;
       p10_1_store64(&result->ps_start_ticks_low,
@@ -1318,6 +1311,23 @@ static int p10_1_command_autonomous_stream(
     result->objects_completed++;
     accepted_bytes += slot->bytes;
     wire_bytes += slot->bytes;
+
+    /*
+     * Start N+1 before CPU integrity work for N.  Four DMA buffer slots and
+     * their descriptor chains remain queued, while PL transfers N+1 and the
+     * receiver verifies N.  The sender waits a fixed receiver-lead interval;
+     * there is no per-object optical readiness exchange.
+     */
+    if (ordinal + 1U < result->object_count &&
+        ordinal != recovery_ordinal && ordinal + 1U != recovery_ordinal) {
+      mailbox->object_id = result->first_object_id + ordinal + 1U;
+      mailbox->initial_sequence = 0U;
+      p10_1_configure_object(mailbox, flags, 0U, local_rx);
+      if (local_tx != 0U)
+        usleep(2000U);
+      p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+      next_object_prestarted = 1U;
+    }
 
     if (local_rx != 0U) {
       uint32_t object_input_crc;

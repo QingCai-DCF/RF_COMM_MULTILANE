@@ -243,9 +243,18 @@ def main() -> int:
         errors=errors,
     )
     if args.write or not errors:
+        evidence_stem = (
+            "p10_1r_measurement_contract"
+            if not errors and canonical_values(documents)[
+                "ACK_AGGREGATION_THRESHOLD"
+            ] == 32
+            else "p10_1_measurement_contract"
+        )
         write_pair(
-            "p10_1_measurement_contract",
-            "P10.1 measurement contract and schema validation",
+            evidence_stem,
+            "P10.1R measurement contract and schema validation"
+            if evidence_stem.startswith("p10_1r_")
+            else "P10.1 measurement contract and schema validation",
             payload,
             [
                 "## Result",
