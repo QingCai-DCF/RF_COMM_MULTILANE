@@ -8,7 +8,6 @@
 ## Errors
 
 - streaming stage summary is missing
-- duplicate_segment_f_to_r_64m:rotating:injected fault not observed
 
 ## Machine-readable evidence
 

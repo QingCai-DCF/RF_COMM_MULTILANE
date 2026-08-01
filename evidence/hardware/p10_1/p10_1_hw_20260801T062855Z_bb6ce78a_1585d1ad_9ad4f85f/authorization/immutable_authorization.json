@@ -1,0 +1,248 @@
+{
+  "angle_adjustment_allowed": false,
+  "artifacts": [
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "role": "fixed",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e"
+    },
+    {
+      "bytes": 848595,
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1/p10_ax7020_fixed_functional.xsa",
+      "role": "fixed",
+      "sha256": "7f7f6cc154b3a50bd6c37f3fe0d0fddb867f585065616c7cf173952081fd94a1"
+    },
+    {
+      "bytes": 1855896,
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "role": "fixed",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+    },
+    {
+      "bytes": 550240,
+      "kind": "elf",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf",
+      "role": "fixed",
+      "sha256": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728"
+    },
+    {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b/d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3/p10_ax7020_fixed_shutdown.bit",
+      "role": "fixed",
+      "sha256": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "role": "rotating",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f"
+    },
+    {
+      "bytes": 849469,
+      "kind": "xsa",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea/p10_ax7020_rotating_functional.xsa",
+      "role": "rotating",
+      "sha256": "89d766c05a960061d366a7a58812dc59b23054d2d0dcb37abc26155c04a13aea"
+    },
+    {
+      "bytes": 1856209,
+      "kind": "bsp",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "role": "rotating",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+    },
+    {
+      "bytes": 550428,
+      "kind": "elf",
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf",
+      "role": "rotating",
+      "sha256": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0"
+    },
+    {
+      "bytes": 369073,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit",
+      "role": "rotating",
+      "sha256": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+    }
+  ],
+  "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "ff979da60d01316d7567c29629cba538e30353f2",
+  "authorized_stages": [
+    "faults"
+  ],
+  "base_goal_retry_limits_overridden": [
+    "jtag_connect",
+    "program",
+    "diagnostic_stage_new_run_id"
+  ],
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "branch": "p10.1/hardware-performance-acceptance",
+  "build_summaries": {
+    "functional": {
+      "path": "evidence/generated/p10_1_hw_functional_build_summary.json",
+      "sha256": "adb609f267355c2699119dda5ac2f42ac9b25290abf949753a72abce12cb17ae"
+    },
+    "runtime": {
+      "path": "evidence/generated/p10_1_hw_ps_runtime_build_summary.json",
+      "sha256": "11d377568e3eafcdbda2cddfe8af3b797e9947fcf9c56cba1200420040539ce1"
+    },
+    "shutdown": {
+      "path": "evidence/generated/p10_offline_artifact_manifest.json",
+      "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
+    }
+  },
+  "current_run_hardware_authorization": true,
+  "diagnostic_stage_retry_budget": {
+    "faults": {
+      "base_goal_limit": 2,
+      "effective_limit": null,
+      "override_applied": true,
+      "run_ids": [
+        "p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f",
+        "p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f",
+        "p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f"
+      ]
+    }
+  },
+  "effective_retry_limits": {
+    "diagnostic_stage_new_run_id": null,
+    "jtag_connect": null,
+    "program": null
+  },
+  "ethernet_allowed": false,
+  "generated_at_utc": "2026-08-01T06:28:55+00:00",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "input_hashes": {
+    "fixed_profile": {
+      "bytes": 907,
+      "path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "sha256": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d"
+    },
+    "fixed_xdc": {
+      "bytes": 2679,
+      "path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+      "sha256": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184"
+    },
+    "goal": {
+      "bytes": 28113,
+      "path": "C:\\Users\\user\\Downloads\\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md",
+      "sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
+    },
+    "hardware_runtime": {
+      "bytes": 2264,
+      "path": "config/performance/p10_1_hardware_runtime.yaml",
+      "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
+    },
+    "measurement_contract": {
+      "bytes": 4098,
+      "path": "config/performance/p10_1_measurement_contract.yaml",
+      "sha256": "5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1"
+    },
+    "pipeline_model": {
+      "bytes": 2861,
+      "path": "config/performance/p10_1_pipeline.yaml",
+      "sha256": "8091670777af5a02986371a550cbac3ebd85adab9390486c93ce9c32cde45882"
+    },
+    "register_map": {
+      "bytes": 52873,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "ab2e159a7a09a273a0bf10d7bc79968fde302870bb540f9e1a2d4508792a01c8"
+    },
+    "requirements": {
+      "bytes": 215196,
+      "path": "config/project_requirements.yaml",
+      "sha256": "bc593d83391d2b889bfeb2295b1977e266a44fedb2a3dadb5010edeca8a168b4"
+    },
+    "rotating_profile": {
+      "bytes": 927,
+      "path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "sha256": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407"
+    },
+    "rotating_xdc": {
+      "bytes": 2682,
+      "path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+      "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
+    },
+    "runner": {
+      "bytes": 95527,
+      "path": "scripts/p10_1_hardware_acceptance.py",
+      "sha256": "358709d1c3a79034114e50d98ca7b0ee68d13f8375b716407b92a8fbab2c58a8"
+    },
+    "streaming_contract": {
+      "bytes": 1085,
+      "path": "config/performance/p10_1_streaming.yaml",
+      "sha256": "70b9731f8441b5b489f443fd0f31a70fca136e214e9d4ada9e194da8b95a673b"
+    },
+    "wiring": {
+      "bytes": 27452,
+      "path": "config/hardware/p10_active_wiring.yaml",
+      "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
+    },
+    "xsdb_stage": {
+      "bytes": 41898,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "d10f018d3e19c160fd3e22d959a2c4de6e154b7a646ca99f9bb1371371e7257d"
+    }
+  },
+  "lane_masks": [
+    1,
+    2,
+    3
+  ],
+  "maximum_lane_mask": 3,
+  "maximum_single_formal_run_seconds": 1800,
+  "module_exchange_allowed": false,
+  "movement_allowed": false,
+  "obscuration_allowed": false,
+  "offline_base_tag": "p10.1-offline-performance-ready",
+  "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
+  "part": "xc7z020clg400-2",
+  "plan_sha256": {
+    "faults": "edf5c52105b2bf599a55e778c766e0004e167a28de36a04c51fcd54798e3bb6a"
+  },
+  "retry_limit_override": {
+    "authorization_id": "P10_1-HARDWARE-DIAGNOSTIC-RETRY-LIMIT-OVERRIDE",
+    "path": "config/p10_1_retry_limit_override_authorization.json",
+    "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+    "sha256": "b69cfc00a73f1b91cb00bc2ffcfdb3c723499fe4078b78b9355dcf93adfa036a",
+    "user_authorization_statement_sha256": "30215a9e5011712c01379bc81e571204fbf9741db854860c240b65d8ccdc32c6"
+  },
+  "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
+  "rewiring_allowed": false,
+  "rotation_allowed": false,
+  "run_id": "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+  "shutdown": {
+    "after": true,
+    "before": true,
+    "normal_exit": true,
+    "on_error": true,
+    "on_interrupt": true,
+    "on_timeout": true,
+    "program_role_bound_shutdown_bitstreams": true
+  },
+  "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "status": "AUTHORIZED",
+  "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
+  "user_retry_limit_override": "不设上限"
+}

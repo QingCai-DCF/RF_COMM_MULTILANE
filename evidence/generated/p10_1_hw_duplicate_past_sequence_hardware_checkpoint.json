@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-DUPLICATE-PAST-SEQUENCE-HARDWARE-CHECKPOINT",
+  "status": "PASS",
+  "scope": "faults stage only",
+  "run_id": "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "generated_at_utc": "2026-08-01T07:14:37+00:00",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "artifact_freeze_commit": "ff979da60d01316d7567c29629cba538e30353f2",
+  "authorization_commit": "4e6d476e6747b8a429e8749c7e916f98f07ecf71",
+  "hardware_actions_executed": true,
+  "board_identities": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "artifact_hashes": {
+    "fixed_bitstream": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+    "rotating_bitstream": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+    "fixed_elf": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728",
+    "rotating_elf": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0",
+    "fixed_shutdown_bitstream": "d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3",
+    "rotating_shutdown_bitstream": "cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148"
+  },
+  "stage_result": {
+    "stage": "faults",
+    "status": "PASS",
+    "observation_count": 19,
+    "recovery_vector_count": 9,
+    "post_recovery_clean_count": 9,
+    "errors": [],
+    "xsdb_returncode": 0,
+    "xsdb_elapsed_seconds": 2635.676684099948,
+    "xsdb_timed_out": false
+  },
+  "duplicate_vector": {
+    "label": "duplicate_segment_f_to_r_64m",
+    "receiver": "rotating",
+    "injected_fault_observed_count": 3,
+    "application_bytes_committed": 0,
+    "atomic_commit_count": 0,
+    "duplicate_commit_count": 0,
+    "crc_bad_count": 0,
+    "integrity_error_count": 0,
+    "retry_exhausted_count": 0,
+    "status": "PASS"
+  },
+  "duplicate_clean_successor": {
+    "label": "post_duplicate_clean_f_to_r_64m",
+    "bytes": 67108864,
+    "application_goodput_bps": 2585496.213485937,
+    "atomic_commit_count": 1,
+    "duplicate_commit_count": 0,
+    "crc_bad_count": 0,
+    "integrity_error_count": 0,
+    "retry_exhausted_count": 0,
+    "status": "PASS"
+  },
+  "integrity_totals": {
+    "crc_bad": 0,
+    "sha_mismatch": 0,
+    "partial_commit": 0,
+    "duplicate_commit": 0,
+    "stale_commit": 0,
+    "retry_exhausted": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duty_violation": 0,
+    "continuous_high_violation": 0,
+    "deadlock": 0
+  },
+  "safety_and_scope": {
+    "maximum_lane_mask_used": "0x3",
+    "ethernet_used": false,
+    "network_used": false,
+    "hardware_movement": false,
+    "rotation_executed": false,
+    "rewiring_executed": false,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "active_tx_mask_after_shutdown": 0,
+    "endpoint_armed_after_shutdown": 0,
+    "sd_request_active_after_shutdown": 1,
+    "txd_output_intent_after_shutdown": 0
+  },
+  "raw_evidence": [
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/stages/faults/stage_summary.json",
+      "sha256": "4f2015b2ec5d364a9c0d4438661a4e96c4509991523795019bee75f5a250be33"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/stages/faults/xsdb.result.txt",
+      "sha256": "e3cb1e1d9ae53dd0583ab6888f780db151e3346635fffb50413a49da963f902e"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/stages/faults/dumps/observations.psv",
+      "sha256": "2397f34108e63c539a1c8a476e173e12e60841794ff0497eb4eb5039d0e7ec4b"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "8cf10f26f30008a14d5409e8484aaf5f9cb55032c37cecbb01ea6c68a99f1955"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "d5ade86d5042d2123efb5acce35892137ced3dfb0a554fc1a8ffa9652c330eaf"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f/authorization/immutable_authorization.json",
+      "sha256": "243dab920f47844044afd8650fe53cce97202eedf107c7e76918bdf06d61cb71"
+    }
+  ],
+  "authorization_lifecycle": "CONSUMED_AFTER_RUN",
+  "current_run_hardware_authorization": false,
+  "campaign_finalizer": {
+    "status": "FAIL",
+    "reason": "the final campaign gate requires all eleven stages for the new ELF bundle; this immutable diagnostic run authorized and executed faults only",
+    "executed_stage_status": {
+      "faults": "PASS",
+      "remaining_stages": "MISSING"
+    },
+    "final_summary_path": "evidence/generated/p10_1_hw_final_summary.json",
+    "final_summary_sha256": "1a39cc775250fc11c463399363b8f7de5a051bc24b1cab2ee9b44e3821f36207"
+  },
+  "campaign_pass_inherited": false,
+  "next_action": "run the remaining full P10.1 hardware campaign stages against the same immutable new ELF bundle"
+}
