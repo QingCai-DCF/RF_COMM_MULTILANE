@@ -193,8 +193,12 @@ def inspect_elf(role: str, elf: Path, out: Path) -> tuple[dict[str, Any], list[s
     ):
         result = run([str(executable), *arguments], 120)
         path = out / f"p10_{role}_runtime_{name}.txt"
-        path.write_text(result.stdout + "\n" + result.stderr,
-                        encoding="utf-8", errors="replace", newline="\n")
+        inspection_text = "\n".join(
+            line.rstrip()
+            for line in (result.stdout + "\n" + result.stderr).splitlines()
+        ) + "\n"
+        path.write_text(inspection_text, encoding="utf-8", errors="replace",
+                        newline="\n")
         inspection[name] = {"returncode": result.returncode, "path": rel(path),
                             "sha256": sha256(path)}
         if result.returncode != 0:
@@ -322,6 +326,7 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     native = run([
         str(HOST_GCC), "-std=c11", "-Wall", "-Wextra", "-Werror",
+        "-Wl,--no-insert-timestamp",
         "-Isoftware/ps_driver", "tests/test_p9_crypto.c",
         "software/ps_driver/p9_crypto.c", "-o", str(OUT / "p10_crypto_test.exe")], 120)
     native_run = run([str(OUT / "p10_crypto_test.exe")], 30) if native.returncode == 0 else None
