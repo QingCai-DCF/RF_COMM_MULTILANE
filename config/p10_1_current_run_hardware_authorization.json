@@ -73,8 +73,7 @@
     }
   ],
   "authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "c0d1021707de1e9155b0d416808ffac595ca4b6b",
-  "authorization_status_at_run_start": "AUTHORIZED",
+  "authorization_parent_commit": "ebaa02b7ddc4f27c93a55faf5ee51aae25176c2e",
   "authorized_stages": [
     "preflight",
     "smoke",
@@ -120,12 +119,7 @@
       "sha256": "463c219c0f3d135aa4b37ab65787db7778e7f1e30208abaecc00cc9c3d3afd29"
     }
   },
-  "campaign_disposition": "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
-  "campaign_status": "FAIL",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-01T07:26:32+00:00",
-  "consumed_by_run_id": "p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f",
-  "current_run_hardware_authorization": false,
+  "current_run_hardware_authorization": true,
   "diagnostic_stage_retry_budget": {
     "baseline": {
       "base_goal_limit": 2,
@@ -188,7 +182,8 @@
         "p10_1_hw_20260731T214947Z_ddf4a064_1585d1ad_9ad4f85f",
         "p10_1_hw_20260801T015919Z_bfff4836_1585d1ad_9ad4f85f",
         "p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f",
-        "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f"
+        "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
+        "p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f"
       ]
     },
     "smoke": {
@@ -224,11 +219,8 @@
     "program": null
   },
   "ethernet_allowed": false,
-  "final_evidence_path": "evidence/generated/p10_1_hw_final_summary.json",
-  "final_evidence_sha256": "9ee2b0568fe3281749cae28ec95d79de4c521d04aef2d74a36bf049a33da3705",
-  "generated_at_utc": "2026-08-01T07:23:51+00:00",
+  "generated_at_utc": "2026-08-01T07:32:24+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
-  "hardware_actions_executed": true,
   "input_hashes": {
     "fixed_profile": {
       "bytes": 907,
@@ -268,7 +260,7 @@
     "requirements": {
       "bytes": 215196,
       "path": "config/project_requirements.yaml",
-      "sha256": "dd706b2942dafb003cee78b2cb1617987c48729efd3aaa33c6fad3b949809608"
+      "sha256": "a225282f17fc54e51664172d93855c26ff4c5d7bbb14deb9e7d32ab9c252c399"
     },
     "rotating_profile": {
       "bytes": 927,
@@ -281,9 +273,9 @@
       "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
     },
     "runner": {
-      "bytes": 95527,
+      "bytes": 95833,
       "path": "scripts/p10_1_hardware_acceptance.py",
-      "sha256": "358709d1c3a79034114e50d98ca7b0ee68d13f8375b716407b92a8fbab2c58a8"
+      "sha256": "51888fd70de468391ddb0e5fffd4c0e05fe0dc022c233d9d0405fd4328b6f030"
     },
     "streaming_contract": {
       "bytes": 1085,
@@ -310,7 +302,6 @@
   "maximum_single_formal_run_seconds": 1800,
   "module_exchange_allowed": false,
   "movement_allowed": false,
-  "next_required_user_action": "none; continue automatic remediation and retry under the current user-authorized unlimited retry policy",
   "obscuration_allowed": false,
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
@@ -324,7 +315,7 @@
     "half_duplex": "eea0b43b145beec8afd960205fbaea1630009ca10f63fd5ea13e46ea88a71b72",
     "oneplusone": "31a8c75e68ce43a1e4c32fcafd6eb4bed008d89e01b92b527eb2d6d9da685c9f",
     "pipeline": "956c793f22cd384403ab6e3174b24881fa1c8315288532fd54c43c420ac467e7",
-    "preflight": "d9f12f3ca92fce4eb92fa0c0b01be1737607872d9ed3c4a640560e37cd3f6301",
+    "preflight": "99babfa9a39ed4bc9df56dc29e160894d47aac9b8cd836204940912a20e99cd4",
     "smoke": "271f1b8084c65c8bf7039161667f29b88110435d35ad29afccab707623d9bd5c",
     "streaming": "bcf09ecec1c424c73e0bccc79c0b2b206cb7c5afa74dd33569ec8551eb9e8d77",
     "tuning": "1e528bb0a2203deb33c74d3f3cd6c3950fb285122690a24654a3e445fc73c9c4"
@@ -337,10 +328,9 @@
     "user_authorization_statement_sha256": "30215a9e5011712c01379bc81e571204fbf9741db854860c240b65d8ccdc32c6"
   },
   "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
-  "reusable_for_future_run": false,
   "rewiring_allowed": false,
   "rotation_allowed": false,
-  "run_id": "p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "scope": "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
   "shutdown": {
@@ -352,10 +342,8 @@
     "on_timeout": true,
     "program_role_bound_shutdown_bitstreams": true
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
-  "status": "CONSUMED_AFTER_P10_1_HARDWARE_FAIL",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-01T09:45:32+08:00",
   "user_retry_limit_override": "不设上限"
 }
