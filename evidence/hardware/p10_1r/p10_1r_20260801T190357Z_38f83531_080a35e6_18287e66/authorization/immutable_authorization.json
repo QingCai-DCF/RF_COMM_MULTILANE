@@ -104,10 +104,8 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-01T19:15:16Z",
-  "consumed_by_run_id": "p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "generated_at_utc": "2026-08-01T19:03:57+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
@@ -264,7 +262,7 @@
     ]
   },
   "source_commit": "38f83531f51ad052d72680a4df69920d76131728",
-  "status": "CONSUMED_AFTER_PASS_ECHO_CALIBRATION",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"

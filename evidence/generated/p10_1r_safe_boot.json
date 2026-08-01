@@ -1,26 +1,16 @@
 {
-  "errors": [
-    "XSDB PASS marker missing",
-    "safe-boot marker missing",
-    "exactly one final endpoint-shutdown row required",
-    "immutable plan case missing: p10_1r_identity",
-    "immutable plan case missing: p10_1r_receive_only_5000ms",
-    "immutable plan case missing: p10_1r_ring32",
-    "immutable plan case missing: p10_1r_dma_reset_idle",
-    "immutable plan case missing: p10_1r_pl_soft_reset",
-    "immutable plan case missing: p10_1r_identity_after_reset"
-  ],
-  "generated_at_utc": "2026-08-01T18:44:01+00:00",
+  "errors": [],
+  "generated_at_utc": "2026-08-01T19:15:16+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66/safe_boot/stage_summary.json",
-  "raw_summary_sha256": "ce49c7f8d30154c089b7040f8388b4294500ba621b129e93b050d0d3e6c4834d",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/safe_boot/stage_summary.json",
+  "raw_summary_sha256": "1b92b3f6da23f99e7811b14af1a460213471681dfb2c724ba7056a9b8b8bc7d4",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66",
+  "run_id": "p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66",
   "schema_version": 1,
   "semantics": {},
-  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
-  "status": "FAIL",
+  "source_commit": "38f83531f51ad052d72680a4df69920d76131728",
+  "status": "PASS",
   "test_id": "P10_1R-HW-PREFLIGHT"
 }

@@ -1,0 +1,80 @@
+{
+  "acceptance_eligible": false,
+  "artifact_bundle_purpose": "ECHO_CALIBRATION_ONLY",
+  "configured_guard_cycles_during_measurement": 36864,
+  "current_run_hardware_authorization": false,
+  "deterministic_margin_cycles": 4096,
+  "echo_tail": {
+    "F0": {
+      "maximum_cycles": 0,
+      "p99_9_cycles": 0,
+      "p99_cycles": 0,
+      "raw_echo_count": 1000,
+      "samples": 1000,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/echo_tail/dumps/echo_F0.echo_tail.psv",
+      "source_sha256": "a95fdd6feeb54aa39241df0e761802e2cd7d2acf3b2a148a52be0ebc193c21bd"
+    },
+    "F1": {
+      "maximum_cycles": 0,
+      "p99_9_cycles": 0,
+      "p99_cycles": 0,
+      "raw_echo_count": 1000,
+      "samples": 1000,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/echo_tail/dumps/echo_F1.echo_tail.psv",
+      "source_sha256": "ead2ad8e5ab29cc9ead6b50ecafc53fd10f0e6fe821eda55291fcb9cc362a0c0"
+    },
+    "R0": {
+      "maximum_cycles": 0,
+      "p99_9_cycles": 0,
+      "p99_cycles": 0,
+      "raw_echo_count": 1000,
+      "samples": 1000,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/echo_tail/dumps/echo_R0.echo_tail.psv",
+      "source_sha256": "ffa4b7724c4ecde51e83bc29a20563ad750d57726f75546b97a1bf181686b92f"
+    },
+    "R1": {
+      "maximum_cycles": 0,
+      "p99_9_cycles": 0,
+      "p99_cycles": 0,
+      "raw_echo_count": 1000,
+      "samples": 1000,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/echo_tail/dumps/echo_R1.echo_tail.psv",
+      "source_sha256": "5baf77c6ad765a819f2508cf4f395defada5e30be63295d6c28a8236e81d6162"
+    }
+  },
+  "generated_at_utc": "2026-08-01T19:15:16Z",
+  "hardware_actions_executed": true,
+  "idle_qualification_cycles": 256,
+  "maximum_observed_post_tx_echo_tail_cycles": 0,
+  "minimum_safe_guard_cycles": 4096,
+  "network_used": false,
+  "next_action": "Set minimum_post_tx_guard_cycles to 4096, retain the separate 256-cycle idle qualification, rebuild all final artifacts, and rerun the complete acceptance campaign.",
+  "raw_same_module_echo_count": 4000,
+  "run_id": "p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66",
+  "schema_version": 1,
+  "selected_final_guard_cycles": 4096,
+  "shutdown": {
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "all_attempts_confirmed": true
+  },
+  "source_evidence": {
+    "authorization_sha256": "5c63c176a26d679c46b481ac7df86cf211c243f4e285d246e21c54cb81120f92",
+    "echo_stage_summary": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/echo_tail/stage_summary.json",
+    "echo_stage_summary_sha256": "9aff3f7599f87481b8dd754e06bfea7576d1d0fa6ed9086adf303e33c59a8503",
+    "orchestrator": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/final/orchestrator_result.json",
+    "orchestrator_sha256": "d100f2477867974a9b1325511b91ce450a56cff575537af114e2f562560ebe12",
+    "run_manifest": "evidence/hardware/p10_1r/p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66/final/run_evidence_sha256_manifest.json",
+    "run_manifest_sha256": "7d879bdc1bac6a00640f2ef476e2feb8418241c3ea50e8d443848a47f3a5ddb2",
+    "safe_boot_summary_sha256": "1b92b3f6da23f99e7811b14af1a460213471681dfb2c724ba7056a9b8b8bc7d4"
+  },
+  "status": "PASS",
+  "test_id": "P10_1R-ECHO-GUARD-SELECTION",
+  "violations": {
+    "accepted_same_module_frames": 0,
+    "admission": 0,
+    "cross_lane_accepted": 0,
+    "non_target_accepted": 0,
+    "overlap": 0
+  }
+}
