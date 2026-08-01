@@ -1,9 +1,13 @@
 # P10.1 single/two-lane baseline
 
-- Status: `PASS`
+- Status: `FAIL`
 - Test ID: `P10_1-HW-BASELINE`
 - Hardware actions executed: `true`
 - Current-run hardware authorization: `false`
+
+## Errors
+
+- baseline stage summary is missing
 
 ## Machine-readable evidence
 
