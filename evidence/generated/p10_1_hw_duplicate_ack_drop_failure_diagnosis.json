@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-DUPLICATE-ACK-DROP-FAILURE-DIAGNOSIS",
+  "status": "PASS",
+  "scope": "DIAGNOSIS_OF_FAILED_VALIDATION_STIMULUS",
+  "generated_at_utc": "2026-08-01T06:17:19Z",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "run": {
+    "run_id": "p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f",
+    "artifact_source_commit": "9b453015fdc9a4c16373ac185099ef87238a142e",
+    "stage": "faults",
+    "stage_status": "FAIL",
+    "xsdb_execution_status": "PASS",
+    "observation_count": 19,
+    "elapsed_seconds": 2631.7482980000786,
+    "maximum_lane_mask_used": "0x3",
+    "ethernet_used": false,
+    "movement_or_rewiring_executed": false,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "current_run_hardware_authorization": false
+  },
+  "raw_evidence": {
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/stages/faults/stage_summary.json",
+      "sha256": "5954ab69d1faa79889c701c21aef1e84197bfbaa75e092f48b5e5ffb8e8a30eb"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/stages/faults/xsdb.result.txt",
+      "sha256": "d571eb17ef7159859b5a80991ff15f4912f48bf25526df021fe0132177e6651d"
+    },
+    "observations": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/stages/faults/dumps/observations.psv",
+      "sha256": "67ff3c48f1abc59b73203c1ec8a6da450a67f5eb1adc903f6be259437fcca8a3"
+    },
+    "duplicate_fixed_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/stages/faults/dumps/duplicate_segment_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "703c343c56ec119df5f0d9edff3587391389bb8c5e25344d05a0b035a2918e3f"
+    },
+    "duplicate_rotating_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/stages/faults/dumps/duplicate_segment_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "0747cc6b754e512a975866c1e74a33e81e321c15a506c4f60d74068f07b857a6"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "a00724c7de92cb1d4de2da07141ecb0c994fe47a40d7345d01af26e81d1bf38a"
+    },
+    "shutdown_after": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    "run_manifest": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T052733Z_9b453015_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "1cbe0818d1c4dbf1d27fa3c631c6c7c486ed5deabe49e0f0bc7a0dbe804222a8"
+    }
+  },
+  "direct_observations": {
+    "duplicate_segment_f_to_r_64m": {
+      "receiver_role": "rotating",
+      "configured_receiver_ack_drop_count": 255,
+      "receiver_injected_fault_observed_count": 0,
+      "sender_injected_fault_observed_count": 0,
+      "application_bytes_committed": 0,
+      "atomic_commit_count": 0,
+      "retry_exhausted_count": 0,
+      "receiver_physical_data_good_by_lane": [68189, 68125],
+      "receiver_physical_ack_good_by_lane": [34094, 0],
+      "fault_observation_gate": "FAIL",
+      "recovery_safety_checks": "PASS"
+    },
+    "post_duplicate_clean_f_to_r_64m": {
+      "application_bytes_committed": 67108864,
+      "atomic_commit_count": 1,
+      "application_goodput_bps": 2588519.653125451,
+      "status": "PASS"
+    },
+    "stale_segment_r_to_f_64m": {
+      "receiver_role": "fixed",
+      "receiver_injected_fault_observed_count": 3,
+      "application_bytes_committed": 0,
+      "status": "PASS"
+    },
+    "all_other_fault_and_clean_vectors": "PASS"
+  },
+  "source_audit": {
+    "runtime_extension": {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "sha256": "4130f01ae212c524125234306509cf163ea0addd97ae709670e5157641d7d12f"
+    },
+    "transport_core": {
+      "path": "rtl/p9_optical_transport_core.sv",
+      "sha256": "f1536cc2011915c664a0bd1b36b06ba25c9ec44a9ab4c7849a7e9d9a11788847"
+    },
+    "selective_repeat_receiver": {
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    "facts": [
+      "The retry timeout is a fixed 4000000 cycles at 64000000 Hz, or 62.5 ms.",
+      "P9_FAULT_INJECTION exposes only an eight-bit ACK-candidate drop counter.",
+      "The counter is decremented when a local cumulative-ACK snapshot is consumed, not once per serialized ACK frame.",
+      "A later cumulative ACK can therefore acknowledge the outstanding window without any DATA retransmission even when the counter starts at 255.",
+      "Existing protocol_fault_flags bit 3 forces the first three DATA attempts to sequence initial_sequence-1 while retaining canonical payload metadata.",
+      "The selective-repeat RX classifies a same-session sequence behind its base by receive_distance>=0x8000 and increments duplicate_count."
+    ]
+  },
+  "diagnosis": {
+    "classification": "ACK_DROP_COUNTER_DOES_NOT_GUARANTEE_DATA_RETRANSMISSION",
+    "direct_cause": "The receiver observed no duplicate DATA because the bounded ACK-candidate drop stimulus did not force the sender across its RTO.",
+    "evaluator_bug": false,
+    "optical_or_wiring_failure_indicated": false,
+    "safety_failure_indicated": false
+  },
+  "next_remediation_contract": {
+    "mechanism": "On the DATA sender only, set protocol_fault_flags bit 3 for the recovery object and do not configure ACK drops.",
+    "injected_attempt_count": 3,
+    "injected_sequence": "initial_sequence-1",
+    "required_receiver_duplicate_delta_minimum": 1,
+    "required_application_commit": 0,
+    "required_clean_successor_bytes": 67108864,
+    "rtl_change_required": false,
+    "normal_protocol_path_changed": false,
+    "safety_path_changed": false,
+    "new_role_bound_elf_hashes_required": true,
+    "fresh_faults_run_required": true
+  },
+  "acceptance_boundary": {
+    "diagnosis_pass_claimed": true,
+    "faults_stage_pass_claimed": false,
+    "hardware_pass_claimed": false,
+    "old_artifact_hardware_pass_inherited": false
+  }
+}

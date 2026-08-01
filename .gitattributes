@@ -74,6 +74,8 @@ evidence/hardware/p10/** -text -whitespace
 # Preserve byte-exact P10.1 generated summaries, raw tool logs, and software
 # artifacts. Vendor logs contain significant trailing spacing and are bound by
 # SHA256 records, so source whitespace normalization must not rewrite them.
+artifacts/p10_1/** -text -whitespace
+evidence/hardware/p10_1/** -text -whitespace
 evidence/generated/p10_1_* -text -whitespace
 evidence/generated/p10_1_*/** -text -whitespace
 

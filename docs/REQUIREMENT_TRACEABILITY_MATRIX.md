@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `fa0922bddbf74751a27cf46472910a74547e454ef9ce3b3bc3d33edefe1aa337`
-- `PROJECT_STATUS.md` — `0f1c0862ab193941554c27a7bd36291ab8463b8a99e1c364da6f641594c633a1`
+- `config/project_state.json` — `28eba7124ed523925d11b16aad2031f600f45660088e36e85b7d283a1f172a45`
+- `PROJECT_STATUS.md` — `ab4b1efc92d63067a23fbe7e428ef5c89b2690ed961cf96832fa6657679cfd83`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `fa0922bddbf74751a27cf46472910a74547e454ef9ce3b3bc3d33edefe1aa337`
+- `config/project_state.json` — `28eba7124ed523925d11b16aad2031f600f45660088e36e85b7d283a1f172a45`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `fa0922bddbf74751a27cf46472910a74547e454ef9ce3b3bc3d33edefe1aa337`
-- `PROJECT_STATUS.md` — `0f1c0862ab193941554c27a7bd36291ab8463b8a99e1c364da6f641594c633a1`
+- `config/project_state.json` — `28eba7124ed523925d11b16aad2031f600f45660088e36e85b7d283a1f172a45`
+- `PROJECT_STATUS.md` — `ab4b1efc92d63067a23fbe7e428ef5c89b2690ed961cf96832fa6657679cfd83`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -903,7 +903,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
-- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `9acacfc17e7f7947b48a080b228bd81364c372fe012f61c80cb9e4e96a030dd6`
+- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `6c8c5b366f411047facd69197da33b203fba853df34ef0e25eb3173b148aadbe`
 
 ### `PERF-MEAS-001`
 
@@ -985,11 +985,11 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `ac65cb4de8b83acd419f5dce6e6ad18ab91a97f52f67c0bb18dd922181d7859c`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6/p10_fixed_runtime.elf` — `5dbf7e2668b1ddac9f742085d907c90324b7ca931dc47e932ae70dcd8881f4e6`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`
-- `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `9f3b3c4da76a7711e9430512ba95f4b1025612d5005af1da554ab451b974e9ed`
+- `artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/27177f776520d3266cf7733b4a905d1eceb24a71b871797ae4dfa9f7aab9ac93/p10_fixed_runtime.elf` — `27177f776520d3266cf7733b4a905d1eceb24a71b871797ae4dfa9f7aab9ac93`
+- `artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
+- `artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/3f023515e87cad79ec92cbb1353a1079b43356b1656904be7dacf39148c83fee/p10_rotating_runtime.elf` — `3f023515e87cad79ec92cbb1353a1079b43356b1656904be7dacf39148c83fee`
+- `artifacts/p10_1/9b453015fdc9a4c16373ac185099ef87238a142e/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
 - `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
 
 ### `OBS-LED-001`
