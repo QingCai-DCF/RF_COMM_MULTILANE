@@ -72,11 +72,12 @@
   "errors": [
     "preflight did not complete",
     "1-byte diagnostic record missing",
-    "diagnostic scaling exclusion missing"
+    "diagnostic scaling exclusion missing",
+    "host fast-path exclusion failed"
   ],
   "ethernet_used": false,
   "failed_object": null,
-  "generated_at_utc": "2026-08-01T09:04:39+00:00",
+  "generated_at_utc": "2026-08-01T09:37:55+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -103,11 +104,11 @@
   },
   "raw_evidence": [
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "preflight"
     }
   ],
@@ -118,7 +119,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "semantics": {},
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",

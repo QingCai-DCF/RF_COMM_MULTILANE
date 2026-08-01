@@ -77,10 +77,11 @@
     "faults: safe boot or stage failed",
     "crosstalk: safe boot or stage failed",
     "half_duplex: safe boot or stage failed",
+    "oneplusone: safe boot or stage failed",
     "formal: safe boot or stage failed"
   ],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T09:04:39+00:00",
+  "generated_at_utc": "2026-08-01T09:37:55+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -106,89 +107,89 @@
   },
   "raw_evidence": [
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "preflight"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "smoke"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "baseline"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "tuning"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "pipeline"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "streaming"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "faults"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "crosstalk"
     },
     {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
       "stage": "half_duplex"
     },
     {
-      "bytes": 5464,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/stages/oneplusone/stage_summary.json",
-      "sha256": "e0f985be203c347e9bec56050591dbd11ff5058a5a09e10887c255aead0e42a3"
-    },
-    {
-      "bytes": 30044,
+      "bytes": 1162759,
       "declared_status": null,
       "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55",
-      "stage": "formal"
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
+      "stage": "oneplusone"
+    },
+    {
+      "bytes": 1000804,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/stages/formal/stage_summary.json",
+      "sha256": "57beaf682f12fc556cf1249b3b7439fe72beffe490872cc9c627f93286d26ce4"
     }
   ],
   "register_map": {
@@ -198,7 +199,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
   "safe_boot_contract": {
     "active_tx_mask": 0,
     "autonomous_tx": false,
@@ -213,9 +214,9 @@
     "baseline": null,
     "crosstalk": null,
     "faults": null,
-    "formal": null,
+    "formal": "PASS",
     "half_duplex": null,
-    "oneplusone": "PASS",
+    "oneplusone": null,
     "pipeline": null,
     "preflight": null,
     "smoke": null,

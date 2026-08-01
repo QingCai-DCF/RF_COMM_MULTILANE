@@ -16,6 +16,7 @@
 - faults: safe boot or stage failed
 - crosstalk: safe boot or stage failed
 - half_duplex: safe boot or stage failed
+- oneplusone: safe boot or stage failed
 - formal: safe boot or stage failed
 
 ## Machine-readable evidence

@@ -77,8 +77,8 @@
   "bounded_retry_audit_superseded": true,
   "campaign_disposition": "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
   "captured_run_hardware_authorization": true,
-  "committed_bytes_f_to_r": null,
-  "committed_bytes_r_to_f": null,
+  "committed_bytes_f_to_r": 236978176,
+  "committed_bytes_r_to_f": 236978176,
   "complete_run_id": null,
   "cross_lane_crosstalk_class": "NOT_MEASURED",
   "crosstalk_4x4_matrix": "FAIL",
@@ -95,6 +95,7 @@
     "p10_1_hw_streaming_64m_summary",
     "p10_1_hw_half_duplex_summary",
     "p10_1_hw_crosstalk_summary",
+    "p10_1_hw_1plus1_summary",
     "p10_1_hw_stationary_30min_summary",
     "p10_1_hw_evidence_consistency"
   ],
@@ -103,9 +104,9 @@
     "baseline": "MISSING",
     "crosstalk": "MISSING",
     "faults": "MISSING",
-    "formal": "MISSING",
+    "formal": "FAIL",
     "half_duplex": "MISSING",
-    "oneplusone": "PASS",
+    "oneplusone": "MISSING",
     "pipeline": "MISSING",
     "preflight": "MISSING",
     "smoke": "MISSING",
@@ -127,12 +128,13 @@
     "p10_1_hw_streaming_64m_summary",
     "p10_1_hw_half_duplex_summary",
     "p10_1_hw_crosstalk_summary",
+    "p10_1_hw_1plus1_summary",
     "p10_1_hw_stationary_30min_summary",
     "p10_1_hw_evidence_consistency"
   ],
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T09:04:39+00:00",
+  "generated_at_utc": "2026-08-01T09:37:55+00:00",
   "generated_evidence": [
     "evidence/generated/p10_1_hw_repo_intake.json",
     "evidence/generated/p10_1_hw_model_sanity_summary.json",
@@ -192,7 +194,7 @@
   "next_recommended_stage": "P10_1_PERFORMANCE_REMEDIATION",
   "next_required_user_action": "none; continue automatic remediation and retry under the current user-authorized unlimited retry policy",
   "nonblocking_results": {
-    "oneplusone": "SKIP_WITH_REASON",
+    "oneplusone": null,
     "streaming_128m": "SKIP_WITH_REASON",
     "stretch_4p8mbps": {
       "f_to_r": "FAIL",
@@ -203,7 +205,7 @@
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
-  "p10_1_1plus1_experiment": "SKIP_WITH_REASON",
+  "p10_1_1plus1_experiment": null,
   "p11_hardware_ready": false,
   "p11_missing_prerequisites": [
     "single-lane four-fixed-module handover hardware",
@@ -216,7 +218,6 @@
   ],
   "pass_gates": [
     "p10_1_hw_artifact_summary",
-    "p10_1_hw_1plus1_summary",
     "p10_1_hw_shutdown_summary"
   ],
   "pipeline_config": {
@@ -230,14 +231,14 @@
   "r_to_f_application_goodput_bps": null,
   "raw_evidence": [
     {
-      "bytes": 30044,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55"
+      "bytes": 1162759,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079"
     },
     {
-      "bytes": 12933,
+      "bytes": 79110,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "05b2c15da42c339b1c16cbcf5f6eee44124a73df3d8b6c8cc1a9406d729617fb"
+      "sha256": "b95155ece6ff72922c3cde4546bd8783a0159f7e55dc485d5c98412057cf88f3"
     }
   ],
   "register_map": {
@@ -255,8 +256,8 @@
   "retry_run_id_limit": null,
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
-  "runtime_seconds": null,
+  "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "runtime_seconds": 1800.037,
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
   "stationary_30min": "FAIL",

@@ -6,9 +6,9 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 168
-PASS: 139
+PASS: 138
 PENDING: 16
-FAIL: 13
+FAIL: 14
 WAIVED: 0
 ```
 
@@ -176,7 +176,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1_PERF-002` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | R-to-F two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s for at least 300 seconds and 150 MiB committed. |
 | `P10_1_PERF-003` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-HALF-DUPLEX-4MBPS` | `evidence/generated/p10_1_hw_half_duplex_summary.json` | Measured sustained goodput and its primary bottleneck shall be reconciled with the corrected physical-airtime model without exceeding the same-protocol ceiling. |
 | `P10_1_XTALK-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-CROSSTALK-4X4` | `evidence/generated/p10_1_hw_crosstalk_summary.json` | The stationary two-board setup shall produce a direct 4-by-4 TX-to-RX raw and framed crosstalk matrix with zero non-target CRC-valid false frames. |
-| `P10_1_FD-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-1PLUS1-DIRECT-CAPABILITY` | `evidence/generated/p10_1_hw_1plus1_summary.json` | The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it. |
+| `P10_1_FD-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-1PLUS1-DIRECT-CAPABILITY` | `evidence/generated/p10_1_hw_1plus1_summary.json` | The campaign shall directly determine whether lane0 F-to-R and lane1 R-to-F simultaneous 1+1 operation is supported, and shall preserve an explicit nonblocking result when the frozen endpoint direction contract prevents it. |
 | `P10_1_SOAK-001` | `FAIL` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-STATIONARY-30MIN` | `evidence/generated/p10_1_hw_stationary_30min_summary.json` | One complete 1800-second stationary performance run shall retain at least 4 Mbit/s in both formal directions with zero integrity, resource, retry, deadlock, or internal safety violations. |
 | `P10_1_SAFE-001` | `PASS` | P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `P10_1-HW-SHUTDOWN-BOTH` | `evidence/generated/p10_1_hw_shutdown_summary.json` | Every stage and all error, timeout, interrupt, and normal exits shall end with independently verified shutdown of both bound AX7020 endpoints. |
 | `OBS-LED-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-MAPPING-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | Both AX7020 roles shall use the same active-low PL LED mapping, with LED1/LED2 showing lane0 TX/RX and LED3/LED4 showing lane1 TX/RX on the exact official Bank 35 pins. |
@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `05a6c2d48a56ae1d910697ae627a61730ae8c68026e92db6fd5724abb4e45515`
-- `PROJECT_STATUS.md` — `402c7c8a5eb09dae6aa2882746eef801ad58cd6c525977b390da0c74fd7c774c`
+- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
+- `PROJECT_STATUS.md` — `fa784143ac280ae1799b7b3bc6c380be84776dce9f2d5fc6c5445d9e43c6f821`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `05a6c2d48a56ae1d910697ae627a61730ae8c68026e92db6fd5724abb4e45515`
+- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `05a6c2d48a56ae1d910697ae627a61730ae8c68026e92db6fd5724abb4e45515`
-- `PROJECT_STATUS.md` — `402c7c8a5eb09dae6aa2882746eef801ad58cd6c525977b390da0c74fd7c774c`
+- `config/project_state.json` — `54eabfac390e9baa6ee8dac798a0d8e46de155ba8af99755fe03d2131c70ea86`
+- `PROJECT_STATUS.md` — `fa784143ac280ae1799b7b3bc6c380be84776dce9f2d5fc6c5445d9e43c6f821`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -903,7 +903,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
-- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `e1b30c15eea929b98bd7b12f7aa98c4d34dc0cee717acb23c45b6bd41dac04dd`
+- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `9eb81c5238ee93d312802200f2581072961de695304c792e6d4d6762b39b7a0f`
 
 ### `PERF-MEAS-001`
 
@@ -983,18 +983,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `artifacts/p10_1/bfff483663e51862a0e1e4aed31940bd84d80cdb/9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0/p10_rotating_runtime.elf` — `9b9bef44b65b3f08ca9442d2d577bdbdc79db2d2d8da3991eb93a4b1dd5946a0`
 - `artifacts/p10/c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d/cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148/p10_ax7020_rotating_shutdown.bit` — `cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148`
 
-### `P10_1_FD-001`
-
-- `evidence/generated/p10_1_hw_1plus1_summary.json` — `db896bcaac996b47e7dae7422949da51c37ad1794bf891dc42fb1dffeac5b31e`
-- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
-- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
-- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
-- `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit` — `9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f`
-- `config/hardware/p10_active_wiring.yaml` — `64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f`
-
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `4b4b43f1997c0343685ef98e30c823a15a58bf12d8e8819dcdbb1418283bb33e`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `011afce6ffb7b53ead7839e81bb5d0e0026153c15ee8d9337ba7e11dc10cd5bc`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`

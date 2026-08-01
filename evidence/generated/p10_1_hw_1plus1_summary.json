@@ -68,12 +68,15 @@
   "boundary": "NOT_A_4PLUS4_FULL_DUPLEX_PASS",
   "captured_run_hardware_authorization": true,
   "current_run_hardware_authorization": false,
-  "errors": [],
+  "errors": [
+    "oneplusone stage summary is missing",
+    "frozen endpoint direction capability was not explicit"
+  ],
   "ethernet_used": false,
-  "experiment_outcome": "SKIP_WITH_REASON",
+  "experiment_outcome": null,
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T09:04:39+00:00",
+  "generated_at_utc": "2026-08-01T09:37:55+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -99,12 +102,15 @@
   },
   "raw_evidence": [
     {
-      "bytes": 5464,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/stages/oneplusone/stage_summary.json",
-      "sha256": "e0f985be203c347e9bec56050591dbd11ff5058a5a09e10887c255aead0e42a3"
+      "bytes": 1162759,
+      "declared_status": null,
+      "evidence_role": "ORCHESTRATOR_STAGE_DISPOSITION",
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2988063b7ad8cf32fa9b71045b4cd203522aedab29a0a23631354da42444e079",
+      "stage": "oneplusone"
     }
   ],
-  "reason": "single_endpoint_direction_bit_no_independent_per_lane_direction",
+  "reason": null,
   "register_map": {
     "bytes": 52873,
     "path": "config/register_map/ir_axi_regs.yaml",
@@ -112,10 +118,10 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
-  "status": "PASS",
+  "status": "FAIL",
   "streaming_contract": {
     "bytes": 1085,
     "path": "config/performance/p10_1_streaming.yaml",

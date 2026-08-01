@@ -7,7 +7,12 @@
 
 ## Errors
 
-- formal stage summary is missing
+- stationary_30min_formal_f2r: host fast-path exclusion failed
+- stationary_30min_formal_r2f: host fast-path exclusion failed
+- stationary_30min_formal_f2r: wall application goodput below 4 Mbit/s
+- stationary_30min_formal_f2r: active application goodput below 4 Mbit/s
+- stationary_30min_formal_r2f: wall application goodput below 4 Mbit/s
+- stationary_30min_formal_r2f: active application goodput below 4 Mbit/s
 - formal runtime is not exactly 1800 seconds
 
 ## Machine-readable evidence
