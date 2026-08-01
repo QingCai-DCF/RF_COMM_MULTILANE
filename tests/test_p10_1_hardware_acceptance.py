@@ -559,6 +559,39 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertLess(state_write, cache_clean)
         self.assertGreaterEqual(publish.count("dsb();"), 2)
 
+    def test_bounded_window_large_chunk_budget_is_measurement_adaptive(
+        self,
+    ) -> None:
+        tcl = STAGE_TCL.read_text(encoding="utf-8")
+        window_start = tcl.index("proc p10_run_p101_window")
+        window_end = tcl.index("proc p10_wait_p101_active", window_start)
+        window = tcl[window_start:window_end]
+        for marker in (
+            "last_case_size",
+            "last_case_elapsed_ms",
+            "measured_budget",
+            "P10_1_WINDOW_CHUNK_DEFERRED",
+        ):
+            self.assertIn(marker, window)
+
+        # Captured baseline trace: the first 1 MiB took 4154 ms and left
+        # 55846 ms.  Linear scaling alone puts 16 MiB at 66464 ms; the Tcl
+        # safety budget is 25% plus 2 s, so that chunk must be deferred.
+        elapsed_ms = 4154
+        last_size = 1 * 1024 * 1024
+        candidate = 16 * 1024 * 1024
+        remaining_ms = 55_846
+        measured_budget = (
+            (
+                elapsed_ms * candidate * 5
+                + (last_size * 4 - 1)
+            )
+            // (last_size * 4)
+            + 2000
+        )
+        self.assertEqual(measured_budget, 85_080)
+        self.assertGreater(measured_budget + 3000, remaining_ms)
+
     def test_receiver_prime_timeout_preserves_machine_diagnostics(self) -> None:
         tcl = STAGE_TCL.read_text(encoding="utf-8")
         wait_start = tcl.index("proc p10_wait_receiver_primed")
@@ -575,6 +608,19 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             "p10_1_sequence=0x%08X",
         ):
             self.assertIn(marker, wait)
+
+        pair_start = tcl.index("proc p10_wait_pair_terminal")
+        pair_end = tcl.index("proc p10_execute_case", pair_start)
+        pair_wait = tcl[pair_start:pair_end]
+        for marker in (
+            "fixed_p101_state",
+            "fixed_p101_status",
+            "fixed_committed_low",
+            "rotating_p101_state",
+            "rotating_p101_status",
+            "rotating_committed_low",
+        ):
+            self.assertIn(marker, pair_wait)
 
 
 if __name__ == "__main__":

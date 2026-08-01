@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "test_id": "P10_1-HW-BASELINE-WINDOW-TIMEOUT-REMEDIATION",
+  "status": "PASS",
+  "scope": "OFFLINE_HOST_SCHEDULER_REMEDIATION_ONLY",
+  "generated_utc": "2026-08-01T03:05:01Z",
+  "hardware_actions_executed_during_remediation": false,
+  "hardware_confirmation_of_remediation": "PENDING_RETRY",
+  "failed_run": {
+    "run_id": "p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f",
+    "checkpoint_commit": "059c48166e50162c56079a9d76bf2bb3b41ea517",
+    "orchestrator_status": "FAIL",
+    "orchestrator_error": "RuntimeError: baseline validation failed",
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "current_run_hardware_authorization": false,
+    "campaign_disposition": "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED"
+  },
+  "immutable_evidence": {
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/stages/baseline/stage_summary.json",
+      "sha256": "f4573b7c1c057026d08555d5925b512d1c59457956fba68fdc5c3fb7dc46b174"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/stages/baseline/xsdb.result.txt",
+      "sha256": "c742c8f32f5918e221652211f5e6c7d4514751e5fdcec820d648fefca56067b2"
+    },
+    "observations": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/stages/baseline/dumps/observations.psv",
+      "sha256": "294ff27bb1c5a53b2f6415b21a080276cf84807769b21a07050c3678bd513014"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "5a28aca0ffe637e8b59d013465e1ec2f969ba32e27b0a5018ccfae7cdb4c976b"
+    }
+  },
+  "direct_observations": {
+    "completed_case": "baseline_two_lane_f_to_r_60s_0000_1048576",
+    "completed_case_bytes": 1048576,
+    "completed_case_started_ms": 1785553071524,
+    "completed_case_finished_ms": 1785553075678,
+    "completed_case_wall_ms": 4154,
+    "window_duration_ms": 60000,
+    "window_remaining_after_case_ms": 55846,
+    "next_selected_case": "baseline_two_lane_f_to_r_60s_0001_16777216",
+    "next_selected_case_bytes": 16777216,
+    "timeout_terminal_main_state": {
+      "fixed": 3,
+      "rotating": 3,
+      "meaning": "P9_SERVICE_RUNNING"
+    }
+  },
+  "root_cause_arithmetic": {
+    "historical_fixed_candidate_budget_ms": 42000,
+    "linear_16m_estimate_from_completed_1m_ms": 66464,
+    "available_window_time_ms": 55846,
+    "linear_estimate_exceeds_available_by_ms": 10618,
+    "new_measured_budget_formula": "ceil(last_case_elapsed_ms * candidate_bytes * 1.25 / last_case_bytes) + 2000",
+    "new_16m_measured_budget_ms": 85080,
+    "new_selection_guard_ms": 3000,
+    "conclusion": "The old fixed 42 s assumption selected a chunk that could not fit the remaining bounded window at the directly measured rate. Both endpoints were still in P9_SERVICE_RUNNING when the host deadline expired."
+  },
+  "remediation": {
+    "stage_runner": {
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "747f24c2e9b001c673e75d5f872da5574dfe9b5a122f2259ef98257115b13af3"
+    },
+    "policy": [
+      "Always complete a 1 MiB sample before considering a larger bounded-window chunk.",
+      "Scale the most recently completed wall time to the proposed chunk.",
+      "Add 25 percent plus 2 seconds of safety margin.",
+      "Defer the large chunk when its measured budget plus 3 seconds cannot fit.",
+      "Preserve a slow transfer as a measured performance result instead of a host scheduling timeout.",
+      "On any future paired timeout, capture both P10.1 state/status and committed-byte diagnostics for each endpoint."
+    ],
+    "bitstream_or_elf_changed": false,
+    "new_current_run_authorization_required": true
+  },
+  "validation": {
+    "unit_tests": {
+      "command": "python -m unittest tests.test_p10_1_hardware_acceptance tests.test_finalize_p10_1_hardware_acceptance",
+      "tests_run": 27,
+      "status": "PASS"
+    },
+    "tcl_parse_to_argument_guard": {
+      "command": "xsdb.bat scripts/hw/p10_dual_xsdb_stage.tcl",
+      "expected_terminal": "usage guard before connect",
+      "status": "PASS"
+    },
+    "no_hardware_call_check": {
+      "command": "python scripts/check_no_hardware_calls.py",
+      "marker": "NO_HARDWARE_ACTIONS_EXECUTED=1",
+      "status": "PASS"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "PASS"
+    }
+  }
+}

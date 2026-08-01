@@ -414,7 +414,13 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
     }
     after 5
   }
-  error "P10 paired command timeout sequence=$sequence fixed_state=$fixed_state rotating_state=$rotating_state"
+  set fixed_p101_state [p10_read32 fixed 0x00020410]
+  set fixed_p101_status [p10_read32 fixed 0x00020414]
+  set fixed_committed_low [p10_read32 fixed 0x000204B0]
+  set rotating_p101_state [p10_read32 rotating 0x00020410]
+  set rotating_p101_status [p10_read32 rotating 0x00020414]
+  set rotating_committed_low [p10_read32 rotating 0x000204B0]
+  error "P10 paired command timeout sequence=$sequence fixed_state=$fixed_state rotating_state=$rotating_state fixed_p101_state=$fixed_p101_state fixed_p101_status=$fixed_p101_status fixed_committed_low=$fixed_committed_low rotating_p101_state=$rotating_p101_state rotating_p101_status=$rotating_p101_status rotating_committed_low=$rotating_committed_low"
 }
 
 proc p10_execute_case {d {window "NA"}} {
@@ -520,6 +526,8 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
   set started [clock milliseconds]
   set deadline [expr {$started + $duration_sec * 1000}]
   set index 0
+  set last_case_size 0
+  set last_case_elapsed_ms 0
   set object_id [expr {0x51000000 ^ (($direction & 1) << 27) ^
       (($lane & 3) << 24) ^ ($duration_sec << 8)}]
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
@@ -543,7 +551,24 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
       set candidate 67108864
       set candidate_budget 145000
     }
+    # A bounded window may not assume that the endpoint already meets its
+    # target throughput.  Scale the most recent completed case wall time to
+    # the proposed larger chunk, add 25 percent plus 2 s of margin, and defer
+    # the large chunk when it cannot fit.  This keeps a slow measurement a
+    # measured performance FAIL instead of turning it into a host timeout.
+    if {$candidate > 1048576 && $last_case_size > 0 &&
+        $last_case_elapsed_ms > 0} {
+      set measured_budget [expr {
+          (($last_case_elapsed_ms * $candidate * 5) +
+           ($last_case_size * 4 - 1)) / ($last_case_size * 4) + 2000}]
+      if {$measured_budget > $candidate_budget} {
+        set candidate_budget $measured_budget
+      }
+    }
     if {$candidate_budget + 3000 >= $remaining} {
+      if {$candidate > 1048576} {
+        p10_say "P10_1_WINDOW_CHUNK_DEFERRED=$label:candidate=$candidate,budget_ms=$candidate_budget,remaining_ms=$remaining"
+      }
       set candidate 1048576
       set candidate_budget 5000
     }
@@ -556,7 +581,11 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk} {
     set pattern_flags [expr {($index % 5) << 8}]
     set d [p10_p101_case $case_label [expr {$object_id + $index}] \
         $candidate $direction $lane $timeout $pattern_flags]
+    set case_started [clock milliseconds]
     p10_execute_case $d $label
+    set last_case_elapsed_ms [expr {
+        max(1, [clock milliseconds] - $case_started)}]
+    set last_case_size $candidate
     if {[clock milliseconds] > $deadline} {
       error "P10.1 window $label exceeded its bounded deadline"
     }
