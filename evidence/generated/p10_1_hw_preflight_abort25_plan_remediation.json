@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-PREFLIGHT-ABORT25-PLAN-REMEDIATION",
+  "status": "PASS",
+  "generated_at_utc": "2026-08-01T07:31:30.7380389Z",
+  "scope": "offline host-plan remediation",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "implementation_commit": "42545b07a78031e3189c0fbea421916d79ac1ac4",
+  "artifact_source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "current_run_hardware_authorization": false,
+  "change": {
+    "file": "scripts/p10_1_hardware_acceptance.py",
+    "case": "failed_object_diagnostic",
+    "old_total_bytes": 1048576,
+    "new_total_bytes": 2097152,
+    "object_bytes": 524288,
+    "old_object_count": 2,
+    "new_object_count": 4,
+    "old_recovery_ordinal": 0,
+    "new_recovery_ordinal": 1,
+    "old_preflight_plan_sha256": "d9f12f3ca92fce4eb92fa0c0b01be1737607872d9ed3c4a640560e37cd3f6301",
+    "new_preflight_plan_sha256": "99babfa9a39ed4bc9df56dc29e160894d47aac9b8cd836204940912a20e99cd4"
+  },
+  "regression_invariant": "abort25 preflight vector has at least four objects and integer recovery ordinal is at least one",
+  "source_hashes": {
+    "scripts/p10_1_hardware_acceptance.py": "51888fd70de468391ddb0e5fffd4c0e05fe0dc022c233d9d0405fd4328b6f030",
+    "tests/test_p10_1_hardware_acceptance.py": "46c2489097856ffffb9eeee259a948ecf8ce9575e0184550b243b891b87d969f"
+  },
+  "offline_validation": {
+    "hardware_runner_unittests": "20/20 PASS",
+    "finalizer_unittests": "10/10 PASS",
+    "python_compile": "PASS",
+    "artifact_collector": "PASS (10 records)",
+    "git_diff_check": "PASS"
+  },
+  "artifact_impact": {
+    "rtl_changed": false,
+    "firmware_changed": false,
+    "protocol_changed": false,
+    "functional_bitstreams_changed": false,
+    "xsa_changed": false,
+    "bsp_changed": false,
+    "elf_changed": false,
+    "frozen_artifact_count": 10,
+    "fixed_bitstream_sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e",
+    "rotating_bitstream_sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f",
+    "fixed_elf_sha256": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728",
+    "rotating_elf_sha256": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0"
+  },
+  "root_cause_evidence": {
+    "path": "evidence/generated/p10_1_hw_preflight_prime_timeout_root_cause.json",
+    "status": "PASS"
+  },
+  "next_action": "create a fresh full-campaign current-run authorization bound to the new plan hash and unchanged frozen artifacts"
+}
