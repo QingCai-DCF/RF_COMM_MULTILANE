@@ -349,7 +349,9 @@ proc p10_wait_receiver_primed {role d} {
     set last_response $response
     set last_pl_status $pl_status
     set last_phy $phy
-    if {$state == 5} { error "P10 $role receiver faulted before source launch" }
+    if {$state == 5 && $command != 13} {
+      error "P10 $role receiver faulted before source launch"
+    }
     if {($phy & 0x00000F00) != 0} { error "P10 $role receiver safety fault before source launch" }
     if {$command == 3 && $state == 3 && ($pl_status & 0x4) != 0} { return }
     if {$command == 13} {
@@ -365,7 +367,7 @@ proc p10_wait_receiver_primed {role d} {
           ($pl_status & 0x4) != 0} {
         return
       }
-      if {$p10_1_state == 8} {
+      if {$state == 5 || $p10_1_state == 8} {
         error [format "P10.1 %s receiver faulted before source launch: main_state=0x%08X response=0x%08X pl_status=0x%08X phy=0x%08X p10_1_magic=0x%08X p10_1_state=0x%08X p10_1_status=0x%08X p10_1_sequence=0x%08X" \
             $role $state $response $pl_status $phy $p10_1_magic \
             $p10_1_state $p10_1_status $p10_1_sequence]

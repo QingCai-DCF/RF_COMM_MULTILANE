@@ -29,7 +29,7 @@ pipeline:
 supported:
   buffer_count: [2, 4, 8, 16]
   descriptor_ring_depth: [8, 16, 32]
-  descriptor_batch: [1, 4, 8, 16, 32]
+  descriptor_batch: [4, 8, 16, 32]
   lane_mask: [1, 2, 3]
   ack_threshold: [8]
   outstanding_frames: [32]
@@ -40,6 +40,7 @@ admission_constraints:
   - stream_bytes_lte_64_mib
 unsupported:
   descriptor_ring_depth_64: runtime_dma_ring_not_allocated
+  descriptor_batch_1: current_bfff4836_artifact_receiver_priming_fault_reproduced_with_default_and_64k_object_candidates
   ack_threshold_other_than_8: endpoint_aggregator_is_fixed_in_current_bitstream
   outstanding_frames_64: selective_repeat_window_is_32
   streaming_128_mib: runtime_address_and_mailbox_contract_is_64_mib

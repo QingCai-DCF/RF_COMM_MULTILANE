@@ -1,36 +1,37 @@
 # P10.1 tuning candidate qualification
 
-Status: **PASS** for offline qualification and plan correction only. The new
-candidate still requires a hardware tuning retry.
+Status: **PASS** for qualifying the current artifact's supported descriptor
+batch set. The remaining nine-candidate tuning plan still requires a hardware
+retry.
 
-Run `p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f` completed six
-tuning candidates and then rejected the composite candidate
-`ring8 + batch1 + 64 KiB object`. Both outer shutdown markers are PASS and the
-current-run authorization is consumed.
+Two independently authorized runs rejected `descriptor_batch=1`:
 
-The fixed sender reported P10.1 status `0x104` (`PL_OBJECT`) with PL object
-error `0x50090004`, which the RTL defines as TX retry exhaustion. The rotating
-receiver reported `0x103` (`DMA_COMPLETION`). Neither endpoint published an
-application commit; CRC, SHA, integrity, partial-commit, duplicate-commit and
-stale-commit counters all remained zero.
+- `ring8 + batch1 + 64 KiB object` entered active transfer, then the fixed
+  sender reported PL object error `0x50090004` (TX retry exhausted) and the
+  rotating receiver reported DMA completion failure. No application commit
+  or integrity error occurred.
+- `ring16 + batch1 + 256 KiB object` held the default configuration constant
+  except for batch size. The rotating receiver faulted while priming, before
+  source launch.
 
-This observation qualifies only that exact composite configuration. It does
-not prove that `descriptor_batch=1` is unsupported for every object size or
-ring depth.
+Both runs ended with `SHUTDOWN_FIXED=PASS` and
+`SHUTDOWN_ROTATING=PASS`; both current-run authorizations are consumed.
 
-The replacement `tune_batch1` candidate now changes only one parameter from
-the mandatory/default configuration:
+The direct evidence supports this bounded conclusion:
 
-- buffer count: 4
-- ring depth: 16
-- descriptor batch: 1
-- object size: 256 KiB
-- descriptor size: 64 KiB
+```text
+artifact source: bfff483663e51862a0e1e4aed31940bd84d80cdb
+descriptor_batch=1: unsupported for this artifact
+supported hardware tuning set: [4, 8, 16, 32]
+```
 
-The runner SHA256 is
-`8d807a0b86444655d74c902cb6db774f5c089d86e389a61e1c72e751de4fdefe`.
-No bitstream or ELF changed. A new authorization must bind that runner before
-the tuning retry.
+This is not extrapolated to a future rebuilt artifact or to product hardware.
+Batch one may be reintroduced only after a new artifact and direct
+requalification.
+
+The active tuning plan removes the batch-one candidate. The XSDB receiver
+prime error path now captures P10.1 state/status diagnostics before returning
+a main-state fault. No bitstream or ELF changed.
 
 Machine-readable evidence is in
 `evidence/generated/p10_1_hw_tuning_candidate_qualification.json`.

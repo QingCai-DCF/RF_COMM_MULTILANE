@@ -434,14 +434,6 @@ def build_plans() -> dict[str, list[PlanItem]]:
             timeout=30_000,
         ),
         p101_case(
-            "tune_batch1",
-            direction=0,
-            total=4 * mib,
-            batch=1,
-            object_id=0x10101006,
-            timeout=30_000,
-        ),
-        p101_case(
             "tune_batch4",
             direction=0,
             total=4 * mib,

@@ -32,7 +32,7 @@ ownership_rules:
 sweeps:
   buffer_count: [2, 4, 8, 16]
   descriptor_ring_depth: [8, 16, 32, 64]
-  descriptor_batch: [1, 4, 8, 16, 32]
+  descriptor_batch: [4, 8, 16, 32]
   cache_strategy:
   - per_segment
   - per_batch
