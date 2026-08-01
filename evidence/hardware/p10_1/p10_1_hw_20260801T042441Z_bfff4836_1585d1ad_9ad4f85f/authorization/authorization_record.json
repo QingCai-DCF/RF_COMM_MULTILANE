@@ -1,0 +1,34 @@
+{
+  "authorization": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
+  "authorization_sha256": "6f27311bd0627e07bd9a9d19b244d1be0269254a5b41da80de2e72a1c4a06838",
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "errors": [],
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "hardware_actions_executed": false,
+  "maximum_single_formal_run_seconds": 1800,
+  "run_id": "p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "shutdown": {
+    "after": true,
+    "before": true,
+    "normal_exit": true,
+    "on_error": true,
+    "on_interrupt": true,
+    "on_timeout": true,
+    "program_role_bound_shutdown_bitstreams": true
+  },
+  "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
+  "status": "PASS",
+  "test_id": "P10_1-HW-CURRENT-RUN-AUTHORIZATION"
+}

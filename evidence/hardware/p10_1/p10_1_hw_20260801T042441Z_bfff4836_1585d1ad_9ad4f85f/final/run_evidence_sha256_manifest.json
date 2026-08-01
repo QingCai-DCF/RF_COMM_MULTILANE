@@ -1,0 +1,559 @@
+{
+  "files": [
+    {
+      "bytes": 26867,
+      "path": "artifacts/fixed/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 26867,
+      "path": "artifacts/rotating/ps7_init.tcl",
+      "sha256": "5c34d37a91948d02ea88682e17595a9b09e29f0555c420c7ad52979e6126086b"
+    },
+    {
+      "bytes": 1201,
+      "path": "authorization/authorization_record.json",
+      "sha256": "72a370c9010ea0d4124469e4ae284481a7588b0104e58f8482c028dd9fd0b32c"
+    },
+    {
+      "bytes": 9876,
+      "path": "authorization/immutable_authorization.json",
+      "sha256": "6f27311bd0627e07bd9a9d19b244d1be0269254a5b41da80de2e72a1c4a06838"
+    },
+    {
+      "bytes": 279286,
+      "path": "final/orchestrator_result.json",
+      "sha256": "946f31c661747892597c0d435971aa1e29b591764d471a1412bb55f3b510945c"
+    },
+    {
+      "bytes": 68,
+      "path": "raw_logs/hw_server.json",
+      "sha256": "45c8044adb4fb019f99fc06b7cab6eb63a75e2c107d8158d586f5432cd49aeb0"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/faults_after/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/faults_after/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/faults_after/attempt_1.stdout.log",
+      "sha256": "300aee31ce04474ed7419d349fbdbe76ad281e3d97dda68fa638d205bd315e62"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/faults_before/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/faults_before/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/faults_before/attempt_1.stdout.log",
+      "sha256": "7e0dc8ab055bd258caa1fdcc296202739e84322e149aabd79a7fd52d7a732807"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/finally_emergency/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/finally_emergency/attempt_1.stdout.log",
+      "sha256": "2bb4775bf599fc1520a6d9bffe67d73a1339ab61bfa57cb106cb769426968952"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/initial_shutdown/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/initial_shutdown/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3612,
+      "path": "shutdown/initial_shutdown/attempt_1.stdout.log",
+      "sha256": "9b55f6d43cdd98f5228342f8d6ff4c15d494eb48731b07a044c849f355a3357d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/abort25_f_to_r_64m.fixed.bin",
+      "sha256": "051d325e9683dcf86b239f176a36fd07917024fd63630f204afc405f27d3eabe"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/abort25_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "68b798108993bde4edd9175faac426da2dc381c662dde855f18b1a5e12893a04"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/abort25_f_to_r_64m.rotating.bin",
+      "sha256": "d6e7e304f27322a01cf3e391dbecdf6ad1432b603481c276f85fe78df339073d"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/abort25_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "b5b79ef3220016213d37a50302f9aeff1b8c5ab058981c579484accecbc47c80"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/abort75_r_to_f_64m.fixed.bin",
+      "sha256": "08d77e3f5ca54f5be238012cf2c32383071f829406fca98e98cdf1a148e7374c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/abort75_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "08700a0299581a1c440cee0c86c5273991ecb72ba47597ca9f1d09b16331de5d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/abort75_r_to_f_64m.rotating.bin",
+      "sha256": "da1437e54126b2eb085b68529f57cea11ddf8022202d8c654478e651371ed631"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/abort75_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "d75304d090c86236eef1a1e4869d982315ea6b2befd404abe4cd524089a007cd"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m.fixed.bin",
+      "sha256": "908f52ee6cd3b2391b7cbcfac855fbac6ed2d473588de7f73c9ae3137075969e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "b8b56bc977d71fd8c1485c9c4f44fc5bfb4fc6d74927e3834a6c82ba06050598"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m.rotating.bin",
+      "sha256": "31e61e6e731ac5de4b5f9ba10cefdeb2820eae3144da1ca52f35cc512a5d89a1"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "c1a856c1ded194d6a483c80966dec84c4ead0dbdaa7fdfa8193cad6f1b86edea"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m_fixed_reset_recovery_reboot.fixed.bin",
+      "sha256": "1aa73efad3c8124e592eecb8a1c8d5e6e2e9ef2f4c7438f9c5e48b1fe782a70b"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_receiver_f_to_r_64m_rotating_reset_recovery_reboot.rotating.bin",
+      "sha256": "222739d8ffa41f16669f8312a76b19d622a7dbc4a442028eeca9711fa55521d2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m.fixed.bin",
+      "sha256": "cc9c1a904b73bdaa4ce3ce624800b7a20e173be08d519a7dbadd176fc1366d70"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "e543fc730910db8953aa09132ef7480344b662999d80f2a1e8c7caf4d1325161"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m.rotating.bin",
+      "sha256": "dcf21ba6de546a170ff369a736ce2de310dcf1ae3d4f5b7da89d79544e1a0e35"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "0335d6b1732e91c3cb1cbb8a967a913bcadd5b1092f06f87d5f905283997b58d"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m_fixed_reset_recovery_reboot.fixed.bin",
+      "sha256": "af121e3eff7361c7d57addde208645ac8e96fa5e2d6ed13297eaeafe5b9fa0b5"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/dma_reset_sender_f_to_r_64m_rotating_reset_recovery_reboot.rotating.bin",
+      "sha256": "8558d9dcd827ffb9e5e6a869742956004b4e4e0bd0aabbc5db43012122fbc685"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/duplicate_segment_f_to_r_64m.fixed.bin",
+      "sha256": "28ac104f88660e1f19254012b0c994c846c333fdcb9f23a1ff29bcdc423383b4"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/duplicate_segment_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "6278570e799ebd2791c26269a6165d1b36ecc3df8a4a168f30ac73f39c10e1c5"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/duplicate_segment_f_to_r_64m.rotating.bin",
+      "sha256": "8508dd49b98a081e9c9d69f21667448e7be3d44056be22b5da7af2193b47b46c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/duplicate_segment_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "03278c54e9da88c598c6ef400ffa81f334e8dd5690d66729569251efb0c8547f"
+    },
+    {
+      "bytes": 17934,
+      "path": "stages/faults/dumps/observations.psv",
+      "sha256": "a7f07da628edcc69586a2112440d2984269cb7ea3f67aa04f8fe8886c3407dde"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/P10-DIAG_endpoint_shutdown.fixed.bin",
+      "sha256": "d04753241dd8ec6110c15951cc3df3b2d08932d2ec8ea412c74325577121ab8a"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/P10-DIAG_endpoint_shutdown.rotating.bin",
+      "sha256": "fad7a6943172e6b47ef8070f0e10d783d1ddbef40a9409075de69d0a41f7a408"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/P10-DIAG_ready.fixed.bin",
+      "sha256": "62e99b3966b80c79910e8a1428dc9b4e98af1795203aee14e7857acdac7ed19e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/P10-DIAG_ready.rotating.bin",
+      "sha256": "9133bc3b4e16caa74690a483cb3903e3009761a02d33849d1525001a038f6dc2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m.fixed.bin",
+      "sha256": "ff9eb3dc154ca41de914ebdcf5d599652fc132871652b3cc3c900e6157c377de"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "6aac8225ff943e795f1f4dcf69af1658bba4f6fe197233a4fc679079274a7015"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m.rotating.bin",
+      "sha256": "eb12dfed0eb001ef060d85997ffacc8f3c45e935d7835d29577148109f64fc70"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "fd0e3e2fed56c03b56dcde65c0b28b96da0f9b4a38fc0a3c6a0b81a55f8fe2bc"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m_fixed_reset_recovery_reboot.fixed.bin",
+      "sha256": "bd069f30172ed7778bb3002f809668186513638bb78206b0179b6d963056aeae"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/pl_reset_r_to_f_64m_rotating_reset_recovery_reboot.rotating.bin",
+      "sha256": "233ca19b463f9cdbd8a7b25636222dbc58d1b8e855234497ba1ec1e6c3a1ff45"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_abort25_clean_f_to_r_64m.fixed.bin",
+      "sha256": "852add1b37bfc68ba5d3bdba91d4623368da493a243da45ef5039a41dfdcda6a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_abort25_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "72ffd96e6bf073a8ac5d2c6245e5e3f3354acee858ac6ee60de7d11c7f12ccc0"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_abort25_clean_f_to_r_64m.rotating.bin",
+      "sha256": "3a649926a989a8a08e3cf477b9e0bcbd8017f2c71fe7f0bded3f945c4f20904b"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_abort25_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "7dff0caa3f814dd671d47ebf464b130b66f645cd66e2c523160d2fbdcb5b4e34"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_abort75_clean_r_to_f_64m.fixed.bin",
+      "sha256": "bb2132c27c4e0aefc2efe4406b8f4f905cf1d4d066744f337925c24614d12d1d"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_abort75_clean_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "5d9f288fdf59a3bb53fe82789102667155e727bad115a116c9ba43d2678f1522"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_abort75_clean_r_to_f_64m.rotating.bin",
+      "sha256": "dd75993be9afe618ceb183df082c1fee626264fd48b154d582d813e65b8688b0"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_abort75_clean_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "70ad3bc45de727a4e7fa6ced328a4fefb9c063f271b44c47329817a93d2dc9de"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_dma_receiver_clean_f_to_r_64m.fixed.bin",
+      "sha256": "326b333952fadd3003de36091b2c4b64a03ee8ad4c47ae74388755e43f964b0c"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_dma_receiver_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "9924526a5476b98750f8ef40868fcec6e7325aba04a7a21570613d75311871ac"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_dma_receiver_clean_f_to_r_64m.rotating.bin",
+      "sha256": "992fea4426f1c7ad303a13e09da2fb99a2b5aec3d626808133f66d57ea7a48ad"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_dma_receiver_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "70547cffb7c91d81c2ac06f637f2ec7d6d5688b4acc188eb387b1f0ebadeac8b"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_dma_reset_clean_f_to_r_64m.fixed.bin",
+      "sha256": "dbd4c54907d10438cfba08eb079d8c371f933ef2e47fab4e831bb0601fa59ef0"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_dma_reset_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "ed3a8a3bba741d3c502fd199ecaee2a05f2ab2251390c76e75222219e92f1b5e"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_dma_reset_clean_f_to_r_64m.rotating.bin",
+      "sha256": "924d401015e15b8db2778e85fdd0c433bcd9bff51ce6e5938263277c63c70dee"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_dma_reset_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "4ce961e92c76e835b4d133c0923b43d11d7c8296a067e3f01e66bba0979ba514"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_duplicate_clean_f_to_r_64m.fixed.bin",
+      "sha256": "ef26de18f6e55f74580c9da7679c9ff81f4be978fc2a458730ea5a96f9feb6c5"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_duplicate_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "a7895e62fcfb6f15a1a1f33455f7553785e149c863e06000443bf788b68a3ddb"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_duplicate_clean_f_to_r_64m.rotating.bin",
+      "sha256": "6253757d0bd638944ec63bebffd9387141da1c92e68f9043e12f54429f12928d"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_duplicate_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "acf2824415db9bf72a688443b84083555ac2ef17e4710b22ef4f2df2f4716ed1"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_pl_reset_clean_r_to_f_64m.fixed.bin",
+      "sha256": "e4d326d57536dd105e113240d4b28e62fad23afe87b20a892c182acbdee9c1f8"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_pl_reset_clean_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "f2a2d6b37ff3ff78d5a22695dfc5b6daa035081c58b6072df24a85e496df9806"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_pl_reset_clean_r_to_f_64m.rotating.bin",
+      "sha256": "3670ffb1b2272521dba4245d79187a0fa536ed7dfee03441bab1dd76b151f722"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_pl_reset_clean_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "3157e83d35ed08f489801c179b5d12233a3c933162b6e98499b82ed9b49d2cf6"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_receiver_ps_reset_clean_f_to_r_64m.fixed.bin",
+      "sha256": "0b9e718531b75bc919792a86a41a68274c7d5e6c16a9fd2cb9c669a5ff742639"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_receiver_ps_reset_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "c2fa7491fa9d56ed32cd433200a9afe8f1d4b01fa39dd346d7e50f456b4a0a15"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_receiver_ps_reset_clean_f_to_r_64m.rotating.bin",
+      "sha256": "3330ee0b170b9ff17abbe1de4c0bf927693d5404cb14d7470bf766ec43cc4c50"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_receiver_ps_reset_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "247e4f459325b3fda59dbe260650b987893d01b537283ac1cef929312b72eece"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_sender_ps_reset_clean_f_to_r_64m.fixed.bin",
+      "sha256": "1d8665278a3b53c3419347b523c6e375ccbdd5d3b41bbf315a72729e3695e5f2"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_sender_ps_reset_clean_f_to_r_64m.fixed.p10_1.bin",
+      "sha256": "be742dbdcd44008e0b50f3e8932663917bd3e1e84a51dc9fa98e1bdf6521a890"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_sender_ps_reset_clean_f_to_r_64m.rotating.bin",
+      "sha256": "4eac876a64f34bb87e4c9d18635e01605407352d7f3cb54ead7afcd2f480527e"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_sender_ps_reset_clean_f_to_r_64m.rotating.p10_1.bin",
+      "sha256": "f41e43b76143dc03e9595dbe3ec67ba7a6479325529a8dca9bdfc7266ad22748"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_stale_clean_r_to_f_64m.fixed.bin",
+      "sha256": "66d6a83c8024fbef5634ad758af570dfa3c1099039979526044e791e6076e655"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_stale_clean_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "264a5002abe9860fd5e97ec3e59ea1a4c2d8e85fbe6d7f5b7e263322a3d50bdb"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/post_stale_clean_r_to_f_64m.rotating.bin",
+      "sha256": "bf81a06f5f7f1ccbf7db298dbf371e05299d713ed2127d2cf27c58f2175ca8b1"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/post_stale_clean_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "e812dcd21786adfd197931854146dd6ecb762360c7922097bfdac7150fe03de3"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r.fixed.bin",
+      "sha256": "cf016449a59625dc3e4171302afa9f64cfedf87bb426ba54062b9575881b06a3"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r.fixed.p10_1.bin",
+      "sha256": "bd85a2f2a333515c07fdbd5b00b488841969256a213ec42405f0f771bd60d205"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r.rotating.bin",
+      "sha256": "b96fe4d60295849f6dee3d5d0b1810b848a70f3d7a23cea3754487d1167159ac"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r.rotating.p10_1.bin",
+      "sha256": "c5ac374fdcc4914e1a3b3727c4ddcd2eb502db049d74d16048e90435373e30bd"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r_peer_recovery_reboot.fixed.bin",
+      "sha256": "f225fc9d043118a50f2787cf8556ffbab398707ac5f2a6d5ccc282b735e6d4bc"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/receiver_ps_service_reset_f_to_r_selected_reboot.rotating.bin",
+      "sha256": "6cd004cfff84dbaee3ab6426926e198123cfa471dfc0f5a515800bd636eb7a10"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r.fixed.bin",
+      "sha256": "8abf591ee0e382ebb1654c56e572373dc769bfc69d6103a810897e14469641f4"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r.fixed.p10_1.bin",
+      "sha256": "e58802563438310ba2c4c8bc4524756a6788003fa31a0d5448bb4238692ccc4f"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r.rotating.bin",
+      "sha256": "546d0fd1ac7309e921bc884d0146c44cca18e3c2ac933ee2e1d33526efa1b5e6"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r.rotating.p10_1.bin",
+      "sha256": "eccada8f9cd6b002ccb7d01895205cb38cb6a5260f543e326f6ca0bc17706687"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r_peer_recovery_reboot.rotating.bin",
+      "sha256": "b75a3edef4f33cab1621800b5a650e9150f99451bbf35e50e48e5a695bca1fa2"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/sender_ps_service_reset_f_to_r_selected_reboot.fixed.bin",
+      "sha256": "fa370f116b15479822d2431e0018e5579ee0fdceed3438d51d166f1352665009"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/stale_segment_r_to_f_64m.fixed.bin",
+      "sha256": "a24139a7a47692a9657201d0623c7607117f7c32591431a3a09e0ebb61a7aef1"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/stale_segment_r_to_f_64m.fixed.p10_1.bin",
+      "sha256": "d67098371d230e5990af74baae781fc8e000c463df8db100f42bdeee866eb4c7"
+    },
+    {
+      "bytes": 1024,
+      "path": "stages/faults/dumps/stale_segment_r_to_f_64m.rotating.bin",
+      "sha256": "19fcdde4667ebf9616851dae2037f0c8e949bcf8c7d6c23473a2357c0eb14e3a"
+    },
+    {
+      "bytes": 2048,
+      "path": "stages/faults/dumps/stale_segment_r_to_f_64m.rotating.p10_1.bin",
+      "sha256": "078ae8ae754a7636026ff18bc5a891f30104f81edfd14107617c1a01ff1a6359"
+    },
+    {
+      "bytes": 2356,
+      "path": "stages/faults/faults.plan",
+      "sha256": "edf5c52105b2bf599a55e778c766e0004e167a28de36a04c51fcd54798e3bb6a"
+    },
+    {
+      "bytes": 227248,
+      "path": "stages/faults/stage_summary.json",
+      "sha256": "f167511475678613a8ab3944980043e0c0225ee8af16357c53933529e15ce601"
+    },
+    {
+      "bytes": 9977,
+      "path": "stages/faults/xsdb.result.txt",
+      "sha256": "cb7344987efe06046aa1976b9438f9d14f50cabdbc73d280209f9c331dcb4d18"
+    },
+    {
+      "bytes": 0,
+      "path": "stages/faults/xsdb.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 9977,
+      "path": "stages/faults/xsdb.stdout.log",
+      "sha256": "cb7344987efe06046aa1976b9438f9d14f50cabdbc73d280209f9c331dcb4d18"
+    }
+  ],
+  "generated_at_utc": "2026-08-01T05:10:24+00:00",
+  "run_id": "p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1-HW-EVIDENCE-MANIFEST"
+}

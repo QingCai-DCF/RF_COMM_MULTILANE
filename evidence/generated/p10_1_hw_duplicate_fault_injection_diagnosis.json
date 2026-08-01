@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-DUPLICATE-FAULT-INJECTION-DIAGNOSIS",
+  "status": "PASS",
+  "scope": "DIAGNOSIS_OF_FAILED_FAULT_VECTOR",
+  "generated_at_utc": "2026-08-01T05:13:06Z",
+  "source_run": {
+    "run_id": "p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f",
+    "hardware_stage": "faults",
+    "hardware_stage_status": "FAIL",
+    "xsdb_execution_result": "PASS",
+    "observation_count": 19,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "current_run_hardware_authorization": false,
+    "files": {
+      "stage_summary": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/stage_summary.json",
+        "bytes": 227248,
+        "sha256": "f167511475678613a8ab3944980043e0c0225ee8af16357c53933529e15ce601"
+      },
+      "xsdb_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/xsdb.result.txt",
+        "bytes": 9977,
+        "sha256": "cb7344987efe06046aa1976b9438f9d14f50cabdbc73d280209f9c331dcb4d18"
+      },
+      "observations": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/dumps/observations.psv",
+        "bytes": 17934,
+        "sha256": "a7f07da628edcc69586a2112440d2984269cb7ea3f67aa04f8fe8886c3407dde"
+      },
+      "duplicate_receiver_dump": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/dumps/duplicate_segment_f_to_r_64m.rotating.p10_1.bin",
+        "bytes": 2048,
+        "sha256": "03278c54e9da88c598c6ef400ffa81f334e8dd5690d66729569251efb0c8547f"
+      },
+      "stale_receiver_dump": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/stages/faults/dumps/stale_segment_r_to_f_64m.fixed.p10_1.bin",
+        "bytes": 2048,
+        "sha256": "d67098371d230e5990af74baae781fc8e000c463df8db100f42bdeee866eb4c7"
+      },
+      "orchestrator_result": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+        "bytes": 279286,
+        "sha256": "946f31c661747892597c0d435971aa1e29b591764d471a1412bb55f3b510945c"
+      },
+      "shutdown_after": {
+        "path": "evidence/hardware/p10_1/p10_1_hw_20260801T042441Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.result.txt",
+        "bytes": 1699,
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      }
+    }
+  },
+  "direct_observations": {
+    "duplicate_segment_f_to_r_64m": {
+      "receiver_role": "rotating",
+      "receiver_injected_fault_observed_count": 0,
+      "sender_injected_fault_observed_count": 0,
+      "application_bytes_committed": 0,
+      "recovery_safety_checks": "PASS",
+      "fault_observation_gate": "FAIL"
+    },
+    "stale_segment_r_to_f_64m": {
+      "receiver_role": "fixed",
+      "receiver_injected_fault_observed_count": 3,
+      "application_bytes_committed": 0,
+      "recovery_safety_checks": "PASS",
+      "fault_observation_gate": "PASS"
+    },
+    "all_other_fault_and_clean_vectors": "PASS"
+  },
+  "source_audit": {
+    "runtime_extension": {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "sha256": "c92be5ed2a4295f1305730d6121d6c59c46f87a4a73af362eac2f7c7722eb605"
+    },
+    "transport_core": {
+      "path": "rtl/p9_optical_transport_core.sv",
+      "sha256": "f1536cc2011915c664a0bd1b36b06ba25c9ec44a9ab4c7849a7e9d9a11788847"
+    },
+    "facts": [
+      "P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT maps to bit 8 of P9_FAULT_INJECTION.",
+      "P9_FAULT_INJECTION bits 15:8 are the bounded ACK-drop count, so bit 8 requests exactly one dropped ACK.",
+      "The endpoint transport uses four-DATA-frame bursts and cumulative ACKs.",
+      "The hardware RTO is 4000000 cycles at 64 MHz, or 62.5 ms.",
+      "The receiver duplicate counter increments only when a retransmitted DATA sequence is actually rejected as duplicate."
+    ]
+  },
+  "diagnosis": {
+    "classification": "FAULT_STIMULUS_NOT_DETERMINISTIC",
+    "direct_cause": "The requested single dropped ACK did not produce a receiver-visible duplicate DATA frame in this run.",
+    "mechanism_inference": "A later cumulative ACK from the four-frame burst can acknowledge the outstanding data before the 62.5 ms retry timeout, so dropping only one ACK does not guarantee retransmission.",
+    "evaluator_bug": false,
+    "wiring_or_optical_failure_indicated": false
+  },
+  "remediation_contract": {
+    "duplicate_vector": "On the receiver only, suppress a bounded number of ACKs sufficient to span at least one RTO; keep waiting for a positive delta of P9_RX_DUPLICATE_COUNT before expected recovery.",
+    "proposed_receiver_ack_drop_count": 255,
+    "sender_ack_drop_count": 0,
+    "observation_timeout_ms": 250,
+    "required_receiver_duplicate_delta_minimum": 1,
+    "required_remote_commit": 0,
+    "required_partial_duplicate_stale_commit_counts": 0,
+    "safety_constraints_unchanged": true,
+    "requires_new_role_bound_elf_hashes": true,
+    "requires_fresh_hardware_faults_run": true
+  },
+  "acceptance_boundary": {
+    "faults_stage_pass_claimed": false,
+    "hardware_pass_claimed": false,
+    "old_artifact_pass_reused_for_changed_firmware": false
+  }
+}
