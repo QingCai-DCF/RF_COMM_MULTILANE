@@ -1,0 +1,53 @@
+{
+  "artifacts_programmed": {
+    "fixed_bitstream_sha256": "080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1",
+    "rotating_bitstream_sha256": "18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "current_run_hardware_authorization": false,
+  "diagnosis": {
+    "firmware_expected_fixed_build_id": "0x50313046",
+    "firmware_expected_rotating_build_id": "0x50313052",
+    "observed_fixed_build_id": "0x50315246",
+    "observed_fixed_identity": "0x5031305A",
+    "observed_fixed_profile": "0x702000F0",
+    "observed_register_map_hash_low": "0x53D711A6",
+    "observed_register_map_version": "0x0A000002",
+    "rtl_fixed_build_id": "0x50315246",
+    "rtl_rotating_build_id": "0x50315252",
+    "root_cause": "The P10.1R RTL build identity was revised, while the XSDB preflight and role-bound PS firmware retained the older P10 build-ID literals.",
+    "xsdb_expected_fixed_build_id": "0x50313046",
+    "xsdb_expected_rotating_build_id": "0x50313052"
+  },
+  "elf_downloaded": false,
+  "errors": [
+    "P10 fixed identity mismatch id=0x5031305A build=0x50315246 profile=0x702000F0 version=0x0A000002 hash=0x53D711A6 caps=0xF7204221"
+  ],
+  "evidence": {
+    "immutable_authorization_sha256": "7163408a4b12466187642ab37130b12246589573cfdc16af800df2d6dbcc6f91",
+    "orchestrator": "evidence/hardware/p10_1r/p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66/final/orchestrator_result.json",
+    "orchestrator_sha256": "725980dd9ecfe41dac3bfe2b33e8867cebb2e6b6d24257b8ac2350773e6f5c8c",
+    "run_manifest": "evidence/hardware/p10_1r/p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66/final/run_evidence_sha256_manifest.json",
+    "run_manifest_sha256": "cc06fbff746d31945bbb6ae48fa43978fefbb29ba259e5c7c000848de429c63e",
+    "stage_summary": "evidence/hardware/p10_1r/p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66/safe_boot/stage_summary.json",
+    "stage_summary_sha256": "ce49c7f8d30154c089b7040f8388b4294500ba621b129e93b050d0d3e6c4834d"
+  },
+  "generated_at_utc": "2026-08-01T18:46:06Z",
+  "hardware_actions_executed": true,
+  "network_used": false,
+  "next_action": "Correct both XSDB and firmware build-ID expectations, rebuild and freeze new role-bound ELF artifacts, then allocate a new authorization and run_id.",
+  "protocol_case_executed": false,
+  "run_id": "p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66",
+  "schema_version": 1,
+  "shutdown": {
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "all_attempts_confirmed": true,
+    "finally_shutdown_confirmed": true
+  },
+  "status": "FAIL_CLOSED",
+  "test_id": "P10_1R-PREFLIGHT-IDENTITY-MISMATCH"
+}

@@ -1,107 +1,11 @@
 {
-  "artifact_freeze": {
-    "bytes": 6301,
-    "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19"
-  },
-  "artifacts": {
-    "fixed": {
-      "bitstream": {
-        "bytes": 4045681,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1/p10_ax7020_fixed_functional.bit",
-        "read_only": true,
-        "sha256": "080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1"
-      },
-      "bsp": {
-        "bytes": 1855896,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
-        "read_only": true,
-        "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
-      },
-      "elf": {
-        "bytes": 553368,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0/p10_fixed_runtime.elf",
-        "read_only": true,
-        "sha256": "85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0"
-      },
-      "shutdown_bitstream": {
-        "bytes": 369073,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259/p10_ax7020_fixed_shutdown.bit",
-        "read_only": true,
-        "sha256": "0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259"
-      },
-      "xsa": {
-        "bytes": 941819,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293/p10_ax7020_fixed_functional.xsa",
-        "read_only": true,
-        "sha256": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293"
-      }
-    },
-    "rotating": {
-      "bitstream": {
-        "bytes": 4045681,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d/p10_ax7020_rotating_functional.bit",
-        "read_only": true,
-        "sha256": "18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d"
-      },
-      "bsp": {
-        "bytes": 1856209,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
-        "read_only": true,
-        "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
-      },
-      "elf": {
-        "bytes": 552888,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55/p10_rotating_runtime.elf",
-        "read_only": true,
-        "sha256": "01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55"
-      },
-      "shutdown_bitstream": {
-        "bytes": 369073,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c/p10_ax7020_rotating_shutdown.bit",
-        "read_only": true,
-        "sha256": "00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c"
-      },
-      "xsa": {
-        "bytes": 917077,
-        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101/p10_ax7020_rotating_functional.xsa",
-        "read_only": true,
-        "sha256": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101"
-      }
-    }
-  },
-  "authorization_consumed": false,
-  "authorization_granted": false,
-  "board_binding": {
-    "fixed": "AX7020-F/JTAG:210249855178",
-    "rotating_role": "AX7020-R/JTAG:210512180081"
-  },
-  "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-01T00:00:00Z",
-  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": false,
-  "maximum_formal_runtime_seconds": 1800,
-  "maximum_lane_mask": "0x3",
-  "network_used": false,
-  "next_required_user_action": "grant a fresh current-run authorization explicitly bound to this source commit and exact artifact hashes",
-  "prohibited": [
-    "Ethernet",
-    "movement_or_rotation",
-    "rewiring_or_module_exchange",
-    "lane_mask_above_0x3",
-    "P11_or_8x32_or_600rpm_promotion"
-  ],
+  "authorization": "config/p10_1r_current_run_hardware_authorization.json",
+  "authorization_sha256": "7163408a4b12466187642ab37130b12246589573cfdc16af800df2d6dbcc6f91",
+  "generated_at_utc": "2026-08-01T18:44:01+00:00",
+  "hardware_actions_executed": true,
+  "raw_record": "evidence/hardware/p10_1r/p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66/authorization/authorization_record.json",
+  "run_id": "p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66",
   "schema_version": 1,
-  "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
-  "shutdown_strategy": {
-    "both_role_shutdown_marker_required": true,
-    "shutdown_before_every_stage": true,
-    "shutdown_on_ctrl_c": true,
-    "shutdown_on_error": true,
-    "shutdown_on_normal_exit": true,
-    "shutdown_on_timeout": true
-  },
-  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
-  "status": "PENDING_NEW_AUTHORIZATION",
-  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-READINESS"
+  "status": "PASS",
+  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-EVIDENCE"
 }
