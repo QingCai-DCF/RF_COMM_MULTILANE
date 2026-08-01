@@ -1,0 +1,27 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sun Aug  2 01:42:54 2026
+# Process ID: 6188
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/build/p10_1r_p8d_exact_branch/p8d_raw/formal_493955d57889/xsim/tb_ir_scheduler_migration/work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_ir_scheduler_migration_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/build/p10_1r_p8d_exact_branch/p8d_raw/formal_493955d57889/xsim/tb_ir_scheduler_migration/work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/build/p10_1r_p8d_exact_branch/p8d_raw/formal_493955d57889/xsim/tb_ir_scheduler_migration/work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_ir_scheduler_migration_snapshot/xsim_script.tcl
+# xsim {tb_ir_scheduler_migration_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+SCHED_WEIGHT_1_TO_3_COUNTS=129,383
+SCHED_WEIGHT_3_TO_1_COUNTS=383,129
+P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1
+P8D_SCHEDULER_FAIRNESS_PASS=1
+P8D_SCHEDULER_UNEQUAL_WEIGHT_PASS=1
+P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1
+TB_IR_SCHEDULER_MIGRATION_PASS=1
+$finish called at time : 50609 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_ir_scheduler_migration.sv" Line 167
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:42:56 2026...

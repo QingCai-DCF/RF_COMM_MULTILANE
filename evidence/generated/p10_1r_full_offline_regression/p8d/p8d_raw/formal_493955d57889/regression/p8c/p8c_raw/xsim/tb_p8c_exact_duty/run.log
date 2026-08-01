@@ -1,0 +1,28 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p8c_exact_duty_sim -runall
+RETURNCODE=0
+
+STDOUT
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p8c_exact_duty_sim/xsim_script.tcl
+# xsim {tb_p8c_exact_duty_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8C_EXACT_1000US_SLIDING_DUTY_PASS=1
+P8C_STRICT_LT20_PERCENT_PASS=1
+P8C_LE18_TARGET_PASS=1
+P8C_HISTORY_COOLDOWN_PASS=1
+P8C_TELEMETRY_CLEAR_HISTORY_PRESERVED_PASS=1
+P8C_EXACT_VECTOR_MATRIX_PASS=1
+TB_P8C_EXACT_DUTY_PASS=1
+$finish called at time : 4596 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/tb_p8c_exact_duty.sv" Line 142
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:49:17 2026...
+
+STDERR

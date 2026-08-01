@@ -1,0 +1,170 @@
+{
+  "blocking_condition": "P10-SAFETY-POWERUP-001",
+  "campaign": "p10_1r",
+  "configured_shutdown_intent": {
+    "Mode": "HIGH",
+    "SD": "HIGH",
+    "Txd": "LOW"
+  },
+  "current_run_hardware_authorization_for_this_offline_build": false,
+  "generated_at_utc": "2026-08-01T16:14:26.951618+00:00",
+  "hardware_actions_executed": false,
+  "hardware_admission": false,
+  "no_hardware": true,
+  "roles": [
+    {
+      "artifact": {
+        "bytes": 369073,
+        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259/p10_ax7020_fixed_shutdown.bit",
+        "read_only": true,
+        "sha256": "0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259"
+      },
+      "errors": [],
+      "input_sha256": {
+        "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184",
+        "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+        "goals/P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET_GOAL.md": "5a81eeea8cf5bb0ff9d41c237a2af097f58cf71d1d208825dfb6144b5d6e23a3",
+        "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
+        "rtl/p10_ax7020_shutdown_top.v": "2cf65beaaf3e2728437cf17c85b4f1da3aeff367b5e4f7bdada1a8d00985a79b",
+        "scripts/build_p10_ax7020_shutdown.py": "d48877856429f9c5ea5c994847c214ecc3160106a57eb2afab39eacb41aaea23",
+        "scripts/vivado/build_p10_ax7020_shutdown.tcl": "38ae7a498bd5bff9fd3b865ca4f625a523b164fbd08ffc8c1def102092ff63b2"
+      },
+      "markers": {
+        "P10_CDC_CRITICAL_COUNT": "0",
+        "P10_DRC_CRITICAL_COUNT": "0",
+        "P10_DRC_ERROR_COUNT": "0",
+        "P10_ENDPOINT_ROLE": "fixed",
+        "P10_METHODOLOGY_CRITICAL_COUNT": "0",
+        "P10_PART": "xc7z020clg400-2",
+        "P10_PROFILE_ID": "P10_AX7020_FIXED_2LANE",
+        "P10_REQP_1839_COUNT": "0",
+        "P10_SHUTDOWN_BUILD": "PASS",
+        "P10_SHUTDOWN_MODE_INTENT": "0x3",
+        "P10_SHUTDOWN_SD_INTENT": "0x3",
+        "P10_SHUTDOWN_TXD_INTENT": "0x0",
+        "P10_TOP": "p10_ax7020_shutdown_top",
+        "P10_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+      },
+      "part": "xc7z020clg400-2",
+      "profile": "P10_AX7020_FIXED_2LANE",
+      "reports": [
+        {
+          "bytes": 492,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/p10_shutdown_build_markers.txt",
+          "sha256": "e864fdb40431b743eadd4ff08fcb5b1201ab5f4defb2492b44fb4517f58c1ead"
+        },
+        {
+          "bytes": 1730,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/post_route_drc.rpt",
+          "sha256": "13bf9addbff33b6004165213953e098926e47a5bb2159bbb898458840a696506"
+        },
+        {
+          "bytes": 8973,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/post_route_timing_summary.rpt",
+          "sha256": "be195fa8b6ac9c2fd5212b33b600032399aa4d445e609fe47ab618068ec7e3b0"
+        },
+        {
+          "bytes": 1847,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/post_route_utilization.rpt",
+          "sha256": "18a56485e33a94fbcf5a65542faac9bc8c49952f70f34ba9fec8222f88e0a1f9"
+        },
+        {
+          "bytes": 1503,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/post_route_methodology.rpt",
+          "sha256": "07db55c493d305ec83f1f6fc75a60bc5ad5c18a65641c3dda6c09fbfb60145c9"
+        },
+        {
+          "bytes": 1006,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/fixed/post_route_cdc.rpt",
+          "sha256": "166c47365bdc4d0c96f4719ca314cba58279f0ff9c26c1cb59a96e970225f1c2"
+        }
+      ],
+      "role": "fixed",
+      "source_bundle_sha256": "3a4bbc524da1644782cebc8e9b6f990252b6ecc0b09f3e6da7a2b17f00134d13",
+      "status": "PASS",
+      "vivado_log": "evidence/generated/vivado/p10_1r_shutdown/fixed/vivado_stdout_stderr.txt",
+      "vivado_log_sha256": "61925976ee54b0e50bd9f8a7d6c15d45c5ae279ee26996bf3d460335b40e620b",
+      "xdc_sha256": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184"
+    },
+    {
+      "artifact": {
+        "bytes": 369073,
+        "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c/p10_ax7020_rotating_shutdown.bit",
+        "read_only": true,
+        "sha256": "00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c"
+      },
+      "errors": [],
+      "input_sha256": {
+        "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345",
+        "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+        "goals/P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET_GOAL.md": "5a81eeea8cf5bb0ff9d41c237a2af097f58cf71d1d208825dfb6144b5d6e23a3",
+        "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
+        "rtl/p10_ax7020_shutdown_top.v": "2cf65beaaf3e2728437cf17c85b4f1da3aeff367b5e4f7bdada1a8d00985a79b",
+        "scripts/build_p10_ax7020_shutdown.py": "d48877856429f9c5ea5c994847c214ecc3160106a57eb2afab39eacb41aaea23",
+        "scripts/vivado/build_p10_ax7020_shutdown.tcl": "38ae7a498bd5bff9fd3b865ca4f625a523b164fbd08ffc8c1def102092ff63b2"
+      },
+      "markers": {
+        "P10_CDC_CRITICAL_COUNT": "0",
+        "P10_DRC_CRITICAL_COUNT": "0",
+        "P10_DRC_ERROR_COUNT": "0",
+        "P10_ENDPOINT_ROLE": "rotating",
+        "P10_METHODOLOGY_CRITICAL_COUNT": "0",
+        "P10_PART": "xc7z020clg400-2",
+        "P10_PROFILE_ID": "P10_AX7020_ROTATING_2LANE",
+        "P10_REQP_1839_COUNT": "0",
+        "P10_SHUTDOWN_BUILD": "PASS",
+        "P10_SHUTDOWN_MODE_INTENT": "0x3",
+        "P10_SHUTDOWN_SD_INTENT": "0x3",
+        "P10_SHUTDOWN_TXD_INTENT": "0x0",
+        "P10_TOP": "p10_ax7020_shutdown_top",
+        "P10_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+      },
+      "part": "xc7z020clg400-2",
+      "profile": "P10_AX7020_ROTATING_2LANE",
+      "reports": [
+        {
+          "bytes": 504,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/p10_shutdown_build_markers.txt",
+          "sha256": "3659af650c562b3dcd773cdbdeede015e1e3bfb8cfcf536bb2faa1df664061c8"
+        },
+        {
+          "bytes": 1739,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/post_route_drc.rpt",
+          "sha256": "aa6f12d82cf3c8487a6e4006780eb3bf75b786e03d48d5787bcd010313775911"
+        },
+        {
+          "bytes": 8982,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/post_route_timing_summary.rpt",
+          "sha256": "22abcd940809dab5eaa760f55a88f6ecb45741bc206ba20549ee033d066a2aaf"
+        },
+        {
+          "bytes": 1856,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/post_route_utilization.rpt",
+          "sha256": "5d68c0f1e6da908d35b6e8ef649bdd86a9108cab60b3c471ea4f21bf7ed4d6c8"
+        },
+        {
+          "bytes": 1512,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/post_route_methodology.rpt",
+          "sha256": "515692888b0c7175a8ad9d5e877746b25a57888241b82fe6b92f6ff4bdc297d3"
+        },
+        {
+          "bytes": 1015,
+          "path": "evidence/generated/vivado/p10_1r_shutdown/rotating/post_route_cdc.rpt",
+          "sha256": "7fc2ade7da0cccbf2127e1c93d36ca0afc5dc8d89b45845ed76fa09303fa1167"
+        }
+      ],
+      "role": "rotating",
+      "source_bundle_sha256": "ff7ee1a393e7f4ad364a423167c3c75253d33d700dadbca43702bc52d3e9072c",
+      "status": "PASS",
+      "vivado_log": "evidence/generated/vivado/p10_1r_shutdown/rotating/vivado_stdout_stderr.txt",
+      "vivado_log_sha256": "a92cb2354c58a039e32c3247feebf24332f6e58b00ec911b83366f52742fc436",
+      "xdc_sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_1R-AX7020-DUAL-SHUTDOWN-BUILD",
+  "unconfigured_or_partial_power_guarantee": false
+}

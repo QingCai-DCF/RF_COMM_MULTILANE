@@ -1,0 +1,27 @@
+# P8D P0-P8C regression
+
+- Status: `PASS`
+- Test ID: `P8D-P0-P8C-FULL-REGRESSION`
+- Profile: `P8D_MULTI_PROFILE_OFFLINE`
+- Source commit: `493955d5788942ac448a9cfd99c97f0c526281fe`
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "base_p0_p7_p8a": "PASS",
+  "base_parent_log": "PARENT_RUN_OFFLINE_GATES_INCLUDE_P8D",
+  "generated_utc": "2026-08-01T17:52:12.318796Z",
+  "hardware_scope_promoted": false,
+  "isolated_regression_output": true,
+  "p8b_gate": "PASS",
+  "p8b_log": "build/p10_1r_p8d_exact_branch/p8d_raw/formal_493955d57889/regression/p8b_gate.log",
+  "p8c_gate": "PASS",
+  "p8c_log": "build/p10_1r_p8d_exact_branch/p8d_raw/formal_493955d57889/regression/p8c_gate.log",
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "schema_version": 1,
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "status": "PASS",
+  "test_id": "P8D-P0-P8C-FULL-REGRESSION"
+}
+```

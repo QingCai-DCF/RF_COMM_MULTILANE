@@ -84,3 +84,13 @@ evidence/generated/p10_1_*/** -text -whitespace
 artifacts/p10_1_led/** -text -whitespace
 evidence/generated/vivado/p10_1_ax7020_pl_activity_led/** -text -whitespace
 evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime/** -text -whitespace
+
+# Preserve byte-exact P10.1R content-addressed artifacts, generated summaries,
+# raw XSim/Vivado/Vitis output, and captured offline regression evidence. These
+# files are covered by SHA256 manifests and must not undergo EOL normalization.
+artifacts/p10_1r/** -text -eol -whitespace
+evidence/generated/p10_1r_* -text -eol -whitespace
+evidence/generated/p10_1r_*/** -text -eol -whitespace
+evidence/generated/vivado/p10_1r/** -text -eol -whitespace
+evidence/generated/vivado/p10_1r_shutdown/** -text -eol -whitespace
+evidence/generated/vitis/p10_1r_runtime/** -text -eol -whitespace

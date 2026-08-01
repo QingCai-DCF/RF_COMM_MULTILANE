@@ -1,0 +1,32 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sun Aug  2 00:01:24 2026
+# Process ID: 9992
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/generated/p10_1r_xsim/raw/20260801T160108.070993Z/tb_tfdu_echo_guard_sweep_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_tfdu_echo_guard_sweep_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/generated/p10_1r_xsim/raw/20260801T160108.070993Z/tb_tfdu_echo_guard_sweep_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/generated/p10_1r_xsim/raw/20260801T160108.070993Z/tb_tfdu_echo_guard_sweep_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_tfdu_echo_guard_sweep_snapshot/xsim_script.tcl
+# xsim {tb_tfdu_echo_guard_sweep_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+GUARD_DIAG delay=0 accept=1 blanked=1 previous=0 violation=0 timeout=36862
+GUARD_DIAG delay=64 accept=1 blanked=2 previous=1 violation=0 timeout=36799
+GUARD_DIAG delay=128 accept=1 blanked=3 previous=2 violation=0 timeout=36735
+GUARD_DIAG delay=256 accept=1 blanked=4 previous=3 violation=0 timeout=36607
+GUARD_DIAG delay=512 accept=1 blanked=5 previous=4 violation=0 timeout=36351
+GUARD_DIAG delay=1024 accept=1 blanked=6 previous=5 violation=0 timeout=35839
+GUARD_DIAG delay=2048 accept=1 blanked=7 previous=6 violation=0 timeout=34815
+GUARD_DIAG delay=4096 accept=1 blanked=8 previous=7 violation=0 timeout=32767
+GUARD_DIAG delay=8192 accept=1 blanked=9 previous=8 violation=0 timeout=28671
+GUARD_DIAG delay=16384 accept=1 blanked=10 previous=9 violation=0 timeout=20479
+GUARD_DIAG delay=32768 accept=1 blanked=11 previous=10 violation=0 timeout=4095
+TB_TFDU_ECHO_GUARD_SWEEP=PASS
+$finish called at time : 4055306 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_p10_1r_focused.sv" Line 333
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 00:01:26 2026...

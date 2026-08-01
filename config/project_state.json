@@ -115,18 +115,6 @@
   ],
   "current_program_stage": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
   "current_run_hardware_authorization": false,
-  "p10_1r_status": "IN_PROGRESS",
-  "p10_1r_remediation": {
-    "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
-    "current_run_hardware_authorization": false,
-    "goal_path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
-    "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-    "hardware_actions_executed": false,
-    "new_artifact_hardware_validation": "PENDING",
-    "no_hardware": true,
-    "source_artifact_freeze": "PENDING",
-    "status": "IN_PROGRESS"
-  },
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
@@ -135,7 +123,7 @@
   "last_hardware_stage": "P10_1",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
-  "last_verified_commit": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
+  "last_verified_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
   "legacy_known_failures": [
     {
       "current_authority": false,
@@ -320,6 +308,95 @@
     "status": "OFFLINE_PASS_HARDWARE_PENDING",
     "verification_scope": "P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE"
   },
+  "p10_1r_remediation": {
+    "artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "artifact_freeze_sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19",
+    "artifacts": {
+      "fixed": {
+        "bitstream": {
+          "bytes": 4045681,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1/p10_ax7020_fixed_functional.bit",
+          "read_only": true,
+          "sha256": "080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1"
+        },
+        "bsp": {
+          "bytes": 1855896,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+          "read_only": true,
+          "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+        },
+        "elf": {
+          "bytes": 553368,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0/p10_fixed_runtime.elf",
+          "read_only": true,
+          "sha256": "85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0"
+        },
+        "shutdown_bitstream": {
+          "bytes": 369073,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259/p10_ax7020_fixed_shutdown.bit",
+          "read_only": true,
+          "sha256": "0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259"
+        },
+        "xsa": {
+          "bytes": 941819,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293/p10_ax7020_fixed_functional.xsa",
+          "read_only": true,
+          "sha256": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293"
+        }
+      },
+      "rotating": {
+        "bitstream": {
+          "bytes": 4045681,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d/p10_ax7020_rotating_functional.bit",
+          "read_only": true,
+          "sha256": "18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d"
+        },
+        "bsp": {
+          "bytes": 1856209,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+          "read_only": true,
+          "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+        },
+        "elf": {
+          "bytes": 552888,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55/p10_rotating_runtime.elf",
+          "read_only": true,
+          "sha256": "01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55"
+        },
+        "shutdown_bitstream": {
+          "bytes": 369073,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c/p10_ax7020_rotating_shutdown.bit",
+          "read_only": true,
+          "sha256": "00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c"
+        },
+        "xsa": {
+          "bytes": 917077,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101/p10_ax7020_rotating_functional.xsa",
+          "read_only": true,
+          "sha256": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101"
+        }
+      }
+    },
+    "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
+    "candidate_guard_cycles": {
+      "F0": 36864,
+      "F1": 36864,
+      "R0": 36864,
+      "R1": 36864
+    },
+    "candidate_guard_hardware_measured": false,
+    "current_run_hardware_authorization": false,
+    "goal_path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
+    "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+    "hardware_actions_executed": false,
+    "network_used": false,
+    "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+    "p11_started": false,
+    "source_artifact_freeze": "PASS",
+    "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+    "status": "OFFLINE_READY_HARDWARE_PENDING"
+  },
+  "p10_1r_status": "OFFLINE_READY_HARDWARE_PENDING",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -692,9 +769,9 @@
   "schema_version": 1,
   "stage_status": {
     "P0_BOOTSTRAP": "PASS",
+    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "IN_PROGRESS",
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS",
     "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE": "FAIL",
-    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "IN_PROGRESS",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
     "P1_OFFLINE_HARDENING": "PASS",
     "P2_SIMULATION_BASELINE": "PASS",
@@ -711,5 +788,6 @@
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
   "state_revision": "P10-1R-REMEDIATION-IN-PROGRESS-1",
+  "two_lane_speed_stability": "PENDING_DIRECT_HARDWARE_REACCEPTANCE",
   "z7020_target_status": "PENDING_Z7020_HW"
 }

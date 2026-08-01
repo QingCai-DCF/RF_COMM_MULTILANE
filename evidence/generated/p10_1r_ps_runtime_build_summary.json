@@ -1,0 +1,187 @@
+{
+  "artifact_provenance": {
+    "hardware_goal": {
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\goals\\P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
+      "sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
+    },
+    "required_inputs": {
+      "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
+      "config/performance/p10_1r_hardware_runtime.yaml": "bb0da402fe2d0fad60aa2364b48c736e38cbf9ee7f76a2cd0d7907458b564a04",
+      "config/register_map/ir_axi_regs.yaml": "2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6",
+      "config/tfdu_rx_admission.yaml": "95b43f449b85eef06757d6cbb7b682dfc6d5f8eef9c29680127a6fcb2081f485",
+      "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "8316e16b0abfd8d1a0b9a6c8b4ae2d75ab75acc3317936bd00a8e6382a0ab7d6"
+    }
+  },
+  "blocking_condition": "P10-SAFETY-POWERUP-001",
+  "campaign": "p10_1r",
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-01T16:26:31.879132+00:00",
+  "hardware_actions_executed": false,
+  "hardware_admission": false,
+  "native_crypto_protocol_test": "PASS",
+  "network_used": false,
+  "no_hardware": true,
+  "roles": [
+    {
+      "artifacts": {
+        "bsp": {
+          "bytes": 1855896,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+          "read_only": true,
+          "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+        },
+        "elf": {
+          "bytes": 553368,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0/p10_fixed_runtime.elf",
+          "read_only": true,
+          "sha256": "85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0"
+        }
+      },
+      "build_log": "evidence/generated/vitis/p10_1r_runtime/fixed/p10_fixed_runtime_build.log",
+      "build_log_sha256": "1905741863a587fda0ef07a79f5aac6fb65b13c61a0569feffc79d746671ef2b",
+      "errors": [],
+      "inspection": {
+        "elf_end_address": "0x0001A070",
+        "ocm_boundary": "0x00020000",
+        "sections": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/fixed/p10_fixed_runtime_sections.txt",
+          "returncode": 0,
+          "sha256": "c768919049a79a8bda3262807dd80c43455657adfa6e83eb3b8cf9f72608fd87"
+        },
+        "size": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/fixed/p10_fixed_runtime_size.txt",
+          "returncode": 0,
+          "sha256": "c991f7c2c10b4c117ef53ebb910dacf2b0508558f68e34fa252b98dcdca98a45"
+        },
+        "symbols": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/fixed/p10_fixed_runtime_symbols.txt",
+          "returncode": 0,
+          "sha256": "b5902ede9203d7cd61f4ec571c3ead67915cf1a7b76fbdc1a460a2d2e4d7f550"
+        }
+      },
+      "ps7_parameter_checks": {
+        "crystal": true,
+        "ddr_frequency": true,
+        "ddr_part": true,
+        "ddr_width": true
+      },
+      "role": "fixed",
+      "role_value": 1,
+      "source_bundle_sha256": "209b2244ca4b50b61d50e2a796b3bf3b161562b33d25953795e35c43ecd56c64",
+      "source_sha256": {
+        "board_profiles/ax7020_fixed_2lane/p10_runtime_role.h": "e57fdacd99d9b197c80983a9504cd3ed8e030cbee9feeef503bb6705a2ea654d",
+        "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
+        "config/performance/p10_1r_hardware_runtime.yaml": "bb0da402fe2d0fad60aa2364b48c736e38cbf9ee7f76a2cd0d7907458b564a04",
+        "config/register_map/ir_axi_regs.yaml": "2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6",
+        "config/tfdu_rx_admission.yaml": "95b43f449b85eef06757d6cbb7b682dfc6d5f8eef9c29680127a6fcb2081f485",
+        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "8316e16b0abfd8d1a0b9a6c8b4ae2d75ab75acc3317936bd00a8e6382a0ab7d6",
+        "evidence/generated/vivado/p10_1r/fixed/p10_ax7020_fixed_functional.xsa": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293",
+        "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+        "scripts/build_p10_ps_runtime.py": "c61d631854e22d338806ba6a7008278fd53443fea0c7d8850a8c474cd4075d8f",
+        "scripts/vitis/build_p10_ax7020_runtime.tcl": "91bdb87f8d443488c4c2ee6962fbe20287da2e9b18c4d5bc4605365d267bfdee",
+        "software/ps_driver/ir_regs.h": "41c84afde927480d1dd1b6dda8e2d814aeab93a4cab9b9bc8e0d453257da6862",
+        "software/ps_driver/p10_1_runtime_extension.inc": "eb8bc388f2947aa7d209998fe44c0c21277c577a2506e968bcc1b173ca14df62",
+        "software/ps_driver/p10_1_runtime_protocol.h": "3be492ab7ab3203d14b351c3323e0408f1691f9808c4c7044123511c7da54cf6",
+        "software/ps_driver/p10_runtime_main.c": "52406eb2e4b20e2da6d4396e31176819f56a959d473acd878615f11706ae501a",
+        "software/ps_driver/p9_crypto.c": "2f9626db0a5a38f43329baa339710b71f29c44c34aee0d0ec50e562ccb7c2b2b",
+        "software/ps_driver/p9_crypto.h": "d7ef819ff794748bb424ab8bf2d0fefacc70c68ab8633c36518b2b1fb67f380e",
+        "software/ps_driver/p9_runtime_main.c": "ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30",
+        "software/ps_driver/p9_runtime_protocol.h": "09c8ac0ee3ab62487248d15d258e21d0d793950cc5ecffddc116c2250103cb8f"
+      },
+      "status": "PASS",
+      "xparameters_checks": {
+        "dma_base": true,
+        "dma_device": true,
+        "dma_sg_width": true,
+        "endpoint_base": true
+      },
+      "xsa": {
+        "path": "evidence/generated/vivado/p10_1r/fixed/p10_ax7020_fixed_functional.xsa",
+        "sha256": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293"
+      }
+    },
+    {
+      "artifacts": {
+        "bsp": {
+          "bytes": 1856209,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+          "read_only": true,
+          "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+        },
+        "elf": {
+          "bytes": 552888,
+          "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55/p10_rotating_runtime.elf",
+          "read_only": true,
+          "sha256": "01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55"
+        }
+      },
+      "build_log": "evidence/generated/vitis/p10_1r_runtime/rotating/p10_rotating_runtime_build.log",
+      "build_log_sha256": "efbc7311da369923bd7cf619ee5ab1400dcd73e8c63927f84cea6cc444f36d68",
+      "errors": [],
+      "inspection": {
+        "elf_end_address": "0x0001A070",
+        "ocm_boundary": "0x00020000",
+        "sections": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/rotating/p10_rotating_runtime_sections.txt",
+          "returncode": 0,
+          "sha256": "59585d5fef51521e2b646b4179b92b2ab3485917cc67133beb6d96285569cf2f"
+        },
+        "size": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/rotating/p10_rotating_runtime_size.txt",
+          "returncode": 0,
+          "sha256": "8af8a037dd7acff16b82a6a559e9974de23481ed51a17f545b37bfa922d52ff2"
+        },
+        "symbols": {
+          "path": "evidence/generated/vitis/p10_1r_runtime/rotating/p10_rotating_runtime_symbols.txt",
+          "returncode": 0,
+          "sha256": "241a2cac5663a8f5e44e03ae56dcef57a6b2495ccfa77c148fa4b6ca9b115e3b"
+        }
+      },
+      "ps7_parameter_checks": {
+        "crystal": true,
+        "ddr_frequency": true,
+        "ddr_part": true,
+        "ddr_width": true
+      },
+      "role": "rotating",
+      "role_value": 2,
+      "source_bundle_sha256": "e45e0112e4a9eed330fd1aa629397104231712f0c783a377f3ffd6328d492ea8",
+      "source_sha256": {
+        "board_profiles/ax7020_rotating_2lane/p10_runtime_role.h": "6dbfecb715e7e1189eea3dbc5bcd488d92762747047ae5dcb3e9b630c5825dcd",
+        "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
+        "config/performance/p10_1r_hardware_runtime.yaml": "bb0da402fe2d0fad60aa2364b48c736e38cbf9ee7f76a2cd0d7907458b564a04",
+        "config/register_map/ir_axi_regs.yaml": "2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6",
+        "config/tfdu_rx_admission.yaml": "95b43f449b85eef06757d6cbb7b682dfc6d5f8eef9c29680127a6fcb2081f485",
+        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "8316e16b0abfd8d1a0b9a6c8b4ae2d75ab75acc3317936bd00a8e6382a0ab7d6",
+        "evidence/generated/vivado/p10_1r/rotating/p10_ax7020_rotating_functional.xsa": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101",
+        "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+        "scripts/build_p10_ps_runtime.py": "c61d631854e22d338806ba6a7008278fd53443fea0c7d8850a8c474cd4075d8f",
+        "scripts/vitis/build_p10_ax7020_runtime.tcl": "91bdb87f8d443488c4c2ee6962fbe20287da2e9b18c4d5bc4605365d267bfdee",
+        "software/ps_driver/ir_regs.h": "41c84afde927480d1dd1b6dda8e2d814aeab93a4cab9b9bc8e0d453257da6862",
+        "software/ps_driver/p10_1_runtime_extension.inc": "eb8bc388f2947aa7d209998fe44c0c21277c577a2506e968bcc1b173ca14df62",
+        "software/ps_driver/p10_1_runtime_protocol.h": "3be492ab7ab3203d14b351c3323e0408f1691f9808c4c7044123511c7da54cf6",
+        "software/ps_driver/p10_runtime_main.c": "52406eb2e4b20e2da6d4396e31176819f56a959d473acd878615f11706ae501a",
+        "software/ps_driver/p9_crypto.c": "2f9626db0a5a38f43329baa339710b71f29c44c34aee0d0ec50e562ccb7c2b2b",
+        "software/ps_driver/p9_crypto.h": "d7ef819ff794748bb424ab8bf2d0fefacc70c68ab8633c36518b2b1fb67f380e",
+        "software/ps_driver/p9_runtime_main.c": "ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30",
+        "software/ps_driver/p9_runtime_protocol.h": "09c8ac0ee3ab62487248d15d258e21d0d793950cc5ecffddc116c2250103cb8f"
+      },
+      "status": "PASS",
+      "xparameters_checks": {
+        "dma_base": true,
+        "dma_device": true,
+        "dma_sg_width": true,
+        "endpoint_base": true
+      },
+      "xsa": {
+        "path": "evidence/generated/vivado/p10_1r/rotating/p10_ax7020_rotating_functional.xsa",
+        "sha256": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_1R-AX7020-DUAL-PS-RUNTIME-BUILD"
+}

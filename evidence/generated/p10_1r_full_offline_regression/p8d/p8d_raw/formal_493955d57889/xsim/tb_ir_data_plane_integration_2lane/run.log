@@ -1,0 +1,27 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_ir_data_plane_integration_2lane_snapshot -runall
+RETURN_CODE=0
+STARTED_UTC=2026-08-01T17:43:07.520112Z
+FINISHED_UTC=2026-08-01T17:43:10.096622Z
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_ir_data_plane_integration_2lane_snapshot/xsim_script.tcl
+# xsim {tb_ir_data_plane_integration_2lane_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1
+P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1
+TB_IR_DATA_PLANE_INTEGRATION_2LANE_PASS=1
+$finish called at time : 2916 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R_GATE_TMP/sim/tb/p8d_data_plane_integration_common.sv" Line 222
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 01:43:10 2026...
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

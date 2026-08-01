@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-P8D-DETACHED-PRECONDITION-FAILURE",
+  "generated_at_utc": "2026-08-01T00:00:00Z",
+  "status": "RECORDED_PRECONDITION_FAILURE",
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "no_hardware": true,
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "network_used": false,
+  "failure": {
+    "gate": "P8C_BASELINE_RECHECK",
+    "cause": "The exact-source replay worktree was detached, so git branch --show-current returned an empty string while the P8D baseline requires the exact p10.1r/2lane-speed-stability-remediation branch.",
+    "mandatory_functional_failures": [],
+    "non_blocking_model_outcomes": {
+      "19P2MBPS_STRETCH_FEASIBILITY": "FAIL"
+    }
+  },
+  "raw_evidence": [
+    {
+      "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/raw/baseline_checks.json",
+      "bytes": 1073,
+      "sha256": "6c63aa19f8d08c0febfb409d859ee94b7348417bcbf015d391f2cd2ed12fde1d"
+    },
+    {
+      "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/raw/gate_run.json",
+      "bytes": 2911,
+      "sha256": "9f123a4de2eaca7ee3e58d093dfb10d4ce8374745d7eca8fadf59f11b84c9722"
+    },
+    {
+      "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/raw/p8d_evidence_consistency_summary.json",
+      "bytes": 513,
+      "sha256": "58bd6be25f65e5af4258a3762d1a5934f56a9e0c8d4fdc483b37730b70de9265"
+    },
+    {
+      "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/raw/p8d_final_summary.json",
+      "bytes": 6239,
+      "sha256": "ec69b64d5cc0936939dfa590926dbba97fce24898c561a9b76bf33bd166894ad"
+    }
+  ],
+  "corrected_rerun": {
+    "branch": "p10.1r/2lane-speed-stability-remediation",
+    "status": "PASS",
+    "p8c_baseline_recheck": "PASS",
+    "final_summary": {
+      "path": "evidence/generated/p10_1r_full_offline_regression/p8d/p8d_final_summary.json",
+      "bytes": 6209,
+      "sha256": "7470973f4edf8134ca884bba40833c2b1c48ba76e9c70b26f642ea79311f6be9"
+    },
+    "baseline_checks": {
+      "path": "evidence/generated/p10_1r_full_offline_regression/p8d/p8d_raw/formal_493955d57889/baseline_checks.json",
+      "bytes": 869,
+      "sha256": "a44ab0649e8567ea830715c56bc180ebf6b89042eb988f9ea9fb89819a979fa2"
+    }
+  },
+  "scope_note": "This record preserves a harness precondition failure. It is not hardware evidence and does not convert the first run to PASS; the corrected, independently captured rerun is the accepted P8D offline result."
+}

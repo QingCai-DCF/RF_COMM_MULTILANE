@@ -1,0 +1,91 @@
+# P10.1R immutable failure baseline
+
+- Status: `PASS`
+- Source commit: `493955d5788942ac448a9cfd99c97f0c526281fe`
+- Hardware actions executed: `false`
+
+```json
+{
+  "artifact_hash_match": true,
+  "artifact_hashes": {
+    "fixed:elf": {
+      "bytes": 550240,
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf",
+      "sha256": "17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728"
+    },
+    "fixed:performance_bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit",
+      "sha256": "1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e"
+    },
+    "rotating:elf": {
+      "bytes": 550428,
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf",
+      "sha256": "88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0"
+    },
+    "rotating:performance_bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f/p10_ax7020_rotating_functional.bit",
+      "sha256": "9ad4f85faf186d709ce887fba432d25524ba719cba74f448cb783e2cd1cdfc5f"
+    }
+  },
+  "baseline_source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+  "crosstalk_4x4_matrix": "FAIL",
+  "current_run_hardware_authorization": false,
+  "fail_gates": [
+    "BOARD_AUTONOMOUS_FAST_PATH",
+    "HOST_NOT_IN_FAST_PATH",
+    "F_TO_R_APPLICATION_GOODPUT_4MBPS",
+    "R_TO_F_APPLICATION_GOODPUT_4MBPS",
+    "CROSSTALK_4X4_MATRIX_ACCEPTANCE",
+    "NON_TARGET_CRC_VALID_FALSE_FRAME_ZERO",
+    "STATIONARY_30MIN"
+  ],
+  "failure_classification": "FAIL_WITH_PERFORMANCE_EVIDENCE_AND_CROSSTALK_GATE_FAILURE",
+  "failure_tag": "p10.1-hardware-performance-fail-20260801",
+  "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
+  "failure_tag_type": "tag",
+  "generated_at_utc": "2026-08-01T16:12:09+00:00",
+  "hardware_actions_executed": false,
+  "measured_goodput_bps": {
+    "fixed_to_rotating": 2587436.3002872,
+    "rotating_to_fixed": 2585671.4991892674
+  },
+  "network_used": false,
+  "no_hardware": true,
+  "old_authorization_consumed": true,
+  "old_authorization_reusable": false,
+  "run_ids": [
+    "p10_1_hw_20260801T062855Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f"
+  ],
+  "same_module_false_frames": 16984,
+  "schema_version": 1,
+  "selected_stage_runs": {
+    "baseline": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "crosstalk": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "faults": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "formal": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "half_duplex": "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "oneplusone": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "pipeline": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "preflight": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "smoke": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "streaming": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "tuning": "p10_1_hw_20260801T073224Z_bb6ce78a_1585d1ad_9ad4f85f"
+  },
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "status": "PASS",
+  "terminal_summary": {
+    "bytes": 16193,
+    "path": "evidence/generated/p10_1_hw_campaign_terminal_summary.json",
+    "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
+  },
+  "test_id": "P10_1R-FAILURE-BASELINE-FREEZE"
+}
+```

@@ -1,0 +1,68 @@
+{
+  "artifact_freeze": {
+    "bytes": 6301,
+    "path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19"
+  },
+  "authorization_readiness": {
+    "bytes": 4938,
+    "path": "evidence/generated/p10_1r_authorization.json",
+    "sha256": "3beceebc8fd3f754a73f4ab3d040e798ecece5584835002342059d9737454703"
+  },
+  "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
+  "branch": "p10.1r/2lane-speed-stability-remediation",
+  "candidate_guard_cycles": {
+    "F0": 36864,
+    "F1": 36864,
+    "R0": 36864,
+    "R1": 36864
+  },
+  "candidate_guard_hardware_measured": false,
+  "cross_lane_accepted_data_count": "PENDING_HARDWARE_MEASUREMENT",
+  "current_run_hardware_authorization": false,
+  "direct_hardware_status": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+  "errors": [],
+  "evidence_consistency": {
+    "bytes": 6895,
+    "path": "evidence/generated/p10_1r_evidence_consistency.json",
+    "sha256": "722ccf67be31f4d7b64a4401fb57a8a44673c6089a53cada5be42d2c32080831"
+  },
+  "frozen_protocol_defaults": {
+    "ack_max_delay_cycles": 64000,
+    "ack_threshold": 32,
+    "endpoint_burst_frames": 32,
+    "objects_in_flight": 4
+  },
+  "generated_at_utc": "2026-08-01T00:00:00Z",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": false,
+  "hardware_movement": false,
+  "head_when_finalized": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "measured_hardware_goodput_bps": {
+    "fixed_to_rotating": "PENDING",
+    "rotating_to_fixed": "PENDING"
+  },
+  "modeled_goodput_bps": {
+    "fixed_to_rotating": 4088854.315225635,
+    "rotating_to_fixed": 4088854.315225635
+  },
+  "network_used": false,
+  "no_hardware": true,
+  "old_hardware_results_applicable_to_new_artifacts": false,
+  "p10_1_failure_baseline_preserved": "FAIL",
+  "p10_functional_status_preserved": "PASS",
+  "p11_status": "NOT_STARTED",
+  "p8d_detached_precondition_failure_preserved": {
+    "bytes": 2525,
+    "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/summary.json",
+    "sha256": "1756a1278d63ba309afc201c51559ef896d1d6c24f662a6769c0bbb22b5cc9ce"
+  },
+  "same_module_accepted_data_count": "PENDING_HARDWARE_MEASUREMENT",
+  "same_module_blanked_frame_count": "PENDING_HARDWARE_MEASUREMENT",
+  "same_module_raw_echo_count": "PENDING_HARDWARE_MEASUREMENT",
+  "schema_version": 1,
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "status": "OFFLINE_READY_HARDWARE_PENDING",
+  "test_id": "P10_1R-OFFLINE-FINAL-CHECKPOINT",
+  "wiring_changed": false
+}

@@ -1,0 +1,183 @@
+{
+  "artifact_freeze": {
+    "bytes": 6301,
+    "path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19"
+  },
+  "authorization_readiness": {
+    "bytes": 4938,
+    "path": "evidence/generated/p10_1r_authorization.json",
+    "sha256": "3beceebc8fd3f754a73f4ab3d040e798ecece5584835002342059d9737454703"
+  },
+  "canonical_files": [
+    {
+      "bytes": 227719,
+      "path": "config/project_requirements.yaml",
+      "sha256": "6b5a34052d700802016b2fc2cc5b185d63841806afc4316969e13816ccce8195"
+    },
+    {
+      "bytes": 35971,
+      "path": "config/project_state.json",
+      "sha256": "10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8"
+    },
+    {
+      "bytes": 9074,
+      "path": "PROJECT_STATUS.md",
+      "sha256": "cd96c6c08a0517e5caccede008c1a24f8fac9318333a3235d7b540cba5787c55"
+    },
+    {
+      "bytes": 124435,
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "fa2d81be9c2b34bb45b2ff130f683cada28d5f76845904d497dce960d0973649"
+    }
+  ],
+  "checks": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "REQUIREMENT_TRACEABILITY_GENERATION=PASS\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "CANONICAL_CONSTRAINT_GATE=PASS\nPROJECT_STATE_CONSISTENCY=PASS\nREQUIREMENT_TRACEABILITY_BASELINE=PASS\nP0_P7_EVIDENCE_RECONCILIATION=PASS\nNO_HARDWARE_ACTIONS_EXECUTED=1\nP8A_STATUS=PASS\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "NO_HARDWARE_ACTIONS_EXECUTED=1\n"
+    },
+    {
+      "command": "git diff --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "diagnostic_evidence": {
+    "bytes": 2525,
+    "path": "evidence/generated/p10_1r_p8d_detached_precondition_failure/summary.json",
+    "sha256": "1756a1278d63ba309afc201c51559ef896d1d6c24f662a6769c0bbb22b5cc9ce"
+  },
+  "direct_hardware_requirements": {
+    "P10_1R-ECHO-002": "PENDING",
+    "P10_1R-ECHO-005": "PENDING",
+    "P10_1R-PERF-001": "PENDING",
+    "P10_1R-PERF-002": "PENDING",
+    "P10_1R-SOAK-001": "PENDING",
+    "P10_1R-STREAM-001": "PENDING",
+    "P10_1R-STREAM-002": "PENDING"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-08-01T00:00:00Z",
+  "hardware_actions_executed": false,
+  "input_evidence": {
+    "ack_pipeline_model": {
+      "bytes": 2737,
+      "path": "evidence/generated/p10_1r_ack_pipeline_model.json",
+      "sha256": "6d3636be6633598e3d31075de969b4e76f6e41980d7d08c8182d3031f2bc47eb"
+    },
+    "dual_endpoint_regression": {
+      "bytes": 3977,
+      "path": "evidence/generated/p10_1r_dual_endpoint_regression/summary.json",
+      "sha256": "f11bf4b98a6ff166b7d8d03de44e03f55c82d2b79c306f1a1576cfd26963d8e5"
+    },
+    "failure_baseline": {
+      "bytes": 3903,
+      "path": "evidence/generated/p10_1r_failure_baseline_summary.json",
+      "sha256": "ac26a4f2692bb8d0ada8a0760db023afc2cffe65451ee93283b89301cf3fc200"
+    },
+    "focused_xsim": {
+      "bytes": 5340,
+      "path": "evidence/generated/p10_1r_xsim/summary.json",
+      "sha256": "d1c25723fbb1f87089a3ff90ceed3cf38f30aaaed09212cc7fef3127c2bda0e7"
+    },
+    "full_offline_gate": {
+      "bytes": 321078,
+      "path": "evidence/generated/p10_1r_full_offline_regression/summary.json",
+      "sha256": "c5fd4b8aa9029c0ff45c30ed8453620ec49374372e06ede3b56520c94ed863c2"
+    },
+    "functional_build": {
+      "bytes": 19793,
+      "path": "evidence/generated/p10_1r_functional_build_summary.json",
+      "sha256": "56b1b9c2b7cd32f41eb0f0e3f09eddf244f355076785f8d45447e8f5ac0d887d"
+    },
+    "p8c_regression": {
+      "bytes": 4409,
+      "path": "evidence/generated/p10_1r_full_offline_regression/p8c/p8c_final_summary.json",
+      "sha256": "8f128c83e5739bec24069f688ea6425b89598956eac5b119880f7ea9712ef6ea"
+    },
+    "p8d_regression": {
+      "bytes": 6209,
+      "path": "evidence/generated/p10_1r_full_offline_regression/p8d/p8d_final_summary.json",
+      "sha256": "7470973f4edf8134ca884bba40833c2b1c48ba76e9c70b26f642ea79311f6be9"
+    },
+    "repo_intake": {
+      "bytes": 2992,
+      "path": "evidence/generated/p10_1r_repo_intake.json",
+      "sha256": "899c6fbca00c1bbf63f83307903fcf36893e1ec1706d53efca1e7dfcd4787056"
+    },
+    "runtime_build": {
+      "bytes": 10807,
+      "path": "evidence/generated/p10_1r_ps_runtime_build_summary.json",
+      "sha256": "0b60daf796a00df8a97a5ef090bcec22cf25fc1570accc9e7e33fa6bb82a7639"
+    },
+    "rx_admission_design": {
+      "bytes": 1935,
+      "path": "evidence/generated/p10_1r_rx_admission_design.json",
+      "sha256": "07c77c218c0fe297ad32d8945facfb4684c8508b075e31d3e3f85b2773d14823"
+    },
+    "self_echo_model": {
+      "bytes": 2263,
+      "path": "evidence/generated/p10_1r_self_echo_model.json",
+      "sha256": "0c555bfe55b9555b263f8b0a04cc54465087c98ac688e9258e82cb029691571b"
+    },
+    "shutdown_build": {
+      "bytes": 8474,
+      "path": "evidence/generated/p10_1r_shutdown_build_summary.json",
+      "sha256": "250240e79fb7be7268cfddd2c3f03d912573f697f8a27cf941777f250add8ccc"
+    }
+  },
+  "network_used": false,
+  "no_hardware": true,
+  "offline_requirements": {
+    "P10_1R-ACK-001": "PASS",
+    "P10_1R-ACK-002": "PASS",
+    "P10_1R-ACK-003": "PASS",
+    "P10_1R-ECHO-001": "PASS",
+    "P10_1R-ECHO-003": "PASS",
+    "P10_1R-ECHO-004": "PASS",
+    "P10_1R-HOST-001": "PASS"
+  },
+  "role_build_evidence": {
+    "fixed": {
+      "bytes": 4293,
+      "path": "evidence/generated/p10_1r_fixed_build.json",
+      "sha256": "70d2cc926ea392c6c85137577c854c00d303c9d3eaa3173d18ae10e909af4aaa"
+    },
+    "rotating": {
+      "bytes": 4328,
+      "path": "evidence/generated/p10_1r_rotating_build.json",
+      "sha256": "c2c6f2f29b297160ec0c61099173612903fec8762cab15f5401d34d5b122ef04"
+    }
+  },
+  "schema_version": 1,
+  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
+  "status": "PASS",
+  "test_id": "P10_1R-EVIDENCE-CONSISTENCY"
+}
