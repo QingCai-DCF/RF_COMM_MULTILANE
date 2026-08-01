@@ -15,6 +15,8 @@ RUNTIME = ROOT / "scripts/p10_hardware_runtime.py"
 RUNNER = ROOT / "scripts/p10_1_hardware_acceptance.py"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 RUNTIME_EXTENSION = ROOT / "software/ps_driver/p10_1_runtime_extension.inc"
+TRANSPORT_CORE = ROOT / "rtl/p9_optical_transport_core.sv"
+SELECTIVE_REPEAT_RX = ROOT / "rtl/ir_selective_repeat_rx.sv"
 
 
 def load_runner():
@@ -565,8 +567,10 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertNotIn("ethernet", tcl.lower())
         self.assertIn("if (recovery_flags != 0U &&", extension)
 
-    def test_duplicate_fault_stimulus_spans_rto_on_receiver_only(self) -> None:
+    def test_duplicate_fault_stimulus_uses_sender_past_sequence(self) -> None:
         extension = RUNTIME_EXTENSION.read_text(encoding="utf-8")
+        transport = TRANSPORT_CORE.read_text(encoding="utf-8")
+        receiver = SELECTIVE_REPEAT_RX.read_text(encoding="utf-8")
         configure_start = extension.index(
             "static void p10_1_configure_object"
         )
@@ -579,14 +583,27 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             "ordinal == recovery_ordinal,\n                           local_rx);"
         )
 
-        self.assertIn("P10_1_DUPLICATE_ACK_DROP_COUNT = 0xffU", extension)
-        self.assertIn("uint32_t local_receiver", configure)
-        self.assertIn("local_receiver != 0U", configure)
         self.assertIn(
-            "(P10_1_DUPLICATE_ACK_DROP_COUNT & 0xffU) << 8", configure
+            "P10_1_DUPLICATE_PAST_SEQUENCE_FLAG = 1U << 3", extension
         )
-        self.assertNotIn("physical_fault_injection |= 1U << 8", configure)
+        self.assertIn("uint32_t local_receiver", configure)
+        self.assertIn(
+            "local_receiver == 0U", configure
+        )
+        self.assertIn(
+            "protocol_fault_flags |= "
+            "P10_1_DUPLICATE_PAST_SEQUENCE_FLAG",
+            configure,
+        )
+        self.assertNotIn("P10_1_DUPLICATE_ACK_DROP_COUNT", extension)
+        self.assertNotIn("physical_fault_injection |=", configure)
         self.assertIn(call, extension)
+        self.assertIn("object_initial_sequence_q - 1'b1", transport)
+        self.assertIn("fault_attempt_budget_q <=", transport)
+        self.assertIn("receive_distance >= 16'h8000", receiver)
+        self.assertIn(
+            "duplicate_count_q <= duplicate_count_q + 1'b1", receiver
+        )
 
     def test_cacheable_runtime_state_is_cleaned_before_xsdb_polling(self) -> None:
         extension = RUNTIME_EXTENSION.read_text(encoding="utf-8")

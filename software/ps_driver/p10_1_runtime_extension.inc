@@ -33,13 +33,12 @@ enum {
   P10_1_PER_LANE_SYMBOL_ERROR_0 = 0x08b4U,
   P10_1_PER_LANE_SYMBOL_ERROR_1 = 0x08b8U,
   /*
-   * One lost cumulative ACK is not a deterministic duplicate-DATA stimulus:
-   * a later ACK from the four-frame endpoint burst can cover it before the
-   * 62.5 ms RTO.  Suppress a bounded receiver-only run of ACKs so at least
-   * one real DATA retry must cross the optical path within the existing
-   * 250 ms observation interval.
+   * Existing protocol fault bit 3 sends the first three DATA attempts with
+   * sequence initial_sequence-1 while retaining their canonical payload
+   * metadata.  The receiver must classify those same-session, behind-base
+   * frames as duplicates before a normal sequence is retried.
    */
-  P10_1_DUPLICATE_ACK_DROP_COUNT = 0xffU,
+  P10_1_DUPLICATE_PAST_SEQUENCE_FLAG = 1U << 3,
 };
 
 static volatile p10_1_runtime_result_t *p10_1_result(void) {
@@ -490,9 +489,8 @@ static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
     if ((command_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
       protocol_fault_flags |= 1U;
     if ((command_flags & P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT) != 0U &&
-        local_receiver != 0U)
-      physical_fault_injection |=
-          (P10_1_DUPLICATE_ACK_DROP_COUNT & 0xffU) << 8;
+        local_receiver == 0U)
+      protocol_fault_flags |= P10_1_DUPLICATE_PAST_SEQUENCE_FLAG;
   }
   p9_pl_write(IR_REG_P9_OBJECT_CONFIG,
               (mailbox->lane_mask & 3U) |
