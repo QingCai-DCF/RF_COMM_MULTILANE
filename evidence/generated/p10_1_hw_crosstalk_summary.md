@@ -7,7 +7,7 @@
 
 ## Errors
 
-- crosstalk was not run because the campaign stopped after an earlier stage failure
+- crosstalk stage summary is missing
 
 ## Machine-readable evidence
 

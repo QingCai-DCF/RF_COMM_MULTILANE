@@ -7,7 +7,7 @@
 
 ## Errors
 
-- tuning was not run because the campaign stopped after an earlier stage failure
+- tuning stage summary is missing
 
 ## Machine-readable evidence
 

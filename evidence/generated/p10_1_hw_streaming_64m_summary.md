@@ -7,8 +7,8 @@
 
 ## Errors
 
-- streaming was not run because the campaign stopped after an earlier stage failure
-- faults was not run because the campaign stopped after an earlier stage failure
+- streaming stage summary is missing
+- faults stage summary is missing
 
 ## Machine-readable evidence
 

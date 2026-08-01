@@ -84,10 +84,11 @@
   "crosstalk_4x4_matrix": "FAIL",
   "current_run_hardware_authorization": false,
   "errors": [
+    "p10_1_hw_authorization_summary",
+    "p10_1_hw_target_identity_summary",
     "p10_1_hw_safe_boot_summary",
     "p10_1_hw_timer_summary",
     "p10_1_hw_metric_semantics_summary",
-    "p10_1_hw_baseline_summary",
     "p10_1_hw_tuning_summary",
     "p10_1_hw_pipeline_summary",
     "p10_1_hw_streaming_64m_summary",
@@ -99,26 +100,27 @@
   ],
   "ethernet_used": false,
   "executed_stage_status": {
-    "baseline": "FAIL",
-    "crosstalk": "NOT_RUN",
-    "faults": "NOT_RUN",
-    "formal": "NOT_RUN",
-    "half_duplex": "NOT_RUN",
-    "oneplusone": "NOT_RUN",
-    "pipeline": "NOT_RUN",
-    "preflight": "PASS",
-    "smoke": "PASS",
-    "streaming": "NOT_RUN",
-    "tuning": "NOT_RUN"
+    "baseline": "PASS",
+    "crosstalk": "MISSING",
+    "faults": "MISSING",
+    "formal": "MISSING",
+    "half_duplex": "MISSING",
+    "oneplusone": "MISSING",
+    "pipeline": "MISSING",
+    "preflight": "MISSING",
+    "smoke": "MISSING",
+    "streaming": "MISSING",
+    "tuning": "MISSING"
   },
   "f_to_r_4mbps_target": "FAIL",
   "f_to_r_4p8mbps_stretch": "FAIL",
   "f_to_r_application_goodput_bps": null,
   "fail_gates": [
+    "p10_1_hw_authorization_summary",
+    "p10_1_hw_target_identity_summary",
     "p10_1_hw_safe_boot_summary",
     "p10_1_hw_timer_summary",
     "p10_1_hw_metric_semantics_summary",
-    "p10_1_hw_baseline_summary",
     "p10_1_hw_tuning_summary",
     "p10_1_hw_pipeline_summary",
     "p10_1_hw_streaming_64m_summary",
@@ -130,7 +132,7 @@
   ],
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T02:59:50+00:00",
+  "generated_at_utc": "2026-08-01T03:12:53+00:00",
   "generated_evidence": [
     "evidence/generated/p10_1_hw_repo_intake.json",
     "evidence/generated/p10_1_hw_model_sanity_summary.json",
@@ -214,8 +216,7 @@
   ],
   "pass_gates": [
     "p10_1_hw_artifact_summary",
-    "p10_1_hw_authorization_summary",
-    "p10_1_hw_target_identity_summary",
+    "p10_1_hw_baseline_summary",
     "p10_1_hw_shutdown_summary"
   ],
   "pipeline_config": {
@@ -229,14 +230,14 @@
   "r_to_f_application_goodput_bps": null,
   "raw_evidence": [
     {
-      "bytes": 564665,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "5a28aca0ffe637e8b59d013465e1ec2f969ba32e27b0a5018ccfae7cdb4c976b"
+      "bytes": 660280,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T030649Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "98f1c975a9c55b95695abdfe26c0e6cb80b190abdf2c398d9233e93983b65c47"
     },
     {
-      "bytes": 46320,
+      "bytes": 50094,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "02cecde7bf65142dda06191394623e466b6306a5ef32affa055edc63dc9b8577"
+      "sha256": "6789bec20039d30b6e4944ebebd3235ac611f2e458e48c3749d114a68752d60f"
     }
   ],
   "register_map": {
@@ -250,11 +251,11 @@
     "sha256": "7813d23690b226c745bda9c999744647116c5a196b55c8c197b58adb80dd95a3"
   },
   "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL",
-  "retry_run_id_count": 4,
+  "retry_run_id_count": 1,
   "retry_run_id_limit": null,
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T030649Z_bfff4836_1585d1ad_9ad4f85f",
   "runtime_seconds": null,
   "schema_version": 1,
   "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",

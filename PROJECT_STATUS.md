@@ -21,7 +21,7 @@ CURRENT_PROGRAM_STAGE: P10_1_PERFORMANCE_REMEDIATION
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 LAST_HARDWARE_STAGE: P10_1
-LAST_HARDWARE_RUN_ID: p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f
+LAST_HARDWARE_RUN_ID: p10_1_hw_20260801T030649Z_bfff4836_1585d1ad_9ad4f85f
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -147,7 +147,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 ## P10.1 scoped AX7020 hardware performance campaign
 
 - Status: `FAIL`
-- Run ID: `p10_1_hw_20260801T025145Z_bfff4836_1585d1ad_9ad4f85f`
+- Run ID: `p10_1_hw_20260801T030649Z_bfff4836_1585d1ad_9ad4f85f`
 - Source commit: `bfff483663e51862a0e1e4aed31940bd84d80cdb`
 - Fixed / rotating-role IDs: `AX7020-F/JTAG:210249855178` / `AX7020-R/JTAG:210512180081`
 - Final evidence: `evidence/generated/p10_1_hw_final_summary.json`
