@@ -165,6 +165,15 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             plans["formal"], [("P101_FORMAL", "stationary_30min", "1800")]
         )
         self.assertEqual(len(plans["tuning"]), 10)
+        batch1 = next(
+            item
+            for item in plans["tuning"]
+            if isinstance(item, self.runner.Case)
+            and item.label == "tune_batch1"
+        )
+        self.assertEqual(batch1.ring, 16)
+        self.assertEqual(batch1.initialseq, 1)
+        self.assertEqual(batch1.rawtarget, 256 * 1024)
         streaming = [
             item
             for item in plans["streaming"]

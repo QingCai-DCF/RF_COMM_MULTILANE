@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "test_id": "P10_1-HW-TUNING-CANDIDATE-QUALIFICATION",
+  "status": "PASS",
+  "scope": "OFFLINE_REMEDIATION_OF_ONE_REJECTED_COMPOSITE_CANDIDATE",
+  "generated_utc": "2026-08-01T03:22:51Z",
+  "hardware_actions_executed_during_remediation": false,
+  "failed_run": {
+    "run_id": "p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f",
+    "checkpoint_commit": "0de58d48",
+    "orchestrator_status": "FAIL",
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "current_run_hardware_authorization": false
+  },
+  "immutable_evidence": {
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/stage_summary.json",
+      "sha256": "69e890df75bbd36894ccb6a69280744adbf21df7e1c9b3fea8c6686582ff3820"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/xsdb.result.txt",
+      "sha256": "97170630f0a54dc5b0fa4a22d954b853ecb05b633b37eaeef8adc95c2d5932d9"
+    },
+    "observations": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/dumps/observations.psv",
+      "sha256": "abfa5cb8f54e51bf0b8e3ca00e9098cfa6f99d10fe91378546f625bcc8b1288b"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T031417Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "e04ae6c8d34e44f29c0bfaf65941d5f6e658dfba83d2c14d3fa41d45665ea841"
+    }
+  },
+  "completed_candidates_before_rejection": {
+    "count": 6,
+    "best": {
+      "label": "tune_ring8",
+      "application_goodput_bps": 2586451.0298286914,
+      "buffer_count": 4,
+      "ring_depth": 8,
+      "descriptor_batch": 4,
+      "object_bytes": 131072
+    }
+  },
+  "rejected_exact_candidate": {
+    "label": "tune_batch1",
+    "total_bytes": 4194304,
+    "buffer_count": 4,
+    "ring_depth": 8,
+    "descriptor_batch": 1,
+    "object_bytes": 65536,
+    "descriptor_bytes": 65536,
+    "fixed": {
+      "p9_status": 12,
+      "p9_state": 5,
+      "p10_1_status": 260,
+      "p10_1_status_name": "P10_1_RUNTIME_STATUS_PL_OBJECT",
+      "application_bytes_accepted": 131072,
+      "application_bytes_committed": 0,
+      "objects_completed": 2,
+      "descriptors_reclaimed_by_reset": 3,
+      "pl_object_error": "0x50090004",
+      "pl_object_error_meaning": "TX retry exhausted"
+    },
+    "rotating": {
+      "p9_status": 12,
+      "p9_state": 5,
+      "p10_1_status": 259,
+      "p10_1_status_name": "P10_1_RUNTIME_STATUS_DMA_COMPLETION",
+      "application_bytes_accepted": 196608,
+      "application_bytes_committed": 0,
+      "objects_completed": 3,
+      "descriptors_reclaimed_by_reset": 4
+    },
+    "integrity_counters": {
+      "crc_bad": 0,
+      "sha_mismatch": 0,
+      "integrity_error": 0,
+      "partial_commit": 0,
+      "duplicate_commit": 0,
+      "stale_commit": 0
+    }
+  },
+  "inference_boundary": {
+    "allowed": "Reject the exact ring8, batch1, 64 KiB-object composite candidate for this artifact and tuning pass.",
+    "forbidden": "Do not infer that descriptor_batch=1 is unsupported for every ring depth or object size."
+  },
+  "replacement_candidate": {
+    "label": "tune_batch1",
+    "changed_parameter": "descriptor_batch",
+    "buffer_count": 4,
+    "ring_depth": 16,
+    "descriptor_batch": 1,
+    "object_bytes": 262144,
+    "descriptor_bytes": 65536,
+    "rationale": "Hold the mandatory/default candidate constant and isolate descriptor_batch=1."
+  },
+  "remediated_runner": {
+    "path": "scripts/p10_1_hardware_acceptance.py",
+    "sha256": "8d807a0b86444655d74c902cb6db774f5c089d86e389a61e1c72e751de4fdefe",
+    "bitstream_or_elf_changed": false,
+    "hardware_confirmation": "PENDING_TUNING_RETRY"
+  },
+  "validation": {
+    "focused_unit_tests": {
+      "tests_run": 27,
+      "status": "PASS"
+    },
+    "python_compile": "PASS",
+    "git_diff_check": "PASS"
+  }
+}
