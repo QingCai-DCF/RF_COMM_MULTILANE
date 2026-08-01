@@ -1,8 +1,11 @@
 {
+  "acceptance_eligible": false,
+  "artifact_bundle_purpose": "ECHO_CALIBRATION_ONLY",
   "artifact_freeze": "evidence/generated/p10_1r_artifact_freeze.json",
-  "artifact_freeze_sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19",
+  "artifact_freeze_sha256": "5fcf424a802b2661c1240dcca5e382b34b68f94684f2e4578d65f80dfe3d1c09",
   "artifacts": [
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 4045681,
       "kind": "functional_bitstream",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1/p10_ax7020_fixed_functional.bit",
@@ -10,6 +13,7 @@
       "sha256": "080a35e604982e6df2fe2f5ed5de7f102a26c67a66171bd968a37cafa6512db1"
     },
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 369073,
       "kind": "shutdown_bitstream",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259/p10_ax7020_fixed_shutdown.bit",
@@ -17,6 +21,7 @@
       "sha256": "0e8c4771bb66f46b62688bf17acd998a7efad4c4a9a3bb862acad0ef47581259"
     },
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 941819,
       "kind": "xsa",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293/p10_ax7020_fixed_functional.xsa",
@@ -24,20 +29,23 @@
       "sha256": "48c6f5cad40950f18cb6598b7a4820cbcae121d24a6224334b7df85b4f289293"
     },
     {
+      "built_source_commit": "38f83531f51ad052d72680a4df69920d76131728",
       "bytes": 1855896,
       "kind": "bsp",
-      "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "path": "artifacts/p10_1r/38f83531f51ad052d72680a4df69920d76131728/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
       "role": "fixed",
       "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
     },
     {
-      "bytes": 553368,
+      "built_source_commit": "38f83531f51ad052d72680a4df69920d76131728",
+      "bytes": 553536,
       "kind": "elf",
-      "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0/p10_fixed_runtime.elf",
+      "path": "artifacts/p10_1r/38f83531f51ad052d72680a4df69920d76131728/3dfb9c7f02d08a0c03dc6553cbdb6c44d8f0f78de02a4e490464bf41024a63d3/p10_fixed_runtime.elf",
       "role": "fixed",
-      "sha256": "85a7a10c8a4240c3ce860748eb887802266927edd9435ec79a676a7a7e9d44a0"
+      "sha256": "3dfb9c7f02d08a0c03dc6553cbdb6c44d8f0f78de02a4e490464bf41024a63d3"
     },
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 4045681,
       "kind": "functional_bitstream",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d/p10_ax7020_rotating_functional.bit",
@@ -45,6 +53,7 @@
       "sha256": "18287e6601031aeead6648a541e076dc52401045f9fad194058b7651b60ae49d"
     },
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 369073,
       "kind": "shutdown_bitstream",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c/p10_ax7020_rotating_shutdown.bit",
@@ -52,6 +61,7 @@
       "sha256": "00fcd7eabea623f516b0ee07cd60511087292d4481538619e82d5aa9e79bd52c"
     },
     {
+      "built_source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
       "bytes": 917077,
       "kind": "xsa",
       "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101/p10_ax7020_rotating_functional.xsa",
@@ -59,22 +69,24 @@
       "sha256": "98f781e756ebd44c4730f6d96ffd7908f9a2966557fbed3425e868abcc0a1101"
     },
     {
+      "built_source_commit": "38f83531f51ad052d72680a4df69920d76131728",
       "bytes": 1856209,
       "kind": "bsp",
-      "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "path": "artifacts/p10_1r/38f83531f51ad052d72680a4df69920d76131728/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
       "role": "rotating",
       "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
     },
     {
-      "bytes": 552888,
+      "built_source_commit": "38f83531f51ad052d72680a4df69920d76131728",
+      "bytes": 553228,
       "kind": "elf",
-      "path": "artifacts/p10_1r/493955d5788942ac448a9cfd99c97f0c526281fe/01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55/p10_rotating_runtime.elf",
+      "path": "artifacts/p10_1r/38f83531f51ad052d72680a4df69920d76131728/b22c66488ff0560ed6a7fc1071b98845e947fb2fd36508402df521b2d83ed754/p10_rotating_runtime.elf",
       "role": "rotating",
-      "sha256": "01500cb532c4d8e296f30ff81aca31c1b836a2203ad3c2b0731751b6acabae55"
+      "sha256": "b22c66488ff0560ed6a7fc1071b98845e947fb2fd36508402df521b2d83ed754"
     }
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "b24cb5b48773d80f008d5858c5d577be3de10ad2",
+  "authorization_parent_commit": "9c504e70b96a1be2c11351d79d9673b3d589ad30",
   "authorized_stages": [
     "preflight",
     "echo_tail"
@@ -92,11 +104,9 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-01T18:44:01Z",
-  "consumed_by_run_id": "p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66",
-  "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-01T18:41:57+00:00",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
+  "generated_at_utc": "2026-08-01T19:03:57+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
   "inputs": {
@@ -106,9 +116,9 @@
       "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
     },
     "artifact_freeze": {
-      "bytes": 6301,
+      "bytes": 7667,
       "path": "evidence/generated/p10_1r_artifact_freeze.json",
-      "sha256": "a470e891039b514a12c676d261fa9b251e92914e6e87bfbe94756a5619dd2f19"
+      "sha256": "5fcf424a802b2661c1240dcca5e382b34b68f94684f2e4578d65f80dfe3d1c09"
     },
     "fixed_profile": {
       "bytes": 907,
@@ -171,9 +181,9 @@
       "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
     },
     "runner": {
-      "bytes": 61344,
+      "bytes": 63936,
       "path": "scripts/p10_1r_hardware_acceptance.py",
-      "sha256": "81c4b3401ab4f9737f018fcef4bed7823d0bb7841f45a3c8234876f2727eeeb1"
+      "sha256": "fe0c5c33af1a23ab41560a2cb7310b197f11448d40737061ecef474496f91b8f"
     },
     "runtime": {
       "bytes": 1376,
@@ -181,9 +191,9 @@
       "sha256": "bb0da402fe2d0fad60aa2364b48c736e38cbf9ee7f76a2cd0d7907458b564a04"
     },
     "runtime_helpers": {
-      "bytes": 69261,
+      "bytes": 69457,
       "path": "scripts/p10_hardware_runtime.py",
-      "sha256": "1cf329ec479636369ba3c0c2bb2248c12b4ebab82d3c849cf86f7c6f53209a76"
+      "sha256": "ac13ca787d765207ec5e5e39101e353a38d86d35e065b2bd05d8d026c3acb099"
     },
     "rx_admission": {
       "bytes": 2565,
@@ -196,9 +206,9 @@
       "sha256": "f9c156783e13494e41f215f72b5608ff42e46a2114c4288c2de4acd3e63c4995"
     },
     "xsdb_stage": {
-      "bytes": 52114,
+      "bytes": 52884,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "80938309d33ec19530bb008d7ac8d4115cd5b9f4fd88b6a34b8d2c828d7158bf"
+      "sha256": "358e795489863799b19608a9195997065b7733cc994106a9180671a462b465fc"
     }
   },
   "lane_masks": [
@@ -209,6 +219,10 @@
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
   "part": "xc7z020clg400-2",
+  "pl_build_identity": {
+    "fixed": "0x50315246",
+    "rotating": "0x50315252"
+  },
   "plan_sha256": {
     "echo_tail": "7ecc6bd5776161a95232d755077888844142af17cdd8833799b72de8e3bb7c3d",
     "preflight": "e87724b1381c04109e12866928238a48a9df4abd727ffad67720883a823c4b03"
@@ -228,7 +242,7 @@
     "spi": true
   },
   "reusable_for_future_run": false,
-  "run_id": "p10_1r_20260801T184156Z_493955d5_080a35e6_18287e66",
+  "run_id": "p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66",
   "schema_version": 1,
   "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
   "shutdown": {
@@ -247,8 +261,8 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "source_commit": "493955d5788942ac448a9cfd99c97f0c526281fe",
-  "status": "CONSUMED_AFTER_FAIL_CLOSED_PREFLIGHT",
+  "source_commit": "38f83531f51ad052d72680a4df69920d76131728",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"
