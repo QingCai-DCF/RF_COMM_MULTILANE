@@ -619,7 +619,7 @@ module p9_axi_dma_peripheral #(
       12'hA8C: reg_rd_data = p10_1r_snapshot_q[32];
       12'hA90: reg_rd_data = p10_1r_snapshot_q[33];
       12'hA94: reg_rd_data = p10_1r_snapshot_q[34];
-      12'hA98: reg_rd_data = 32'd36864;
+      12'hA98: reg_rd_data = DEPLOYMENT_ROLE == 0 ? 32'd36864 : 32'd4096;
       12'hA9C: reg_rd_data = 32'd256;
       12'hAA0: reg_rd_data = 32'd131072;
       12'hAA4: reg_rd_data = 32'd4;
@@ -633,6 +633,10 @@ module p9_axi_dma_peripheral #(
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
     .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000),
+    // Preserve the historical P9 monolithic defaults while P10.1R role-bound
+    // endpoints use the directly measured guard selection.
+    .ACK_TURNAROUND_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 37_120 : 4_352),
+    .RX_MIN_POST_TX_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 36_864 : 4_096),
     .DEPLOYMENT_ROLE(DEPLOYMENT_ROLE)
   ) u_transport (
     .clk(s_axi_aclk), .rst_n(transport_resetn_q),

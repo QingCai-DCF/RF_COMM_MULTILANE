@@ -12,19 +12,24 @@ trigger:
   location: after_global_permit_tx_kill_and_tfdu_safety_guards
   requested_or_scheduled_tx_is_not_a_trigger: true
 candidate_timing:
-  status: OFFLINE_CANDIDATE_NOT_HARDWARE_MEASURED
-  minimum_post_tx_guard_cycles: 36864
-  minimum_post_tx_guard_us: 576
+  status: HARDWARE_MEASURED_AND_SELECTED_FOR_FINAL_REBUILD
+  minimum_post_tx_guard_cycles: 4096
+  minimum_post_tx_guard_us: 64
   rxd_idle_qual_cycles: 256
   rxd_idle_qual_us: 4
   maximum_echo_quarantine_cycles: 131072
   maximum_echo_quarantine_us: 2048
   decoder_clear_cycles: HELD_FOR_LOCAL_TX_AND_FULL_ECHO_QUARANTINE
-  minimum_decoder_clear_cycles_after_txd_fall: 37120
+  minimum_decoder_clear_cycles_after_txd_fall: 4352
   local_source_reject_enable: true
   guard_measurement_mode: timestamp_every_local_txd_and_post_tx_raw_rxd_edge
   final_value_rule: measured_max_echo_tail_plus_deterministic_margin
-  hardware_measurement_required_before_acceptance: true
+  hardware_measurement_required_before_acceptance: false
+  measured_maximum_echo_tail_cycles: 0
+  deterministic_margin_cycles: 4096
+  selection_run_id: p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66
+  selection_evidence: evidence/generated/p10_1r_echo_guard_selection.json
+  final_acceptance_reverification_required: true
 behavior:
   local_tx_immediately_disables_same_module_rx_admission: true
   local_tx_does_not_blank_other_lane: true
@@ -58,12 +63,23 @@ provenance:
     path: evidence/generated/p10_1_hw_campaign_terminal_summary.json
     role: immutable_failure_baseline
   fresh_hardware_echo_tail_trace:
-    status: PENDING_NEW_CURRENT_RUN_AUTHORIZATION
+    status: PASS
+    run_id: p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66
     required_frames_per_module: 1000
     required_statistics: [maximum, p99, p99_9]
+    observed_frames_per_module: 1000
+    observed_maximum_cycles: {F0: 0, F1: 0, R0: 0, R1: 0}
+    observed_p99_cycles: {F0: 0, F1: 0, R0: 0, R1: 0}
+    observed_p99_9_cycles: {F0: 0, F1: 0, R0: 0, R1: 0}
+    raw_same_module_echo_count: 4000
+    accepted_same_module_frames: 0
+    selection_evidence_sha256: 91219cccda83a7edb68ffc26842c1a081583fa4f68005dd1c95344a7de342fe0
+    raw_manifest_sha256: 7d879bdc1bac6a00640f2ef476e2feb8418241c3ea50e8d443848a47f3a5ddb2
 safety:
   affects_global_permit: false
   affects_txd_kill_or_sd_or_mode: false
   creates_backpressure: false
   hardware_authorization: false
   no_hardware: true
+  configuration_update_hardware_actions_executed: false
+  selection_evidence_hardware_actions_executed: true

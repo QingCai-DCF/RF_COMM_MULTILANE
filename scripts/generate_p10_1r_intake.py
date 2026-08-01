@@ -217,7 +217,7 @@ def main() -> int:
     )
     design_ok = all((
         admission.get("candidate_timing", {}).get("minimum_post_tx_guard_cycles")
-            == 36_864,
+            == 4_096,
         admission.get("candidate_timing", {}).get("rxd_idle_qual_cycles") == 256,
         admission.get("candidate_timing", {}).get(
             "maximum_echo_quarantine_cycles"
@@ -235,9 +235,13 @@ def main() -> int:
         "test_id": "P10_1R-RX-ADMISSION-DESIGN",
         "status": "PASS" if design_ok else "FAIL",
         "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
-        "hardware_measurement_status": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
-        "candidate_guard_cycles": 36_864,
-        "candidate_guard_us": 576,
+        "hardware_measurement_status": "PASS_GUARD_SELECTION_REBUILD_PENDING",
+        "candidate_guard_cycles": 4_096,
+        "candidate_guard_us": 64,
+        "selected_final_guard_cycles": 4_096,
+        "guard_selection_evidence": record(
+            ROOT / "evidence/generated/p10_1r_echo_guard_selection.json"
+        ),
         "idle_qualification_cycles": 256,
         "maximum_quarantine_cycles": 131_072,
         "source_identity": admission.get("source_identity"),

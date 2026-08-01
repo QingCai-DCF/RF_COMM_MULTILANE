@@ -1,12 +1,12 @@
 # P10.1R per-module RX admission and self-echo rejection
 
-Status: offline implementation candidate; direct four-module measurement pending.
+Status: four-module guard calibration passed; rebuilt-artifact acceptance pending.
 
 Each physical TFDU owns an independent admission state. The trigger is the final role-local physical `Txd` after `GLOBAL_PERMIT`, endpoint arm, lane permit, one-hot, exact-duty, stuck-high, frame-admission, and final TX-kill logic. A queued descriptor or scheduled frame cannot trigger or bypass this state.
 
 When final `Txd` becomes active, the same module's `rx_frame_accept_enable` is removed combinationally. Its decoder and parser are held clear for all of local TX and the complete echo quarantine. Raw synchronized Rxd remains counted and timestamped, but the blanked path cannot create DATA, ACK/SACK, sequence-window progress, DMA writes, application commits, or RX LED activity. The other lane has a separate instance and is not blanked.
 
-The initial offline candidate at 64 MHz is a 36,864-cycle (576 us) minimum guard followed by 256 cycles (4 us) of Rxd idle qualification, with a 131,072-cycle (2,048 us) fail-closed maximum. The 576 us value covers the Goal's 512 us model sweep plus 64 us deterministic margin. It is not hardware-measured and cannot satisfy `P10_1R-ECHO-005`; a newly authorized campaign must measure at least 1,000 frames on each of F0, F1, R0, and R1 and freeze `max + margin`.
+The purpose-limited four-module calibration run measured 1,000 transmissions on each of F0, F1, R0, and R1. It observed 4,000 raw same-module echoes, zero accepted same-module frames, and zero post-TX raw-edge tail on every module. The selected 64 MHz minimum guard is therefore 4,096 cycles (64 us), equal to the observed maximum plus a frozen 4,096-cycle deterministic margin. The separate 256-cycle (4 us) Rxd-idle qualification and 131,072-cycle (2,048 us) fail-closed maximum remain unchanged. The rebuilt artifacts must reverify this bound before `P10_1R-ECHO-005` or the campaign can pass.
 
 Wire-format source identity is defense in depth. Fixed uses node ID 1 and rotating-role uses node ID 2 in previously reserved header bits, without adding airtime bytes. A CRC-valid frame carrying the local node ID is rejected even after admission reopens. Remote DATA and remote ACK/SACK remain admissible according to endpoint role.
 

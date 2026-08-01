@@ -6,12 +6,13 @@
 // control.  Quarantine is triggered by the actual final physical Txd level,
 // after every safety gate, rather than by a requested/scheduled transmission.
 //
-// The default timing values are conservative offline candidates for the
-// 64 MHz AX7020 build.  They are not POST_TX_GUARD_MEASURED; a future
-// authorized hardware campaign must measure the echo tail and freeze the
-// final value before hardware acceptance.
+// The 64 MHz default is selected from the four-module hardware calibration
+// run p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66.  That run observed
+// no post-TX raw edge in 1,000 samples on each module; 4,096 cycles therefore
+// provide the frozen deterministic 64 us margin.  The separate 256-cycle idle
+// qualification remains mandatory before admission reopens.
 module p10_1r_rx_admission #(
-  parameter integer MIN_POST_TX_GUARD_CYCLES = 36_864,
+  parameter integer MIN_POST_TX_GUARD_CYCLES = 4_096,
   parameter integer IDLE_QUALIFY_CYCLES = 256,
   parameter integer MAX_QUARANTINE_CYCLES = 131_072
 ) (

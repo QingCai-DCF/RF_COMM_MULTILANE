@@ -9,8 +9,8 @@ protocol:
   ack_threshold: 32
   ack_max_delay_cycles: 64000
   ack_max_delay_us: 1000
-  direction_turnaround_guard_cycles: 37120
-  direction_turnaround_guard_us: 580
+  direction_turnaround_guard_cycles: 4352
+  direction_turnaround_guard_us: 68
   receiver_credit_low_watermark: 8
   per_object_direction_turnaround: false
   per_object_optical_ready_roundtrip: false
@@ -38,5 +38,7 @@ safety:
   no_hardware: true
   current_run_hardware_authorization: false
 hardware_acceptance:
-  status: PENDING_NEW_ARTIFACT_FREEZE_AND_CURRENT_RUN_AUTHORIZATION
+  status: GUARD_SELECTED_PENDING_NEW_ARTIFACT_FREEZE_AND_CURRENT_RUN_AUTHORIZATION
   old_p10_1_results_inherited: false
+  echo_guard_selection_run_id: p10_1r_20260801T190357Z_38f83531_080a35e6_18287e66
+  echo_guard_selection_evidence: evidence/generated/p10_1r_echo_guard_selection.json

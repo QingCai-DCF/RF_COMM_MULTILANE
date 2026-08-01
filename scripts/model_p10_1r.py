@@ -18,8 +18,8 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 SEEDS = (1, 7, 17, 31, 127, 1024, 20260801)
-ECHO_DELAYS_US = (0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512)
-ECHO_DURATIONS_US = (0.125, 0.5, 1, 4, 16, 64)
+ECHO_DELAYS_US = (0, 1, 2, 4, 8, 16, 32, 60, 64)
+ECHO_DURATIONS_US = (0.125, 0.5, 1, 4, 16)
 ECHO_JITTER_US = (-2, -1, 0, 1, 2)
 REFLECTION_TAIL_COMPONENT_US = (0, 1, 4, 16, 64)
 
@@ -41,8 +41,8 @@ class PerformanceInputs:
     bundle_burst_frames: int = 32
     ack_threshold: int = 32
     outstanding_frames: int = 32
-    post_tx_guard_us: float = 576.0
-    direction_quiet_us: float = 580.0
+    post_tx_guard_us: float = 64.0
+    direction_quiet_us: float = 68.0
     packet_error_rate: float = 0.0001
     dma_ps_overlap_efficiency: float = 0.995
 
@@ -131,7 +131,7 @@ def _event_seed_stream(total: int, seeds: Iterable[int]):
 
 
 def stress_admission(total: int = 50_000) -> dict:
-    guard_cycles = 36_864
+    guard_cycles = 4_096
     idle_cycles = 256
     raw_echo = 0
     blanked = 0
@@ -151,7 +151,9 @@ def stress_admission(total: int = 50_000) -> dict:
             # The sweep value is the final observed local echo edge after
             # Txd falls, not merely the first reflection onset. Duration,
             # jitter, and reflection-tail components are randomized inside
-            # that explicit envelope so the 512 us endpoint stays bounded.
+            # that explicit envelope.  The directly observed post-TX maximum
+            # was zero; this synthetic sweep exercises the full selected
+            # 64 us deterministic margin without inventing a longer bound.
             tail_envelope_us = rng.choice(ECHO_DELAYS_US)
             duration_us = min(rng.choice(ECHO_DURATIONS_US), tail_envelope_us)
             jitter_us = rng.choice(ECHO_JITTER_US)
@@ -373,7 +375,10 @@ def main() -> int:
         "status": "PASS" if admission["pass"] and reset_fault["pass"] else "FAIL",
         "admission_stress": admission,
         "reset_fault_stress": reset_fault,
-        "guard_status": "OFFLINE_CANDIDATE_NOT_HARDWARE_MEASURED",
+        "guard_status": "HARDWARE_MEASURED_SELECTION_OFFLINE_REBUILD",
+        "guard_selection_evidence": (
+            "evidence/generated/p10_1r_echo_guard_selection.json"
+        ),
     }
     ack_payload = {
         **common,

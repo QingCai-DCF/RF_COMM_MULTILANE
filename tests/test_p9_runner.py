@@ -245,7 +245,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         config = (ROOT / "config/p9_z7010_stationary_2lane.yaml").read_text(
             encoding="utf-8"
         )
-        self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 37_120", core)
+        self.assertIn("ACK_TURNAROUND_GUARD_CYCLES = 4_352", core)
         self.assertIn(
             "DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 4_096 :", core
         )

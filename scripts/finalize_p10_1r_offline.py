@@ -30,18 +30,19 @@ STATE = ROOT / "config/project_state.json"
 TRACEABILITY = ROOT / "docs/REQUIREMENT_TRACEABILITY_MATRIX.md"
 PROJECT_STATUS = ROOT / "PROJECT_STATUS.md"
 
-SOURCE_COMMIT = "493955d5788942ac448a9cfd99c97f0c526281fe"
+SOURCE_COMMIT = ""
 FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 FAILURE_TAG_OBJECT = "6359cb1113884365a01f1a6a2b1d84d17a6b8f2d"
 FAILURE_TAG_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 GOAL_SHA256 = "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
-DETERMINISTIC_TIMESTAMP = "2026-08-01T00:00:00Z"
+DETERMINISTIC_TIMESTAMP = "2026-08-02T00:00:00Z"
 
 GOAL = ROOT / "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md"
 PIPELINE_CONFIG = ROOT / "config/performance/p10_1_pipeline.yaml"
 RUNTIME_CONFIG = ROOT / "config/performance/p10_1r_hardware_runtime.yaml"
 ADMISSION_CONFIG = ROOT / "config/tfdu_rx_admission.yaml"
 MEASUREMENT_CONTRACT = ROOT / "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md"
+GUARD_SELECTION = GENERATED / "p10_1r_echo_guard_selection.json"
 P8D_PRECONDITION_FAILURE = (
     GENERATED / "p10_1r_p8d_detached_precondition_failure/summary.json"
 )
@@ -270,6 +271,7 @@ def verify_artifact(
         "bytes": path.stat().st_size,
         "sha256": actual,
         "read_only": read_only,
+        "built_source_commit": SOURCE_COMMIT,
     }
 
 
@@ -329,12 +331,19 @@ def update_state(artifact_freeze: Path, artifacts: dict[str, Any]) -> None:
         "artifact_freeze_sha256": sha256(artifact_freeze),
         "artifacts": artifacts,
         "candidate_guard_cycles": {
-            "F0": 36864,
-            "F1": 36864,
-            "R0": 36864,
-            "R1": 36864,
+            "F0": 4096,
+            "F1": 4096,
+            "R0": 4096,
+            "R1": 4096,
         },
-        "candidate_guard_hardware_measured": False,
+        "selected_guard_cycles": {
+            "F0": 4096,
+            "F1": 4096,
+            "R0": 4096,
+            "R1": 4096,
+        },
+        "candidate_guard_hardware_measured": True,
+        "guard_selection": record(GUARD_SELECTION),
         "current_run_hardware_authorization": False,
         "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
         "hardware_actions_executed": False,
@@ -412,6 +421,7 @@ def update_requirements(payloads: dict[str, dict[str, Any]]) -> None:
 
 
 def main() -> int:
+    global SOURCE_COMMIT
     parser = argparse.ArgumentParser()
     parser.add_argument("--json-summary", action="store_true")
     args = parser.parse_args()
@@ -423,6 +433,7 @@ def main() -> int:
         errors.append("CURRENT_RUN_HARDWARE_AUTHORIZATION must be false")
     branch = git("branch", "--show-current").stdout.strip()
     head = git("rev-parse", "HEAD").stdout.strip()
+    SOURCE_COMMIT = head
     source_is_ancestor = (
         git("merge-base", "--is-ancestor", SOURCE_COMMIT, "HEAD", check=False).returncode
         == 0
@@ -442,6 +453,30 @@ def main() -> int:
         errors.append("failure baseline annotated tag target changed")
     if not GOAL.is_file() or sha256(GOAL) != GOAL_SHA256:
         errors.append("P10.1R Goal SHA256 mismatch")
+
+    guard_selection: dict[str, Any] = {}
+    try:
+        guard_selection = load_json(GUARD_SELECTION)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(f"invalid guard-selection evidence: {exc}")
+    if guard_selection:
+        if guard_selection.get("status") != "PASS":
+            errors.append("guard-selection status is not PASS")
+        if guard_selection.get("selected_final_guard_cycles") != 4096:
+            errors.append("guard-selection final value mismatch")
+        if guard_selection.get("maximum_observed_post_tx_echo_tail_cycles") != 0:
+            errors.append("guard-selection measured maximum mismatch")
+        if guard_selection.get("raw_same_module_echo_count") != 4000:
+            errors.append("guard-selection raw echo count mismatch")
+        if guard_selection.get("violations", {}).get("accepted_same_module_frames") != 0:
+            errors.append("guard-selection accepted same-module frame mismatch")
+        selection_shutdown = guard_selection.get("shutdown", {})
+        if not (
+            selection_shutdown.get("SHUTDOWN_FIXED") == "PASS"
+            and selection_shutdown.get("SHUTDOWN_ROTATING") == "PASS"
+            and selection_shutdown.get("all_attempts_confirmed") is True
+        ):
+            errors.append("guard-selection shutdown evidence mismatch")
 
     payloads: dict[str, dict[str, Any]] = {}
     for name, path in INPUTS.items():
@@ -638,6 +673,8 @@ def main() -> int:
         ADMISSION_CONFIG,
         MEASUREMENT_CONTRACT,
         ROOT / "config/register_map/ir_axi_regs.yaml",
+        ROOT / "config/register_map/generated/ir_regs_manifest.json",
+        GUARD_SELECTION,
         ROOT / "board_profiles/ax7020_fixed_2lane/pinmap.csv",
         ROOT / "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
         ROOT / "board_profiles/ax7020_rotating_2lane/pinmap.csv",
@@ -663,6 +700,24 @@ def main() -> int:
             "rotating_role": "AX7020-R/JTAG:210512180081",
         },
         "lane_mapping": {"lane0": "F0-R0", "lane1": "F1-R1"},
+        "purpose": "FINAL_ACCEPTANCE",
+        "acceptance_eligible": True,
+        "allowed_hardware_stages": [
+            "preflight",
+            "echo_tail",
+            "crosstalk",
+            "phy_sanity",
+            "ack_tuning",
+            "performance",
+            "streaming_64m",
+            "formal_30min",
+        ],
+        "pl_build_identity": {
+            "fixed": "0x50315246",
+            "rotating": "0x50315252",
+        },
+        "guard_selection": record(GUARD_SELECTION),
+        "old_hardware_results_inherited": False,
         "roles": frozen_by_role,
         "inputs": [record(path) for path in artifact_inputs if path.is_file()],
         "errors": errors.copy(),
@@ -689,7 +744,8 @@ def main() -> int:
         "source_commit": SOURCE_COMMIT,
         "goal_sha256": GOAL_SHA256,
         "current_run_hardware_authorization": False,
-        "authorization_granted": False,
+        "authorization_granted": True,
+        "user_authorization_available": True,
         "authorization_consumed": False,
         "hardware_actions_executed": False,
         "network_used": False,
@@ -714,8 +770,8 @@ def main() -> int:
             "P11_or_8x32_or_600rpm_promotion",
         ],
         "next_required_user_action": (
-            "grant a fresh current-run authorization explicitly bound to this "
-            "source commit and exact artifact hashes"
+            "NONE; create a fresh immutable run-bound authorization record "
+            "from the user's existing P10.1R authorization"
         ),
     }
     write_pair(
@@ -723,10 +779,11 @@ def main() -> int:
         "P10.1R current-run authorization readiness",
         authorization,
         [
-            "No authorization has been created or consumed by this offline run.",
+            "The user authorization exists, but no run-bound authorization record "
+            "has been created or consumed by this offline run.",
             "",
-            "Hardware execution must not begin until the user supplies a fresh "
-            "authorization bound to the exact frozen hashes in this record.",
+            "Hardware execution must not begin until a fresh immutable current-run "
+            "record is bound to the exact frozen hashes in this record.",
         ],
     )
 
@@ -830,12 +887,19 @@ def main() -> int:
         "hardware_movement": False,
         "wiring_changed": False,
         "candidate_guard_cycles": {
-            "F0": 36864,
-            "F1": 36864,
-            "R0": 36864,
-            "R1": 36864,
+            "F0": 4096,
+            "F1": 4096,
+            "R0": 4096,
+            "R1": 4096,
         },
-        "candidate_guard_hardware_measured": False,
+        "selected_guard_cycles": {
+            "F0": 4096,
+            "F1": 4096,
+            "R0": 4096,
+            "R1": 4096,
+        },
+        "candidate_guard_hardware_measured": True,
+        "guard_selection": record(GUARD_SELECTION),
         "modeled_goodput_bps": {
             "fixed_to_rotating": perf.get("modeled_fixed_to_rotating_bps"),
             "rotating_to_fixed": perf.get("modeled_rotating_to_fixed_bps"),
@@ -882,8 +946,9 @@ def main() -> int:
             "regression, fixed/rotating routed builds, shutdown builds, BSPs, and "
             "ELFs are complete.",
             "",
-            "This checkpoint is not a P10.1R hardware PASS. Echo-tail statistics, "
-            "the final per-module guard, direct admission counters, 4.0 Mbit/s "
+            "This checkpoint is not a P10.1R hardware PASS. The calibration-selected "
+            "guard is frozen, but rebuilt-artifact echo-tail verification, direct "
+            "admission counters, 4.0 Mbit/s "
             "goodput, 5x64 MiB streaming, and the 1800-second run remain PENDING.",
         ],
     )

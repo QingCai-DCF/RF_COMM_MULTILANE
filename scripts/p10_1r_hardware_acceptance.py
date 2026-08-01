@@ -64,9 +64,11 @@ EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
 EXPECTED_ARTIFACT_FREEZE_SHA256 = (
-    "5fcf424a802b2661c1240dcca5e382b34b68f94684f2e4578d65f80dfe3d1c09"
+    "0000000000000000000000000000000000000000000000000000000000000000"
 )
-EXPECTED_ARTIFACT_PURPOSE = "ECHO_CALIBRATION_ONLY"
+EXPECTED_ARTIFACT_PURPOSE = "NO_ACTIVE_BUNDLE"
+EXPECTED_ACCEPTANCE_ELIGIBLE = False
+EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = ()
 AUTH_PATH = ROOT / "config/p10_1r_current_run_hardware_authorization.json"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
@@ -115,7 +117,7 @@ ACK_THRESHOLD = 32
 OUTSTANDING_FRAMES = 32
 GUARD_MARGIN_CYCLES = 4096
 EXPECTED_ADMISSION_CAPS = 0x52310101
-EXPECTED_GUARD_CYCLES = 36864
+EXPECTED_GUARD_CYCLES = 4096
 EXPECTED_IDLE_QUALIFY_CYCLES = 256
 EXPECTED_MAX_QUARANTINE_CYCLES = 131072
 EXPECTED_IDLE_LOW_CYCLES = 4
@@ -410,10 +412,11 @@ def load_freeze() -> tuple[dict[str, Any], dict[str, Path]]:
         raise RuntimeError("P10.1R artifact freeze is not an offline PASS")
     if (
         record.get("purpose") != EXPECTED_ARTIFACT_PURPOSE
-        or record.get("acceptance_eligible") is not False
-        or record.get("allowed_hardware_stages") != ["preflight", "echo_tail"]
+        or record.get("acceptance_eligible") is not EXPECTED_ACCEPTANCE_ELIGIBLE
+        or tuple(record.get("allowed_hardware_stages", ()))
+        != EXPECTED_ALLOWED_HARDWARE_STAGES
     ):
-        raise RuntimeError("P10.1R echo-calibration artifact scope mismatch")
+        raise RuntimeError("P10.1R artifact-bundle scope mismatch")
     if record.get("goal", {}).get("sha256") != EXPECTED_GOAL_SHA256:
         raise RuntimeError("artifact freeze Goal binding mismatch")
     for item in record.get("inputs", []):
@@ -534,7 +537,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "artifact_freeze": rel(ARTIFACT_FREEZE),
         "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
         "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
-        "acceptance_eligible": False,
+        "acceptance_eligible": EXPECTED_ACCEPTANCE_ELIGIBLE,
         "artifacts": artifact_records(freeze),
         "pl_build_identity": {
             role: f"0x{value:08X}"
@@ -625,7 +628,7 @@ def validate_authorization(
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
         "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
-        "acceptance_eligible": False,
+        "acceptance_eligible": EXPECTED_ACCEPTANCE_ELIGIBLE,
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,

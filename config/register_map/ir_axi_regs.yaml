@@ -784,7 +784,7 @@
     {"name": "P10_1R_RX_ADMISSION_VIOLATION", "offset": "0x0A8C", "access": "RO", "description": "Snapshotted fail-closed maximum-quarantine violations"},
     {"name": "P10_1R_NON_TARGET_ACCEPTED", "offset": "0x0A90", "access": "RO", "description": "Snapshotted accepted CRC-valid frames on lanes outside the configured lane mask"},
     {"name": "P10_1R_CROSS_LANE_ACCEPTED", "offset": "0x0A94", "access": "RO", "description": "Snapshotted accepted frames whose encoded logical lane differs from the receiving physical lane"},
-    {"name": "P10_1R_MIN_POST_TX_GUARD_CYCLES", "offset": "0x0A98", "access": "RO", "description": "Offline candidate minimum post-TX guard; not hardware-measured"},
+    {"name": "P10_1R_MIN_POST_TX_GUARD_CYCLES", "offset": "0x0A98", "access": "RO", "description": "Hardware-measured post-TX guard selection; final artifact acceptance must reverify it"},
     {"name": "P10_1R_RXD_IDLE_QUAL_CYCLES", "offset": "0x0A9C", "access": "RO", "description": "Offline candidate Rxd idle qualification interval"},
     {"name": "P10_1R_MAX_ECHO_QUARANTINE_CYCLES", "offset": "0x0AA0", "access": "RO", "description": "Fail-closed maximum echo quarantine interval"},
     {"name": "P10_1R_DECODER_CLEAR_CYCLES", "offset": "0x0AA4", "access": "RO", "description": "Minimum decoder clear interval in protocol clocks"},

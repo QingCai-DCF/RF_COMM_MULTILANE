@@ -10,7 +10,7 @@
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
 set p10_expected_register_map_version 0x0A000002
-set p10_expected_register_map_hash_low 0x53D711A6
+set p10_expected_register_map_hash_low 0x6C0301EA
 
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
@@ -267,7 +267,7 @@ proc p10_read_p10_1r_snapshot {role} {
   for {set address 0x43C00A0C} {$address <= 0x43C00AA8} {incr address 4} {
     lappend values [p10_read32 $role $address]
   }
-  if {[lindex $values 35] != 36864 || [lindex $values 36] != 256 ||
+  if {[lindex $values 35] != 4096 || [lindex $values 36] != 256 ||
       [lindex $values 37] != 131072 || [lindex $values 38] != 4 ||
       [lindex $values 39] != 3} {
     error "P10.1R $role admission timing/config readback mismatch"

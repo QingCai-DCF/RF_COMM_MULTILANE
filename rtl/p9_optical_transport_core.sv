@@ -8,11 +8,10 @@ module p9_optical_transport_core #(
   parameter integer MAX_PAYLOAD_BYTES = 247,
   parameter integer STORE_ADDR_WIDTH = 13,
   parameter integer RTO_CYCLES = 4_000_000,
-  // P10.1R's offline echo sweep reaches 512 us. Keep 64 us deterministic
-  // margin so a reverse frame cannot begin while the peer's same-module RX
-  // admission is still quarantined.  This is an offline candidate pending a
-  // fresh four-module hardware echo-tail measurement.
-  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 37_120,
+  // P10.1R's four-module calibration observed no post-TX raw edge.  Keep the
+  // measured 4,096-cycle deterministic margin plus the independent 256-cycle
+  // idle qualification before a reverse frame can begin.
+  parameter integer ACK_TURNAROUND_GUARD_CYCLES = 4_352,
   // P10.1R freezes one cumulative ACK per full 32-frame bundle window.  P9
   // dual-fixture builds retain their historical threshold at the data-plane
   // parameter boundary below.
@@ -34,9 +33,9 @@ module p9_optical_transport_core #(
   // until that boundary, preventing DATA/ACK optical collisions without a
   // shared scheduler or shared memory between the two FPGAs.
   parameter integer ENDPOINT_BURST_FRAMES = 32,
-  // Offline candidate values only.  Hardware acceptance must replace the
-  // candidate with a directly measured echo-tail bound plus margin.
-  parameter integer RX_MIN_POST_TX_GUARD_CYCLES = 36_864,
+  // Hardware-selected bound: measured maximum post-TX echo tail (zero cycles
+  // in 1,000 samples on each of F0/F1/R0/R1) plus 4,096-cycle margin.
+  parameter integer RX_MIN_POST_TX_GUARD_CYCLES = 4_096,
   parameter integer RX_IDLE_QUALIFY_CYCLES = 256,
   parameter integer RX_MAX_QUARANTINE_CYCLES = 131_072
 ) (

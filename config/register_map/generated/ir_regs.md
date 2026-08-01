@@ -3,7 +3,7 @@
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
 - Register map version: `P10-2` (`0x0A000002`)
-- Canonical source SHA256: `2a82d64c377d71a4e95d80d0d23b938d42e91b782444c572fe82466153d711a6`
+- Canonical source SHA256: `cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea`
 - Compatibility: P0-P10.1 offsets and meanings are preserved; P10.1R atomic RX-admission observability is additive from 0x0A00.
 
 | Name | Offset | Access | Description |
@@ -415,7 +415,7 @@
 | `P10_1R_RX_ADMISSION_VIOLATION` | `0x0A8C` | `RO` | Snapshotted fail-closed maximum-quarantine violations |
 | `P10_1R_NON_TARGET_ACCEPTED` | `0x0A90` | `RO` | Snapshotted accepted CRC-valid frames on lanes outside the configured lane mask |
 | `P10_1R_CROSS_LANE_ACCEPTED` | `0x0A94` | `RO` | Snapshotted accepted frames whose encoded logical lane differs from the receiving physical lane |
-| `P10_1R_MIN_POST_TX_GUARD_CYCLES` | `0x0A98` | `RO` | Offline candidate minimum post-TX guard; not hardware-measured |
+| `P10_1R_MIN_POST_TX_GUARD_CYCLES` | `0x0A98` | `RO` | Hardware-measured post-TX guard selection; final artifact acceptance must reverify it |
 | `P10_1R_RXD_IDLE_QUAL_CYCLES` | `0x0A9C` | `RO` | Offline candidate Rxd idle qualification interval |
 | `P10_1R_MAX_ECHO_QUARANTINE_CYCLES` | `0x0AA0` | `RO` | Fail-closed maximum echo quarantine interval |
 | `P10_1R_DECODER_CLEAR_CYCLES` | `0x0AA4` | `RO` | Minimum decoder clear interval in protocol clocks |

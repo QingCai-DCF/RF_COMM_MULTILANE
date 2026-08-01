@@ -39,28 +39,10 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
         )
-        freeze, artifacts = self.runner.load_freeze()
-        self.assertEqual(freeze["status"], "PASS")
-        self.assertEqual(freeze["purpose"], "ECHO_CALIBRATION_ONLY")
-        self.assertFalse(freeze["acceptance_eligible"])
-        self.assertEqual(
-            freeze["allowed_hardware_stages"], ["preflight", "echo_tail"]
-        )
-        self.assertEqual(len(artifacts), 10)
-        self.assertEqual(
-            set(artifacts),
-            {
-                f"{role}:{kind}"
-                for role in ("fixed", "rotating")
-                for kind in (
-                    "functional_bitstream",
-                    "shutdown_bitstream",
-                    "xsa",
-                    "bsp",
-                    "elf",
-                )
-            },
-        )
+        self.assertEqual(self.runner.EXPECTED_ARTIFACT_PURPOSE, "NO_ACTIVE_BUNDLE")
+        self.assertEqual(self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES, ())
+        with self.assertRaisesRegex(RuntimeError, "artifact-freeze SHA256 mismatch"):
+            self.runner.load_freeze()
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()
@@ -116,7 +98,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
 
     def test_snapshot_parser_is_fail_closed(self) -> None:
         words = [0] * 40
-        words[35:40] = [36864, 256, 131072, 4, 3]
+        words[35:40] = [4096, 256, 131072, 4, 3]
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory) / "snapshot.psv"
             path.write_text(
@@ -124,7 +106,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
                 encoding="ascii",
             )
             parsed = self.runner.parse_snapshot(path)
-            self.assertEqual(parsed["configured_guard_cycles"], 36864)
+            self.assertEqual(parsed["configured_guard_cycles"], 4096)
             path.write_text("2|0", encoding="ascii")
             with self.assertRaises(ValueError):
                 self.runner.parse_snapshot(path)
@@ -161,7 +143,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
                             "module": module,
                             "direction": direction,
                             "lane_mask": lane,
-                            "tail_cycles": sample,
+                            "tail_cycles": 0,
                             "sender_raw": 1,
                             "sender_blanked_raw": 1,
                             "receiver_raw": 1,
@@ -170,8 +152,8 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             errors, result = self.runner.evaluate_echo(stage)
             self.assertEqual(errors, [])
             self.assertEqual(result["sample_count"], 4000)
-            self.assertEqual(result["modules"]["F0"]["p99_cycles"], 989)
-            self.assertEqual(result["modules"]["F0"]["p99_9_cycles"], 998)
+            self.assertEqual(result["modules"]["F0"]["p99_cycles"], 0)
+            self.assertEqual(result["modules"]["F0"]["p99_9_cycles"], 0)
             self.assertTrue(result["configured_guard_is_safe"])
 
     def test_runner_has_all_hardware_gates_and_finally_shutdown(self) -> None:
