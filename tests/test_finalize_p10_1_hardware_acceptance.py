@@ -109,6 +109,63 @@ class FinalizeP101HardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual(result["cross_lane_crosstalk_class"], "NOT_MEASURED")
         self.assertEqual(result["all_rx_ready_risk"], "NOT_MEASURED")
 
+    def test_timer_gate_is_local_ps_vs_pl_not_cross_endpoint(self) -> None:
+        rows = self.module.timer_crosscheck_rows(
+            [
+                {
+                    "label": "asymmetric-local-work",
+                    "recovery_case": False,
+                    "fixed": {
+                        "ps_elapsed_ticks": 100_000_000,
+                        "ps_timer_frequency_hz": 100_000_000,
+                        "pl_elapsed_ticks": 64_000_000,
+                        "pl_timer_frequency_hz": 64_000_000,
+                        "timer_crosscheck_pass": 1,
+                    },
+                    "rotating": {
+                        "ps_elapsed_ticks": 105_000_000,
+                        "ps_timer_frequency_hz": 100_000_000,
+                        "pl_elapsed_ticks": 67_200_000,
+                        "pl_timer_frequency_hz": 64_000_000,
+                        "timer_crosscheck_pass": 1,
+                    },
+                }
+            ]
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["fixed_local_ps_pl_error_percent"], 0.0)
+        self.assertEqual(rows[0]["rotating_local_ps_pl_error_percent"], 0.0)
+        self.assertGreater(rows[0]["ps_cross_endpoint_skew_percent"], 1.0)
+        self.assertFalse(rows[0]["cross_endpoint_skew_is_gating"])
+
+    def test_unlimited_retry_authorization_supersedes_stale_audit(self) -> None:
+        result = self.module.retry_campaign_fields(
+            {
+                "run_id": "run-3",
+                "retry_limit_policy": (
+                    self.module.UNLIMITED_RETRY_OVERRIDE_POLICY
+                ),
+                "diagnostic_stage_retry_budget": {
+                    "preflight": {"run_ids": ["run-1", "run-2"]}
+                },
+            },
+            "FAIL",
+            {
+                "campaign_disposition": "STOPPED_AT_GOAL_RETRY_LIMIT",
+                "next_required_user_action": "request another override",
+                "preflight_retry_ledger": {"new_run_id_count": 2},
+                "goal": {"diagnostic_stage_new_run_id_limit": 2},
+            },
+        )
+        self.assertEqual(
+            result["campaign_disposition"],
+            "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED",
+        )
+        self.assertIsNone(result["retry_run_id_limit"])
+        self.assertEqual(result["retry_run_id_count"], 3)
+        self.assertTrue(result["bounded_retry_audit_superseded"])
+        self.assertIn("none", result["next_required_user_action"])
+
     def test_common_context_uses_run_authorization_artifacts(self) -> None:
         authorization = {
             "source_commit": "authorized-source",

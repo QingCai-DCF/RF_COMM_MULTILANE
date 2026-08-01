@@ -88,7 +88,7 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             "crc_bad_count": 0,
             "sha_mismatch_count": 0,
             "retry_exhausted_count": 0,
-            "perf_integrity_error_count": 0,
+            "perf_integrity_error_count": 1 if recovery else 0,
             "perf_retry_exhausted_count": 0,
             "perf_descriptor_leak_count": 0,
             "perf_double_completion_count": 0,
@@ -419,6 +419,26 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         errors, _ = self.runner.evaluate_p101_pair(row, fixed, rotating)
         self.assertIn("synthetic:receiver stream SHA mismatch", errors)
 
+    def test_cross_endpoint_elapsed_skew_is_observed_not_gated(self) -> None:
+        row = self._row()
+        fixed = self._result(1, row)
+        rotating = self._result(2, row)
+        rotating["ps_elapsed_ticks"] = 105_000_000
+        rotating["pl_elapsed_ticks"] = 67_200_000
+        errors, detail = self.runner.evaluate_p101_pair(row, fixed, rotating)
+        self.assertEqual(errors, [])
+        self.assertGreater(
+            detail["cross_endpoint_elapsed_observation"]["ps"]["skew_percent"],
+            1.0,
+        )
+        self.assertTrue(
+            detail["local_timer_crosschecks"]["rotating"]["within_one_percent"]
+        )
+
+        rotating["pl_elapsed_ticks"] = 64_000_000
+        errors, _ = self.runner.evaluate_p101_pair(row, fixed, rotating)
+        self.assertIn("synthetic:rotating:timer_host_recomputed", errors)
+
     def test_recovery_pair_requires_reclaim_and_selected_reset(self) -> None:
         row = self._row(flags=self.runner.FLAG_DMA_RESET_RECEIVER)
         fixed = self._result(1, row, recovery=True)
@@ -428,6 +448,9 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertTrue(detail["recovery_case"])
         self.assertIsNone(detail["application_goodput_bps"])
+        self.assertTrue(
+            detail["fixed"]["checks"]["expected_pl_object_fail_edge"]
+        )
 
         rotating["descriptors_reclaimed_by_reset"] = 0
         errors, _ = self.runner.evaluate_p101_pair(row, fixed, rotating)
@@ -467,6 +490,8 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
                 "application_bytes_committed": 16 * 1024 * 1024,
                 "ps_elapsed_ticks": 25_000_000,
                 "ps_timer_frequency_hz": 1_000_000,
+                "pl_elapsed_ticks": 1_600_000_000,
+                "pl_timer_frequency_hz": 64_000_000,
                 "host_command_count": 1,
                 "fast_path_segment_count": 256,
                 "objects_completed": 64,

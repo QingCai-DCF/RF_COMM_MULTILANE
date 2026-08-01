@@ -53,6 +53,9 @@ P10_RUNTIME_ALLOWED_DIFF_SHA256 = (
 GOAL_SHA256 = (
     "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3"
 )
+UNLIMITED_RETRY_OVERRIDE_POLICY = (
+    "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL"
+)
 OFFLINE_TAG = "p10.1-offline-performance-ready"
 OFFLINE_SOURCE = "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183"
 OFFLINE_EVIDENCE = "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f"
@@ -694,7 +697,7 @@ def verify_run_manifest(run_root: Path) -> tuple[list[str], dict[str, Any]]:
     return errors, manifest
 
 
-def cross_board_timer_errors(details: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def timer_crosscheck_rows(details: list[dict[str, Any]]) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
     for detail in details:
         if detail.get("recovery_case"):
@@ -711,26 +714,100 @@ def cross_board_timer_errors(details: list[dict[str, Any]]) -> list[dict[str, An
             for key in required
         ):
             continue
-        item: dict[str, Any] = {"label": detail.get("label")}
-        for timer, ticks, frequency in (
-            ("ps", "ps_elapsed_ticks", "ps_timer_frequency_hz"),
-            ("pl", "pl_elapsed_ticks", "pl_timer_frequency_hz"),
-        ):
-            values = []
-            for role in ("fixed", "rotating"):
-                endpoint = detail[role]
-                values.append(
-                    endpoint[ticks] / endpoint[frequency]
-                    if endpoint[frequency]
-                    else 0.0
-                )
+        item: dict[str, Any] = {
+            "label": detail.get("label"),
+            "cross_endpoint_skew_is_gating": False,
+        }
+        for role in ("fixed", "rotating"):
+            endpoint = detail[role]
+            ps_seconds = (
+                endpoint["ps_elapsed_ticks"]
+                / endpoint["ps_timer_frequency_hz"]
+                if endpoint["ps_timer_frequency_hz"]
+                else 0.0
+            )
+            pl_seconds = (
+                endpoint["pl_elapsed_ticks"]
+                / endpoint["pl_timer_frequency_hz"]
+                if endpoint["pl_timer_frequency_hz"]
+                else 0.0
+            )
+            maximum = max(ps_seconds, pl_seconds)
+            fraction = (
+                abs(ps_seconds - pl_seconds) / maximum if maximum else 1.0
+            )
+            item[f"{role}_ps_seconds"] = ps_seconds
+            item[f"{role}_pl_seconds"] = pl_seconds
+            item[f"{role}_local_ps_pl_error_percent"] = fraction * 100.0
+            item[f"{role}_firmware_crosscheck_pass"] = (
+                endpoint.get("timer_crosscheck_pass") == 1
+            )
+        for timer in ("ps", "pl"):
+            values = [item[f"{role}_{timer}_seconds"] for role in ("fixed", "rotating")]
             maximum = max(values)
             fraction = abs(values[0] - values[1]) / maximum if maximum else 1.0
-            item[f"{timer}_fixed_seconds"] = values[0]
-            item[f"{timer}_rotating_seconds"] = values[1]
-            item[f"{timer}_cross_board_error_percent"] = fraction * 100.0
+            item[f"{timer}_cross_endpoint_skew_percent"] = fraction * 100.0
         results.append(item)
     return results
+
+
+def retry_campaign_fields(
+    authorization: dict[str, Any],
+    final_status: str,
+    fallback_audit: dict[str, Any],
+) -> dict[str, Any]:
+    """Resolve retry disposition from the immutable run authorization.
+
+    A captured unlimited user override outranks the older generated bounded
+    retry audit.  The latter remains historical evidence, but must never ask
+    the user for another override or claim that the campaign stopped at the
+    superseded Goal section-23 count.
+    """
+    if (
+        authorization.get("retry_limit_policy")
+        == UNLIMITED_RETRY_OVERRIDE_POLICY
+    ):
+        prior = authorization.get("diagnostic_stage_retry_budget", {}).get(
+            "preflight", {}
+        )
+        run_ids = {
+            str(item)
+            for item in prior.get("run_ids", [])
+            if str(item)
+        }
+        if authorization.get("run_id"):
+            run_ids.add(str(authorization["run_id"]))
+        return {
+            "campaign_disposition": (
+                "CAMPAIGN_COMPLETE"
+                if final_status == "PASS"
+                else "AUTOMATIC_REMEDIATION_AND_RETRY_AUTHORIZED"
+            ),
+            "retry_run_id_count": len(run_ids),
+            "retry_run_id_limit": None,
+            "next_required_user_action": (
+                None
+                if final_status == "PASS"
+                else "none; continue automatic remediation and retry under "
+                "the current user-authorized unlimited retry policy"
+            ),
+            "policy": UNLIMITED_RETRY_OVERRIDE_POLICY,
+            "bounded_retry_audit_superseded": True,
+        }
+    return {
+        "campaign_disposition": fallback_audit.get("campaign_disposition"),
+        "retry_run_id_count": fallback_audit.get(
+            "preflight_retry_ledger", {}
+        ).get("new_run_id_count"),
+        "retry_run_id_limit": fallback_audit.get("goal", {}).get(
+            "diagnostic_stage_new_run_id_limit"
+        ),
+        "next_required_user_action": fallback_audit.get(
+            "next_required_user_action"
+        ),
+        "policy": "GOAL_SECTION_23_BOUNDED",
+        "bounded_retry_audit_superseded": False,
+    }
 
 
 def classify_ratio(value: float) -> str:
@@ -1170,12 +1247,13 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         for detail in payload.get("details", [])
         if "fixed" in detail and "rotating" in detail
     ]
-    timer_rows = cross_board_timer_errors(all_details)
+    timer_rows = timer_crosscheck_rows(all_details)
     timer_errors = [
-        f"{item['label']}: timer disagreement exceeds 1%"
+        f"{item['label']}:{role}: local PS/PL timer disagreement exceeds 1%"
         for item in timer_rows
-        if item["ps_cross_board_error_percent"] > 1.0
-        or item["pl_cross_board_error_percent"] > 1.0
+        for role in ("fixed", "rotating")
+        if item[f"{role}_local_ps_pl_error_percent"] > 1.0
+        or not item[f"{role}_firmware_crosscheck_pass"]
     ]
     if not timer_rows:
         timer_errors.append("no complete PS/PL timer crosscheck row was captured")
@@ -1201,6 +1279,8 @@ def finalize_run(run_id: str) -> dict[str, Any]:
         list(stage_records.values()),
         timer_rows=timer_rows,
         maximum_allowed_error_percent=1.0,
+        comparison_scope="LOCAL_PS_VS_LOCAL_PL_PER_ENDPOINT",
+        cross_endpoint_elapsed_skew_role="INFORMATIONAL_ONLY_DIFFERENT_LOCAL_BOUNDARIES",
         host_timer_role="orchestration_only",
         errors=timer_errors,
     )
@@ -1550,6 +1630,19 @@ def finalize_run(run_id: str) -> dict[str, Any]:
     retry_audit = (
         load_json(retry_audit_path) if retry_audit_path.is_file() else {}
     )
+    retry_fields = retry_campaign_fields(
+        authorization, final_status, retry_audit
+    )
+    retry_evidence_path = retry_audit_path
+    if retry_fields["bounded_retry_audit_superseded"]:
+        override_path = authorization.get("retry_limit_override", {}).get(
+            "path"
+        )
+        if override_path:
+            candidate = (ROOT / str(override_path)).resolve()
+            candidate.relative_to(ROOT.resolve())
+            if candidate.is_file():
+                retry_evidence_path = candidate
     final = pair_payload(
         "P10_1-HW-FINAL-ACCEPTANCE",
         final_status,
@@ -1701,17 +1794,19 @@ def finalize_run(run_id: str) -> dict[str, Any]:
                 "r_to_f": r_4p8mbps,
             },
         },
-        retry_limit_audit=record(retry_audit_path) if retry_audit else None,
-        campaign_disposition=retry_audit.get("campaign_disposition"),
-        retry_run_id_count=retry_audit.get(
-            "preflight_retry_ledger", {}
-        ).get("new_run_id_count"),
-        retry_run_id_limit=retry_audit.get("goal", {}).get(
-            "diagnostic_stage_new_run_id_limit"
+        retry_limit_audit=(
+            record(retry_evidence_path)
+            if retry_evidence_path.is_file()
+            else None
         ),
-        next_required_user_action=retry_audit.get(
-            "next_required_user_action"
-        ),
+        retry_limit_policy=retry_fields["policy"],
+        bounded_retry_audit_superseded=retry_fields[
+            "bounded_retry_audit_superseded"
+        ],
+        campaign_disposition=retry_fields["campaign_disposition"],
+        retry_run_id_count=retry_fields["retry_run_id_count"],
+        retry_run_id_limit=retry_fields["retry_run_id_limit"],
+        next_required_user_action=retry_fields["next_required_user_action"],
         generated_evidence=[
             f"evidence/generated/{stem}.json"
             for stem in (

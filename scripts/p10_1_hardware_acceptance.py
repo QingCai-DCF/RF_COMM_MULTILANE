@@ -1573,7 +1573,31 @@ def evaluate_p101_pair(
         }
     expected_state = 7 if recovery else 6
     expected_role = {"fixed": 1, "rotating": 2}
+    local_timer_crosschecks: dict[str, dict[str, Any]] = {}
     for role, result in (("fixed", fixed), ("rotating", rotating)):
+        ps_seconds = (
+            result["ps_elapsed_ticks"] / result["ps_timer_frequency_hz"]
+            if result["ps_timer_frequency_hz"]
+            else 0.0
+        )
+        pl_seconds = (
+            result["pl_elapsed_ticks"] / result["pl_timer_frequency_hz"]
+            if result["pl_timer_frequency_hz"]
+            else 0.0
+        )
+        local_maximum = max(ps_seconds, pl_seconds)
+        local_error_fraction = (
+            abs(ps_seconds - pl_seconds) / local_maximum
+            if local_maximum
+            else 1.0
+        )
+        local_timer_crosschecks[role] = {
+            "ps_seconds": ps_seconds,
+            "pl_seconds": pl_seconds,
+            "error_percent": local_error_fraction * 100.0,
+            "within_one_percent": local_error_fraction <= 0.01,
+            "firmware_crosscheck_pass": result["timer_crosscheck_pass"] == 1,
+        }
         checks = {
             "magic": result["magic"] == P10_1_MAGIC,
             "schema": result["schema_version"] == P10_1_SCHEMA,
@@ -1592,7 +1616,8 @@ def evaluate_p101_pair(
                 result["fast_path_segment_count"]
                 > result["host_command_count"]
             ),
-            "timer": result["timer_crosscheck_pass"] == 1,
+            "timer_firmware": result["timer_crosscheck_pass"] == 1,
+            "timer_host_recomputed": local_error_fraction <= 0.01,
             "descriptor_leak": result["descriptor_leak_count"] == 0,
             "double_completion": result["double_completion_count"] == 0,
             "partial_commit": result["partial_commit_count"] == 0,
@@ -1602,7 +1627,6 @@ def evaluate_p101_pair(
             "crc": result["crc_bad_count"] == 0,
             "sha": result["sha_mismatch_count"] == 0,
             "retry_exhausted": result["retry_exhausted_count"] == 0,
-            "perf_integrity": result["perf_integrity_error_count"] == 0,
             "perf_retry_exhausted": (
                 result["perf_retry_exhausted_count"] == 0
             ),
@@ -1635,6 +1659,15 @@ def evaluate_p101_pair(
                     "abort_recorded": result["abort_count"] == 1,
                     "descriptor_reclaim_recorded": (
                         result["descriptors_reclaimed_by_reset"] > 0
+                    ),
+                    # P10_1_INTEGRITY_ERROR_COUNT is currently driven by the
+                    # transport object_fail rising edge.  Every intentional
+                    # recovery issues ABORT_OBJECT, so exactly one PL event is
+                    # expected here.  PS CRC/SHA/pattern counters above must
+                    # still remain zero.  Normal measurement cases require
+                    # this PL counter to remain zero below.
+                    "expected_pl_object_fail_edge": (
+                        result["perf_integrity_error_count"] == 1
                     ),
                 }
             )
@@ -1677,6 +1710,9 @@ def evaluate_p101_pair(
                     "descriptors": (
                         result["descriptors_submitted"]
                         == result["descriptors_completed"]
+                    ),
+                    "pl_object_fail_edge_zero": (
+                        result["perf_integrity_error_count"] == 0
                     ),
                 }
             )
@@ -1746,13 +1782,22 @@ def evaluate_p101_pair(
             errors.append(f"{row['label']}:receiver stream SHA mismatch")
         if sender["input_sha256_words"] != receiver["input_sha256_words"]:
             errors.append(f"{row['label']}:cross-board expected SHA mismatch")
-        elapsed = sender["ps_elapsed_ticks"]
-        frequency = sender["ps_timer_frequency_hz"]
-        goodput = (
-            row["size"] * 8 * frequency / elapsed
-            if elapsed and frequency
+        ps_elapsed = sender["ps_elapsed_ticks"]
+        ps_frequency = sender["ps_timer_frequency_hz"]
+        pl_elapsed = sender["pl_elapsed_ticks"]
+        pl_frequency = sender["pl_timer_frequency_hz"]
+        goodput_ps = (
+            row["size"] * 8 * ps_frequency / ps_elapsed
+            if ps_elapsed and ps_frequency
             else 0.0
         )
+        goodput_pl = (
+            row["size"] * 8 * pl_frequency / pl_elapsed
+            if pl_elapsed and pl_frequency
+            else 0.0
+        )
+        goodput = goodput_ps
+        cross_endpoint_elapsed: dict[str, dict[str, float]] = {}
         for timer_name, ticks_name, frequency_name in (
             ("PS", "ps_elapsed_ticks", "ps_timer_frequency_hz"),
             ("PL", "pl_elapsed_ticks", "pl_timer_frequency_hz"),
@@ -1773,13 +1818,20 @@ def evaluate_p101_pair(
                 if maximum
                 else 1.0
             )
-            if error_fraction > 0.01:
-                errors.append(
-                    f"{row['label']}:{timer_name} cross-board elapsed "
-                    f"error exceeds 1%"
-                )
+            # The two endpoints bracket different local work (sender DMA/TX
+            # versus receiver RX/verify/commit), so cross-endpoint elapsed
+            # skew is an observation, not a timer-accuracy gate.  Accuracy is
+            # independently gated by each endpoint's local PS-vs-PL pair.
+            cross_endpoint_elapsed[timer_name.lower()] = {
+                "fixed_seconds": fixed_seconds,
+                "rotating_seconds": rotating_seconds,
+                "skew_percent": error_fraction * 100.0,
+            }
     else:
         goodput = None
+        goodput_ps = None
+        goodput_pl = None
+        cross_endpoint_elapsed = {}
     return errors, {
         "label": row["label"],
         "direction": row["direction"],
@@ -1787,6 +1839,10 @@ def evaluate_p101_pair(
         "requested_bytes": row["size"],
         "recovery_case": recovery,
         "application_goodput_bps": goodput,
+        "application_goodput_ps_bps": goodput_ps,
+        "application_goodput_pl_bps": goodput_pl,
+        "local_timer_crosschecks": local_timer_crosschecks,
+        "cross_endpoint_elapsed_observation": cross_endpoint_elapsed,
         "fixed": {key: value for key, value in fixed.items() if key != "words"},
         "rotating": {
             key: value for key, value in rotating.items() if key != "words"
@@ -1882,7 +1938,8 @@ def _aggregate_windows(
         if not duration_ms <= elapsed_ms <= duration_ms + 500:
             errors.append(f"{label}: window elapsed time is not bounded")
         committed = 0
-        active_seconds = 0.0
+        active_ps_seconds = 0.0
+        active_pl_seconds = 0.0
         wall_started: list[int] = []
         wall_finished: list[int] = []
         host_commands = 0
@@ -1903,17 +1960,36 @@ def _aggregate_windows(
                 else detail["rotating"]
             )
             committed += int(sender["application_bytes_committed"])
-            ticks = int(sender["ps_elapsed_ticks"])
-            frequency = int(sender["ps_timer_frequency_hz"])
-            if ticks > 0 and frequency > 0:
-                active_seconds += ticks / frequency
+            ps_ticks = int(sender["ps_elapsed_ticks"])
+            ps_frequency = int(sender["ps_timer_frequency_hz"])
+            pl_ticks = int(sender["pl_elapsed_ticks"])
+            pl_frequency = int(sender["pl_timer_frequency_hz"])
+            if ps_ticks > 0 and ps_frequency > 0:
+                active_ps_seconds += ps_ticks / ps_frequency
+            if pl_ticks > 0 and pl_frequency > 0:
+                active_pl_seconds += pl_ticks / pl_frequency
             host_commands += int(sender["host_command_count"])
             segments += int(sender["fast_path_segment_count"])
             objects += int(sender["objects_completed"])
             wall_started.append(int(row["started_ms"]))
             wall_finished.append(int(row["finished_ms"]))
-        active_goodput = (
-            committed * 8.0 / active_seconds if active_seconds > 0 else 0.0
+        active_goodput_ps = (
+            committed * 8.0 / active_ps_seconds
+            if active_ps_seconds > 0
+            else 0.0
+        )
+        active_goodput_pl = (
+            committed * 8.0 / active_pl_seconds
+            if active_pl_seconds > 0
+            else 0.0
+        )
+        active_timer_maximum = max(active_ps_seconds, active_pl_seconds)
+        active_timer_error_percent = (
+            abs(active_ps_seconds - active_pl_seconds)
+            / active_timer_maximum
+            * 100.0
+            if active_timer_maximum
+            else 100.0
         )
         wall_goodput = committed * 8.0 / spec["duration_seconds"]
         aggregate = {
@@ -1922,8 +1998,13 @@ def _aggregate_windows(
             "case_count": len(window_rows),
             "elapsed_ms": elapsed_ms,
             "committed_bytes": committed,
-            "active_stream_seconds": active_seconds,
-            "active_application_goodput_bps": active_goodput,
+            "active_stream_seconds": active_ps_seconds,
+            "active_stream_ps_seconds": active_ps_seconds,
+            "active_stream_pl_seconds": active_pl_seconds,
+            "active_timer_error_percent": active_timer_error_percent,
+            "active_application_goodput_bps": active_goodput_ps,
+            "active_application_goodput_ps_bps": active_goodput_ps,
+            "active_application_goodput_pl_bps": active_goodput_pl,
             "wall_application_goodput_bps": wall_goodput,
             "host_command_count": host_commands,
             "objects_completed": objects,
@@ -1942,6 +2023,8 @@ def _aggregate_windows(
         }
         if not aggregate["host_not_in_fast_path"]:
             errors.append(f"{label}: host fast-path exclusion failed")
+        if active_timer_error_percent > 1.0:
+            errors.append(f"{label}: aggregate PS/PL timer error exceeds 1%")
         aggregates.append(aggregate)
     return errors, aggregates
 
@@ -2146,7 +2229,11 @@ def _validate_stage_semantics(
 
 
 def evaluate_stage(
-    stage: str, stage_dir: Path, process: dict[str, Any]
+    stage: str,
+    stage_dir: Path,
+    process: dict[str, Any],
+    *,
+    write_summary: bool = True,
 ) -> dict[str, Any]:
     markers = parse_markers(stage_dir / "xsdb.result.txt")
     observation = stage_dir / "dumps/observations.psv"
@@ -2255,7 +2342,8 @@ def evaluate_stage(
         "semantics": semantics,
         "errors": errors,
     }
-    write_json(stage_dir / "stage_summary.json", summary)
+    if write_summary:
+        write_json(stage_dir / "stage_summary.json", summary)
     return summary
 
 

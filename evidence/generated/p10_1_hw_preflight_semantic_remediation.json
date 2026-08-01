@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "test_id": "P10_1-HW-PREFLIGHT-SEMANTIC-REMEDIATION",
+  "status": "PASS",
+  "generated_utc": "2026-08-01T02:49:22Z",
+  "hardware_actions_executed": false,
+  "raw_hardware_evidence_modified": false,
+  "run_id": "p10_1_hw_20260801T015919Z_bfff4836_1585d1ad_9ad4f85f",
+  "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
+  "immutable_inputs": {
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T015919Z_bfff4836_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
+      "sha256": "8d3601c9a4baae4c8fd9b94aa16ee92dfa39abe9f042c79d7e28d3b4dea9b7f3"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T015919Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "3a73c0aa7be930d26f5fd96e0f42db6b9ec54b5a0681fda81b7581059ea354c0"
+    }
+  },
+  "historical_evaluator_result": {
+    "status": "FAIL",
+    "error_count": 12,
+    "errors": [
+      "pattern_prbs_1m:PS cross-board elapsed error exceeds 1%",
+      "pattern_prbs_1m:PL cross-board elapsed error exceeds 1%",
+      "pattern_zero_1m:PS cross-board elapsed error exceeds 1%",
+      "pattern_zero_1m:PL cross-board elapsed error exceeds 1%",
+      "pattern_one_1m:PS cross-board elapsed error exceeds 1%",
+      "pattern_one_1m:PL cross-board elapsed error exceeds 1%",
+      "pattern_counter_1m:PS cross-board elapsed error exceeds 1%",
+      "pattern_counter_1m:PL cross-board elapsed error exceeds 1%",
+      "pattern_corpus_1m:PS cross-board elapsed error exceeds 1%",
+      "pattern_corpus_1m:PL cross-board elapsed error exceeds 1%",
+      "failed_object_diagnostic:fixed:perf_integrity",
+      "failed_object_diagnostic:rotating:perf_integrity"
+    ]
+  },
+  "root_cause": {
+    "timer": "The historical host evaluator compared elapsed time across endpoints. The sender and receiver bracket different local work, so cross-endpoint skew is not a clock-accuracy measurement. Timer accuracy is the local PS timer versus local PL timer on each endpoint.",
+    "recovery": "IR_REG_P10_1_INTEGRITY_ERROR_COUNT is driven by the transport object_fail rising edge. The intentional recovery case writes ABORT_OBJECT, so exactly one PL object-fail edge is expected on each endpoint while the independent PS CRC, SHA, and pattern-integrity counters remain zero.",
+    "retry_disposition": "The immutable USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL authorization supersedes the older generated section-23 bounded retry audit."
+  },
+  "source_crosschecks": [
+    {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "lines": "440-465",
+      "finding": "Firmware computes the local PS-versus-PL timer error and accepts at no more than one percent."
+    },
+    {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "lines": "692-711",
+      "finding": "Intentional recovery writes ABORT_OBJECT and then finalizes the local timer pair."
+    },
+    {
+      "path": "rtl/p9_axi_dma_peripheral.sv",
+      "lines": "253-258,384",
+      "finding": "The PL integrity counter input is object_fail && !object_fail_d_q."
+    }
+  ],
+  "remediated_evaluator": {
+    "path": "scripts/p10_1_hardware_acceptance.py",
+    "sha256": "07770340e887719a6e002ed8040a292c4c3bee2490bd564bbddaf40192552b36",
+    "write_summary": false,
+    "status": "PASS",
+    "errors": [],
+    "observation_count": 11,
+    "maximum_local_ps_pl_timer_error_percent": 2.6528736911115144e-06,
+    "maximum_cross_endpoint_elapsed_skew_percent": 3.8111963110524907,
+    "cross_endpoint_elapsed_skew_is_gating": false,
+    "intentional_recovery_pl_object_fail_edges": {
+      "fixed": 1,
+      "rotating": 1
+    }
+  },
+  "remediated_finalizer": {
+    "path": "scripts/finalize_p10_1_hardware_acceptance.py",
+    "sha256": "51ad010f083b911fe22435d04c877957b067a5b03d339896d7fee971ee5b98c8",
+    "timer_gate": "LOCAL_PS_VS_LOCAL_PL_PER_ENDPOINT",
+    "retry_limit_policy": "USER_OVERRIDE_NO_LIMIT_UNTIL_CAMPAIGN_TERMINAL"
+  },
+  "validation": {
+    "unit_tests": {
+      "command": "python -m unittest tests.test_p10_1_hardware_acceptance tests.test_finalize_p10_1_hardware_acceptance",
+      "tests_run": 26,
+      "status": "PASS"
+    },
+    "python_compile": {
+      "command": "python -m py_compile scripts/p10_1_hardware_acceptance.py scripts/finalize_p10_1_hardware_acceptance.py",
+      "status": "PASS"
+    },
+    "no_hardware_call_check": {
+      "command": "python scripts/check_no_hardware_calls.py",
+      "status": "PASS",
+      "marker": "NO_HARDWARE_ACTIONS_EXECUTED=1"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "PASS"
+    },
+    "complete_legacy_bootstrap_gate": {
+      "status": "NOT_CLAIMED",
+      "reason": "The verify-existing-vivado mode reported pre-existing legacy nonhardware output and cascading plan-audit failures outside this host evaluator/finalizer change. Its regenerated files were restored and are not used as evidence for this remediation."
+    }
+  },
+  "conclusion": "The captured preflight hardware behavior satisfies the corrected stage semantics. This read-only re-evaluation does not rewrite the historical FAIL record and does not by itself promote the full P10.1 hardware campaign."
+}
