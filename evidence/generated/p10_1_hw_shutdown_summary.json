@@ -71,7 +71,7 @@
   "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T04:02:03+00:00",
+  "generated_at_utc": "2026-08-01T04:20:17+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -97,14 +97,14 @@
   },
   "raw_evidence": [
     {
-      "bytes": 59506,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "af708dcc544572c122096621a30dce1282268732f7b9a1e33630136eeb21399c"
+      "bytes": 113551,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "adb0ee8cd8f4ac5bf125e1acb24ff83018665af3cf45d3fbeff505e3f1c394ba"
     },
     {
-      "bytes": 7205,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
-      "sha256": "b264bd0366a40d4b6ce0aa4c729997857ca4ef251b6e69c0f82d675bd02c77b1"
+      "bytes": 9399,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/final/run_evidence_sha256_manifest.json",
+      "sha256": "cb346cbcb71690140623234fa2fa84ef2ad803cf43e7106fc182744850145de1"
     }
   ],
   "register_map": {
@@ -114,7 +114,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "shutdowns": [
     {
@@ -178,16 +178,16 @@
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b\\d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3\\p10_ax7020_fixed_shutdown.bit",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d\\cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148\\p10_ax7020_rotating_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\initial_shutdown\\attempt_1.result.txt"
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\initial_shutdown\\attempt_1.result.txt"
             ],
-            "elapsed_seconds": 11.866416200064123,
+            "elapsed_seconds": 11.906627299962565,
             "returncode": 0,
-            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.stderr.log",
-            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.stdout.log",
+            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.stdout.log",
             "timed_out": false,
             "timeout_seconds": 180
           },
-          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.result.txt",
+          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/initial_shutdown/attempt_1.result.txt",
           "status": "PASS"
         }
       ],
@@ -256,20 +256,20 @@
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b\\d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3\\p10_ax7020_fixed_shutdown.bit",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d\\cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148\\p10_ax7020_rotating_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\streaming_before\\attempt_1.result.txt"
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\faults_before\\attempt_1.result.txt"
             ],
-            "elapsed_seconds": 11.798287000041455,
+            "elapsed_seconds": 11.681086800061166,
             "returncode": 0,
-            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_before/attempt_1.stderr.log",
-            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_before/attempt_1.stdout.log",
+            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_before/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_before/attempt_1.stdout.log",
             "timed_out": false,
             "timeout_seconds": 180
           },
-          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_before/attempt_1.result.txt",
+          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_before/attempt_1.result.txt",
           "status": "PASS"
         }
       ],
-      "label": "streaming_before",
+      "label": "faults_before",
       "status": "PASS",
       "test_id": "P10-DUAL-SHUTDOWN"
     },
@@ -334,20 +334,20 @@
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b\\d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3\\p10_ax7020_fixed_shutdown.bit",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d\\cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148\\p10_ax7020_rotating_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\streaming_after\\attempt_1.result.txt"
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\faults_after\\attempt_1.result.txt"
             ],
-            "elapsed_seconds": 11.625179199967533,
+            "elapsed_seconds": 22.23952029994689,
             "returncode": 0,
-            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_after/attempt_1.stderr.log",
-            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_after/attempt_1.stdout.log",
+            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.stdout.log",
             "timed_out": false,
             "timeout_seconds": 180
           },
-          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/streaming_after/attempt_1.result.txt",
+          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/faults_after/attempt_1.result.txt",
           "status": "PASS"
         }
       ],
-      "label": "streaming_after",
+      "label": "faults_after",
       "status": "PASS",
       "test_id": "P10-DUAL-SHUTDOWN"
     },
@@ -412,94 +412,16 @@
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b\\d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3\\p10_ax7020_fixed_shutdown.bit",
               "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d\\cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148\\p10_ax7020_rotating_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\final_shutdown\\attempt_1.result.txt"
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\finally_emergency\\attempt_1.result.txt"
             ],
-            "elapsed_seconds": 11.60872649983503,
+            "elapsed_seconds": 12.227686800062656,
             "returncode": 0,
-            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/final_shutdown/attempt_1.stderr.log",
-            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/final_shutdown/attempt_1.stdout.log",
+            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.stdout.log",
             "timed_out": false,
             "timeout_seconds": 180
           },
-          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/final_shutdown/attempt_1.result.txt",
-          "status": "PASS"
-        }
-      ],
-      "label": "final_shutdown",
-      "status": "PASS",
-      "test_id": "P10-DUAL-SHUTDOWN"
-    },
-    {
-      "SHUTDOWN_FIXED": "PASS",
-      "SHUTDOWN_ROTATING": "PASS",
-      "attempts": [
-        {
-          "attempt": 1,
-          "markers": {
-            "P10_DUAL_SHUTDOWN_RESULT": "PASS",
-            "P10_SHUTDOWN_FIXED": "PASS",
-            "P10_SHUTDOWN_FIXED_ACTIVE_TX_MASK": "0",
-            "P10_SHUTDOWN_FIXED_AUXILIARY_DAP_COUNT": "1",
-            "P10_SHUTDOWN_FIXED_ENDPOINT_ARMED": "0",
-            "P10_SHUTDOWN_FIXED_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
-            "P10_SHUTDOWN_FIXED_ENUM_DEVICE_1": "xc7z020_1|PART=xc7z020|NAME=xc7z020_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093",
-            "P10_SHUTDOWN_FIXED_EXACT_FPGA_MATCH_COUNT": "1",
-            "P10_SHUTDOWN_FIXED_HW_OBJECT_COUNT": "2",
-            "P10_SHUTDOWN_FIXED_MODE_HIGH": "1",
-            "P10_SHUTDOWN_FIXED_SD_REQUEST_ACTIVE": "1",
-            "P10_SHUTDOWN_FIXED_SERIAL": "210249855178",
-            "P10_SHUTDOWN_FIXED_TARGET": "localhost:3121/xilinx_tcf/Digilent/210249855178",
-            "P10_SHUTDOWN_FIXED_TXD_OUTPUT_INTENT": "0",
-            "P10_SHUTDOWN_FIXED_UNEXPECTED_HW_OBJECT_COUNT": "0",
-            "P10_SHUTDOWN_ROTATING": "PASS",
-            "P10_SHUTDOWN_ROTATING_ACTIVE_TX_MASK": "0",
-            "P10_SHUTDOWN_ROTATING_AUXILIARY_DAP_COUNT": "1",
-            "P10_SHUTDOWN_ROTATING_ENDPOINT_ARMED": "0",
-            "P10_SHUTDOWN_ROTATING_ENUM_DEVICE_0": "arm_dap_0_1|PART=arm_dap|NAME=arm_dap_0_1|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
-            "P10_SHUTDOWN_ROTATING_ENUM_DEVICE_1": "xc7z020_1_1|PART=xc7z020|NAME=xc7z020_1_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093",
-            "P10_SHUTDOWN_ROTATING_EXACT_FPGA_MATCH_COUNT": "1",
-            "P10_SHUTDOWN_ROTATING_HW_OBJECT_COUNT": "2",
-            "P10_SHUTDOWN_ROTATING_MODE_HIGH": "1",
-            "P10_SHUTDOWN_ROTATING_SD_REQUEST_ACTIVE": "1",
-            "P10_SHUTDOWN_ROTATING_SERIAL": "210512180081",
-            "P10_SHUTDOWN_ROTATING_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
-            "P10_SHUTDOWN_ROTATING_TXD_OUTPUT_INTENT": "0",
-            "P10_SHUTDOWN_ROTATING_UNEXPECTED_HW_OBJECT_COUNT": "0",
-            "SHUTDOWN_EXIT": "0",
-            "SHUTDOWN_FIXED": "PASS",
-            "SHUTDOWN_ROTATING": "PASS",
-            "TFDU_SHUTDOWN_PROGRAMMED": "1"
-          },
-          "process": {
-            "command": [
-              "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
-              "-mode",
-              "batch",
-              "-nolog",
-              "-nojournal",
-              "-notrace",
-              "-source",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\scripts\\hw\\p10_program_dual_shutdown.tcl",
-              "-tclargs",
-              "localhost:3121",
-              "localhost:3121/xilinx_tcf/Digilent/210249855178",
-              "localhost:3121/xilinx_tcf/Digilent/210512180081",
-              "210249855178",
-              "210512180081",
-              "xc7z020clg400-2",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\config\\p10_1_current_run_hardware_authorization.json",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c96f85544f9f5815b205045f7ddac0acbd43cc17681c0679de82919438cb112b\\d849da80c485519ae6300398cdf0b09dc5838941bd14bdf71cb26c01ec9e3fe3\\p10_ax7020_fixed_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\artifacts\\p10\\c794ee8c8aad8103a861780cc49d36fa2cf57f03b5982763f640ef09cd54a01d\\cf269e67f2f7aa246b792d5c378168e10913d2af10ccd5dcd5a97b62f679b148\\p10_ax7020_rotating_shutdown.bit",
-              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1_HW\\evidence\\hardware\\p10_1\\p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f\\shutdown\\finally_emergency\\attempt_1.result.txt"
-            ],
-            "elapsed_seconds": 11.660438999999315,
-            "returncode": 0,
-            "stderr": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.stderr.log",
-            "stdout": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.stdout.log",
-            "timed_out": false,
-            "timeout_seconds": 180
-          },
-          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.result.txt",
+          "result": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/shutdown/finally_emergency/attempt_1.result.txt",
           "status": "PASS"
         }
       ],

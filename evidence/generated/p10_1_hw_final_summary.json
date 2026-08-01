@@ -103,14 +103,14 @@
   "executed_stage_status": {
     "baseline": "MISSING",
     "crosstalk": "MISSING",
-    "faults": "MISSING",
+    "faults": "FAIL",
     "formal": "MISSING",
     "half_duplex": "MISSING",
     "oneplusone": "MISSING",
     "pipeline": "MISSING",
     "preflight": "MISSING",
     "smoke": "MISSING",
-    "streaming": "PASS",
+    "streaming": "MISSING",
     "tuning": "MISSING"
   },
   "f_to_r_4mbps_target": "FAIL",
@@ -134,7 +134,7 @@
   ],
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T04:02:04+00:00",
+  "generated_at_utc": "2026-08-01T04:20:17+00:00",
   "generated_evidence": [
     "evidence/generated/p10_1_hw_repo_intake.json",
     "evidence/generated/p10_1_hw_model_sanity_summary.json",
@@ -231,14 +231,14 @@
   "r_to_f_application_goodput_bps": null,
   "raw_evidence": [
     {
-      "bytes": 59506,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "af708dcc544572c122096621a30dce1282268732f7b9a1e33630136eeb21399c"
+      "bytes": 113551,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "adb0ee8cd8f4ac5bf125e1acb24ff83018665af3cf45d3fbeff505e3f1c394ba"
     },
     {
-      "bytes": 14515,
+      "bytes": 16820,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "163fdc134965b18925de75a1fc4f9d5ca61b968b0aeee2a1df5baa4e584fa6dc"
+      "sha256": "f1ed74ad2d12d856a113b82f643fdbe0bd154258349861f1c4cac9902f15ebd4"
     }
   ],
   "register_map": {
@@ -256,7 +256,7 @@
   "retry_run_id_limit": null,
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T035258Z_bfff4836_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T040257Z_bfff4836_1585d1ad_9ad4f85f",
   "runtime_seconds": null,
   "schema_version": 1,
   "source_commit": "bfff483663e51862a0e1e4aed31940bd84d80cdb",
