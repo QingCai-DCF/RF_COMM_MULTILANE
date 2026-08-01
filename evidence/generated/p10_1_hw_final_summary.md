@@ -18,7 +18,6 @@
 - p10_1_hw_streaming_64m_summary
 - p10_1_hw_half_duplex_summary
 - p10_1_hw_crosstalk_summary
-- p10_1_hw_1plus1_summary
 - p10_1_hw_stationary_30min_summary
 - p10_1_hw_evidence_consistency
 

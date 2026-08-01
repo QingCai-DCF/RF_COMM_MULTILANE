@@ -7,6 +7,7 @@
 
 ## Errors
 
+- no complete PS/PL timer crosscheck row was captured
 - preflight: complete timer coverage unavailable because stage is not PASS
 - smoke: complete timer coverage unavailable because stage is not PASS
 - baseline: complete timer coverage unavailable because stage is not PASS
@@ -16,7 +17,6 @@
 - faults: complete timer coverage unavailable because stage is not PASS
 - crosstalk: complete timer coverage unavailable because stage is not PASS
 - half_duplex: complete timer coverage unavailable because stage is not PASS
-- oneplusone: complete timer coverage unavailable because stage is not PASS
 - formal: complete timer coverage unavailable because stage is not PASS
 
 ## Machine-readable evidence

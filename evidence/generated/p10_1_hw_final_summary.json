@@ -95,7 +95,6 @@
     "p10_1_hw_streaming_64m_summary",
     "p10_1_hw_half_duplex_summary",
     "p10_1_hw_crosstalk_summary",
-    "p10_1_hw_1plus1_summary",
     "p10_1_hw_stationary_30min_summary",
     "p10_1_hw_evidence_consistency"
   ],
@@ -105,8 +104,8 @@
     "crosstalk": "MISSING",
     "faults": "MISSING",
     "formal": "MISSING",
-    "half_duplex": "FAIL",
-    "oneplusone": "MISSING",
+    "half_duplex": "MISSING",
+    "oneplusone": "PASS",
     "pipeline": "MISSING",
     "preflight": "MISSING",
     "smoke": "MISSING",
@@ -115,7 +114,7 @@
   },
   "f_to_r_4mbps_target": "FAIL",
   "f_to_r_4p8mbps_stretch": "FAIL",
-  "f_to_r_application_goodput_bps": 2464153.6,
+  "f_to_r_application_goodput_bps": null,
   "fail_gates": [
     "p10_1_hw_authorization_summary",
     "p10_1_hw_target_identity_summary",
@@ -128,13 +127,12 @@
     "p10_1_hw_streaming_64m_summary",
     "p10_1_hw_half_duplex_summary",
     "p10_1_hw_crosstalk_summary",
-    "p10_1_hw_1plus1_summary",
     "p10_1_hw_stationary_30min_summary",
     "p10_1_hw_evidence_consistency"
   ],
   "full_duplex_f_to_r_bps": null,
   "full_duplex_r_to_f_bps": null,
-  "generated_at_utc": "2026-08-01T09:01:22+00:00",
+  "generated_at_utc": "2026-08-01T09:04:39+00:00",
   "generated_evidence": [
     "evidence/generated/p10_1_hw_repo_intake.json",
     "evidence/generated/p10_1_hw_model_sanity_summary.json",
@@ -180,8 +178,8 @@
     "stale_commit": 0
   },
   "maximum_lane_mask_used": "0x3",
-  "measured_to_model_ratio_f_to_r": 0.5881443135614781,
-  "measured_to_model_ratio_r_to_f": 0.5944011679610683,
+  "measured_to_model_ratio_f_to_r": null,
+  "measured_to_model_ratio_r_to_f": null,
   "measurement_contract": {
     "bytes": 4098,
     "path": "config/performance/p10_1_measurement_contract.yaml",
@@ -194,7 +192,7 @@
   "next_recommended_stage": "P10_1_PERFORMANCE_REMEDIATION",
   "next_required_user_action": "none; continue automatic remediation and retry under the current user-authorized unlimited retry policy",
   "nonblocking_results": {
-    "oneplusone": null,
+    "oneplusone": "SKIP_WITH_REASON",
     "streaming_128m": "SKIP_WITH_REASON",
     "stretch_4p8mbps": {
       "f_to_r": "FAIL",
@@ -205,7 +203,7 @@
   "offline_base_tag": "p10.1-offline-performance-ready",
   "offline_evidence_checkpoint": "8c34d60f064b01b95dc9c35b664ffbe43efb0b1f",
   "offline_source_commit": "ae942f0b5d9e9b4b7f5ced4751cc748c55b81183",
-  "p10_1_1plus1_experiment": null,
+  "p10_1_1plus1_experiment": "SKIP_WITH_REASON",
   "p11_hardware_ready": false,
   "p11_missing_prerequisites": [
     "single-lane four-fixed-module handover hardware",
@@ -218,6 +216,7 @@
   ],
   "pass_gates": [
     "p10_1_hw_artifact_summary",
+    "p10_1_hw_1plus1_summary",
     "p10_1_hw_shutdown_summary"
   ],
   "pipeline_config": {
@@ -228,17 +227,17 @@
   "primary_measured_bottleneck": "NOT_MEASURED",
   "r_to_f_4mbps_target": "FAIL",
   "r_to_f_4p8mbps_stretch": "FAIL",
-  "r_to_f_application_goodput_bps": 2490368.0,
+  "r_to_f_application_goodput_bps": null,
   "raw_evidence": [
     {
-      "bytes": 609723,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
-      "sha256": "9be4dc1d0185bce4a3a2026cb719f5a573125e8d9f25b94ab97beb63f24dbdd7"
+      "bytes": 30044,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "e11a749b7a894cd6158ff97013a14083c72cae8b03e240e0e5226ce0f231ce55"
     },
     {
-      "bytes": 46830,
+      "bytes": 12933,
       "path": "evidence/generated/p10_1_hw_sha256_manifest.json",
-      "sha256": "d30df7d0cd18f71b653717616cb218478d6986346e5a2096150f71bbab53d6ef"
+      "sha256": "05b2c15da42c339b1c16cbcf5f6eee44124a73df3d8b6c8cc1a9406d729617fb"
     }
   ],
   "register_map": {
@@ -256,7 +255,7 @@
   "retry_run_id_limit": null,
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T084807Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T090219Z_bb6ce78a_1585d1ad_9ad4f85f",
   "runtime_seconds": null,
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",

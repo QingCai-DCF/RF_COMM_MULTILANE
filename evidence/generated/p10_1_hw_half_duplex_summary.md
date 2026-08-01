@@ -7,12 +7,9 @@
 
 ## Errors
 
-- half_duplex_f_to_r_320s: committed bytes are below 150 MiB
-- half_duplex_f_to_r_320s: wall application goodput below 4 Mbit/s
-- half_duplex_f_to_r_320s: active application goodput below 4 Mbit/s
-- half_duplex_r_to_f_320s: committed bytes are below 150 MiB
-- half_duplex_r_to_f_320s: wall application goodput below 4 Mbit/s
-- half_duplex_r_to_f_320s: active application goodput below 4 Mbit/s
+- half_duplex stage summary is missing
+- missing half-duplex direction 0
+- missing half-duplex direction 1
 
 ## Machine-readable evidence
 
