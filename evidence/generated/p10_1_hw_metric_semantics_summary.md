@@ -7,7 +7,7 @@
 
 ## Errors
 
-- preflight did not complete
+- host fast-path exclusion failed
 
 ## Machine-readable evidence
 

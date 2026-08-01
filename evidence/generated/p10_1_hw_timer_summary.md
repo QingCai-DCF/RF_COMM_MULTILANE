@@ -7,13 +7,6 @@
 
 ## Errors
 
-- pattern_prbs_1m: timer disagreement exceeds 1%
-- pattern_zero_1m: timer disagreement exceeds 1%
-- pattern_one_1m: timer disagreement exceeds 1%
-- pattern_counter_1m: timer disagreement exceeds 1%
-- pattern_corpus_1m: timer disagreement exceeds 1%
-- preflight: complete timer coverage unavailable because stage is not PASS
-- smoke: complete timer coverage unavailable because stage is not PASS
 - baseline: complete timer coverage unavailable because stage is not PASS
 - tuning: complete timer coverage unavailable because stage is not PASS
 - pipeline: complete timer coverage unavailable because stage is not PASS
@@ -27,6 +20,12 @@
 - diagnostic_only_1byte: local PS/PL timer gate failed
 - short_ring_wrap: local PS/PL timer gate failed
 - idle_heavy_5s: local PS/PL timer gate failed
+- identity: local PS/PL timer gate failed
+- raw_lane0_f_to_r_64: local PS/PL timer gate failed
+- raw_lane0_r_to_f_64: local PS/PL timer gate failed
+- raw_lane1_f_to_r_64: local PS/PL timer gate failed
+- raw_lane1_r_to_f_64: local PS/PL timer gate failed
+- identity_after_stream_rearm: local PS/PL timer gate failed
 
 ## Machine-readable evidence
 
