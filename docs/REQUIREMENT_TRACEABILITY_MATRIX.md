@@ -257,13 +257,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
-- `PROJECT_STATUS.md` — `8ea39c806052c7c7f90c368bf43021d256da11405d2bbf1457eca866e920f148`
+- `config/project_state.json` — `2abd2b5f380546784685952214a2075695e22b5a0144aa827da904fce4b4b43e`
+- `PROJECT_STATUS.md` — `a8991f2e6ce5bce980c7ae9516548ee86e3e7788c2b032a590b8c65c69a0b33c`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
+- `config/project_state.json` — `2abd2b5f380546784685952214a2075695e22b5a0144aa827da904fce4b4b43e`
 
 ### `P8A-EVID-001`
 
@@ -273,8 +273,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `b0f7e3cd5b8507c201c73b2f3d7c06eb682fdca3a389939b8829fcc5b9e68bc8`
-- `PROJECT_STATUS.md` — `8ea39c806052c7c7f90c368bf43021d256da11405d2bbf1457eca866e920f148`
+- `config/project_state.json` — `2abd2b5f380546784685952214a2075695e22b5a0144aa827da904fce4b4b43e`
+- `PROJECT_STATUS.md` — `a8991f2e6ce5bce980c7ae9516548ee86e3e7788c2b032a590b8c65c69a0b33c`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -903,7 +903,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `software/ps_driver/p9_runtime_main.c` — `ecf1d04a0728a942a1475c20c18f0e65156415b708fc028353575ee915928b30`
 - `config/performance/p10_1_measurement_contract.yaml` — `5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1`
 - `docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md` — `3ba81b88ffce572df2de038568485aaeec473283e8e6c0cbfec53c4614f1ed74`
-- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `85867c60b26fb19e798b8408ebfbd349c727a9c2d7233f09fd6740672a8a8e95`
+- `evidence/generated/p10_goodput_runtime_source_reverification.json` — `57e4f243497f5125edaa964bd2264eccf66523aa44431787518f6c9e31b5cd27`
 
 ### `PERF-MEAS-001`
 
@@ -971,7 +971,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1_HW-001`
 
-- `evidence/generated/p10_1_hw_authorization_summary.json` — `8729ca2d38013a01433e9fb20b9def72af0b4b5156becafaa1c6b8f2957346cc`
+- `evidence/generated/p10_1_hw_authorization_summary.json` — `9218738f49d60edf71f65be3e8a9e41dc746d5dc6f30414bd3853f05d243ce9c`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`
@@ -994,7 +994,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1_SAFE-001`
 
-- `evidence/generated/p10_1_hw_shutdown_summary.json` — `a4f1932281b9497ed30f34178652cb4edd5ba07c532ba848c9871cd9958edfbf`
+- `evidence/generated/p10_1_hw_shutdown_summary.json` — `b70c5c35e8b72617bb73262505f9999585a16a78374dcfdaa360446719a4c9ed`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728/p10_fixed_runtime.elf` — `17394f82ecc594562f6ea6209f1075cac9a03e09179879d3d3584437d9b7d728`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e/p10_ax7020_fixed_functional.bit` — `1585d1ad90324ac525ec38d5f8323930c0ac52977f3fcacc585863195439608e`
 - `artifacts/p10_1/bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1/88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0/p10_rotating_runtime.elf` — `88b4ce1d02e63c24687afe10edf6fcdc7b5a2c990b8fea8077f53115c5f444c0`

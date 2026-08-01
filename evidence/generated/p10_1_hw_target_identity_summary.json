@@ -101,7 +101,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 2015,
+        "elapsed_ticks": 2016,
         "firmware_build_id": "0x50313046",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 0,
@@ -359,7 +359,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 428682,
+        "elapsed_ticks": 428672,
         "firmware_build_id": "0x50313046",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 3523407757,
@@ -484,7 +484,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 4074883,
+        "elapsed_ticks": 4534546,
         "firmware_build_id": "0x50313052",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 3523407757,
@@ -610,7 +610,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 12363,
+        "elapsed_ticks": 12366,
         "firmware_build_id": "0x50313046",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 0,
@@ -735,7 +735,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 12358,
+        "elapsed_ticks": 12393,
         "firmware_build_id": "0x50313052",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 0,
@@ -861,7 +861,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 1666846112,
+        "elapsed_ticks": 1666841927,
         "firmware_build_id": "0x50313046",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 0,
@@ -986,7 +986,7 @@
           12799,
           11520
         ],
-        "elapsed_ticks": 1666841881,
+        "elapsed_ticks": 1666842031,
         "firmware_build_id": "0x50313052",
         "first_mismatch_offset": 4294967295,
         "input_crc32": 0,
@@ -1080,19 +1080,19 @@
       "window": "NA"
     },
     {
-      "application_goodput_bps": 2589498.0063445955,
-      "application_goodput_pl_bps": 2589497.9610252352,
-      "application_goodput_ps_bps": 2589498.0063445955,
+      "application_goodput_bps": 2589594.0551519,
+      "application_goodput_pl_bps": 2589593.999939176,
+      "application_goodput_ps_bps": 2589594.0551519,
       "cross_endpoint_elapsed_observation": {
         "pl": {
-          "fixed_seconds": 3.23947271875,
-          "rotating_seconds": 3.376648109375,
-          "skew_percent": 4.062472196736852
+          "fixed_seconds": 3.239352578125,
+          "rotating_seconds": 3.3830964375,
+          "skew_percent": 4.248884477003615
         },
         "ps": {
-          "fixed_seconds": 3.239472662055293,
-          "rotating_seconds": 3.376648036077207,
-          "skew_percent": 4.062471793218824
+          "fixed_seconds": 3.239352509058777,
+          "rotating_seconds": 3.383096355890206,
+          "skew_percent": 4.248884208726738
         }
       },
       "direction": 0,
@@ -1190,7 +1190,7 @@
         ],
         "integrity_error_count": 0,
         "integrity_verify_ticks": 0,
-        "inter_object_signal_ticks": 91733948,
+        "inter_object_signal_ticks": 91682695,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -1211,16 +1211,16 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 9961555,
-        "perf_ack_wait": 189662670,
+        "payload_prepare_ticks": 9961549,
+        "perf_ack_wait": 189662671,
         "perf_application_accepted": 1048576,
         "perf_application_committed": 0,
-        "perf_axis_stall": 200660410,
+        "perf_axis_stall": 200650920,
         "perf_descriptor_completed": 0,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 2,
-        "perf_direction_quiet": 25278638,
-        "perf_dma_stall": 200660410,
+        "perf_direction_quiet": 25271022,
+        "perf_dma_stall": 200650920,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 0,
         "perf_integrity_error_count": 0,
@@ -1264,7 +1264,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 207326254,
+        "pl_elapsed_ticks": 207318565,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -1272,7 +1272,7 @@
           "pl_tx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1079824252,
+        "ps_elapsed_ticks": 1079784201,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -1313,17 +1313,17 @@
       "lane_mask": 3,
       "local_timer_crosschecks": {
         "fixed": {
-          "error_percent": 1.7501214572065064e-06,
+          "error_percent": 2.1320995877196174e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.23947271875,
-          "ps_seconds": 3.239472662055293,
+          "pl_seconds": 3.239352578125,
+          "ps_seconds": 3.239352509058777,
           "within_one_percent": true
         },
         "rotating": {
-          "error_percent": 2.170726436220313e-06,
+          "error_percent": 2.4122810431622573e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.376648109375,
-          "ps_seconds": 3.376648036077207,
+          "pl_seconds": 3.3830964375,
+          "ps_seconds": 3.383096355890206,
           "within_one_percent": true
         }
       },
@@ -1422,8 +1422,8 @@
           3112780870
         ],
         "integrity_error_count": 0,
-        "integrity_verify_ticks": 91542866,
-        "inter_object_signal_ticks": 173221,
+        "integrity_verify_ticks": 91519606,
+        "inter_object_signal_ticks": 173191,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -1452,7 +1452,7 @@
         "perf_descriptor_completed": 2,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 0,
-        "perf_direction_quiet": 25173341,
+        "perf_direction_quiet": 25171233,
         "perf_dma_stall": 0,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 1048576,
@@ -1497,7 +1497,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 216105479,
+        "pl_elapsed_ticks": 216518172,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -1506,7 +1506,7 @@
           "pl_rx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1125549378,
+        "ps_elapsed_ticks": 1127698818,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -1545,19 +1545,19 @@
       }
     },
     {
-      "application_goodput_bps": 2589850.9549525054,
-      "application_goodput_pl_bps": 2589850.9006358,
-      "application_goodput_ps_bps": 2589850.9549525054,
+      "application_goodput_bps": 2588056.9789594146,
+      "application_goodput_pl_bps": 2588056.934147756,
+      "application_goodput_ps_bps": 2588056.9789594146,
       "cross_endpoint_elapsed_observation": {
         "pl": {
-          "fixed_seconds": 3.355389,
-          "rotating_seconds": 3.23903125,
-          "skew_percent": 3.4677871924834984
+          "fixed_seconds": 3.34315490625,
+          "rotating_seconds": 3.241276453125,
+          "skew_percent": 3.047374590227315
         },
         "ps": {
-          "fixed_seconds": 3.355388932693721,
-          "rotating_seconds": 3.239031182068096,
-          "skew_percent": 3.4677872806897687
+          "fixed_seconds": 3.34315483404851,
+          "rotating_seconds": 3.2412763970029843,
+          "skew_percent": 3.047374175073801
         }
       },
       "direction": 1,
@@ -1654,8 +1654,8 @@
           1489739664
         ],
         "integrity_error_count": 0,
-        "integrity_verify_ticks": 91551618,
-        "inter_object_signal_ticks": 173241,
+        "integrity_verify_ticks": 92285759,
+        "inter_object_signal_ticks": 173218,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -1676,7 +1676,7 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 145575,
+        "payload_prepare_ticks": 145529,
         "perf_ack_wait": 0,
         "perf_application_accepted": 0,
         "perf_application_committed": 1048576,
@@ -1684,7 +1684,7 @@
         "perf_descriptor_completed": 2,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 0,
-        "perf_direction_quiet": 23305461,
+        "perf_direction_quiet": 23449040,
         "perf_dma_stall": 0,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 1048576,
@@ -1729,7 +1729,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 214744896,
+        "pl_elapsed_ticks": 213961914,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -1738,7 +1738,7 @@
           "pl_rx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1118463010,
+        "ps_elapsed_ticks": 1114384977,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -1779,17 +1779,17 @@
       "lane_mask": 3,
       "local_timer_crosschecks": {
         "fixed": {
-          "error_percent": 2.005915833207253e-06,
+          "error_percent": 2.159681263497962e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.355389,
-          "ps_seconds": 3.355388932693721,
+          "pl_seconds": 3.34315490625,
+          "ps_seconds": 3.34315483404851,
           "within_one_percent": true
         },
         "rotating": {
-          "error_percent": 2.0972907903227395e-06,
+          "error_percent": 1.7314788260416083e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.23903125,
-          "ps_seconds": 3.239031182068096,
+          "pl_seconds": 3.241276453125,
+          "ps_seconds": 3.2412763970029843,
           "within_one_percent": true
         }
       },
@@ -1889,7 +1889,7 @@
         ],
         "integrity_error_count": 0,
         "integrity_verify_ticks": 0,
-        "inter_object_signal_ticks": 91716835,
+        "inter_object_signal_ticks": 92450715,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -1910,16 +1910,16 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 131245,
-        "perf_ack_wait": 189637078,
+        "payload_prepare_ticks": 131225,
+        "perf_ack_wait": 189637079,
         "perf_application_accepted": 1048576,
         "perf_application_committed": 0,
-        "perf_axis_stall": 199682281,
+        "perf_axis_stall": 199675641,
         "perf_descriptor_completed": 0,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 2,
-        "perf_direction_quiet": 23388376,
-        "perf_dma_stall": 199682281,
+        "perf_direction_quiet": 23531825,
+        "perf_dma_stall": 199675641,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 0,
         "perf_integrity_error_count": 0,
@@ -1963,7 +1963,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 207298000,
+        "pl_elapsed_ticks": 207441693,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -1971,7 +1971,7 @@
           "pl_tx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1079677092,
+        "ps_elapsed_ticks": 1080425497,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -2010,19 +2010,19 @@
       }
     },
     {
-      "application_goodput_bps": 2587353.6659471723,
-      "application_goodput_pl_bps": 2587353.6122613414,
-      "application_goodput_ps_bps": 2587353.6659471723,
+      "application_goodput_bps": 2589192.1729808166,
+      "application_goodput_pl_bps": 2589192.130360488,
+      "application_goodput_ps_bps": 2589192.1729808166,
       "cross_endpoint_elapsed_observation": {
         "pl": {
-          "fixed_seconds": 3.24215753125,
-          "rotating_seconds": 3.355116046875,
-          "skew_percent": 3.366754355045662
+          "fixed_seconds": 3.239855359375,
+          "rotating_seconds": 3.354297765625,
+          "skew_percent": 3.4118141633939407
         },
         "ps": {
-          "fixed_seconds": 3.2421574639774335,
-          "rotating_seconds": 3.355115971701637,
-          "skew_percent": 3.3667541949947424
+          "fixed_seconds": 3.239855306044196,
+          "rotating_seconds": 3.3542976977253667,
+          "skew_percent": 3.411813798124621
         }
       },
       "direction": 0,
@@ -2120,7 +2120,7 @@
         ],
         "integrity_error_count": 0,
         "integrity_verify_ticks": 0,
-        "inter_object_signal_ticks": 92484834,
+        "inter_object_signal_ticks": 91733892,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -2141,16 +2141,16 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 131253,
+        "payload_prepare_ticks": 131249,
         "perf_ack_wait": 189688006,
         "perf_application_accepted": 1048576,
         "perf_application_committed": 0,
-        "perf_axis_stall": 199735757,
+        "perf_axis_stall": 199734290,
         "perf_descriptor_completed": 0,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 2,
-        "perf_direction_quiet": 23537711,
-        "perf_dma_stall": 199735757,
+        "perf_direction_quiet": 23390531,
+        "perf_dma_stall": 199734290,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 0,
         "perf_integrity_error_count": 0,
@@ -2194,7 +2194,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 207498082,
+        "pl_elapsed_ticks": 207350743,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -2202,7 +2202,7 @@
           "pl_tx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1080719186,
+        "ps_elapsed_ticks": 1079951800,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -2243,17 +2243,17 @@
       "lane_mask": 3,
       "local_timer_crosschecks": {
         "fixed": {
-          "error_percent": 2.074932077790844e-06,
+          "error_percent": 1.6460859469791193e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.24215753125,
-          "ps_seconds": 3.2421574639774335,
+          "pl_seconds": 3.239855359375,
+          "ps_seconds": 3.239855306044196,
           "within_one_percent": true
         },
         "rotating": {
-          "error_percent": 2.2405592545732782e-06,
+          "error_percent": 2.024257779591065e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.355116046875,
-          "ps_seconds": 3.355115971701637,
+          "pl_seconds": 3.354297765625,
+          "ps_seconds": 3.3542976977253667,
           "within_one_percent": true
         }
       },
@@ -2352,8 +2352,8 @@
           3964877228
         ],
         "integrity_error_count": 0,
-        "integrity_verify_ticks": 92311592,
-        "inter_object_signal_ticks": 173228,
+        "integrity_verify_ticks": 91535107,
+        "inter_object_signal_ticks": 173186,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -2374,7 +2374,7 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 145524,
+        "payload_prepare_ticks": 145526,
         "perf_ack_wait": 0,
         "perf_application_accepted": 0,
         "perf_application_committed": 1048576,
@@ -2382,7 +2382,7 @@
         "perf_descriptor_completed": 2,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 0,
-        "perf_direction_quiet": 23454937,
+        "perf_direction_quiet": 23307600,
         "perf_dma_stall": 0,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 1048576,
@@ -2427,7 +2427,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 214727427,
+        "pl_elapsed_ticks": 214675057,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -2436,7 +2436,7 @@
           "pl_rx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1118372023,
+        "ps_elapsed_ticks": 1118099265,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -2475,19 +2475,19 @@
       }
     },
     {
-      "application_goodput_bps": 2587602.544980711,
-      "application_goodput_pl_bps": 2587602.510747603,
-      "application_goodput_ps_bps": 2587602.544980711,
+      "application_goodput_bps": 2587688.2468764028,
+      "application_goodput_pl_bps": 2587688.1940844115,
+      "application_goodput_ps_bps": 2587688.2468764028,
       "cross_endpoint_elapsed_observation": {
         "pl": {
-          "fixed_seconds": 3.34649975,
-          "rotating_seconds": 3.241845671875,
-          "skew_percent": 3.1272698623389954
+          "fixed_seconds": 3.366223046875,
+          "rotating_seconds": 3.241738328125,
+          "skew_percent": 3.6980531894808455
         },
         "ps": {
-          "fixed_seconds": 3.3464996749515095,
-          "rotating_seconds": 3.2418456289864768,
-          "skew_percent": 3.1272689714679003
+          "fixed_seconds": 3.3662229763795337,
+          "rotating_seconds": 3.2417382619895903,
+          "skew_percent": 3.698053137401796
         }
       },
       "direction": 1,
@@ -2584,8 +2584,8 @@
           1872313811
         ],
         "integrity_error_count": 0,
-        "integrity_verify_ticks": 92337270,
-        "inter_object_signal_ticks": 173178,
+        "integrity_verify_ticks": 92296639,
+        "inter_object_signal_ticks": 173201,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -2606,7 +2606,7 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 707440,
+        "payload_prepare_ticks": 705783,
         "perf_ack_wait": 0,
         "perf_application_accepted": 0,
         "perf_application_committed": 1048576,
@@ -2614,7 +2614,7 @@
         "perf_descriptor_completed": 2,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 0,
-        "perf_direction_quiet": 23551586,
+        "perf_direction_quiet": 23544437,
         "perf_dma_stall": 0,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 1048576,
@@ -2659,7 +2659,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 214175984,
+        "pl_elapsed_ticks": 215438275,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -2668,7 +2668,7 @@
           "pl_rx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1115499924,
+        "ps_elapsed_ticks": 1122074358,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -2709,17 +2709,17 @@
       "lane_mask": 3,
       "local_timer_crosschecks": {
         "fixed": {
-          "error_percent": 2.242596627511824e-06,
+          "error_percent": 2.0942006923378664e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.34649975,
-          "ps_seconds": 3.3464996749515095,
+          "pl_seconds": 3.366223046875,
+          "ps_seconds": 3.3662229763795337,
           "within_one_percent": true
         },
         "rotating": {
-          "error_percent": 1.3229662278954958e-06,
+          "error_percent": 2.040121777240043e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.241845671875,
-          "ps_seconds": 3.2418456289864768,
+          "pl_seconds": 3.241738328125,
+          "ps_seconds": 3.2417382619895903,
           "within_one_percent": true
         }
       },
@@ -2819,7 +2819,7 @@
         ],
         "integrity_error_count": 0,
         "integrity_verify_ticks": 0,
-        "inter_object_signal_ticks": 92536036,
+        "inter_object_signal_ticks": 92484845,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -2840,16 +2840,16 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 626841,
-        "perf_ack_wait": 189662542,
+        "payload_prepare_ticks": 626991,
+        "perf_ack_wait": 189662544,
         "perf_application_accepted": 1048576,
         "perf_application_committed": 0,
-        "perf_axis_stall": 199762119,
+        "perf_axis_stall": 199758434,
         "perf_descriptor_completed": 0,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 2,
-        "perf_direction_quiet": 23638076,
-        "perf_dma_stall": 199762119,
+        "perf_direction_quiet": 23631168,
+        "perf_dma_stall": 199758434,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 0,
         "perf_integrity_error_count": 0,
@@ -2893,7 +2893,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 207478123,
+        "pl_elapsed_ticks": 207471253,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -2901,7 +2901,7 @@
           "pl_tx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1080615241,
+        "ps_elapsed_ticks": 1080579452,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -2940,19 +2940,19 @@
       }
     },
     {
-      "application_goodput_bps": 2589484.2558637224,
-      "application_goodput_pl_bps": 2589484.209645177,
-      "application_goodput_ps_bps": 2589484.2558637224,
+      "application_goodput_bps": 2589411.2301641083,
+      "application_goodput_pl_bps": 2589411.1836463124,
+      "application_goodput_ps_bps": 2589411.2301641083,
       "cross_endpoint_elapsed_observation": {
         "pl": {
-          "fixed_seconds": 3.239489921875,
-          "rotating_seconds": 3.362019421875,
-          "skew_percent": 3.644520885357199
+          "fixed_seconds": 3.23958128125,
+          "rotating_seconds": 3.363822921875,
+          "skew_percent": 3.693465545319125
         },
         "ps": {
-          "fixed_seconds": 3.2394898640547938,
-          "rotating_seconds": 3.3620193555014386,
-          "skew_percent": 3.6445207028967204
+          "fixed_seconds": 3.2395812230521446,
+          "rotating_seconds": 3.3638228564491373,
+          "skew_percent": 3.6934654022816935
         }
       },
       "direction": 0,
@@ -3050,7 +3050,7 @@
         ],
         "integrity_error_count": 0,
         "integrity_verify_ticks": 0,
-        "inter_object_signal_ticks": 91733932,
+        "inter_object_signal_ticks": 91785112,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -3071,16 +3071,16 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 3084411,
+        "payload_prepare_ticks": 3107729,
         "perf_ack_wait": 189661462,
         "perf_application_accepted": 1048576,
         "perf_application_committed": 0,
-        "perf_axis_stall": 200002017,
+        "perf_axis_stall": 200005802,
         "perf_descriptor_completed": 0,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 2,
-        "perf_direction_quiet": 23960722,
-        "perf_dma_stall": 200002017,
+        "perf_direction_quiet": 23969896,
+        "perf_dma_stall": 200005802,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 0,
         "perf_integrity_error_count": 0,
@@ -3124,7 +3124,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 207327355,
+        "pl_elapsed_ticks": 207333202,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -3132,7 +3132,7 @@
           "pl_tx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1079829986,
+        "ps_elapsed_ticks": 1079860439,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -3173,17 +3173,17 @@
       "lane_mask": 3,
       "local_timer_crosschecks": {
         "fixed": {
-          "error_percent": 1.7848552640992163e-06,
+          "error_percent": 1.7964622700023177e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.239489921875,
-          "ps_seconds": 3.2394898640547938,
+          "pl_seconds": 3.23958128125,
+          "ps_seconds": 3.2395812230521446,
           "within_one_percent": true
         },
         "rotating": {
-          "error_percent": 1.9742170697147587e-06,
+          "error_percent": 1.9449853475962556e-06,
           "firmware_crosscheck_pass": true,
-          "pl_seconds": 3.362019421875,
-          "ps_seconds": 3.3620193555014386,
+          "pl_seconds": 3.363822921875,
+          "ps_seconds": 3.3638228564491373,
           "within_one_percent": true
         }
       },
@@ -3282,8 +3282,8 @@
           3059240255
         ],
         "integrity_error_count": 0,
-        "integrity_verify_ticks": 91554720,
-        "inter_object_signal_ticks": 173203,
+        "integrity_verify_ticks": 91595366,
+        "inter_object_signal_ticks": 173211,
         "lane_mask": 3,
         "last_error_detail": 0,
         "magic": 825241936,
@@ -3304,7 +3304,7 @@
         ],
         "outstanding_frames": 32,
         "partial_commit_count": 0,
-        "payload_prepare_ticks": 3145815,
+        "payload_prepare_ticks": 3145820,
         "perf_ack_wait": 0,
         "perf_application_accepted": 0,
         "perf_application_committed": 1048576,
@@ -3312,7 +3312,7 @@
         "perf_descriptor_completed": 2,
         "perf_descriptor_leak_count": 0,
         "perf_descriptor_submitted": 0,
-        "perf_direction_quiet": 23875325,
+        "perf_direction_quiet": 23889130,
         "perf_dma_stall": 0,
         "perf_double_completion_count": 0,
         "perf_frame_acked": 1048576,
@@ -3357,7 +3357,7 @@
           0,
           0
         ],
-        "pl_elapsed_ticks": 215169243,
+        "pl_elapsed_ticks": 215284667,
         "pl_reset_count": 0,
         "pl_role_checks": {
           "local_wire_metric_consistent": true,
@@ -3366,7 +3366,7 @@
           "pl_rx_object_packets": true
         },
         "pl_timer_frequency_hz": 64000000,
-        "ps_elapsed_ticks": 1120673151,
+        "ps_elapsed_ticks": 1121274318,
         "ps_timer_frequency_hz": 333333343,
         "rate_select": 2,
         "raw_rx_after": [
@@ -3407,7 +3407,7 @@
   ],
   "errors": [],
   "ethernet_used": false,
-  "generated_at_utc": "2026-08-01T07:21:19+00:00",
+  "generated_at_utc": "2026-08-01T07:26:32+00:00",
   "goal_sha256": "b3d0ae793a89ba270ca72880fb4fa38bcb17ac7631f3fc650e2557963840f9d3",
   "hardware_actions_executed": true,
   "hardware_movement": false,
@@ -3421,8 +3421,8 @@
     "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
     "P10_CASE_PASS": "pattern_corpus_1m",
     "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
-    "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/dumps/P10-DIAG_ready.fixed.bin",
-    "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/dumps/P10-DIAG_ready.rotating.bin",
+    "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/hardware/p10_1/p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/dumps/P10-DIAG_ready.fixed.bin",
+    "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1_HW/evidence/hardware/p10_1/p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/dumps/P10-DIAG_ready.rotating.bin",
     "P10_PAIRED_LAUNCH": "pattern_corpus_1m:receiver=rotating,sender=fixed",
     "P10_PS7_INITIALIZED_FIXED": "1",
     "P10_PS7_INITIALIZED_ROTATING": "1",
@@ -3436,13 +3436,13 @@
     "P10_SERVICE_READY_FIXED": "initial_boot",
     "P10_SERVICE_READY_ROTATING": "initial_boot",
     "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
-    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "11",
     "P10_XSDB_FIXED_SERIAL": "210249855178",
     "P10_XSDB_FIXED_TARGETS": "APU:5,CPU0:6,FPGA:8",
     "P10_XSDB_IDENTITY": "PASS",
     "P10_XSDB_ROTATING_SERIAL": "210512180081",
     "P10_XSDB_ROTATING_TARGETS": "APU:1,CPU0:2,FPGA:4",
-    "P10_XSDB_RUN_ID": "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
+    "P10_XSDB_RUN_ID": "p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f",
     "P10_XSDB_STAGE": "P10-DIAG",
     "P10_XSDB_STAGE_ERROR": "P10 rotating receiver did not prime before paired source launch: wait_ms_38000 main_state_0x00000004 response_0x000003F2 pl_status_0x00000002 phy_0x00000000 p10_1_magic_0x31303150 p10_1_state_0x00000007 p10_1_status_0x00000000 p10_1_sequence_0x000003F2",
     "P10_XSDB_STAGE_RESULT": "FAIL"
@@ -3464,9 +3464,9 @@
   },
   "raw_evidence": [
     {
-      "bytes": 93845,
-      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
-      "sha256": "16cdc903c2bc0ec9d3f385120f42aa1ee341c98ef2dd8ed1b93195e73a1f3725"
+      "bytes": 93866,
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f/stages/preflight/stage_summary.json",
+      "sha256": "529098c33756178b40313be1736fe47de41020d5b390d4f2b16401599fc1ff9e"
     }
   ],
   "register_map": {
@@ -3476,7 +3476,7 @@
   },
   "rewiring_executed": false,
   "rotation_executed": false,
-  "run_id": "p10_1_hw_20260801T071828Z_bb6ce78a_1585d1ad_9ad4f85f",
+  "run_id": "p10_1_hw_20260801T072351Z_bb6ce78a_1585d1ad_9ad4f85f",
   "schema_version": 1,
   "source_commit": "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
   "status": "PASS",
