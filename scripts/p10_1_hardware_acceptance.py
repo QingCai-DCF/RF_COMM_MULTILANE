@@ -116,6 +116,16 @@ FLAG_DUPLICATE_SEGMENT = 1 << 20
 FLAG_STALE_SEGMENT = 1 << 21
 FLAG_PS_RESET_SENDER = 1 << 22
 FLAG_PS_RESET_RECEIVER = 1 << 23
+
+# Direct hardware tuning selection from
+# p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f.  Keep the tuning
+# vectors below explicit so selecting this configuration does not rewrite the
+# sweep that produced it.
+SELECTED_BUFFER_COUNT = 4
+SELECTED_RING_DEPTH = 32
+SELECTED_DESCRIPTOR_BATCH = 8
+SELECTED_OBJECT_BYTES = 512 * 1024
+SELECTED_DESCRIPTOR_BYTES = 64 * 1024
 FLAG_DMA_RESET_RECEIVER = 1 << 24
 RECOVERY_FLAGS = (
     FLAG_ABORT_25
@@ -178,11 +188,11 @@ def p101_case(
     direction: int,
     total: int,
     lane: int = 3,
-    buffer_count: int = 4,
-    ring: int = 16,
-    batch: int = 4,
-    object_bytes: int = 256 * 1024,
-    descriptor_bytes: int = 64 * 1024,
+    buffer_count: int = SELECTED_BUFFER_COUNT,
+    ring: int = SELECTED_RING_DEPTH,
+    batch: int = SELECTED_DESCRIPTOR_BATCH,
+    object_bytes: int = SELECTED_OBJECT_BYTES,
+    descriptor_bytes: int = SELECTED_DESCRIPTOR_BYTES,
     flags: int = 0,
     object_id: int = 0x10100000,
     timeout: int = 600_000,
@@ -390,6 +400,9 @@ def build_plans() -> dict[str, list[PlanItem]]:
             direction=0,
             total=4 * mib,
             buffer_count=2,
+            ring=16,
+            batch=4,
+            object_bytes=256 * 1024,
             object_id=0x10101000,
             timeout=30_000,
         ),
@@ -397,6 +410,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_buffer4",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
+            ring=16,
+            batch=4,
+            object_bytes=256 * 1024,
             object_id=0x10101001,
             timeout=30_000,
         ),
@@ -405,6 +422,8 @@ def build_plans() -> dict[str, list[PlanItem]]:
             direction=0,
             total=4 * mib,
             buffer_count=8,
+            ring=16,
+            batch=4,
             object_bytes=128 * 1024,
             object_id=0x10101002,
             timeout=30_000,
@@ -413,7 +432,9 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_ring8",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
             ring=8,
+            batch=4,
             object_bytes=128 * 1024,
             object_id=0x10101003,
             timeout=30_000,
@@ -422,6 +443,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_ring16",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
+            ring=16,
+            batch=4,
+            object_bytes=256 * 1024,
             object_id=0x10101004,
             timeout=30_000,
         ),
@@ -429,7 +454,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_ring32",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
             ring=32,
+            batch=4,
+            object_bytes=256 * 1024,
             object_id=0x10101005,
             timeout=30_000,
         ),
@@ -437,7 +465,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_batch4",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
+            ring=16,
             batch=4,
+            object_bytes=256 * 1024,
             object_id=0x10101007,
             timeout=30_000,
         ),
@@ -445,6 +476,7 @@ def build_plans() -> dict[str, list[PlanItem]]:
             "tune_batch8",
             direction=0,
             total=4 * mib,
+            buffer_count=4,
             ring=32,
             batch=8,
             object_bytes=512 * 1024,

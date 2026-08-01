@@ -7,12 +7,17 @@ transport:
   board_autonomous_command: 13
   cache_mode: write_back_enabled
   dma_completion_mode: polling
+selected_hardware_tuning:
+  run_id: p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f
+  stage_summary: evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/stage_summary.json
+  stage_summary_sha256: 282e56e0d7033d5277b4a14a95ffa55fc608accf43c5c7ba44f1af3f862addb5
+  measured_application_goodput_bps: 2588639.5636545448
 mandatory_candidate:
   buffer_count: 4
-  object_bytes: 262144
+  object_bytes: 524288
   descriptor_bytes: 65536
-  descriptor_ring_depth: 16
-  descriptor_batch: 4
+  descriptor_ring_depth: 32
+  descriptor_batch: 8
   ack_threshold: 8
   outstanding_frames: 32
   lane_mask: 3

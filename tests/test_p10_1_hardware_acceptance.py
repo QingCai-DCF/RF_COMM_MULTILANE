@@ -173,6 +173,19 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
                 if isinstance(item, self.runner.Case)
             },
         )
+        self.assertEqual(
+            self.runner.plan_hashes(["tuning"])["tuning"],
+            "1e528bb0a2203deb33c74d3f3cd6c3950fb285122690a24654a3e445fc73c9c4",
+        )
+        stream = next(
+            item
+            for item in plans["streaming"]
+            if isinstance(item, self.runner.Case)
+        )
+        self.assertEqual(stream.stale, 4)
+        self.assertEqual(stream.ring, 32)
+        self.assertEqual(stream.initialseq, 8)
+        self.assertEqual(stream.rawtarget, 512 * 1024)
         streaming = [
             item
             for item in plans["streaming"]

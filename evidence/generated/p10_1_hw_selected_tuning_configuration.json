@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1-HW-SELECTED-TUNING-CONFIGURATION",
+  "status": "PASS",
+  "scope": "SELECT_BEST_MEASURED_CANDIDATE_FOR_SUSTAINED_PIPELINE_QUALIFICATION",
+  "generated_at_utc": "2026-08-01T03:43:36Z",
+  "source_run": {
+    "run_id": "p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f",
+    "authorization_commit": "795a6fce4a199071ebc6213e2877543ec73393ed",
+    "evidence_checkpoint_commit": "b940c05009c887910b8e1c33cc83fabeae47558c",
+    "candidate_count": 9,
+    "stage_status": "PASS",
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/stage_summary.json",
+      "sha256": "282e56e0d7033d5277b4a14a95ffa55fc608accf43c5c7ba44f1af3f862addb5"
+    },
+    "observations": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/dumps/observations.psv",
+      "sha256": "a322623fe5fff031355d98b58798807d452c0fe52923b9117f997c8c4214f070"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/final/orchestrator_result.json",
+      "sha256": "2ee9cab6796a1c243126fb7d5a0ee76aa1d3f46f6d56fcc2301a6826ee6586ec"
+    }
+  },
+  "selected_candidate": {
+    "label": "tune_batch8",
+    "application_goodput_bps": 2588639.5636545448,
+    "buffer_count": 4,
+    "object_bytes": 524288,
+    "descriptor_bytes": 65536,
+    "descriptor_ring_depth": 32,
+    "descriptor_batch": 8,
+    "ack_threshold": 8,
+    "outstanding_frames": 32,
+    "lane_mask": 3,
+    "rate_select": 2
+  },
+  "previous_default": {
+    "buffer_count": 4,
+    "object_bytes": 262144,
+    "descriptor_bytes": 65536,
+    "descriptor_ring_depth": 16,
+    "descriptor_batch": 4,
+    "ack_threshold": 8,
+    "outstanding_frames": 32
+  },
+  "selection_rule": "MAXIMUM_VALID_APPLICATION_GOODPUT_AMONG_THE_NINE_AUTHORIZED_CANDIDATES",
+  "tuning_plan_sha256_before_and_after_selection": "1e528bb0a2203deb33c74d3f3cd6c3950fb285122690a24654a3e445fc73c9c4",
+  "active_files": {
+    "runner": {
+      "path": "scripts/p10_1_hardware_acceptance.py",
+      "sha256": "358709d1c3a79034114e50d98ca7b0ee68d13f8375b716407b92a8fbab2c58a8"
+    },
+    "xsdb_stage": {
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "478fd92b73b8ad03563431c0f4020ad7836ebd1d466c603daef0526ddd1afba4"
+    },
+    "hardware_runtime": {
+      "path": "config/performance/p10_1_hardware_runtime.yaml",
+      "sha256": "59b04cd5fce27da1e0256fdfa82573566ff02d1dbe5cb2c932d2bcef401c688f"
+    },
+    "pipeline": {
+      "path": "config/performance/p10_1_pipeline.yaml",
+      "sha256": "8091670777af5a02986371a550cbac3ebd85adab9390486c93ce9c32cde45882"
+    }
+  },
+  "artifact_change": false,
+  "bitstream_or_elf_changed": false,
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed_during_selection_file_update": false,
+  "pipeline_hardware_confirmation": "PENDING_NEW_RUN_BOUND_AUTHORIZATION",
+  "acceptance_boundary": {
+    "four_mbit_per_second_gate_changed": false,
+    "four_mbit_per_second_gate_passed_by_tuning": false,
+    "selected_candidate_is_hardware_performance_pass": false,
+    "selection_is_valid_only_for_current_bfff4836_artifact": true
+  }
+}

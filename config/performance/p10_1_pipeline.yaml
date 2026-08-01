@@ -3,13 +3,18 @@ config_id: P10_1_DUAL_NODE_PIPELINE
 profile: P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET
 defaults:
   buffer_count: 4
-  buffer_size_bytes: 262144
-  descriptor_ring_depth: 16
-  descriptor_batch: 4
+  buffer_size_bytes: 524288
+  descriptor_ring_depth: 32
+  descriptor_batch: 8
   interrupt_coalescing: 16
   outstanding_frames: 32
   ack_aggregation_threshold: 8
   ack_max_delay_us: 200
+selected_hardware_tuning:
+  run_id: p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f
+  stage_summary: evidence/hardware/p10_1/p10_1_hw_20260801T033309Z_bfff4836_1585d1ad_9ad4f85f/stages/tuning/stage_summary.json
+  stage_summary_sha256: 282e56e0d7033d5277b4a14a95ffa55fc608accf43c5c7ba44f1af3f862addb5
+  selected_candidate: tune_batch8
   direction_window_us: 250000
   lane_mask: 3
   formal_measurement_duration_seconds: 30

@@ -512,8 +512,11 @@ proc p10_execute_case {d {window "NA"}} {
 }
 
 proc p10_p101_case {label object_id size direction lane timeout_ms {flags 0}} {
-  set fields [list CASE $label 13 0 $flags $lane $direction 2 257 $size 16 1 0 0 \
-      $timeout_ms 0xA1010001 0x101 $object_id 8 32 0 262144 65536 4 4 0 0 0 0]
+  # Hardware-selected sustained configuration: buffer=4, ring=32, batch=8,
+  # object=512 KiB.  Source run and hashes are frozen in the selected tuning
+  # configuration evidence; this helper is used by windows and recovery cases.
+  set fields [list CASE $label 13 0 $flags $lane $direction 2 257 $size 32 1 0 0 \
+      $timeout_ms 0xA1010001 0x101 $object_id 8 32 0 524288 65536 4 8 0 0 0 0]
   return [p10_case_dict $fields]
 }
 
