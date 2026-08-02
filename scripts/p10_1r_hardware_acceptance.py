@@ -303,10 +303,10 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
         Case("p10_1r_identity_after_reset", 1),
     ]
     plans["echo_tail"] = [
-        # Exercise both lane1 directions first so a lane1 receive failure is
+        # Exercise both lane1 directions first so each receive direction is
         # observed independently of the preceding 1000-pulse lane0 sweep.
-        ("P101R_ECHO_SWEEP", "echo_F1", "0", "2", "1000", "1024"),
         ("P101R_ECHO_SWEEP", "echo_R1", "1", "2", "1000", "1024"),
+        ("P101R_ECHO_SWEEP", "echo_F1", "0", "2", "1000", "1024"),
         ("P101R_ECHO_SWEEP", "echo_F0", "0", "1", "1000", "1024"),
         ("P101R_ECHO_SWEEP", "echo_R0", "1", "1", "1000", "1024"),
     ]
