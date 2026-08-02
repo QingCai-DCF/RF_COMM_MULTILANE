@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059
+    sha256: e081ccd9801e47bdcdc539fc0486d85e6941c92dffbb38e6fd8bc8e3b31836c2
   - path: PROJECT_STATUS.md
-    sha256: e873fc650dd94a08ef649b69d9a5c15039889e55e98cef943c76d56323a4807b
-  artifact_hash: bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059
+    sha256: fe76a12101c2e624ca811ca96ce91ca41b236d3bdd311696f4af5a3bb4166aac
+  artifact_hash: e081ccd9801e47bdcdc539fc0486d85e6941c92dffbb38e6fd8bc8e3b31836c2
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059
+    sha256: e081ccd9801e47bdcdc539fc0486d85e6941c92dffbb38e6fd8bc8e3b31836c2
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059
+    sha256: e081ccd9801e47bdcdc539fc0486d85e6941c92dffbb38e6fd8bc8e3b31836c2
   - path: PROJECT_STATUS.md
-    sha256: e873fc650dd94a08ef649b69d9a5c15039889e55e98cef943c76d56323a4807b
+    sha256: fe76a12101c2e624ca811ca96ce91ca41b236d3bdd311696f4af5a3bb4166aac
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059
+  artifact_hash: e081ccd9801e47bdcdc539fc0486d85e6941c92dffbb38e6fd8bc8e3b31836c2
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3495,15 +3495,19 @@ requirements:
   requirement_text: Each TFDU module shall exclude frame admission whenever its own final physical Txd is active.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Focused XSIM assertion plus fixed and rotating implementation audit.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_RTL_IMPLEMENTATION_PASS_HARDWARE_PENDING
+  test_id: P10_1R_FOCUSED_XSIM
+  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The firmware and measurement-contract source change invalidated the prior exact-source bundle; focused
-    XSIM and implementation evidence must be frozen again before direct hardware validation.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_functional_build_summary.json
+    sha256: 96a6c399e6efc66b1d9c19135b2013b9b6c112a5de01e55772145327550bf0b6
+  hardware_followup: Direct four-module admission counters remain pending under a new artifact-bound current-run authorization.
+  artifact_hash: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
 - requirement_id: P10_1R-ECHO-002
   requirement_text: Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3521,28 +3525,37 @@ requirements:
     while protocol admission is blanked.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Register-map generation, source audit, focused XSIM, and future direct trace capture.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_OBSERVABILITY_PASS_HARDWARE_PENDING
+  test_id: P10_1R_FOCUSED_XSIM
+  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The measurement-contract source change invalidated the prior exact-source bundle; observability and
-    implementation evidence must be frozen again before direct trace capture.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_functional_build_summary.json
+    sha256: 96a6c399e6efc66b1d9c19135b2013b9b6c112a5de01e55772145327550bf0b6
+  hardware_followup: Hardware must populate raw echo-tail maximum, p99, and p99.9; no hardware count is inferred from the
+    model.
+  artifact_hash: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
 - requirement_id: P10_1R-ECHO-004
   requirement_text: A local transmission on one module shall not blank receive admission on the other lane.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Independent per-lane RTL structure and exact focused XSIM test.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_RTL_IMPLEMENTATION_PASS_HARDWARE_PENDING
+  test_id: P10_1R_FOCUSED_XSIM
+  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The measurement-contract source change invalidated the prior exact-source bundle; independent-lane
-    regression evidence must be frozen again before the direct 4x4 matrix.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_dual_endpoint_regression/summary.json
+    sha256: 3ca4a081b859998398b5bd6b0f8e3f3b73f6a93d61a75acee74e59331ed6b546
+  hardware_followup: The direct 4x4 receive-admission matrix remains pending.
+  artifact_hash: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
 - requirement_id: P10_1R-ECHO-005
   requirement_text: The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail
     plus deterministic margin.
@@ -3575,57 +3588,77 @@ requirements:
     frozen default.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: ACK-window XSIM, randomized model, register/config audit, and future hardware tuning.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_PROTOCOL_PASS_HARDWARE_PENDING
+  test_id: P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL
+  evidence_path: evidence/generated/p10_1r_ack_pipeline_model.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The firmware and measurement-contract source change invalidated the prior exact-source bundle; model,
-    XSIM, implementation, and direct ACK-window telemetry remain pending.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_ack_pipeline_model.json
+    sha256: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_functional_build_summary.json
+    sha256: 96a6c399e6efc66b1d9c19135b2013b9b6c112a5de01e55772145327550bf0b6
+  hardware_followup: Direct ACK-window telemetry and final hardware tuning remain pending.
+  artifact_hash: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
 - requirement_id: P10_1R-ACK-002
   requirement_text: Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime,
     or global pipeline drain.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Runtime source audit and continuous multi-object focused XSIM.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_PROTOCOL_PASS_HARDWARE_PENDING
+  test_id: P10_1R_FOCUSED_XSIM
+  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The integrity-pipeline firmware change invalidated the prior runtime binding; exact-source continuous-object
-    evidence and direct inter-object timing remain pending.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
+    sha256: 6578f4240f6ec3537178524dfcde80aec7a17e7f41e45af15c9e07a1ecccd86e
+  hardware_followup: Direct inter-object timing must confirm that object boundaries do not create a hidden hardware turnaround.
+  artifact_hash: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
 - requirement_id: P10_1R-ACK-003
   requirement_text: At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying,
     or committing across the continuous pipeline.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Four-buffer/ring model, runtime source audit, reset/fault stress, and future hardware telemetry.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_PIPELINE_PASS_HARDWARE_PENDING
+  test_id: P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL
+  evidence_path: evidence/generated/p10_1r_ack_pipeline_model.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The integrity-pipeline firmware change invalidated the prior runtime binding; exact-source pipeline evidence
-    plus direct descriptor, completion, and occupancy telemetry remain pending.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_ack_pipeline_model.json
+    sha256: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
+  - path: evidence/generated/p10_1r_xsim/summary.json
+    sha256: b9754fd0aa5fc6480cdfbbf651d807a5c84bb2f8f0b1d376345bbb97802e1d2b
+  - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
+    sha256: 6578f4240f6ec3537178524dfcde80aec7a17e7f41e45af15c9e07a1ecccd86e
+  hardware_followup: Direct descriptor, completion, and occupancy telemetry remain pending.
+  artifact_hash: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
 - requirement_id: P10_1R-HOST-001
   requirement_text: The host shall not participate in the per-object fast path; each direction shall use at most four blocking
     commands and at least 1000 segments per command.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Runtime source/unit audit, command-count telemetry, and future sustained hardware window.
-  verification_stage: P10_1R_OFFLINE_REVALIDATION
-  verification_scope: P10_1R_OFFLINE_REVALIDATION_PENDING
-  test_id: null
-  evidence_path: docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md
-  status: PENDING
+  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
+  verification_scope: P10_1R_OFFLINE_SOFTWARE_PASS_HARDWARE_PENDING
+  test_id: P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL
+  evidence_path: evidence/generated/p10_1r_ack_pipeline_model.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: The integrity-pipeline firmware change invalidated the prior runtime binding; exact-source software evidence
-    and formal host-command telemetry remain pending.
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_ack_pipeline_model.json
+    sha256: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
+  - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
+    sha256: 6578f4240f6ec3537178524dfcde80aec7a17e7f41e45af15c9e07a1ecccd86e
+  hardware_followup: The formal hardware window must report host command counts and segments per command.
+  artifact_hash: 22e9b9bf34c48945c6f497e874eb84cc48c9deb90cff7ebddeffc8eb5c25be6a
 - requirement_id: P10_1R-PERF-001
   requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
   profile: P10_1R_AX7020_2LANE_REMEDIATION

@@ -5,6 +5,6 @@
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 
-All candidate and shutdown artifacts are frozen below `artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/<sha256>/`.
+All candidate and shutdown artifacts are frozen below `artifacts/p10_1r/a1ac5457bc1555312c00dda81f2e2ad3a7c9751a/<sha256>/`.
 
 Any later RTL, protocol, XDC, firmware, or artifact hash change invalidates direct-hardware applicability and requires a new freeze.

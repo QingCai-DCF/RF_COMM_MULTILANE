@@ -1,7 +1,7 @@
 # P10.1R repository intake
 
 - Status: `PASS`
-- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
+- Source commit: `a1ac5457bc1555312c00dda81f2e2ad3a7c9751a`
 - Hardware actions executed: `false`
 
 ```json
@@ -16,7 +16,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-02T05:01:52+00:00",
+  "generated_at_utc": "2026-08-02T05:58:47+00:00",
   "goal": {
     "bytes": 30007,
     "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
@@ -36,14 +36,14 @@
       "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
     },
     {
-      "bytes": 37128,
+      "bytes": 37130,
       "path": "config/project_state.json",
-      "sha256": "9eb4d2f3a2e7c153c49a98316f87c5ad407e48187b36a374f2e0195b7083394e"
+      "sha256": "bd69cf65a54d2781eed45d2ee498ff965fb0eb53bfec06010bf56cd300a4f059"
     },
     {
-      "bytes": 226027,
+      "bytes": 226011,
       "path": "config/project_requirements.yaml",
-      "sha256": "b35f62339e0d9be3383e161b7e7348d44bf573f59fd3c7410db03a3a5a840187"
+      "sha256": "2f8b3b2c51593368891ee6e332cee416f4f5bd533d2c35b2c86ed8a28cdc3960"
     },
     {
       "bytes": 3477,
@@ -85,8 +85,8 @@
   "offline_tag_is_ancestor": true,
   "p10_pass_tag_is_ancestor": true,
   "schema_version": 1,
-  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
-  "source_worktree_dirty_before_generation": true,
+  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "source_worktree_dirty_before_generation": false,
   "status": "PASS",
   "test_id": "P10_1R-REPOSITORY-INTAKE",
   "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R"

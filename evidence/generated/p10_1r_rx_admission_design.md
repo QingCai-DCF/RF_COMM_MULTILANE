@@ -1,7 +1,7 @@
 # P10.1R RX admission design evidence
 
 - Status: `PASS`
-- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
+- Source commit: `a1ac5457bc1555312c00dda81f2e2ad3a7c9751a`
 - Hardware actions executed: `false`
 
 ```json
@@ -20,7 +20,7 @@
     "path": "evidence/generated/p10_1r_xsim/summary.json",
     "sha256": "ab6bacee19f9ebca58fcf196879a3a1cd7431cbc200ac575cb596b4f35f5218a"
   },
-  "generated_at_utc": "2026-08-02T05:01:52+00:00",
+  "generated_at_utc": "2026-08-02T05:58:47+00:00",
   "guard_selection_evidence": {
     "bytes": 3571,
     "path": "evidence/generated/p10_1r_echo_guard_selection.json",
@@ -61,7 +61,7 @@
   "schema_version": 1,
   "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
   "selected_final_guard_cycles": 4096,
-  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
   "source_identity": {
     "ack_header_encoding": "byte11_bits_7_2_source_bit_1_lane_bit_0_direction",
     "airtime_bytes_added": 0,
