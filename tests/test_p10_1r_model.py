@@ -30,6 +30,27 @@ class P101RModelTests(unittest.TestCase):
         self.assertGreaterEqual(result["modeled_fixed_to_rotating_bps"], 4_000_000)
         self.assertGreaterEqual(result["modeled_rotating_to_fixed_bps"], 4_000_000)
         self.assertTrue(result["overhead_counters_overlap"])
+        self.assertEqual(result["inputs"]["frame_duty_guard_cycles"], 17_984)
+        self.assertEqual(result["data_frame_start_period_us"], 840.0)
+        proof = result["duty_schedule_proof"]
+        self.assertTrue(proof["pass"])
+        self.assertTrue(proof["first_frame_requires_empty_history"])
+        self.assertEqual(proof["maximum_window_pulse_intersections"], 1_439)
+        self.assertEqual(proof["maximum_window_high_cycles"], 11_512)
+        self.assertEqual(proof["target_high_cycles_strict_threshold"], 11_520)
+        self.assertEqual(proof["margin_cycles"], 8)
+
+    def test_guard_is_the_minimum_safe_whole_symbol_schedule(self) -> None:
+        self.assertEqual(
+            MODEL.maximum_periodic_pulse_intersections(1_116, 562, 2_000),
+            1_439,
+        )
+        self.assertEqual(
+            MODEL.maximum_periodic_pulse_intersections(1_116, 561, 2_000),
+            1_440,
+        )
+        self.assertEqual(1_439 * 8, 11_512)
+        self.assertEqual(1_440 * 8, 11_520)
 
     def test_required_random_event_counts_and_seeds(self) -> None:
         admission = MODEL.stress_admission()
@@ -97,9 +118,15 @@ class P101RModelTests(unittest.TestCase):
             "endpoint_burst_frames: 32", "ack_threshold: 32",
             "per_object_optical_ready_roundtrip: false",
             "minimum_concurrent_host_objects_or_equivalent: 4",
+            "post_frame_guard_cycles: 17984",
+            "first_data_frame_requires_empty_exact_history: true",
+            "maximum_window_high_cycles: 11512",
         ):
             self.assertIn(marker, runtime)
         self.assertIn("dp_attempt_descriptor[0] || dp_attempt_retry", core)
+        self.assertIn("frame_schedule_valid_q", core)
+        self.assertIn("data_duty_history_empty", core)
+        self.assertIn("!serializer_done[0]", core)
 
     def test_builders_have_goal_bound_p10_1r_namespace(self) -> None:
         expected_goal_hash = (

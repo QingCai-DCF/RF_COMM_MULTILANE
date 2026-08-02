@@ -26,6 +26,7 @@ REFLECTION_TAIL_COMPONENT_US = (0, 1, 4, 16, 64)
 
 @dataclass(frozen=True)
 class PerformanceInputs:
+    protocol_clock_hz: int = 64_000_000
     lane_rate_bps: int = 4_000_000
     lane_count: int = 2
     l1_payload_bytes: int = 247
@@ -38,6 +39,11 @@ class PerformanceInputs:
     symbol_us: float = 0.5
     pulse_us_per_symbol: float = 0.125
     exact_target_duty: float = 0.18
+    duty_window_cycles: int = 64_000
+    duty_target_high_cycles: int = 11_520
+    frame_duty_guard_cycles: int = 17_984
+    frame_launch_overhead_cycles: int = 64
+    tx_high_cycles_per_symbol: int = 8
     bundle_burst_frames: int = 32
     ack_threshold: int = 32
     outstanding_frames: int = 32
@@ -65,6 +71,31 @@ def encode_ack_direction_byte(
     return (source_node_id << 2) | (lane_id << 1) | direction
 
 
+def maximum_periodic_pulse_intersections(
+    active_slots: int, guard_slots: int, window_slots: int
+) -> int:
+    """Conservative pulse intersections for a periodic active/idle schedule.
+
+    Every active symbol slot contains one pulse.  The prefix-sum search finds
+    the exact maximum number of complete symbol slots in any window phase; one
+    extra intersection accounts for an arbitrarily clock-aligned pulse cut by
+    either window boundary.
+    """
+    if active_slots <= 0 or guard_slots <= 0 or window_slots <= 0:
+        raise ValueError("active, guard, and window slot counts must be positive")
+    period = active_slots + guard_slots
+    repetitions = math.ceil((window_slots + period) / period) + 1
+    pattern = ([1] * active_slots + [0] * guard_slots) * repetitions
+    prefix = [0]
+    for value in pattern:
+        prefix.append(prefix[-1] + value)
+    complete = max(
+        prefix[phase + window_slots] - prefix[phase]
+        for phase in range(period)
+    )
+    return complete + 1
+
+
 def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:
     data_symbols = inputs.preamble_symbols + inputs.symbols_per_byte * (
         inputs.data_header_bytes + inputs.l1_payload_bytes + inputs.payload_crc_bytes
@@ -75,20 +106,32 @@ def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:
     data_airtime_us = data_symbols * inputs.symbol_us
     ack_airtime_us = ack_symbols * inputs.symbol_us
     data_txd_high_us = data_symbols * inputs.pulse_us_per_symbol
-    # Complete-frame headroom reservation in RTL enforces this exact-duty
-    # spacing without the superseded redundant fixed post-frame delay.
-    data_start_spacing_us = data_txd_high_us / inputs.exact_target_duty
+    frame_duty_guard_us = (
+        inputs.frame_duty_guard_cycles / inputs.protocol_clock_hz * 1_000_000
+    )
+    frame_launch_overhead_us = (
+        inputs.frame_launch_overhead_cycles
+        / inputs.protocol_clock_hz
+        * 1_000_000
+    )
+    # The RTL qualifies the first DATA launch with an empty exact-duty history,
+    # then enforces a fixed guard after every complete DATA frame.  Include a
+    # conservative 64-cycle allowance for registered handshakes and serializer
+    # header preparation rather than treating those cycles as free airtime.
+    frame_boundary_recovery_us = frame_duty_guard_us + frame_launch_overhead_us
+    data_start_spacing_us = data_airtime_us + frame_boundary_recovery_us
     frames_per_lane = math.ceil(inputs.bundle_burst_frames / inputs.lane_count)
     data_burst_us = data_airtime_us + (frames_per_lane - 1) * data_start_spacing_us
-    # Post-TX admission and direction quiet describe the same physical wait;
-    # never add both as independent counters.  One guard occurs before ACK and
-    # one before the following DATA burst.
-    shared_turnaround_guard_us = max(
-        inputs.post_tx_guard_us, inputs.direction_quiet_us
+    # The final DATA-module duty recovery overlaps the DATA->ACK->DATA optical
+    # turnaround.  Add only the slower path; summing both would double-count
+    # elapsed time that occurs concurrently on opposite physical transmitters.
+    turnaround_sequence_us = (
+        2 * inputs.direction_quiet_us
+        + ack_airtime_us
+        + 2 * frame_launch_overhead_us
     )
-    bundle_cycle_us = (
-        data_burst_us + 2 * shared_turnaround_guard_us + ack_airtime_us
-    )
+    bundle_recovery_us = max(frame_boundary_recovery_us, turnaround_sequence_us)
+    bundle_cycle_us = data_burst_us + bundle_recovery_us
     l1_bits = inputs.bundle_burst_frames * inputs.l1_payload_bytes * 8
     useful_bits = inputs.bundle_burst_frames * inputs.rfap_useful_bytes * 8
     airtime_ceiling_bps = l1_bits / (bundle_cycle_us * 1e-6)
@@ -101,29 +144,71 @@ def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:
         * retry_efficiency
         * inputs.dma_ps_overlap_efficiency
     )
+    symbol_cycles = round(
+        inputs.symbol_us * inputs.protocol_clock_hz / 1_000_000
+    )
+    window_symbol_slots = inputs.duty_window_cycles // symbol_cycles
+    guard_symbol_slots = inputs.frame_duty_guard_cycles // symbol_cycles
+    max_window_pulse_intersections = maximum_periodic_pulse_intersections(
+        data_symbols, guard_symbol_slots, window_symbol_slots
+    )
+    max_window_high_cycles = (
+        max_window_pulse_intersections * inputs.tx_high_cycles_per_symbol
+    )
+    duty_schedule_proof_pass = (
+        data_symbols == 1_116
+        and symbol_cycles == 32
+        and inputs.duty_window_cycles == 64_000
+        and inputs.duty_window_cycles % symbol_cycles == 0
+        and inputs.frame_duty_guard_cycles >= 17_984
+        and guard_symbol_slots >= 562
+        and max_window_pulse_intersections == 1_439
+        and inputs.duty_target_high_cycles
+        == int(inputs.duty_window_cycles * inputs.exact_target_duty)
+        and max_window_high_cycles < inputs.duty_target_high_cycles
+    )
     return {
         "inputs": asdict(inputs),
         "data_frame_symbols": data_symbols,
         "data_frame_airtime_us": data_airtime_us,
         "data_frame_txd_high_us": data_txd_high_us,
+        "frame_duty_guard_us": frame_duty_guard_us,
+        "frame_launch_overhead_us": frame_launch_overhead_us,
+        "frame_boundary_recovery_us": frame_boundary_recovery_us,
+        "data_frame_start_period_us": data_start_spacing_us,
         "exact_duty_start_spacing_us": data_start_spacing_us,
         "ack_frame_symbols": ack_symbols,
         "ack_airtime_us": ack_airtime_us,
         "frames_per_lane_per_bundle": frames_per_lane,
         "data_burst_airtime_us": data_burst_us,
-        "shared_turnaround_guard_us": shared_turnaround_guard_us,
+        "turnaround_sequence_us": turnaround_sequence_us,
+        "bundle_recovery_us": bundle_recovery_us,
         "bundle_cycle_us": bundle_cycle_us,
         "airtime_ceiling_bps": airtime_ceiling_bps,
         "application_ceiling_bps": application_ceiling_bps,
-        "guard_overhead_fraction": (2 * shared_turnaround_guard_us) / bundle_cycle_us,
+        "guard_overhead_fraction": bundle_recovery_us / bundle_cycle_us,
         "ack_overhead_fraction": ack_airtime_us / bundle_cycle_us,
-        "direction_overhead_fraction": (2 * shared_turnaround_guard_us) / bundle_cycle_us,
+        "direction_overhead_fraction": turnaround_sequence_us / bundle_cycle_us,
         "overhead_counters_overlap": True,
+        "duty_schedule_proof": {
+            "first_frame_requires_empty_history": True,
+            "maximum_data_frame_symbols": data_symbols,
+            "symbol_cycles": symbol_cycles,
+            "window_symbol_slots": window_symbol_slots,
+            "guard_symbol_slots": guard_symbol_slots,
+            "maximum_window_pulse_intersections": max_window_pulse_intersections,
+            "maximum_window_high_cycles": max_window_high_cycles,
+            "target_high_cycles_strict_threshold": inputs.duty_target_high_cycles,
+            "margin_cycles": (
+                inputs.duty_target_high_cycles - max_window_high_cycles
+            ),
+            "pass": duty_schedule_proof_pass,
+        },
         "expected_sustained_goodput_bps": sustained_bps,
         "modeled_fixed_to_rotating_bps": sustained_bps,
         "modeled_rotating_to_fixed_bps": sustained_bps,
         "minimum_gate_bps": 4_000_000,
-        "gate_pass": sustained_bps >= 4_000_000,
+        "gate_pass": sustained_bps >= 4_000_000 and duty_schedule_proof_pass,
     }
 
 

@@ -17,12 +17,15 @@ module p9_optical_transport_core #(
   // parameter boundary below.
   parameter integer ACK_FRAME_THRESHOLD = 32,
   parameter integer ACK_MAX_DELAY_CYCLES = 64_000,
-  // P10.1R relies on the existing exact 1 ms sliding accountant and reserves
-  // the complete next frame against its 18% headroom before launch.  A second
-  // fixed post-frame delay would double-count that safety margin and reduce
-  // useful throughput.  P9's historical monolithic role retains 20,480
-  // cycles through EFFECTIVE_FRAME_DUTY_GUARD_CYCLES below.
-  parameter integer FRAME_DUTY_GUARD_CYCLES = 0,
+  // Independent P10.1R endpoints use a proved frame-boundary schedule.  At
+  // 64 MHz and 4 Mbit/s, a maximum DATA frame occupies 1,116 32-cycle symbol
+  // slots.  A 17,984-cycle (562-slot) post-frame guard bounds every 1 ms
+  // window to at most 1,439 pulse intersections, or 11,512 high cycles.  That
+  // remains strictly below the exact accountant's 11,520-cycle 18% threshold.
+  // The first DATA frame after reset, raw mode, fault, shutdown, abort, or a
+  // direction change still waits for an empty exact-duty history.  P9's
+  // monolithic role retains its historical 20,480-cycle guard below.
+  parameter integer FRAME_DUTY_GUARD_CYCLES = 17_984,
   // 0 keeps the frozen P9 single-FPGA fixture behavior. P10 instantiates one
   // physical endpoint per AX7020: 1 owns side A (fixed), 2 owns side B
   // (rotating role). The two instances exchange DATA and ACK frames only
@@ -189,6 +192,15 @@ module p9_optical_transport_core #(
   localparam integer ROLE_P9_DUAL = 0;
   localparam integer ROLE_FIXED_A = 1;
   localparam integer ROLE_ROTATING_B = 2;
+  localparam integer ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES = 17_984;
+  localparam integer ENDPOINT_MAX_DATA_FRAME_SYMBOLS = 1_116;
+  localparam integer ENDPOINT_DUTY_WINDOW_SYMBOLS = 2_000;
+  localparam integer ENDPOINT_MAX_WINDOW_PULSE_INTERSECTIONS =
+      ENDPOINT_DUTY_WINDOW_SYMBOLS -
+      ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES / 32 + 1;
+  localparam integer ENDPOINT_MAX_WINDOW_HIGH_CYCLES =
+      ENDPOINT_MAX_WINDOW_PULSE_INTERSECTIONS * 8;
+  localparam integer ENDPOINT_TARGET_HIGH_CYCLES = 11_520;
   localparam integer EFFECTIVE_FRAME_DUTY_GUARD_CYCLES =
       DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 20_480 : FRAME_DUTY_GUARD_CYCLES;
   localparam integer EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES =
@@ -203,6 +215,24 @@ module p9_optical_transport_core #(
       $error("DEPLOYMENT_ROLE must be 0 (P9 dual), 1 (fixed A), or 2 (rotating B)");
     if (ENDPOINT_BURST_FRAMES < 1 || ENDPOINT_BURST_FRAMES > WINDOW_SIZE)
       $error("ENDPOINT_BURST_FRAMES must be within the selective-repeat window");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL && CLK_HZ != 64_000_000)
+      $error("P10.1R frame-boundary duty proof requires the canonical 64 MHz clock");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
+        FRAME_DUTY_GUARD_CYCLES < ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES)
+      $error("P10.1R endpoint frame-duty guard is below the proved minimum");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
+        ENDPOINT_DUTY_WINDOW_SYMBOLS <
+        ENDPOINT_MAX_DATA_FRAME_SYMBOLS +
+        ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES / 32)
+      $error("P10.1R duty proof assumes one complete DATA run and guard per window");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
+        ENDPOINT_DUTY_WINDOW_SYMBOLS >=
+        2 * (ENDPOINT_MAX_DATA_FRAME_SYMBOLS +
+             ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES / 32))
+      $error("P10.1R duty proof assumes at most one complete DATA run per window");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
+        ENDPOINT_MAX_WINDOW_HIGH_CYCLES >= ENDPOINT_TARGET_HIGH_CYCLES)
+      $error("P10.1R frame-boundary duty proof does not close below 18 percent");
   end
 
   function automatic [31:0] crc32_next_byte(
@@ -706,6 +736,8 @@ module p9_optical_transport_core #(
   reg [6:0] receive_tail [0:1];
   reg receive_tail_destination_b [0:1];
   reg [FRAME_DUTY_GUARD_WIDTH-1:0] frame_duty_guard_q [0:1];
+  reg frame_schedule_valid_q [0:1];
+  reg frame_schedule_direction_q [0:1];
 
   always @(posedge clk) begin
     tx_store_read_data[0] <= tx_store_lane0[tx_store_read_addr[0]];
@@ -734,12 +766,12 @@ module p9_optical_transport_core #(
        dp_attempt_descriptor[0] || dp_attempt_retry);
   wire lanes_idle = serializer_start_ready[0] && serializer_start_ready[1] &&
                     !lane_start_pending[0] && !lane_start_pending[1];
-  // Admit an entire encoded frame against the exact physical-module duty
-  // headroom before its first symbol.  A DATA frame has 16 preamble symbols,
-  // 24 header bytes, payload, and four CRC bytes; every 4PPM symbol requests
-  // exactly eight Txd-high clock cycles at all supported raw rates.  Reserving
-  // the complete frame prevents a target-policy throttle from deleting a chip
-  // in the middle of an otherwise valid physical frame.
+  // P9's monolithic fixture admits an entire encoded frame against current
+  // headroom.  Independent P10.1R endpoints instead establish a clean exact-
+  // duty history before the first DATA frame, then use the proved fixed
+  // frame-boundary schedule.  The exact sliding accountant remains the final
+  // per-pulse backstop; the qualified schedule is designed never to invoke a
+  // target throttle in the middle of a valid frame.
   wire [31:0] data_frame_required_high_cycles =
       32'd1024 + ({16'd0, dp_attempt_payload_length} << 5);
   wire [31:0] data_lane0_headroom = object_direction_q ?
@@ -750,6 +782,18 @@ module p9_optical_transport_core #(
       data_lane1_headroom >= data_frame_required_high_cycles,
       data_lane0_headroom >= data_frame_required_high_cycles
   };
+  wire [1:0] data_duty_history_empty = {
+      data_lane1_headroom == duty_target_limit_cycles_o,
+      data_lane0_headroom == duty_target_limit_cycles_o
+  };
+  wire [1:0] data_frame_schedule_ready = endpoint_mode ? {
+      (frame_schedule_valid_q[1] &&
+       frame_schedule_direction_q[1] == object_direction_q) ||
+          (!frame_schedule_valid_q[1] && data_duty_history_empty[1]),
+      (frame_schedule_valid_q[0] &&
+       frame_schedule_direction_q[0] == object_direction_q) ||
+          (!frame_schedule_valid_q[0] && data_duty_history_empty[0])
+  } : data_frame_duty_ready;
   // ACK frames contain 16 preamble plus 20*4 data symbols, or 768 Txd-high
   // cycles.  ACKs travel from the opposite physical endpoint.
   wire [31:0] ack_lane0_headroom = object_direction_q ?
@@ -766,13 +810,15 @@ module p9_optical_transport_core #(
       schedulable_lane_mask[0] &&
       !serializer_busy[0] &&
       serializer_start_ready[0] && !lane_start_pending[0] &&
-      frame_duty_guard_q[0] == 0 && data_frame_duty_ready[0] &&
+      !serializer_done[0] && frame_duty_guard_q[0] == 0 &&
+      data_frame_schedule_ready[0] &&
       phase_q == PH_DATA;
   assign lane_runtime_ready[1] = local_sender && !endpoint_waiting_for_ack_q &&
       schedulable_lane_mask[1] &&
       !serializer_busy[1] &&
       serializer_start_ready[1] && !lane_start_pending[1] &&
-      frame_duty_guard_q[1] == 0 && data_frame_duty_ready[1] &&
+      !serializer_done[1] && frame_duty_guard_q[1] == 0 &&
+      data_frame_schedule_ready[1] &&
       phase_q == PH_DATA;
   assign dp_attempt_ready = phase_q == PH_DATA && !dp_local_ack_valid &&
       (dp_attempt_lane ? lane_runtime_ready[1] : lane_runtime_ready[0]);
@@ -847,6 +893,8 @@ module p9_optical_transport_core #(
         receive_tail[copy_lane] <= 0;
         receive_tail_destination_b[copy_lane] <= 0;
         frame_duty_guard_q[copy_lane] <= 0;
+        frame_schedule_valid_q[copy_lane] <= 0;
+        frame_schedule_direction_q[copy_lane] <= 0;
       end
     end else begin
       dp_local_ack_ready_q <= 0;
@@ -859,6 +907,10 @@ module p9_optical_transport_core #(
         if (serializer_done[copy_lane]) begin
           frame_duty_guard_q[copy_lane] <=
               EFFECTIVE_FRAME_DUTY_GUARD_CYCLES;
+          if (endpoint_mode && !lane_frame_ack[copy_lane] && local_sender) begin
+            frame_schedule_valid_q[copy_lane] <= 1;
+            frame_schedule_direction_q[copy_lane] <= object_direction_q;
+          end
         end else if (frame_duty_guard_q[copy_lane] != 0) begin
           frame_duty_guard_q[copy_lane] <= frame_duty_guard_q[copy_lane] - 1'b1;
         end
@@ -898,8 +950,15 @@ module p9_optical_transport_core #(
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
+          if (!frame_schedule_valid_q[copy_lane] ||
+              frame_schedule_direction_q[copy_lane] != cfg_direction_i) begin
+            frame_schedule_valid_q[copy_lane] <= 0;
+            frame_schedule_direction_q[copy_lane] <= cfg_direction_i;
+          end
         end
-      end else if (abort_object_i || disarm_request_i || full_shutdown_request_i || any_safety_fault) begin
+      end else if (abort_object_i || disarm_request_i ||
+                   full_shutdown_request_i || any_safety_fault ||
+                   object_fail_q) begin
         phase_q <= PH_DATA;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
@@ -910,6 +969,7 @@ module p9_optical_transport_core #(
         endpoint_turnaround_pending_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
+          frame_schedule_valid_q[copy_lane] <= 0;
         end
       end else if (!object_active_q) begin
         phase_q <= PH_DATA;
@@ -1120,6 +1180,14 @@ module p9_optical_transport_core #(
           end
           default: ;
         endcase
+      end
+
+      // Raw validation traffic uses the same physical pulse/accountant path
+      // but not the DATA-frame schedule.  Any request therefore invalidates
+      // the qualification, even if another guard later rejects that request.
+      if (raw_start_i) begin
+        for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1)
+          frame_schedule_valid_q[copy_lane] <= 0;
       end
     end
   end

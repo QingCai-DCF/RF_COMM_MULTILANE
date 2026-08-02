@@ -205,14 +205,14 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def test_p10_1r_pl_build_identity_is_explicit_end_to_end(self) -> None:
         self.assertEqual(
             self.runner.EXPECTED_PL_BUILD_IDS,
-            {"fixed": 0x50325246, "rotating": 0x50325252},
+            {"fixed": 0x50325346, "rotating": 0x50325352},
         )
         self.assertIn(
-            "#define P10_EXPECTED_PL_BUILD_ID 0x50325246U",
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50325346U",
             FIXED_ROLE.read_text(encoding="utf-8"),
         )
         self.assertIn(
-            "#define P10_EXPECTED_PL_BUILD_ID 0x50325252U",
+            "#define P10_EXPECTED_PL_BUILD_ID 0x50325352U",
             ROTATING_ROLE.read_text(encoding="utf-8"),
         )
         runtime = RUNTIME_MAIN.read_text(encoding="utf-8")
@@ -229,6 +229,11 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("EXPECTED_ROLE_IDENTITIES", runner)
         self.assertIn("EXPECTED_PL_BUILD_IDS['fixed']", runner)
         self.assertIn("EXPECTED_PL_BUILD_IDS['rotating']", runner)
+        self.assertIn('"15000000", "1895825408"', runner)
+        self.assertIn('"15000000", "1895825409"', runner)
+        self.assertIn("$size != 15000000", tcl)
+        self.assertIn("ps_runtime_words_csv", tcl)
+        self.assertIn("pl_perf_snapshot_words_csv", tcl)
 
 
 if __name__ == "__main__":

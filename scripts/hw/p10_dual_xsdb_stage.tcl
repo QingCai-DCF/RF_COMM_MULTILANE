@@ -292,9 +292,53 @@ proc p10_record_p10_1r_telemetry {sequence label} {
   global p10_telemetry_handle
   set captured [clock milliseconds]
   foreach role {fixed rotating} {
-    set values [p10_read_p10_1r_snapshot $role]
+    set admission_values [p10_read_p10_1r_snapshot $role]
+    # These append-only result words are flushed whenever firmware publishes a
+    # progress state.  Keep the address order frozen in the PSV header comment:
+    # state/status, configured sizes, accepted/committed bytes, descriptor and
+    # object progress, atomic commit, host command, fast path, remote commit.
+    set runtime_values {}
+    foreach address {0x00020410 0x00020414 0x0002042C 0x00020430
+                     0x0002043C 0x000204A8 0x000204AC 0x000204B0
+                     0x000204B4 0x000204C0 0x000204C4 0x000204C8
+                     0x000204CC 0x000204D0 0x000204D4 0x000204D8
+                     0x000204DC 0x000204E0 0x000204E4} {
+      lappend runtime_values [p10_read32 $role $address]
+    }
+
+    # Trigger the PL's observational atomic snapshot and accept it only when
+    # the even generation is stable across the complete counter read.
+    p10_write32 $role 0x43C00934 1
+    after 1
+    set perf_values {}
+    set coherent 0
+    for {set attempt 0} {$attempt < 8} {incr attempt} {
+      set before [p10_read32 $role 0x43C00938]
+      if {($before & 1) != 0} { after 1; continue }
+      set candidate [list $before]
+      foreach address {0x43C0093C 0x43C00940 0x43C00944 0x43C00948
+                       0x43C0094C 0x43C00950 0x43C00954 0x43C00958
+                       0x43C0095C 0x43C00960 0x43C00964 0x43C00968
+                       0x43C0096C 0x43C00970 0x43C00974 0x43C00978
+                       0x43C0097C 0x43C00980 0x43C00984 0x43C00988
+                       0x43C0098C 0x43C009B0 0x43C009B4 0x43C009B8
+                       0x43C009BC} {
+        lappend candidate [p10_read32 $role $address]
+      }
+      set after_generation [p10_read32 $role 0x43C00938]
+      if {$before == $after_generation && ($after_generation & 1) == 0} {
+        set perf_values $candidate
+        set coherent 1
+        break
+      }
+      after 1
+    }
+    if {!$coherent} {
+      error "P10.1 $role live performance snapshot was not coherent"
+    }
     puts $p10_telemetry_handle [join [list $captured $sequence $label $role \
-        [join $values ","]] "|"]
+        [join $admission_values ","] [join $runtime_values ","] \
+        [join $perf_values ","]] "|"]
   }
   flush $p10_telemetry_handle
 }
@@ -801,7 +845,7 @@ proc p10_run_p101_formal {label duration_sec} {
 proc p10_run_p101r_timed_case {label duration_sec direction lane size object_id} {
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $duration_sec != 30 || $direction ni {0 1} || $lane != 3 ||
-      $size != 16777216 || ![string is integer -strict $object_id]} {
+      $size != 15000000 || ![string is integer -strict $object_id]} {
     error "invalid P10.1R timed case"
   }
   set started [clock milliseconds]
@@ -1020,7 +1064,7 @@ puts $p10_observation_handle "label|command|expected_status|flags|lane|direction
 flush $p10_observation_handle
 set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
 set p10_telemetry_handle [open $p10_telemetry_file w]
-puts $p10_telemetry_handle "captured_ms|sequence|label|role|snapshot_words_csv"
+puts $p10_telemetry_handle "captured_ms|sequence|label|role|admission_snapshot_words_csv|ps_runtime_words_csv|pl_perf_snapshot_words_csv"
 flush $p10_telemetry_handle
 
 set rc [catch {

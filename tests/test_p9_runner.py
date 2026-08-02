@@ -300,12 +300,16 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn("active_pulse_cycles <= 8'd8", tx)
         self.assertIn(".TX_PULSE_CYCLES(8)", wrapper)
         self.assertIn(".DETECT_START_CYCLES(3), .DETECT_END_CYCLES(4)", wrapper)
-        self.assertIn("FRAME_DUTY_GUARD_CYCLES = 0", core)
+        self.assertIn("FRAME_DUTY_GUARD_CYCLES = 17_984", core)
         self.assertIn(
             "DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 20_480 :", core
         )
         self.assertIn("frame_duty_guard_q[0] == 0", core)
         self.assertIn("frame_duty_guard_q[1] == 0", core)
+        self.assertIn("data_frame_schedule_ready", core)
+        self.assertIn("data_duty_history_empty", core)
+        self.assertIn("!serializer_done[0]", core)
+        self.assertIn("!serializer_done[1]", core)
         self.assertRegex(
             core,
             r"frame_duty_guard_q\[copy_lane\]\s*<=\s*"

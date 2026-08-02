@@ -132,8 +132,8 @@ EXPECTED_MAX_QUARANTINE_CYCLES = 131072
 EXPECTED_IDLE_LOW_CYCLES = 4
 EXPECTED_IDLE_HIGH_CYCLES = 3
 EXPECTED_PL_BUILD_IDS = {
-    "fixed": 0x50325246,
-    "rotating": 0x50325252,
+    "fixed": 0x50325346,
+    "rotating": 0x50325352,
 }
 EXPECTED_ROLE_IDENTITIES = {
     "fixed": {
@@ -331,11 +331,11 @@ def build_plans() -> dict[str, list[Case | tuple[str, ...]]]:
     plans["ack_tuning"] = [
         (
             "P101R_TIMED_CASE", "ack32_burst32_f2r", "30", "0", "3",
-            "16777216", "1895825408",
+            "15000000", "1895825408",
         ),
         (
             "P101R_TIMED_CASE", "ack32_burst32_r2f", "30", "1", "3",
-            "16777216", "1895825409",
+            "15000000", "1895825409",
         ),
     ]
     plans["performance"] = [

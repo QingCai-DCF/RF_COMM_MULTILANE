@@ -650,8 +650,12 @@ module tb_p10_dual_endpoint_pair;
     // without changing the canonical unqualified regression scenario list.
     run_object(247*40, 8'h32, 1'b1, 2'b11, 16'h0300, 0, 1, 0);
 `elsif P10_1R_FOCUSED
-    run_object(247*4, 8'h71, 1'b0, 2'b11, 16'h4000, 0, 0, 0);
-    run_object(247*4, 8'h72, 1'b1, 2'b11, 16'h5000, 0, 0, 0);
+    // Forty maximum frames per direction exercise more than one exact 1 ms
+    // history window on both lanes and force the qualified frame schedule to
+    // survive a direction change.  Four-frame smoke traffic cannot validate
+    // the sliding-window bound introduced by P10.1R remediation.
+    run_object(247*40, 8'h71, 1'b0, 2'b11, 16'h4000, 0, 0, 0);
+    run_object(247*40, 8'h72, 1'b1, 2'b11, 16'h5000, 0, 0, 0);
 `else
     run_object(600, 8'h22, 1'b1, 2'b10, 16'h0100, 0, 0, 0);
     run_object(600, 8'h21, 1'b0, 2'b01, 16'h0000, 0, 0, 0);
@@ -682,9 +686,22 @@ module tb_p10_dual_endpoint_pair;
     if (f_tx_high_max[31:0] > 64 || f_tx_high_max[63:32] > 64 ||
         r_tx_high_max[95:64] > 64 || r_tx_high_max[127:96] > 64)
       $fatal(1, "P10 continuous-high maximum exceeded");
-    if (f_duty_high_max[31:0] > 11520 || f_duty_high_max[63:32] > 11520 ||
-        r_duty_high_max[95:64] > 11520 || r_duty_high_max[127:96] > 11520)
+    if (f_duty_high_max[31:0] > 11512 || f_duty_high_max[63:32] > 11512 ||
+        r_duty_high_max[95:64] > 11512 || r_duty_high_max[127:96] > 11512)
       $fatal(1, "P10 rolling-duty design target exceeded");
+`ifdef P10_1R_FOCUSED
+    if (r_duty_high_max[95:64] < 11000 ||
+        r_duty_high_max[127:96] < 11000)
+      $fatal(1, "P10.1R focused traffic did not stress a full duty window");
+    if (!rotating_endpoint.frame_schedule_valid_q[0] ||
+        !rotating_endpoint.frame_schedule_valid_q[1] ||
+        fixed_endpoint.frame_schedule_valid_q[0] ||
+        fixed_endpoint.frame_schedule_valid_q[1])
+      $fatal(1, "P10.1R direction-bound frame schedule qualification mismatch");
+    $display("P10_1R_DUTY_SCHEDULE_MAX=%0d/%0d/%0d/%0d",
+             f_duty_high_max[31:0], f_duty_high_max[63:32],
+             r_duty_high_max[95:64], r_duty_high_max[127:96]);
+`endif
     if (parallel_lane_busy_cycles == 0)
       $fatal(1, "P10 two-lane cases never exercised concurrent serializers");
 

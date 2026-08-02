@@ -32,8 +32,34 @@ safety:
   global_permit_count_per_endpoint: 1
   lane_mask_max: '0x3'
   exact_rolling_duty_limit_preserved: true
-  redundant_fixed_post_frame_duty_guard_cycles: 0
-  complete_frame_headroom_reservation_required: true
+  endpoint_frame_boundary_schedule:
+    clock_hz: 64000000
+    maximum_data_frame_symbols: 1116
+    symbol_cycles_at_4mbps: 32
+    post_frame_guard_cycles: 17984
+    post_frame_guard_symbol_slots: 562
+    rolling_window_cycles: 64000
+    rolling_window_symbol_slots: 2000
+    maximum_window_pulse_intersections: 1439
+    maximum_window_high_cycles: 11512
+    target_high_cycles_strict_threshold: 11520
+    proof_margin_cycles: 8
+    first_data_frame_requires_empty_exact_history: true
+    qualification_invalidated_by:
+      - reset
+      - raw_mode_request
+      - abort
+      - disarm
+      - full_shutdown
+      - safety_fault
+      - object_failure
+      - direction_change
+    qualified_only_after_complete_data_frame: true
+    exact_per_pulse_accountant_remains_final_backstop: true
+    normal_schedule_must_not_invoke_mid_frame_target_throttle: true
+  p9_monolithic_post_frame_guard_cycles: 20480
+  complete_frame_headroom_reservation_required_for_p9_monolithic: true
+  complete_frame_headroom_reservation_repeated_for_qualified_endpoints: false
   tx_kill_sd_mode_preserved: true
   no_hardware: true
   current_run_hardware_authorization: false
