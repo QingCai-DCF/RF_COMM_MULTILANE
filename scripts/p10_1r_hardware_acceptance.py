@@ -60,6 +60,28 @@ EXPECTED_GOAL_SHA256 = (
 )
 EXPECTED_BRANCH = "p10.1r/2lane-speed-stability-remediation"
 EXPECTED_SCOPE = "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+STANDING_AUTHORIZATION_SOURCES = (
+    {
+        "source_thread_id": "019fc130-82cb-7653-bda1-69a0ccfee3fd",
+        "received_on": "2026-08-02",
+        "source_kind": "codex_delegation_from_user_side_conversation",
+        "user_quotes": [
+            "我想一次性授权之后全部需要的操作",
+            "我确认，帮我告诉主线程",
+        ],
+        "scope": EXPECTED_SCOPE,
+        "campaign_level_standing_authorization": True,
+        "artifact_bundle_iteration_authorized": True,
+    },
+    {
+        "source_thread_id": "019fbafb-34a3-7223-95dc-7b3982218221",
+        "received_on": "2026-08-01",
+        "source_kind": "codex_delegation_from_user_side_conversation",
+        "user_quotes": ["不设上限"],
+        "scope": EXPECTED_SCOPE,
+        "campaign_new_run_id_limit": None,
+    },
+)
 EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
@@ -557,6 +579,14 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,
+        "standing_authorization_sources": list(STANDING_AUTHORIZATION_SOURCES),
+        "standing_authorization_policy": {
+            "scope": EXPECTED_SCOPE,
+            "new_immutable_bundle_requires_exact_offline_pass_and_sha256_freeze": True,
+            "fresh_per_run_authorization_required": True,
+            "campaign_new_run_id_limit": None,
+            "historical_authorization_or_artifact_pass_reuse": False,
+        },
         "user_authorization_statement": statement,
         "user_authorization_statement_sha256": hashlib.sha256(
             statement.encode("utf-8")
@@ -641,6 +671,14 @@ def validate_authorization(
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,
+        "standing_authorization_sources": list(STANDING_AUTHORIZATION_SOURCES),
+        "standing_authorization_policy": {
+            "scope": EXPECTED_SCOPE,
+            "new_immutable_bundle_requires_exact_offline_pass_and_sha256_freeze": True,
+            "fresh_per_run_authorization_required": True,
+            "campaign_new_run_id_limit": None,
+            "historical_authorization_or_artifact_pass_reuse": False,
+        },
         "part": EXPECTED_PART,
         "maximum_single_formal_run_seconds": 1800,
         "maximum_lane_mask": 3,

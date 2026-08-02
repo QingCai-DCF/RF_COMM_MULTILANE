@@ -52,6 +52,17 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         )
         self.assertEqual(len(artifacts), 10)
 
+    def test_standing_authorization_sources_are_exact_and_unbounded(self) -> None:
+        sources = self.runner.STANDING_AUTHORIZATION_SOURCES
+        self.assertEqual(
+            sources[0]["source_thread_id"],
+            "019fc130-82cb-7653-bda1-69a0ccfee3fd",
+        )
+        self.assertEqual(sources[0]["scope"], self.runner.EXPECTED_SCOPE)
+        self.assertTrue(sources[0]["artifact_bundle_iteration_authorized"])
+        self.assertEqual(sources[1]["user_quotes"], ["不设上限"])
+        self.assertIsNone(sources[1]["campaign_new_run_id_limit"])
+
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()
         self.assertEqual(tuple(plans), self.runner.STAGES)
