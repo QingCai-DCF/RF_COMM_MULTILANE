@@ -5,14 +5,14 @@
     "echo_F1.echo_tail.psv: expected 1000 samples, got 0",
     "echo-tail evidence does not contain F0/F1/R0/R1 exactly"
   ],
-  "generated_at_utc": "2026-08-02T18:25:50+00:00",
+  "generated_at_utc": "2026-08-02T18:28:31+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T182216Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
-  "raw_summary_sha256": "06bbb1ce432e1dde75784cfc86de1b6ec2c2a6d3355845db1441f74f23cb6c9c",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T182703Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
+  "raw_summary_sha256": "f00b38f310730b96b717ee4299a52e9fc0179b29af3a547a8e88a17b92cc3f05",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T182216Z_cce2180b_c1370686_bfb1c51d",
+  "run_id": "p10_1r_20260802T182703Z_cce2180b_c1370686_bfb1c51d",
   "schema_version": 1,
   "semantics": {
     "configured_guard_cycles": 4096,
@@ -21,36 +21,10 @@
     "guard_minimization_pending": false,
     "measured_maximum_echo_tail_cycles": 0,
     "minimum_safe_guard_cycles": 4096,
-    "modules": {
-      "F0": {
-        "blanked_frame_count": 0,
-        "blanked_raw_count": 1000,
-        "local_source_reject_count": 0,
-        "maximum_cycles": 0,
-        "module": "F0",
-        "p99_9_cycles": 0,
-        "p99_cycles": 0,
-        "raw_while_tx_count": 1000,
-        "receiver_raw_count": 1000,
-        "same_module_raw_count": 1000,
-        "samples": 1000,
-        "sender_accepted_remote_count": 0,
-        "source": "evidence/hardware/p10_1r/p10_1r_20260802T182216Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv",
-        "violations": {
-          "receiver_admission_violation": 0,
-          "receiver_cross_lane_accepted": 0,
-          "receiver_non_target_accepted": 0,
-          "receiver_overlap_violation": 0,
-          "sender_admission_violation": 0,
-          "sender_cross_lane_accepted": 0,
-          "sender_non_target_accepted": 0,
-          "sender_overlap_violation": 0
-        }
-      }
-    },
+    "modules": {},
     "same_module_blanked_frame_count": 0,
-    "same_module_raw_echo_count": 1000,
-    "sample_count": 1000
+    "same_module_raw_echo_count": 0,
+    "sample_count": 0
   },
   "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "status": "FAIL",
