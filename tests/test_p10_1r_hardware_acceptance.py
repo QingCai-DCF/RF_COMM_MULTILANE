@@ -78,6 +78,10 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual({item[1] for item in items}, {
             "echo_F0", "echo_F1", "echo_R0", "echo_R1"
         })
+        self.assertEqual(
+            [item[1] for item in items],
+            ["echo_F1", "echo_R1", "echo_F0", "echo_R0"],
+        )
         self.assertTrue(all(item[4] == "1000" for item in items))
 
     def test_echo_failure_captures_terminal_state_before_shutdown(self) -> None:
