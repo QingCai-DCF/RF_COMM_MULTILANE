@@ -275,17 +275,23 @@ proc p10_read_p10_1r_snapshot {role} {
   return [linsert $values 0 $generation $caps]
 }
 
-proc p10_dump_p10_1r_snapshot {role label} {
+proc p10_write_p10_1r_snapshot {role label values} {
   global p10_dump_dir
-  if {![regexp {^[A-Za-z0-9_.-]+$} $label]} {
+  if {$role ni {fixed rotating} ||
+      ![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      [llength $values] != 42} {
     error "unsafe P10.1R snapshot label"
   }
   set final [file join $p10_dump_dir "${label}.${role}.p10_1r.psv"]
-  set values [p10_read_p10_1r_snapshot $role]
   set out [open $final w]
   puts $out [join $values "|"]
   close $out
   return $final
+}
+
+proc p10_dump_p10_1r_snapshot {role label} {
+  set values [p10_read_p10_1r_snapshot $role]
+  return [p10_write_p10_1r_snapshot $role $label $values]
 }
 
 proc p10_record_p10_1r_telemetry {sequence label} {
@@ -964,6 +970,66 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
           [lindex $terminal 1] $fixed_response $rotating_response \
           $fixed_pl_status $rotating_pl_status $fixed_phy_status \
           $rotating_phy_status $fixed_error_detail $rotating_error_detail]
+      # Preserve one coherent PL snapshot per endpoint before the error path
+      # requests shutdown.  The raw counters establish whether the receiver
+      # observed an electrical Rxd pulse, while the final-Txd timestamps are a
+      # direct tap after the permit/duty/kill path.  They do not prove optical
+      # power or identify a failed external component.
+      set fixed_failure_snapshot [p10_read_p10_1r_snapshot fixed]
+      set rotating_failure_snapshot [p10_read_p10_1r_snapshot rotating]
+      set failure_label [format "%s_failure_%04d" $label $sample]
+      set fixed_failure_dump [p10_write_p10_1r_snapshot fixed $failure_label \
+          $fixed_failure_snapshot]
+      set rotating_failure_dump [p10_write_p10_1r_snapshot rotating $failure_label \
+          $rotating_failure_snapshot]
+      if {$sender eq "fixed"} {
+        set sender_failure_snapshot $fixed_failure_snapshot
+        set receiver_failure_snapshot $rotating_failure_snapshot
+        set sender_failure_dump $fixed_failure_dump
+        set receiver_failure_dump $rotating_failure_dump
+      } else {
+        set sender_failure_snapshot $rotating_failure_snapshot
+        set receiver_failure_snapshot $fixed_failure_snapshot
+        set sender_failure_dump $rotating_failure_dump
+        set receiver_failure_dump $fixed_failure_dump
+      }
+      set base 2
+      set sender_raw [lindex $sender_failure_snapshot \
+          [expr {$base + 1 + $lane_index}]]
+      set sender_raw_while_tx [lindex $sender_failure_snapshot \
+          [expr {$base + 3 + $lane_index}]]
+      set sender_blanked_raw [lindex $sender_failure_snapshot \
+          [expr {$base + 5 + $lane_index}]]
+      set sender_accepted_remote [lindex $sender_failure_snapshot \
+          [expr {$base + 13 + $lane_index}]]
+      set receiver_raw [lindex $receiver_failure_snapshot \
+          [expr {$base + 1 + $lane_index}]]
+      set receiver_accepted_remote [lindex $receiver_failure_snapshot \
+          [expr {$base + 13 + $lane_index}]]
+      set sender_last_txd_rise [lindex $sender_failure_snapshot \
+          [expr {$base + 23 + $lane_index}]]
+      set sender_last_txd_fall [lindex $sender_failure_snapshot \
+          [expr {$base + 25 + $lane_index}]]
+      set sender_first_rxd_after_tx [lindex $sender_failure_snapshot \
+          [expr {$base + 27 + $lane_index}]]
+      set sender_last_rxd_after_tx [lindex $sender_failure_snapshot \
+          [expr {$base + 29 + $lane_index}]]
+      set sender_raw_sent [p10_read32 $sender 0x43C0074C]
+      set receiver_raw_sent [p10_read32 $receiver 0x43C0074C]
+      set fixed_physical_tx {}
+      set rotating_physical_tx {}
+      foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+        lappend fixed_physical_tx [p10_read32 fixed $address]
+        lappend rotating_physical_tx [p10_read32 rotating $address]
+      }
+      p10_say [format "P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=%s:module=%s,sample=%d,sender=%s,receiver=%s,sender_raw=%u,sender_raw_while_tx=%u,sender_blanked_raw=%u,sender_accepted_remote=%u,receiver_raw=%u,receiver_accepted_remote=%u,sender_last_txd_rise=%u,sender_last_txd_fall=%u,sender_first_rxd_after_tx=%u,sender_last_rxd_after_tx=%u,sender_raw_sent=%u,receiver_raw_sent=%u,fixed_physical_tx=%s,rotating_physical_tx=%s,sender_dump=%s,receiver_dump=%s" \
+          $label $module $sample $sender $receiver $sender_raw \
+          $sender_raw_while_tx $sender_blanked_raw $sender_accepted_remote \
+          $receiver_raw $receiver_accepted_remote $sender_last_txd_rise \
+          $sender_last_txd_fall $sender_first_rxd_after_tx \
+          $sender_last_rxd_after_tx $sender_raw_sent $receiver_raw_sent \
+          [join $fixed_physical_tx ","] [join $rotating_physical_tx ","] \
+          $sender_failure_dump $receiver_failure_dump]
       close $handle
       error "P10.1R echo sweep command failed $label sample=$sample"
     }

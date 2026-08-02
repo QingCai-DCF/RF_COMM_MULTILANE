@@ -80,13 +80,14 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         })
         self.assertEqual(
             [item[1] for item in items],
-            ["echo_R1", "echo_F1", "echo_F0", "echo_R0"],
+            ["echo_F1", "echo_R1", "echo_F0", "echo_R0"],
         )
         self.assertTrue(all(item[4] == "1000" for item in items))
 
     def test_echo_failure_captures_terminal_state_before_shutdown(self) -> None:
         tcl = TCL_PATH.read_text(encoding="utf-8")
         self.assertIn("P10_1R_ECHO_SWEEP_FAIL=", tcl)
+        self.assertIn("P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=", tcl)
         self.assertIn("fixed_status=0x%08X", tcl)
         self.assertIn("rotating_status=0x%08X", tcl)
         self.assertIn("fixed_phy_status=0x%08X", tcl)
@@ -95,6 +96,20 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("rotating_error_detail=0x%08X", tcl)
         self.assertIn("p10_read32 fixed 0x000201CC", tcl)
         self.assertIn("p10_read32 rotating 0x000201CC", tcl)
+        self.assertIn("sender_raw_while_tx=%u", tcl)
+        self.assertIn("receiver_raw=%u", tcl)
+        self.assertIn("sender_last_txd_rise=%u", tcl)
+        self.assertIn("sender_last_txd_fall=%u", tcl)
+        self.assertIn("sender_raw_sent=%u", tcl)
+        self.assertIn("fixed_physical_tx=%s", tcl)
+        self.assertIn("sender_dump=%s", tcl)
+        snapshot = tcl.index("set fixed_failure_snapshot")
+        marker = tcl.index("P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=")
+        shutdown_request = tcl.index(
+            "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR=1", marker
+        )
+        self.assertLess(snapshot, marker)
+        self.assertLess(marker, shutdown_request)
 
     def test_streaming_plan_has_goal_recovery_matrix(self) -> None:
         items = self.runner.build_plans()["streaming_64m"]
