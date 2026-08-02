@@ -1,0 +1,71 @@
+{
+  "artifact_bundle_source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "conclusion": "The artifact bundle is not eligible for P10.1R performance acceptance. The first ACK-tuning direction remained healthy and made continuous progress, but its directly observed maximum L1 payload rate was below 4,000,000 bit/s. Increasing only the orchestration timeout would hide the failure rather than remediate it.",
+  "diagnosis": {
+    "ack_density_target_met_during_observed_interval": true,
+    "artifact_or_firmware_fault_observed": false,
+    "complete_frame_high_cycles": 8928,
+    "complete_frame_reservation_start_threshold_cycles": 2592,
+    "exact_target_high_cycles_per_1ms": 11520,
+    "model_assumed_frame_start_spacing_us": 775.0,
+    "primary_cause": "The offline model assumes average-duty frame spacing, while the implemented whole-frame admission gate requires all 8,928 high cycles to be free at frame start. That conservative reservation drains most of the preceding frame from the 1 ms history before admitting the next frame, approximately halving two-lane payload throughput.",
+    "runner_contract_issue": "The 16 MiB command cannot complete inside the required 30-second case even at the offline modeled 4,427,415.552 bit/s: it needs 30.315 seconds. This is a separate test-size defect, but it is not the cause of the measured sub-4-Mbit/s hardware rate.",
+    "safe_remediation_direction": "Replace the full-frame-at-start reservation with a provably safe inter-frame admission schedule that preserves the exact sliding duty accountant and never permits mid-frame target throttling; regenerate the performance model and all immutable hardware artifacts before another acceptance run.",
+    "timeout_only_change_is_sufficient": false
+  },
+  "generated_at_utc": "2026-08-02T00:57:42Z",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "immutable_inputs": {
+    "fixed_bitstream_sha256": "7e24b993d03f61995cce5083c9a5ff04cd6138734b2d768d0eb402d98ff329d0",
+    "fixed_elf_sha256": "976f4e0d45ef1718bbe455d8f2fc7944eee7e40d553a492df488cecfb8c28c92",
+    "fixed_jtag_serial": "210249855178",
+    "rotating_bitstream_sha256": "0c6533e98f6ddff358905b7086e0d4b0b652f52cd4525a55fc7c437c753e5545",
+    "rotating_elf_sha256": "aa5fd29b87c0b359f5ae772650d26d8ccf04f6a6b7a129443135397429dd50ac",
+    "rotating_jtag_serial": "210512180081"
+  },
+  "observations": {
+    "ack_count_delta": 1039,
+    "accepted_data_frame_delta": 30674,
+    "capture_interval_ms": 25058,
+    "data_frames_per_ack": 29.52261790182868,
+    "last_capture_maximum_l1_payload_bytes": 9099480,
+    "last_capture_transfer_fraction": 0.5423712730407715,
+    "projected_16mib_completion_seconds_from_last_capture": 55.3126640203616,
+    "steady_state_maximum_l1_payload_bps": 2418861.202011334,
+    "target_application_bps": 4000000,
+    "telemetry_has_zero_admission_or_cross_lane_violations": true
+  },
+  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
+  "schema_version": 1,
+  "shutdown": {
+    "all_shutdown_records_pass": true,
+    "record_count": 12,
+    "shutdown_exit": 0,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "tfdu_shutdown_programmed": 1
+  },
+  "source_evidence": {
+    "ack_stage_summary": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/stage_summary.json",
+    "ack_stage_summary_sha256": "32c9e0a212df38255480861b75053a58866ea0fbf9b579bf1178ad893217beae",
+    "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/final/orchestrator_result.json",
+    "orchestrator_result_sha256": "46eadaeaae2564a3f050b145d9e737401a1cf73ee08bff47ad8482c175b08e6f",
+    "telemetry": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/dumps/p10_1r_telemetry.psv",
+    "telemetry_sha256": "7e36495f6bb54fd7af185f24abd7c842b881dae2806379efe53dbfd7dfced50b",
+    "xsdb_result": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/xsdb.result.txt",
+    "xsdb_result_sha256": "70f2a4a45d2499cd6ad6a464fbe9090d024643253e8d7e31ba895612625df5a9"
+  },
+  "stage_results": {
+    "ack_tuning": "FAIL",
+    "crosstalk": "PASS",
+    "echo_tail": "PASS",
+    "formal_30min": "NOT_RUN",
+    "performance": "NOT_RUN",
+    "phy_sanity": "PASS",
+    "preflight": "PASS",
+    "streaming_64m": "NOT_RUN"
+  },
+  "status": "FAIL_WITH_EVIDENCE",
+  "test_id": "P10_1R-HW-ACK_TUNING-DIAGNOSIS"
+}

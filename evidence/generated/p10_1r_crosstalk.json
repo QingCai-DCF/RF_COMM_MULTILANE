@@ -1,26 +1,24 @@
 {
-  "errors": [
-    "remediation_frame_lane1_f2r_0000_1048576:fixed:cross_lane_accepted=136",
-    "remediation_frame_lane1_r2f_0000_1048576:rotating:cross_lane_accepted=136",
-    "local-source rejection was not directly observed"
-  ],
-  "generated_at_utc": "2026-08-01T22:29:16+00:00",
+  "errors": [],
+  "generated_at_utc": "2026-08-02T00:44:42+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c/crosstalk_remediation/stage_summary.json",
-  "raw_summary_sha256": "0f83aa3bca9638e7713c2f26d327790aaea2f6903a3a01f7ed152fc88b84a927",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/crosstalk_remediation/stage_summary.json",
+  "raw_summary_sha256": "b2ff6f31e12935151fb2ae1c77e1825190ea018059601eea4060536a12b9af30",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260801T221620Z_60581a20_ac128032_4b8f569c",
+  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
   "schema_version": 1,
   "semantics": {
     "cross_lane_accepted_data_count": 0,
     "local_source_rejected_frame_count": 0,
+    "local_source_rejection_enabled": true,
+    "local_source_rejection_observed": false,
     "other_lane_blanked_count": 0,
     "remote_acceptance_reconciled_case_count": 4,
     "same_module_accepted_data_count": 0
   },
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
-  "status": "FAIL",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "status": "PASS",
   "test_id": "P10_1R-HW-CROSSTALK"
 }

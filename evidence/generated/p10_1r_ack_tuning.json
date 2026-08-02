@@ -1,0 +1,62 @@
+{
+  "errors": [
+    "XSDB PASS marker missing",
+    "exactly one final endpoint-shutdown row required",
+    "immutable plan case missing: ack32_burst32_f2r",
+    "immutable plan case missing: ack32_burst32_r2f",
+    "ack32_burst32_f2r: application goodput below 4 Mbit/s",
+    "ack32_burst32_f2r: fewer than 24 data frames/ACK",
+    "ack32_burst32_r2f: application goodput below 4 Mbit/s",
+    "ack32_burst32_r2f: fewer than 24 data frames/ACK"
+  ],
+  "generated_at_utc": "2026-08-02T00:44:42+00:00",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "network_used": false,
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/stage_summary.json",
+  "raw_summary_sha256": "32c9e0a212df38255480861b75053a58866ea0fbf9b579bf1178ad893217beae",
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
+  "schema_version": 1,
+  "semantics": {
+    "best_ack_max_delay_cycles": 64000,
+    "best_ack_threshold": 32,
+    "best_burst_frames": 32,
+    "objects_in_flight": 4,
+    "windows": [
+      {
+        "ack_count": 0,
+        "ack_wait_ratio": 0.0,
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "data_frames": 0,
+        "data_frames_per_ack": 0.0,
+        "direction": 0,
+        "duration_seconds": 30,
+        "host_blocking_commands": 0,
+        "inter_object_ratio": 0.0,
+        "label": "ack32_burst32_f2r",
+        "lane_mask": 3
+      },
+      {
+        "ack_count": 0,
+        "ack_wait_ratio": 0.0,
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "data_frames": 0,
+        "data_frames_per_ack": 0.0,
+        "direction": 1,
+        "duration_seconds": 30,
+        "host_blocking_commands": 0,
+        "inter_object_ratio": 0.0,
+        "label": "ack32_burst32_r2f",
+        "lane_mask": 3
+      }
+    ]
+  },
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "status": "FAIL",
+  "test_id": "P10_1R-HW-ACK_TUNING"
+}
