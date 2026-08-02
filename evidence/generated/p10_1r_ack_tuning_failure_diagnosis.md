@@ -1,32 +1,47 @@
-# P10.1R ACK-tuning failure diagnosis
+# P10.1R ACK tuning failure diagnosis
 
-- Status: `FAIL_WITH_EVIDENCE`
-- Run ID: `p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
-- Failed stage: `ack_tuning`
-- Hardware actions executed: `true`
-- Final shutdown: fixed `PASS`, rotating `PASS`
+Status: **FAIL_DIAGNOSED**. This document explains the immutable failed run; it is not hardware PASS evidence.
 
-The ACK-lane identity remediation worked: preflight, echo-tail, 4x4 crosstalk, and 4 Mbit/s PHY sanity all passed. The first F-to-R ACK-tuning transfer then remained in the healthy running state but did not complete its 16 MiB command before the paired-command deadline. All 12 shutdown records contain `SHUTDOWN_EXIT=0`, `TFDU_SHUTDOWN_PROGRAMMED=1`, and dual-board `PASS` markers.
+## Direct evidence
 
-## Direct telemetry
+- Run: `p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f`
+- Failure checkpoint: `fa4e0237c3d30035a7db5efe7437965e76eec0ce`
+- Raw ACK-stage summary SHA256: `f78a8f8e7234ce3aa6292f72340e47086e8c822c196978017df6af930d277c89`
+- F→R committed exactly 15,000,000 bytes with CRC32, SHA256, byte integrity, atomic-commit, descriptor, retry, duty, pulse-width, and shutdown checks clean.
+- Measured goodput was 3,658,361.060 bit/s. Fixed PL elapsed time was 32.801574641 s.
+- Sender payload preparation consumed 142,502,078 PS ticks, or 0.427506222 s at 333,333,343 Hz.
+- Receiver integrity verification consumed 1,306,486,402 PS ticks, or 3.919459092 s.
+- The 60,729 DATA frames used 2,060 ACKs: 29.4801 DATA frames per ACK. Inter-object control consumed only 0.015468 s.
+- Exact rolling-duty maxima were 11,504 high cycles per active sender module; the 18% target threshold is 11,520 cycles. No duty or continuous-high fault occurred.
 
-Between the first and last 5-second snapshots, the rotating receiver accepted 30,674 additional CRC-valid DATA frames over 25.058 seconds. Even crediting every frame with the maximum 247-byte L1 payload, this is only:
+## First-principles reconciliation
+
+The application gate includes payload preparation and receiver verification. Removing only those directly measured serial CPU intervals gives:
 
 ```text
-30,674 * 247 * 8 / 25.058 = 2,418,861.202 bit/s
+transport interval
+= 32.801574640625
+  - 142502078 / 333333343
+  - 1306486402 / 333333343
+= 28.454609326687 s
+
+reconciled transport rate
+= 120000000 / 28.454609326687
+= 4217242.929688 bit/s
 ```
 
-The sender accepted 1,039 additional ACKs over the same interval, or 29.523 DATA frames per ACK. Thus the `>=24` ACK-density objective was already met; the throughput failure cannot be repaired by merely relaxing the XSDB timeout. At the final snapshot, at most 9,099,480 of 16,777,216 requested bytes had crossed as L1 payload, projecting about 55.313 seconds for completion at that rate.
+The measured run exceeded 30 seconds by 2.801575 s, while receiver verification alone consumed 3.919459 s.
 
 ## Root cause
 
-The model assumes a 775 us average-duty start spacing for a full DATA frame. The implemented admission gate instead requires all 8,928 Txd-high cycles of the next full frame to be free at its start. With an exact 1 ms target budget of 11,520 cycles, a following frame cannot start until the preceding history falls to 2,592 cycles or less. This conservative whole-frame reservation discards the benefit of high cycles expiring while the new frame is being serialized and approximately halves the achievable two-lane payload rate.
+The active receiver clean path rereads every object seven times: input/output CRC32, input/output SHA256, byte comparison, incremental output CRC32, and incremental output SHA256. The input stream CRC32/SHA256 had already been computed during slot preparation. The frozen CRC32 implementation was also correct but bit-at-a-time.
 
-There is also an independent orchestration defect: 16 MiB in exactly 30 seconds requires 4,473,924.267 bit/s, while the offline model predicted only 4,427,415.552 bit/s and therefore 30.315 seconds. Fixing that test-size mismatch alone would still leave the directly measured rate below the 4,000,000 bit/s Goal gate.
+The direct evidence therefore identifies `SERIAL_REDUNDANT_CPU_INTEGRITY_VERIFICATION` as the actionable cause. ACK aggregation, inter-object optical control, duty throttling, corruption, retries, and resource leakage are not supported as the cause of this failure.
 
-## Required remediation
+## Bounded remediation
 
-Implement and prove a frame-boundary admission schedule that accounts for the exact sliding window while guaranteeing no target-duty throttle can corrupt a frame. The exact duty accountant, strict hard limit, complete-frame integrity, GLOBAL_PERMIT, final TX kill, SD, Mode, and shutdown behavior must remain unchanged. Then regenerate the model, rebuild and freeze both bitstreams/XSA/BSP/ELF under new hashes, and rerun the complete hardware campaign under a fresh authorization.
+The optimized clean path will retain direct byte equality with first-mismatch reporting, one incremental input CRC32/SHA256, one incremental output CRC32/SHA256, and atomic commit after all comparisons. Byte comparison and output CRC32 will share one memory pass; output SHA256 remains an independent pass. Per-object CRC/SHA classification is retained on the error path. CRC32 will use a verified reflected nibble-table update.
 
-Machine-readable detail is in `evidence/generated/p10_1r_ack_tuning_failure_diagnosis.json`.
+No RTL protocol, safety path, duty schedule, `GLOBAL_PERMIT`, pinmap, or lane mapping change is justified by this diagnosis. New firmware artifacts and fresh direct hardware acceptance remain mandatory.
+
+No hardware action was executed while producing this diagnosis.

@@ -1,71 +1,103 @@
 {
-  "artifact_bundle_source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
-  "conclusion": "The artifact bundle is not eligible for P10.1R performance acceptance. The first ACK-tuning direction remained healthy and made continuous progress, but its directly observed maximum L1 payload rate was below 4,000,000 bit/s. Increasing only the orchestration timeout would hide the failure rather than remediate it.",
-  "diagnosis": {
-    "ack_density_target_met_during_observed_interval": true,
-    "artifact_or_firmware_fault_observed": false,
-    "complete_frame_high_cycles": 8928,
-    "complete_frame_reservation_start_threshold_cycles": 2592,
-    "exact_target_high_cycles_per_1ms": 11520,
-    "model_assumed_frame_start_spacing_us": 775.0,
-    "primary_cause": "The offline model assumes average-duty frame spacing, while the implemented whole-frame admission gate requires all 8,928 high cycles to be free at frame start. That conservative reservation drains most of the preceding frame from the 1 ms history before admitting the next frame, approximately halving two-lane payload throughput.",
-    "runner_contract_issue": "The 16 MiB command cannot complete inside the required 30-second case even at the offline modeled 4,427,415.552 bit/s: it needs 30.315 seconds. This is a separate test-size defect, but it is not the cause of the measured sub-4-Mbit/s hardware rate.",
-    "safe_remediation_direction": "Replace the full-frame-at-start reservation with a provably safe inter-frame admission schedule that preserves the exact sliding duty accountant and never permits mid-frame target throttling; regenerate the performance model and all immutable hardware artifacts before another acceptance run.",
-    "timeout_only_change_is_sufficient": false
-  },
-  "generated_at_utc": "2026-08-02T00:57:42Z",
-  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
-  "immutable_inputs": {
-    "fixed_bitstream_sha256": "7e24b993d03f61995cce5083c9a5ff04cd6138734b2d768d0eb402d98ff329d0",
-    "fixed_elf_sha256": "976f4e0d45ef1718bbe455d8f2fc7944eee7e40d553a492df488cecfb8c28c92",
-    "fixed_jtag_serial": "210249855178",
-    "rotating_bitstream_sha256": "0c6533e98f6ddff358905b7086e0d4b0b652f52cd4525a55fc7c437c753e5545",
-    "rotating_elf_sha256": "aa5fd29b87c0b359f5ae772650d26d8ccf04f6a6b7a129443135397429dd50ac",
-    "rotating_jtag_serial": "210512180081"
-  },
-  "observations": {
-    "ack_count_delta": 1039,
-    "accepted_data_frame_delta": 30674,
-    "capture_interval_ms": 25058,
-    "data_frames_per_ack": 29.52261790182868,
-    "last_capture_maximum_l1_payload_bytes": 9099480,
-    "last_capture_transfer_fraction": 0.5423712730407715,
-    "projected_16mib_completion_seconds_from_last_capture": 55.3126640203616,
-    "steady_state_maximum_l1_payload_bps": 2418861.202011334,
-    "target_application_bps": 4000000,
-    "telemetry_has_zero_admission_or_cross_lane_violations": true
-  },
-  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
   "schema_version": 1,
-  "shutdown": {
-    "all_shutdown_records_pass": true,
-    "record_count": 12,
-    "shutdown_exit": 0,
-    "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS",
-    "tfdu_shutdown_programmed": 1
+  "test_id": "P10_1R-ACK-TUNING-FAILURE-DIAGNOSIS",
+  "status": "FAIL_DIAGNOSED",
+  "generated_at_utc": "2026-08-02T06:00:00Z",
+  "goal": {
+    "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
+    "sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
   },
-  "source_evidence": {
-    "ack_stage_summary": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/stage_summary.json",
-    "ack_stage_summary_sha256": "32c9e0a212df38255480861b75053a58866ea0fbf9b579bf1178ad893217beae",
-    "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/final/orchestrator_result.json",
-    "orchestrator_result_sha256": "46eadaeaae2564a3f050b145d9e737401a1cf73ee08bff47ad8482c175b08e6f",
-    "telemetry": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/dumps/p10_1r_telemetry.psv",
-    "telemetry_sha256": "7e36495f6bb54fd7af185f24abd7c842b881dae2806379efe53dbfd7dfced50b",
-    "xsdb_result": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/xsdb.result.txt",
-    "xsdb_result_sha256": "70f2a4a45d2499cd6ad6a464fbe9090d024643253e8d7e31ba895612625df5a9"
+  "failed_run": {
+    "run_id": "p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f",
+    "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+    "immutable_failure_checkpoint": "fa4e0237c3d30035a7db5efe7437965e76eec0ce",
+    "stage": "ack_tuning",
+    "case": "ack32_burst32_f2r",
+    "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f/ack_tuning/stage_summary.json",
+    "raw_summary_sha256": "f78a8f8e7234ce3aa6292f72340e47086e8c822c196978017df6af930d277c89",
+    "artifact_freeze": "evidence/generated/p10_1r_artifact_freeze.json",
+    "artifact_freeze_sha256": "d38977826812b6fa5b0036f642cb01fd41e283315e9deaed3852f67643764950"
   },
-  "stage_results": {
-    "ack_tuning": "FAIL",
-    "crosstalk": "PASS",
-    "echo_tail": "PASS",
-    "formal_30min": "NOT_RUN",
-    "performance": "NOT_RUN",
-    "phy_sanity": "PASS",
-    "preflight": "PASS",
-    "streaming_64m": "NOT_RUN"
+  "direct_observations": {
+    "requested_and_committed_bytes": 15000000,
+    "application_goodput_bps": 3658361.0601295065,
+    "fixed_sender_pl_elapsed_seconds": 32.801574640625,
+    "rotating_receiver_pl_elapsed_seconds": 32.9480686875,
+    "ps_timer_frequency_hz": 333333343,
+    "fixed_sender_payload_prepare_ticks": 142502078,
+    "fixed_sender_payload_prepare_seconds": 0.42750622160231955,
+    "rotating_receiver_integrity_verify_ticks": 1306486402,
+    "rotating_receiver_integrity_verify_seconds": 3.9194590923356865,
+    "serial_cpu_work_seconds": 4.346965313938006,
+    "elapsed_excess_over_30_seconds": 2.801574640624999,
+    "elapsed_after_subtracting_measured_serial_cpu_seconds": 28.45460932668699,
+    "transport_rate_after_measured_serial_cpu_reconciliation_bps": 4217242.929687827,
+    "data_frames": 60729,
+    "ack_frames": 2060,
+    "data_frames_per_ack": 29.480097087378642,
+    "inter_object_signal_ticks": 5155881,
+    "inter_object_signal_seconds": 0.015467642551438366,
+    "maximum_exact_duty_high_cycles": [11504, 11504, 0, 0],
+    "maximum_continuous_txd_high_cycles": [16, 16, 0, 0],
+    "crc_bad_count": 0,
+    "sha_mismatch_count": 0,
+    "integrity_error_count": 0,
+    "partial_commit_count": 0,
+    "duplicate_commit_count": 0,
+    "stale_commit_count": 0,
+    "descriptor_leak_count": 0,
+    "double_completion_count": 0,
+    "retry_exhausted_count": 0,
+    "atomic_commit_count": 1,
+    "shutdown_after": "PASS"
   },
-  "status": "FAIL_WITH_EVIDENCE",
-  "test_id": "P10_1R-HW-ACK_TUNING-DIAGNOSIS"
+  "source_audit": {
+    "active_runtime": "software/ps_driver/p10_1_runtime_extension.inc",
+    "input_stream_integrity": "Input CRC32 and SHA256 are already updated once while each transmit slot is prepared.",
+    "receiver_clean_path_full_buffer_passes": [
+      "per-object input CRC32",
+      "per-object output CRC32",
+      "per-object input SHA256",
+      "per-object output SHA256",
+      "byte-for-byte mismatch scan",
+      "incremental stream output CRC32",
+      "incremental stream output SHA256"
+    ],
+    "crc_implementation": "The frozen firmware used the correct but bit-at-a-time reflected CRC32 update (eight inner iterations per byte).",
+    "integrity_semantics_required": [
+      "direct byte-for-byte object equality with first mismatch offset",
+      "incremental whole-stream CRC32 equality",
+      "incremental whole-stream SHA256 equality",
+      "one atomic commit only after all checks pass"
+    ]
+  },
+  "reconciliation": {
+    "formula": "120000000 / (32.801574640625 - 142502078/333333343 - 1306486402/333333343)",
+    "result_bps": 4217242.929687827,
+    "required_bps": 4000000,
+    "headroom_bps": 217242.929687827,
+    "conclusion": "The physical two-lane transport clears the required rate after removal of directly measured serial CPU preparation and redundant receiver verification time. The failed 30-second gate is dominated by redundant serialized integrity passes, not by ACK ratio, inter-object optical handshakes, integrity faults, or duty throttling."
+  },
+  "remediation_contract": {
+    "classification": "SERIAL_REDUNDANT_CPU_INTEGRITY_VERIFICATION",
+    "keep": [
+      "incremental input CRC32 and SHA256",
+      "incremental output CRC32 and SHA256",
+      "byte-for-byte comparison and first mismatch offset",
+      "atomic commit and all safety/error counters"
+    ],
+    "change": [
+      "fuse clean-path byte comparison with incremental output CRC32",
+      "perform only one incremental output SHA256 pass",
+      "perform redundant per-object CRC32/SHA256 classification only on the error path",
+      "replace bit-at-a-time CRC32 with a verified reflected nibble-table implementation"
+    ],
+    "forbid": [
+      "weakening or removing CRC32, SHA256, byte comparison, or atomic commit",
+      "changing RTL safety, duty schedule, GLOBAL_PERMIT, pinmap, lane mapping, or ACK protocol based on this diagnosis",
+      "promoting this diagnosis or its reconciled rate to hardware PASS"
+    ],
+    "requires_new_firmware_artifacts_and_hardware_acceptance": true
+  },
+  "hardware_actions_executed_during_diagnosis": false
 }
