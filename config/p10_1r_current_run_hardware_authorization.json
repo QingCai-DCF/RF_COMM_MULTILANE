@@ -87,6 +87,7 @@
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "07bee67621567e843af9240f2d7200cab03ee652",
+  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "formal_30min"
   ],
@@ -103,11 +104,18 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "consumed": false,
-  "current_run_hardware_authorization": true,
+  "campaign_disposition": "ACCEPTANCE_COMPLETE",
+  "campaign_status": "PASS",
+  "consumed": true,
+  "consumed_at_utc": "2026-08-02T14:20:07+00:00",
+  "consumed_by_run_id": "p10_1r_20260802T134755Z_af46d3b9_5b594148_67ce5cd8",
+  "current_run_hardware_authorization": false,
+  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260802T134755Z_af46d3b9_5b594148_67ce5cd8/final/orchestrator_result.json",
+  "final_evidence_sha256": "e136f226f8c8893ee64718be084b44e4e5e073a77ff9ed03ad62e55154339bda",
   "generated_at_utc": "2026-08-02T13:47:56+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -217,6 +225,7 @@
   ],
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
+  "next_required_action": "freeze the final evidence checkpoint and annotated PASS tag",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
@@ -259,6 +268,8 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
   "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -291,7 +302,7 @@
       ]
     }
   ],
-  "status": "AUTHORIZED",
+  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"
