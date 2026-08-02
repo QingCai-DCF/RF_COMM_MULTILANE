@@ -80,6 +80,18 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         })
         self.assertTrue(all(item[4] == "1000" for item in items))
 
+    def test_echo_failure_captures_terminal_state_before_shutdown(self) -> None:
+        tcl = TCL_PATH.read_text(encoding="utf-8")
+        self.assertIn("P10_1R_ECHO_SWEEP_FAIL=", tcl)
+        self.assertIn("fixed_status=0x%08X", tcl)
+        self.assertIn("rotating_status=0x%08X", tcl)
+        self.assertIn("fixed_phy_status=0x%08X", tcl)
+        self.assertIn("rotating_phy_status=0x%08X", tcl)
+        self.assertIn("fixed_error_detail=0x%08X", tcl)
+        self.assertIn("rotating_error_detail=0x%08X", tcl)
+        self.assertIn("p10_read32 fixed 0x000201CC", tcl)
+        self.assertIn("p10_read32 rotating 0x000201CC", tcl)
+
     def test_streaming_plan_has_goal_recovery_matrix(self) -> None:
         items = self.runner.build_plans()["streaming_64m"]
         cases = [item for item in items if isinstance(item, self.runner.Case)]

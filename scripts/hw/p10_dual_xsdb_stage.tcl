@@ -946,6 +946,24 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
     set rotating_status [p10_read32 rotating 0x00020020]
     if {$fixed_status != 0 || $rotating_status != 0 ||
         [lindex $terminal 0] != 4 || [lindex $terminal 1] != 4} {
+      set fixed_response [p10_read32 fixed 0x0002001C]
+      set rotating_response [p10_read32 rotating 0x0002001C]
+      set fixed_pl_status [p10_read32 fixed 0x43C0071C]
+      set rotating_pl_status [p10_read32 rotating 0x43C0071C]
+      set fixed_phy_status [p10_read32 fixed 0x43C00720]
+      set rotating_phy_status [p10_read32 rotating 0x43C00720]
+      # p9_mailbox_t.last_error_detail is word 115 in the immutable
+      # schema-5 mailbox.  Capture it before endpoint shutdown destroys the
+      # diagnostic state.  This marker changes evidence detail only; the
+      # command, timing, lane selection, and fail-closed behavior are intact.
+      set fixed_error_detail [p10_read32 fixed 0x000201CC]
+      set rotating_error_detail [p10_read32 rotating 0x000201CC]
+      p10_say [format "P10_1R_ECHO_SWEEP_FAIL=%s:module=%s,sample=%d,sequence=%d,sender=%s,receiver=%s,fixed_status=0x%08X,rotating_status=0x%08X,fixed_state=%d,rotating_state=%d,fixed_response=%d,rotating_response=%d,fixed_pl_status=0x%08X,rotating_pl_status=0x%08X,fixed_phy_status=0x%08X,rotating_phy_status=0x%08X,fixed_error_detail=0x%08X,rotating_error_detail=0x%08X" \
+          $label $module $sample $sequence $sender $receiver \
+          $fixed_status $rotating_status [lindex $terminal 0] \
+          [lindex $terminal 1] $fixed_response $rotating_response \
+          $fixed_pl_status $rotating_pl_status $fixed_phy_status \
+          $rotating_phy_status $fixed_error_detail $rotating_error_detail]
       close $handle
       error "P10.1R echo sweep command failed $label sample=$sample"
     }
