@@ -118,9 +118,9 @@
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
-  "last_hardware_authorization_id": "P10_1-HARDWARE-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_run_id": "p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f",
-  "last_hardware_stage": "P10_1",
+  "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
+  "last_hardware_run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
+  "last_hardware_stage": "P10_1R",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
   "last_verified_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
@@ -403,10 +403,22 @@
       "path": "evidence/generated/p10_1r_echo_guard_selection.json",
       "sha256": "91219cccda83a7edb68ffc26842c1a081583fa4f68005dd1c95344a7de342fe0"
     },
-    "hardware_actions_executed": false,
+    "hardware_actions_executed": true,
+    "hardware_blocker": {
+      "current_f1_to_r1": "FAIL_NO_REMOTE_RAW_ACTIVITY",
+      "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000",
+      "path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
+      "sha256": "98f34da0aec1dcc5bceaf4fd8dcd59d2329c45de9c0e3456e444554772df66c7",
+      "status": "BLOCKED_MANUAL_HARDWARE"
+    },
+    "hardware_movement": false,
+    "last_hardware_run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
+    "last_shutdown_fixed": "PASS",
+    "last_shutdown_rotating": "PASS",
     "network_used": false,
-    "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+    "new_artifact_hardware_validation": "PARTIAL_FAIL_CURRENT_F1_TO_R1_DIRECTIONAL_CONNECTIVITY",
     "p11_started": false,
+    "rewiring_executed": false,
     "selected_guard_cycles": {
       "F0": 4096,
       "F1": 4096,
@@ -415,9 +427,9 @@
     },
     "source_artifact_freeze": "PASS",
     "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
-    "status": "OFFLINE_READY_HARDWARE_PENDING"
+    "status": "PARTIAL"
   },
-  "p10_1r_status": "OFFLINE_READY_HARDWARE_PENDING",
+  "p10_1r_status": "PARTIAL",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -790,7 +802,7 @@
   "schema_version": 1,
   "stage_status": {
     "P0_BOOTSTRAP": "PASS",
-    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "IN_PROGRESS",
+    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "PARTIAL",
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS",
     "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE": "FAIL",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
@@ -808,7 +820,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-1R-REMEDIATION-IN-PROGRESS-1",
-  "two_lane_speed_stability": "PENDING_DIRECT_HARDWARE_REACCEPTANCE",
+  "state_revision": "P10-1R-MANUAL-HARDWARE-BLOCKER-1",
+  "two_lane_speed_stability": "FAIL_CURRENT_F1_TO_R1_DIRECTIONAL_CONNECTIVITY",
   "z7020_target_status": "PENDING_Z7020_HW"
 }

@@ -812,8 +812,28 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             and state.get("p10_1_hardware_status")
             in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
         )
-        expected_last_hardware = (
-            {
+        p10_1r_campaign = state.get("p10_1r_remediation", {})
+        p10_1r_is_latest_hardware = (
+            isinstance(p10_1r_campaign, dict)
+            and p10_1r_campaign.get("hardware_actions_executed") is True
+            and state.get("p10_1r_status")
+            in {"IN_PROGRESS", "AUTHORIZED", "PARTIAL", "FAIL"}
+        )
+        if p10_1r_is_latest_hardware:
+            expected_last_hardware = {
+                "last_hardware_stage": "P10_1R",
+                "last_hardware_run_id": p10_1r_campaign.get(
+                    "last_hardware_run_id"
+                ),
+                "last_shutdown_fixed": p10_1r_campaign.get(
+                    "last_shutdown_fixed"
+                ),
+                "last_shutdown_rotating": p10_1r_campaign.get(
+                    "last_shutdown_rotating"
+                ),
+            }
+        elif p10_1_is_latest_hardware:
+            expected_last_hardware = {
                 "last_hardware_stage": "P10_1",
                 "last_hardware_run_id": p10_1_campaign.get("run_id"),
                 "last_shutdown_fixed": p10_1_campaign.get("shutdown_fixed"),
@@ -821,14 +841,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                     "shutdown_rotating"
                 ),
             }
-            if p10_1_is_latest_hardware
-            else {
+        else:
+            expected_last_hardware = {
                 "last_hardware_stage": "P10",
                 "last_hardware_run_id": "p10_formal_20260730T181535Z_03",
                 "last_shutdown_fixed": "PASS",
                 "last_shutdown_rotating": "PASS",
             }
-        )
         for key, value in expected_last_hardware.items():
             if state.get(key) != value:
                 errors.append(
@@ -981,6 +1000,52 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                         errors.append(f"{label} path/hash mismatch")
                 except (TypeError, ValueError) as exc:
                     errors.append(f"{label} path invalid: {exc}")
+
+    p10_1r_status = state.get("p10_1r_status")
+    if p10_1r_status not in {
+        "IN_PROGRESS",
+        "OFFLINE_READY_HARDWARE_PENDING",
+        "AUTHORIZED",
+        "PARTIAL",
+        "FAIL",
+        "PASS",
+    }:
+        errors.append("p10_1r_status has an invalid scoped campaign state")
+    if p10_1r_status in {"PARTIAL", "FAIL", "PASS"}:
+        remediation = state.get("p10_1r_remediation", {})
+        if not isinstance(remediation, dict):
+            errors.append("p10_1r_remediation must be a mapping")
+        else:
+            if remediation.get("status") != p10_1r_status:
+                errors.append(
+                    "p10_1r_remediation.status must match p10_1r_status"
+                )
+            if remediation.get("hardware_actions_executed") is not True:
+                errors.append(
+                    "P10.1R terminal hardware state requires hardware-action evidence"
+                )
+            if remediation.get("current_run_hardware_authorization") is not False:
+                errors.append(
+                    "P10.1R terminal hardware state requires current authorization false"
+                )
+            for key in ("network_used", "hardware_movement", "rewiring_executed"):
+                if remediation.get(key) is not False:
+                    errors.append(f"p10_1r_remediation.{key} must be false")
+            for key in ("last_shutdown_fixed", "last_shutdown_rotating"):
+                if remediation.get(key) != "PASS":
+                    errors.append(f"p10_1r_remediation.{key} must be PASS")
+            if p10_1r_status in {"PARTIAL", "FAIL"}:
+                blocker = remediation.get("hardware_blocker", {})
+                errors.extend(
+                    hash_record_errors(blocker, root, "P10.1R hardware blocker")
+                )
+                if not isinstance(blocker, dict) or blocker.get("status") != (
+                    "BLOCKED_MANUAL_HARDWARE"
+                ):
+                    errors.append(
+                        "p10_1r_remediation.hardware_blocker.status must be "
+                        "BLOCKED_MANUAL_HARDWARE"
+                    )
 
     commit = str(state.get("last_verified_commit", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
@@ -1434,6 +1499,24 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- Shutdown fixed / rotating: `{campaign.get('shutdown_fixed', 'PENDING')}` / `{campaign.get('shutdown_rotating', 'PENDING')}`",
             f"- Hardware actions / network / movement: `{str(campaign.get('hardware_actions_executed', False)).lower()}` / `{str(campaign.get('network_used', False)).lower()}` / `{str(campaign.get('hardware_movement', False)).lower()}`",
             "- Scope remains stationary dual AX7020, two lanes, no Ethernet and no movement; it does not promote P11, 8x32, 600 rpm, physical GLOBAL_PERMIT, external duty, or product-final acceptance.",
+        ]
+    if isinstance(state.get("p10_1r_remediation"), dict):
+        remediation = state["p10_1r_remediation"]
+        blocker = remediation.get("hardware_blocker", {})
+        lines += [
+            "",
+            "## P10.1R two-lane speed and stability remediation",
+            "",
+            f"- Status: `{state.get('p10_1r_status')}`",
+            f"- Artifact source: `{remediation.get('source_commit')}`",
+            f"- Artifact freeze: `{remediation.get('artifact_freeze_path')}`",
+            f"- Latest run: `{remediation.get('last_hardware_run_id', 'NOT_RUN')}`",
+            f"- Current lane1 F1→R1 / R1→F1: `{blocker.get('current_f1_to_r1', 'PENDING')}` / `{blocker.get('current_r1_to_f1', 'PENDING')}`",
+            f"- Hardware blocker: `{blocker.get('status', 'NONE')}` (`{blocker.get('path', 'NONE')}`)",
+            f"- Shutdown fixed / rotating: `{remediation.get('last_shutdown_fixed', 'PENDING')}` / `{remediation.get('last_shutdown_rotating', 'PENDING')}`",
+            f"- Hardware actions / network / movement / rewiring: `{str(remediation.get('hardware_actions_executed', False)).lower()}` / `{str(remediation.get('network_used', False)).lower()}` / `{str(remediation.get('hardware_movement', False)).lower()}` / `{str(remediation.get('rewiring_executed', False)).lower()}`",
+            f"- Current-run hardware authorization: `{str(remediation.get('current_run_hardware_authorization', False)).lower()}`",
+            "- This partial result does not create a P10.1R PASS and does not promote P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance.",
         ]
     lines += [
         "",

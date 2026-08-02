@@ -15,14 +15,14 @@ P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
 P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
 P10_1_OFFLINE_STATUS: PASS
 P10_1_HARDWARE_STATUS: FAIL
-P10_1R_STATUS: OFFLINE_READY_HARDWARE_PENDING
+P10_1R_STATUS: PARTIAL
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
 CURRENT_PROGRAM_STAGE: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
-LAST_HARDWARE_STAGE: P10_1
-LAST_HARDWARE_RUN_ID: p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f
+LAST_HARDWARE_STAGE: P10_1R
+LAST_HARDWARE_RUN_ID: p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -34,7 +34,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | Stage | Status |
 |---|---|
 | `P0_BOOTSTRAP` | `PASS` |
-| `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `IN_PROGRESS` |
+| `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `PARTIAL` |
 | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `PASS` |
 | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `FAIL` |
 | `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
@@ -157,6 +157,19 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Shutdown fixed / rotating: `PASS` / `PASS`
 - Hardware actions / network / movement: `true` / `false` / `false`
 - Scope remains stationary dual AX7020, two lanes, no Ethernet and no movement; it does not promote P11, 8x32, 600 rpm, physical GLOBAL_PERMIT, external duty, or product-final acceptance.
+
+## P10.1R two-lane speed and stability remediation
+
+- Status: `PARTIAL`
+- Artifact source: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
+- Artifact freeze: `evidence/generated/p10_1r_artifact_freeze.json`
+- Latest run: `p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d`
+- Current lane1 F1→R1 / R1→F1: `FAIL_NO_REMOTE_RAW_ACTIVITY` / `PASS_RAW_DIRECTIONAL_1000_OF_1000`
+- Hardware blocker: `BLOCKED_MANUAL_HARDWARE` (`evidence/generated/p10_1r_lane1_directional_blocker.json`)
+- Shutdown fixed / rotating: `PASS` / `PASS`
+- Hardware actions / network / movement / rewiring: `true` / `false` / `false` / `false`
+- Current-run hardware authorization: `false`
+- This partial result does not create a P10.1R PASS and does not promote P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance.
 
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 

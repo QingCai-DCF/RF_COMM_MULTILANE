@@ -63,20 +63,28 @@ class P8AConsistencyTests(unittest.TestCase):
         self.assertTrue(any("p10_acceptance.network_used" in error for error in errors))
         self.assertTrue(any("PRODUCT_FINAL" in error for error in errors))
 
-    def test_latest_p10_1_hardware_run_owns_last_hardware_fields(self) -> None:
-        self.assertEqual("P10_1", self.state["last_hardware_stage"])
+    def test_latest_p10_1r_hardware_run_owns_last_hardware_fields(self) -> None:
+        self.assertEqual("P10_1R", self.state["last_hardware_stage"])
         self.assertEqual(
-            self.state["p10_1_hardware_campaign"]["run_id"],
+            self.state["p10_1r_remediation"]["last_hardware_run_id"],
             self.state["last_hardware_run_id"],
         )
         state = copy.deepcopy(self.state)
-        state["last_hardware_stage"] = "P10"
+        state["last_hardware_stage"] = "P10_1"
         errors = validate_state(state, ROOT)
         self.assertTrue(
             any(
-                "last_hardware_stage must be P10_1" in error
+                "last_hardware_stage must be P10_1R" in error
                 for error in errors
             )
+        )
+
+    def test_p10_1r_blocker_hash_is_fail_closed(self) -> None:
+        state = copy.deepcopy(self.state)
+        state["p10_1r_remediation"]["hardware_blocker"]["sha256"] = "0" * 64
+        errors = validate_state(state, ROOT)
+        self.assertTrue(
+            any("P10.1R hardware blocker: SHA256 mismatch" in error for error in errors)
         )
 
     def test_state_requires_legacy_ab_l1_record(self) -> None:
