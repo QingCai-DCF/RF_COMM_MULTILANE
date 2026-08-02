@@ -13,6 +13,11 @@ typedef struct p9_sha256_context {
 
 uint32_t p9_crc32_begin(void);
 uint32_t p9_crc32_update(uint32_t state, const uint8_t *data, size_t size);
+uint32_t p9_crc32_update_compare(uint32_t state,
+                                 const uint8_t *expected,
+                                 const uint8_t *observed,
+                                 size_t size,
+                                 size_t *first_mismatch);
 uint32_t p9_crc32_end(uint32_t state);
 uint32_t p9_crc32(const uint8_t *data, size_t size);
 void p9_sha256_init(p9_sha256_context_t *context);

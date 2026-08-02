@@ -87,6 +87,23 @@ class P101RModelTests(unittest.TestCase):
         self.assertIn("next_object_prestarted", active)
         self.assertIn("result->host_command_count = 1U", active)
 
+    def test_runtime_integrity_clean_path_has_no_redundant_digests(self) -> None:
+        runtime = (ROOT / "software/ps_driver/p10_1_runtime_extension.inc").read_text(
+            encoding="utf-8"
+        )
+        active = runtime.split("#endif", 1)[1]
+        self.assertIn("p9_crc32_update_compare(output_crc_state", active)
+        self.assertEqual(active.count("p9_sha256_update(\n          &output_sha_context"), 1)
+        self.assertIn("object_mismatch != SIZE_MAX", active)
+        self.assertIn("result->first_mismatch_offset", active)
+        clean_path = active.split("if (object_mismatch != SIZE_MAX)", 1)[0]
+        self.assertNotIn("object_input_crc", clean_path)
+        self.assertNotIn("object_output_crc", clean_path)
+        self.assertNotIn("object_input_sha", clean_path)
+        self.assertNotIn("object_output_sha", clean_path)
+        self.assertIn("result->input_crc32 != result->output_crc32", active)
+        self.assertIn("memcmp(input_sha, output_sha", active)
+
     def test_admission_is_triggered_from_final_physical_txd(self) -> None:
         rtl = (ROOT / "rtl/p10_1r_rx_admission.sv").read_text(encoding="utf-8")
         self.assertIn("final_physical_txd_i", rtl)

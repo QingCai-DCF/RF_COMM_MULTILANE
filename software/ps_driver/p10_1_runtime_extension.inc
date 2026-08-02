@@ -1332,43 +1332,46 @@ static int p10_1_command_autonomous_stream(
     }
 
     if (local_rx != 0U) {
-      uint32_t object_input_crc;
-      uint32_t object_output_crc;
-      uint8_t object_input_sha[32];
-      uint8_t object_output_sha[32];
+      size_t object_mismatch;
       uint64_t phase_start = p9_time_now();
 
       p10_1_publish_state(result, P10_1_RUNTIME_VERIFYING);
       p9_cache_invalidate((UINTPTR)slot->rx_buffer, slot->bytes);
-      object_input_crc = p9_crc32(slot->tx_buffer, slot->bytes);
-      object_output_crc = p9_crc32(slot->rx_buffer, slot->bytes);
-      p9_sha256(slot->tx_buffer, slot->bytes, object_input_sha);
-      p9_sha256(slot->rx_buffer, slot->bytes, object_output_sha);
-      if (object_input_crc != object_output_crc) {
-        result->crc_bad_count++;
-        status = P10_1_RUNTIME_STATUS_INTEGRITY;
-      }
-      if (memcmp(object_input_sha, object_output_sha,
-                 sizeof(object_input_sha)) != 0) {
-        result->sha_mismatch_count++;
-        status = P10_1_RUNTIME_STATUS_INTEGRITY;
-      }
-      for (uint32_t index = 0U;
-           index < slot->bytes &&
-               status == P10_1_RUNTIME_STATUS_OK; ++index) {
-        if (slot->tx_buffer[index] != slot->rx_buffer[index]) {
-          result->first_mismatch_offset =
-              ordinal * result->object_bytes + index;
-          result->integrity_error_count++;
-          status = P10_1_RUNTIME_STATUS_INTEGRITY;
-        }
-      }
-      if (status != P10_1_RUNTIME_STATUS_OK)
-        goto stream_fail_v2;
+      /*
+       * Preserve direct byte equality while folding that scan into the one
+       * required incremental output CRC pass.  Input CRC/SHA was already
+       * accumulated when the slot was prepared; output SHA remains an
+       * independent incremental pass.  Redundant per-segment digests run only
+       * on the error path so clean streaming is not serialized behind seven
+       * complete memory passes.
+       */
       output_crc_state =
-          p9_crc32_update(output_crc_state, slot->rx_buffer, slot->bytes);
+          p9_crc32_update_compare(output_crc_state,
+                                  slot->tx_buffer, slot->rx_buffer,
+                                  slot->bytes, &object_mismatch);
       p9_sha256_update(
           &output_sha_context, slot->rx_buffer, slot->bytes);
+      if (object_mismatch != SIZE_MAX) {
+        uint32_t object_input_crc =
+            p9_crc32(slot->tx_buffer, slot->bytes);
+        uint32_t object_output_crc =
+            p9_crc32(slot->rx_buffer, slot->bytes);
+        uint8_t object_input_sha[32];
+        uint8_t object_output_sha[32];
+
+        p9_sha256(slot->tx_buffer, slot->bytes, object_input_sha);
+        p9_sha256(slot->rx_buffer, slot->bytes, object_output_sha);
+        if (object_input_crc != object_output_crc)
+          result->crc_bad_count++;
+        if (memcmp(object_input_sha, object_output_sha,
+                   sizeof(object_input_sha)) != 0)
+          result->sha_mismatch_count++;
+        result->first_mismatch_offset =
+            ordinal * result->object_bytes + (uint32_t)object_mismatch;
+        result->integrity_error_count++;
+        status = P10_1_RUNTIME_STATUS_INTEGRITY;
+        goto stream_fail_v2;
+      }
       verify_ticks += p9_time_now() - phase_start;
     }
     slot->valid = 0U;
@@ -1388,8 +1391,11 @@ static int p10_1_command_autonomous_stream(
     p9_sha256_final(&output_sha_context, output_sha);
     result->output_crc32 = p9_crc32_end(output_crc_state);
     p10_1_copy_digest_words(result->output_sha256, output_sha);
-    if (result->input_crc32 != result->output_crc32 ||
-        memcmp(input_sha, output_sha, sizeof(input_sha)) != 0) {
+    if (result->input_crc32 != result->output_crc32)
+      result->crc_bad_count++;
+    if (memcmp(input_sha, output_sha, sizeof(input_sha)) != 0)
+      result->sha_mismatch_count++;
+    if (result->crc_bad_count != 0U || result->sha_mismatch_count != 0U) {
       result->integrity_error_count++;
       status = P10_1_RUNTIME_STATUS_INTEGRITY;
       goto stream_fail_v2;

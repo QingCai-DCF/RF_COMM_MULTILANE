@@ -122,13 +122,43 @@ uint32_t p9_crc32_begin(void) {
   return UINT32_C(0xffffffff);
 }
 
+static uint32_t p9_crc32_update_byte(uint32_t crc, uint8_t value) {
+  static const uint32_t reflected_nibble[16] = {
+      UINT32_C(0x00000000), UINT32_C(0x1db71064),
+      UINT32_C(0x3b6e20c8), UINT32_C(0x26d930ac),
+      UINT32_C(0x76dc4190), UINT32_C(0x6b6b51f4),
+      UINT32_C(0x4db26158), UINT32_C(0x5005713c),
+      UINT32_C(0xedb88320), UINT32_C(0xf00f9344),
+      UINT32_C(0xd6d6a3e8), UINT32_C(0xcb61b38c),
+      UINT32_C(0x9b64c2b0), UINT32_C(0x86d3d2d4),
+      UINT32_C(0xa00ae278), UINT32_C(0xbdbdf21c)};
+
+  crc ^= value;
+  crc = (crc >> 4U) ^ reflected_nibble[crc & UINT32_C(0x0f)];
+  return (crc >> 4U) ^ reflected_nibble[crc & UINT32_C(0x0f)];
+}
+
 uint32_t p9_crc32_update(uint32_t state, const uint8_t *data, size_t size) {
   uint32_t crc = state;
+  for (size_t index = 0U; index < size; ++index)
+    crc = p9_crc32_update_byte(crc, data[index]);
+  return crc;
+}
+
+uint32_t p9_crc32_update_compare(uint32_t state,
+                                 const uint8_t *expected,
+                                 const uint8_t *observed,
+                                 size_t size,
+                                 size_t *first_mismatch) {
+  uint32_t crc = state;
+  size_t mismatch = SIZE_MAX;
+
   for (size_t index = 0U; index < size; ++index) {
-    crc ^= data[index];
-    for (uint32_t bit = 0U; bit < 8U; ++bit)
-      crc = (crc >> 1) ^ ((crc & 1U) ? UINT32_C(0xedb88320) : 0U);
+    if (mismatch == SIZE_MAX && expected[index] != observed[index])
+      mismatch = index;
+    crc = p9_crc32_update_byte(crc, observed[index]);
   }
+  *first_mismatch = mismatch;
   return crc;
 }
 
