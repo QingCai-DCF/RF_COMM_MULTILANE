@@ -1,19 +1,13 @@
 {
-  "errors": [
-    "XSDB PASS marker missing",
-    "exactly one final endpoint-shutdown row required",
-    "immutable plan case missing: ack32_burst32_r2f",
-    "ack32_burst32_r2f: application goodput below 4 Mbit/s",
-    "ack32_burst32_r2f: fewer than 24 data frames/ACK"
-  ],
-  "generated_at_utc": "2026-08-02T08:58:42+00:00",
+  "errors": [],
+  "generated_at_utc": "2026-08-02T13:41:14+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/ack_tuning/stage_summary.json",
-  "raw_summary_sha256": "49f5bf9846295be07891659dfe3eea919c75847cb3a219afd9965acca0e52a0f",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/ack_tuning/stage_summary.json",
+  "raw_summary_sha256": "5c5d6fcb7c5b6f2d294bda37c4872bdcf4604e96727b5fa7d86098fdcc0f6c48",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a",
+  "run_id": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
   "schema_version": 1,
   "semantics": {
     "best_ack_max_delay_cycles": 64000,
@@ -22,38 +16,38 @@
     "objects_in_flight": 4,
     "windows": [
       {
-        "ack_count": 2060,
-        "ack_wait_ratio": 0.9959578773022766,
+        "ack_count": 1946,
+        "ack_wait_ratio": 0.9948096441136147,
         "application_goodput_bps": 4000000.0,
         "case_count": 1,
         "committed_bytes": 15000000,
         "data_frames": 60729,
-        "data_frames_per_ack": 29.480097087378642,
+        "data_frames_per_ack": 31.207091469681398,
         "direction": 0,
         "duration_seconds": 30,
         "host_blocking_commands": 1,
-        "inter_object_ratio": 0.00013901406609543492,
+        "inter_object_ratio": 0.00017789232929379118,
         "label": "ack32_burst32_f2r",
         "lane_mask": 3
       },
       {
-        "ack_count": 0,
-        "ack_wait_ratio": 0.0,
-        "application_goodput_bps": 0.0,
-        "case_count": 0,
-        "committed_bytes": 0,
-        "data_frames": 0,
-        "data_frames_per_ack": 0.0,
+        "ack_count": 1946,
+        "ack_wait_ratio": 0.9948425334118978,
+        "application_goodput_bps": 4000000.0,
+        "case_count": 1,
+        "committed_bytes": 15000000,
+        "data_frames": 60729,
+        "data_frames_per_ack": 31.207091469681398,
         "direction": 1,
         "duration_seconds": 30,
-        "host_blocking_commands": 0,
-        "inter_object_ratio": 0.0,
+        "host_blocking_commands": 1,
+        "inter_object_ratio": 0.00017595085786669632,
         "label": "ack32_burst32_r2f",
         "lane_mask": 3
       }
     ]
   },
-  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
-  "status": "FAIL",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "status": "PASS",
   "test_id": "P10_1R-HW-ACK_TUNING"
 }

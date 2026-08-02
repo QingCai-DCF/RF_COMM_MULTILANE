@@ -1,13 +1,13 @@
 {
   "errors": [],
-  "generated_at_utc": "2026-08-02T08:58:42+00:00",
+  "generated_at_utc": "2026-08-02T13:41:14+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/echo_tail/stage_summary.json",
-  "raw_summary_sha256": "0e7e6a938901c31d94a366ece9e43ceccb8db3e68f3a6e04e5880b98943e7a62",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/echo_tail/stage_summary.json",
+  "raw_summary_sha256": "54759d144b67dfd2350d4a101740eaa9b9cd58dc0644444e1408f625def3d8fc",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a",
+  "run_id": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
   "schema_version": 1,
   "semantics": {
     "configured_guard_cycles": 4096,
@@ -30,7 +30,7 @@
         "same_module_raw_count": 1000,
         "samples": 1000,
         "sender_accepted_remote_count": 0,
-        "source": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/echo_tail/dumps/echo_F0.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/echo_tail/dumps/echo_F0.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -55,7 +55,7 @@
         "same_module_raw_count": 1000,
         "samples": 1000,
         "sender_accepted_remote_count": 0,
-        "source": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/echo_tail/dumps/echo_F1.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/echo_tail/dumps/echo_F1.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -80,7 +80,7 @@
         "same_module_raw_count": 1000,
         "samples": 1000,
         "sender_accepted_remote_count": 0,
-        "source": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/echo_tail/dumps/echo_R0.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/echo_tail/dumps/echo_R0.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -105,7 +105,7 @@
         "same_module_raw_count": 1000,
         "samples": 1000,
         "sender_accepted_remote_count": 0,
-        "source": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/echo_tail/dumps/echo_R1.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/echo_tail/dumps/echo_R1.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -122,7 +122,7 @@
     "same_module_raw_echo_count": 4000,
     "sample_count": 4000
   },
-  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "status": "PASS",
   "test_id": "P10_1R-HW-ECHO_TAIL"
 }

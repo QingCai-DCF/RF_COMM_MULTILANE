@@ -1,0 +1,43 @@
+{
+  "errors": [
+    "XSDB PASS marker missing",
+    "exactly one final endpoint-shutdown row required",
+    "formal windows missing: stationary_30min_formal_f2r,stationary_30min_formal_r2f,stationary_30min_warmup_f2r,stationary_30min_warmup_r2f",
+    "formal active window is not exactly 1800 seconds",
+    "stationary_30min_formal_f2r: formal goodput below 4 Mbit/s",
+    "stationary_30min_formal_r2f: formal goodput below 4 Mbit/s"
+  ],
+  "generated_at_utc": "2026-08-02T13:41:14+00:00",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "network_used": false,
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/formal_30min/stage_summary.json",
+  "raw_summary_sha256": "626d9b2c8290b4b12ff1086d309e4ece221b9aaf4b110c91e856ee4de4308a24",
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
+  "schema_version": 1,
+  "semantics": {
+    "elapsed_ms": 0,
+    "formal_windows": [
+      {
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "direction": 0,
+        "duration_seconds": 840,
+        "label": "stationary_30min_formal_f2r"
+      },
+      {
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "direction": 1,
+        "duration_seconds": 840,
+        "label": "stationary_30min_formal_r2f"
+      }
+    ]
+  },
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "status": "FAIL",
+  "test_id": "P10_1R-HW-FORMAL_30MIN"
+}

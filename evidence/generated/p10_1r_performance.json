@@ -1,0 +1,53 @@
+{
+  "errors": [],
+  "generated_at_utc": "2026-08-02T13:41:14+00:00",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "network_used": false,
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/sustained_performance/stage_summary.json",
+  "raw_summary_sha256": "4a5ab8bda16a29ce0a6232fdc9a0246b75a5cac39d7444b5da556fcfdda1822b",
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
+  "schema_version": 1,
+  "semantics": {
+    "best_ack_max_delay_cycles": 64000,
+    "best_ack_threshold": 32,
+    "best_burst_frames": 32,
+    "objects_in_flight": 4,
+    "windows": [
+      {
+        "ack_count": 21896,
+        "ack_wait_ratio": 0.9941163784390025,
+        "application_goodput_bps": 4501886.293333333,
+        "case_count": 14,
+        "committed_bytes": 168820736,
+        "data_frames": 683489,
+        "data_frames_per_ack": 31.215244793569603,
+        "direction": 0,
+        "duration_seconds": 300,
+        "host_blocking_commands": 14,
+        "inter_object_ratio": 0.0009559007236611735,
+        "label": "sustained_300s_f2r",
+        "lane_mask": 3
+      },
+      {
+        "ack_count": 21896,
+        "ack_wait_ratio": 0.994136996591843,
+        "application_goodput_bps": 4501886.293333333,
+        "case_count": 14,
+        "committed_bytes": 168820736,
+        "data_frames": 683489,
+        "data_frames_per_ack": 31.215244793569603,
+        "direction": 1,
+        "duration_seconds": 300,
+        "host_blocking_commands": 14,
+        "inter_object_ratio": 0.0009561885930730002,
+        "label": "sustained_300s_r2f",
+        "lane_mask": 3
+      }
+    ]
+  },
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "status": "PASS",
+  "test_id": "P10_1R-HW-PERFORMANCE"
+}

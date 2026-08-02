@@ -1,0 +1,100 @@
+{
+  "details": [],
+  "errors": [
+    "XSDB PASS marker missing",
+    "exactly one final endpoint-shutdown row required",
+    "formal windows missing: stationary_30min_formal_f2r,stationary_30min_formal_r2f,stationary_30min_warmup_f2r,stationary_30min_warmup_r2f",
+    "formal active window is not exactly 1800 seconds",
+    "stationary_30min_formal_f2r: formal goodput below 4 Mbit/s",
+    "stationary_30min_formal_r2f: formal goodput below 4 Mbit/s"
+  ],
+  "generated_at_utc": "2026-08-02T13:40:50+00:00",
+  "markers": {
+    "P10_1_FORMAL_START_MS": "1785678050320",
+    "P10_CANDIDATE_PROGRAMMED_FIXED": "1",
+    "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
+    "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+    "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/formal_30min/dumps/P10_1R-FORMAL_30MIN_ready.fixed.bin",
+    "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/formal_30min/dumps/P10_1R-FORMAL_30MIN_ready.rotating.bin",
+    "P10_PS7_INITIALIZED_FIXED": "1",
+    "P10_PS7_INITIALIZED_ROTATING": "1",
+    "P10_PS_ELF_DOWNLOADED_FIXED": "1",
+    "P10_PS_ELF_DOWNLOADED_ROTATING": "1",
+    "P10_SAFE_BOOT": "PASS",
+    "P10_SAFE_STATE_FIXED_PREBOOT": "id:0x5031305A,build:0x50325346,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_FIXED_SAFE_BOOT": "id:0x5031305A,build:0x50325346,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_PREBOOT": "id:0x5031305A,build:0x50325352,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_SAFE_BOOT": "id:0x5031305A,build:0x50325352,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SERVICE_READY_FIXED": "initial_boot",
+    "P10_SERVICE_READY_ROTATING": "initial_boot",
+    "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+    "P10_XSDB_EXPECTED_BUILD_FIXED": "0x50325346",
+    "P10_XSDB_EXPECTED_BUILD_ROTATING": "0x50325352",
+    "P10_XSDB_FIXED_SERIAL": "210249855178",
+    "P10_XSDB_FIXED_TARGETS": "APU:5,CPU0:6,FPGA:8",
+    "P10_XSDB_IDENTITY": "PASS",
+    "P10_XSDB_ROTATING_SERIAL": "210512180081",
+    "P10_XSDB_ROTATING_TARGETS": "APU:1,CPU0:2,FPGA:4",
+    "P10_XSDB_RUN_ID": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
+    "P10_XSDB_STAGE": "P10_1R-FORMAL_30MIN",
+    "P10_XSDB_STAGE_ERROR": "invalid P10.1 bounded window",
+    "P10_XSDB_STAGE_RESULT": "FAIL"
+  },
+  "observation_count": 0,
+  "process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\scripts\\hw\\p10_dual_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c\\5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3\\p10_ax7020_fixed_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c\\67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4\\p10_ax7020_rotating_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c\\622f35d893c8c8ab70db881d6dcd4d1ddbec30cd39e729d795935043d805719e\\p10_fixed_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c\\861ca25bb0bcdca29c8e135253995dba85f8c73c363dc1e256c87fdcebf2e705\\p10_rotating_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\artifacts\\fixed\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\artifacts\\rotating\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\formal_30min\\formal_30min.plan",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\formal_30min\\dumps",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8\\formal_30min\\xsdb.result.txt",
+      "P10_1R-FORMAL_30MIN",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\config\\p10_1r_current_run_hardware_authorization.json",
+      "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
+      "0x50325346",
+      "0x50325352"
+    ],
+    "elapsed_seconds": 22.29879210004583,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/formal_30min/xsdb.stderr.log",
+    "stdout": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/formal_30min/xsdb.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 2400
+  },
+  "schema_version": 1,
+  "semantics": {
+    "elapsed_ms": 0,
+    "formal_windows": [
+      {
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "direction": 0,
+        "duration_seconds": 840,
+        "label": "stationary_30min_formal_f2r"
+      },
+      {
+        "application_goodput_bps": 0.0,
+        "case_count": 0,
+        "committed_bytes": 0,
+        "direction": 1,
+        "duration_seconds": 840,
+        "label": "stationary_30min_formal_r2f"
+      }
+    ]
+  },
+  "stage": "formal_30min",
+  "status": "FAIL",
+  "test_id": "P10_1R-HW-FORMAL_30MIN"
+}

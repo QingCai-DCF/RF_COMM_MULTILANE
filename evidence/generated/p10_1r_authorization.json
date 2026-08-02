@@ -1,118 +1,21 @@
 {
-  "artifact_freeze": {
-    "bytes": 7993,
-    "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "aededfa8ada3171351ca073ba7616a57688e6e184bdc8a5af6a873352cf8d4bc"
-  },
-  "artifacts": {
-    "fixed": {
-      "bitstream": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 4045681,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3/p10_ax7020_fixed_functional.bit",
-        "read_only": true,
-        "sha256": "5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3"
-      },
-      "bsp": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 1855896,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
-        "read_only": true,
-        "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
-      },
-      "elf": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 554840,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/622f35d893c8c8ab70db881d6dcd4d1ddbec30cd39e729d795935043d805719e/p10_fixed_runtime.elf",
-        "read_only": true,
-        "sha256": "622f35d893c8c8ab70db881d6dcd4d1ddbec30cd39e729d795935043d805719e"
-      },
-      "shutdown_bitstream": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 369073,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/159eb3ca0ab04f6d3c6795896b349e5b8390b16a88ddfb5e2bcb0069fd192624/p10_ax7020_fixed_shutdown.bit",
-        "read_only": true,
-        "sha256": "159eb3ca0ab04f6d3c6795896b349e5b8390b16a88ddfb5e2bcb0069fd192624"
-      },
-      "xsa": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 923892,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b/p10_ax7020_fixed_functional.xsa",
-        "read_only": true,
-        "sha256": "88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b"
-      }
-    },
-    "rotating": {
-      "bitstream": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 4045681,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4/p10_ax7020_rotating_functional.bit",
-        "read_only": true,
-        "sha256": "67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4"
-      },
-      "bsp": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 1856209,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
-        "read_only": true,
-        "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
-      },
-      "elf": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 555120,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/861ca25bb0bcdca29c8e135253995dba85f8c73c363dc1e256c87fdcebf2e705/p10_rotating_runtime.elf",
-        "read_only": true,
-        "sha256": "861ca25bb0bcdca29c8e135253995dba85f8c73c363dc1e256c87fdcebf2e705"
-      },
-      "shutdown_bitstream": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 369073,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/ff5079f4876336e650bcdb93fce38ac3acf3a127fbf012ff87dbaf3cb061e1ad/p10_ax7020_rotating_shutdown.bit",
-        "read_only": true,
-        "sha256": "ff5079f4876336e650bcdb93fce38ac3acf3a127fbf012ff87dbaf3cb061e1ad"
-      },
-      "xsa": {
-        "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-        "bytes": 942033,
-        "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8/p10_ax7020_rotating_functional.xsa",
-        "read_only": true,
-        "sha256": "d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8"
-      }
-    }
-  },
-  "authorization_consumed": false,
-  "authorization_granted": true,
-  "board_binding": {
-    "fixed": "AX7020-F/JTAG:210249855178",
-    "rotating_role": "AX7020-R/JTAG:210512180081"
-  },
+  "authorization_at_run_start": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/authorization/immutable_authorization.json",
+  "authorization_at_run_start_sha256": "5387fd63e3dbfb0635593feead601f3ab755b9cad1849efd5ad4dba68b0d5583",
+  "authorization_status_at_run_start": "AUTHORIZED",
+  "campaign_status": "FAIL",
+  "consumed": true,
+  "current_authorization": "config/p10_1r_current_run_hardware_authorization.json",
+  "current_authorization_sha256": "8dc14a85f7e7bd1d739eea6165dcfca5631c2fc3cbcd0258189e19e7389bbba9",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-02T00:00:00Z",
-  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": false,
-  "maximum_formal_runtime_seconds": 1800,
-  "maximum_lane_mask": "0x3",
-  "network_used": false,
-  "next_required_user_action": "NONE; create a fresh immutable run-bound authorization record from the user's existing P10.1R authorization",
-  "prohibited": [
-    "Ethernet",
-    "movement_or_rotation",
-    "rewiring_or_module_exchange",
-    "lane_mask_above_0x3",
-    "P11_or_8x32_or_600rpm_promotion"
-  ],
+  "errors": [],
+  "generated_at_utc": "2026-08-02T13:41:14+00:00",
+  "hardware_actions_executed": true,
+  "raw_record": "evidence/hardware/p10_1r/p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8/authorization/authorization_record.json",
+  "reusable_for_future_run": false,
+  "run_id": "p10_1r_20260802T124646Z_af46d3b9_5b594148_67ce5cd8",
   "schema_version": 1,
-  "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
-  "shutdown_strategy": {
-    "both_role_shutdown_marker_required": true,
-    "shutdown_before_every_stage": true,
-    "shutdown_on_ctrl_c": true,
-    "shutdown_on_error": true,
-    "shutdown_on_normal_exit": true,
-    "shutdown_on_timeout": true
-  },
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-  "status": "PENDING_NEW_AUTHORIZATION",
-  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-READINESS",
-  "user_authorization_available": true
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "status": "PASS",
+  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-EVIDENCE"
 }
