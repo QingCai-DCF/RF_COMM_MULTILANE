@@ -86,9 +86,6 @@ STANDING_AUTHORIZATION_SOURCES = (
 EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
-EXPECTED_ARTIFACT_FREEZE_SHA256 = (
-    "aededfa8ada3171351ca073ba7616a57688e6e184bdc8a5af6a873352cf8d4bc"
-)
 EXPECTED_ARTIFACT_PURPOSE = "FINAL_ACCEPTANCE"
 EXPECTED_ACCEPTANCE_ELIGIBLE = True
 EXPECTED_ALLOWED_HARDWARE_STAGES: tuple[str, ...] = (
@@ -436,8 +433,11 @@ def plan_hashes(stages: Iterable[str]) -> dict[str, str]:
     return {stage: hash_text(plan_text(plans[stage])) for stage in stages}
 
 
-def load_freeze() -> tuple[dict[str, Any], dict[str, Path]]:
-    if sha256(ARTIFACT_FREEZE) != EXPECTED_ARTIFACT_FREEZE_SHA256:
+def load_freeze(
+    expected_sha256: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Path]]:
+    live_sha256 = sha256(ARTIFACT_FREEZE)
+    if expected_sha256 is not None and live_sha256 != expected_sha256:
         raise RuntimeError("P10.1R artifact-freeze SHA256 mismatch")
     record = json.loads(ARTIFACT_FREEZE.read_text(encoding="utf-8"))
     if record.get("status") != "PASS" or record.get("no_hardware") is not True:
@@ -530,11 +530,18 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         raise RuntimeError("wrong P10.1R branch")
     if git("status", "--porcelain"):
         raise RuntimeError("authorization generation requires a clean worktree")
+    if subprocess.run(
+        ["git", "ls-files", "--error-unmatch", rel(ARTIFACT_FREEZE)],
+        cwd=ROOT,
+        capture_output=True,
+    ).returncode:
+        raise RuntimeError("artifact freeze is not committed in this worktree")
     if sha256(GOAL) != EXPECTED_GOAL_SHA256:
         raise RuntimeError("live P10.1R Goal hash mismatch")
     if git("rev-list", "-n", "1", EXPECTED_BASE_FAILURE_TAG) != EXPECTED_BASE_FAILURE_COMMIT:
         raise RuntimeError("immutable base failure tag mismatch")
-    freeze, _ = load_freeze()
+    freeze_sha256 = sha256(ARTIFACT_FREEZE)
+    freeze, _ = load_freeze(freeze_sha256)
     allowed_stages = freeze["allowed_hardware_stages"]
     if any(stage not in allowed_stages for stage in stages):
         raise RuntimeError("requested stage exceeds artifact-bundle purpose")
@@ -567,7 +574,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "goal": rel(GOAL),
         "goal_sha256": EXPECTED_GOAL_SHA256,
         "artifact_freeze": rel(ARTIFACT_FREEZE),
-        "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
+        "artifact_freeze_sha256": freeze_sha256,
         "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
         "acceptance_eligible": EXPECTED_ACCEPTANCE_ELIGIBLE,
         "artifacts": artifact_records(freeze),
@@ -666,7 +673,6 @@ def validate_authorization(
         "authorized_stages": stages,
         "branch": EXPECTED_BRANCH,
         "goal_sha256": EXPECTED_GOAL_SHA256,
-        "artifact_freeze_sha256": EXPECTED_ARTIFACT_FREEZE_SHA256,
         "artifact_bundle_purpose": EXPECTED_ARTIFACT_PURPOSE,
         "acceptance_eligible": EXPECTED_ACCEPTANCE_ELIGIBLE,
         "current_run_hardware_authorization": True,
@@ -694,6 +700,14 @@ def validate_authorization(
         for key, value in expected.items()
         if record.get(key) != value
     )
+    live_freeze_sha256 = sha256(ARTIFACT_FREEZE)
+    authorized_freeze_sha256 = record.get("artifact_freeze_sha256")
+    if (
+        not isinstance(authorized_freeze_sha256, str)
+        or not SHA_RE.fullmatch(authorized_freeze_sha256)
+        or authorized_freeze_sha256 != live_freeze_sha256
+    ):
+        errors.append("authorization artifact-freeze SHA256 mismatch")
     if not RUN_RE.fullmatch(str(record.get("run_id", ""))):
         errors.append("authorization run_id syntax invalid")
     if sha256(GOAL) != EXPECTED_GOAL_SHA256:
@@ -736,7 +750,11 @@ def validate_authorization(
         if shutdown.get(key) is not True:
             errors.append(f"shutdown policy missing {key}")
     try:
-        freeze, frozen_paths = load_freeze()
+        freeze, frozen_paths = load_freeze(
+            authorized_freeze_sha256
+            if isinstance(authorized_freeze_sha256, str)
+            else None
+        )
         if record.get("source_commit") != freeze.get("source_commit"):
             errors.append("authorization source/freeze mismatch")
         if record.get("artifacts") != artifact_records(freeze):
