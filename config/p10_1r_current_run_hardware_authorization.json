@@ -86,8 +86,7 @@
     }
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "f15c7ba18c5004ce5ea65e6b1c551eb4d82dd427",
-  "authorization_status_at_run_start": "AUTHORIZED",
+  "authorization_parent_commit": "f1c0a35232539b4ad9955f0d07c607a8920f6869",
   "authorized_stages": [
     "echo_tail"
   ],
@@ -104,18 +103,11 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "REMEDIATION_REQUIRED_NEW_IMMUTABLE_BUNDLE",
-  "campaign_status": "FAIL",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-02T18:32:54+00:00",
-  "consumed_by_run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
-  "current_run_hardware_authorization": false,
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
-  "final_evidence_sha256": "55f82c55d1ace3f95f85de1d3a9044b5713c41a3b1c8e9cf9c9514b0c246a38c",
-  "generated_at_utc": "2026-08-02T18:29:22+00:00",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
+  "generated_at_utc": "2026-08-02T19:13:23+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -158,9 +150,9 @@
       "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
     },
     "project_state": {
-      "bytes": 37050,
+      "bytes": 37589,
       "path": "config/project_state.json",
-      "sha256": "eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a"
+      "sha256": "38bf5c4c4bdcaea917f236d751ede2e3ed35e502fec695781bdc8d68cd1ba039"
     },
     "register_map": {
       "bytes": 60093,
@@ -175,7 +167,7 @@
     "requirements": {
       "bytes": 230140,
       "path": "config/project_requirements.yaml",
-      "sha256": "fd38bf5ae5f10daf5c5523110526f718bc337cf05b429b4ee951d38cf9f01467"
+      "sha256": "9431b7d1775037d204491d88e6d961be666d8c5296410ce690a90fb679bca16a"
     },
     "rotating_profile": {
       "bytes": 927,
@@ -188,9 +180,9 @@
       "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
     },
     "runner": {
-      "bytes": 73371,
+      "bytes": 73450,
       "path": "scripts/p10_1r_hardware_acceptance.py",
-      "sha256": "5b2feb94f443982982b450fa511944a5b1fcd4715631b89c3f656efa0be08880"
+      "sha256": "8dcbad2460aadb78e1d6f99fc251626b85a4a7e094897d1fae4b183cb2accd2b"
     },
     "runtime": {
       "bytes": 3158,
@@ -213,9 +205,9 @@
       "sha256": "f9c156783e13494e41f215f72b5608ff42e46a2114c4288c2de4acd3e63c4995"
     },
     "xsdb_stage": {
-      "bytes": 58565,
+      "bytes": 62529,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "20fd693fd2f81da2a06efa9ffd0b845a44d08943725853a42499122f0dc81097"
+      "sha256": "bd2ac23ad4ec333dc8b835f58cbbbf1e4f3c9fcebef088aa8220d63248e4105c"
     }
   },
   "lane_masks": [
@@ -225,14 +217,13 @@
   ],
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this run, remediate the direct failure, freeze a new exact-source artifact bundle, and create a fresh per-run authorization",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
     "rotating": "0x50325352"
   },
   "plan_sha256": {
-    "echo_tail": "ef215a30ea521b050a7a6994ea5af03fd50126c830a1801b30535eeb94bd1fd0"
+    "echo_tail": "95bcdfa54a9e6b4a34a03751fd1b0f2dd4eacc09069a31780c9e37a583fe1074"
   },
   "prohibited": {
     "8x32": true,
@@ -249,7 +240,7 @@
     "spi": true
   },
   "reusable_for_future_run": false,
-  "run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
+  "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
   "schema_version": 1,
   "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
   "shutdown": {
@@ -268,8 +259,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -302,7 +291,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_FAIL",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"
