@@ -2,21 +2,18 @@
   "errors": [
     "XSDB PASS marker missing",
     "exactly one final endpoint-shutdown row required",
-    "immutable plan case missing: ack32_burst32_f2r",
     "immutable plan case missing: ack32_burst32_r2f",
-    "ack32_burst32_f2r: application goodput below 4 Mbit/s",
-    "ack32_burst32_f2r: fewer than 24 data frames/ACK",
     "ack32_burst32_r2f: application goodput below 4 Mbit/s",
     "ack32_burst32_r2f: fewer than 24 data frames/ACK"
   ],
-  "generated_at_utc": "2026-08-02T00:44:42+00:00",
+  "generated_at_utc": "2026-08-02T05:21:43+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/ack_tuning/stage_summary.json",
-  "raw_summary_sha256": "32c9e0a212df38255480861b75053a58866ea0fbf9b579bf1178ad893217beae",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f/ack_tuning/stage_summary.json",
+  "raw_summary_sha256": "f78a8f8e7234ce3aa6292f72340e47086e8c822c196978017df6af930d277c89",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
+  "run_id": "p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f",
   "schema_version": 1,
   "semantics": {
     "best_ack_max_delay_cycles": 64000,
@@ -25,17 +22,17 @@
     "objects_in_flight": 4,
     "windows": [
       {
-        "ack_count": 0,
-        "ack_wait_ratio": 0.0,
-        "application_goodput_bps": 0.0,
-        "case_count": 0,
-        "committed_bytes": 0,
-        "data_frames": 0,
-        "data_frames_per_ack": 0.0,
+        "ack_count": 2060,
+        "ack_wait_ratio": 0.9956308461843627,
+        "application_goodput_bps": 4000000.0,
+        "case_count": 1,
+        "committed_bytes": 15000000,
+        "data_frames": 60729,
+        "data_frames_per_ack": 29.480097087378642,
         "direction": 0,
         "duration_seconds": 30,
-        "host_blocking_commands": 0,
-        "inter_object_ratio": 0.0,
+        "host_blocking_commands": 1,
+        "inter_object_ratio": 0.000471551843351536,
         "label": "ack32_burst32_f2r",
         "lane_mask": 3
       },
@@ -56,7 +53,7 @@
       }
     ]
   },
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "FAIL",
   "test_id": "P10_1R-HW-ACK_TUNING"
 }

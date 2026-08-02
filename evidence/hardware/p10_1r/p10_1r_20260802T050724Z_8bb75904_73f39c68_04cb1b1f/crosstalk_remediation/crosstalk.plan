@@ -1,0 +1,13 @@
+# Immutable P10 paired hardware plan
+CASE remediation_raw_lane0_f2r_64 2 0 0 1 0 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 64 1024 0 0 0 0 0 0
+CASE remediation_raw_lane0_f2r_1024 2 0 0 1 0 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 1024 1024 0 0 0 0 0 0
+P101_WINDOW remediation_frame_lane0_f2r 10 0 1 1048576
+CASE remediation_raw_lane0_r2f_64 2 0 0 1 1 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 64 1024 0 0 0 0 0 0
+CASE remediation_raw_lane0_r2f_1024 2 0 0 1 1 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 1024 1024 0 0 0 0 0 0
+P101_WINDOW remediation_frame_lane0_r2f 10 1 1 1048576
+CASE remediation_raw_lane1_f2r_64 2 0 0 2 0 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 64 1024 0 0 0 0 0 0
+CASE remediation_raw_lane1_f2r_1024 2 0 0 2 0 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 1024 1024 0 0 0 0 0 0
+P101_WINDOW remediation_frame_lane1_f2r 10 0 2 1048576
+CASE remediation_raw_lane1_r2f_64 2 0 0 2 1 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 64 1024 0 0 0 0 0 0
+CASE remediation_raw_lane1_r2f_1024 2 0 0 2 1 2 257 0 8 0 0 0 30000 2685403137 10 1 0 0 0 1024 1024 0 0 0 0 0 0
+P101_WINDOW remediation_frame_lane1_r2f 10 1 2 1048576
