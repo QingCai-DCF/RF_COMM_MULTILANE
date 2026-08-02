@@ -3,24 +3,24 @@
 - Status: `PASS`
 - Test ID: `P8D-P0-P8C-FULL-REGRESSION`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
+- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
 
 ```json
 {
   "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
   "base_p0_p7_p8a": "PASS",
-  "base_parent_log": "PARENT_RUN_OFFLINE_GATES_INCLUDE_P8D",
-  "generated_utc": "2026-08-01T23:29:00.193561Z",
+  "base_parent_log": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276/regression/base_offline_gate.log",
+  "generated_utc": "2026-08-02T04:44:42.525192Z",
   "hardware_scope_promoted": false,
   "isolated_regression_output": true,
   "p8b_gate": "PASS",
-  "p8b_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/regression/p8b_gate.log",
+  "p8b_log": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276/regression/p8b_gate.log",
   "p8c_gate": "PASS",
-  "p8c_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/regression/p8c_gate.log",
+  "p8c_log": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276/regression/p8c_gate.log",
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "schema_version": 1,
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "PASS",
   "test_id": "P8D-P0-P8C-FULL-REGRESSION"
 }

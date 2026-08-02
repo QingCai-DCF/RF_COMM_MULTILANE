@@ -4,27 +4,27 @@
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
   "commands": {
     "p8b_checkpoint_evidence_verify": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/p8b_checkpoint_evidence_verify.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/p8b_checkpoint_evidence_verify.log",
       "status": "PASS"
     },
     "python_reference": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/python_reference.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/python_reference.log",
       "status": "PASS"
     },
     "python_unit_tests": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/python_unit_tests.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/python_unit_tests.log",
       "status": "PASS"
     },
     "register_map_verify": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/register_map_verify.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/register_map_verify.log",
       "status": "PASS"
     },
     "safety_config_verify": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/safety_config_verify.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/safety_config_verify.log",
       "status": "PASS"
     },
     "static_architecture": {
-      "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/static_architecture.log",
+      "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/static_architecture.log",
       "status": "PASS"
     }
   },
@@ -34,7 +34,7 @@
     "source": "parent run_offline_gates.py",
     "status": "PASS"
   },
-  "generated_at_utc": "2026-08-01T23:19:01+00:00",
+  "generated_at_utc": "2026-08-02T03:41:15+00:00",
   "mandatory_vector_coverage": {
     "CONTINUOUS_HIGH_VECTOR_MATRIX": "PASS",
     "EXACT_DUTY_TARGETED_VECTOR_MATRIX": "PASS",
@@ -45,15 +45,15 @@
   "profile": "P8C_MULTI_PROFILE_OFFLINE",
   "resource_status": "PASS",
   "software": {
-    "log": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/software/ps_driver_host_compile_and_run.log",
+    "log": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/software/ps_driver_host_compile_and_run.log",
     "status": "PASS"
   },
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "PASS",
   "test_id": "P8C-OFFLINE-GATE",
   "xsim": {
     "tb_p8c_endpoint_safety": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_endpoint_safety",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_endpoint_safety",
       "markers": [
         "P8C_PERMIT_VECTOR_MATRIX_PASS=1",
         "P8C_FAULT_DROP_MID_HIGH_PASS=1",
@@ -76,7 +76,7 @@
       "status": "PASS"
     },
     "tb_p8c_exact_duty": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_exact_duty",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_exact_duty",
       "markers": [
         "P8C_TELEMETRY_CLEAR_HISTORY_PRESERVED_PASS=1",
         "P8C_EXACT_VECTOR_MATRIX_PASS=1",
@@ -94,7 +94,7 @@
       "status": "PASS"
     },
     "tb_p8c_full_scale": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_full_scale",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_full_scale",
       "markers": [
         "P8C_LONG_PERIODIC_4PPM_LIKE_PASS=1",
         "TB_P8C_FULL_SCALE_PASS=1"
@@ -114,7 +114,7 @@
       "status": "PASS"
     },
     "tb_p8c_physical_safety": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_physical_safety",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_physical_safety",
       "markers": [
         "P8C_CONTINUOUS_VECTOR_MATRIX_PASS=1",
         "P8C_SD_HISTORY_PRESERVED_PASS=1",
@@ -133,7 +133,7 @@
       "status": "PASS"
     },
     "tb_p8c_profile_matrix": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_profile_matrix",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_profile_matrix",
       "markers": [
         "P8C_ILLEGAL_COMMIT_DURING_FRAME_PASS=1",
         "P8C_PERMIT_DROP_DURING_PATH_COMMIT_PASS=1",
@@ -160,7 +160,7 @@
       "status": "PASS"
     },
     "tb_p8c_safety_regs": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_safety_regs",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_safety_regs",
       "markers": [
         "TB_P8C_SAFETY_REGS_PASS=1"
       ],
@@ -176,7 +176,7 @@
       "status": "PASS"
     },
     "tb_p8c_trace_crosscheck": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_trace_crosscheck",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_p8c_trace_crosscheck",
       "markers": [
         "TB_P8C_TRACE_CROSSCHECK_PASS=1"
       ],
@@ -192,7 +192,7 @@
       "status": "PASS"
     },
     "tb_tfdu_lane_phy_smoke": {
-      "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_tfdu_lane_phy_smoke",
+      "log_directory": "evidence/generated/p10_1r_exact_source_p8c_8bb75904/p8c_raw/xsim/tb_tfdu_lane_phy_smoke",
       "markers": [
         "TB_TFDU_LANE_PHY_SMOKE_PASS=1"
       ],

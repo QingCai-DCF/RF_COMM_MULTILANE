@@ -2,12 +2,12 @@
   "artifact_freeze": {
     "bytes": 7993,
     "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "fddaf62f1a1426f1c51c887487207670cc1f506f335aaf0ee70d3aa6c6427e01"
+    "sha256": "d38977826812b6fa5b0036f642cb01fd41e283315e9deaed3852f67643764950"
   },
   "authorization_readiness": {
     "bytes": 5730,
     "path": "evidence/generated/p10_1r_authorization.json",
-    "sha256": "75998024e9eee68f93f082d8c26fe1339c3be2e4106994144bfc5219f6dc3c4f"
+    "sha256": "2882bac06eae194c411f68449c15f5533649b378604c8e3608a4265530571264"
   },
   "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
   "branch": "p10.1r/2lane-speed-stability-remediation",
@@ -23,9 +23,9 @@
   "direct_hardware_status": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
   "errors": [],
   "evidence_consistency": {
-    "bytes": 9123,
+    "bytes": 7193,
     "path": "evidence/generated/p10_1r_evidence_consistency.json",
-    "sha256": "3bcb92837b9cd2cd561ad77ef0ff35130ff802ecfdd045e98b85e7dcc68b1dbf"
+    "sha256": "ce0e8c420a8cc9dc14ec41891fd4d54bb5a978fed330c09051f0025bfd2e7fd5"
   },
   "frozen_protocol_defaults": {
     "ack_max_delay_cycles": 64000,
@@ -42,14 +42,14 @@
   },
   "hardware_actions_executed": false,
   "hardware_movement": false,
-  "head_when_finalized": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "head_when_finalized": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "measured_hardware_goodput_bps": {
     "fixed_to_rotating": "PENDING",
     "rotating_to_fixed": "PENDING"
   },
   "modeled_goodput_bps": {
-    "fixed_to_rotating": 4427415.552291298,
-    "rotating_to_fixed": 4427415.552291298
+    "fixed_to_rotating": 4073947.033868042,
+    "rotating_to_fixed": 4073947.033868042
   },
   "network_used": false,
   "no_hardware": true,
@@ -72,7 +72,7 @@
     "R0": 4096,
     "R1": 4096
   },
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "OFFLINE_READY_HARDWARE_PENDING",
   "test_id": "P10_1R-OFFLINE-FINAL-CHECKPOINT",
   "wiring_changed": false

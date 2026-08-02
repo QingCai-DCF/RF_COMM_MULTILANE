@@ -15,7 +15,7 @@ P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
 P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
 P10_1_OFFLINE_STATUS: PASS
 P10_1_HARDWARE_STATUS: FAIL
-P10_1R_STATUS: IN_PROGRESS
+P10_1R_STATUS: OFFLINE_READY_HARDWARE_PENDING
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
 CURRENT_PROGRAM_STAGE: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
@@ -179,6 +179,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`.
+Last verified evidence commit: `8bb759047276e5bb9952403013d1d33cea6bba92`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

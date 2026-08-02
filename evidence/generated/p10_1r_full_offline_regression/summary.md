@@ -1,7 +1,7 @@
 # P10.1R exact-source full offline regression
 
 - Status: `PASS`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
+- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Canonical base used the real offline build process: `true`

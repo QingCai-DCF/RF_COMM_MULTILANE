@@ -49,7 +49,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual(freeze["status"], "PASS")
         self.assertEqual(
             freeze["source_commit"],
-            "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+            "8bb759047276e5bb9952403013d1d33cea6bba92",
         )
         self.assertEqual(len(artifacts), 10)
 

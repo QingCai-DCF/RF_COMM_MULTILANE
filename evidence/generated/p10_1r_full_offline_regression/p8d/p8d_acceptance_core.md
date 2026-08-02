@@ -3,7 +3,7 @@
 - Status: `PASS`
 - Test ID: `P8D-ACCEPTANCE-CORE`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
+- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
 
 ```json
 {
@@ -58,14 +58,14 @@
     "Z7020_ROTATING_8LANE_PROFILE": "PASS"
   },
   "failures": [],
-  "generated_utc": "2026-08-01T23:29:00.243969Z",
+  "generated_utc": "2026-08-02T04:44:42.612516Z",
   "hardware_scope_promoted": false,
   "mode": "FULL",
   "no_hardware_scan": {
     "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
     "NO_HARDWARE": "1",
     "existing_scan": "PASS",
-    "existing_scan_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/no_hardware_existing_scan.log",
+    "existing_scan_log": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276/no_hardware_existing_scan.log",
     "p8d_forbidden_hits": [],
     "status": "PASS",
     "test_id": "P8D-NO-HARDWARE-STATIC-SCAN"
@@ -75,8 +75,8 @@
   ],
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "schema_version": 1,
-  "selected_raw_run": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c",
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "selected_raw_run": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "PASS",
   "test_id": "P8D-ACCEPTANCE-CORE",
   "timing_followup": "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING"

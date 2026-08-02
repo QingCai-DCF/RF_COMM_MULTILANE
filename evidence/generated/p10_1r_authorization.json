@@ -1,11 +1,118 @@
 {
-  "authorization": "config/p10_1r_current_run_hardware_authorization.json",
-  "authorization_sha256": "e913fce5e1db75487e9a362b8c6bee9fc195f26c14f20679440f12c0852f6a2a",
-  "generated_at_utc": "2026-08-02T00:44:42+00:00",
-  "hardware_actions_executed": true,
-  "raw_record": "evidence/hardware/p10_1r/p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9/authorization/authorization_record.json",
-  "run_id": "p10_1r_20260802T002938Z_e38b0772_7e24b993_0c6533e9",
+  "artifact_freeze": {
+    "bytes": 7993,
+    "path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "sha256": "d38977826812b6fa5b0036f642cb01fd41e283315e9deaed3852f67643764950"
+  },
+  "artifacts": {
+    "fixed": {
+      "bitstream": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 4045681,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/73f39c686f16bfd6f5201b79351dbeff46827a8a245f4347f40210a7b8a76805/p10_ax7020_fixed_functional.bit",
+        "read_only": true,
+        "sha256": "73f39c686f16bfd6f5201b79351dbeff46827a8a245f4347f40210a7b8a76805"
+      },
+      "bsp": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 1855896,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+        "read_only": true,
+        "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+      },
+      "elf": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 553536,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/48cca2655cc8f6b8d76e527e914eccd4602d20ca4cc5b6130ffd672ade6d15e1/p10_fixed_runtime.elf",
+        "read_only": true,
+        "sha256": "48cca2655cc8f6b8d76e527e914eccd4602d20ca4cc5b6130ffd672ade6d15e1"
+      },
+      "shutdown_bitstream": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 369073,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/bf627696f2a51edaaa1698c293e6004b2f690b4bf7711c97e5757e1c54dcd58f/p10_ax7020_fixed_shutdown.bit",
+        "read_only": true,
+        "sha256": "bf627696f2a51edaaa1698c293e6004b2f690b4bf7711c97e5757e1c54dcd58f"
+      },
+      "xsa": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 918544,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/22a4fb903acbc0486eb3548450a5ef044755dbafc35ab421c3f030bdd8e4e3c9/p10_ax7020_fixed_functional.xsa",
+        "read_only": true,
+        "sha256": "22a4fb903acbc0486eb3548450a5ef044755dbafc35ab421c3f030bdd8e4e3c9"
+      }
+    },
+    "rotating": {
+      "bitstream": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 4045681,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/04cb1b1f9f3e267c5d635e25f13539ba5c949c226c7e5cc4ec0e1560cc91447d/p10_ax7020_rotating_functional.bit",
+        "read_only": true,
+        "sha256": "04cb1b1f9f3e267c5d635e25f13539ba5c949c226c7e5cc4ec0e1560cc91447d"
+      },
+      "bsp": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 1856209,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+        "read_only": true,
+        "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+      },
+      "elf": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 553228,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/ed6d416e95bbbd55a134b004865ed2ff28e20ac8cad0802de76fb0ae8561c141/p10_rotating_runtime.elf",
+        "read_only": true,
+        "sha256": "ed6d416e95bbbd55a134b004865ed2ff28e20ac8cad0802de76fb0ae8561c141"
+      },
+      "shutdown_bitstream": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 369073,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/e8efaef320ce35025bf58f888921f3e70a150eb662dc9baf5777f86b3616e587/p10_ax7020_rotating_shutdown.bit",
+        "read_only": true,
+        "sha256": "e8efaef320ce35025bf58f888921f3e70a150eb662dc9baf5777f86b3616e587"
+      },
+      "xsa": {
+        "built_source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+        "bytes": 935976,
+        "path": "artifacts/p10_1r/8bb759047276e5bb9952403013d1d33cea6bba92/1db493c510fa8e3a0346db5f0ef7ea81f812dc17a90fd4d602049def78db92e7/p10_ax7020_rotating_functional.xsa",
+        "read_only": true,
+        "sha256": "1db493c510fa8e3a0346db5f0ef7ea81f812dc17a90fd4d602049def78db92e7"
+      }
+    }
+  },
+  "authorization_consumed": false,
+  "authorization_granted": true,
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating_role": "AX7020-R/JTAG:210512180081"
+  },
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-02T00:00:00Z",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": false,
+  "maximum_formal_runtime_seconds": 1800,
+  "maximum_lane_mask": "0x3",
+  "network_used": false,
+  "next_required_user_action": "NONE; create a fresh immutable run-bound authorization record from the user's existing P10.1R authorization",
+  "prohibited": [
+    "Ethernet",
+    "movement_or_rotation",
+    "rewiring_or_module_exchange",
+    "lane_mask_above_0x3",
+    "P11_or_8x32_or_600rpm_promotion"
+  ],
   "schema_version": 1,
-  "status": "PASS",
-  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-EVIDENCE"
+  "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+  "shutdown_strategy": {
+    "both_role_shutdown_marker_required": true,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_ctrl_c": true,
+    "shutdown_on_error": true,
+    "shutdown_on_normal_exit": true,
+    "shutdown_on_timeout": true
+  },
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+  "status": "PENDING_NEW_AUTHORIZATION",
+  "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-READINESS",
+  "user_authorization_available": true
 }

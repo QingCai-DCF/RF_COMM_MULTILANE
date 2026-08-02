@@ -3,16 +3,16 @@
 - Status: `PASS`
 - Test ID: `P8D-CANONICAL-CONFIG`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
+- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
 
 ```json
 {
   "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
-  "command_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/canonical_config.log",
+  "command_log": "evidence/generated/p10_1r_exact_source_p8d_8bb75904/p8d_raw/formal_8bb759047276/canonical_config.log",
   "config_path": "config/p8d_data_plane.yaml",
   "config_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
-  "generated_utc": "2026-08-01T23:19:19.853415Z",
+  "generated_utc": "2026-08-02T03:41:23.169468Z",
   "hardware_scope_promoted": false,
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "schema_validation": {
@@ -40,7 +40,7 @@
     }
   },
   "schema_version": 1,
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
   "status": "PASS",
   "test_id": "P8D-CANONICAL-CONFIG"
 }

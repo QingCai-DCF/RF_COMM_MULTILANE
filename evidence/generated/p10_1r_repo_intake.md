@@ -1,7 +1,7 @@
 # P10.1R repository intake
 
 - Status: `PASS`
-- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
+- Source commit: `8bb759047276e5bb9952403013d1d33cea6bba92`
 - Hardware actions executed: `false`
 
 ```json
@@ -16,7 +16,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-01T22:39:46+00:00",
+  "generated_at_utc": "2026-08-02T05:01:52+00:00",
   "goal": {
     "bytes": 30007,
     "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
@@ -36,14 +36,14 @@
       "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
     },
     {
-      "bytes": 37050,
+      "bytes": 37128,
       "path": "config/project_state.json",
-      "sha256": "4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30"
+      "sha256": "9eb4d2f3a2e7c153c49a98316f87c5ad407e48187b36a374f2e0195b7083394e"
     },
     {
-      "bytes": 228507,
+      "bytes": 226027,
       "path": "config/project_requirements.yaml",
-      "sha256": "efa2143c9136a1e6327b81064226c4e7daeabefb182d69ab189b48d1312392e5"
+      "sha256": "b35f62339e0d9be3383e161b7e7348d44bf573f59fd3c7410db03a3a5a840187"
     },
     {
       "bytes": 3477,
@@ -51,9 +51,9 @@
       "sha256": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69"
     },
     {
-      "bytes": 1556,
+      "bytes": 2506,
       "path": "config/performance/p10_1r_hardware_runtime.yaml",
-      "sha256": "b5626eb3d9e92d3750c2114e0e03efca774703cb04fcbdd88950d2edc229489e"
+      "sha256": "88bd46acc83eead69da5710630615f11384bbd75df112cba1705b44aa1d8916e"
     },
     {
       "bytes": 60093,
@@ -66,9 +66,9 @@
       "sha256": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b"
     },
     {
-      "bytes": 98522,
+      "bytes": 102146,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "73bad916dbccb24b9ae70504e2a2565962a890cd4b87a52756ef858352c18124"
+      "sha256": "edcba650d937938d62dc817130fe6d091e4b8e9cc5b8630b5861e3ca3796c3bb"
     },
     {
       "bytes": 15805,
@@ -85,8 +85,8 @@
   "offline_tag_is_ancestor": true,
   "p10_pass_tag_is_ancestor": true,
   "schema_version": 1,
-  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
-  "source_worktree_dirty_before_generation": false,
+  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+  "source_worktree_dirty_before_generation": true,
   "status": "PASS",
   "test_id": "P10_1R-REPOSITORY-INTAKE",
   "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R"
