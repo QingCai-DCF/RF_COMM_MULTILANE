@@ -53,6 +53,9 @@ INPUTS = {
     "rx_admission_design": GENERATED / "p10_1r_rx_admission_design.json",
     "self_echo_model": GENERATED / "p10_1r_self_echo_model.json",
     "ack_pipeline_model": GENERATED / "p10_1r_ack_pipeline_model.json",
+    "boundary_ack_remediation": (
+        GENERATED / "p10_1r_boundary_ack_skew_remediation.json"
+    ),
     "focused_xsim": GENERATED / "p10_1r_xsim/summary.json",
     "dual_endpoint_regression": (
         GENERATED / "p10_1r_dual_endpoint_regression/summary.json"
@@ -119,6 +122,20 @@ OFFLINE_REQUIREMENTS = {
         "evidence": ("ack_pipeline_model", "focused_xsim", "runtime_build"),
         "followup": (
             "Direct descriptor, completion, and occupancy telemetry remain pending."
+        ),
+    },
+    "P10_1R-ACK-004": {
+        "test_id": "P10_1R-DUAL-LANE-BOUNDARY-ACK-SKEW-REMEDIATION",
+        "scope": "P10_1R_OFFLINE_BOUNDARY_ACK_PASS_HARDWARE_PENDING",
+        "evidence": (
+            "boundary_ack_remediation",
+            "focused_xsim",
+            "dual_endpoint_regression",
+            "functional_build",
+        ),
+        "followup": (
+            "Direct dual-lane ACK hardware telemetry must confirm zero avoidable "
+            "turnaround timeout under the frozen artifact bundle."
         ),
     },
     "P10_1R-HOST-001": {
@@ -961,6 +978,12 @@ def main() -> int:
             "endpoint_burst_frames": runtime_config["protocol"]["endpoint_burst_frames"],
             "ack_threshold": runtime_config["protocol"]["ack_threshold"],
             "ack_max_delay_cycles": runtime_config["protocol"]["ack_max_delay_cycles"],
+            "boundary_ack_requires_cumulative_base_past_tag": runtime_config[
+                "protocol"
+            ]["boundary_ack_requires_cumulative_base_past_tag"],
+            "boundary_ack_settle_fallback_cycles": runtime_config["protocol"][
+                "boundary_ack_settle_fallback_cycles"
+            ],
             "objects_in_flight": runtime_config["pipeline"][
                 "minimum_concurrent_host_objects_or_equivalent"
             ],
