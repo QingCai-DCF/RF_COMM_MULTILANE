@@ -643,7 +643,7 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
       $duration_sec < 10 || $duration_sec > 840 ||
       $direction ni {0 1} || $lane ni {1 2 3} ||
       $maximum_chunk ni {1048576 4194304 16777216 67108864} ||
-      ![string is integer -strict $absolute_deadline] ||
+      ![string is wideinteger -strict $absolute_deadline] ||
       $absolute_deadline < 0} {
     error "invalid P10.1 bounded window"
   }

@@ -257,6 +257,16 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         ):
             self.assertIn(marker, text)
 
+        # ``clock milliseconds`` already exceeds Tcl's 32-bit ``integer``
+        # class.  Formal absolute deadlines therefore must be validated as
+        # wide integers or every real run fails before its first TX window.
+        self.assertIn(
+            "![string is wideinteger -strict $absolute_deadline]", text
+        )
+        self.assertNotIn(
+            "![string is integer -strict $absolute_deadline]", text
+        )
+
     def test_p10_1r_pl_build_identity_is_explicit_end_to_end(self) -> None:
         self.assertEqual(
             self.runner.EXPECTED_PL_BUILD_IDS,
