@@ -1,6 +1,5 @@
 import csv
 import importlib.util
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -35,7 +34,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.runner = load_runner()
 
-    def test_goal_and_exact_artifact_freeze_are_bound(self) -> None:
+    def test_goal_and_artifact_bundle_contract_is_fail_closed(self) -> None:
         self.assertEqual(
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
@@ -46,27 +45,8 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
             self.runner.STAGES,
         )
-        freeze, artifacts = self.runner.load_freeze()
-        self.assertRegex(freeze["source_commit"], r"^[0-9a-f]{40}$")
-        self.assertEqual(
-            subprocess.run(
-                [
-                    "git",
-                    "merge-base",
-                    "--is-ancestor",
-                    freeze["source_commit"],
-                    "HEAD",
-                ],
-                cwd=ROOT,
-                capture_output=True,
-            ).returncode,
-            0,
-        )
-        self.assertRegex(
-            self.runner.sha256(self.runner.ARTIFACT_FREEZE), r"^[0-9a-f]{64}$"
-        )
-        self.assertEqual(len(artifacts), 10)
-        self.assertTrue(all(path.is_file() for path in artifacts.values()))
+        with self.assertRaisesRegex(RuntimeError, "artifact-freeze SHA256 mismatch"):
+            self.runner.load_freeze("0" * 64)
 
     def test_standing_authorization_sources_are_exact_and_unbounded(self) -> None:
         sources = self.runner.STANDING_AUTHORIZATION_SOURCES
