@@ -2,33 +2,33 @@
   "artifact_freeze": {
     "bytes": 7993,
     "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "4392ecc0c85b53928ed916414d24fe0a9d7134a8cb15df8ddbd09c39b181ee1d"
+    "sha256": "fddaf62f1a1426f1c51c887487207670cc1f506f335aaf0ee70d3aa6c6427e01"
   },
   "authorization_readiness": {
     "bytes": 5730,
     "path": "evidence/generated/p10_1r_authorization.json",
-    "sha256": "b3bf8699198f039790f8b4799d1efc4b4fab202b35b3db73f57528eed3709924"
+    "sha256": "75998024e9eee68f93f082d8c26fe1339c3be2e4106994144bfc5219f6dc3c4f"
   },
   "canonical_files": [
     {
-      "bytes": 227797,
+      "bytes": 228511,
       "path": "config/project_requirements.yaml",
-      "sha256": "3137ee6a2a43a13a3f9034d6b2951daed45aae9c8c793687a30a697a4addd143"
+      "sha256": "a605b5f3a0d71ebe231fab73a4657d0b5a43854367059214969d4159d5c4532b"
     },
     {
       "bytes": 37050,
       "path": "config/project_state.json",
-      "sha256": "4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30"
+      "sha256": "ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988"
     },
     {
       "bytes": 9074,
       "path": "PROJECT_STATUS.md",
-      "sha256": "c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f"
+      "sha256": "3aa4f629a222cf26af9a419096bde2fa9c0d38493a3def230144eac0a8dba10e"
     },
     {
-      "bytes": 124435,
+      "bytes": 124718,
       "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
-      "sha256": "fd47f9f88d142d869ec64c2b8cbe4f6de0504051a28ca70d966e06f49231d3ee"
+      "sha256": "8c569d043d72e5894edd55210889317db6512ea074002eb6a8e5ddcf54a2469d"
     }
   ],
   "checks": [
@@ -64,7 +64,7 @@
       "command": "git diff --check",
       "return_code": 0,
       "status": "PASS",
-      "stderr_tail": "warning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.md', CRLF will be replaced by LF the next time Git touches it\n",
+      "stderr_tail": "warning: in the working copy of 'constraints/legacy_conflicts/xdc_conflict_report.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m1_tfdu_model_reference.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m1_tfdu_model_reference.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m2_detect_window_sweep.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m2_detect_window_sweep.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m3_crc_bad_ack_reference.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m3_crc_bad_ack_reference.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m4_ps_driver_trace.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m4_ps_driver_trace.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m6_refusal_runtime.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/m6_refusal_runtime.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/plan_completion_audit.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/sv_port_contracts.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/sv_port_contracts.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.md', CRLF will be replaced by LF the next time Git touches it\n",
       "stdout_tail": ""
     }
   ],
@@ -90,67 +90,67 @@
     "ack_pipeline_model": {
       "bytes": 2735,
       "path": "evidence/generated/p10_1r_ack_pipeline_model.json",
-      "sha256": "f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c"
+      "sha256": "5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e"
     },
     "dual_endpoint_regression": {
       "bytes": 3977,
       "path": "evidence/generated/p10_1r_dual_endpoint_regression/summary.json",
-      "sha256": "32f4065f995c6101cb4541963cb4afaca975c1c939f665ebffc7a0195cdab534"
+      "sha256": "ac5cf98ac68104ee6994acb2e2d56803a7fb9c31df7ad88df0101ef991411228"
     },
     "failure_baseline": {
       "bytes": 3903,
       "path": "evidence/generated/p10_1r_failure_baseline_summary.json",
-      "sha256": "9dad124c521689e7fd177ff62b6d344179305208404fdb289837e27265fe7578"
+      "sha256": "cf36c75605af6bae588f3972c088868933bda5afced31b3b67ed70f420d70508"
     },
     "focused_xsim": {
       "bytes": 5340,
       "path": "evidence/generated/p10_1r_xsim/summary.json",
-      "sha256": "6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc"
+      "sha256": "f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e"
     },
     "full_offline_gate": {
-      "bytes": 321318,
+      "bytes": 321069,
       "path": "evidence/generated/p10_1r_full_offline_regression/summary.json",
-      "sha256": "1debe3efc5e56f14748024f78609fc38ccf6480e591957e84f6626c67f61eade"
+      "sha256": "91cd9bd9aa502073854f38c1b156ac55f87e442a15bdfcbeb54ba8e67cdab6d7"
     },
     "functional_build": {
-      "bytes": 19791,
+      "bytes": 19793,
       "path": "evidence/generated/p10_1r_functional_build_summary.json",
-      "sha256": "a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c"
+      "sha256": "f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437"
     },
     "p8c_regression": {
       "bytes": 4409,
       "path": "evidence/generated/p10_1r_full_offline_regression/p8c/p8c_final_summary.json",
-      "sha256": "62056b8deafd32630e85454801440ae04d69beb4cc87ae3e124f0d1f0822fb1d"
+      "sha256": "71ec62b0d90cc1228de6dc5a89adc4152f5aa2aa688d8cbeb3440f619c3e3be9"
     },
     "p8d_regression": {
       "bytes": 6209,
       "path": "evidence/generated/p10_1r_full_offline_regression/p8d/p8d_final_summary.json",
-      "sha256": "20336b17fb0ea877f0066716e46878da8e83f61634ed7dbd5569db03b0e64d30"
+      "sha256": "063b857f83d437d4d11399f334350d3422632c218c88ae0c45e9ac0c96c409ed"
     },
     "repo_intake": {
-      "bytes": 2992,
+      "bytes": 2993,
       "path": "evidence/generated/p10_1r_repo_intake.json",
-      "sha256": "e5aa1bec4c82a9613df1f3493fd0caed8298dd7bde8ad62d60e7f2572439949b"
+      "sha256": "3036db4b85c106d95ae282c004b5add257a971240e11c343425b63f4a647403a"
     },
     "runtime_build": {
       "bytes": 10807,
       "path": "evidence/generated/p10_1r_ps_runtime_build_summary.json",
-      "sha256": "aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9"
+      "sha256": "1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f"
     },
     "rx_admission_design": {
-      "bytes": 2294,
+      "bytes": 2328,
       "path": "evidence/generated/p10_1r_rx_admission_design.json",
-      "sha256": "f7cd66392246cb3f6ef54ef8b8ae3f8311e08eb414d8d018fb877f81de0c0d60"
+      "sha256": "71af9292a404460417d8bdebf3a45d113cc3a091ab3ab9ff06003cc63f154562"
     },
     "self_echo_model": {
       "bytes": 2319,
       "path": "evidence/generated/p10_1r_self_echo_model.json",
-      "sha256": "4bbe4dd906ded5ff6d3e699dd221fb86b9904adf61f2377c1fc04e20d65c3fa6"
+      "sha256": "259a110d3a1651b790f78684aefeafb56d7c58e1723bffae84ddbde5238465a9"
     },
     "shutdown_build": {
       "bytes": 8474,
       "path": "evidence/generated/p10_1r_shutdown_build_summary.json",
-      "sha256": "da7411facc35b1bafa60317e048dbbdd2639d802689a6065767d0f5640634796"
+      "sha256": "bc594f32a11ef60d70209748f68354e9d2c7cbe3acb7b8d5dc6165d82b477b8a"
     }
   },
   "network_used": false,
@@ -166,18 +166,18 @@
   },
   "role_build_evidence": {
     "fixed": {
-      "bytes": 4653,
+      "bytes": 4656,
       "path": "evidence/generated/p10_1r_fixed_build.json",
-      "sha256": "1ba40b576c23ef11c3b5c6124e6a732b65d135e29884a86006ff3a6d08d65cc7"
+      "sha256": "0043f8f7218f737abf5be6d82434ca3ccfd0dbbceefd3b690e2e734e1f0a29a4"
     },
     "rotating": {
-      "bytes": 4693,
+      "bytes": 4694,
       "path": "evidence/generated/p10_1r_rotating_build.json",
-      "sha256": "9138991d87f42873834cc123104a707d084175f3caab53d9346aa083fdb5d802"
+      "sha256": "27534cbce4d31acb41236e78e54d14d4a89fb9e06c76361cd0923b0f2524d4dd"
     }
   },
   "schema_version": 1,
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "status": "PASS",
   "test_id": "P10_1R-EVIDENCE-CONSISTENCY"
 }

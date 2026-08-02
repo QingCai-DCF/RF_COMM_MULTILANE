@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 182
+REQUIREMENT_COUNT: 183
 PASS: 154
-PENDING: 23
+PENDING: 24
 FAIL: 5
 WAIVED: 0
 ```
@@ -189,6 +189,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
 | `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | A local transmission on one module shall not blank receive admission on the other lane. |
 | `P10_1R-ECHO-005` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
+| `P10_1R-ECHO-006` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
 | `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
 | `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
 | `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
@@ -271,13 +272,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
-- `PROJECT_STATUS.md` — `c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f`
+- `config/project_state.json` — `ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988`
+- `PROJECT_STATUS.md` — `3aa4f629a222cf26af9a419096bde2fa9c0d38493a3def230144eac0a8dba10e`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
+- `config/project_state.json` — `ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988`
 
 ### `P8A-EVID-001`
 
@@ -287,8 +288,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30`
-- `PROJECT_STATUS.md` — `c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f`
+- `config/project_state.json` — `ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988`
+- `PROJECT_STATUS.md` — `3aa4f629a222cf26af9a419096bde2fa9c0d38493a3def230144eac0a8dba10e`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1105,37 +1106,37 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1R-ECHO-001`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437`
 
 ### `P10_1R-ECHO-003`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437`
 
 ### `P10_1R-ECHO-004`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `32f4065f995c6101cb4541963cb4afaca975c1c939f665ebffc7a0195cdab534`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `ac5cf98ac68104ee6994acb2e2d56803a7fb9c31df7ad88df0101ef991411228`
 
 ### `P10_1R-ACK-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437`
 
 ### `P10_1R-ACK-002`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f`
 
 ### `P10_1R-ACK-003`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
-- `evidence/generated/p10_1r_xsim/summary.json` — `6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e`
+- `evidence/generated/p10_1r_xsim/summary.json` — `f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f`
 
 ### `P10_1R-HOST-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f`

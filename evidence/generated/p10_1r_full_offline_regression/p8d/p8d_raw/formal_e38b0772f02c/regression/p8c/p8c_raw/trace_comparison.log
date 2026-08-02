@@ -1,0 +1,17 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/compare_p8c_rtl_trace.py C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\evidence\generated\p10_1r_exact_source_p8d\p8d_raw\formal_e38b0772f02c\regression\p8c\p8c_raw\xsim\tb_p8c_trace_crosscheck\run.log --output C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\evidence\generated\p10_1r_exact_source_p8d\p8d_raw\formal_e38b0772f02c\regression\p8c\p8c_raw\trace_comparison.json
+RETURNCODE=0
+
+STDOUT
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "first_mismatch": null,
+  "profile": "P8C_REDUCED_1MHZ_100CYCLE_WINDOW",
+  "random_seed": null,
+  "record_count": 250,
+  "status": "PASS",
+  "test_id": "P8C-RTL-PYTHON-CYCLE-TRACE"
+}
+
+STDERR

@@ -1,0 +1,10 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/generate_p8d_data_plane_config.py --verify --json-summary
+RETURN_CODE=0
+STARTED_UTC=2026-08-01T23:19:19.781739Z
+FINISHED_UTC=2026-08-01T23:19:19.852718Z
+STDOUT_BEGIN
+{"CURRENT_RUN_HARDWARE_AUTHORIZATION": false, "NO_HARDWARE_ACTIONS_EXECUTED": true, "outputs": ["config/generated/p8d_data_plane_constants.json", "config/generated/p8d_data_plane_schema_validation.json", "rtl/generated/ir_p8d_data_plane_pkg.sv", "software/ps_driver/p8d_data_plane_config.h", "tools/generated/p8d_data_plane_config.py", "tools/generated/__init__.py", "docs/generated/P8D_DATA_PLANE_PARAMETERS.md"], "profile": "P8D_MULTI_PROFILE_OFFLINE", "source_path": "config/p8d_data_plane.yaml", "source_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02", "stale_outputs": [], "status": "PASS", "test_id": "P8D-CANONICAL-CONFIG", "validation": {"active_window_less_than_half_space": true, "descriptor_layout_bytes_covered": 64, "minimum_outstanding": 32, "minimum_sack_bits": 32, "profile_count": 3, "profiles": ["Z7010_2LANE_DEV", "Z7020_FIXED_32MODULE_ACCOUNTING_MODEL_WITH_8LANE_DATA_PLANE", "Z7020_ROTATING_8LANE_MODEL"], "sequence_space": 65536, "status": "PASS"}}
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

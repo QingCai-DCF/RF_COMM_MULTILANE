@@ -13,7 +13,7 @@ HARDWARE_SCOPE_PROMOTED: false
   "HARDWARE_SCOPE_PROMOTED": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
   "failures": [],
-  "generated_at_utc": "2026-08-01T21:01:54+00:00",
+  "generated_at_utc": "2026-08-01T23:19:01+00:00",
   "profile": "P8C_MULTI_PROFILE_OFFLINE",
   "simulation": {
     "log_directory": "evidence/generated/p10_1r_exact_source_p8c/p8c_raw/xsim/tb_p8c_endpoint_safety",
@@ -38,7 +38,7 @@ HARDWARE_SCOPE_PROMOTED: false
     ],
     "status": "PASS"
   },
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "static": {
     "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
     "HARDWARE_SCOPE_PROMOTED": false,

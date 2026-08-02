@@ -13,7 +13,7 @@ HARDWARE_SCOPE_PROMOTED: false
   "HARDWARE_SCOPE_PROMOTED": false,
   "NO_HARDWARE_ACTIONS_EXECUTED": true,
   "failures": [],
-  "generated_at_utc": "2026-08-01T21:01:54+00:00",
+  "generated_at_utc": "2026-08-01T23:19:01+00:00",
   "p7_status_preserved": "PASS",
   "p8b_status_preserved": "PASS",
   "profile": "P8C_MULTI_PROFILE_OFFLINE",
@@ -22,7 +22,7 @@ HARDWARE_SCOPE_PROMOTED: false
     "source": "parent run_offline_gates.py",
     "status": "PASS"
   },
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "status": "PASS",
   "test_id": "P8C-P0-P8B-REGRESSION"
 }

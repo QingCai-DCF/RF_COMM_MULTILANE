@@ -1,7 +1,7 @@
 # P10.1R RX admission design evidence
 
 - Status: `PASS`
-- Source commit: `60581a2074fd0021af9e2bf2c7cf96ec20cbcf92`
+- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
 - Hardware actions executed: `false`
 
 ```json
@@ -9,9 +9,9 @@
   "candidate_guard_cycles": 4096,
   "candidate_guard_us": 64,
   "config": {
-    "bytes": 3443,
+    "bytes": 3477,
     "path": "config/tfdu_rx_admission.yaml",
-    "sha256": "2920d482dfbb18d368c012d1d092dd05a5f61ae2efe8b6d621a4bc3a46554e0a"
+    "sha256": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69"
   },
   "current_run_hardware_authorization": false,
   "direct_hardware_claim": false,
@@ -20,7 +20,7 @@
     "path": "evidence/generated/p10_1r_xsim/summary.json",
     "sha256": "6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc"
   },
-  "generated_at_utc": "2026-08-01T19:42:06+00:00",
+  "generated_at_utc": "2026-08-01T22:39:46+00:00",
   "guard_selection_evidence": {
     "bytes": 3571,
     "path": "evidence/generated/p10_1r_echo_guard_selection.json",
@@ -61,9 +61,9 @@
   "schema_version": 1,
   "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
   "selected_final_guard_cycles": 4096,
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "source_identity": {
-    "ack_header_encoding": "byte11_bits_7_2",
+    "ack_header_encoding": "byte11_bits_7_2_source_bit_1_lane_bit_0_direction",
     "airtime_bytes_added": 0,
     "data_header_encoding": "byte13_bits_7_2",
     "fixed_node_id": 1,

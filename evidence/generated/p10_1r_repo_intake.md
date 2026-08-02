@@ -1,7 +1,7 @@
 # P10.1R repository intake
 
 - Status: `PASS`
-- Source commit: `60581a2074fd0021af9e2bf2c7cf96ec20cbcf92`
+- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
 - Hardware actions executed: `false`
 
 ```json
@@ -16,7 +16,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-01T19:42:06+00:00",
+  "generated_at_utc": "2026-08-01T22:39:46+00:00",
   "goal": {
     "bytes": 30007,
     "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
@@ -36,19 +36,19 @@
       "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
     },
     {
-      "bytes": 35971,
+      "bytes": 37050,
       "path": "config/project_state.json",
-      "sha256": "10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8"
+      "sha256": "4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30"
     },
     {
-      "bytes": 227793,
+      "bytes": 228507,
       "path": "config/project_requirements.yaml",
-      "sha256": "56ca48846aee4a80316c32b8e631f0733efeccd6a5f20580e650ed0dbcda6c00"
+      "sha256": "efa2143c9136a1e6327b81064226c4e7daeabefb182d69ab189b48d1312392e5"
     },
     {
-      "bytes": 3443,
+      "bytes": 3477,
       "path": "config/tfdu_rx_admission.yaml",
-      "sha256": "2920d482dfbb18d368c012d1d092dd05a5f61ae2efe8b6d621a4bc3a46554e0a"
+      "sha256": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69"
     },
     {
       "bytes": 1556,
@@ -71,9 +71,9 @@
       "sha256": "73bad916dbccb24b9ae70504e2a2565962a890cd4b87a52756ef858352c18124"
     },
     {
-      "bytes": 15725,
+      "bytes": 15805,
       "path": "sim/tb/tb_p10_1r_focused.sv",
-      "sha256": "0ff2510f3e0316817aef62f055a1fb6f590e5e83fdf56af4cd52596333de0fc6"
+      "sha256": "6eb62ae224b9c8ac123bb714445f5ac9722e34df7e0acf2a02ac4cfd72ebba48"
     }
   ],
   "lane_mapping": {
@@ -85,8 +85,8 @@
   "offline_tag_is_ancestor": true,
   "p10_pass_tag_is_ancestor": true,
   "schema_version": 1,
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
-  "source_worktree_dirty_before_generation": true,
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+  "source_worktree_dirty_before_generation": false,
   "status": "PASS",
   "test_id": "P10_1R-REPOSITORY-INTAKE",
   "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R"

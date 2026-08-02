@@ -3,7 +3,7 @@
 - Status: `PASS`
 - Test ID: `P8D-FINAL-ACCEPTANCE`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `60581a2074fd0021af9e2bf2c7cf96ec20cbcf92`
+- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
 
 ```json
 {
@@ -41,7 +41,7 @@
   "P8D_CHECKPOINT_COMMIT": "RESOLVED_BY_P8D_TAG_TARGET_AFTER_COMMIT",
   "P8D_DATA_PLANE_CONFIG_SHA256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
   "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE": "PASS",
-  "P8D_SOURCE_COMMIT": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "P8D_SOURCE_COMMIT": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "P8D_TAG": "p8d-pass",
   "PASS": [
     "8LANE_16MBPS_ARCHITECTURE_FEASIBILITY",
@@ -91,8 +91,8 @@
     "Z7020_ROTATING_8LANE_PROFILE"
   ],
   "PROJECT_CONSTRAINTS_SHA256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
-  "PROJECT_REQUIREMENTS_SHA256": "efd62fd324efcc18791d29b01081e7ec878824e3721e2ba44614e9a736ff458b",
-  "PROJECT_STATE_SHA256": "10c044ed4e21c86fa6acbc3a565185d4ccf70cebbbf1ce32024242f566e83dc8",
+  "PROJECT_REQUIREMENTS_SHA256": "5879855318a061dcab8e4c25f0c92d0481b480b3bd4c4f29bb080589e58104b6",
+  "PROJECT_STATE_SHA256": "4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30",
   "REGISTER_MAP_SHA256": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea",
   "SKIP_WITH_REASON": [],
   "UNCHANGED_PENDING_SCOPES": {
@@ -151,12 +151,12 @@
     "Z7020_OUTSTANDING_64_PROFILE": "PASS",
     "Z7020_ROTATING_8LANE_PROFILE": "PASS"
   },
-  "generated_utc": "2026-08-01T22:06:43.789417Z",
+  "generated_utc": "2026-08-01T23:29:00.247319Z",
   "hardware_scope_promoted": false,
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
   "schema_version": 1,
   "scope_note": "P8D is portable RTL/software/model acceptance only; no DMA, DDR, Z7020, rotation, throughput-hardware, or final-product hardware PASS is claimed.",
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "status": "PASS",
   "test_id": "P8D-FINAL-ACCEPTANCE"
 }

@@ -1,0 +1,33 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe -m unittest discover -s tests/p8c -v
+RETURNCODE=0
+
+STDOUT
+
+STDERR
+test_full_reference_campaign (test_tfdu_safety_reference.CampaignTests.test_full_reference_campaign) ... ok
+test_clear_starts_cooldown (test_tfdu_safety_reference.ContinuousHighTests.test_clear_starts_cooldown) ... ok
+test_max_minus_one_and_max_allowed (test_tfdu_safety_reference.ContinuousHighTests.test_max_minus_one_and_max_allowed) ... ok
+test_max_plus_one_requested_is_killed_and_latched (test_tfdu_safety_reference.ContinuousHighTests.test_max_plus_one_requested_is_killed_and_latched) ... ok
+test_zero_one_normal_pulse_and_very_long_request (test_tfdu_safety_reference.ContinuousHighTests.test_zero_one_normal_pulse_and_very_long_request) ... ok
+test_cross_bucket_attack (test_tfdu_safety_reference.ExactDutyTests.test_cross_bucket_attack) ... ok
+test_design_target_and_next_requested_cycle (test_tfdu_safety_reference.ExactDutyTests.test_design_target_and_next_requested_cycle) ... ok
+test_history_invalidation_requires_full_cooldown (test_tfdu_safety_reference.ExactDutyTests.test_history_invalidation_requires_full_cooldown) ... ok
+test_physical_histories_are_independent (test_tfdu_safety_reference.ExactDutyTests.test_physical_histories_are_independent) ... ok
+test_reduced_window_exhaustive_sequences (test_tfdu_safety_reference.ExactDutyTests.test_reduced_window_exhaustive_sequences) ... ok
+test_ring_wrap_and_expiration (test_tfdu_safety_reference.ExactDutyTests.test_ring_wrap_and_expiration) ... ok
+test_strict_20_percent_boundary (test_tfdu_safety_reference.ExactDutyTests.test_strict_20_percent_boundary) ... ok
+test_zero_and_single_pulse (test_tfdu_safety_reference.ExactDutyTests.test_zero_and_single_pulse) ... ok
+test_drop_midframe_requires_new_boundary_and_rearm (test_tfdu_safety_reference.PermitTests.test_drop_midframe_requires_new_boundary_and_rearm) ... ok
+test_high_filter_and_explicit_arm (test_tfdu_safety_reference.PermitTests.test_high_filter_and_explicit_arm) ... ok
+test_one_hot_path_gating_and_kill_reason_priority (test_tfdu_safety_reference.PermitTests.test_one_hot_path_gating_and_kill_reason_priority) ... ok
+test_power_up_low_and_xz_fail_low (test_tfdu_safety_reference.PermitTests.test_power_up_low_and_xz_fail_low) ... ok
+test_receive_only_with_permit_low (test_tfdu_safety_reference.PermitTests.test_receive_only_with_permit_low) ... ok
+test_canonical_exact_conversions (test_tfdu_safety_reference.SafetyMathTests.test_canonical_exact_conversions) ... ok
+test_invalid_target_fails (test_tfdu_safety_reference.SafetyMathTests.test_invalid_target_fails) ... ok
+test_non_divisible_clock_fails_closed (test_tfdu_safety_reference.SafetyMathTests.test_non_divisible_clock_fails_closed) ... ok
+test_strict_thresholds (test_tfdu_safety_reference.SafetyMathTests.test_strict_thresholds) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.202s
+
+OK

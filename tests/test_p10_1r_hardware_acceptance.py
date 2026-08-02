@@ -39,11 +39,19 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
         )
-        self.assertEqual(self.runner.EXPECTED_ARTIFACT_PURPOSE, "NO_ACTIVE_BUNDLE")
-        self.assertFalse(self.runner.EXPECTED_ACCEPTANCE_ELIGIBLE)
-        self.assertEqual(self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES, ())
-        with self.assertRaisesRegex(RuntimeError, "artifact-freeze SHA256 mismatch"):
-            self.runner.load_freeze()
+        self.assertEqual(self.runner.EXPECTED_ARTIFACT_PURPOSE, "FINAL_ACCEPTANCE")
+        self.assertTrue(self.runner.EXPECTED_ACCEPTANCE_ELIGIBLE)
+        self.assertEqual(
+            self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
+            self.runner.STAGES,
+        )
+        freeze, artifacts = self.runner.load_freeze()
+        self.assertEqual(freeze["status"], "PASS")
+        self.assertEqual(
+            freeze["source_commit"],
+            "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
+        )
+        self.assertEqual(len(artifacts), 10)
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()

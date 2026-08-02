@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30
+    sha256: ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988
   - path: PROJECT_STATUS.md
-    sha256: c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f
-  artifact_hash: 4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30
+    sha256: 3aa4f629a222cf26af9a419096bde2fa9c0d38493a3def230144eac0a8dba10e
+  artifact_hash: ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30
+    sha256: ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30
+    sha256: ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988
   - path: PROJECT_STATUS.md
-    sha256: c955138ce673feca40bda7c7c3ba748f56105e3160b9eba07982dcde3d3e392f
+    sha256: 3aa4f629a222cf26af9a419096bde2fa9c0d38493a3def230144eac0a8dba10e
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 4091b1510b48fd891f76b7eeeaa09805cdf14bdac06bee1369aff7ab3cec1a30
+  artifact_hash: ffd2178ff27bb60819a2214dbb448f49b11c393803a630e6d65f87ac22d19988
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3503,11 +3503,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c
+    sha256: f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437
   hardware_followup: Direct four-module admission counters remain pending under a new artifact-bound current-run authorization.
-  artifact_hash: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+  artifact_hash: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
 - requirement_id: P10_1R-ECHO-002
   requirement_text: Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3533,12 +3533,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c
+    sha256: f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437
   hardware_followup: Hardware must populate raw echo-tail maximum, p99, and p99.9; no hardware count is inferred from the
     model.
-  artifact_hash: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+  artifact_hash: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
 - requirement_id: P10_1R-ECHO-004
   requirement_text: A local transmission on one module shall not blank receive admission on the other lane.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3551,11 +3551,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_dual_endpoint_regression/summary.json
-    sha256: 32f4065f995c6101cb4541963cb4afaca975c1c939f665ebffc7a0195cdab534
+    sha256: ac5cf98ac68104ee6994acb2e2d56803a7fb9c31df7ad88df0101ef991411228
   hardware_followup: The direct 4x4 receive-admission matrix remains pending.
-  artifact_hash: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+  artifact_hash: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
 - requirement_id: P10_1R-ECHO-005
   requirement_text: The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail
     plus deterministic margin.
@@ -3571,7 +3571,8 @@ requirements:
   hardware_followup: The calibration selected 4096 cycles from max tail zero plus a 4096-cycle margin; rebuilt-artifact remeasurement
     and full acceptance remain pending.
 - requirement_id: P10_1R-ECHO-006
-  requirement_text: Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane.
+  requirement_text: Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving
+    physical lane.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Focused ACK lane encode/decode XSIM plus the direct role-bound four-path hardware crosstalk matrix.
   verification_stage: P10_1R_HARDWARE_REMEDIATION
@@ -3595,13 +3596,13 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+    sha256: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: a6efa839cc37363d512efa99c91608595982d589ce69e63cff1c1856256f818c
+    sha256: f9a0a646d9344f30b13af7111a2d7ae3746d30a8999c56bb257e49f8c5bcd437
   hardware_followup: Direct ACK-window telemetry and final hardware tuning remain pending.
-  artifact_hash: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+  artifact_hash: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
 - requirement_id: P10_1R-ACK-002
   requirement_text: Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime,
     or global pipeline drain.
@@ -3615,11 +3616,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9
+    sha256: 1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f
   hardware_followup: Direct inter-object timing must confirm that object boundaries do not create a hidden hardware turnaround.
-  artifact_hash: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+  artifact_hash: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
 - requirement_id: P10_1R-ACK-003
   requirement_text: At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying,
     or committing across the continuous pipeline.
@@ -3633,13 +3634,13 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+    sha256: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: 6b2c842ac475fb179fad553deac6a07ff33bb1e8191764d59d950cc1714c3ccc
+    sha256: f0283f7072e9d6eb5a2c8d747b3ab1a27fb8f3640f0facf5d0f0481c2a04b09e
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9
+    sha256: 1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f
   hardware_followup: Direct descriptor, completion, and occupancy telemetry remain pending.
-  artifact_hash: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+  artifact_hash: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
 - requirement_id: P10_1R-HOST-001
   requirement_text: The host shall not participate in the per-object fast path; each direction shall use at most four blocking
     commands and at least 1000 segments per command.
@@ -3653,11 +3654,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+    sha256: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: aa89d950f5bf602947adeb5a7f40128b25ad73af57b7821fb5984787a09b23b9
+    sha256: 1d3370257733ad4b6b540f6ef3b5da91d0597f780b1497c738314d255976173f
   hardware_followup: The formal hardware window must report host command counts and segments per command.
-  artifact_hash: f14617654bfa42561235decc409241e78e0b13fb8b6e55a5a129c440531a4a6c
+  artifact_hash: 5cf7a4db79d49eb5672e1183a3403b6bdeba87a5dea1302f4aebdf03331f7c9e
 - requirement_id: P10_1R-PERF-001
   requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
   profile: P10_1R_AX7020_2LANE_REMEDIATION

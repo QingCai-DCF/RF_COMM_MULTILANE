@@ -1,4 +1,4 @@
-COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -nojournal -nolog -notrace -source C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\scripts\vivado\p8c_resource_audit.tcl -tclargs C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R ir_p8c_resource_top_32 xc7z020clg400-1 C:\Users\user\AppData\Local\Temp\p8c_ooc_8rqkuyf0\out
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -nojournal -nolog -notrace -source C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\scripts\vivado\p8c_resource_audit.tcl -tclargs C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R ir_p8c_resource_top_32 xc7z020clg400-1 C:\Users\user\AppData\Local\Temp\p8c_ooc_mt975fsv\out
 RETURNCODE=0
 
 STDOUT
@@ -19,9 +19,9 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 46076
+INFO: [Synth 8-7075] Helper process launched with PID 36344
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1828.793 ; gain = 413.367
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 1828.520 ; gain = 413.945
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'ir_p8c_resource_top_32' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:74]
 INFO: [Synth 8-6157] synthesizing module 'ir_p8c_resource_top' [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:6]
@@ -47,21 +47,21 @@ INFO: [Synth 8-6155] done synthesizing module 'ir_tfdu_safety_endpoint' (0#1) [C
 INFO: [Synth 8-6155] done synthesizing module 'ir_p8c_resource_top' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:6]
 INFO: [Synth 8-6155] done synthesizing module 'ir_p8c_resource_top_32' (0#1) [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_p8c_resource_tops.sv:74]
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1934.801 ; gain = 519.375
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 1935.098 ; gain = 520.523
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1934.801 ; gain = 519.375
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1935.098 ; gain = 520.523
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7z020clg400-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1934.801 ; gain = 519.375
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1935.098 ; gain = 520.523
 ---------------------------------------------------------------------------------
 INFO: [Device 21-403] Loading part xc7z020clg400-1
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1934.801 ; gain = 519.375
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:04 . Memory (MB): peak = 1940.488 ; gain = 525.914
 ---------------------------------------------------------------------------------
 No constraint files found.
 ---------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:58 ; elapsed = 00:01:00 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:59 ; elapsed = 00:01:01 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -135,7 +135,7 @@ No constraint files found.
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:58 ; elapsed = 00:01:00 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Timing Optimization : Time (s): cpu = 00:00:59 ; elapsed = 00:01:01 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -187,7 +187,7 @@ INFO: [Synth 8-7052] The timing for the instance impl/endpoint/g_physical_safety
 INFO: [Synth 8-7052] The timing for the instance impl/endpoint/g_physical_safety[30].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance impl/endpoint/g_physical_safety[31].u_physical_module_safety/u_exact_duty_accountant/history_mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:59 ; elapsed = 00:01:01 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Technology Mapping : Time (s): cpu = 00:01:00 ; elapsed = 00:01:02 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -205,37 +205,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished IO Insertion : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -337,18 +337,18 @@ Report Instance Areas:
 |67    |        u_exact_duty_accountant                        |ir_tfdu_exact_duty_accountant     |   214|
 +------+-------------------------------------------------------+----------------------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
-Synthesis Optimization Complete : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 2799.250 ; gain = 1383.824
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
+Synthesis Optimization Complete : Time (s): cpu = 00:01:03 ; elapsed = 00:01:04 . Memory (MB): peak = 2806.406 ; gain = 1391.832
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.081 . Memory (MB): peak = 2799.250 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.079 . Memory (MB): peak = 2806.406 ; gain = 0.000
 INFO: [Netlist 29-17] Analyzing 1376 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2799.250 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2806.406 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
@@ -356,23 +356,23 @@ Synth Design complete | Checksum: 9e41a5a8
 INFO: [Common 17-83] Releasing license: Synthesis
 54 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:04 ; elapsed = 00:01:07 . Memory (MB): peak = 2799.250 ; gain = 1408.688
+synth_design: Time (s): cpu = 00:01:05 ; elapsed = 00:01:07 . Memory (MB): peak = 2806.406 ; gain = 1416.680
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
 INFO: [Timing 38-35] Done setting XDC timing constraints.
 WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
 Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
-Command: report_drc -file C:/Users/user/AppData/Local/Temp/p8c_ooc_8rqkuyf0/out/drc.rpt
+Command: report_drc -file C:/Users/user/AppData/Local/Temp/p8c_ooc_mt975fsv/out/drc.rpt
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2023.1/data/ip'.
 INFO: [DRC 23-27] Running DRC with 2 threads
-INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/AppData/Local/Temp/p8c_ooc_8rqkuyf0/out/drc.rpt.
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/AppData/Local/Temp/p8c_ooc_mt975fsv/out/drc.rpt.
 report_drc completed successfully
 WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ RAMB18*}'.
 WARNING: [Vivado 12-180] No cells matched 'get_cells -hierarchical -filter {REF_NAME =~ SRL*}'.
 INFO: [Timing 38-480] Writing timing data to binary archive.
-INFO: [Common 17-1381] The checkpoint 'C:/Users/user/AppData/Local/Temp/p8c_ooc_8rqkuyf0/out/post_synth.dcp' has been generated.
-INFO: [Common 17-206] Exiting Vivado at Sun Aug  2 05:01:53 2026...
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/AppData/Local/Temp/p8c_ooc_mt975fsv/out/post_synth.dcp' has been generated.
+INFO: [Common 17-206] Exiting Vivado at Sun Aug  2 07:19:00 2026...
 
 STDERR

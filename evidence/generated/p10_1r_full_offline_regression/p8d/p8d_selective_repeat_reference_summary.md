@@ -3,7 +3,7 @@
 - Status: `PASS`
 - Test ID: `P8D-PYTHON-REFERENCE-CAMPAIGN`
 - Profile: `P8D_MULTI_PROFILE_OFFLINE`
-- Source commit: `60581a2074fd0021af9e2bf2c7cf96ec20cbcf92`
+- Source commit: `e38b0772f02c898ebe9b53f6ac3c1bda06a4210c`
 
 ```json
 {
@@ -80,15 +80,15 @@
     },
     "test_id": "P8D-PYTHON-REFERENCE-CAMPAIGN"
   },
-  "generated_utc": "2026-08-01T21:02:17.551344Z",
+  "generated_utc": "2026-08-01T23:19:22.094551Z",
   "hardware_scope_promoted": false,
   "profile": "P8D_MULTI_PROFILE_OFFLINE",
-  "reference_campaign_path": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/reference/reference_campaign.json",
-  "reference_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/python_reference.log",
+  "reference_campaign_path": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/reference/reference_campaign.json",
+  "reference_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/python_reference.log",
   "schema_version": 1,
-  "source_commit": "60581a2074fd0021af9e2bf2c7cf96ec20cbcf92",
+  "source_commit": "e38b0772f02c898ebe9b53f6ac3c1bda06a4210c",
   "status": "PASS",
   "test_id": "P8D-PYTHON-REFERENCE-CAMPAIGN",
-  "unit_test_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_60581a2074fd/python_unit_tests.log"
+  "unit_test_log": "evidence/generated/p10_1r_exact_source_p8d/p8d_raw/formal_e38b0772f02c/python_unit_tests.log"
 }
 ```
