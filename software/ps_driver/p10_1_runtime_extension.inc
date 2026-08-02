@@ -603,7 +603,7 @@ static int p10_1_validate_stream_args(
        mailbox->ring_depth != 32U) ||
       mailbox->cache_mode != 1U ||
       total == 0U || object_bytes == 0U ||
-      total > P10_1_RUNTIME_MAX_OBJECT_BYTES ||
+      total > P10_1_RUNTIME_MAX_STREAM_BYTES ||
       object_bytes > total ||
       object_bytes > P10_1_RUNTIME_MAX_OBJECT_BYTES ||
       descriptor_bytes == 0U || descriptor_bytes > object_bytes ||

@@ -38,6 +38,10 @@ host:
   maximum_blocking_commands_per_direction: 4
   implementation_blocking_commands_per_direction: 1
   minimum_segments_per_host_command: 1000
+  maximum_stream_bytes_per_blocking_command: 536870912
+  formal_stream_bytes_per_direction_command: 436207616
+  formal_objects_per_host_command: 1664
+  formal_segments_per_host_command: 6656
 safety:
   global_permit_count_per_endpoint: 1
   lane_mask_max: '0x3'

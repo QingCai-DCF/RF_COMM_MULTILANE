@@ -1057,6 +1057,25 @@ def _p101_receiver(detail: dict[str, Any]) -> dict[str, Any]:
     return detail["rotating"] if detail["direction"] == 0 else detail["fixed"]
 
 
+def formal_host_metrics(details: list[dict[str, Any]]) -> dict[str, int]:
+    senders = [_p101_sender(detail) for detail in details]
+    host_commands = sum(int(sender["host_command_count"]) for sender in senders)
+    dependency_count = sum(
+        0 if sender.get("checks", {}).get("host_not_fast_path") is True else 1
+        for sender in senders
+    )
+    segment_counts = [
+        int(sender["fast_path_segment_count"])
+        // max(1, int(sender["host_command_count"]))
+        for sender in senders
+    ]
+    return {
+        "host_blocking_commands": host_commands,
+        "host_fast_path_dependency_count": dependency_count,
+        "minimum_segments_per_host_command": min(segment_counts, default=0),
+    }
+
+
 def window_summary(details: list[dict[str, Any]], stage: str) -> list[dict[str, Any]]:
     specs = [item for item in build_plans()[stage] if isinstance(item, tuple)]
     windows: list[dict[str, Any]] = []
@@ -1339,6 +1358,7 @@ def evaluate_stage(
             matched = [detail for detail in details if detail.get("window") == label]
             committed = sum(detail["requested_bytes"] for detail in matched)
             goodput = committed * 8 / duration
+            host = formal_host_metrics(matched)
             windows.append(
                 {
                     "label": label,
@@ -1347,10 +1367,17 @@ def evaluate_stage(
                     "case_count": len(matched),
                     "committed_bytes": committed,
                     "application_goodput_bps": goodput,
+                    **host,
                 }
             )
             if not matched or goodput < 4_000_000:
                 errors.append(f"{label}: formal goodput below 4 Mbit/s")
+            if host["host_blocking_commands"] > 4:
+                errors.append(f"{label}: more than four host commands")
+            if host["host_fast_path_dependency_count"] != 0:
+                errors.append(f"{label}: host remains in the per-object fast path")
+            if host["minimum_segments_per_host_command"] < 1000:
+                errors.append(f"{label}: fewer than 1000 segments per host command")
         semantics = {"elapsed_ms": elapsed, "formal_windows": windows}
     summary = {
         "schema_version": 1,

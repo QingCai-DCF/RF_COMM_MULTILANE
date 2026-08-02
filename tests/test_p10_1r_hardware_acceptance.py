@@ -120,6 +120,47 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             "recovery_ordinal = result->object_count / 2U", extension
         )
 
+    def test_formal_stream_is_one_large_autonomous_host_command(self) -> None:
+        protocol = PROTOCOL.read_text(encoding="utf-8")
+        extension = EXTENSION.read_text(encoding="utf-8")
+        tcl = TCL_PATH.read_text(encoding="utf-8")
+        self.assertIn(
+            "P10_1_RUNTIME_MAX_STREAM_BYTES UINT32_C(0x20000000)", protocol
+        )
+        self.assertIn("total > P10_1_RUNTIME_MAX_STREAM_BYTES", extension)
+        self.assertIn("proc p10_run_p101_formal_window", tcl)
+        self.assertIn("set stream_bytes 436207616", tcl)
+        self.assertIn(
+            'p10_run_p101_formal_window "${label}_formal_f2r" 840 0 3', tcl
+        )
+        self.assertIn(
+            'p10_run_p101_formal_window "${label}_formal_r2f" 840 1 3', tcl
+        )
+
+        detail = {
+            "direction": 0,
+            "fixed": {
+                "host_command_count": 1,
+                "fast_path_segment_count": 6656,
+                "checks": {"host_not_fast_path": True},
+            },
+            "rotating": {},
+        }
+        self.assertEqual(
+            self.runner.formal_host_metrics([detail]),
+            {
+                "host_blocking_commands": 1,
+                "host_fast_path_dependency_count": 0,
+                "minimum_segments_per_host_command": 6656,
+            },
+        )
+        self.assertGreater(
+            self.runner.formal_host_metrics([detail] * 24)[
+                "host_blocking_commands"
+            ],
+            4,
+        )
+
     def test_snapshot_parser_is_fail_closed(self) -> None:
         words = [0] * 40
         words[35:40] = [4096, 256, 131072, 4, 3]

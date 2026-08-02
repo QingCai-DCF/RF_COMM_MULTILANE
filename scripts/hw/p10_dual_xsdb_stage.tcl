@@ -734,6 +734,50 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
   p10_say "P10_1_WINDOW_PASS_${marker_label}=cases:$index,elapsed_ms:$elapsed"
 }
 
+proc p10_run_p101_formal_window {label duration_sec direction lane \
+                                  absolute_deadline} {
+  # The Goal permits at most four blocking host commands per direction and
+  # calls for one CONFIG/START for the formal window.  One 416-MiB command
+  # contains 1,664 256-KiB objects and 6,656 64-KiB DMA segments, so the PS
+  # launches once while the board-autonomous pipeline remains continuously
+  # responsible for object scheduling, transfer, verification, and commit.
+  set stream_bytes 436207616
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $duration_sec != 840 || $direction ni {0 1} || $lane != 3 ||
+      ![string is wideinteger -strict $absolute_deadline] ||
+      $absolute_deadline < 0} {
+    error "invalid P10.1 formal autonomous window"
+  }
+  set started [clock milliseconds]
+  set deadline $absolute_deadline
+  if {$deadline <= $started || $deadline > $started + $duration_sec * 1000} {
+    error "invalid P10.1 formal absolute window deadline"
+  }
+  set remaining [expr {$deadline - [clock milliseconds]}]
+  if {$remaining <= 16000} {
+    error "insufficient P10.1 formal autonomous window budget"
+  }
+  set timeout [expr {min(1800000, max(10000, $remaining - 6000))}]
+  set object_id [expr {0x5F000000 ^ (($direction & 1) << 27)}]
+  set case_label [format "%s_0000_%d" $label $stream_bytes]
+  set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
+  p10_say "P10_1_WINDOW_START_${marker_label}=$started"
+  set d [p10_p101_case $case_label $object_id $stream_bytes \
+      $direction $lane $timeout]
+  p10_execute_case $d $label
+  set now [clock milliseconds]
+  if {$now > $deadline} {
+    error "P10.1 formal autonomous stream exceeded its bounded deadline"
+  }
+  after [expr {$deadline - $now}]
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$finished < $deadline || $finished > $deadline + 500} {
+    error "P10.1 formal autonomous window deadline bound failed: elapsed=$elapsed ms"
+  }
+  p10_say "P10_1_WINDOW_PASS_${marker_label}=cases:1,elapsed_ms:$elapsed"
+}
+
 proc p10_wait_p101_active {sequence timeout_ms} {
   set deadline [expr {[clock milliseconds] + $timeout_ms}]
   while {[clock milliseconds] < $deadline} {
@@ -828,9 +872,9 @@ proc p10_run_p101_formal {label duration_sec} {
       [expr {$started + 60000}]
   p10_run_p101_window "${label}_warmup_r2f" 60 1 3 16777216 \
       [expr {$started + 120000}]
-  p10_run_p101_window "${label}_formal_f2r" 840 0 3 67108864 \
+  p10_run_p101_formal_window "${label}_formal_f2r" 840 0 3 \
       [expr {$started + 960000}]
-  p10_run_p101_window "${label}_formal_r2f" 840 1 3 67108864 \
+  p10_run_p101_formal_window "${label}_formal_r2f" 840 1 3 \
       [expr {$started + 1800000}]
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
