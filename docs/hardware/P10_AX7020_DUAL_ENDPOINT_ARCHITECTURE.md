@@ -63,13 +63,17 @@ previous object/session cannot be emitted after ownership changes.
 
 ## Half-duplex turnaround
 
-P10 endpoint mode uses bounded DATA bursts of four frames.  The last DATA frame
+P10.1R endpoint mode uses bounded DATA bursts of 32 frames.  The last DATA frame
 of a burst, or the final frame of an object, carries the protocol turnaround
 request in DATA flag bit 1.  The sender then stops scheduling DATA and waits
-for an ACK.  The receiver delays its timer ACK until the explicit boundary and
-returns cumulative ACK/SACK plus its local receiver credit.  Valid ACK receipt
-releases the sender for the next burst.  Timeout retains selective-repeat retry
-behavior.
+for an ACK. Because the two serializers can finish out of sequence, the
+receiver records the tagged frame sequence and waits until its wrap-safe
+cumulative RX base has advanced past that sequence before returning cumulative
+ACK/SACK plus local receiver credit. A 64,000-cycle fallback returns SACK state
+for a genuinely missing earlier frame, still well before the 4,000,000-cycle
+retransmission timeout. Normal no-loss traffic is event-driven and does not pay
+a fixed 1 ms fallback. Valid ACK receipt releases the sender for the next
+burst; timeout retains selective-repeat retry behavior.
 
 The turnaround mechanism is local protocol state carried over the optical
 frames; it is not a shared scheduler and introduces no second permit channel.

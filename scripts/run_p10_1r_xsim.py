@@ -69,6 +69,9 @@ TESTS: list[dict[str, Any]] = [
     {"top": "tb_p10_1r_dual_endpoint",
      "marker": "TB_P10_1R_DUAL_ENDPOINT=PASS",
      "sources": [*COMMON_RTL, "sim/tb/tb_p10_1r_dual_endpoint.sv"]},
+    {"top": "tb_p10_1r_boundary_skew",
+     "marker": "TB_P10_1R_BOUNDARY_SKEW=PASS retries=0/0",
+     "sources": [*COMMON_RTL, "sim/tb/tb_p10_1r_boundary_skew.sv"]},
 ]
 
 
@@ -142,6 +145,7 @@ def run_one(spec: dict[str, Any], raw: Path) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", default="evidence/generated/p10_1r_xsim")
+    parser.add_argument("--only", choices=[spec["top"] for spec in TESTS])
     args = parser.parse_args()
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
@@ -160,9 +164,13 @@ def main() -> int:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = output / "raw" / run_id
     raw.mkdir(parents=True, exist_ok=False)
-    results = [run_one(spec, raw) for spec in TESTS]
+    selected = [
+        spec for spec in TESTS
+        if args.only is None or spec["top"] == args.only
+    ]
+    results = [run_one(spec, raw) for spec in selected]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
-    source_files = sorted({item for spec in TESTS for item in spec["sources"]})
+    source_files = sorted({item for spec in selected for item in spec["sources"]})
     summary = {
         "schema_version": 1,
         "test_id": "P10_1R_FOCUSED_XSIM",

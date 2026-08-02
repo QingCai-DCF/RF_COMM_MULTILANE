@@ -80,8 +80,27 @@ module tb_p10_dual_endpoint_pair;
   // The real stationary fixture can expose each module to a reflection of
   // its own Txd.  Inject that self-echo independently of the cross-endpoint
   // recovery guard so the endpoint-role filter is exercised directly.
+`ifdef P10_1R_BOUNDARY_SKEW
+  // Delay one forward optical lane beyond the DATA-to-ACK guard.  The last
+  // scheduled boundary frame remains on lane1, while the preceding lane0
+  // frame is still in flight.  A correct receiver must not serialize the
+  // boundary ACK until its cumulative base covers both frames.
+  localparam integer BOUNDARY_SKEW_CYCLES = 8192;
+  logic [BOUNDARY_SKEW_CYCLES-1:0] f_lane0_delay_q;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+      f_lane0_delay_q <= '0;
+    else
+      f_lane0_delay_q <= {f_lane0_delay_q[BOUNDARY_SKEW_CYCLES-2:0],
+                          f_a_txd[0]};
+  end
+  wire [1:0] f_to_r_optical = {f_a_txd[1],
+                                f_lane0_delay_q[BOUNDARY_SKEW_CYCLES-1]};
+`else
+  wire [1:0] f_to_r_optical = f_a_txd;
+`endif
   wire [1:0] f_a_rxd = ~((r_b_txd & f_recovery_clear) | f_a_txd);
-  wire [1:0] r_b_rxd = ~((f_a_txd & r_recovery_clear) | r_b_txd);
+  wire [1:0] r_b_rxd = ~((f_to_r_optical & r_recovery_clear) | r_b_txd);
 
   wire f_armed;
   wire r_armed;
@@ -638,14 +657,25 @@ module tb_p10_dual_endpoint_pair;
       $fatal(1, "P10 reset did not fail closed");
 
 `ifndef P10_1R_DROP_DIAG
+`ifndef P10_1R_BOUNDARY_SKEW
     prepare_endpoints();
     run_raw(1'b0, 0);
     run_raw(1'b1, 0);
     run_raw(1'b0, 1);
     run_raw(1'b1, 1);
 `endif
+`endif
 
-`ifdef P10_1R_DROP_DIAG
+`ifdef P10_1R_BOUNDARY_SKEW
+    // Exactly one 32-frame window leaves no later boundary that could hide a
+    // premature cumulative ACK.  Clean traffic must complete without RTO.
+    run_object(247*32, 8'h7b, 1'b0, 2'b11, 16'hfff0, 0, 0, 0);
+    if (f_retry_count != 0 || r_retry_count != 0)
+      $fatal(1, "P10.1R clean boundary-skew traffic retried fixed=%0d rotating=%0d",
+             f_retry_count, r_retry_count);
+    $display("TB_P10_1R_BOUNDARY_SKEW=PASS retries=%0d/%0d",
+             f_retry_count, r_retry_count);
+`elsif P10_1R_DROP_DIAG
     // Developer diagnostic: isolate the full-window missing-first-frame case
     // without changing the canonical unqualified regression scenario list.
     run_object(247*40, 8'h32, 1'b1, 2'b11, 16'h0300, 0, 1, 0);

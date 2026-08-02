@@ -1,0 +1,87 @@
+{
+  "acceptance_scope": "DIAGNOSTIC_ONLY_REQUIRES_CLEAN_EXACT_SOURCE_REBUILD_AND_HARDWARE_RETEST",
+  "current_run_hardware_authorization": false,
+  "diagnostic_source_commit": "660ca514bef7f790691d6b748c35e84af51faea4",
+  "diagnostic_worktree_dirty": true,
+  "generated_at_utc": "2026-08-02T09:30:00+00:00",
+  "hardware_actions_executed": false,
+  "mechanism": {
+    "boundary_ack_condition": "wrap-safe cumulative RX base is strictly after the tagged DATA sequence",
+    "fallback_cycles": 64000,
+    "fallback_purpose": "emit SACK for genuine earlier-frame loss or excess skew before sender RTO",
+    "fallback_us_at_64mhz": 1000,
+    "maximum_data_frame_cycles": 35712,
+    "maximum_no_loss_settle_cycles": 36224,
+    "normal_no_loss_fixed_fallback_overhead_cycles": 0,
+    "receiver_commit_staging_budget_cycles": 512,
+    "retransmission_timeout_cycles": 4000000,
+    "sequence_width_bits": 16
+  },
+  "observations": [
+    {
+      "classification": "HARNESS_SETUP_FAILURE_NON_DECISIVE",
+      "detail": "The first harness also delayed the raw-pulse check and failed its unchanged one-cycle raw-count assertion before reaching the boundary object.",
+      "directory": "evidence/generated/p10_1r_boundary_skew_pre_fix",
+      "log_sha256": "ef3a3cc277054a8c9ab666389158d74513c9dbe7b5bee8e928d842af1e84ee40",
+      "reported_status": "FAIL",
+      "summary_sha256": "80a86ed1eb8c2fa893911c22dbc4748ef3845d91d9456976c5d2521a70d3753e"
+    },
+    {
+      "classification": "DIRECT_PRE_FIX_RTL_FAILURE",
+      "detail": "With raw checks excluded, exact 32-frame clean dual-lane traffic retried fixed/rotating=1/0 after the boundary ACK advanced before the delayed older lane frame.",
+      "directory": "evidence/generated/p10_1r_boundary_skew_pre_fix_v2",
+      "log_sha256": "f8c59eb381dde71886fb496e625bce66e4f19fddfaeed598064f209776afdcd4",
+      "reported_status": "FAIL",
+      "summary_sha256": "658ebd8703c08bd661fb4485df8826574dada0b025a5635d441e06836c70973a"
+    },
+    {
+      "classification": "DESIGN_MARKER_PASS_HARNESS_ASSERTION_NON_DECISIVE",
+      "detail": "The remediated object emitted retries=0/0, then an unrelated focused-duty assertion from the reused wrapper failed because the diagnostic intentionally ran only one short object.",
+      "directory": "evidence/generated/p10_1r_boundary_skew_post_fix",
+      "log_sha256": "ff063572456ac931c64389371e6012479aff96af1f4bdc05f6089f1a6955e8a6",
+      "reported_status": "FAIL",
+      "summary_sha256": "e65824b9ab75b78fcb4efc939a0d2326199c1a7c4166354076ff1fc0f911f53f"
+    },
+    {
+      "classification": "DIRECT_POST_FIX_RTL_PASS",
+      "detail": "The isolated exact 32-frame boundary-skew object completed with retries fixed/rotating=0/0.",
+      "directory": "evidence/generated/p10_1r_boundary_skew_post_fix_v2",
+      "log_sha256": "9b68f8f7cf298fc7c85513df376c8da93b9d28e23db6c9ebbf3a5f30bb8baa8b",
+      "reported_status": "PASS",
+      "summary_sha256": "f2e81f029e12156e50484920a3f55e953d11f7288161f8ee6e2b5626c2622f55"
+    },
+    {
+      "classification": "DIRECT_POST_FIX_WRAP_RTL_PASS",
+      "detail": "The same skew case starting at sequence 0xFFF0 crossed 0xFFFF to 0x0000 and completed with retries fixed/rotating=0/0.",
+      "directory": "evidence/generated/p10_1r_boundary_skew_post_fix_wrap",
+      "log_sha256": "86fbce0c5b123990bdb888f79ae6c3601c24f8423752ea425340156e8a4f14b4",
+      "reported_status": "PASS",
+      "summary_sha256": "6b65eec8b7e22d65e0ba41d438dbac1132661c1328c0a4fafa556670701e91e2"
+    }
+  ],
+  "pre_fix_core_sha256": "edcba650d937938d62dc817130fe6d091e4b8e9cc5b8630b5861e3ca3796c3bb",
+  "post_fix_core_sha256": "6af5c5b3c3c1b7d106f6c48fb492ab0a0a8650deb833a299bc68e176a75eca2d",
+  "result": "PRE_FIX_REPRODUCED_POST_FIX_ZERO_RETRY_AND_WRAP_PASS",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_1R-DUAL-LANE-BOUNDARY-ACK-SKEW-REMEDIATION",
+  "verification": {
+    "full_focused_xsim": {
+      "path": "evidence/generated/p10_1r_boundary_ack_full_xsim_dirty/summary.json",
+      "sha256": "0f503c28f179bc01613f3b65c5cda9a905ff56d29c02815c5b96ce5e2f3c2994",
+      "status": "PASS",
+      "test_count": 8
+    },
+    "performance_and_settle_model": {
+      "modeled_application_goodput_bps": 4073947.033868042,
+      "path": "evidence/generated/p10_1r_boundary_ack_model_dirty/p10_1r_ack_pipeline_model.json",
+      "sha256": "91d1dba9b48841f8a4ae5d2bd1af93c66ad06d91732bf01226ccd16b245e6030",
+      "status": "PASS"
+    },
+    "portable_fault_and_legacy_regression": {
+      "path": "evidence/generated/p10_1r_boundary_ack_dual_endpoint_regression_dirty/summary.json",
+      "sha256": "8bd007e1d84684c64b56dfcce61874c1e820fc20c05122c97fa19879dee0965b",
+      "status": "PASS"
+    }
+  }
+}

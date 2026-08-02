@@ -1,0 +1,148 @@
+# P10.1R ACK/pipeline performance model
+
+- Status: `PASS`
+- Hardware actions executed: `false`
+
+```json
+{
+  "ack_window_stress": {
+    "ack_count": 1562,
+    "ack_threshold": 32,
+    "early_ack_count": 0,
+    "event_count": 50000,
+    "events_by_seed": {
+      "1": 7142,
+      "1024": 7143,
+      "127": 7143,
+      "17": 7143,
+      "20260801": 7143,
+      "31": 7143,
+      "7": 7143
+    },
+    "object_boundary_count": 6317,
+    "object_boundary_forced_ack_count": 0,
+    "outstanding": 32,
+    "pass": true,
+    "pending_at_end": 16,
+    "seeds": [
+      1,
+      7,
+      17,
+      31,
+      127,
+      1024,
+      20260801
+    ]
+  },
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-02T09:47:17+00:00",
+  "hardware_actions_executed": false,
+  "model_source": "scripts/model_p10_1r.py",
+  "model_source_sha256": "fe361dbf8d634e844b28301588081c6d7b3e35bcec482a7db73b4dadf776e1b3",
+  "no_hardware": true,
+  "performance": {
+    "ack_airtime_us": 48.0,
+    "ack_frame_symbols": 96,
+    "ack_overhead_fraction": 0.0035714285714285713,
+    "airtime_ceiling_bps": 4704761.904761905,
+    "application_ceiling_bps": 4095238.0952380956,
+    "boundary_ack_settle_proof": {
+      "boundary_ack_requires_cumulative_base_past_tag": true,
+      "boundary_ack_settle_fallback_cycles": 64000,
+      "boundary_ack_settle_fallback_us": 1000.0,
+      "fallback_margin_over_no_loss_cycles": 27776,
+      "fallback_only_for_loss_or_excess_skew": true,
+      "maximum_data_frame_cycles": 35712,
+      "maximum_no_loss_boundary_settle_cycles": 36224,
+      "normal_no_loss_fixed_fallback_overhead_cycles": 0,
+      "normal_no_loss_wait_is_event_driven": true,
+      "pass": true,
+      "receiver_commit_staging_budget_cycles": 512,
+      "retransmission_timeout_cycles": 4000000,
+      "sequence_comparison_is_wrap_safe": true,
+      "sequence_comparison_width_bits": 16,
+      "wrap_examples": {
+        "000f_before_0010": true,
+        "0010_before_000f": false,
+        "equal_is_before": false,
+        "ffff_before_0000": true
+      }
+    },
+    "bundle_cycle_us": 13440.0,
+    "bundle_recovery_us": 282.0,
+    "data_burst_airtime_us": 13158.0,
+    "data_frame_airtime_us": 558.0,
+    "data_frame_start_period_us": 840.0,
+    "data_frame_symbols": 1116,
+    "data_frame_txd_high_us": 139.5,
+    "direction_overhead_fraction": 0.013839285714285714,
+    "duty_schedule_proof": {
+      "first_frame_requires_empty_history": true,
+      "guard_symbol_slots": 562,
+      "margin_cycles": 8,
+      "maximum_data_frame_symbols": 1116,
+      "maximum_window_high_cycles": 11512,
+      "maximum_window_pulse_intersections": 1439,
+      "pass": true,
+      "symbol_cycles": 32,
+      "target_high_cycles_strict_threshold": 11520,
+      "window_symbol_slots": 2000
+    },
+    "exact_duty_start_spacing_us": 840.0,
+    "expected_sustained_goodput_bps": 4073947.033868042,
+    "frame_boundary_recovery_us": 282.0,
+    "frame_duty_guard_us": 281.0,
+    "frame_launch_overhead_us": 1.0,
+    "frames_per_lane_per_bundle": 16,
+    "gate_pass": true,
+    "guard_overhead_fraction": 0.020982142857142855,
+    "inputs": {
+      "ack_header_bytes": 20,
+      "ack_threshold": 32,
+      "boundary_ack_settle_max_cycles": 64000,
+      "bundle_burst_frames": 32,
+      "data_header_bytes": 24,
+      "direction_quiet_us": 68.0,
+      "dma_ps_overlap_efficiency": 0.995,
+      "duty_target_high_cycles": 11520,
+      "duty_window_cycles": 64000,
+      "exact_target_duty": 0.18,
+      "frame_duty_guard_cycles": 17984,
+      "frame_launch_overhead_cycles": 64,
+      "l1_payload_bytes": 247,
+      "lane_count": 2,
+      "lane_rate_bps": 4000000,
+      "outstanding_frames": 32,
+      "packet_error_rate": 0.0001,
+      "payload_crc_bytes": 4,
+      "post_tx_guard_us": 64.0,
+      "preamble_symbols": 16,
+      "protocol_clock_hz": 64000000,
+      "pulse_us_per_symbol": 0.125,
+      "receiver_commit_staging_budget_cycles": 512,
+      "retransmission_timeout_cycles": 4000000,
+      "rfap_useful_bytes": 215,
+      "symbol_us": 0.5,
+      "symbols_per_byte": 4,
+      "tx_high_cycles_per_symbol": 8
+    },
+    "minimum_gate_bps": 4000000,
+    "modeled_fixed_to_rotating_bps": 4073947.033868042,
+    "modeled_rotating_to_fixed_bps": 4073947.033868042,
+    "overhead_counters_overlap": true,
+    "turnaround_sequence_us": 186.0
+  },
+  "pipeline": {
+    "buffer_count": 4,
+    "descriptor_batch": 8,
+    "host_blocking_commands_per_direction": 1,
+    "per_object_optical_ready_roundtrip": false,
+    "ring_depth": 32,
+    "segments_per_host_command": 1024
+  },
+  "schema_version": 1,
+  "source_commit": "660ca514bef7f790691d6b748c35e84af51faea4",
+  "status": "PASS",
+  "test_id": "P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL"
+}
+```

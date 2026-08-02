@@ -187,6 +187,8 @@ module p9_optical_transport_core #(
   output wire [31:0]  rx_cross_lane_accepted_count_o,
   output wire [63:0]  rx_decoder_clear_count_flat_o
 );
+  import ir_seq_math_pkg::*;
+
   localparam integer STORE_BYTES = WINDOW_SIZE * MAX_PAYLOAD_BYTES;
   localparam integer ENTRY_WIDTH = $clog2(WINDOW_SIZE);
   localparam integer ROLE_P9_DUAL = 0;
@@ -215,6 +217,9 @@ module p9_optical_transport_core #(
       $error("DEPLOYMENT_ROLE must be 0 (P9 dual), 1 (fixed A), or 2 (rotating B)");
     if (ENDPOINT_BURST_FRAMES < 1 || ENDPOINT_BURST_FRAMES > WINDOW_SIZE)
       $error("ENDPOINT_BURST_FRAMES must be within the selective-repeat window");
+    if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
+        (ACK_MAX_DELAY_CYCLES < 1 || ACK_MAX_DELAY_CYCLES >= RTO_CYCLES))
+      $error("endpoint ACK fallback must be positive and below the retransmission timeout");
     if (DEPLOYMENT_ROLE != ROLE_P9_DUAL && CLK_HZ != 64_000_000)
       $error("P10.1R frame-boundary duty proof requires the canonical 64 MHz clock");
     if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
@@ -534,6 +539,7 @@ module p9_optical_transport_core #(
   // after ACK loss) forces an immediate cumulative re-ACK of stable state.
   reg [1:0] dp_ack_control_pipe_q;
   reg [1:0] dp_turnaround_pipe_q;
+  reg [15:0] dp_turnaround_sequence_pipe_q [0:1];
   reg dp_rx_accept_delayed_q;
   reg dp_rx_frame_valid_q;
   reg dp_rx_l1_valid_q;
@@ -643,7 +649,8 @@ module p9_optical_transport_core #(
     // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
     .ack_control_event_i(dp_ack_control_pipe_q[1] &&
                          !dp_rx_accept_delayed_q),
-    .ack_direction_boundary_i(endpoint_mode && endpoint_turnaround_pending_q),
+    .ack_direction_boundary_i(endpoint_mode &&
+                              endpoint_turnaround_ack_eligible),
     .ack_explicit_request_i(!endpoint_mode && input_complete_q &&
                             tx_outstanding_count_o != 0),
     .local_ack_valid_o(dp_local_ack_valid), .local_ack_ready_i(dp_local_ack_ready_q),
@@ -687,11 +694,15 @@ module p9_optical_transport_core #(
     if (!rst_n) begin
       dp_ack_control_pipe_q <= 2'b00;
       dp_turnaround_pipe_q <= 2'b00;
+      dp_turnaround_sequence_pipe_q[0] <= 16'd0;
+      dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
     end else if (start_object_i || abort_object_i || disarm_request_i ||
                  full_shutdown_request_i || any_safety_fault) begin
       dp_ack_control_pipe_q <= 2'b00;
       dp_turnaround_pipe_q <= 2'b00;
+      dp_turnaround_sequence_pipe_q[0] <= 16'd0;
+      dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
     end else begin
       dp_ack_control_pipe_q <= {
@@ -702,6 +713,9 @@ module p9_optical_transport_core #(
           dp_turnaround_pipe_q[0],
           dp_rx_frame_valid_q && dp_rx_l1_valid_q && dp_rx_turnaround_q
       };
+      dp_turnaround_sequence_pipe_q[0] <= dp_rx_sequence_q;
+      dp_turnaround_sequence_pipe_q[1] <=
+          dp_turnaround_sequence_pipe_q[0];
       dp_rx_accept_delayed_q <= dp_rx_accept_pulse;
     end
   end
@@ -758,7 +772,24 @@ module p9_optical_transport_core #(
   reg endpoint_waiting_for_ack_q;
   reg [31:0] endpoint_wait_ack_timer_q;
   reg endpoint_turnaround_pending_q;
+  reg [15:0] endpoint_turnaround_boundary_sequence_q;
+  reg [31:0] endpoint_turnaround_settle_timer_q;
   wire endpoint_turnaround_request_pulse;
+  // A boundary flag rides one of two concurrently serialized DATA frames.  It
+  // can be decoded before an older sequence still in flight on the other lane.
+  // Do not release the half-duplex direction until the cumulative RX base has
+  // passed the tagged sequence.  The bounded fallback still emits SACK state
+  // for a genuinely lost earlier frame, well before the retransmission timer.
+  wire endpoint_turnaround_cumulative_ready =
+      endpoint_turnaround_pending_q &&
+      seq_before(endpoint_turnaround_boundary_sequence_q,
+                 rx_base_sequence_o);
+  wire endpoint_turnaround_fallback_ready =
+      endpoint_turnaround_pending_q &&
+      endpoint_turnaround_settle_timer_q >= ACK_MAX_DELAY_CYCLES-1;
+  wire endpoint_turnaround_ack_eligible =
+      endpoint_turnaround_cumulative_ready ||
+      endpoint_turnaround_fallback_ready;
   wire endpoint_valid_ack_pulse = ack_received_pulse_q &&
       dp_peer_ack_session_q == object_session_q;
   wire endpoint_data_boundary = endpoint_mode && local_sender &&
@@ -872,6 +903,8 @@ module p9_optical_transport_core #(
       endpoint_waiting_for_ack_q <= 0;
       endpoint_wait_ack_timer_q <= 0;
       endpoint_turnaround_pending_q <= 0;
+      endpoint_turnaround_boundary_sequence_q <= 0;
+      endpoint_turnaround_settle_timer_q <= 0;
       for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
         lane_payload_base[copy_lane] <= 0;
         lane_start_pending[copy_lane] <= 0;
@@ -923,6 +956,7 @@ module p9_optical_transport_core #(
           if (phase_q == PH_ACK_START && copy_lane == ack_lane_q) begin
             dp_local_ack_ready_q <= 1;
             endpoint_turnaround_pending_q <= 0;
+            endpoint_turnaround_settle_timer_q <= 0;
             phase_q <= PH_ACK_WAIT_DONE;
           end
         end
@@ -947,6 +981,8 @@ module p9_optical_transport_core #(
         endpoint_waiting_for_ack_q <= 0;
         endpoint_wait_ack_timer_q <= 0;
         endpoint_turnaround_pending_q <= 0;
+        endpoint_turnaround_boundary_sequence_q <= 0;
+        endpoint_turnaround_settle_timer_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
@@ -967,6 +1003,8 @@ module p9_optical_transport_core #(
         endpoint_waiting_for_ack_q <= 0;
         endpoint_wait_ack_timer_q <= 0;
         endpoint_turnaround_pending_q <= 0;
+        endpoint_turnaround_boundary_sequence_q <= 0;
+        endpoint_turnaround_settle_timer_q <= 0;
         for (copy_lane = 0; copy_lane < 2; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           frame_schedule_valid_q[copy_lane] <= 0;
@@ -982,9 +1020,22 @@ module p9_optical_transport_core #(
         endpoint_waiting_for_ack_q <= 0;
         endpoint_wait_ack_timer_q <= 0;
         endpoint_turnaround_pending_q <= 0;
+        endpoint_turnaround_boundary_sequence_q <= 0;
+        endpoint_turnaround_settle_timer_q <= 0;
       end else begin
-        if (endpoint_turnaround_request_pulse)
+        if (endpoint_turnaround_request_pulse) begin
           endpoint_turnaround_pending_q <= 1;
+          endpoint_turnaround_boundary_sequence_q <=
+              dp_turnaround_sequence_pipe_q[1];
+          endpoint_turnaround_settle_timer_q <= 0;
+        end else if (endpoint_turnaround_pending_q &&
+                     !endpoint_turnaround_cumulative_ready &&
+                     !endpoint_turnaround_fallback_ready) begin
+          endpoint_turnaround_settle_timer_q <=
+              endpoint_turnaround_settle_timer_q + 1'b1;
+        end else if (!endpoint_turnaround_pending_q) begin
+          endpoint_turnaround_settle_timer_q <= 0;
+        end
         if (endpoint_mode && local_sender) begin
           if (endpoint_valid_ack_pulse) begin
             endpoint_tx_burst_count_q <= 0;
@@ -1080,7 +1131,8 @@ module p9_optical_transport_core #(
               phase_q <= PH_DATA_GUARD;
               phase_guard_q <= EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES + 0;
             end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
-                         (!endpoint_mode || endpoint_turnaround_pending_q)) begin
+                         (!endpoint_mode ||
+                          endpoint_turnaround_ack_eligible)) begin
               if (dp_local_ack_snapshot_stale) begin
                 // A timer may have frozen an ACK snapshot while the bounded
                 // DATA burst was still arriving or while an in-order delivery

@@ -1,0 +1,77 @@
+STARTED_UTC=2026-08-02T09:34:50+00:00
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\sim\tb C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl\ir_4ppm_codec.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl\p9_rate_4ppm_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl\p9_4ppm_frame_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl\p9_4ppm_frame_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\rtl\p10_1r_rx_admission.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R\sim\tb\tb_p10_1r_focused.sv
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/p9_rate_4ppm_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_rate_4ppm_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/p9_4ppm_frame_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/p9_4ppm_frame_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/p10_1r_rx_admission.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1r_rx_admission
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_p10_1r_focused.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_tfdu_rx_admission_same_module_echo
+INFO: [VRFC 10-311] analyzing module tb_tfdu_rx_admission_remote_ack
+INFO: [VRFC 10-311] analyzing module tb_tfdu_rx_admission_other_lane
+INFO: [VRFC 10-311] analyzing module tb_tfdu_echo_guard_sweep
+INFO: [VRFC 10-311] analyzing module tb_bundle_ack_window_2lane
+INFO: [VRFC 10-311] analyzing module tb_multi_object_continuous_pipeline
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_tfdu_rx_admission_remote_ack -debug typical -s tb_tfdu_rx_admission_remote_ack_snapshot
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_tfdu_rx_admission_remote_ack -debug typical -s tb_tfdu_rx_admission_remote_ack_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.p9_4ppm_frame_tx
+Compiling module work.p10_1r_rx_admission(MIN_POST_TX_...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,DE...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=15,DE...
+Compiling module work.ir_4ppm_codec(DETECT_START_CYCLE...
+Compiling module work.p9_rate_4ppm_rx
+Compiling module work.p9_4ppm_frame_rx
+Compiling module work.tb_tfdu_rx_admission_remote_ack
+Built simulation snapshot tb_tfdu_rx_admission_remote_ack_snapshot
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_tfdu_rx_admission_remote_ack_snapshot -runall
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_tfdu_rx_admission_remote_ack_snapshot/xsim_script.tcl
+# xsim {tb_tfdu_rx_admission_remote_ack_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_TFDU_RX_ADMISSION_REMOTE_ACK=PASS
+$finish called at time : 30966 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_p10_1r_focused.sv" Line 200
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  2 17:34:56 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+FINISHED_UTC=2026-08-02T09:34:56+00:00
+RETURN_CODE=0

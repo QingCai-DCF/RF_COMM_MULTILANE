@@ -9,6 +9,16 @@ protocol:
   ack_threshold: 32
   ack_max_delay_cycles: 64000
   ack_max_delay_us: 1000
+  boundary_ack_requires_cumulative_base_past_tag: true
+  boundary_ack_settle_fallback_cycles: 64000
+  boundary_ack_settle_fallback_us: 1000
+  boundary_ack_settle_fallback_only_for_loss_or_excess_skew: true
+  retransmission_timeout_cycles: 4000000
+  normal_boundary_wait_is_event_driven: true
+  maximum_data_frame_cycles: 35712
+  receiver_commit_staging_budget_cycles: 512
+  maximum_no_loss_boundary_settle_cycles: 36224
+  boundary_fallback_margin_cycles: 27776
   direction_turnaround_guard_cycles: 4352
   direction_turnaround_guard_us: 68
   receiver_credit_low_watermark: 8

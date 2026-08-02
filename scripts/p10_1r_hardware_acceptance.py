@@ -15,6 +15,7 @@ duplex, P11, or lane mask above 0x3 is implemented here.
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import hashlib
 import json
@@ -787,6 +788,77 @@ def validate_authorization(
     return record, artifacts, errors
 
 
+def consumed_authorization_payload(
+    authorization: dict[str, Any],
+    *,
+    run_id: str,
+    campaign_status: str,
+    consumed_at_utc: str,
+    final_evidence_path: str,
+    final_evidence_sha256: str,
+    shutdown_fixed: str,
+    shutdown_rotating: str,
+    hardware_actions_executed: bool,
+) -> dict[str, Any]:
+    """Return the fail-closed terminal state for one immutable run grant."""
+    result = copy.deepcopy(authorization)
+    if result.get("run_id") != run_id:
+        raise ValueError("current authorization run_id does not match hardware run")
+    if result.get("current_run_hardware_authorization") is False:
+        if (
+            result.get("consumed") is True
+            and result.get("consumed_by_run_id") == run_id
+            and result.get("reusable_for_future_run") is False
+        ):
+            return result
+        raise ValueError("current authorization has an invalid consumed state")
+    if (
+        result.get("status") != "AUTHORIZED"
+        or result.get("current_run_hardware_authorization") is not True
+        or result.get("consumed") is not False
+    ):
+        raise ValueError("current authorization was not active for this run")
+    if campaign_status not in {"PASS", "FAIL"}:
+        raise ValueError("campaign status must be PASS or FAIL")
+    if shutdown_fixed not in {"PASS", "FAIL"} or shutdown_rotating not in {
+        "PASS", "FAIL"
+    }:
+        raise ValueError("shutdown status is malformed")
+    disposition = (
+        "ACCEPTANCE_COMPLETE"
+        if campaign_status == "PASS"
+        else "REMEDIATION_REQUIRED_NEW_IMMUTABLE_BUNDLE"
+    )
+    next_action = (
+        "freeze the final evidence checkpoint and annotated PASS tag"
+        if campaign_status == "PASS"
+        else (
+            "preserve this run, remediate the direct failure, freeze a new "
+            "exact-source artifact bundle, and create a fresh per-run authorization"
+        )
+    )
+    result.update(
+        {
+            "status": f"CONSUMED_AFTER_P10_1R_HARDWARE_{campaign_status}",
+            "authorization_status_at_run_start": "AUTHORIZED",
+            "current_run_hardware_authorization": False,
+            "consumed": True,
+            "consumed_by_run_id": run_id,
+            "consumed_at_utc": consumed_at_utc,
+            "reusable_for_future_run": False,
+            "campaign_status": campaign_status,
+            "campaign_disposition": disposition,
+            "hardware_actions_executed": hardware_actions_executed,
+            "shutdown_fixed": shutdown_fixed,
+            "shutdown_rotating": shutdown_rotating,
+            "final_evidence_path": final_evidence_path,
+            "final_evidence_sha256": final_evidence_sha256,
+            "next_required_action": next_action,
+        }
+    )
+    return result
+
+
 SNAPSHOT_NAMES = (
     "status",
     "raw_lane0",
@@ -1451,6 +1523,8 @@ def main(argv: list[str] | None = None) -> int:
     record, artifacts, errors = validate_authorization(
         auth, args.run_id, stages
     )
+    if auth != AUTH_PATH.resolve():
+        errors.append("hardware run must use the canonical current-run authorization")
     if args.validate_only:
         result = {
             "status": "PASS" if not errors else "FAIL",
@@ -1657,15 +1731,70 @@ def main(argv: list[str] | None = None) -> int:
     write_json(run_root / "final/orchestrator_result.json", summary)
     for stage, result in stage_results.items():
         publish_stage(stage, result, run_root)
+    immutable_authorization = (
+        run_root / "authorization/immutable_authorization.json"
+    )
+    authorization_consumption_error: str | None = None
+    current_authorization: dict[str, Any] | None = None
+    try:
+        final_result = run_root / "final/orchestrator_result.json"
+        current_authorization = consumed_authorization_payload(
+            record,
+            run_id=args.run_id,
+            campaign_status=status,
+            consumed_at_utc=utc_now(),
+            final_evidence_path=rel(final_result),
+            final_evidence_sha256=sha256(final_result),
+            shutdown_fixed=shutdown_fixed,
+            shutdown_rotating=shutdown_rotating,
+            hardware_actions_executed=hardware_actions,
+        )
+        write_json(AUTH_PATH, current_authorization)
+    except (OSError, ValueError, TypeError) as exc:
+        authorization_consumption_error = (
+            f"current-run authorization consumption failed: {exc}"
+        )
+        status = "FAIL"
+        summary["status"] = status
+        summary["errors"].append(authorization_consumption_error)
+        write_json(run_root / "final/orchestrator_result.json", summary)
     authorization_generated = {
         "schema_version": 1,
         "test_id": "P10_1R-CURRENT-RUN-AUTHORIZATION-EVIDENCE",
-        "status": "PASS" if not authorization_record["errors"] else "FAIL",
+        "status": (
+            "PASS"
+            if not authorization_record["errors"]
+            and authorization_consumption_error is None
+            and current_authorization is not None
+            else "FAIL"
+        ),
         "run_id": args.run_id,
-        "authorization": rel(auth),
-        "authorization_sha256": sha256(auth),
+        "authorization_at_run_start": rel(immutable_authorization),
+        "authorization_at_run_start_sha256": sha256(immutable_authorization),
+        "authorization_status_at_run_start": "AUTHORIZED",
+        "current_authorization": rel(AUTH_PATH),
+        "current_authorization_sha256": sha256(AUTH_PATH),
+        "current_run_hardware_authorization": (
+            current_authorization.get("current_run_hardware_authorization")
+            if current_authorization is not None
+            else record.get("current_run_hardware_authorization")
+        ),
+        "consumed": (
+            current_authorization.get("consumed")
+            if current_authorization is not None
+            else False
+        ),
+        "reusable_for_future_run": False,
+        "campaign_status": status,
         "raw_record": rel(run_root / "authorization/authorization_record.json"),
         "hardware_actions_executed": hardware_actions,
+        "shutdown_fixed": shutdown_fixed,
+        "shutdown_rotating": shutdown_rotating,
+        "errors": (
+            [authorization_consumption_error]
+            if authorization_consumption_error is not None
+            else []
+        ),
         "generated_at_utc": utc_now(),
     }
     write_json(GENERATED / "p10_1r_authorization.json", authorization_generated)

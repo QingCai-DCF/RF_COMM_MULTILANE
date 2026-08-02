@@ -1,0 +1,42 @@
+{
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-02T09:21:32+00:00",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "results": [
+    {
+      "fatal_detected": true,
+      "log": "evidence/generated/p10_1r_boundary_skew_post_fix/raw/20260802T092106.382664Z/tb_p10_1r_boundary_skew.log",
+      "log_sha256": "ff063572456ac931c64389371e6012479aff96af1f4bdc05f6089f1a6955e8a6",
+      "marker_present": true,
+      "required_marker": "TB_P10_1R_BOUNDARY_SKEW=PASS retries=0/0",
+      "returncode": 0,
+      "status": "FAIL",
+      "test_id": "tb_p10_1r_boundary_skew",
+      "timed_out": false
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "660ca514bef7f790691d6b748c35e84af51faea4",
+  "source_sha256": {
+    "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
+    "rtl/ir_ack_aggregator.sv": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa",
+    "rtl/ir_data_plane_top.sv": "8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab",
+    "rtl/ir_health_weighted_scheduler.sv": "0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a",
+    "rtl/ir_selective_repeat_rx.sv": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028",
+    "rtl/ir_selective_repeat_tx.sv": "48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f",
+    "rtl/ir_seq_math_pkg.sv": "860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e",
+    "rtl/ir_tfdu_exact_duty_accountant.sv": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f",
+    "rtl/ir_tfdu_physical_module_safety.sv": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19",
+    "rtl/p10_1r_rx_admission.sv": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b",
+    "rtl/p9_4ppm_frame_rx.sv": "002837209d0f39c1fd18a2b06fd7e6721e3b9424028ef5abcf243733dbf658cf",
+    "rtl/p9_4ppm_frame_tx.sv": "7abacc77cf113269b3d15961ffd01aec786f81de0602b1527de9394542dfd162",
+    "rtl/p9_optical_transport_core.sv": "6af5c5b3c3c1b7d106f6c48fb492ab0a0a8650deb833a299bc68e176a75eca2d",
+    "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
+    "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
+    "sim/tb/tb_p10_1r_boundary_skew.sv": "d7ef77348049ccca2c830f18060b54328a47d75012ea00b7561ba82c2eec9af7"
+  },
+  "source_worktree_dirty": true,
+  "status": "FAIL",
+  "test_id": "P10_1R_FOCUSED_XSIM"
+}

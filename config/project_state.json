@@ -309,9 +309,9 @@
     "verification_scope": "P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE"
   },
   "p10_1r_remediation": {
-    "artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "artifact_freeze_sha256": "eddbdd50ac9920a666dc4010d840c5ff92512dfbb275041653d71f503d38b728",
-    "artifacts": {
+    "artifact_freeze_path": null,
+    "artifact_freeze_sha256": null,
+    "previous_artifacts": {
       "fixed": {
         "bitstream": {
           "built_source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
@@ -405,7 +405,7 @@
     },
     "hardware_actions_executed": false,
     "network_used": false,
-    "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+    "new_artifact_hardware_validation": "PENDING_EXACT_SOURCE_OFFLINE_REVALIDATION",
     "p11_started": false,
     "selected_guard_cycles": {
       "F0": 4096,
@@ -413,11 +413,13 @@
       "R0": 4096,
       "R1": 4096
     },
-    "source_artifact_freeze": "PASS",
-    "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
-    "status": "OFFLINE_READY_HARDWARE_PENDING"
+    "previous_artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "previous_artifact_freeze_sha256": "eddbdd50ac9920a666dc4010d840c5ff92512dfbb275041653d71f503d38b728",
+    "source_artifact_freeze": "INVALIDATED_BY_RTL_CHANGE",
+    "source_commit": "PENDING_NEW_EXACT_SOURCE_COMMIT",
+    "status": "IN_PROGRESS"
   },
-  "p10_1r_status": "OFFLINE_READY_HARDWARE_PENDING",
+  "p10_1r_status": "IN_PROGRESS",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",

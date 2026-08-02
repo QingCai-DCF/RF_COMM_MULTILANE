@@ -47,6 +47,9 @@ class PerformanceInputs:
     bundle_burst_frames: int = 32
     ack_threshold: int = 32
     outstanding_frames: int = 32
+    boundary_ack_settle_max_cycles: int = 64_000
+    receiver_commit_staging_budget_cycles: int = 512
+    retransmission_timeout_cycles: int = 4_000_000
     post_tx_guard_us: float = 64.0
     direction_quiet_us: float = 68.0
     packet_error_rate: float = 0.0001
@@ -69,6 +72,14 @@ def encode_ack_direction_byte(
     ):
         raise ValueError("source node, lane, or direction is out of range")
     return (source_node_id << 2) | (lane_id << 1) | direction
+
+
+def seq_before_16(a: int, b: int) -> bool:
+    """Match ir_seq_math_pkg.seq_before for the 16-bit sequence space."""
+    if not 0 <= a <= 0xFFFF or not 0 <= b <= 0xFFFF:
+        raise ValueError("sequence value is outside the 16-bit space")
+    distance = (b - a) & 0xFFFF
+    return distance != 0 and distance < 0x8000
 
 
 def maximum_periodic_pulse_intersections(
@@ -147,6 +158,22 @@ def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:
     symbol_cycles = round(
         inputs.symbol_us * inputs.protocol_clock_hz / 1_000_000
     )
+    maximum_data_frame_cycles = data_symbols * symbol_cycles
+    maximum_no_loss_boundary_settle_cycles = (
+        maximum_data_frame_cycles
+        + inputs.receiver_commit_staging_budget_cycles
+    )
+    boundary_ack_settle_proof_pass = (
+        maximum_data_frame_cycles == 35_712
+        and inputs.receiver_commit_staging_budget_cycles >= 512
+        and maximum_no_loss_boundary_settle_cycles
+        < inputs.boundary_ack_settle_max_cycles
+        < inputs.retransmission_timeout_cycles
+        and seq_before_16(0xFFFF, 0x0000)
+        and seq_before_16(0x000F, 0x0010)
+        and not seq_before_16(0x0010, 0x0010)
+        and not seq_before_16(0x0010, 0x000F)
+    )
     window_symbol_slots = inputs.duty_window_cycles // symbol_cycles
     guard_symbol_slots = inputs.frame_duty_guard_cycles // symbol_cycles
     max_window_pulse_intersections = maximum_periodic_pulse_intersections(
@@ -204,11 +231,52 @@ def performance_model(inputs: PerformanceInputs = PerformanceInputs()) -> dict:
             ),
             "pass": duty_schedule_proof_pass,
         },
+        "boundary_ack_settle_proof": {
+            "boundary_ack_requires_cumulative_base_past_tag": True,
+            "sequence_comparison_width_bits": 16,
+            "sequence_comparison_is_wrap_safe": True,
+            "maximum_data_frame_cycles": maximum_data_frame_cycles,
+            "receiver_commit_staging_budget_cycles": (
+                inputs.receiver_commit_staging_budget_cycles
+            ),
+            "maximum_no_loss_boundary_settle_cycles": (
+                maximum_no_loss_boundary_settle_cycles
+            ),
+            "boundary_ack_settle_fallback_cycles": (
+                inputs.boundary_ack_settle_max_cycles
+            ),
+            "boundary_ack_settle_fallback_us": (
+                inputs.boundary_ack_settle_max_cycles
+                / inputs.protocol_clock_hz
+                * 1_000_000
+            ),
+            "fallback_margin_over_no_loss_cycles": (
+                inputs.boundary_ack_settle_max_cycles
+                - maximum_no_loss_boundary_settle_cycles
+            ),
+            "retransmission_timeout_cycles": (
+                inputs.retransmission_timeout_cycles
+            ),
+            "normal_no_loss_wait_is_event_driven": True,
+            "normal_no_loss_fixed_fallback_overhead_cycles": 0,
+            "fallback_only_for_loss_or_excess_skew": True,
+            "wrap_examples": {
+                "ffff_before_0000": seq_before_16(0xFFFF, 0x0000),
+                "000f_before_0010": seq_before_16(0x000F, 0x0010),
+                "equal_is_before": seq_before_16(0x0010, 0x0010),
+                "0010_before_000f": seq_before_16(0x0010, 0x000F),
+            },
+            "pass": boundary_ack_settle_proof_pass,
+        },
         "expected_sustained_goodput_bps": sustained_bps,
         "modeled_fixed_to_rotating_bps": sustained_bps,
         "modeled_rotating_to_fixed_bps": sustained_bps,
         "minimum_gate_bps": 4_000_000,
-        "gate_pass": sustained_bps >= 4_000_000 and duty_schedule_proof_pass,
+        "gate_pass": (
+            sustained_bps >= 4_000_000
+            and duty_schedule_proof_pass
+            and boundary_ack_settle_proof_pass
+        ),
     }
 
 

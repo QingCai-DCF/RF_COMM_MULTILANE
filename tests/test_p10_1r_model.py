@@ -39,6 +39,26 @@ class P101RModelTests(unittest.TestCase):
         self.assertEqual(proof["maximum_window_high_cycles"], 11_512)
         self.assertEqual(proof["target_high_cycles_strict_threshold"], 11_520)
         self.assertEqual(proof["margin_cycles"], 8)
+        boundary = result["boundary_ack_settle_proof"]
+        self.assertTrue(boundary["pass"])
+        self.assertEqual(boundary["maximum_data_frame_cycles"], 35_712)
+        self.assertEqual(
+            boundary["maximum_no_loss_boundary_settle_cycles"], 36_224
+        )
+        self.assertEqual(
+            boundary["boundary_ack_settle_fallback_cycles"], 64_000
+        )
+        self.assertEqual(boundary["retransmission_timeout_cycles"], 4_000_000)
+        self.assertTrue(boundary["normal_no_loss_wait_is_event_driven"])
+        self.assertEqual(boundary["normal_no_loss_fixed_fallback_overhead_cycles"], 0)
+
+    def test_boundary_sequence_order_is_wrap_safe(self) -> None:
+        self.assertTrue(MODEL.seq_before_16(0xFFFF, 0x0000))
+        self.assertTrue(MODEL.seq_before_16(0x000F, 0x0010))
+        self.assertFalse(MODEL.seq_before_16(0x0010, 0x0010))
+        self.assertFalse(MODEL.seq_before_16(0x0010, 0x000F))
+        with self.assertRaises(ValueError):
+            MODEL.seq_before_16(-1, 0)
 
     def test_guard_is_the_minimum_safe_whole_symbol_schedule(self) -> None:
         self.assertEqual(
@@ -138,12 +158,19 @@ class P101RModelTests(unittest.TestCase):
             "post_frame_guard_cycles: 17984",
             "first_data_frame_requires_empty_exact_history: true",
             "maximum_window_high_cycles: 11512",
+            "boundary_ack_requires_cumulative_base_past_tag: true",
+            "boundary_ack_settle_fallback_cycles: 64000",
+            "retransmission_timeout_cycles: 4000000",
+            "normal_boundary_wait_is_event_driven: true",
         ):
             self.assertIn(marker, runtime)
         self.assertIn("dp_attempt_descriptor[0] || dp_attempt_retry", core)
         self.assertIn("frame_schedule_valid_q", core)
         self.assertIn("data_duty_history_empty", core)
         self.assertIn("!serializer_done[0]", core)
+        self.assertIn("endpoint_turnaround_cumulative_ready", core)
+        self.assertIn("seq_before(endpoint_turnaround_boundary_sequence_q", core)
+        self.assertIn("endpoint_turnaround_fallback_ready", core)
 
     def test_builders_have_goal_bound_p10_1r_namespace(self) -> None:
         expected_goal_hash = (

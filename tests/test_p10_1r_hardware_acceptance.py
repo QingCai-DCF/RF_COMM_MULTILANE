@@ -34,7 +34,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.runner = load_runner()
 
-    def test_goal_and_frozen_artifact_bundle_are_exact(self) -> None:
+    def test_goal_is_exact_and_stale_artifact_freeze_is_rejected(self) -> None:
         self.assertEqual(
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
@@ -45,12 +45,10 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
             self.runner.STAGES,
         )
-        freeze, artifacts = self.runner.load_freeze()
-        self.assertEqual(
-            freeze["source_commit"],
-            "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
-        )
-        self.assertEqual(len(artifacts), 10)
+        with self.assertRaisesRegex(
+            RuntimeError, "artifact-freeze input mismatch"
+        ):
+            self.runner.load_freeze()
 
     def test_standing_authorization_sources_are_exact_and_unbounded(self) -> None:
         sources = self.runner.STANDING_AUTHORIZATION_SOURCES
@@ -198,6 +196,46 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn('"local_source_rejection_enabled"', text)
         self.assertNotIn("git push", text)
         self.assertNotIn("lane mask >", text)
+
+    def test_authorization_consumption_is_terminal_and_idempotent(self) -> None:
+        active = {
+            "status": "AUTHORIZED",
+            "run_id": "p10_1r_test",
+            "current_run_hardware_authorization": True,
+            "consumed": False,
+            "reusable_for_future_run": False,
+        }
+        consumed = self.runner.consumed_authorization_payload(
+            active,
+            run_id="p10_1r_test",
+            campaign_status="FAIL",
+            consumed_at_utc="2026-08-02T00:00:00+00:00",
+            final_evidence_path="evidence/final.json",
+            final_evidence_sha256="a" * 64,
+            shutdown_fixed="PASS",
+            shutdown_rotating="PASS",
+            hardware_actions_executed=True,
+        )
+        self.assertEqual(
+            consumed["status"], "CONSUMED_AFTER_P10_1R_HARDWARE_FAIL"
+        )
+        self.assertFalse(consumed["current_run_hardware_authorization"])
+        self.assertTrue(consumed["consumed"])
+        self.assertEqual(consumed["consumed_by_run_id"], "p10_1r_test")
+        self.assertEqual(
+            self.runner.consumed_authorization_payload(
+                consumed,
+                run_id="p10_1r_test",
+                campaign_status="FAIL",
+                consumed_at_utc="2026-08-02T00:00:00+00:00",
+                final_evidence_path="evidence/final.json",
+                final_evidence_sha256="a" * 64,
+                shutdown_fixed="PASS",
+                shutdown_rotating="PASS",
+                hardware_actions_executed=True,
+            ),
+            consumed,
+        )
 
     def test_tcl_has_atomic_snapshot_and_absolute_formal_boundaries(self) -> None:
         text = TCL_PATH.read_text(encoding="utf-8")
