@@ -1,0 +1,127 @@
+{
+  "artifact_freeze_sha256": "eddbdd50ac9920a666dc4010d840c5ff92512dfbb275041653d71f503d38b728",
+  "classification": "FAIL_WITH_DIRECT_DUAL_LANE_TIMEOUT_EVIDENCE",
+  "direct_observations": {
+    "dual_lane_ack_case": {
+      "application_bytes_committed": 15000000,
+      "application_goodput_bps": 3659562.7035334986,
+      "data_frames_required": 60729,
+      "physical_data_frames_received": 60882,
+      "receiver_ack_aggregation_events": 60768,
+      "receiver_ack_snapshot_handshakes": 6066,
+      "sender_ack_frames_received": 2060,
+      "sender_scheduler_frames": [
+        30498,
+        30441
+      ],
+      "sender_scheduler_migrations": [
+        57,
+        0
+      ],
+      "sender_scheduler_retries": [
+        114,
+        57
+      ],
+      "sender_starvation_max": 1,
+      "sender_tx_attempts": 60939,
+      "sender_tx_retries": 399,
+      "sender_tx_timeouts": 399
+    },
+    "integrity_and_safety": {
+      "crc_bad": 0,
+      "descriptor_leak": 0,
+      "duty_hard_fault": 0,
+      "duplicate_commit": 0,
+      "partial_commit": 0,
+      "retry_exhausted": 0,
+      "sha_mismatch": 0,
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "stale_commit": 0
+    },
+    "single_lane_phy_cases": [
+      {
+        "direction": "F_TO_R",
+        "lane": 0,
+        "sender_tx_attempts": 1000,
+        "sender_tx_retries": 0,
+        "sender_tx_timeouts": 0
+      },
+      {
+        "direction": "R_TO_F",
+        "lane": 0,
+        "sender_tx_attempts": 1000,
+        "sender_tx_retries": 0,
+        "sender_tx_timeouts": 0
+      },
+      {
+        "direction": "F_TO_R",
+        "lane": 1,
+        "sender_tx_attempts": 1000,
+        "sender_tx_retries": 0,
+        "sender_tx_timeouts": 0
+      },
+      {
+        "direction": "R_TO_F",
+        "lane": 1,
+        "sender_tx_attempts": 1000,
+        "sender_tx_retries": 0,
+        "sender_tx_timeouts": 0
+      }
+    ]
+  },
+  "generated_at_utc": "2026-08-02T09:12:39+00:00",
+  "hardware_actions_executed": false,
+  "inference": {
+    "confidence": "HIGH",
+    "mechanism": "The receiver may serialize a boundary ACK after the turnaround-tagged lane has completed but before an older frame on the other lane has entered the cumulative RX base. The sender accepts that incomplete ACK, fills or remains blocked behind the missing base sequence, and the receiver suppresses its later timer ACK because endpoint_turnaround_pending_q was cleared when the first ACK started. Progress then waits for the 4000000-cycle selective-repeat timeout.",
+    "why_single_lane_is_control": "With one lane, the turnaround-tagged last scheduled frame cannot overtake an older concurrently active frame on a second serializer; all four single-lane controls completed without timeout or retry.",
+    "rtl_evidence": [
+      "rtl/p9_optical_transport_core.sv:764",
+      "rtl/p9_optical_transport_core.sv:925",
+      "rtl/p9_optical_transport_core.sv:989",
+      "rtl/p9_optical_transport_core.sv:1082",
+      "rtl/p9_optical_transport_core.sv:1406"
+    ]
+  },
+  "network_used": false,
+  "next_remediation": "Hold the explicit turnaround boundary until the cumulative RX base covers the tagged boundary sequence, with a bounded fallback for a genuinely lost frame; verify a forced two-lane completion-skew case before rebuilding.",
+  "raw_evidence": {
+    "ack_stage_summary": {
+      "bytes": 22817,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/ack_tuning/stage_summary.json",
+      "sha256": "49f5bf9846295be07891659dfe3eea919c75847cb3a219afd9965acca0e52a0f"
+    },
+    "fixed_mailbox": {
+      "bytes": 1024,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/ack_tuning/dumps/ack32_burst32_f2r.fixed.bin",
+      "sha256": "830fff68c7000d5ccb2c325be9ee9fc901ad4d6b88d470b7705e5bfb0c974df6"
+    },
+    "orchestrator_result": {
+      "bytes": 445224,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/final/orchestrator_result.json",
+      "sha256": "9bebd93ab320d56154835eab64f2220c37e8dbbc9989b50ffe4082df2125a7ed"
+    },
+    "phy_stage_summary": {
+      "bytes": 78413,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/phy_sanity/stage_summary.json",
+      "sha256": "0213ca8e5f0604c667941eb5231476a3b051a145f4a8960387668088a03bed38"
+    },
+    "rotating_mailbox": {
+      "bytes": 1024,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/ack_tuning/dumps/ack32_burst32_f2r.rotating.bin",
+      "sha256": "9b60124a1672c352f201482c35c2156399c131fe6aa442f852f22171549cfba1"
+    },
+    "run_manifest": {
+      "bytes": 41542,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/final/run_evidence_sha256_manifest.json",
+      "sha256": "d19dcc607f88319ffc513e0a4e7052fcfd156825df9bd19b16df12fa1c42e3fd"
+    }
+  },
+  "run_id": "p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a",
+  "schema_version": 1,
+  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "status": "FAIL",
+  "test_id": "P10_1R-A1AC-DUAL-LANE-TIMEOUT-DIAGNOSIS",
+  "wiring_changed": false
+}

@@ -6,14 +6,14 @@
     "ack32_burst32_r2f: application goodput below 4 Mbit/s",
     "ack32_burst32_r2f: fewer than 24 data frames/ACK"
   ],
-  "generated_at_utc": "2026-08-02T05:21:43+00:00",
+  "generated_at_utc": "2026-08-02T08:58:42+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f/ack_tuning/stage_summary.json",
-  "raw_summary_sha256": "f78a8f8e7234ce3aa6292f72340e47086e8c822c196978017df6af930d277c89",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a/ack_tuning/stage_summary.json",
+  "raw_summary_sha256": "49f5bf9846295be07891659dfe3eea919c75847cb3a219afd9965acca0e52a0f",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f",
+  "run_id": "p10_1r_20260802T084403Z_a1ac5457_42fc3b22_3cc8144a",
   "schema_version": 1,
   "semantics": {
     "best_ack_max_delay_cycles": 64000,
@@ -23,7 +23,7 @@
     "windows": [
       {
         "ack_count": 2060,
-        "ack_wait_ratio": 0.9956308461843627,
+        "ack_wait_ratio": 0.9959578773022766,
         "application_goodput_bps": 4000000.0,
         "case_count": 1,
         "committed_bytes": 15000000,
@@ -32,7 +32,7 @@
         "direction": 0,
         "duration_seconds": 30,
         "host_blocking_commands": 1,
-        "inter_object_ratio": 0.000471551843351536,
+        "inter_object_ratio": 0.00013901406609543492,
         "label": "ack32_burst32_f2r",
         "lane_mask": 3
       },
@@ -53,7 +53,7 @@
       }
     ]
   },
-  "source_commit": "8bb759047276e5bb9952403013d1d33cea6bba92",
+  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
   "status": "FAIL",
   "test_id": "P10_1R-HW-ACK_TUNING"
 }
