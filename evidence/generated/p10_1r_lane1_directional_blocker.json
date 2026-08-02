@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "test_id": "P10_1R-LANE1-DIRECTIONAL-BLOCKER",
-  "generated_at_utc": "2026-08-02T18:39:27Z",
+  "generated_at_utc": "2026-08-02T19:17:19Z",
   "status": "BLOCKED_MANUAL_HARDWARE",
   "p10_1r_result": "PARTIAL",
   "hardware_acceptance_status": "FAIL",
@@ -14,7 +14,7 @@
   "repository": {
     "branch": "p10.1r/2lane-speed-stability-remediation",
     "worktree": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R",
-    "evidence_parent_commit": "0ab2f1b33476d1bc473c2b1d86f5da150dbb768c",
+    "evidence_parent_commit": "af3bb2b95e9abe5edc8634364618212a046ec68a",
     "artifact_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
     "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
     "base_failure_tag_commit": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
@@ -47,7 +47,7 @@
   },
   "authorization": {
     "path": "config/p10_1r_current_run_hardware_authorization.json",
-    "sha256": "b7d1338edd7512df2bc08b1a2980be4de795caaf2419635ffb29348092d575dc",
+    "sha256": "06cb8e38c4468e27fb43aca13a2c5ec5c09b9b9d34c0c4e73ffe79a1e6f5692f",
     "status": "CONSUMED_AFTER_P10_1R_HARDWARE_FAIL",
     "current_run_hardware_authorization": false,
     "consumed": true,
@@ -63,8 +63,8 @@
     "rewiring_executed": false,
     "maximum_lane_mask_used": 3,
     "last_shutdown": {
-      "run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
-      "path": "evidence/hardware/p10_1r/p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d/shutdown/finally_emergency/attempt_1.result.txt",
+      "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
+      "path": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/shutdown/finally_emergency/attempt_1.result.txt",
       "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
@@ -103,9 +103,9 @@
     },
     "f1_to_r1": {
       "status": "FAIL_NO_REMOTE_RAW_ACTIVITY",
-      "run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
+      "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
       "failed_sample": 0,
-      "sequence": 2001,
+      "sequence": 1001,
       "lane_mask": 2,
       "sender": "fixed/F1",
       "receiver": "rotating/R1",
@@ -116,16 +116,39 @@
       "fixed_state_decode": "COMPLETE",
       "rotating_state": 5,
       "rotating_state_decode": "FAULT",
-      "fixed_response": 2001,
-      "rotating_response": 2001,
+      "fixed_response": 1001,
+      "rotating_response": 1001,
       "fixed_pl_status": "0x00000102",
       "rotating_pl_status": "0x00000002",
       "fixed_phy_status": "0x00000000",
       "rotating_phy_status": "0x00000000",
       "fixed_error_detail": "0x00000000",
       "rotating_error_detail": "0x00000000",
-      "source": "evidence/hardware/p10_1r/p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
-      "source_sha256": "30ac4a455e0091b4cc62d050bff5beaccf4b0b02631f28edcb0b00e5ac4455c0"
+      "source": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "source_sha256": "b2c738e0152fea154abc7ee5afe9fa84b9570eaa0e41fea5cbb9762a623bd82b",
+      "localization_snapshot": {
+        "sender_raw": 1,
+        "sender_raw_while_tx": 1,
+        "sender_blanked_raw": 1,
+        "sender_accepted_remote": 0,
+        "receiver_raw": 0,
+        "receiver_accepted_remote": 0,
+        "sender_last_txd_rise": 40073142,
+        "sender_last_txd_fall": 40073147,
+        "sender_final_txd_high_cycles": 5,
+        "sender_first_rxd_after_tx": 0,
+        "sender_last_rxd_after_tx": 0,
+        "sender_raw_sent": 1,
+        "receiver_raw_sent": 0,
+        "fixed_physical_tx_a0_a1_b0_b1": [0, 1, 0, 0],
+        "rotating_physical_tx_a0_a1_b0_b1": [0, 0, 0, 0],
+        "fixed_snapshot": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv",
+        "fixed_snapshot_sha256": "8c75777e24f2c67dde4cf2e64201b3fc96df76207fb9abad700a200f0a265b14",
+        "rotating_snapshot": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+        "rotating_snapshot_sha256": "a3b0c219c1aad1ce271c6fbac90c35fd5009be3218c750cbb7029d5ddac920e5",
+        "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+        "orchestrator_result_sha256": "639bcc130752bbbc2f3bd4663e074d30cf85be0958fd848f39d14ccf8dddab87"
+      }
     }
   },
   "diagnostic_controls": [
@@ -149,6 +172,13 @@
       "run_id": "p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d",
       "source": "evidence/hardware/p10_1r/p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
       "source_sha256": "30ac4a455e0091b4cc62d050bff5beaccf4b0b02631f28edcb0b00e5ac4455c0"
+    },
+    {
+      "result": "FINAL_TXD_AND_LOCAL_ECHO_OBSERVED_REMOTE_RAW_ABSENT",
+      "fact": "With F1-to-R1 first after a fresh boot, the fixed final-Txd tap rose and fell five protocol cycles apart, the fixed A1 physical-TX counter advanced to one, and fixed F1 recorded one raw event while local Txd was high. Rotating R1 recorded zero raw events and timed out. This directly closes the host-command, raw-generator, lane-select, permit/duty/kill, and internal final-Txd path for this pulse, but it is not external optical-power or component-level evidence.",
+      "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
+      "source": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "source_sha256": "b2c738e0152fea154abc7ee5afe9fa84b9570eaa0e41fea5cbb9762a623bd82b"
     }
   ],
   "preceding_performance_transition": {
@@ -193,9 +223,9 @@
     "source_sha256": "1b488a3f5964610dfa471a2dff95b02bd48417a53cb6cd7e62c0f4d6f9eaaa75"
   },
   "inference": {
-    "strongest_supported_boundary": "The fixed endpoint completed the F1 raw command while the rotating endpoint timed out waiting for R1 raw activity. Together with the reverse-direction 1000/1000 result, the unresolved boundary is the fixed-F1 transmit/emission/optical-path-to-rotating-R1 receive/detection chain in the current physical setup.",
+    "strongest_supported_boundary": "For the failing F1-to-R1 pulse, the fixed host command completed, the fixed lane1 raw generator completed, the internal final-Txd tap pulsed for five protocol cycles after the permit/duty/kill path, the fixed A1 physical-TX counter advanced, and fixed F1 observed one contemporaneous local raw event; rotating R1 observed no raw event and timed out. Together with the reverse-direction 1000/1000 result, the remaining unverified boundary begins after the internal fixed final-Txd tap and extends through the fixed F1 external pin/connector/module emission, stationary optical path, and rotating R1 module/connector/input detection path.",
     "not_distinguishable_without_manual_or_external_evidence": [
-      "fixed F1 TFDU emitter, module power, SD, Mode, Txd, connector, or board-output path",
+      "fixed F1 FPGA package-pin/J10 electrical delivery, TFDU emitter, module power, SD, Mode, Txd, or optical output",
       "stationary optical line of sight, alignment, obstruction, or reflection condition between F1 and R1",
       "rotating-role R1 TFDU detector, module power, SD, Mode, Rxd, connector, or board-input path"
     ],

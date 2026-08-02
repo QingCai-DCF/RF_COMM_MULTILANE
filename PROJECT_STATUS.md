@@ -22,7 +22,7 @@ CURRENT_PROGRAM_STAGE: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 LAST_HARDWARE_STAGE: P10_1R
-LAST_HARDWARE_RUN_ID: p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d
+LAST_HARDWARE_RUN_ID: p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -163,8 +163,8 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Status: `PARTIAL`
 - Artifact source: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
 - Artifact freeze: `evidence/generated/p10_1r_artifact_freeze.json`
-- Latest run: `p10_1r_20260802T182921Z_cce2180b_c1370686_bfb1c51d`
-- Current lane1 F1→R1 / R1→F1: `FAIL_NO_REMOTE_RAW_ACTIVITY` / `PASS_RAW_DIRECTIONAL_1000_OF_1000`
+- Latest run: `p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d`
+- Current lane1 F1→R1 / R1→F1: `FAIL_REMOTE_RAW_ZERO_WITH_FIXED_FINAL_TXD_AND_LOCAL_RAW_OBSERVED` / `PASS_RAW_DIRECTIONAL_1000_OF_1000`
 - Hardware blocker: `BLOCKED_MANUAL_HARDWARE` (`evidence/generated/p10_1r_lane1_directional_blocker.json`)
 - Shutdown fixed / rotating: `PASS` / `PASS`
 - Hardware actions / network / movement / rewiring: `true` / `false` / `false` / `false`
