@@ -35,10 +35,10 @@
     ]
   },
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-02T05:58:54+00:00",
+  "generated_at_utc": "2026-08-02T09:58:06+00:00",
   "hardware_actions_executed": false,
   "model_source": "scripts/model_p10_1r.py",
-  "model_source_sha256": "219601af06f9240070db8ba1cc023535c883b10e718ee16160aab9ead72c29de",
+  "model_source_sha256": "fe361dbf8d634e844b28301588081c6d7b3e35bcec482a7db73b4dadf776e1b3",
   "no_hardware": true,
   "performance": {
     "ack_airtime_us": 48.0,
@@ -46,6 +46,28 @@
     "ack_overhead_fraction": 0.0035714285714285713,
     "airtime_ceiling_bps": 4704761.904761905,
     "application_ceiling_bps": 4095238.0952380956,
+    "boundary_ack_settle_proof": {
+      "boundary_ack_requires_cumulative_base_past_tag": true,
+      "boundary_ack_settle_fallback_cycles": 64000,
+      "boundary_ack_settle_fallback_us": 1000.0,
+      "fallback_margin_over_no_loss_cycles": 27776,
+      "fallback_only_for_loss_or_excess_skew": true,
+      "maximum_data_frame_cycles": 35712,
+      "maximum_no_loss_boundary_settle_cycles": 36224,
+      "normal_no_loss_fixed_fallback_overhead_cycles": 0,
+      "normal_no_loss_wait_is_event_driven": true,
+      "pass": true,
+      "receiver_commit_staging_budget_cycles": 512,
+      "retransmission_timeout_cycles": 4000000,
+      "sequence_comparison_is_wrap_safe": true,
+      "sequence_comparison_width_bits": 16,
+      "wrap_examples": {
+        "000f_before_0010": true,
+        "0010_before_000f": false,
+        "equal_is_before": false,
+        "ffff_before_0000": true
+      }
+    },
     "bundle_cycle_us": 13440.0,
     "bundle_recovery_us": 282.0,
     "data_burst_airtime_us": 13158.0,
@@ -77,6 +99,7 @@
     "inputs": {
       "ack_header_bytes": 20,
       "ack_threshold": 32,
+      "boundary_ack_settle_max_cycles": 64000,
       "bundle_burst_frames": 32,
       "data_header_bytes": 24,
       "direction_quiet_us": 68.0,
@@ -96,6 +119,8 @@
       "preamble_symbols": 16,
       "protocol_clock_hz": 64000000,
       "pulse_us_per_symbol": 0.125,
+      "receiver_commit_staging_budget_cycles": 512,
+      "retransmission_timeout_cycles": 4000000,
       "rfap_useful_bytes": 215,
       "symbol_us": 0.5,
       "symbols_per_byte": 4,
@@ -116,7 +141,7 @@
     "segments_per_host_command": 1024
   },
   "schema_version": 1,
-  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "status": "PASS",
   "test_id": "P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL"
 }

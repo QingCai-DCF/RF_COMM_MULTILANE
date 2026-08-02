@@ -71,12 +71,12 @@
     "tx_rx_overlap_count": 0
   },
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-02T05:58:54+00:00",
+  "generated_at_utc": "2026-08-02T09:58:06+00:00",
   "guard_selection_evidence": "evidence/generated/p10_1r_echo_guard_selection.json",
   "guard_status": "HARDWARE_MEASURED_SELECTION_OFFLINE_REBUILD",
   "hardware_actions_executed": false,
   "model_source": "scripts/model_p10_1r.py",
-  "model_source_sha256": "219601af06f9240070db8ba1cc023535c883b10e718ee16160aab9ead72c29de",
+  "model_source_sha256": "fe361dbf8d634e844b28301588081c6d7b3e35bcec482a7db73b4dadf776e1b3",
   "no_hardware": true,
   "reset_fault_stress": {
     "descriptor_leak_count": 0,
@@ -107,7 +107,7 @@
     "unsafe_tx_count": 0
   },
   "schema_version": 1,
-  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "status": "PASS",
   "test_id": "P10_1R_SELF_ECHO_ADMISSION_MODEL"
 }

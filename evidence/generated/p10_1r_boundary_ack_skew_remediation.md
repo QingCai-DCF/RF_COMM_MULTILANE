@@ -1,6 +1,6 @@
 # P10.1R dual-lane boundary ACK skew remediation
 
-Status: `PASS` for the diagnostic comparison only.
+Status: `PASS` for exact-source offline remediation; direct hardware acceptance remains pending.
 
 The isolated two-lane case delays fixed lane0 by 8,192 protocol-clock cycles while lane1 carries the tagged 32nd frame. Before the RTL change, clean traffic reached the sender retransmission timeout and recorded retries `1/0`. After the receiver held the turnaround request until its wrap-safe cumulative base passed the tagged sequence, the same case completed with retries `0/0`.
 
@@ -8,4 +8,8 @@ The final diagnostic starts at sequence `0xFFF0`, crosses `0xFFFF -> 0x0000`, an
 
 The first pre-fix attempt and first post-fix attempt are retained rather than deleted. They are classified in the adjacent JSON as harness setup/assertion failures; the decisive pre-fix, post-fix, and wrap logs are separately hash-bound there.
 
-All entries were produced from a dirty diagnostic worktree with `NO_HARDWARE=1` and `CURRENT_RUN_HARDWARE_AUTHORIZATION=false`. They are not exact-source acceptance evidence and do not authorize JTAG or inherit hardware PASS. A clean source checkpoint, complete offline regression, newly frozen artifacts, and a fresh per-run authorization remain mandatory.
+The before/after entries were produced from a dirty diagnostic worktree and remain explicitly classified as diagnostic evidence. The remediation was then checkpointed at `f8d36805c4d2fc19d1695092655629b40860e421`; the finalizer-only follow-up produced exact source commit `af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c`.
+
+That exact source independently passed the eight-test focused XSIM suite, portable dual-endpoint fault/loss and P9 regression, fixed/rotating routed functional builds, the performance/settle model, and the complete canonical/P8C/P8D offline capture. Their paths and SHA256 values are bound in the adjacent JSON. All runs used `NO_HARDWARE=1` and `CURRENT_RUN_HARDWARE_AUTHORIZATION=false`.
+
+This closes only the offline remediation requirement. It does not authorize JTAG, inherit any old hardware PASS, or prove direct two-board throughput. Newly frozen artifacts and a fresh per-run authorization remain mandatory before hardware acceptance.

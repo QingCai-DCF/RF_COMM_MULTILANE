@@ -4,9 +4,9 @@
 - `run_id`: `p8b_20260717_offline_geometry_mapping_handover`
 - `stage`: `P8B_GEOMETRY_MAPPING_HANDOVER`
 - `status`: `PASS`
-- `source_commit`: `e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134`
-- `branch`: `p8/integration`
-- `worktree`: `C:\Users\user\.codex\worktrees\3765\RF_COMM_MULTILANE`
+- `source_commit`: `af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c`
+- `branch`: `p10.1r/2lane-speed-stability-remediation`
+- `worktree`: `C:\Users\user\Documents\RF_COMM_MULTILANE_P10_1R`
 - `profile`: `D200_D600_8X32`
 - `no_hardware`: `True`
 - `hardware_authorized`: `False`
@@ -17,19 +17,19 @@
 - `p8a_checkpoint_commit`: `3ed79e02baa2c60af86e752c79ad1d0c44e37fb4`
 - `p8a_checkpoint_tag`: `p8a-pass`
 - `acceptance_core_path`: `evidence/generated/p8b_acceptance_core.json`
-- `acceptance_core_sha256`: `ab2f8cda8c366a5c14e472dff801dd2fc7b90586e0f7ca3bbf0067f3e496fa52`
+- `acceptance_core_sha256`: `ec7071184a50f8295416865752fc823f5d3590886474375c7284826925095a7b`
 - `worst_case_geometry_acceptance`: `PENDING_WITH_EXPLICIT_GAPS`
 - `logic_model_timing_target`: `PASS`
 - `simulator_tool_version`: `Vivado Simulator/xsim 2023.1`
 - `project_state_before_sha256`: `d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd`
-- `project_state_after_sha256`: `724c16808b3d55e0a66abfabd1e82492c4319dd07830b63b75d8b3f68fa52faf`
+- `project_state_after_sha256`: `ac22f2c7d837b3003ff6529e74e2f78a7370c00abfb2d588b8f11c661a77e9ab`
 - `first_failing_case`: `None`
 
 ```json
 {
   "acceptance_core_path": "evidence/generated/p8b_acceptance_core.json",
-  "acceptance_core_sha256": "ab2f8cda8c366a5c14e472dff801dd2fc7b90586e0f7ca3bbf0067f3e496fa52",
-  "branch": "p8/integration",
+  "acceptance_core_sha256": "ec7071184a50f8295416865752fc823f5d3590886474375c7284826925095a7b",
+  "branch": "p10.1r/2lane-speed-stability-remediation",
   "canonical_constraint_sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758",
   "failures": [],
   "first_failing_case": null,
@@ -75,7 +75,7 @@
     "Z7020_TARGET_ACCEPTANCE": "PENDING_Z7020_HW"
   },
   "profile": "D200_D600_8X32",
-  "project_state_after_sha256": "724c16808b3d55e0a66abfabd1e82492c4319dd07830b63b75d8b3f68fa52faf",
+  "project_state_after_sha256": "ac22f2c7d837b3003ff6529e74e2f78a7370c00abfb2d588b8f11c661a77e9ab",
   "project_state_before_sha256": "d08e11cf33a34154a9b1c87b95f0ff612a2f006f250b6b833f7bfd89d83596bd",
   "python_model_artifacts": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "path": "scripts/run_p8b_geometry_gate.py",
-      "sha256": "64d317e5b15d65f51537ffe136ec60a7bfe34cec65e1c6d8d265214369749bf1"
+      "sha256": "1de5c8fb10b96ee3a545d81b19dac7676f6fad3b5eb2140b260e7ccf9ee37f25"
     }
   ],
   "random_seeds": [
@@ -154,7 +154,7 @@
   },
   "schema_version": 1,
   "simulator_tool_version": "Vivado Simulator/xsim 2023.1",
-  "source_commit": "e8be6ffddd1b59b13b6bf3e0c32c02c6a66b6134",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "stage": "P8B_GEOMETRY_MAPPING_HANDOVER",
   "status": "PASS",
   "tests": [
@@ -279,7 +279,18 @@
     {
       "details": {
         "expected": {
-          "current_program_stage": "P8C_TFDU_SAFETY_SINGLE_GLOBAL_PERMIT",
+          "current_program_stage": [
+            "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+            "P10_1_HARDWARE_PERFORMANCE_ACCEPTANCE",
+            "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE",
+            "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET",
+            "P10_POST_ACCEPTANCE_ANALYSIS",
+            "P11_SINGLE_LOGICAL_LANE_FOUR_FIXED_MODULE_HANDOVER",
+            "P8D_SELECTIVE_REPEAT_SACK_DMA_DATA_PLANE",
+            "P8E_DUAL_TARGET_BUILD_CDC_RESOURCE_TIMING",
+            "P9_Z7010_PLATFORM_LIMITED_HARDWARE_VALIDATION",
+            "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
+          ],
           "current_run_hardware_authorization": false,
           "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
           "final_product_status": "PENDING_HW",
@@ -328,7 +339,7 @@
       "test_id": "P8B-OFFLINE-FULL-REGRESSION"
     }
   ],
-  "worktree": "C:\\Users\\user\\.codex\\worktrees\\3765\\RF_COMM_MULTILANE",
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R",
   "worst_case_geometry_acceptance": "PENDING_WITH_EXPLICIT_GAPS"
 }
 ```

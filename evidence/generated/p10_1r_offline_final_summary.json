@@ -2,12 +2,12 @@
   "artifact_freeze": {
     "bytes": 7993,
     "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "eddbdd50ac9920a666dc4010d840c5ff92512dfbb275041653d71f503d38b728"
+    "sha256": "aededfa8ada3171351ca073ba7616a57688e6e184bdc8a5af6a873352cf8d4bc"
   },
   "authorization_readiness": {
     "bytes": 5730,
     "path": "evidence/generated/p10_1r_authorization.json",
-    "sha256": "90d3bc772800e0fab8021767520523982c73513fc4a40f8e221649df80f16ff7"
+    "sha256": "c04b9ae1b4a03fba10c096f064f71176967ef40f158abd51811348c44872c624"
   },
   "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
   "branch": "p10.1r/2lane-speed-stability-remediation",
@@ -23,13 +23,15 @@
   "direct_hardware_status": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
   "errors": [],
   "evidence_consistency": {
-    "bytes": 7193,
+    "bytes": 7446,
     "path": "evidence/generated/p10_1r_evidence_consistency.json",
-    "sha256": "8696a651241bcb99962896ba28028a0c2b418eca7d9f26d28d64faaad689c555"
+    "sha256": "9229b8b4a57992c87707ba86baf2af17969b804cafca18a98f8fc5a808cd8344"
   },
   "frozen_protocol_defaults": {
     "ack_max_delay_cycles": 64000,
     "ack_threshold": 32,
+    "boundary_ack_requires_cumulative_base_past_tag": true,
+    "boundary_ack_settle_fallback_cycles": 64000,
     "endpoint_burst_frames": 32,
     "objects_in_flight": 4
   },
@@ -42,7 +44,7 @@
   },
   "hardware_actions_executed": false,
   "hardware_movement": false,
-  "head_when_finalized": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "head_when_finalized": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "measured_hardware_goodput_bps": {
     "fixed_to_rotating": "PENDING",
     "rotating_to_fixed": "PENDING"
@@ -72,7 +74,7 @@
     "R0": 4096,
     "R1": 4096
   },
-  "source_commit": "a1ac5457bc1555312c00dda81f2e2ad3a7c9751a",
+  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
   "status": "OFFLINE_READY_HARDWARE_PENDING",
   "test_id": "P10_1R-OFFLINE-FINAL-CHECKPOINT",
   "wiring_changed": false

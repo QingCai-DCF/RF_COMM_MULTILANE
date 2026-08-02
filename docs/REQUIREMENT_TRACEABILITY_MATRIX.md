@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 184
-PASS: 147
-PENDING: 32
+PASS: 155
+PENDING: 24
 FAIL: 5
 WAIVED: 0
 ```
@@ -184,17 +184,17 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `OBS-LED-003` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-HOLD-SHUTDOWN-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold. |
 | `OBS-LED-004` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-NONINTERFERENCE-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling. |
 | `OBS-LED-HW-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP | `PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION` | — | `docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md` | The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS. |
-| `P10_1R-ECHO-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
+| `P10_1R-ECHO-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
 | `P10_1R-ECHO-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
-| `P10_1R-ECHO-003` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
-| `P10_1R-ECHO-004` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | A local transmission on one module shall not blank receive admission on the other lane. |
+| `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
+| `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | A local transmission on one module shall not blank receive admission on the other lane. |
 | `P10_1R-ECHO-005` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
 | `P10_1R-ECHO-006` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
-| `P10_1R-ACK-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
-| `P10_1R-ACK-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
-| `P10_1R-ACK-003` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
-| `P10_1R-ACK-004` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
-| `P10_1R-HOST-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_OFFLINE_REVALIDATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
+| `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
+| `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
+| `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
+| `P10_1R-ACK-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R-DUAL-LANE-BOUNDARY-ACK-SKEW-REMEDIATION` | `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
+| `P10_1R-HOST-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
 | `P10_1R-PERF-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-PERF-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-STREAM-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
@@ -273,13 +273,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `ac22f2c7d837b3003ff6529e74e2f78a7370c00abfb2d588b8f11c661a77e9ab`
-- `PROJECT_STATUS.md` — `02ecafcc32614f4b198ede7922811db9b84ebb85599c3b0e828363a2a1c25a35`
+- `config/project_state.json` — `e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726`
+- `PROJECT_STATUS.md` — `075894d4aaa9105af1caf39aa6515e4e7421f228e1fb69f61a077e1c6aa6710b`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `ac22f2c7d837b3003ff6529e74e2f78a7370c00abfb2d588b8f11c661a77e9ab`
+- `config/project_state.json` — `e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726`
 
 ### `P8A-EVID-001`
 
@@ -289,8 +289,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `ac22f2c7d837b3003ff6529e74e2f78a7370c00abfb2d588b8f11c661a77e9ab`
-- `PROJECT_STATUS.md` — `02ecafcc32614f4b198ede7922811db9b84ebb85599c3b0e828363a2a1c25a35`
+- `config/project_state.json` — `e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726`
+- `PROJECT_STATUS.md` — `075894d4aaa9105af1caf39aa6515e4e7421f228e1fb69f61a077e1c6aa6710b`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1104,3 +1104,47 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `OBS-LED-004`
 
 - `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
+
+### `P10_1R-ECHO-001`
+
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63`
+
+### `P10_1R-ECHO-003`
+
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63`
+
+### `P10_1R-ECHO-004`
+
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `84e285fa0bb7822872c98ec11fef673b40b1b3677f78c51f29b9825b8a544817`
+
+### `P10_1R-ACK-001`
+
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f`
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63`
+
+### `P10_1R-ACK-002`
+
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc`
+
+### `P10_1R-ACK-003`
+
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f`
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc`
+
+### `P10_1R-ACK-004`
+
+- `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` — `70929f8e31273c9705b85973dd0ff96b62c14dd9f885a76b4693dce4ce2f8cde`
+- `evidence/generated/p10_1r_xsim/summary.json` — `b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `84e285fa0bb7822872c98ec11fef673b40b1b3677f78c51f29b9825b8a544817`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63`
+
+### `P10_1R-HOST-001`
+
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc`

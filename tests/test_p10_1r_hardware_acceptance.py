@@ -34,7 +34,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.runner = load_runner()
 
-    def test_goal_is_exact_and_stale_artifact_freeze_is_rejected(self) -> None:
+    def test_goal_and_exact_artifact_freeze_are_bound(self) -> None:
         self.assertEqual(
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
@@ -45,10 +45,17 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
             self.runner.STAGES,
         )
-        with self.assertRaisesRegex(
-            RuntimeError, "artifact-freeze input mismatch"
-        ):
-            self.runner.load_freeze()
+        freeze, artifacts = self.runner.load_freeze()
+        self.assertEqual(
+            freeze["source_commit"],
+            "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+        )
+        self.assertEqual(
+            self.runner.sha256(self.runner.ARTIFACT_FREEZE),
+            self.runner.EXPECTED_ARTIFACT_FREEZE_SHA256,
+        )
+        self.assertEqual(len(artifacts), 10)
+        self.assertTrue(all(path.is_file() for path in artifacts.values()))
 
     def test_standing_authorization_sources_are_exact_and_unbounded(self) -> None:
         sources = self.runner.STANDING_AUTHORIZATION_SOURCES
