@@ -123,7 +123,7 @@
   "last_hardware_stage": "P10_1",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
-  "last_verified_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "last_verified_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "legacy_known_failures": [
     {
       "current_authority": false,
@@ -310,80 +310,80 @@
   },
   "p10_1r_remediation": {
     "artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "artifact_freeze_sha256": "aededfa8ada3171351ca073ba7616a57688e6e184bdc8a5af6a873352cf8d4bc",
+    "artifact_freeze_sha256": "05681978cba335cb4aa1c1cea41e8a4661017d64a307e9b037ded7064ec01a54",
     "artifacts": {
       "fixed": {
         "bitstream": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3/p10_ax7020_fixed_functional.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27/p10_ax7020_fixed_functional.bit",
           "read_only": true,
-          "sha256": "5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3"
+          "sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27"
         },
         "bsp": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 1855896,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
           "read_only": true,
           "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
         },
         "elf": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-          "bytes": 554840,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/622f35d893c8c8ab70db881d6dcd4d1ddbec30cd39e729d795935043d805719e/p10_fixed_runtime.elf",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+          "bytes": 554900,
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4/p10_fixed_runtime.elf",
           "read_only": true,
-          "sha256": "622f35d893c8c8ab70db881d6dcd4d1ddbec30cd39e729d795935043d805719e"
+          "sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4"
         },
         "shutdown_bitstream": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 369073,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/159eb3ca0ab04f6d3c6795896b349e5b8390b16a88ddfb5e2bcb0069fd192624/p10_ax7020_fixed_shutdown.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf/p10_ax7020_fixed_shutdown.bit",
           "read_only": true,
-          "sha256": "159eb3ca0ab04f6d3c6795896b349e5b8390b16a88ddfb5e2bcb0069fd192624"
+          "sha256": "6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf"
         },
         "xsa": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 923892,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b/p10_ax7020_fixed_functional.xsa",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/91762a99e6b0401e3262f54a95ca5fb22fb66dd64e0c4e924a03f7d6a36fd42e/p10_ax7020_fixed_functional.xsa",
           "read_only": true,
-          "sha256": "88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b"
+          "sha256": "91762a99e6b0401e3262f54a95ca5fb22fb66dd64e0c4e924a03f7d6a36fd42e"
         }
       },
       "rotating": {
         "bitstream": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4/p10_ax7020_rotating_functional.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f/p10_ax7020_rotating_functional.bit",
           "read_only": true,
-          "sha256": "67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4"
+          "sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f"
         },
         "bsp": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 1856209,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
           "read_only": true,
           "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
         },
         "elf": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-          "bytes": 555120,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/861ca25bb0bcdca29c8e135253995dba85f8c73c363dc1e256c87fdcebf2e705/p10_rotating_runtime.elf",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+          "bytes": 555184,
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e/p10_rotating_runtime.elf",
           "read_only": true,
-          "sha256": "861ca25bb0bcdca29c8e135253995dba85f8c73c363dc1e256c87fdcebf2e705"
+          "sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e"
         },
         "shutdown_bitstream": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
           "bytes": 369073,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/ff5079f4876336e650bcdb93fce38ac3acf3a127fbf012ff87dbaf3cb061e1ad/p10_ax7020_rotating_shutdown.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6/p10_ax7020_rotating_shutdown.bit",
           "read_only": true,
-          "sha256": "ff5079f4876336e650bcdb93fce38ac3acf3a127fbf012ff87dbaf3cb061e1ad"
+          "sha256": "66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6"
         },
         "xsa": {
-          "built_source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
-          "bytes": 942033,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8/p10_ax7020_rotating_functional.xsa",
+          "built_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+          "bytes": 942034,
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/49f328a4a397b482743f4329db6b7e283388d9e195305f8e06e56e97d5db7350/p10_ax7020_rotating_functional.xsa",
           "read_only": true,
-          "sha256": "d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8"
+          "sha256": "49f328a4a397b482743f4329db6b7e283388d9e195305f8e06e56e97d5db7350"
         }
       }
     },
@@ -414,7 +414,7 @@
       "R1": 4096
     },
     "source_artifact_freeze": "PASS",
-    "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+    "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
     "status": "OFFLINE_READY_HARDWARE_PENDING"
   },
   "p10_1r_status": "OFFLINE_READY_HARDWARE_PENDING",

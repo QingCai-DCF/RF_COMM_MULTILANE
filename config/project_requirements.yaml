@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726
+    sha256: eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a
   - path: PROJECT_STATUS.md
-    sha256: 075894d4aaa9105af1caf39aa6515e4e7421f228e1fb69f61a077e1c6aa6710b
-  artifact_hash: e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726
+    sha256: a242d29a70d61c0f470ce39ba2cb1d45bb60a8080c7b08fd81848f37d07fc240
+  artifact_hash: eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726
+    sha256: eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726
+    sha256: eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a
   - path: PROJECT_STATUS.md
-    sha256: 075894d4aaa9105af1caf39aa6515e4e7421f228e1fb69f61a077e1c6aa6710b
+    sha256: a242d29a70d61c0f470ce39ba2cb1d45bb60a8080c7b08fd81848f37d07fc240
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726
+  artifact_hash: eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3503,11 +3503,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: 8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63
+    sha256: b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4
   hardware_followup: Direct four-module admission counters remain pending under a new artifact-bound current-run authorization.
-  artifact_hash: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+  artifact_hash: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
 - requirement_id: P10_1R-ECHO-002
   requirement_text: Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3533,12 +3533,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: 8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63
+    sha256: b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4
   hardware_followup: Hardware must populate raw echo-tail maximum, p99, and p99.9; no hardware count is inferred from the
     model.
-  artifact_hash: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+  artifact_hash: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
 - requirement_id: P10_1R-ECHO-004
   requirement_text: A local transmission on one module shall not blank receive admission on the other lane.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3551,11 +3551,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_dual_endpoint_regression/summary.json
-    sha256: 84e285fa0bb7822872c98ec11fef673b40b1b3677f78c51f29b9825b8a544817
+    sha256: be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013
   hardware_followup: The direct 4x4 receive-admission matrix remains pending.
-  artifact_hash: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+  artifact_hash: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
 - requirement_id: P10_1R-ECHO-005
   requirement_text: The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail
     plus deterministic margin.
@@ -3596,13 +3596,13 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+    sha256: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: 8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63
+    sha256: b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4
   hardware_followup: Direct ACK-window telemetry and final hardware tuning remain pending.
-  artifact_hash: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+  artifact_hash: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
 - requirement_id: P10_1R-ACK-002
   requirement_text: Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime,
     or global pipeline drain.
@@ -3616,11 +3616,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc
+    sha256: 1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b
   hardware_followup: Direct inter-object timing must confirm that object boundaries do not create a hidden hardware turnaround.
-  artifact_hash: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+  artifact_hash: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
 - requirement_id: P10_1R-ACK-003
   requirement_text: At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying,
     or committing across the continuous pipeline.
@@ -3634,13 +3634,13 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+    sha256: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc
+    sha256: 1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b
   hardware_followup: Direct descriptor, completion, and occupancy telemetry remain pending.
-  artifact_hash: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+  artifact_hash: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
 - requirement_id: P10_1R-ACK-004
   requirement_text: A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past
     the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout.
@@ -3655,16 +3655,16 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_boundary_ack_skew_remediation.json
-    sha256: 70929f8e31273c9705b85973dd0ff96b62c14dd9f885a76b4693dce4ce2f8cde
+    sha256: ad41aace26388deef12e63a30ec2997951a958e0c031143e4054f7976d966473
   - path: evidence/generated/p10_1r_xsim/summary.json
-    sha256: b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f
+    sha256: 26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25
   - path: evidence/generated/p10_1r_dual_endpoint_regression/summary.json
-    sha256: 84e285fa0bb7822872c98ec11fef673b40b1b3677f78c51f29b9825b8a544817
+    sha256: be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013
   - path: evidence/generated/p10_1r_functional_build_summary.json
-    sha256: 8d4829fde339bca04d0087c87edca39b3b020cf46b05a281665d33642013cb63
+    sha256: b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4
   hardware_followup: Direct dual-lane ACK hardware telemetry must confirm zero avoidable turnaround timeout under the frozen
     artifact bundle.
-  artifact_hash: 70929f8e31273c9705b85973dd0ff96b62c14dd9f885a76b4693dce4ce2f8cde
+  artifact_hash: ad41aace26388deef12e63a30ec2997951a958e0c031143e4054f7976d966473
 - requirement_id: P10_1R-HOST-001
   requirement_text: The host shall not participate in the per-object fast path; each direction shall use at most four blocking
     commands and at least 1000 segments per command.
@@ -3678,11 +3678,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_1r_ack_pipeline_model.json
-    sha256: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+    sha256: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
   - path: evidence/generated/p10_1r_ps_runtime_build_summary.json
-    sha256: bbee2e5bb901db5dd5c3f9ff1431a1521774657e5cfb24b5c342b6740080b9dc
+    sha256: 1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b
   hardware_followup: The formal hardware window must report host command counts and segments per command.
-  artifact_hash: 04edc8e51f75cbaccafb5fca422573eaa98c240089fd3979ab8dba330e39bd9f
+  artifact_hash: 9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b
 - requirement_id: P10_1R-PERF-001
   requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
   profile: P10_1R_AX7020_2LANE_REMEDIATION

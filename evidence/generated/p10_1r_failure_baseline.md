@@ -1,7 +1,7 @@
 # P10.1R immutable failure baseline
 
 - Status: `PASS`
-- Source commit: `af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c`
+- Source commit: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
 - Hardware actions executed: `false`
 
 ```json
@@ -45,7 +45,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-02T10:08:58+00:00",
+  "generated_at_utc": "2026-08-02T15:21:30+00:00",
   "hardware_actions_executed": false,
   "measured_goodput_bps": {
     "fixed_to_rotating": 2587436.3002872,
@@ -79,7 +79,7 @@
   },
   "shutdown_fixed": "PASS",
   "shutdown_rotating": "PASS",
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "status": "PASS",
   "terminal_summary": {
     "bytes": 16193,

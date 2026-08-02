@@ -1,13 +1,13 @@
 {
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-02T10:19:27+00:00",
+  "generated_at_utc": "2026-08-02T15:21:26+00:00",
   "hardware_actions_executed": false,
   "no_hardware": true,
   "results": [
     {
       "fatal_detected": false,
-      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T100858.127125Z/p10_dual_endpoint_pair.log",
-      "log_sha256": "472817c6f8a8709e386f2c5a47b4b5eb9ce61ffaab1a1323de2bab5f7c01d2d3",
+      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T151042.991323Z/p10_dual_endpoint_pair.log",
+      "log_sha256": "f150204196b8b0a77f7e5dde3917e000b8b2c8f0cf4718f7ac53f4aeb1743dd8",
       "metrics": {
         "object_pass_count": 10,
         "p10_final_marker_count": 1,
@@ -22,8 +22,8 @@
     },
     {
       "fatal_detected": false,
-      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T100858.127125Z/p9_legacy_transport.log",
-      "log_sha256": "e1e9a4aa96fbad52f167b726c5f5259015b793e810c18021b7480ee80fb53b96",
+      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T151042.991323Z/p9_legacy_transport.log",
+      "log_sha256": "9b8662a76265c00fe0540f4ee28f9a1d0311cb9b40e8326ffd5df58548ef31c9",
       "metrics": {
         "object_pass_count": 0,
         "p10_final_marker_count": 0,
@@ -37,14 +37,14 @@
       "timed_out": false
     },
     {
-      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T100858.127125Z/p9_runner_unit_tests.log",
-      "log_sha256": "06b39044efd8e54a2b173836a2bf6e935cf21ae6af1bf09db3cd875a10ef0661",
+      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T151042.991323Z/p9_runner_unit_tests.log",
+      "log_sha256": "b2b79a07d7fef7a7659d2aabe7ebef19d06d5491c8be7e2de0096954ed3797bd",
       "returncode": 0,
       "status": "PASS",
       "test_id": "P10-REGRESSION-P9-RUNNER-UNIT"
     },
     {
-      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T100858.127125Z/register_map_verify.log",
+      "log": "evidence/generated/p10_1r_dual_endpoint_regression/raw/20260802T151042.991323Z/register_map_verify.log",
       "log_sha256": "69fd6c2ff9cb50eedee1dc433fbd56547d25bf77a87680403d586228c512c38f",
       "missing_markers": [],
       "returncode": 0,
@@ -53,7 +53,7 @@
     }
   ],
   "schema_version": 1,
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "source_sha256": {
     "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
     "rtl/ir_ack_aggregator.sv": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa",

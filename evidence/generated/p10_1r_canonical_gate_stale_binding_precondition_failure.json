@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-CANONICAL-GATE-STALE-EVIDENCE-BINDING-PRECONDITION",
+  "status": "RECORDED_PRECONDITION_FAILURE",
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "generated_at_utc": "2026-08-02T17:42:00+00:00",
+  "no_hardware": true,
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "network_used": false,
+  "observed_first_run": {
+    "status": "FAIL",
+    "offline_real_build_process_ran": true,
+    "direct_failures": [
+      "p8a_unit_tests",
+      "p8a_consistency"
+    ],
+    "cascade_failures": [
+      "generate_plan_completion_audit",
+      "plan_completion_static"
+    ],
+    "stale_p10_1r_artifact_hash_binding_count": 19,
+    "raw_summary_retention": "OVERWRITTEN_BY_REQUIRED_CORRECTED_CANONICAL_RUN"
+  },
+  "reconstruction": {
+    "method": "validate the source-commit requirements blob against the newly generated exact-source evidence",
+    "source_requirements_blob_sha256": "b63148c2e31e6a486c22c6142d2bbee0fd127eb78b3ec999a6a0bf0386218391",
+    "reproduced_mismatch_count_after_boundary_reverification": 20,
+    "root_cause": "requirements still bound the previous immutable bundle while new exact-source evidence had already been generated"
+  },
+  "correction": {
+    "requirements_sha256": "fd38bf5ae5f10daf5c5523110526f718bc337cf05b429b4ee951d38cf9f01467",
+    "traceability_sha256": "93761729b38c81ca643236e8404be392df46ef6761b9dff2b59bcac1462db0a4",
+    "canonical_summary_path": "evidence/generated/offline_gate_summary.json",
+    "canonical_summary_sha256": "91293a11f245f7abd45eef1ec9b6c7feb94cb9dff98b7dd6b8477df97dcf24a4",
+    "canonical_status": "PASS",
+    "offline_real_build_process_ran": true
+  },
+  "notes": [
+    "No PASS was inferred from the failed run.",
+    "The corrected canonical run independently reran the real build process.",
+    "The loss of the first transient summary file is recorded explicitly rather than hidden."
+  ]
+}

@@ -1,7 +1,7 @@
 # P10.1R RX admission design evidence
 
 - Status: `PASS`
-- Source commit: `af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c`
+- Source commit: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
 - Hardware actions executed: `false`
 
 ```json
@@ -18,9 +18,9 @@
   "focused_xsim": {
     "bytes": 5899,
     "path": "evidence/generated/p10_1r_xsim/summary.json",
-    "sha256": "b649f8768ac995626480011b43828233fe638ee59486526a6d9b9c0a4dd8ca2f"
+    "sha256": "26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25"
   },
-  "generated_at_utc": "2026-08-02T10:08:58+00:00",
+  "generated_at_utc": "2026-08-02T15:21:30+00:00",
   "guard_selection_evidence": {
     "bytes": 3571,
     "path": "evidence/generated/p10_1r_echo_guard_selection.json",
@@ -61,7 +61,7 @@
   "schema_version": 1,
   "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
   "selected_final_guard_cycles": 4096,
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "source_identity": {
     "ack_header_encoding": "byte11_bits_7_2_source_bit_1_lane_bit_0_direction",
     "airtime_bytes_added": 0,

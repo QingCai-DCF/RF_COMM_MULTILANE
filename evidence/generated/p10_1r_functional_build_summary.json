@@ -6,18 +6,18 @@
     },
     "required_inputs": {
       "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
-      "config/performance/p10_1r_hardware_runtime.yaml": "176785d71cb5a89e1806c30b3449ae0518dc19372fc15709342415be0ff4f022",
+      "config/performance/p10_1r_hardware_runtime.yaml": "612675f67b0d75a6f7754b7d1b92acafc6be02f16593be55cfbf08be363405f7",
       "config/register_map/ir_axi_regs.yaml": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea",
       "config/tfdu_rx_admission.yaml": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69",
       "docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md": "293a31a5a9bf3f45d3b752327df7e380de379dff125b2c3e4af36471fe7a3b0d",
       "docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md": "73212089e0bc26246d07bfba20a4b07bdc8482b05cdae75853ca33fa83467df4",
-      "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "729a79931882722f995b06d0bdcf57d262c6008f8289ec214018c1bfad37ae5e"
+      "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "2272a3c8a0298953f017f4f74b16fb8411e0c1915a6f8a5a9bfb6afcde245cf8"
     }
   },
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "campaign": "p10_1r",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-02T10:32:28.337819+00:00",
+  "generated_at_utc": "2026-08-02T15:06:16.323111+00:00",
   "hardware_actions_executed": false,
   "hardware_admission": false,
   "network_used": false,
@@ -28,20 +28,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3/p10_ax7020_fixed_functional.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27/p10_ax7020_fixed_functional.bit",
           "read_only": true,
-          "sha256": "5b594148710728912c3a0072d138504cafb441ea6e0472fc59e97295b53426c3"
+          "sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27"
         },
         "xsa": {
           "bytes": 923892,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b/p10_ax7020_fixed_functional.xsa",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/91762a99e6b0401e3262f54a95ca5fb22fb66dd64e0c4e924a03f7d6a36fd42e/p10_ax7020_fixed_functional.xsa",
           "read_only": true,
-          "sha256": "88bd377a7f67b394f3b63d61782f1130106d717242baba0838ae9e607f4fed7b"
+          "sha256": "91762a99e6b0401e3262f54a95ca5fb22fb66dd64e0c4e924a03f7d6a36fd42e"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_1r/fixed/vivado_stdout_stderr.txt",
-      "log_sha256": "fdbfefcd3c53bbd69668da64ddb9c841fdacbbd4efe1f2474b587bf028d1d3af",
+      "log_sha256": "7fb004dab63f105baf73405ac1505b1799d21c28434dd4286e8121e3867499dc",
       "markers": {
         "P10_AXIL_CLOCK_HZ": "50000000",
         "P10_AXI_BASE": "0x43C00000",
@@ -80,48 +80,48 @@
         {
           "bytes": 10554,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_drc.rpt",
-          "sha256": "d0ede6637f2336e69c79e61b9e1a1a99cb8075ae3c3690914b4d14fc27efb7ea"
+          "sha256": "6a54429bb123ef02d73496586b888c233cc3d53e92243f5cd87754793872d43c"
         },
         {
           "bytes": 36064,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_methodology.rpt",
-          "sha256": "4b4d11f61a467eada7457bbbe151b32eca20c631dec37e7b99db5f1ae382fa43"
+          "sha256": "e68fd8f731314ac89d41c87b073d4b523d4d0d7a93f087fac665b7f4df8bcc71"
         },
         {
           "bytes": 211471,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_timing_summary.rpt",
-          "sha256": "4cfe3e5978514c50e1e6d0fd9bf62271faba9e26b087c3f5d42287dfb1369128"
+          "sha256": "fcd2b4a3b4bb9a2c499c234ffa36be99ae5886ab9be77adbd76bb65af0ece91e"
         },
         {
           "bytes": 176083,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_utilization.rpt",
-          "sha256": "a46dbad6d89bfa289ac9f34df4f94c2642b4214d5b69e89d32d5eda2cac51206"
+          "sha256": "49e123fe33f626cdb37cec824195a89abf79445f87bba40b2179cd37dcf8dbf2"
         },
         {
           "bytes": 77358,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_cdc.rpt",
-          "sha256": "b762308b0b060ebc197b1620fdc8f88a64454712547fa3f11c6b2b1bbf95b10b"
+          "sha256": "d83bf4b0c2e76ebcf225e4bc1832d4038733a3533e105416dcc545637ffe2855"
         },
         {
           "bytes": 2873,
           "path": "evidence/generated/vivado/p10_1r/fixed/post_route_clock_interaction.rpt",
-          "sha256": "a7222144261fd5490af97a47d1c50b24ea4cc60f929736daeaf605f4af9251c5"
+          "sha256": "7131b3e0e6e39b5bc2040d8bcd353f7b733dae18d5d278e900bb739bd3a86b53"
         }
       ],
       "role": "fixed",
-      "source_bundle_sha256": "aef0c8adba25aa4dc4f60100a0a425eedde5ec0c620a4106bd31d232562ae315",
+      "source_bundle_sha256": "ba38e817f5eac78b5c1b376bfbb01de9d3c55033c5a9a4a2d03cd0dd2de28e1e",
       "source_sha256": {
         "board_profiles/ax7020_common/p10_ps7_config.tcl": "b094c0ba2a1f832143e230c4561d2f0861c5f3d150dc53b86cddd0b1d2ce0d01",
         "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184",
         "board_profiles/ax7020_fixed_2lane/profile.yaml": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d",
         "config/hardware/p10_1_ax7020_pl_activity_leds.yaml": "dfe12a845a31cf71e57b3cef390bf6cc4799c28fc9998743562199b8993fc0a6",
         "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
-        "config/performance/p10_1r_hardware_runtime.yaml": "176785d71cb5a89e1806c30b3449ae0518dc19372fc15709342415be0ff4f022",
+        "config/performance/p10_1r_hardware_runtime.yaml": "612675f67b0d75a6f7754b7d1b92acafc6be02f16593be55cfbf08be363405f7",
         "config/register_map/ir_axi_regs.yaml": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea",
         "config/tfdu_rx_admission.yaml": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69",
         "docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md": "293a31a5a9bf3f45d3b752327df7e380de379dff125b2c3e4af36471fe7a3b0d",
         "docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md": "73212089e0bc26246d07bfba20a4b07bdc8482b05cdae75853ca33fa83467df4",
-        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "729a79931882722f995b06d0bdcf57d262c6008f8289ec214018c1bfad37ae5e",
+        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "2272a3c8a0298953f017f4f74b16fb8411e0c1915a6f8a5a9bfb6afcde245cf8",
         "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
         "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
         "rtl/generated/ir_register_map_defs.svh": "05b6b00d8825ff2e2a7039753b8c84e913e212967211d7750404f7362b56f530",
@@ -174,20 +174,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4/p10_ax7020_rotating_functional.bit",
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f/p10_ax7020_rotating_functional.bit",
           "read_only": true,
-          "sha256": "67ce5cd80cb8ae051e05d75001c7024c6101820dc4871bfa9172e4b17de847f4"
+          "sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f"
         },
         "xsa": {
-          "bytes": 942033,
-          "path": "artifacts/p10_1r/af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c/d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8/p10_ax7020_rotating_functional.xsa",
+          "bytes": 942034,
+          "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/49f328a4a397b482743f4329db6b7e283388d9e195305f8e06e56e97d5db7350/p10_ax7020_rotating_functional.xsa",
           "read_only": true,
-          "sha256": "d637d6d83995b5e64d4d026f7b13124c975efbbbfbdc836f3b45702acd1ffab8"
+          "sha256": "49f328a4a397b482743f4329db6b7e283388d9e195305f8e06e56e97d5db7350"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_1r/rotating/vivado_stdout_stderr.txt",
-      "log_sha256": "229adc9da0d03c279b0482cefa0b005b8fe1f7de36959e8300fb5071460642ad",
+      "log_sha256": "05b2cad92ce4f76615dde3c5a1250691f3e41c34b00ca88f08ee04a402673d0c",
       "markers": {
         "P10_AXIL_CLOCK_HZ": "50000000",
         "P10_AXI_BASE": "0x43C00000",
@@ -226,48 +226,48 @@
         {
           "bytes": 10563,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_drc.rpt",
-          "sha256": "a2aa1ef5a83192738357b00c8e3d292c37191a254748ce912eb0612c3b9c5214"
+          "sha256": "3779c0d030fcbd49f51f814e682bce23d44d3438838a0f5398ca5d8f75c9d8b1"
         },
         {
           "bytes": 36073,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_methodology.rpt",
-          "sha256": "0a9bf44915253649b6af81a661a8354dd9db89dc04e9656325dfe27c4f8a79d8"
+          "sha256": "2d54d557a5335766a8f8f88056a2612fd2b90b1539eb58b8f64ab92cd62c47de"
         },
         {
           "bytes": 220926,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_timing_summary.rpt",
-          "sha256": "25df85f18b3f58f6a4a9c6a902ab69910b62c5a977049e5a761c848c624cfe98"
+          "sha256": "525a124036881fddb8cea1961d2edf8a7e9a617458f36634472e438e4d16dcbd"
         },
         {
           "bytes": 176092,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_utilization.rpt",
-          "sha256": "b8ce3e3e45fc688ad52c58b57318d5e0a8bcb65e1581e6fcd83f16b7bfe4aedc"
+          "sha256": "69285439baa2fc4ba83dfe585a924c18b0d0a67c00b9fc59c14825149b9fdf28"
         },
         {
           "bytes": 77367,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_cdc.rpt",
-          "sha256": "4a62b37068a51cadd91a360575e631feff62b7fbc2db0a594f369fee67964ba0"
+          "sha256": "046ae2185cfa413130adb332dc01274beb595485432f55ae1449a9477dadb258"
         },
         {
           "bytes": 2882,
           "path": "evidence/generated/vivado/p10_1r/rotating/post_route_clock_interaction.rpt",
-          "sha256": "a9fe0cb8155bbbec5bd2be28484abbf9f893089fc3357f77d7837076b805434c"
+          "sha256": "b651142cde0505700311c80adc6b11977fb8797538b3ea47b1dba4991fc23231"
         }
       ],
       "role": "rotating",
-      "source_bundle_sha256": "f4de5e334cb1e11525e87ff6ab3554ce1f84fe1f7f4a6f154154cd66861b72ce",
+      "source_bundle_sha256": "ac3aa6be3db66e42488bf183fca9189c9d933bd1f4da0f80dbc38cbaee1779e7",
       "source_sha256": {
         "board_profiles/ax7020_common/p10_ps7_config.tcl": "b094c0ba2a1f832143e230c4561d2f0861c5f3d150dc53b86cddd0b1d2ce0d01",
         "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345",
         "board_profiles/ax7020_rotating_2lane/profile.yaml": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407",
         "config/hardware/p10_1_ax7020_pl_activity_leds.yaml": "dfe12a845a31cf71e57b3cef390bf6cc4799c28fc9998743562199b8993fc0a6",
         "config/performance/p10_1_pipeline.yaml": "fbfc60ccc0656f73e61b87f1354c49146611f6bf21562e19d697b15f85f8dc30",
-        "config/performance/p10_1r_hardware_runtime.yaml": "176785d71cb5a89e1806c30b3449ae0518dc19372fc15709342415be0ff4f022",
+        "config/performance/p10_1r_hardware_runtime.yaml": "612675f67b0d75a6f7754b7d1b92acafc6be02f16593be55cfbf08be363405f7",
         "config/register_map/ir_axi_regs.yaml": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea",
         "config/tfdu_rx_admission.yaml": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69",
         "docs/design/P10_1R_ACK_MULTI_OBJECT_PIPELINE.md": "293a31a5a9bf3f45d3b752327df7e380de379dff125b2c3e4af36471fe7a3b0d",
         "docs/design/P10_1R_RX_ADMISSION_AND_ECHO_REJECTION.md": "73212089e0bc26246d07bfba20a4b07bdc8482b05cdae75853ca33fa83467df4",
-        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "729a79931882722f995b06d0bdcf57d262c6008f8289ec214018c1bfad37ae5e",
+        "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md": "2272a3c8a0298953f017f4f74b16fb8411e0c1915a6f8a5a9bfb6afcde245cf8",
         "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
         "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md": "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603",
         "rtl/generated/ir_register_map_defs.svh": "05b6b00d8825ff2e2a7039753b8c84e913e212967211d7750404f7362b56f530",
@@ -318,7 +318,7 @@
     }
   ],
   "schema_version": 1,
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_1R-AX7020-DUAL-FUNCTIONAL-BUILD"

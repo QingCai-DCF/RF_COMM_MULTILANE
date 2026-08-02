@@ -8,7 +8,7 @@ The final diagnostic starts at sequence `0xFFF0`, crosses `0xFFFF -> 0x0000`, an
 
 The first pre-fix attempt and first post-fix attempt are retained rather than deleted. They are classified in the adjacent JSON as harness setup/assertion failures; the decisive pre-fix, post-fix, and wrap logs are separately hash-bound there.
 
-The before/after entries were produced from a dirty diagnostic worktree and remain explicitly classified as diagnostic evidence. The remediation was then checkpointed at `f8d36805c4d2fc19d1695092655629b40860e421`; the finalizer-only follow-up produced exact source commit `af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c`.
+The before/after entries were produced from a dirty diagnostic worktree and remain explicitly classified as diagnostic evidence. The remediation was checkpointed at `f8d36805c4d2fc19d1695092655629b40860e421`; the current formal-fast-path and immutable-freeze control follow-ups were then frozen at exact source commit `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`.
 
 That exact source independently passed the eight-test focused XSIM suite, portable dual-endpoint fault/loss and P9 regression, fixed/rotating routed functional builds, the performance/settle model, and the complete canonical/P8C/P8D offline capture. Their paths and SHA256 values are bound in the adjacent JSON. All runs used `NO_HARDWARE=1` and `CURRENT_RUN_HARDWARE_AUTHORIZATION=false`.
 
