@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-INTEGRITY-PIPELINE-REMEDIATION",
+  "status": "PASS_OFFLINE_HARDWARE_PENDING",
+  "generated_at_utc": "2026-08-02T06:10:00Z",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "implementation_checkpoint": "8d19744e651cf3b0c56780b1f6fb18473c87b859",
+  "diagnosis": {
+    "path": "evidence/generated/p10_1r_ack_tuning_failure_diagnosis.json",
+    "classification": "SERIAL_REDUNDANT_CPU_INTEGRITY_VERIFICATION",
+    "failed_run_id": "p10_1r_20260802T050724Z_8bb75904_73f39c68_04cb1b1f",
+    "measured_elapsed_seconds": 32.801574640625,
+    "measured_sender_prepare_seconds": 0.42750622160231955,
+    "measured_receiver_verify_seconds": 3.9194590923356865,
+    "reconciled_transport_seconds": 28.45460932668699,
+    "reconciled_transport_bps": 4217242.929687827,
+    "hardware_pass_claimed": false
+  },
+  "clean_path_before": {
+    "full_segment_passes": 7,
+    "passes": [
+      "input CRC32",
+      "output CRC32",
+      "input SHA256",
+      "output SHA256",
+      "byte comparison",
+      "incremental output CRC32",
+      "incremental output SHA256"
+    ]
+  },
+  "clean_path_after": {
+    "full_segment_passes": 2,
+    "passes": [
+      "fused byte comparison and incremental output CRC32",
+      "incremental output SHA256"
+    ],
+    "input_crc32_sha256_source": "single incremental slot-preparation pass",
+    "error_path_per_segment_digest_classification_retained": true
+  },
+  "integrity_invariants": {
+    "direct_byte_equality": true,
+    "first_mismatch_offset": true,
+    "incremental_input_crc32": true,
+    "incremental_output_crc32": true,
+    "incremental_input_sha256": true,
+    "incremental_output_sha256": true,
+    "final_crc32_equality_before_commit": true,
+    "final_sha256_equality_before_commit": true,
+    "single_atomic_commit_after_all_checks": true,
+    "partial_commit_on_error": false
+  },
+  "crc32": {
+    "polynomial_reflected": "0xedb88320",
+    "implementation": "16-entry reflected nibble table, two lookups per byte",
+    "reference_implementation": "bit-at-a-time reflected CRC32 retained in the host test oracle",
+    "known_vector": {
+      "input": "123456789",
+      "expected": "cbf43926",
+      "result": "PASS"
+    },
+    "deterministic_4096_byte_reference_equivalence": "PASS",
+    "incremental_split_equivalence": "PASS",
+    "fused_compare_equal_case": "PASS",
+    "fused_compare_first_mismatch_case": "PASS"
+  },
+  "focused_tests": [
+    {
+      "command": "python -m unittest tests.test_p10_1r_model tests.test_p10_1r_hardware_acceptance",
+      "tests": 20,
+      "result": "PASS"
+    },
+    {
+      "command": "gcc -std=c11 -Wall -Wextra -Werror tests/test_p9_crypto.c software/ps_driver/p9_crypto.c",
+      "marker": "P9_CRYPTO_PROTOCOL_TEST=PASS",
+      "result": "PASS"
+    }
+  ],
+  "files": [
+    {
+      "path": "software/ps_driver/p9_crypto.c",
+      "bytes": 7234,
+      "sha256": "8e16a9e4c723b610549ae70d6d3e80ec2cae3f0147b8d76a33ea6ddc1f0d68a9"
+    },
+    {
+      "path": "software/ps_driver/p9_crypto.h",
+      "bytes": 1008,
+      "sha256": "2bb783c97f6fcec61f99a5a9e73ebbcd02efaed7a1dcd02df3e1f98ff60b8aee"
+    },
+    {
+      "path": "software/ps_driver/p10_1_runtime_extension.inc",
+      "bytes": 62393,
+      "sha256": "d79c19e9bbaebb7ed2f9e84ac351c96215fe46b1e5e76de4997926f89f124ebb"
+    },
+    {
+      "path": "tests/test_p9_crypto.c",
+      "bytes": 3784,
+      "sha256": "f92a4777d2ac652be1552d5e920afa0279ee6b4c176ff7bdd1ac1307bc53cd45"
+    },
+    {
+      "path": "tests/test_p10_1r_model.py",
+      "bytes": 7550,
+      "sha256": "c2953603c33030d08a4187e97a93aa73940305e6684102cb5866cdf4ba7b13e2"
+    }
+  ],
+  "unchanged": [
+    "RTL protocol and ACK state machine",
+    "exact rolling-duty schedule and final safety guards",
+    "single GLOBAL_PERMIT architecture",
+    "AX7020 pinmaps and XDC",
+    "F0-R0 and F1-R1 lane mapping"
+  ],
+  "next_gate": "new exact-source ELF/artifact freeze followed by fresh direct P10.1R hardware campaign",
+  "old_hardware_results_inherited": false,
+  "no_hardware": true,
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "network_used": false
+}

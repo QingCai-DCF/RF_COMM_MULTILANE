@@ -34,7 +34,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.runner = load_runner()
 
-    def test_goal_and_artifact_freeze_are_exact(self) -> None:
+    def test_goal_is_exact_and_stale_artifact_freeze_is_rejected(self) -> None:
         self.assertEqual(
             self.runner.sha256(self.runner.GOAL),
             self.runner.EXPECTED_GOAL_SHA256,
@@ -45,13 +45,10 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.runner.EXPECTED_ALLOWED_HARDWARE_STAGES,
             self.runner.STAGES,
         )
-        freeze, artifacts = self.runner.load_freeze()
-        self.assertEqual(freeze["status"], "PASS")
-        self.assertEqual(
-            freeze["source_commit"],
-            "8bb759047276e5bb9952403013d1d33cea6bba92",
-        )
-        self.assertEqual(len(artifacts), 10)
+        with self.assertRaisesRegex(
+            RuntimeError, "artifact-freeze input mismatch"
+        ):
+            self.runner.load_freeze()
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()
