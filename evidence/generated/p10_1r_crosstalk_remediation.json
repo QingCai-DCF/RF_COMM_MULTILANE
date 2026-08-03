@@ -1,0 +1,44 @@
+{
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "finalization_hardware_actions_executed": false,
+  "generated_at_utc": "2026-08-03T13:10:00Z",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "network_used": false,
+  "orchestrator_result": {
+    "bytes": 201131,
+    "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+    "sha256": "7a8d3afb7c703185cb173df0011bedef00c33c56011eda5ee416dd4e70e3e7b1"
+  },
+  "raw_summary": {
+    "bytes": 154426,
+    "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json",
+    "sha256": "0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530"
+  },
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
+  "run_manifest": {
+    "bytes": 18429,
+    "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+    "sha256": "bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99"
+  },
+  "schema_version": 1,
+  "semantics": {
+    "cross_lane_accepted_data_count": 0,
+    "local_source_rejected_frame_count": 0,
+    "local_source_rejection_enabled": true,
+    "local_source_rejection_observed": false,
+    "other_lane_blanked_count": 0,
+    "remote_acceptance_reconciled_case_count": 4,
+    "same_module_accepted_data_count": 0
+  },
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "source_wrapper": {
+    "bytes": 952,
+    "path": "evidence/generated/p10_1r_crosstalk.json",
+    "sha256": "36c64c74c477f5903532278a933d7fd2e00d2df4a0b36169c13749b90010152b"
+  },
+  "status": "PASS",
+  "test_id": "P10_1R-HW-CROSSTALK-REMEDIATION"
+}

@@ -104,7 +104,67 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
+  "campaign_disposition": "ALL_MANDATORY_P10_1R_STAGE_SETS_COMPLETE",
+  "campaign_evidence": {
+    "ack_tuning": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "50c18068e32ba22dd6fe5ea630b7276553925d1758ecc40e2b2ed9e706fc2459"
+    },
+    "crosstalk": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "7a8d3afb7c703185cb173df0011bedef00c33c56011eda5ee416dd4e70e3e7b1"
+    },
+    "echo_tail": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "7acd2111a500d36af0b5f13c2a9e5b847f236124a7ecdc722c6732a9cd5b224f"
+    },
+    "formal_30min": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "25ab89c6af96369969d699ec4700eff9ffb1fe1148a9ee0fbcd15a72492df9d7"
+    },
+    "performance": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "02af55895972077730caec4f6adafb2895fe58ab4754cbf34f483df5386dc5d3"
+    },
+    "phy_sanity": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "4fd9fc02053fe47f331518d6dd41dbf2fe75b9f92fe2748c839802fcf9d7eaec",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "f13254df4de9dd5fd38a569128296de5f907426ec2ce91760fb92816de6360d0"
+    },
+    "preflight": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "c692b680d73d0c90452f1af09b60a0d3212b0bf918736ec29d7a6db7cc019f88",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "a37ebf89be8d5a7a9bba3ec1a2cc738e839895118f6764e533f968ffb1fe40f3"
+    },
+    "streaming_64m": {
+      "manifest": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "d2713b38762d455580a8670361bd46580671ffdf949d9bbad8dbf45bae8b91a4",
+      "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "orchestrator_sha256": "4c3ecf7a5d8f7af13b15932c1102a81ad04c6d5ff8badd8627c7ab89b053d682"
+    }
+  },
+  "campaign_stage_runs": {
+    "ack_tuning": "p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6",
+    "crosstalk": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
+    "echo_tail": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+    "formal_30min": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
+    "performance": "p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6",
+    "phy_sanity": "p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6",
+    "preflight": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
+    "streaming_64m": "p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6"
+  },
   "campaign_status": "PASS",
   "consumed": true,
   "consumed_at_utc": "2026-08-03T13:07:12+00:00",
@@ -129,7 +189,7 @@
   },
   "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
   "final_evidence_sha256": "a37ebf89be8d5a7a9bba3ec1a2cc738e839895118f6764e533f968ffb1fe40f3",
-  "full_campaign_completed": false,
+  "full_campaign_completed": true,
   "generated_at_utc": "2026-08-03T13:05:35+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
@@ -244,7 +304,7 @@
   "maximum_echo_tail_stage_seconds": 1200,
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this stage-scoped PASS and create fresh run-bound authorizations for the remaining mandatory P10.1R stages",
+  "next_required_action": "USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
@@ -361,7 +421,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
+  "status": "CONSUMED_AFTER_P10_1R_CAMPAIGN_PASS",
   "user_authorization_received_on": "2026-08-02",
   "user_authorization_statement": "用户于2026-08-02确认P10.1R campaign-level standing authorization，允许在完整离线验证和artifact SHA256冻结后，为Goal内必要硬件阶段自动创建新的不可变current-run authorization；用户于2026-08-03再次要求‘继续完成目标’。本run只执行stage=preflight，不得扩大到P11、1+1全双工、Ethernet、SPI、移动、重接或lane mask>0x3；必须shutdown-before，并在成功、失败、异常、超时、Ctrl+C和正常退出后验证双端shutdown。",
   "user_authorization_statement_sha256": "49d785b4cc87a3335748461e170ff9a7c021854aa11669648d310ea762e818c4"

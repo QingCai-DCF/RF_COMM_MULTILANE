@@ -1,0 +1,514 @@
+{
+  "artifact_freeze": {
+    "bytes": 7993,
+    "path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "sha256": "d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467"
+  },
+  "artifact_roles": {
+    "fixed": {
+      "bitstream": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 4045681,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea/p10_ax7020_fixed_functional.bit",
+        "read_only": true,
+        "sha256": "565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea"
+      },
+      "bsp": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 1855896,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+        "read_only": true,
+        "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+      },
+      "elf": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 554900,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4/p10_fixed_runtime.elf",
+        "read_only": true,
+        "sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4"
+      },
+      "shutdown_bitstream": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 369449,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a/p10_ax7020_fixed_shutdown.bit",
+        "read_only": true,
+        "sha256": "0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a"
+      },
+      "xsa": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 944670,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648/p10_ax7020_fixed_functional.xsa",
+        "read_only": true,
+        "sha256": "cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648"
+      }
+    },
+    "rotating": {
+      "bitstream": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 4045681,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0/p10_ax7020_rotating_functional.bit",
+        "read_only": true,
+        "sha256": "df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0"
+      },
+      "bsp": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 1856209,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+        "read_only": true,
+        "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+      },
+      "elf": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 555184,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e/p10_rotating_runtime.elf",
+        "read_only": true,
+        "sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e"
+      },
+      "shutdown_bitstream": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 369449,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27/p10_ax7020_rotating_shutdown.bit",
+        "read_only": true,
+        "sha256": "a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27"
+      },
+      "xsa": {
+        "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+        "bytes": 942509,
+        "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d/p10_ax7020_rotating_functional.xsa",
+        "read_only": true,
+        "sha256": "e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d"
+      }
+    }
+  },
+  "canonical_files": [
+    {
+      "bytes": 45174,
+      "path": "config/project_state.json",
+      "sha256": "79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2"
+    },
+    {
+      "bytes": 9881,
+      "path": "PROJECT_STATUS.md",
+      "sha256": "ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0"
+    },
+    {
+      "bytes": 247548,
+      "path": "config/project_requirements.yaml",
+      "sha256": "f15277d7af2256750ba9081db003e71cfecfbcd137676cff254f5a7911df909d"
+    },
+    {
+      "bytes": 137714,
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "73096d83489a7f11f656d92dc65365ceee5bdfbfa6ac43dda16d3554cc1244d5"
+    },
+    {
+      "bytes": 19930,
+      "path": "config/p10_1r_current_run_hardware_authorization.json",
+      "sha256": "504b3ab17f2e16e11951bd96bc131e707d309d5fc52d96e1bb2f4ba0e4c37187"
+    }
+  ],
+  "checks": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_project_status.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_requirement_traceability.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "REQUIREMENT_TRACEABILITY_GENERATION=PASS\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_p8a_consistency.py --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "CANONICAL_CONSTRAINT_GATE=PASS\nPROJECT_STATE_CONSISTENCY=PASS\nREQUIREMENT_TRACEABILITY_BASELINE=PASS\nP0_P7_EVIDENCE_RECONCILIATION=PASS\nNO_HARDWARE_ACTIONS_EXECUTED=1\nP8A_STATUS=PASS\n"
+    },
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/check_no_hardware_calls.py",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "NO_HARDWARE_ACTIONS_EXECUTED=1\n"
+    },
+    {
+      "command": "git diff --check",
+      "return_code": 0,
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "finalization_hardware_actions_executed": false,
+  "generated_at_utc": "2026-08-03T13:10:00Z",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "mandatory_exit_gates": {
+    "ACK_BUNDLE_WINDOW": "PASS",
+    "CONTINUOUS_HIGH_VIOLATION_ZERO": "PASS",
+    "CRC_BAD_ZERO": "PASS",
+    "CROSS_LANE_ACCEPTED_ZERO": "PASS",
+    "DEADLOCK_ZERO": "PASS",
+    "DECODER_CLEAR_ON_TX": "PASS",
+    "DESCRIPTOR_LEAK_ZERO": "PASS",
+    "DOUBLE_COMPLETION_ZERO": "PASS",
+    "DUTY_VIOLATION_ZERO": "PASS",
+    "EVIDENCE_CONSISTENCY": "PASS",
+    "FAILURE_BASELINE_FROZEN": "PASS",
+    "F_TO_R_APPLICATION_GOODPUT_4MBPS": "PASS",
+    "HOST_NOT_IN_FAST_PATH": "PASS",
+    "LOCAL_SOURCE_REJECTION": "PASS",
+    "MULTI_OBJECT_PIPELINE": "PASS",
+    "NON_TARGET_ACCEPTED_CRC_VALID_ZERO": "PASS",
+    "NO_PER_OBJECT_TURNAROUND": "PASS",
+    "OLD_AUTHORIZATION_CLOSED": "PASS",
+    "OTHER_LANE_NOT_BLANKED": "PASS",
+    "PARTIAL_DUPLICATE_STALE_ZERO": "PASS",
+    "PER_MODULE_TX_RX_EXCLUSION": "PASS",
+    "POST_TX_GUARD_MEASURED": "PASS",
+    "RETRY_EXHAUSTED_ZERO": "PASS",
+    "R_TO_F_APPLICATION_GOODPUT_4MBPS": "PASS",
+    "SAME_MODULE_ACCEPTED_DATA_ZERO": "PASS",
+    "SAME_MODULE_RAW_ECHO_OBSERVABLE": "PASS",
+    "SHA_MISMATCH_ZERO": "PASS",
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "STATIONARY_30MIN": "PASS",
+    "STREAMING_64M_F_TO_R_5X": "PASS",
+    "STREAMING_64M_R_TO_F_5X": "PASS",
+    "STREAM_ABORT_RESET_RECOVERY": "PASS"
+  },
+  "network_used": false,
+  "offline_evidence_consistency_preserved": {
+    "bytes": 7878,
+    "path": "evidence/generated/p10_1r_evidence_consistency.json",
+    "sha256": "7b59ab5a023ec59c6d609f52f3c12cc673232bf2add732e280a637d24e905be5"
+  },
+  "rewiring_executed": false,
+  "runs": {
+    "ack_tuning": {
+      "evidence": [
+        {
+          "bytes": 1763,
+          "path": "evidence/generated/p10_1r_ack_tuning.json",
+          "sha256": "70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897"
+        },
+        {
+          "bytes": 47714,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/ack_tuning/stage_summary.json",
+          "sha256": "f0aad9a673c4e3f58f3dd88a7574301afaa83c1d3f733a3a893f199c3de794cc"
+        },
+        {
+          "bytes": 14578,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "84bef984c961ed28b013da4dcfa52b4bd08db662e93747be2741e84593683416"
+        },
+        {
+          "bytes": 1815,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "a73fc1f8ec85f465f982719a01fa13cdb796480824bd64bbbcf96b00f66f4ee9"
+        },
+        {
+          "bytes": 8659,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a"
+        },
+        {
+          "bytes": 78025,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "50c18068e32ba22dd6fe5ea630b7276553925d1758ecc40e2b2ed9e706fc2459"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 47,
+      "run_id": "p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "crosstalk": {
+      "evidence": [
+        {
+          "bytes": 952,
+          "path": "evidence/generated/p10_1r_crosstalk.json",
+          "sha256": "36c64c74c477f5903532278a933d7fd2e00d2df4a0b36169c13749b90010152b"
+        },
+        {
+          "bytes": 154426,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json",
+          "sha256": "0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530"
+        },
+        {
+          "bytes": 14584,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "10c9165556e3d9fd6395042497ea41d8394646f245734c4ec852361821b73e79"
+        },
+        {
+          "bytes": 1814,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "51fe78bf966ef7cdf9965ca460394c0d4a6aff4ae3552fc2927672312f8602a5"
+        },
+        {
+          "bytes": 18429,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99"
+        },
+        {
+          "bytes": 201131,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "7a8d3afb7c703185cb173df0011bedef00c33c56011eda5ee416dd4e70e3e7b1"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 91,
+      "run_id": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "echo_tail": {
+      "evidence": [
+        {
+          "bytes": 6266,
+          "path": "evidence/generated/p10_1r_echo_tail.json",
+          "sha256": "253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69"
+        },
+        {
+          "bytes": 20945,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/echo_tail/stage_summary.json",
+          "sha256": "667ec9b66b53c16ea2589cd1bdb562abf24d08ce5ecdcef625cd7c0693a91bdf"
+        },
+        {
+          "bytes": 13853,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "cd9ec647213afcf14a3b21c133bef2e8f4292acab05bfe4f0ebeec1083e60d95"
+        },
+        {
+          "bytes": 1814,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "da838c24004d6fba44a41246faad4edf4c6f41f7ea41213ac83b27bae00b143c"
+        },
+        {
+          "bytes": 8702,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d"
+        },
+        {
+          "bytes": 47304,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "7acd2111a500d36af0b5f13c2a9e5b847f236124a7ecdc722c6732a9cd5b224f"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 47,
+      "run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "formal_30min": {
+      "evidence": [
+        {
+          "bytes": 1447,
+          "path": "evidence/generated/p10_1r_formal_30min.json",
+          "sha256": "292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd"
+        },
+        {
+          "bytes": 307867,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json",
+          "sha256": "439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e"
+        },
+        {
+          "bytes": 14589,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "60efaf53578df3831af4c625340f5f6e68509f0811937924ce59d327e20a7136"
+        },
+        {
+          "bytes": 1817,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "1db7fb37927671ad27f34f084e1dedab07148a7951495f7aca37fdd5a414bbf0"
+        },
+        {
+          "bytes": 29162,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96"
+        },
+        {
+          "bytes": 373917,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "25ab89c6af96369969d699ec4700eff9ffb1fe1148a9ee0fbcd15a72492df9d7"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 143,
+      "run_id": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "performance": {
+      "evidence": [
+        {
+          "bytes": 1804,
+          "path": "evidence/generated/p10_1r_performance.json",
+          "sha256": "dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6"
+        },
+        {
+          "bytes": 470016,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/sustained_performance/stage_summary.json",
+          "sha256": "6262e8bb5bdecf3987354d87d8c80dba8ca554356377c0952595d580c60ef350"
+        },
+        {
+          "bytes": 14582,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "2f89bca9e81c765365c3b055cf1fb448852fdac03396b935c89ece9b7a9d1ba1"
+        },
+        {
+          "bytes": 1816,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "b9c7fdd548c36f69d1f00361dc01f0153e6dedbd9b01bc20204fe811ffc2c279"
+        },
+        {
+          "bytes": 41872,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10"
+        },
+        {
+          "bytes": 558387,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "02af55895972077730caec4f6adafb2895fe58ab4754cbf34f483df5386dc5d3"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 203,
+      "run_id": "p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "phy_sanity": {
+      "evidence": [
+        {
+          "bytes": 942,
+          "path": "evidence/generated/p10_1r_phy_sanity.json",
+          "sha256": "6e3587597571ca9bec344662dbec43c341fee3170cf3de9cd8e52292b08c12c7"
+        },
+        {
+          "bytes": 78400,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/phy_sanity/stage_summary.json",
+          "sha256": "a68aed1508d013aed7b29245b2018ae28f890bc065fc18f05b582f64a28c8eea"
+        },
+        {
+          "bytes": 14588,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "cf6306dd215d2c88e3a1e1339b3cf430125371c1fa7376a7a9541af199272d7f"
+        },
+        {
+          "bytes": 1815,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "e9052305b5b4a22ae058f364b0e9f8f06b5d37771075756b2c146a3c10b8bf75"
+        },
+        {
+          "bytes": 11064,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "4fd9fc02053fe47f331518d6dd41dbf2fe75b9f92fe2748c839802fcf9d7eaec"
+        },
+        {
+          "bytes": 113054,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "f13254df4de9dd5fd38a569128296de5f907426ec2ce91760fb92816de6360d0"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 59,
+      "run_id": "p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "preflight": {
+      "evidence": [
+        {
+          "bytes": 636,
+          "path": "evidence/generated/p10_1r_safe_boot.json",
+          "sha256": "a545a6139b548cc04e74a6c6f47c63fcb809f6f6a02c25ee63157e87b9029ff1"
+        },
+        {
+          "bytes": 66523,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/safe_boot/stage_summary.json",
+          "sha256": "944e6882991c00ffb62144aad31c4b869b45088fea6e16c49cdf037a448406a3"
+        },
+        {
+          "bytes": 14563,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "ed202365ca3a911a8214e56a8140f71f5923296f4ecaeb745894eb9b08a5e920"
+        },
+        {
+          "bytes": 1814,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "035c734892fa846a523f9c62053f8d87228ac6cd3eea552126cae0f9d6fe3f4e"
+        },
+        {
+          "bytes": 10878,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "c692b680d73d0c90452f1af09b60a0d3212b0bf918736ec29d7a6db7cc019f88"
+        },
+        {
+          "bytes": 100410,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "a37ebf89be8d5a7a9bba3ec1a2cc738e839895118f6764e533f968ffb1fe40f3"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 59,
+      "run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "streaming_64m": {
+      "evidence": [
+        {
+          "bytes": 762,
+          "path": "evidence/generated/p10_1r_streaming_64m.json",
+          "sha256": "a1035bc1a2a991d6f54224d20ecc2af8f2de674a1032d0af32ae143d8d5ff081"
+        },
+        {
+          "bytes": 269888,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/streaming_64m/stage_summary.json",
+          "sha256": "350520c0de5c469da34a16b01bc3de51958f8108b15161c982a0b721907fc098"
+        },
+        {
+          "bytes": 14590,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/authorization/immutable_authorization.json",
+          "sha256": "506969c222dc791fea84c9300b4d76c8ef2a02fc0e93168deff23d1b29d135ba"
+        },
+        {
+          "bytes": 1818,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/authorization/authorization_record.json",
+          "sha256": "1e376ad070093c073b9329b69ca4dd42aea7b1b154d94fb7697dce0098d15ab4"
+        },
+        {
+          "bytes": 25642,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+          "sha256": "d2713b38762d455580a8670361bd46580671ffdf949d9bbad8dbf45bae8b91a4"
+        },
+        {
+          "bytes": 330822,
+          "path": "evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+          "sha256": "4c3ecf7a5d8f7af13b15932c1102a81ad04c6d5ff8badd8627c7ab89b053d682"
+        }
+      ],
+      "manifest_coverage": "ALL_RUN_FILES_EXCEPT_MANIFEST_AND_FINAL_ORCHESTRATOR",
+      "manifest_file_count": 135,
+      "run_id": "p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    }
+  },
+  "schema_version": 1,
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "status": "PASS",
+  "test_id": "P10_1R-HARDWARE-EVIDENCE-CONSISTENCY"
+}

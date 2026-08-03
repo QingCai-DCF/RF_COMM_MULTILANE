@@ -134,8 +134,9 @@ P10_1_EXTENDED_MODEL_REQUIREMENT_IDS = {"PERF-MODEL-001", "PERF-MODEL-002"}
 P10_1_PENDING_HARDWARE_REQUIREMENT_IDS = {"PERF-HW-001"}
 P10_1R_REQUIREMENT_IDS = {
     "P10_1R-ECHO-001", "P10_1R-ECHO-002", "P10_1R-ECHO-003",
-    "P10_1R-ECHO-004", "P10_1R-ECHO-005",
+    "P10_1R-ECHO-004", "P10_1R-ECHO-005", "P10_1R-ECHO-006",
     "P10_1R-ACK-001", "P10_1R-ACK-002", "P10_1R-ACK-003",
+    "P10_1R-ACK-004",
     "P10_1R-HOST-001",
     "P10_1R-PERF-001", "P10_1R-PERF-002",
     "P10_1R-STREAM-001", "P10_1R-STREAM-002", "P10_1R-SOAK-001",
@@ -527,7 +528,11 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         if p10_stage == "PASS" and p10_authorization_consumed:
             if state.get("p10_1_offline_status") == "PASS":
                 p10_1_hardware_status = state.get("p10_1_hardware_status")
-                if p10_1_hardware_status == "PASS":
+                if state.get("p10_1r_status") == "PASS":
+                    expected_program_stage = (
+                        "USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS"
+                    )
+                elif p10_1_hardware_status == "PASS":
                     expected_program_stage = "P11_PREREQUISITE_ACQUISITION"
                 elif (
                     state.get("p10_1r_status") in {
@@ -817,7 +822,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             isinstance(p10_1r_campaign, dict)
             and p10_1r_campaign.get("hardware_actions_executed") is True
             and state.get("p10_1r_status")
-            in {"IN_PROGRESS", "AUTHORIZED", "PARTIAL", "FAIL"}
+            in {"IN_PROGRESS", "AUTHORIZED", "PARTIAL", "FAIL", "PASS"}
         )
         if p10_1r_is_latest_hardware:
             expected_last_hardware = {

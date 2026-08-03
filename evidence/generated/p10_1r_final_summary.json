@@ -1,0 +1,264 @@
+{
+  "artifact_freeze": {
+    "bytes": 7993,
+    "path": "evidence/generated/p10_1r_artifact_freeze.json",
+    "sha256": "d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467"
+  },
+  "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
+  "base_failure_tag_commit": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "branch": "p10.1r/2lane-speed-stability-remediation",
+  "checkpoint_tag": "p10.1r-2lane-speed-stability-pass",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "fail": [],
+  "finalization_hardware_actions_executed": false,
+  "generated_at_utc": "2026-08-03T13:10:00Z",
+  "generated_evidence": [
+    {
+      "bytes": 636,
+      "path": "evidence/generated/p10_1r_safe_boot.json",
+      "sha256": "a545a6139b548cc04e74a6c6f47c63fcb809f6f6a02c25ee63157e87b9029ff1"
+    },
+    {
+      "bytes": 6266,
+      "path": "evidence/generated/p10_1r_echo_tail.json",
+      "sha256": "253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69"
+    },
+    {
+      "bytes": 952,
+      "path": "evidence/generated/p10_1r_crosstalk.json",
+      "sha256": "36c64c74c477f5903532278a933d7fd2e00d2df4a0b36169c13749b90010152b"
+    },
+    {
+      "bytes": 942,
+      "path": "evidence/generated/p10_1r_phy_sanity.json",
+      "sha256": "6e3587597571ca9bec344662dbec43c341fee3170cf3de9cd8e52292b08c12c7"
+    },
+    {
+      "bytes": 1763,
+      "path": "evidence/generated/p10_1r_ack_tuning.json",
+      "sha256": "70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897"
+    },
+    {
+      "bytes": 1804,
+      "path": "evidence/generated/p10_1r_performance.json",
+      "sha256": "dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6"
+    },
+    {
+      "bytes": 762,
+      "path": "evidence/generated/p10_1r_streaming_64m.json",
+      "sha256": "a1035bc1a2a991d6f54224d20ecc2af8f2de674a1032d0af32ae143d8d5ff081"
+    },
+    {
+      "bytes": 1447,
+      "path": "evidence/generated/p10_1r_formal_30min.json",
+      "sha256": "292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd"
+    },
+    {
+      "bytes": 1781,
+      "path": "evidence/generated/p10_1r_crosstalk_remediation.json",
+      "sha256": "2043eef8c4290002a0006c7466afc990ed552626a7d391380a333ba9d665d621"
+    },
+    {
+      "bytes": 7878,
+      "path": "evidence/generated/p10_1r_evidence_consistency.json",
+      "sha256": "7b59ab5a023ec59c6d609f52f3c12cc673232bf2add732e280a637d24e905be5"
+    },
+    {
+      "bytes": 23646,
+      "path": "evidence/generated/p10_1r_hardware_evidence_consistency.json",
+      "sha256": "a6627ae734a333d66fb29cd47199b2b7c460cd64509adf89f773c7ce8d8cbbf6"
+    },
+    {
+      "bytes": 23394,
+      "path": "evidence/generated/p10_1r_shutdown.json",
+      "sha256": "e85146d071157b6b832e4bc4c5571cee0172f251b2887fddacf37788a5365e74"
+    }
+  ],
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "head_when_aggregated": "0e8e7e174e2e6b509686cd9e568e284fee6bf43f",
+  "lane_mapping": {
+    "lane0": "F0-R0",
+    "lane1": "F1-R1"
+  },
+  "mandatory_exit_gates": {
+    "ACK_BUNDLE_WINDOW": "PASS",
+    "CONTINUOUS_HIGH_VIOLATION_ZERO": "PASS",
+    "CRC_BAD_ZERO": "PASS",
+    "CROSS_LANE_ACCEPTED_ZERO": "PASS",
+    "DEADLOCK_ZERO": "PASS",
+    "DECODER_CLEAR_ON_TX": "PASS",
+    "DESCRIPTOR_LEAK_ZERO": "PASS",
+    "DOUBLE_COMPLETION_ZERO": "PASS",
+    "DUTY_VIOLATION_ZERO": "PASS",
+    "EVIDENCE_CONSISTENCY": "PASS",
+    "FAILURE_BASELINE_FROZEN": "PASS",
+    "F_TO_R_APPLICATION_GOODPUT_4MBPS": "PASS",
+    "HOST_NOT_IN_FAST_PATH": "PASS",
+    "LOCAL_SOURCE_REJECTION": "PASS",
+    "MULTI_OBJECT_PIPELINE": "PASS",
+    "NON_TARGET_ACCEPTED_CRC_VALID_ZERO": "PASS",
+    "NO_PER_OBJECT_TURNAROUND": "PASS",
+    "OLD_AUTHORIZATION_CLOSED": "PASS",
+    "OTHER_LANE_NOT_BLANKED": "PASS",
+    "PARTIAL_DUPLICATE_STALE_ZERO": "PASS",
+    "PER_MODULE_TX_RX_EXCLUSION": "PASS",
+    "POST_TX_GUARD_MEASURED": "PASS",
+    "RETRY_EXHAUSTED_ZERO": "PASS",
+    "R_TO_F_APPLICATION_GOODPUT_4MBPS": "PASS",
+    "SAME_MODULE_ACCEPTED_DATA_ZERO": "PASS",
+    "SAME_MODULE_RAW_ECHO_OBSERVABLE": "PASS",
+    "SHA_MISMATCH_ZERO": "PASS",
+    "SHUTDOWN_FIXED": "PASS",
+    "SHUTDOWN_ROTATING": "PASS",
+    "STATIONARY_30MIN": "PASS",
+    "STREAMING_64M_F_TO_R_5X": "PASS",
+    "STREAMING_64M_R_TO_F_5X": "PASS",
+    "STREAM_ABORT_RESET_RECOVERY": "PASS"
+  },
+  "metrics": {
+    "ack_wait_ratio_after": 0.994121855561447,
+    "ack_wait_ratio_before": 0.914,
+    "best_ack_max_delay_cycles": 64000,
+    "best_ack_threshold": 32,
+    "best_burst_frames": 32,
+    "counters": {
+      "continuous_high_violation": 0,
+      "crc_bad": 0.0,
+      "deadlock": 0,
+      "descriptor_leak": 0.0,
+      "double_completion": 0.0,
+      "duplicate_commit": 0.0,
+      "duty_violation": 0.0,
+      "maximum_observed_txd_high_cycles": 16.0,
+      "partial_commit": 0.0,
+      "retry_exhausted": 0.0,
+      "sha_mismatch": 0.0,
+      "stale_commit": 0.0,
+      "transport_timeout": 0.0
+    },
+    "cross_lane_accepted_data_count": 0,
+    "formal_application_goodput_bps": {
+      "fixed_to_rotating": 4154358.2476190478,
+      "rotating_to_fixed": 4154358.2476190478
+    },
+    "formal_committed_bytes": {
+      "fixed_to_rotating": 436207616,
+      "rotating_to_fixed": 436207616
+    },
+    "formal_runtime_seconds": 1800.009,
+    "formal_window_seconds": {
+      "fixed_to_rotating": 840,
+      "rotating_to_fixed": 840
+    },
+    "guard_cycles": {
+      "F0": 4096,
+      "F1": 4096,
+      "R0": 4096,
+      "R1": 4096
+    },
+    "host_blocking_commands_fixed_to_rotating": 1,
+    "host_blocking_commands_rotating_to_fixed": 1,
+    "host_fast_path_dependency_count": 0,
+    "inter_object_ratio_after": 0.0009580813341342467,
+    "inter_object_ratio_before": 0.445,
+    "local_source_rejected_frame_count": 0,
+    "local_source_rejection_directly_exercised": false,
+    "local_source_rejection_enabled": true,
+    "minimum_segments_per_host_command": 6656,
+    "non_target_accepted_crc_valid_count": 0.0,
+    "objects_in_flight": 4,
+    "other_lane_blanked_count": 0,
+    "remote_acceptance_reconciled_case_count": 4,
+    "same_module_accepted_data_count": 0,
+    "same_module_blanked_frame_count": 0,
+    "same_module_raw_echo_count": 4000,
+    "streaming_64m": {
+      "fixed_to_rotating_count": 5,
+      "post_recovery_clean_count": 3,
+      "recovery_vector_count": 3,
+      "rotating_to_fixed_count": 5
+    },
+    "sustained_application_goodput_bps": {
+      "fixed_to_rotating": 4501886.293333333,
+      "rotating_to_fixed": 4501886.293333333
+    }
+  },
+  "network_used": false,
+  "next_recommended_stage": "USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS",
+  "no_hardware_movement": true,
+  "p10_1_failure_baseline_preserved": "FAIL",
+  "p10_functional_status_preserved": "PASS",
+  "p11_status": "NOT_STARTED",
+  "pass": [
+    "FAILURE_BASELINE_FROZEN",
+    "OLD_AUTHORIZATION_CLOSED",
+    "PER_MODULE_TX_RX_EXCLUSION",
+    "OTHER_LANE_NOT_BLANKED",
+    "DECODER_CLEAR_ON_TX",
+    "POST_TX_GUARD_MEASURED",
+    "LOCAL_SOURCE_REJECTION",
+    "SAME_MODULE_RAW_ECHO_OBSERVABLE",
+    "SAME_MODULE_ACCEPTED_DATA_ZERO",
+    "NON_TARGET_ACCEPTED_CRC_VALID_ZERO",
+    "CROSS_LANE_ACCEPTED_ZERO",
+    "ACK_BUNDLE_WINDOW",
+    "NO_PER_OBJECT_TURNAROUND",
+    "MULTI_OBJECT_PIPELINE",
+    "HOST_NOT_IN_FAST_PATH",
+    "F_TO_R_APPLICATION_GOODPUT_4MBPS",
+    "R_TO_F_APPLICATION_GOODPUT_4MBPS",
+    "STREAMING_64M_F_TO_R_5X",
+    "STREAMING_64M_R_TO_F_5X",
+    "STREAM_ABORT_RESET_RECOVERY",
+    "STATIONARY_30MIN",
+    "CRC_BAD_ZERO",
+    "SHA_MISMATCH_ZERO",
+    "PARTIAL_DUPLICATE_STALE_ZERO",
+    "RETRY_EXHAUSTED_ZERO",
+    "DESCRIPTOR_LEAK_ZERO",
+    "DOUBLE_COMPLETION_ZERO",
+    "DEADLOCK_ZERO",
+    "DUTY_VIOLATION_ZERO",
+    "CONTINUOUS_HIGH_VIOLATION_ZERO",
+    "SHUTDOWN_FIXED",
+    "SHUTDOWN_ROTATING",
+    "EVIDENCE_CONSISTENCY"
+  ],
+  "schema_version": 1,
+  "scope_non_promotions": [
+    "P11",
+    "ONEPLUSONE_FULL_DUPLEX",
+    "8X32",
+    "600RPM",
+    "ETHERNET",
+    "SPI",
+    "PHYSICAL_GLOBAL_PERMIT",
+    "EXTERNAL_TFDU_DUTY",
+    "PRODUCT_FINAL"
+  ],
+  "shutdown_fixed": "PASS",
+  "shutdown_led_physical_confirmation": "PENDING_USER_VISUAL_OR_ELECTRICAL_OBSERVATION",
+  "shutdown_led_scope_note": "Both role-bound shutdown bitstreams were programmed with active-low all-off intent and all shutdown markers passed; configuration evidence does not directly measure physical LED pins.",
+  "shutdown_rotating": "PASS",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "stage_runs": {
+    "ack_tuning": "p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6",
+    "crosstalk": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
+    "echo_tail": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+    "formal_30min": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
+    "performance": "p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6",
+    "phy_sanity": "p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6",
+    "preflight": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
+    "streaming_64m": "p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6"
+  },
+  "status": "PASS",
+  "test_id": "P10_1R-FINAL-HARDWARE-CHECKPOINT",
+  "wiring_changed": false,
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R"
+}

@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 186
-PASS: 158
-PENDING: 23
+PASS: 165
+PENDING: 16
 FAIL: 5
 WAIVED: 0
 ```
@@ -186,22 +186,22 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `OBS-LED-HW-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP | `PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION` | — | `docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md` | The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS. |
 | `OBS-LED-SHUTDOWN-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1R_EXACT_SOURCE_OFFLINE_AND_BOUNDED_RAW_HARDWARE` | `P10_1-SHUTDOWN-LED-XSIM-001` | `evidence/generated/p10_1_led_offline/summary.json` | The role-bound AX7020 standalone shutdown bitstream shall expose all four active-low PL LED outputs and drive pl_activity_led_n_o=4'b1111 so LED1 through LED4 are off after configuration. |
 | `P10_1R-RAW-PULSE-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_EXACT_SOURCE_OFFLINE_AND_BOUNDED_RAW_HARDWARE` | `P10_1R-HW-ECHO_TAIL` | `evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json` | The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall traverse the unchanged final per-module arm, TX-kill, one-hot, continuous-high, stuck-high, and exact sliding-duty safety path. |
-| `P10_1R-ECHO-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
-| `P10_1R-ECHO-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
-| `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/generated/p10_1r_echo_tail.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
-| `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | A local transmission on one module shall not blank receive admission on the other lane. |
-| `P10_1R-ECHO-005` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/generated/p10_1r_echo_tail.json` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
-| `P10_1R-ECHO-006` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
-| `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
-| `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
-| `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
-| `P10_1R-ACK-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R-DUAL-LANE-BOUNDARY-ACK-SKEW-REMEDIATION` | `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
-| `P10_1R-HOST-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
-| `P10_1R-PERF-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
-| `P10_1R-PERF-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
-| `P10_1R-STREAM-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
-| `P10_1R-STREAM-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Rotating-to-fixed transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
-| `P10_1R-SOAK-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | One 1800-second stationary run shall retain both directional speed targets with zero integrity, protocol, descriptor, safety, deadlock, or shutdown errors. |
+| `P10_1R-ECHO-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-CROSSTALK` | `evidence/generated/p10_1r_crosstalk_remediation.json` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
+| `P10_1R-ECHO-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-CROSSTALK` | `evidence/generated/p10_1r_crosstalk_remediation.json` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
+| `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/generated/p10_1r_echo_tail.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
+| `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-CROSSTALK` | `evidence/generated/p10_1r_crosstalk_remediation.json` | A local transmission on one module shall not blank receive admission on the other lane. |
+| `P10_1R-ECHO-005` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/generated/p10_1r_echo_tail.json` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
+| `P10_1R-ECHO-006` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-CROSSTALK` | `evidence/generated/p10_1r_crosstalk_remediation.json` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
+| `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ACK_TUNING` | `evidence/generated/p10_1r_ack_tuning.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
+| `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ACK_TUNING` | `evidence/generated/p10_1r_ack_tuning.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
+| `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ACK_TUNING` | `evidence/generated/p10_1r_ack_tuning.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
+| `P10_1R-ACK-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_ack_tuning.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
+| `P10_1R-HOST-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_formal_30min.json` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
+| `P10_1R-PERF-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
+| `P10_1R-PERF-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
+| `P10_1R-STREAM-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-STREAMING_64M` | `evidence/generated/p10_1r_streaming_64m.json` | Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
+| `P10_1R-STREAM-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-STREAMING_64M` | `evidence/generated/p10_1r_streaming_64m.json` | Rotating-to-fixed transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
+| `P10_1R-SOAK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_formal_30min.json` | One 1800-second stationary run shall retain both directional speed targets with zero integrity, protocol, descriptor, safety, deadlock, or shutdown errors. |
 
 ## PASS artifact bindings
 
@@ -275,13 +275,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5`
-- `PROJECT_STATUS.md` — `3d3f61ee2901426ff8621dd6318306a4bd9d47b44051e15298f1bb2cedc16a64`
+- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
+- `PROJECT_STATUS.md` — `ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5`
+- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
 
 ### `P8A-EVID-001`
 
@@ -291,8 +291,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5`
-- `PROJECT_STATUS.md` — `3d3f61ee2901426ff8621dd6318306a4bd9d47b44051e15298f1bb2cedc16a64`
+- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
+- `PROJECT_STATUS.md` — `ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1121,52 +1121,128 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P10_1R-ECHO-001`
 
+- `evidence/generated/p10_1r_crosstalk_remediation.json` — `2043eef8c4290002a0006c7466afc990ed552626a7d391380a333ba9d665d621`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json` — `0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99`
 - `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-ECHO-002`
+
+- `evidence/generated/p10_1r_crosstalk_remediation.json` — `2043eef8c4290002a0006c7466afc990ed552626a7d391380a333ba9d665d621`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json` — `0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ECHO-003`
 
 - `evidence/generated/p10_1r_echo_tail.json` — `253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69`
+- `evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/echo_tail/stage_summary.json` — `667ec9b66b53c16ea2589cd1bdb562abf24d08ce5ecdcef625cd7c0693a91bdf`
 - `evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d`
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ECHO-004`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac`
+- `evidence/generated/p10_1r_crosstalk_remediation.json` — `2043eef8c4290002a0006c7466afc990ed552626a7d391380a333ba9d665d621`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json` — `0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ECHO-005`
 
 - `evidence/generated/p10_1r_echo_tail.json` — `253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69`
-- `evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json` — `bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42`
+- `evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/echo_tail/stage_summary.json` — `667ec9b66b53c16ea2589cd1bdb562abf24d08ce5ecdcef625cd7c0693a91bdf`
 - `evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-ECHO-006`
+
+- `evidence/generated/p10_1r_crosstalk_remediation.json` — `2043eef8c4290002a0006c7466afc990ed552626a7d391380a333ba9d665d621`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json` — `0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `bcf6aeb40258ca52f06f8a5d64f00dfeab7b62d29b6f3daee54f26892fce3c99`
+- `evidence/generated/p10_1r_phy_sanity.json` — `6e3587597571ca9bec344662dbec43c341fee3170cf3de9cd8e52292b08c12c7`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/phy_sanity/stage_summary.json` — `a68aed1508d013aed7b29245b2018ae28f890bc065fc18f05b582f64a28c8eea`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `4fd9fc02053fe47f331518d6dd41dbf2fe75b9f92fe2748c839802fcf9d7eaec`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ACK-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
+- `evidence/generated/p10_1r_ack_tuning.json` — `70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/ack_tuning/stage_summary.json` — `f0aad9a673c4e3f58f3dd88a7574301afaa83c1d3f733a3a893f199c3de794cc`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a`
+- `evidence/generated/p10_1r_performance.json` — `dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/sustained_performance/stage_summary.json` — `6262e8bb5bdecf3987354d87d8c80dba8ca554356377c0952595d580c60ef350`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ACK-002`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`
+- `evidence/generated/p10_1r_ack_tuning.json` — `70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/ack_tuning/stage_summary.json` — `f0aad9a673c4e3f58f3dd88a7574301afaa83c1d3f733a3a893f199c3de794cc`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a`
+- `evidence/generated/p10_1r_performance.json` — `dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/sustained_performance/stage_summary.json` — `6262e8bb5bdecf3987354d87d8c80dba8ca554356377c0952595d580c60ef350`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ACK-003`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`
+- `evidence/generated/p10_1r_ack_tuning.json` — `70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/ack_tuning/stage_summary.json` — `f0aad9a673c4e3f58f3dd88a7574301afaa83c1d3f733a3a893f199c3de794cc`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a`
+- `evidence/generated/p10_1r_streaming_64m.json` — `a1035bc1a2a991d6f54224d20ecc2af8f2de674a1032d0af32ae143d8d5ff081`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/streaming_64m/stage_summary.json` — `350520c0de5c469da34a16b01bc3de51958f8108b15161c982a0b721907fc098`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `d2713b38762d455580a8670361bd46580671ffdf949d9bbad8dbf45bae8b91a4`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-ACK-004`
 
-- `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` — `322965b3e4aefff87b488329e6827ec63b274c4993f5af509900ad33d2f908ed`
-- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
+- `evidence/generated/p10_1r_ack_tuning.json` — `70ab5153fe53c12f9f85ddcf5f5f6a7d70661bb7e90d5b9a53e62f3dceed0897`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/ack_tuning/stage_summary.json` — `f0aad9a673c4e3f58f3dd88a7574301afaa83c1d3f733a3a893f199c3de794cc`
+- `evidence/hardware/p10_1r/p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `95c9e4ef26ad94b5cd3dc66eb6a1679ad0b9e7aacf5426c25e52d4df538cbc2a`
+- `evidence/generated/p10_1r_formal_30min.json` — `292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json` — `439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
 ### `P10_1R-HOST-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`
+- `evidence/generated/p10_1r_formal_30min.json` — `292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json` — `439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-PERF-001`
+
+- `evidence/generated/p10_1r_performance.json` — `dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/sustained_performance/stage_summary.json` — `6262e8bb5bdecf3987354d87d8c80dba8ca554356377c0952595d580c60ef350`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-PERF-002`
+
+- `evidence/generated/p10_1r_performance.json` — `dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/sustained_performance/stage_summary.json` — `6262e8bb5bdecf3987354d87d8c80dba8ca554356377c0952595d580c60ef350`
+- `evidence/hardware/p10_1r/p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `780e5f98f6cb90cbcbeeb0ff46c52e2e0c002b479279dd351092b3d21f45ec10`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-STREAM-001`
+
+- `evidence/generated/p10_1r_streaming_64m.json` — `a1035bc1a2a991d6f54224d20ecc2af8f2de674a1032d0af32ae143d8d5ff081`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/streaming_64m/stage_summary.json` — `350520c0de5c469da34a16b01bc3de51958f8108b15161c982a0b721907fc098`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `d2713b38762d455580a8670361bd46580671ffdf949d9bbad8dbf45bae8b91a4`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-STREAM-002`
+
+- `evidence/generated/p10_1r_streaming_64m.json` — `a1035bc1a2a991d6f54224d20ecc2af8f2de674a1032d0af32ae143d8d5ff081`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/streaming_64m/stage_summary.json` — `350520c0de5c469da34a16b01bc3de51958f8108b15161c982a0b721907fc098`
+- `evidence/hardware/p10_1r/p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `d2713b38762d455580a8670361bd46580671ffdf949d9bbad8dbf45bae8b91a4`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_1R-SOAK-001`
+
+- `evidence/generated/p10_1r_formal_30min.json` — `292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json` — `439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e`
+- `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
+- `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`

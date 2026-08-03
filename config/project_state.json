@@ -59,6 +59,10 @@
     {
       "gate_id": "P10",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P10_1R",
+      "status": "PASS"
     }
   ],
   "current_profiles": [
@@ -113,13 +117,13 @@
       "xdc_path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
     }
   ],
-  "current_program_stage": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+  "current_program_stage": "USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS",
   "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+  "last_hardware_run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
   "last_hardware_stage": "P10_1R",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
@@ -388,6 +392,16 @@
       }
     },
     "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
+    "campaign_stage_runs": {
+      "ack_tuning": "p10_1r_20260803T114906Z_39df1715_56533798_df0c60f6",
+      "crosstalk": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
+      "echo_tail": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+      "formal_30min": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
+      "performance": "p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6",
+      "phy_sanity": "p10_1r_20260803T114645Z_39df1715_56533798_df0c60f6",
+      "preflight": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
+      "streaming_64m": "p10_1r_20260803T120402Z_39df1715_56533798_df0c60f6"
+    },
     "candidate_guard_cycles": {
       "F0": 4096,
       "F1": 4096,
@@ -395,8 +409,10 @@
       "R1": 4096
     },
     "candidate_guard_hardware_measured": true,
+    "checkpoint_tag": "p10.1r-2lane-speed-stability-pass",
     "current_bundle_hardware_actions_executed": true,
     "current_run_hardware_authorization": false,
+    "final_summary_path": "evidence/generated/p10_1r_final_summary.json",
     "goal_path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
     "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
     "guard_selection": {
@@ -412,10 +428,11 @@
       "historical_blocker_sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
       "path": "evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json",
       "sha256": "bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42",
-      "status": "CLEARED_CURRENT_RAW_CONNECTIVITY"
+      "status": "RESOLVED_BY_EXACT_BUNDLE_HARDWARE_CAMPAIGN"
     },
+    "hardware_evidence_consistency_path": "evidence/generated/p10_1r_hardware_evidence_consistency.json",
     "hardware_movement": false,
-    "last_hardware_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+    "last_hardware_run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
     "last_shutdown_fixed": "PASS",
     "last_shutdown_rotating": "PASS",
     "latest_four_direction_retest": {
@@ -436,8 +453,113 @@
       "shutdown_rotating": "PASS",
       "status": "PASS_FOUR_DIRECTION_RAW_CONNECTIVITY"
     },
+    "mandatory_exit_gates": {
+      "ACK_BUNDLE_WINDOW": "PASS",
+      "CONTINUOUS_HIGH_VIOLATION_ZERO": "PASS",
+      "CRC_BAD_ZERO": "PASS",
+      "CROSS_LANE_ACCEPTED_ZERO": "PASS",
+      "DEADLOCK_ZERO": "PASS",
+      "DECODER_CLEAR_ON_TX": "PASS",
+      "DESCRIPTOR_LEAK_ZERO": "PASS",
+      "DOUBLE_COMPLETION_ZERO": "PASS",
+      "DUTY_VIOLATION_ZERO": "PASS",
+      "EVIDENCE_CONSISTENCY": "PASS",
+      "FAILURE_BASELINE_FROZEN": "PASS",
+      "F_TO_R_APPLICATION_GOODPUT_4MBPS": "PASS",
+      "HOST_NOT_IN_FAST_PATH": "PASS",
+      "LOCAL_SOURCE_REJECTION": "PASS",
+      "MULTI_OBJECT_PIPELINE": "PASS",
+      "NON_TARGET_ACCEPTED_CRC_VALID_ZERO": "PASS",
+      "NO_PER_OBJECT_TURNAROUND": "PASS",
+      "OLD_AUTHORIZATION_CLOSED": "PASS",
+      "OTHER_LANE_NOT_BLANKED": "PASS",
+      "PARTIAL_DUPLICATE_STALE_ZERO": "PASS",
+      "PER_MODULE_TX_RX_EXCLUSION": "PASS",
+      "POST_TX_GUARD_MEASURED": "PASS",
+      "RETRY_EXHAUSTED_ZERO": "PASS",
+      "R_TO_F_APPLICATION_GOODPUT_4MBPS": "PASS",
+      "SAME_MODULE_ACCEPTED_DATA_ZERO": "PASS",
+      "SAME_MODULE_RAW_ECHO_OBSERVABLE": "PASS",
+      "SHA_MISMATCH_ZERO": "PASS",
+      "SHUTDOWN_FIXED": "PASS",
+      "SHUTDOWN_ROTATING": "PASS",
+      "STATIONARY_30MIN": "PASS",
+      "STREAMING_64M_F_TO_R_5X": "PASS",
+      "STREAMING_64M_R_TO_F_5X": "PASS",
+      "STREAM_ABORT_RESET_RECOVERY": "PASS"
+    },
+    "metrics": {
+      "ack_wait_ratio_after": 0.994121855561447,
+      "ack_wait_ratio_before": 0.914,
+      "best_ack_max_delay_cycles": 64000,
+      "best_ack_threshold": 32,
+      "best_burst_frames": 32,
+      "counters": {
+        "continuous_high_violation": 0,
+        "crc_bad": 0.0,
+        "deadlock": 0,
+        "descriptor_leak": 0.0,
+        "double_completion": 0.0,
+        "duplicate_commit": 0.0,
+        "duty_violation": 0.0,
+        "maximum_observed_txd_high_cycles": 16.0,
+        "partial_commit": 0.0,
+        "retry_exhausted": 0.0,
+        "sha_mismatch": 0.0,
+        "stale_commit": 0.0,
+        "transport_timeout": 0.0
+      },
+      "cross_lane_accepted_data_count": 0,
+      "formal_application_goodput_bps": {
+        "fixed_to_rotating": 4154358.2476190478,
+        "rotating_to_fixed": 4154358.2476190478
+      },
+      "formal_committed_bytes": {
+        "fixed_to_rotating": 436207616,
+        "rotating_to_fixed": 436207616
+      },
+      "formal_runtime_seconds": 1800.009,
+      "formal_window_seconds": {
+        "fixed_to_rotating": 840,
+        "rotating_to_fixed": 840
+      },
+      "guard_cycles": {
+        "F0": 4096,
+        "F1": 4096,
+        "R0": 4096,
+        "R1": 4096
+      },
+      "host_blocking_commands_fixed_to_rotating": 1,
+      "host_blocking_commands_rotating_to_fixed": 1,
+      "host_fast_path_dependency_count": 0,
+      "inter_object_ratio_after": 0.0009580813341342467,
+      "inter_object_ratio_before": 0.445,
+      "local_source_rejected_frame_count": 0,
+      "local_source_rejection_directly_exercised": false,
+      "local_source_rejection_enabled": true,
+      "minimum_segments_per_host_command": 6656,
+      "non_target_accepted_crc_valid_count": 0.0,
+      "objects_in_flight": 4,
+      "other_lane_blanked_count": 0,
+      "remote_acceptance_reconciled_case_count": 4,
+      "same_module_accepted_data_count": 0,
+      "same_module_blanked_frame_count": 0,
+      "same_module_raw_echo_count": 4000,
+      "streaming_64m": {
+        "fixed_to_rotating_count": 5,
+        "post_recovery_clean_count": 3,
+        "recovery_vector_count": 3,
+        "rotating_to_fixed_count": 5
+      },
+      "sustained_application_goodput_bps": {
+        "fixed_to_rotating": 4501886.293333333,
+        "rotating_to_fixed": 4501886.293333333
+      }
+    },
     "network_used": false,
-    "new_artifact_hardware_validation": "PARTIAL_ECHO_TAIL_AND_FOUR_DIRECTION_RAW_CONNECTIVITY_PASS_REMAINING_STAGES_PENDING",
+    "new_artifact_hardware_validation": "PASS",
+    "no_hardware_movement": true,
+    "p10_functional_status_preserved": "PASS",
     "p11_started": false,
     "post_power_cycle_recheck": {
       "evidence_level": "RAW_PHYSICAL_ONLY",
@@ -454,14 +576,22 @@
     },
     "prior_hardware_artifact_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
     "rewiring_executed": false,
+    "scope": "AX7020_DUAL_NODE_STATIONARY_2LANE_HALF_DUPLEX_NO_ETHERNET",
+    "scope_exclusions": [
+      "ETHERNET",
+      "SPI",
+      "ONEPLUSONE_FULL_DUPLEX",
+      "P11_HANDOVER",
+      "8X32",
+      "600RPM",
+      "PRODUCT_FINAL"
+    ],
     "selected_guard_cycles": {
       "F0": 4096,
       "F1": 4096,
       "R0": 4096,
       "R1": 4096
     },
-    "source_artifact_freeze": "PASS",
-    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
     "shutdown_led_physical_confirmation": "PENDING_USER_VISUAL_OR_ELECTRICAL_OBSERVATION",
     "shutdown_led_programming_evidence": {
       "all_off_vector": "4'b1111",
@@ -469,9 +599,11 @@
       "sha256": "bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42",
       "status": "CONFIGURED_AND_PROGRAMMED_INTENT_PASS"
     },
-    "status": "PARTIAL"
+    "source_artifact_freeze": "PASS",
+    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "status": "PASS"
   },
-  "p10_1r_status": "PARTIAL",
+  "p10_1r_status": "PASS",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -844,7 +976,7 @@
   "schema_version": 1,
   "stage_status": {
     "P0_BOOTSTRAP": "PASS",
-    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "PARTIAL",
+    "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION": "PASS",
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS": "PASS",
     "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE": "FAIL",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
@@ -862,7 +994,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-1R-RAW-LED-HARDWARE-RETEST-1",
-  "two_lane_speed_stability": "PARTIAL_RAW_CONNECTIVITY_PASS_PERFORMANCE_STABILITY_PENDING",
+  "state_revision": "P10-1R-HARDWARE-PASS-1",
+  "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",
   "z7020_target_status": "PENDING_Z7020_HW"
 }

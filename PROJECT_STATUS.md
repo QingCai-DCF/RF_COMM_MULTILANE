@@ -15,14 +15,14 @@ P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION: PASS
 P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET: PASS
 P10_1_OFFLINE_STATUS: PASS
 P10_1_HARDWARE_STATUS: FAIL
-P10_1R_STATUS: PARTIAL
+P10_1R_STATUS: PASS
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
-CURRENT_PROGRAM_STAGE: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION
+CURRENT_PROGRAM_STAGE: USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 LAST_HARDWARE_STAGE: P10_1R
-LAST_HARDWARE_RUN_ID: p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6
+LAST_HARDWARE_RUN_ID: p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -34,7 +34,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | Stage | Status |
 |---|---|
 | `P0_BOOTSTRAP` | `PASS` |
-| `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `PARTIAL` |
+| `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `PASS` |
 | `P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_AND_P11_READINESS` | `PASS` |
 | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `FAIL` |
 | `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
@@ -160,12 +160,12 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 
 ## P10.1R two-lane speed and stability remediation
 
-- Status: `PARTIAL`
+- Status: `PASS`
 - Artifact source: `39df17155ce82e38366fbdac00c79584f0fe1afa`
 - Artifact freeze: `evidence/generated/p10_1r_artifact_freeze.json`
-- Latest run: `p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6`
+- Latest run: `p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6`
 - Current lane1 F1→R1 / R1→F1: `PASS_RAW_DIRECTIONAL_1000_OF_1000` / `PASS_RAW_DIRECTIONAL_1000_OF_1000`
-- Hardware blocker: `CLEARED_CURRENT_RAW_CONNECTIVITY` (`evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json`)
+- Hardware blocker: `RESOLVED_BY_EXACT_BUNDLE_HARDWARE_CAMPAIGN` (`evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json`)
 - Shutdown fixed / rotating: `PASS` / `PASS`
 - Hardware actions / network / movement / rewiring: `true` / `false` / `false` / `false`
 - Current-run hardware authorization: `false`

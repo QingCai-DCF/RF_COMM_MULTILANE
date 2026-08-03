@@ -81,6 +81,11 @@ class P8AConsistencyTests(unittest.TestCase):
 
     def test_p10_1r_blocker_hash_is_fail_closed(self) -> None:
         state = copy.deepcopy(self.state)
+        state["p10_1r_status"] = "PARTIAL"
+        state["p10_1r_remediation"]["status"] = "PARTIAL"
+        state["p10_1r_remediation"]["hardware_blocker"]["status"] = (
+            "CLEARED_CURRENT_RAW_CONNECTIVITY"
+        )
         state["p10_1r_remediation"]["hardware_blocker"]["sha256"] = "0" * 64
         errors = validate_state(state, ROOT)
         self.assertTrue(
@@ -89,6 +94,8 @@ class P8AConsistencyTests(unittest.TestCase):
 
     def test_p10_1r_partial_state_rejects_unknown_blocker_disposition(self) -> None:
         state = copy.deepcopy(self.state)
+        state["p10_1r_status"] = "PARTIAL"
+        state["p10_1r_remediation"]["status"] = "PARTIAL"
         state["p10_1r_remediation"]["hardware_blocker"]["status"] = "UNKNOWN"
         errors = validate_state(state, ROOT)
         self.assertTrue(any(
