@@ -428,6 +428,7 @@ def update_requirements(pass_status: bool) -> None:
     text = refresh_canonical_bindings(text, state_hash, status_hash)
     REQUIREMENTS.write_text(text, encoding="utf-8", newline="\n")
     document = yaml.safe_load(text)
+    TRACE.parent.mkdir(parents=True, exist_ok=True)
     TRACE.write_text(render_traceability(document), encoding="utf-8", newline="\n")
 
 
