@@ -1,0 +1,216 @@
+{
+  "allegation": "The executed code may have held Txd high for a long interval and damaged a TFDU component.",
+  "artifact_binding": {
+    "fixed_functional_bitstream": {
+      "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27/p10_ax7020_fixed_functional.bit",
+      "sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27"
+    },
+    "fixed_shutdown_bitstream": {
+      "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf"
+    },
+    "rotating_functional_bitstream": {
+      "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f/p10_ax7020_rotating_functional.bit",
+      "sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f"
+    },
+    "rotating_shutdown_bitstream": {
+      "path": "artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6"
+    },
+    "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d"
+  },
+  "audit_base_commit": "358afeaa4d8392b81f651bb32fa8a361a5730523",
+  "audit_id": "P10_1R-TX-DAMAGE-CAUSAL-AUDIT-20260803",
+  "branch": "p10.1r/2lane-speed-stability-remediation",
+  "causal_assessment": {
+    "component_damage_determined": false,
+    "component_damage_status": "POSSIBLE_NOT_PROVEN",
+    "external_electrical_or_optical_cause_excluded": false,
+    "long_continuous_txd_cause": "NOT_SUPPORTED_BY_RECORDED_DIGITAL_EVIDENCE",
+    "overall": "INDETERMINATE_WITH_RESPECT_TO_COMPONENT_DAMAGE",
+    "recorded_digital_overstress_found": false
+  },
+  "conclusion": "PARTIAL_CAUSAL_ASSESSMENT / HARDWARE_HOLD",
+  "combined_mailbox_audit": {
+    "clock_hz": 64000000,
+    "continuous_high_limit_cycles": 64,
+    "continuous_high_limit_us": 1.0,
+    "duty_design_target_cycles": 11520,
+    "duty_design_target_percent": 18.0,
+    "duty_hard_limit_cycles": 12799,
+    "duty_hard_limit_percent_strict_lt": 20.0,
+    "duty_window_cycles": 64000,
+    "hard_duty_fault_nonzero_mailboxes": 0,
+    "mailboxes_decoded": 4809,
+    "mailboxes_over_continuous_limit": 0,
+    "mailboxes_over_design_target": 0,
+    "mailboxes_over_hard_duty_limit": 0,
+    "maximum_continuous_high_cycles": 16,
+    "maximum_continuous_high_ns": 250.0,
+    "maximum_rolling_duty_cycles": 11504,
+    "maximum_rolling_duty_percent": 17.975,
+    "phy_sticky_safety_mask_nonzero_mailboxes": 0
+  },
+  "containment": {
+    "current_run_authorization_path": "config/p10_1r_current_run_hardware_authorization.json",
+    "current_run_authorization_sha256": "1fe995cf4beb64b15de42889c4ed1ea085615196a92f61c3b9aaa1f31420c8a8",
+    "current_run_hardware_authorization": false,
+    "hardware_actions_executed_during_audit": false,
+    "hardware_hold": true,
+    "latest_final_evidence": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+    "latest_final_evidence_sha256": "6b5b055197f00823d2b6d60507e850a70deda2126a7f6bac994c5cd4d0e79423",
+    "latest_shutdown_fixed": "PASS",
+    "latest_shutdown_rotating": "PASS",
+    "no_hardware": true
+  },
+  "datasheet": {
+    "authority": "Vishay TFDU6102 datasheet",
+    "limits": {
+      "four_mbit_nominal_input_pulse_ns": 125,
+      "long_input_internal_optical_limit_max_us": 85,
+      "on_chip_driver_disable_after_txd_high_us": 80,
+      "repetitive_pulse_duty_percent_strict_lt": 20,
+      "repetitive_pulse_width_us_strict_lt": 90
+    },
+    "path": "docs/datasheets/TFDU6102datasheet.pdf",
+    "sha256": "54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef",
+    "source_locations": [
+      "PDF page 4 / printed page 3: Pin Description",
+      "PDF page 5 / printed page 4: Absolute Maximum Ratings",
+      "PDF page 8 / printed page 7: Transmitter",
+      "PDF page 10 / printed page 9: Truth Table",
+      "PDF page 11 / printed page 10: Temperature Derating Diagram"
+    ]
+  },
+  "generated_at_utc": "2026-08-03T07:11:57.086136+00:00",
+  "hardware_hold": true,
+  "hardware_failure_observation": {
+    "failed_direction": "F1_TO_R1",
+    "failure_class": "RAW_PHYSICAL_ONLY",
+    "latest_failure_snapshot": {
+      "receiver_raw": 0,
+      "sender_final_txd_fall": 33803834,
+      "sender_final_txd_high_cycles": 5,
+      "sender_final_txd_high_ns": 78.125,
+      "sender_final_txd_rise": 33803829,
+      "sender_physical_tx_increment": 1,
+      "sender_raw": 1,
+      "sender_raw_while_tx": 1,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv",
+      "source_sha256": "6f915a46480e09d8e361db02c296ebbd3277ba04030512f3f60bd5c85e9f5bb3"
+    },
+    "not_proven": [
+      "fixed F1 external optical power",
+      "fixed F1 emitter health",
+      "rotating R1 receiver health",
+      "F1-to-R1 optical path health"
+    ],
+    "other_directions_latest": {
+      "F0_TO_R0": "PASS_1000_OF_1000",
+      "R0_TO_F0": "PASS_1000_OF_1000",
+      "R1_TO_F1": "PASS_1000_OF_1000"
+    }
+  },
+  "identified_diagnostic_defect": {
+    "damage_risk_direction": "SHORTER_THAN_CHARACTERIZED_NOT_LONGER",
+    "datasheet_characterized_lower_bound_ns": 100.0,
+    "effect": "CAN_CAUSE_FALSE_NEGATIVE_OR_MARGIN_DEPENDENT_RAW_CONNECTIVITY_RESULT",
+    "raw_generator_cycles": 5,
+    "raw_generator_ns_at_64mhz": 78.125,
+    "source": "rtl/p9_optical_transport_core.sv",
+    "source_sha256": "6af5c5b3c3c1b7d106f6c48fb492ab0a0a8650deb833a299bc68e176a75eca2d"
+  },
+  "known_evidence_gaps": [
+    "No oscilloscope capture of package-pin Txd and SD during functional operation or programming transition.",
+    "No external optical power, current, rail ripple, temperature, or ESD evidence.",
+    "Actual VCC1 and VCC2 values and power sequencing were not recorded by the runner.",
+    "FPGA-unconfigured and partial-power fail-safe behavior remains PENDING_D17.",
+    "One earliest P10 run failed to confirm rotating shutdown before any functional stage; the failure is preserved and not promoted to PASS."
+  ],
+  "mailbox_scopes": {
+    "p10": {
+      "hard_duty_fault_nonzero": 0,
+      "mailboxes_decoded": 2942,
+      "maximum_continuous_high_cycles": 16,
+      "maximum_continuous_high_ns": 250.0,
+      "maximum_rolling_duty_cycles": 8928,
+      "maximum_rolling_duty_percent": 13.95,
+      "phy_sticky_safety_mask_nonzero": 0,
+      "raw_maximum_source": "evidence/hardware/p10/p10_formal_20260730T181535Z_03/stages/p10_j/dumps/soak_00395_1048576_d1.rotating.bin",
+      "raw_maximum_source_sha256": "128f98cac8afa69002e28e77aab9c8ad0d56e760588ec194493e4cab32810ad9"
+    },
+    "p10_1": {
+      "hard_duty_fault_nonzero": 0,
+      "mailboxes_decoded": 1124,
+      "maximum_continuous_high_cycles": 16,
+      "maximum_continuous_high_ns": 250.0,
+      "maximum_rolling_duty_cycles": 8928,
+      "maximum_rolling_duty_percent": 13.95,
+      "phy_sticky_safety_mask_nonzero": 0,
+      "raw_maximum_source": "evidence/hardware/p10_1/p10_1_hw_20260801T090528Z_bb6ce78a_1585d1ad_9ad4f85f/stages/formal/dumps/stationary_30min_warmup_r2f_0012_1048576.rotating.bin",
+      "raw_maximum_source_sha256": "e85c7929d9cdc17061f909c94aba5cde2f7c01dc0f9914c5140a02196c1ec0ff"
+    },
+    "p10_1r": {
+      "hard_duty_fault_nonzero": 0,
+      "mailboxes_decoded": 743,
+      "maximum_continuous_high_cycles": 16,
+      "maximum_continuous_high_ns": 250.0,
+      "maximum_rolling_duty_cycles": 11504,
+      "maximum_rolling_duty_percent": 17.975,
+      "phy_sticky_safety_mask_nonzero": 0,
+      "raw_maximum_source": "evidence/hardware/p10_1r/p10_1r_20260803T061448Z_cce2180b_c1370686_bfb1c51d/crosstalk_remediation/dumps/remediation_frame_lane0_r2f_0000_1048576.rotating.bin",
+      "raw_maximum_source_sha256": "93b97bca119c08b343608ec2102e29b2e2f14a2cdab75d16fc69de55b326af9a"
+    }
+  },
+  "required_next_actions": [
+    "Keep both endpoints under HARDWARE_HOLD and do not drive any TFDU.",
+    "Power off and manually inspect modules, rails, polarity, ground, shorts, discoloration, odor, and abnormal heating.",
+    "Measure actual VCC1, VCC2, quiescent current, Txd, and SD with external instruments.",
+    "Externally isolate fixed F1 emitter health from rotating R1 receiver/path health.",
+    "Change raw diagnostic pulse to at least 8 cycles / 125 ns, freeze new artifact hashes, and repeat offline validation before any newly authorized hardware run."
+  ],
+  "rtl_safety_audit": {
+    "same_content_verified_at_source_commits": [
+      "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+      "bb6ce78ab67ebe8aaa459bdd3e440693ee725cc1",
+      "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d"
+    ],
+    "sources": {
+      "rtl/generated/tfdu_safety_config.svh": "afce2804034e0423a954988aeb0b59b2b97d28a53165648891b3cc33b2718e1d",
+      "rtl/ir_tfdu_exact_duty_accountant.sv": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f",
+      "rtl/ir_tfdu_physical_module_safety.sv": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19",
+      "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7"
+    },
+    "software_can_bypass_final_guard": false
+  },
+  "schema_version": 1,
+  "shutdown_audit": {
+    "p10": {
+      "failed_attempt_result_files": 4,
+      "failed_final_dual_shutdown_runs": 1,
+      "orchestrator_runs": 16,
+      "shutdown_attempt_result_files": 121
+    },
+    "p10_1": {
+      "failed_attempt_result_files": 0,
+      "failed_final_dual_shutdown_runs": 0,
+      "orchestrator_runs": 20,
+      "shutdown_attempt_result_files": 104
+    },
+    "p10_1r": {
+      "failed_attempt_result_files": 0,
+      "failed_final_dual_shutdown_runs": 0,
+      "orchestrator_runs": 21,
+      "shutdown_attempt_result_files": 143
+    },
+    "preserved_historical_gap": {
+      "functional_stage_executed": false,
+      "orchestrator": "evidence/hardware/p10/p10_diag_a_20260730T141200Z_01/final/orchestrator_result.json",
+      "orchestrator_sha256": "874010846d052e9cf85e13a7ea22fe8194c3a70b0fc48f4dea1fbf2dc7252e2c",
+      "rotating_shutdown": "FAIL",
+      "run_id": "p10_diag_a_20260730T141200Z_01"
+    }
+  },
+  "status": "PARTIAL_CAUSAL_ASSESSMENT",
+  "test_id": "P10_1R-TX-DAMAGE-CAUSAL-AUDIT"
+}
