@@ -65,16 +65,28 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             "fixed-side F1 TFDU small board",
         )
         self.assertFalse(sources[2]["codex_hardware_change_authorized_during_run"])
+        self.assertEqual(sources[3]["user_quotes"], ["继续完成目标"])
         self.assertEqual(
-            self.runner.CURRENT_DIRECT_AUTHORIZED_STAGES,
-            ("echo_tail",),
+            self.runner.CURRENT_CAMPAIGN_AUTHORIZED_STAGES,
+            self.runner.STAGES,
         )
+        self.assertEqual(self.runner.CURRENT_RUN_MAX_STAGE_COUNT, 1)
         self.assertEqual(self.runner.ECHO_TAIL_STAGE_TIMEOUT_SECONDS, 1200)
 
-    def test_current_direct_authorization_rejects_non_raw_stages(self) -> None:
+    def test_current_run_authorization_is_single_stage_scoped(self) -> None:
         run_id = "p10_1r_20260803T000000Z_00000000_00000000_00000000"
-        with self.assertRaisesRegex(ValueError, "permits only echo_tail"):
-            self.runner.create_authorization(run_id, ["crosstalk"])
+        with self.assertRaisesRegex(ValueError, "exactly one stage"):
+            self.runner.create_authorization(
+                run_id, ["crosstalk", "phy_sanity"]
+            )
+        scope = self.runner.current_run_scope(["crosstalk"])
+        self.assertEqual(scope["stage"], "crosstalk")
+        self.assertEqual(scope["lane_masks"], [1, 2])
+        self.assertTrue(scope["framed_object_transmission"])
+        self.assertFalse(scope["performance_or_streaming"])
+        formal = self.runner.current_run_scope(["formal_30min"])
+        self.assertEqual(formal["lane_masks"], [3])
+        self.assertEqual(formal["formal_active_window_seconds"], 1800)
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()

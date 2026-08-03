@@ -96,8 +96,19 @@ STANDING_AUTHORIZATION_SOURCES = (
         "pre_run_user_module_replacement": "fixed-side F1 TFDU small board",
         "codex_hardware_change_authorized_during_run": False,
     },
+    {
+        "source_thread_id": "current_root_thread",
+        "received_on": "2026-08-03",
+        "source_kind": "direct_user_continuation_request",
+        "user_quotes": ["继续完成目标"],
+        "scope": EXPECTED_SCOPE,
+        "continue_campaign_requested": True,
+        "authorization_basis": (
+            "the 2026-08-02 campaign-level standing authorization above"
+        ),
+        "scope_expansion_authorized": False,
+    },
 )
-CURRENT_DIRECT_AUTHORIZED_STAGES = ("echo_tail",)
 ECHO_TAIL_STAGE_TIMEOUT_SECONDS = 1200
 EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
@@ -134,6 +145,8 @@ STAGES = (
     "streaming_64m",
     "formal_30min",
 )
+CURRENT_CAMPAIGN_AUTHORIZED_STAGES = STAGES
+CURRENT_RUN_MAX_STAGE_COUNT = 1
 TCL_STAGE = {
     stage: f"P10_1R-{stage.upper()}" for stage in STAGES
 }
@@ -452,6 +465,55 @@ def plan_hashes(stages: Iterable[str]) -> dict[str, str]:
     return {stage: hash_text(plan_text(plans[stage])) for stage in stages}
 
 
+def current_run_scope(stages: list[str]) -> dict[str, Any]:
+    """Describe one fresh stage-scoped run without widening the Goal."""
+    if len(stages) != CURRENT_RUN_MAX_STAGE_COUNT:
+        raise ValueError("each current-run authorization must select exactly one stage")
+    stage = stages[0]
+    if stage not in CURRENT_CAMPAIGN_AUTHORIZED_STAGES:
+        raise ValueError("stage is outside the standing P10.1R authorization")
+    lane_masks = {
+        "preflight": [],
+        "echo_tail": [1, 2],
+        "crosstalk": [1, 2],
+        "phy_sanity": [1, 2],
+        "ack_tuning": [3],
+        "performance": [3],
+        "streaming_64m": [3],
+        "formal_30min": [3],
+    }[stage]
+    return {
+        "classification": (
+            "RAW_PHYSICAL_ONLY"
+            if stage == "echo_tail"
+            else "P10_1R_GOAL_STAGE_HARDWARE_ACCEPTANCE"
+        ),
+        "stage": stage,
+        "stationary_two_lane_half_duplex_only": True,
+        "lane_masks": lane_masks,
+        "framed_object_transmission": stage in {
+            "crosstalk",
+            "phy_sanity",
+            "ack_tuning",
+            "performance",
+            "streaming_64m",
+            "formal_30min",
+        },
+        "performance_or_streaming": stage in {
+            "ack_tuning",
+            "performance",
+            "streaming_64m",
+            "formal_30min",
+        },
+        "formal_active_window_seconds": 1800 if stage == "formal_30min" else 0,
+        "ethernet": False,
+        "spi": False,
+        "movement_or_rewiring": False,
+        "oneplusone_full_duplex": False,
+        "p11": False,
+    }
+
+
 def load_freeze(
     expected_sha256: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Path]]:
@@ -545,10 +607,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         raise ValueError("invalid content-bound P10.1R run_id")
     if not stages or any(stage not in STAGES for stage in stages):
         raise ValueError("invalid P10.1R stage set")
-    if tuple(stages) != CURRENT_DIRECT_AUTHORIZED_STAGES:
-        raise ValueError(
-            "the 2026-08-03 direct current-run authorization permits only echo_tail"
-        )
+    scope = current_run_scope(stages)
     if git("branch", "--show-current") != EXPECTED_BRANCH:
         raise RuntimeError("wrong P10.1R branch")
     if git("status", "--porcelain"):
@@ -579,9 +638,11 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
     inputs = hash_inputs()
     parent = git("rev-parse", "HEAD")
     statement = (
-        "用户于2026-08-03同意修复raw连通性后再次测试，并报告已在运行前自行更换固定侧F1小板；"
-        "用户同时要求修复shutdown后四个低有效PL LED均亮的问题。本run仅授权echo_tail四方向raw复测。"
-        "Codex在运行期间不得移动、重接、交换板卡或模块，也不得扩大到帧、性能、streaming或串扰测试。"
+        "用户于2026-08-02确认P10.1R campaign-level standing authorization，允许在完整离线验证和"
+        "artifact SHA256冻结后，为Goal内必要硬件阶段自动创建新的不可变current-run authorization；"
+        "用户于2026-08-03再次要求‘继续完成目标’。本run只执行stage="
+        f"{stages[0]}，不得扩大到P11、1+1全双工、Ethernet、SPI、移动、重接或lane mask>0x3；"
+        "必须shutdown-before，并在成功、失败、异常、超时、Ctrl+C和正常退出后验证双端shutdown。"
     )
     record = {
         "schema_version": 1,
@@ -621,15 +682,8 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "user_authorization_statement_sha256": hashlib.sha256(
             statement.encode("utf-8")
         ).hexdigest(),
-        "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
-        "current_run_scope": {
-            "classification": "RAW_PHYSICAL_ONLY",
-            "stage": "echo_tail",
-            "directions": ["F1_TO_R1", "R1_TO_F1", "F0_TO_R0", "R0_TO_F0"],
-            "samples_per_direction": 1000,
-            "framed_object_transmission": False,
-            "performance_or_streaming": False,
-        },
+        "user_authorization_received_on": "2026-08-02",
+        "current_run_scope": scope,
         "pre_run_user_hardware_change": {
             "reported_by_user": True,
             "performed_before_current_run": True,
@@ -710,6 +764,11 @@ def validate_authorization(
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         return {}, {}, [f"authorization unreadable: {exc}"]
+    try:
+        scope = current_run_scope(stages)
+    except ValueError as exc:
+        scope = {}
+        errors.append(str(exc))
     expected = {
         "schema_version": 1,
         "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
@@ -724,15 +783,8 @@ def validate_authorization(
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,
-        "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
-        "current_run_scope": {
-            "classification": "RAW_PHYSICAL_ONLY",
-            "stage": "echo_tail",
-            "directions": ["F1_TO_R1", "R1_TO_F1", "F0_TO_R0", "R0_TO_F0"],
-            "samples_per_direction": 1000,
-            "framed_object_transmission": False,
-            "performance_or_streaming": False,
-        },
+        "user_authorization_received_on": "2026-08-02",
+        "current_run_scope": scope,
         "standing_authorization_sources": list(STANDING_AUTHORIZATION_SOURCES),
         "standing_authorization_policy": {
             "scope": EXPECTED_SCOPE,
@@ -756,8 +808,6 @@ def validate_authorization(
         for key, value in expected.items()
         if record.get(key) != value
     )
-    if tuple(stages) != CURRENT_DIRECT_AUTHORIZED_STAGES:
-        errors.append("current direct authorization permits only echo_tail")
     expected_pre_run_change = {
         "reported_by_user": True,
         "performed_before_current_run": True,
@@ -1892,6 +1942,12 @@ def main(argv: list[str] | None = None) -> int:
         run_root / "artifacts/derived_artifact_manifest.json",
         {"schema_version": 1, "status": "PASS", "ps7_init": derived},
     )
+    actual_lane_masks = current_run_scope(stages)["lane_masks"]
+    actual_lane_mask_text = (
+        ",".join(f"0x{value:X}" for value in actual_lane_masks)
+        if actual_lane_masks
+        else "NONE"
+    )
     write_text(
         run_root / "authorization/NO_MOVEMENT_NETWORK_ATTESTATION.txt",
         "NO_HARDWARE_MOVEMENT_BY_CODEX=true\nROTATION_EXECUTED_BY_CODEX=false\n"
@@ -1899,7 +1955,7 @@ def main(argv: list[str] | None = None) -> int:
         "PRE_RUN_USER_REPORTED_FIXED_F1_MODULE_REPLACEMENT=true\n"
         "EXTERNAL_NETWORK_USED=false\nETHERNET_USED=false\nSPI_USED=false\n"
         "LOCALHOST_HW_SERVER_USED=true\nMAX_AUTHORIZED_LANE_MASK=0x3\n"
-        "ACTUAL_PLAN_LANE_MASKS=0x1,0x2\n",
+        f"ACTUAL_PLAN_LANE_MASKS={actual_lane_mask_text}\n",
     )
     env = os.environ.copy()
     env["RF_COMM_P10_HW_AUTH"] = "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"
