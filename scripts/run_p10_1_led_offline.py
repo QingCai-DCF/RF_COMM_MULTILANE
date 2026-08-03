@@ -27,14 +27,18 @@ ROLE_XDCS = {
 }
 SOURCE_FILES = [
     "rtl/p10_lane_activity_leds.sv",
+    "rtl/p10_ax7020_shutdown_top.v",
     "rtl/p9_optical_transport_core.sv",
     "rtl/p9_axi_dma_peripheral.sv",
     "rtl/p9_axi_dma_peripheral_bd.v",
     "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
     "sim/tb/tb_p10_lane_activity_leds.sv",
+    "sim/tb/tb_p10_ax7020_shutdown_top.sv",
     "scripts/run_p10_1_led_offline.py",
     "scripts/build_p10_ax7020_functional.py",
+    "scripts/build_p10_ax7020_shutdown.py",
     "scripts/vivado/build_p10_ax7020_functional.tcl",
+    "scripts/vivado/build_p10_ax7020_shutdown.tcl",
     "board_profiles/ax7020_fixed_2lane/profile.yaml",
     "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
     "board_profiles/ax7020_rotating_2lane/profile.yaml",
@@ -150,6 +154,80 @@ def run_led_xsim(raw: Path) -> dict[str, Any]:
     status = "PASS" if returncode == 0 and marker in content and "=FAIL" not in content else "FAIL"
     return {
         "test_id": "P10_1-LED-XSIM-001",
+        "status": status,
+        "returncode": returncode,
+        "required_marker": marker,
+        "log": rel(log),
+        "log_sha256": sha256(log),
+    }
+
+
+def run_shutdown_top_xsim(raw: Path) -> dict[str, Any]:
+    work = raw / "shutdown_top_xsim_work"
+    work.mkdir(parents=True, exist_ok=False)
+    log = raw / "p10_ax7020_shutdown_top_xsim.log"
+    commands = [
+        [
+            str(TOOLS["xvlog"]),
+            "-sv",
+            str(ROOT / "rtl/p10_ax7020_shutdown_top.v"),
+            str(ROOT / "sim/tb/tb_p10_ax7020_shutdown_top.sv"),
+        ],
+        [
+            str(TOOLS["xelab"]),
+            "tb_p10_ax7020_shutdown_top",
+            "-debug",
+            "typical",
+            "-s",
+            "p10_ax7020_shutdown_top_snapshot",
+        ],
+        [
+            str(TOOLS["xsim"]),
+            "p10_ax7020_shutdown_top_snapshot",
+            "-runall",
+        ],
+    ]
+    chunks = [f"STARTED_UTC={now()}\n"]
+    returncode = 0
+    for command in commands:
+        chunks.append("COMMAND=" + subprocess.list2cmdline(command) + "\n")
+        result = subprocess.run(
+            command,
+            cwd=work,
+            text=True,
+            capture_output=True,
+            timeout=300,
+            shell=False,
+            env={
+                **os.environ,
+                "NO_HARDWARE": "1",
+                "CURRENT_RUN_HARDWARE_AUTHORIZATION": "false",
+            },
+        )
+        chunks.extend(
+            [
+                f"RETURN_CODE={result.returncode}\n",
+                "STDOUT_BEGIN\n",
+                result.stdout,
+                "\nSTDOUT_END\n",
+                "STDERR_BEGIN\n",
+                result.stderr,
+                "\nSTDERR_END\n",
+            ]
+        )
+        returncode = result.returncode
+        if returncode != 0:
+            break
+    content = "".join(chunks) + f"FINISHED_UTC={now()}\n"
+    log.write_text(content, encoding="utf-8", errors="replace", newline="\n")
+    marker = "TB_P10_AX7020_SHUTDOWN_TOP=PASS LED_N=1111"
+    status = (
+        "PASS"
+        if returncode == 0 and marker in content and "=FAIL" not in content
+        else "FAIL"
+    )
+    return {
+        "test_id": "P10_1-SHUTDOWN-LED-XSIM-001",
         "status": status,
         "returncode": returncode,
         "required_marker": marker,
@@ -289,6 +367,12 @@ def static_audit(raw: Path) -> dict[str, Any]:
     transport = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
         encoding="utf-8"
     )
+    shutdown_top = (ROOT / "rtl/p10_ax7020_shutdown_top.v").read_text(
+        encoding="utf-8"
+    )
+    shutdown_build = (
+        ROOT / "scripts/vivado/build_p10_ax7020_shutdown.tcl"
+    ).read_text(encoding="utf-8")
     integration_checks = {
         "monitor_has_no_global_permit_input": re.search(
             r"\binput\b[^;\n]*global_permit", led_rtl, flags=re.IGNORECASE
@@ -310,6 +394,16 @@ def static_audit(raw: Path) -> dict[str, Any]:
             ".TICK_HZ(1_000)" in wrapper and ".HOLD_MS(200)" in wrapper
         ),
         "feedback_absent": "input  wire [3:0] pl_led_n_o" not in led_rtl,
+        "shutdown_image_exposes_led_bus": (
+            "output wire [3:0] pl_activity_led_n_o" in shutdown_top
+        ),
+        "shutdown_image_drives_all_leds_off": (
+            "assign pl_activity_led_n_o = 4'b1111;" in shutdown_top
+        ),
+        "shutdown_build_records_led_off_intent": (
+            "P10_SHUTDOWN_LED_N_INTENT=0xF" in shutdown_build
+            and "P10_SHUTDOWN_LED_PORT_COUNT=" in shutdown_build
+        ),
     }
     checks.update(integration_checks)
     errors.extend(
@@ -355,7 +449,12 @@ def main() -> int:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = OUT / "raw" / run_id
     raw.mkdir(parents=True, exist_ok=False)
-    results = [run_led_xsim(raw), run_integration_elaboration(raw), static_audit(raw)]
+    results = [
+        run_led_xsim(raw),
+        run_shutdown_top_xsim(raw),
+        run_integration_elaboration(raw),
+        static_audit(raw),
+    ]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
     source_dirty = bool(
         subprocess.check_output(

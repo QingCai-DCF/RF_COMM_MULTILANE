@@ -61,6 +61,14 @@ role-local SD outputs being high has priority over every activity event. That
 condition immediately drives `4'b1111` and clears all hold counters. Leaving
 shutdown without a new event therefore keeps all LEDs off.
 
+The standalone role-bound shutdown image has the same obligation. The prior
+shutdown top omitted the LED port even though the role XDC contained the four
+pin constraints. The user directly observed all four active-low LEDs lit after
+that image was programmed. The remediated `p10_ax7020_shutdown_top` now exposes
+`pl_activity_led_n_o[3:0]` and unconditionally drives `4'b1111`. Its dedicated
+XSIM test covers all Rxd input combinations, while each routed shutdown build
+must report `P10_SHUTDOWN_LED_N_INTENT=0xF` and exactly four LED ports.
+
 After configuration, asserted reset drives all four outputs high. During FPGA
 configuration the board’s active-low LED load and the AX7020 configuration
 pull-up behavior are expected to keep the LEDs off; this visual condition is
@@ -76,9 +84,10 @@ validated independently for both endpoint roles.
 
 ## Verification obligations
 
-The dedicated XSIM test covers mapping, active-low polarity, shared tick,
+The activity-monitor XSIM test covers mapping, active-low polarity, shared tick,
 hold/reload behavior, sustained activity, reset priority, shutdown priority,
-and state clearing. Static audits check both XDCs, source provenance, role
+and state clearing. A separate shutdown-top XSIM test proves the configured
+constant all-off vector. Static audits check both XDCs, source provenance, role
 semantics, and the absence of LED feedback. The complete P10 dual-endpoint and
 TFDU safety regressions, both routed AX7020 builds, DRC, methodology, CDC,
 timing, utilization, the complete no-hardware offline gate, and evidence

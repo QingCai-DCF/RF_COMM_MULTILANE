@@ -15,6 +15,8 @@ electrical:
   inactive_level: "HIGH"
   configured_reset_default: "HIGH_ALL_OFF"
   effective_full_shutdown_default: "HIGH_ALL_OFF"
+  standalone_shutdown_bitstream_default: "HIGH_ALL_OFF"
+  standalone_shutdown_bitstream_vector: "4'b1111"
   fpga_unconfigured_state: "LED_OFF_EXPECTED_FROM_BOARD_ACTIVE_LOW_LED_LOAD_AND_CONFIGURATION_PULLUP; NOT_A_FUNCTIONAL_STATUS_GUARANTEE"
 
 timing:
@@ -116,3 +118,5 @@ evidence_boundary:
   new_bitstreams_require_new_hardware_evidence: true
   offline_results_may_promote_hardware_status: false
   statement: "LED indications are human observability only and are not safety, electrical, protocol-integrity, or optical-link acceptance evidence."
+  user_reported_defect: "Previous standalone shutdown image left the four LED pads absent and the user observed all four active-low LEDs lit after shutdown."
+  remediation: "The role-bound standalone shutdown top now exposes the LED bus and explicitly drives 4'b1111; direct physical visual confirmation remains pending."

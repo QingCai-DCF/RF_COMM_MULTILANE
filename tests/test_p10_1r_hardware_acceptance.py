@@ -58,6 +58,23 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertTrue(sources[0]["artifact_bundle_iteration_authorized"])
         self.assertEqual(sources[1]["user_quotes"], ["不设上限"])
         self.assertIsNone(sources[1]["campaign_new_run_id_limit"])
+        self.assertEqual(sources[2]["source_kind"], "direct_user_message")
+        self.assertEqual(sources[2]["current_run_stage_scope"], ["echo_tail"])
+        self.assertEqual(
+            sources[2]["pre_run_user_module_replacement"],
+            "fixed-side F1 TFDU small board",
+        )
+        self.assertFalse(sources[2]["codex_hardware_change_authorized_during_run"])
+        self.assertEqual(
+            self.runner.CURRENT_DIRECT_AUTHORIZED_STAGES,
+            ("echo_tail",),
+        )
+        self.assertEqual(self.runner.ECHO_TAIL_STAGE_TIMEOUT_SECONDS, 1200)
+
+    def test_current_direct_authorization_rejects_non_raw_stages(self) -> None:
+        run_id = "p10_1r_20260803T000000Z_00000000_00000000_00000000"
+        with self.assertRaisesRegex(ValueError, "permits only echo_tail"):
+            self.runner.create_authorization(run_id, ["crosstalk"])
 
     def test_plan_scope_is_stationary_half_duplex_only(self) -> None:
         plans = self.runner.build_plans()
@@ -83,6 +100,36 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             ["echo_F1", "echo_R1", "echo_F0", "echo_R0"],
         )
         self.assertTrue(all(item[4] == "1000" for item in items))
+
+    def test_raw_connectivity_pulse_is_one_125ns_4ppm_chip(self) -> None:
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        pair = (ROOT / "sim/tb/tb_p10_dual_endpoint_pair.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("RAW_CONNECTIVITY_PULSE_CYCLES = 8", core)
+        self.assertIn(
+            "raw_cycle_q < RAW_CONNECTIVITY_PULSE_CYCLES", core
+        )
+        self.assertNotIn("raw_cycle_q < 5", core)
+        self.assertIn("sender_high_max != 32'd8", pair)
+        self.assertIn("P10 raw final Txd width mismatch", pair)
+
+    def test_shutdown_image_explicitly_turns_all_pl_leds_off(self) -> None:
+        top = (ROOT / "rtl/p10_ax7020_shutdown_top.v").read_text(
+            encoding="utf-8"
+        )
+        build = (
+            ROOT / "scripts/vivado/build_p10_ax7020_shutdown.tcl"
+        ).read_text(encoding="utf-8")
+        builder = (
+            ROOT / "scripts/build_p10_ax7020_shutdown.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("output wire [3:0] pl_activity_led_n_o", top)
+        self.assertIn("assign pl_activity_led_n_o = 4'b1111;", top)
+        self.assertIn("P10_SHUTDOWN_LED_N_INTENT=0xF", build)
+        self.assertIn('"P10_SHUTDOWN_LED_N_INTENT": "0xF"', builder)
 
     def test_echo_failure_captures_terminal_state_before_shutdown(self) -> None:
         tcl = TCL_PATH.read_text(encoding="utf-8")

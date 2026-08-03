@@ -3491,6 +3491,30 @@ requirements:
   waiver: null
   artifact_hashes: []
   hardware_followup: Remains pending; this offline follow-up performs no JTAG, programming, UART, or TFDU drive.
+- requirement_id: OBS-LED-SHUTDOWN-001
+  requirement_text: The role-bound AX7020 standalone shutdown bitstream shall expose all four active-low PL LED outputs and drive pl_activity_led_n_o=4'b1111 so LED1 through LED4 are off after configuration.
+  profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
+  verification_method: Dedicated shutdown-top XSIM, exact fixed/rotating XDC audit, and independent routed shutdown builds with explicit LED port-count and all-off intent markers.
+  verification_stage: P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION
+  verification_scope: OFFLINE_REMEDIATION_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Direct visual or electrical confirmation remains pending; programming and shutdown markers alone do not measure the physical LED pins.
+- requirement_id: P10_1R-RAW-PULSE-001
+  requirement_text: The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall traverse the unchanged final per-module arm, TX-kill, one-hot, continuous-high, stuck-high, and exact sliding-duty safety path.
+  profile: P10_1R_AX7020_2LANE_REMEDIATION
+  verification_method: Four-direction focused XSIM final-physical-Txd width assertions followed by a newly authorized 1000-sample-per-direction echo_tail hardware run.
+  verification_stage: P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION
+  verification_scope: OFFLINE_AND_RAW_HARDWARE_PENDING
+  test_id: null
+  evidence_path: docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: A passing echo_tail result is RAW_PHYSICAL_ONLY and cannot promote valid-frame, CRC, streaming, performance, crosstalk, or full P10.1R acceptance.
 - requirement_id: P10_1R-ECHO-001
   requirement_text: Each TFDU module shall exclude frame admission whenever its own final physical Txd is active.
   profile: P10_1R_AX7020_2LANE_REMEDIATION

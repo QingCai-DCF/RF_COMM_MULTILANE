@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 184
+REQUIREMENT_COUNT: 186
 PASS: 156
-PENDING: 23
+PENDING: 25
 FAIL: 5
 WAIVED: 0
 ```
@@ -184,6 +184,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `OBS-LED-003` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-HOLD-SHUTDOWN-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold. |
 | `OBS-LED-004` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-NONINTERFERENCE-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling. |
 | `OBS-LED-HW-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP | `PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION` | — | `docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md` | The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS. |
+| `OBS-LED-SHUTDOWN-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION` | — | `docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md` | The role-bound AX7020 standalone shutdown bitstream shall expose all four active-low PL LED outputs and drive pl_activity_led_n_o=4'b1111 so LED1 through LED4 are off after configuration. |
+| `P10_1R-RAW-PULSE-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION` | — | `docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md` | The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall traverse the unchanged final per-module arm, TX-kill, one-hot, continuous-high, stuck-high, and exact sliding-duty safety path. |
 | `P10_1R-ECHO-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
 | `P10_1R-ECHO-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
 | `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |

@@ -25,6 +25,11 @@ read_verilog "$root_dir/rtl/p10_ax7020_shutdown_top.v"
 read_xdc $xdc_path
 
 synth_design -top p10_ax7020_shutdown_top -part xc7z020clg400-2
+
+set shutdown_led_ports [get_ports -quiet {pl_activity_led_n_o[*]}]
+if {[llength $shutdown_led_ports] != 4} {
+  error "P10 shutdown image must expose exactly four active-low PL LED outputs"
+}
 write_checkpoint -force "$out_dir/post_synth_shutdown.dcp"
 report_utilization -hierarchical -file "$out_dir/post_synth_utilization.rpt"
 report_drc -file "$out_dir/post_synth_drc.rpt"
@@ -81,6 +86,9 @@ puts $marker "P10_XDC=$xdc_path"
 puts $marker "P10_SHUTDOWN_MODE_INTENT=0x3"
 puts $marker "P10_SHUTDOWN_SD_INTENT=0x3"
 puts $marker "P10_SHUTDOWN_TXD_INTENT=0x0"
+puts $marker "P10_SHUTDOWN_LED_N_INTENT=0xF"
+puts $marker "P10_SHUTDOWN_LED_ACTIVE_LOW=true"
+puts $marker "P10_SHUTDOWN_LED_PORT_COUNT=[llength $shutdown_led_ports]"
 puts $marker "P10_DRC_CRITICAL_COUNT=$drc_critical"
 puts $marker "P10_DRC_ERROR_COUNT=$drc_error"
 puts $marker "P10_REQP_1839_COUNT=$reqp_1839"

@@ -11,11 +11,16 @@ module p10_ax7020_shutdown_top (
   output wire [1:0] tfdu_mode_o,
   input  wire [1:0] tfdu_rxd_i,
   output wire [1:0] tfdu_sd_o,
-  output wire [1:0] tfdu_txd_o
+  output wire [1:0] tfdu_txd_o,
+  output wire [3:0] pl_activity_led_n_o
 );
   assign tfdu_mode_o = 2'b11;
   assign tfdu_sd_o = 2'b11;
   assign tfdu_txd_o = 2'b00;
+  // AX7020 PL user LEDs are active-low.  A shutdown image must explicitly
+  // drive every LED high/off; leaving these pads absent allowed the board LED
+  // loads to appear lit after programming the previous shutdown image.
+  assign pl_activity_led_n_o = 4'b1111;
 
   // Keep the two physical input pads explicit without allowing them to affect
   // any output or the safe shutdown state.

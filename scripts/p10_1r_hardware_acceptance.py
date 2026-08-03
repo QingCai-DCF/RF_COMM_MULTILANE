@@ -82,7 +82,23 @@ STANDING_AUTHORIZATION_SOURCES = (
         "scope": EXPECTED_SCOPE,
         "campaign_new_run_id_limit": None,
     },
+    {
+        "source_thread_id": "current_root_thread",
+        "received_on": "2026-08-03",
+        "source_kind": "direct_user_message",
+        "user_quotes": [
+            "同意将raw连通性修复后再次测试，我现在已经更换了F1小板",
+            "还有目前存在shutdown后PL的4个LED均亮起的问题，请一并修复",
+        ],
+        "scope": EXPECTED_SCOPE,
+        "current_run_hardware_authorization": True,
+        "current_run_stage_scope": ["echo_tail"],
+        "pre_run_user_module_replacement": "fixed-side F1 TFDU small board",
+        "codex_hardware_change_authorized_during_run": False,
+    },
 )
+CURRENT_DIRECT_AUTHORIZED_STAGES = ("echo_tail",)
+ECHO_TAIL_STAGE_TIMEOUT_SECONDS = 1200
 EXPECTED_BASE_FAILURE_TAG = "p10.1-hardware-performance-fail-20260801"
 EXPECTED_BASE_FAILURE_COMMIT = "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
 ARTIFACT_FREEZE = ROOT / "evidence/generated/p10_1r_artifact_freeze.json"
@@ -529,6 +545,10 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         raise ValueError("invalid content-bound P10.1R run_id")
     if not stages or any(stage not in STAGES for stage in stages):
         raise ValueError("invalid P10.1R stage set")
+    if tuple(stages) != CURRENT_DIRECT_AUTHORIZED_STAGES:
+        raise ValueError(
+            "the 2026-08-03 direct current-run authorization permits only echo_tail"
+        )
     if git("branch", "--show-current") != EXPECTED_BRANCH:
         raise RuntimeError("wrong P10.1R branch")
     if git("status", "--porcelain"):
@@ -559,10 +579,9 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
     inputs = hash_inputs()
     parent = git("rev-parse", "HEAD")
     statement = (
-        "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION "
-        "范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；"
-        "除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown "
-        "外，不再请求确认。"
+        "用户于2026-08-03同意修复raw连通性后再次测试，并报告已在运行前自行更换固定侧F1小板；"
+        "用户同时要求修复shutdown后四个低有效PL LED均亮的问题。本run仅授权echo_tail四方向raw复测。"
+        "Codex在运行期间不得移动、重接、交换板卡或模块，也不得扩大到帧、性能、streaming或串扰测试。"
     )
     record = {
         "schema_version": 1,
@@ -602,7 +621,25 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         "user_authorization_statement_sha256": hashlib.sha256(
             statement.encode("utf-8")
         ).hexdigest(),
-        "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
+        "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
+        "current_run_scope": {
+            "classification": "RAW_PHYSICAL_ONLY",
+            "stage": "echo_tail",
+            "directions": ["F1_TO_R1", "R1_TO_F1", "F0_TO_R0", "R0_TO_F0"],
+            "samples_per_direction": 1000,
+            "framed_object_transmission": False,
+            "performance_or_streaming": False,
+        },
+        "pre_run_user_hardware_change": {
+            "reported_by_user": True,
+            "performed_before_current_run": True,
+            "performed_by_codex": False,
+            "board_role": "fixed",
+            "module_id": "F1",
+            "change": "TFDU small board replaced",
+            "module_serial": None,
+            "note": "No module serial or marking was supplied; identity is not guessed.",
+        },
         "board_identities": {
             "fixed": {
                 "id": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
@@ -617,6 +654,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
         },
         "part": EXPECTED_PART,
         "maximum_single_formal_run_seconds": 1800,
+        "maximum_echo_tail_stage_seconds": ECHO_TAIL_STAGE_TIMEOUT_SECONDS,
         "maximum_lane_mask": 3,
         "lane_masks": [1, 2, 3],
         "shutdown": {
@@ -628,6 +666,7 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
             "normal_exit": True,
             "finally": True,
             "program_role_bound_shutdown_bitstreams": True,
+            "configured_pl_led_n_intent": "0xF_ACTIVE_LOW_ALL_OFF",
             "required_markers": [
                 "SHUTDOWN_FIXED=PASS",
                 "SHUTDOWN_ROTATING=PASS",
@@ -649,6 +688,10 @@ def create_authorization(run_id: str, stages: list[str]) -> dict[str, Any]:
             "p11": True,
             "8x32": True,
         },
+        "prohibition_scope": (
+            "Codex actions during this current run; the user's reported fixed-side "
+            "F1 replacement occurred before this run."
+        ),
         "generated_at_utc": utc_now(),
     }
     write_json(AUTH_PATH, record)
@@ -681,6 +724,15 @@ def validate_authorization(
         "current_run_hardware_authorization": True,
         "consumed": False,
         "reusable_for_future_run": False,
+        "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
+        "current_run_scope": {
+            "classification": "RAW_PHYSICAL_ONLY",
+            "stage": "echo_tail",
+            "directions": ["F1_TO_R1", "R1_TO_F1", "F0_TO_R0", "R0_TO_F0"],
+            "samples_per_direction": 1000,
+            "framed_object_transmission": False,
+            "performance_or_streaming": False,
+        },
         "standing_authorization_sources": list(STANDING_AUTHORIZATION_SOURCES),
         "standing_authorization_policy": {
             "scope": EXPECTED_SCOPE,
@@ -691,6 +743,7 @@ def validate_authorization(
         },
         "part": EXPECTED_PART,
         "maximum_single_formal_run_seconds": 1800,
+        "maximum_echo_tail_stage_seconds": ECHO_TAIL_STAGE_TIMEOUT_SECONDS,
         "maximum_lane_mask": 3,
         "lane_masks": [1, 2, 3],
         "pl_build_identity": {
@@ -703,6 +756,20 @@ def validate_authorization(
         for key, value in expected.items()
         if record.get(key) != value
     )
+    if tuple(stages) != CURRENT_DIRECT_AUTHORIZED_STAGES:
+        errors.append("current direct authorization permits only echo_tail")
+    expected_pre_run_change = {
+        "reported_by_user": True,
+        "performed_before_current_run": True,
+        "performed_by_codex": False,
+        "board_role": "fixed",
+        "module_id": "F1",
+        "change": "TFDU small board replaced",
+        "module_serial": None,
+        "note": "No module serial or marking was supplied; identity is not guessed.",
+    }
+    if record.get("pre_run_user_hardware_change") != expected_pre_run_change:
+        errors.append("pre-run user F1 replacement provenance mismatch")
     live_freeze_sha256 = sha256(ARTIFACT_FREEZE)
     authorized_freeze_sha256 = record.get("artifact_freeze_sha256")
     if (
@@ -752,6 +819,24 @@ def validate_authorization(
     ):
         if shutdown.get(key) is not True:
             errors.append(f"shutdown policy missing {key}")
+    if shutdown.get("configured_pl_led_n_intent") != "0xF_ACTIVE_LOW_ALL_OFF":
+        errors.append("shutdown PL LED all-off intent mismatch")
+    for key in (
+        "ethernet",
+        "spi",
+        "movement",
+        "rotation",
+        "angle_adjustment",
+        "obscuration",
+        "module_exchange",
+        "rewiring",
+        "lane_mask_above_0x3",
+        "oneplusone_full_duplex",
+        "p11",
+        "8x32",
+    ):
+        if record.get("prohibited", {}).get(key) is not True:
+            errors.append(f"prohibition missing {key}")
     try:
         freeze, frozen_paths = load_freeze(
             authorized_freeze_sha256
@@ -1603,7 +1688,7 @@ def invoke_stage(
     ]
     timeout = {
         "preflight": 900,
-        "echo_tail": 7200,
+        "echo_tail": ECHO_TAIL_STAGE_TIMEOUT_SECONDS,
         "crosstalk": 1800,
         "phy_sanity": 900,
         "ack_tuning": 900,
@@ -1769,6 +1854,10 @@ def main(argv: list[str] | None = None) -> int:
         "board_identities": record.get("board_identities"),
         "authorized_stages": stages,
         "maximum_single_formal_run_seconds": 1800,
+        "maximum_echo_tail_stage_seconds": ECHO_TAIL_STAGE_TIMEOUT_SECONDS,
+        "pre_run_user_hardware_change": record.get(
+            "pre_run_user_hardware_change"
+        ),
         "shutdown": record.get("shutdown"),
         "errors": errors,
         "hardware_actions_executed": False,
@@ -1805,10 +1894,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     write_text(
         run_root / "authorization/NO_MOVEMENT_NETWORK_ATTESTATION.txt",
-        "NO_HARDWARE_MOVEMENT=true\nROTATION_EXECUTED=false\n"
-        "REWIRING_EXECUTED=false\nMODULE_EXCHANGE_EXECUTED=false\n"
+        "NO_HARDWARE_MOVEMENT_BY_CODEX=true\nROTATION_EXECUTED_BY_CODEX=false\n"
+        "REWIRING_EXECUTED_BY_CODEX=false\nMODULE_EXCHANGE_EXECUTED_BY_CODEX=false\n"
+        "PRE_RUN_USER_REPORTED_FIXED_F1_MODULE_REPLACEMENT=true\n"
         "EXTERNAL_NETWORK_USED=false\nETHERNET_USED=false\nSPI_USED=false\n"
-        "LOCALHOST_HW_SERVER_USED=true\nMAX_LANE_MASK_USED=0x3\n",
+        "LOCALHOST_HW_SERVER_USED=true\nMAX_AUTHORIZED_LANE_MASK=0x3\n"
+        "ACTUAL_PLAN_LANE_MASKS=0x1,0x2\n",
     )
     env = os.environ.copy()
     env["RF_COMM_P10_HW_AUTH"] = "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"

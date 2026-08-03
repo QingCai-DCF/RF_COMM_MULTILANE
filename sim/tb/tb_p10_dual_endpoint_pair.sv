@@ -430,6 +430,7 @@ module tb_p10_dual_endpoint_pair;
     integer watchdog;
     logic [31:0] before_count;
     logic [31:0] after_count;
+    logic [31:0] sender_high_max;
     begin
       @(negedge clk); clear_counters = 1;
       @(posedge clk); @(negedge clk); clear_counters = 0;
@@ -470,6 +471,12 @@ module tb_p10_dual_endpoint_pair;
       if ((!direction && (lane ? r_raw_rx_counts[95:64] : r_raw_rx_counts[127:96]) != 0) ||
           (direction && (lane ? f_raw_rx_counts[31:0] : f_raw_rx_counts[63:32]) != 0))
         $fatal(1, "P10 raw off-lane crosstalk direction=%0d lane=%0d", direction, lane);
+      sender_high_max = !direction ?
+          (lane ? f_tx_high_max[63:32] : f_tx_high_max[31:0]) :
+          (lane ? r_tx_high_max[127:96] : r_tx_high_max[95:64]);
+      if (sender_high_max != 32'd8)
+        $fatal(1, "P10 raw final Txd width mismatch direction=%0d lane=%0d cycles=%0d expected=8",
+               direction, lane, sender_high_max);
       $display("P10_DUAL_RAW_PASS direction=%0d lane=%0d pulses=64", direction, lane);
     end
   endtask

@@ -1254,7 +1254,13 @@ module p9_optical_transport_core #(
   reg [31:0] raw_spacing_q;
   reg [31:0] raw_cycle_q;
   reg [31:0] raw_sent_q;
-  wire raw_pulse_request = raw_busy_q && raw_cycle_q < 5;
+  // Match one normal 4PPM optical chip at 64 MHz.  The previous five-cycle
+  // diagnostic pulse was only 78.125 ns and was not representative of the
+  // qualified physical waveform.  Raw diagnostics still traverse the same
+  // final arm, kill, pulse-width, one-hot, and exact-duty safety boundary.
+  localparam integer RAW_CONNECTIVITY_PULSE_CYCLES = 8;
+  wire raw_pulse_request =
+      raw_busy_q && raw_cycle_q < RAW_CONNECTIVITY_PULSE_CYCLES;
   assign raw_busy_o = raw_busy_q;
   assign raw_done_o = raw_done_q;
   assign raw_sent_count_o = raw_sent_q;
