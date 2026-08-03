@@ -1,0 +1,105 @@
+{
+  "artifacts": {
+    "fixed_bitstream_sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27",
+    "fixed_elf_sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4",
+    "rotating_bitstream_sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f",
+    "rotating_elf_sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e",
+    "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+    "xsdb_stage_sha256": "9c0bac4acc4c87a06fc9967b45eece6bc1422c5bdbd8b983e3c7309aeb4195f4"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating_role": "AX7020-R/JTAG:210512180081"
+  },
+  "classification": "MANUAL_HARDWARE_ACTION_REQUIRED_FOR_F1_TO_R1_PATH",
+  "current_run_hardware_authorization": false,
+  "direct_current_observation": {
+    "F0_TO_R0": "PASS_1000_OF_1000",
+    "F1_TO_R1": {
+      "receiver_raw": 0,
+      "receiver_settle_ms": 5,
+      "sample": 0,
+      "sender_blanked_raw": 1,
+      "sender_final_physical_tx_lane1": 1,
+      "sender_raw": 1,
+      "sender_raw_while_tx": 1,
+      "status": "FAIL"
+    },
+    "R0_TO_F0": "PASS_1000_OF_1000",
+    "R1_TO_F1": "PASS_1000_OF_1000"
+  },
+  "eliminated_or_bounded": [
+    "JTAG board identity ambiguity",
+    "functional bitstream or ELF hash drift",
+    "lane0 bidirectional path loss",
+    "R1-to-F1 reverse-direction path loss",
+    "preceding-lane state carryover as a necessary trigger",
+    "receiver settle margin up to 5 ms after receiver-primed",
+    "diagnostic matrix abort after a stale pre-reboot FAULT mailbox value"
+  ],
+  "evidence": {
+    "manifest": {
+      "declared_files": 46,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "rehash_errors": 0,
+      "sha256": "1e7b3396537ed4b594159b989a6d44e5e5bb0fcde3bae690ee15f3787b12801c"
+    },
+    "orchestrator": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+      "sha256": "6b5b055197f00823d2b6d60507e850a70deda2126a7f6bac994c5cd4d0e79423"
+    },
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
+      "sha256": "a73d0af266ae4d614db4342e47bb14a2a3333fae80c6e7209d93369b8a3ffd51"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "sha256": "8ccda7052e12d3ce38580ad863c8927665f37cddbe4f663f491eeda0a0d72852"
+    }
+  },
+  "evidence_class": "RAW_PHYSICAL_ONLY",
+  "generated_at_utc": "2026-08-03T06:52:34+00:00",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "latest_run_id": "p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d",
+  "network_used": false,
+  "next_required_user_action": "Power both boards off, inspect and restore the existing fixed F1/J10-B transmit path and rotating R1/J10-B receive path (including module seating, existing VCC/GND, SD, Mode, fixed Txd, and rotating Rxd continuity), then report that the non-movement physical inspection is complete. Do not move the optical geometry unless separately authorizing that scope.",
+  "not_uniquely_distinguished": [
+    "fixed F1 TFDU optical transmitter output despite final FPGA Txd activity",
+    "rotating R1 TFDU optical receiver response",
+    "fixed F1 Txd/SD/Mode external electrical path",
+    "rotating R1 Rxd/SD/Mode external electrical path",
+    "the stationary F1-to-R1 optical path"
+  ],
+  "repeated_observations": [
+    {
+      "observation": "F1-to-R1 remote raw 2/64 after lane0 sequence",
+      "run_id": "p10_1r_20260803T061448Z_cce2180b_c1370686_bfb1c51d"
+    },
+    {
+      "observation": "reboot-isolated F1-to-R1 raw 0 at sample 0",
+      "run_id": "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d"
+    },
+    {
+      "observation": "complete matrix F1-to-R1 raw 0 at sample 0; other directions 1000/1000",
+      "run_id": "p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d"
+    },
+    {
+      "observation": "5 ms receiver-settle matrix F1-to-R1 raw 0 at sample 0; other directions 1000/1000",
+      "run_id": "p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d"
+    }
+  ],
+  "result": "BLOCKED_MANUAL_HARDWARE_ACTION_REQUIRED",
+  "rewiring_executed": false,
+  "schema_version": 1,
+  "shutdown": {
+    "final_evidence_sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "test_id": "P10_1R-CURRENT-PHYSICAL-BLOCKER",
+  "verdict_boundary": "P10.1R remains PARTIAL. ACK tuning, performance, 64 MiB streaming, recovery, and formal stages cannot run while one required physical direction is absent."
+}

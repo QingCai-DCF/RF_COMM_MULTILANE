@@ -4,14 +4,14 @@
     "F1: expected 1000 samples, got 0",
     "F1: direction result marker is not PASS"
   ],
-  "generated_at_utc": "2026-08-03T06:37:40+00:00",
+  "generated_at_utc": "2026-08-03T06:52:35+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
-  "raw_summary_sha256": "8fe86f27675bdcbef74a41607e6be187a675d27df18d347e19c33891ac6b9ae1",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
+  "raw_summary_sha256": "a73d0af266ae4d614db4342e47bb14a2a3333fae80c6e7209d93369b8a3ffd51",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d",
+  "run_id": "p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d",
   "schema_version": 1,
   "semantics": {
     "configured_guard_cycles": 4096,
@@ -47,7 +47,7 @@
         "samples": 1000,
         "sender_accepted_remote_count": 0,
         "sender_role": "fixed",
-        "source": "evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -73,7 +73,7 @@
             0
           ],
           "module": "F1",
-          "raw_marker": "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,sender_last_txd_rise=32299894,sender_last_txd_fall=32299899,sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,sender_raw_sent=1,receiver_raw_sent=0,fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,sender_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv,receiver_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+          "raw_marker": "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,sender_last_txd_rise=33803829,sender_last_txd_fall=33803834,sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,sender_raw_sent=1,receiver_raw_sent=0,fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,sender_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv,receiver_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
           "receiver": "rotating",
           "receiver_accepted_remote": 0,
           "receiver_raw": 0,
@@ -90,8 +90,8 @@
           "sender_blanked_raw": 1,
           "sender_first_rxd_after_tx": 0,
           "sender_last_rxd_after_tx": 0,
-          "sender_last_txd_fall": 32299899,
-          "sender_last_txd_rise": 32299894,
+          "sender_last_txd_fall": 33803834,
+          "sender_last_txd_rise": 33803829,
           "sender_raw": 1,
           "sender_raw_sent": 1,
           "sender_raw_while_tx": 1
@@ -105,7 +105,7 @@
         "result_marker": "FAIL",
         "samples": 0,
         "sender_role": "fixed",
-        "source": "evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv"
+        "source": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv"
       },
       "R0": {
         "blanked_frame_count": 0,
@@ -130,7 +130,7 @@
         "samples": 1000,
         "sender_accepted_remote_count": 0,
         "sender_role": "rotating",
-        "source": "evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R0.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R0.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
@@ -165,7 +165,7 @@
         "samples": 1000,
         "sender_accepted_remote_count": 0,
         "sender_role": "rotating",
-        "source": "evidence/hardware/p10_1r/p10_1r_20260803T062846Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R1.echo_tail.psv",
+        "source": "evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R1.echo_tail.psv",
         "violations": {
           "receiver_admission_violation": 0,
           "receiver_cross_lane_accepted": 0,
