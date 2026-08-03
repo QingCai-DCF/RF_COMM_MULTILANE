@@ -195,8 +195,15 @@ proc p10_verify_pl_safe {role expected_build expected_profile label} {
       [string toupper $role] $label $identity $build $profile $status $phy [join $physical_tx ,]]
 }
 
-proc p10_wait_ready {role label} {
+proc p10_wait_ready {role label {stale_fault_grace_ms 0}} {
+  if {![string is integer -strict $stale_fault_grace_ms] ||
+      $stale_fault_grace_ms < 0 || $stale_fault_grace_ms > 2000} {
+    error "invalid P10 stale-fault grace"
+  }
+  set started [clock milliseconds]
   set deadline [expr {[clock milliseconds] + 20000}]
+  set stale_fault_deadline [expr {$started + $stale_fault_grace_ms}]
+  set stale_fault_reported 0
   set magic 0; set state 0; set status 0
   while {[clock milliseconds] < $deadline} {
     p10_check_abort
@@ -206,6 +213,19 @@ proc p10_wait_ready {role label} {
     if {$magic == 0x424D3950 && $state == 1 && $status == 0} {
       p10_say "P10_SERVICE_READY_[string toupper $role]=$label"
       return
+    }
+    if {$state == 5 && [clock milliseconds] < $stale_fault_deadline} {
+      # ``rst -processor`` and ``dow`` do not synchronously erase the DDR
+      # mailbox.  A failed command can therefore leave state=FAULT visible for
+      # a few polls after ``con`` even though the replacement ELF has not yet
+      # initialized its service state.  Ignore only that bounded pre-start
+      # residue; a persistent/new FAULT still fails as soon as the grace ends.
+      if {!$stale_fault_reported} {
+        p10_say "P10_SERVICE_STALE_FAULT_IGNORED_[string toupper $role]=$label:status=$status,grace_ms=$stale_fault_grace_ms"
+        set stale_fault_reported 1
+      }
+      after 10
+      continue
     }
     if {$state == 5} {
       error "P10 $role service entered FAULT during $label status=$status"
@@ -1107,7 +1127,10 @@ proc p10_reboot_role {role label} {
   rst -processor
   dow $p10_elf($role)
   con
-  p10_wait_ready $role $label
+  # The prior command's terminal mailbox remains in DDR until the replacement
+  # ELF reaches its startup initialization.  Give that stale value a bounded
+  # grace without weakening detection of a persistent post-reboot FAULT.
+  p10_wait_ready $role $label 1000
   set dump [p10_dump_mailbox $role $label]
   p10_say "P10_REBOOT_PASS_[string toupper $role]=$label:$dump"
   p10_resume $role

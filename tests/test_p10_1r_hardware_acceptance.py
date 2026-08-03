@@ -116,6 +116,27 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertLess(snapshot, marker)
         self.assertLess(marker, shutdown_request)
 
+    def test_echo_rebootstrap_ignores_only_bounded_stale_fault(self) -> None:
+        tcl = TCL_PATH.read_text(encoding="utf-8")
+        wait_start = tcl.index("proc p10_wait_ready")
+        wait_end = tcl.index("proc p10_dump_mailbox", wait_start)
+        wait = tcl[wait_start:wait_end]
+        reboot_start = tcl.index("proc p10_reboot_role")
+        reboot_end = tcl.index(
+            "proc p10_rebootstrap_after_reset_recovery", reboot_start
+        )
+        reboot = tcl[reboot_start:reboot_end]
+
+        self.assertIn("{stale_fault_grace_ms 0}", wait)
+        self.assertIn("$stale_fault_grace_ms > 2000", wait)
+        self.assertIn(
+            "$state == 5 && [clock milliseconds] < $stale_fault_deadline",
+            wait,
+        )
+        self.assertIn("P10_SERVICE_STALE_FAULT_IGNORED_", wait)
+        self.assertIn("if {$state == 5} {", wait)
+        self.assertIn("p10_wait_ready $role $label 1000", reboot)
+
     def test_streaming_plan_has_goal_recovery_matrix(self) -> None:
         items = self.runner.build_plans()["streaming_64m"]
         cases = [item for item in items if isinstance(item, self.runner.Case)]
