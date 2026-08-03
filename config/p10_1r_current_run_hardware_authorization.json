@@ -86,10 +86,9 @@
     }
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "6c547f483058d2c38185a82572e9b9bc58b98f9e",
-  "authorization_status_at_run_start": "AUTHORIZED",
+  "authorization_parent_commit": "197d355f9fc3a584920f8dbc986605f7422ebdc5",
   "authorized_stages": [
-    "echo_tail"
+    "crosstalk"
   ],
   "board_identities": {
     "fixed": {
@@ -104,35 +103,28 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
-  "campaign_status": "PASS",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-03T10:45:03+00:00",
-  "consumed_by_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
-  "consumed_stage_set": [
-    "echo_tail"
-  ],
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "current_run_scope": {
-    "classification": "RAW_PHYSICAL_ONLY",
-    "directions": [
-      "F1_TO_R1",
-      "R1_TO_F1",
-      "F0_TO_R0",
-      "R0_TO_F0"
+    "classification": "P10_1R_GOAL_STAGE_HARDWARE_ACCEPTANCE",
+    "ethernet": false,
+    "formal_active_window_seconds": 0,
+    "framed_object_transmission": true,
+    "lane_masks": [
+      1,
+      2
     ],
-    "framed_object_transmission": false,
+    "movement_or_rewiring": false,
+    "oneplusone_full_duplex": false,
+    "p11": false,
     "performance_or_streaming": false,
-    "samples_per_direction": 1000,
-    "stage": "echo_tail"
+    "spi": false,
+    "stage": "crosstalk",
+    "stationary_two_lane_half_duplex_only": true
   },
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
-  "final_evidence_sha256": "7acd2111a500d36af0b5f13c2a9e5b847f236124a7ecdc722c6732a9cd5b224f",
-  "full_campaign_completed": false,
-  "generated_at_utc": "2026-08-03T10:33:23+00:00",
+  "generated_at_utc": "2026-08-03T11:43:25+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -175,9 +167,9 @@
       "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
     },
     "project_state": {
-      "bytes": 39817,
+      "bytes": 40328,
       "path": "config/project_state.json",
-      "sha256": "3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751"
+      "sha256": "4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5"
     },
     "register_map": {
       "bytes": 60093,
@@ -190,9 +182,9 @@
       "sha256": "49d8bc3c1c5b9c6a1990c28be6dd861917b5e71668d483a4610e54ba59e2fdf8"
     },
     "requirements": {
-      "bytes": 232981,
+      "bytes": 234489,
       "path": "config/project_requirements.yaml",
-      "sha256": "693ee721aa3151070af654d4f31e1423654d0287da6bd942f5249e9cc2d1eff6"
+      "sha256": "368915c5db0e16a32e873ea40030a70b12fe9239145c7a54b10bb29fef704e33"
     },
     "rotating_profile": {
       "bytes": 927,
@@ -205,9 +197,9 @@
       "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
     },
     "runner": {
-      "bytes": 83096,
+      "bytes": 84783,
       "path": "scripts/p10_1r_hardware_acceptance.py",
-      "sha256": "e7b8132de16b5ea78878c6ec0f5f1689568c9fe3b483c2937cd42e7c327cf1ac"
+      "sha256": "fb4a6683df09dc4f63185970171914c7671ecc0fccbb5294512af284a688784b"
     },
     "runtime": {
       "bytes": 3158,
@@ -243,14 +235,13 @@
   "maximum_echo_tail_stage_seconds": 1200,
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this stage-scoped PASS and create fresh run-bound authorizations for the remaining mandatory P10.1R stages",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
     "rotating": "0x50325352"
   },
   "plan_sha256": {
-    "echo_tail": "95bcdfa54a9e6b4a34a03751fd1b0f2dd4eacc09069a31780c9e37a583fe1074"
+    "crosstalk": "b53e619975705188a77d4e6d2992003adc42511ae544b2572496ffca7c90ad3a"
   },
   "pre_run_user_hardware_change": {
     "board_role": "fixed",
@@ -278,7 +269,7 @@
   },
   "prohibition_scope": "Codex actions during this current run; the user's reported fixed-side F1 replacement occurred before this run.",
   "reusable_for_future_run": false,
-  "run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+  "run_id": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
   "schema_version": 1,
   "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
   "shutdown": {
@@ -298,8 +289,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -346,10 +335,22 @@
         "同意将raw连通性修复后再次测试，我现在已经更换了F1小板",
         "还有目前存在shutdown后PL的4个LED均亮起的问题，请一并修复"
       ]
+    },
+    {
+      "authorization_basis": "the 2026-08-02 campaign-level standing authorization above",
+      "continue_campaign_requested": true,
+      "received_on": "2026-08-03",
+      "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+      "scope_expansion_authorized": false,
+      "source_kind": "direct_user_continuation_request",
+      "source_thread_id": "current_root_thread",
+      "user_quotes": [
+        "继续完成目标"
+      ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
-  "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
-  "user_authorization_statement": "用户于2026-08-03同意修复raw连通性后再次测试，并报告已在运行前自行更换固定侧F1小板；用户同时要求修复shutdown后四个低有效PL LED均亮的问题。本run仅授权echo_tail四方向raw复测。Codex在运行期间不得移动、重接、交换板卡或模块，也不得扩大到帧、性能、streaming或串扰测试。",
-  "user_authorization_statement_sha256": "887ad0dcefdd72bbda7028428823a93caf5f7b9596c2e9ca7d446fe7379dd465"
+  "status": "AUTHORIZED",
+  "user_authorization_received_on": "2026-08-02",
+  "user_authorization_statement": "用户于2026-08-02确认P10.1R campaign-level standing authorization，允许在完整离线验证和artifact SHA256冻结后，为Goal内必要硬件阶段自动创建新的不可变current-run authorization；用户于2026-08-03再次要求‘继续完成目标’。本run只执行stage=crosstalk，不得扩大到P11、1+1全双工、Ethernet、SPI、移动、重接或lane mask>0x3；必须shutdown-before，并在成功、失败、异常、超时、Ctrl+C和正常退出后验证双端shutdown。",
+  "user_authorization_statement_sha256": "2e6a007e439588181d8b3a0e832feec27399d3552f8e7417aeba8361d57e48b6"
 }
