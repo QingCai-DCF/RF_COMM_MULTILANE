@@ -3,9 +3,9 @@
   "current_run_hardware_authorization": false,
   "diagnostic_source_commit": "660ca514bef7f790691d6b748c35e84af51faea4",
   "diagnostic_worktree_dirty": true,
-  "exact_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "exact_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "exact_source_worktree_clean_at_checkpoint": true,
-  "generated_at_utc": "2026-08-02T17:41:00+00:00",
+  "generated_at_utc": "2026-08-03T10:26:18Z",
   "hardware_actions_executed": false,
   "mechanism": {
     "boundary_ack_condition": "wrap-safe cumulative RX base is strictly after the tagged DATA sequence",
@@ -66,40 +66,40 @@
   "remediation_source_commit": "f8d36805c4d2fc19d1695092655629b40860e421",
   "result": "PRE_FIX_REPRODUCED_POST_FIX_ZERO_RETRY_WRAP_AND_EXACT_SOURCE_OFFLINE_PASS",
   "schema_version": 1,
-  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "status": "PASS",
   "test_id": "P10_1R-DUAL-LANE-BOUNDARY-ACK-SKEW-REMEDIATION",
   "verification": {
     "exact_source_focused_xsim": {
       "path": "evidence/generated/p10_1r_xsim/summary.json",
-      "sha256": "26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25",
-      "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+      "sha256": "969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0",
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
       "status": "PASS",
       "test_count": 8
     },
     "exact_source_full_offline_regression": {
-      "path": "evidence/generated/p10_1r_full_offline_regression/summary.json",
-      "sha256": "8d6116ba3ed5c1d58b51484d2b00993e6ac710762fff9849a07c8edba9e13fce",
-      "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+      "path": "evidence/generated/p10_1r_raw_led_full_offline_regression/summary.json",
+      "sha256": "55935fabb4516f1695df34335c29d4d0e3f6c160662deaaf82479f09ac989858",
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
       "status": "PASS"
     },
     "exact_source_functional_build": {
       "path": "evidence/generated/p10_1r_functional_build_summary.json",
-      "sha256": "b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4",
-      "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+      "sha256": "73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70",
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
       "status": "PASS"
     },
     "exact_source_performance_and_settle_model": {
       "modeled_application_goodput_bps": 4073947.033868042,
       "path": "evidence/generated/p10_1r_ack_pipeline_model.json",
-      "sha256": "9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b",
-      "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+      "sha256": "f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32",
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
       "status": "PASS"
     },
     "exact_source_portable_fault_and_legacy_regression": {
       "path": "evidence/generated/p10_1r_dual_endpoint_regression/summary.json",
-      "sha256": "be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013",
-      "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+      "sha256": "e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac",
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
       "status": "PASS"
     },
     "full_focused_xsim": {

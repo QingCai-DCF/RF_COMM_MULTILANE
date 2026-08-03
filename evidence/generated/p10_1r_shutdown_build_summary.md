@@ -3,11 +3,11 @@
 - Status: `PASS`
 - Hardware actions executed: `false`
 - Part: `xc7z020clg400-2`
-- Configured intent: `Mode=HIGH`, `SD=HIGH`, `Txd=LOW` on both lanes.
+- Configured intent: `Mode=HIGH`, `SD=HIGH`, `Txd=LOW` on both lanes and `PL_LED_N=0xF` (all four active-low LEDs off).
 - Hardware admission: `false` (`P10-SAFETY-POWERUP-001`).
 - Boundary: these bitstreams establish only post-configuration PL levels; they do not prove FPGA-unconfigured or partial-power safety.
 
 | Role | Result | Source bundle SHA256 | Bitstream SHA256 | Artifact |
 |---|---|---|---|---|
-| fixed | PASS | `3a4bbc524da1644782cebc8e9b6f990252b6ecc0b09f3e6da7a2b17f00134d13` | `6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf` | `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/6ca0c42b93cdac8785a89948cfa14bc8c366d7a514394bd4a8dd9ae3becb3fdf/p10_ax7020_fixed_shutdown.bit` |
-| rotating | PASS | `ff7ee1a393e7f4ad364a423167c3c75253d33d700dadbca43702bc52d3e9072c` | `66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6` | `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/66da73c6310887d6617ccb010f9804bb879aad0fe781e952ba713e31232fc6c6/p10_ax7020_rotating_shutdown.bit` |
+| fixed | PASS | `be03ff7553f32984fecfba7b73450a7d5e997f1d8a15b4394faeb7d1dc390410` | `0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a` | `artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a/p10_ax7020_fixed_shutdown.bit` |
+| rotating | PASS | `556d3b86cbf1526a1c9cc6dcd22b6c47dbc7579c370119949e40baafecaf142e` | `a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27` | `artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27/p10_ax7020_rotating_shutdown.bit` |

@@ -1,7 +1,7 @@
 # P10.1R repository intake
 
 - Status: `PASS`
-- Source commit: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
+- Source commit: `39df17155ce82e38366fbdac00c79584f0fe1afa`
 - Hardware actions executed: `false`
 
 ```json
@@ -16,7 +16,7 @@
   "failure_tag": "p10.1-hardware-performance-fail-20260801",
   "failure_tag_target": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151",
   "failure_tag_type": "tag",
-  "generated_at_utc": "2026-08-02T15:21:30+00:00",
+  "generated_at_utc": "2026-08-03T07:55:34+00:00",
   "goal": {
     "bytes": 30007,
     "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
@@ -36,14 +36,14 @@
       "sha256": "5d5cacd78417986d9457676826fce42efe14f38d2866713ff4c98668c44bfc68"
     },
     {
-      "bytes": 37050,
+      "bytes": 39719,
       "path": "config/project_state.json",
-      "sha256": "e95bed1653b43418fd305c2c173afe0b7a5406750b86624b9e75f495a9742726"
+      "sha256": "c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d"
     },
     {
-      "bytes": 230140,
+      "bytes": 233792,
       "path": "config/project_requirements.yaml",
-      "sha256": "b63148c2e31e6a486c22c6142d2bbee0fd127eb78b3ec999a6a0bf0386218391"
+      "sha256": "bb4db13e6de17dc266b64de7ea68097a604e04c6770719b63475d76bb8b72204"
     },
     {
       "bytes": 3477,
@@ -66,9 +66,9 @@
       "sha256": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b"
     },
     {
-      "bytes": 104826,
+      "bytes": 105218,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "6af5c5b3c3c1b7d106f6c48fb492ab0a0a8650deb833a299bc68e176a75eca2d"
+      "sha256": "f32d2d015143492922baa4b6b4530cd0394d23d65dbef017b1629e9fff3337d9"
     },
     {
       "bytes": 15805,
@@ -85,7 +85,7 @@
   "offline_tag_is_ancestor": true,
   "p10_pass_tag_is_ancestor": true,
   "schema_version": 1,
-  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "source_worktree_dirty_before_generation": true,
   "status": "PASS",
   "test_id": "P10_1R-REPOSITORY-INTAKE",

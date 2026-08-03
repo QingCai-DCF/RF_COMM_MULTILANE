@@ -349,17 +349,44 @@ def parse_resources(path: Path, limits: dict[str, float]) -> dict[str, Any]:
 
 def update_state(artifact_freeze: Path, artifacts: dict[str, Any]) -> None:
     state = load_json(STATE)
+    source_state: dict[str, Any] = {}
+    try:
+        source_state = json.loads(
+            git("show", f"{SOURCE_COMMIT}:config/project_state.json").stdout
+        )
+    except (json.JSONDecodeError, subprocess.CalledProcessError):
+        source_state = {}
+    prior_remediation = state.get("p10_1r_remediation", {})
+    source_remediation = source_state.get("p10_1r_remediation", {})
+    if not (
+        isinstance(prior_remediation, dict)
+        and prior_remediation.get("hardware_actions_executed") is True
+    ) and (
+        isinstance(source_remediation, dict)
+        and source_remediation.get("hardware_actions_executed") is True
+    ):
+        prior_remediation = source_remediation
+    prior_hardware_executed = (
+        isinstance(prior_remediation, dict)
+        and prior_remediation.get("hardware_actions_executed") is True
+    )
     state["current_program_stage"] = (
         "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
     )
     state["current_run_hardware_authorization"] = False
-    state["p10_1r_status"] = "OFFLINE_READY_HARDWARE_PENDING"
-    state["two_lane_speed_stability"] = "PENDING_DIRECT_HARDWARE_REACCEPTANCE"
+    state["p10_1r_status"] = (
+        "PARTIAL" if prior_hardware_executed else "OFFLINE_READY_HARDWARE_PENDING"
+    )
+    state["two_lane_speed_stability"] = (
+        "PARTIAL_RAW_CONNECTIVITY_PASS_PERFORMANCE_STABILITY_PENDING"
+        if prior_hardware_executed
+        else "PENDING_DIRECT_HARDWARE_REACCEPTANCE"
+    )
     state["last_verified_commit"] = SOURCE_COMMIT
     state["p11_status"] = "NOT_STARTED"
     state["p11_hardware_ready"] = False
-    state["p10_1r_remediation"] = {
-        "status": "OFFLINE_READY_HARDWARE_PENDING",
+    remediation = {
+        "status": "PARTIAL" if prior_hardware_executed else "OFFLINE_READY_HARDWARE_PENDING",
         "base_failure_tag": FAILURE_TAG,
         "source_commit": SOURCE_COMMIT,
         "goal_path": rel(GOAL),
@@ -384,10 +411,28 @@ def update_state(artifact_freeze: Path, artifacts: dict[str, Any]) -> None:
         "guard_selection": record(GUARD_SELECTION),
         "current_run_hardware_authorization": False,
         "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
-        "hardware_actions_executed": False,
+        "hardware_actions_executed": prior_hardware_executed,
+        "current_bundle_hardware_actions_executed": False,
         "network_used": False,
         "p11_started": False,
     }
+    if prior_hardware_executed:
+        remediation["prior_hardware_artifact_source_commit"] = prior_remediation.get(
+            "source_commit"
+        )
+        for key in (
+            "hardware_blocker",
+            "hardware_movement",
+            "last_hardware_run_id",
+            "last_shutdown_fixed",
+            "last_shutdown_rotating",
+            "post_power_cycle_recheck",
+            "latest_four_direction_retest",
+            "rewiring_executed",
+        ):
+            if key in prior_remediation:
+                remediation[key] = prior_remediation[key]
+    state["p10_1r_remediation"] = remediation
     STATE.write_text(
         json.dumps(state, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",

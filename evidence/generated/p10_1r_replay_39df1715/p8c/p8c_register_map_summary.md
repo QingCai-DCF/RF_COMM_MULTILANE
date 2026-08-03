@@ -1,0 +1,45 @@
+# P8C register map
+
+```text
+STATUS: FAIL
+NO_HARDWARE_ACTIONS_EXECUTED: true
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+HARDWARE_SCOPE_PROMOTED: false
+```
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "failures": [
+    "p0_p8b_full_regression"
+  ],
+  "generated_at_utc": "2026-08-03T09:15:18+00:00",
+  "map_sha256": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea",
+  "profile": "P8C_MULTI_PROFILE_OFFLINE",
+  "simulation": {
+    "log_directory": "evidence/generated/p10_1r_replay_39df1715/p8c/p8c_raw/xsim/tb_p8c_safety_regs",
+    "markers": [
+      "TB_P8C_SAFETY_REGS_PASS=1"
+    ],
+    "phase_returncodes": {
+      "compile": 0,
+      "elaborate": 0,
+      "run": 0
+    },
+    "sources": [
+      "rtl/ir_p8c_safety_regs.sv",
+      "sim/tb/tb_p8c_safety_regs.sv"
+    ],
+    "status": "PASS"
+  },
+  "software": {
+    "log": "evidence/generated/p10_1r_replay_39df1715/p8c/p8c_raw/software/ps_driver_host_compile_and_run.log",
+    "status": "PASS"
+  },
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "status": "FAIL",
+  "test_id": "P8C-REGISTER-MAP"
+}
+```

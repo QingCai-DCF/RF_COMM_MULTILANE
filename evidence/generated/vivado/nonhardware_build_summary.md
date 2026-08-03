@@ -11,7 +11,7 @@ VIVADO_EXECUTABLE=D:\Xilinx\Vivado\2023.1\bin\vivado.bat
 VIVADO_EXIT_CODE=0
 BITSTREAM_GENERATED_NO_HW=1
 BITSTREAM_PATH=evidence/generated/vivado/ir_top_new_safe_idle.bit
-BITSTREAM_SHA256=6e965048dd81748ed58186672403b2512527f6fdb1fb48a410bee3ba4a1fd21a
+BITSTREAM_SHA256=33cd8f041d402651bd85ef0acafdeef0836c4e193b141ff6ca306b623241382d
 P4_AUTO_DEBUG_INSTRUMENTATION_LOG=evidence/generated/vivado/p4_auto_debug_instrumentation.txt
 P4_AUTO_DEBUG_CLOCK_NET_COUNT=1
 P4_AUTO_DEBUG_STATUS_NET_COUNT=768
@@ -25,18 +25,18 @@ P4_AUTO_DEBUG_PROBES_SHA256=1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26
 
 | Stage | Bitstream | SHA256 | ILA Core | Probe Width |
 | --- | --- | --- | --- | --- |
-| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `6e965048dd81748ed58186672403b2512527f6fdb1fb48a410bee3ba4a1fd21a` | p4_auto_safe_idle_ila | 768 |
-| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `beb8e8ac02a9d75b979f6bc568a3c8a873b14f1d79d2bcdd7d0635dc18f65caa` | p4_auto_tfdu_control_idle_ila | 768 |
-| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `feeb89e0bf501190b5a75f6a425d2b12109b4db82f8b49981b97cbdc4e19dd1a` | p4_auto_raw_pulse_ila | 768 |
-| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `907ee3841ba73c12fa7a56fd1289558c648bf2a10688212f6280f5fa065b76ab` | p4_auto_raw_lane_matrix_ila | 768 |
-| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `30b46cbfb62d79bf7c26f0fa8c592126bb04418151d94b510acfc4f87412949c` | p4_auto_protocol_lane0_ila | 768 |
-| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `04b084a2e688d1d5b139dac7c3326dc2a214cac319c644d3cefe5ea4392e014c` | p4_auto_protocol_lane0_ack_ila | 768 |
-| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `e6d4f591596cc491cac19430c4a3e171ce0da7ccc29dff44c2b0251a4f7cd80e` | p4_auto_protocol_lane1_ila | 768 |
-| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `c4df527ac4d2b4459850494ed5526dc7f59ab3fd4b1d48f79a1d9cbe37cc5d90` | p4_auto_protocol_lane1_ack_ila | 768 |
-| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `71a871d3dcef66b8f90d0904e20646f5a173ecf5ef0d03957e5bcdafea32be2a` | p4_auto_protocol_two_lane_minimal_ila | 768 |
-| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `830d66ac2fe2f3ca9d6079680622e7be98bd37183d26f963a4783c0e48d30e0a` | p4_auto_protocol_lane0_soak_ila | 768 |
-| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `c79268735ab5d96be695cd05ac4c1bd68697864af59b96137bac408b95fcb239` | p4_auto_protocol_two_lane_soak_ila | 768 |
-| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `84a50b9f48ef63cf905c4c3c9326ce65ce17c8d958951b3a185c98b64458f9a7` | p4_auto_p6_local_transport_ila | 768 |
+| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `33cd8f041d402651bd85ef0acafdeef0836c4e193b141ff6ca306b623241382d` | p4_auto_safe_idle_ila | 768 |
+| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `8b2610ffb9d846f469b4f29ee104371902170275adeef23a54ec18027b9716f8` | p4_auto_tfdu_control_idle_ila | 768 |
+| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `1f812fc1feebd639814df267d7570eb84eb2d12f207f6b525a151fd2bb5aabb9` | p4_auto_raw_pulse_ila | 768 |
+| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `154b428befaf7e6e2fd4ea8f25e21c2c9a8f500941bc9ef42092456b538f3d7c` | p4_auto_raw_lane_matrix_ila | 768 |
+| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `b5ef0245665842261e584b8341efe05730bdf9795679dac7c7b0520d503391a2` | p4_auto_protocol_lane0_ila | 768 |
+| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `275ee7a73b5ff62e8fca9537d3f639bc4cab7a2ad364f146a677c6260af17af7` | p4_auto_protocol_lane0_ack_ila | 768 |
+| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `b841880439aa58eddae3bb3a68370ff7b9c61448949deef76c492635894316ce` | p4_auto_protocol_lane1_ila | 768 |
+| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `3baea47af2d21597c07561f45a01e730765ab525c343512ac0f80cb51bbefccd` | p4_auto_protocol_lane1_ack_ila | 768 |
+| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `e3c1b1b805ec2e1f9de00a5ef312153e01de1d18361e2c6b622c81e6e324117e` | p4_auto_protocol_two_lane_minimal_ila | 768 |
+| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `e9a1b4436594df3c08dd486fe929171c334a50f048ccd1e6ef9930e94cbe80dc` | p4_auto_protocol_lane0_soak_ila | 768 |
+| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `b7afb3137153db17a8da7bd8faeeee5935ae85881bbb2333e70c438f9de093f7` | p4_auto_protocol_two_lane_soak_ila | 768 |
+| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `5663437a3ef6bcaca8a42f9513e7afd10a899d786c375c8159ac1ae30ed4834c` | p4_auto_p6_local_transport_ila | 768 |
 
 ## Stage Commands
 
@@ -56,7 +56,7 @@ P4_AUTO_DEBUG_PROBES_SHA256=1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26
 ## Log Tail
 
 ```text
-u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_CTL/ctl_reg_en_2[1], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_capture[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_drck[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_runtest[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gras.rsts/ram_empty_i... and (the first 15 of 26 listed).
+NID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD1/ctl_reg_en_2[1], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_capture[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_drck[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_runtest[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_0_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gras.rsts/ram_empty_i... and (the first 15 of 26 listed).
 WARNING: [DRC ZPS7-1] PS7 block required: The PS7 cell must be used in this Zynq design in order to enable correct default configuration.
 INFO: [Vivado 12-3199] DRC finished with 0 Errors, 5 Warnings
 INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
@@ -73,7 +73,7 @@ INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT dev
 INFO: [Common 17-83] Releasing license: Implementation
 9 Infos, 5 Warnings, 0 Critical Warnings and 0 Errors encountered.
 write_bitstream completed successfully
-write_bitstream: Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 3724.719 ; gain = 220.020
+write_bitstream: Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 3729.746 ; gain = 209.660
 # set log_file [open "$out_dir/nonhardware_build_markers_${stage}.txt" "a"]
 # puts $log_file "VIVADO_NONHARDWARE_BUILD_DONE=1"
 # puts $log_file "VIVADO_REPORT_DIR=$out_dir"
@@ -90,7 +90,7 @@ write_bitstream: Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): pe
 # if {$stage eq "safe_idle"} {
 #   file copy -force "$out_dir/nonhardware_build_markers_${stage}.txt" "$out_dir/nonhardware_build_markers.txt"
 # }
-INFO: [Common 17-206] Exiting Vivado at Mon Aug  3 01:15:59 2026...
+INFO: [Common 17-206] Exiting Vivado at Mon Aug  3 18:19:05 2026...
 
 ===== safe_idle stderr =====
 

@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 186
-PASS: 156
-PENDING: 25
+PASS: 157
+PENDING: 24
 FAIL: 5
 WAIVED: 0
 ```
@@ -184,13 +184,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `OBS-LED-003` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-HOLD-SHUTDOWN-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | A shared 1 ms tick shall provide an approximately 200 ms visual hold, with sustained activity remaining lit and reset, safety fault, or effective full shutdown immediately forcing all LEDs off and clearing every hold. |
 | `OBS-LED-004` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE` | `P10_1-LED-NONINTERFERENCE-001` | `evidence/generated/p10_1_led_offline_acceptance_leaf.json` | The PL LED implementation shall be a pure monitor tap with no feedback, backpressure, or influence on Txd, SD, Mode, GLOBAL_PERMIT, TX kill, frame admission, reset, or fault handling. |
 | `OBS-LED-HW-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_HARDWARE_FOLLOWUP | `PENDING_NEW_BITSTREAM_HARDWARE_VALIDATION` | — | `docs/hardware/P10_1_AX7020_PL_ACTIVITY_LED_DESIGN.md` | The LED-enabled fixed and rotating AX7020 bitstreams shall receive new direct hardware validation before their LED behavior or pre-existing P10/P10.1 functions are assigned a hardware PASS. |
-| `OBS-LED-SHUTDOWN-001` | `PENDING` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION` | — | `docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md` | The role-bound AX7020 standalone shutdown bitstream shall expose all four active-low PL LED outputs and drive pl_activity_led_n_o=4'b1111 so LED1 through LED4 are off after configuration. |
-| `P10_1R-RAW-PULSE-001` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_RAW_AND_SHUTDOWN_LED_REMEDIATION` | — | `docs/hardware/P10_1R_RAW_CONNECTIVITY_AND_SHUTDOWN_LED_REMEDIATION.md` | The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall traverse the unchanged final per-module arm, TX-kill, one-hot, continuous-high, stuck-high, and exact sliding-duty safety path. |
+| `OBS-LED-SHUTDOWN-001` | `PASS` | P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1-SHUTDOWN-LED-XSIM-001` | `evidence/generated/p10_1_led_offline/summary.json` | The role-bound AX7020 standalone shutdown bitstream shall expose all four active-low PL LED outputs and drive pl_activity_led_n_o=4'b1111 so LED1 through LED4 are off after configuration. |
+| `P10_1R-RAW-PULSE-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall traverse the unchanged final per-module arm, TX-kill, one-hot, continuous-high, stuck-high, and exact sliding-duty safety path. |
 | `P10_1R-ECHO-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Each TFDU module shall exclude frame admission whenever its own final physical Txd is active. |
 | `P10_1R-ECHO-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
 | `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
 | `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | A local transmission on one module shall not blank receive admission on the other lane. |
-| `P10_1R-ECHO-005` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
+| `P10_1R-ECHO-005` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
 | `P10_1R-ECHO-006` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
 | `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
 | `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
@@ -275,13 +275,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
-- `PROJECT_STATUS.md` — `893d8bbc1223b51b6ef459a0b35f5ea9a0a6b828e2bc38691b9ef2a89cf504c1`
+- `config/project_state.json` — `3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751`
+- `PROJECT_STATUS.md` — `ac989fc650fac590a204d06107c35a7519fe4d1ac80c4a071ddea0c9016332e3`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
+- `config/project_state.json` — `3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751`
 
 ### `P8A-EVID-001`
 
@@ -291,8 +291,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
-- `PROJECT_STATUS.md` — `893d8bbc1223b51b6ef459a0b35f5ea9a0a6b828e2bc38691b9ef2a89cf504c1`
+- `config/project_state.json` — `3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751`
+- `PROJECT_STATUS.md` — `ac989fc650fac590a204d06107c35a7519fe4d1ac80c4a071ddea0c9016332e3`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1107,56 +1107,56 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/generated/p10_1_led_offline_acceptance_leaf.json` — `d3be7a623810c9878b201d9e16d1174de909701b25ccc62440dc1db0b029c422`
 
+### `OBS-LED-SHUTDOWN-001`
+
+- `evidence/generated/p10_1_led_offline/summary.json` — `3efe608d1522005d7c4e7830c7a4c026880ccd6c9ad95626e645cc5aef411f1c`
+- `evidence/generated/p10_1r_shutdown_build_summary.json` — `9bca99a5653fc42e1b3e8c31a6649829bd8595ae79c787d8c363c23ab5cab077`
+
+### `P10_1R-RAW-PULSE-001`
+
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
+
 ### `P10_1R-ECHO-001`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
 
 ### `P10_1R-ECHO-003`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
 
 ### `P10_1R-ECHO-004`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013`
-
-### `P10_1R-ECHO-005`
-
-- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json` — `afebdcc5121df41e0a28fb7fa261ff1cc6e16fe50539d98ffcb6a05e9b705235`
-- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv` — `02b19278c096a1b9d52c0b6731c8ae550048af2ace2555d4ebad05d17671f4d8`
-- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R0.echo_tail.psv` — `d995645cc4a949c2a9d6b76ddfa6a06fef8675c6106fc9c54646fdb3b63843b4`
-- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv` — `105eb320501f9ee7b84e0f162d5fcc3da0907b01311c6344d129b29c8c7452dd`
-- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R1.echo_tail.psv` — `6bd4a8c68bbc82244c101a8a25f4b62dd7f8b3d2ca0fc0cf4f0dac8cd426ba34`
-- `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27/p10_ax7020_fixed_functional.bit` — `c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27`
-- `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f/p10_ax7020_rotating_functional.bit` — `bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac`
 
 ### `P10_1R-ACK-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b`
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
 
 ### `P10_1R-ACK-002`
 
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`
 
 ### `P10_1R-ACK-003`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b`
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`
 
 ### `P10_1R-ACK-004`
 
-- `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` — `ad41aace26388deef12e63a30ec2997951a958e0c031143e4054f7976d966473`
-- `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
-- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013`
-- `evidence/generated/p10_1r_functional_build_summary.json` — `b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4`
+- `evidence/generated/p10_1r_boundary_ack_skew_remediation.json` — `322965b3e4aefff87b488329e6827ec63b274c4993f5af509900ad33d2f908ed`
+- `evidence/generated/p10_1r_xsim/summary.json` — `969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0`
+- `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac`
+- `evidence/generated/p10_1r_functional_build_summary.json` — `73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70`
 
 ### `P10_1R-HOST-001`
 
-- `evidence/generated/p10_1r_ack_pipeline_model.json` — `9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b`
-- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b`
+- `evidence/generated/p10_1r_ack_pipeline_model.json` — `f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32`
+- `evidence/generated/p10_1r_ps_runtime_build_summary.json` — `2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131`

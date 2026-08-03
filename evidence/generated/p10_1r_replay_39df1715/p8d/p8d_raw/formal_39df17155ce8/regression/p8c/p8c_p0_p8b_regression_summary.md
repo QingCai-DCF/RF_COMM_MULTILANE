@@ -1,0 +1,31 @@
+# P8C P0-P8B regression
+
+```text
+STATUS: FAIL
+NO_HARDWARE_ACTIONS_EXECUTED: true
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+HARDWARE_SCOPE_PROMOTED: false
+```
+
+```json
+{
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "HARDWARE_SCOPE_PROMOTED": false,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "failures": [
+    "parent_offline_provenance"
+  ],
+  "generated_at_utc": "2026-08-03T09:06:34+00:00",
+  "p7_status_preserved": "PASS",
+  "p8b_status_preserved": "PASS",
+  "profile": "P8C_MULTI_PROFILE_OFFLINE",
+  "regression": {
+    "parent_environment": null,
+    "source": "parent run_offline_gates.py",
+    "status": "FAIL"
+  },
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "status": "FAIL",
+  "test_id": "P8C-P0-P8B-REGRESSION"
+}
+```

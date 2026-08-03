@@ -1,7 +1,7 @@
 # P10.1R RX admission design evidence
 
 - Status: `PASS`
-- Source commit: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
+- Source commit: `39df17155ce82e38366fbdac00c79584f0fe1afa`
 - Hardware actions executed: `false`
 
 ```json
@@ -18,9 +18,9 @@
   "focused_xsim": {
     "bytes": 5899,
     "path": "evidence/generated/p10_1r_xsim/summary.json",
-    "sha256": "26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25"
+    "sha256": "969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0"
   },
-  "generated_at_utc": "2026-08-02T15:21:30+00:00",
+  "generated_at_utc": "2026-08-03T07:55:34+00:00",
   "guard_selection_evidence": {
     "bytes": 3571,
     "path": "evidence/generated/p10_1r_echo_guard_selection.json",
@@ -44,9 +44,9 @@
       "sha256": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b"
     },
     {
-      "bytes": 104826,
+      "bytes": 105218,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "6af5c5b3c3c1b7d106f6c48fb492ab0a0a8650deb833a299bc68e176a75eca2d"
+      "sha256": "f32d2d015143492922baa4b6b4530cd0394d23d65dbef017b1629e9fff3337d9"
     }
   ],
   "safety_noninterference": {
@@ -61,7 +61,7 @@
   "schema_version": 1,
   "scope": "OFFLINE_DESIGN_AND_XSIM_ONLY",
   "selected_final_guard_cycles": 4096,
-  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "source_identity": {
     "ack_header_encoding": "byte11_bits_7_2_source_bit_1_lane_bit_0_direction",
     "airtime_bytes_added": 0,

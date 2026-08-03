@@ -2,33 +2,33 @@
   "artifact_freeze": {
     "bytes": 7993,
     "path": "evidence/generated/p10_1r_artifact_freeze.json",
-    "sha256": "05681978cba335cb4aa1c1cea41e8a4661017d64a307e9b037ded7064ec01a54"
+    "sha256": "d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467"
   },
   "authorization_readiness": {
     "bytes": 5730,
     "path": "evidence/generated/p10_1r_authorization.json",
-    "sha256": "966cad00aff10be245b50b48001768d8e9ef76aee93691109a5e54acd554d934"
+    "sha256": "cd0f5fcd5556d589024ce8824ed6a8a09459acf853274a0125036c2ed5c8c6fa"
   },
   "canonical_files": [
     {
-      "bytes": 230140,
+      "bytes": 232981,
       "path": "config/project_requirements.yaml",
-      "sha256": "fd38bf5ae5f10daf5c5523110526f718bc337cf05b429b4ee951d38cf9f01467"
+      "sha256": "693ee721aa3151070af654d4f31e1423654d0287da6bd942f5249e9cc2d1eff6"
     },
     {
-      "bytes": 37050,
+      "bytes": 39817,
       "path": "config/project_state.json",
-      "sha256": "eee0461bfbfd584607b9626e16394e0501f80899a541f3fcfdec674e73e8b45a"
+      "sha256": "3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751"
     },
     {
-      "bytes": 9074,
+      "bytes": 9866,
       "path": "PROJECT_STATUS.md",
-      "sha256": "a242d29a70d61c0f470ce39ba2cb1d45bb60a8080c7b08fd81848f37d07fc240"
+      "sha256": "ac989fc650fac590a204d06107c35a7519fe4d1ac80c4a071ddea0c9016332e3"
     },
     {
-      "bytes": 125730,
+      "bytes": 127197,
       "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
-      "sha256": "93761729b38c81ca643236e8404be392df46ef6761b9dff2b59bcac1462db0a4"
+      "sha256": "d38e5b845f867b9cd5fb3017d9f1e6202d574a5e48b403cf42050c09e59267c3"
     }
   ],
   "checks": [
@@ -64,7 +64,7 @@
       "command": "git diff --check",
       "return_code": 0,
       "status": "PASS",
-      "stderr_tail": "warning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.md', CRLF will be replaced by LF the next time Git touches it\n",
+      "stderr_tail": "warning: in the working copy of 'evidence/generated/plan_completion_audit.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'evidence/generated/vivado/nonhardware_build_summary.md', CRLF will be replaced by LF the next time Git touches it\n",
       "stdout_tail": ""
     }
   ],
@@ -90,77 +90,83 @@
     "ack_pipeline_model": {
       "bytes": 4610,
       "path": "evidence/generated/p10_1r_ack_pipeline_model.json",
-      "sha256": "9efcfadf2b568a7ce6d1391eb3711dd626f12c6007ce0e23a9374a0139daa99b"
+      "sha256": "f974db4306c1e163abc81c9bc122fa39468d047ee862df53ba6382e2f7e22c32"
     },
     "boundary_ack_remediation": {
-      "bytes": 6558,
+      "bytes": 6561,
       "path": "evidence/generated/p10_1r_boundary_ack_skew_remediation.json",
-      "sha256": "ad41aace26388deef12e63a30ec2997951a958e0c031143e4054f7976d966473"
+      "sha256": "322965b3e4aefff87b488329e6827ec63b274c4993f5af509900ad33d2f908ed"
     },
     "dual_endpoint_regression": {
       "bytes": 3977,
       "path": "evidence/generated/p10_1r_dual_endpoint_regression/summary.json",
-      "sha256": "be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013"
+      "sha256": "e61a691b401de01e87febcfaa283d8ede7db41eac2e13cfdaa3e9b2e39ec42ac"
     },
     "failure_baseline": {
       "bytes": 3903,
       "path": "evidence/generated/p10_1r_failure_baseline_summary.json",
-      "sha256": "a93bb54eb371ebd8b6c38382830f4cc801d93d37facc6b4debcab159f1a7d217"
+      "sha256": "76210a8da819d72c548a35a899923c64c6d42c0b5e80bab9cb8582264b32bad1"
     },
     "focused_xsim": {
       "bytes": 5899,
       "path": "evidence/generated/p10_1r_xsim/summary.json",
-      "sha256": "26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25"
+      "sha256": "969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0"
     },
     "full_offline_gate": {
-      "bytes": 555130,
-      "path": "evidence/generated/p10_1r_full_offline_regression/summary.json",
-      "sha256": "8d6116ba3ed5c1d58b51484d2b00993e6ac710762fff9849a07c8edba9e13fce"
+      "bytes": 330615,
+      "path": "evidence/generated/p10_1r_raw_led_full_offline_regression/summary.json",
+      "sha256": "55935fabb4516f1695df34335c29d4d0e3f6c160662deaaf82479f09ac989858"
     },
     "functional_build": {
-      "bytes": 19792,
+      "bytes": 19793,
       "path": "evidence/generated/p10_1r_functional_build_summary.json",
-      "sha256": "b0f91c692f95459af5a38ea35b4f8bb8effe173fb1cd224341bff8778df114d4"
+      "sha256": "73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70"
+    },
+    "led_offline": {
+      "bytes": 8241,
+      "path": "evidence/generated/p10_1_led_offline/summary.json",
+      "sha256": "3efe608d1522005d7c4e7830c7a4c026880ccd6c9ad95626e645cc5aef411f1c"
     },
     "p8c_regression": {
       "bytes": 4409,
-      "path": "evidence/generated/p10_1r_full_offline_regression/p8c/p8c_final_summary.json",
-      "sha256": "caaa67489741bb3585a39bf45db0fb49da0c38b00c9130bfd48db31f6ccd6e31"
+      "path": "evidence/generated/p10_1r_raw_led_full_offline_regression/p8c/p8c_final_summary.json",
+      "sha256": "ee2bccbc669f01b9f32c11d92c36c4eb211fe7f9639c8912d925af0941d3275a"
     },
     "p8d_regression": {
       "bytes": 6209,
-      "path": "evidence/generated/p10_1r_full_offline_regression/p8d/p8d_final_summary.json",
-      "sha256": "b3b71b4ab99b1b321cfac5fcd0473fb99c5af06c1b4b35aa32f35e6990ce23f3"
+      "path": "evidence/generated/p10_1r_raw_led_full_offline_regression/p8d/p8d_final_summary.json",
+      "sha256": "36128b291a621f615d24528905ad7079de6210aeee5fdee5ac3d1de54a88908d"
     },
     "repo_intake": {
       "bytes": 2993,
       "path": "evidence/generated/p10_1r_repo_intake.json",
-      "sha256": "e9a1f058a51f2297dbfb2eea2f1704c824a381cf1cb6a4622791a8a1e615c125"
+      "sha256": "2b6e14d27ea13f0eaac9b4f1dac4c5187f984a7b070c71fbb6d4a238df9a50d3"
     },
     "runtime_build": {
       "bytes": 10807,
       "path": "evidence/generated/p10_1r_ps_runtime_build_summary.json",
-      "sha256": "1aeb90d738cd18bc7048a5730544f267d14f5031118dedaabc4f1b546b91241b"
+      "sha256": "2fbbf14f76d0f148650854b4ff687db3b308005b037bf1d516879f9e584d8131"
     },
     "rx_admission_design": {
       "bytes": 2329,
       "path": "evidence/generated/p10_1r_rx_admission_design.json",
-      "sha256": "a56bce219211bfbc5ecd1675cec5fb397d8339edba880501f0958d7f5e59d1b9"
+      "sha256": "921bbd618da045887c72b544599520fce3ec458cddb41e7b7723cc51c4e8dc37"
     },
     "self_echo_model": {
       "bytes": 2319,
       "path": "evidence/generated/p10_1r_self_echo_model.json",
-      "sha256": "64dec44eb58125aaa1c80c88e78d9bb01bf50802fbc48639ff1716cb938b3fb4"
+      "sha256": "b5e3987753feb36601b19607fd12a90a78aa8427a9799170f69138f8a960fb75"
     },
     "shutdown_build": {
-      "bytes": 8474,
+      "bytes": 8776,
       "path": "evidence/generated/p10_1r_shutdown_build_summary.json",
-      "sha256": "3a8623ff7aa6293164def5bdc22d562421bc2b16159973ad65cfe0db7d029b1e"
+      "sha256": "9bca99a5653fc42e1b3e8c31a6649829bd8595ae79c787d8c363c23ab5cab077"
     }
   },
   "network_used": false,
   "no_hardware": true,
   "offline_requirements": {
+    "OBS-LED-SHUTDOWN-001": "PASS",
     "P10_1R-ACK-001": "PASS",
     "P10_1R-ACK-002": "PASS",
     "P10_1R-ACK-003": "PASS",
@@ -168,22 +174,23 @@
     "P10_1R-ECHO-001": "PASS",
     "P10_1R-ECHO-003": "PASS",
     "P10_1R-ECHO-004": "PASS",
-    "P10_1R-HOST-001": "PASS"
+    "P10_1R-HOST-001": "PASS",
+    "P10_1R-RAW-PULSE-001": "PASS"
   },
   "role_build_evidence": {
     "fixed": {
       "bytes": 4658,
       "path": "evidence/generated/p10_1r_fixed_build.json",
-      "sha256": "7d86a7a362a268c5cedd2911dafd1c7f7af82ac01c5795eb1c6991773bf5c635"
+      "sha256": "11f5089b09234d89e92dc2f2ce2151652489bf002ad35a54d5a11f1c767e13e6"
     },
     "rotating": {
-      "bytes": 4692,
+      "bytes": 4694,
       "path": "evidence/generated/p10_1r_rotating_build.json",
-      "sha256": "2a24430f9e20d12f6a9ef65d1c5dae864fd9f8dfad283f7f5d301e10821c9275"
+      "sha256": "90b8730c728a632097f3d5ccfee78b1dd77d3ce775eab5a54a1ac160602ec240"
     }
   },
   "schema_version": 1,
-  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "status": "PASS",
   "test_id": "P10_1R-EVIDENCE-CONSISTENCY"
 }

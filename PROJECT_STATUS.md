@@ -161,7 +161,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 ## P10.1R two-lane speed and stability remediation
 
 - Status: `PARTIAL`
-- Artifact source: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`
+- Artifact source: `39df17155ce82e38366fbdac00c79584f0fe1afa`
 - Artifact freeze: `evidence/generated/p10_1r_artifact_freeze.json`
 - Latest run: `p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d`
 - Current lane1 F1→R1 / R1→F1: `PASS_RAW_DIRECTIONAL_1000_OF_1000` / `PASS_RAW_DIRECTIONAL_1000_OF_1000`
@@ -192,6 +192,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d`.
+Last verified evidence commit: `39df17155ce82e38366fbdac00c79584f0fe1afa`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.
