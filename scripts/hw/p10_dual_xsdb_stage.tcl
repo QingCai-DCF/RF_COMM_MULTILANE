@@ -951,6 +951,12 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
   puts $handle "sample|module|direction|lane_mask|tail_cycles|sender_raw|sender_raw_while_tx|sender_blanked_raw|sender_blanked_frame|sender_blanked_crc_valid|sender_local_source_reject|sender_accepted_remote|receiver_raw|receiver_accepted_remote|sender_last_txd_rise|sender_last_txd_fall|sender_first_rxd_after_tx|sender_last_rxd_after_tx|sender_overlap_violation|sender_admission_violation|sender_non_target_accepted|sender_cross_lane_accepted|receiver_overlap_violation|receiver_admission_violation|receiver_non_target_accepted|receiver_cross_lane_accepted"
   set module [expr {$direction == 0 ? ($lane == 1 ? "F0" : "F1") :
       ($lane == 1 ? "R0" : "R1")}]
+  # PHY-ready already proves the mandatory >=500 us startup guard.  This
+  # additional diagnostic-only settle interval tests whether the external
+  # receiver needs margin beyond that ready edge; the source endpoint remains
+  # unsubmitted and therefore cannot transmit during the interval.
+  set receiver_settle_ms 5
+  p10_say "P10_1R_ECHO_RECEIVER_SETTLE_MS_${module}=$receiver_settle_ms"
   for {set sample 0} {$sample < $sample_count} {incr sample} {
     p10_check_abort
     foreach role {fixed rotating} {
@@ -966,6 +972,7 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
     set p10_active_case_label [format "%s_%04d" $label $sample]
     p10_publish_case $receiver $d $sequence
     p10_wait_receiver_primed $receiver $d
+    after $receiver_settle_ms
     p10_publish_case $sender $d $sequence
     set terminal [p10_wait_pair_terminal $sequence 10000]
     set fixed_status [p10_read32 fixed 0x00020020]

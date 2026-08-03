@@ -137,6 +137,20 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("if {$state == 5} {", wait)
         self.assertIn("p10_wait_ready $role $label 1000", reboot)
 
+    def test_echo_probe_has_diagnostic_receiver_settle_before_source(self) -> None:
+        tcl = TCL_PATH.read_text(encoding="utf-8")
+        echo_start = tcl.index("proc p10_run_p101r_echo_sweep")
+        echo_end = tcl.index("proc p10_probe_1plus1", echo_start)
+        echo = tcl[echo_start:echo_end]
+
+        self.assertIn("set receiver_settle_ms 5", echo)
+        self.assertIn("P10_1R_ECHO_RECEIVER_SETTLE_MS_", echo)
+        primed = echo.index("p10_wait_receiver_primed $receiver $d")
+        settle = echo.index("after $receiver_settle_ms", primed)
+        source = echo.index("p10_publish_case $sender $d $sequence", settle)
+        self.assertLess(primed, settle)
+        self.assertLess(settle, source)
+
     def test_streaming_plan_has_goal_recovery_matrix(self) -> None:
         items = self.runner.build_plans()["streaming_64m"]
         cases = [item for item in items if isinstance(item, self.runner.Case)]
