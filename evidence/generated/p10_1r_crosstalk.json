@@ -1,24 +1,13 @@
 {
-  "errors": [
-    "XSDB PASS marker missing",
-    "exactly one final endpoint-shutdown row required",
-    "remediation_raw_lane1_f2r_64: rotating service state",
-    "remediation_raw_lane1_f2r_64: rotating command status",
-    "remediation_raw_lane1_f2r_64: destination raw RX lane1",
-    "immutable plan case missing: remediation_raw_lane1_f2r_1024",
-    "bounded window has no observation: remediation_frame_lane1_f2r",
-    "immutable plan case missing: remediation_raw_lane1_r2f_64",
-    "immutable plan case missing: remediation_raw_lane1_r2f_1024",
-    "bounded window has no observation: remediation_frame_lane1_r2f"
-  ],
-  "generated_at_utc": "2026-08-03T06:17:23+00:00",
+  "errors": [],
+  "generated_at_utc": "2026-08-03T11:45:56+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260803T061448Z_cce2180b_c1370686_bfb1c51d/crosstalk_remediation/stage_summary.json",
-  "raw_summary_sha256": "db84238efd86887ca104c6406e2f7a1ab547fbf68d83d9f5c840cc0fe63f48ac",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6/crosstalk_remediation/stage_summary.json",
+  "raw_summary_sha256": "0f881765c9a0c6b53933dc28fadbf99c44437d1f66974703128c6ca4fa6b6530",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260803T061448Z_cce2180b_c1370686_bfb1c51d",
+  "run_id": "p10_1r_20260803T114324Z_39df1715_56533798_df0c60f6",
   "schema_version": 1,
   "semantics": {
     "cross_lane_accepted_data_count": 0,
@@ -26,10 +15,10 @@
     "local_source_rejection_enabled": true,
     "local_source_rejection_observed": false,
     "other_lane_blanked_count": 0,
-    "remote_acceptance_reconciled_case_count": 2,
+    "remote_acceptance_reconciled_case_count": 4,
     "same_module_accepted_data_count": 0
   },
-  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
-  "status": "FAIL",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "status": "PASS",
   "test_id": "P10_1R-HW-CROSSTALK"
 }
