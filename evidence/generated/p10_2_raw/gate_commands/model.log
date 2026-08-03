@@ -1,0 +1,1025 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/model_p10_2_4lane.py --json-summary evidence/generated/p10_2_raw/model.json
+RETURN_CODE=0
+STDOUT_BEGIN
+{
+  "arq": {
+    "ack_threshold": 32,
+    "bundle_burst_frames": 32,
+    "duplicate_commit": 0,
+    "global_outstanding": 32,
+    "host_in_fast_path": false,
+    "objects_in_flight": 4,
+    "per_object_direction_reversal": false,
+    "sack_window": 32,
+    "stale_commit": 0,
+    "status": "PASS"
+  },
+  "current_run_hardware_authorization": false,
+  "echo_safety": {
+    "echo_events": 64000,
+    "local_source_application_commits": 0,
+    "local_source_rejected_frame_count": 1024,
+    "matrix_cells": [
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "F0",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "R0",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "F0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "F1",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "R1",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "F1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "F2",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "R2",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "F2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "F3",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "R3",
+        "tx": "F3"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "F0",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "R0",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "R0"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "F1",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "R1",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "R1"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "F2",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F3",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "R2",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R3",
+        "tx": "R2"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F0",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F1",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "remote_non_target_cross_lane",
+        "raw_visible": false,
+        "rx": "F2",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": true,
+        "classification": "remote_target",
+        "raw_visible": true,
+        "rx": "F3",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R0",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R1",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_endpoint_cross_lane",
+        "raw_visible": false,
+        "rx": "R2",
+        "tx": "R3"
+      },
+      {
+        "accepted_crc_valid": false,
+        "classification": "same_module_echo",
+        "raw_visible": true,
+        "rx": "R3",
+        "tx": "R3"
+      }
+    ],
+    "matrix_dimension": "8x8",
+    "non_target_accepted_crc_valid_frames": 0,
+    "other_lanes_blanked_by_lane_i": 0,
+    "per_lane_global_permit_channels": 0,
+    "physical_modules": {
+      "F0": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "F1": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "F2": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "F3": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "R0": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "R1": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "R2": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      },
+      "R3": {
+        "continuous_high_limit_cycles": 64,
+        "design_target_high_cycles": 11520,
+        "hard_limit_high_cycles_exclusive": 12800,
+        "modeled_max_continuous_high_cycles": 8,
+        "rolling_window_cycles": 64000,
+        "same_module_accepted_echo_frames": 0,
+        "startup_cycles": 32000,
+        "tx_rx_overlap_events": 0
+      }
+    },
+    "raw_visible_cells": 16,
+    "single_global_permit_channels_per_endpoint": 1,
+    "status": "PASS",
+    "target_remote_accepted_cells": 8
+  },
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "performance": {
+    "ack_frame_airtime_us": 48.0,
+    "assumptions": {
+      "dma_ps_crc_sha_remote_verification": "overlapped and provisioned above optical bottleneck",
+      "exact_per_module_duty_target": 0.18,
+      "modeled_per": 0.002,
+      "pipeline_efficiency": 0.99,
+      "ppm_txd_high_fraction_during_frame": 0.25,
+      "same_module_guard_each_direction_us": 64.0
+    },
+    "bottleneck": "per-module 18% exact rolling-duty target plus frame airtime",
+    "candidate_count": 20,
+    "chosen": {
+      "ack_threshold": 32,
+      "burst_frames": 32,
+      "cycle_us": 6376.0,
+      "hard_target_pass": true,
+      "modeled_application_goodput_bps": 9791249,
+      "objects_in_flight": 4,
+      "outstanding": 32,
+      "sack_window": 32,
+      "stretch_pass": true,
+      "wire_format_implemented": true
+    },
+    "claim_scope": "OFFLINE_FEASIBILITY_ONLY",
+    "data_frame_airtime_us": 558.0,
+    "duty_limited_l1_ceiling_bps": 10198710,
+    "frame_payload_ceiling_bps": 14164875,
+    "hard_target_bps": 8000000,
+    "hard_target_status": "PASS",
+    "modeled_application_goodput_bps": 9791249,
+    "raw_capability_bps": 16000000,
+    "rfap_useful_ceiling_bps": 10191245,
+    "status": "PASS",
+    "stretch_status": "PASS",
+    "stretch_target_bps": 9600000
+  },
+  "randomized_events": {
+    "echo_admission_events": 56000,
+    "fault_reset_events": 28000,
+    "invariant_failures": 0,
+    "per_seed": [
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 1
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 7
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 17
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 31
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 127
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 1024
+      },
+      {
+        "echo": 8000,
+        "fault_reset": 4000,
+        "scheduler": 15000,
+        "seed": 20260803
+      }
+    ],
+    "scheduler_protocol_events": 105000,
+    "seeds": [
+      1,
+      7,
+      17,
+      31,
+      127,
+      1024,
+      20260803
+    ],
+    "status": "PASS"
+  },
+  "scheduler": {
+    "all_masks_1_to_f_covered": true,
+    "degradation": [
+      {
+        "active_lane_count": 3,
+        "eligible_mask": "0x7",
+        "healthy_lane_blocked": false,
+        "unavailable_mask": "0x8"
+      },
+      {
+        "active_lane_count": 2,
+        "eligible_mask": "0x3",
+        "healthy_lane_blocked": false,
+        "unavailable_mask": "0xC"
+      },
+      {
+        "active_lane_count": 1,
+        "eligible_mask": "0x1",
+        "healthy_lane_blocked": false,
+        "unavailable_mask": "0xE"
+      },
+      {
+        "active_lane_count": 4,
+        "eligible_mask": "0xF",
+        "healthy_lane_blocked": false,
+        "unavailable_mask": "0x0"
+      },
+      {
+        "active_lane_count": 4,
+        "eligible_mask": "0xF",
+        "recovery": "1->4"
+      }
+    ],
+    "equal_weight_events": 122880,
+    "matrix": {
+      "0x1": {
+        "counts": [
+          8192,
+          0,
+          0,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x2": {
+        "counts": [
+          0,
+          8192,
+          0,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x3": {
+        "counts": [
+          4096,
+          4096,
+          0,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x4": {
+        "counts": [
+          0,
+          0,
+          8192,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x5": {
+        "counts": [
+          4096,
+          0,
+          4096,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x6": {
+        "counts": [
+          0,
+          4096,
+          4096,
+          0
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x7": {
+        "counts": [
+          2731,
+          2731,
+          2730,
+          0
+        ],
+        "healthy_lane_spread": 1,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x8": {
+        "counts": [
+          0,
+          0,
+          0,
+          8192
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0x9": {
+        "counts": [
+          4096,
+          0,
+          0,
+          4096
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xA": {
+        "counts": [
+          0,
+          4096,
+          0,
+          4096
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xB": {
+        "counts": [
+          2731,
+          2731,
+          0,
+          2730
+        ],
+        "healthy_lane_spread": 1,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xC": {
+        "counts": [
+          0,
+          0,
+          4096,
+          4096
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xD": {
+        "counts": [
+          2731,
+          0,
+          2731,
+          2730
+        ],
+        "healthy_lane_spread": 1,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xE": {
+        "counts": [
+          0,
+          2731,
+          2731,
+          2730
+        ],
+        "healthy_lane_spread": 1,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      },
+      "0xF": {
+        "counts": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "healthy_lane_spread": 0,
+        "inactive_lane_scheduled": 0,
+        "status": "PASS"
+      }
+    },
+    "migration": {
+      "acknowledged_frame_migrated": 0,
+      "duplicate_commit": 0,
+      "stale_commit": 0,
+      "unacknowledged_retry_migrated": 4096
+    },
+    "required_masks_covered": [
+      "0x1",
+      "0x2",
+      "0x4",
+      "0x8",
+      "0x3",
+      "0x5",
+      "0xA",
+      "0x7",
+      "0xB",
+      "0xD",
+      "0xE",
+      "0xF"
+    ],
+    "status": "PASS",
+    "weighted_counts_1_2_3_4": [
+      5000,
+      10000,
+      15000,
+      20000
+    ]
+  },
+  "schema_version": 1,
+  "scope": "OFFLINE_MODEL_ONLY",
+  "status": "PASS",
+  "streaming": {
+    "cases": [
+      {
+        "atomic_commit_count": 1,
+        "bytes": 67108864,
+        "descriptor_leak": 0,
+        "descriptors": 1024,
+        "double_completion": 0,
+        "duplicate_commit": 0,
+        "input_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "integrity_match": true,
+        "lane_descriptors": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "output_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "partial_commit": 0,
+        "retry_migrations": 0,
+        "stale_commit": 0,
+        "unavailable_lanes": []
+      },
+      {
+        "atomic_commit_count": 1,
+        "bytes": 134217728,
+        "descriptor_leak": 0,
+        "descriptors": 2048,
+        "double_completion": 0,
+        "duplicate_commit": 0,
+        "input_sha256": "3c93a83c627be325512b7971df59d4470ea19cb75e596e7f1f67b942ef4de7c2",
+        "integrity_match": true,
+        "lane_descriptors": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "output_sha256": "3c93a83c627be325512b7971df59d4470ea19cb75e596e7f1f67b942ef4de7c2",
+        "partial_commit": 0,
+        "retry_migrations": 0,
+        "stale_commit": 0,
+        "unavailable_lanes": []
+      },
+      {
+        "atomic_commit_count": 1,
+        "bytes": 67108864,
+        "descriptor_leak": 0,
+        "descriptors": 1024,
+        "double_completion": 0,
+        "duplicate_commit": 0,
+        "input_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "integrity_match": true,
+        "lane_descriptors": [
+          342,
+          341,
+          0,
+          341
+        ],
+        "output_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "partial_commit": 0,
+        "retry_migrations": 4,
+        "stale_commit": 0,
+        "unavailable_lanes": [
+          2
+        ]
+      },
+      {
+        "atomic_commit_count": 1,
+        "bytes": 67108864,
+        "descriptor_leak": 0,
+        "descriptors": 1024,
+        "double_completion": 0,
+        "duplicate_commit": 0,
+        "input_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "integrity_match": true,
+        "lane_descriptors": [
+          342,
+          341,
+          341,
+          0
+        ],
+        "output_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "partial_commit": 0,
+        "retry_migrations": 4,
+        "stale_commit": 0,
+        "unavailable_lanes": [
+          3
+        ]
+      },
+      {
+        "atomic_commit_count": 1,
+        "bytes": 67108864,
+        "descriptor_leak": 0,
+        "descriptors": 1024,
+        "double_completion": 0,
+        "duplicate_commit": 0,
+        "input_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "integrity_match": true,
+        "lane_descriptors": [
+          512,
+          512,
+          0,
+          0
+        ],
+        "output_sha256": "85fa1463c6088d8727c3839f54beae1d3d3c537cfcff535f1b620b1e1955ace2",
+        "partial_commit": 0,
+        "retry_migrations": 4,
+        "stale_commit": 0,
+        "unavailable_lanes": [
+          2,
+          3
+        ]
+      }
+    ],
+    "descriptor_wrap": "PASS",
+    "incremental_crc32": "PRESERVED_BY_CONTRACT_AND_SOFTWARE_REGRESSION",
+    "incremental_sha256": "PASS",
+    "reset_during_streaming": {
+      "aborted_partial_commit": 0,
+      "recovery_status": "PASS"
+    },
+    "sequence_wrap": "PASS",
+    "status": "PASS"
+  },
+  "test_id": "P10_2-4LANE-DETERMINISTIC-OFFLINE-MODEL"
+}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END

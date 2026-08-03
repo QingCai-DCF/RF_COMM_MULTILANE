@@ -1,0 +1,126 @@
+{
+  "artifacts": {
+    "fixed": {
+      "bitstream": {
+        "bytes": 4045681,
+        "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98/p10_ax7020_fixed_functional.bit",
+        "read_only": true,
+        "sha256": "b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98"
+      },
+      "bsp": {
+        "bytes": 1856396,
+        "path": "artifacts/p10_2/6a470f71885214f4aaad0a5c1190d969647b985618ad4cd0bd66df4e6858e76f/ce293deeaeec749fcddb086855f67819ff32aaf85d8433fa3861ca4da08a563b/p10_ax7020_fixed_bsp.zip",
+        "read_only": true,
+        "sha256": "ce293deeaeec749fcddb086855f67819ff32aaf85d8433fa3861ca4da08a563b"
+      },
+      "elf": {
+        "bytes": 558516,
+        "path": "artifacts/p10_2/6a470f71885214f4aaad0a5c1190d969647b985618ad4cd0bd66df4e6858e76f/9e7dbb39dc21e6a44b0a0a23abbf784e67af656e625027ce2bda19f72fee5802/p10_fixed_runtime.elf",
+        "read_only": true,
+        "sha256": "9e7dbb39dc21e6a44b0a0a23abbf784e67af656e625027ce2bda19f72fee5802"
+      },
+      "xsa": {
+        "bytes": 1188359,
+        "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8/p10_ax7020_fixed_functional.xsa",
+        "read_only": true,
+        "sha256": "9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8"
+      }
+    },
+    "rotating": {
+      "bitstream": {
+        "bytes": 4045681,
+        "path": "artifacts/p10_2/8044477f5c99a2f6df0bf0c64ec6629b999869ecfcc5425c53f45f63d67d5e78/d0afa4ae6e1698d6b35229367617f7718edafc7877899c278db9c44c1f2e41e1/p10_ax7020_rotating_functional.bit",
+        "read_only": true,
+        "sha256": "d0afa4ae6e1698d6b35229367617f7718edafc7877899c278db9c44c1f2e41e1"
+      },
+      "bsp": {
+        "bytes": 1856541,
+        "path": "artifacts/p10_2/f7307c03d4087fbbbd60cb64f63456a50a3837afb7dee562b0271492fe90d43f/812eac6d7c32a80dd5450bf23b5d7026e302009b4e14b403b6e5a5b75099820b/p10_ax7020_rotating_bsp.zip",
+        "read_only": true,
+        "sha256": "812eac6d7c32a80dd5450bf23b5d7026e302009b4e14b403b6e5a5b75099820b"
+      },
+      "elf": {
+        "bytes": 558868,
+        "path": "artifacts/p10_2/f7307c03d4087fbbbd60cb64f63456a50a3837afb7dee562b0271492fe90d43f/a987603bde262a47a86e47b4505f518f03ce49e41b63db89d5daa17dac8a4c04/p10_rotating_runtime.elf",
+        "read_only": true,
+        "sha256": "a987603bde262a47a86e47b4505f518f03ce49e41b63db89d5daa17dac8a4c04"
+      },
+      "xsa": {
+        "bytes": 1187761,
+        "path": "artifacts/p10_2/8044477f5c99a2f6df0bf0c64ec6629b999869ecfcc5425c53f45f63d67d5e78/139e1598d3bbefcc63afd8dab0d16a0255c62d176bc483788ce91a9e7000e59a/p10_ax7020_rotating_functional.xsa",
+        "read_only": true,
+        "sha256": "139e1598d3bbefcc63afd8dab0d16a0255c62d176bc483788ce91a9e7000e59a"
+      }
+    }
+  },
+  "base_commit": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8",
+  "branch": "p10.2/4lane-offline-readiness",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "evidence_consistency_path": "evidence/generated/p10_2_evidence_consistency.json",
+  "fail": [],
+  "four_tx_peak_current_budget_a": 2.4,
+  "generated_at_utc": "2026-08-03T18:55:13.228518+00:00",
+  "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+  "hard_8mbps_feasibility": "PASS",
+  "hardware_actions_executed": false,
+  "lane_count": 4,
+  "lane_mask_matrix": "PASS",
+  "modeled_application_goodput_bps": 9791249,
+  "network_used": false,
+  "no_hardware": true,
+  "p10_1r_closed_tag": "p10.1r-2lane-speed-stability-closed",
+  "p10_1r_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+  "p10_1r_pass_tag": "p10.1r-2lane-speed-stability-pass",
+  "p10_1r_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "p10_3_hardware_ready": false,
+  "p10_3_missing_prerequisites": [
+    "F2/F3/R2/R3 physical identity and acceptance",
+    "both-board J11 wiring, rail, decoupling and powered-idle inspection",
+    "content-addressed four-lane shutdown bitstreams",
+    "new current-run P10.3 authorization"
+  ],
+  "p10_3_status": "PENDING_PHYSICAL_WIRING_AND_NEW_AUTHORIZATION",
+  "p11_status": "NOT_STARTED",
+  "pass": [
+    "P10.1R immutable closeout recheck",
+    "eight-slot inventory/quarantine",
+    "four-lane wiring and profiles",
+    "2/4/8 elaboration",
+    "8-module safety",
+    "8x8 echo model",
+    "mask 0x1..0xF scheduler/degradation",
+    "ARQ/SACK",
+    "64/128 MiB streaming model",
+    "8 Mbit/s application feasibility",
+    "fixed/rotating routed builds",
+    "four-lane software builds",
+    "P10.3 fail-closed command-only dry-run"
+  ],
+  "raw_capability_bps": 16000000,
+  "recommended": {
+    "ack_threshold": 32,
+    "burst_frames": 32,
+    "cycle_us": 6376.0,
+    "hard_target_pass": true,
+    "modeled_application_goodput_bps": 9791249,
+    "objects_in_flight": 4,
+    "outstanding": 32,
+    "sack_window": 32,
+    "stretch_pass": true,
+    "wire_format_implemented": true
+  },
+  "schema_version": 1,
+  "scope": "P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS",
+  "skip_with_reason": [
+    "P10.3 real hardware: no current authorization and physical prerequisites incomplete",
+    "two-hour qualification: expressly excluded by this Goal"
+  ],
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "stretch_9p6mbps": "PASS",
+  "test_id": "P10_2-OFFLINE-READINESS-FINAL",
+  "two_hour_qualification_executed": false,
+  "two_lane_baseline_status": "FROZEN_ACCEPTED",
+  "wiring_proposal_sha256": "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+}

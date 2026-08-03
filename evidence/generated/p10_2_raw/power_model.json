@@ -1,0 +1,32 @@
+{
+  "existing_supply_acceptance": "PENDING_MEASUREMENT_NOT_GUESSED",
+  "four_tx_peak_ired_current_a": 2.4,
+  "hardware_acceptance": "PENDING_P10_3",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "per_module_engineering_peak_a": 0.6,
+  "rows": [
+    {
+      "ired_long_term_average_at_18pct_a": 0.108,
+      "ired_peak_current_a": 0.6,
+      "minimum_effective_capacitance_for_0p1v_1us_f": 5.999999999999999e-06,
+      "simultaneous_tx_modules": 1
+    },
+    {
+      "ired_long_term_average_at_18pct_a": 0.216,
+      "ired_peak_current_a": 1.2,
+      "minimum_effective_capacitance_for_0p1v_1us_f": 1.1999999999999999e-05,
+      "simultaneous_tx_modules": 2
+    },
+    {
+      "ired_long_term_average_at_18pct_a": 0.432,
+      "ired_peak_current_a": 2.4,
+      "minimum_effective_capacitance_for_0p1v_1us_f": 2.3999999999999997e-05,
+      "simultaneous_tx_modules": 4
+    }
+  ],
+  "schema_version": 1,
+  "scope": "OFFLINE_REQUIREMENT_PACKAGE_ONLY",
+  "status": "PASS",
+  "test_id": "P10_2-FOUR-TX-POWER-REQUIREMENT-MODEL"
+}

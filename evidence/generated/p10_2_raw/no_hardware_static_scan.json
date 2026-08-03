@@ -1,0 +1,42 @@
+{
+  "allowed_offline_tools": [
+    "Vivado synthesis/implementation batch",
+    "XSIM",
+    "XSCT/Vitis build only"
+  ],
+  "changed_executable_files": [
+    "config/register_map/generated/ir_regs.py",
+    "scripts/build_p10_2_software.py",
+    "scripts/build_p10_ax7020_functional.py",
+    "scripts/build_p10_ps_runtime.py",
+    "scripts/finalize_p10_2_offline.py",
+    "scripts/generate_p10_2_board_package.py",
+    "scripts/generate_p10_3_evidence_templates.py",
+    "scripts/generate_register_headers.py",
+    "scripts/model_p10_2_4lane.py",
+    "scripts/model_p10_2_4lane_power.py",
+    "scripts/run_p10_2_4lane_offline_gate.py",
+    "scripts/run_p10_2_xsim.py",
+    "scripts/run_p10_3_ax7020_4lane_hardware.py",
+    "scripts/vitis/build_p10_ax7020_runtime.tcl",
+    "scripts/vivado/build_p10_ax7020_functional.tcl",
+    "tools/run_p10_2_4lane_offline_gate.ps1",
+    "tools/run_p10_3_ax7020_4lane_hardware.ps1"
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "forbidden_findings": [],
+  "fpga_programmed": false,
+  "hardware_actions_executed": false,
+  "hw_server_connected": false,
+  "jtag_connected": false,
+  "network_used": false,
+  "ps_elf_run": false,
+  "schema_version": 1,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "test_id": "P10_2-NO-HARDWARE-STATIC-SCAN",
+  "tfdu_driven": false,
+  "two_hour_qualification_executed": false,
+  "uart_written": false
+}

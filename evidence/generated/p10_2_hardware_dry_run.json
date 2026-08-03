@@ -1,0 +1,66 @@
+{
+  "hardware_actions_executed": false,
+  "hw_server_connected": false,
+  "jtag_connected": false,
+  "no_2h_stage_present": true,
+  "schema_version": 1,
+  "scope": "P10_3_COMMAND_VALIDATION_SELF_TEST_NO_BACKEND",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "test_id": "P10_2-HWPREP-001",
+  "tests": [
+    {
+      "errors": [
+        "CURRENT_RUN_AUTHORIZATION_REQUIRED"
+      ],
+      "expected": "CURRENT_RUN_AUTHORIZATION_REQUIRED",
+      "name": "no_authorization",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "OLD_F1_SELECTION_FORBIDDEN"
+      ],
+      "expected": "OLD_F1_SELECTION_FORBIDDEN",
+      "name": "old_f1",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "LANE_MASK_OUT_OF_RANGE"
+      ],
+      "expected": "LANE_MASK_OUT_OF_RANGE",
+      "name": "lane_mask_gt_f",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "ETHERNET_FORBIDDEN"
+      ],
+      "expected": "ETHERNET_FORBIDDEN",
+      "name": "ethernet",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "MOVEMENT_FORBIDDEN"
+      ],
+      "expected": "MOVEMENT_FORBIDDEN",
+      "name": "movement",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "TWO_HOUR_FORBIDDEN"
+      ],
+      "expected": "TWO_HOUR_FORBIDDEN",
+      "name": "two_hour",
+      "status": "PASS"
+    },
+    {
+      "errors": [],
+      "name": "valid_command_only_dry_run",
+      "status": "PASS"
+    }
+  ]
+}

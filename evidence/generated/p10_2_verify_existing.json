@@ -1,0 +1,49 @@
+{
+  "allow_skips": false,
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "hardware_actions_executed": false,
+  "mode": "verify-existing",
+  "no_cache": false,
+  "p10_1r_recheck": {
+    "checks": {
+      "authorization_closed": true,
+      "authorization_consumed": true,
+      "closed_tag_annotated": true,
+      "closed_tag_target": true,
+      "closeout_pass": true,
+      "consistency_pass": true,
+      "final_pass": true,
+      "future_inventory_positions_are_additive": true,
+      "main_at_closeout": true,
+      "old_f1_quarantined": true,
+      "p10_1r_inventory_identity_preserved": true,
+      "p10_1r_worktree_clean": true,
+      "pass_tag_annotated": true,
+      "pass_tag_target": true,
+      "shutdown_fixed": true,
+      "shutdown_rotating": true,
+      "source_ancestor_of_checkpoint": true
+    },
+    "current_run_hardware_authorization": false,
+    "errors": [],
+    "hardware_actions_executed": false,
+    "p10_1r_closed_tag": "p10.1r-2lane-speed-stability-closed",
+    "p10_1r_closed_tag_target": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8",
+    "p10_1r_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "p10_1r_pass_tag": "p10.1r-2lane-speed-stability-pass",
+    "p10_1r_pass_tag_target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "p10_1r_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "schema_version": 1,
+    "status": "PASS",
+    "test_id": "P10_2-P10_1R-FROZEN-RECHECK",
+    "verified_hash_records": 15
+  },
+  "p10_2_verify": {
+    "errors": [],
+    "hardware_actions_executed": false,
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "status": "PASS"
+}

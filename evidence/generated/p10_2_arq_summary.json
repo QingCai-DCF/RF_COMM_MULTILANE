@@ -1,0 +1,23 @@
+{
+  "ack_threshold": 32,
+  "bundle_burst_frames": 32,
+  "duplicate_commit": 0,
+  "global_outstanding": 32,
+  "hardware_actions_executed": false,
+  "host_in_fast_path": false,
+  "objects_in_flight": 4,
+  "per_object_direction_reversal": false,
+  "retry_migration": {
+    "acknowledged_frame_migrated": 0,
+    "duplicate_commit": 0,
+    "stale_commit": 0,
+    "unacknowledged_retry_migrated": 4096
+  },
+  "sack_window": 32,
+  "schema_version": 1,
+  "scope": "P10_2_4LANE_ARQ_SACK_OFFLINE_MODEL",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "stale_commit": 0,
+  "status": "PASS",
+  "test_id": "P10_2-ARQ-001"
+}

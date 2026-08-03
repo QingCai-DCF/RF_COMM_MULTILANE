@@ -1,0 +1,235 @@
+{
+  "all_masks_1_to_f_covered": true,
+  "degradation": [
+    {
+      "active_lane_count": 3,
+      "eligible_mask": "0x7",
+      "healthy_lane_blocked": false,
+      "unavailable_mask": "0x8"
+    },
+    {
+      "active_lane_count": 2,
+      "eligible_mask": "0x3",
+      "healthy_lane_blocked": false,
+      "unavailable_mask": "0xC"
+    },
+    {
+      "active_lane_count": 1,
+      "eligible_mask": "0x1",
+      "healthy_lane_blocked": false,
+      "unavailable_mask": "0xE"
+    },
+    {
+      "active_lane_count": 4,
+      "eligible_mask": "0xF",
+      "healthy_lane_blocked": false,
+      "unavailable_mask": "0x0"
+    },
+    {
+      "active_lane_count": 4,
+      "eligible_mask": "0xF",
+      "recovery": "1->4"
+    }
+  ],
+  "equal_weight_events": 122880,
+  "fixed_seed_events": 105000,
+  "hardware_actions_executed": false,
+  "matrix": {
+    "0x1": {
+      "counts": [
+        8192,
+        0,
+        0,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x2": {
+      "counts": [
+        0,
+        8192,
+        0,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x3": {
+      "counts": [
+        4096,
+        4096,
+        0,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x4": {
+      "counts": [
+        0,
+        0,
+        8192,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x5": {
+      "counts": [
+        4096,
+        0,
+        4096,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x6": {
+      "counts": [
+        0,
+        4096,
+        4096,
+        0
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x7": {
+      "counts": [
+        2731,
+        2731,
+        2730,
+        0
+      ],
+      "healthy_lane_spread": 1,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x8": {
+      "counts": [
+        0,
+        0,
+        0,
+        8192
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0x9": {
+      "counts": [
+        4096,
+        0,
+        0,
+        4096
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xA": {
+      "counts": [
+        0,
+        4096,
+        0,
+        4096
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xB": {
+      "counts": [
+        2731,
+        2731,
+        0,
+        2730
+      ],
+      "healthy_lane_spread": 1,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xC": {
+      "counts": [
+        0,
+        0,
+        4096,
+        4096
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xD": {
+      "counts": [
+        2731,
+        0,
+        2731,
+        2730
+      ],
+      "healthy_lane_spread": 1,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xE": {
+      "counts": [
+        0,
+        2731,
+        2731,
+        2730
+      ],
+      "healthy_lane_spread": 1,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    },
+    "0xF": {
+      "counts": [
+        2048,
+        2048,
+        2048,
+        2048
+      ],
+      "healthy_lane_spread": 0,
+      "inactive_lane_scheduled": 0,
+      "status": "PASS"
+    }
+  },
+  "migration": {
+    "acknowledged_frame_migrated": 0,
+    "duplicate_commit": 0,
+    "stale_commit": 0,
+    "unacknowledged_retry_migrated": 4096
+  },
+  "required_masks_covered": [
+    "0x1",
+    "0x2",
+    "0x4",
+    "0x8",
+    "0x3",
+    "0x5",
+    "0xA",
+    "0x7",
+    "0xB",
+    "0xD",
+    "0xE",
+    "0xF"
+  ],
+  "schema_version": 1,
+  "scope": "P10_2_4LANE_SCHEDULER_OFFLINE_MODEL",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "test_id": "P10_2-SCHED-001/P10_2-LANE-002/P10_2-LANE-003",
+  "weighted_counts_1_2_3_4": [
+    5000,
+    10000,
+    15000,
+    20000
+  ]
+}

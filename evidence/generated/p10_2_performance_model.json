@@ -1,0 +1,42 @@
+{
+  "ack_frame_airtime_us": 48.0,
+  "assumptions": {
+    "dma_ps_crc_sha_remote_verification": "overlapped and provisioned above optical bottleneck",
+    "exact_per_module_duty_target": 0.18,
+    "modeled_per": 0.002,
+    "pipeline_efficiency": 0.99,
+    "ppm_txd_high_fraction_during_frame": 0.25,
+    "same_module_guard_each_direction_us": 64.0
+  },
+  "bottleneck": "per-module 18% exact rolling-duty target plus frame airtime",
+  "candidate_count": 20,
+  "chosen": {
+    "ack_threshold": 32,
+    "burst_frames": 32,
+    "cycle_us": 6376.0,
+    "hard_target_pass": true,
+    "modeled_application_goodput_bps": 9791249,
+    "objects_in_flight": 4,
+    "outstanding": 32,
+    "sack_window": 32,
+    "stretch_pass": true,
+    "wire_format_implemented": true
+  },
+  "claim_scope": "OFFLINE_FEASIBILITY_ONLY",
+  "data_frame_airtime_us": 558.0,
+  "duty_limited_l1_ceiling_bps": 10198710,
+  "frame_payload_ceiling_bps": 14164875,
+  "hard_target_bps": 8000000,
+  "hard_target_status": "PASS",
+  "hardware_actions_executed": false,
+  "modeled_application_goodput_bps": 9791249,
+  "raw_capability_bps": 16000000,
+  "rfap_useful_ceiling_bps": 10191245,
+  "schema_version": 1,
+  "scope": "P10_2_OFFLINE_FEASIBILITY_NOT_HARDWARE_MEASUREMENT",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "stretch_status": "PASS",
+  "stretch_target_bps": 9600000,
+  "test_id": "P10_2-PERF-001/P10_2-PERF-002/P10_2-PERF-003"
+}

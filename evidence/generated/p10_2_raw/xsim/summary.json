@@ -1,0 +1,123 @@
+{
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "results": [
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_ax7020_4lane_profile.log",
+      "log_sha256": "64dfe983ec1fbcde887f8a48b2919f47221e4c97b74f90025d377fc700adbc4e",
+      "marker_present": true,
+      "required_marker": "TB_AX7020_4LANE_PROFILE=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_ax7020_4lane_profile"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_lane_mask_matrix.log",
+      "log_sha256": "5025646f236d78c50801285ae30d44735b77adcc1d9dee68334b28e1ec85f85a",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_LANE_MASK_MATRIX=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_lane_mask_matrix"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_scheduler_fairness.log",
+      "log_sha256": "326794907d4ae99b56e91af6e2eabb650708169be254e987b16d47d064b80c08",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_SCHEDULER_FAIRNESS=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_scheduler_fairness"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_retry_migration.log",
+      "log_sha256": "f8f849791d4563dfc47ee8ce5c8173e0ab6647f01dae5450f31532110ad2cf81",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_RETRY_MIGRATION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_retry_migration"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_echo_admission.log",
+      "log_sha256": "6eb764d681caf28d069c6c3deffd63f987f5d3679bf3ae070c7bcb13f23f93ed",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_ECHO_ADMISSION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_echo_admission"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_streaming.log",
+      "log_sha256": "98463348410d1db816f90a5cef57229d3abe4e653bf1b2a539c12f18aaff30a2",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_STREAMING=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_streaming"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_4lane_dual_endpoint.log",
+      "log_sha256": "2d9cb5fff48a7e0047a57791f0b32ad40fe5d0b451533b05e5adec91c1beb83b",
+      "marker_present": true,
+      "required_marker": "TB_4LANE_DUAL_ENDPOINT=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_4lane_dual_endpoint"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_2lane_4lane_regression.log",
+      "log_sha256": "589b84b37bbae11b7d7a4f2625e003eefef20b5fa91c8652fc4c9b8541830e7b",
+      "marker_present": true,
+      "required_marker": "TB_2LANE_4LANE_REGRESSION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_2lane_4lane_regression"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_p10_2_lane_count_elaboration.log",
+      "log_sha256": "202916d0fb68d8d1eecfc04f07319cede1482fdc3540fd8eafe69b1077d5925f",
+      "marker_present": true,
+      "required_marker": "TB_P10_2_LANE_COUNT_ELABORATION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_p10_2_lane_count_elaboration"
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "source_sha256": {
+    "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
+    "rtl/ir_ack_aggregator.sv": "bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa",
+    "rtl/ir_data_plane_top.sv": "8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab",
+    "rtl/ir_health_weighted_scheduler.sv": "0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a",
+    "rtl/ir_retry_migration.sv": "53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951",
+    "rtl/ir_selective_repeat_rx.sv": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028",
+    "rtl/ir_selective_repeat_tx.sv": "48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f",
+    "rtl/ir_seq_math_pkg.sv": "860c37a7565b19c7e2a1048c1552e12bba98662090f536a329258e69b292666e",
+    "rtl/ir_tfdu_exact_duty_accountant.sv": "05385eee22ad7ace59da7ced41296ce0480fcd0339d8dee3194534cc5af9cb2f",
+    "rtl/ir_tfdu_physical_module_safety.sv": "428a40acf4f5638294d8fd516c3ba86fbe3e90ce0bc0a2ddc9b2a4051020ac19",
+    "rtl/p10_1r_rx_admission.sv": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b",
+    "rtl/p10_2_lane_activity_leds.sv": "9c1df30f6a31b6e71b8bf1198a50d7228b8317d5909c336703c45cdae424bc7b",
+    "rtl/p9_4ppm_frame_rx.sv": "f70d8011a5352d4be1e864702381663e14b71daa5ad6fbb2b92358594688c8ac",
+    "rtl/p9_4ppm_frame_tx.sv": "33a014b8666f6c82942755e563fbefaba4b1ce5995fe9e019936f70fc49a9b0e",
+    "rtl/p9_optical_transport_core.sv": "aa4805f1e38af2a89abbc3a299a965fd31221502da99db6b64e7b1fce7a42e81",
+    "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
+    "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
+    "sim/tb/tb_p10_2_4lane_suite.sv": "8f9771204bc09f78e9e105de8978b021f6a5e7bc89acd34b28e4040b3f0c8208",
+    "sim/tb/tb_p10_2_lane_count_elaboration.sv": "9ddf40fe233bdc4de5da4a09517c2479507f01aef4010ac6314abcc2bf0e57ec"
+  },
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_2_4LANE_XSIM"
+}

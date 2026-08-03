@@ -63,6 +63,10 @@
     {
       "gate_id": "P10_1R",
       "status": "PASS"
+    },
+    {
+      "gate_id": "P10_2",
+      "status": "PASS"
     }
   ],
   "current_profiles": [
@@ -115,20 +119,42 @@
       "profile": "P10_AX7020_ROTATING_2LANE",
       "status": "SCOPED_STATIONARY_2LANE_HARDWARE_PASS",
       "xdc_path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+    },
+    {
+      "active_profile_path": "board_profiles/ax7020_fixed_4lane/ACTIVE_PROFILE.json",
+      "available_physical_lanes": 4,
+      "board": "AX7020-F",
+      "jtag_cable_serial": "210249855178",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": "board_profiles/ax7020_fixed_4lane/pinmap.csv",
+      "profile": "P10_2_AX7020_FIXED_4LANE",
+      "status": "OFFLINE_READY_PHYSICAL_WIRING_AND_NEW_MODULES_PENDING",
+      "xdc_path": "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc"
+    },
+    {
+      "active_profile_path": "board_profiles/ax7020_rotating_4lane/ACTIVE_PROFILE.json",
+      "available_physical_lanes": 4,
+      "board": "AX7020-R",
+      "jtag_cable_serial": "210512180081",
+      "part": "xc7z020clg400-2",
+      "pinmap_path": "board_profiles/ax7020_rotating_4lane/pinmap.csv",
+      "profile": "P10_2_AX7020_ROTATING_4LANE",
+      "status": "OFFLINE_READY_PHYSICAL_WIRING_AND_NEW_MODULES_PENDING",
+      "xdc_path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
     }
   ],
-  "current_program_stage": "USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS",
+  "current_program_stage": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
   "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
+  "last_hardware_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
   "last_hardware_run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
   "last_hardware_stage": "P10_1R",
-  "last_hardware_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
-  "last_verified_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "last_verified_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
   "legacy_known_failures": [
     {
       "current_authority": false,
@@ -312,6 +338,23 @@
     "runtime_build_source_commit": "a07f218434e2fb3000f1d7c086917169fb500163",
     "status": "OFFLINE_PASS_HARDWARE_PENDING",
     "verification_scope": "P10_1_AX7020_PL_ACTIVITY_LED_OFFLINE_VALIDATED_PENDING_HARDWARE"
+  },
+  "p10_1r_closeout": {
+    "authorization_consumed": true,
+    "closed_tag": "p10.1r-2lane-speed-stability-closed",
+    "current_run_hardware_authorization": false,
+    "evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "evidence_path": "evidence/generated/p10_1r_closeout_summary.json",
+    "evidence_sha256": "4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170",
+    "git_metadata_path": "evidence/generated/p10_1r_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313",
+    "hardware_actions_executed": false,
+    "module_inventory_path": "config/hardware/tfdu_module_inventory.yaml",
+    "module_inventory_sha256": "8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc",
+    "pass_tag": "p10.1r-2lane-speed-stability-pass",
+    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "status": "PASS",
+    "two_hour_qualification_executed": false
   },
   "p10_1r_remediation": {
     "artifact_freeze_path": "evidence/generated/p10_1r_artifact_freeze.json",
@@ -604,24 +647,37 @@
     "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
     "status": "PASS"
   },
-  "p10_1r_closeout": {
-    "authorization_consumed": true,
-    "closed_tag": "p10.1r-2lane-speed-stability-closed",
-    "current_run_hardware_authorization": false,
-    "evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
-    "evidence_path": "evidence/generated/p10_1r_closeout_summary.json",
-    "evidence_sha256": "4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170",
-    "git_metadata_path": "evidence/generated/p10_1r_git_checkpoint_metadata.json",
-    "git_metadata_sha256": "46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313",
-    "hardware_actions_executed": false,
-    "module_inventory_path": "config/hardware/tfdu_module_inventory.yaml",
-    "module_inventory_sha256": "8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc",
-    "pass_tag": "p10.1r-2lane-speed-stability-pass",
-    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
-    "status": "PASS",
-    "two_hour_qualification_executed": false
-  },
   "p10_1r_status": "PASS",
+  "p10_2_offline_readiness": {
+    "current_run_hardware_authorization": false,
+    "final_evidence_path": "evidence/generated/p10_2_final_summary.json",
+    "final_evidence_sha256": "9f3b5ef92b6e75435bb102dc2c96ab55568b3cc1878df9f372291499e6c4c164",
+    "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+    "hardware_actions_executed": false,
+    "hardware_ready": false,
+    "missing_prerequisites": [
+      "physical intake and acceptance of F2/F3/R2/R3",
+      "four-lane wiring/rail/decoupling inspection on both boards",
+      "content-addressed four-lane shutdown bitstreams",
+      "new P10.3 current-run hardware authorization"
+    ],
+    "modeled_application_goodput_bps": 9791249,
+    "not_promoted_to": [
+      "P10_3_HARDWARE_PASS",
+      "P11",
+      "8x32",
+      "600_RPM",
+      "PRODUCT_FINAL"
+    ],
+    "p10_3_status": "PENDING_PHYSICAL_WIRING_AND_NEW_AUTHORIZATION",
+    "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+    "status": "PASS",
+    "two_hour_qualification_executed": false,
+    "two_lane_baseline_status": "FROZEN_ACCEPTED",
+    "wiring_proposal_sha256": "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+  },
+  "p10_2_status": "PASS",
+  "p10_3_status": "PENDING_PHYSICAL_WIRING_AND_NEW_AUTHORIZATION",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -1013,6 +1069,7 @@
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
   "state_revision": "P10-1R-HARDWARE-PASS-1",
+  "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",
   "z7020_target_status": "PENDING_Z7020_HW"
 }

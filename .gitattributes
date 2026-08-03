@@ -95,3 +95,11 @@ evidence/generated/p10_1r_*/** -text -eol -whitespace
 evidence/generated/vivado/p10_1r/** -text -eol -whitespace
 evidence/generated/vivado/p10_1r_shutdown/** -text -eol -whitespace
 evidence/generated/vitis/p10_1r_runtime/** -text -eol -whitespace
+
+# Preserve byte-exact P10.2 content-addressed artifacts and referenced vendor
+# outputs. Their original spacing and line endings are covered by SHA256.
+artifacts/p10_2/** -text -eol -whitespace
+evidence/generated/p10_2_raw/**/*.log -text -eol -whitespace
+evidence/generated/p10_2_software/** -text -eol -whitespace
+evidence/generated/vivado/p10_2_4lane/** -text -eol -whitespace
+evidence/generated/vitis/p10_2_4lane_runtime/** -text -eol -whitespace

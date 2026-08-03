@@ -18,7 +18,7 @@ P10_1_HARDWARE_STATUS: FAIL
 P10_1R_STATUS: PASS
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
-CURRENT_PROGRAM_STAGE: USER_DECISION_AFTER_2LANE_SPEED_STABILITY_PASS
+CURRENT_PROGRAM_STAGE: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
 CURRENT_RUN_HARDWARE_AUTHORIZATION: false
 LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 LAST_HARDWARE_STAGE: P10_1R
@@ -192,6 +192,6 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `ENVIRONMENT` | `PENDING` |
 | `OPTICS` | `PENDING` |
 
-Last verified evidence commit: `39df17155ce82e38366fbdac00c79584f0fe1afa`.
+Last verified evidence commit: `dd44b0a4163ce74a491bae49bb6079b82dd94b7d`.
 
 P8A, P8B, and completed P8C/P8D portable-function gates were executed with `NO_HARDWARE=1`; they do not create or promote hardware acceptance scope.

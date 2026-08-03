@@ -1,0 +1,78 @@
+{
+  "artifacts": [
+    {
+      "bytes": 346012,
+      "path": "evidence/generated/p10_2_software/p10_2_4lane_host_native_test.exe",
+      "sha256": "ad3bae180fa94ab34f667ebde3d53a8afff72ec3a25e448db8b46787654cc514"
+    },
+    {
+      "bytes": 66264,
+      "path": "evidence/generated/p10_2_software/p10_2_fixed_service.elf",
+      "sha256": "603f7bb4a2302d141ae12f75f5ca6444071061463de25f595ef5612c85fc791e"
+    },
+    {
+      "bytes": 66264,
+      "path": "evidence/generated/p10_2_software/p10_2_rotating_service.elf",
+      "sha256": "35a8c04c3ff750a6702773c8784e564c3e9754ff1474a2576960507a549660f7"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-08-03T18:38:22.141439+00:00",
+  "hardware_actions_executed": false,
+  "lane_count": 4,
+  "lane_mask_max": "0xF",
+  "logs": [
+    {
+      "bytes": 582,
+      "path": "evidence/generated/p10_2_software/host_build.log",
+      "sha256": "74ada962be74b3cd5a77e4ee0dfeb0cb6d9ee912556c7cc1e11af7843f508182"
+    },
+    {
+      "bytes": 341,
+      "path": "evidence/generated/p10_2_software/host_run.log",
+      "sha256": "317dce715f5497275122fe610cdfbd0cfea1bb9b240d368f859a69a498e65d65"
+    },
+    {
+      "bytes": 1062,
+      "path": "evidence/generated/p10_2_software/fixed_arm_build.log",
+      "sha256": "9df13b1ccfec20a94149e685b64402f93550634042b25db0a7c0f2fa4e897535"
+    },
+    {
+      "bytes": 2029,
+      "path": "evidence/generated/p10_2_software/fixed_arm_readelf.log",
+      "sha256": "9afe3beaf296fb9da681d0bef820c787b3ba6a6c690cc5f0b7a8c868f4fdcce6"
+    },
+    {
+      "bytes": 1068,
+      "path": "evidence/generated/p10_2_software/rotating_arm_build.log",
+      "sha256": "6d1462d8276d05c5c9e4ff0a071947cd389cfee5588b369c9c724e0bea9837fe"
+    },
+    {
+      "bytes": 2032,
+      "path": "evidence/generated/p10_2_software/rotating_arm_readelf.log",
+      "sha256": "c005bd9be681529d36e23d8be691d1b1448ac38bbf71e7f6826895d5b2f65135"
+    }
+  ],
+  "network_used": false,
+  "no_hardware": true,
+  "role_fixed_at_compile_time": true,
+  "schema_version": 1,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "source_sha256": {
+    "config/performance/p10_2_4lane.yaml": "374e7680296efea458dceb9987853f9ec018e71bd02a1a185cb3c0fe6733b304",
+    "config/register_map/ir_axi_regs.yaml": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159",
+    "scripts/build_p10_2_software.py": "907e0073dfb48b31a9263661b25e48f00dd19eaf7dcb5e9f62100cc4ff4be7c6",
+    "software/ps_driver/ir_regs.h": "d3765591df6728285e5ee31951b5564f57f025062a8ebfc1b7ddf96b86941cd7",
+    "software/ps_driver/p10_1_contract.h": "c3dbba9c7b324562e2ea7ba326fde30c1dfe2c9bf82186f6986c6462ca346486",
+    "software/ps_driver/p10_1_hal_baremetal.c": "bbcd201f788795e1b95d9ec3e5a703e5cb7bfa61e59a56084f2116ab3870daa9",
+    "software/ps_driver/p10_1_hal_freertos.c": "a27dedf169c75006bda25299504682f02750bf9f663dd828f8d09b3d89a1d4c9",
+    "software/ps_driver/p10_1_hal_host.c": "fce3d31ef853b6aee17970dd6dd0bd2f63310c1ffaa42d89ebc9b681a010a32b",
+    "software/ps_driver/p10_1_service.c": "2551fe6e17547b58d81a75550680b8af2ff40ffa55ffda1184e6733e31f57839",
+    "software/ps_driver/p10_1_service.h": "25ab064a235de4a77221eef8b82ab74fd1ab19eef879794e595d77e66e69ecfd",
+    "software/ps_driver/p10_1_trace.c": "18b7613a2e7f0c38319fced81db418ab86fc4fecc9efa7af9bdf32bab8a7a202",
+    "tests/p10_1/p10_1_host_native_test.c": "e8fe4797681b2c6dfb59d86b7abc047e7e765094259cc10875d2a4474d3f9d41"
+  },
+  "status": "PASS",
+  "test_id": "P10_2-FOUR-LANE-SOFTWARE-COMPILE"
+}

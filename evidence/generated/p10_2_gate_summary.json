@@ -1,0 +1,241 @@
+{
+  "allow_skips_requested": false,
+  "branch": "p10.2/4lane-offline-readiness",
+  "core_skips_allowed": false,
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-08-03T18:55:13.668884+00:00",
+  "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+  "hardware_actions_executed": false,
+  "mode": "full",
+  "network_used": false,
+  "no_cache": true,
+  "no_hardware": true,
+  "no_hardware_static_scan": {
+    "allowed_offline_tools": [
+      "Vivado synthesis/implementation batch",
+      "XSIM",
+      "XSCT/Vitis build only"
+    ],
+    "changed_executable_files": [
+      "config/register_map/generated/ir_regs.py",
+      "scripts/build_p10_2_software.py",
+      "scripts/build_p10_ax7020_functional.py",
+      "scripts/build_p10_ps_runtime.py",
+      "scripts/finalize_p10_2_offline.py",
+      "scripts/generate_p10_2_board_package.py",
+      "scripts/generate_p10_3_evidence_templates.py",
+      "scripts/generate_register_headers.py",
+      "scripts/model_p10_2_4lane.py",
+      "scripts/model_p10_2_4lane_power.py",
+      "scripts/run_p10_2_4lane_offline_gate.py",
+      "scripts/run_p10_2_xsim.py",
+      "scripts/run_p10_3_ax7020_4lane_hardware.py",
+      "scripts/vitis/build_p10_ax7020_runtime.tcl",
+      "scripts/vivado/build_p10_ax7020_functional.tcl",
+      "tools/run_p10_2_4lane_offline_gate.ps1",
+      "tools/run_p10_3_ax7020_4lane_hardware.ps1"
+    ],
+    "current_run_hardware_authorization": false,
+    "errors": [],
+    "forbidden_findings": [],
+    "fpga_programmed": false,
+    "hardware_actions_executed": false,
+    "hw_server_connected": false,
+    "jtag_connected": false,
+    "network_used": false,
+    "ps_elf_run": false,
+    "schema_version": 1,
+    "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+    "status": "PASS",
+    "test_id": "P10_2-NO-HARDWARE-STATIC-SCAN",
+    "tfdu_driven": false,
+    "two_hour_qualification_executed": false,
+    "uart_written": false
+  },
+  "p10_1r_recheck": {
+    "checks": {
+      "authorization_closed": true,
+      "authorization_consumed": true,
+      "closed_tag_annotated": true,
+      "closed_tag_target": true,
+      "closeout_pass": true,
+      "consistency_pass": true,
+      "final_pass": true,
+      "future_inventory_positions_are_additive": true,
+      "main_at_closeout": true,
+      "old_f1_quarantined": true,
+      "p10_1r_inventory_identity_preserved": true,
+      "p10_1r_worktree_clean": true,
+      "pass_tag_annotated": true,
+      "pass_tag_target": true,
+      "shutdown_fixed": true,
+      "shutdown_rotating": true,
+      "source_ancestor_of_checkpoint": true
+    },
+    "current_run_hardware_authorization": false,
+    "errors": [],
+    "hardware_actions_executed": false,
+    "p10_1r_closed_tag": "p10.1r-2lane-speed-stability-closed",
+    "p10_1r_closed_tag_target": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8",
+    "p10_1r_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "p10_1r_pass_tag": "p10.1r-2lane-speed-stability-pass",
+    "p10_1r_pass_tag_target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "p10_1r_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "schema_version": 1,
+    "status": "PASS",
+    "test_id": "P10_2-P10_1R-FROZEN-RECHECK",
+    "verified_hash_records": 15
+  },
+  "schema_version": 1,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "steps": [
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_p10_2_board_package.py"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/board_package.log",
+      "log_sha256": "acfd248a2bdeecab8bbd262ebaa4fb8b3e2f7ac889fd9ea516f20dbb007acd21",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "board_package"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/register_map.log",
+      "log_sha256": "9b92d71980f88b9a2fead31ed2dd1c038150748a84dbe6cb0e03ed7b5119eda8",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "register_map"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_p10_3_evidence_templates.py"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/templates.log",
+      "log_sha256": "75940f6f36debae475b5ec87f73028b3f981f800d9f794e34e54b8f3670397c8",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "templates"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/model_p10_2_4lane.py",
+        "--json-summary",
+        "evidence/generated/p10_2_raw/model.json"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/model.log",
+      "log_sha256": "dd0a680e808b99ee9786f9f445d66299e35760ccdfcef1b01e4bcb44424878f3",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "model"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/model_p10_2_4lane_power.py",
+        "--json-summary",
+        "evidence/generated/p10_2_raw/power_model.json"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/power_model.log",
+      "log_sha256": "dd95602152af31d91593c2e4fad12f20dfea8a9745070618a9453bfe702ca243",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "power_model"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/run_p10_2_xsim.py"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/xsim.log",
+      "log_sha256": "e38c25e07be4156cc7dfde31426ad4718c3b419aee7ba404a3da955ca0a0cb49",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "xsim"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/build_p10_2_software.py"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/host_software.log",
+      "log_sha256": "8a0bc216443b5b40a09b962bc0edaeee87c3338e2e599627bb2ec2b6aec4e705",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "host_software"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/run_p10_3_ax7020_4lane_hardware.py",
+        "--self-test"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/p10_3_runner_selftest.log",
+      "log_sha256": "7383b4f3d4937909096420e5a27fa2ef6195f572a369772ae37d5d7e620a4c00",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "p10_3_runner_selftest"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/build_p10_ax7020_functional.py",
+        "--campaign",
+        "p10_2"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/functional_build.log",
+      "log_sha256": "8a5b0753f694ec360dbe3c4230938a5ae7ebd037d05d658604a91c6c7de09275",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "functional_build"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/build_p10_ps_runtime.py",
+        "--campaign",
+        "p10_2"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/runtime_build.log",
+      "log_sha256": "583057353f15eaf8ac40931b5f433d9566259fc831034a530571f4c139764482",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "runtime_build"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/finalize_p10_2_offline.py",
+        "--write",
+        "--json-summary"
+      ],
+      "hardware_actions_executed": false,
+      "log": "evidence/generated/p10_2_raw/gate_commands/finalize.log",
+      "log_sha256": "5fb55dbbd5f52c66091dc9f2a8d88c10104f23ce4082595c734b08d6eaf5f071",
+      "returncode": 0,
+      "status": "PASS",
+      "step": "finalize"
+    }
+  ],
+  "test_id": "P10_2-4LANE-OFFLINE-GATE",
+  "two_hour_qualification_executed": false
+}

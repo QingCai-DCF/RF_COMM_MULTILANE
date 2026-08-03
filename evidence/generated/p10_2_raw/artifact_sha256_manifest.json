@@ -1,0 +1,74 @@
+{
+  "artifacts": [
+    {
+      "bytes": 4045681,
+      "kind": "bitstream",
+      "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98"
+    },
+    {
+      "bytes": 1188359,
+      "kind": "xsa",
+      "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8"
+    },
+    {
+      "bytes": 558516,
+      "kind": "elf",
+      "path": "artifacts/p10_2/6a470f71885214f4aaad0a5c1190d969647b985618ad4cd0bd66df4e6858e76f/9e7dbb39dc21e6a44b0a0a23abbf784e67af656e625027ce2bda19f72fee5802/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9e7dbb39dc21e6a44b0a0a23abbf784e67af656e625027ce2bda19f72fee5802"
+    },
+    {
+      "bytes": 1856396,
+      "kind": "bsp",
+      "path": "artifacts/p10_2/6a470f71885214f4aaad0a5c1190d969647b985618ad4cd0bd66df4e6858e76f/ce293deeaeec749fcddb086855f67819ff32aaf85d8433fa3861ca4da08a563b/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "ce293deeaeec749fcddb086855f67819ff32aaf85d8433fa3861ca4da08a563b"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "bitstream",
+      "path": "artifacts/p10_2/8044477f5c99a2f6df0bf0c64ec6629b999869ecfcc5425c53f45f63d67d5e78/d0afa4ae6e1698d6b35229367617f7718edafc7877899c278db9c44c1f2e41e1/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d0afa4ae6e1698d6b35229367617f7718edafc7877899c278db9c44c1f2e41e1"
+    },
+    {
+      "bytes": 1187761,
+      "kind": "xsa",
+      "path": "artifacts/p10_2/8044477f5c99a2f6df0bf0c64ec6629b999869ecfcc5425c53f45f63d67d5e78/139e1598d3bbefcc63afd8dab0d16a0255c62d176bc483788ce91a9e7000e59a/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "139e1598d3bbefcc63afd8dab0d16a0255c62d176bc483788ce91a9e7000e59a"
+    },
+    {
+      "bytes": 558868,
+      "kind": "elf",
+      "path": "artifacts/p10_2/f7307c03d4087fbbbd60cb64f63456a50a3837afb7dee562b0271492fe90d43f/a987603bde262a47a86e47b4505f518f03ce49e41b63db89d5daa17dac8a4c04/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a987603bde262a47a86e47b4505f518f03ce49e41b63db89d5daa17dac8a4c04"
+    },
+    {
+      "bytes": 1856541,
+      "kind": "bsp",
+      "path": "artifacts/p10_2/f7307c03d4087fbbbd60cb64f63456a50a3837afb7dee562b0271492fe90d43f/812eac6d7c32a80dd5450bf23b5d7026e302009b4e14b403b6e5a5b75099820b/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "812eac6d7c32a80dd5450bf23b5d7026e302009b4e14b403b6e5a5b75099820b"
+    }
+  ],
+  "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+  "hardware_actions_executed": false,
+  "schema_version": 1,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "test_id": "P10_2-ARTIFACT-SHA256-MANIFEST"
+}

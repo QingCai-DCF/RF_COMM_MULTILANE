@@ -1,0 +1,42 @@
+{
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "lane_mask_max": "0xF",
+  "lane_mask_min": "0x1",
+  "lane_mask_width": 4,
+  "no_hardware": true,
+  "schema_version": 1,
+  "scope": "P10_2_OFFLINE_RTL_PARAMETERIZATION",
+  "selected_lane_count": 4,
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "supported_lane_counts": [
+    2,
+    4,
+    8
+  ],
+  "test_id": "P10_2-LANE-001",
+  "two_lane_wire_header_bit_compatible": true,
+  "xsim_tests": [
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_p10_2_lane_count_elaboration.log",
+      "log_sha256": "202916d0fb68d8d1eecfc04f07319cede1482fdc3540fd8eafe69b1077d5925f",
+      "marker_present": true,
+      "required_marker": "TB_P10_2_LANE_COUNT_ELABORATION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_p10_2_lane_count_elaboration"
+    },
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_2_raw/xsim/raw/20260803T183730.103652Z/tb_2lane_4lane_regression.log",
+      "log_sha256": "589b84b37bbae11b7d7a4f2625e003eefef20b5fa91c8652fc4c9b8541830e7b",
+      "marker_present": true,
+      "required_marker": "TB_2LANE_4LANE_REGRESSION=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_2lane_4lane_regression"
+    }
+  ]
+}

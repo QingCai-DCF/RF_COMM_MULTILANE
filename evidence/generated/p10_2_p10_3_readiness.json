@@ -1,0 +1,109 @@
+{
+  "hardware_actions_executed": false,
+  "hardware_ready": false,
+  "matrix_template": {
+    "bytes": 387,
+    "path": "evidence/templates/p10_3_crosstalk_8x8/matrix.json",
+    "sha256": "9a4f8f2c7bc9c6eed21e026953bf99a2a8176aa8a25f9824223a8d94a6f95e84"
+  },
+  "missing_prerequisites": [
+    "F2/F3/R2/R3 physical intake and acceptance",
+    "physical four-lane wiring and power/decoupling inspection",
+    "content-addressed fixed/rotating four-lane shutdown images",
+    "new P10.3 current-run hardware authorization"
+  ],
+  "runner_dry_run": "PASS",
+  "schema_version": 1,
+  "scope": "P10_3_OFFLINE_READINESS_PACKAGE_ONLY",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "template_count": 17,
+  "templates": [
+    {
+      "bytes": 768,
+      "path": "evidence/templates/p10_3_4lane/artifact_manifest.json",
+      "sha256": "72f9fe53e83d9dba32e79270bb20e1cd392e18721ccacd03b4374839fc9f8a01"
+    },
+    {
+      "bytes": 764,
+      "path": "evidence/templates/p10_3_4lane/authorization.json",
+      "sha256": "cc302cf4bbc75197d3b3f48f751c055dbb64534c91469e26c0d368cc485fa76f"
+    },
+    {
+      "bytes": 765,
+      "path": "evidence/templates/p10_3_4lane/board_identity.json",
+      "sha256": "7da18843accab2385aa1200a524ebee765633afa257d94731bd57079842dcf42"
+    },
+    {
+      "bytes": 765,
+      "path": "evidence/templates/p10_3_4lane/degraded_masks.json",
+      "sha256": "d9065171cfb82671619c4398d90283c431486e6cd37c6f9cf13c6d55d3efd7bd"
+    },
+    {
+      "bytes": 756,
+      "path": "evidence/templates/p10_3_4lane/final.json",
+      "sha256": "f64c4c79b40c131a37c737a3946853ac130c07712760619d3488b84379e804e1"
+    },
+    {
+      "bytes": 764,
+      "path": "evidence/templates/p10_3_4lane/four_lane_raw.json",
+      "sha256": "bdc112283979727531ee02f5f0e7c187bb93af0045d49c5da20fd56392af4643"
+    },
+    {
+      "bytes": 767,
+      "path": "evidence/templates/p10_3_4lane/module_inventory.json",
+      "sha256": "210c38e4ebea898a4b91629dc76302ea5950af9f17d432a77ad24309a9cd3aa3"
+    },
+    {
+      "bytes": 763,
+      "path": "evidence/templates/p10_3_4lane/per_lane_phy.json",
+      "sha256": "845ea7d23bc276ae0837633aa9a3df548d15ca3f50a5e4c63e5400ceec4ad83d"
+    },
+    {
+      "bytes": 762,
+      "path": "evidence/templates/p10_3_4lane/performance.json",
+      "sha256": "0437451b46a6b294c6f6cf614ea3ae38066ce50ffc44799bd13d06dd527c1b79"
+    },
+    {
+      "bytes": 765,
+      "path": "evidence/templates/p10_3_4lane/power_baseline.json",
+      "sha256": "a1dabf2cc10624b028d8072a449f545cd53791493122258304cad7f7e39d7fbd"
+    },
+    {
+      "bytes": 769,
+      "path": "evidence/templates/p10_3_4lane/protocol_scheduler.json",
+      "sha256": "00e1c002d1ff95d3ee79ae950ae63456915f5df949839e8274dc5f29f4bdd3e5"
+    },
+    {
+      "bytes": 765,
+      "path": "evidence/templates/p10_3_4lane/raw_8x8_matrix.json",
+      "sha256": "be8590e9e95809c14014790f10b09af482d4d2d3ad56f1136ea3e63ed21735a7"
+    },
+    {
+      "bytes": 760,
+      "path": "evidence/templates/p10_3_4lane/safe_boot.json",
+      "sha256": "ab8a8019cd55465423842b3a81db227050bc7d18d1b2d35a7c77a871bf74590b"
+    },
+    {
+      "bytes": 759,
+      "path": "evidence/templates/p10_3_4lane/shutdown.json",
+      "sha256": "5299013ba6513aaa4f5513ae724cf9111a176978bb9ba6757da1bc185da8e01a"
+    },
+    {
+      "bytes": 767,
+      "path": "evidence/templates/p10_3_4lane/stationary_30min.json",
+      "sha256": "8e085dbdf996ce4955e34122a2bb5026c125a8e9fa853ead15a5010cc046c1d2"
+    },
+    {
+      "bytes": 760,
+      "path": "evidence/templates/p10_3_4lane/streaming.json",
+      "sha256": "822d06a4358577dd703eb89a7cbaadf9b118718619be54a291112405a2c3cb32"
+    },
+    {
+      "bytes": 757,
+      "path": "evidence/templates/p10_3_4lane/wiring.json",
+      "sha256": "8adb4da80f7fc2aac66d9c087a9bd021d6a43c2972384ecc7c80c1f1d3ba97f8"
+    }
+  ],
+  "test_id": "P10_2-HWPREP-002"
+}

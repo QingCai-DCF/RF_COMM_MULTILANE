@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
+    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
   - path: PROJECT_STATUS.md
-    sha256: 5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f
-  artifact_hash: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
+    sha256: 47180105cc08d2da2ff4faf06f6fc90b45d769c0978509eb2cc6540de6bd4056
+  artifact_hash: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
+    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
+    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
   - path: PROJECT_STATUS.md
-    sha256: 5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f
+    sha256: 47180105cc08d2da2ff4faf06f6fc90b45d769c0978509eb2cc6540de6bd4056
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
+  artifact_hash: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3821,42 +3821,6 @@ requirements:
   hardware_followup: Scoped PASS is limited to the frozen AX7020 stationary two-lane half-duplex no-Ethernet bundle; it does
     not promote P11, 1+1 full duplex, 8x32, 600 rpm, external electrical/optical measurement, or product-final acceptance.
   artifact_hash: 292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd
-- requirement_id: P10_2-CLOSE-001
-  requirement_text: P10.1R authorization shall remain consumed and false while its immutable PASS tag, checkpoint, artifacts, raw evidence, failures, and shutdown records remain unchanged.
-  profile: P10_1R_POST_ACCEPTANCE_CLOSEOUT
-  verification_method: Annotated-tag identity and ancestry checks, recursive frozen-record SHA256 verification, canonical state/status checks, and no-hardware static scan.
-  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
-  verification_scope: P10_1R_POST_ACCEPTANCE_CLOSEOUT_OFFLINE
-  test_id: P10_2-CLOSE-001
-  evidence_path: evidence/generated/p10_1r_closeout_summary.json
-  status: PASS
-  waiver: null
-  artifact_hashes:
-  - path: evidence/generated/p10_1r_closeout_summary.json
-    sha256: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
-  - path: evidence/generated/p10_1r_git_checkpoint_metadata.json
-    sha256: 46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313
-  - path: evidence/generated/p10_1r_final_summary.json
-    sha256: 728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f
-  hardware_followup: No hardware follow-up is authorized by closeout; P10.3 requires new immutable artifacts, physical inventory, wiring, and current-run authorization.
-  artifact_hash: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
-- requirement_id: P10_2-INV-001
-  requirement_text: The replacement fixed-side F1 shall be the accepted lane1 identity, the original F1 shall be quarantined, and F2/F3/R2/R3 shall remain pending until their own physical intake and acceptance.
-  profile: P10_2_TFDU_EIGHT_MODULE_INVENTORY
-  verification_method: User replacement provenance, immutable P10.1R run binding, machine-readable inventory audit, and explicit old-F1 alias rejection.
-  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
-  verification_scope: P10_2_OFFLINE_MODULE_IDENTITY
-  test_id: P10_2-INV-001
-  evidence_path: config/hardware/tfdu_module_inventory.yaml
-  status: PASS
-  waiver: null
-  artifact_hashes:
-  - path: config/hardware/tfdu_module_inventory.yaml
-    sha256: 8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc
-  - path: evidence/generated/p10_1r_final_summary.json
-    sha256: 728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f
-  hardware_followup: F2/F3/R2/R3 require physical marking/revision intake, pinout check, safe-idle, and raw acceptance before P10.3.
-  artifact_hash: 8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc
 - requirement_id: P10_1R-PERF-001
   requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3970,3 +3934,324 @@ requirements:
   hardware_followup: Scoped PASS is limited to the frozen AX7020 stationary two-lane half-duplex no-Ethernet bundle; it does
     not promote P11, 1+1 full duplex, 8x32, 600 rpm, external electrical/optical measurement, or product-final acceptance.
   artifact_hash: 292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd
+# BEGIN P10_2 GENERATED REQUIREMENTS
+- requirement_id: P10_2-CLOSE-001
+  requirement_text: P10.1R authorization is closed and its PASS tag/checkpoint remain immutable.
+  profile: P10_1R_CLOSEOUT
+  verification_method: Immutable tag, ancestry, evidence-hash and authorization recheck.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_1R_CLOSEOUT_OFFLINE
+  test_id: P10_2-CLOSE-001
+  evidence_path: evidence/generated/p10_1r_closeout_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_closeout_summary.json
+    sha256: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
+- requirement_id: P10_2-INV-001
+  requirement_text: The accepted replacement F1 is retained, old F1 is quarantined, and F2/F3/R2/R3 remain explicit pending
+    identities.
+  profile: P10_2_EIGHT_MODULE_INVENTORY
+  verification_method: Machine-readable inventory and quarantine audit.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_MODULE_IDENTITY
+  test_id: P10_2-INV-001
+  evidence_path: evidence/generated/p10_2_module_inventory_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_module_inventory_summary.json
+    sha256: 0788a22f71d932aa2c1494e93801afaf03328d29998f57b9a30fd8a348902747
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 0788a22f71d932aa2c1494e93801afaf03328d29998f57b9a30fd8a348902747
+- requirement_id: P10_2-WIRE-001
+  requirement_text: The independent AX7020 four-lane wiring proposal preserves lanes 0/1 and assigns J11-A/J11-B to lanes
+    2/3.
+  profile: P10_2_AX7020_4LANE
+  verification_method: Wiring proposal and source-bound pin-map audit.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_BOARD_DESIGN
+  test_id: P10_2-WIRE-001
+  evidence_path: evidence/generated/p10_2_wiring_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_wiring_summary.json
+    sha256: 9fdc7c5efb607111f062afd8bad45b112aa0296e85d5e3b4205bb05f4bf9cf92
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 9fdc7c5efb607111f062afd8bad45b112aa0296e85d5e3b4205bb05f4bf9cf92
+- requirement_id: P10_2-PIN-001
+  requirement_text: Every selected four-lane signal pin has a unique package pin, compatible bank/VCCO and no Z7010 XDC reuse.
+  profile: P10_2_AX7020_4LANE
+  verification_method: Pin/bank/VCCO/XDC audit.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_BOARD_DESIGN
+  test_id: P10_2-PIN-001
+  evidence_path: evidence/generated/p10_2_pin_bank_audit.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_pin_bank_audit.json
+    sha256: a1c7e5fd662cadab8157b9faeb930b0a2e29eb49da298b5f2430373cfd520635
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: a1c7e5fd662cadab8157b9faeb930b0a2e29eb49da298b5f2430373cfd520635
+- requirement_id: P10_2-PROFILE-001
+  requirement_text: The fixed AX7020 has an independent four-lane profile, pinmap and XDC.
+  profile: P10_2_AX7020_FIXED_4LANE
+  verification_method: Profile generation and routed build.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PROFILE
+  test_id: P10_2-PROFILE-001
+  evidence_path: evidence/generated/p10_2_fixed_build.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_fixed_build.json
+    sha256: 7f573b2214c79764d9e270e7ccb5a35a533be30286aeac515a3cea2d134e544a
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 7f573b2214c79764d9e270e7ccb5a35a533be30286aeac515a3cea2d134e544a
+- requirement_id: P10_2-PROFILE-002
+  requirement_text: The rotating-role AX7020 has an independent four-lane profile, pinmap and XDC.
+  profile: P10_2_AX7020_ROTATING_4LANE
+  verification_method: Profile generation and routed build.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PROFILE
+  test_id: P10_2-PROFILE-002
+  evidence_path: evidence/generated/p10_2_rotating_build.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_rotating_build.json
+    sha256: 0cbc24a82a18b7f2bcc697acc16208bef3e2de348ebc267c8bd1deb7c8d43506
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 0cbc24a82a18b7f2bcc697acc16208bef3e2de348ebc267c8bd1deb7c8d43506
+- requirement_id: P10_2-SAFE-001
+  requirement_text: Eight physical TFDU module paths retain exact rolling duty, startup, pulse and per-module TX/RX exclusion
+    models.
+  profile: P10_2_EIGHT_PHYSICAL_MODULE_SAFETY
+  verification_method: RTL XSIM plus deterministic fault/echo model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_SAFETY
+  test_id: P10_2-SAFE-001
+  evidence_path: evidence/generated/p10_2_safety_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_safety_summary.json
+    sha256: 87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c
+- requirement_id: P10_2-SAFE-002
+  requirement_text: Each endpoint retains exactly one local active-high GLOBAL_PERMIT and no per-lane permit channel.
+  profile: P10_2_SINGLE_GLOBAL_PERMIT
+  verification_method: Structural RTL and model assertion.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_SAFETY
+  test_id: P10_2-SAFE-002
+  evidence_path: evidence/generated/p10_2_safety_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_safety_summary.json
+    sha256: 87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c
+- requirement_id: P10_2-ECHO-001
+  requirement_text: The 8x8 echo/crosstalk model accepts only the eight intended remote lane-pair cells.
+  profile: P10_2_ECHO_8X8
+  verification_method: Deterministic 8x8 matrix and RX admission XSIM.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_ECHO_MODEL
+  test_id: P10_2-ECHO-001
+  evidence_path: evidence/generated/p10_2_echo_matrix_model.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_echo_matrix_model.json
+    sha256: 22e5818e6a1646192ff1037530fe799d1c49445092e8a2a292e5162b2d3b45a5
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 22e5818e6a1646192ff1037530fe799d1c49445092e8a2a292e5162b2d3b45a5
+- requirement_id: P10_2-LANE-001
+  requirement_text: The common RTL elaborates with lane counts 2, 4 and 8 while P10.2 selects lane count 4.
+  profile: P10_2_PARAMETERIZATION
+  verification_method: Bounded XSIM elaboration matrix.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_RTL
+  test_id: P10_2-LANE-001
+  evidence_path: evidence/generated/p10_2_parameterization_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_parameterization_summary.json
+    sha256: d30174e88c6f1d92897f1f4958c5f4d0dc1194f4cf137ba9adf256dbfe90deb0
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: d30174e88c6f1d92897f1f4958c5f4d0dc1194f4cf137ba9adf256dbfe90deb0
+- requirement_id: P10_2-LANE-002
+  requirement_text: All nonzero four-lane masks 0x1 through 0xF are supported and bounded.
+  profile: P10_2_LANE_MASK_MATRIX
+  verification_method: Scheduler XSIM and deterministic mask matrix.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_RTL
+  test_id: P10_2-LANE-002
+  evidence_path: evidence/generated/p10_2_scheduler_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_scheduler_summary.json
+    sha256: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+- requirement_id: P10_2-LANE-003
+  requirement_text: The scheduler degrades 4 to 3 to 2 to 1 healthy lane and recovers without selecting an unavailable lane.
+  profile: P10_2_DEGRADATION
+  verification_method: Deterministic degradation/recovery model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_RTL
+  test_id: P10_2-LANE-003
+  evidence_path: evidence/generated/p10_2_scheduler_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_scheduler_summary.json
+    sha256: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+- requirement_id: P10_2-SCHED-001
+  requirement_text: The four-lane scheduler is fair, weighted and health-aware.
+  profile: P10_2_4LANE_SCHEDULER
+  verification_method: XSIM and fixed-seed scheduler events.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PROTOCOL
+  test_id: P10_2-SCHED-001
+  evidence_path: evidence/generated/p10_2_scheduler_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_scheduler_summary.json
+    sha256: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e
+- requirement_id: P10_2-ARQ-001
+  requirement_text: Four-lane selective-repeat/SACK preserves one bundle sequence space and safe retry migration.
+  profile: P10_2_4LANE_ARQ
+  verification_method: XSIM reorder/wrap plus deterministic ARQ model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PROTOCOL
+  test_id: P10_2-ARQ-001
+  evidence_path: evidence/generated/p10_2_arq_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_arq_summary.json
+    sha256: 637b46b1a40e31a6a15f35e45e733edc0cd6d5f90409e64d3d78c321f6b98f11
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 637b46b1a40e31a6a15f35e45e733edc0cd6d5f90409e64d3d78c321f6b98f11
+- requirement_id: P10_2-STREAM-001
+  requirement_text: The four-lane model completes 64 MiB and 128 MiB objects with atomic matching integrity hashes.
+  profile: P10_2_4LANE_STREAMING
+  verification_method: Deterministic streaming, wrap, fault and recovery model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_STREAMING
+  test_id: P10_2-STREAM-001
+  evidence_path: evidence/generated/p10_2_streaming_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_streaming_summary.json
+    sha256: b86d602611529bbf2214d84b072eba4b01fb594039c2eaaa151e59a6dd4ba7ea
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: b86d602611529bbf2214d84b072eba4b01fb594039c2eaaa151e59a6dd4ba7ea
+- requirement_id: P10_2-PERF-001
+  requirement_text: Four independent 4 Mbit/s lanes provide 16 Mbit/s aggregate raw modeled capability.
+  profile: P10_2_4LANE_PERFORMANCE
+  verification_method: Airtime and exact-duty reconciliation.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PERFORMANCE_FEASIBILITY
+  test_id: P10_2-PERF-001
+  evidence_path: evidence/generated/p10_2_performance_model.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_performance_model.json
+    sha256: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+- requirement_id: P10_2-PERF-002
+  requirement_text: The four-lane stationary half-duplex design has modeled application feasibility at or above 8 Mbit/s.
+  profile: P10_2_4LANE_PERFORMANCE
+  verification_method: Bounded candidate-space performance model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PERFORMANCE_FEASIBILITY
+  test_id: P10_2-PERF-002
+  evidence_path: evidence/generated/p10_2_performance_model.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_performance_model.json
+    sha256: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+- requirement_id: P10_2-PERF-003
+  requirement_text: The 9.6 Mbit/s stretch point is explicitly evaluated without becoming a hardware claim.
+  profile: P10_2_4LANE_PERFORMANCE
+  verification_method: Bounded candidate-space performance model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_PERFORMANCE_FEASIBILITY
+  test_id: P10_2-PERF-003
+  evidence_path: evidence/generated/p10_2_performance_model.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_performance_model.json
+    sha256: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af
+- requirement_id: P10_2-POWER-001
+  requirement_text: The future four-simultaneous-TX rail is budgeted for 2.4 A peak IRED demand and explicit decoupling verification.
+  profile: P10_2_4TX_POWER
+  verification_method: Offline worst-case current/capacitance requirement model.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_POWER_REQUIREMENTS
+  test_id: P10_2-POWER-001
+  evidence_path: evidence/generated/p10_2_power_budget.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_power_budget.json
+    sha256: a4d4f0ca903fdfa075ed38a698e0702c241031c54c4a3520d30d531d70d5f28a
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: a4d4f0ca903fdfa075ed38a698e0702c241031c54c4a3520d30d531d70d5f28a
+- requirement_id: P10_2-HWPREP-001
+  requirement_text: The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement
+    and two-hour requests.
+  profile: P10_3_FAIL_CLOSED_RUNNER
+  verification_method: Offline runner self-test only.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_HARDWARE_PREPARATION
+  test_id: P10_2-HWPREP-001
+  evidence_path: evidence/generated/p10_2_hardware_dry_run.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_hardware_dry_run.json
+    sha256: fef8d538bbad8a1851717f16bc872cd084946569e22e82d945e2353ace10ed3a
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: fef8d538bbad8a1851717f16bc872cd084946569e22e82d945e2353ace10ed3a
+- requirement_id: P10_2-HWPREP-002
+  requirement_text: P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority.
+  profile: P10_3_EVIDENCE_SCHEMA
+  verification_method: Template inventory and readiness audit.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_HARDWARE_PREPARATION
+  test_id: P10_2-HWPREP-002
+  evidence_path: evidence/generated/p10_2_p10_3_readiness.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_2_p10_3_readiness.json
+    sha256: 565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63
+  hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
+  artifact_hash: 565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63
+# END P10_2 GENERATED REQUIREMENTS

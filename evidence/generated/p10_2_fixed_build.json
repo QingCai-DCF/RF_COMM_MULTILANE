@@ -1,0 +1,180 @@
+{
+  "artifacts": {
+    "bitstream": {
+      "bytes": 4045681,
+      "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "sha256": "b50c9ea25a3519ab55de77a8f937ec4639f46dbffa75d3fef38a832b6685aa98"
+    },
+    "xsa": {
+      "bytes": 1188359,
+      "path": "artifacts/p10_2/f86ba28cd01db7afe1edd42e1c901c646f55799edd18790e316c52e774482ddf/9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "sha256": "9bebda4f92cf04feea6ddc21a74e2bc6461edf0296a6d36d6f45a19f91ff64b8"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "delta_4lane_minus_2lane": {
+    "bram36_equivalent": 13.0,
+    "dsp": 0.0,
+    "ff": 8605.0,
+    "lut": 6666.0
+  },
+  "errors": [],
+  "hardware_actions_executed": false,
+  "markers": {
+    "P10_AXIL_CLOCK_HZ": "50000000",
+    "P10_AXI_BASE": "0x43C00000",
+    "P10_BLOCKING_CONDITION": "P10-SAFETY-POWERUP-001",
+    "P10_BRAM18": "4",
+    "P10_BRAM36": "28",
+    "P10_BRAM36_EQUIVALENT": "30.0",
+    "P10_BRAM_PERCENT": "21.428571428571427",
+    "P10_CANONICAL_XDC": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_2/board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+    "P10_CDC_CRITICAL_COUNT": "0",
+    "P10_DMA_AXI_BASE": "0x40400000",
+    "P10_DMA_CLOCK_HZ": "100000000",
+    "P10_DMA_HP_PORT": "S_AXI_HP0",
+    "P10_DMA_MODE": "SCATTER_GATHER",
+    "P10_DMA_SG_STSCNTRL_STREAM": "DISABLED",
+    "P10_DRC_CRITICAL_COUNT": "0",
+    "P10_DRC_ERROR_COUNT": "0",
+    "P10_DSP": "0",
+    "P10_DSP_PERCENT": "0.0",
+    "P10_ENDPOINT_ROLE": "fixed",
+    "P10_ENDPOINT_ROLE_VALUE": "1",
+    "P10_ETHERNET_ENABLED": "false",
+    "P10_FF": "28729",
+    "P10_FF_PERCENT": "27.00093984962406",
+    "P10_FUNCTIONAL_BUILD": "PASS",
+    "P10_HARDWARE_ADMISSION": "false",
+    "P10_LANE_COUNT": "4",
+    "P10_LUT": "30888",
+    "P10_LUT_PERCENT": "58.06015037593985",
+    "P10_METHODOLOGY_CRITICAL_COUNT": "0",
+    "P10_NETWORK_USED": "false",
+    "P10_NO_CLOCK_COUNT": "0",
+    "P10_PART": "xc7z020clg400-2",
+    "P10_PL_ACTIVITY_LED_ACTIVE_LOW": "true",
+    "P10_PL_ACTIVITY_LED_HOLD_MS": "200",
+    "P10_PL_ACTIVITY_LED_MAPPING": "LED1_LANE0_ACTIVITY_LED2_LANE1_ACTIVITY_LED3_LANE2_ACTIVITY_LED4_LANE3_ACTIVITY",
+    "P10_PL_ACTIVITY_LED_SAFETY_ROLE": "MONITOR_ONLY",
+    "P10_PROFILE_ID": "P10_2_AX7020_FIXED_4LANE",
+    "P10_PROTOCOL_CLOCK_HZ": "64000000",
+    "P10_REQP_1839_COUNT": "0",
+    "P10_RESOURCE_LIMITS_PASS": "1",
+    "P10_TNS_NS": "0.0",
+    "P10_TOP": "p10_ps_system_wrapper",
+    "P10_UNCONSTRAINED_INTERNAL_ENDPOINTS": "0",
+    "P10_WHS_NS": "0.014",
+    "P10_WNS_NS": "0.278"
+  },
+  "no_hardware": true,
+  "part": "xc7z020clg400-2",
+  "profile": "P10_2_AX7020_FIXED_4LANE",
+  "projected_8lane_linear_from_lane_delta": {
+    "bram36_equivalent": 56.0,
+    "dsp": 0.0,
+    "ff": 45939.0,
+    "lut": 38854.0
+  },
+  "projection_is_not_an_8lane_build": true,
+  "reports": [
+    {
+      "bytes": 10566,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_drc.rpt",
+      "sha256": "8de341becc2818983d5e1dc65cd9da38923796e5f1545ffc1ff9520ac3b93046"
+    },
+    {
+      "bytes": 38987,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_methodology.rpt",
+      "sha256": "66393760ec1f8d0e9cb4fdf6c7a2025aeca3b63c5afa04a415c6bcf794dd3e9e"
+    },
+    {
+      "bytes": 223428,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_timing_summary.rpt",
+      "sha256": "48d19556dec13082f3540de832a503db8e31a7853c1550c0d4d70b0802ed1c68"
+    },
+    {
+      "bytes": 3666,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_check_timing.rpt",
+      "sha256": "64fda7a704f8285b41e1ead865242d20fbdab4a8478be631f1488901955093ea"
+    },
+    {
+      "bytes": 185241,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_utilization.rpt",
+      "sha256": "3de33ca37f1ef1270b2e62b7303a8e820ebaf440b9c47b5ab53eb1648d152900"
+    },
+    {
+      "bytes": 77370,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_cdc.rpt",
+      "sha256": "0cf2a7194f393dcd254e9f153936e3a79e74d306c8406d649d6e0b1d40ced2a6"
+    },
+    {
+      "bytes": 2885,
+      "path": "evidence/generated/vivado/p10_2_4lane/fixed/post_route_clock_interaction.rpt",
+      "sha256": "d6ffcc934bd484550984eb5e1507e370b668285b2977185af8c5db2fbb970403"
+    }
+  ],
+  "resources_2lane_baseline": {
+    "capacity": {
+      "bram36_equivalent": 140.0,
+      "dsp": 220,
+      "ff": 106400,
+      "lut": 53200
+    },
+    "limits_percent": {
+      "bram36_equivalent": 75.0,
+      "dsp": 50.0,
+      "ff": 70.0,
+      "lut": 70.0
+    },
+    "percent": {
+      "bram36_equivalent": 12.142857142857142,
+      "dsp": 0.0,
+      "ff": 18.913533834586467,
+      "lut": 35.44360902255639
+    },
+    "status": "PASS",
+    "used": {
+      "bram36_equivalent": 17.0,
+      "dsp": 0,
+      "ff": 20124,
+      "lut": 18856
+    },
+    "within_limits": true
+  },
+  "resources_4lane": {
+    "capacity": {
+      "bram36_equivalent": 140.0,
+      "dsp": 220,
+      "ff": 106400,
+      "lut": 53200
+    },
+    "limits_percent": {
+      "bram36_equivalent": 75.0,
+      "dsp": 50.0,
+      "ff": 70.0,
+      "lut": 70.0
+    },
+    "percent": {
+      "bram36_equivalent": 21.428571428571427,
+      "dsp": 0.0,
+      "ff": 27.00093984962406,
+      "lut": 47.973684210526315
+    },
+    "status": "PASS",
+    "used": {
+      "bram36_equivalent": 30.0,
+      "dsp": 0,
+      "ff": 28729,
+      "lut": 25522
+    },
+    "within_limits": true
+  },
+  "schema_version": 1,
+  "scope": "AX7020_FOUR_LANE_OFFLINE_IMPLEMENTATION_ONLY",
+  "source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "status": "PASS",
+  "test_id": "P10_2-FIXED-FOUR-LANE-ROUTED-BUILD"
+}

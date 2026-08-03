@@ -1,0 +1,71 @@
+COMMAND=C:\Users\user\AppData\Local\Programs\Python\Python314\python.exe scripts/run_p10_3_ax7020_4lane_hardware.py --self-test
+RETURN_CODE=0
+STDOUT_BEGIN
+{
+  "hardware_actions_executed": false,
+  "hw_server_connected": false,
+  "jtag_connected": false,
+  "no_2h_stage_present": true,
+  "schema_version": 1,
+  "status": "PASS",
+  "tests": [
+    {
+      "errors": [
+        "CURRENT_RUN_AUTHORIZATION_REQUIRED"
+      ],
+      "expected": "CURRENT_RUN_AUTHORIZATION_REQUIRED",
+      "name": "no_authorization",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "OLD_F1_SELECTION_FORBIDDEN"
+      ],
+      "expected": "OLD_F1_SELECTION_FORBIDDEN",
+      "name": "old_f1",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "LANE_MASK_OUT_OF_RANGE"
+      ],
+      "expected": "LANE_MASK_OUT_OF_RANGE",
+      "name": "lane_mask_gt_f",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "ETHERNET_FORBIDDEN"
+      ],
+      "expected": "ETHERNET_FORBIDDEN",
+      "name": "ethernet",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "MOVEMENT_FORBIDDEN"
+      ],
+      "expected": "MOVEMENT_FORBIDDEN",
+      "name": "movement",
+      "status": "PASS"
+    },
+    {
+      "errors": [
+        "TWO_HOUR_FORBIDDEN"
+      ],
+      "expected": "TWO_HOUR_FORBIDDEN",
+      "name": "two_hour",
+      "status": "PASS"
+    },
+    {
+      "errors": [],
+      "name": "valid_command_only_dry_run",
+      "status": "PASS"
+    }
+  ]
+}
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
