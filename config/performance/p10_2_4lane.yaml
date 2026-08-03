@@ -1,0 +1,47 @@
+schema_version: 1
+campaign: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+scope: OFFLINE_MODEL_ONLY
+lane_count: 4
+raw_bps_per_lane: 4000000
+aggregate_raw_capability_bps: 16000000
+l1_payload_bytes: 247
+data_header_crc_bytes: 28
+ack_header_crc_bytes: 20
+preamble_symbols: 16
+ppm_slots: 4
+design_duty_fraction: 0.18
+hard_duty_fraction_exclusive: 0.20
+maximum_continuous_txd_high_us: 1.0
+post_tx_guard_us: 64.0
+modeled_per: 0.002
+pipeline_efficiency: 0.99
+rfap_useful_chunk_bytes: 65536
+rfap_header_bytes: 48
+hard_application_target_bps: 8000000
+stretch_application_target_bps: 9600000
+candidate_space:
+  outstanding: [32, 64]
+  sack_window: [32, 64]
+  burst_frames: [32, 64]
+  ack_threshold: [32, 64]
+  objects_in_flight: [4, 8]
+frozen_candidate:
+  outstanding: 32
+  sack_window: 32
+  burst_frames: 32
+  ack_threshold: 32
+  objects_in_flight: 4
+device_capacity:
+  part: xc7z020clg400-2
+  lut: 53200
+  ff: 106400
+  bram36_equivalent: 140
+  dsp: 220
+resource_limits_percent:
+  lut: 70
+  ff: 70
+  bram36_equivalent: 75
+  dsp: 50
+notes:
+  - "The 32-bit ACK wire format is retained; 64-bit SACK candidates are evaluated but not selected."
+  - "All throughput values are modeled feasibility, not hardware measurements."

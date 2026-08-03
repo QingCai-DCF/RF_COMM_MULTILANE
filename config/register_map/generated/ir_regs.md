@@ -3,8 +3,8 @@
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
 - Register map version: `P10-2` (`0x0A000002`)
-- Canonical source SHA256: `cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea`
-- Compatibility: P0-P10.1 offsets and meanings are preserved; P10.1R atomic RX-admission observability is additive from 0x0A00.
+- Canonical source SHA256: `96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159`
+- Compatibility: P0-P10.1R offsets and meanings are preserved; P10.2 appends a versioned 128-word atomic four-lane snapshot window at 0x0B00-0x0D08.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -420,3 +420,7 @@
 | `P10_1R_MAX_ECHO_QUARANTINE_CYCLES` | `0x0AA0` | `RO` | Fail-closed maximum echo quarantine interval |
 | `P10_1R_DECODER_CLEAR_CYCLES` | `0x0AA4` | `RO` | Minimum decoder clear interval in protocol clocks |
 | `P10_1R_ADMISSION_CONFIG_FLAGS` | `0x0AA8` | `RO` | Bit0 local-source rejection enabled; bit1 guard measurement telemetry enabled |
+| `P10_2_SNAPSHOT_CONTROL` | `0x0B00` | `WO` | Bit 0 atomically snapshots the P10.2 four-lane/per-module telemetry window |
+| `P10_2_SNAPSHOT_GENERATION` | `0x0B04` | `RO` | Even generation incremented by two for each completed atomic P10.2 snapshot |
+| `P10_2_SNAPSHOT_SCHEMA` | `0x0B08` | `RO` | P10.2 snapshot schema identity 0x50310201 |
+| `P10_2_SNAPSHOT_DATA_BASE` | `0x0B0C` | `RO` | Base of 128 coherent 32-bit snapshot words through 0x0D08; words 0-7 global, 8+12*lane per-lane, 56+8*module per-module, 120-127 safety/schema |

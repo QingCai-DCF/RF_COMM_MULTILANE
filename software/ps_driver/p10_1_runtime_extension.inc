@@ -153,6 +153,40 @@ static void p10_1_read_pair(uint32_t first_offset,
 
 static void p10_1_snapshot_physical(
     volatile p10_1_runtime_result_t *result, uint32_t before) {
+#if P10_LANE_COUNT == 4
+  p9_pl_write(IR_REG_P10_2_SNAPSHOT_CONTROL, 1U);
+  for (uint32_t lane = 0U; lane < 4U; ++lane) {
+    uint32_t module = P10_ENDPOINT_ROLE == 2 ? lane + 4U : lane;
+    volatile uint32_t *raw = before != 0U ? result->raw_rx_before :
+                                            result->raw_rx_after;
+    volatile uint32_t *tx = before != 0U ? result->physical_tx_before :
+                                           result->physical_tx_after;
+    raw[lane] = p9_pl_read(ir_p10_2_module_word_offset(module, 0U));
+    tx[lane] = p9_pl_read(ir_p10_2_module_word_offset(module, 1U));
+    if (before == 0U) {
+      result->tx_high_max_after[lane] =
+          p9_pl_read(ir_p10_2_module_word_offset(module, 2U));
+      result->duty_high_max_after[lane] =
+          p9_pl_read(ir_p10_2_module_word_offset(module, 3U));
+      result->duty_hard_fault_after[lane] =
+          p9_pl_read(ir_p10_2_module_word_offset(module, 7U));
+    }
+  }
+  if (before != 0U) return;
+  /* Frozen P10.1 result fields retain lanes 0/1 for old readers.  The
+   * complete four-lane view is the versioned P10.2 atomic snapshot. */
+  for (uint32_t lane = 0U; lane < 2U; ++lane) {
+    result->physical_data_good_by_lane_after[lane] =
+        p9_pl_read(ir_p10_2_lane_word_offset(lane, 4U));
+    result->physical_ack_good_by_lane_after[lane] =
+        p9_pl_read(ir_p10_2_lane_word_offset(lane, 5U));
+    result->physical_crc_bad_by_lane_after[lane] =
+        p9_pl_read(ir_p10_2_lane_word_offset(lane, 6U));
+    result->physical_frame_bad_by_lane_after[lane] =
+        p9_pl_read(ir_p10_2_lane_word_offset(lane, 7U));
+  }
+  return;
+#else
   if (before != 0U) {
     p10_1_read_quad(IR_REG_P9_RAW_RX_A0, result->raw_rx_before);
     p10_1_read_quad(IR_REG_P9_PHYSICAL_TX_A0, result->physical_tx_before);
@@ -176,6 +210,7 @@ static void p10_1_snapshot_physical(
                   result->physical_preamble_by_lane_after);
   p10_1_read_pair(P10_1_PER_LANE_SYMBOL_ERROR_0,
                   result->physical_symbol_error_by_lane_after);
+#endif
 }
 
 static void p10_1_snapshot_perf(
@@ -372,14 +407,10 @@ static int p10_1_collect_chain(uint32_t tx_direction, uint32_t expected,
   return P10_1_RUNTIME_STATUS_DMA_COMPLETION;
 }
 
-static uint32_t p10_1_local_raw_offset(uint32_t lane) {
-  if (P10_ENDPOINT_ROLE == 1)
-    return lane == 0U ? IR_REG_P9_RAW_RX_A0 : IR_REG_P9_RAW_RX_A1;
-  return lane == 0U ? IR_REG_P9_RAW_RX_B0 : IR_REG_P9_RAW_RX_B1;
-}
-
 static uint32_t p10_1_signal_lane(uint32_t lane_mask) {
-  return (lane_mask & 1U) != 0U ? 0U : 1U;
+  for (uint32_t lane = 0U; lane < P10_LANE_COUNT; ++lane)
+    if ((lane_mask & (UINT32_C(1) << lane)) != 0U) return lane;
+  return 0U;
 }
 
 static int p10_1_send_signal(uint32_t original_direction,
@@ -410,7 +441,8 @@ static int p10_1_send_signal(uint32_t original_direction,
                     &result->inter_object_signal_ticks_high, elapsed);
       return P10_1_RUNTIME_STATUS_OK;
     }
-    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U)
+    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
+         (P10_PHY_READY_ALL_MASK << P10_PHY_SAFETY_SHIFT)) != 0U)
       break;
     usleep(P9_POLL_DELAY_US);
   }
@@ -420,14 +452,13 @@ static int p10_1_send_signal(uint32_t original_direction,
 static int p10_1_wait_signal(uint32_t lane_mask, uint32_t timeout_ms,
                              volatile p10_1_runtime_result_t *result) {
   uint32_t lane = p10_1_signal_lane(lane_mask);
-  uint32_t offset = p10_1_local_raw_offset(lane);
-  uint32_t before = p9_pl_read(offset);
+  uint32_t before = p10_runtime_local_raw_count(lane);
   uint64_t started = p9_time_now();
   uint64_t deadline = p9_time_now() +
       ((uint64_t)timeout_ms * (uint64_t)COUNTS_PER_SECOND) /
           UINT64_C(1000);
   while (p9_time_now() < deadline) {
-    uint32_t after = p9_pl_read(offset);
+    uint32_t after = p10_runtime_local_raw_count(lane);
     if (after - before >= P10_1_RUNTIME_SIGNAL_PULSES) {
       uint64_t elapsed = p10_1_load64(
           &result->inter_object_signal_ticks_low,
@@ -437,7 +468,8 @@ static int p10_1_wait_signal(uint32_t lane_mask, uint32_t timeout_ms,
                     &result->inter_object_signal_ticks_high, elapsed);
       return P10_1_RUNTIME_STATUS_OK;
     }
-    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U)
+    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
+         (P10_PHY_READY_ALL_MASK << P10_PHY_SAFETY_SHIFT)) != 0U)
       break;
     usleep(P9_POLL_DELAY_US);
   }
@@ -484,7 +516,7 @@ static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
                                    uint32_t local_receiver) {
   uint32_t protocol_fault_flags = mailbox->protocol_fault_flags & 0xfffU;
   uint32_t physical_fault_injection =
-      (mailbox->lane_unavailable_mask & 3U) << 16;
+      (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16;
   if (inject_fault != 0U) {
     if ((command_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
       protocol_fault_flags |= 1U;
@@ -493,10 +525,12 @@ static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
       protocol_fault_flags |= P10_1_DUPLICATE_PAST_SEQUENCE_FLAG;
   }
   p9_pl_write(IR_REG_P9_OBJECT_CONFIG,
-              (mailbox->lane_mask & 3U) |
+              (mailbox->lane_mask & P10_LANE_MASK) |
                   ((mailbox->rate_select & 3U) << 8) |
                   ((mailbox->direction & 1U) << 16));
-  p9_pl_write(IR_REG_P9_LANE_WEIGHTS, mailbox->lane_weights & 0xffffU);
+  p9_pl_write(IR_REG_P9_LANE_WEIGHTS,
+              mailbox->lane_weights &
+                  (P10_LANE_COUNT == 4 ? UINT32_MAX : UINT32_C(0xffff)));
   p9_pl_write(IR_REG_P9_SESSION_EPOCH, mailbox->session_epoch);
   p9_pl_write(IR_REG_P9_PATH_EPOCH, mailbox->path_epoch & 0xffffU);
   p9_pl_write(IR_REG_P9_OBJECT_ID, mailbox->object_id);
@@ -597,7 +631,8 @@ static int p10_1_validate_stream_args(
        P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_RECEIVER);
   uint32_t recovery_vector_flags =
       abort_flags | reset_flags | injected_fault_flags;
-  if (mailbox->lane_mask == 0U || mailbox->lane_mask > 3U ||
+  if (mailbox->lane_mask == 0U ||
+      (mailbox->lane_mask & ~P10_LANE_MASK) != 0U ||
       mailbox->direction > 1U || mailbox->rate_select > 2U ||
       (mailbox->ring_depth != 8U && mailbox->ring_depth != 16U &&
        mailbox->ring_depth != 32U) ||

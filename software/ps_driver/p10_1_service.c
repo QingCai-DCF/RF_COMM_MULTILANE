@@ -2,6 +2,13 @@
 
 #include <string.h>
 
+#ifndef P10_1_SERVICE_LANE_COUNT
+#define P10_1_SERVICE_LANE_COUNT 2U
+#endif
+
+#define P10_1_SERVICE_LANE_MASK \
+  ((UINT32_C(1) << P10_1_SERVICE_LANE_COUNT) - UINT32_C(1))
+
 enum {
   P10_1_OWNER_POOL = 0,
   P10_1_OWNER_GENERATOR = 1,
@@ -67,7 +74,8 @@ int p10_1_service_configure(p10_1_service_t *service,
   if (service == NULL || config == NULL ||
       service->state == P10_1_SERVICE_RUNNING ||
       config->schema_version != P10_1_SERVICE_SCHEMA_VERSION ||
-      config->lane_mask == 0U || (config->lane_mask & ~UINT32_C(0x3)) != 0U ||
+      config->lane_mask == 0U ||
+      (config->lane_mask & ~P10_1_SERVICE_LANE_MASK) != 0U ||
       config->total_bytes == 0U ||
       config->total_bytes > P10_1_MAX_STREAM_SIZE_BYTES ||
       config->segment_size_bytes == 0U ||

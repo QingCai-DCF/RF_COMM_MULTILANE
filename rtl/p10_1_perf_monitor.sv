@@ -3,7 +3,8 @@
 `include "generated/ir_register_map_defs.svh"
 
 module p10_1_perf_monitor #(
-  parameter int unsigned EVENT_FIFO_DEPTH = 256
+  parameter int unsigned EVENT_FIFO_DEPTH = 256,
+  parameter int unsigned PHYSICAL_MODULE_COUNT = 4
 ) (
   input  logic         clk,
   input  logic         rst_n,
@@ -21,7 +22,7 @@ module p10_1_perf_monitor #(
   input  logic         descriptor_complete_i,
   input  logic         application_commit_i,
   input  logic [31:0]  application_commit_bytes_i,
-  input  logic [127:0] physical_tx_symbols_flat_i,
+  input  logic [PHYSICAL_MODULE_COUNT*32-1:0] physical_tx_symbols_flat_i,
   input  logic [5:0]   queue_occupancy_i,
   input  logic         ack_wait_i,
   input  logic         direction_quiet_i,
@@ -79,22 +80,24 @@ module p10_1_perf_monitor #(
   logic [63:0] descriptor_leak_snapshot_q;
   logic [63:0] double_completion_snapshot_q;
   logic [5:0] queue_occupancy_snapshot_q;
-  logic [33:0] physical_tx_symbol_sum;
+  logic [31+$clog2(PHYSICAL_MODULE_COUNT):0] physical_tx_symbol_sum;
+  integer physical_module_index;
 
   /*
    * tfdu_lane_phy counts actual rising-edge pulses at the final, killed
    * physical Txd boundary.  One 4PPM symbol carries two wire bits, so four
    * transmitted symbols are one byte-equivalent on the optical wire.  Sum
-   * all four module counters before dividing; this preserves any remainder
+   * all physical-module counters before dividing; this preserves any remainder
    * shared across lanes and includes DATA, ACK, retry, and bounded
    * inter-object signalling that was really driven.
    */
   always_comb begin
-    physical_tx_symbol_sum =
-        {2'b00, physical_tx_symbols_flat_i[31:0]} +
-        {2'b00, physical_tx_symbols_flat_i[63:32]} +
-        {2'b00, physical_tx_symbols_flat_i[95:64]} +
-        {2'b00, physical_tx_symbols_flat_i[127:96]};
+    physical_tx_symbol_sum = '0;
+    for (physical_module_index = 0;
+         physical_module_index < PHYSICAL_MODULE_COUNT;
+         physical_module_index = physical_module_index + 1)
+      physical_tx_symbol_sum = physical_tx_symbol_sum +
+          physical_tx_symbols_flat_i[32*physical_module_index +: 32];
   end
 
   logic event_push;
@@ -110,6 +113,8 @@ module p10_1_perf_monitor #(
   initial begin
     if (EVENT_FIFO_DEPTH != 256)
       $error("P10.1 canonical PL event FIFO depth must be 256");
+    if (PHYSICAL_MODULE_COUNT < 1 || PHYSICAL_MODULE_COUNT > 16)
+      $error("PHYSICAL_MODULE_COUNT must be within 1..16");
   end
 
   p10_1_timer_snapshot u_timer (

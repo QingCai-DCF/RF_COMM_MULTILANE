@@ -1,17 +1,27 @@
 set root_dir [file normalize [lindex $argv 0]]
 set role [string tolower [lindex $argv 1]]
 set xsa_file [file normalize [lindex $argv 2]]
+set campaign p10
+if {[llength $argv] > 3} { set campaign [string tolower [lindex $argv 3]] }
 
 if {$role eq "fixed"} {
-  set role_header "$root_dir/board_profiles/ax7020_fixed_2lane/p10_runtime_role.h"
+  if {$campaign eq "p10_2"} {
+    set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_runtime_role.h"
+  } else {
+    set role_header "$root_dir/board_profiles/ax7020_fixed_2lane/p10_runtime_role.h"
+  }
 } elseif {$role eq "rotating"} {
-  set role_header "$root_dir/board_profiles/ax7020_rotating_2lane/p10_runtime_role.h"
+  if {$campaign eq "p10_2"} {
+    set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_runtime_role.h"
+  } else {
+    set role_header "$root_dir/board_profiles/ax7020_rotating_2lane/p10_runtime_role.h"
+  }
 } else {
   error "P10 runtime role must be fixed or rotating"
 }
 
 # Keep generated Vitis paths short enough for Windows/Xilinx legacy tools.
-set workspace [file normalize "C:/p10_vitis/$role"]
+set workspace [file normalize "C:/p10_vitis/${campaign}_$role"]
 file mkdir $workspace
 setws $workspace
 set platform_name "p10_${role}_platform"

@@ -18,6 +18,21 @@
 #define P10_ENDPOINT_ROLE 0
 #endif
 
+#ifndef P10_LANE_COUNT
+#define P10_LANE_COUNT 2
+#endif
+
+#if P10_LANE_COUNT != 2 && P10_LANE_COUNT != 4
+#error "P10_LANE_COUNT must be 2 or 4 for the AX7020 runtime"
+#endif
+
+#define P10_LANE_MASK ((UINT32_C(1) << P10_LANE_COUNT) - UINT32_C(1))
+#define P10_PHYSICAL_STATUS_WIDTH (2U * P10_LANE_COUNT)
+#define P10_PHY_READY_ALL_MASK \
+  ((UINT32_C(1) << P10_PHYSICAL_STATUS_WIDTH) - UINT32_C(1))
+#define P10_PHY_STARTUP_SHIFT P10_PHYSICAL_STATUS_WIDTH
+#define P10_PHY_SAFETY_SHIFT (2U * P10_PHYSICAL_STATUS_WIDTH)
+
 #if P10_ENDPOINT_ROLE < 0 || P10_ENDPOINT_ROLE > 2
 #error "P10_ENDPOINT_ROLE must be 0 (legacy P9), 1 (fixed), or 2 (rotating)"
 #endif
@@ -46,9 +61,6 @@ enum {
   P9_STATUS_RAW_BUSY = 1U << 7,
   P9_STATUS_RAW_DONE = 1U << 8,
   P9_STATUS_RECEIVER_ENABLE = 1U << 9,
-  P9_PHY_READY_MASK = 0x0000000fU,
-  P9_PHY_STARTUP_MASK = 0x000000f0U,
-  P9_PHY_SAFETY_MASK = 0x00000f00U,
   P9_POLL_DELAY_US = 50U,
   P9_RESET_POLLS = 200000U,
   P9_RFAP_V1_HEADER_BYTES = 32U,
@@ -109,9 +121,9 @@ static uint32_t p9_local_sender(uint32_t direction) {
 }
 
 static uint32_t p9_expected_phy_mask(void) {
-  if (P10_ENDPOINT_ROLE == 1) return 0x3U;
-  if (P10_ENDPOINT_ROLE == 2) return 0xcU;
-  return 0xfU;
+  if (P10_ENDPOINT_ROLE == 1) return P10_LANE_MASK;
+  if (P10_ENDPOINT_ROLE == 2) return P10_LANE_MASK << P10_LANE_COUNT;
+  return P10_PHY_READY_ALL_MASK;
 }
 
 static uint32_t p9_expected_pl_id(void) {
@@ -128,8 +140,12 @@ static uint32_t p9_expected_pl_build_id(void) {
 }
 
 static uint32_t p9_expected_pl_profile_id(void) {
-  if (P10_ENDPOINT_ROLE == 1) return UINT32_C(0x702000f0);
-  if (P10_ENDPOINT_ROLE == 2) return UINT32_C(0x702000a0);
+  if (P10_ENDPOINT_ROLE == 1)
+    return P10_LANE_COUNT == 4 ? UINT32_C(0x702004f0) :
+                                UINT32_C(0x702000f0);
+  if (P10_ENDPOINT_ROLE == 2)
+    return P10_LANE_COUNT == 4 ? UINT32_C(0x702004a0) :
+                                UINT32_C(0x702000a0);
   return UINT32_C(0x00701022);
 }
 #endif
@@ -211,6 +227,22 @@ static void p9_pl_write(uint32_t offset, uint32_t value) {
   Xil_Out32((UINTPTR)IR_PL_BASEADDR + offset, value);
   dsb();
   g_metrics.memory_barrier_count++;
+}
+
+static uint32_t p10_runtime_local_raw_count(uint32_t lane) {
+#if P10_LANE_COUNT == 4
+  uint32_t module = P10_ENDPOINT_ROLE == 2 ? lane + 4U : lane;
+  p9_pl_write(IR_REG_P10_2_SNAPSHOT_CONTROL, 1U);
+  return p9_pl_read(ir_p10_2_module_word_offset(module, 0U));
+#else
+  if (P10_ENDPOINT_ROLE == 1)
+    return p9_pl_read(lane == 0U ? IR_REG_P9_RAW_RX_A0 :
+                                   IR_REG_P9_RAW_RX_A1);
+  if (P10_ENDPOINT_ROLE == 2)
+    return p9_pl_read(lane == 0U ? IR_REG_P9_RAW_RX_B0 :
+                                   IR_REG_P9_RAW_RX_B1);
+  return p9_pl_read(IR_REG_P9_RAW_RX_A0 + 4U * lane);
+#endif
 }
 
 static uint64_t p9_time_now(void) {
@@ -389,8 +421,8 @@ static int p9_shutdown(void) {
 
 static int p9_enable_and_arm(void) {
   uint32_t expected = p9_expected_phy_mask();
-  uint32_t expected_startup = expected << 4;
-  uint32_t expected_safety = expected << 8;
+  uint32_t expected_startup = expected << P10_PHY_STARTUP_SHIFT;
+  uint32_t expected_safety = expected << P10_PHY_SAFETY_SHIFT;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_RECEIVER_ENABLE_MASK);
   usleep(600U);
   uint64_t deadline = p9_deadline_ms(100U);
@@ -637,7 +669,9 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
       m->pl_profile_id != p9_expected_pl_profile_id() ||
       m->pl_register_map_version != IR_REGISTER_MAP_VERSION ||
       m->pl_register_map_hash_low != IR_REGISTER_MAP_HASH_LOW ||
-      m->pl_capabilities != UINT32_C(0xf7204221) ||
+      m->pl_capabilities !=
+          (P10_LANE_COUNT == 4 ? UINT32_C(0xf7204441) :
+                                UINT32_C(0xf7204221)) ||
       m->dma_has_sg != 1U || m->dma_base_address != UINT32_C(0x40400000))
     return P9_RUNTIME_PL_IDENTITY;
 #endif
@@ -645,7 +679,8 @@ static int p9_command_identity(volatile p9_mailbox_t *m) {
 }
 
 static int p9_command_raw(volatile p9_mailbox_t *m) {
-  if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
+  if (m->lane_mask == 0U || (m->lane_mask & ~P10_LANE_MASK) != 0U ||
+      m->direction > 1U ||
       m->raw_target == 0U || m->raw_spacing_cycles < 128U)
     return P9_RUNTIME_BAD_ARGUMENT;
   int status = p9_shutdown();
@@ -654,7 +689,8 @@ static int p9_command_raw(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) return status;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
   p9_pl_write(IR_REG_P9_RAW_CONFIG,
-              (m->lane_mask & 3U) | ((m->direction & 1U) << 8));
+              (m->lane_mask & P10_LANE_MASK) |
+                  ((m->direction & 1U) << 8));
   p9_pl_write(IR_REG_P9_RAW_TARGET, m->raw_target);
   p9_pl_write(IR_REG_P9_RAW_SPACING, m->raw_spacing_cycles);
   uint32_t local_source = p9_local_sender(m->direction);
@@ -672,17 +708,19 @@ static int p9_command_raw(volatile p9_mailbox_t *m) {
         break;
       }
     } else {
-      uint32_t lane0 = p9_pl_read(P10_ENDPOINT_ROLE == 1 ?
-          IR_REG_P9_RAW_RX_A0 : IR_REG_P9_RAW_RX_B0);
-      uint32_t lane1 = p9_pl_read(P10_ENDPOINT_ROLE == 1 ?
-          IR_REG_P9_RAW_RX_A1 : IR_REG_P9_RAW_RX_B1);
-      if (((m->lane_mask & 1U) == 0U || lane0 >= m->raw_target) &&
-          ((m->lane_mask & 2U) == 0U || lane1 >= m->raw_target)) {
+      uint32_t all_reached = 1U;
+      for (uint32_t lane = 0U; lane < P10_LANE_COUNT; ++lane) {
+        if ((m->lane_mask & (UINT32_C(1) << lane)) != 0U &&
+            p10_runtime_local_raw_count(lane) < m->raw_target)
+          all_reached = 0U;
+      }
+      if (all_reached != 0U) {
         status = P9_RUNTIME_OK;
         break;
       }
     }
-    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U) {
+    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
+         (P10_PHY_READY_ALL_MASK << P10_PHY_SAFETY_SHIFT)) != 0U) {
       status = P9_RUNTIME_PL_OBJECT;
       break;
     }
@@ -930,9 +968,12 @@ static int p9_validate_rfap(volatile p9_mailbox_t *m, const uint8_t *input,
 static int p9_configure_object(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
   p9_pl_write(IR_REG_P9_OBJECT_CONFIG,
-              (m->lane_mask & 3U) | ((m->rate_select & 3U) << 8) |
+              (m->lane_mask & P10_LANE_MASK) |
+                  ((m->rate_select & 3U) << 8) |
                   ((m->direction & 1U) << 16));
-  p9_pl_write(IR_REG_P9_LANE_WEIGHTS, m->lane_weights & 0xffffU);
+  p9_pl_write(IR_REG_P9_LANE_WEIGHTS,
+              m->lane_weights & (P10_LANE_COUNT == 4 ? UINT32_MAX :
+                                                         UINT32_C(0xffff)));
   p9_pl_write(IR_REG_P9_SESSION_EPOCH, m->session_epoch);
   p9_pl_write(IR_REG_P9_PATH_EPOCH, m->path_epoch & 0xffffU);
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
@@ -942,7 +983,7 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_FAULT_INJECTION,
               (m->drop_data_count & 0xffU) |
                   ((m->drop_ack_count & 0xffU) << 8) |
-                  ((m->lane_unavailable_mask & 3U) << 16));
+                  ((m->lane_unavailable_mask & P10_LANE_MASK) << 16));
   return P9_RUNTIME_OK;
 }
 
@@ -950,7 +991,8 @@ static int p9_validate_object_args(volatile p9_mailbox_t *m,
                                    UINTPTR *tx_address,
                                    UINTPTR *rx_address,
                                    uint32_t *transfer_bytes) {
-  if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
+  if (m->lane_mask == 0U || (m->lane_mask & ~P10_LANE_MASK) != 0U ||
+      m->direction > 1U ||
       m->rate_select > 2U ||
       (m->ring_depth != 8U && m->ring_depth != 16U &&
        m->ring_depth != 32U) ||
@@ -1256,14 +1298,23 @@ static int p9_command_stale_completion(volatile p9_mailbox_t *m) {
 }
 
 static void p9_read_physical_tx_counts(volatile uint32_t output[4]) {
+#if P10_LANE_COUNT == 4
+  p9_pl_write(IR_REG_P10_2_SNAPSHOT_CONTROL, 1U);
+  for (uint32_t lane = 0U; lane < 4U; ++lane) {
+    uint32_t module = P10_ENDPOINT_ROLE == 2 ? lane + 4U : lane;
+    output[lane] = p9_pl_read(ir_p10_2_module_word_offset(module, 1U));
+  }
+#else
   output[0] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_A0);
   output[1] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_A1);
   output[2] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_B0);
   output[3] = p9_pl_read(IR_REG_P9_PHYSICAL_TX_B1);
+#endif
 }
 
 static int p9_command_permit_drop(volatile p9_mailbox_t *m) {
-  if (m->lane_mask == 0U || m->lane_mask > 3U || m->direction > 1U ||
+  if (m->lane_mask == 0U || (m->lane_mask & ~P10_LANE_MASK) != 0U ||
+      m->direction > 1U ||
       m->raw_target < 64U || m->raw_spacing_cycles < 128U)
     return P9_RUNTIME_BAD_ARGUMENT;
   int status = p9_shutdown();
@@ -1272,7 +1323,8 @@ static int p9_command_permit_drop(volatile p9_mailbox_t *m) {
   if (status != P9_RUNTIME_OK) return status;
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
   p9_pl_write(IR_REG_P9_RAW_CONFIG,
-              (m->lane_mask & 3U) | ((m->direction & 1U) << 8));
+              (m->lane_mask & P10_LANE_MASK) |
+                  ((m->direction & 1U) << 8));
   p9_pl_write(IR_REG_P9_RAW_TARGET, m->raw_target);
   p9_pl_write(IR_REG_P9_RAW_SPACING, m->raw_spacing_cycles);
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_RAW_MASK);
@@ -1287,7 +1339,8 @@ static int p9_command_permit_drop(volatile p9_mailbox_t *m) {
       active_seen = 1U;
       break;
     }
-    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U)
+    if ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
+         (P10_PHY_READY_ALL_MASK << P10_PHY_SAFETY_SHIFT)) != 0U)
       break;
     usleep(P9_POLL_DELAY_US);
   }
@@ -1366,7 +1419,7 @@ static int p9_command_idle_noise(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_RECEIVER_ENABLE_MASK);
   uint32_t expected = p9_expected_phy_mask();
-  uint32_t expected_startup = expected << 4;
+  uint32_t expected_startup = expected << P10_PHY_STARTUP_SHIFT;
   uint64_t ready_deadline = p9_deadline_ms(100U);
   while ((p9_pl_read(IR_REG_P9_PHY_STATUS) &
           (expected | expected_startup)) != (expected | expected_startup)) {
@@ -1382,11 +1435,17 @@ static int p9_command_idle_noise(volatile p9_mailbox_t *m) {
       uint32_t pl_status = p9_pl_read(IR_REG_P9_STATUS);
       if ((pl_status & P9_STATUS_ENDPOINT_ARMED) != 0U ||
           (pl_status & P9_STATUS_TX_KILL_ACTIVE) == 0U ||
-          (p9_pl_read(IR_REG_P9_PHY_STATUS) & P9_PHY_SAFETY_MASK) != 0U ||
-          p9_pl_read(IR_REG_P9_PHYSICAL_TX_A0) != 0U ||
-          p9_pl_read(IR_REG_P9_PHYSICAL_TX_A1) != 0U ||
-          p9_pl_read(IR_REG_P9_PHYSICAL_TX_B0) != 0U ||
-          p9_pl_read(IR_REG_P9_PHYSICAL_TX_B1) != 0U) {
+          (p9_pl_read(IR_REG_P9_PHY_STATUS) &
+           (P10_PHY_READY_ALL_MASK << P10_PHY_SAFETY_SHIFT)) != 0U) {
+        status = P9_RUNTIME_SAFE_IDLE;
+        break;
+      }
+      volatile uint32_t local_tx_counts[4];
+      p9_read_physical_tx_counts(local_tx_counts);
+      uint32_t any_local_tx = 0U;
+      for (uint32_t lane = 0U; lane < P10_LANE_COUNT; ++lane)
+        any_local_tx |= local_tx_counts[lane];
+      if (any_local_tx != 0U) {
         status = P9_RUNTIME_SAFE_IDLE;
         break;
       }

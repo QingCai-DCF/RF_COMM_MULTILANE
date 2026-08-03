@@ -86,11 +86,13 @@ P10_1R_PROVENANCE = [
     ROOT / "config/register_map/ir_axi_regs.yaml",
     ROOT / "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md",
 ]
+P10_2_GOAL = ROOT / "goals/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS_GOAL.md"
+P10_2_GOAL_SHA256 = "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
 
 
 def configure_campaign(campaign: str) -> None:
     global OUT, ARTIFACTS, SUMMARY_JSON, SUMMARY_MD, FUNCTIONAL_OUT
-    global CAMPAIGN, TEST_ID, SUMMARY_TITLE
+    global CAMPAIGN, TEST_ID, SUMMARY_TITLE, ROLES
     CAMPAIGN = campaign
     if campaign == "p10":
         return
@@ -117,6 +119,25 @@ def configure_campaign(campaign: str) -> None:
         FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_1r"
         TEST_ID = "P10_1R-AX7020-DUAL-PS-RUNTIME-BUILD"
         SUMMARY_TITLE = "P10.1R AX7020 role-bound PS runtime build"
+        return
+    if campaign == "p10_2":
+        OUT = ROOT / "evidence/generated/vitis/p10_2_4lane_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_2"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_2_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_2_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_2_4lane"
+        TEST_ID = "P10_2-AX7020-DUAL-4LANE-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.2 AX7020 role-bound four-lane PS runtime build"
+        ROLES = {
+            "fixed": {
+                "role_value": 1,
+                "header": ROOT / "board_profiles/ax7020_fixed_4lane/p10_runtime_role.h",
+            },
+            "rotating": {
+                "role_value": 2,
+                "header": ROOT / "board_profiles/ax7020_rotating_4lane/p10_runtime_role.h",
+            },
+        }
         return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
@@ -191,6 +212,8 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
+    if CAMPAIGN == "p10_2":
+        paths.append(P10_2_GOAL)
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -242,7 +265,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     role_out = OUT / role
     role_out.mkdir(parents=True, exist_ok=True)
     xsa = FUNCTIONAL_OUT / role / f"p10_ax7020_{role}_functional.xsa"
-    workspace = Path(f"C:/p10_vitis/{role}")
+    workspace = Path(f"C:/p10_vitis/{CAMPAIGN}_{role}")
     platform = workspace / f"p10_{role}_platform"
     app = workspace / f"p10_{role}_runtime"
     elf = app / "Debug" / f"p10_{role}_runtime.elf"
@@ -252,7 +275,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     ps7_parameters = platform / "zynq_fsbl/ps7_parameters.xml"
     platform_xsa = platform / "hw" / xsa.name
     ps7_init_tcl = platform / "hw/ps7_init.tcl"
-    command = [str(XSCT), str(TCL), str(ROOT), role, str(xsa)]
+    command = [str(XSCT), str(TCL), str(ROOT), role, str(xsa), CAMPAIGN]
     result = run(command)
     log = role_out / f"p10_{role}_runtime_build.log"
     log.write_text(
@@ -319,7 +342,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -350,12 +373,18 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
+    if CAMPAIGN == "p10_2" and (
+        not P10_2_GOAL.is_file() or sha256(P10_2_GOAL) != P10_2_GOAL_SHA256
+    ):
+        print("P10_RUNTIME_BUILD_REFUSED: P10.2 goal hash mismatch", file=sys.stderr)
+        return 2
     source_worktree_dirty = tracked_source_dirty([
         *SOURCES,
         *(
             P10_1_PROVENANCE if CAMPAIGN == "p10_1"
             else [*P10_1R_PROVENANCE, P10_1R_GOAL]
             if CAMPAIGN == "p10_1r"
+            else [P10_2_GOAL] if CAMPAIGN == "p10_2"
             else []
         ),
         *(cfg["header"] for cfg in ROLES.values()),

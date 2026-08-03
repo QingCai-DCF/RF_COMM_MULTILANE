@@ -2,7 +2,7 @@
   "schema_version": 2,
   "register_map_version": "P10-2",
   "data_width_bits": 32,
-  "compatibility": "P0-P10.1 offsets and meanings are preserved; P10.1R atomic RX-admission observability is additive from 0x0A00",
+  "compatibility": "P0-P10.1R offsets and meanings are preserved; P10.2 appends a versioned 128-word atomic four-lane snapshot window at 0x0B00-0x0D08",
   "registers": [
     {
       "name": "CONTROL",
@@ -788,6 +788,10 @@
     {"name": "P10_1R_RXD_IDLE_QUAL_CYCLES", "offset": "0x0A9C", "access": "RO", "description": "Offline candidate Rxd idle qualification interval"},
     {"name": "P10_1R_MAX_ECHO_QUARANTINE_CYCLES", "offset": "0x0AA0", "access": "RO", "description": "Fail-closed maximum echo quarantine interval"},
     {"name": "P10_1R_DECODER_CLEAR_CYCLES", "offset": "0x0AA4", "access": "RO", "description": "Minimum decoder clear interval in protocol clocks"},
-    {"name": "P10_1R_ADMISSION_CONFIG_FLAGS", "offset": "0x0AA8", "access": "RO", "description": "Bit0 local-source rejection enabled; bit1 guard measurement telemetry enabled"}
+    {"name": "P10_1R_ADMISSION_CONFIG_FLAGS", "offset": "0x0AA8", "access": "RO", "description": "Bit0 local-source rejection enabled; bit1 guard measurement telemetry enabled"},
+    {"name": "P10_2_SNAPSHOT_CONTROL", "offset": "0x0B00", "access": "WO", "description": "Bit 0 atomically snapshots the P10.2 four-lane/per-module telemetry window"},
+    {"name": "P10_2_SNAPSHOT_GENERATION", "offset": "0x0B04", "access": "RO", "description": "Even generation incremented by two for each completed atomic P10.2 snapshot"},
+    {"name": "P10_2_SNAPSHOT_SCHEMA", "offset": "0x0B08", "access": "RO", "description": "P10.2 snapshot schema identity 0x50310201"},
+    {"name": "P10_2_SNAPSHOT_DATA_BASE", "offset": "0x0B0C", "access": "RO", "description": "Base of 128 coherent 32-bit snapshot words through 0x0D08; words 0-7 global, 8+12*lane per-lane, 56+8*module per-module, 120-127 safety/schema"}
   ]
 }

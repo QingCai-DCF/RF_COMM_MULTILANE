@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define IR_REGISTER_MAP_VERSION 0x0A000002u
-#define IR_REGISTER_MAP_HASH_LOW 0x6C0301EAu
+#define IR_REGISTER_MAP_HASH_LOW 0x185A4159u
 
 #define IR_REG_CONTROL 0x0000u
 #define IR_REG_PROFILE_LANE_MASK 0x0004u
@@ -544,6 +544,10 @@
 #define IR_REG_P10_1R_MAX_ECHO_QUARANTINE_CYCLES 0x0AA0u
 #define IR_REG_P10_1R_DECODER_CLEAR_CYCLES 0x0AA4u
 #define IR_REG_P10_1R_ADMISSION_CONFIG_FLAGS 0x0AA8u
+#define IR_REG_P10_2_SNAPSHOT_CONTROL 0x0B00u
+#define IR_REG_P10_2_SNAPSHOT_GENERATION 0x0B04u
+#define IR_REG_P10_2_SNAPSHOT_SCHEMA 0x0B08u
+#define IR_REG_P10_2_SNAPSHOT_DATA_BASE 0x0B0Cu
 
 typedef uint32_t (*ir_reg_read32_fn)(void *context, uint32_t offset);
 static inline int ir_p10_1_read64_snapshot(
@@ -562,6 +566,43 @@ static inline int ir_p10_1_read64_snapshot(
       *value = ((uint64_t)high << 32) | low;
       return 0;
     }
+  }
+  return -2;
+}
+
+
+#define IR_P10_2_LANE_COUNT 4u
+#define IR_P10_2_PHYSICAL_MODULE_COUNT 8u
+#define IR_P10_2_SNAPSHOT_WORDS 128u
+#define IR_P10_2_LANE_BASE_WORD 8u
+#define IR_P10_2_LANE_STRIDE_WORDS 12u
+#define IR_P10_2_MODULE_BASE_WORD 56u
+#define IR_P10_2_MODULE_STRIDE_WORDS 8u
+static inline uint32_t ir_p10_2_snapshot_word_offset(uint32_t word) {
+  return IR_REG_P10_2_SNAPSHOT_DATA_BASE + 4u * word;
+}
+static inline uint32_t ir_p10_2_lane_word_offset(
+    uint32_t lane, uint32_t field) {
+  return ir_p10_2_snapshot_word_offset(
+      IR_P10_2_LANE_BASE_WORD + IR_P10_2_LANE_STRIDE_WORDS * lane + field);
+}
+static inline uint32_t ir_p10_2_module_word_offset(
+    uint32_t module, uint32_t field) {
+  return ir_p10_2_snapshot_word_offset(
+      IR_P10_2_MODULE_BASE_WORD + IR_P10_2_MODULE_STRIDE_WORDS * module + field);
+}
+static inline int ir_p10_2_read_snapshot(
+    ir_reg_read32_fn read32, void *context, uint32_t *words) {
+  uint32_t before, after, word;
+  unsigned attempt;
+  if (read32 == 0 || words == 0) return -1;
+  for (attempt = 0; attempt < 4U; ++attempt) {
+    before = read32(context, IR_REG_P10_2_SNAPSHOT_GENERATION);
+    if ((before & 1U) != 0U) continue;
+    for (word = 0; word < IR_P10_2_SNAPSHOT_WORDS; ++word)
+      words[word] = read32(context, ir_p10_2_snapshot_word_offset(word));
+    after = read32(context, IR_REG_P10_2_SNAPSHOT_GENERATION);
+    if (before == after && (after & 1U) == 0U) return 0;
   }
   return -2;
 }

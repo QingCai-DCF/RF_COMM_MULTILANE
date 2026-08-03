@@ -6,7 +6,12 @@
 // window itself remains in shared block RAM.
 module p9_4ppm_frame_tx #(
   parameter int MAX_PAYLOAD_BYTES = 247,
-  parameter int PAYLOAD_ADDR_WIDTH = 13
+  parameter int PAYLOAD_ADDR_WIDTH = 13,
+  // The physical header keeps its historical one-byte lane/source field.
+  // LANE_COUNT=2 is bit-for-bit compatible with the frozen P10.1R wire
+  // format. Four- and eight-lane builds consume only formerly source-ID bits;
+  // endpoint IDs 1 and 2 remain exactly representable.
+  parameter int LANE_COUNT = 2
 ) (
   input  logic                          clk,
   input  logic                          rst_n,
@@ -42,6 +47,11 @@ module p9_4ppm_frame_tx #(
   localparam int DATA_HEADER_BYTES = 24;
   localparam int ACK_HEADER_BYTES = 20;
   localparam int PREAMBLE_SYMBOLS = 16;
+
+  initial begin
+    if (LANE_COUNT != 2 && LANE_COUNT != 4 && LANE_COUNT != 8)
+      $error("LANE_COUNT must be 2, 4, or 8");
+  end
 
   logic active_ack;
   logic [31:0] active_session;
@@ -112,9 +122,11 @@ module p9_4ppm_frame_tx #(
         10: data_header_byte_no_crc = active_payload_length[7:0];
         11: data_header_byte_no_crc = active_payload_length[15:8];
         12: data_header_byte_no_crc = active_flags;
-        // P10.1R reuses formerly-zero lane-id upper bits for the immutable
-        // endpoint source identity without adding any airtime.
-        13: data_header_byte_no_crc = {active_source_node, active_lane[1:0]};
+        // Preserve the frozen two/four-lane DATA encoding. Eight lanes use
+        // one additional lane bit and five source bits in the same byte.
+        13: data_header_byte_no_crc = LANE_COUNT <= 4 ?
+            {active_source_node, active_lane[1:0]} :
+            {active_source_node[4:0], active_lane[2:0]};
         14: data_header_byte_no_crc = active_object[7:0];
         15: data_header_byte_no_crc = active_object[15:8];
         16: data_header_byte_no_crc = active_object[23:16];
@@ -142,12 +154,14 @@ module p9_4ppm_frame_tx #(
         8: ack_header_byte_no_crc = active_ack_base[7:0];
         9: ack_header_byte_no_crc = active_ack_base[15:8];
         10: ack_header_byte_no_crc = 8'd32;
-        // ACK byte 11 carries the source identity plus the logical lane in
-        // the existing reserved bit 1.  This keeps ACK airtime unchanged and
-        // lets the receiver distinguish legitimate lane1 ACKs from optical
-        // cross-lane acceptance.  Bit 0 retains the direction field.
-        11: ack_header_byte_no_crc = {active_source_node, active_lane[0],
-                                       active_direction};
+        // ACK byte 11 remains bit-for-bit compatible for two lanes. Four and
+        // eight lanes widen only the lane field while retaining direction in
+        // bit 0 and keeping ACK airtime unchanged.
+        11: ack_header_byte_no_crc = LANE_COUNT == 2 ?
+            {active_source_node, active_lane[0], active_direction} :
+            LANE_COUNT == 4 ?
+            {active_source_node[4:0], active_lane[1:0], active_direction} :
+            {active_source_node[3:0], active_lane[2:0], active_direction};
         12: ack_header_byte_no_crc = active_ack_credit[7:0];
         13: ack_header_byte_no_crc = active_ack_credit[15:8];
         14: ack_header_byte_no_crc = active_ack_bitmap[7:0];

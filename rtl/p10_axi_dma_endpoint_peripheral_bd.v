@@ -5,7 +5,8 @@
 // ENDPOINT_ROLE=1 is AX7020-F (logical side A); ENDPOINT_ROLE=2 is AX7020-R
 // (logical side B). Only the role-local two TFDU modules reach package pins.
 module p10_axi_dma_endpoint_peripheral_bd #(
-  parameter integer ENDPOINT_ROLE = 1
+  parameter integer ENDPOINT_ROLE = 1,
+  parameter integer LANE_COUNT = 2
 ) (
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 s_axi_aclk CLK" *)
   (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF s_axi:s_axis:m_axis, ASSOCIATED_RESET s_axi_aresetn, FREQ_HZ 64000000" *)
@@ -45,28 +46,32 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 m_axis TLAST" *) output m_axis_tlast,
   output stream_reset_request_o,
 
-  output [1:0] tfdu_mode_o,
-  input  [1:0] tfdu_rxd_i,
-  output [1:0] tfdu_sd_o,
-  output [1:0] tfdu_txd_o,
+  output [LANE_COUNT-1:0] tfdu_mode_o,
+  input  [LANE_COUNT-1:0] tfdu_rxd_i,
+  output [LANE_COUNT-1:0] tfdu_sd_o,
+  output [LANE_COUNT-1:0] tfdu_txd_o,
   output [3:0] pl_activity_led_n_o
 );
   localparam [31:0] P10_MAGIC = 32'h5031_305A;
-  localparam [31:0] P10_BUILD_ID = ENDPOINT_ROLE == 1 ?
-      32'h5032_5346 : 32'h5032_5352;
+  localparam [31:0] P10_BUILD_ID = LANE_COUNT == 4 ?
+      (ENDPOINT_ROLE == 1 ? 32'h5032_3446 : 32'h5032_3452) :
+      (ENDPOINT_ROLE == 1 ? 32'h5032_5346 : 32'h5032_5352);
   localparam [31:0] P10_PROFILE_ID = ENDPOINT_ROLE == 1 ?
-      32'h7020_00F0 : 32'h7020_00A0;
+      (LANE_COUNT == 4 ? 32'h7020_04F0 : 32'h7020_00F0) :
+      (LANE_COUNT == 4 ? 32'h7020_04A0 : 32'h7020_00A0);
 
-  wire [1:0] a_mode;
-  wire [1:0] a_sd;
-  wire [1:0] a_txd;
-  wire [1:0] b_mode;
-  wire [1:0] b_sd;
-  wire [1:0] b_txd;
-  wire [1:0] valid_rx_frame_activity;
+  wire [LANE_COUNT-1:0] a_mode;
+  wire [LANE_COUNT-1:0] a_sd;
+  wire [LANE_COUNT-1:0] a_txd;
+  wire [LANE_COUNT-1:0] b_mode;
+  wire [LANE_COUNT-1:0] b_sd;
+  wire [LANE_COUNT-1:0] b_txd;
+  wire [LANE_COUNT-1:0] valid_rx_frame_activity;
   wire effective_full_shutdown;
-  wire [1:0] a_rxd = ENDPOINT_ROLE == 1 ? tfdu_rxd_i : 2'b11;
-  wire [1:0] b_rxd = ENDPOINT_ROLE == 2 ? tfdu_rxd_i : 2'b11;
+  wire [LANE_COUNT-1:0] a_rxd = ENDPOINT_ROLE == 1 ?
+      tfdu_rxd_i : {LANE_COUNT{1'b1}};
+  wire [LANE_COUNT-1:0] b_rxd = ENDPOINT_ROLE == 2 ?
+      tfdu_rxd_i : {LANE_COUNT{1'b1}};
 
   assign tfdu_mode_o = ENDPOINT_ROLE == 1 ? a_mode : b_mode;
   assign tfdu_sd_o = ENDPOINT_ROLE == 1 ? a_sd : b_sd;
@@ -75,10 +80,13 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   initial begin
     if (ENDPOINT_ROLE != 1 && ENDPOINT_ROLE != 2)
       $error("P10 ENDPOINT_ROLE must be 1 (fixed) or 2 (rotating)");
+    if (LANE_COUNT != 2 && LANE_COUNT != 4)
+      $error("P10 endpoint wrapper supports LANE_COUNT=2 or 4");
   end
 
   p9_axi_dma_peripheral #(
     .DEPLOYMENT_ROLE(ENDPOINT_ROLE),
+    .LANE_COUNT(LANE_COUNT),
     .BUILD_ID(P10_BUILD_ID),
     .PROFILE_ID(P10_PROFILE_ID),
     .IDENTITY_MAGIC(P10_MAGIC)
@@ -108,19 +116,29 @@ module p10_axi_dma_endpoint_peripheral_bd #(
     .monitor_effective_full_shutdown_o(effective_full_shutdown)
   );
 
-  p10_lane_activity_leds #(
-    .CLK_HZ(64_000_000),
-    .TICK_HZ(1_000),
-    .HOLD_MS(200)
-  ) u_activity_leds (
-    .clk(s_axi_aclk),
-    .rst_n(s_axi_aresetn),
-    .effective_full_shutdown_i(
-        effective_full_shutdown || (&tfdu_sd_o)),
-    .final_txd_activity_i(tfdu_txd_o),
-    .valid_rx_frame_activity_i(valid_rx_frame_activity),
-    .pl_led_n_o(pl_activity_led_n_o)
-  );
+  generate
+    if (LANE_COUNT == 2) begin : g_legacy_2lane_leds
+      p10_lane_activity_leds #(
+        .CLK_HZ(64_000_000), .TICK_HZ(1_000), .HOLD_MS(200)
+      ) u_activity_leds (
+        .clk(s_axi_aclk), .rst_n(s_axi_aresetn),
+        .effective_full_shutdown_i(effective_full_shutdown || (&tfdu_sd_o)),
+        .final_txd_activity_i(tfdu_txd_o),
+        .valid_rx_frame_activity_i(valid_rx_frame_activity),
+        .pl_led_n_o(pl_activity_led_n_o)
+      );
+    end else begin : g_4lane_leds
+      p10_2_lane_activity_leds #(
+        .CLK_HZ(64_000_000), .TICK_HZ(1_000), .HOLD_MS(200)
+      ) u_activity_leds (
+        .clk(s_axi_aclk), .rst_n(s_axi_aresetn),
+        .effective_full_shutdown_i(effective_full_shutdown || (&tfdu_sd_o)),
+        .final_txd_activity_i(tfdu_txd_o),
+        .valid_rx_frame_activity_i(valid_rx_frame_activity),
+        .pl_led_n_o(pl_activity_led_n_o)
+      );
+    end
+  endgenerate
 endmodule
 
 `default_nettype wire

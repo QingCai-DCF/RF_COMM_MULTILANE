@@ -1,0 +1,25 @@
+schema_version: 1
+scope: P10_2_OFFLINE_REQUIREMENT_ONLY
+module: TFDU6102 small-board assembly
+simultaneous_modules_per_endpoint: [1, 2, 4]
+engineering_peak_ired_current_per_module_a: 0.6
+four_module_peak_ired_current_a: 2.4
+design_duty_fraction_per_module: 0.18
+hard_duty_fraction_exclusive: 0.20
+single_chip_pulse_us: 0.125
+maximum_continuous_txd_high_us: 1.0
+provisional_droop_budget_v: 0.1
+minimum_effective_local_capacitance_for_1us_four_tx_f: 0.000024
+required_future_measurements:
+  - VCC2 at every module during 1-lane, 2-lane and 4-lane controlled TX
+  - endpoint input current and rail current
+  - cable and connector voltage drop
+  - local bulk and high-frequency capacitance including DC bias derating
+  - ground-return drop and temperature rise
+unknown_not_defaulted:
+  - existing supply continuous-current rating
+  - existing cable resistance and connector rating
+  - actual small-board capacitor values and derating
+  - actual VCC1 and VCC2 static currents
+hardware_acceptance: PENDING_P10_3
+no_hardware: true

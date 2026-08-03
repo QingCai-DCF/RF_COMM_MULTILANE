@@ -7,6 +7,9 @@
 // and read-only telemetry.  All logic is in the 64 MHz protocol domain.
 module p9_axi_dma_peripheral #(
   parameter integer DEPLOYMENT_ROLE = 0,
+  parameter integer LANE_COUNT = 2,
+  parameter integer WINDOW_SIZE = 32,
+  parameter integer SACK_BITS = 32,
   parameter logic [31:0] BUILD_ID = 32'h5009_000B,
   parameter logic [31:0] PROFILE_ID = 32'h0070_1022,
   parameter logic [31:0] IDENTITY_MAGIC = 32'h5039_5A10
@@ -45,20 +48,21 @@ module p9_axi_dma_peripheral #(
   output logic         m_axis_tlast,
   output logic         stream_reset_request_o,
 
-  output logic [1:0]   ir_mode_out_0,
-  input  logic [1:0]   ir_rx_in_0,
-  output logic [1:0]   ir_sd_0,
-  output logic [1:0]   ir_tx_out_0,
-  output logic [1:0]   loop_mode_b0,
-  input  logic [1:0]   loop_rx_b0,
-  output logic [1:0]   loop_sd_b0,
-  output logic [1:0]   loop_tx_b0,
-  output logic [1:0]   monitor_valid_rx_frame_o,
+  output logic [LANE_COUNT-1:0] ir_mode_out_0,
+  input  logic [LANE_COUNT-1:0] ir_rx_in_0,
+  output logic [LANE_COUNT-1:0] ir_sd_0,
+  output logic [LANE_COUNT-1:0] ir_tx_out_0,
+  output logic [LANE_COUNT-1:0] loop_mode_b0,
+  input  logic [LANE_COUNT-1:0] loop_rx_b0,
+  output logic [LANE_COUNT-1:0] loop_sd_b0,
+  output logic [LANE_COUNT-1:0] loop_tx_b0,
+  output logic [LANE_COUNT-1:0] monitor_valid_rx_frame_o,
   output logic         monitor_effective_full_shutdown_o
 );
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
   localparam logic [31:0] P9_BUILD_ID = 32'h5009_000B;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
+  localparam integer P10_2_SNAPSHOT_WORDS = 128;
   wire [31:0] effective_magic = DEPLOYMENT_ROLE == 0 ? P9_MAGIC : IDENTITY_MAGIC;
   wire [31:0] effective_build_id = DEPLOYMENT_ROLE == 0 ? P9_BUILD_ID : BUILD_ID;
   wire [31:0] effective_profile_id = DEPLOYMENT_ROLE == 0 ? P9_PROFILE_ID : PROFILE_ID;
@@ -81,14 +85,14 @@ module p9_axi_dma_peripheral #(
   logic raw_start_pulse_q;
   logic [5:0] stream_reset_hold_q;
   logic transport_resetn_q;
-  logic [1:0] core_a_mode;
-  logic [1:0] core_a_sd;
-  logic [1:0] core_a_txd;
-  logic [1:0] core_b_mode;
-  logic [1:0] core_b_sd;
-  logic [1:0] core_b_txd;
-  logic [1:0] cfg_lane_mask_q;
-  logic [15:0] cfg_lane_weights_q;
+  logic [LANE_COUNT-1:0] core_a_mode;
+  logic [LANE_COUNT-1:0] core_a_sd;
+  logic [LANE_COUNT-1:0] core_a_txd;
+  logic [LANE_COUNT-1:0] core_b_mode;
+  logic [LANE_COUNT-1:0] core_b_sd;
+  logic [LANE_COUNT-1:0] core_b_txd;
+  logic [LANE_COUNT-1:0] cfg_lane_mask_q;
+  logic [LANE_COUNT*8-1:0] cfg_lane_weights_q;
   logic [1:0] cfg_rate_q;
   logic cfg_direction_q;
   logic [31:0] cfg_session_q;
@@ -98,9 +102,9 @@ module p9_axi_dma_peripheral #(
   logic [31:0] cfg_fault_flags_q;
   logic [7:0] cfg_drop_data_q;
   logic [7:0] cfg_drop_ack_q;
-  logic [1:0] cfg_lane_unavailable_q;
+  logic [LANE_COUNT-1:0] cfg_lane_unavailable_q;
   logic raw_direction_q;
-  logic [1:0] raw_lane_mask_q;
+  logic [LANE_COUNT-1:0] raw_lane_mask_q;
   logic [31:0] raw_target_q;
   logic [31:0] raw_spacing_q;
   logic object_done_sticky_q;
@@ -110,9 +114,9 @@ module p9_axi_dma_peripheral #(
 
   logic endpoint_armed;
   logic tx_kill_active;
-  logic [3:0] phy_ready_mask;
-  logic [3:0] startup_done_mask;
-  logic [3:0] safety_fault_mask;
+  logic [2*LANE_COUNT-1:0] phy_ready_mask;
+  logic [2*LANE_COUNT-1:0] startup_done_mask;
+  logic [2*LANE_COUNT-1:0] safety_fault_mask;
   logic object_active;
   logic object_done;
   logic object_fail;
@@ -150,10 +154,10 @@ module p9_axi_dma_peripheral #(
   logic [31:0] ack_aggregation_count;
   logic [31:0] ack_timer_expiry_count;
   logic [31:0] ack_frames_sent;
-  logic [63:0] scheduler_frames_flat;
-  logic [63:0] scheduler_bytes_flat;
-  logic [63:0] scheduler_retries_flat;
-  logic [63:0] scheduler_migrations_flat;
+  logic [LANE_COUNT*32-1:0] scheduler_frames_flat;
+  logic [LANE_COUNT*32-1:0] scheduler_bytes_flat;
+  logic [LANE_COUNT*32-1:0] scheduler_retries_flat;
+  logic [LANE_COUNT*32-1:0] scheduler_migrations_flat;
   logic [31:0] scheduler_maximum_starvation;
   logic [31:0] physical_data_frames_good;
   logic [31:0] physical_ack_frames_good;
@@ -161,48 +165,51 @@ module p9_axi_dma_peripheral #(
   logic [31:0] physical_frame_bad;
   logic [31:0] physical_preamble_count;
   logic [31:0] physical_symbol_error_count;
-  logic [63:0] physical_data_good_by_lane;
-  logic [63:0] physical_ack_good_by_lane;
-  logic [63:0] physical_crc_bad_by_lane;
-  logic [63:0] physical_frame_bad_by_lane;
-  logic [63:0] physical_preamble_by_lane;
-  logic [63:0] physical_symbol_error_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_data_good_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_ack_good_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_crc_bad_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_frame_bad_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_preamble_by_lane;
+  logic [LANE_COUNT*32-1:0] physical_symbol_error_by_lane;
   logic [31:0] physical_drop_data_count;
   logic [31:0] physical_drop_ack_count;
-  logic [127:0] raw_rx_counts_flat;
-  logic [127:0] physical_tx_counts_flat;
-  logic [127:0] tx_high_max_flat;
-  logic [127:0] duty_high_max_flat;
-  logic [127:0] duty_high_current_flat;
-  logic [127:0] duty_headroom_flat;
-  logic [127:0] duty_target_throttle_count_flat;
-  logic [127:0] duty_hard_fault_count_flat;
+  logic [2*LANE_COUNT*32-1:0] raw_rx_counts_flat;
+  logic [2*LANE_COUNT*32-1:0] physical_tx_counts_flat;
+  logic [2*LANE_COUNT*32-1:0] tx_high_max_flat;
+  logic [2*LANE_COUNT*32-1:0] duty_high_max_flat;
+  logic [2*LANE_COUNT*32-1:0] duty_high_current_flat;
+  logic [2*LANE_COUNT*32-1:0] duty_headroom_flat;
+  logic [2*LANE_COUNT*32-1:0] duty_target_throttle_count_flat;
+  logic [2*LANE_COUNT*32-1:0] duty_hard_fault_count_flat;
   logic [31:0] duty_window_cycles;
   logic [31:0] duty_hard_limit_cycles;
   logic [31:0] duty_target_limit_cycles;
   logic [31:0] rx_admission_status;
-  logic [63:0] rx_raw_while_local_tx_flat;
-  logic [63:0] rx_blanked_raw_pulse_flat;
-  logic [63:0] rx_blanked_frame_start_flat;
-  logic [63:0] rx_blanked_crc_valid_flat;
-  logic [63:0] rx_local_source_reject_flat;
-  logic [63:0] rx_accepted_remote_flat;
-  logic [63:0] rx_guard_total_flat;
-  logic [63:0] rx_guard_max_flat;
-  logic [63:0] rx_echo_tail_max_flat;
-  logic [63:0] rx_last_txd_rise_flat;
-  logic [63:0] rx_last_txd_fall_flat;
-  logic [63:0] rx_first_rxd_after_tx_flat;
-  logic [63:0] rx_last_rxd_after_tx_flat;
+  logic [LANE_COUNT*32-1:0] rx_raw_while_local_tx_flat;
+  logic [LANE_COUNT*32-1:0] rx_blanked_raw_pulse_flat;
+  logic [LANE_COUNT*32-1:0] rx_blanked_frame_start_flat;
+  logic [LANE_COUNT*32-1:0] rx_blanked_crc_valid_flat;
+  logic [LANE_COUNT*32-1:0] rx_local_source_reject_flat;
+  logic [LANE_COUNT*32-1:0] rx_accepted_remote_flat;
+  logic [LANE_COUNT*32-1:0] rx_guard_total_flat;
+  logic [LANE_COUNT*32-1:0] rx_guard_max_flat;
+  logic [LANE_COUNT*32-1:0] rx_echo_tail_max_flat;
+  logic [LANE_COUNT*32-1:0] rx_last_txd_rise_flat;
+  logic [LANE_COUNT*32-1:0] rx_last_txd_fall_flat;
+  logic [LANE_COUNT*32-1:0] rx_first_rxd_after_tx_flat;
+  logic [LANE_COUNT*32-1:0] rx_last_rxd_after_tx_flat;
   logic [31:0] rx_overlap_violation_count;
   logic [31:0] rx_admission_violation_count;
   logic [31:0] rx_non_target_accepted_count;
   logic [31:0] rx_cross_lane_accepted_count;
-  logic [63:0] rx_decoder_clear_count_flat;
+  logic [LANE_COUNT*32-1:0] rx_decoder_clear_count_flat;
   logic [31:0] p10_1r_snapshot_generation_q;
   logic [31:0] p10_1r_snapshot_q [0:34];
-  wire [63:0] local_raw_rx_counts = DEPLOYMENT_ROLE == 2 ?
-      raw_rx_counts_flat[127:64] : raw_rx_counts_flat[63:0];
+  wire [LANE_COUNT*32-1:0] local_raw_rx_counts = DEPLOYMENT_ROLE == 2 ?
+      raw_rx_counts_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      raw_rx_counts_flat[LANE_COUNT*32-1:0];
+  logic [31:0] p10_2_snapshot_generation_q;
+  logic [31:0] p10_2_snapshot_q [0:P10_2_SNAPSHOT_WORDS-1];
   logic [31:0] p10_1_reg_rd_data;
   logic [63:0] p10_1_timer;
   logic [31:0] p10_1_snapshot_generation;
@@ -211,6 +218,16 @@ module p9_axi_dma_peripheral #(
   logic [31:0] retry_exhausted_d_q;
   logic [2:0] p10_1_axis_bytes;
   integer p10_1r_snapshot_index;
+  integer p10_2_snapshot_index;
+  integer p10_2_snapshot_lane;
+  integer p10_2_snapshot_module;
+
+  initial begin
+    if (LANE_COUNT != 2 && LANE_COUNT != 4)
+      $error("AXI peripheral supports the frozen 2-lane and P10.2 4-lane profiles");
+    if (WINDOW_SIZE != 32 || SACK_BITS != 32)
+      $error("P10.2 peripheral freezes WINDOW_SIZE=SACK_BITS=32");
+  end
 
   always_comb begin
     p10_1_axis_bytes = s_axis_tkeep[0] + s_axis_tkeep[1] +
@@ -243,7 +260,7 @@ module p9_axi_dma_peripheral #(
       stream_reset_hold_q <= 0;
       stream_reset_request_o <= 0;
       cfg_lane_mask_q <= 0;
-      cfg_lane_weights_q <= 16'h0101;
+      cfg_lane_weights_q <= {LANE_COUNT{8'h01}};
       cfg_rate_q <= 2'd2;
       cfg_direction_q <= 0;
       cfg_session_q <= 32'h0000_0001;
@@ -263,10 +280,15 @@ module p9_axi_dma_peripheral #(
       object_fail_d_q <= 0;
       raw_done_sticky_q <= 0;
       p10_1r_snapshot_generation_q <= 0;
+      p10_2_snapshot_generation_q <= 0;
       for (p10_1r_snapshot_index = 0;
            p10_1r_snapshot_index < 35;
            p10_1r_snapshot_index = p10_1r_snapshot_index + 1)
         p10_1r_snapshot_q[p10_1r_snapshot_index] <= 0;
+      for (p10_2_snapshot_index = 0;
+           p10_2_snapshot_index < P10_2_SNAPSHOT_WORDS;
+           p10_2_snapshot_index = p10_2_snapshot_index + 1)
+        p10_2_snapshot_q[p10_2_snapshot_index] <= 0;
     end else begin
       arm_pulse_q <= 0;
       disarm_pulse_q <= 0;
@@ -341,21 +363,21 @@ module p9_axi_dma_peripheral #(
             end
           end
           12'h728: begin
-            cfg_lane_mask_q <= reg_wr_data[1:0];
+            cfg_lane_mask_q <= reg_wr_data[LANE_COUNT-1:0];
             cfg_rate_q <= reg_wr_data[9:8];
             cfg_direction_q <= reg_wr_data[16];
           end
-          12'h72C: cfg_lane_weights_q <= reg_wr_data[15:0];
+          12'h72C: cfg_lane_weights_q <= reg_wr_data[LANE_COUNT*8-1:0];
           12'h730: cfg_session_q <= reg_wr_data;
           12'h734: cfg_path_q <= reg_wr_data[15:0];
           12'h738: cfg_object_q <= reg_wr_data;
           12'h73C: begin
             cfg_drop_data_q <= reg_wr_data[7:0];
             cfg_drop_ack_q <= reg_wr_data[15:8];
-            cfg_lane_unavailable_q <= reg_wr_data[17:16];
+            cfg_lane_unavailable_q <= reg_wr_data[16 +: LANE_COUNT];
           end
           12'h740: begin
-            raw_lane_mask_q <= reg_wr_data[1:0];
+            raw_lane_mask_q <= reg_wr_data[LANE_COUNT-1:0];
             raw_direction_q <= reg_wr_data[8];
           end
           12'h744: raw_target_q <= reg_wr_data;
@@ -403,6 +425,87 @@ module p9_axi_dma_peripheral #(
             p10_1r_snapshot_q[33] <= rx_non_target_accepted_count;
             p10_1r_snapshot_q[34] <= rx_cross_lane_accepted_count;
           end
+          // P10.2 appends a versioned, atomic four-lane snapshot without
+          // changing any frozen P9/P10.1R address or snapshot word.
+          12'hB00: if (reg_wr_data[0]) begin
+            p10_2_snapshot_generation_q <=
+                p10_2_snapshot_generation_q + 32'd2;
+            for (p10_2_snapshot_index = 0;
+                 p10_2_snapshot_index < P10_2_SNAPSHOT_WORDS;
+                 p10_2_snapshot_index = p10_2_snapshot_index + 1)
+              p10_2_snapshot_q[p10_2_snapshot_index] <= 0;
+            p10_2_snapshot_q[0] <= {8'd247, 8'(WINDOW_SIZE), 8'(LANE_COUNT),
+                                     8'(2*LANE_COUNT)};
+            p10_2_snapshot_q[1] <= {{(32-3*LANE_COUNT){1'b0}},
+                safety_fault_mask[LANE_COUNT-1:0],
+                startup_done_mask[LANE_COUNT-1:0],
+                phy_ready_mask[LANE_COUNT-1:0]};
+            p10_2_snapshot_q[2] <= {{(32-2*LANE_COUNT){1'b0}},
+                                     cfg_lane_unavailable_q,
+                                     cfg_lane_mask_q};
+            p10_2_snapshot_q[3] <= rx_admission_status;
+            p10_2_snapshot_q[4] <= tx_attempt_count;
+            p10_2_snapshot_q[5] <= tx_retry_count;
+            p10_2_snapshot_q[6] <= tx_migration_count;
+            p10_2_snapshot_q[7] <= {physical_ack_frames_good[15:0],
+                                     physical_data_frames_good[15:0]};
+            for (p10_2_snapshot_lane = 0;
+                 p10_2_snapshot_lane < LANE_COUNT;
+                 p10_2_snapshot_lane = p10_2_snapshot_lane + 1) begin
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+0] <=
+                  scheduler_frames_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+1] <=
+                  scheduler_bytes_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+2] <=
+                  scheduler_retries_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+3] <=
+                  scheduler_migrations_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+4] <=
+                  physical_data_good_by_lane[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+5] <=
+                  physical_ack_good_by_lane[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+6] <=
+                  physical_crc_bad_by_lane[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+7] <=
+                  physical_frame_bad_by_lane[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+8] <=
+                  rx_raw_while_local_tx_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+9] <=
+                  rx_blanked_raw_pulse_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+10] <=
+                  rx_local_source_reject_flat[32*p10_2_snapshot_lane +: 32];
+              p10_2_snapshot_q[8+12*p10_2_snapshot_lane+11] <=
+                  rx_accepted_remote_flat[32*p10_2_snapshot_lane +: 32];
+            end
+            for (p10_2_snapshot_module = 0;
+                 p10_2_snapshot_module < 2*LANE_COUNT;
+                 p10_2_snapshot_module = p10_2_snapshot_module + 1) begin
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+0] <=
+                  raw_rx_counts_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+1] <=
+                  physical_tx_counts_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+2] <=
+                  tx_high_max_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+3] <=
+                  duty_high_max_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+4] <=
+                  duty_high_current_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+5] <=
+                  duty_headroom_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+6] <=
+                  duty_target_throttle_count_flat[32*p10_2_snapshot_module +: 32];
+              p10_2_snapshot_q[56+8*p10_2_snapshot_module+7] <=
+                  duty_hard_fault_count_flat[32*p10_2_snapshot_module +: 32];
+            end
+            p10_2_snapshot_q[120] <= rx_overlap_violation_count;
+            p10_2_snapshot_q[121] <= rx_admission_violation_count;
+            p10_2_snapshot_q[122] <= rx_non_target_accepted_count;
+            p10_2_snapshot_q[123] <= rx_cross_lane_accepted_count;
+            p10_2_snapshot_q[124] <= duty_window_cycles;
+            p10_2_snapshot_q[125] <= duty_hard_limit_cycles;
+            p10_2_snapshot_q[126] <= duty_target_limit_cycles;
+            p10_2_snapshot_q[127] <= 32'h5031_0201;
+          end
           default: ;
         endcase
       end
@@ -429,7 +532,9 @@ module p9_axi_dma_peripheral #(
     end
   end
 
-  p10_1_perf_monitor u_p10_1_perf_monitor (
+  p10_1_perf_monitor #(
+    .PHYSICAL_MODULE_COUNT(2*LANE_COUNT)
+  ) u_p10_1_perf_monitor (
     .clk(s_axi_aclk),
     .rst_n(s_axi_aresetn),
     .object_reset_i(stream_reset_request_o),
@@ -457,12 +562,12 @@ module p9_axi_dma_peripheral #(
     .snapshot_generation_o(p10_1_snapshot_generation)
   );
 
-  assign ir_mode_out_0 = s_axi_aresetn ? core_a_mode : 2'b11;
-  assign ir_sd_0       = s_axi_aresetn ? core_a_sd   : 2'b11;
-  assign ir_tx_out_0   = s_axi_aresetn ? core_a_txd  : 2'b00;
-  assign loop_mode_b0  = s_axi_aresetn ? core_b_mode : 2'b11;
-  assign loop_sd_b0    = s_axi_aresetn ? core_b_sd   : 2'b11;
-  assign loop_tx_b0    = s_axi_aresetn ? core_b_txd  : 2'b00;
+  assign ir_mode_out_0 = s_axi_aresetn ? core_a_mode : {LANE_COUNT{1'b1}};
+  assign ir_sd_0       = s_axi_aresetn ? core_a_sd   : {LANE_COUNT{1'b1}};
+  assign ir_tx_out_0   = s_axi_aresetn ? core_a_txd  : {LANE_COUNT{1'b0}};
+  assign loop_mode_b0  = s_axi_aresetn ? core_b_mode : {LANE_COUNT{1'b1}};
+  assign loop_sd_b0    = s_axi_aresetn ? core_b_sd   : {LANE_COUNT{1'b1}};
+  assign loop_tx_b0    = s_axi_aresetn ? core_b_txd  : {LANE_COUNT{1'b0}};
 
   always_comb begin
     reg_rd_data = 32'h0000_0000;
@@ -472,20 +577,38 @@ module p9_axi_dma_peripheral #(
       12'h708: reg_rd_data = effective_profile_id;
       12'h70C: reg_rd_data = `IR_REGISTER_MAP_VERSION;
       12'h710: reg_rd_data = `IR_REGISTER_MAP_HASH_LOW;
-      12'h714: reg_rd_data = {8'd247, 8'd32, 4'd4, 4'd2, 4'd2, 4'd1};
+      // Keep the frozen 2-lane capability word bit-for-bit compatible
+      // (0xf7204221).  The two lane-count nibbles describe the physical and
+      // logical lanes visible to this endpoint; the project-wide eight-module
+      // count is reported by the versioned P10.2 snapshot schema instead.
+      12'h714: reg_rd_data = {8'd247, 8'(WINDOW_SIZE), 4'd4,
+                               4'(LANE_COUNT), 4'(LANE_COUNT), 4'd1};
       12'h718: reg_rd_data = 0;
       12'h71C: reg_rd_data = {22'd0, receiver_enable_q, raw_done_sticky_q,
           raw_busy, output_complete, input_complete, object_fail_sticky_q,
           object_done_sticky_q, object_active, tx_kill_active, endpoint_armed};
-      12'h720: reg_rd_data = {16'd0, safety_fault_mask, startup_done_mask, phy_ready_mask};
+      12'h720: reg_rd_data = {{(32-6*LANE_COUNT){1'b0}},
+          safety_fault_mask, startup_done_mask, phy_ready_mask};
       12'h724: reg_rd_data = object_error;
-      12'h728: reg_rd_data = {15'd0, cfg_direction_q, 6'd0, cfg_rate_q, 6'd0, cfg_lane_mask_q};
-      12'h72C: reg_rd_data = {16'd0, cfg_lane_weights_q};
+      12'h728: begin
+        reg_rd_data = 0;
+        reg_rd_data[LANE_COUNT-1:0] = cfg_lane_mask_q;
+        reg_rd_data[9:8] = cfg_rate_q;
+        reg_rd_data[16] = cfg_direction_q;
+      end
+      12'h72C: reg_rd_data = cfg_lane_weights_q;
       12'h730: reg_rd_data = cfg_session_q;
       12'h734: reg_rd_data = {16'd0, cfg_path_q};
       12'h738: reg_rd_data = cfg_object_q;
-      12'h73C: reg_rd_data = {14'd0, cfg_lane_unavailable_q, cfg_drop_ack_q, cfg_drop_data_q};
-      12'h740: reg_rd_data = {23'd0, raw_direction_q, 6'd0, raw_lane_mask_q};
+      12'h73C: begin
+        reg_rd_data = {16'd0, cfg_drop_ack_q, cfg_drop_data_q};
+        reg_rd_data[16 +: LANE_COUNT] = cfg_lane_unavailable_q;
+      end
+      12'h740: begin
+        reg_rd_data = 0;
+        reg_rd_data[LANE_COUNT-1:0] = raw_lane_mask_q;
+        reg_rd_data[8] = raw_direction_q;
+      end
       12'h744: reg_rd_data = raw_target_q;
       12'h748: reg_rd_data = raw_spacing_q;
       12'h74C: reg_rd_data = raw_sent_count;
@@ -622,16 +745,25 @@ module p9_axi_dma_peripheral #(
       12'hA98: reg_rd_data = DEPLOYMENT_ROLE == 0 ? 32'd36864 : 32'd4096;
       12'hA9C: reg_rd_data = 32'd256;
       12'hAA0: reg_rd_data = 32'd131072;
-      12'hAA4: reg_rd_data = 32'd4;
-      12'hAA8: reg_rd_data = 32'h0000_0003;
-      default: reg_rd_data =
-          (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
-          ? p10_1_reg_rd_data : 0;
+      12'hAA4: reg_rd_data = LANE_COUNT;
+      12'hAA8: reg_rd_data = (1 << LANE_COUNT) - 1;
+      12'hB00: reg_rd_data = 0;
+      12'hB04: reg_rd_data = p10_2_snapshot_generation_q;
+      12'hB08: reg_rd_data = 32'h5031_0201;
+      default: begin
+        if (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
+          reg_rd_data = p10_1_reg_rd_data;
+        else if (reg_rd_addr >= 12'hB0C && reg_rd_addr <= 12'hD08)
+          reg_rd_data = p10_2_snapshot_q[(reg_rd_addr-12'hB0C) >> 2];
+        else
+          reg_rd_data = 0;
+      end
     endcase
   end
 
   p9_optical_transport_core #(
-    .CLK_HZ(64_000_000), .WINDOW_SIZE(32), .SACK_BITS(32),
+    .CLK_HZ(64_000_000), .LANE_COUNT(LANE_COUNT),
+    .WINDOW_SIZE(WINDOW_SIZE), .SACK_BITS(SACK_BITS),
     .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(4_000_000),
     // Preserve the historical P9 monolithic defaults while P10.1R role-bound
     // endpoints use the directly measured guard selection.

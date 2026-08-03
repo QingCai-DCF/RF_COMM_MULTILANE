@@ -1,15 +1,30 @@
 set root_dir [file normalize [lindex $argv 0]]
 set endpoint_role_name [string tolower [lindex $argv 1]]
 set out_dir [file normalize [lindex $argv 2]]
+set lane_count 2
+if {[llength $argv] > 3} { set lane_count [lindex $argv 3] }
+if {$lane_count != 2 && $lane_count != 4} {
+  error "P10 AX7020 build lane_count must be 2 or 4"
+}
 
 if {$endpoint_role_name eq "fixed"} {
   set endpoint_role 1
-  set profile_id P10_AX7020_FIXED_2LANE
-  set xdc_file "$root_dir/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+  if {$lane_count == 4} {
+    set profile_id P10_2_AX7020_FIXED_4LANE
+    set xdc_file "$root_dir/board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc"
+  } else {
+    set profile_id P10_AX7020_FIXED_2LANE
+    set xdc_file "$root_dir/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+  }
 } elseif {$endpoint_role_name eq "rotating"} {
   set endpoint_role 2
-  set profile_id P10_AX7020_ROTATING_2LANE
-  set xdc_file "$root_dir/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+  if {$lane_count == 4} {
+    set profile_id P10_2_AX7020_ROTATING_4LANE
+    set xdc_file "$root_dir/board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
+  } else {
+    set profile_id P10_AX7020_ROTATING_2LANE
+    set xdc_file "$root_dir/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+  }
 } else {
   error "P10 endpoint role must be fixed or rotating"
 }
@@ -17,10 +32,11 @@ if {$endpoint_role_name eq "fixed"} {
 # Vivado 2023.1 still enforces a 260-byte path limit for generated OOC files on
 # Windows.  Keep the disposable project path deliberately short; all retained
 # reports and artifacts are written to out_dir in the worktree.
-set build_dir [file normalize "C:/p10_vivado/$endpoint_role_name"]
+set build_dir [file normalize "C:/p10_vivado/${endpoint_role_name}_${lane_count}lane"]
 file mkdir $build_dir
 file mkdir $out_dir
-create_project "p10_ax7020_${endpoint_role_name}_functional" "$build_dir/project" \
+set project_name "p10_ax7020_${endpoint_role_name}_${lane_count}lane_functional"
+create_project $project_name "$build_dir/project" \
   -part xc7z020clg400-2 -force
 
 set rtl_sources [list \
@@ -48,6 +64,7 @@ set rtl_sources [list \
   "$root_dir/rtl/p10_1_perf_monitor.sv" \
   "$root_dir/rtl/p9_axi_dma_peripheral.sv" \
   "$root_dir/rtl/p10_lane_activity_leds.sv" \
+  "$root_dir/rtl/p10_2_lane_activity_leds.sv" \
   "$root_dir/rtl/p10_axi_dma_endpoint_peripheral_bd.v" \
 ]
 add_files -fileset sources_1 $rtl_sources
@@ -82,6 +99,7 @@ set_property -dict [list \
 update_compile_order -fileset sources_1
 set endpoint [create_bd_cell -type module -reference p10_axi_dma_endpoint_peripheral_bd p10_endpoint_0]
 set_property CONFIG.ENDPOINT_ROLE $endpoint_role $endpoint
+set_property CONFIG.LANE_COUNT $lane_count $endpoint
 
 set rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_protocol_64]
 set rst100 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_dma_100]
@@ -198,7 +216,7 @@ validate_bd_design
 save_bd_design
 generate_target all [get_files p10_ps_system.bd]
 make_wrapper -files [get_files p10_ps_system.bd] -top
-add_files -norecurse "$build_dir/project/p10_ax7020_${endpoint_role_name}_functional.gen/sources_1/bd/p10_ps_system/hdl/p10_ps_system_wrapper.v"
+add_files -norecurse "$build_dir/project/${project_name}.gen/sources_1/bd/p10_ps_system/hdl/p10_ps_system_wrapper.v"
 set_property top p10_ps_system_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
@@ -216,6 +234,7 @@ report_drc -file "$out_dir/post_route_drc.rpt"
 report_methodology -file "$out_dir/post_route_methodology.rpt"
 report_timing_summary -report_unconstrained -check_timing_verbose \
   -file "$out_dir/post_route_timing_summary.rpt"
+check_timing -verbose -file "$out_dir/post_route_check_timing.rpt"
 report_utilization -hierarchical -file "$out_dir/post_route_utilization.rpt"
 report_cdc -details -file "$out_dir/post_route_cdc.rpt"
 report_clock_interaction -file "$out_dir/post_route_clock_interaction.rpt"
@@ -242,6 +261,14 @@ if {![catch {set cdc_violations [get_cdc_violations -quiet]}]} {
     }
   }
 }
+set check_handle [open "$out_dir/post_route_check_timing.rpt" r]
+set check_text [read $check_handle]
+close $check_handle
+set unconstrained_internal_endpoints -1
+set no_clock_count -1
+regexp {checking unconstrained_internal_endpoints \(([0-9]+)\)} \
+  $check_text -> unconstrained_internal_endpoints
+regexp {checking no_clock \(([0-9]+)\)} $check_text -> no_clock_count
 set setup_path [get_timing_paths -quiet -delay_type max -max_paths 1]
 set hold_path [get_timing_paths -quiet -delay_type min -max_paths 1]
 set wns [expr {[llength $setup_path] ? [get_property SLACK $setup_path] : 0.0}]
@@ -250,10 +277,23 @@ set tns 0.0
 foreach path [get_timing_paths -quiet -delay_type max -slack_lesser_than 0.0 -max_paths 100000] {
   set tns [expr {$tns + [get_property SLACK $path]}]
 }
+set lut_count [llength [get_cells -hierarchical -filter {PRIMITIVE_GROUP == LUT}]]
+set ff_count [llength [get_cells -hierarchical -filter {PRIMITIVE_GROUP == FLOP_LATCH}]]
+set bram36_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB36*}]]
+set bram18_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB18*}]]
+set dsp_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ DSP48*}]]
+set bram36_equivalent [expr {$bram36_count + $bram18_count / 2.0}]
+set lut_percent [expr {100.0 * $lut_count / 53200.0}]
+set ff_percent [expr {100.0 * $ff_count / 106400.0}]
+set bram_percent [expr {100.0 * $bram36_equivalent / 140.0}]
+set dsp_percent [expr {100.0 * $dsp_count / 220.0}]
+set resource_limits_pass [expr {$lut_percent <= 70.0 && $ff_percent <= 70.0 &&
+    $bram_percent <= 75.0 && $dsp_percent <= 50.0}]
 if {$wns < 0.0 || $whs < 0.0 || $tns < 0.0 || $drc_critical != 0 ||
     $drc_error != 0 || $reqp_1839 != 0 || $methodology_critical != 0 ||
-    $cdc_critical != 0} {
-  error "P10 signoff gate failed: WNS=$wns WHS=$whs TNS=$tns DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical"
+    $cdc_critical != 0 || $unconstrained_internal_endpoints != 0 ||
+    $no_clock_count != 0 || !$resource_limits_pass} {
+  error "P10 signoff gate failed: WNS=$wns WHS=$whs TNS=$tns DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical UNCONSTRAINED_INTERNAL=$unconstrained_internal_endpoints NO_CLOCK=$no_clock_count RESOURCE_LIMITS=$resource_limits_pass"
 }
 
 write_checkpoint -force "$out_dir/p10_ax7020_${endpoint_role_name}_post_route.dcp"
@@ -266,6 +306,7 @@ puts $marker "P10_FUNCTIONAL_BUILD=PASS"
 puts $marker "P10_ENDPOINT_ROLE=$endpoint_role_name"
 puts $marker "P10_ENDPOINT_ROLE_VALUE=$endpoint_role"
 puts $marker "P10_PROFILE_ID=$profile_id"
+puts $marker "P10_LANE_COUNT=$lane_count"
 puts $marker "P10_PART=[get_property PART [current_project]]"
 puts $marker "P10_TOP=p10_ps_system_wrapper"
 puts $marker "P10_AXI_BASE=0x43C00000"
@@ -278,7 +319,11 @@ puts $marker "P10_DMA_CLOCK_HZ=100000000"
 puts $marker "P10_AXIL_CLOCK_HZ=50000000"
 puts $marker "P10_NETWORK_USED=false"
 puts $marker "P10_ETHERNET_ENABLED=false"
-puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX"
+if {$lane_count == 4} {
+  puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_ACTIVITY_LED2_LANE1_ACTIVITY_LED3_LANE2_ACTIVITY_LED4_LANE3_ACTIVITY"
+} else {
+  puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX"
+}
 puts $marker "P10_PL_ACTIVITY_LED_ACTIVE_LOW=true"
 puts $marker "P10_PL_ACTIVITY_LED_HOLD_MS=200"
 puts $marker "P10_PL_ACTIVITY_LED_SAFETY_ROLE=MONITOR_ONLY"
@@ -291,6 +336,19 @@ puts $marker "P10_DRC_ERROR_COUNT=$drc_error"
 puts $marker "P10_REQP_1839_COUNT=$reqp_1839"
 puts $marker "P10_METHODOLOGY_CRITICAL_COUNT=$methodology_critical"
 puts $marker "P10_CDC_CRITICAL_COUNT=$cdc_critical"
+puts $marker "P10_UNCONSTRAINED_INTERNAL_ENDPOINTS=$unconstrained_internal_endpoints"
+puts $marker "P10_NO_CLOCK_COUNT=$no_clock_count"
+puts $marker "P10_LUT=$lut_count"
+puts $marker "P10_FF=$ff_count"
+puts $marker "P10_BRAM36=$bram36_count"
+puts $marker "P10_BRAM18=$bram18_count"
+puts $marker "P10_BRAM36_EQUIVALENT=$bram36_equivalent"
+puts $marker "P10_DSP=$dsp_count"
+puts $marker "P10_LUT_PERCENT=$lut_percent"
+puts $marker "P10_FF_PERCENT=$ff_percent"
+puts $marker "P10_BRAM_PERCENT=$bram_percent"
+puts $marker "P10_DSP_PERCENT=$dsp_percent"
+puts $marker "P10_RESOURCE_LIMITS_PASS=$resource_limits_pass"
 puts $marker "P10_HARDWARE_ADMISSION=false"
 puts $marker "P10_BLOCKING_CONDITION=P10-SAFETY-POWERUP-001"
 close $marker

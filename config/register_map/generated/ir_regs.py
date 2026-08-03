@@ -1,6 +1,6 @@
 # Auto-generated from config/register_map/ir_axi_regs.yaml
 IR_REGISTER_MAP_VERSION = 0x0A000002
-IR_REGISTER_MAP_HASH_LOW = 0x6C0301EA
+IR_REGISTER_MAP_HASH_LOW = 0x185A4159
 
 IR_REG_CONTROL = 0x0000
 IR_REG_PROFILE_LANE_MASK = 0x0004
@@ -542,6 +542,10 @@ IR_REG_P10_1R_RXD_IDLE_QUAL_CYCLES = 0x0A9C
 IR_REG_P10_1R_MAX_ECHO_QUARANTINE_CYCLES = 0x0AA0
 IR_REG_P10_1R_DECODER_CLEAR_CYCLES = 0x0AA4
 IR_REG_P10_1R_ADMISSION_CONFIG_FLAGS = 0x0AA8
+IR_REG_P10_2_SNAPSHOT_CONTROL = 0x0B00
+IR_REG_P10_2_SNAPSHOT_GENERATION = 0x0B04
+IR_REG_P10_2_SNAPSHOT_SCHEMA = 0x0B08
+IR_REG_P10_2_SNAPSHOT_DATA_BASE = 0x0B0C
 
 P10_1_64BIT_REGISTER_PAIRS = {
     'P10_1_TOTAL_BYTES': (0x918, 0x91C),
@@ -570,3 +574,37 @@ def read_p10_1_snapshot_u64(read32, name):
         if before == after and not (after & 1):
             return (high << 32) | low
     raise RuntimeError('unstable P10.1 counter snapshot')
+
+P10_2_LANE_COUNT = 4
+P10_2_PHYSICAL_MODULE_COUNT = 8
+P10_2_SNAPSHOT_WORDS = 128
+P10_2_LANE_BASE_WORD = 8
+P10_2_LANE_STRIDE_WORDS = 12
+P10_2_MODULE_BASE_WORD = 56
+P10_2_MODULE_STRIDE_WORDS = 8
+
+def p10_2_snapshot_word_offset(word):
+    if not 0 <= word < P10_2_SNAPSHOT_WORDS:
+        raise ValueError('P10.2 snapshot word out of range')
+    return IR_REG_P10_2_SNAPSHOT_DATA_BASE + 4 * word
+
+def p10_2_lane_word_offset(lane, field):
+    if not 0 <= lane < P10_2_LANE_COUNT or not 0 <= field < P10_2_LANE_STRIDE_WORDS:
+        raise ValueError('P10.2 lane snapshot index out of range')
+    return p10_2_snapshot_word_offset(P10_2_LANE_BASE_WORD + P10_2_LANE_STRIDE_WORDS * lane + field)
+
+def p10_2_module_word_offset(module, field):
+    if not 0 <= module < P10_2_PHYSICAL_MODULE_COUNT or not 0 <= field < P10_2_MODULE_STRIDE_WORDS:
+        raise ValueError('P10.2 module snapshot index out of range')
+    return p10_2_snapshot_word_offset(P10_2_MODULE_BASE_WORD + P10_2_MODULE_STRIDE_WORDS * module + field)
+
+def read_p10_2_snapshot(read32):
+    for _ in range(4):
+        before = read32(IR_REG_P10_2_SNAPSHOT_GENERATION)
+        if before & 1:
+            continue
+        words = [read32(p10_2_snapshot_word_offset(i)) for i in range(P10_2_SNAPSHOT_WORDS)]
+        after = read32(IR_REG_P10_2_SNAPSHOT_GENERATION)
+        if before == after and not (after & 1):
+            return words
+    raise RuntimeError('unstable P10.2 counter snapshot')

@@ -5,7 +5,8 @@
 // writes DATA payload bytes into a lane-local temporary buffer.  A frame event
 // is emitted only after the complete optical frame has been observed.
 module p9_4ppm_frame_rx #(
-  parameter int MAX_PAYLOAD_BYTES = 247
+  parameter int MAX_PAYLOAD_BYTES = 247,
+  parameter int LANE_COUNT = 2
 ) (
   input  logic        clk,
   input  logic        rst_n,
@@ -47,6 +48,11 @@ module p9_4ppm_frame_rx #(
   // receive paths on the resource-limited XC7Z010.  The AXI register contract
   // remains 32-bit through explicit zero extension.
   localparam int PHYSICAL_COUNTER_WIDTH = 20;
+
+  initial begin
+    if (LANE_COUNT != 2 && LANE_COUNT != 4 && LANE_COUNT != 8)
+      $error("LANE_COUNT must be 2, 4, or 8");
+  end
   typedef enum logic [1:0] {RX_WAIT, RX_COLLECT, RX_VALIDATE} state_t;
   state_t state;
   logic [7:0] header [0:23];
@@ -260,8 +266,16 @@ module p9_4ppm_frame_rx #(
               sequence_o <= 16'd0;
               payload_length_o <= 16'd0;
               flags_o <= 8'd0;
-              lane_id_o <= {7'd0, header[11][1]};
-              source_node_id_o <= header[11][7:2];
+              if (LANE_COUNT == 2) begin
+                lane_id_o <= {7'd0, header[11][1]};
+                source_node_id_o <= header[11][7:2];
+              end else if (LANE_COUNT == 4) begin
+                lane_id_o <= {6'd0, header[11][2:1]};
+                source_node_id_o <= {1'b0, header[11][7:3]};
+              end else begin
+                lane_id_o <= {5'd0, header[11][3:1]};
+                source_node_id_o <= {2'b00, header[11][7:4]};
+              end
               object_id_o <= 32'd0;
               fragment_offset_o <= 32'd0;
               ack_base_o <= {header[9], header[8]};
@@ -272,8 +286,13 @@ module p9_4ppm_frame_rx #(
               sequence_o <= {header[9], header[8]};
               payload_length_o <= {header[11], header[10]};
               flags_o <= header[12];
-              lane_id_o <= {6'd0, header[13][1:0]};
-              source_node_id_o <= header[13][7:2];
+              if (LANE_COUNT <= 4) begin
+                lane_id_o <= {6'd0, header[13][1:0]};
+                source_node_id_o <= header[13][7:2];
+              end else begin
+                lane_id_o <= {5'd0, header[13][2:0]};
+                source_node_id_o <= {1'b0, header[13][7:3]};
+              end
               object_id_o <= {header[17], header[16], header[15], header[14]};
               fragment_offset_o <= {header[21], header[20], header[19], header[18]};
               ack_base_o <= 16'd0;
