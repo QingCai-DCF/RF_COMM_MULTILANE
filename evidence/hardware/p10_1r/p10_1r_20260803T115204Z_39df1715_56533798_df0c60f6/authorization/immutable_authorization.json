@@ -1,0 +1,355 @@
+{
+  "acceptance_eligible": true,
+  "artifact_bundle_purpose": "FINAL_ACCEPTANCE",
+  "artifact_freeze": "evidence/generated/p10_1r_artifact_freeze.json",
+  "artifact_freeze_sha256": "d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467",
+  "artifacts": [
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea/p10_ax7020_fixed_functional.bit",
+      "role": "fixed",
+      "sha256": "565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a/p10_ax7020_fixed_shutdown.bit",
+      "role": "fixed",
+      "sha256": "0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 944670,
+      "kind": "xsa",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648/p10_ax7020_fixed_functional.xsa",
+      "role": "fixed",
+      "sha256": "cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 1855896,
+      "kind": "bsp",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip",
+      "role": "fixed",
+      "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 554900,
+      "kind": "elf",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4/p10_fixed_runtime.elf",
+      "role": "fixed",
+      "sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0/p10_ax7020_rotating_functional.bit",
+      "role": "rotating",
+      "sha256": "df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27/p10_ax7020_rotating_shutdown.bit",
+      "role": "rotating",
+      "sha256": "a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 942509,
+      "kind": "xsa",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d/p10_ax7020_rotating_functional.xsa",
+      "role": "rotating",
+      "sha256": "e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 1856209,
+      "kind": "bsp",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip",
+      "role": "rotating",
+      "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5"
+    },
+    {
+      "built_source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "bytes": 555184,
+      "kind": "elf",
+      "path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e/p10_rotating_runtime.elf",
+      "role": "rotating",
+      "sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e"
+    }
+  ],
+  "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "4bbb0d4622b68a06f630b30df78152f4adc3bf20",
+  "authorized_stages": [
+    "performance"
+  ],
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "branch": "p10.1r/2lane-speed-stability-remediation",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
+  "current_run_scope": {
+    "classification": "P10_1R_GOAL_STAGE_HARDWARE_ACCEPTANCE",
+    "ethernet": false,
+    "formal_active_window_seconds": 0,
+    "framed_object_transmission": true,
+    "lane_masks": [
+      3
+    ],
+    "movement_or_rewiring": false,
+    "oneplusone_full_duplex": false,
+    "p11": false,
+    "performance_or_streaming": true,
+    "spi": false,
+    "stage": "performance",
+    "stationary_two_lane_half_duplex_only": true
+  },
+  "generated_at_utc": "2026-08-03T11:52:05+00:00",
+  "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "inputs": {
+    "active_wiring": {
+      "bytes": 27452,
+      "path": "config/hardware/p10_active_wiring.yaml",
+      "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f"
+    },
+    "artifact_freeze": {
+      "bytes": 7993,
+      "path": "evidence/generated/p10_1r_artifact_freeze.json",
+      "sha256": "d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467"
+    },
+    "fixed_profile": {
+      "bytes": 907,
+      "path": "board_profiles/ax7020_fixed_2lane/profile.yaml",
+      "sha256": "3d454568647bce993f485708c9bc6bfdb0e75f13e2a86ee37c308694b4eefe8d"
+    },
+    "fixed_xdc": {
+      "bytes": 2679,
+      "path": "board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc",
+      "sha256": "6e4530e6dec034b4220381c84d1e8270bbf9bac7f5311c9f02de799e7f07a184"
+    },
+    "goal": {
+      "bytes": 30007,
+      "path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
+      "sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f"
+    },
+    "measurement_contract": {
+      "bytes": 7272,
+      "path": "docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md",
+      "sha256": "2272a3c8a0298953f017f4f74b16fb8411e0c1915a6f8a5a9bfb6afcde245cf8"
+    },
+    "p101_evaluator": {
+      "bytes": 95877,
+      "path": "scripts/p10_1_hardware_acceptance.py",
+      "sha256": "97f1440e1bff96b9a041ccf591aee66258c642ffbbba71b4870bbf0218ceaa1a"
+    },
+    "project_constraints": {
+      "bytes": 77090,
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    "project_state": {
+      "bytes": 40328,
+      "path": "config/project_state.json",
+      "sha256": "4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5"
+    },
+    "register_map": {
+      "bytes": 60093,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea"
+    },
+    "register_map_manifest": {
+      "bytes": 1814,
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "49d8bc3c1c5b9c6a1990c28be6dd861917b5e71668d483a4610e54ba59e2fdf8"
+    },
+    "requirements": {
+      "bytes": 234489,
+      "path": "config/project_requirements.yaml",
+      "sha256": "368915c5db0e16a32e873ea40030a70b12fe9239145c7a54b10bb29fef704e33"
+    },
+    "rotating_profile": {
+      "bytes": 927,
+      "path": "board_profiles/ax7020_rotating_2lane/profile.yaml",
+      "sha256": "b54e90ec2dfc6894674cd4914354d80823eccc902090391e17118991ae3a6407"
+    },
+    "rotating_xdc": {
+      "bytes": 2682,
+      "path": "board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc",
+      "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
+    },
+    "runner": {
+      "bytes": 84783,
+      "path": "scripts/p10_1r_hardware_acceptance.py",
+      "sha256": "fb4a6683df09dc4f63185970171914c7671ecc0fccbb5294512af284a688784b"
+    },
+    "runtime": {
+      "bytes": 3158,
+      "path": "config/performance/p10_1r_hardware_runtime.yaml",
+      "sha256": "612675f67b0d75a6f7754b7d1b92acafc6be02f16593be55cfbf08be363405f7"
+    },
+    "runtime_helpers": {
+      "bytes": 69457,
+      "path": "scripts/p10_hardware_runtime.py",
+      "sha256": "ac13ca787d765207ec5e5e39101e353a38d86d35e065b2bd05d8d026c3acb099"
+    },
+    "rx_admission": {
+      "bytes": 3477,
+      "path": "config/tfdu_rx_admission.yaml",
+      "sha256": "09924177deb60eee1889c2f622645ace41fc9dbd3bdf82e3c1fe4e5d3ffebb69"
+    },
+    "shutdown_stage": {
+      "bytes": 8112,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "f9c156783e13494e41f215f72b5608ff42e46a2114c4288c2de4acd3e63c4995"
+    },
+    "xsdb_stage": {
+      "bytes": 66394,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "9c0bac4acc4c87a06fc9967b45eece6bc1422c5bdbd8b983e3c7309aeb4195f4"
+    }
+  },
+  "lane_masks": [
+    1,
+    2,
+    3
+  ],
+  "maximum_echo_tail_stage_seconds": 1200,
+  "maximum_lane_mask": 3,
+  "maximum_single_formal_run_seconds": 1800,
+  "part": "xc7z020clg400-2",
+  "pl_build_identity": {
+    "fixed": "0x50325346",
+    "rotating": "0x50325352"
+  },
+  "plan_sha256": {
+    "performance": "816758d21b928b12df3529b1389d6b0a8d0f7227147a4035346ef177ffa2539b"
+  },
+  "pre_run_user_hardware_change": {
+    "board_role": "fixed",
+    "change": "TFDU small board replaced",
+    "module_id": "F1",
+    "module_serial": null,
+    "note": "No module serial or marking was supplied; identity is not guessed.",
+    "performed_before_current_run": true,
+    "performed_by_codex": false,
+    "reported_by_user": true
+  },
+  "prohibited": {
+    "8x32": true,
+    "angle_adjustment": true,
+    "ethernet": true,
+    "lane_mask_above_0x3": true,
+    "module_exchange": true,
+    "movement": true,
+    "obscuration": true,
+    "oneplusone_full_duplex": true,
+    "p11": true,
+    "rewiring": true,
+    "rotation": true,
+    "spi": true
+  },
+  "prohibition_scope": "Codex actions during this current run; the user's reported fixed-side F1 replacement occurred before this run.",
+  "reusable_for_future_run": false,
+  "run_id": "p10_1r_20260803T115204Z_39df1715_56533798_df0c60f6",
+  "schema_version": 1,
+  "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+  "shutdown": {
+    "after": true,
+    "before": true,
+    "configured_pl_led_n_intent": "0xF_ACTIVE_LOW_ALL_OFF",
+    "finally": true,
+    "normal_exit": true,
+    "on_error": true,
+    "on_interrupt": true,
+    "on_timeout": true,
+    "program_role_bound_shutdown_bitstreams": true,
+    "required_markers": [
+      "SHUTDOWN_FIXED=PASS",
+      "SHUTDOWN_ROTATING=PASS",
+      "TFDU_SHUTDOWN_PROGRAMMED=1",
+      "SHUTDOWN_EXIT=0"
+    ]
+  },
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "standing_authorization_policy": {
+    "campaign_new_run_id_limit": null,
+    "fresh_per_run_authorization_required": true,
+    "historical_authorization_or_artifact_pass_reuse": false,
+    "new_immutable_bundle_requires_exact_offline_pass_and_sha256_freeze": true,
+    "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+  },
+  "standing_authorization_sources": [
+    {
+      "artifact_bundle_iteration_authorized": true,
+      "campaign_level_standing_authorization": true,
+      "received_on": "2026-08-02",
+      "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+      "source_kind": "codex_delegation_from_user_side_conversation",
+      "source_thread_id": "019fc130-82cb-7653-bda1-69a0ccfee3fd",
+      "user_quotes": [
+        "我想一次性授权之后全部需要的操作",
+        "我确认，帮我告诉主线程"
+      ]
+    },
+    {
+      "campaign_new_run_id_limit": null,
+      "received_on": "2026-08-01",
+      "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+      "source_kind": "codex_delegation_from_user_side_conversation",
+      "source_thread_id": "019fbafb-34a3-7223-95dc-7b3982218221",
+      "user_quotes": [
+        "不设上限"
+      ]
+    },
+    {
+      "codex_hardware_change_authorized_during_run": false,
+      "current_run_hardware_authorization": true,
+      "current_run_stage_scope": [
+        "echo_tail"
+      ],
+      "pre_run_user_module_replacement": "fixed-side F1 TFDU small board",
+      "received_on": "2026-08-03",
+      "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+      "source_kind": "direct_user_message",
+      "source_thread_id": "current_root_thread",
+      "user_quotes": [
+        "同意将raw连通性修复后再次测试，我现在已经更换了F1小板",
+        "还有目前存在shutdown后PL的4个LED均亮起的问题，请一并修复"
+      ]
+    },
+    {
+      "authorization_basis": "the 2026-08-02 campaign-level standing authorization above",
+      "continue_campaign_requested": true,
+      "received_on": "2026-08-03",
+      "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
+      "scope_expansion_authorized": false,
+      "source_kind": "direct_user_continuation_request",
+      "source_thread_id": "current_root_thread",
+      "user_quotes": [
+        "继续完成目标"
+      ]
+    }
+  ],
+  "status": "AUTHORIZED",
+  "user_authorization_received_on": "2026-08-02",
+  "user_authorization_statement": "用户于2026-08-02确认P10.1R campaign-level standing authorization，允许在完整离线验证和artifact SHA256冻结后，为Goal内必要硬件阶段自动创建新的不可变current-run authorization；用户于2026-08-03再次要求‘继续完成目标’。本run只执行stage=performance，不得扩大到P11、1+1全双工、Ethernet、SPI、移动、重接或lane mask>0x3；必须shutdown-before，并在成功、失败、异常、超时、Ctrl+C和正常退出后验证双端shutdown。",
+  "user_authorization_statement_sha256": "56bd168da7afecf99fc6ea4fb736ece2164574c84943c6e7f2dd7c2e66d9a130"
+}
