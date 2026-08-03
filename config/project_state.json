@@ -119,7 +119,7 @@
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+  "last_hardware_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
   "last_hardware_stage": "P10_1R",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
@@ -395,7 +395,7 @@
       "R1": 4096
     },
     "candidate_guard_hardware_measured": true,
-    "current_bundle_hardware_actions_executed": false,
+    "current_bundle_hardware_actions_executed": true,
     "current_run_hardware_authorization": false,
     "goal_path": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
     "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
@@ -410,12 +410,12 @@
       "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000",
       "historical_blocker_path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
       "historical_blocker_sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
-      "path": "evidence/generated/p10_1r_four_direction_connectivity_retest.json",
-      "sha256": "3060b623ffa715318c85c62509c3e3171c929dd9549961b42d1fcfe685041022",
+      "path": "evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json",
+      "sha256": "bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42",
       "status": "CLEARED_CURRENT_RAW_CONNECTIVITY"
     },
     "hardware_movement": false,
-    "last_hardware_run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+    "last_hardware_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
     "last_shutdown_fixed": "PASS",
     "last_shutdown_rotating": "PASS",
     "latest_four_direction_retest": {
@@ -423,21 +423,21 @@
       "evidence_level": "RAW_PHYSICAL_ONLY",
       "f0_to_r0": "PASS_1000_OF_1000",
       "f1_to_r1": "PASS_1000_OF_1000",
-      "manifest_path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
-      "manifest_sha256": "31f6ad2be7d6eb2b586394dc02550bec9cefeaafc2862c2e82e42e653d2b23f4",
+      "manifest_path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d",
       "r0_to_f0": "PASS_1000_OF_1000",
       "r1_to_f1": "PASS_1000_OF_1000",
-      "report_path": "reports/four_direction_connectivity_retest_20260803T054430Z.md",
-      "report_sha256": "9df22fbb1970cc93c4d1de74717d367b4dfa3b8494902aef1b7b9a7d927dfcb7",
-      "result_path": "evidence/generated/p10_1r_four_direction_connectivity_retest.json",
-      "result_sha256": "3060b623ffa715318c85c62509c3e3171c929dd9549961b42d1fcfe685041022",
-      "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+      "report_path": "reports/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest_20260803T104503Z.md",
+      "report_sha256": "031a0fcbe6bd94bd9ce70b3f33f30f58196aa4a4f97168754119c15a988095dd",
+      "result_path": "evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json",
+      "result_sha256": "bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42",
+      "run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
       "status": "PASS_FOUR_DIRECTION_RAW_CONNECTIVITY"
     },
     "network_used": false,
-    "new_artifact_hardware_validation": "PENDING_NEW_CURRENT_RUN_AUTHORIZATION",
+    "new_artifact_hardware_validation": "PARTIAL_ECHO_TAIL_AND_FOUR_DIRECTION_RAW_CONNECTIVITY_PASS_REMAINING_STAGES_PENDING",
     "p11_started": false,
     "post_power_cycle_recheck": {
       "evidence_level": "RAW_PHYSICAL_ONLY",
@@ -462,6 +462,13 @@
     },
     "source_artifact_freeze": "PASS",
     "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "shutdown_led_physical_confirmation": "PENDING_USER_VISUAL_OR_ELECTRICAL_OBSERVATION",
+    "shutdown_led_programming_evidence": {
+      "all_off_vector": "4'b1111",
+      "path": "evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json",
+      "sha256": "bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42",
+      "status": "CONFIGURED_AND_PROGRAMMED_INTENT_PASS"
+    },
     "status": "PARTIAL"
   },
   "p10_1r_status": "PARTIAL",
@@ -855,7 +862,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-1R-MANUAL-HARDWARE-BLOCKER-2",
+  "state_revision": "P10-1R-RAW-LED-HARDWARE-RETEST-1",
   "two_lane_speed_stability": "PARTIAL_RAW_CONNECTIVITY_PASS_PERFORMANCE_STABILITY_PENDING",
   "z7020_target_status": "PENDING_Z7020_HW"
 }

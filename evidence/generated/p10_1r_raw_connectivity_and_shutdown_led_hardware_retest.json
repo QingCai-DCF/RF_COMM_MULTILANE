@@ -1,0 +1,107 @@
+{
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "current_run_hardware_authorization": false,
+  "evidence_class": "RAW_PHYSICAL_ONLY",
+  "generated_at_utc": "2026-08-03T10:45:03Z",
+  "hardware_actions_executed": true,
+  "hardware_boundaries": {
+    "ethernet_used": false,
+    "framed_objects_executed": false,
+    "hardware_movement": false,
+    "performance_or_streaming_executed": false,
+    "rewiring_executed": false,
+    "rotation_executed": false
+  },
+  "immutable_artifacts": {
+    "fixed_functional_bitstream_sha256": "565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea",
+    "fixed_runtime_elf_sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4",
+    "fixed_shutdown_bitstream_sha256": "0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a",
+    "rotating_functional_bitstream_sha256": "df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0",
+    "rotating_runtime_elf_sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e",
+    "rotating_shutdown_bitstream_sha256": "a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27",
+    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa"
+  },
+  "inputs": {
+    "authorization": {
+      "path": "config/p10_1r_current_run_hardware_authorization.json",
+      "sha256": "831cedadd516c2948339c07d66f330d542a6f1aba53024be7a72360d956f17af",
+      "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS"
+    },
+    "echo_tail": {
+      "path": "evidence/generated/p10_1r_echo_tail.json",
+      "sha256": "253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69"
+    },
+    "manifest": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json",
+      "sha256": "5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
+      "sha256": "7acd2111a500d36af0b5f13c2a9e5b847f236124a7ecdc722c6732a9cd5b224f"
+    },
+    "shutdown": {
+      "path": "evidence/generated/p10_1r_shutdown.json",
+      "sha256": "b066a82ea48f04b9325b5c1dfda7118d74b0e0cf4b969a775a7c3ca335d7b40b"
+    }
+  },
+  "physical_directions": {
+    "F0_TO_R0": {
+      "received_raw_count": 1000,
+      "required_samples": 1000,
+      "status": "PASS"
+    },
+    "F1_TO_R1": {
+      "received_raw_count": 1000,
+      "required_samples": 1000,
+      "status": "PASS"
+    },
+    "R0_TO_F0": {
+      "received_raw_count": 1000,
+      "required_samples": 1000,
+      "status": "PASS"
+    },
+    "R1_TO_F1": {
+      "received_raw_count": 1000,
+      "required_samples": 1000,
+      "status": "PASS"
+    }
+  },
+  "raw_stimulus": {
+    "clock_hz": 64000000,
+    "hardware_received_raw_total": 4000,
+    "offline_final_physical_txd_width_cycles": 8,
+    "pulse_width_ns": 125.0,
+    "requested_spacing_cycles": 1024,
+    "requested_txd_high_fraction": 0.0078125
+  },
+  "run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
+  "schema_version": 1,
+  "shutdown": {
+    "attempt_count": 5,
+    "fixed": "PASS",
+    "markers": {
+      "SHUTDOWN_EXIT": "0",
+      "TFDU_SHUTDOWN_PROGRAMMED": "1"
+    },
+    "rotating": "PASS"
+  },
+  "shutdown_led": {
+    "active_low_all_off_vector": "4'b1111",
+    "configured_and_programmed_intent": "PASS",
+    "fixed_shutdown_bitstream_programmed": true,
+    "physical_visual_or_electrical_confirmation": "PENDING_USER_OBSERVATION",
+    "rotating_shutdown_bitstream_programmed": true
+  },
+  "status": "PASS_RAW_FOUR_DIRECTION_CONNECTIVITY_AND_SHUTDOWN_PROGRAMMING",
+  "test_id": "P10_1R-RAW-CONNECTIVITY-SHUTDOWN-LED-HW-RETEST",
+  "user_reported_pre_run_change": {
+    "board_role": "fixed",
+    "module_id": "F1",
+    "module_serial": null,
+    "performed_by_codex": false,
+    "reported_change": "TFDU small board replaced"
+  }
+}

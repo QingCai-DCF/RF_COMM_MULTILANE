@@ -1,7 +1,7 @@
 # P10.1R echo tail
 
-Status: `FAIL`
-Run ID: `p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d`
-Raw summary: `evidence/hardware/p10_1r/p10_1r_20260803T064202Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json`
+Status: `PASS`
+Run ID: `p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6`
+Raw summary: `evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/echo_tail/stage_summary.json`
 
 The adjacent JSON is the authoritative machine-readable record.

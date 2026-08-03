@@ -87,7 +87,6 @@
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "6c547f483058d2c38185a82572e9b9bc58b98f9e",
-  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "echo_tail"
   ],
@@ -104,15 +103,8 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
-  "campaign_status": "PASS",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-03T10:45:03+00:00",
-  "consumed_by_run_id": "p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6",
-  "consumed_stage_set": [
-    "echo_tail"
-  ],
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "current_run_scope": {
     "classification": "RAW_PHYSICAL_ONLY",
     "directions": [
@@ -126,13 +118,9 @@
     "samples_per_direction": 1000,
     "stage": "echo_tail"
   },
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
-  "final_evidence_sha256": "7acd2111a500d36af0b5f13c2a9e5b847f236124a7ecdc722c6732a9cd5b224f",
-  "full_campaign_completed": false,
   "generated_at_utc": "2026-08-03T10:33:23+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -243,7 +231,6 @@
   "maximum_echo_tail_stage_seconds": 1200,
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this stage-scoped PASS and create fresh run-bound authorizations for the remaining mandatory P10.1R stages",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
@@ -298,8 +285,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -348,7 +333,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-03T00:00:00+08:00",
   "user_authorization_statement": "用户于2026-08-03同意修复raw连通性后再次测试，并报告已在运行前自行更换固定侧F1小板；用户同时要求修复shutdown后四个低有效PL LED均亮的问题。本run仅授权echo_tail四方向raw复测。Codex在运行期间不得移动、重接、交换板卡或模块，也不得扩大到帧、性能、streaming或串扰测试。",
   "user_authorization_statement_sha256": "887ad0dcefdd72bbda7028428823a93caf5f7b9596c2e9ca7d446fe7379dd465"

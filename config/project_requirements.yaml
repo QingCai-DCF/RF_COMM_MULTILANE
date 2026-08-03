@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751
+    sha256: 4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5
   - path: PROJECT_STATUS.md
-    sha256: ac989fc650fac590a204d06107c35a7519fe4d1ac80c4a071ddea0c9016332e3
-  artifact_hash: 3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751
+    sha256: 3d3f61ee2901426ff8621dd6318306a4bd9d47b44051e15298f1bb2cedc16a64
+  artifact_hash: 4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751
+    sha256: 4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751
+    sha256: 4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5
   - path: PROJECT_STATUS.md
-    sha256: ac989fc650fac590a204d06107c35a7519fe4d1ac80c4a071ddea0c9016332e3
+    sha256: 3d3f61ee2901426ff8621dd6318306a4bd9d47b44051e15298f1bb2cedc16a64
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 3a5ca91d23eab58b3149e4fae29525511025b28d004cb9b360a428850e3ae751
+  artifact_hash: 4857f4531279ed0f0cdca810a551552f9336f83402da7c9db20af429e4847fa5
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3497,8 +3497,8 @@ requirements:
   profile: P10_1_AX7020_PL_ACTIVITY_LED_OBSERVABILITY
   verification_method: Dedicated shutdown-top XSIM, exact fixed/rotating XDC audit, and independent routed shutdown builds
     with explicit LED port-count and all-off intent markers.
-  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
-  verification_scope: P10_1R_OFFLINE_SHUTDOWN_LED_REMEDIATION_PASS_HARDWARE_PENDING
+  verification_stage: P10_1R_EXACT_SOURCE_OFFLINE_AND_BOUNDED_RAW_HARDWARE
+  verification_scope: P10_1R_SHUTDOWN_LED_DESIGN_AND_PROGRAMMING_PASS_PHYSICAL_CONFIRMATION_PENDING
   test_id: P10_1-SHUTDOWN-LED-XSIM-001
   evidence_path: evidence/generated/p10_1_led_offline/summary.json
   status: PASS
@@ -3508,8 +3508,10 @@ requirements:
     sha256: 3efe608d1522005d7c4e7830c7a4c026880ccd6c9ad95626e645cc5aef411f1c
   - path: evidence/generated/p10_1r_shutdown_build_summary.json
     sha256: 9bca99a5653fc42e1b3e8c31a6649829bd8595ae79c787d8c363c23ab5cab077
-  hardware_followup: Direct visual or electrical confirmation remains pending; routed intent and programming markers do not
-    measure the physical LED pins.
+  - path: evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json
+    sha256: bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42
+  hardware_followup: Both content-addressed shutdown images were programmed and all shutdown markers passed. Direct visual
+    or electrical confirmation remains pending because configuration evidence does not measure the physical LED pins.
   artifact_hash: 3efe608d1522005d7c4e7830c7a4c026880ccd6c9ad95626e645cc5aef411f1c
 - requirement_id: P10_1R-RAW-PULSE-001
   requirement_text: The raw physical-connectivity stimulus shall request an eight-clock 125 ns Txd pulse at 64 MHz and shall
@@ -3518,19 +3520,23 @@ requirements:
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Four-direction focused XSIM final-physical-Txd width assertions followed by a newly authorized 1000-sample-per-direction
     echo_tail hardware run.
-  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
-  verification_scope: P10_1R_OFFLINE_RAW_PULSE_PASS_HARDWARE_PENDING
-  test_id: P10_1R_FOCUSED_XSIM
-  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  verification_stage: P10_1R_EXACT_SOURCE_OFFLINE_AND_BOUNDED_RAW_HARDWARE
+  verification_scope: P10_1R_RAW_PULSE_OFFLINE_PASS_AND_FOUR_DIRECTION_RAW_PHYSICAL_PASS
+  test_id: P10_1R-HW-ECHO_TAIL
+  evidence_path: evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json
   status: PASS
   waiver: null
   artifact_hashes:
+  - path: evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json
+    sha256: bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42
   - path: evidence/generated/p10_1r_xsim/summary.json
     sha256: 969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0
   - path: evidence/generated/p10_1r_functional_build_summary.json
     sha256: 73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70
-  hardware_followup: The newly authorized echo_tail run must directly test all four directions; any PASS remains RAW_PHYSICAL_ONLY.
-  artifact_hash: 969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0
+  hardware_followup: Four-direction raw connectivity completed at 1000/1000 per direction. Exact 8-clock width remains an
+    exact-source final-physical-Txd XSIM result rather than an external oscilloscope measurement; the hardware result remains
+    RAW_PHYSICAL_ONLY.
+  artifact_hash: bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42
 - requirement_id: P10_1R-ECHO-001
   requirement_text: Each TFDU module shall exclude frame admission whenever its own final physical Txd is active.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3565,20 +3571,24 @@ requirements:
     while protocol admission is blanked.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
   verification_method: Register-map generation, source audit, focused XSIM, and future direct trace capture.
-  verification_stage: P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE
-  verification_scope: P10_1R_OFFLINE_OBSERVABILITY_PASS_HARDWARE_PENDING
-  test_id: P10_1R_FOCUSED_XSIM
-  evidence_path: evidence/generated/p10_1r_xsim/summary.json
+  verification_stage: P10_1R_HARDWARE_REMEDIATION
+  verification_scope: DIRECT_AX7020_RAW_PHYSICAL_OBSERVABILITY
+  test_id: P10_1R-HW-ECHO_TAIL
+  evidence_path: evidence/generated/p10_1r_echo_tail.json
   status: PASS
   waiver: null
   artifact_hashes:
+  - path: evidence/generated/p10_1r_echo_tail.json
+    sha256: 253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69
+  - path: evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json
+    sha256: 5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d
   - path: evidence/generated/p10_1r_xsim/summary.json
     sha256: 969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0
   - path: evidence/generated/p10_1r_functional_build_summary.json
     sha256: 73f2ea76085e595c0ebcb4f30074a6c14c3cda3fdfb6ee33822e8e623824ed70
-  hardware_followup: Hardware must populate raw echo-tail maximum, p99, and p99.9; no hardware count is inferred from the
-    model.
-  artifact_hash: 969ed47a750135d549f32a3c5d03cbe7c3d08757f835e3bb35f49dcacf6cd2d0
+  hardware_followup: Four direct module traces populated 4000 raw observations plus maximum, p99, and p99.9 metrics. This
+    does not promote framed DATA, performance, streaming, or crosstalk scopes.
+  artifact_hash: 253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69
 - requirement_id: P10_1R-ECHO-004
   requirement_text: A local transmission on one module shall not blank receive admission on the other lane.
   profile: P10_1R_AX7020_2LANE_REMEDIATION
@@ -3604,13 +3614,20 @@ requirements:
     analysis, independently isolated across F0-to-R0, R0-to-F0, F1-to-R1, and R1-to-F1.
   verification_stage: P10_1R_HARDWARE_REMEDIATION
   verification_scope: DIRECT_AX7020_RAW_PHYSICAL_ECHO_TAIL
-  test_id: null
-  evidence_path: evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json
-  status: PENDING
+  test_id: P10_1R-HW-ECHO_TAIL
+  evidence_path: evidence/generated/p10_1r_echo_tail.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_echo_tail.json
+    sha256: 253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69
+  - path: evidence/generated/p10_1r_raw_connectivity_and_shutdown_led_hardware_retest.json
+    sha256: bcf0344b04e9e0b20d0a3a340249aaecc2b3a167089733f211ed871ae80e7b42
+  - path: evidence/hardware/p10_1r/p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json
+    sha256: 5dc05d240e47aa68fb462f05b904376592227fd11a307609753f652dcbdfa55d
   hardware_followup: This PASS is limited to raw physical echo-tail measurement and the configured guard. CRC-valid DATA,
     application goodput, streaming integrity, recovery, formal stability, and complete P10.1R acceptance remain pending.
+  artifact_hash: 253e11707d2d6acf974ab66bab0cbf0e82450b06bf4166dcf1060a0e88fe4c69
 - requirement_id: P10_1R-ECHO-006
   requirement_text: Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving
     physical lane.
