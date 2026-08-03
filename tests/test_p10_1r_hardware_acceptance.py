@@ -350,6 +350,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             active,
             run_id="p10_1r_test",
             campaign_status="FAIL",
+            selected_stages=["echo_tail"],
             consumed_at_utc="2026-08-02T00:00:00+00:00",
             final_evidence_path="evidence/final.json",
             final_evidence_sha256="a" * 64,
@@ -362,12 +363,14 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         )
         self.assertFalse(consumed["current_run_hardware_authorization"])
         self.assertTrue(consumed["consumed"])
+        self.assertFalse(consumed["full_campaign_completed"])
         self.assertEqual(consumed["consumed_by_run_id"], "p10_1r_test")
         self.assertEqual(
             self.runner.consumed_authorization_payload(
                 consumed,
                 run_id="p10_1r_test",
                 campaign_status="FAIL",
+                selected_stages=["echo_tail"],
                 consumed_at_utc="2026-08-02T00:00:00+00:00",
                 final_evidence_path="evidence/final.json",
                 final_evidence_sha256="a" * 64,
@@ -377,6 +380,34 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             ),
             consumed,
         )
+
+    def test_stage_scoped_pass_does_not_claim_campaign_acceptance(self) -> None:
+        active = {
+            "status": "AUTHORIZED",
+            "run_id": "p10_1r_test",
+            "authorized_stages": ["echo_tail"],
+            "current_run_hardware_authorization": True,
+            "consumed": False,
+            "reusable_for_future_run": False,
+        }
+        consumed = self.runner.consumed_authorization_payload(
+            active,
+            run_id="p10_1r_test",
+            campaign_status="PASS",
+            selected_stages=["echo_tail"],
+            consumed_at_utc="2026-08-03T00:00:00+00:00",
+            final_evidence_path="evidence/final.json",
+            final_evidence_sha256="a" * 64,
+            shutdown_fixed="PASS",
+            shutdown_rotating="PASS",
+            hardware_actions_executed=True,
+        )
+        self.assertEqual(
+            consumed["campaign_disposition"],
+            "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
+        )
+        self.assertFalse(consumed["full_campaign_completed"])
+        self.assertEqual(consumed["consumed_stage_set"], ["echo_tail"])
 
     def test_tcl_has_atomic_snapshot_and_absolute_formal_boundaries(self) -> None:
         text = TCL_PATH.read_text(encoding="utf-8")

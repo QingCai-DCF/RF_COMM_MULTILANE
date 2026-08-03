@@ -87,6 +87,14 @@ class P8AConsistencyTests(unittest.TestCase):
             any("P10.1R hardware blocker: SHA256 mismatch" in error for error in errors)
         )
 
+    def test_p10_1r_partial_state_rejects_unknown_blocker_disposition(self) -> None:
+        state = copy.deepcopy(self.state)
+        state["p10_1r_remediation"]["hardware_blocker"]["status"] = "UNKNOWN"
+        errors = validate_state(state, ROOT)
+        self.assertTrue(any(
+            "hardware_blocker.status is invalid" in error for error in errors
+        ))
+
     def test_state_requires_legacy_ab_l1_record(self) -> None:
         state = copy.deepcopy(self.state)
         state["legacy_known_failures"] = []

@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 184
-PASS: 155
-PENDING: 24
+PASS: 156
+PENDING: 23
 FAIL: 5
 WAIVED: 0
 ```
@@ -188,7 +188,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1R-ECHO-002` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Same-module accepted DATA frames shall remain exactly zero in the direct four-module campaign. |
 | `P10_1R-ECHO-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Raw same-module Rxd activity shall remain synchronized, counted, timestamped, and atomically observable while protocol admission is blanked. |
 | `P10_1R-ECHO-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | A local transmission on one module shall not blank receive admission on the other lane. |
-| `P10_1R-ECHO-005` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
+| `P10_1R-ECHO-005` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | `P10_1R-HW-ECHO_TAIL` | `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json` | The final per-module post-TX guard shall be bounded and no shorter than the measured maximum echo tail plus deterministic margin. |
 | `P10_1R-ECHO-006` | `PENDING` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_HARDWARE_REMEDIATION` | — | `docs/hardware/P10_1R_HARDWARE_MEASUREMENT_CONTRACT.md` | Every accepted CRC-valid DATA or ACK frame shall carry a logical lane identity matching the receiving physical lane. |
 | `P10_1R-ACK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_ACK_PIPELINE_PERFORMANCE_MODEL` | `evidence/generated/p10_1r_ack_pipeline_model.json` | The two-lane bundle shall sustain a DATA burst and ACK threshold of at least 24 frames, with 32 as the frozen default. |
 | `P10_1R-ACK-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_OFFLINE` | `P10_1R_FOCUSED_XSIM` | `evidence/generated/p10_1r_xsim/summary.json` | Object boundaries shall not force an optical direction turnaround, ready round trip, receiver re-prime, or global pipeline drain. |
@@ -273,13 +273,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `42f10b06624625faaf40d81a271ecb189ab771c09e8d4cc54c871bcebd033b15`
-- `PROJECT_STATUS.md` — `94e1fbe8a73c8127b4cab2788ac462790ab033ec0495ec99f69c7a7b7a9e55ec`
+- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
+- `PROJECT_STATUS.md` — `893d8bbc1223b51b6ef459a0b35f5ea9a0a6b828e2bc38691b9ef2a89cf504c1`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `42f10b06624625faaf40d81a271ecb189ab771c09e8d4cc54c871bcebd033b15`
+- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
 
 ### `P8A-EVID-001`
 
@@ -289,8 +289,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `42f10b06624625faaf40d81a271ecb189ab771c09e8d4cc54c871bcebd033b15`
-- `PROJECT_STATUS.md` — `94e1fbe8a73c8127b4cab2788ac462790ab033ec0495ec99f69c7a7b7a9e55ec`
+- `config/project_state.json` — `c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d`
+- `PROJECT_STATUS.md` — `893d8bbc1223b51b6ef459a0b35f5ea9a0a6b828e2bc38691b9ef2a89cf504c1`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1119,6 +1119,16 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `evidence/generated/p10_1r_xsim/summary.json` — `26cb67473a00538fb518c796dd4aab9c7f397f6b44948cc1c6d4a9ca7f9cad25`
 - `evidence/generated/p10_1r_dual_endpoint_regression/summary.json` — `be3af54bbf972d177d9663bac7d4c26a0020c690bba94f8cca300ac3a6ade013`
+
+### `P10_1R-ECHO-005`
+
+- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json` — `afebdcc5121df41e0a28fb7fa261ff1cc6e16fe50539d98ffcb6a05e9b705235`
+- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv` — `02b19278c096a1b9d52c0b6731c8ae550048af2ace2555d4ebad05d17671f4d8`
+- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R0.echo_tail.psv` — `d995645cc4a949c2a9d6b76ddfa6a06fef8675c6106fc9c54646fdb3b63843b4`
+- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv` — `105eb320501f9ee7b84e0f162d5fcc3da0907b01311c6344d129b29c8c7452dd`
+- `evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R1.echo_tail.psv` — `6bd4a8c68bbc82244c101a8a25f4b62dd7f8b3d2ca0fc0cf4f0dac8cd426ba34`
+- `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27/p10_ax7020_fixed_functional.bit` — `c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27`
+- `artifacts/p10_1r/cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d/bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f/p10_ax7020_rotating_functional.bit` — `bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f`
 
 ### `P10_1R-ACK-001`
 

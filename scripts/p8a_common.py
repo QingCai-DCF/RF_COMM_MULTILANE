@@ -1039,12 +1039,16 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.extend(
                     hash_record_errors(blocker, root, "P10.1R hardware blocker")
                 )
-                if not isinstance(blocker, dict) or blocker.get("status") != (
-                    "BLOCKED_MANUAL_HARDWARE"
+                allowed_blocker_states = {"BLOCKED_MANUAL_HARDWARE"}
+                if p10_1r_status == "PARTIAL":
+                    allowed_blocker_states.add("CLEARED_CURRENT_RAW_CONNECTIVITY")
+                if (
+                    not isinstance(blocker, dict)
+                    or blocker.get("status") not in allowed_blocker_states
                 ):
                     errors.append(
-                        "p10_1r_remediation.hardware_blocker.status must be "
-                        "BLOCKED_MANUAL_HARDWARE"
+                        "p10_1r_remediation.hardware_blocker.status is invalid "
+                        "for the scoped P10.1R state"
                     )
 
     commit = str(state.get("last_verified_commit", "")).lower()

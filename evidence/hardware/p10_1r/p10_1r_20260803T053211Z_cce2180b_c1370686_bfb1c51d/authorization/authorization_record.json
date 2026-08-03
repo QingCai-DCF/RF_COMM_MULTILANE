@@ -1,0 +1,44 @@
+{
+  "authorization": "config/p10_1r_current_run_hardware_authorization.json",
+  "authorization_sha256": "14df303bf2f864681628bfb2167487441fc9cbdc5c7e9d32aadfefade7dd3869",
+  "authorized_stages": [
+    "echo_tail"
+  ],
+  "board_identities": {
+    "fixed": {
+      "id": "AX7020-F/JTAG:210249855178",
+      "serial": "210249855178",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210249855178"
+    },
+    "rotating": {
+      "id": "AX7020-R/JTAG:210512180081",
+      "serial": "210512180081",
+      "target": "localhost:3121/xilinx_tcf/Digilent/210512180081"
+    }
+  },
+  "errors": [],
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "maximum_single_formal_run_seconds": 1800,
+  "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+  "schema_version": 1,
+  "shutdown": {
+    "after": true,
+    "before": true,
+    "finally": true,
+    "normal_exit": true,
+    "on_error": true,
+    "on_interrupt": true,
+    "on_timeout": true,
+    "program_role_bound_shutdown_bitstreams": true,
+    "required_markers": [
+      "SHUTDOWN_FIXED=PASS",
+      "SHUTDOWN_ROTATING=PASS",
+      "TFDU_SHUTDOWN_PROGRAMMED=1",
+      "SHUTDOWN_EXIT=0"
+    ]
+  },
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "status": "PASS",
+  "test_id": "P10_1R-HW-CURRENT-RUN-AUTHORIZATION"
+}

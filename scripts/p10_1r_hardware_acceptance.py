@@ -814,6 +814,7 @@ def consumed_authorization_payload(
     *,
     run_id: str,
     campaign_status: str,
+    selected_stages: Iterable[str] | None = None,
     consumed_at_utc: str,
     final_evidence_path: str,
     final_evidence_sha256: str,
@@ -845,19 +846,25 @@ def consumed_authorization_payload(
         "PASS", "FAIL"
     }:
         raise ValueError("shutdown status is malformed")
-    disposition = (
-        "ACCEPTANCE_COMPLETE"
-        if campaign_status == "PASS"
-        else "REMEDIATION_REQUIRED_NEW_IMMUTABLE_BUNDLE"
-    )
-    next_action = (
-        "freeze the final evidence checkpoint and annotated PASS tag"
-        if campaign_status == "PASS"
-        else (
+    stage_set = tuple(dict.fromkeys(selected_stages or authorization.get(
+        "authorized_stages", ()
+    )))
+    full_campaign = set(stage_set) == set(STAGES)
+    if campaign_status == "PASS" and full_campaign:
+        disposition = "ACCEPTANCE_COMPLETE"
+        next_action = "freeze the final evidence checkpoint and annotated PASS tag"
+    elif campaign_status == "PASS":
+        disposition = "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL"
+        next_action = (
+            "preserve this stage-scoped PASS and create fresh run-bound "
+            "authorizations for the remaining mandatory P10.1R stages"
+        )
+    else:
+        disposition = "REMEDIATION_REQUIRED_NEW_IMMUTABLE_BUNDLE"
+        next_action = (
             "preserve this run, remediate the direct failure, freeze a new "
             "exact-source artifact bundle, and create a fresh per-run authorization"
         )
-    )
     result.update(
         {
             "status": f"CONSUMED_AFTER_P10_1R_HARDWARE_{campaign_status}",
@@ -869,6 +876,8 @@ def consumed_authorization_payload(
             "reusable_for_future_run": False,
             "campaign_status": campaign_status,
             "campaign_disposition": disposition,
+            "consumed_stage_set": list(stage_set),
+            "full_campaign_completed": full_campaign and campaign_status == "PASS",
             "hardware_actions_executed": hardware_actions_executed,
             "shutdown_fixed": shutdown_fixed,
             "shutdown_rotating": shutdown_rotating,
@@ -1928,6 +1937,7 @@ def main(argv: list[str] | None = None) -> int:
             record,
             run_id=args.run_id,
             campaign_status=status,
+            selected_stages=stages,
             consumed_at_utc=utc_now(),
             final_evidence_path=rel(final_result),
             final_evidence_sha256=sha256(final_result),

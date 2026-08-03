@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-HW-FOUR-DIRECTION-RAW-CONNECTIVITY-RETEST",
+  "status": "PASS",
+  "scope": "STATIONARY_DUAL_AX7020_F0_R0_F1_R1_RAW_PHYSICAL_CONNECTIVITY",
+  "evidence_class": "RAW_PHYSICAL_ONLY",
+  "data_path_acceptance_claimed": false,
+  "p10_1r_final_acceptance_claimed": false,
+  "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+  "user_request": "retest_all_four_physical_directions",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "artifact_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "artifact_freeze_sha256": "05681978cba335cb4aa1c1cea41e8a4661017d64a307e9b037ded7064ec01a54",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating_role": "AX7020-R/JTAG:210512180081"
+  },
+  "artifact_hashes": {
+    "fixed_bitstream": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27",
+    "rotating_bitstream": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f",
+    "fixed_elf": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4",
+    "rotating_elf": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e"
+  },
+  "lane_mapping": {
+    "lane0": "F0-R0",
+    "lane1": "F1-R1"
+  },
+  "direction_results": [
+    {
+      "direction": "F0_TO_R0",
+      "lane": "lane0",
+      "sender_role": "fixed",
+      "receiver_role": "rotating",
+      "status": "PASS",
+      "samples": 1000,
+      "receiver_raw_count": 1000,
+      "sender_raw_count": 1000,
+      "sender_raw_while_tx_count": 1000,
+      "sender_accepted_remote_count": 0,
+      "maximum_echo_tail_cycles": 0,
+      "violation_count": 0,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F0.echo_tail.psv",
+      "source_sha256": "02b19278c096a1b9d52c0b6731c8ae550048af2ace2555d4ebad05d17671f4d8"
+    },
+    {
+      "direction": "R0_TO_F0",
+      "lane": "lane0",
+      "sender_role": "rotating",
+      "receiver_role": "fixed",
+      "status": "PASS",
+      "samples": 1000,
+      "receiver_raw_count": 1000,
+      "sender_raw_count": 1000,
+      "sender_raw_while_tx_count": 1000,
+      "sender_accepted_remote_count": 0,
+      "maximum_echo_tail_cycles": 0,
+      "violation_count": 0,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R0.echo_tail.psv",
+      "source_sha256": "d995645cc4a949c2a9d6b76ddfa6a06fef8675c6106fc9c54646fdb3b63843b4"
+    },
+    {
+      "direction": "F1_TO_R1",
+      "lane": "lane1",
+      "sender_role": "fixed",
+      "receiver_role": "rotating",
+      "status": "PASS",
+      "samples": 1000,
+      "receiver_raw_count": 1000,
+      "sender_raw_count": 1000,
+      "sender_raw_while_tx_count": 1000,
+      "sender_accepted_remote_count": 0,
+      "maximum_echo_tail_cycles": 0,
+      "violation_count": 0,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv",
+      "source_sha256": "105eb320501f9ee7b84e0f162d5fcc3da0907b01311c6344d129b29c8c7452dd"
+    },
+    {
+      "direction": "R1_TO_F1",
+      "lane": "lane1",
+      "sender_role": "rotating",
+      "receiver_role": "fixed",
+      "status": "PASS",
+      "samples": 1000,
+      "receiver_raw_count": 1000,
+      "sender_raw_count": 1000,
+      "sender_raw_while_tx_count": 1000,
+      "sender_accepted_remote_count": 0,
+      "maximum_echo_tail_cycles": 0,
+      "violation_count": 0,
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_R1.echo_tail.psv",
+      "source_sha256": "6bd4a8c68bbc82244c101a8a25f4b62dd7f8b3d2ca0fc0cf4f0dac8cd426ba34"
+    }
+  ],
+  "lane_results": {
+    "lane0": "PASS_BIDIRECTIONAL_RAW_PHYSICAL_CONNECTIVITY",
+    "lane1": "PASS_BIDIRECTIONAL_RAW_PHYSICAL_CONNECTIVITY"
+  },
+  "aggregate": {
+    "direction_count": 4,
+    "sample_count": 4000,
+    "remote_raw_observation_count": 4000,
+    "same_module_raw_echo_count": 4000,
+    "same_module_accepted_count": 0,
+    "cross_lane_or_admission_violation_count": 0,
+    "configured_guard_cycles": 4096,
+    "measured_maximum_echo_tail_cycles": 0,
+    "guard_assessment_complete": true,
+    "configured_guard_is_safe": true
+  },
+  "historical_failure_preserved": {
+    "path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
+    "sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
+    "interpretation": "The earlier F1-to-R1 failures remain immutable historical evidence. This fresh run supersedes them only for current raw-connectivity status and does not identify why the physical state changed."
+  },
+  "primary_evidence": [
+    {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
+      "sha256": "afebdcc5121df41e0a28fb7fa261ff1cc6e16fe50539d98ffcb6a05e9b705235"
+    },
+    {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "sha256": "c4b4418f1e8b11c4be7a992996b259115a4247649c7cc77fd13572e36135811b"
+    },
+    {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+      "sha256": "6d7c2ea2c6b6ab6bd6e6bc1a23d41a3b8a94f6553179e36c685c82ec5f0e221f"
+    },
+    {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "sha256": "31f6ad2be7d6eb2b586394dc02550bec9cefeaafc2862c2e82e42e653d2b23f4"
+    }
+  ],
+  "manifest_verification": {
+    "status": "PASS",
+    "declared_file_count": 47,
+    "hash_or_size_mismatch_count": 0
+  },
+  "safety_closure": {
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "tfdu_shutdown_programmed": true,
+    "shutdown_exit": 0,
+    "current_run_hardware_authorization": false,
+    "network_used": false,
+    "ethernet_used": false,
+    "spi_used": false,
+    "hardware_movement": false,
+    "rewiring_executed": false,
+    "final_shutdown_source": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/shutdown/finally_emergency/attempt_1.result.txt",
+    "final_shutdown_source_sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+  },
+  "remaining_p10_1r_scope": [
+    "sustained_application_goodput_in_both_directions",
+    "five_64MiB_streams_in_each_direction",
+    "abort_and_reset_recovery",
+    "1800_second_formal_run",
+    "final_evidence_consistency_and_acceptance"
+  ],
+  "generated_at_utc": "2026-08-03T05:44:30+00:00"
+}

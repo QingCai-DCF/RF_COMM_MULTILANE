@@ -119,7 +119,7 @@
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
+  "last_hardware_run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
   "last_hardware_stage": "P10_1R",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
@@ -405,21 +405,20 @@
     },
     "hardware_actions_executed": true,
     "hardware_blocker": {
-      "current_f1_to_r1": "FAIL_REMOTE_RAW_ZERO_WITH_FIXED_FINAL_TXD_AND_LOCAL_RAW_OBSERVED_POST_POWER_CYCLE",
-      "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000_PRESERVED_NOT_RETESTED_POST_POWER_CYCLE",
-      "fixed_f1_final_txd_event": "OBSERVED_5_PROTOCOL_CYCLES",
-      "fixed_f1_local_raw_while_tx": 1,
-      "path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
-      "rotating_r1_raw": 0,
-      "sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
-      "status": "BLOCKED_MANUAL_HARDWARE"
+      "current_f1_to_r1": "PASS_RAW_DIRECTIONAL_1000_OF_1000",
+      "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000",
+      "historical_blocker_path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
+      "historical_blocker_sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
+      "path": "evidence/generated/p10_1r_four_direction_connectivity_retest.json",
+      "sha256": "3060b623ffa715318c85c62509c3e3171c929dd9549961b42d1fcfe685041022",
+      "status": "CLEARED_CURRENT_RAW_CONNECTIVITY"
     },
     "hardware_movement": false,
-    "last_hardware_run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
+    "last_hardware_run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
     "last_shutdown_fixed": "PASS",
     "last_shutdown_rotating": "PASS",
     "network_used": false,
-    "new_artifact_hardware_validation": "PARTIAL_FAIL_CURRENT_F1_TO_R1_REPRODUCED_AFTER_USER_REPORTED_POWER_CYCLE",
+    "new_artifact_hardware_validation": "PARTIAL_ECHO_TAIL_AND_FOUR_DIRECTION_RAW_CONNECTIVITY_PASS_REMAINING_STAGES_PENDING",
     "p11_started": false,
     "post_power_cycle_recheck": {
       "evidence_level": "RAW_PHYSICAL_ONLY",
@@ -433,6 +432,24 @@
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
       "status": "FAIL_DIRECTIONAL_CONNECTIVITY_PERSISTS"
+    },
+    "latest_four_direction_retest": {
+      "data_path_acceptance_claimed": false,
+      "evidence_level": "RAW_PHYSICAL_ONLY",
+      "f0_to_r0": "PASS_1000_OF_1000",
+      "f1_to_r1": "PASS_1000_OF_1000",
+      "manifest_path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "31f6ad2be7d6eb2b586394dc02550bec9cefeaafc2862c2e82e42e653d2b23f4",
+      "r0_to_f0": "PASS_1000_OF_1000",
+      "r1_to_f1": "PASS_1000_OF_1000",
+      "report_path": "reports/four_direction_connectivity_retest_20260803T054430Z.md",
+      "report_sha256": "9df22fbb1970cc93c4d1de74717d367b4dfa3b8494902aef1b7b9a7d927dfcb7",
+      "result_path": "evidence/generated/p10_1r_four_direction_connectivity_retest.json",
+      "result_sha256": "3060b623ffa715318c85c62509c3e3171c929dd9549961b42d1fcfe685041022",
+      "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "status": "PASS_FOUR_DIRECTION_RAW_CONNECTIVITY"
     },
     "rewiring_executed": false,
     "selected_guard_cycles": {
@@ -837,6 +854,6 @@
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
   "state_revision": "P10-1R-MANUAL-HARDWARE-BLOCKER-2",
-  "two_lane_speed_stability": "FAIL_CURRENT_F1_TO_R1_DIRECTIONAL_CONNECTIVITY",
+  "two_lane_speed_stability": "PARTIAL_RAW_CONNECTIVITY_PASS_PERFORMANCE_STABILITY_PENDING",
   "z7020_target_status": "PENDING_Z7020_HW"
 }
