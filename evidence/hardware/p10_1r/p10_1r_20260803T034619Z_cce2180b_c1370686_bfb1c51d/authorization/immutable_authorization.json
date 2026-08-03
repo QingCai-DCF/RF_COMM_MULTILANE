@@ -87,7 +87,6 @@
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "f5844ece5d192cf051b2ab86147cb28f4d416372",
-  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "echo_tail"
   ],
@@ -104,18 +103,11 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "REMEDIATION_REQUIRED_NEW_IMMUTABLE_BUNDLE",
-  "campaign_status": "FAIL",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-03T03:48:22+00:00",
-  "consumed_by_run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
-  "current_run_hardware_authorization": false,
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
-  "final_evidence_sha256": "c9d84b226c29eb8f21e5289238613b5d773077414e076fa2c2439658a9b0ad80",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "generated_at_utc": "2026-08-03T03:46:20+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -225,7 +217,6 @@
   ],
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this run, remediate the direct failure, freeze a new exact-source artifact bundle, and create a fresh per-run authorization",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
@@ -268,8 +259,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -302,7 +291,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_FAIL",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"

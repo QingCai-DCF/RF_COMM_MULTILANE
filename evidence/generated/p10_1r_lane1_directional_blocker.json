@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "test_id": "P10_1R-LANE1-DIRECTIONAL-BLOCKER",
-  "generated_at_utc": "2026-08-02T19:17:19Z",
+  "generated_at_utc": "2026-08-03T03:48:22Z",
   "status": "BLOCKED_MANUAL_HARDWARE",
   "p10_1r_result": "PARTIAL",
   "hardware_acceptance_status": "FAIL",
@@ -14,7 +14,7 @@
   "repository": {
     "branch": "p10.1r/2lane-speed-stability-remediation",
     "worktree": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R",
-    "evidence_parent_commit": "af3bb2b95e9abe5edc8634364618212a046ec68a",
+    "evidence_parent_commit": "fff349da04e2e3602557993b9f2934854efcdf67",
     "artifact_source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
     "base_failure_tag": "p10.1-hardware-performance-fail-20260801",
     "base_failure_tag_commit": "991cc8a6cc5fd656178f9a3ddd9bb7c2f9c84151"
@@ -47,7 +47,7 @@
   },
   "authorization": {
     "path": "config/p10_1r_current_run_hardware_authorization.json",
-    "sha256": "06cb8e38c4468e27fb43aca13a2c5ec5c09b9b9d34c0c4e73ffe79a1e6f5692f",
+    "sha256": "bbdf0fcf3145f7a888dde087b5f79d1bef0cf305259d7e424637d20d4960e3b3",
     "status": "CONSUMED_AFTER_P10_1R_HARDWARE_FAIL",
     "current_run_hardware_authorization": false,
     "consumed": true,
@@ -63,8 +63,8 @@
     "rewiring_executed": false,
     "maximum_lane_mask_used": 3,
     "last_shutdown": {
-      "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
-      "path": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/shutdown/finally_emergency/attempt_1.result.txt",
+      "run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/shutdown/finally_emergency/attempt_1.result.txt",
       "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
@@ -103,7 +103,7 @@
     },
     "f1_to_r1": {
       "status": "FAIL_NO_REMOTE_RAW_ACTIVITY",
-      "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
+      "run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
       "failed_sample": 0,
       "sequence": 1001,
       "lane_mask": 2,
@@ -124,8 +124,8 @@
       "rotating_phy_status": "0x00000000",
       "fixed_error_detail": "0x00000000",
       "rotating_error_detail": "0x00000000",
-      "source": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
-      "source_sha256": "b2c738e0152fea154abc7ee5afe9fa84b9570eaa0e41fea5cbb9762a623bd82b",
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "source_sha256": "ebfb1cb86e0242d9aeb86d93b44060985aca8305073719a87621da49855a08a5",
       "localization_snapshot": {
         "sender_raw": 1,
         "sender_raw_while_tx": 1,
@@ -133,8 +133,8 @@
         "sender_accepted_remote": 0,
         "receiver_raw": 0,
         "receiver_accepted_remote": 0,
-        "sender_last_txd_rise": 40073142,
-        "sender_last_txd_fall": 40073147,
+        "sender_last_txd_rise": 34007980,
+        "sender_last_txd_fall": 34007985,
         "sender_final_txd_high_cycles": 5,
         "sender_first_rxd_after_tx": 0,
         "sender_last_rxd_after_tx": 0,
@@ -142,12 +142,12 @@
         "receiver_raw_sent": 0,
         "fixed_physical_tx_a0_a1_b0_b1": [0, 1, 0, 0],
         "rotating_physical_tx_a0_a1_b0_b1": [0, 0, 0, 0],
-        "fixed_snapshot": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv",
-        "fixed_snapshot_sha256": "8c75777e24f2c67dde4cf2e64201b3fc96df76207fb9abad700a200f0a265b14",
-        "rotating_snapshot": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+        "fixed_snapshot": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv",
+        "fixed_snapshot_sha256": "8ed9373af25269ba024ab53e4a563582354d33134c3fd308bb9f7a549bb4abdf",
+        "rotating_snapshot": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
         "rotating_snapshot_sha256": "a3b0c219c1aad1ce271c6fbac90c35fd5009be3218c750cbb7029d5ddac920e5",
-        "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
-        "orchestrator_result_sha256": "639bcc130752bbbc2f3bd4663e074d30cf85be0958fd848f39d14ccf8dddab87"
+        "orchestrator_result": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+        "orchestrator_result_sha256": "c9d84b226c29eb8f21e5289238613b5d773077414e076fa2c2439658a9b0ad80"
       }
     }
   },
@@ -179,6 +179,13 @@
       "run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
       "source": "evidence/hardware/p10_1r/p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
       "source_sha256": "b2c738e0152fea154abc7ee5afe9fa84b9570eaa0e41fea5cbb9762a623bd82b"
+    },
+    {
+      "result": "POST_POWER_CYCLE_FAIL_REPRODUCED",
+      "fact": "After the user reported power-cycling/re-powering the setup, a new immutable current-run authorization reprogrammed both role-bound endpoints and made F1-to-R1 the first raw command. The fixed final-Txd tap again pulsed for five protocol cycles and fixed F1 again saw one local raw event while rotating R1 saw zero raw events and timed out at sample 0. The power-cycle did not restore this direction. R1-to-F1 was not re-executed in this fail-fast run; its 1000/1000 status remains preserved historical evidence from the same frozen artifact bundle.",
+      "run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
+      "source": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "source_sha256": "ebfb1cb86e0242d9aeb86d93b44060985aca8305073719a87621da49855a08a5"
     }
   ],
   "preceding_performance_transition": {
@@ -263,6 +270,6 @@
     "P10_1R_FINAL_ACCEPTANCE"
   ],
   "pass_tag_created": false,
-  "next_required_user_action": "With both boards powered off, inspect and restore the existing fixed-F1 to rotating-R1 physical path without changing board roles. Check the F1/R1 line of sight and the existing F1 transmitter-side and R1 receiver-side TFDU power, ground, SD, Mode, Txd/Rxd, and J10 position-B connections; then report exactly what was changed or confirmed.",
+  "next_required_user_action": "The user-reported power-cycle did not restore F1-to-R1. With both boards powered off, inspect the existing fixed-F1 to rotating-R1 physical path without changing board roles. Check the F1/R1 line of sight and the existing F1 transmitter-side and R1 receiver-side TFDU power, ground, SD, Mode, Txd/Rxd, and J10 position-B connections; then report exactly what was changed or confirmed.",
   "resume_condition": "After the user confirms the current F1-to-R1 physical path has been inspected/restored and reports any physical change, create a fresh immutable per-run authorization from the standing P10.1R authorization, rerun shutdown-before and a bidirectional lane1 raw diagnostic, then resume the complete P10.1R campaign only if that diagnostic passes."
 }

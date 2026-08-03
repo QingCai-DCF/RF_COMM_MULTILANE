@@ -119,7 +119,7 @@
   "final_product_status": "PENDING_HW",
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
+  "last_hardware_run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
   "last_hardware_stage": "P10_1R",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
@@ -405,22 +405,35 @@
     },
     "hardware_actions_executed": true,
     "hardware_blocker": {
-      "current_f1_to_r1": "FAIL_REMOTE_RAW_ZERO_WITH_FIXED_FINAL_TXD_AND_LOCAL_RAW_OBSERVED",
-      "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000",
+      "current_f1_to_r1": "FAIL_REMOTE_RAW_ZERO_WITH_FIXED_FINAL_TXD_AND_LOCAL_RAW_OBSERVED_POST_POWER_CYCLE",
+      "current_r1_to_f1": "PASS_RAW_DIRECTIONAL_1000_OF_1000_PRESERVED_NOT_RETESTED_POST_POWER_CYCLE",
       "fixed_f1_final_txd_event": "OBSERVED_5_PROTOCOL_CYCLES",
       "fixed_f1_local_raw_while_tx": 1,
       "path": "evidence/generated/p10_1r_lane1_directional_blocker.json",
       "rotating_r1_raw": 0,
-      "sha256": "ab67026dda9f96e6a98f66d923b6b28adcf357f7de33f91d65baff80da1d1b89",
+      "sha256": "c8825814fe4d954ab1be682e0a0a7d9ec7d60010b229a353adfedfc28eac5c93",
       "status": "BLOCKED_MANUAL_HARDWARE"
     },
     "hardware_movement": false,
-    "last_hardware_run_id": "p10_1r_20260802T191315Z_cce2180b_c1370686_bfb1c51d",
+    "last_hardware_run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
     "last_shutdown_fixed": "PASS",
     "last_shutdown_rotating": "PASS",
     "network_used": false,
-    "new_artifact_hardware_validation": "PARTIAL_FAIL_CURRENT_F1_TO_R1_AFTER_FIXED_INTERNAL_FINAL_TXD_LOCALIZATION",
+    "new_artifact_hardware_validation": "PARTIAL_FAIL_CURRENT_F1_TO_R1_REPRODUCED_AFTER_USER_REPORTED_POWER_CYCLE",
     "p11_started": false,
+    "post_power_cycle_recheck": {
+      "evidence_level": "RAW_PHYSICAL_ONLY",
+      "f1_to_r1": "FAIL_NO_REMOTE_RAW_ACTIVITY",
+      "manifest_path": "evidence/hardware/p10_1r/p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "manifest_sha256": "5075dfdb1923e1af379355f337ff272ba04321984976c026fb9804fb717efdf3",
+      "r1_to_f1": "NOT_REEXECUTED_PRESERVED_1000_OF_1000",
+      "report_path": "reports/lane1_connectivity_probe_20260803T034822Z.md",
+      "report_sha256": "9b5d54befc1de4a991d35ca7a764f9cd63a5f19612b9e47b8f2b1a1512348830",
+      "run_id": "p10_1r_20260803T034619Z_cce2180b_c1370686_bfb1c51d",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "status": "FAIL_DIRECTIONAL_CONNECTIVITY_PERSISTS"
+    },
     "rewiring_executed": false,
     "selected_guard_cycles": {
       "F0": 4096,
@@ -823,7 +836,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-1R-MANUAL-HARDWARE-BLOCKER-1",
+  "state_revision": "P10-1R-MANUAL-HARDWARE-BLOCKER-2",
   "two_lane_speed_stability": "FAIL_CURRENT_F1_TO_R1_DIRECTIONAL_CONNECTIVITY",
   "z7020_target_status": "PENDING_Z7020_HW"
 }
