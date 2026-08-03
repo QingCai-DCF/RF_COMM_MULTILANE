@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_2-REPOSITORY-DISCOVERY",
+  "status": "PASS",
+  "generated_at_utc": "2026-08-03T15:56:34Z",
+  "goal_path": "C:/Users/user/Downloads/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS_GOAL.md",
+  "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+  "main_head_before_closeout": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
+  "origin_main_before_closeout": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
+  "p10_1r_branch": "p10.1r/2lane-speed-stability-remediation",
+  "p10_1r_worktree": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R",
+  "p10_1r_worktree_clean": true,
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+  "evidence_checkpoint_tree": "e3abb60577ef040e1d8061efaaddfe6330b6ba37",
+  "pass_tag": {
+    "name": "p10.1r-2lane-speed-stability-pass",
+    "type": "tag",
+    "object": "c78066152e2d5ac0c673e21896fb90b9a78f7489",
+    "target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "annotated": true,
+    "moved_or_rewritten": false
+  },
+  "source_is_checkpoint_ancestor": true,
+  "frozen_verify_existing": {
+    "status": "PASS",
+    "verified_hash_records": 68,
+    "project_status_check": "PASS",
+    "requirements_check": "PASS",
+    "canonical_consistency": "PASS",
+    "no_hardware_scan": "PASS"
+  },
+  "remote": {
+    "name": "origin",
+    "url": "https://github.com/QingCai-DCF/RF_COMM_MULTILANE.git",
+    "refs": {
+      "origin/HEAD": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
+      "origin/main": "7863618197a9b3a9ad54469628de1cc0351b4ba7",
+      "origin/p10/ax7020-dual-node-2lane": "7863618197a9b3a9ad54469628de1cc0351b4ba7"
+    }
+  },
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "no_2h_qualification_executed": true,
+  "errors": []
+}

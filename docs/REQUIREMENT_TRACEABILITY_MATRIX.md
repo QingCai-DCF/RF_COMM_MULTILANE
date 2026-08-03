@@ -5,8 +5,8 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 186
-PASS: 165
+REQUIREMENT_COUNT: 188
+PASS: 167
 PENDING: 16
 FAIL: 5
 WAIVED: 0
@@ -197,6 +197,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ACK_TUNING` | `evidence/generated/p10_1r_ack_tuning.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
 | `P10_1R-ACK-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_ack_tuning.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
 | `P10_1R-HOST-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_formal_30min.json` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
+| `P10_2-CLOSE-001` | `PASS` | P10_1R_POST_ACCEPTANCE_CLOSEOUT | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-CLOSE-001` | `evidence/generated/p10_1r_closeout_summary.json` | P10.1R authorization shall remain consumed and false while its immutable PASS tag, checkpoint, artifacts, raw evidence, failures, and shutdown records remain unchanged. |
+| `P10_2-INV-001` | `PASS` | P10_2_TFDU_EIGHT_MODULE_INVENTORY | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-INV-001` | `config/hardware/tfdu_module_inventory.yaml` | The replacement fixed-side F1 shall be the accepted lane1 identity, the original F1 shall be quarantined, and F2/F3/R2/R3 shall remain pending until their own physical intake and acceptance. |
 | `P10_1R-PERF-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-PERF-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-STREAM-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-STREAMING_64M` | `evidence/generated/p10_1r_streaming_64m.json` | Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
@@ -275,13 +277,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
-- `PROJECT_STATUS.md` — `ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0`
+- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
+- `PROJECT_STATUS.md` — `5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
+- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
 
 ### `P8A-EVID-001`
 
@@ -291,8 +293,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2`
-- `PROJECT_STATUS.md` — `ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0`
+- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
+- `PROJECT_STATUS.md` — `5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1211,6 +1213,17 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json` — `439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e`
 - `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
 - `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_2-CLOSE-001`
+
+- `evidence/generated/p10_1r_closeout_summary.json` — `4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170`
+- `evidence/generated/p10_1r_git_checkpoint_metadata.json` — `46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313`
+- `evidence/generated/p10_1r_final_summary.json` — `728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f`
+
+### `P10_2-INV-001`
+
+- `config/hardware/tfdu_module_inventory.yaml` — `8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc`
+- `evidence/generated/p10_1r_final_summary.json` — `728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f`
 
 ### `P10_1R-PERF-001`
 

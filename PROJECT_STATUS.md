@@ -169,7 +169,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Shutdown fixed / rotating: `PASS` / `PASS`
 - Hardware actions / network / movement / rewiring: `true` / `false` / `false` / `false`
 - Current-run hardware authorization: `false`
-- This partial result does not create a P10.1R PASS and does not promote P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance.
+- This PASS is limited to the frozen stationary AX7020 two-lane half-duplex no-Ethernet scope; it does not promote P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance.
 
 `AB_L1_BAD_DIR` remains immutable history. The later lane1 evidence resolves usability only for the explicitly named stationary Z7010 two-lane scope and is not extrapolated to future hardware.
 

@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2
+    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
   - path: PROJECT_STATUS.md
-    sha256: ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0
-  artifact_hash: 79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2
+    sha256: 5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f
+  artifact_hash: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2
+    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2
+    sha256: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
   - path: PROJECT_STATUS.md
-    sha256: ec4a06891e89366c1d89082551d371a1e1b2238de454fbc678287d81ef7c63d0
+    sha256: 5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 79d58df3d037a057d71086a30e6a5f1785614ffbcc486b4eb5d42f4f3e4b98e2
+  artifact_hash: da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -3821,6 +3821,42 @@ requirements:
   hardware_followup: Scoped PASS is limited to the frozen AX7020 stationary two-lane half-duplex no-Ethernet bundle; it does
     not promote P11, 1+1 full duplex, 8x32, 600 rpm, external electrical/optical measurement, or product-final acceptance.
   artifact_hash: 292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd
+- requirement_id: P10_2-CLOSE-001
+  requirement_text: P10.1R authorization shall remain consumed and false while its immutable PASS tag, checkpoint, artifacts, raw evidence, failures, and shutdown records remain unchanged.
+  profile: P10_1R_POST_ACCEPTANCE_CLOSEOUT
+  verification_method: Annotated-tag identity and ancestry checks, recursive frozen-record SHA256 verification, canonical state/status checks, and no-hardware static scan.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_1R_POST_ACCEPTANCE_CLOSEOUT_OFFLINE
+  test_id: P10_2-CLOSE-001
+  evidence_path: evidence/generated/p10_1r_closeout_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_1r_closeout_summary.json
+    sha256: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
+  - path: evidence/generated/p10_1r_git_checkpoint_metadata.json
+    sha256: 46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313
+  - path: evidence/generated/p10_1r_final_summary.json
+    sha256: 728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f
+  hardware_followup: No hardware follow-up is authorized by closeout; P10.3 requires new immutable artifacts, physical inventory, wiring, and current-run authorization.
+  artifact_hash: 4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170
+- requirement_id: P10_2-INV-001
+  requirement_text: The replacement fixed-side F1 shall be the accepted lane1 identity, the original F1 shall be quarantined, and F2/F3/R2/R3 shall remain pending until their own physical intake and acceptance.
+  profile: P10_2_TFDU_EIGHT_MODULE_INVENTORY
+  verification_method: User replacement provenance, immutable P10.1R run binding, machine-readable inventory audit, and explicit old-F1 alias rejection.
+  verification_stage: P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS
+  verification_scope: P10_2_OFFLINE_MODULE_IDENTITY
+  test_id: P10_2-INV-001
+  evidence_path: config/hardware/tfdu_module_inventory.yaml
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: config/hardware/tfdu_module_inventory.yaml
+    sha256: 8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc
+  - path: evidence/generated/p10_1r_final_summary.json
+    sha256: 728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f
+  hardware_followup: F2/F3/R2/R3 require physical marking/revision intake, pinout check, safe-idle, and raw acceptance before P10.3.
+  artifact_hash: 8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc
 - requirement_id: P10_1R-PERF-001
   requirement_text: Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s.
   profile: P10_1R_AX7020_2LANE_REMEDIATION

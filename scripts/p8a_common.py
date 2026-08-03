@@ -1512,6 +1512,18 @@ def render_project_status(state: dict[str, Any]) -> str:
     if isinstance(state.get("p10_1r_remediation"), dict):
         remediation = state["p10_1r_remediation"]
         blocker = remediation.get("hardware_blocker", {})
+        if state.get("p10_1r_status") == "PASS":
+            scope_note = (
+                "- This PASS is limited to the frozen stationary AX7020 "
+                "two-lane half-duplex no-Ethernet scope; it does not promote "
+                "P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance."
+            )
+        else:
+            scope_note = (
+                "- This partial result does not create a P10.1R PASS and does "
+                "not promote P11, 8x32, 600 rpm, Ethernet/SPI, or "
+                "product-final acceptance."
+            )
         lines += [
             "",
             "## P10.1R two-lane speed and stability remediation",
@@ -1525,7 +1537,7 @@ def render_project_status(state: dict[str, Any]) -> str:
             f"- Shutdown fixed / rotating: `{remediation.get('last_shutdown_fixed', 'PENDING')}` / `{remediation.get('last_shutdown_rotating', 'PENDING')}`",
             f"- Hardware actions / network / movement / rewiring: `{str(remediation.get('hardware_actions_executed', False)).lower()}` / `{str(remediation.get('network_used', False)).lower()}` / `{str(remediation.get('hardware_movement', False)).lower()}` / `{str(remediation.get('rewiring_executed', False)).lower()}`",
             f"- Current-run hardware authorization: `{str(remediation.get('current_run_hardware_authorization', False)).lower()}`",
-            "- This partial result does not create a P10.1R PASS and does not promote P11, 8x32, 600 rpm, Ethernet/SPI, or product-final acceptance.",
+            scope_note,
         ]
     lines += [
         "",

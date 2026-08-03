@@ -125,6 +125,7 @@
   "last_hardware_authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
   "last_hardware_run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
   "last_hardware_stage": "P10_1R",
+  "last_hardware_evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
   "last_verified_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
@@ -602,6 +603,23 @@
     "source_artifact_freeze": "PASS",
     "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
     "status": "PASS"
+  },
+  "p10_1r_closeout": {
+    "authorization_consumed": true,
+    "closed_tag": "p10.1r-2lane-speed-stability-closed",
+    "current_run_hardware_authorization": false,
+    "evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "evidence_path": "evidence/generated/p10_1r_closeout_summary.json",
+    "evidence_sha256": "4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170",
+    "git_metadata_path": "evidence/generated/p10_1r_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313",
+    "hardware_actions_executed": false,
+    "module_inventory_path": "config/hardware/tfdu_module_inventory.yaml",
+    "module_inventory_sha256": "8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc",
+    "pass_tag": "p10.1r-2lane-speed-stability-pass",
+    "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+    "status": "PASS",
+    "two_hour_qualification_executed": false
   },
   "p10_1r_status": "PASS",
   "p10_acceptance": {

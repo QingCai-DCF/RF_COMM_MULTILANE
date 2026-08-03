@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_1R-GIT-CHECKPOINT-METADATA",
+  "status": "PASS",
+  "generated_at_utc": "2026-08-03T15:56:34Z",
+  "scope": "P10_1R_POST_ACCEPTANCE_CLOSEOUT_NO_HARDWARE",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+  "evidence_checkpoint": {
+    "branch": "p10.1r/2lane-speed-stability-remediation",
+    "commit": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "tree": "e3abb60577ef040e1d8061efaaddfe6330b6ba37",
+    "pass_tag": "p10.1r-2lane-speed-stability-pass",
+    "pass_tag_type": "tag",
+    "pass_tag_object": "c78066152e2d5ac0c673e21896fb90b9a78f7489",
+    "pass_tag_target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+    "pass_tag_moved_or_rewritten": false
+  },
+  "closed_tag_to_create": "p10.1r-2lane-speed-stability-closed",
+  "formal_run_id": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
+  "last_campaign_run_id": "p10_1r_20260803T130535Z_39df1715_56533798_df0c60f6",
+  "fixed_board_id": "AX7020-F/JTAG:210249855178",
+  "rotating_board_id": "AX7020-R/JTAG:210512180081",
+  "artifacts": {
+    "fixed_bitstream": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea/p10_ax7020_fixed_functional.bit", "sha256": "565337987c949bb65b57a088eb1038144714b867d8ebf6d5115e7346b11d44ea", "bytes": 4045681},
+    "fixed_xsa": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648/p10_ax7020_fixed_functional.xsa", "sha256": "cc671149676f1cdeaea6cb750c0cdd31f1b2456697d93244cc5fb12fa4eca648", "bytes": 944670},
+    "fixed_bsp": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8/p10_ax7020_fixed_bsp.zip", "sha256": "ce07b946468f167abff530a5be3786ce6e983f2a3f203deb2bfc27aca4e141d8", "bytes": 1855896},
+    "fixed_elf": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4/p10_fixed_runtime.elf", "sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4", "bytes": 554900},
+    "fixed_shutdown_bitstream": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a/p10_ax7020_fixed_shutdown.bit", "sha256": "0d0f4fbf2b35518094aec58728461f505c225a5f1aef647d3917259564fc279a", "bytes": 369449},
+    "rotating_bitstream": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0/p10_ax7020_rotating_functional.bit", "sha256": "df0c60f6e3826c358fd2ca562ee4807b28a935c354bda535e98c59313e6471b0", "bytes": 4045681},
+    "rotating_xsa": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d/p10_ax7020_rotating_functional.xsa", "sha256": "e1890cb603530e70abcf931c3ae69a5ddf4bfde68a66b1a31ccb6231b883c28d", "bytes": 942509},
+    "rotating_bsp": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5/p10_ax7020_rotating_bsp.zip", "sha256": "d46f9574d64bc8a464f3cc60392ff1bee2c44fd841bb4ae31df185ca14c868a5", "bytes": 1856209},
+    "rotating_elf": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e/p10_rotating_runtime.elf", "sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e", "bytes": 555184},
+    "rotating_shutdown_bitstream": {"path": "artifacts/p10_1r/39df17155ce82e38366fbdac00c79584f0fe1afa/a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27/p10_ax7020_rotating_shutdown.bit", "sha256": "a0abfef77d566a6baaf51242d95cae679e63cb9e34f423595f3faae7bcfbac27", "bytes": 369449}
+  },
+  "wiring": {"path": "config/hardware/p10_active_wiring.yaml", "sha256": "64022daa974e7c848b037da837180b1051a05ca946643fd4b185d9ff74c5540f", "bytes": 27452},
+  "module_inventory": {"path": "config/hardware/tfdu_module_inventory.yaml", "sha256": "8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc", "bytes": 5562},
+  "final_summary": {"path": "evidence/generated/p10_1r_final_summary.json", "sha256": "728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f", "bytes": 9367},
+  "evidence_consistency": {"path": "evidence/generated/p10_1r_hardware_evidence_consistency.json", "sha256": "a6627ae734a333d66fb29cd47199b2b7c460cd64509adf89f773c7ce8d8cbbf6", "bytes": 23646},
+  "formal_run_manifest": {"path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json", "sha256": "21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96", "bytes": 29162},
+  "authorization": {"path": "config/p10_1r_current_run_hardware_authorization.json", "sha256": "504b3ab17f2e16e11951bd96bc131e707d309d5fc52d96e1bb2f4ba0e4c37187", "consumed": true, "reusable_for_future_run": false, "current_run_hardware_authorization": false},
+  "shutdown_results": {"fixed": "PASS", "rotating": "PASS"},
+  "hardware_actions_executed": false
+}
