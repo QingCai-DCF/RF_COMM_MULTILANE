@@ -1,0 +1,36 @@
+{
+  "hardware_actions_executed": false,
+  "hardware_admission": false,
+  "lane_count": 4,
+  "lane_mask_width": 4,
+  "max_lane_mask": "0xF",
+  "physical_module_count_per_endpoint": 4,
+  "roles": {
+    "fixed": {
+      "active_profile": "board_profiles/ax7020_fixed_4lane/ACTIVE_PROFILE.json",
+      "active_profile_sha256": "57c79dba4172294146c566753e7cb714b5d0e7f98deee517249756190266d80b",
+      "pinmap": "board_profiles/ax7020_fixed_4lane/pinmap.csv",
+      "pinmap_sha256": "15c87eb0a7aff6b4057c4a49b1f9906e6bb82c89467d35706bd1b140d6bd4b95",
+      "profile": "board_profiles/ax7020_fixed_4lane/profile.yaml",
+      "profile_sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571",
+      "xdc": "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+      "xdc_sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1"
+    },
+    "rotating": {
+      "active_profile": "board_profiles/ax7020_rotating_4lane/ACTIVE_PROFILE.json",
+      "active_profile_sha256": "4235b7f59e5cec7d5c3415bea4adcc93ebcfab1c82f0a8678ba6a3bb1fe41a24",
+      "pinmap": "board_profiles/ax7020_rotating_4lane/pinmap.csv",
+      "pinmap_sha256": "bed6c9d65d4a0053422065707c7372695608968bca94ecfe3ed635027c269e3f",
+      "profile": "board_profiles/ax7020_rotating_4lane/profile.yaml",
+      "profile_sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8",
+      "xdc": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+      "xdc_sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"
+    }
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "test_ids": [
+    "P10_2-PROFILE-001",
+    "P10_2-PROFILE-002"
+  ]
+}

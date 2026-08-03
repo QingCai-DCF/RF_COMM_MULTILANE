@@ -1,0 +1,37 @@
+{
+  "banks": {
+    "34": {
+      "vcco_volts": 3.3
+    },
+    "35": {
+      "vcco_volts": 3.3
+    }
+  },
+  "clock_capable_gpio": [
+    "H16/MRCC",
+    "L16/SRCC"
+  ],
+  "configuration_behavior": "PUDC_B low enables configuration pull-ups; paired SD high optically inhibits Txd high, but partial-power fail-low remains unclaimed",
+  "connector_series_ohms": 33,
+  "duplicate_package_pins": [],
+  "hardware_actions_executed": false,
+  "iostandard": "LVCMOS33",
+  "j10_u13_r29_gap_preserved": true,
+  "lane0_lane1_pin_preservation": "PASS",
+  "part": "xc7z020clg400-2",
+  "schema_version": 1,
+  "selected_signal_pin_count_per_endpoint": 16,
+  "source_manifest": "evidence/generated/p10_2_raw/board_document_set_manifest.json",
+  "source_manifest_sha256": "6001e132db2cf549a2161f8d0dd61f638340c9ce6e44800960d14e5389337dc6",
+  "status": "PASS",
+  "test_id": "P10_2-PIN-001",
+  "unique_signal_pin_count_per_endpoint": 16,
+  "xadc_auxiliary_gpio": [
+    "K14/AD6P",
+    "M17/AD10P",
+    "E18/AD9P",
+    "B19/AD8P",
+    "C20/AD0P"
+  ],
+  "z7010_xdc_reuse": false
+}

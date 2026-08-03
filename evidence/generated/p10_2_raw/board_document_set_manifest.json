@@ -1,0 +1,61 @@
+{
+  "goal_sha256": "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5",
+  "read_only_sources": {
+    "ax7020_manual_v2_2": {
+      "authority": "ALINX official AX7020 user manual V2.2 source",
+      "locations": [
+        "section 7.4 J10 connector table and pin-1 photograph",
+        "section 7.5 J11 connector table and pin-1 photograph"
+      ],
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\AX7020UserManualV2.2\\AX7020UserManualV2.2.rst",
+      "sha256": "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16"
+    },
+    "ax7020_pin_workbook": {
+      "authority": "ALINX official AX7010/AX7020 package-pin workbook",
+      "locations": [
+        "Sheet1 A1:B228; IO1/IO2 signal-to-package-pin rows"
+      ],
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7010_AX7020管脚.xlsx",
+      "sha256": "2113ac32317262b681b2f54f63e77fced28f99c233c456e030b03cf77941ccbb"
+    },
+    "ax7020_schematic_v2": {
+      "authority": "ALINX official AX7010/AX7020 development-board schematic",
+      "locations": [
+        "PDF page/sheet 5: Bank 34/35 package pins and VCC3V3/VCCIO",
+        "PDF page/sheet 15: J10/J11 numbering and 33-ohm resistor arrays",
+        "PDF page/sheet 16: VCC3V3 regulator and VCCIO_35 regulator"
+      ],
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7020\\01_SCH\\AX7020开发板原理图V2.0.pdf",
+      "sha256": "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e"
+    },
+    "tfdu6102_datasheet": {
+      "authority": "Vishay TFDU6102 datasheet, document 82550 rev 1.3",
+      "locations": [
+        "PDF page 4 / printed page 3: pin descriptions and polarities",
+        "PDF page 8 / printed page 7: 3.3-V transmitter and 600-mA maximum switched current",
+        "PDF page 10 / printed page 9: static Mode and SD/Txd truth table"
+      ],
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102datasheet.pdf",
+      "sha256": "54db2771cf8887eb264f38518b13ec5eb17be04d63a20712d18a558b0c7376ef"
+    },
+    "tfdu_small_board_schematic": {
+      "authority": "user-supplied TFDU small-board design source",
+      "locations": [
+        "header pin1 VCC2/VCC1 path; pins2/4/6 GND; pin3 Txd; pin5 Rxd; pin7 SD; pin8 Mode"
+      ],
+      "path": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE\\hardware_AX7010\\TFDU6102电路\\ir_comm_TFDU6102\\TFDU6102_subb.SchDoc",
+      "sha256": "4fb54601855e9bf585fffeda037390db9097e6cb11caa32efdcadd4fefd57f4a"
+    }
+  },
+  "schema_version": 1,
+  "spreadsheet_inspection": {
+    "result": "Sheet1 A1:B228 inspected; all selected IO1/IO2 package-pin pairs matched",
+    "tool": "@oai/artifact-tool 2.8.6+"
+  },
+  "status": "PASS",
+  "vivado_device_database": {
+    "part": "xc7z020clg400-2",
+    "result": "all 20 selected TFDU/LED package pins resolved with expected PIN_FUNC and BANK",
+    "tool": "Vivado 2023.1"
+  }
+}
