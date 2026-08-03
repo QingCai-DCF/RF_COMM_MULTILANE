@@ -1,36 +1,42 @@
 {
   "errors": [],
-  "generated_at_utc": "2026-08-02T14:20:07+00:00",
+  "generated_at_utc": "2026-08-03T13:04:40+00:00",
   "hardware_actions_executed": true,
   "hardware_movement": false,
   "network_used": false,
-  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260802T134755Z_af46d3b9_5b594148_67ce5cd8/formal_30min/stage_summary.json",
-  "raw_summary_sha256": "b603b026e292ea7c6ca5dc89f32b77d24cbac38eede650a33f9648654f2ccc1f",
+  "raw_summary": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json",
+  "raw_summary_sha256": "439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e",
   "rewiring_executed": false,
-  "run_id": "p10_1r_20260802T134755Z_af46d3b9_5b594148_67ce5cd8",
+  "run_id": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
   "schema_version": 1,
   "semantics": {
-    "elapsed_ms": 1800005,
+    "elapsed_ms": 1800009,
     "formal_windows": [
       {
-        "application_goodput_bps": 4583775.085714285,
-        "case_count": 24,
-        "committed_bytes": 481296384,
+        "application_goodput_bps": 4154358.2476190478,
+        "case_count": 1,
+        "committed_bytes": 436207616,
         "direction": 0,
         "duration_seconds": 840,
-        "label": "stationary_30min_formal_f2r"
+        "host_blocking_commands": 1,
+        "host_fast_path_dependency_count": 0,
+        "label": "stationary_30min_formal_f2r",
+        "minimum_segments_per_host_command": 6656
       },
       {
-        "application_goodput_bps": 4583775.085714285,
-        "case_count": 24,
-        "committed_bytes": 481296384,
+        "application_goodput_bps": 4154358.2476190478,
+        "case_count": 1,
+        "committed_bytes": 436207616,
         "direction": 1,
         "duration_seconds": 840,
-        "label": "stationary_30min_formal_r2f"
+        "host_blocking_commands": 1,
+        "host_fast_path_dependency_count": 0,
+        "label": "stationary_30min_formal_r2f",
+        "minimum_segments_per_host_command": 6656
       }
     ]
   },
-  "source_commit": "af46d3b9d09fca6d9c57e79b7e91ef634a1ecf5c",
+  "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "status": "PASS",
   "test_id": "P10_1R-HW-FORMAL_30MIN"
 }

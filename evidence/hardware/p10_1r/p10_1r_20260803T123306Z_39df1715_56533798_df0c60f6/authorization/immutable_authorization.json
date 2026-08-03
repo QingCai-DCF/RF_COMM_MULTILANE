@@ -87,7 +87,6 @@
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "1c4ff7bcfd159d60b633ce5b6638a3d6266f4bb4",
-  "authorization_status_at_run_start": "AUTHORIZED",
   "authorized_stages": [
     "formal_30min"
   ],
@@ -104,15 +103,8 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
-  "campaign_status": "PASS",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-03T13:04:40+00:00",
-  "consumed_by_run_id": "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6",
-  "consumed_stage_set": [
-    "formal_30min"
-  ],
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "current_run_scope": {
     "classification": "P10_1R_GOAL_STAGE_HARDWARE_ACCEPTANCE",
     "ethernet": false,
@@ -129,13 +121,9 @@
     "stage": "formal_30min",
     "stationary_two_lane_half_duplex_only": true
   },
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/orchestrator_result.json",
-  "final_evidence_sha256": "25ab89c6af96369969d699ec4700eff9ffb1fe1148a9ee0fbcd15a72492df9d7",
-  "full_campaign_completed": false,
   "generated_at_utc": "2026-08-03T12:33:06+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -246,7 +234,6 @@
   "maximum_echo_tail_stage_seconds": 1200,
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "next_required_action": "preserve this stage-scoped PASS and create fresh run-bound authorizations for the remaining mandatory P10.1R stages",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
@@ -301,8 +288,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -363,7 +348,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
+  "status": "AUTHORIZED",
   "user_authorization_received_on": "2026-08-02",
   "user_authorization_statement": "用户于2026-08-02确认P10.1R campaign-level standing authorization，允许在完整离线验证和artifact SHA256冻结后，为Goal内必要硬件阶段自动创建新的不可变current-run authorization；用户于2026-08-03再次要求‘继续完成目标’。本run只执行stage=formal_30min，不得扩大到P11、1+1全双工、Ethernet、SPI、移动、重接或lane mask>0x3；必须shutdown-before，并在成功、失败、异常、超时、Ctrl+C和正常退出后验证双端shutdown。",
   "user_authorization_statement_sha256": "9bb0c27b272c740c408469fbf64430ce0a46016a2ba97367baf0f7a04e2fc4ac"
