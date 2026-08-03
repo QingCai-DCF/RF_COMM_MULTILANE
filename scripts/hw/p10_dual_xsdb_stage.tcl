@@ -1022,7 +1022,7 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
         lappend fixed_physical_tx [p10_read32 fixed $address]
         lappend rotating_physical_tx [p10_read32 rotating $address]
       }
-      p10_say [format "P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=%s:module=%s,sample=%d,sender=%s,receiver=%s,sender_raw=%u,sender_raw_while_tx=%u,sender_blanked_raw=%u,sender_accepted_remote=%u,receiver_raw=%u,receiver_accepted_remote=%u,sender_last_txd_rise=%u,sender_last_txd_fall=%u,sender_first_rxd_after_tx=%u,sender_last_rxd_after_tx=%u,sender_raw_sent=%u,receiver_raw_sent=%u,fixed_physical_tx=%s,rotating_physical_tx=%s,sender_dump=%s,receiver_dump=%s" \
+      set failure_snapshot_text [format "%s:module=%s,sample=%d,sender=%s,receiver=%s,sender_raw=%u,sender_raw_while_tx=%u,sender_blanked_raw=%u,sender_accepted_remote=%u,receiver_raw=%u,receiver_accepted_remote=%u,sender_last_txd_rise=%u,sender_last_txd_fall=%u,sender_first_rxd_after_tx=%u,sender_last_rxd_after_tx=%u,sender_raw_sent=%u,receiver_raw_sent=%u,fixed_physical_tx=%s,rotating_physical_tx=%s,sender_dump=%s,receiver_dump=%s" \
           $label $module $sample $sender $receiver $sender_raw \
           $sender_raw_while_tx $sender_blanked_raw $sender_accepted_remote \
           $receiver_raw $receiver_accepted_remote $sender_last_txd_rise \
@@ -1030,8 +1030,16 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
           $sender_last_rxd_after_tx $sender_raw_sent $receiver_raw_sent \
           [join $fixed_physical_tx ","] [join $rotating_physical_tx ","] \
           $sender_failure_dump $receiver_failure_dump]
+      p10_say "P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=$failure_snapshot_text"
+      p10_say "P10_1R_ECHO_DIRECTION_FAILURE_${module}=$failure_snapshot_text"
+      p10_say "P10_1R_ECHO_DIRECTION_RESULT_${module}=FAIL"
       close $handle
-      error "P10.1R echo sweep command failed $label sample=$sample"
+      # A four-direction physical-connectivity audit must preserve a direct
+      # verdict for every module.  Return the failure to the matrix driver so
+      # it can force both endpoints safe, rebootstrap them, and continue with
+      # the next independently isolated direction.  The aggregate stage still
+      # fails closed after the final endpoint-shutdown command.
+      return 0
     }
     set fixed_snapshot [p10_read_p10_1r_snapshot fixed]
     set rotating_snapshot [p10_read_p10_1r_snapshot rotating]
@@ -1075,6 +1083,8 @@ proc p10_run_p101r_echo_sweep {label direction lane sample_count spacing} {
   }
   close $handle
   p10_say "P10_1R_ECHO_SWEEP_PASS=$label:module=$module,samples=$sample_count,path=$output"
+  p10_say "P10_1R_ECHO_DIRECTION_RESULT_${module}=PASS"
+  return 1
 }
 
 proc p10_probe_1plus1 {label} {
@@ -1111,6 +1121,25 @@ proc p10_rebootstrap_after_reset_recovery {label} {
   p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 "${label}_RESET_RECOVERED"
   p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 "${label}_RESET_RECOVERED"
   p10_say "P10_1_RESET_RECOVERY_REBOOT_PASS=$label"
+}
+
+proc p10_rebootstrap_after_echo_direction {label} {
+  global p10_expected_build
+  p10_say "P10_1R_ECHO_DIRECTION_ISOLATION_BEGIN=$label"
+  # Assert the final PL shutdown/reset controls on both endpoints before any
+  # processor is restarted.  This is required after both PASS and FAIL so a
+  # direction cannot inherit state or an armed transmitter from its predecessor.
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00718 0x0000001A
+  }
+  after 10
+  p10_reboot_role fixed "${label}_fixed_echo_isolation_reboot"
+  p10_reboot_role rotating "${label}_rotating_echo_isolation_reboot"
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 \
+      "${label}_ECHO_ISOLATED"
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 \
+      "${label}_ECHO_ISOLATED"
+  p10_say "P10_1R_ECHO_DIRECTION_ISOLATION_PASS=$label"
 }
 
 proc p10_soak_case {label object_id size direction timeout_ms} {
@@ -1352,6 +1381,8 @@ set rc [catch {
   p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 SAFE_BOOT
   p10_say "P10_SAFE_BOOT=PASS"
 
+  set p10_echo_matrix_failures {}
+  set p10_echo_matrix_directions 0
   foreach record $parsed_plan {
     set kind [lindex $record 0]
     if {$kind eq "CASE"} {
@@ -1372,8 +1403,14 @@ set rc [catch {
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
     } elseif {$kind eq "P101R_ECHO_SWEEP"} {
-      p10_run_p101r_echo_sweep [lindex $record 1] [lindex $record 2] \
-          [lindex $record 3] [lindex $record 4] [lindex $record 5]
+      incr p10_echo_matrix_directions
+      set echo_pass [p10_run_p101r_echo_sweep [lindex $record 1] \
+          [lindex $record 2] [lindex $record 3] [lindex $record 4] \
+          [lindex $record 5]]
+      if {!$echo_pass} {
+        lappend p10_echo_matrix_failures [lindex $record 1]
+      }
+      p10_rebootstrap_after_echo_direction [lindex $record 1]
     } elseif {$kind eq "P101R_TIMED_CASE"} {
       p10_run_p101r_timed_case [lindex $record 1] [lindex $record 2] \
           [lindex $record 3] [lindex $record 4] [lindex $record 5] \
@@ -1386,6 +1423,16 @@ set rc [catch {
   p10_execute_case [p10_case_dict $shutdown_fields]
   p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
   p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
+  if {$p10_echo_matrix_directions > 0} {
+    if {$p10_echo_matrix_directions != 4} {
+      error "P10.1R echo matrix did not contain exactly four directions"
+    }
+    if {[llength $p10_echo_matrix_failures] != 0} {
+      p10_say "P10_1R_ECHO_MATRIX_RESULT=FAIL:[join $p10_echo_matrix_failures ,]"
+      error "P10.1R echo matrix direction failure: [join $p10_echo_matrix_failures ,]"
+    }
+    p10_say "P10_1R_ECHO_MATRIX_RESULT=PASS:F0,F1,R0,R1"
+  }
   p10_say "P10_XSDB_STAGE_RESULT=PASS"
 } error_text error_options]
 

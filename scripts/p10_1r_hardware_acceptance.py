@@ -974,99 +974,237 @@ def nearest_rank(values: list[int], percentile: float) -> int:
     return ordered[rank - 1]
 
 
+ECHO_DIRECTION_SPECS: dict[str, dict[str, Any]] = {
+    "F0": {
+        "physical_direction": "F0_TO_R0",
+        "lane": "lane0",
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+    },
+    "R0": {
+        "physical_direction": "R0_TO_F0",
+        "lane": "lane0",
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+    },
+    "F1": {
+        "physical_direction": "F1_TO_R1",
+        "lane": "lane1",
+        "sender_role": "fixed",
+        "receiver_role": "rotating",
+    },
+    "R1": {
+        "physical_direction": "R1_TO_F1",
+        "lane": "lane1",
+        "sender_role": "rotating",
+        "receiver_role": "fixed",
+    },
+}
+
+
+def parse_echo_failure_snapshot(text: str | None) -> dict[str, Any] | None:
+    """Extract direct electrical facts from one direction-bound failure marker."""
+    if text is None:
+        return None
+    result: dict[str, Any] = {"raw_marker": text}
+    for field in (
+        "sample",
+        "sender_raw",
+        "sender_raw_while_tx",
+        "sender_blanked_raw",
+        "sender_accepted_remote",
+        "receiver_raw",
+        "receiver_accepted_remote",
+        "sender_last_txd_rise",
+        "sender_last_txd_fall",
+        "sender_first_rxd_after_tx",
+        "sender_last_rxd_after_tx",
+        "sender_raw_sent",
+        "receiver_raw_sent",
+    ):
+        match = re.search(rf"(?:^|[:,]){field}=([0-9]+)(?:,|$)", text)
+        if match:
+            result[field] = int(match.group(1))
+    for field in ("module", "sender", "receiver"):
+        match = re.search(
+            rf"(?:^|[:,]){field}=([A-Za-z0-9_.-]+)(?:,|$)", text
+        )
+        if match:
+            result[field] = match.group(1)
+    for field, terminator in (
+        ("fixed_physical_tx", "rotating_physical_tx"),
+        ("rotating_physical_tx", "sender_dump"),
+    ):
+        match = re.search(rf"(?:^|,){field}=([0-9,]+),{terminator}=", text)
+        if match:
+            result[field] = [int(value) for value in match.group(1).split(",")]
+    return result
+
+
 def evaluate_echo(stage_dir: Path) -> tuple[list[str], dict[str, Any]]:
     errors: list[str] = []
     modules: dict[str, Any] = {}
-    for path in sorted((stage_dir / "dumps").glob("*.echo_tail.psv")):
-        with path.open(encoding="ascii", newline="") as handle:
-            rows = [
-                {key: (value if key == "module" else int(value, 0))
-                 for key, value in row.items()}
-                for row in csv.DictReader(handle, delimiter="|")
-            ]
-        if len(rows) != 1000:
-            errors.append(f"{path.name}: expected 1000 samples, got {len(rows)}")
-            continue
-        module_names = {row["module"] for row in rows}
-        if len(module_names) != 1:
-            errors.append(f"{path.name}: module identity is not unique")
-            continue
-        module = module_names.pop()
-        tails = [row["tail_cycles"] for row in rows]
-        summary = {
-            "module": module,
-            "samples": len(rows),
-            "p99_cycles": nearest_rank(tails, 0.99),
-            "p99_9_cycles": nearest_rank(tails, 0.999),
-            "maximum_cycles": max(tails),
-            "same_module_raw_count": sum(row["sender_raw"] for row in rows),
-            "raw_while_tx_count": sum(
-                row["sender_raw_while_tx"] for row in rows
-            ),
-            "blanked_raw_count": sum(
-                row["sender_blanked_raw"] for row in rows
-            ),
-            "blanked_frame_count": sum(
-                row["sender_blanked_frame"] for row in rows
-            ),
-            "local_source_reject_count": sum(
-                row["sender_local_source_reject"] for row in rows
-            ),
-            "sender_accepted_remote_count": sum(
-                row["sender_accepted_remote"] for row in rows
-            ),
-            "receiver_raw_count": sum(row["receiver_raw"] for row in rows),
-            "source": rel(path),
-        }
-        violation_fields = (
-            "sender_overlap_violation",
-            "sender_admission_violation",
-            "sender_non_target_accepted",
-            "sender_cross_lane_accepted",
-            "receiver_overlap_violation",
-            "receiver_admission_violation",
-            "receiver_non_target_accepted",
-            "receiver_cross_lane_accepted",
+    markers = parse_markers(stage_dir / "xsdb.result.txt")
+    expected_names = {
+        f"echo_{module}.echo_tail.psv" for module in ECHO_DIRECTION_SPECS
+    }
+    observed_names = {
+        path.name for path in (stage_dir / "dumps").glob("*.echo_tail.psv")
+    }
+    unexpected = observed_names - expected_names
+    if unexpected:
+        errors.append(
+            "unexpected echo-tail evidence: " + ",".join(sorted(unexpected))
         )
-        summary["violations"] = {
-            field: sum(row[field] for row in rows) for field in violation_fields
+    for module, spec in ECHO_DIRECTION_SPECS.items():
+        path = stage_dir / "dumps" / f"echo_{module}.echo_tail.psv"
+        marker = markers.get(f"P10_1R_ECHO_DIRECTION_RESULT_{module}")
+        failure = parse_echo_failure_snapshot(
+            markers.get(f"P10_1R_ECHO_DIRECTION_FAILURE_{module}")
+        )
+        module_errors: list[str] = []
+        rows: list[dict[str, Any]] = []
+        if not path.is_file():
+            module_errors.append("evidence file missing")
+        else:
+            try:
+                with path.open(encoding="ascii", newline="") as handle:
+                    rows = [
+                        {
+                            key: (value if key == "module" else int(value, 0))
+                            for key, value in row.items()
+                        }
+                        for row in csv.DictReader(handle, delimiter="|")
+                    ]
+            except (OSError, TypeError, ValueError) as exc:
+                module_errors.append(f"evidence parse failed: {exc}")
+        summary: dict[str, Any] = {
+            "module": module,
+            **spec,
+            "evidence_class": "RAW_PHYSICAL_ONLY",
+            "samples": len(rows),
+            "required_samples": 1000,
+            "result_marker": marker,
+            "failure_snapshot": failure,
+            "source": rel(path) if path.is_file() else None,
         }
-        if summary["same_module_raw_count"] <= 0:
-            errors.append(f"{module}: same-module raw echo was not observed")
-        if summary["receiver_raw_count"] < 1000:
-            errors.append(f"{module}: intended remote raw observations < 1000")
-        if summary["sender_accepted_remote_count"] != 0:
-            errors.append(f"{module}: same-module event entered accepted path")
-        for field, value in summary["violations"].items():
-            if value != 0:
-                errors.append(f"{module}: {field}={value}")
+        if len(rows) != 1000:
+            module_errors.append(f"expected 1000 samples, got {len(rows)}")
+        if marker != "PASS":
+            module_errors.append(
+                "direction result marker is not PASS"
+                if marker is not None
+                else "direction result marker missing"
+            )
+        if len(rows) == 1000:
+            module_names = {row["module"] for row in rows}
+            if module_names != {module}:
+                module_errors.append(
+                    "module identity does not match the direction-bound filename"
+                )
+            tails = [row["tail_cycles"] for row in rows]
+            summary.update(
+                {
+                    "p99_cycles": nearest_rank(tails, 0.99),
+                    "p99_9_cycles": nearest_rank(tails, 0.999),
+                    "maximum_cycles": max(tails),
+                    "same_module_raw_count": sum(
+                        row["sender_raw"] for row in rows
+                    ),
+                    "raw_while_tx_count": sum(
+                        row["sender_raw_while_tx"] for row in rows
+                    ),
+                    "blanked_raw_count": sum(
+                        row["sender_blanked_raw"] for row in rows
+                    ),
+                    "blanked_frame_count": sum(
+                        row["sender_blanked_frame"] for row in rows
+                    ),
+                    "local_source_reject_count": sum(
+                        row["sender_local_source_reject"] for row in rows
+                    ),
+                    "sender_accepted_remote_count": sum(
+                        row["sender_accepted_remote"] for row in rows
+                    ),
+                    "receiver_raw_count": sum(
+                        row["receiver_raw"] for row in rows
+                    ),
+                }
+            )
+            violation_fields = (
+                "sender_overlap_violation",
+                "sender_admission_violation",
+                "sender_non_target_accepted",
+                "sender_cross_lane_accepted",
+                "receiver_overlap_violation",
+                "receiver_admission_violation",
+                "receiver_non_target_accepted",
+                "receiver_cross_lane_accepted",
+            )
+            summary["violations"] = {
+                field: sum(row[field] for row in rows)
+                for field in violation_fields
+            }
+            if summary["same_module_raw_count"] <= 0:
+                module_errors.append("same-module raw echo was not observed")
+            if summary["receiver_raw_count"] < 1000:
+                module_errors.append("intended remote raw observations < 1000")
+            if summary["sender_accepted_remote_count"] != 0:
+                module_errors.append("same-module event entered accepted path")
+            for field, value in summary["violations"].items():
+                if value != 0:
+                    module_errors.append(f"{field}={value}")
+        summary["physical_direction_status"] = (
+            "PASS" if not module_errors else "FAIL"
+        )
+        summary["errors"] = module_errors
         modules[module] = summary
+        errors.extend(f"{module}: {message}" for message in module_errors)
     if set(modules) != {"F0", "F1", "R0", "R1"}:
         errors.append("echo-tail evidence does not contain F0/F1/R0/R1 exactly")
     maximum = max(
-        (item["maximum_cycles"] for item in modules.values()), default=0
+        (
+            item["maximum_cycles"]
+            for item in modules.values()
+            if "maximum_cycles" in item
+        ),
+        default=0,
     )
-    minimum_safe = maximum + GUARD_MARGIN_CYCLES
-    configured_safe = EXPECTED_GUARD_CYCLES >= minimum_safe
-    if not configured_safe:
+    assessment_complete = all(
+        item["physical_direction_status"] == "PASS" for item in modules.values()
+    )
+    minimum_safe = maximum + GUARD_MARGIN_CYCLES if assessment_complete else None
+    configured_safe = (
+        EXPECTED_GUARD_CYCLES >= minimum_safe
+        if minimum_safe is not None
+        else None
+    )
+    if configured_safe is False:
         errors.append(
             f"configured guard {EXPECTED_GUARD_CYCLES} < measured-safe {minimum_safe}"
         )
     return errors, {
+        "evidence_class": "RAW_PHYSICAL_ONLY",
+        "data_path_acceptance_claimed": False,
         "modules": modules,
         "sample_count": sum(item["samples"] for item in modules.values()),
         "same_module_raw_echo_count": sum(
-            item["same_module_raw_count"] for item in modules.values()
+            int(item.get("same_module_raw_count", 0)) for item in modules.values()
         ),
         "same_module_blanked_frame_count": sum(
-            item["blanked_frame_count"] for item in modules.values()
+            int(item.get("blanked_frame_count", 0)) for item in modules.values()
         ),
         "measured_maximum_echo_tail_cycles": maximum,
         "deterministic_margin_cycles": GUARD_MARGIN_CYCLES,
         "minimum_safe_guard_cycles": minimum_safe,
         "configured_guard_cycles": EXPECTED_GUARD_CYCLES,
         "configured_guard_is_safe": configured_safe,
-        "guard_minimization_pending": minimum_safe != EXPECTED_GUARD_CYCLES,
+        "guard_assessment_complete": assessment_complete,
+        "guard_minimization_pending": (
+            minimum_safe != EXPECTED_GUARD_CYCLES
+            if minimum_safe is not None
+            else None
+        ),
     }
 
 

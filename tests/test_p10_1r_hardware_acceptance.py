@@ -103,6 +103,11 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("sender_raw_sent=%u", tcl)
         self.assertIn("fixed_physical_tx=%s", tcl)
         self.assertIn("sender_dump=%s", tcl)
+        self.assertIn("P10_1R_ECHO_DIRECTION_FAILURE_${module}=", tcl)
+        self.assertIn("P10_1R_ECHO_DIRECTION_RESULT_${module}=FAIL", tcl)
+        self.assertIn("proc p10_rebootstrap_after_echo_direction", tcl)
+        self.assertIn("P10_1R_ECHO_DIRECTION_ISOLATION_PASS=", tcl)
+        self.assertIn("P10_1R_ECHO_MATRIX_RESULT=FAIL:", tcl)
         snapshot = tcl.index("set fixed_failure_snapshot")
         marker = tcl.index("P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT=")
         shutdown_request = tcl.index(
@@ -217,6 +222,14 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             stage = Path(directory)
             dumps = stage / "dumps"
             dumps.mkdir()
+            (stage / "xsdb.result.txt").write_text(
+                "\n".join(
+                    f"P10_1R_ECHO_DIRECTION_RESULT_{module}=PASS"
+                    for module in ("F0", "R0", "F1", "R1")
+                )
+                + "\n",
+                encoding="ascii",
+            )
             for module, direction, lane in (
                 ("F0", 0, 1), ("F1", 0, 2),
                 ("R0", 1, 1), ("R1", 1, 2),
@@ -244,6 +257,64 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             self.assertEqual(result["modules"]["F0"]["p99_cycles"], 0)
             self.assertEqual(result["modules"]["F0"]["p99_9_cycles"], 0)
             self.assertTrue(result["configured_guard_is_safe"])
+            self.assertTrue(result["guard_assessment_complete"])
+            self.assertEqual(result["evidence_class"], "RAW_PHYSICAL_ONLY")
+            self.assertFalse(result["data_path_acceptance_claimed"])
+
+    def test_echo_failure_snapshot_parser_preserves_direct_physical_facts(self) -> None:
+        parsed = self.runner.parse_echo_failure_snapshot(
+            "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,"
+            "sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,"
+            "sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,"
+            "sender_last_txd_rise=34007980,sender_last_txd_fall=34007985,"
+            "sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,"
+            "sender_raw_sent=1,receiver_raw_sent=0,"
+            "fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,"
+            "sender_dump=C:/sender.psv,receiver_dump=C:/receiver.psv"
+        )
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        self.assertEqual(parsed["module"], "F1")
+        self.assertEqual(parsed["receiver_raw"], 0)
+        self.assertEqual(parsed["sender_last_txd_fall"] - parsed["sender_last_txd_rise"], 5)
+        self.assertEqual(parsed["fixed_physical_tx"], [0, 1, 0, 0])
+        self.assertEqual(parsed["rotating_physical_tx"], [0, 0, 0, 0])
+
+    def test_echo_evaluator_keeps_all_direction_verdicts_after_failures(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            stage = Path(directory)
+            dumps = stage / "dumps"
+            dumps.mkdir()
+            modules = ("F0", "R0", "F1", "R1")
+            for module in modules:
+                (dumps / f"echo_{module}.echo_tail.psv").write_text(
+                    "sample|module\n", encoding="ascii"
+                )
+            (stage / "xsdb.result.txt").write_text(
+                "\n".join(
+                    [
+                        *(f"P10_1R_ECHO_DIRECTION_RESULT_{module}=FAIL" for module in modules),
+                        "P10_1R_ECHO_DIRECTION_FAILURE_F1=echo_F1:module=F1,"
+                        "sample=0,sender=fixed,receiver=rotating,sender_raw=1,"
+                        "receiver_raw=0",
+                    ]
+                )
+                + "\n",
+                encoding="ascii",
+            )
+            errors, result = self.runner.evaluate_echo(stage)
+            self.assertTrue(errors)
+            self.assertEqual(set(result["modules"]), set(modules))
+            self.assertTrue(all(
+                item["physical_direction_status"] == "FAIL"
+                for item in result["modules"].values()
+            ))
+            self.assertEqual(
+                result["modules"]["F1"]["failure_snapshot"]["receiver_raw"],
+                0,
+            )
+            self.assertFalse(result["guard_assessment_complete"])
+            self.assertIsNone(result["configured_guard_is_safe"])
 
     def test_runner_has_all_hardware_gates_and_finally_shutdown(self) -> None:
         text = RUNNER_PATH.read_text(encoding="utf-8")
