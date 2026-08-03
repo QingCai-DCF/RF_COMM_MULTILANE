@@ -58,6 +58,7 @@ BOARD_EVIDENCE = (
     "p10_2_pin_bank_audit",
     "p10_2_profile_summary",
 )
+BOARD_JSON_ONLY = {"p10_1r_git_checkpoint_metadata"}
 
 NEW_PAIRS = (
     "p10_2_parameterization_summary",
@@ -804,7 +805,9 @@ def main() -> int:
     update_requirements(pass_status)
 
     verified_paths = [
-        *(GENERATED / f"{name}.{suffix}" for name in (*BOARD_EVIDENCE, *NEW_PAIRS[:-1]) for suffix in ("json", "md")),
+        *(GENERATED / f"{name}.json" for name in BOARD_EVIDENCE),
+        *(GENERATED / f"{name}.md" for name in BOARD_EVIDENCE if name not in BOARD_JSON_ONLY),
+        *(GENERATED / f"{name}.{suffix}" for name in NEW_PAIRS[:-1] for suffix in ("json", "md")),
         RAW / "artifact_sha256_manifest.json", STATE, REQUIREMENTS, STATUS, TRACE,
     ]
     consistency_errors: list[str] = []
