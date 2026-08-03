@@ -1,0 +1,82 @@
+{
+  "artifacts": {
+    "fixed_bitstream_sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27",
+    "fixed_elf_sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4",
+    "rotating_bitstream_sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f",
+    "rotating_elf_sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e",
+    "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating_role": "AX7020-R/JTAG:210512180081"
+  },
+  "classification": "DIRECT_CURRENT_ARTIFACT_DATA_PATH_FAILURE_RETRY_EXHAUSTED",
+  "current_run_hardware_authorization": false,
+  "evidence": {
+    "manifest": {
+      "declared_files": 70,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "rehash_errors": 0,
+      "sha256": "36c41f02564e9c4741fde3d59b41f8f650dac340e58b96381ebe6ee66b584ffd"
+    },
+    "orchestrator": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+      "sha256": "b4e542c738e26a76218001e39bc20c6647f1ef7c2a5864d5e205ecb9759f1282"
+    },
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d/crosstalk_remediation/stage_summary.json",
+      "sha256": "7d3f6e323a49903be21b0ac8b9dfed63abacdbf9f898b6839412b18239182964"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d/crosstalk_remediation/xsdb.result.txt",
+      "sha256": "76a555b0fdd044fcf78f5d2d94557c4dba37270c23d62c342f543a9bf1daa9d2"
+    }
+  },
+  "generated_at_utc": "2026-08-03T06:08:17+00:00",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "lane0_completed_cases": [
+    "raw_64_F_TO_R",
+    "raw_1024_F_TO_R",
+    "frame_1MiB_F_TO_R",
+    "raw_64_R_TO_F",
+    "raw_1024_R_TO_F",
+    "frame_1MiB_R_TO_F"
+  ],
+  "lane1_f_to_r": {
+    "accepted_bytes_before_failure": 524288,
+    "committed_bytes": 0,
+    "completed_descriptors": 8,
+    "completed_objects": 2,
+    "fixed_last_error_detail": "0x50090004",
+    "fixed_status": "0x104_P10_1_RUNTIME_STATUS_PL_OBJECT",
+    "frame_case": "FAIL",
+    "frame_requested_bytes": 1048576,
+    "interpretation": "P9_OBJECT_ERROR retry exhausted; direct evidence does not distinguish remaining optical loss, ACK loss, or a protocol boundary race",
+    "raw_1024": "PASS",
+    "raw_64": "PASS",
+    "rotating_status": "0x103_P10_1_RUNTIME_STATUS_DMA_COMPLETION",
+    "submitted_descriptors": 16,
+    "submitted_objects": 4
+  },
+  "lane1_r_to_f": "NOT_EXECUTED_AFTER_FAIL_CLOSED",
+  "network_used": false,
+  "observed_protocol_safety": {
+    "admission_violation": 0,
+    "cross_lane_accepted_data": 0,
+    "same_module_accepted_data": 0
+  },
+  "result": "FAIL",
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d",
+  "schema_version": 1,
+  "shutdown": {
+    "fixed": "PASS",
+    "finally_evidence_sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+    "rotating": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "test_id": "P10_1R-CURRENT-CROSSTALK-RETRY-EXHAUSTION"
+}
