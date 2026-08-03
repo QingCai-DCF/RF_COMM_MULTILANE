@@ -647,6 +647,7 @@ Signal harness IDs are `F0-SIG` through `F3-SIG` and `R0-SIG` through `R3-SIG`. 
         "current_run_hardware_authorization": False,
         "no_2h_qualification": True,
         "reference_roots_read_only": True,
+        "hardware_actions_executed": False,
     }
     write_json("evidence/generated/p10_2_repo_intake.json", repo_intake)
     write_text(
