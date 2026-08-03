@@ -86,10 +86,9 @@
     }
   ],
   "authorization_id": "P10_1R-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "6626d1ddeabddab0379e3366d7c1fd8ab6403a7b",
-  "authorization_status_at_run_start": "AUTHORIZED",
+  "authorization_parent_commit": "59c11f37a0d4e381ee6b903ca02f0a235bc29903",
   "authorized_stages": [
-    "echo_tail"
+    "crosstalk"
   ],
   "board_identities": {
     "fixed": {
@@ -104,33 +103,11 @@
     }
   },
   "branch": "p10.1r/2lane-speed-stability-remediation",
-  "campaign_disposition": "AUTHORIZED_STAGE_SET_COMPLETE_CAMPAIGN_REMAINS_PARTIAL",
-  "campaign_status": "PASS",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-03T05:44:30+00:00",
-  "consumed_by_run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
-  "consumed_stage_set": [
-    "echo_tail"
-  ],
-  "current_run_hardware_authorization": false,
-  "current_run_user_request": {
-    "evidence_class": "RAW_PHYSICAL_ONLY",
-    "physical_directions": [
-      "F0_TO_R0",
-      "R0_TO_F0",
-      "F1_TO_R1",
-      "R1_TO_F1"
-    ],
-    "received_on": "2026-08-03",
-    "requested_action": "retest_all_four_physical_directions",
-    "user_quote": "重新复测四个物理方向连通性"
-  },
-  "final_evidence_path": "evidence/hardware/p10_1r/p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
-  "final_evidence_sha256": "6d7c2ea2c6b6ab6bd6e6bc1a23d41a3b8a94f6553179e36c685c82ec5f0e221f",
-  "generated_at_utc": "2026-08-03T05:32:11+00:00",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
+  "generated_at_utc": "2026-08-03T06:05:29+00:00",
   "goal": "goals/P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION_GOAL.md",
   "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
-  "hardware_actions_executed": true,
   "inputs": {
     "active_wiring": {
       "bytes": 27452,
@@ -173,9 +150,9 @@
       "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
     },
     "project_state": {
-      "bytes": 38624,
+      "bytes": 39719,
       "path": "config/project_state.json",
-      "sha256": "42f10b06624625faaf40d81a271ecb189ab771c09e8d4cc54c871bcebd033b15"
+      "sha256": "c25484de1c87f50eb3b673b0c72f288d52eb369f2de98c4fbbd1e9d2110b752d"
     },
     "register_map": {
       "bytes": 60093,
@@ -188,9 +165,9 @@
       "sha256": "49d8bc3c1c5b9c6a1990c28be6dd861917b5e71668d483a4610e54ba59e2fdf8"
     },
     "requirements": {
-      "bytes": 230140,
+      "bytes": 231939,
       "path": "config/project_requirements.yaml",
-      "sha256": "6f15d539ce954a2443233bff43d5ea49e731cdc3bf601a7deda5932702786768"
+      "sha256": "890f008dc4599d8227470241cdbe76bc98c90710c99190e2cf31ef4647de8bcb"
     },
     "rotating_profile": {
       "bytes": 927,
@@ -203,9 +180,9 @@
       "sha256": "ea57c4052e3747a4eb104b1e57eb929d8aeaae8d402ff9aa08b641f4db437345"
     },
     "runner": {
-      "bytes": 78299,
+      "bytes": 78960,
       "path": "scripts/p10_1r_hardware_acceptance.py",
-      "sha256": "0b8298d6e2aac3ab82f591008357e6dc7b28e3719f9fdfb135adc1c270de5a0c"
+      "sha256": "8f8f05447c90007cb220a81d44c37f9b708b1a47cf99b3cf85b7212c0ad2e7cb"
     },
     "runtime": {
       "bytes": 3158,
@@ -240,15 +217,13 @@
   ],
   "maximum_lane_mask": 3,
   "maximum_single_formal_run_seconds": 1800,
-  "full_campaign_completed": false,
-  "next_required_action": "preserve this stage-scoped PASS and create fresh run-bound authorizations for the remaining mandatory P10.1R stages",
   "part": "xc7z020clg400-2",
   "pl_build_identity": {
     "fixed": "0x50325346",
     "rotating": "0x50325352"
   },
   "plan_sha256": {
-    "echo_tail": "95bcdfa54a9e6b4a34a03751fd1b0f2dd4eacc09069a31780c9e37a583fe1074"
+    "crosstalk": "b53e619975705188a77d4e6d2992003adc42511ae544b2572496ffca7c90ad3a"
   },
   "prohibited": {
     "8x32": true,
@@ -265,7 +240,7 @@
     "spi": true
   },
   "reusable_for_future_run": false,
-  "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d",
+  "run_id": "p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d",
   "schema_version": 1,
   "scope": "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION",
   "shutdown": {
@@ -284,8 +259,6 @@
       "SHUTDOWN_EXIT=0"
     ]
   },
-  "shutdown_fixed": "PASS",
-  "shutdown_rotating": "PASS",
   "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
   "standing_authorization_policy": {
     "campaign_new_run_id_limit": null,
@@ -318,7 +291,7 @@
       ]
     }
   ],
-  "status": "CONSUMED_AFTER_P10_1R_HARDWARE_PASS",
+  "status": "AUTHORIZED",
   "user_authorization_received_at": "2026-08-02T00:00:00+08:00",
   "user_authorization_statement": "用户授权 Codex 在 P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION 范围内，对当前两块 AX7020 和四个 TFDU6102 小板执行自动化硬件操作；除明确电气危险、无法唯一绑定板卡、必须人工操作硬件或无法确认 shutdown 外，不再请求确认。",
   "user_authorization_statement_sha256": "a602d7d7b6709e48cde94a63c07a3e1c0267985648f76d259dd200f80e89636e"
