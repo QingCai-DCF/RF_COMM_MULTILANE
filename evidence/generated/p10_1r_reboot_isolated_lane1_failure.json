@@ -1,0 +1,86 @@
+{
+  "artifacts": {
+    "fixed_bitstream_sha256": "c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27",
+    "fixed_elf_sha256": "0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4",
+    "rotating_bitstream_sha256": "bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f",
+    "rotating_elf_sha256": "5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e",
+    "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating_role": "AX7020-R/JTAG:210512180081"
+  },
+  "classification": "REBOOT_ISOLATED_F1_TO_R1_RAW_RECEIVE_FAILURE",
+  "comparison": {
+    "earlier_reboot_isolated_run": {
+      "f1_to_r1": "PASS_1000_OF_1000",
+      "path": "evidence/generated/p10_1r_four_direction_connectivity_retest.json",
+      "run_id": "p10_1r_20260803T053211Z_cce2180b_c1370686_bfb1c51d"
+    },
+    "preceding_crosstalk_run_1": {
+      "f1_to_r1_frame": "FAIL_RETRY_EXHAUSTED_AFTER_524288_BYTES",
+      "path": "evidence/generated/p10_1r_current_crosstalk_retry_exhaustion.json",
+      "run_id": "p10_1r_20260803T060521Z_cce2180b_c1370686_bfb1c51d"
+    },
+    "preceding_crosstalk_run_2": {
+      "f1_to_r1_raw_64": "FAIL_REMOTE_RAW_2_OF_64_AFTER_LANE0_SEQUENCE",
+      "path": "evidence/generated/p10_1r_lane1_post_lane0_transition_failure.json",
+      "run_id": "p10_1r_20260803T061448Z_cce2180b_c1370686_bfb1c51d"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "direction_results": {
+    "F0_TO_R0": "NOT_EXECUTED_AFTER_DIAGNOSTIC_REBOOT_ABORT",
+    "F1_TO_R1": {
+      "accepted_remote": 0,
+      "receiver_raw": 0,
+      "result": "FAIL_AT_SAMPLE_0",
+      "sender_blanked_raw": 1,
+      "sender_physical_tx_lane1": 1,
+      "sender_raw": 1,
+      "sender_raw_while_tx": 1
+    },
+    "R0_TO_F0": "NOT_EXECUTED_AFTER_DIAGNOSTIC_REBOOT_ABORT",
+    "R1_TO_F1": "NOT_EXECUTED_AFTER_DIAGNOSTIC_REBOOT_ABORT"
+  },
+  "evidence": {
+    "manifest": {
+      "declared_files": 32,
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+      "rehash_errors": 0,
+      "sha256": "1110dbdbcad61f92073d22dc51b5f6c5ea0592f8648f2ea8155b0f8195ca6fce"
+    },
+    "orchestrator": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/final/orchestrator_result.json",
+      "sha256": "67d0563230559b44f9cfe812b4b7f107f999a7a1155410bf98446224c65ce6f9"
+    },
+    "stage_summary": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/stage_summary.json",
+      "sha256": "f0941bbc6ebbb5fc0090f7ab71529203dc21fc1708ed28ed9dd2fc41db48c986"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.result.txt",
+      "sha256": "bfa9068a45faaed39919a093f9824bc57f4d3d2975cde477cc45c36b07c902cb"
+    }
+  },
+  "evidence_class": "RAW_PHYSICAL_ONLY",
+  "generated_at_utc": "2026-08-03T06:24:35+00:00",
+  "goal_sha256": "299e9b04b824f6bcf77b51398e87a2b7dc19272bcc245ef968fc7cdf0e57b35f",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "network_used": false,
+  "result": "FAIL",
+  "rewiring_executed": false,
+  "run_id": "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d",
+  "schema_version": 1,
+  "shutdown": {
+    "final_evidence_sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "test_id": "P10_1R-REBOOT-ISOLATED-LANE1-FAILURE",
+  "test_orchestration_finding": "After the direct F1-to-R1 failure, the rotating mailbox still contained terminal FAULT state 5/status 14 when the diagnostic reboot helper began polling. The helper treated that stale pre-restart mailbox value as a new boot failure and aborted the remaining directions. This affects coverage, not the preserved F1-to-R1 negative observation.",
+  "unresolved_cause": "The current evidence proves that the rotating lane1 receiver tap observed no raw pulse for a final-path fixed lane1 TX event in this run. It does not by itself identify optical alignment, TFDU hardware, connector wiring, or FPGA IO as the cause."
+}

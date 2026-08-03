@@ -1,7 +1,23 @@
 {
   "SHUTDOWN_FIXED": "PASS",
   "SHUTDOWN_ROTATING": "PASS",
-  "attempts": [
+  "current_run_hardware_authorization": true,
+  "errors": [
+    "RuntimeError: echo_tail validation failed"
+  ],
+  "ethernet_used": false,
+  "evidence_file_count": 32,
+  "evidence_manifest": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/final/run_evidence_sha256_manifest.json",
+  "generated_at_utc": "2026-08-03T06:24:34+00:00",
+  "hardware_actions_executed": true,
+  "hardware_movement": false,
+  "maximum_lane_mask_used": "0x3",
+  "network_used": false,
+  "rewiring_executed": false,
+  "rotation_executed": false,
+  "run_id": "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d",
+  "schema_version": 1,
+  "shutdowns": [
     {
       "SHUTDOWN_FIXED": "PASS",
       "SHUTDOWN_ROTATING": "PASS",
@@ -315,9 +331,225 @@
       "test_id": "P10-DUAL-SHUTDOWN"
     }
   ],
-  "generated_at_utc": "2026-08-03T06:24:35+00:00",
-  "run_id": "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d",
-  "schema_version": 1,
-  "status": "PASS",
-  "test_id": "P10_1R-DUAL-SHUTDOWN"
+  "source_commit": "cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d",
+  "spi_used": false,
+  "stage_results": {
+    "echo_tail": {
+      "details": [],
+      "errors": [
+        "XSDB PASS marker missing",
+        "exactly one final endpoint-shutdown row required",
+        "F0: evidence file missing",
+        "F0: expected 1000 samples, got 0",
+        "F0: direction result marker missing",
+        "R0: evidence file missing",
+        "R0: expected 1000 samples, got 0",
+        "R0: direction result marker missing",
+        "F1: expected 1000 samples, got 0",
+        "F1: direction result marker is not PASS",
+        "R1: evidence file missing",
+        "R1: expected 1000 samples, got 0",
+        "R1: direction result marker missing"
+      ],
+      "generated_at_utc": "2026-08-03T06:24:04+00:00",
+      "markers": {
+        "P10_1R_ECHO_DIRECTION_FAILURE_F1": "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,sender_last_txd_rise=31407761,sender_last_txd_fall=31407766,sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,sender_raw_sent=1,receiver_raw_sent=0,fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,sender_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv,receiver_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+        "P10_1R_ECHO_DIRECTION_ISOLATION_BEGIN": "echo_F1",
+        "P10_1R_ECHO_DIRECTION_RESULT_F1": "FAIL",
+        "P10_1R_ECHO_SWEEP_FAIL": "echo_F1:module=F1,sample=0,sequence=1001,sender=fixed,receiver=rotating,fixed_status=0x00000000,rotating_status=0x0000000E,fixed_state=4,rotating_state=5,fixed_response=1001,rotating_response=1001,fixed_pl_status=0x00000102,rotating_pl_status=0x00000002,fixed_phy_status=0x00000000,rotating_phy_status=0x00000000,fixed_error_detail=0x00000000,rotating_error_detail=0x00000000",
+        "P10_1R_ECHO_SWEEP_FAILURE_SNAPSHOT": "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,sender_last_txd_rise=31407761,sender_last_txd_fall=31407766,sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,sender_raw_sent=1,receiver_raw_sent=0,fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,sender_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv,receiver_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+        "P10_CANDIDATE_PROGRAMMED_FIXED": "1",
+        "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
+        "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+        "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/P10_1R-ECHO_TAIL_ready.fixed.bin",
+        "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/P10_1R-ECHO_TAIL_ready.rotating.bin",
+        "P10_PS7_INITIALIZED_FIXED": "1",
+        "P10_PS7_INITIALIZED_ROTATING": "1",
+        "P10_PS_ELF_DOWNLOADED_FIXED": "1",
+        "P10_PS_ELF_DOWNLOADED_ROTATING": "1",
+        "P10_REBOOT_PASS_FIXED": "echo_F1_fixed_echo_isolation_reboot:C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_fixed_echo_isolation_reboot.fixed.bin",
+        "P10_SAFE_BOOT": "PASS",
+        "P10_SAFE_STATE_FIXED_PREBOOT": "id:0x5031305A,build:0x50325346,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+        "P10_SAFE_STATE_FIXED_SAFE_BOOT": "id:0x5031305A,build:0x50325346,profile:0x702000F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+        "P10_SAFE_STATE_ROTATING_PREBOOT": "id:0x5031305A,build:0x50325352,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+        "P10_SAFE_STATE_ROTATING_SAFE_BOOT": "id:0x5031305A,build:0x50325352,profile:0x702000A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+        "P10_SERVICE_READY_FIXED": "echo_F1_fixed_echo_isolation_reboot",
+        "P10_SERVICE_READY_ROTATING": "initial_boot",
+        "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+        "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+        "P10_XSDB_EXPECTED_BUILD_FIXED": "0x50325346",
+        "P10_XSDB_EXPECTED_BUILD_ROTATING": "0x50325352",
+        "P10_XSDB_FIXED_SERIAL": "210249855178",
+        "P10_XSDB_FIXED_TARGETS": "APU:6,CPU0:7,FPGA:1",
+        "P10_XSDB_IDENTITY": "PASS",
+        "P10_XSDB_ROTATING_SERIAL": "210512180081",
+        "P10_XSDB_ROTATING_TARGETS": "APU:2,CPU0:3,FPGA:5",
+        "P10_XSDB_RUN_ID": "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d",
+        "P10_XSDB_STAGE": "P10_1R-ECHO_TAIL",
+        "P10_XSDB_STAGE_ERROR": "P10 rotating service entered FAULT during echo_F1_rotating_echo_isolation_reboot status_14",
+        "P10_XSDB_STAGE_RESULT": "FAIL"
+      },
+      "observation_count": 0,
+      "process": {
+        "command": [
+          "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\scripts\\hw\\p10_dual_xsdb_stage.tcl",
+          "tcp:localhost:3121",
+          "210249855178",
+          "210512180081",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d\\c13706860a003721d45e9a6fd90f444825aaa1b342a74a095079eceffa856a27\\p10_ax7020_fixed_functional.bit",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d\\bfb1c51d639188ea60392c8ceb39b25276e12b819c8e2ee0c5ae3ef63497639f\\p10_ax7020_rotating_functional.bit",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d\\0d3963ce7fbcaab95373ebec97f4c62712bd216f041a23547c9006024e219db4\\p10_fixed_runtime.elf",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\artifacts\\p10_1r\\cce2180bcaa9dd1cb4f0f09bf02a68530f6eb62d\\5abf3d3d597b14e182d07665609a8dd8ff05d7c6159fd2deb1f81813723c035e\\p10_rotating_runtime.elf",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\artifacts\\fixed\\ps7_init.tcl",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\artifacts\\rotating\\ps7_init.tcl",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\echo_tail\\echo_tail.plan",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\echo_tail\\dumps",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\authorization\\ABORT_NOW.txt",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\evidence\\hardware\\p10_1r\\p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d\\echo_tail\\xsdb.result.txt",
+          "P10_1R-ECHO_TAIL",
+          "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_1R\\config\\p10_1r_current_run_hardware_authorization.json",
+          "p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d",
+          "0x50325346",
+          "0x50325352"
+        ],
+        "elapsed_seconds": 29.96960059995763,
+        "returncode": 0,
+        "stderr": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.stderr.log",
+        "stdout": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/xsdb.stdout.log",
+        "timed_out": false,
+        "timeout_seconds": 7200
+      },
+      "schema_version": 1,
+      "semantics": {
+        "configured_guard_cycles": 4096,
+        "configured_guard_is_safe": null,
+        "data_path_acceptance_claimed": false,
+        "deterministic_margin_cycles": 4096,
+        "evidence_class": "RAW_PHYSICAL_ONLY",
+        "guard_assessment_complete": false,
+        "guard_minimization_pending": null,
+        "measured_maximum_echo_tail_cycles": 0,
+        "minimum_safe_guard_cycles": null,
+        "modules": {
+          "F0": {
+            "errors": [
+              "evidence file missing",
+              "expected 1000 samples, got 0",
+              "direction result marker missing"
+            ],
+            "evidence_class": "RAW_PHYSICAL_ONLY",
+            "failure_snapshot": null,
+            "lane": "lane0",
+            "module": "F0",
+            "physical_direction": "F0_TO_R0",
+            "physical_direction_status": "FAIL",
+            "receiver_role": "rotating",
+            "required_samples": 1000,
+            "result_marker": null,
+            "samples": 0,
+            "sender_role": "fixed",
+            "source": null
+          },
+          "F1": {
+            "errors": [
+              "expected 1000 samples, got 0",
+              "direction result marker is not PASS"
+            ],
+            "evidence_class": "RAW_PHYSICAL_ONLY",
+            "failure_snapshot": {
+              "fixed_physical_tx": [
+                0,
+                1,
+                0,
+                0
+              ],
+              "module": "F1",
+              "raw_marker": "echo_F1:module=F1,sample=0,sender=fixed,receiver=rotating,sender_raw=1,sender_raw_while_tx=1,sender_blanked_raw=1,sender_accepted_remote=0,receiver_raw=0,receiver_accepted_remote=0,sender_last_txd_rise=31407761,sender_last_txd_fall=31407766,sender_first_rxd_after_tx=0,sender_last_rxd_after_tx=0,sender_raw_sent=1,receiver_raw_sent=0,fixed_physical_tx=0,1,0,0,rotating_physical_tx=0,0,0,0,sender_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.fixed.p10_1r.psv,receiver_dump=C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1_failure_0000.rotating.p10_1r.psv",
+              "receiver": "rotating",
+              "receiver_accepted_remote": 0,
+              "receiver_raw": 0,
+              "receiver_raw_sent": 0,
+              "rotating_physical_tx": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "sample": 0,
+              "sender": "fixed",
+              "sender_accepted_remote": 0,
+              "sender_blanked_raw": 1,
+              "sender_first_rxd_after_tx": 0,
+              "sender_last_rxd_after_tx": 0,
+              "sender_last_txd_fall": 31407766,
+              "sender_last_txd_rise": 31407761,
+              "sender_raw": 1,
+              "sender_raw_sent": 1,
+              "sender_raw_while_tx": 1
+            },
+            "lane": "lane1",
+            "module": "F1",
+            "physical_direction": "F1_TO_R1",
+            "physical_direction_status": "FAIL",
+            "receiver_role": "rotating",
+            "required_samples": 1000,
+            "result_marker": "FAIL",
+            "samples": 0,
+            "sender_role": "fixed",
+            "source": "evidence/hardware/p10_1r/p10_1r_20260803T062223Z_cce2180b_c1370686_bfb1c51d/echo_tail/dumps/echo_F1.echo_tail.psv"
+          },
+          "R0": {
+            "errors": [
+              "evidence file missing",
+              "expected 1000 samples, got 0",
+              "direction result marker missing"
+            ],
+            "evidence_class": "RAW_PHYSICAL_ONLY",
+            "failure_snapshot": null,
+            "lane": "lane0",
+            "module": "R0",
+            "physical_direction": "R0_TO_F0",
+            "physical_direction_status": "FAIL",
+            "receiver_role": "fixed",
+            "required_samples": 1000,
+            "result_marker": null,
+            "samples": 0,
+            "sender_role": "rotating",
+            "source": null
+          },
+          "R1": {
+            "errors": [
+              "evidence file missing",
+              "expected 1000 samples, got 0",
+              "direction result marker missing"
+            ],
+            "evidence_class": "RAW_PHYSICAL_ONLY",
+            "failure_snapshot": null,
+            "lane": "lane1",
+            "module": "R1",
+            "physical_direction": "R1_TO_F1",
+            "physical_direction_status": "FAIL",
+            "receiver_role": "fixed",
+            "required_samples": 1000,
+            "result_marker": null,
+            "samples": 0,
+            "sender_role": "rotating",
+            "source": null
+          }
+        },
+        "same_module_blanked_frame_count": 0,
+        "same_module_raw_echo_count": 0,
+        "sample_count": 0
+      },
+      "stage": "echo_tail",
+      "status": "FAIL",
+      "test_id": "P10_1R-HW-ECHO_TAIL"
+    }
+  },
+  "stage_status": {
+    "echo_tail": "FAIL"
+  },
+  "status": "FAIL",
+  "test_id": "P10_1R-HW-ORCHESTRATOR"
 }
