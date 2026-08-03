@@ -130,6 +130,15 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("assign pl_activity_led_n_o = 4'b1111;", top)
         self.assertIn("P10_SHUTDOWN_LED_N_INTENT=0xF", build)
         self.assertIn('"P10_SHUTDOWN_LED_N_INTENT": "0xF"', builder)
+        capture = (
+            ROOT / "scripts/capture_p10_1r_full_offline_regression.py"
+        ).read_text(encoding="utf-8")
+        finalizer = (
+            ROOT / "scripts/finalize_p10_1r_offline.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("p10_1r_raw_led_full_offline_regression", capture)
+        self.assertIn("p10_1r_raw_led_full_offline_regression", finalizer)
+        self.assertIn('"P10_SHUTDOWN_LED_PORT_COUNT": "4"', finalizer)
 
     def test_echo_failure_captures_terminal_state_before_shutdown(self) -> None:
         tcl = TCL_PATH.read_text(encoding="utf-8")

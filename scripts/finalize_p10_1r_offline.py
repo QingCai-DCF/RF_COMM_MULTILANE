@@ -57,6 +57,7 @@ INPUTS = {
         GENERATED / "p10_1r_boundary_ack_skew_remediation.json"
     ),
     "focused_xsim": GENERATED / "p10_1r_xsim/summary.json",
+    "led_offline": GENERATED / "p10_1_led_offline/summary.json",
     "dual_endpoint_regression": (
         GENERATED / "p10_1r_dual_endpoint_regression/summary.json"
     ),
@@ -64,17 +65,37 @@ INPUTS = {
     "shutdown_build": GENERATED / "p10_1r_shutdown_build_summary.json",
     "runtime_build": GENERATED / "p10_1r_ps_runtime_build_summary.json",
     "full_offline_gate": (
-        GENERATED / "p10_1r_full_offline_regression/summary.json"
+        GENERATED / "p10_1r_raw_led_full_offline_regression/summary.json"
     ),
     "p8c_regression": (
-        GENERATED / "p10_1r_full_offline_regression/p8c/p8c_final_summary.json"
+        GENERATED
+        / "p10_1r_raw_led_full_offline_regression/p8c/p8c_final_summary.json"
     ),
     "p8d_regression": (
-        GENERATED / "p10_1r_full_offline_regression/p8d/p8d_final_summary.json"
+        GENERATED
+        / "p10_1r_raw_led_full_offline_regression/p8d/p8d_final_summary.json"
     ),
 }
 
 OFFLINE_REQUIREMENTS = {
+    "OBS-LED-SHUTDOWN-001": {
+        "test_id": "P10_1-SHUTDOWN-LED-XSIM-001",
+        "scope": "P10_1R_OFFLINE_SHUTDOWN_LED_REMEDIATION_PASS_HARDWARE_PENDING",
+        "evidence": ("led_offline", "shutdown_build"),
+        "followup": (
+            "Direct visual or electrical confirmation remains pending; routed "
+            "intent and programming markers do not measure the physical LED pins."
+        ),
+    },
+    "P10_1R-RAW-PULSE-001": {
+        "test_id": "P10_1R_FOCUSED_XSIM",
+        "scope": "P10_1R_OFFLINE_RAW_PULSE_PASS_HARDWARE_PENDING",
+        "evidence": ("focused_xsim", "functional_build"),
+        "followup": (
+            "The newly authorized echo_tail run must directly test all four "
+            "directions; any PASS remains RAW_PHYSICAL_ONLY."
+        ),
+    },
     "P10_1R-ECHO-001": {
         "test_id": "P10_1R_FOCUSED_XSIM",
         "scope": "P10_1R_OFFLINE_RTL_IMPLEMENTATION_PASS_HARDWARE_PENDING",
@@ -695,6 +716,18 @@ def main() -> int:
             role_errors.append("functional or runtime build status failed")
         if shutdown_role.get("status") != "PASS":
             role_errors.append("shutdown build status failed")
+        shutdown_markers = shutdown_role.get("markers", {})
+        expected_shutdown_markers = {
+            "P10_SHUTDOWN_LED_N_INTENT": "0xF",
+            "P10_SHUTDOWN_LED_ACTIVE_LOW": "true",
+            "P10_SHUTDOWN_LED_PORT_COUNT": "4",
+        }
+        for key, expected in expected_shutdown_markers.items():
+            if shutdown_markers.get(key) != expected:
+                role_errors.append(
+                    f"shutdown marker {key}={shutdown_markers.get(key)!r}, "
+                    f"expected {expected!r}"
+                )
         errors.extend(f"{role}: {item}" for item in role_errors)
         frozen_by_role[role] = artifacts
         role_payloads[role] = {

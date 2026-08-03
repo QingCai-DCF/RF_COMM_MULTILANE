@@ -47,6 +47,10 @@ programming success plus shutdown markers prove that the content-addressed
 shutdown bitstream was loaded. Neither is direct electrical measurement of the
 LED pins; physical visual confirmation remains a user-observable follow-up.
 
+The complete exact-source offline replay is stored separately under
+`evidence/generated/p10_1r_raw_led_full_offline_regression/`; it does not
+overwrite the earlier P10.1R replay evidence.
+
 ## Current hardware boundary
 
 After a clean source commit, complete offline regression, dual-role functional

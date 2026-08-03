@@ -15,7 +15,10 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DESTINATION = ROOT / "evidence/generated/p10_1r_full_offline_regression"
+# Preserve the earlier P10.1R exact-source replay as immutable evidence.  This
+# raw-pulse/shutdown-LED bundle receives a separate semantic namespace instead
+# of overwriting the historical replay directory.
+DESTINATION = ROOT / "evidence/generated/p10_1r_raw_led_full_offline_regression"
 SOURCE_COMMIT = ""
 DETERMINISTIC_TIMESTAMP = "2026-08-02T00:00:00Z"
 
