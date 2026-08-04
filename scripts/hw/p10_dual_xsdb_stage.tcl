@@ -10,7 +10,7 @@
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
 set p10_expected_register_map_version 0x0A000002
-set p10_expected_register_map_hash_low 0x6C0301EA
+set p10_expected_register_map_hash_low 0x185A4159
 
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import re
 import sys
 import tempfile
 import unittest
@@ -146,6 +148,29 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn('"rewiring": False', source)
         self.assertIn('"two_hour_test": False', source)
         self.assertIn('"p11": False', source)
+
+    def test_xsdb_register_map_identity_matches_generated_manifest(self) -> None:
+        manifest = json.loads((
+            ROOT / "config/register_map/generated/ir_regs_manifest.json"
+        ).read_text(encoding="utf-8"))
+        source = STAGE_TCL.read_text(encoding="utf-8")
+        version = re.search(
+            r"^set p10_expected_register_map_version (0x[0-9A-Fa-f]{8})$",
+            source,
+            flags=re.MULTILINE,
+        )
+        hash_low = re.search(
+            r"^set p10_expected_register_map_hash_low (0x[0-9A-Fa-f]{8})$",
+            source,
+            flags=re.MULTILINE,
+        )
+        self.assertIsNotNone(version)
+        self.assertIsNotNone(hash_low)
+        self.assertEqual(
+            version.group(1).upper(),
+            manifest["register_map_version_value"].upper(),
+        )
+        self.assertEqual(hash_low.group(1).upper(), manifest["hash_low"].upper())
 
 
 if __name__ == "__main__":
