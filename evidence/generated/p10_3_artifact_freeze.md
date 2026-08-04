@@ -1,0 +1,18 @@
+# P10.3 immutable artifact freeze
+
+- Status: `PASS`
+- Source commit: `d4eef729e91c60fc7a72fa68c95fcd4a569fcffc`
+- Hardware actions executed: `false`
+
+## Artifacts
+
+- `fixed:shutdown_bitstream` — `027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28/p10_ax7020_fixed_shutdown.bit`
+- `fixed:functional_bitstream` — `3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd/p10_ax7020_fixed_functional.bit`
+- `fixed:xsa` — `50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9/p10_ax7020_fixed_functional.xsa`
+- `fixed:bsp` — `d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae/p10_ax7020_fixed_bsp.zip`
+- `fixed:elf` — `f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a/p10_fixed_runtime.elf`
+- `rotating:shutdown_bitstream` — `204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d/p10_ax7020_rotating_shutdown.bit`
+- `rotating:functional_bitstream` — `a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846/p10_ax7020_rotating_functional.bit`
+- `rotating:xsa` — `fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c/p10_ax7020_rotating_functional.xsa`
+- `rotating:bsp` — `fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1/p10_ax7020_rotating_bsp.zip`
+- `rotating:elf` — `fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a` — `artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a/p10_rotating_runtime.elf`
