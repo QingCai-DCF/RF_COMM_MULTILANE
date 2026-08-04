@@ -509,10 +509,13 @@ def build_plans() -> dict[str, list[PlanItem]]:
     intake: list[PlanItem] = []
     intake.append(Case("intake_receive_only_5000ms", 11, idle=5000,
                        timeout=15_000))
-    # Establish both raw optical directions before any framed traffic.  If an
-    # ACK-return path is absent or intermittent, direct receiver evidence is
-    # preserved without first spending a full selective-repeat retry budget.
-    for lane in (4, 8):
+    # Establish both raw optical directions on every installed lane before any
+    # framed traffic.  Lane0/lane1 are the accepted two-lane baseline, but this
+    # campaign must re-observe them with the frozen four-lane artifacts instead
+    # of inheriting their older hardware result.  Ordering all raw probes first
+    # also preserves direct receiver evidence if a later ACK-return path is
+    # absent or intermittent.
+    for lane in (1, 2, 4, 8):
         lane_index = int(math.log2(lane))
         for direction, module in ((0, f"F{lane_index}"),
                                   (1, f"R{lane_index}")):
@@ -1014,11 +1017,20 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         },
         "current_run_hardware_authorization": True,
         "user_authorization_received_on": "2026-08-04",
-        "user_authorization_statement": (
-            "User explicitly authorized automated P10_3 AX7020 stationary four-lane "
-            "hardware acceptance for the current two boards and eight modules, mask<=0xF, "
-            "no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
-        ),
+        "user_authorization_statement": "继续目标，raw测试还需要包括lane0 lane1",
+        "authorization_basis": {
+            "campaign_standing_authorization": (
+                "User explicitly authorized automated P10_3 AX7020 stationary four-lane "
+                "hardware acceptance for the current two boards and eight modules, "
+                "mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no "
+                "two-hour run, and no P11."
+            ),
+            "fresh_current_run_instruction": (
+                "Continue the P10.3 goal and include bidirectional raw tests for lane0 "
+                "and lane1 in the new immutable run."
+            ),
+            "fresh_current_run_ids_authorized": 1,
+        },
         "shutdown_policy": {
             "before": True, "on_error": True, "on_timeout": True,
             "on_ctrl_c": True, "on_normal_exit": True,
@@ -1661,6 +1673,17 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
             },
         })
     elif stage == "module_intake":
+        raw_status: dict[str, str] = {}
+        for module in MODULES:
+            expected_raw = {
+                f"intake_{module}_raw_64", f"intake_{module}_raw_1024"
+            }
+            observed_raw = {
+                d["label"] for d in non_shutdown if d["label"] in expected_raw
+            }
+            raw_status[module] = "PASS" if observed_raw == expected_raw else "FAIL"
+            if raw_status[module] != "PASS":
+                errors.append(f"{module}:bidirectional raw-intake vector incomplete")
         module_status: dict[str, str] = {}
         for module in ("F2", "F3", "R2", "R3"):
             expected = {f"intake_{module}_raw_64", f"intake_{module}_raw_1024",
@@ -1673,7 +1696,8 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
         for detail in non_shutdown:
             if detail["command"] == 3:
                 errors.extend(data_path_errors(detail))
-        semantics.update({"modules": module_status,
+        semantics.update({"raw_connectivity_all_modules": raw_status,
+                          "modules": module_status,
                           "receive_only_startup": "PASS",
                           "mode_sd_txd_default": "DIRECT_PL_SAFE_STATE_EVIDENCE"})
     elif stage == "raw_8x8":

@@ -72,10 +72,14 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         labels = [item.label for item in cases]
         raw_labels = [
             f"intake_{module}_raw_{count}"
-            for module in ("F2", "R2", "F3", "R3")
+            for module in ("F0", "R0", "F1", "R1", "F2", "R2", "F3", "R3")
             for count in (64, 1024)
         ]
         self.assertEqual(labels[1:1 + len(raw_labels)], raw_labels)
+        self.assertEqual(
+            {item.lane for item in cases if item.command == 2},
+            {1, 2, 4, 8},
+        )
         first_frame = min(index for index, item in enumerate(cases)
                           if item.command == 3)
         last_raw = max(index for index, item in enumerate(cases)
