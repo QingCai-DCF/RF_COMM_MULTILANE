@@ -1,0 +1,228 @@
+{
+  "acceptance_eligible": true,
+  "allowed_hardware_stages": [
+    "staircase",
+    "formal"
+  ],
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a"
+    },
+    {
+      "bytes": 1307778,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/868212f6a06733cc7979c9977bebd36fb1a3df74431a88d43f8b12612c36e22e/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "868212f6a06733cc7979c9977bebd36fb1a3df74431a88d43f8b12612c36e22e"
+    },
+    {
+      "bytes": 1970179,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600"
+    },
+    {
+      "bytes": 570652,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2"
+    },
+    {
+      "bytes": 1301250,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/2ae989275b5bfe25dc9f191064a07badc38cefc6a83390770db3cb9068309229/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2ae989275b5bfe25dc9f191064a07badc38cefc6a83390770db3cb9068309229"
+    },
+    {
+      "bytes": 1970549,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0"
+    },
+    {
+      "bytes": 571096,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d"
+    }
+  ],
+  "branch": "codex/p10.3-fault-forensics",
+  "build_evidence": {
+    "functional": {
+      "bytes": 25383,
+      "path": "evidence/generated/p10_3_fault_forensics_functional_build_summary.json",
+      "sha256": "28e020aa5af9ca08dcdcde24e486c07130e2ae3517caca66a46973dded86b61b"
+    },
+    "offline": {
+      "bytes": 8812,
+      "path": "evidence/generated/p10_3_fault_forensics_offline.json",
+      "sha256": "da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0"
+    },
+    "ps_runtime": {
+      "bytes": 12798,
+      "path": "evidence/generated/p10_3_fault_forensics_ps_runtime_build_summary.json",
+      "sha256": "7a6a6cd6e09dd62df7ae65b69b02b59661229de43c07000c8a8147d38279052f"
+    },
+    "shutdown": {
+      "bytes": 10578,
+      "path": "evidence/generated/p10_3_fault_forensics_shutdown_build_summary.json",
+      "sha256": "401a32d49fc393501850ef7d4bed1de2adcf68e26f4f791d531e4ae4a798e968"
+    },
+    "xsim": {
+      "bytes": 10093,
+      "path": "evidence/generated/p10_3_fault_forensics_xsim/summary.json",
+      "sha256": "eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "eligibility_scope": "NEW_ARTIFACT_CURRENT_RUN_AUTHORIZATION_ONLY",
+  "errors": [],
+  "expected_build_ids": {
+    "fixed": "0x50334646",
+    "rotating": "0x50334652"
+  },
+  "generated_at_utc": "2026-08-04T22:18:10+00:00",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_actions_executed": false,
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "no_hardware": true,
+  "offline_gates": {
+    "no_hardware_static_scan": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": {
+        "bytes": 31,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/no_hardware_static_scan.log",
+        "sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_2_scoped_regression": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_2_existing.py"
+      ],
+      "log": {
+        "bytes": 181,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/p10_2_scoped_regression.log",
+        "sha256": "181d803018fc436d877ae8daa2d7dedce9e8d7fcfd8103d1c72d21fb4794dbbf"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p8c_safety_regression": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p8c_existing.py"
+      ],
+      "log": {
+        "bytes": 25,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/p8c_safety_regression.log",
+        "sha256": "42040d278511b798595228f906f6eb59f51b8a15d979941ac27ff3b10ad4861b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "register_map_verify": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 149,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/register_map_verify.log",
+        "sha256": "92b2c163d46f8098601f9d612fd78a123c37aca8019e161d700204851ed16683"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "requirement_traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 111,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/requirement_traceability.log",
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "state_requirements_consistency": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 183,
+        "path": "evidence/generated/p10_3_fault_forensics_freeze_raw/state_requirements_consistency.log",
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "old_hardware_pass_inherited": false,
+  "schema_version": 1,
+  "scope": "P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP",
+  "shutdown_policy": {
+    "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "source_commit": "21f159e3fdb250d1a25e9f521e104d6240d9caae",
+  "source_tree_clean": true,
+  "status": "PASS",
+  "test_id": "P10_3F-IMMUTABLE-ARTIFACT-FREEZE"
+}
