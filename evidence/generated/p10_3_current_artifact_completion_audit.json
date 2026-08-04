@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-04T15:53:21Z",
+  "generated_at_utc": "2026-08-04T16:48:51Z",
   "test_id": "P10_3-CURRENT-ARTIFACT-COMPLETION-AUDIT",
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "status": "OFFLINE_READY_AWAITING_CURRENT_RUN_AUTHORIZATION",
@@ -9,8 +9,10 @@
   "branch": "codex/p10.3-fault-forensics",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "artifact_source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
-  "host_source_commit": "2b92e074030c6b4d7e01808e9750f6d071feea49",
+  "host_source_commit": "5d63c69ca92377cec90f0f9694b7e8b15c8cac62",
+  "campaign_freeze_checkpoint": "6f5787eae9cb0d0758196c41173d6e1514dbf94a",
   "prior_evidence_checkpoint": "91759332857bc471b254e7a2bc835da7fd3bee01",
+  "prior_readiness_audit_checkpoint": "590f35d29af1b9fd2d34006380e517aed814012c",
   "hardware_actions_executed_this_followup": false,
   "no_hardware": true,
   "current_run_hardware_authorization": false,
@@ -105,7 +107,7 @@
     },
     "full_campaign_freeze": {
       "path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-      "sha256": "54be681069d99bee8e14a89015f4b0bf8d273f90668980c3fd957210f01a4c8d",
+      "sha256": "9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331",
       "status": "PASS",
       "raw_gate_log_count": 10
     }
@@ -115,6 +117,11 @@
     "allowed_stages": [
       "preflight",
       "module_intake",
+      "staircase_1k",
+      "staircase_4k",
+      "staircase_16k",
+      "staircase_64k",
+      "staircase_256k",
       "fault_capture",
       "raw_8x8",
       "per_lane_phy",
@@ -124,11 +131,6 @@
       "degrade",
       "arq_sack",
       "dma",
-      "staircase_1k",
-      "staircase_4k",
-      "staircase_16k",
-      "staircase_64k",
-      "staircase_256k",
       "streaming_64m",
       "stream_dma_reset_fault",
       "stream_dma_reset_recovery_64m",
@@ -148,13 +150,26 @@
     "verify_both_shutdown_markers": true,
     "clear_frozen_capture_before_shutdown_program": false
   },
+  "execution_hardening": {
+    "content_bound_run_id": "p10_3f_full_<UTC>_<host_commit_8>_<fixed_functional_bit_sha256_8>_<rotating_functional_bit_sha256_8>",
+    "authorization_validates_run_id_digest_prefixes": true,
+    "custom_observation_plan_exact_shape_validation": true,
+    "bounded_p101_window_dispatcher_maximum_command_bytes": 262144,
+    "stage_local_object_ids_are_unique_and_non_overlapping": true,
+    "fault_or_timeout_forces_terminal_pl_abort_and_freeze_before_readout": true,
+    "already_frozen_first_fault_is_preserved": true,
+    "independent_shutdown_occurs_after_archive_attempt": true,
+    "final_safety_shutdown_occurs_even_if_archive_fails": true,
+    "goal_named_evidence_views_published": true,
+    "final_evidence_manifest_exact_file_set_and_sha256_verified": true
+  },
   "first_fault_evidence_boundary": {
     "immediate_hardware_tx_kill_and_full_shutdown": "PASS_OFFLINE_ONLY",
     "functional_reset_preserves_capture": true,
     "functional_shutdown_preserves_capture": true,
     "fpga_reconfiguration_preserves_capture": false,
     "power_loss_preserves_capture": false,
-    "operational_policy": "complete ordered readout, write raw binary and parsed JSON, verify SHA256, commit archive in PL, then load the independent shutdown bitstream without issuing capture clear",
+    "operational_policy": "preserve an already frozen first fault; otherwise force a terminal PL abort and freeze, verify shutdown/kill/no-TX-advance, complete ordered readout, write raw binary and parsed JSON, verify SHA256, commit archive in PL, then load the independent shutdown bitstream without issuing capture clear",
     "hardware_proof": "PENDING"
   },
   "requirements": {
@@ -221,6 +236,6 @@
     "two_hour_test": true,
     "p11_or_product_acceptance": true
   },
-  "blocking_condition": "No new explicit current-run authorization exists for the exact P10.3F full-campaign freeze and immutable artifact bundle.",
-  "next_required_user_action": "Provide a new explicit current-run authorization binding the full-campaign freeze SHA256, host and artifact source commits, ten artifact hashes, both JTAG serials, eight module IDs, 1800-second bound, lane mask 0xF maximum, and archive-before-independent-shutdown policy."
+  "blocking_condition": "No new explicit current-run authorization exists for full-campaign freeze SHA256 9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331 and its immutable artifact and host-input bundle.",
+  "next_required_user_action": "Provide a new explicit current-run authorization binding full-campaign freeze SHA256 9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331, host source commit 5d63c69ca92377cec90f0f9694b7e8b15c8cac62, artifact source commit 5b2e9e8a22038b15308faf435163f1787054f41d, ten artifact hashes, both JTAG serials, eight module IDs, 1800-second bound, lane mask 0xF maximum, and archive-before-independent-shutdown policy."
 }
