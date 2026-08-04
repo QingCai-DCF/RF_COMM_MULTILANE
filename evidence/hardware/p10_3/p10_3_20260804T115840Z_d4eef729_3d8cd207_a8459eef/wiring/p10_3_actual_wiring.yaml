@@ -1,0 +1,89 @@
+schema_version: 1
+record_id: "P10_3_AX7020_STATIONARY_4LANE_ACTUAL_AS_WIRED"
+status: "USER_DECLARED_PHYSICAL_WIRING_COMPLETE_PENDING_ELECTRONIC_INTAKE"
+recorded_at_local: "2026-08-04"
+scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
+user_source: "Current Codex task: explicit installed F0..F3/R0..R3 topology; on 2026-08-04 the user reported replacing R2 B0015 with new B0023; old-F1 quarantine and current safety boundaries remain in force"
+goal:
+  external_path: "C:/Users/user/Downloads/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
+  external_sha256: "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+  repository_path: "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
+  repository_sha256: "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+frozen_wiring_proposal:
+  path: "docs/hardware/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md"
+  sha256: "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+  machine_path: "config/hardware/p10_2_ax7020_4lane_wiring.yaml"
+  machine_sha256: "5b53408fe10c6cf1a04f4e5c88cc18eb5a400a91f987b27ec42c77c2bbec7dad"
+boards:
+  fixed: {board_id: "AX7020-F", jtag_cable_serial: "210249855178", active_modules: [F0, F1, F2, F3]}
+  rotating: {board_id: "AX7020-R", jtag_cable_serial: "210512180081", active_modules: [R0, R1, R2, R3]}
+lane_pairs:
+  lane0: "F0-R0"
+  lane1: "F1-R1"
+  lane2: "F2-R2"
+  lane3: "F3-R3"
+module_positions:
+  F0: {endpoint: fixed, connector: J10, position: A, lane: 0, small_board_id: "A0019"}
+  F1: {endpoint: fixed, connector: J10, position: B, lane: 1, small_board_id: "B0012"}
+  F2: {endpoint: fixed, connector: J11, position: A, lane: 2, small_board_id: "B0001"}
+  F3: {endpoint: fixed, connector: J11, position: B, lane: 3, small_board_id: "B0004"}
+  R0: {endpoint: rotating, connector: J10, position: A, lane: 0, small_board_id: "A0010"}
+  R1: {endpoint: rotating, connector: J10, position: B, lane: 1, small_board_id: "A0017"}
+  R2: {endpoint: rotating, connector: J11, position: A, lane: 2, small_board_id: "B0023"}
+  R3: {endpoint: rotating, connector: J11, position: B, lane: 3, small_board_id: "B0017"}
+quarantined_historical_module:
+  status: "QUARANTINED_NOT_ACCEPTED"
+  active: false
+  eligible_as_any_active_module: false
+signal_positions:
+  A: {Mode: 30, SD: 32, Rxd: 34, Txd: 36}
+  B: {Mode: 22, SD: 24, Rxd: 26, Txd: 28}
+package_pins:
+  lane0: {Mode: T12, SD: T11, Rxd: B19, Txd: C20}
+  lane1: {Mode: V17, SD: T14, Rxd: U13, Txd: V12}
+  lane2: {Mode: G17, SD: H16, Rxd: H15, Txd: K14}
+  lane3: {Mode: L16, SD: M17, Rxd: D19, Txd: E18}
+electrical_contract:
+  iostandard: "LVCMOS33"
+  vcco_volts: 3.3
+  signal_details_source: "config/hardware/p10_2_ax7020_4lane_wiring.yaml"
+  Txd: "FPGA output to TFDU; active high; configured reset/fault/shutdown LOW; continuous HIGH <=1 us"
+  Rxd: "TFDU output to FPGA; active low"
+  SD: "FPGA output to TFDU; active-high shutdown"
+  Mode: "FPGA output to TFDU; static HIGH for MIR/FIR"
+power_and_ground:
+  user_existing_connections_preserved: true
+  codex_rewiring_authorized: false
+  j11_gauge_source_and_decoupling_match_j10: "USER_ATTESTED"
+  user_attested_adequate_for_current_use: true
+  attestation_is_not_independent_external_measurement: true
+  external_four_lane_power_acceptance: "PENDING_EXTERNAL_MEASUREMENT"
+  internal_no_brownout_observation_is_not_external_power_acceptance: true
+physical_state_declaration:
+  P10_3_PHYSICAL_WIRING_COMPLETED: true
+  modules_installed: [F0, F1, F2, F3, R0, R1, R2, R3]
+  pre_run_user_module_replacement: "R2 B0015 replaced by new B0023"
+  replacement_source: "Direct user statement on 2026-08-04; identity not independently read by Codex"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action_for_replacement: false
+  old_f1_quarantined: true
+  no_hardware_movement_during_formal_run: true
+  no_rewiring_during_campaign: true
+  powered_off_during_historical_wiring: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  no_undocumented_wires: "USER_CURRENT_HARDWARE_SCOPE_TREATED_AS_COMPLETE_FOR_THIS_GOAL; electronic safe-idle intake remains mandatory"
+bound_profiles:
+  fixed: {path: "board_profiles/ax7020_fixed_4lane/profile.yaml", sha256: "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571"}
+  rotating: {path: "board_profiles/ax7020_rotating_4lane/profile.yaml", sha256: "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8"}
+bound_xdc:
+  fixed: {path: "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc", sha256: "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1"}
+  rotating: {path: "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc", sha256: "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"}
+register_map: {path: "config/register_map/ir_axi_regs.yaml", sha256: "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"}
+safety_boundaries:
+  maximum_lane_mask: 15
+  ethernet: false
+  movement: false
+  rotation: false
+  optical_realignment: false
+  rewiring: false
+  two_hour_test: false
+  p11: false
