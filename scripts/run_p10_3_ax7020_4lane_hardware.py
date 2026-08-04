@@ -149,6 +149,10 @@ EXPECTED_ROLE = {
         "local_indices": (4, 5, 6, 7),
     },
 }
+# Drop only the first cumulative ACK.  This holds a full unacknowledged window
+# through the lane-fault injection, while allowing the first RTO retry to
+# generate a deliverable ACK so the object can still complete.
+MIGRATION_ACK_SUPPRESSION = 1
 MODULES = ("F0", "F1", "F2", "F3", "R0", "R1", "R2", "R3")
 P103_SCHEMA = 0x50310201
 TARGET_DUTY_CYCLES = 11520
@@ -625,7 +629,8 @@ def build_plans() -> dict[str, list[PlanItem]]:
             f"degrade_inflight_lane{int(math.log2(failed_lane))}",
             size=16 << 20, direction=(failed_lane >> 1) & 1, lane=15,
             object_id=ids.allocate(), injectmask=failed_lane,
-            injectdelay=100, timeout=300_000,
+            injectdelay=10, physical_drop_ack=MIGRATION_ACK_SUPPRESSION,
+            timeout=300_000,
         ))
         degrade.append(object_case(
             f"degrade_recovery_after_lane{lane_index}", size=4 << 20,
@@ -654,7 +659,9 @@ def build_plans() -> dict[str, list[PlanItem]]:
                     object_id=ids.allocate(), protocol_fault_flags=1 << 6),
         object_case("arq_retry_migration", size=16 << 20, direction=1,
                     lane=15, object_id=ids.allocate(), injectmask=1,
-                    injectdelay=100, timeout=300_000),
+                    injectdelay=10,
+                    physical_drop_ack=MIGRATION_ACK_SUPPRESSION,
+                    timeout=300_000),
         object_case("scheduler_fair_f2r", size=16 << 20, direction=0,
                     lane=15, object_id=ids.allocate()),
         object_case("scheduler_fair_r2f", size=16 << 20, direction=1,
@@ -1173,6 +1180,9 @@ def integer_row(row: dict[str, str]) -> dict[str, Any]:
         "injectmask", "injectdelay", "started_ms", "finished_ms", "sequence",
         "fixed_status", "rotating_status", "fixed_state", "rotating_state",
         "injection_applied", "injection_readback", "injection_timestamp_ms",
+        "injection_preconditions_verified", "injection_pre_outstanding",
+        "injection_pre_target_scheduled", "injection_pre_target_physical_tx",
+        "injection_pre_dropped_ack", "injection_pre_migration_count",
     }
     return {key: int(value, 0) if key in numbers and value else value
             for key, value in row.items()}
@@ -1609,6 +1619,18 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                            "injection_readback": row.get("injection_readback", 0),
                            "injection_timestamp_ms": row.get("injection_timestamp_ms", 0),
                            "injection_sender": row.get("injection_sender", "NA"),
+                           "injection_preconditions_verified": row.get(
+                               "injection_preconditions_verified", 0),
+                           "injection_pre_outstanding": row.get(
+                               "injection_pre_outstanding", 0),
+                           "injection_pre_target_scheduled": row.get(
+                               "injection_pre_target_scheduled", 0),
+                           "injection_pre_target_physical_tx": row.get(
+                               "injection_pre_target_physical_tx", 0),
+                           "injection_pre_dropped_ack": row.get(
+                               "injection_pre_dropped_ack", 0),
+                           "injection_pre_migration_count": row.get(
+                               "injection_pre_migration_count", 0),
                            "plan_fields": {key: row[key] for key in (
                                "command", "flags", "lane", "direction", "rate",
                                "weights", "size", "ring", "cache", "object",
@@ -1804,6 +1826,16 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
             if detail["injectmask"]:
                 sender_role, _ = path_roles(detail)
                 sender_snap = detail[f"{sender_role}_p10_2"]
+                if detail["plan_fields"]["dropack"] != MIGRATION_ACK_SUPPRESSION or \
+                        detail["injection_preconditions_verified"] != 1 or \
+                        detail["injection_pre_outstanding"] != 32 or \
+                        detail["injection_pre_target_scheduled"] == 0 or \
+                        detail["injection_pre_target_physical_tx"] == 0 or \
+                        detail["injection_pre_dropped_ack"] != \
+                        MIGRATION_ACK_SUPPRESSION or \
+                        detail["injection_pre_migration_count"] != 0:
+                    errors.append(
+                        f"{detail['label']}:unacked migration precondition not directly observed")
                 if detail["injection_applied"] != 1 or \
                         sender_snap["migration_count"] == 0 or \
                         sum(lane["migrations"] for lane in sender_snap["lanes"]) == 0:
@@ -1811,7 +1843,16 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                 inflight.append({"label": detail["label"],
                                  "fault_mask": detail["injectmask"],
                                  "readback": f"0x{detail['injection_readback']:08X}",
-                                 "migration_count": sender_snap["migration_count"]})
+                                 "migration_count": sender_snap["migration_count"],
+                                 "pre_outstanding": detail["injection_pre_outstanding"],
+                                 "pre_target_scheduled": detail[
+                                     "injection_pre_target_scheduled"],
+                                 "pre_target_physical_tx": detail[
+                                     "injection_pre_target_physical_tx"],
+                                 "pre_dropped_ack": detail[
+                                     "injection_pre_dropped_ack"],
+                                 "pre_migration_count": detail[
+                                     "injection_pre_migration_count"]})
         if sorted(set(static_masks)) != [1, 2, 3, 4, 7, 8] or len(inflight) != 4:
             errors.append("degrade single-lane/4-to-3-to-2-to-1 matrix incomplete")
         semantics.update({"static_unavailable_masks": static_masks,
@@ -1868,6 +1909,15 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
         migration = by_label.get("arq_retry_migration")
         if migration:
             sender_role, _ = path_roles(migration)
+            if migration["plan_fields"]["dropack"] != MIGRATION_ACK_SUPPRESSION or \
+                    migration["injection_preconditions_verified"] != 1 or \
+                    migration["injection_pre_outstanding"] != 32 or \
+                    migration["injection_pre_target_scheduled"] == 0 or \
+                    migration["injection_pre_target_physical_tx"] == 0 or \
+                    migration["injection_pre_dropped_ack"] != \
+                    MIGRATION_ACK_SUPPRESSION or \
+                    migration["injection_pre_migration_count"] != 0:
+                errors.append("ARQ unacked migration precondition not directly observed")
             if migration["injection_applied"] != 1 or \
                     migration[f"{sender_role}_p10_2"]["migration_count"] == 0:
                 errors.append("ARQ retry migration not directly observed")

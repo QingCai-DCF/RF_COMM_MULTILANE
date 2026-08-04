@@ -80,6 +80,37 @@ The immutable run `p10_3f_full_20260804T172941Z_6e8d939a_a6ecd8e6_a5491982` comp
 
 The corrected orchestration issues one 64-MiB board-autonomous stream command whose firmware/RTL data path still uses 256-KiB objects, 64-KiB segments, the existing selective-repeat/SACK protocol, the unchanged duty and continuous-high guards, and the unchanged single `GLOBAL_PERMIT` safety path. Timed windows use bounded 1/4/16/64-MiB aggregate commands. This changes host orchestration only; it does not weaken the per-module rolling-duty, pulse-width, permit, SD, Mode, Txd-kill, or first-fault requirements.
 
+## Deterministic unacknowledged-frame migration evidence
+
+The immutable run
+`p10_3f_full_20260804T181517Z_f113566f_a6ecd8e6_a5491982` remains FAIL
+evidence. It reached the degradation stage after the preceding stages passed,
+but the lane-1 fault was applied after all frames previously scheduled on that
+lane had already been acknowledged. Consequently that run could not directly
+observe an unacknowledged retry migrating away from lane 1. The successful
+fault-mask readback is not reclassified as migration evidence.
+
+The remediated host procedure keeps the functional bitstream and safety path
+unchanged. A command-3 migration case drops exactly the first cumulative ACK
+for the full 32-frame window. Before applying the single-lane unavailable bit,
+XSDB requires a coherent PL snapshot that directly shows all of the following:
+
+- 32 outstanding frames;
+- at least one frame scheduled on the target lane;
+- at least one physical TX event on the target module;
+- exactly one deliberately dropped ACK; and
+- zero migrations before fault injection.
+
+The lane fault is then applied before the 62.5 ms retransmission timeout. The
+first timed-out retry can use a remaining healthy lane, and its cumulative ACK
+is not suppressed. Acceptance requires the terminal snapshot to show a
+non-zero migration count in addition to successful object completion and all
+existing integrity and safety checks. The pre-injection values, injection
+readback, and terminal migration counters are retained in machine-readable
+evidence. This establishes that the migrated attempt belonged to the
+unacknowledged window; it does not treat already acknowledged frames as
+migration candidates.
+
 ## Evidence limits
 
 The PL counters and event recorder can show what the implemented digital logic requested and what its internal safety monitors observed. They are not a substitute for an oscilloscope, rail-current measurement, module temperature measurement, or optical detector. Because the user excluded those manual measurements, this follow-up cannot independently prove actual pin voltage, optical pulse energy, rail droop, current, or temperature.
