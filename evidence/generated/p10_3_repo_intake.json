@@ -1,13 +1,22 @@
 {
   "branch": "codex/p10.3-fault-forensics",
   "current_run_hardware_authorization": false,
-  "errors": [],
+  "errors": [
+    "NO_HARDWARE must be 1",
+    "offline intake requires a clean worktree before generating evidence"
+  ],
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
     "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
   },
-  "git_status_before_generation": [],
+  "git_status_before_generation": [
+    "M evidence/generated/p10_3f_full_campaign_freeze.json",
+    " M evidence/generated/p10_3f_full_campaign_freeze.md",
+    " M evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
+    " M evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
+    " M evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log"
+  ],
   "goal": {
     "bytes": 31921,
     "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -54,9 +63,9 @@
       "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
     },
     {
-      "bytes": 293453,
+      "bytes": 294227,
       "path": "config/project_requirements.yaml",
-      "sha256": "0a2503c67deb45d99ba875ae57b7306782043acf0ef0a0c4384a699b511d8525"
+      "sha256": "baa531a4b4d8d2fbca9d861cdc0a6d257229bf4efcd2273ce980ec004b2e3fa3"
     },
     {
       "bytes": 65218,
@@ -98,10 +107,10 @@
   "no_hardware": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
-  "source_commit": "06379a7a4456120601be3e26dccf2960a33aa3fb",
-  "source_tree_clean_before_generation": true,
-  "started_at_utc": "2026-08-04T18:13:14+00:00",
-  "status": "PASS",
+  "source_commit": "b02d919b90b7cc3229e55fec69588b2e4f07c19e",
+  "source_tree_clean_before_generation": false,
+  "started_at_utc": "2026-08-04T19:07:41+00:00",
+  "status": "FAIL",
   "test_id": "P10_3-REPOSITORY-INTAKE",
   "tools": {
     "git": {

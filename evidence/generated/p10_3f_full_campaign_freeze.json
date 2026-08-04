@@ -123,8 +123,8 @@
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
   "errors": [
-    "offline readiness gate failed: state_requirements_consistency",
-    "offline readiness gate failed: requirement_traceability"
+    "static repository intake canonical-input set/hash is stale",
+    "offline readiness gate failed: full_runner_regression"
   ],
   "forbidden": {
     "ethernet": true,
@@ -136,7 +136,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T19:03:05+00:00",
+  "generated_at_utc": "2026-08-04T19:07:20+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -162,9 +162,9 @@
       "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
     },
     {
-      "bytes": 293453,
+      "bytes": 294227,
       "path": "config/project_requirements.yaml",
-      "sha256": "0a2503c67deb45d99ba875ae57b7306782043acf0ef0a0c4384a699b511d8525"
+      "sha256": "baa531a4b4d8d2fbca9d861cdc0a6d257229bf4efcd2273ce980ec004b2e3fa3"
     },
     {
       "bytes": 65218,
@@ -342,7 +342,7 @@
       "sha256": "2fb807fee73fe78398ee8ff1583f787f73b37b97900e63ea5804f83092f4efda"
     }
   ],
-  "host_source_commit": "8e224e8b9e06477fe40931555ec54060e195930f",
+  "host_source_commit": "b02d919b90b7cc3229e55fec69588b2e4f07c19e",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -373,12 +373,12 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 133,
+        "bytes": 1118,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "a8cc50d258336073c4c7619584ffe1f6dac757b883dd48b64a437a30e0fbe8d7"
+        "sha256": "9e0f2ecd9bd33a21ed753776ab4439ae38af64072f2c60fb8c84f6ed5b3a90d0"
       },
-      "returncode": 0,
-      "status": "PASS"
+      "returncode": 1,
+      "status": "FAIL"
     },
     "no_hardware_static_scan": {
       "command": [
@@ -466,12 +466,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 313,
+        "bytes": 111,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
-        "sha256": "a1b4b18c08d0b4b272aab4a6ece9bcb1f4f2d3a2d2580613f30dcb925a649e16"
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "state_requirements_consistency": {
       "command": [
@@ -480,12 +480,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 455,
+        "bytes": 183,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log",
-        "sha256": "56812973bca13be16ad1f97139a4656a4558b87599c1fb48e56fba789d4fdaa4"
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "tcl_syntax_complete": {
       "command": [

@@ -2,7 +2,7 @@
 
 - Status: `FAIL`
 - Artifact source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
-- Host source commit: `8e224e8b9e06477fe40931555ec54060e195930f`
+- Host source commit: `b02d919b90b7cc3229e55fec69588b2e4f07c19e`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Manual instrumentation: `OMITTED_BY_USER`
@@ -14,5 +14,5 @@
 
 ## Errors
 
-- offline readiness gate failed: state_requirements_consistency
-- offline readiness gate failed: requirement_traceability
+- static repository intake canonical-input set/hash is stale
+- offline readiness gate failed: full_runner_regression
