@@ -2,24 +2,24 @@
   "branch": "codex/p10.3-fault-forensics",
   "build_evidence": {
     "functional": {
-      "bytes": 25384,
+      "bytes": 25383,
       "path": "evidence/generated/p10_3_fault_forensics_functional_build_summary.json",
-      "sha256": "44da5b1ca9a0e45057f6600edaf8b658f01a965df262ab7b217a5eb0b8998cab"
+      "sha256": "28e020aa5af9ca08dcdcde24e486c07130e2ae3517caca66a46973dded86b61b"
     },
     "ps_runtime": {
       "bytes": 12798,
       "path": "evidence/generated/p10_3_fault_forensics_ps_runtime_build_summary.json",
-      "sha256": "7350d68b198aadb4955792d552751cf4d4030d0f19dd03193a29a708d0c28462"
+      "sha256": "7a6a6cd6e09dd62df7ae65b69b02b59661229de43c07000c8a8147d38279052f"
     },
     "shutdown": {
       "bytes": 10578,
       "path": "evidence/generated/p10_3_fault_forensics_shutdown_build_summary.json",
-      "sha256": "375d1ee220ccb21c21a6170286af710ec7d33f03668a6b58dc5d665c8e8b43ea"
+      "sha256": "401a32d49fc393501850ef7d4bed1de2adcf68e26f4f791d531e4ae4a798e968"
     },
     "xsim": {
-      "bytes": 9645,
+      "bytes": 10093,
       "path": "evidence/generated/p10_3_fault_forensics_xsim/summary.json",
-      "sha256": "906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea"
+      "sha256": "eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799"
     }
   },
   "checks": {
@@ -48,7 +48,7 @@
       "log": {
         "bytes": 1366,
         "path": "evidence/generated/p10_3_fault_forensics_offline_raw/host_unit_tests.log",
-        "sha256": "b36ed6d2230f07f97fb9785c5f05f63d532c1819da97baad9e08189a6d56f72d"
+        "sha256": "989ec3802917ce2a54e44280970116db08862da2925c2de1382e9027a083be64"
       },
       "returncode": 0,
       "status": "PASS"
@@ -94,7 +94,7 @@
       "log": {
         "bytes": 149,
         "path": "evidence/generated/p10_3_fault_forensics_offline_raw/register_map_verify.log",
-        "sha256": "ff646b0cefb22946e16ce04b810511e9f5f8c96289b8069d74c67fb3750b7498"
+        "sha256": "92b2c163d46f8098601f9d612fd78a123c37aca8019e161d700204851ed16683"
       },
       "returncode": 0,
       "status": "PASS"
@@ -117,19 +117,19 @@
   "current_run_hardware_authorization": false,
   "electrical_or_optical_measurement_claimed": false,
   "errors": [],
-  "generated_at_utc": "2026-08-04T14:55:14+00:00",
+  "generated_at_utc": "2026-08-04T22:17:15+00:00",
   "hardware_actions_executed": false,
   "manual_instrumentation": "OMITTED_BY_USER",
   "no_hardware": true,
   "old_hardware_pass_inherited": false,
   "schema_version": 1,
   "scope": "P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP",
-  "source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
+  "source_commit": "21f159e3fdb250d1a25e9f521e104d6240d9caae",
   "source_inputs": [
     {
-      "bytes": 65218,
+      "bytes": 67360,
       "path": "config/register_map/ir_axi_regs.yaml",
-      "sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae"
+      "sha256": "8783951ad23bb2d966aa36b2da01892f807b94cdf10dfda0512a609fffa1c1b3"
     },
     {
       "bytes": 2856,
@@ -142,14 +142,14 @@
       "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
     },
     {
-      "bytes": 287292,
+      "bytes": 289128,
       "path": "config/project_requirements.yaml",
-      "sha256": "7bcf5a4f4a6a70e42e5740900a51e4fcb1599f9aea92e13063af5e156786cdd3"
+      "sha256": "27935cb09f03a5134f05191cc53aaa8732cc63da9021f83e6e871f9b715e0569"
     },
     {
-      "bytes": 6767,
+      "bytes": 16366,
       "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
-      "sha256": "c31d97c57c71169f75fe5c85f3e6db4add326320a2e0d9054bb2c51cf8fe1490"
+      "sha256": "786d601287159beb6c913bbee69f3217e4213c0eed1bcaa815313566cdd07511"
     },
     {
       "bytes": 29664,
@@ -157,14 +157,14 @@
       "sha256": "e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3"
     },
     {
-      "bytes": 111433,
+      "bytes": 120418,
       "path": "rtl/p9_optical_transport_core.sv",
-      "sha256": "0e65dd39e77a79495bb47c6755a4dc9225a0997f629177fa149724c434c75b71"
+      "sha256": "bf4dfc9394e501c4520d9ecbd091e3d50eac6bf0d20414248ffcbc4d265c399a"
     },
     {
-      "bytes": 55722,
+      "bytes": 58277,
       "path": "rtl/p9_axi_dma_peripheral.sv",
-      "sha256": "4e62c43952a81a64843ee69549504be48455584acb0db7c6d97a59887cd52e07"
+      "sha256": "0884ec04fe8f1e0873f984ab6de3aef1a4dbe8a093c13776d95a28fe4967ad2d"
     },
     {
       "bytes": 15023,
@@ -172,14 +172,14 @@
       "sha256": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c"
     },
     {
-      "bytes": 12105,
+      "bytes": 16185,
       "path": "scripts/hw/p10_3f_fault_forensics.tcl",
-      "sha256": "be53ba9f83601754580b2c077496d530098d8da0ad2ae52fc1a6f37ab4709d96"
+      "sha256": "e0f56b877a78fdea8ba2d30d4a54e9e157fed84f44fe22b650e1757b47d68505"
     },
     {
-      "bytes": 81256,
+      "bytes": 107184,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "144b3085cc86582783fce8ada6b18260c671069c4ca914238eeb77544b893a6b"
+      "sha256": "ea9ee2cf4286f59a32e049100c90373713610479b9f34fd875911a74b725ab08"
     },
     {
       "bytes": 23750,
@@ -187,9 +187,9 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 9616,
+      "bytes": 9696,
       "path": "scripts/run_p10_3f_fault_forensics_offline.py",
-      "sha256": "2031f92a1ca8857a1c6c68ae4df98f1f634327951519ee7427792cc7c684e1e5"
+      "sha256": "c902aef5c16e9d8832a19b78c34790bbf3e85899615147a1b9c75bae7832b01d"
     },
     {
       "bytes": 10908,
@@ -217,14 +217,19 @@
       "sha256": "0c07842ec076bffcb8bd9b3b34268aacd0763ee39a3418116a399f6967fc1b1a"
     },
     {
-      "bytes": 9258,
+      "bytes": 9358,
       "path": "scripts/run_p10_2_xsim.py",
-      "sha256": "99598e695aab9789867b6ddf34a210ecffa2cbd09628a3910f6ee8f91f30d39b"
+      "sha256": "821fec8b67a75093f11cead70726f43f6d1e90c07d48888fdb3a2d6c41836500"
     },
     {
       "bytes": 21198,
       "path": "scripts/vivado/build_p10_ax7020_functional.tcl",
       "sha256": "51283f4108d11e0c8a9e06d70ce02af5da5dfb5482cbb6408f6db878d159e469"
+    },
+    {
+      "bytes": 38959,
+      "path": "sim/tb/tb_p10_2_4lane_suite.sv",
+      "sha256": "8882af6388f3c1c096e915d2b1d334b5894771ca268305c0a08db55de8b6d266"
     },
     {
       "bytes": 13113,

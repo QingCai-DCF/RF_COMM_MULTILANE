@@ -1,7 +1,7 @@
 # P10.3F first-fault forensic offline evidence
 
 - Status: `PASS`
-- Source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
+- Source commit: `21f159e3fdb250d1a25e9f521e104d6240d9caae`
 - Hardware actions executed: `false`
 - Manual instrumentation: `OMITTED_BY_USER`
 - Electrical/optical measurement claimed: `false`

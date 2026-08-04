@@ -350,11 +350,23 @@ class P103FFullHardwareTests(unittest.TestCase):
     def test_base_artifact_bundle_is_exact_and_old_hardware_is_not_inherited(self) -> None:
         freeze, artifacts, errors = runner.validate_artifact_freeze()
         self.assertEqual(errors, [])
-        self.assertEqual(freeze["source_commit"],
-                         "5b2e9e8a22038b15308faf435163f1787054f41d")
+        self.assertRegex(freeze["source_commit"], r"^[0-9a-f]{40}$")
         self.assertEqual(freeze["allowed_hardware_stages"], ["staircase", "formal"])
         self.assertFalse(freeze["old_hardware_pass_inherited"])
         self.assertEqual(len(artifacts), 10)
+        self.assertTrue(all(
+            freeze["source_commit"] in Path(item["path"]).parts
+            for item in freeze["artifacts"]
+        ))
+        old_functional_hashes = {
+            "a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03",
+            "a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00",
+        }
+        current_functional_hashes = {
+            item["sha256"] for item in freeze["artifacts"]
+            if item["kind"] == "functional_bitstream"
+        }
+        self.assertTrue(current_functional_hashes.isdisjoint(old_functional_hashes))
 
     def test_goal_named_static_intake_matches_current_canonical_inputs(self) -> None:
         self.assertEqual(runner.validate_static_intake_evidence(), [])
