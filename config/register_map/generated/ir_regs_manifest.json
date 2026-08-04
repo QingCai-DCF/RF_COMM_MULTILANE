@@ -1,5 +1,5 @@
 {
-  "hash_low": "0x185A4159",
+  "hash_low": "0x5072E5AE",
   "legacy_compatible": true,
   "p10_1_64bit_register_pairs": [
     {
@@ -66,13 +66,17 @@
   "p10_1_additive_base": "0x0900",
   "p10_2_additive_base": "0x0B00",
   "p10_2_snapshot_words": 128,
+  "p10_first_fault_additive_base": "0x0D10",
+  "p10_first_fault_event_depth": 256,
+  "p10_first_fault_event_words": 8,
+  "p10_first_fault_snapshot_words_4lane": 64,
   "p8c_additive_base": "0x0400",
   "p8d_additive_base": "0x0500",
   "p9_additive_base": "0x0700",
-  "register_count": 416,
-  "register_map_version": "P10-2",
-  "register_map_version_value": "0x0A000002",
+  "register_count": 445,
+  "register_map_version": "P10-3",
+  "register_map_version_value": "0x0A000003",
   "schema_version": 1,
   "source_path": "config/register_map/ir_axi_regs.yaml",
-  "source_sha256": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"
+  "source_sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae"
 }

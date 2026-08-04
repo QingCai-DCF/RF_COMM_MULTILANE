@@ -3,14 +3,13 @@
 # Each invocation discovers both boards by their immutable JTAG cable serial,
 # resets/programs/boots the two role-specific artifacts, verifies a safe boot,
 # executes one immutable paired plan, requests shutdown in both endpoint
-# runtimes, and exits.  The outer wrapper independently programs both frozen
-# shutdown images before and after this process and on every failure, timeout,
-# or Ctrl+C path.
+# runtimes, and exits.  For P10.3F the outer wrapper archives any frozen PL
+# evidence before it independently programs both frozen shutdown images.
 # require-user-hw-authorization: reached only through the committed P10
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
-set p10_expected_register_map_version 0x0A000002
-set p10_expected_register_map_hash_low 0x185A4159
+set p10_expected_register_map_version 0x0A000003
+set p10_expected_register_map_hash_low 0x5072E5AE
 
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
@@ -351,6 +350,58 @@ proc p10_dump_p10_2_snapshot {role label} {
   puts $out [join $values "|"]
   close $out
   return $final
+}
+
+proc p10ff_assert_safety {label} {
+  foreach role {fixed rotating} {
+    set values [p10_read_p10_2_snapshot $role]
+    if {[llength $values] != 130 || [lindex $values 1] != 0x50310201} {
+      error "P10.3F $role $label snapshot shape mismatch"
+    }
+    # values[0:1] are generation/schema; values[2+] are snapshot words.
+    set phy_word [lindex $values 3]
+    if {(($phy_word >> 8) & 0xF) != 0} {
+      error "P10.3F $role $label safety fault mask is nonzero"
+    }
+    if {[lindex $values 126] != 64000 ||
+        [lindex $values 127] != 12799 ||
+        [lindex $values 128] != 11520} {
+      error "P10.3F $role $label duty constants mismatch"
+    }
+    set first_module [expr {$role eq "fixed" ? 0 : 4}]
+    for {set module $first_module} {$module < $first_module + 4} {incr module} {
+      set base [expr {2 + 56 + 8*$module}]
+      set high_max [lindex $values [expr {$base + 2}]]
+      set duty_max [lindex $values [expr {$base + 3}]]
+      set hard_fault [lindex $values [expr {$base + 7}]]
+      if {$high_max > 64 || $duty_max > 11520 || $hard_fault != 0} {
+        error "P10.3F $role $label module$module safety gate failed high=$high_max duty=$duty_max hard=$hard_fault"
+      }
+    }
+    set ff_status [p10_read32 $role 0x43C00D14]
+    if {($ff_status & 1) != 0} {
+      error [format "P10.3F %s %s first-fault recorder frozen status=0x%08X" \
+          $role $label $ff_status]
+    }
+  }
+  p10_say "P10_3F_SAFETY_GATE_PASS=$label"
+}
+
+proc p10ff_checkpoint {label tag} {
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      ![string is wideinteger -strict $tag] || $tag < 0 || $tag > 0xFFFFFFFF} {
+    error "invalid P10.3F checkpoint"
+  }
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00D7C $tag
+  }
+  after 1
+  foreach role {fixed rotating} {
+    if {[p10_read32 $role 0x43C00D7C] != $tag} {
+      error "P10.3F $role checkpoint readback mismatch"
+    }
+  }
+  p10_say [format "P10_3F_CHECKPOINT=%s:0x%08X" $label $tag]
 }
 
 proc p10_record_p10_1r_telemetry {sequence label} {
@@ -1053,6 +1104,92 @@ proc p10_run_p101_formal {label duration_sec} {
   p10_say "P10_1_FORMAL_RESULT=PASS"
 }
 
+proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadline} {
+  global p10_max_lane_mask
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $duration_sec < 10 || $duration_sec > 840 || $direction ni {0 1} ||
+      $lane != $p10_max_lane_mask || $absolute_deadline <= 0} {
+    error "invalid P10.3F bounded window"
+  }
+  set started [clock milliseconds]
+  if {$absolute_deadline <= $started ||
+      $absolute_deadline > $started + $duration_sec * 1000} {
+    error "invalid P10.3F absolute deadline"
+  }
+  set next_object_id [expr {0x6F000000 ^ (($direction & 1) << 27) ^
+      (($duration_sec & 0x3FF) << 12)}]
+  set command_count 0
+  set active_ms 0
+  set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
+  p10_say "P10_3F_WINDOW_START_${marker_label}=$started"
+  while {[clock milliseconds] < $absolute_deadline} {
+    p10_check_abort
+    set remaining [expr {$absolute_deadline - [clock milliseconds]}]
+    if {$remaining <= 6000} {
+      after $remaining
+      break
+    }
+    set case_label [format "%s_%05d_262144" $label $command_count]
+    set timeout [expr {min(1800000, max(10000, $remaining - 1000))}]
+    set d [p10_p101_case $case_label $next_object_id 262144 \
+        $direction $lane $timeout [expr {($command_count % 5) << 8}]]
+    set case_started [clock milliseconds]
+    p10_execute_case $d $label
+    incr active_ms [expr {max(1, [clock milliseconds] - $case_started)}]
+    p10ff_assert_safety $case_label
+    incr next_object_id
+    incr command_count
+    if {$next_object_id > 0x7FFFFFFF} {
+      error "P10.3F formal object-ID range overflow"
+    }
+    if {[clock milliseconds] > $absolute_deadline} {
+      error "P10.3F bounded window exceeded its deadline"
+    }
+  }
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$finished < $absolute_deadline || $finished > $absolute_deadline + 500 ||
+      $command_count == 0} {
+    error "P10.3F bounded window completion failed elapsed=$elapsed commands=$command_count"
+  }
+  # Preserve the existing direct acceptance threshold.  Smaller command
+  # boundaries may expose overhead; that is a measured FAIL, not permission to
+  # weaken the >=8 Mbit/s or continuous-coverage acceptance requirement.
+  if {$duration_sec == 840 && $active_ms < 798000} {
+    error "P10.3F formal board-active coverage below 95 percent"
+  }
+  p10_say "P10_3F_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,active_ms:$active_ms,max_command_bytes:262144"
+}
+
+proc p10ff_run_formal {label duration_sec} {
+  global p10_max_lane_mask
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] || $duration_sec != 1800} {
+    error "formal P10.3F run must be exactly 1800 seconds"
+  }
+  set started [clock milliseconds]
+  p10_say "P10_3F_FORMAL_START_MS=$started"
+  p10ff_checkpoint "${label}_warmup_f2r" 0xF3F00000
+  p10ff_run_bounded_window "${label}_warmup_f2r" 60 0 $p10_max_lane_mask \
+      [expr {$started + 60000}]
+  p10ff_checkpoint "${label}_warmup_r2f" 0xF3F00001
+  p10ff_run_bounded_window "${label}_warmup_r2f" 60 1 $p10_max_lane_mask \
+      [expr {$started + 120000}]
+  p10ff_checkpoint "${label}_formal_f2r" 0xF3F00002
+  p10ff_run_bounded_window "${label}_formal_f2r" 840 0 $p10_max_lane_mask \
+      [expr {$started + 960000}]
+  p10ff_checkpoint "${label}_formal_r2f" 0xF3F00003
+  p10ff_run_bounded_window "${label}_formal_r2f" 840 1 $p10_max_lane_mask \
+      [expr {$started + 1800000}]
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$elapsed < 1800000 || $elapsed > 1800500} {
+    error "P10.3F formal active window was not 1800 seconds: $elapsed ms"
+  }
+  p10_say "P10_3F_FORMAL_END_MS=$finished"
+  p10_say "P10_3F_FORMAL_ELAPSED_MS=$elapsed"
+  p10_say "P10_3F_FORMAL_RESULT=PASS"
+}
+
 proc p10_run_p101r_timed_case {label duration_sec direction lane size object_id} {
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $duration_sec != 30 || $direction ni {0 1} || $lane != 3 ||
@@ -1368,7 +1505,9 @@ set p10_result_file [file normalize [lindex $argv 12]]
 set p10_stage [lindex $argv 13]
 set p10_authorization_file [file normalize [lindex $argv 14]]
 set p10_run_id [lindex $argv 15]
-set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage]}]
+set p10_campaign_p103f [expr {[string match "P10_3F-*" $p10_stage]}]
+set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage] ||
+    $p10_campaign_p103f}]
 set p10_lane_count [expr {$p10_campaign_p103 ? 4 : 2}]
 set p10_max_lane_mask [expr {$p10_campaign_p103 ? 15 : 3}]
 # P9_PHY_STATUS concatenates three fields of width 2*LANE_COUNT in the
@@ -1416,13 +1555,21 @@ flush $p10_ps_gpio_handle
 
 set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
-      $::env(RF_COMM_P10_HW_AUTH) ne "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"} {
+      $::env(RF_COMM_P10_HW_AUTH) ni {
+        P10_FASTTRACK_IMMUTABLE_AUTHORIZED P10_3F_IMMUTABLE_AUTHORIZED}} {
     error "P10 immutable current-run environment marker required"
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
   set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST|LANE3_RAW_RETEST)$} $p10_stage]
-  if {!$p10_1r_stage_ok && !$p10_3_stage_ok} { error "unsupported P10 XSDB stage" }
-  if {$p10_campaign_p103} {
+  set p10_3f_stage_ok [regexp {^P10_3F-(STAIRCASE|FORMAL)$} $p10_stage]
+  if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok} {
+    error "unsupported P10 XSDB stage"
+  }
+  if {$p10_campaign_p103f} {
+    if {![regexp {^p10_3f_[A-Za-z0-9_.-]+$} $p10_run_id]} {
+      error "unsafe P10.3F run id"
+    }
+  } elseif {$p10_campaign_p103} {
     if {![regexp {^p10_3_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10.3 run id" }
   } elseif {![regexp {^p10_1r_[A-Za-z0-9_.-]+$} $p10_run_id]} {
     error "unsafe P10.1R run id"
@@ -1487,6 +1634,22 @@ set rc [catch {
           ![string is integer -strict [lindex $fields 2]] ||
           [lindex $fields 2] != 1800} {
         error "invalid P10.1 FORMAL record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P10FF_CHECKPOINT"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is wideinteger -strict [lindex $fields 2]] ||
+          [lindex $fields 2] < 0 || [lindex $fields 2] > 0xFFFFFFFF} {
+        error "invalid P10.3F checkpoint record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P10FF_FORMAL"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] ||
+          [lindex $fields 2] != 1800} {
+        error "invalid P10.3F formal record"
       }
       lappend parsed_plan $fields
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
@@ -1584,6 +1747,9 @@ set rc [catch {
     set kind [lindex $record 0]
     if {$kind eq "CASE"} {
       p10_execute_case [lindex $record 1]
+      if {$p10_campaign_p103f} {
+        p10ff_assert_safety [dict get [lindex $record 1] label]
+      }
     } elseif {$kind eq "REBOOT"} {
       p10_reboot_role [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "SOAK"} {
@@ -1597,6 +1763,10 @@ set rc [catch {
           [lindex $record 6]
     } elseif {$kind eq "P101_FORMAL"} {
       p10_run_p101_formal [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P10FF_CHECKPOINT"} {
+      p10ff_checkpoint [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P10FF_FORMAL"} {
+      p10ff_run_formal [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
     } elseif {$kind eq "P101R_ECHO_SWEEP"} {

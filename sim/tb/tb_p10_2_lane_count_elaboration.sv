@@ -18,6 +18,7 @@ module p10_2_core_elaboration_fixture #(
     .clk(clk), .rst_n(rst_n),
     .receiver_enable_i(1'b0), .arm_request_i(1'b0),
     .disarm_request_i(1'b0), .full_shutdown_request_i(1'b0),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(1'b0), .start_object_i(1'b0),
     .abort_object_i(1'b0),
     .cfg_lane_mask_i({LANE_COUNT{1'b1}}),

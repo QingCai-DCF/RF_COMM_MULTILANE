@@ -240,6 +240,7 @@ module tb_4lane_dual_endpoint;
       .WINDOW_SIZE(32), .SACK_BITS(32), .DEPLOYMENT_ROLE(1)) fixed (
     .clk,.rst_n,.receiver_enable_i(receiver_enable),.arm_request_i(arm),
     .disarm_request_i(1'b0),.full_shutdown_request_i(shutdown),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(1'b0),.start_object_i(1'b0),.abort_object_i(1'b0),
     .cfg_lane_mask_i(4'hf),.cfg_lane_weights_i(32'h01010101),
     .cfg_rate_select_i(2'd2),.cfg_direction_i(1'b0),.cfg_session_epoch_i(32'd1),
@@ -255,6 +256,7 @@ module tb_4lane_dual_endpoint;
       .WINDOW_SIZE(32), .SACK_BITS(32), .DEPLOYMENT_ROLE(2)) rotating (
     .clk,.rst_n,.receiver_enable_i(receiver_enable),.arm_request_i(arm),
     .disarm_request_i(1'b0),.full_shutdown_request_i(shutdown),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(1'b0),.start_object_i(1'b0),.abort_object_i(1'b0),
     .cfg_lane_mask_i(4'hf),.cfg_lane_weights_i(32'h01010101),
     .cfg_rate_select_i(2'd2),.cfg_direction_i(1'b0),.cfg_session_epoch_i(32'd1),
@@ -421,6 +423,7 @@ module tb_p10_3_single_lane_ack_progress;
     .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
     .arm_request_i(arm_request), .disarm_request_i(1'b0),
     .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(clear_counters),
     .start_object_i(fixed_start_object), .abort_object_i(1'b0),
     .cfg_lane_mask_i(4'h4), .cfg_lane_weights_i(32'h0101_0101),
@@ -454,6 +457,7 @@ module tb_p10_3_single_lane_ack_progress;
     .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
     .arm_request_i(arm_request), .disarm_request_i(1'b0),
     .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(clear_counters),
     .start_object_i(rotating_start_object), .abort_object_i(1'b0),
     .cfg_lane_mask_i(4'h4), .cfg_lane_weights_i(32'h0101_0101),

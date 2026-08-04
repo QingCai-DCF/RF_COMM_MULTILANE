@@ -269,6 +269,7 @@ module tb_p10_dual_endpoint_pair;
   ) fixed_endpoint (
     .clk, .rst_n, .receiver_enable_i(receiver_enable), .arm_request_i(arm_request),
     .disarm_request_i(disarm_request), .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(clear_counters), .start_object_i(f_start_object),
     .abort_object_i(abort_object), .cfg_lane_mask_i(cfg_lane_mask),
     .cfg_lane_weights_i(cfg_lane_weights), .cfg_rate_select_i(cfg_rate_select),
@@ -311,6 +312,7 @@ module tb_p10_dual_endpoint_pair;
   ) rotating_endpoint (
     .clk, .rst_n, .receiver_enable_i(receiver_enable), .arm_request_i(arm_request),
     .disarm_request_i(disarm_request), .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(clear_counters), .start_object_i(r_start_object),
     .abort_object_i(abort_object), .cfg_lane_mask_i(cfg_lane_mask),
     .cfg_lane_weights_i(cfg_lane_weights), .cfg_rate_select_i(cfg_rate_select),

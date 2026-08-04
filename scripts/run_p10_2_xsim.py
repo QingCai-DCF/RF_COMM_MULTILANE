@@ -52,6 +52,11 @@ TESTS = (
 P10_3_TESTS = (
     ("tb_p10_3_single_lane_ack_progress",
      "TB_P10_3_SINGLE_LANE_ACK_PROGRESS=PASS", [*CORE, SUITE]),
+    ("tb_p10_fault_forensics", "P10_FAULT_FORENSICS_XSIM=PASS",
+     ["rtl/p10_fault_forensics.sv", "sim/tb/tb_p10_fault_forensics.sv"]),
+    ("tb_p10_forensic_safety_integration",
+     "P10_FORENSIC_SAFETY_INTEGRATION_XSIM=PASS",
+     [*CORE, "sim/tb/tb_p10_forensic_safety_integration.sv"]),
 )
 
 
@@ -98,7 +103,7 @@ def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, o
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir")
-    parser.add_argument("--campaign", choices=("p10_2", "p10_3"),
+    parser.add_argument("--campaign", choices=("p10_2", "p10_3", "p10_3f"),
                         default="p10_2")
     parser.add_argument(
         "--only", choices=[test[0] for test in (*TESTS, *P10_3_TESTS)])
@@ -110,21 +115,23 @@ def main() -> int:
     if any(not tool.is_file() for tool in TOOLS.values()):
         print("P10_2_XSIM_REFUSED=MISSING_VIVADO_SIMULATOR", file=sys.stderr)
         return 2
-    if args.campaign == "p10_3" and (
+    if args.campaign in {"p10_3", "p10_3f"} and (
             not (ROOT / P10_3_GOAL).is_file() or
             sha(ROOT / P10_3_GOAL) != P10_3_GOAL_SHA256):
         print("P10_3_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
         return 2
-    output_name = args.output_dir or (
-        "evidence/generated/p10_3_xsim" if args.campaign == "p10_3"
-        else "evidence/generated/p10_2_raw/xsim"
-    )
+    output_name = args.output_dir or {
+        "p10_2": "evidence/generated/p10_2_raw/xsim",
+        "p10_3": "evidence/generated/p10_3_xsim",
+        "p10_3f": "evidence/generated/p10_3_fault_forensics_xsim",
+    }[args.campaign]
     output = (ROOT / output_name).resolve()
     output.relative_to(ROOT.resolve())
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = output / "raw" / run_id
     raw.mkdir(parents=True)
-    available = (*TESTS, *P10_3_TESTS) if args.campaign == "p10_3" else TESTS
+    available = (*TESTS, *P10_3_TESTS) \
+        if args.campaign in {"p10_3", "p10_3f"} else TESTS
     selected = [test for test in available
                 if args.only is None or args.only == test[0]]
     if not selected:
@@ -135,7 +142,7 @@ def main() -> int:
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
     source_files = sorted({item for _, _, sources in selected for item in sources} |
                           {rel(Path(__file__).resolve())})
-    if args.campaign == "p10_3":
+    if args.campaign in {"p10_3", "p10_3f"}:
         source_files.extend([
             P10_3_GOAL,
             "config/hardware/p10_3_actual_wiring.yaml",
@@ -143,11 +150,26 @@ def main() -> int:
             "config/hardware/p10_3_ax7020_activity_leds.yaml",
             "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
+        if args.campaign == "p10_3f":
+            source_files.extend([
+                "config/safety/p10_3_fault_forensics.yaml",
+                "config/performance/p10_3f_staircase.yaml",
+                "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
+                "scripts/archive_p10_fault_forensics.py",
+                "scripts/hw/p10_3f_fault_forensics.tcl",
+                "scripts/run_p10_3f_staircase_hardware.py",
+                "scripts/run_p10_3f_fault_forensics_offline.py",
+                "scripts/freeze_p10_3f_artifacts.py",
+                "scripts/finalize_p10_3f_offline.py",
+            ])
         source_files = sorted(set(source_files))
     summary = {
         "schema_version": 1,
-        "test_id": "P10_3_4LANE_XSIM" if args.campaign == "p10_3"
-        else "P10_2_4LANE_XSIM",
+        "test_id": {
+            "p10_2": "P10_2_4LANE_XSIM",
+            "p10_3": "P10_3_4LANE_XSIM",
+            "p10_3f": "P10_3F_FIRST_FAULT_4LANE_XSIM",
+        }[args.campaign],
         "campaign": args.campaign,
         "status": status, "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
@@ -169,7 +191,7 @@ def main() -> int:
                  for item in results)
     (output / "summary.md").write_text("\n".join(lines) + "\n",
                                        encoding="utf-8", newline="\n")
-    print(f"{'P10_3' if args.campaign == 'p10_3' else 'P10_2'}_4LANE_XSIM={status}")
+    print(f"{args.campaign.upper()}_4LANE_XSIM={status}")
     print("HARDWARE_ACTIONS_EXECUTED=false")
     return 0 if status == "PASS" else 1
 

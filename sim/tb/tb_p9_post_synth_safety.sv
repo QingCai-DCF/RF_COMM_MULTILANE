@@ -77,6 +77,7 @@ module tb_p9_post_synth_safety;
     .receiver_enable_i(receiver_enable_i), .arm_request_i(arm_request_i),
     .disarm_request_i(disarm_request_i),
     .full_shutdown_request_i(full_shutdown_request_i),
+    .forensic_fault_hold_i(1'b0),
     .clear_counters_i(clear_counters_i), .start_object_i(start_object_i),
     .abort_object_i(abort_object_i), .cfg_lane_mask_i(cfg_lane_mask_i),
     .cfg_lane_weights_i(cfg_lane_weights_i), .cfg_rate_select_i(cfg_rate_select_i),

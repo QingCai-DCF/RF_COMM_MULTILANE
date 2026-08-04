@@ -300,6 +300,7 @@ def generate(run_baselines: bool) -> int:
         "rtl/ir_ack_aggregator.sv",
         "rtl/ir_axis_dma_adapter.sv",
         "rtl/ir_data_plane_top.sv",
+        "rtl/p10_fault_forensics.sv",
         "rtl/p9_axi_dma_peripheral.sv",
         "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
         "scripts/generate_register_headers.py",

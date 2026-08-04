@@ -90,6 +90,17 @@ P10_2_GOAL = ROOT / "goals/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINE
 P10_2_GOAL_SHA256 = "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
 P10_3_GOAL = ROOT / "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
 P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+P10_3F_PROVENANCE = [
+    ROOT / "config/safety/p10_3_fault_forensics.yaml",
+    ROOT / "config/performance/p10_3f_staircase.yaml",
+    ROOT / "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
+    ROOT / "scripts/archive_p10_fault_forensics.py",
+    ROOT / "scripts/hw/p10_3f_fault_forensics.tcl",
+    ROOT / "scripts/run_p10_3f_staircase_hardware.py",
+    ROOT / "scripts/run_p10_3f_fault_forensics_offline.py",
+    ROOT / "scripts/freeze_p10_3f_artifacts.py",
+    ROOT / "scripts/finalize_p10_3f_offline.py",
+]
 
 
 def configure_campaign(campaign: str) -> None:
@@ -160,6 +171,25 @@ def configure_campaign(campaign: str) -> None:
             },
         }
         return
+    if campaign == "p10_3f":
+        OUT = ROOT / "evidence/generated/vitis/p10_3_fault_forensics_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_3_fault_forensics"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_3_fault_forensics_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_3_fault_forensics_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_3_fault_forensics"
+        TEST_ID = "P10_3F-AX7020-DUAL-4LANE-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.3F AX7020 role-bound first-fault PS runtime build"
+        ROLES = {
+            "fixed": {
+                "role_value": 1,
+                "header": ROOT / "board_profiles/ax7020_fixed_4lane/p10_3f_runtime_role.h",
+            },
+            "rotating": {
+                "role_value": 2,
+                "header": ROOT / "board_profiles/ax7020_rotating_4lane/p10_3f_runtime_role.h",
+            },
+        }
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime"
@@ -207,7 +237,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3"}
+        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3", "p10_3f"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -233,9 +263,9 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
-    if CAMPAIGN in {"p10_2", "p10_3"}:
-        paths.append(P10_3_GOAL if CAMPAIGN == "p10_3" else P10_2_GOAL)
-    if CAMPAIGN == "p10_3":
+    if CAMPAIGN in {"p10_2", "p10_3", "p10_3f"}:
+        paths.append(P10_3_GOAL if CAMPAIGN in {"p10_3", "p10_3f"} else P10_2_GOAL)
+    if CAMPAIGN in {"p10_3", "p10_3f"}:
         paths.extend([
             ROOT / "config/hardware/p10_3_actual_wiring.yaml",
             ROOT / "config/hardware/tfdu_module_inventory.yaml",
@@ -243,6 +273,8 @@ def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]
             ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
             ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
+    if CAMPAIGN == "p10_3f":
+        paths.extend(P10_3F_PROVENANCE)
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -332,7 +364,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "dma_sg_width": bool(re.search(r"#define\s+XPAR_AXI_DMA_0_SG_LENGTH_WIDTH\s+26", xparam_text)),
         "endpoint_base": bool(re.search(r"#define\s+XPAR_P10_ENDPOINT_0_BASEADDR\s+0x43C00000", xparam_text)),
     }
-    if CAMPAIGN == "p10_3":
+    if CAMPAIGN in {"p10_3", "p10_3f"}:
         xparam_checks.update({
             "ps_gpio_device": bool(re.search(
                 r"#define\s+XPAR_PS7_GPIO_0_DEVICE_ID\s+0", xparam_text)),
@@ -346,7 +378,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     mss_text = system_mss.read_text(encoding="utf-8", errors="replace") \
         if system_mss.is_file() else ""
     mss_checks = {}
-    if CAMPAIGN == "p10_3":
+    if CAMPAIGN in {"p10_3", "p10_3f"}:
         mss_checks = {
             "gpiops_driver": bool(re.search(
                 r"DRIVER_NAME\s*=\s*gpiops[\s\S]*?HW_INSTANCE\s*=\s*ps7_gpio_0",
@@ -395,7 +427,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3", "p10_3f"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -431,7 +463,7 @@ def main() -> int:
     ):
         print("P10_RUNTIME_BUILD_REFUSED: P10.2 goal hash mismatch", file=sys.stderr)
         return 2
-    if CAMPAIGN == "p10_3" and (
+    if CAMPAIGN in {"p10_3", "p10_3f"} and (
         not P10_3_GOAL.is_file() or sha256(P10_3_GOAL) != P10_3_GOAL_SHA256
     ):
         print("P10_RUNTIME_BUILD_REFUSED: P10.3 goal hash mismatch", file=sys.stderr)
@@ -450,7 +482,8 @@ def main() -> int:
                 ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
                 ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
                 ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
-            ] if CAMPAIGN == "p10_3"
+                *(P10_3F_PROVENANCE if CAMPAIGN == "p10_3f" else []),
+            ] if CAMPAIGN in {"p10_3", "p10_3f"}
             else []
         ),
         *(cfg["header"] for cfg in ROLES.values()),

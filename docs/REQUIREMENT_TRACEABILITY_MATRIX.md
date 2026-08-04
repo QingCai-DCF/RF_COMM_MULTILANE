@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 235
+REQUIREMENT_COUNT: 242
 PASS: 186
-PENDING: 44
+PENDING: 51
 FAIL: 5
 WAIVED: 0
 ```
@@ -251,6 +251,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_3-PERF-002` | `PENDING` | P10_3_FOUR_LANE_PERFORMANCE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PERF-002` | `evidence/generated/p10_3_performance.json` | Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract. |
 | `P10_3-SOAK-001` | `PENDING` | P10_3_STATIONARY_30MIN | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SOAK-001` | `evidence/generated/p10_3_formal_30min.json` | A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors. |
 | `P10_3-EVID-001` | `PENDING` | P10_3_EVIDENCE_CONSISTENCY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-EVID-001` | `evidence/generated/p10_3_evidence_consistency.json` | Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest. |
+| `P10_3F-OFF-001` | `PENDING` | P10_3F_FIRST_FAULT_SAFETY_PATH | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-001` | `evidence/generated/p10_3_fault_forensics_offline.json` | A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling. |
+| `P10_3F-OFF-002` | `PENDING` | P10_3F_RESET_INDEPENDENT_CAPTURE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-002` | `evidence/generated/p10_3_fault_forensics_offline.json` | The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command. |
+| `P10_3F-OFF-003` | `PENDING` | P10_3F_SNAPSHOT_EVENT_ARCHIVE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-003` | `evidence/generated/p10_3_fault_forensics_offline.json` | Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence. |
+| `P10_3F-OFF-004` | `PENDING` | P10_3F_BOUNDED_STAIRCASE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-004` | `evidence/generated/p10_3_fault_forensics_offline.json` | The replacement long-test contract shall use bidirectional 1, 4, 16, 64, and 256 KiB staircase levels, require a safety snapshot gate after each direction before advancing, and bound every formal run to 1800 seconds with no command larger than 256 KiB. |
+| `P10_3F-HW-001` | `PENDING` | P10_3F_CURRENT_HARDWARE_FAULT_PATH | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-001` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read. |
+| `P10_3F-HW-002` | `PENDING` | P10_3F_CURRENT_HARDWARE_ARCHIVE_SHUTDOWN | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-002` | `evidence/generated/p10_3f_hardware/final/summary.json` | On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown bitstreams without clearing the capture first. |
+| `P10_3F-HW-003` | `PENDING` | P10_3F_CURRENT_HARDWARE_STAIRCASE_FORMAL | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-003` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety gate before advancement, then pass the separately bounded 1800-second stationary formal stage. |
 
 ## PASS artifact bindings
 

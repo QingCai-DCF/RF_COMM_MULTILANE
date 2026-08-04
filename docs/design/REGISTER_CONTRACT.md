@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P10-2` (`0x0A000002`)
-- Canonical source SHA256: `96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159`
-- Compatibility: P0-P10.1R offsets and meanings are preserved; P10.2 appends a versioned 128-word atomic four-lane snapshot window at 0x0B00-0x0D08.
+- Register map version: `P10-3` (`0x0A000003`)
+- Canonical source SHA256: `36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae`
+- Compatibility: P0-P10.2 offsets and meanings are preserved; P10.3F appends a reset-independent first-fault forensic window at 0x0D10-0x0D80.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -424,3 +424,32 @@
 | `P10_2_SNAPSHOT_GENERATION` | `0x0B04` | `RO` | Even generation incremented by two for each completed atomic P10.2 snapshot |
 | `P10_2_SNAPSHOT_SCHEMA` | `0x0B08` | `RO` | P10.2 snapshot schema identity 0x50310201 |
 | `P10_2_SNAPSHOT_DATA_BASE` | `0x0B0C` | `RO` | Base of 128 coherent 32-bit snapshot words through 0x0D08; words 0-7 global, 8+12*lane per-lane, 56+8*module per-module, 120-127 safety/schema |
+| `P10_FF_CAPABILITIES` | `0x0D10` | `RO` | First-fault recorder identity, lane/module count, event words, and snapshot words |
+| `P10_FF_STATUS` | `0x0D14` | `RO` | Frozen/post-trace/read/archive/clear/hold/shutdown/kill/direct-fault status bits |
+| `P10_FF_FAULT_SEQUENCE` | `0x0D18` | `RO` | Monotonic first-fault capture sequence since PL configuration |
+| `P10_FF_FAULT_TIMESTAMP_LOW` | `0x0D1C` | `RO` | Frozen first-fault 64 MHz timestamp bits 31:0 |
+| `P10_FF_FAULT_TIMESTAMP_HIGH` | `0x0D20` | `RO` | Frozen first-fault 64 MHz timestamp bits 63:32 |
+| `P10_FF_FAULT_CAUSE` | `0x0D24` | `RO` | Frozen module safety/object/retry cause vector |
+| `P10_FF_SNAPSHOT_WORDS` | `0x0D28` | `RO` | Number of immutable 32-bit words in the first-fault snapshot |
+| `P10_FF_PRE_EVENT_COUNT` | `0x0D2C` | `RO` | Chronological pre-fault circular BRAM event count |
+| `P10_FF_POST_EVENT_COUNT` | `0x0D30` | `RO` | Bounded post-fault kill/shutdown trace event count |
+| `P10_FF_TOTAL_EVENT_COUNT` | `0x0D34` | `RO` | Total chronological pre-fault plus post-fault event count |
+| `P10_FF_EVENT_DEPTH` | `0x0D38` | `RO` | Total BRAM event capacity including reserved post-fault tail |
+| `P10_FF_SNAPSHOT_INDEX` | `0x0D3C` | `RW` | Indirect immutable first-fault snapshot word index |
+| `P10_FF_SNAPSHOT_DATA` | `0x0D40` | `RO` | Indexed first-fault snapshot word; ordered reads participate in archive interlock |
+| `P10_FF_EVENT_INDEX` | `0x0D44` | `RW` | Indirect chronological event entry index |
+| `P10_FF_EVENT_WORD_INDEX` | `0x0D48` | `RW` | Indirect event word index 0..7 |
+| `P10_FF_EVENT_DATA` | `0x0D4C` | `RO` | Indexed synchronous BRAM event word; ordered reads participate in archive interlock |
+| `P10_FF_ARCHIVE_DIGEST0` | `0x0D50` | `RW` | Archived raw-binary SHA256 word 0, little-endian |
+| `P10_FF_ARCHIVE_DIGEST1` | `0x0D54` | `RW` | Archived raw-binary SHA256 word 1, little-endian |
+| `P10_FF_ARCHIVE_DIGEST2` | `0x0D58` | `RW` | Archived raw-binary SHA256 word 2, little-endian |
+| `P10_FF_ARCHIVE_DIGEST3` | `0x0D5C` | `RW` | Archived raw-binary SHA256 word 3, little-endian |
+| `P10_FF_ARCHIVE_DIGEST4` | `0x0D60` | `RW` | Archived raw-binary SHA256 word 4, little-endian |
+| `P10_FF_ARCHIVE_DIGEST5` | `0x0D64` | `RW` | Archived raw-binary SHA256 word 5, little-endian |
+| `P10_FF_ARCHIVE_DIGEST6` | `0x0D68` | `RW` | Archived raw-binary SHA256 word 6, little-endian |
+| `P10_FF_ARCHIVE_DIGEST7` | `0x0D6C` | `RW` | Archived raw-binary SHA256 word 7, little-endian |
+| `P10_FF_ARCHIVE_COMMIT` | `0x0D70` | `WO` | Write 0x41524348 only after raw read, SHA256 verification, JSON parsing, and archival |
+| `P10_FF_CLEAR_KEY` | `0x0D74` | `WO` | Explicit bounded two-key clear: 0x46524F5A then 0x434C5241 while fully shut down |
+| `P10_FF_CLEAR_AUDIT` | `0x0D78` | `RO` | Accepted clear count bits 15:0 and rejected archive/clear count bits 31:16 |
+| `P10_FF_CHECKPOINT` | `0x0D7C` | `RW` | Write an observational staircase/checkpoint tag into the pre-fault event ring |
+| `P10_FF_READ_PROGRESS` | `0x0D80` | `RO` | Frozen/read/archive progress and frozen event count summary |

@@ -63,6 +63,9 @@ module p9_axi_dma_peripheral #(
   localparam logic [31:0] P9_BUILD_ID = 32'h5009_000B;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
   localparam integer P10_2_SNAPSHOT_WORDS = 128;
+  localparam integer P10_FORENSIC_SNAPSHOT_WORDS = 24 + 10*LANE_COUNT;
+  localparam integer P10_FORENSIC_EVENT_DEPTH = 256;
+  localparam integer P10_FORENSIC_EVENT_WORDS = 8;
   wire [31:0] effective_magic = DEPLOYMENT_ROLE == 0 ? P9_MAGIC : IDENTITY_MAGIC;
   wire [31:0] effective_build_id = DEPLOYMENT_ROLE == 0 ? P9_BUILD_ID : BUILD_ID;
   wire [31:0] effective_profile_id = DEPLOYMENT_ROLE == 0 ? P9_PROFILE_ID : PROFILE_ID;
@@ -175,6 +178,7 @@ module p9_axi_dma_peripheral #(
   logic [31:0] physical_drop_ack_count;
   logic [2*LANE_COUNT*32-1:0] raw_rx_counts_flat;
   logic [2*LANE_COUNT*32-1:0] physical_tx_counts_flat;
+  logic [2*LANE_COUNT*32-1:0] tx_high_current_flat;
   logic [2*LANE_COUNT*32-1:0] tx_high_max_flat;
   logic [2*LANE_COUNT*32-1:0] duty_high_max_flat;
   logic [2*LANE_COUNT*32-1:0] duty_high_current_flat;
@@ -221,6 +225,85 @@ module p9_axi_dma_peripheral #(
   integer p10_2_snapshot_index;
   integer p10_2_snapshot_lane;
   integer p10_2_snapshot_module;
+
+  logic [$clog2(P10_FORENSIC_SNAPSHOT_WORDS)-1:0]
+      forensic_snapshot_index_q;
+  logic [$clog2(P10_FORENSIC_EVENT_DEPTH)-1:0]
+      forensic_event_index_q;
+  logic [$clog2(P10_FORENSIC_EVENT_WORDS)-1:0]
+      forensic_event_word_q;
+  logic forensic_archive_digest_write_q;
+  logic [2:0] forensic_archive_digest_index_q;
+  logic [31:0] forensic_archive_digest_data_q;
+  logic forensic_archive_commit_q;
+  logic forensic_clear_key_write_q;
+  logic [31:0] forensic_clear_key_q;
+  logic forensic_checkpoint_event_q;
+  logic [31:0] forensic_checkpoint_tag_q;
+  logic [31:0] forensic_snapshot_data;
+  logic [31:0] forensic_event_data;
+  logic forensic_fault_hold;
+  logic forensic_frozen;
+  logic forensic_post_complete;
+  logic forensic_snapshot_read_complete;
+  logic forensic_event_read_complete;
+  logic forensic_archive_committed;
+  logic forensic_clear_armed;
+  logic [31:0] forensic_fault_sequence;
+  logic [63:0] forensic_fault_timestamp;
+  logic [31:0] forensic_fault_cause_frozen;
+  logic [31:0] forensic_pre_event_count;
+  logic [31:0] forensic_post_event_count;
+  logic [31:0] forensic_total_event_count;
+  logic [31:0] forensic_clear_count;
+  logic [31:0] forensic_clear_reject_count;
+  logic [255:0] forensic_archive_digest;
+  wire [LANE_COUNT-1:0] forensic_local_txd = DEPLOYMENT_ROLE == 2 ?
+      core_b_txd : core_a_txd;
+  wire [LANE_COUNT-1:0] forensic_local_sd = DEPLOYMENT_ROLE == 2 ?
+      core_b_sd : core_a_sd;
+  wire [LANE_COUNT-1:0] forensic_local_mode = DEPLOYMENT_ROLE == 2 ?
+      core_b_mode : core_a_mode;
+  wire [LANE_COUNT-1:0] forensic_local_phy_ready = DEPLOYMENT_ROLE == 2 ?
+      phy_ready_mask[2*LANE_COUNT-1 -: LANE_COUNT] :
+      phy_ready_mask[LANE_COUNT-1:0];
+  wire [LANE_COUNT-1:0] forensic_local_startup = DEPLOYMENT_ROLE == 2 ?
+      startup_done_mask[2*LANE_COUNT-1 -: LANE_COUNT] :
+      startup_done_mask[LANE_COUNT-1:0];
+  wire [LANE_COUNT-1:0] forensic_local_safety_fault = DEPLOYMENT_ROLE == 2 ?
+      safety_fault_mask[2*LANE_COUNT-1 -: LANE_COUNT] :
+      safety_fault_mask[LANE_COUNT-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_physical_tx = DEPLOYMENT_ROLE == 2 ?
+      physical_tx_counts_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      physical_tx_counts_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_tx_high_current = DEPLOYMENT_ROLE == 2 ?
+      tx_high_current_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      tx_high_current_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_tx_high_max = DEPLOYMENT_ROLE == 2 ?
+      tx_high_max_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      tx_high_max_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_duty_current = DEPLOYMENT_ROLE == 2 ?
+      duty_high_current_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      duty_high_current_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_duty_max = DEPLOYMENT_ROLE == 2 ?
+      duty_high_max_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      duty_high_max_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_duty_headroom = DEPLOYMENT_ROLE == 2 ?
+      duty_headroom_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      duty_headroom_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_target_throttle = DEPLOYMENT_ROLE == 2 ?
+      duty_target_throttle_count_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      duty_target_throttle_count_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_hard_fault_count = DEPLOYMENT_ROLE == 2 ?
+      duty_hard_fault_count_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      duty_hard_fault_count_flat[LANE_COUNT*32-1:0];
+  wire [LANE_COUNT*32-1:0] forensic_local_raw_rx = DEPLOYMENT_ROLE == 2 ?
+      raw_rx_counts_flat[2*LANE_COUNT*32-1 -: LANE_COUNT*32] :
+      raw_rx_counts_flat[LANE_COUNT*32-1:0];
+  wire forensic_capture_fault = (|forensic_local_safety_fault) || object_fail;
+  wire [31:0] forensic_fault_cause = {
+      object_error[15:0], 6'd0, (tx_retry_exhausted_count != 0),
+      (object_error != 0), object_fail, forensic_local_safety_fault};
 
   initial begin
     if (LANE_COUNT != 2 && LANE_COUNT != 4)
@@ -279,6 +362,17 @@ module p9_axi_dma_peripheral #(
       object_fail_sticky_q <= 0;
       object_fail_d_q <= 0;
       raw_done_sticky_q <= 0;
+      forensic_snapshot_index_q <= 0;
+      forensic_event_index_q <= 0;
+      forensic_event_word_q <= 0;
+      forensic_archive_digest_write_q <= 0;
+      forensic_archive_digest_index_q <= 0;
+      forensic_archive_digest_data_q <= 0;
+      forensic_archive_commit_q <= 0;
+      forensic_clear_key_write_q <= 0;
+      forensic_clear_key_q <= 0;
+      forensic_checkpoint_event_q <= 0;
+      forensic_checkpoint_tag_q <= 0;
       p10_1r_snapshot_generation_q <= 0;
       p10_2_snapshot_generation_q <= 0;
       for (p10_1r_snapshot_index = 0;
@@ -297,6 +391,10 @@ module p9_axi_dma_peripheral #(
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
+      forensic_archive_digest_write_q <= 0;
+      forensic_archive_commit_q <= 0;
+      forensic_clear_key_write_q <= 0;
+      forensic_checkpoint_event_q <= 0;
       if (stream_reset_hold_q != 0) begin
         stream_reset_hold_q <= stream_reset_hold_q - 1'b1;
         if (stream_reset_hold_q == 1) stream_reset_request_o <= 0;
@@ -384,6 +482,36 @@ module p9_axi_dma_peripheral #(
           12'h748: raw_spacing_q <= reg_wr_data;
           12'h860: cfg_initial_sequence_q <= reg_wr_data[15:0];
           12'h864: cfg_fault_flags_q <= reg_wr_data;
+          `IR_REG_P10_FF_SNAPSHOT_INDEX:
+            forensic_snapshot_index_q <= reg_wr_data;
+          `IR_REG_P10_FF_EVENT_INDEX:
+            forensic_event_index_q <= reg_wr_data;
+          `IR_REG_P10_FF_EVENT_WORD_INDEX:
+            forensic_event_word_q <= reg_wr_data;
+          `IR_REG_P10_FF_ARCHIVE_DIGEST0,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST1,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST2,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST3,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST4,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST5,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST6,
+          `IR_REG_P10_FF_ARCHIVE_DIGEST7: begin
+            forensic_archive_digest_write_q <= 1'b1;
+            forensic_archive_digest_index_q <=
+                (reg_wr_addr - `IR_REG_P10_FF_ARCHIVE_DIGEST0) >> 2;
+            forensic_archive_digest_data_q <= reg_wr_data;
+          end
+          `IR_REG_P10_FF_ARCHIVE_COMMIT:
+            if (reg_wr_data == 32'h4152_4348)
+              forensic_archive_commit_q <= 1'b1;
+          `IR_REG_P10_FF_CLEAR_KEY: begin
+            forensic_clear_key_write_q <= 1'b1;
+            forensic_clear_key_q <= reg_wr_data;
+          end
+          `IR_REG_P10_FF_CHECKPOINT: begin
+            forensic_checkpoint_event_q <= 1'b1;
+            forensic_checkpoint_tag_q <= reg_wr_data;
+          end
           // Atomic P10.1R telemetry snapshot.  All values and the even
           // generation advance on the same protocol clock edge.
           12'hA00: if (reg_wr_data[0]) begin
@@ -750,6 +878,60 @@ module p9_axi_dma_peripheral #(
       12'hB00: reg_rd_data = 0;
       12'hB04: reg_rd_data = p10_2_snapshot_generation_q;
       12'hB08: reg_rd_data = 32'h5031_0201;
+      `IR_REG_P10_FF_CAPABILITIES:
+        reg_rd_data = {8'h46, 4'(LANE_COUNT), 4'(LANE_COUNT),
+                       8'(P10_FORENSIC_EVENT_WORDS),
+                       8'(P10_FORENSIC_SNAPSHOT_WORDS)};
+      `IR_REG_P10_FF_STATUS: reg_rd_data = {
+          22'd0, forensic_capture_fault, tx_kill_active,
+          monitor_effective_full_shutdown_o, forensic_fault_hold,
+          forensic_clear_armed, forensic_archive_committed,
+          forensic_event_read_complete, forensic_snapshot_read_complete,
+          forensic_post_complete, forensic_frozen};
+      `IR_REG_P10_FF_FAULT_SEQUENCE: reg_rd_data = forensic_fault_sequence;
+      `IR_REG_P10_FF_FAULT_TIMESTAMP_LOW:
+        reg_rd_data = forensic_fault_timestamp[31:0];
+      `IR_REG_P10_FF_FAULT_TIMESTAMP_HIGH:
+        reg_rd_data = forensic_fault_timestamp[63:32];
+      `IR_REG_P10_FF_FAULT_CAUSE: reg_rd_data = forensic_fault_cause_frozen;
+      `IR_REG_P10_FF_SNAPSHOT_WORDS:
+        reg_rd_data = P10_FORENSIC_SNAPSHOT_WORDS;
+      `IR_REG_P10_FF_PRE_EVENT_COUNT: reg_rd_data = forensic_pre_event_count;
+      `IR_REG_P10_FF_POST_EVENT_COUNT: reg_rd_data = forensic_post_event_count;
+      `IR_REG_P10_FF_TOTAL_EVENT_COUNT: reg_rd_data = forensic_total_event_count;
+      `IR_REG_P10_FF_EVENT_DEPTH: reg_rd_data = P10_FORENSIC_EVENT_DEPTH;
+      `IR_REG_P10_FF_SNAPSHOT_INDEX: reg_rd_data = forensic_snapshot_index_q;
+      `IR_REG_P10_FF_SNAPSHOT_DATA: reg_rd_data = forensic_snapshot_data;
+      `IR_REG_P10_FF_EVENT_INDEX: reg_rd_data = forensic_event_index_q;
+      `IR_REG_P10_FF_EVENT_WORD_INDEX: reg_rd_data = forensic_event_word_q;
+      `IR_REG_P10_FF_EVENT_DATA: reg_rd_data = forensic_event_data;
+      `IR_REG_P10_FF_ARCHIVE_DIGEST0:
+        reg_rd_data = forensic_archive_digest[31:0];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST1:
+        reg_rd_data = forensic_archive_digest[63:32];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST2:
+        reg_rd_data = forensic_archive_digest[95:64];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST3:
+        reg_rd_data = forensic_archive_digest[127:96];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST4:
+        reg_rd_data = forensic_archive_digest[159:128];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST5:
+        reg_rd_data = forensic_archive_digest[191:160];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST6:
+        reg_rd_data = forensic_archive_digest[223:192];
+      `IR_REG_P10_FF_ARCHIVE_DIGEST7:
+        reg_rd_data = forensic_archive_digest[255:224];
+      `IR_REG_P10_FF_ARCHIVE_COMMIT: reg_rd_data = 0;
+      `IR_REG_P10_FF_CLEAR_KEY: reg_rd_data = 0;
+      `IR_REG_P10_FF_CLEAR_AUDIT:
+        reg_rd_data = {forensic_clear_reject_count[15:0],
+                       forensic_clear_count[15:0]};
+      `IR_REG_P10_FF_CHECKPOINT: reg_rd_data = forensic_checkpoint_tag_q;
+      `IR_REG_P10_FF_READ_PROGRESS: reg_rd_data = {
+          16'd0, forensic_total_event_count[7:0], 2'd0,
+          forensic_archive_committed, forensic_event_read_complete,
+          forensic_snapshot_read_complete, forensic_post_complete,
+          forensic_frozen, forensic_fault_hold};
       default: begin
         if (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
           reg_rd_data = p10_1_reg_rd_data;
@@ -760,6 +942,97 @@ module p9_axi_dma_peripheral #(
       end
     endcase
   end
+
+  p10_fault_forensics #(
+    .CLK_HZ(64_000_000),
+    .LANE_COUNT(LANE_COUNT),
+    .MODULE_COUNT(LANE_COUNT),
+    .SNAPSHOT_WORDS(P10_FORENSIC_SNAPSHOT_WORDS),
+    .EVENT_DEPTH(P10_FORENSIC_EVENT_DEPTH),
+    .POST_EVENT_COUNT(8),
+    .EVENT_WORDS(P10_FORENSIC_EVENT_WORDS),
+    .SAMPLE_INTERVAL_CYCLES(1024)
+  ) u_fault_forensics (
+    .clk(s_axi_aclk),
+    .system_reset_n_i(s_axi_aresetn),
+    .capture_fault_i(forensic_capture_fault),
+    .fault_cause_i(forensic_fault_cause),
+    .effective_shutdown_i(monitor_effective_full_shutdown_o),
+    .endpoint_armed_i(endpoint_armed),
+    .tx_kill_i(tx_kill_active),
+    .receiver_enable_i(receiver_enable_q),
+    .physical_txd_i(forensic_local_txd),
+    .physical_sd_i(forensic_local_sd),
+    .physical_mode_i(forensic_local_mode),
+    .phy_ready_i(forensic_local_phy_ready),
+    .startup_done_i(forensic_local_startup),
+    .safety_fault_i(forensic_local_safety_fault),
+    .configured_lane_mask_i(cfg_lane_mask_q),
+    .unavailable_lane_mask_i(cfg_lane_unavailable_q),
+    .raw_lane_mask_i(raw_lane_mask_q),
+    .raw_busy_i(raw_busy),
+    .raw_direction_i(raw_direction_q),
+    .object_active_i(object_active),
+    .object_done_i(object_done),
+    .object_fail_i(object_fail),
+    .object_id_i(cfg_object_q),
+    .object_error_i(object_error),
+    .tx_next_sequence_i(tx_next_sequence),
+    .tx_ack_base_i(tx_ack_base),
+    .tx_outstanding_i(tx_outstanding_count),
+    .tx_outstanding_high_watermark_i(tx_outstanding_high_watermark),
+    .rx_base_sequence_i(rx_base_sequence),
+    .rx_sack_bitmap_i(rx_sack_bitmap),
+    .tx_attempt_count_i(tx_attempt_count),
+    .tx_retry_count_i(tx_retry_count),
+    .tx_retry_exhausted_count_i(tx_retry_exhausted_count),
+    .tx_timeout_count_i(tx_timeout_count),
+    .tx_migration_count_i(tx_migration_count),
+    .input_byte_count_i(input_byte_count),
+    .output_byte_count_i(output_byte_count),
+    .physical_tx_counts_flat_i(forensic_local_physical_tx),
+    .tx_high_current_flat_i(forensic_local_tx_high_current),
+    .tx_high_max_flat_i(forensic_local_tx_high_max),
+    .duty_high_current_flat_i(forensic_local_duty_current),
+    .duty_high_max_flat_i(forensic_local_duty_max),
+    .duty_headroom_flat_i(forensic_local_duty_headroom),
+    .duty_target_throttle_count_flat_i(forensic_local_target_throttle),
+    .duty_hard_fault_count_flat_i(forensic_local_hard_fault_count),
+    .raw_rx_counts_flat_i(forensic_local_raw_rx),
+    .snapshot_read_index_i(forensic_snapshot_index_q),
+    .snapshot_read_strobe_i(reg_rd_en &&
+        reg_rd_addr == `IR_REG_P10_FF_SNAPSHOT_DATA),
+    .snapshot_read_data_o(forensic_snapshot_data),
+    .event_read_index_i(forensic_event_index_q),
+    .event_read_word_i(forensic_event_word_q),
+    .event_read_strobe_i(reg_rd_en &&
+        reg_rd_addr == `IR_REG_P10_FF_EVENT_DATA),
+    .event_read_data_o(forensic_event_data),
+    .archive_digest_write_i(forensic_archive_digest_write_q),
+    .archive_digest_index_i(forensic_archive_digest_index_q),
+    .archive_digest_data_i(forensic_archive_digest_data_q),
+    .archive_commit_i(forensic_archive_commit_q),
+    .clear_key_write_i(forensic_clear_key_write_q),
+    .clear_key_i(forensic_clear_key_q),
+    .checkpoint_event_i(forensic_checkpoint_event_q),
+    .checkpoint_tag_i(forensic_checkpoint_tag_q),
+    .first_fault_hold_o(forensic_fault_hold),
+    .frozen_o(forensic_frozen),
+    .post_trace_complete_o(forensic_post_complete),
+    .snapshot_read_complete_o(forensic_snapshot_read_complete),
+    .event_read_complete_o(forensic_event_read_complete),
+    .archive_committed_o(forensic_archive_committed),
+    .clear_armed_o(forensic_clear_armed),
+    .fault_sequence_o(forensic_fault_sequence),
+    .fault_timestamp_o(forensic_fault_timestamp),
+    .frozen_fault_cause_o(forensic_fault_cause_frozen),
+    .pre_event_count_o(forensic_pre_event_count),
+    .post_event_count_o(forensic_post_event_count),
+    .total_event_count_o(forensic_total_event_count),
+    .clear_count_o(forensic_clear_count),
+    .clear_reject_count_o(forensic_clear_reject_count),
+    .archive_digest_o(forensic_archive_digest)
+  );
 
   p9_optical_transport_core #(
     .CLK_HZ(64_000_000), .LANE_COUNT(LANE_COUNT),
@@ -774,6 +1047,7 @@ module p9_axi_dma_peripheral #(
     .clk(s_axi_aclk), .rst_n(transport_resetn_q),
     .receiver_enable_i(receiver_enable_q), .arm_request_i(arm_pulse_q),
     .disarm_request_i(disarm_pulse_q), .full_shutdown_request_i(shutdown_pulse_q),
+    .forensic_fault_hold_i(forensic_fault_hold),
     .clear_counters_i(clear_pulse_q), .start_object_i(start_pulse_q),
     .abort_object_i(abort_pulse_q), .cfg_lane_mask_i(cfg_lane_mask_q),
     .cfg_lane_weights_i(cfg_lane_weights_q), .cfg_rate_select_i(cfg_rate_q),
@@ -844,6 +1118,7 @@ module p9_axi_dma_peripheral #(
     .physical_drop_ack_count_o(physical_drop_ack_count),
     .raw_rx_counts_flat_o(raw_rx_counts_flat),
     .physical_tx_counts_flat_o(physical_tx_counts_flat),
+    .tx_high_current_flat_o(tx_high_current_flat),
     .tx_high_max_flat_o(tx_high_max_flat), .duty_high_max_flat_o(duty_high_max_flat),
     .duty_high_current_flat_o(duty_high_current_flat),
     .duty_headroom_flat_o(duty_headroom_flat),

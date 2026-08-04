@@ -4567,3 +4567,81 @@ requirements:
   waiver: null
   artifact_hashes: []
 # END P10_3 REQUIREMENTS
+- requirement_id: P10_3F-OFF-001
+  requirement_text: A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling.
+  profile: P10_3F_FIRST_FAULT_SAFETY_PATH
+  verification_method: XSIM shall prove same-cycle causal safety kill, persistent forensic hold, all-local-Txd low, and all-local-SD high; implemented fixed and rotating-role designs shall pass timing, CDC, DRC, and safety checks.
+  verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
+  verification_scope: P10_3F_OFFLINE_ARTIFACT
+  test_id: P10_3F-OFF-001
+  evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-OFF-002
+  requirement_text: The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command.
+  profile: P10_3F_RESET_INDEPENDENT_CAPTURE
+  verification_method: XSIM shall exercise reset and shutdown persistence, incomplete-read rejection, archive commit interlocks, unsafe clear rejection, and the explicit safe clear sequence.
+  verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
+  verification_scope: P10_3F_OFFLINE_ARTIFACT
+  test_id: P10_3F-OFF-002
+  evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-OFF-003
+  requirement_text: Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence.
+  profile: P10_3F_SNAPSHOT_EVENT_ARCHIVE
+  verification_method: XSIM and host unit tests shall verify field ordering, circular chronology, post-fault tail, ordered reads, canonical binary round trip, parsed fields, and digest generation; routed utilization shall confirm block RAM implementation.
+  verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
+  verification_scope: P10_3F_OFFLINE_ARTIFACT
+  test_id: P10_3F-OFF-003
+  evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-OFF-004
+  requirement_text: The replacement long-test contract shall use bidirectional 1, 4, 16, 64, and 256 KiB staircase levels, require a safety snapshot gate after each direction before advancing, and bound every formal run to 1800 seconds with no command larger than 256 KiB.
+  profile: P10_3F_BOUNDED_STAIRCASE
+  verification_method: Static and unit validation shall compare the generated immutable stage plans to the canonical staircase configuration and verify fail-closed archive-before-shutdown cleanup paths.
+  verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
+  verification_scope: P10_3F_OFFLINE_TOOLING
+  test_id: P10_3F-OFF-004
+  evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-HW-001
+  requirement_text: Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read.
+  profile: P10_3F_CURRENT_HARDWARE_FAULT_PATH
+  verification_method: Execute a separately authorized current-artifact hardware fault campaign and preserve direct register and frozen-event evidence.
+  verification_stage: P10_3F_HARDWARE_REACCEPTANCE
+  verification_scope: P10_3F_CURRENT_HARDWARE
+  test_id: P10_3F-HW-001
+  evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-HW-002
+  requirement_text: On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown bitstreams without clearing the capture first.
+  profile: P10_3F_CURRENT_HARDWARE_ARCHIVE_SHUTDOWN
+  verification_method: Execute the current-run-authorized wrapper and audit ordered read markers, archive digest readback, immutable files, and both shutdown markers.
+  verification_stage: P10_3F_HARDWARE_REACCEPTANCE
+  verification_scope: P10_3F_CURRENT_HARDWARE
+  test_id: P10_3F-HW-002
+  evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3F-HW-003
+  requirement_text: Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety gate before advancement, then pass the separately bounded 1800-second stationary formal stage.
+  profile: P10_3F_CURRENT_HARDWARE_STAIRCASE_FORMAL
+  verification_method: Execute the new immutable artifact bundle under a new current-run authorization and preserve every per-command safety snapshot and cleanup marker.
+  verification_stage: P10_3F_HARDWARE_REACCEPTANCE
+  verification_scope: P10_3F_CURRENT_HARDWARE
+  test_id: P10_3F-HW-003
+  evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+# END P10_3F REQUIREMENTS

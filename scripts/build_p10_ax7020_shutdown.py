@@ -84,13 +84,33 @@ def configure_campaign(campaign: str) -> None:
     CAMPAIGN = campaign
     if campaign == "p10":
         return
-    if campaign == "p10_3":
-        OUT_ROOT = ROOT / "evidence/generated/vivado/p10_3_shutdown"
-        ARTIFACT_ROOT = ROOT / "artifacts/p10_3"
-        SUMMARY_JSON = ROOT / "evidence/generated/p10_3_shutdown_build_summary.json"
-        SUMMARY_MD = ROOT / "evidence/generated/p10_3_shutdown_build_summary.md"
-        TEST_ID = "P10_3-AX7020-DUAL-4LANE-SHUTDOWN-BUILD"
-        SUMMARY_TITLE = "P10.3 AX7020 dual four-lane shutdown build"
+    if campaign in {"p10_3", "p10_3f"}:
+        suffix = "p10_3_shutdown" if campaign == "p10_3" else "p10_3_fault_forensics_shutdown"
+        OUT_ROOT = ROOT / f"evidence/generated/vivado/{suffix}"
+        ARTIFACT_ROOT = ROOT / (
+            "artifacts/p10_3" if campaign == "p10_3"
+            else "artifacts/p10_3_fault_forensics"
+        )
+        SUMMARY_JSON = ROOT / (
+            "evidence/generated/p10_3_shutdown_build_summary.json"
+            if campaign == "p10_3"
+            else "evidence/generated/p10_3_fault_forensics_shutdown_build_summary.json"
+        )
+        SUMMARY_MD = ROOT / (
+            "evidence/generated/p10_3_shutdown_build_summary.md"
+            if campaign == "p10_3"
+            else "evidence/generated/p10_3_fault_forensics_shutdown_build_summary.md"
+        )
+        TEST_ID = (
+            "P10_3-AX7020-DUAL-4LANE-SHUTDOWN-BUILD"
+            if campaign == "p10_3"
+            else "P10_3F-AX7020-DUAL-4LANE-SHUTDOWN-BUILD"
+        )
+        SUMMARY_TITLE = (
+            "P10.3 AX7020 dual four-lane shutdown build"
+            if campaign == "p10_3"
+            else "P10.3F AX7020 dual four-lane shutdown build"
+        )
         PROFILES = {
             "fixed": {
                 "profile": "P10_2_AX7020_FIXED_4LANE",
@@ -120,7 +140,7 @@ def active_goals() -> dict[str, str]:
     goals = dict(EXPECTED_GOALS)
     if CAMPAIGN == "p10_1r":
         goals[P10_1R_GOAL] = P10_1R_GOAL_SHA256
-    elif CAMPAIGN == "p10_3":
+    elif CAMPAIGN in {"p10_3", "p10_3f"}:
         goals[P10_3_GOAL] = P10_3_GOAL_SHA256
     return goals
 
@@ -143,7 +163,7 @@ def parse_markers(path: Path) -> dict[str, str]:
 def bundle_hash(role: str, profile: dict[str, object]) -> tuple[str, dict[str, str]]:
     paths = [Path(__file__).resolve(), TOP, TCL, Path(profile["xdc"]),
              *[ROOT / item for item in active_goals()]]
-    if CAMPAIGN == "p10_3":
+    if CAMPAIGN in {"p10_3", "p10_3f"}:
         paths.extend(ROOT / item for item in P10_3_PROVENANCE)
     hashes = {relative(path): sha256(path) for path in paths}
     payload = json.dumps(
@@ -161,7 +181,7 @@ def freeze(source: Path, source_bundle: str) -> dict[str, object]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1r", "p10_3"}
+        if CAMPAIGN in {"p10_1r", "p10_3", "p10_3f"}
         else source_bundle
     )
     destination = ARTIFACT_ROOT / namespace / digest / source.name
@@ -221,8 +241,8 @@ def run_role(role: str, profile: dict[str, object]) -> dict[str, object]:
         "P10_LANE_COUNT": str(profile.get("lane_count", 2)),
         "P10_PART": "xc7z020clg400-2",
         "P10_TOP": "p10_ax7020_shutdown_top",
-        "P10_SHUTDOWN_MODE_INTENT": "0xF" if CAMPAIGN == "p10_3" else "0x3",
-        "P10_SHUTDOWN_SD_INTENT": "0xF" if CAMPAIGN == "p10_3" else "0x3",
+        "P10_SHUTDOWN_MODE_INTENT": "0xF" if CAMPAIGN in {"p10_3", "p10_3f"} else "0x3",
+        "P10_SHUTDOWN_SD_INTENT": "0xF" if CAMPAIGN in {"p10_3", "p10_3f"} else "0x3",
         "P10_SHUTDOWN_TXD_INTENT": "0x0",
         "P10_SHUTDOWN_LED_N_INTENT": "0xF",
         "P10_SHUTDOWN_LED_ACTIVE_LOW": "true",
@@ -261,7 +281,7 @@ def run_role(role: str, profile: dict[str, object]) -> dict[str, object]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--campaign", choices=("p10", "p10_1r", "p10_3"), default="p10",
+        "--campaign", choices=("p10", "p10_1r", "p10_3", "p10_3f"), default="p10",
         help="Use a separate Goal-bound evidence and artifact namespace.",
     )
     args = parser.parse_args()
@@ -282,6 +302,8 @@ def main() -> int:
         Path(__file__).resolve(), TOP, TCL,
         *(Path(profile["xdc"]) for profile in PROFILES.values()),
         *(ROOT / item for item in active_goals()),
+        *(ROOT / item for item in P10_3_PROVENANCE
+          if CAMPAIGN in {"p10_3", "p10_3f"}),
     ])
     results = [run_role(role, profile) for role, profile in PROFILES.items()]
     status = "PASS" if all(result["status"] == "PASS" for result in results) else "FAIL"

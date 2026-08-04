@@ -50,6 +50,9 @@ module p9_optical_transport_core #(
   input  wire         arm_request_i,
   input  wire         disarm_request_i,
   input  wire         full_shutdown_request_i,
+  // Persistent first-fault hold from the reset-independent forensic domain.
+  // It may only add shutdown/TX kill; it is never an enable or permit.
+  input  wire         forensic_fault_hold_i,
   input  wire         clear_counters_i,
   input  wire         start_object_i,
   input  wire         abort_object_i,
@@ -159,6 +162,7 @@ module p9_optical_transport_core #(
   output wire [31:0]  physical_drop_ack_count_o,
   output wire [2*LANE_COUNT*32-1:0] raw_rx_counts_flat_o,
   output wire [2*LANE_COUNT*32-1:0] physical_tx_counts_flat_o,
+  output wire [2*LANE_COUNT*32-1:0] tx_high_current_flat_o,
   output wire [2*LANE_COUNT*32-1:0] tx_high_max_flat_o,
   output wire [2*LANE_COUNT*32-1:0] duty_high_max_flat_o,
   output wire [2*LANE_COUNT*32-1:0] duty_high_current_flat_o,
@@ -359,9 +363,10 @@ module p9_optical_transport_core #(
   wire [LANE_COUNT-1:0] local_startup_done = local_is_a ? a_startup_done : b_startup_done;
   wire [LANE_COUNT-1:0] local_fault_stuck = local_is_a ? a_fault_stuck : b_fault_stuck;
   wire [LANE_COUNT-1:0] local_fault_duty = local_is_a ? a_fault_duty : b_fault_duty;
-  wire any_safety_fault = endpoint_mode ?
+  wire detected_safety_fault = endpoint_mode ?
       (|local_fault_stuck | |local_fault_duty) :
       (|a_fault_stuck | |b_fault_stuck | |a_fault_duty | |b_fault_duty);
+  wire any_safety_fault = detected_safety_fault || forensic_fault_hold_i;
   wire tx_kill = !endpoint_armed_q || shutdown_latched_q || any_safety_fault;
   wire local_sender = !endpoint_mode ||
       (local_is_a ? !object_direction_q : object_direction_q);
@@ -380,6 +385,9 @@ module p9_optical_transport_core #(
       (local_is_a ? {{LANE_COUNT{1'b0}}, local_startup_done} :
                     {local_startup_done, {LANE_COUNT{1'b0}}}) :
       {b_startup_done, a_startup_done};
+  // Preserve the causal physical fault bits.  The persistent forensic hold is
+  // reported separately by its register window and must not masquerade as a
+  // newly detected module fault after a functional reset.
   assign safety_fault_mask_o = endpoint_mode ?
       (local_is_a ? {{LANE_COUNT{1'b0}},
                      (local_fault_stuck | local_fault_duty)} :
@@ -1336,6 +1344,8 @@ module p9_optical_transport_core #(
   wire [31:0] b_raw_count [0:LANE_COUNT-1];
   wire [31:0] a_tx_count [0:LANE_COUNT-1];
   wire [31:0] b_tx_count [0:LANE_COUNT-1];
+  wire [31:0] a_high_current [0:LANE_COUNT-1];
+  wire [31:0] b_high_current [0:LANE_COUNT-1];
   wire [31:0] a_high_max [0:LANE_COUNT-1];
   wire [31:0] b_high_max [0:LANE_COUNT-1];
   wire [31:0] a_duty_max [0:LANE_COUNT-1];
@@ -1354,7 +1364,10 @@ module p9_optical_transport_core #(
   wire [31:0] b_target_throttle_count [0:LANE_COUNT-1];
   wire [31:0] a_hard_fault_count [0:LANE_COUNT-1];
   wire [31:0] b_hard_fault_count [0:LANE_COUNT-1];
-  wire physical_enable = receiver_enable_q && !shutdown_latched_q;
+  // Any detected or archived first fault is a full-endpoint shutdown.  This
+  // raises every SD and kills every Txd without waiting for PS evidence reads.
+  wire physical_enable = receiver_enable_q && !shutdown_latched_q &&
+                         !any_safety_fault;
 
   generate
     for (tx_lane = 0; tx_lane < LANE_COUNT; tx_lane = tx_lane + 1) begin : g_physical
@@ -1371,7 +1384,8 @@ module p9_optical_transport_core #(
         .shutdown_active(), .fault_stuck_high(a_fault_stuck[tx_lane]),
         .fault_duty_limit(a_fault_duty[tx_lane]), .rx_raw_count(a_raw_count[tx_lane]),
         .tx_pulse_count(a_tx_count[tx_lane]), .rx_pulse_width_min(),
-        .rx_pulse_width_max(), .rx_last_timestamp(), .tx_high_width_current(),
+        .rx_pulse_width_max(), .rx_last_timestamp(),
+        .tx_high_width_current(a_high_current[tx_lane]),
         .duty_window_count(a_window[tx_lane]), .duty_high_count(a_duty_current[tx_lane]),
         .tx_high_width_max_seen(a_high_max[tx_lane]),
         .duty_high_max_seen(a_duty_max[tx_lane]),
@@ -1394,7 +1408,8 @@ module p9_optical_transport_core #(
         .shutdown_active(), .fault_stuck_high(b_fault_stuck[tx_lane]),
         .fault_duty_limit(b_fault_duty[tx_lane]), .rx_raw_count(b_raw_count[tx_lane]),
         .tx_pulse_count(b_tx_count[tx_lane]), .rx_pulse_width_min(),
-        .rx_pulse_width_max(), .rx_last_timestamp(), .tx_high_width_current(),
+        .rx_pulse_width_max(), .rx_last_timestamp(),
+        .tx_high_width_current(b_high_current[tx_lane]),
         .duty_window_count(b_window[tx_lane]), .duty_high_count(b_duty_current[tx_lane]),
         .tx_high_width_max_seen(b_high_max[tx_lane]),
         .duty_high_max_seen(b_duty_max[tx_lane]),
@@ -1410,6 +1425,9 @@ module p9_optical_transport_core #(
       assign raw_rx_counts_flat_o[32*(LANE_COUNT+tx_lane) +: 32] = b_raw_count[tx_lane];
       assign physical_tx_counts_flat_o[32*tx_lane +: 32] = a_tx_count[tx_lane];
       assign physical_tx_counts_flat_o[32*(LANE_COUNT+tx_lane) +: 32] = b_tx_count[tx_lane];
+      assign tx_high_current_flat_o[32*tx_lane +: 32] = a_high_current[tx_lane];
+      assign tx_high_current_flat_o[32*(LANE_COUNT+tx_lane) +: 32] =
+          b_high_current[tx_lane];
       assign tx_high_max_flat_o[32*tx_lane +: 32] = a_high_max[tx_lane];
       assign tx_high_max_flat_o[32*(LANE_COUNT+tx_lane) +: 32] = b_high_max[tx_lane];
       assign duty_high_max_flat_o[32*tx_lane +: 32] = a_duty_max[tx_lane];

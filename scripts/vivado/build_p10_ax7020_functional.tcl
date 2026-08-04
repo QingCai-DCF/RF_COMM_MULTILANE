@@ -34,7 +34,7 @@ if {$endpoint_role_name eq "fixed"} {
 # Vivado 2023.1 still enforces a 260-byte path limit for generated OOC files on
 # Windows.  Keep the disposable project path deliberately short; all retained
 # reports and artifacts are written to out_dir in the worktree.
-set build_dir [file normalize "C:/p10_vivado/${endpoint_role_name}_${lane_count}lane"]
+set build_dir [file normalize "C:/p10_vivado/${campaign}_${endpoint_role_name}_${lane_count}lane"]
 file mkdir $build_dir
 file mkdir $out_dir
 set project_name "p10_ax7020_${endpoint_role_name}_${lane_count}lane_functional"
@@ -64,6 +64,7 @@ set rtl_sources [list \
   "$root_dir/rtl/p10_1_timer_snapshot.sv" \
   "$root_dir/rtl/p10_1_event_fifo.sv" \
   "$root_dir/rtl/p10_1_perf_monitor.sv" \
+  "$root_dir/rtl/p10_fault_forensics.sv" \
   "$root_dir/rtl/p9_axi_dma_peripheral.sv" \
   "$root_dir/rtl/p10_lane_activity_leds.sv" \
   "$root_dir/rtl/p10_2_lane_activity_leds.sv" \
@@ -78,7 +79,7 @@ set ps [create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 proce
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
   -config {make_external "FIXED_IO, DDR" apply_board_preset "0" Master "Disable" Slave "Disable"} $ps
 source "$root_dir/board_profiles/ax7020_common/p10_ps7_config.tcl"
-p10_apply_ax7020_ps7_config $ps [expr {$campaign eq "p10_3"}]
+p10_apply_ax7020_ps7_config $ps [expr {$campaign in {p10_3 p10_3f}}]
 
 set dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0]
 set_property -dict [list \
@@ -103,8 +104,11 @@ set endpoint [create_bd_cell -type module -reference p10_axi_dma_endpoint_periph
 set_property CONFIG.ENDPOINT_ROLE $endpoint_role $endpoint
 set_property CONFIG.LANE_COUNT $lane_count $endpoint
 if {$campaign eq "p10_3"} {
-  set p10_3_build_id [expr {$endpoint_role == 1 ? 0x50333446 : 0x50333452}]
-  set_property CONFIG.BUILD_ID_OVERRIDE $p10_3_build_id $endpoint
+  set_property CONFIG.BUILD_ID_OVERRIDE \
+      [expr {$endpoint_role == 1 ? 0x50333446 : 0x50333452}] $endpoint
+} elseif {$campaign eq "p10_3f"} {
+  set_property CONFIG.BUILD_ID_OVERRIDE \
+      [expr {$endpoint_role == 1 ? 0x50334646 : 0x50334652}] $endpoint
 }
 
 set rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_protocol_64]
@@ -288,6 +292,15 @@ set ff_count [llength [get_cells -hierarchical -filter {PRIMITIVE_GROUP == FLOP_
 set bram36_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB36*}]]
 set bram18_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB18*}]]
 set dsp_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ DSP48*}]]
+set forensic_bram_count 0
+foreach cell [concat \
+    [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB36*}] \
+    [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB18*}]] {
+  if {[string first "u_fault_forensics" [get_property NAME $cell]] >= 0} {
+    incr forensic_bram_count
+  }
+}
+set forensic_bram_inferred [expr {$forensic_bram_count > 0}]
 set bram36_equivalent [expr {$bram36_count + $bram18_count / 2.0}]
 set lut_percent [expr {100.0 * $lut_count / 53200.0}]
 set ff_percent [expr {100.0 * $ff_count / 106400.0}]
@@ -298,7 +311,8 @@ set resource_limits_pass [expr {$lut_percent <= 70.0 && $ff_percent <= 70.0 &&
 if {$wns < 0.0 || $whs < 0.0 || $tns < 0.0 || $drc_critical != 0 ||
     $drc_error != 0 || $reqp_1839 != 0 || $methodology_critical != 0 ||
     $cdc_critical != 0 || $unconstrained_internal_endpoints != 0 ||
-    $no_clock_count != 0 || !$resource_limits_pass} {
+    $no_clock_count != 0 || !$resource_limits_pass ||
+    ($campaign eq "p10_3f" && !$forensic_bram_inferred)} {
   error "P10 signoff gate failed: WNS=$wns WHS=$whs TNS=$tns DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical UNCONSTRAINED_INTERNAL=$unconstrained_internal_endpoints NO_CLOCK=$no_clock_count RESOURCE_LIMITS=$resource_limits_pass"
 }
 
@@ -314,7 +328,14 @@ puts $marker "P10_ENDPOINT_ROLE_VALUE=$endpoint_role"
 puts $marker "P10_PROFILE_ID=$profile_id"
 puts $marker "P10_LANE_COUNT=$lane_count"
 puts $marker "P10_CAMPAIGN=$campaign"
-puts $marker [format "P10_PL_BUILD_ID=0x%08X" [expr {$campaign eq "p10_3" ? ($endpoint_role == 1 ? 0x50333446 : 0x50333452) : ($lane_count == 4 ? ($endpoint_role == 1 ? 0x50323446 : 0x50323452) : ($endpoint_role == 1 ? 0x50325346 : 0x50325352))}]]
+set marker_build_id [expr {$campaign eq "p10_3f" ?
+    ($endpoint_role == 1 ? 0x50334646 : 0x50334652) :
+    ($campaign eq "p10_3" ?
+      ($endpoint_role == 1 ? 0x50333446 : 0x50333452) :
+      ($lane_count == 4 ?
+        ($endpoint_role == 1 ? 0x50323446 : 0x50323452) :
+        ($endpoint_role == 1 ? 0x50325346 : 0x50325352)))}]
+puts $marker [format "P10_PL_BUILD_ID=0x%08X" $marker_build_id]
 puts $marker "P10_PART=[get_property PART [current_project]]"
 puts $marker "P10_TOP=p10_ps_system_wrapper"
 puts $marker "P10_AXI_BASE=0x43C00000"
@@ -327,7 +348,7 @@ puts $marker "P10_DMA_CLOCK_HZ=100000000"
 puts $marker "P10_AXIL_CLOCK_HZ=50000000"
 puts $marker "P10_NETWORK_USED=false"
 puts $marker "P10_ETHERNET_ENABLED=false"
-if {$campaign eq "p10_3"} {
+if {$campaign in {p10_3 p10_3f}} {
   puts $marker "P10_PS_GPIO_ENABLED=true"
   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=PS_LED1_MIO0_MM2S_INFLIGHT_PS_LED2_MIO13_S2MM_INFLIGHT"
   puts $marker "P10_PS_ACTIVITY_LED_ACTIVE_LOW=true"
@@ -335,6 +356,16 @@ if {$campaign eq "p10_3"} {
 } else {
   puts $marker "P10_PS_GPIO_ENABLED=false"
   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=DISABLED"
+}
+if {$campaign eq "p10_3f"} {
+  set forensic_bram_marker [expr {$forensic_bram_inferred ? "true" : "false"}]
+  puts $marker "P10_FIRST_FAULT_FORENSICS=true"
+  puts $marker "P10_FORENSIC_SNAPSHOT_WORDS=64"
+  puts $marker "P10_FORENSIC_EVENT_DEPTH=256"
+  puts $marker "P10_FORENSIC_EVENT_WORDS=8"
+  puts $marker "P10_FORENSIC_RESET_POLICY=NO_FUNCTIONAL_RESET"
+  puts $marker "P10_FORENSIC_BRAM_INFERRED=$forensic_bram_marker"
+  puts $marker "P10_FORENSIC_BRAM_PRIMITIVES=$forensic_bram_count"
 }
 if {$lane_count == 4} {
   puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_ACTIVITY_LED2_LANE1_ACTIVITY_LED3_LANE2_ACTIVITY_LED4_LANE3_ACTIVITY"

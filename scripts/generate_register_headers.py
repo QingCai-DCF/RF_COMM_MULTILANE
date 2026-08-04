@@ -180,6 +180,13 @@ def render(data: dict[str, Any]) -> dict[Path, str]:
             "  }",
             "  return -2;",
             "}",
+            "",
+            "#define IR_P10_FF_SNAPSHOT_WORDS_4LANE 64u",
+            "#define IR_P10_FF_EVENT_DEPTH 256u",
+            "#define IR_P10_FF_EVENT_WORDS 8u",
+            "#define IR_P10_FF_ARCHIVE_MAGIC 0x41524348u",
+            "#define IR_P10_FF_CLEAR_KEY_ARM 0x46524F5Au",
+            "#define IR_P10_FF_CLEAR_KEY_COMMIT 0x434C5241u",
         ]
     )
     py.extend(
@@ -243,6 +250,13 @@ def render(data: dict[str, Any]) -> dict[Path, str]:
             "            return words",
             "    raise RuntimeError('unstable P10.2 counter snapshot')",
             "",
+            "P10_FF_SNAPSHOT_WORDS_4LANE = 64",
+            "P10_FF_EVENT_DEPTH = 256",
+            "P10_FF_EVENT_WORDS = 8",
+            "P10_FF_ARCHIVE_MAGIC = 0x41524348",
+            "P10_FF_CLEAR_KEY_ARM = 0x46524F5A",
+            "P10_FF_CLEAR_KEY_COMMIT = 0x434C5241",
+            "",
         ]
     )
 
@@ -261,6 +275,10 @@ def render(data: dict[str, Any]) -> dict[Path, str]:
         "p10_1_additive_base": "0x0900",
         "p10_2_additive_base": "0x0B00",
         "p10_2_snapshot_words": 128,
+        "p10_first_fault_additive_base": "0x0D10",
+        "p10_first_fault_snapshot_words_4lane": 64,
+        "p10_first_fault_event_depth": 256,
+        "p10_first_fault_event_words": 8,
         "p10_1_64bit_register_pairs": [
             {
                 "name": base_name,
