@@ -65,7 +65,7 @@ EXPECTED_MODULE_BINDING = {
     "F3": {"small_board_id": "B0004", "endpoint": "fixed", "position": "J11-B", "lane": 3},
     "R0": {"small_board_id": "A0010", "endpoint": "rotating", "position": "J10-A", "lane": 0},
     "R1": {"small_board_id": "A0017", "endpoint": "rotating", "position": "J10-B", "lane": 1},
-    "R2": {"small_board_id": "B0015", "endpoint": "rotating", "position": "J11-A", "lane": 2},
+    "R2": {"small_board_id": "B0023", "endpoint": "rotating", "position": "J11-A", "lane": 2},
     "R3": {"small_board_id": "B0017", "endpoint": "rotating", "position": "J11-B", "lane": 3},
 }
 RUN_DIRECTORIES = (

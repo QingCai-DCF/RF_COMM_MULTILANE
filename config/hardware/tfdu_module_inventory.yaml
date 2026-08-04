@@ -25,7 +25,7 @@ p10_3_current_installation:
     F3: {small_board_id: "B0004", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
     R0: {small_board_id: "A0010", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
     R1: {small_board_id: "A0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
-    R2: {small_board_id: "B0015", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
+    R2: {small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
     R3: {small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
 postfreeze_user_provided_small_board_identifiers:
   record_id: "P10_3_USER_PROVIDED_TFDU_SMALL_BOARD_IDS_2026_08_04"
@@ -43,6 +43,20 @@ postfreeze_user_provided_small_board_identifiers:
     R1: {inventory_module_id: "R1", small_board_id: "A0017"}
     R2: {inventory_module_id: "R2", small_board_id: "B0015"}
     R3: {inventory_module_id: "R3", small_board_id: "B0017"}
+r2_replacement_2026_08_04:
+  record_id: "P10_3_USER_REPORTED_R2_REPLACEMENT_B0015_TO_B0023"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the current Codex task"
+  user_statement: "R2 B0015 was replaced by new B0023"
+  endpoint: "AX7020-R/JTAG:210512180081"
+  position: "J11-A"
+  logical_module: "R2"
+  removed_small_board_id: "B0015"
+  installed_small_board_id: "B0023"
+  identity_verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action: false
+  electronic_status: "PENDING_BOUNDED_LANE2_RAW_RETEST"
 accepted_baseline:
   - module_id: "F0"
     endpoint: "AX7020-F/JTAG:210249855178"
@@ -98,10 +112,22 @@ quarantine:
     history: "Removed before accepted P10.1R run p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6."
     inventory_status: "QUARANTINED_NOT_ACCEPTED"
     eligible_for_future_four_lane_use: false
+  - historical_record_id: "REMOVED_R2_B0015_AFTER_P10_3_RAW_FAILURE"
+    small_board_id: "B0015"
+    historical_endpoint: "AX7020-R/JTAG:210512180081"
+    historical_position: "J11-A"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "P10.3 run p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef observed R2-to-F2 raw connectivity failure: F2 received 5 of 64 requested raw events."
+      - "The end-to-end failure did not uniquely attribute the fault to B0015."
+    history: "User reported replacing this R2 small board with new B0023 on 2026-08-04. Historical B0015 evidence remains unchanged."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
 pending_electronic_intake:
   - {module_id: "F2", small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
   - {module_id: "F3", small_board_id: "B0004", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
-  - {module_id: "R2", small_board_id: "B0015", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
+  - {module_id: "R2", small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
   - {module_id: "R3", small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
 evidence:
   p10_1r_final: "evidence/generated/p10_1r_final_summary.json"

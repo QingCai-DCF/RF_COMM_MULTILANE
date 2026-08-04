@@ -1420,7 +1420,7 @@ set rc [catch {
     error "P10 immutable current-run environment marker required"
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
-  set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN)$} $p10_stage]
+  set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST)$} $p10_stage]
   if {!$p10_1r_stage_ok && !$p10_3_stage_ok} { error "unsupported P10 XSDB stage" }
   if {$p10_campaign_p103} {
     if {![regexp {^p10_3_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10.3 run id" }

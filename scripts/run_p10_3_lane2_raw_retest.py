@@ -1,0 +1,947 @@
+#!/usr/bin/env python3
+"""Bounded, fail-closed P10.3 lane2 raw-connectivity retest.
+
+This wrapper exists only for the user-reported R2 replacement B0015 -> B0023.
+It executes two independent raw-only directions under one immutable run ID so
+one failed direction cannot suppress observation of the reciprocal direction.
+
+require-user-hw-authorization
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import os
+import re
+import shutil
+import struct
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import run_p10_3_ax7020_4lane_hardware as p103
+
+
+ROOT = p103.ROOT
+AUTH = ROOT / "config/p10_3_lane2_raw_retest_current_run_authorization.json"
+HW_ROOT = ROOT / "evidence/hardware/p10_3_raw_connectivity"
+GENERATED = ROOT / "evidence/generated"
+REPORTS = ROOT / "reports"
+PREVIOUS_BLOCKER = GENERATED / "p10_3_lane2_directional_connectivity_blocker.json"
+SCOPE = f"{p103.SCOPE}/LANE2_RAW_CONNECTIVITY_RETEST"
+TCL_STAGE = "P10_3-LANE2_RAW_RETEST"
+DIRECTIONS = ("f2_to_r2", "r2_to_f2")
+STAGE_TIMEOUT_SECONDS = 600
+MAXIMUM_ACTIVE_RUNTIME_SECONDS = 1200
+MAXIMUM_WRAPPER_RUNTIME_SECONDS = 1800
+RUN_RE = re.compile(
+    r"^p10_3_raw_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}_[0-9a-f]{8}_[0-9a-f]{8}$"
+)
+
+AUTH_INPUT_PATHS = (
+    p103.GOAL,
+    p103.FREEZE,
+    p103.WIRING,
+    p103.INVENTORY,
+    PREVIOUS_BLOCKER,
+    ROOT / "PROJECT_CONSTRAINTS.txt",
+    ROOT / "AGENTS.md",
+    ROOT / "config/register_map/ir_axi_regs.yaml",
+    ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
+    ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
+    ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
+    ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+    ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+    ROOT / "scripts/hw/p10_program_dual_shutdown.tcl",
+    p103.STAGE_TCL,
+    ROOT / "scripts/p10_hardware_runtime.py",
+    ROOT / "scripts/run_p10_3_ax7020_4lane_hardware.py",
+    Path(__file__).resolve(),
+)
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def build_plans() -> dict[str, list[p103.Case]]:
+    return {
+        "f2_to_r2": [
+            p103.Case("lane2_f2_to_r2_receive_only_5000ms", 11,
+                      idle=5000, timeout=15_000),
+            p103.Case("lane2_F2_to_R2_raw_64", 2, lane=4, direction=0,
+                      rate=2, rawtarget=64, spacing=1024, timeout=30_000),
+            p103.Case("lane2_F2_to_R2_raw_1024", 2, lane=4, direction=0,
+                      rate=2, rawtarget=1024, spacing=1024, timeout=30_000),
+        ],
+        "r2_to_f2": [
+            p103.Case("lane2_r2_to_f2_receive_only_5000ms", 11,
+                      idle=5000, timeout=15_000),
+            p103.Case("lane2_R2_to_F2_raw_64", 2, lane=4, direction=1,
+                      rate=2, rawtarget=64, spacing=1024, timeout=30_000),
+            p103.Case("lane2_R2_to_F2_raw_1024", 2, lane=4, direction=1,
+                      rate=2, rawtarget=1024, spacing=1024, timeout=30_000),
+        ],
+    }
+
+
+def validate_plans() -> list[str]:
+    errors: list[str] = []
+    plans = build_plans()
+    if tuple(plans) != DIRECTIONS:
+        errors.append("lane2 diagnostic direction order mismatch")
+    for name, items in plans.items():
+        expected_direction = 0 if name == "f2_to_r2" else 1
+        if len(items) != 3 or items[0].command != 11:
+            errors.append(f"{name}: exact receive-only/raw64/raw1024 set required")
+        raw_targets = []
+        for item in items:
+            try:
+                item.plan_line()
+            except ValueError as exc:
+                errors.append(str(exc))
+            errors.extend(p103.case_semantic_errors(item))
+            if item.command == 2:
+                raw_targets.append(item.rawtarget)
+                if item.lane != 4 or item.direction != expected_direction or \
+                        item.rate != 2 or item.spacing != 1024:
+                    errors.append(f"{item.label}: raw lane/direction/rate/spacing mismatch")
+            elif item.command == 11:
+                if item.lane != 0 or item.idle != 5000:
+                    errors.append(f"{item.label}: receive-only vector mismatch")
+            else:
+                errors.append(f"{item.label}: non-raw diagnostic command forbidden")
+        if raw_targets != [64, 1024]:
+            errors.append(f"{name}: exact raw target order mismatch")
+    return errors
+
+
+def expected_inputs() -> dict[str, dict[str, Any]]:
+    output: dict[str, dict[str, Any]] = {}
+    for path in AUTH_INPUT_PATHS:
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        output[p103.rel(path)] = {
+            "sha256": p103.sha256(path), "bytes": path.stat().st_size,
+        }
+    return output
+
+
+def validate_static_inputs() -> tuple[dict[str, Any], dict[str, Path], list[str]]:
+    errors = [*p103.validate_goal_files(), *p103.validate_baseline_refs()]
+    try:
+        freeze, artifacts = p103.load_freeze()
+    except RuntimeError as exc:
+        return {}, {}, [*errors, str(exc)]
+    _, inventory, intake_errors = p103.validate_wiring_inventory()
+    errors.extend(intake_errors)
+    errors.extend(validate_plans())
+    active = inventory.get("p10_3_current_installation", {}).get("modules", {})
+    if active.get("F2", {}).get("small_board_id") != "B0001":
+        errors.append("F2 active identity must remain B0001")
+    if active.get("R2", {}).get("small_board_id") != "B0023":
+        errors.append("R2 active identity must be replacement B0023")
+    replacement = inventory.get("r2_replacement_2026_08_04", {})
+    if replacement.get("removed_small_board_id") != "B0015" or \
+            replacement.get("installed_small_board_id") != "B0023" or \
+            replacement.get("electronic_status") != "PENDING_BOUNDED_LANE2_RAW_RETEST":
+        errors.append("R2 replacement provenance/status mismatch")
+    try:
+        tcl = p103.STAGE_TCL.read_text(encoding="utf-8")
+        if "LANE2_RAW_RETEST" not in tcl:
+            errors.append("XSDB executor does not recognize bounded lane2 retest stage")
+        expected_inputs()
+    except OSError as exc:
+        errors.append(f"diagnostic input missing: {exc}")
+    if p103.git("branch", "--show-current") != p103.BRANCH:
+        errors.append("P10.3 branch mismatch")
+    return freeze, artifacts, errors
+
+
+def expected_run_id(freeze: dict[str, Any]) -> str:
+    artifacts = {p103.artifact_key(item): item for item in freeze["artifacts"]}
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    return (
+        f"p10_3_raw_{stamp}_{freeze['source_commit'][:8]}_"
+        f"{artifacts['fixed:functional_bitstream']['sha256'][:8]}_"
+        f"{artifacts['rotating:functional_bitstream']['sha256'][:8]}"
+    )
+
+
+def prepare_authorization(run_id: str | None) -> dict[str, Any]:
+    if os.environ.get("NO_HARDWARE") != "1" or os.environ.get(
+            "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() not in {
+                "false", "0", "no",
+            }:
+        raise RuntimeError("authorization preparation requires NO_HARDWARE=1 and current authorization false")
+    freeze, _, errors = validate_static_inputs()
+    if p103.git("status", "--porcelain"):
+        errors.append("authorization preparation requires a clean worktree")
+    if errors:
+        raise RuntimeError("; ".join(errors))
+    actual_run_id = run_id or expected_run_id(freeze)
+    if not RUN_RE.fullmatch(actual_run_id):
+        raise RuntimeError("invalid lane2 raw-retest run ID")
+    parent = p103.git("rev-parse", "HEAD")
+    plans = build_plans()
+    record = {
+        "schema_version": 1,
+        "authorization_id": "P10_3-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "status": "AUTHORIZED",
+        "scope": SCOPE,
+        "branch": p103.BRANCH,
+        "run_id": actual_run_id,
+        "goal_sha256": p103.GOAL_SHA256,
+        "artifact_source_commit": freeze["source_commit"],
+        "diagnostic_runner_parent_commit": parent,
+        "authorization_parent_commit": parent,
+        "artifact_freeze": p103.rel(p103.FREEZE),
+        "artifact_freeze_sha256": p103.sha256(p103.FREEZE),
+        "artifacts": freeze["artifacts"],
+        "artifact_bundle_sha256": p103.hash_text(json.dumps(
+            freeze["artifacts"], sort_keys=True, separators=(",", ":")
+        )),
+        "inputs": expected_inputs(),
+        "actual_wiring_sha256": p103.sha256(p103.WIRING),
+        "module_inventory_sha256": p103.sha256(p103.INVENTORY),
+        "previous_blocker": {
+            "path": p103.rel(PREVIOUS_BLOCKER),
+            "sha256": p103.sha256(PREVIOUS_BLOCKER),
+            "bytes": PREVIOUS_BLOCKER.stat().st_size,
+        },
+        "part": p103.EXPECTED_PART,
+        "board_binding": {
+            "fixed": "AX7020-F/JTAG:210249855178",
+            "rotating": "AX7020-R/JTAG:210512180081",
+        },
+        "module_binding": p103.EXPECTED_MODULE_BINDING,
+        "replacement": {
+            "logical_module": "R2", "position": "AX7020-R/J11-A",
+            "removed_small_board_id": "B0015",
+            "installed_small_board_id": "B0023",
+            "source": "Direct user statement on 2026-08-04",
+            "identity_independently_verified": False,
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
+        },
+        "lane": 2,
+        "lane_pair": "F2-R2",
+        "allowed_lane_masks": [4],
+        "maximum_lane_mask": 4,
+        "allowed_hardware_stages": list(DIRECTIONS),
+        "tcl_stage": TCL_STAGE,
+        "plan_sha256": {
+            name: p103.hash_text(p103.plan_text(plans[name])) for name in DIRECTIONS
+        },
+        "stimulus": {
+            "commands": ["receive_only_5000ms", "raw_64", "raw_1024"],
+            "directions": ["F2_TO_R2", "R2_TO_F2"],
+            "rate_select": 2,
+            "raw_spacing_cycles": 1024,
+            "requested_txd_high_cycles": 8,
+            "phy_clock_hz": 64000000,
+            "requested_txd_high_ns": 125,
+            "nominal_pulse_duty_percent": 0.78125,
+            "framed_traffic": False,
+        },
+        "runtime_limits": {
+            "per_direction_stage_seconds": STAGE_TIMEOUT_SECONDS,
+            "active_functional_total_seconds": MAXIMUM_ACTIVE_RUNTIME_SECONDS,
+            "wrapper_seconds": MAXIMUM_WRAPPER_RUNTIME_SECONDS,
+            "formal_run_seconds": 0,
+        },
+        "retry_override": {
+            "goal_diagnostic_limit_previously_exhausted": True,
+            "new_diagnostic_run_ids_authorized": 1,
+            "this_run_consumes_override": True,
+            "campaign_wide_unlimited_override": False,
+            "reason": "User replaced R2 B0015 with B0023 and explicitly requested a new raw-connectivity test.",
+        },
+        "user_authorization_received_on": "2026-08-04",
+        "user_authorization_statement": "我已将R2  B0015换为新的B0023，请重新测试raw连通性",
+        "authorization_interpretation": (
+            "One fresh immutable lane2 raw-only run ID covering F2-to-R2 and R2-to-F2. "
+            "It does not authorize the remaining P10.3 campaign or additional retries."
+        ),
+        "current_run_hardware_authorization": True,
+        "hardware_actions_executed": False,
+        "shutdown_policy": {
+            "before": True, "between_directions": True,
+            "on_error": True, "on_timeout": True, "on_ctrl_c": True,
+            "on_normal_exit": True, "after": True, "verify_both": True,
+        },
+        "forbidden": {
+            "ethernet": True, "movement": True, "rotation": True,
+            "realignment": True, "module_swap_during_run": True,
+            "rewiring": True, "lane_mask_outside_0x4": True,
+            "framed_or_protocol_test": True, "two_hour_test": True,
+            "p11": True,
+        },
+        "network_used": False,
+        "movement": False,
+        "rotation": False,
+        "realignment": False,
+        "rewiring_by_codex": False,
+        "two_hour_test": False,
+        "p11": False,
+        "generated_at_utc": utc_now(),
+        "consumed": False,
+    }
+    p103.write_json(AUTH, record)
+    return record
+
+
+def validate_authorization(path: Path, run_id: str) -> tuple[
+        dict[str, Any], dict[str, Path], list[str]]:
+    freeze, artifacts, errors = validate_static_inputs()
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return {}, artifacts, [*errors, f"authorization unreadable: {exc}"]
+    plans = build_plans()
+    expected = {
+        "schema_version": 1,
+        "authorization_id": "P10_3-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "status": "AUTHORIZED",
+        "scope": SCOPE,
+        "branch": p103.BRANCH,
+        "run_id": run_id,
+        "goal_sha256": p103.GOAL_SHA256,
+        "artifact_source_commit": freeze.get("source_commit"),
+        "artifact_freeze": p103.rel(p103.FREEZE),
+        "artifact_freeze_sha256": p103.sha256(p103.FREEZE),
+        "artifact_bundle_sha256": p103.hash_text(json.dumps(
+            freeze.get("artifacts", []), sort_keys=True, separators=(",", ":")
+        )),
+        "actual_wiring_sha256": p103.sha256(p103.WIRING),
+        "module_inventory_sha256": p103.sha256(p103.INVENTORY),
+        "part": p103.EXPECTED_PART,
+        "board_binding": {
+            "fixed": "AX7020-F/JTAG:210249855178",
+            "rotating": "AX7020-R/JTAG:210512180081",
+        },
+        "module_binding": p103.EXPECTED_MODULE_BINDING,
+        "lane": 2,
+        "lane_pair": "F2-R2",
+        "allowed_lane_masks": [4],
+        "maximum_lane_mask": 4,
+        "allowed_hardware_stages": list(DIRECTIONS),
+        "tcl_stage": TCL_STAGE,
+        "plan_sha256": {
+            name: p103.hash_text(p103.plan_text(plans[name])) for name in DIRECTIONS
+        },
+        "runtime_limits": {
+            "per_direction_stage_seconds": STAGE_TIMEOUT_SECONDS,
+            "active_functional_total_seconds": MAXIMUM_ACTIVE_RUNTIME_SECONDS,
+            "wrapper_seconds": MAXIMUM_WRAPPER_RUNTIME_SECONDS,
+            "formal_run_seconds": 0,
+        },
+        "current_run_hardware_authorization": True,
+        "hardware_actions_executed": False,
+        "shutdown_policy": {
+            "before": True, "between_directions": True,
+            "on_error": True, "on_timeout": True, "on_ctrl_c": True,
+            "on_normal_exit": True, "after": True, "verify_both": True,
+        },
+        "forbidden": {
+            "ethernet": True, "movement": True, "rotation": True,
+            "realignment": True, "module_swap_during_run": True,
+            "rewiring": True, "lane_mask_outside_0x4": True,
+            "framed_or_protocol_test": True, "two_hour_test": True,
+            "p11": True,
+        },
+        "network_used": False,
+        "movement": False,
+        "rotation": False,
+        "realignment": False,
+        "rewiring_by_codex": False,
+        "two_hour_test": False,
+        "p11": False,
+        "consumed": False,
+    }
+    errors.extend(
+        f"authorization {key} mismatch" for key, value in expected.items()
+        if record.get(key) != value
+    )
+    if record.get("artifacts") != freeze.get("artifacts"):
+        errors.append("authorization artifact bundle differs from freeze")
+    try:
+        inputs = expected_inputs()
+    except OSError as exc:
+        inputs = {}
+        errors.append(f"authorization input missing: {exc}")
+    if record.get("inputs") != inputs:
+        errors.append("authorization exact input set/hash/size mismatch")
+    if record.get("previous_blocker") != {
+            "path": p103.rel(PREVIOUS_BLOCKER),
+            "sha256": p103.sha256(PREVIOUS_BLOCKER),
+            "bytes": PREVIOUS_BLOCKER.stat().st_size}:
+        errors.append("authorization previous blocker binding mismatch")
+    replacement = record.get("replacement", {})
+    if replacement.get("removed_small_board_id") != "B0015" or \
+            replacement.get("installed_small_board_id") != "B0023" or \
+            replacement.get("identity_independently_verified") is not False:
+        errors.append("authorization replacement binding mismatch")
+    retry = record.get("retry_override", {})
+    if retry.get("new_diagnostic_run_ids_authorized") != 1 or \
+            retry.get("this_run_consumes_override") is not True or \
+            retry.get("campaign_wide_unlimited_override") is not False:
+        errors.append("authorization retry override is not exactly one run ID")
+    if not RUN_RE.fullmatch(run_id):
+        errors.append("unsafe lane2 raw-retest run ID")
+    if path.resolve() != AUTH.resolve():
+        errors.append("canonical lane2 raw-retest authorization path required")
+    if p103.git("branch", "--show-current") != p103.BRANCH:
+        errors.append("branch mismatch")
+    if p103.git("status", "--porcelain"):
+        errors.append("hardware run requires a clean worktree")
+    parent = str(record.get("authorization_parent_commit", ""))
+    runner_parent = str(record.get("diagnostic_runner_parent_commit", ""))
+    if parent != runner_parent or not p103.git_commit_exists(parent) or \
+            not p103.git_is_ancestor(parent):
+        errors.append("authorization parent/diagnostic runner commit mismatch")
+    try:
+        if p103.git("rev-parse", "HEAD^") != parent:
+            errors.append("authorization must be the immediate committed child of its parent")
+    except Exception:
+        errors.append("authorization parent relationship unavailable")
+    if not p103.file_matches_head(path):
+        errors.append("authorization file is not the committed HEAD version")
+    return record, artifacts, errors
+
+
+def expected_case_fields(item: p103.Case) -> dict[str, int]:
+    values = (
+        item.command, item.expected_status, item.flags, item.lane,
+        item.direction, item.rate, item.weights, item.size, item.ring,
+        item.cache, item.txoff, item.rxoff, item.timeout, item.session,
+        item.path, item.object, item.dropdata, item.dropack, item.unavailable,
+        item.rawtarget, item.spacing, item.stale, item.initialseq,
+        item.faultflags, item.idle, item.injectmask, item.injectdelay,
+    )
+    return dict(zip(p103.CASE_ROW_FIELDS, values))
+
+
+def evaluate_direction(name: str, stage_dir: Path,
+                       process: dict[str, Any]) -> dict[str, Any]:
+    errors: list[str] = []
+    markers = p103.parse_markers(stage_dir / "xsdb.result.txt")
+    if process.get("returncode") != 0 or process.get("timed_out"):
+        errors.append("XSDB process failed or timed out")
+    if markers.get("P10_SAFE_BOOT") != "PASS":
+        errors.append("dual safe-boot marker missing")
+    ledger = stage_dir / "dumps/observations.psv"
+    rows: list[dict[str, Any]] = []
+    if ledger.is_file():
+        with ledger.open(encoding="ascii", newline="") as handle:
+            rows = [p103.integer_row(row) for row in csv.DictReader(
+                handle, delimiter="|"
+            )]
+    else:
+        errors.append("observation ledger missing")
+
+    terminal_rows = [row for row in rows
+                     if str(row.get("label", "")).endswith("_endpoint_shutdown")]
+    body = [row for row in rows
+            if not str(row.get("label", "")).endswith("_endpoint_shutdown")]
+    plan = build_plans()[name]
+    if len(body) > len(plan):
+        errors.append("observation ledger contains extra diagnostic cases")
+    for index, row in enumerate(body):
+        if index >= len(plan):
+            break
+        item = plan[index]
+        if row.get("label") != item.label:
+            errors.append(f"case order mismatch: expected {item.label}")
+            continue
+        for key, value in expected_case_fields(item).items():
+            if row.get(key) != value:
+                errors.append(f"{item.label}:{key} differs from immutable plan")
+    if process.get("returncode") == 0 and not process.get("timed_out"):
+        if len(body) != len(plan):
+            errors.append("successful XSDB process did not execute the exact plan")
+        if len(terminal_rows) != 1 or rows[-1] is not terminal_rows[0]:
+            errors.append("successful XSDB process lacks one final endpoint shutdown")
+        if markers.get("P10_XSDB_STAGE_RESULT") != "PASS":
+            errors.append("successful XSDB process lacks stage PASS marker")
+    elif markers.get("P10_XSDB_STAGE_RESULT") != "FAIL":
+        errors.append("failed XSDB process lacks stage FAIL marker")
+
+    case_results: dict[str, dict[str, Any]] = {
+        item.label: {
+            "status": "NOT_RUN", "command": item.command,
+            "requested_raw_pulses": item.rawtarget if item.command == 2 else 0,
+        } for item in plan
+    }
+    safety_observations: list[dict[str, Any]] = []
+    for row in rows:
+        label = str(row.get("label", "unknown"))
+        case_errors: list[str] = []
+        try:
+            fixed_mail_path = Path(row["fixed_dump_path"]).resolve()
+            rotating_mail_path = Path(row["rotating_dump_path"]).resolve()
+            if not p103.inside(fixed_mail_path, stage_dir) or \
+                    not p103.inside(rotating_mail_path, stage_dir):
+                raise ValueError("mailbox dump path escaped stage")
+            fixed_words = p103.parse_mailbox(fixed_mail_path)
+            rotating_words = p103.parse_mailbox(rotating_mail_path)
+            pair_errors, _ = p103.generic_pair(row, fixed_words, rotating_words)
+            case_errors.extend(pair_errors)
+            fixed_snapshot_path = stage_dir / "dumps" / f"{label}.fixed.p10_2.psv"
+            rotating_snapshot_path = stage_dir / "dumps" / f"{label}.rotating.p10_2.psv"
+            fixed_snapshot = p103.parse_p103(fixed_snapshot_path)
+            rotating_snapshot = p103.parse_p103(rotating_snapshot_path)
+            case_errors.extend(p103.snapshot_errors(label, "fixed", fixed_snapshot))
+            case_errors.extend(p103.snapshot_errors(label, "rotating", rotating_snapshot))
+            safety_observations.append({
+                "label": label,
+                "fixed_safety_fault_mask": fixed_snapshot["safety_fault_mask"],
+                "rotating_safety_fault_mask": rotating_snapshot["safety_fault_mask"],
+                "fixed_lane2": fixed_snapshot["modules"][2],
+                "rotating_lane2": rotating_snapshot["modules"][6],
+            })
+            if label in case_results:
+                result = case_results[label]
+                result.update({
+                    "fixed_command_status": fixed_words[8],
+                    "rotating_command_status": rotating_words[8],
+                    "fixed_service_state": fixed_words[3],
+                    "rotating_service_state": rotating_words[3],
+                    "fixed_mailbox": p103.rel(fixed_mail_path),
+                    "rotating_mailbox": p103.rel(rotating_mail_path),
+                    "fixed_snapshot": p103.rel(fixed_snapshot_path),
+                    "rotating_snapshot": p103.rel(rotating_snapshot_path),
+                })
+                if row["command"] == 2:
+                    sender_role = "fixed" if row["direction"] == 0 else "rotating"
+                    receiver_role = "rotating" if row["direction"] == 0 else "fixed"
+                    sender_snapshot = fixed_snapshot if sender_role == "fixed" else rotating_snapshot
+                    receiver_snapshot = rotating_snapshot if receiver_role == "rotating" else fixed_snapshot
+                    sender_index = 2 if sender_role == "fixed" else 6
+                    receiver_index = 6 if receiver_role == "rotating" else 2
+                    sender_tx = sender_snapshot["modules"][sender_index]["physical_tx"]
+                    receiver_raw = receiver_snapshot["modules"][receiver_index]["raw_rx"]
+                    target = row["rawtarget"]
+                    result.update({
+                        "sender_role": sender_role,
+                        "receiver_role": receiver_role,
+                        "sender_module": "F2" if sender_role == "fixed" else "R2",
+                        "receiver_module": "R2" if receiver_role == "rotating" else "F2",
+                        "sender_physical_tx_count": sender_tx,
+                        "receiver_raw_rx_count": receiver_raw,
+                        "receiver_allowed_raw_count_min": target,
+                        "receiver_allowed_raw_count_max": target + 8,
+                        "tx_high_max_cycles": sender_snapshot["modules"][sender_index]["tx_high_max"],
+                        "rolling_duty_high_max_cycles": sender_snapshot["modules"][sender_index]["duty_high_max"],
+                    })
+                    if sender_tx != target:
+                        case_errors.append(f"{label}: physical TX count {sender_tx} != {target}")
+                    if not target <= receiver_raw <= target + 8:
+                        case_errors.append(
+                            f"{label}: remote raw count {receiver_raw} outside {target}..{target + 8}"
+                        )
+                if fixed_words[8] != 0 or rotating_words[8] != 0 or \
+                        fixed_words[3] != 4 or rotating_words[3] != 4:
+                    case_errors.append(f"{label}: endpoint command did not finish cleanly")
+                result["errors"] = case_errors
+                result["status"] = "PASS" if not case_errors else "FAIL"
+        except (OSError, ValueError, KeyError, struct.error) as exc:
+            case_errors.append(f"{label}: {exc}")
+            if label in case_results:
+                case_results[label]["errors"] = case_errors
+                case_results[label]["status"] = "FAIL"
+        errors.extend(case_errors)
+
+    raw_results = [case_results[item.label]["status"]
+                   for item in plan if item.command == 2]
+    receive_only_status = case_results[plan[0].label]["status"]
+    endpoint_shutdown = (
+        len(terminal_rows) == 1 and
+        markers.get("P10_ENDPOINT_SHUTDOWN_FIXED") == "PASS" and
+        markers.get("P10_ENDPOINT_SHUTDOWN_ROTATING") == "PASS"
+    )
+    if not endpoint_shutdown and process.get("returncode") == 0:
+        errors.append("endpoint shutdown command not evidenced")
+    status = "PASS" if (
+        not errors and receive_only_status == "PASS" and
+        raw_results == ["PASS", "PASS"] and endpoint_shutdown
+    ) else "FAIL"
+    summary = {
+        "schema_version": 1,
+        "test_id": f"P10_3-HW-LANE2-RAW-{name.upper()}",
+        "status": status,
+        "evidence_class": "RAW_PHYSICAL_ONLY",
+        "direction": "F2_TO_R2" if name == "f2_to_r2" else "R2_TO_F2",
+        "lane": 2,
+        "lane_mask": "0x4",
+        "module_binding": {"F2": "B0001", "R2": "B0023"},
+        "process": process,
+        "markers": markers,
+        "observation_count": len(rows),
+        "receive_only_status": receive_only_status,
+        "case_results": case_results,
+        "endpoint_shutdown_command": "PASS" if endpoint_shutdown else "NOT_CONFIRMED",
+        "safety_observations": safety_observations,
+        "errors": errors,
+        "generated_at_utc": utc_now(),
+    }
+    p103.write_json(stage_dir / "stage_summary.json", summary)
+    return summary
+
+
+def invoke_direction(name: str, run_root: Path, auth: Path,
+                     artifacts: dict[str, Path], ps7: dict[str, Path],
+                     env: dict[str, str], abort: Path) -> dict[str, Any]:
+    stage_dir = run_root / name
+    dump_dir = stage_dir / "dumps"
+    dump_dir.mkdir(parents=True, exist_ok=True)
+    plan = stage_dir / f"{name}.plan"
+    p103.write_text(plan, p103.plan_text(build_plans()[name]))
+    result = stage_dir / "xsdb.result.txt"
+    command = [
+        str(p103.XSDB), str(p103.STAGE_TCL), "tcp:localhost:3121",
+        p103.EXPECTED_FIXED_SERIAL, p103.EXPECTED_ROTATING_SERIAL,
+        str(artifacts["fixed:functional_bitstream"]),
+        str(artifacts["rotating:functional_bitstream"]),
+        str(artifacts["fixed:elf"]), str(artifacts["rotating:elf"]),
+        str(ps7["fixed"]), str(ps7["rotating"]), str(plan), str(dump_dir),
+        str(abort), str(result), TCL_STAGE, str(auth), run_root.name,
+        f"0x{p103.EXPECTED_PL_BUILD['fixed']:08X}",
+        f"0x{p103.EXPECTED_PL_BUILD['rotating']:08X}",
+    ]
+    process = p103.run_bounded(
+        command, stage_dir / "xsdb.stdout.log", stage_dir / "xsdb.stderr.log",
+        STAGE_TIMEOUT_SECONDS, env,
+    )
+    return evaluate_direction(name, stage_dir, process)
+
+
+def initialize_run_root(run_root: Path, auth: Path,
+                        record: dict[str, Any]) -> dict[str, Path]:
+    run_root.mkdir(parents=True, exist_ok=False)
+    for name in ("authorization", "artifacts/fixed", "artifacts/rotating",
+                 "wiring", *DIRECTIONS, "shutdown", "raw_logs", "final"):
+        (run_root / name).mkdir(parents=True, exist_ok=False)
+    copies = (
+        (auth, run_root / "authorization/immutable_authorization.json"),
+        (p103.GOAL, run_root / "authorization/goal.md"),
+        (p103.FREEZE, run_root / "artifacts/artifact_freeze.json"),
+        (p103.WIRING, run_root / "wiring/p10_3_actual_wiring.yaml"),
+        (p103.INVENTORY, run_root / "wiring/tfdu_module_inventory.yaml"),
+        (PREVIOUS_BLOCKER, run_root / "authorization/previous_lane2_blocker.json"),
+    )
+    manifest = []
+    for source, destination in copies:
+        shutil.copy2(source, destination)
+        if p103.sha256(source) != p103.sha256(destination):
+            raise RuntimeError(f"immutable input copy mismatch: {destination}")
+        manifest.append({
+            "source": str(source),
+            "path": destination.relative_to(run_root).as_posix(),
+            "sha256": p103.sha256(destination),
+            "bytes": destination.stat().st_size,
+        })
+    p103.write_json(run_root / "authorization/immutable_input_copy_manifest.json", {
+        "schema_version": 1, "status": "PASS", "files": manifest,
+        "generated_at_utc": utc_now(),
+    })
+    p103.write_text(
+        run_root / "authorization/PHYSICAL_AND_SCOPE_ATTESTATION.txt",
+        "PRE_RUN_USER_MODULE_REPLACEMENT=R2:B0015->B0023\n"
+        "REPLACEMENT_POWER_STATE=NOT_STATED_BY_USER;NOT_CLAIMED\n"
+        "CODEX_PHYSICAL_ACTION=false\nETHERNET=false\nMOVEMENT=false\n"
+        "ROTATION=false\nREALIGNMENT=false\nREWIRING_DURING_RUN=false\n"
+        "LANE_MASK=0x4\nFRAMED_TRAFFIC=false\nP11=false\n",
+    )
+    artifacts = {p103.artifact_key(item): (ROOT / item["path"]).resolve()
+                 for item in record["artifacts"]}
+    derived = []
+    ps7: dict[str, Path] = {}
+    for role in ("fixed", "rotating"):
+        destination = run_root / f"artifacts/{role}/ps7_init.tcl"
+        derived.append(p103.extract_ps7_init(artifacts[f"{role}:xsa"], destination))
+        ps7[role] = destination
+    p103.write_json(run_root / "artifacts/derived_artifact_manifest.json", derived)
+    p103.write_json(run_root / "artifacts/authorized_artifact_manifest.json", {
+        "schema_version": 1, "status": "PASS",
+        "artifact_source_commit": record["artifact_source_commit"],
+        "artifact_bundle_sha256": record["artifact_bundle_sha256"],
+        "artifacts": record["artifacts"],
+    })
+    return ps7
+
+
+def render_report(summary: dict[str, Any]) -> str:
+    rows = []
+    for direction in DIRECTIONS:
+        stage = next((item for item in summary["directions"]
+                      if item["direction"] == (
+                          "F2_TO_R2" if direction == "f2_to_r2" else "R2_TO_F2"
+                      )), None)
+        if stage is None:
+            rows.append(f"| {direction.upper()} | NOT_RUN | - | - | - |")
+            continue
+        for result in stage["case_results"].values():
+            if result.get("command") != 2:
+                continue
+            rows.append(
+                f"| {stage['direction']} / {result['requested_raw_pulses']} | "
+                f"{result['status']} | {result.get('sender_physical_tx_count', '-')} | "
+                f"{result.get('receiver_raw_rx_count', '-')} | "
+                f"{result.get('tx_high_max_cycles', '-')} |"
+            )
+    artifact_lines = []
+    for item in summary["artifacts"]:
+        if item["kind"] in {"functional_bitstream", "elf", "shutdown_bitstream"}:
+            artifact_lines.append(
+                f"- {item['role']} {item['kind']}: `{item['sha256']}` — `{item['path']}`"
+            )
+    return "\n".join([
+        "# P10.3 lane2 raw-connectivity retest after R2 replacement",
+        "",
+        f"- Result: `{summary['status']}`",
+        "- Evidence class: `RAW_PHYSICAL_ONLY`",
+        f"- Run ID: `{summary['run_id']}`",
+        "- Active pair: `F2=B0001` ↔ `R2=B0023`",
+        "- Historical removed R2: `B0015` (historical evidence retained)",
+        "- Lane mask used: `0x4`",
+        "",
+        "| Direction / requested pulses | Result | Sender final-path TX count | Remote raw RX count | Max TX-high cycles |",
+        "|---|---|---:|---:|---:|",
+        *rows,
+        "",
+        f"Shutdown fixed: `{summary['SHUTDOWN_FIXED']}`; rotating: `{summary['SHUTDOWN_ROTATING']}`.",
+        "",
+        "## Immutable artifacts",
+        "",
+        *artifact_lines,
+        "",
+        "## Scope boundary",
+        "",
+        "This result concerns only bidirectional lane2 raw pulse connectivity. It does not constitute framed-data, ARQ/SACK, DMA, streaming, four-lane, external electrical, module-health, P11, rotating, or final-product acceptance. The module identity and replacement are user-provided; Codex did not independently read the small-board marking or perform the replacement.",
+        "",
+    ])
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--prepare-authorization", action="store_true")
+    parser.add_argument("--run-id")
+    parser.add_argument("--authorization", type=Path, default=AUTH)
+    parser.add_argument("--execute-hardware", action="store_true")
+    args = parser.parse_args(argv)
+    if args.prepare_authorization:
+        try:
+            record = prepare_authorization(args.run_id)
+        except Exception as exc:
+            print(f"P10_3_LANE2_RAW_AUTHORIZATION=FAIL\nERROR={exc}", file=sys.stderr)
+            return 2
+        print("P10_3_LANE2_RAW_AUTHORIZATION=PASS")
+        print(f"P10_3_LANE2_RAW_RUN_ID={record['run_id']}")
+        print(f"P10_3_LANE2_RAW_AUTHORIZATION_PATH={p103.rel(AUTH)}")
+        print(f"P10_3_LANE2_RAW_AUTHORIZATION_SHA256={p103.sha256(AUTH)}")
+        return 0
+    if not args.execute_hardware or not args.run_id:
+        print("P10_3_LANE2_RAW_RUNNER_REFUSED=PREPARE_OR_EXPLICIT_HARDWARE_RUN_REQUIRED")
+        return 3
+
+    auth = args.authorization.resolve()
+    record, artifacts, errors = validate_authorization(auth, args.run_id)
+    if os.environ.get("NO_HARDWARE") != "0" or os.environ.get(
+            "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "true":
+        errors.append("NO_HARDWARE=0 and CURRENT_RUN_HARDWARE_AUTHORIZATION=true required")
+    run_root = HW_ROOT / args.run_id
+    if run_root.exists():
+        errors.append("run ID directory already exists")
+    if errors:
+        print(json.dumps({"status": "FAIL_PRECONDITION", "errors": errors},
+                         indent=2, ensure_ascii=False), file=sys.stderr)
+        return 3
+
+    try:
+        ps7 = initialize_run_root(run_root, auth, record)
+    except Exception as exc:
+        print(f"P10_3_LANE2_RAW_INITIALIZATION=FAIL\nERROR={exc}", file=sys.stderr)
+        return 3
+    abort = run_root / "authorization/ABORT_NOW.txt"
+    env = {
+        **os.environ,
+        "NO_HARDWARE": "0",
+        "CURRENT_RUN_HARDWARE_AUTHORIZATION": "true",
+        "RF_COMM_P10_HW_AUTH": "P10_FASTTRACK_IMMUTABLE_AUTHORIZED",
+    }
+    server_proc = None
+    shutdowns: list[dict[str, Any]] = []
+    direction_results: list[dict[str, Any]] = []
+    campaign_errors: list[str] = []
+    hardware_actions = False
+    try:
+        server_proc, server = p103.start_hw_server(run_root / "raw_logs")
+        p103.write_json(run_root / "raw_logs/hw_server.json", server)
+        if server.get("status") != "PASS":
+            raise RuntimeError(server.get("reason", "hw_server unavailable"))
+        hardware_actions = True
+        initial = p103.guarded_shutdown(run_root, auth, artifacts,
+                                        "initial_shutdown", env)
+        shutdowns.append(initial)
+        if initial["status"] != "PASS":
+            raise RuntimeError("initial dual shutdown unconfirmed")
+        for name in DIRECTIONS:
+            before = p103.guarded_shutdown(run_root, auth, artifacts,
+                                           f"{name}_before", env)
+            shutdowns.append(before)
+            if before["status"] != "PASS":
+                raise RuntimeError(f"{name} shutdown-before unconfirmed")
+            result: dict[str, Any] | None = None
+            stage_exception: BaseException | None = None
+            try:
+                result = invoke_direction(name, run_root, auth, artifacts,
+                                          ps7, env, abort)
+                direction_results.append(result)
+            except BaseException as exc:
+                stage_exception = exc
+            finally:
+                after = p103.guarded_shutdown(run_root, auth, artifacts,
+                                              f"{name}_after", env)
+                shutdowns.append(after)
+            if after["status"] != "PASS":
+                raise RuntimeError(f"{name} shutdown-after unconfirmed")
+            if stage_exception is not None:
+                if isinstance(stage_exception, KeyboardInterrupt):
+                    raise KeyboardInterrupt from stage_exception
+                raise RuntimeError(f"{name} wrapper exception: {stage_exception}")
+            # Deliberately continue to the reciprocal direction after a
+            # cleanly contained diagnostic FAIL.  Both directions are part of
+            # this one immutable retest and every transition is shutdown-bound.
+            assert result is not None
+        final = p103.guarded_shutdown(run_root, auth, artifacts,
+                                      "final_shutdown", env)
+        shutdowns.append(final)
+        if final["status"] != "PASS":
+            raise RuntimeError("final dual shutdown unconfirmed")
+    except KeyboardInterrupt:
+        campaign_errors.append("Ctrl+C")
+    except Exception as exc:
+        campaign_errors.append(str(exc))
+    finally:
+        if hardware_actions:
+            emergency = p103.guarded_shutdown(run_root, auth, artifacts,
+                                              "finally_emergency", env)
+            shutdowns.append(emergency)
+            if emergency["status"] != "PASS":
+                campaign_errors.append("finally dual shutdown unconfirmed")
+        if server_proc is not None:
+            try:
+                p103.terminate_tree(server_proc)
+            except Exception as exc:
+                campaign_errors.append(f"owned hw_server termination failed: {exc}")
+
+    all_shutdown = bool(shutdowns) and all(
+        item.get("status") == "PASS" for item in shutdowns
+    )
+    both_directions = len(direction_results) == 2 and all(
+        item.get("status") == "PASS" for item in direction_results
+    )
+    status = "PASS" if all_shutdown and both_directions and not campaign_errors else "FAIL"
+    summary = {
+        "schema_version": 1,
+        "test_id": "P10_3-HW-LANE2-RAW-CONNECTIVITY-RETEST",
+        "status": status,
+        "evidence_class": "RAW_PHYSICAL_ONLY",
+        "run_id": args.run_id,
+        "scope": SCOPE,
+        "goal_sha256": p103.GOAL_SHA256,
+        "artifact_source_commit": record["artifact_source_commit"],
+        "artifact_freeze_sha256": record["artifact_freeze_sha256"],
+        "artifact_bundle_sha256": record["artifact_bundle_sha256"],
+        "artifacts": record["artifacts"],
+        "board_binding": record["board_binding"],
+        "module_binding": record["module_binding"],
+        "replacement": record["replacement"],
+        "lane": 2,
+        "lane_pair": "F2-R2",
+        "maximum_lane_mask_authorized": "0x4",
+        "maximum_lane_mask_used": "0x4" if direction_results else "0x0",
+        "directions": direction_results,
+        "hardware_actions_executed": hardware_actions,
+        "current_run_hardware_authorization": False,
+        "authorization_consumed": True,
+        "network_used": False,
+        "movement": False,
+        "rotation": False,
+        "realignment": False,
+        "rewiring_by_codex": False,
+        "framed_traffic": False,
+        "two_hour_test": False,
+        "p11": False,
+        "shutdowns": shutdowns,
+        "SHUTDOWN_FIXED": "PASS" if all_shutdown and all(
+            item.get("SHUTDOWN_FIXED") == "PASS" for item in shutdowns
+        ) else "FAIL",
+        "SHUTDOWN_ROTATING": "PASS" if all_shutdown and all(
+            item.get("SHUTDOWN_ROTATING") == "PASS" for item in shutdowns
+        ) else "FAIL",
+        "scope_boundary": (
+            "Raw bidirectional lane2 physical-connectivity evidence only; no framed, "
+            "protocol, DMA, streaming, four-lane, external electrical, module-health, "
+            "P11, rotating, or final-product acceptance."
+        ),
+        "campaign_status": "P10_3_REMAINS_IN_PROGRESS",
+        "errors": campaign_errors,
+        "generated_at_utc": utc_now(),
+    }
+    p103.write_json(run_root / "final/orchestrator_result.json", summary)
+    p103.evidence_manifest(run_root, status)
+    manifest_errors = p103.verify_evidence_manifest(run_root)
+    if manifest_errors:
+        status = "FAIL"
+        summary["status"] = "FAIL"
+        summary["errors"].extend(manifest_errors)
+        p103.write_json(run_root / "final/orchestrator_result.json", summary)
+        p103.evidence_manifest(run_root, status)
+        manifest_errors = p103.verify_evidence_manifest(run_root)
+
+    manifest_path = run_root / "final/run_evidence_sha256_manifest.json"
+    generated = dict(summary)
+    generated.update({
+        "status": status,
+        "raw_result": p103.rel(run_root / "final/orchestrator_result.json"),
+        "raw_result_sha256": p103.sha256(run_root / "final/orchestrator_result.json"),
+        "run_evidence_manifest": p103.rel(manifest_path),
+        "run_evidence_manifest_sha256": p103.sha256(manifest_path),
+        "manifest_verification": "PASS" if not manifest_errors else "FAIL",
+        "manifest_errors": manifest_errors,
+    })
+    GENERATED.mkdir(parents=True, exist_ok=True)
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    generated_json = GENERATED / "p10_3_lane2_raw_connectivity_retest.json"
+    generated_md = GENERATED / "p10_3_lane2_raw_connectivity_retest.md"
+    report = REPORTS / f"p10_3_lane2_raw_connectivity_retest_{args.run_id}.md"
+    p103.write_json(generated_json, generated)
+    report_text = render_report(generated)
+    p103.write_text(generated_md, report_text)
+    p103.write_text(report, report_text)
+
+    consumed = dict(record)
+    consumed.update({
+        "status": f"CONSUMED_AFTER_LANE2_RAW_RETEST_{status}",
+        "current_run_hardware_authorization": False,
+        "hardware_actions_executed": hardware_actions,
+        "consumed": True,
+        "consumed_at_utc": utc_now(),
+        "result": p103.rel(generated_json),
+        "run_evidence": p103.rel(run_root / "final/orchestrator_result.json"),
+    })
+    p103.write_json(AUTH, consumed)
+    print(f"P10_3_LANE2_RAW_CONNECTIVITY={status}")
+    print(f"P10_3_LANE2_RAW_RUN_ID={args.run_id}")
+    print(f"SHUTDOWN_FIXED={generated['SHUTDOWN_FIXED']}")
+    print(f"SHUTDOWN_ROTATING={generated['SHUTDOWN_ROTATING']}")
+    return 0 if status == "PASS" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
