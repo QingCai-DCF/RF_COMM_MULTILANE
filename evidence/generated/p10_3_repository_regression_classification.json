@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3-OFFLINE-REPOSITORY-REGRESSION-CLASSIFICATION",
+  "status": "PASS",
+  "scope": "OFFLINE_CLASSIFICATION_ONLY_NO_HARDWARE_PROMOTION",
+  "generated_at_utc": "2026-08-04T11:03:56Z",
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "test_fix_commit": "75b120763ad18402b9d3e4f727bb586807298422",
+  "artifact_source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "goal": {
+    "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
+    "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+  },
+  "current_run_authorization": {
+    "path": "config/p10_3_current_run_hardware_authorization.json",
+    "sha256": "fca1085c3c0aaef1475e38ded3794891fb6d229aad5a03a3a78d745f1551f590",
+    "run_id": "p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef",
+    "current_run_hardware_authorization": false,
+    "consumed": true,
+    "status": "CONSUMED_AFTER_P10_3_FAIL"
+  },
+  "offline_actions": {
+    "hardware_actions_executed": false,
+    "no_hardware_static_scan": "PASS",
+    "no_hardware_static_scan_marker": "NO_HARDWARE_ACTIONS_EXECUTED=1",
+    "production_rtl_changed": false,
+    "firmware_changed": false,
+    "hardware_runner_changed": false,
+    "configuration_changed": false,
+    "frozen_artifacts_changed": false,
+    "immutable_hardware_evidence_changed": false,
+    "preexisting_hw_server": {
+      "pid": 36668,
+      "start_time_local": "2026-07-28T09:37:20+08:00",
+      "action_taken": "NONE"
+    }
+  },
+  "remediated_live_source_assertions": {
+    "disposition": "TEST_ONLY_ALIGNMENT_WITH_EXISTING_FOUR_LANE_IMPLEMENTATION",
+    "files": [
+      "tests/test_p10_1_hardware_acceptance.py",
+      "tests/test_p10_1r_hardware_acceptance.py",
+      "tests/test_p10_1r_model.py",
+      "tests/test_p9_runner.py"
+    ],
+    "test_ids": [
+      "test_p10_1_hardware_acceptance.P101HardwareAcceptanceTests.test_duplicate_fault_stimulus_uses_sender_past_sequence",
+      "test_p10_1_hardware_acceptance.P101HardwareAcceptanceTests.test_reset_recovery_reboot_is_scoped_and_safe",
+      "test_p10_1r_hardware_acceptance.P101RHardwareAcceptanceTests.test_formal_stream_uses_bounded_autonomous_host_commands",
+      "test_p10_1r_model.P101RModelTests.test_remediation_defaults_are_frozen",
+      "test_p10_1r_model.P101RModelTests.test_runtime_has_no_active_per_object_optical_ready_roundtrip",
+      "test_p10_1r_model.P101RModelTests.test_runtime_integrity_clean_path_has_no_redundant_digests",
+      "test_p9_runner.P9HardwareDutyEvaluatorTests.test_back_to_back_frames_realign_codec_without_truncating_parser_tail",
+      "test_p9_runner.P9HardwareDutyEvaluatorTests.test_p9_4mbps_uses_tfdu_fir_pulse_and_bounded_duty_admission"
+    ],
+    "changes": [
+      "Duplicate-past-sequence remains protocol-only while the bounded lane-unavailable mask remains the sole asserted physical-fault OR input.",
+      "Reset recovery checks the role-specific expected profile, including the independent P10.3 4-lane profiles.",
+      "P10.1R active firmware checks exclude the disabled legacy implementation by selecting the final preprocessor block.",
+      "Serializer and duty assertions use LANE_COUNT and eligibility_lane instead of hard-coded lane0/lane1 indices.",
+      "Formal runner assertions bind repeated bounded 64-MiB autonomous commands and p10_max_lane_mask."
+    ]
+  },
+  "focused_validation": {
+    "command": "python -m unittest tests.test_p10_1_hardware_acceptance tests.test_p10_1r_hardware_acceptance tests.test_p10_1r_model tests.test_p9_runner tests.test_p10_hardware_runtime tests.test_p10_3_hardware_acceptance",
+    "tests_run": 109,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS"
+  },
+  "full_repository_validation": {
+    "command": "python -m unittest discover -s tests -p test_*.py",
+    "tests_run": 528,
+    "failures": 10,
+    "errors": 16,
+    "result": "FAIL_CLOSED",
+    "p10_3_related_residual_failures": 0,
+    "classification": [
+      {
+        "category": "HISTORICAL_P6_P7_FIXTURE_OR_GENERATED_INPUT_DEPENDENCY",
+        "disposition": "PRESERVE_FAILURE_DO_NOT_FABRICATE_OR_REGENERATE_IMMUTABLE_HISTORY",
+        "failures": [
+          "test_ddr_campaign_c2_evidence.CampaignC2PartialEvidenceTests.test_audit_sources_and_closure_binding_are_exact",
+          "test_ddr_campaign_d_evidence.CampaignDEvidenceTests.test_each_run_summary_and_shutdown_are_complete",
+          "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_cli_analyze_reads_raw_binary_without_text_or_endian_conversion",
+          "test_p6_ps_ddr_configuration.P6PsBoardContractTests.test_real_generated_artifacts_pass_contract",
+          "test_p7_r72_failure_package.P7R72FailurePackageTests.test_exact_failure_package_is_machine_validated",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_frozen_imported_specialist_diagnostics_are_git_bound_zero_coverage",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_frozen_r73_stage66_payload_replays_without_semantic_errors",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_real_r1_through_r31_hardware_epochs_validate_and_failed_stage_tamper_fails_closed"
+        ],
+        "errors": [
+          "test_ddr_campaign_c2_evidence.CampaignC2PartialEvidenceTests.test_first_1m_firmware_descriptor_is_terminal_but_host_dump_is_absent",
+          "test_ddr_campaign_c2_evidence.CampaignC2PartialEvidenceTests.test_partial_raw_markers_prove_attempt_but_not_completion",
+          "test_ddr_campaign_c2_evidence.CampaignC2PartialEvidenceTests.test_retained_boundary_checkpoint_and_64k_evidence_is_complete",
+          "test_ddr_campaign_d_evidence.CampaignDEvidenceTests.test_all_raw_evidence_records_rehash_exactly",
+          "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_patterns_are_byte_distinguishable_nonzero_and_stable",
+          "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_audit_binds_fixture_command_tcl_and_raw_readback",
+          "test_ddr_external_master_diagnostic.DdrExternalMasterDiagnosticTests.test_r37_fixture_and_parser_preserve_the_exact_first_mismatch",
+          "test_p7_ps_application_stage_safe.P7PsApplicationSafeStageTests.test_r72_trailing_window_replay_is_diagnostic_only_and_preserves_failure",
+          "test_p7_stage66_campaign.P7Stage66CampaignTests.test_r62_failure_package_preserves_canary_precheck_and_recovery_boundary",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_active_stage66_campaign_pass_is_zero_coverage_and_pending",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_failed_stationary_launch_intent_must_still_be_final",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_full_synthetic_hardware_evidence_passes",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_historical_epoch_tamper_and_nonancestor_fail_closed",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_old_commit_read_only_preflight_is_a_hash_bound_zero_coverage_epoch",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_r2_historical_epoch_tamper_recovery_order_and_nonancestor_fail_closed",
+          "test_summarize_p7_hardware.SummarizeP7HardwareTests.test_two_historical_preflight_epochs_are_ordered_and_never_cover_safe_idle"
+        ]
+      },
+      {
+        "category": "IMMUTABLE_P10_1_RUN_MANIFEST_MISMATCH",
+        "disposition": "PRESERVE_FAIL_CLOSED_DO_NOT_REWRITE_OLD_EVIDENCE",
+        "failures": [
+          "test_finalize_p10_1_hardware_campaign.FinalizeP101HardwareCampaignTests.test_selected_raw_hashes_authorizations_and_shutdowns_validate"
+        ],
+        "observed_manifest_mismatch_count": 101
+      },
+      {
+        "category": "SUPERSEDED_P10_1_IDENTITY_ONLY_RUNTIME_AUDIT",
+        "disposition": "PRESERVE_FAIL_CLOSED_P10_2_P10_3_RUNTIME_GENERALIZATION_IS_OUTSIDE_OLD_AUDIT",
+        "failures": [
+          "test_finalize_p10_1_hardware_acceptance.FinalizeP101HardwareAcceptanceTests.test_p10_goodput_runtime_change_is_identity_only"
+        ],
+        "audit_errors": [
+          "current P10 runtime SHA256 is outside this audit",
+          "P10 runtime diff is outside the audited identity-only change"
+        ]
+      }
+    ]
+  },
+  "p10_3_definition_of_done": {
+    "overall": "NOT_MET",
+    "acceptance_result": "FAIL",
+    "program_state": "IN_PROGRESS_BLOCKED",
+    "completed": {
+      "eight_unique_module_identities": true,
+      "actual_wiring_hash_bound": true,
+      "immutable_shutdown_and_functional_artifacts": true,
+      "preflight": "PASS",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS"
+    },
+    "failed": {
+      "module_intake": "FAIL",
+      "direct_blocker": "R2_TO_F2_DIRECTIONAL_RAW_CONNECTIVITY"
+    },
+    "not_run_due_prior_stage_failure": [
+      "raw_8x8",
+      "per_lane_phy_4mbps",
+      "two_lane_regression",
+      "four_lane_16mbps_raw",
+      "mask_matrix_0x1_to_0xF",
+      "degrade_4_to_3_to_2_to_1",
+      "arq_sack_scheduler_retry_migration",
+      "dma_ddr_cache",
+      "streaming_64m_bidirectional",
+      "application_goodput_8mbps_bidirectional",
+      "formal_30min"
+    ]
+  },
+  "hardware_blocker": {
+    "evidence": [
+      "evidence/generated/p10_3_lane2_directional_connectivity_blocker.json",
+      "evidence/generated/p10_3_lane2_software_path_audit.json",
+      "evidence/generated/p10_3_final_summary.json"
+    ],
+    "observed": {
+      "case": "intake_R2_raw_64",
+      "direction": "R2_TO_F2",
+      "rotating_final_path_physical_tx_events": 64,
+      "fixed_synchronized_raw_rxd_events": 5,
+      "software_direction_control": "PASS"
+    },
+    "ruled_out": [
+      "runner direction reversal",
+      "P10.3 snapshot lane-index selection"
+    ],
+    "not_isolated_without_physical_action": [
+      "R2 module TX/power/interconnect",
+      "rotating AX7020 J11 lane2 external pin path",
+      "R2-to-F2 optical path or alignment",
+      "fixed AX7020 J11 lane2 external pin path",
+      "F2 module RX/power/interconnect"
+    ]
+  },
+  "retry_boundary": {
+    "goal_limits": {
+      "jtag_connect": 3,
+      "program": 2,
+      "diagnostic_run_ids_per_stage": 2
+    },
+    "observed_campaign_run_ids": 5,
+    "observed_module_intake_executions": 3,
+    "conservative_disposition": "NO_FURTHER_HARDWARE_RUN_WITHOUT_EXPLICIT_P10_3_RETRY_OVERRIDE_AND_NEW_CURRENT_RUN_AUTHORIZATION"
+  },
+  "next_required_user_action": [
+    "With both endpoints powered off, physically inspect and isolate the R2-to-F2 external lane2 path without treating software evidence as component-level localization.",
+    "After the physical path is ready, explicitly override the P10.3 bounded retry limit and issue a new current-run hardware authorization bound to the unchanged artifact hashes, board serials, runtime bound, and shutdown policy."
+  ]
+}
