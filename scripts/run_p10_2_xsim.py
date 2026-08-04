@@ -15,6 +15,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+P10_3_GOAL = "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
+P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
 BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 TOOLS = {name: BIN / f"{name}.bat" for name in ("xvlog", "xelab", "xsim")}
 SUITE = "sim/tb/tb_p10_2_4lane_suite.sv"
@@ -91,7 +93,9 @@ def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, o
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", default="evidence/generated/p10_2_raw/xsim")
+    parser.add_argument("--output-dir")
+    parser.add_argument("--campaign", choices=("p10_2", "p10_3"),
+                        default="p10_2")
     parser.add_argument("--only", choices=[test[0] for test in TESTS])
     args = parser.parse_args()
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
@@ -101,7 +105,16 @@ def main() -> int:
     if any(not tool.is_file() for tool in TOOLS.values()):
         print("P10_2_XSIM_REFUSED=MISSING_VIVADO_SIMULATOR", file=sys.stderr)
         return 2
-    output = (ROOT / args.output_dir).resolve()
+    if args.campaign == "p10_3" and (
+            not (ROOT / P10_3_GOAL).is_file() or
+            sha(ROOT / P10_3_GOAL) != P10_3_GOAL_SHA256):
+        print("P10_3_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
+        return 2
+    output_name = args.output_dir or (
+        "evidence/generated/p10_3_xsim" if args.campaign == "p10_3"
+        else "evidence/generated/p10_2_raw/xsim"
+    )
+    output = (ROOT / output_name).resolve()
     output.relative_to(ROOT.resolve())
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = output / "raw" / run_id
@@ -110,9 +123,22 @@ def main() -> int:
     results = [run_one(top, marker, list(sources), raw)
                for top, marker, sources in selected]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
-    source_files = sorted({item for _, _, sources in selected for item in sources})
+    source_files = sorted({item for _, _, sources in selected for item in sources} |
+                          {rel(Path(__file__).resolve())})
+    if args.campaign == "p10_3":
+        source_files.extend([
+            P10_3_GOAL,
+            "config/hardware/p10_3_actual_wiring.yaml",
+            "config/hardware/tfdu_module_inventory.yaml",
+            "config/hardware/p10_3_ax7020_activity_leds.yaml",
+            "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+        ])
+        source_files = sorted(set(source_files))
     summary = {
-        "schema_version": 1, "test_id": "P10_2_4LANE_XSIM",
+        "schema_version": 1,
+        "test_id": "P10_3_4LANE_XSIM" if args.campaign == "p10_3"
+        else "P10_2_4LANE_XSIM",
+        "campaign": args.campaign,
         "status": status, "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "source_worktree_dirty": bool(subprocess.check_output(
@@ -125,14 +151,15 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=True)
     (output / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n",
                                          encoding="utf-8", newline="\n")
-    lines = ["# P10.2 four-lane XSIM", "", f"- Status: `{status}`",
+    lines = [f"# {args.campaign.replace('_', '.')} four-lane XSIM", "",
+             f"- Status: `{status}`",
              "- Hardware actions executed: `false`", "",
              "| Test | Status | Log |", "|---|---|---|"]
     lines.extend(f"| {item['test_id']} | {item['status']} | `{item['log']}` |"
                  for item in results)
     (output / "summary.md").write_text("\n".join(lines) + "\n",
                                        encoding="utf-8", newline="\n")
-    print(f"P10_2_4LANE_XSIM={status}")
+    print(f"{'P10_3' if args.campaign == 'p10_3' else 'P10_2'}_4LANE_XSIM={status}")
     print("HARDWARE_ACTIONS_EXECUTED=false")
     return 0 if status == "PASS" else 1
 

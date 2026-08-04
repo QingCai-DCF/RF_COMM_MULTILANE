@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 188
-PASS: 167
-PENDING: 16
+REQUIREMENT_COUNT: 235
+PASS: 186
+PENDING: 44
 FAIL: 5
 WAIVED: 0
 ```
@@ -197,13 +197,60 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_1R-ACK-003` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-ACK_TUNING` | `evidence/generated/p10_1r_ack_tuning.json` | At least four objects or equivalent streaming segments shall remain prepared, DMA-owned, in flight, verifying, or committing across the continuous pipeline. |
 | `P10_1R-ACK-004` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_ack_tuning.json` | A two-lane turnaround ACK shall not serialize until the wrap-safe cumulative RX base has advanced past the tagged DATA sequence, except that a bounded fallback shall expose SACK state before sender retransmission timeout. |
 | `P10_1R-HOST-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_formal_30min.json` | The host shall not participate in the per-object fast path; each direction shall use at most four blocking commands and at least 1000 segments per command. |
-| `P10_2-CLOSE-001` | `PASS` | P10_1R_POST_ACCEPTANCE_CLOSEOUT | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-CLOSE-001` | `evidence/generated/p10_1r_closeout_summary.json` | P10.1R authorization shall remain consumed and false while its immutable PASS tag, checkpoint, artifacts, raw evidence, failures, and shutdown records remain unchanged. |
-| `P10_2-INV-001` | `PASS` | P10_2_TFDU_EIGHT_MODULE_INVENTORY | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-INV-001` | `config/hardware/tfdu_module_inventory.yaml` | The replacement fixed-side F1 shall be the accepted lane1 identity, the original F1 shall be quarantined, and F2/F3/R2/R3 shall remain pending until their own physical intake and acceptance. |
 | `P10_1R-PERF-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Fixed-to-rotating two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-PERF-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-PERFORMANCE` | `evidence/generated/p10_1r_performance.json` | Rotating-to-fixed two-lane half-duplex sustained application goodput shall be at least 4,000,000 bit/s. |
 | `P10_1R-STREAM-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-STREAMING_64M` | `evidence/generated/p10_1r_streaming_64m.json` | Fixed-to-rotating transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
 | `P10_1R-STREAM-002` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-STREAMING_64M` | `evidence/generated/p10_1r_streaming_64m.json` | Rotating-to-fixed transfer shall complete five independent 64 MiB objects with matching incremental CRC32 and SHA256 and atomic commit. |
 | `P10_1R-SOAK-001` | `PASS` | P10_1R_AX7020_2LANE_REMEDIATION | `P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION` | `P10_1R-HW-FORMAL_30MIN` | `evidence/generated/p10_1r_formal_30min.json` | One 1800-second stationary run shall retain both directional speed targets with zero integrity, protocol, descriptor, safety, deadlock, or shutdown errors. |
+| `P10_2-CLOSE-001` | `PASS` | P10_1R_CLOSEOUT | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-CLOSE-001` | `evidence/generated/p10_1r_closeout_summary.json` | P10.1R authorization is closed and its PASS tag/checkpoint remain immutable. |
+| `P10_2-INV-001` | `PASS` | P10_2_EIGHT_MODULE_INVENTORY | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-INV-001` | `evidence/generated/p10_2_module_inventory_summary.json` | The accepted replacement F1 is retained, old F1 is quarantined, and F2/F3/R2/R3 remain explicit pending identities. |
+| `P10_2-WIRE-001` | `PASS` | P10_2_AX7020_4LANE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-WIRE-001` | `evidence/generated/p10_2_wiring_summary.json` | The independent AX7020 four-lane wiring proposal preserves lanes 0/1 and assigns J11-A/J11-B to lanes 2/3. |
+| `P10_2-PIN-001` | `PASS` | P10_2_AX7020_4LANE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PIN-001` | `evidence/generated/p10_2_pin_bank_audit.json` | Every selected four-lane signal pin has a unique package pin, compatible bank/VCCO and no Z7010 XDC reuse. |
+| `P10_2-PROFILE-001` | `PASS` | P10_2_AX7020_FIXED_4LANE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PROFILE-001` | `evidence/generated/p10_2_fixed_build.json` | The fixed AX7020 has an independent four-lane profile, pinmap and XDC. |
+| `P10_2-PROFILE-002` | `PASS` | P10_2_AX7020_ROTATING_4LANE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PROFILE-002` | `evidence/generated/p10_2_rotating_build.json` | The rotating-role AX7020 has an independent four-lane profile, pinmap and XDC. |
+| `P10_2-SAFE-001` | `PASS` | P10_2_EIGHT_PHYSICAL_MODULE_SAFETY | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-SAFE-001` | `evidence/generated/p10_2_safety_summary.json` | Eight physical TFDU module paths retain exact rolling duty, startup, pulse and per-module TX/RX exclusion models. |
+| `P10_2-SAFE-002` | `PASS` | P10_2_SINGLE_GLOBAL_PERMIT | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-SAFE-002` | `evidence/generated/p10_2_safety_summary.json` | Each endpoint retains exactly one local active-high GLOBAL_PERMIT and no per-lane permit channel. |
+| `P10_2-ECHO-001` | `PASS` | P10_2_ECHO_8X8 | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-ECHO-001` | `evidence/generated/p10_2_echo_matrix_model.json` | The 8x8 echo/crosstalk model accepts only the eight intended remote lane-pair cells. |
+| `P10_2-LANE-001` | `PASS` | P10_2_PARAMETERIZATION | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-LANE-001` | `evidence/generated/p10_2_parameterization_summary.json` | The common RTL elaborates with lane counts 2, 4 and 8 while P10.2 selects lane count 4. |
+| `P10_2-LANE-002` | `PASS` | P10_2_LANE_MASK_MATRIX | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-LANE-002` | `evidence/generated/p10_2_scheduler_summary.json` | All nonzero four-lane masks 0x1 through 0xF are supported and bounded. |
+| `P10_2-LANE-003` | `PASS` | P10_2_DEGRADATION | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-LANE-003` | `evidence/generated/p10_2_scheduler_summary.json` | The scheduler degrades 4 to 3 to 2 to 1 healthy lane and recovers without selecting an unavailable lane. |
+| `P10_2-SCHED-001` | `PASS` | P10_2_4LANE_SCHEDULER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-SCHED-001` | `evidence/generated/p10_2_scheduler_summary.json` | The four-lane scheduler is fair, weighted and health-aware. |
+| `P10_2-ARQ-001` | `PASS` | P10_2_4LANE_ARQ | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-ARQ-001` | `evidence/generated/p10_2_arq_summary.json` | Four-lane selective-repeat/SACK preserves one bundle sequence space and safe retry migration. |
+| `P10_2-STREAM-001` | `PASS` | P10_2_4LANE_STREAMING | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-STREAM-001` | `evidence/generated/p10_2_streaming_summary.json` | The four-lane model completes 64 MiB and 128 MiB objects with atomic matching integrity hashes. |
+| `P10_2-PERF-001` | `PASS` | P10_2_4LANE_PERFORMANCE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PERF-001` | `evidence/generated/p10_2_performance_model.json` | Four independent 4 Mbit/s lanes provide 16 Mbit/s aggregate raw modeled capability. |
+| `P10_2-PERF-002` | `PASS` | P10_2_4LANE_PERFORMANCE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PERF-002` | `evidence/generated/p10_2_performance_model.json` | The four-lane stationary half-duplex design has modeled application feasibility at or above 8 Mbit/s. |
+| `P10_2-PERF-003` | `PASS` | P10_2_4LANE_PERFORMANCE | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-PERF-003` | `evidence/generated/p10_2_performance_model.json` | The 9.6 Mbit/s stretch point is explicitly evaluated without becoming a hardware claim. |
+| `P10_2-POWER-001` | `PASS` | P10_2_4TX_POWER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-POWER-001` | `evidence/generated/p10_2_power_budget.json` | The future four-simultaneous-TX rail is budgeted for 2.4 A peak IRED demand and explicit decoupling verification. |
+| `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
+| `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
+| `P10_3-WIRE-001` | `PENDING` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
+| `P10_3-INV-001` | `PENDING` | P10_3_EIGHT_MODULE_INVENTORY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-INV-001` | `evidence/generated/p10_3_module_inventory.json` | All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments. |
+| `P10_3-INV-002` | `PENDING` | P10_3_EIGHT_MODULE_INVENTORY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-INV-002` | `evidence/generated/p10_3_module_inventory.json` | The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3 module. |
+| `P10_3-HW-001` | `PENDING` | P10_3_CURRENT_RUN_AUTHORIZATION | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-HW-001` | `evidence/generated/p10_3_authorization.json` | A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits, and shutdown policy. |
+| `P10_3-HW-002` | `PENDING` | P10_3_IMMUTABLE_ARTIFACT_BUNDLE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-HW-002` | `evidence/generated/p10_3_artifact_freeze.json` | Fixed and rotating-role shutdown bitstreams, functional bitstreams, XSAs, BSPs, and ELFs shall be immutable and content-addressed. |
+| `P10_3-LED-001` | `PENDING` | P10_3_AX7020_PL_ACTIVITY_LEDS | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-LED-001` | `evidence/generated/p10_3_safe_boot.json` | Each AX7020 PL LED shall indicate the corresponding lane module TX-or-valid-RX activity and shall be off during reset, fault, or full shutdown. |
+| `P10_3-LED-002` | `PENDING` | P10_3_AX7020_PS_ACTIVITY_LEDS | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-LED-002` | `evidence/generated/p10_3_safe_boot.json` | AX7020 PS LED1 and PS LED2 shall indicate actual MM2S and S2MM descriptor activity and remain diagnostic-only and fail-off on cleanup. |
+| `P10_3-SAFE-001` | `PENDING` | P10_3_DUAL_ENDPOINT_SAFE_BOOT | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SAFE-001` | `evidence/generated/p10_3_safe_boot.json` | Both endpoints shall complete shutdown-before and safe boot with exact role and build identity. |
+| `P10_3-SAFE-002` | `PENDING` | P10_3_EIGHT_TFDU_SAFETY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SAFE-002` | `evidence/generated/p10_3_shutdown.json` | Each endpoint shall enforce four-module rolling duty, pulse, TX kill, and full-shutdown constraints. |
+| `P10_3-MOD-001` | `PENDING` | P10_3_MODULE_INTAKE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-MOD-001` | `evidence/generated/p10_3_module_intake.json` | F2 shall pass isolated P10.3 module intake in its frozen position. |
+| `P10_3-MOD-002` | `PENDING` | P10_3_MODULE_INTAKE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-MOD-002` | `evidence/generated/p10_3_module_intake.json` | F3 shall pass isolated P10.3 module intake in its frozen position. |
+| `P10_3-MOD-003` | `PENDING` | P10_3_MODULE_INTAKE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-MOD-003` | `evidence/generated/p10_3_module_intake.json` | R2 shall pass isolated P10.3 module intake in its frozen position. |
+| `P10_3-MOD-004` | `PENDING` | P10_3_MODULE_INTAKE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-MOD-004` | `evidence/generated/p10_3_module_intake.json` | R3 shall pass isolated P10.3 module intake in its frozen position. |
+| `P10_3-XTALK-001` | `PENDING` | P10_3_RAW_8X8_MATRIX | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-XTALK-001` | `evidence/generated/p10_3_raw_8x8.json` | The complete eight-transmitter by eight-receiver raw matrix shall show target raw echo without accepted non-target DATA. |
+| `P10_3-PHY-001` | `PENDING` | P10_3_PER_LANE_PHY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PHY-001` | `evidence/generated/p10_3_per_lane_phy.json` | Lane0 shall pass bidirectional 4 Mbit/s physical communication. |
+| `P10_3-PHY-002` | `PENDING` | P10_3_PER_LANE_PHY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PHY-002` | `evidence/generated/p10_3_per_lane_phy.json` | Lane1 shall pass bidirectional 4 Mbit/s physical communication. |
+| `P10_3-PHY-003` | `PENDING` | P10_3_PER_LANE_PHY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PHY-003` | `evidence/generated/p10_3_per_lane_phy.json` | Lane2 shall pass bidirectional 4 Mbit/s physical communication. |
+| `P10_3-PHY-004` | `PENDING` | P10_3_PER_LANE_PHY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PHY-004` | `evidence/generated/p10_3_per_lane_phy.json` | Lane3 shall pass bidirectional 4 Mbit/s physical communication. |
+| `P10_3-PHY-005` | `PENDING` | P10_3_FOUR_LANE_RAW | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PHY-005` | `evidence/generated/p10_3_four_lane_raw.json` | Four active lanes shall demonstrate 16 Mbit/s aggregate raw capability without safety violations. |
+| `P10_3-MASK-001` | `PENDING` | P10_3_LANE_MASK_MATRIX | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-MASK-001` | `evidence/generated/p10_3_mask_matrix.json` | Every nonzero four-lane mask from 0x1 through 0xF shall operate with no out-of-mask transmission. |
+| `P10_3-DEG-001` | `PENDING` | P10_3_DEGRADED_MODES | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-DEG-001` | `evidence/generated/p10_3_degraded_modes.json` | The endpoint shall degrade and recover across four, three, two, and one available lane without false commit. |
+| `P10_3-ARQ-001` | `PENDING` | P10_3_FOUR_LANE_ARQ | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-ARQ-001` | `evidence/generated/p10_3_arq_scheduler.json` | Four-lane selective-repeat, 32-frame SACK, scheduler fairness, and cross-lane retry migration shall pass. |
+| `P10_3-STREAM-001` | `PENDING` | P10_3_64M_STREAMING | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-STREAM-001` | `evidence/generated/p10_3_streaming_64m.json` | A 64 MiB fixed-to-rotating application stream shall commit exactly with no protocol or descriptor errors. |
+| `P10_3-STREAM-002` | `PENDING` | P10_3_64M_STREAMING | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-STREAM-002` | `evidence/generated/p10_3_streaming_64m.json` | A 64 MiB rotating-to-fixed application stream shall commit exactly with no protocol or descriptor errors. |
+| `P10_3-PERF-001` | `PENDING` | P10_3_FOUR_LANE_PERFORMANCE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PERF-001` | `evidence/generated/p10_3_performance.json` | Fixed-to-rotating application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract. |
+| `P10_3-PERF-002` | `PENDING` | P10_3_FOUR_LANE_PERFORMANCE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PERF-002` | `evidence/generated/p10_3_performance.json` | Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract. |
+| `P10_3-SOAK-001` | `PENDING` | P10_3_STATIONARY_30MIN | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SOAK-001` | `evidence/generated/p10_3_formal_30min.json` | A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors. |
+| `P10_3-EVID-001` | `PENDING` | P10_3_EVIDENCE_CONSISTENCY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-EVID-001` | `evidence/generated/p10_3_evidence_consistency.json` | Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest. |
 
 ## PASS artifact bindings
 
@@ -277,13 +324,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
-- `PROJECT_STATUS.md` — `5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f`
+- `config/project_state.json` — `dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4`
+- `PROJECT_STATUS.md` — `9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
+- `config/project_state.json` — `dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4`
 
 ### `P8A-EVID-001`
 
@@ -293,8 +340,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `da86fd1d749a7885150fdf4be09aa0036112b4005fae409bb6a89f35520a6469`
-- `PROJECT_STATUS.md` — `5e76139259c89198d7d4a1c25b5e1a2424ed2a1c1bb97c88f23c7fe4e96ab75f`
+- `config/project_state.json` — `dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4`
+- `PROJECT_STATUS.md` — `9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1214,17 +1261,6 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
 - `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
 
-### `P10_2-CLOSE-001`
-
-- `evidence/generated/p10_1r_closeout_summary.json` — `4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170`
-- `evidence/generated/p10_1r_git_checkpoint_metadata.json` — `46a23ef754c064ca44ca318d0a524c474ba503e11264f03a88646b517d4e3313`
-- `evidence/generated/p10_1r_final_summary.json` — `728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f`
-
-### `P10_2-INV-001`
-
-- `config/hardware/tfdu_module_inventory.yaml` — `8cc129b5dbc3d92fd8e85fa12f27784f7d96d65373788eb261fd08034b1247dc`
-- `evidence/generated/p10_1r_final_summary.json` — `728c2453044ce2ace68d5e2df8084d5f19dbcfb69cda7290151797a366074e0f`
-
 ### `P10_1R-PERF-001`
 
 - `evidence/generated/p10_1r_performance.json` — `dd29e04010e1c2c49b64b8b94b282e1fd2c2b507f3edfbbd5d3fa4b7aab88fb6`
@@ -1259,3 +1295,87 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/formal_30min/stage_summary.json` — `439c165c9ca527bb69cc153a69c0d64e8a33132fd3b13e499318253568d0181e`
 - `evidence/hardware/p10_1r/p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6/final/run_evidence_sha256_manifest.json` — `21524e081fd570d6a691afc54db23c8db8ba5267d886e3abdec699740bcd0b96`
 - `evidence/generated/p10_1r_artifact_freeze.json` — `d0f8c63e18928c297ddddee101ce198479dd11fac57f79721990205e4d862467`
+
+### `P10_2-CLOSE-001`
+
+- `evidence/generated/p10_1r_closeout_summary.json` — `4dbf527481f7080d2e1760fc8c94408c4d9c65186e96dd0033e6304139e09170`
+
+### `P10_2-INV-001`
+
+- `evidence/generated/p10_2_module_inventory_summary.json` — `0788a22f71d932aa2c1494e93801afaf03328d29998f57b9a30fd8a348902747`
+
+### `P10_2-WIRE-001`
+
+- `evidence/generated/p10_2_wiring_summary.json` — `9fdc7c5efb607111f062afd8bad45b112aa0296e85d5e3b4205bb05f4bf9cf92`
+
+### `P10_2-PIN-001`
+
+- `evidence/generated/p10_2_pin_bank_audit.json` — `a1c7e5fd662cadab8157b9faeb930b0a2e29eb49da298b5f2430373cfd520635`
+
+### `P10_2-PROFILE-001`
+
+- `evidence/generated/p10_2_fixed_build.json` — `7f573b2214c79764d9e270e7ccb5a35a533be30286aeac515a3cea2d134e544a`
+
+### `P10_2-PROFILE-002`
+
+- `evidence/generated/p10_2_rotating_build.json` — `0cbc24a82a18b7f2bcc697acc16208bef3e2de348ebc267c8bd1deb7c8d43506`
+
+### `P10_2-SAFE-001`
+
+- `evidence/generated/p10_2_safety_summary.json` — `87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c`
+
+### `P10_2-SAFE-002`
+
+- `evidence/generated/p10_2_safety_summary.json` — `87936096043bb1acb4791ee31a89b2ceb132b2416910267628f61d6ac69bdd6c`
+
+### `P10_2-ECHO-001`
+
+- `evidence/generated/p10_2_echo_matrix_model.json` — `22e5818e6a1646192ff1037530fe799d1c49445092e8a2a292e5162b2d3b45a5`
+
+### `P10_2-LANE-001`
+
+- `evidence/generated/p10_2_parameterization_summary.json` — `d30174e88c6f1d92897f1f4958c5f4d0dc1194f4cf137ba9adf256dbfe90deb0`
+
+### `P10_2-LANE-002`
+
+- `evidence/generated/p10_2_scheduler_summary.json` — `8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e`
+
+### `P10_2-LANE-003`
+
+- `evidence/generated/p10_2_scheduler_summary.json` — `8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e`
+
+### `P10_2-SCHED-001`
+
+- `evidence/generated/p10_2_scheduler_summary.json` — `8e822d4146030449e38237a6356dea575d1e88764d09f0b1db8b12cb866d225e`
+
+### `P10_2-ARQ-001`
+
+- `evidence/generated/p10_2_arq_summary.json` — `637b46b1a40e31a6a15f35e45e733edc0cd6d5f90409e64d3d78c321f6b98f11`
+
+### `P10_2-STREAM-001`
+
+- `evidence/generated/p10_2_streaming_summary.json` — `b86d602611529bbf2214d84b072eba4b01fb594039c2eaaa151e59a6dd4ba7ea`
+
+### `P10_2-PERF-001`
+
+- `evidence/generated/p10_2_performance_model.json` — `2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af`
+
+### `P10_2-PERF-002`
+
+- `evidence/generated/p10_2_performance_model.json` — `2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af`
+
+### `P10_2-PERF-003`
+
+- `evidence/generated/p10_2_performance_model.json` — `2e1b3fd3833e2a074966944a8ca72d044d450422e5b99237868e7a6c7b8a36af`
+
+### `P10_2-POWER-001`
+
+- `evidence/generated/p10_2_power_budget.json` — `a4d4f0ca903fdfa075ed38a698e0702c241031c54c4a3520d30d531d70d5f28a`
+
+### `P10_2-HWPREP-001`
+
+- `evidence/generated/p10_2_hardware_dry_run.json` — `fef8d538bbad8a1851717f16bc872cd084946569e22e82d945e2353ace10ed3a`
+
+### `P10_2-HWPREP-002`
+
+- `evidence/generated/p10_2_p10_3_readiness.json` — `565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63`

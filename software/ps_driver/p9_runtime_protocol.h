@@ -65,6 +65,7 @@ enum p9_runtime_status {
   P9_RUNTIME_EXPECTED_ABORT = 16,
   P9_RUNTIME_RFAP_VALIDATION = 17,
   P9_RUNTIME_PERMIT_DROP = 18,
+  P9_RUNTIME_PS_LED_CONFIG = 19,
 };
 
 enum p9_command_flags {

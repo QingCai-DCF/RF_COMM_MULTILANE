@@ -6,7 +6,8 @@
 // (logical side B). Only the role-local two TFDU modules reach package pins.
 module p10_axi_dma_endpoint_peripheral_bd #(
   parameter integer ENDPOINT_ROLE = 1,
-  parameter integer LANE_COUNT = 2
+  parameter integer LANE_COUNT = 2,
+  parameter [31:0] BUILD_ID_OVERRIDE = 32'h0000_0000
 ) (
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 s_axi_aclk CLK" *)
   (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF s_axi:s_axis:m_axis, ASSOCIATED_RESET s_axi_aresetn, FREQ_HZ 64000000" *)
@@ -53,9 +54,11 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   output [3:0] pl_activity_led_n_o
 );
   localparam [31:0] P10_MAGIC = 32'h5031_305A;
-  localparam [31:0] P10_BUILD_ID = LANE_COUNT == 4 ?
+  localparam [31:0] P10_DEFAULT_BUILD_ID = LANE_COUNT == 4 ?
       (ENDPOINT_ROLE == 1 ? 32'h5032_3446 : 32'h5032_3452) :
       (ENDPOINT_ROLE == 1 ? 32'h5032_5346 : 32'h5032_5352);
+  localparam [31:0] P10_BUILD_ID = BUILD_ID_OVERRIDE != 0 ?
+      BUILD_ID_OVERRIDE : P10_DEFAULT_BUILD_ID;
   localparam [31:0] P10_PROFILE_ID = ENDPOINT_ROLE == 1 ?
       (LANE_COUNT == 4 ? 32'h7020_04F0 : 32'h7020_00F0) :
       (LANE_COUNT == 4 ? 32'h7020_04A0 : 32'h7020_00A0);

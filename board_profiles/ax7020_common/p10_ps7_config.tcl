@@ -12,7 +12,7 @@
 # JTAG is the debug/program transport and UART1 is retained only for local
 # diagnostics.  This procedure must be called after PS7 block automation.
 
-proc p10_apply_ax7020_ps7_config {ps_cell} {
+proc p10_apply_ax7020_ps7_config {ps_cell {enable_ps_activity_leds 0}} {
   set_property -dict [list \
     CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ {33.333333} \
     CONFIG.PCW_APU_PERIPHERAL_FREQMHZ {666.666666} \
@@ -80,4 +80,24 @@ proc p10_apply_ax7020_ps7_config {ps_cell} {
     CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {100.000000} \
     CONFIG.PCW_FPGA2_PERIPHERAL_FREQMHZ {50.000000} \
   ] $ps_cell
+
+  if {$enable_ps_activity_leds} {
+    # AX7020 PS LED1/2 are active-low MIO0/MIO13 GPIO sinks.  Explicitly
+    # freeze mux, voltage, pull and slew while leaving runtime direction/OEN
+    # ownership to XGpioPs.  GPIO_PERIPHERAL_ENABLE is an EMIO-facing option
+    # and remains disabled for this MIO-only design.
+    set_property -dict [list \
+      CONFIG.PCW_EN_GPIO {1} \
+      CONFIG.PCW_GPIO_PERIPHERAL_ENABLE {0} \
+      CONFIG.PCW_GPIO_MIO_GPIO_ENABLE {1} \
+      CONFIG.PCW_GPIO_MIO_GPIO_IO {MIO} \
+      CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0} \
+      CONFIG.PCW_MIO_0_PULLUP {enabled} \
+      CONFIG.PCW_MIO_0_IOTYPE {LVCMOS 3.3V} \
+      CONFIG.PCW_MIO_0_SLEW {slow} \
+      CONFIG.PCW_MIO_13_PULLUP {enabled} \
+      CONFIG.PCW_MIO_13_IOTYPE {LVCMOS 3.3V} \
+      CONFIG.PCW_MIO_13_SLEW {slow} \
+    ] $ps_cell
+  }
 }

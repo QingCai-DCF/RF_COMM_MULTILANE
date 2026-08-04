@@ -1,17 +1,34 @@
 schema_version: 2
-inventory_id: "P10_2_TFDU_EIGHT_MODULE_INVENTORY"
-status: "PASS"
-scope: "P10_1R_ACCEPTED_2LANE_BASELINE_AND_P10_2_FUTURE_4LANE_INTAKE"
+inventory_id: "P10_3_TFDU_EIGHT_ACTIVE_MODULE_INVENTORY"
+status: "USER_DECLARED_COMPLETE_PENDING_ELECTRONIC_P10_3_INTAKE"
+scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
 generated_at_utc: "2026-08-03T15:56:34Z"
 current_run_hardware_authorization: false
 hardware_actions_executed: false
 identity_policy:
   do_not_guess_unsupplied_marking_or_revision: true
-  accepted_identity_basis: "logical module, endpoint, connector position, immutable P10.1R run evidence, and replacement history"
+  accepted_identity_basis: "logical module, user-supplied small-board identifier, endpoint, connector position, and immutable acceptance evidence"
   old_f1_reuse_forbidden: true
   old_f1_forbidden_future_aliases: [F2, F3, R2, R3]
+p10_3_current_installation:
+  record_id: "P10_3_USER_DECLARED_EIGHT_MODULE_INSTALLATION_2026_08_04"
+  source: "Direct user statement in the current Codex task"
+  verification: "USER_PROVIDED_AND_PENDING_ELECTRONIC_P10_3_INTAKE"
+  active_modules: [F0, F1, F2, F3, R0, R1, R2, R3]
+  lane_pairs: {lane0: "F0-R0", lane1: "F1-R1", lane2: "F2-R2", lane3: "F3-R3"}
+  old_f1_active: false
+  old_f1_status: "QUARANTINED_NOT_ACCEPTED"
+  modules:
+    F0: {small_board_id: "A0019", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
+    F1: {small_board_id: "B0012", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
+    F2: {small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
+    F3: {small_board_id: "B0004", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
+    R0: {small_board_id: "A0010", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
+    R1: {small_board_id: "A0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK"}
+    R2: {small_board_id: "B0015", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
+    R3: {small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", inventory_status: "INSTALLED_PENDING_P10_3_INTAKE"}
 postfreeze_user_provided_small_board_identifiers:
-  record_id: "P10_2_POSTFREEZE_TFDU_SMALL_BOARD_IDS_2026_08_04"
+  record_id: "P10_3_USER_PROVIDED_TFDU_SMALL_BOARD_IDS_2026_08_04"
   recorded_date_local: "2026-08-04"
   source: "Direct user statement in the Codex task"
   verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
@@ -19,9 +36,13 @@ postfreeze_user_provided_small_board_identifiers:
   frozen_p10_2_tag_unchanged: "p10.2-4lane-offline-ready"
   modules:
     F0: {inventory_module_id: "F0", small_board_id: "A0019"}
-    F1: {inventory_module_id: "F1_REPLACEMENT", small_board_id: "B0012"}
+    F1: {inventory_module_id: "F1", small_board_id: "B0012"}
+    F2: {inventory_module_id: "F2", small_board_id: "B0001"}
+    F3: {inventory_module_id: "F3", small_board_id: "B0004"}
     R0: {inventory_module_id: "R0", small_board_id: "A0010"}
     R1: {inventory_module_id: "R1", small_board_id: "A0017"}
+    R2: {inventory_module_id: "R2", small_board_id: "B0015"}
+    R3: {inventory_module_id: "R3", small_board_id: "B0017"}
 accepted_baseline:
   - module_id: "F0"
     endpoint: "AX7020-F/JTAG:210249855178"
@@ -33,16 +54,15 @@ accepted_baseline:
     known_failures: []
     replacement_history: "No replacement reported."
     inventory_status: "ACCEPTED_P10_1R"
-  - module_id: "F1_REPLACEMENT"
-    runtime_label: "F1"
+  - module_id: "F1"
     endpoint: "AX7020-F/JTAG:210249855178"
     position: "J10-B"
-    pcb_revision: "NOT_SUPPLIED_FOR_REPLACEMENT; NOT_GUESSED"
-    tfdu_marking_or_lot: "NOT_SUPPLIED_FOR_REPLACEMENT; NOT_GUESSED"
+    pcb_revision: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
     accepted_stage: "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
     accepted_run_ids: ["p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6", "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6"]
     known_failures: []
-    replacement_history: "User reported replacing fixed-side F1 before the accepted 2026-08-03 exact-bundle runs; supersedes F1_ORIGINAL."
+    historical_note: "This active F1 was installed before the accepted 2026-08-03 P10.1R exact-bundle runs; the failed historical module is separately quarantined."
     inventory_status: "ACCEPTED_P10_1R"
   - module_id: "R0"
     endpoint: "AX7020-R/JTAG:210512180081"
@@ -65,7 +85,7 @@ accepted_baseline:
     replacement_history: "No replacement reported."
     inventory_status: "ACCEPTED_P10_1R"
 quarantine:
-  - module_id: "F1_ORIGINAL"
+  - historical_record_id: "FAILED_FIXED_J10_B_MODULE_PRE_P10_1R"
     historical_endpoint: "AX7020-F/JTAG:210249855178"
     historical_position: "J10-B"
     pcb_revision: "NOT_RECORDED; NOT_GUESSED"
@@ -73,16 +93,16 @@ quarantine:
     accepted_stage: null
     accepted_run_ids: []
     known_failures:
-      - "Historical F1-to-R1 directional connectivity failures before user replacement."
+      - "Historical fixed J10-B to rotating J10-B directional connectivity failures before the current F1 was installed."
       - "Not part of the accepted P10.1R artifact/run bundle."
-    replacement_history: "Removed and replaced by user before accepted P10.1R run p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6."
+    history: "Removed before accepted P10.1R run p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6."
     inventory_status: "QUARANTINED_NOT_ACCEPTED"
     eligible_for_future_four_lane_use: false
-future_intake:
-  - {module_id: "F2", endpoint: "AX7020-F/JTAG:210249855178", proposed_position: "J11-A_PER_FROZEN_P10_2_WIRING_PROPOSAL", pcb_revision: "PENDING_USER_INVENTORY", tfdu_marking_or_lot: "PENDING_USER_INVENTORY", accepted_stage: null, accepted_run_ids: [], known_failures: [], replacement_history: "New intake", inventory_status: "PENDING_PHYSICAL_INVENTORY", intake_status: ["PENDING_PHYSICAL_INVENTORY", "PENDING_PINOUT_CHECK", "PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE"]}
-  - {module_id: "F3", endpoint: "AX7020-F/JTAG:210249855178", proposed_position: "J11-B_PER_FROZEN_P10_2_WIRING_PROPOSAL", pcb_revision: "PENDING_USER_INVENTORY", tfdu_marking_or_lot: "PENDING_USER_INVENTORY", accepted_stage: null, accepted_run_ids: [], known_failures: [], replacement_history: "New intake", inventory_status: "PENDING_PHYSICAL_INVENTORY", intake_status: ["PENDING_PHYSICAL_INVENTORY", "PENDING_PINOUT_CHECK", "PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE"]}
-  - {module_id: "R2", endpoint: "AX7020-R/JTAG:210512180081", proposed_position: "J11-A_PER_FROZEN_P10_2_WIRING_PROPOSAL", pcb_revision: "PENDING_USER_INVENTORY", tfdu_marking_or_lot: "PENDING_USER_INVENTORY", accepted_stage: null, accepted_run_ids: [], known_failures: [], replacement_history: "New intake", inventory_status: "PENDING_PHYSICAL_INVENTORY", intake_status: ["PENDING_PHYSICAL_INVENTORY", "PENDING_PINOUT_CHECK", "PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE"]}
-  - {module_id: "R3", endpoint: "AX7020-R/JTAG:210512180081", proposed_position: "J11-B_PER_FROZEN_P10_2_WIRING_PROPOSAL", pcb_revision: "PENDING_USER_INVENTORY", tfdu_marking_or_lot: "PENDING_USER_INVENTORY", accepted_stage: null, accepted_run_ids: [], known_failures: [], replacement_history: "New intake", inventory_status: "PENDING_PHYSICAL_INVENTORY", intake_status: ["PENDING_PHYSICAL_INVENTORY", "PENDING_PINOUT_CHECK", "PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE"]}
+pending_electronic_intake:
+  - {module_id: "F2", small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
+  - {module_id: "F3", small_board_id: "B0004", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
+  - {module_id: "R2", small_board_id: "B0015", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
+  - {module_id: "R3", small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", accepted_stage: null, accepted_run_ids: [], known_failures: [], inventory_status: "INSTALLED_PENDING_P10_3_INTAKE", intake_status: ["PENDING_SAFE_IDLE", "PENDING_RAW_ACCEPTANCE", "PENDING_FRAME_ACCEPTANCE", "PENDING_SHUTDOWN_RECHECK"]}
 evidence:
   p10_1r_final: "evidence/generated/p10_1r_final_summary.json"
   p10_1r_checkpoint: "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4"

@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
+    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
   - path: PROJECT_STATUS.md
-    sha256: 47180105cc08d2da2ff4faf06f6fc90b45d769c0978509eb2cc6540de6bd4056
-  artifact_hash: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
+    sha256: 9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30
+  artifact_hash: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
+    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
+    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
   - path: PROJECT_STATUS.md
-    sha256: 47180105cc08d2da2ff4faf06f6fc90b45d769c0978509eb2cc6540de6bd4056
+    sha256: 9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 8451d515872646ad82b0294b32c0bf5ac00edda37650b73e2deaf0c113503af5
+  artifact_hash: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -2611,8 +2611,10 @@ requirements:
     sha256: f799b659b2f1a3502d7fa6544d49bae61b443420a0725df1bec451ae44ffd6f3
   - path: scripts/p10_hardware_runtime.py
     sha256: ac13ca787d765207ec5e5e39101e353a38d86d35e065b2bd05d8d026c3acb099
+    source_commit: 38f83531f51ad052d72680a4df69920d76131728
   - path: software/ps_driver/p9_runtime_main.c
     sha256: 3839dd4c4c5c4f70adee1f0dd07bf3661a4be32179fff4d1a2ff76c0d22d3679
+    source_commit: 38f83531f51ad052d72680a4df69920d76131728
   - path: config/performance/p10_1_measurement_contract.yaml
     sha256: 5d5e3abbb3579b0c9c7a2021a261bc3f905eb131dda6a8130aae85d1f74fc9d1
   - path: docs/plans/P10_1_DUAL_NODE_PERFORMANCE_AND_OBSERVABILITY_PLAN.md
@@ -4255,3 +4257,313 @@ requirements:
   hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
   artifact_hash: 565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63
 # END P10_2 GENERATED REQUIREMENTS
+# BEGIN P10_3 REQUIREMENTS
+- requirement_id: P10_3-WIRE-001
+  requirement_text: The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution.
+  profile: P10_3_AX7020_STATIONARY_4LANE
+  verification_method: Compare the actual-as-wired record with the independent AX7020 pinmaps and authorization input hash.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_ACTUAL_WIRING_FREEZE
+  test_id: P10_3-WIRE-001
+  evidence_path: evidence/generated/p10_3_wiring.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-INV-001
+  requirement_text: All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments.
+  profile: P10_3_EIGHT_MODULE_INVENTORY
+  verification_method: Validate the canonical inventory against the user-confirmed module binding and runner binding table.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_MODULE_INVENTORY
+  test_id: P10_3-INV-001
+  evidence_path: evidence/generated/p10_3_module_inventory.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-INV-002
+  requirement_text: The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3 module.
+  profile: P10_3_EIGHT_MODULE_INVENTORY
+  verification_method: Validate quarantine state and active-module exclusion in inventory, authorization, and runtime evidence.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_MODULE_INVENTORY
+  test_id: P10_3-INV-002
+  evidence_path: evidence/generated/p10_3_module_inventory.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-HW-001
+  requirement_text: A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits, and shutdown policy.
+  profile: P10_3_CURRENT_RUN_AUTHORIZATION
+  verification_method: Validate and consume the committed machine-readable current-run authorization.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_AUTHORIZED_HARDWARE_RUN
+  test_id: P10_3-HW-001
+  evidence_path: evidence/generated/p10_3_authorization.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-HW-002
+  requirement_text: Fixed and rotating-role shutdown bitstreams, functional bitstreams, XSAs, BSPs, and ELFs shall be immutable and content-addressed.
+  profile: P10_3_IMMUTABLE_ARTIFACT_BUNDLE
+  verification_method: Run complete offline gates and verify every frozen artifact path, size, and SHA256.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_OFFLINE_ARTIFACT_FREEZE
+  test_id: P10_3-HW-002
+  evidence_path: evidence/generated/p10_3_artifact_freeze.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-LED-001
+  requirement_text: Each AX7020 PL LED shall indicate the corresponding lane module TX-or-valid-RX activity and shall be off during reset, fault, or full shutdown.
+  profile: P10_3_AX7020_PL_ACTIVITY_LEDS
+  verification_method: Verify independent AX7020 XDC pins, active-low RTL monitor taps, 200 ms hold behavior, reset/fault/shutdown priority, and current-bundle hardware telemetry.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_LED_OBSERVABILITY
+  test_id: P10_3-LED-001
+  evidence_path: evidence/generated/p10_3_safe_boot.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-LED-002
+  requirement_text: AX7020 PS LED1 and PS LED2 shall indicate actual MM2S and S2MM descriptor activity and remain diagnostic-only and fail-off on cleanup.
+  profile: P10_3_AX7020_PS_ACTIVITY_LEDS
+  verification_method: Audit official MIO pin bindings, XSA GPIO mux, BSP gpiops support, firmware descriptor accounting, and current-bundle DIRM/OEN/DATA readback.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_LED_OBSERVABILITY
+  test_id: P10_3-LED-002
+  evidence_path: evidence/generated/p10_3_safe_boot.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-SAFE-001
+  requirement_text: Both endpoints shall complete shutdown-before and safe boot with exact role and build identity.
+  profile: P10_3_DUAL_ENDPOINT_SAFE_BOOT
+  verification_method: Program role-bound shutdown then functional artifacts and audit identity and initial safety telemetry.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-SAFE-001
+  evidence_path: evidence/generated/p10_3_safe_boot.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-SAFE-002
+  requirement_text: Each endpoint shall enforce four-module rolling duty, pulse, TX kill, and full-shutdown constraints.
+  profile: P10_3_EIGHT_TFDU_SAFETY
+  verification_method: Audit hardware telemetry throughout all stages and require verified dual shutdown on every exit path.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-SAFE-002
+  evidence_path: evidence/generated/p10_3_shutdown.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-MOD-001
+  requirement_text: F2 shall pass isolated P10.3 module intake in its frozen position.
+  profile: P10_3_MODULE_INTAKE
+  verification_method: Execute bounded raw echo and non-target admission checks for F2.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-MOD-001
+  evidence_path: evidence/generated/p10_3_module_intake.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-MOD-002
+  requirement_text: F3 shall pass isolated P10.3 module intake in its frozen position.
+  profile: P10_3_MODULE_INTAKE
+  verification_method: Execute bounded raw echo and non-target admission checks for F3.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-MOD-002
+  evidence_path: evidence/generated/p10_3_module_intake.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-MOD-003
+  requirement_text: R2 shall pass isolated P10.3 module intake in its frozen position.
+  profile: P10_3_MODULE_INTAKE
+  verification_method: Execute bounded raw echo and non-target admission checks for R2.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-MOD-003
+  evidence_path: evidence/generated/p10_3_module_intake.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-MOD-004
+  requirement_text: R3 shall pass isolated P10.3 module intake in its frozen position.
+  profile: P10_3_MODULE_INTAKE
+  verification_method: Execute bounded raw echo and non-target admission checks for R3.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-MOD-004
+  evidence_path: evidence/generated/p10_3_module_intake.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-XTALK-001
+  requirement_text: The complete eight-transmitter by eight-receiver raw matrix shall show target raw echo without accepted non-target DATA.
+  profile: P10_3_RAW_8X8_MATRIX
+  verification_method: Exercise each transmitter individually and record every receiver raw, CRC-valid, and accepted-DATA counter.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-XTALK-001
+  evidence_path: evidence/generated/p10_3_raw_8x8.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PHY-001
+  requirement_text: Lane0 shall pass bidirectional 4 Mbit/s physical communication.
+  profile: P10_3_PER_LANE_PHY
+  verification_method: Run fresh F0-to-R0 and R0-to-F0 bounded transfers at 4 Mbit/s.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PHY-001
+  evidence_path: evidence/generated/p10_3_per_lane_phy.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PHY-002
+  requirement_text: Lane1 shall pass bidirectional 4 Mbit/s physical communication.
+  profile: P10_3_PER_LANE_PHY
+  verification_method: Run fresh F1-to-R1 and R1-to-F1 bounded transfers at 4 Mbit/s.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PHY-002
+  evidence_path: evidence/generated/p10_3_per_lane_phy.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PHY-003
+  requirement_text: Lane2 shall pass bidirectional 4 Mbit/s physical communication.
+  profile: P10_3_PER_LANE_PHY
+  verification_method: Run fresh F2-to-R2 and R2-to-F2 bounded transfers at 4 Mbit/s.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PHY-003
+  evidence_path: evidence/generated/p10_3_per_lane_phy.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PHY-004
+  requirement_text: Lane3 shall pass bidirectional 4 Mbit/s physical communication.
+  profile: P10_3_PER_LANE_PHY
+  verification_method: Run fresh F3-to-R3 and R3-to-F3 bounded transfers at 4 Mbit/s.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PHY-004
+  evidence_path: evidence/generated/p10_3_per_lane_phy.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PHY-005
+  requirement_text: Four active lanes shall demonstrate 16 Mbit/s aggregate raw capability without safety violations.
+  profile: P10_3_FOUR_LANE_RAW
+  verification_method: Run mask 0xF raw traffic and audit all four per-lane rates and safety counters.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PHY-005
+  evidence_path: evidence/generated/p10_3_four_lane_raw.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-MASK-001
+  requirement_text: Every nonzero four-lane mask from 0x1 through 0xF shall operate with no out-of-mask transmission.
+  profile: P10_3_LANE_MASK_MATRIX
+  verification_method: Execute and audit the complete mask matrix in both transfer directions.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-MASK-001
+  evidence_path: evidence/generated/p10_3_mask_matrix.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-DEG-001
+  requirement_text: The endpoint shall degrade and recover across four, three, two, and one available lane without false commit.
+  profile: P10_3_DEGRADED_MODES
+  verification_method: Inject live unavailable-lane masks and verify persistent exclusion, progress, recovery, and integrity.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-DEG-001
+  evidence_path: evidence/generated/p10_3_degraded_modes.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-ARQ-001
+  requirement_text: Four-lane selective-repeat, 32-frame SACK, scheduler fairness, and cross-lane retry migration shall pass.
+  profile: P10_3_FOUR_LANE_ARQ
+  verification_method: Run deterministic loss, wrap, scheduler, and migration experiments with zero integrity errors.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-ARQ-001
+  evidence_path: evidence/generated/p10_3_arq_scheduler.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-STREAM-001
+  requirement_text: A 64 MiB fixed-to-rotating application stream shall commit exactly with no protocol or descriptor errors.
+  profile: P10_3_64M_STREAMING
+  verification_method: Execute an exact-size DMA-backed application transfer and validate end-to-end integrity and telemetry.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-STREAM-001
+  evidence_path: evidence/generated/p10_3_streaming_64m.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-STREAM-002
+  requirement_text: A 64 MiB rotating-to-fixed application stream shall commit exactly with no protocol or descriptor errors.
+  profile: P10_3_64M_STREAMING
+  verification_method: Execute an exact-size DMA-backed application transfer and validate end-to-end integrity and telemetry.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-STREAM-002
+  evidence_path: evidence/generated/p10_3_streaming_64m.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PERF-001
+  requirement_text: Fixed-to-rotating application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract.
+  profile: P10_3_FOUR_LANE_PERFORMANCE
+  verification_method: Measure committed payload bytes over the exact application observation window.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PERF-001
+  evidence_path: evidence/generated/p10_3_performance.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-PERF-002
+  requirement_text: Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract.
+  profile: P10_3_FOUR_LANE_PERFORMANCE
+  verification_method: Measure committed payload bytes over the exact application observation window.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-PERF-002
+  evidence_path: evidence/generated/p10_3_performance.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-SOAK-001
+  requirement_text: A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors.
+  profile: P10_3_STATIONARY_30MIN
+  verification_method: Execute the immutable formal plan under the safe wrapper and audit complete raw evidence.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-SOAK-001
+  evidence_path: evidence/generated/p10_3_formal_30min.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_3-EVID-001
+  requirement_text: Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest.
+  profile: P10_3_EVIDENCE_CONSISTENCY
+  verification_method: Recompute the final evidence manifest and cross-check summaries against raw stage records.
+  verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
+  verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
+  test_id: P10_3-EVID-001
+  evidence_path: evidence/generated/p10_3_evidence_consistency.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+# END P10_3 REQUIREMENTS

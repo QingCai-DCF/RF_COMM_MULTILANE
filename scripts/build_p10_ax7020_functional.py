@@ -31,6 +31,8 @@ SUMMARY_TITLE = "P10 AX7020 dual functional build"
 GOAL_HASH = "b7cf8f1e10d737ce587f81160df592c8f863825b009760bd32845e019c3b7603"
 P10_2_GOAL = ROOT / "goals/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS_GOAL.md"
 P10_2_GOAL_HASH = "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
+P10_3_GOAL = ROOT / "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
+P10_3_GOAL_HASH = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
 P10_1_HW_GOAL = Path(
     r"C:\Users\user\Downloads"
     r"\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md"
@@ -166,6 +168,28 @@ def configure_campaign(campaign: str) -> None:
             },
         }
         return
+    if campaign == "p10_3":
+        OUT = ROOT / "evidence/generated/vivado/p10_3_4lane"
+        ARTIFACTS = ROOT / "artifacts/p10_3"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_3_functional_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_3_functional_build_summary.md"
+        TEST_ID = "P10_3-AX7020-DUAL-4LANE-FUNCTIONAL-BUILD"
+        SUMMARY_TITLE = "P10.3 AX7020 dual four-lane functional build"
+        ROLES = {
+            "fixed": {
+                "role_value": "1", "profile": "P10_2_AX7020_FIXED_4LANE",
+                "profile_path": "board_profiles/ax7020_fixed_4lane/profile.yaml",
+                "xdc": "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+                "lane_count": "4",
+            },
+            "rotating": {
+                "role_value": "2", "profile": "P10_2_AX7020_ROTATING_4LANE",
+                "profile_path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
+                "xdc": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+                "lane_count": "4",
+            },
+        }
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vivado/p10_1_ax7020_pl_activity_led"
@@ -198,7 +222,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1", "p10_1r"}
+        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -221,12 +245,20 @@ def source_bundle(role: str, cfg: dict[str, str]) -> tuple[str, dict[str, str]]:
                "config/register_map/ir_axi_regs.yaml",
                "config/hardware/p10_1_ax7020_pl_activity_leds.yaml",
                "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"]
-    if CAMPAIGN == "p10_2":
+    if CAMPAIGN in {"p10_2", "p10_3"}:
         sources.extend([
-            rel(P10_2_GOAL),
+            rel(P10_3_GOAL if CAMPAIGN == "p10_3" else P10_2_GOAL),
             "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
             "config/hardware/p10_2_4lane_power_budget.yaml",
             "config/performance/p10_2_4lane.yaml",
+        ])
+    if CAMPAIGN == "p10_3":
+        sources.extend([
+            "config/hardware/p10_3_actual_wiring.yaml",
+            "config/hardware/tfdu_module_inventory.yaml",
+            "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+            "config/hardware/p10_3_ax7020_activity_leds.yaml",
+            "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
     if CAMPAIGN == "p10_1":
         sources.extend(P10_1_PROVENANCE)
@@ -272,6 +304,28 @@ def audit_xsa(path: Path, role_value: str, lane_count: str) -> dict[str, Any]:
         "peripheral_base": 'VALUE="0x43C00000"' in hwh,
         "activity_led_port": "pl_activity_led_n_o" in hwh.lower(),
     }
+    if CAMPAIGN == "p10_3":
+        expected_build = "1345532998" if role_value == "1" else "1345533010"
+        checks.update({
+            "p10_3_build_id_override": (
+                f'<PARAMETER NAME="BUILD_ID_OVERRIDE" VALUE="{expected_build}"/>'
+                in hwh
+            ),
+            "ps_gpio_enabled": (
+                '<PARAMETER NAME="PCW_EN_GPIO" VALUE="1"/>' in hwh
+            ),
+            "ps_mio_gpio_enabled": (
+                '<PARAMETER NAME="PCW_GPIO_MIO_GPIO_ENABLE" VALUE="1"/>'
+                in hwh
+            ),
+            "ps_gpio_base": (
+                '<PARAMETER NAME="PCW_GPIO_BASEADDR" VALUE="0xE000A000"/>'
+                in hwh
+            ),
+            "ethernet1_disabled": (
+                '<PARAMETER NAME="PCW_EN_ENET1" VALUE="0"/>' in hwh
+            ),
+        })
     errors.extend(f"XSA contract check failed: {key}" for key, ok in checks.items() if not ok)
     return {"status": "PASS" if not errors else "FAIL", "checks": checks,
             "errors": errors}
@@ -283,7 +337,7 @@ def run_role(role: str, cfg: dict[str, str], reuse: bool) -> dict[str, Any]:
     log = out / "vivado_stdout_stderr.txt"
     command = [str(VIVADO), "-mode", "batch", "-nolog", "-nojournal",
                "-source", str(TCL), "-tclargs", str(ROOT), role, str(out),
-               cfg["lane_count"]]
+               cfg["lane_count"], CAMPAIGN]
     returncode = 0
     if not reuse:
         proc = subprocess.run(
@@ -327,8 +381,21 @@ def run_role(role: str, cfg: dict[str, str], reuse: bool) -> dict[str, Any]:
         "P10_PL_ACTIVITY_LED_HOLD_MS": "200",
         "P10_PL_ACTIVITY_LED_SAFETY_ROLE": "MONITOR_ONLY",
         "P10_LANE_COUNT": cfg["lane_count"],
+        "P10_CAMPAIGN": CAMPAIGN,
     }
-    if CAMPAIGN == "p10_2":
+    if CAMPAIGN == "p10_3":
+        expected.update({
+            "P10_PL_BUILD_ID": (
+                "0x50333446" if role == "fixed" else "0x50333452"
+            ),
+            "P10_PS_GPIO_ENABLED": "true",
+            "P10_PS_ACTIVITY_LED_MAPPING": (
+                "PS_LED1_MIO0_MM2S_INFLIGHT_PS_LED2_MIO13_S2MM_INFLIGHT"
+            ),
+            "P10_PS_ACTIVITY_LED_ACTIVE_LOW": "true",
+            "P10_PS_ACTIVITY_LED_SAFETY_ROLE": "MONITOR_ONLY",
+        })
+    if CAMPAIGN in {"p10_2", "p10_3"}:
         expected.update({
             "P10_UNCONSTRAINED_INTERNAL_ENDPOINTS": "0",
             "P10_NO_CLOCK_COUNT": "0",
@@ -344,7 +411,7 @@ def run_role(role: str, cfg: dict[str, str], reuse: bool) -> dict[str, Any]:
         except (KeyError, ValueError):
             errors.append(f"invalid timing marker {key}")
     for key in ("P10_LUT", "P10_FF", "P10_BRAM36", "P10_BRAM18", "P10_DSP"):
-        if CAMPAIGN == "p10_2":
+        if CAMPAIGN in {"p10_2", "p10_3"}:
             try:
                 if int(markers[key]) < 0:
                     errors.append(f"negative resource marker {key}")
@@ -376,7 +443,7 @@ def main() -> int:
                         help="audit/freeze existing outputs without rerunning Vivado")
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3"),
         default="p10",
         help="Use a separate output/evidence namespace for a follow-up campaign.",
     )
@@ -386,9 +453,11 @@ def main() -> int:
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
         print("P10_FUNCTIONAL_BUILD_REFUSED: offline environment required", file=sys.stderr)
         return 2
-    goal = P10_2_GOAL if CAMPAIGN == "p10_2" else \
+    goal = P10_3_GOAL if CAMPAIGN == "p10_3" else \
+        P10_2_GOAL if CAMPAIGN == "p10_2" else \
         ROOT / "goals/P10_FASTTRACK_MIDRUN_OVERRIDE_CONCISE.md"
-    expected_goal_hash = P10_2_GOAL_HASH if CAMPAIGN == "p10_2" else GOAL_HASH
+    expected_goal_hash = P10_3_GOAL_HASH if CAMPAIGN == "p10_3" else \
+        P10_2_GOAL_HASH if CAMPAIGN == "p10_2" else GOAL_HASH
     if not goal.is_file() or sha256(goal) != expected_goal_hash:
         print("P10_FUNCTIONAL_BUILD_REFUSED: goal hash mismatch", file=sys.stderr)
         return 2
@@ -427,13 +496,21 @@ def main() -> int:
     elif CAMPAIGN == "p10_1r":
         source_paths.extend(P10_1R_PROVENANCE)
         source_paths.append(rel(P10_1R_GOAL))
-    elif CAMPAIGN == "p10_2":
+    elif CAMPAIGN in {"p10_2", "p10_3"}:
         source_paths.extend([
-            rel(P10_2_GOAL),
+            rel(P10_3_GOAL if CAMPAIGN == "p10_3" else P10_2_GOAL),
             "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
             "config/hardware/p10_2_4lane_power_budget.yaml",
             "config/performance/p10_2_4lane.yaml",
         ])
+        if CAMPAIGN == "p10_3":
+            source_paths.extend([
+                "config/hardware/p10_3_actual_wiring.yaml",
+                "config/hardware/tfdu_module_inventory.yaml",
+                "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+                "config/hardware/p10_3_ax7020_activity_leds.yaml",
+                "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+            ])
     source_worktree_dirty = tracked_source_dirty(source_paths)
     results = [run_role(role, cfg, args.reuse_existing)
                for role, cfg in ROLES.items()]

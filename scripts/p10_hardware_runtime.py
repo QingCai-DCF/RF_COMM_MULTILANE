@@ -770,7 +770,9 @@ def mailbox_detail(
         "pl_profile": words[34] == expected["profile"],
         "register_map_version": words[35] == EXPECTED_REGISTER_MAP_VERSION,
         "register_map_hash": words[36] == EXPECTED_REGISTER_MAP_HASH_LOW,
-        "capabilities": words[37] == EXPECTED_CAPABILITIES,
+        "capabilities": words[37] == expected.get(
+            "capabilities", EXPECTED_CAPABILITIES
+        ),
         "dma_base": words[39] == 0x40400000,
         "dma_sg": words[40] == 1,
         "descriptor_alignment": words[49] == 64,

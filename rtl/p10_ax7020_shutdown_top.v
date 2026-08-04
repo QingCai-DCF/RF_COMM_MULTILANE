@@ -7,16 +7,23 @@
 // contract: Mode=HIGH (static MIR/FIR), SD=HIGH (shutdown), and Txd=LOW.
 // It cannot establish those levels before configuration or under partial
 // power; P10-SAFETY-POWERUP-001 therefore remains a hardware-admission block.
-module p10_ax7020_shutdown_top (
-  output wire [1:0] tfdu_mode_o,
-  input  wire [1:0] tfdu_rxd_i,
-  output wire [1:0] tfdu_sd_o,
-  output wire [1:0] tfdu_txd_o,
+module p10_ax7020_shutdown_top #(
+  parameter integer LANE_COUNT = 2
+) (
+  output wire [LANE_COUNT-1:0] tfdu_mode_o,
+  input  wire [LANE_COUNT-1:0] tfdu_rxd_i,
+  output wire [LANE_COUNT-1:0] tfdu_sd_o,
+  output wire [LANE_COUNT-1:0] tfdu_txd_o,
   output wire [3:0] pl_activity_led_n_o
 );
-  assign tfdu_mode_o = 2'b11;
-  assign tfdu_sd_o = 2'b11;
-  assign tfdu_txd_o = 2'b00;
+  initial begin
+    if (LANE_COUNT != 2 && LANE_COUNT != 4)
+      $error("P10 AX7020 shutdown LANE_COUNT must be 2 or 4");
+  end
+
+  assign tfdu_mode_o = {LANE_COUNT{1'b1}};
+  assign tfdu_sd_o = {LANE_COUNT{1'b1}};
+  assign tfdu_txd_o = {LANE_COUNT{1'b0}};
   // AX7020 PL user LEDs are active-low.  A shutdown image must explicitly
   // drive every LED high/off; leaving these pads absent allowed the board LED
   // loads to appear lit after programming the previous shutdown image.

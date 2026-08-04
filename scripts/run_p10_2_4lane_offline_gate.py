@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run or verify the complete no-hardware P10.2 four-lane readiness gate."""
+"""Run or verify the complete no-hardware P10.2 four-lane readiness gate (offline-build-only)."""
 
 from __future__ import annotations
 

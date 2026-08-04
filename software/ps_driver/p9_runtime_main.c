@@ -4,6 +4,9 @@
 
 #include "sleep.h"
 #include "xaxidma.h"
+#ifdef P10_PS_ACTIVITY_LEDS
+#include "xgpiops.h"
+#endif
 #include "xil_cache.h"
 #include "xil_io.h"
 #include "xparameters.h"
@@ -114,6 +117,112 @@ static uint32_t g_rx_started;
 static uint32_t g_ring_depth;
 static uint32_t g_cache_enabled;
 static p9_metrics_t g_metrics;
+
+/*
+ * P10.3 AX7020 PS activity indicators.  The official board circuit connects
+ * PS LED1 to MIO0 and PS LED2 to MIO13 through active-low sink paths.  These
+ * GPIOs are monitor-only: no readback or LED state enters transport, permit,
+ * SD, Txd kill, admission, flow-control, or recovery decisions.
+ */
+#ifdef P10_PS_ACTIVITY_LEDS
+enum {
+  P10_PS_LED_TX_MIO = 0U,
+  P10_PS_LED_RX_MIO = 13U,
+};
+static XGpioPs g_ps_gpio;
+static uint32_t g_ps_gpio_initialized;
+static uint32_t g_ps_tx_descriptors_inflight;
+static uint32_t g_ps_rx_descriptors_inflight;
+static uint32_t g_ps_activity_counter_fault;
+
+static void p10_ps_activity_leds_refresh(void) {
+  if (g_ps_gpio_initialized != 0U) {
+    XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_TX_MIO,
+                     g_ps_tx_descriptors_inflight == 0U ? 1U : 0U);
+    XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_RX_MIO,
+                     g_ps_rx_descriptors_inflight == 0U ? 1U : 0U);
+    dsb();
+  }
+}
+
+static void p10_ps_activity_leds_force_off(void) {
+  g_ps_tx_descriptors_inflight = 0U;
+  g_ps_rx_descriptors_inflight = 0U;
+  p10_ps_activity_leds_refresh();
+}
+
+static uint32_t p10_ps_activity_leds_faulted(void) {
+  return g_ps_activity_counter_fault;
+}
+
+static void p10_ps_dma_activity_begin(uint32_t tx, uint32_t count) {
+  uint32_t *inflight = tx != 0U ? &g_ps_tx_descriptors_inflight :
+                                  &g_ps_rx_descriptors_inflight;
+  if (count == 0U || *inflight > UINT32_MAX - count) {
+    g_ps_activity_counter_fault = 1U;
+    p10_ps_activity_leds_force_off();
+    return;
+  }
+  *inflight += count;
+  p10_ps_activity_leds_refresh();
+}
+
+static void p10_ps_dma_activity_end(uint32_t tx, uint32_t count) {
+  uint32_t *inflight = tx != 0U ? &g_ps_tx_descriptors_inflight :
+                                  &g_ps_rx_descriptors_inflight;
+  if (count == 0U || *inflight < count) {
+    g_ps_activity_counter_fault = 1U;
+    p10_ps_activity_leds_force_off();
+    return;
+  }
+  *inflight -= count;
+  p10_ps_activity_leds_refresh();
+}
+
+static int p10_ps_activity_leds_initialize(void) {
+  XGpioPs_Config *config = XGpioPs_LookupConfig(XPAR_XGPIOPS_0_DEVICE_ID);
+  if (config == NULL ||
+      XGpioPs_CfgInitialize(&g_ps_gpio, config, config->BaseAddr) !=
+          XST_SUCCESS)
+    return P9_RUNTIME_PS_LED_CONFIG;
+
+  /* Disable output, then preload inactive HIGH before enabling either pin. */
+  XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_TX_MIO, 0U);
+  XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_RX_MIO, 0U);
+  XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_TX_MIO, 1U);
+  XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_RX_MIO, 1U);
+  XGpioPs_SetDirectionPin(&g_ps_gpio, P10_PS_LED_TX_MIO, 1U);
+  XGpioPs_SetDirectionPin(&g_ps_gpio, P10_PS_LED_RX_MIO, 1U);
+  XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_TX_MIO, 1U);
+  XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_RX_MIO, 1U);
+  if (XGpioPs_GetDirectionPin(&g_ps_gpio, P10_PS_LED_TX_MIO) != 1U ||
+      XGpioPs_GetDirectionPin(&g_ps_gpio, P10_PS_LED_RX_MIO) != 1U ||
+      XGpioPs_GetOutputEnablePin(&g_ps_gpio, P10_PS_LED_TX_MIO) != 1U ||
+      XGpioPs_GetOutputEnablePin(&g_ps_gpio, P10_PS_LED_RX_MIO) != 1U ||
+      XGpioPs_ReadPin(&g_ps_gpio, P10_PS_LED_TX_MIO) != 1U ||
+      XGpioPs_ReadPin(&g_ps_gpio, P10_PS_LED_RX_MIO) != 1U) {
+    XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_TX_MIO, 1U);
+    XGpioPs_WritePin(&g_ps_gpio, P10_PS_LED_RX_MIO, 1U);
+    XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_TX_MIO, 0U);
+    XGpioPs_SetOutputEnablePin(&g_ps_gpio, P10_PS_LED_RX_MIO, 0U);
+    return P9_RUNTIME_PS_LED_CONFIG;
+  }
+  g_ps_gpio_initialized = 1U;
+  g_ps_activity_counter_fault = 0U;
+  p10_ps_activity_leds_force_off();
+  return P9_RUNTIME_OK;
+}
+#else
+static void p10_ps_activity_leds_force_off(void) {}
+static void p10_ps_dma_activity_begin(uint32_t tx, uint32_t count) {
+  (void)tx; (void)count;
+}
+static void p10_ps_dma_activity_end(uint32_t tx, uint32_t count) {
+  (void)tx; (void)count;
+}
+static int p10_ps_activity_leds_initialize(void) { return P9_RUNTIME_OK; }
+static uint32_t p10_ps_activity_leds_faulted(void) { return 0U; }
+#endif
 
 static uint32_t p9_local_sender(uint32_t direction) {
   if (P10_ENDPOINT_ROLE == 0) return 1U;
@@ -409,6 +518,7 @@ static int p9_verify_safe_idle(void) {
 }
 
 static int p9_shutdown(void) {
+  p10_ps_activity_leds_force_off();
   g_metrics.shutdown_attempt_count++;
   p9_pl_write(IR_REG_P9_CONTROL,
               IR_P9_CONTROL_RECEIVER_DISABLE_MASK |
@@ -460,6 +570,7 @@ static int p9_dma_wait_reset(void) {
 
 static int p9_dma_initialize(uint32_t depth, uint32_t count_reset) {
   XAxiDma_Bd template_bd;
+  p10_ps_activity_leds_force_off();
   if (depth != 8U && depth != 16U && depth != 32U)
     return P9_RUNTIME_BAD_ARGUMENT;
   if (g_ring_depth != depth) {
@@ -553,6 +664,7 @@ static int p9_submit_rx(UINTPTR address, uint32_t bytes, uint32_t token) {
       return P9_RUNTIME_DMA_SUBMIT;
     g_rx_started = 1U;
   }
+  p10_ps_dma_activity_begin(0U, 1U);
   return P9_RUNTIME_OK;
 }
 
@@ -578,6 +690,7 @@ static int p9_submit_tx(UINTPTR address, uint32_t bytes, uint32_t token) {
       return P9_RUNTIME_DMA_SUBMIT;
     g_tx_started = 1U;
   }
+  p10_ps_dma_activity_begin(1U, 1U);
   return P9_RUNTIME_OK;
 }
 
@@ -603,6 +716,7 @@ static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
         return P9_RUNTIME_DMA_COMPLETION;
       if (XAxiDma_BdRingFree(tx, count, set) != XST_SUCCESS)
         return P9_RUNTIME_DMA_COMPLETION;
+      p10_ps_dma_activity_end(1U, (uint32_t)count);
       g_metrics.tx_completed += (uint32_t)count;
       p9_advance_consumer(1U);
       tx_done = 1U;
@@ -621,6 +735,7 @@ static int p9_poll_completion(volatile p9_mailbox_t *m, uint32_t token,
         return P9_RUNTIME_DMA_COMPLETION;
       if (XAxiDma_BdRingFree(rx, count, set) != XST_SUCCESS)
         return P9_RUNTIME_DMA_COMPLETION;
+      p10_ps_dma_activity_end(0U, (uint32_t)count);
       g_metrics.rx_completed += (uint32_t)count;
       p9_advance_consumer(0U);
       rx_done = 1U;
@@ -1522,7 +1637,9 @@ int main(void) {
 #if P10_ENDPOINT_ROLE != 0
   p10_1_runtime_boot_init();
 #endif
-  int startup_status = p9_shutdown();
+  int startup_status = p10_ps_activity_leds_initialize();
+  int shutdown_status = p9_shutdown();
+  if (startup_status == P9_RUNTIME_OK) startup_status = shutdown_status;
   if (startup_status == P9_RUNTIME_OK)
     startup_status = p9_reset_stream_path(8U, 0U, 0U);
   p9_fill_identity(mailbox);
@@ -1548,6 +1665,14 @@ int main(void) {
     uint64_t start = p9_time_now();
     p9_store_u64(&mailbox->start_ticks_low, &mailbox->start_ticks_high, start);
     int status = p9_dispatch(mailbox);
+    p10_ps_activity_leds_force_off();
+    /* LED monitoring is deliberately outside command control flow and all
+     * TX safety paths.  Preserve a sticky, evidence-only diagnostic if its
+     * descriptor accounting ever underflows/overflows; do not turn the LED
+     * monitor into a transport interlock or silently hide the defect. */
+    if (p10_ps_activity_leds_faulted() != 0U &&
+        mailbox->last_error_detail == 0U)
+      mailbox->last_error_detail = UINT32_C(0x50534c44); /* PSLD */
     p9_cache_disable();
     uint64_t end = p9_time_now();
     p9_store_u64(&mailbox->end_ticks_low, &mailbox->end_ticks_high, end);

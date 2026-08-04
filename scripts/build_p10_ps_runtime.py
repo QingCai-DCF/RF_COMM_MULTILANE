@@ -88,6 +88,8 @@ P10_1R_PROVENANCE = [
 ]
 P10_2_GOAL = ROOT / "goals/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS_GOAL.md"
 P10_2_GOAL_SHA256 = "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
+P10_3_GOAL = ROOT / "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
+P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
 
 
 def configure_campaign(campaign: str) -> None:
@@ -139,6 +141,25 @@ def configure_campaign(campaign: str) -> None:
             },
         }
         return
+    if campaign == "p10_3":
+        OUT = ROOT / "evidence/generated/vitis/p10_3_4lane_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_3"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_3_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_3_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_3_4lane"
+        TEST_ID = "P10_3-AX7020-DUAL-4LANE-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.3 AX7020 role-bound four-lane PS runtime build"
+        ROLES = {
+            "fixed": {
+                "role_value": 1,
+                "header": ROOT / "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h",
+            },
+            "rotating": {
+                "role_value": 2,
+                "header": ROOT / "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h",
+            },
+        }
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime"
@@ -186,7 +207,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1", "p10_1r"}
+        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -212,8 +233,16 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
-    if CAMPAIGN == "p10_2":
-        paths.append(P10_2_GOAL)
+    if CAMPAIGN in {"p10_2", "p10_3"}:
+        paths.append(P10_3_GOAL if CAMPAIGN == "p10_3" else P10_2_GOAL)
+    if CAMPAIGN == "p10_3":
+        paths.extend([
+            ROOT / "config/hardware/p10_3_actual_wiring.yaml",
+            ROOT / "config/hardware/tfdu_module_inventory.yaml",
+            ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+            ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
+            ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+        ])
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -270,8 +299,9 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     app = workspace / f"p10_{role}_runtime"
     elf = app / "Debug" / f"p10_{role}_runtime.elf"
     map_file = app / "Debug" / f"p10_{role}_runtime.map"
-    bsp = platform / "ps7_cortexa9_0/standalone_domain/bsp/ps7_cortexa9_0"
-    xparameters = bsp / "include/xparameters.h"
+    bsp = platform / "ps7_cortexa9_0/standalone_domain/bsp"
+    system_mss = bsp / "system.mss"
+    xparameters = bsp / "ps7_cortexa9_0/include/xparameters.h"
     ps7_parameters = platform / "zynq_fsbl/ps7_parameters.xml"
     platform_xsa = platform / "hw" / xsa.name
     ps7_init_tcl = platform / "hw/ps7_init.tcl"
@@ -284,7 +314,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         f"STDERR_BEGIN\n{result.stderr}\nSTDERR_END\n",
         encoding="utf-8", errors="replace", newline="\n",
     )
-    required = [xsa, elf, map_file, xparameters, ps7_parameters,
+    required = [xsa, elf, map_file, system_mss, xparameters, ps7_parameters,
                 platform_xsa, ps7_init_tcl]
     errors = [f"missing {path}" for path in required if not path.is_file()]
     if result.returncode != 0 or "P10_PS_RUNTIME_BUILD=PASS" not in result.stdout or \
@@ -302,7 +332,26 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "dma_sg_width": bool(re.search(r"#define\s+XPAR_AXI_DMA_0_SG_LENGTH_WIDTH\s+26", xparam_text)),
         "endpoint_base": bool(re.search(r"#define\s+XPAR_P10_ENDPOINT_0_BASEADDR\s+0x43C00000", xparam_text)),
     }
+    if CAMPAIGN == "p10_3":
+        xparam_checks.update({
+            "ps_gpio_device": bool(re.search(
+                r"#define\s+XPAR_XGPIOPS_0_DEVICE_ID\s+0", xparam_text)),
+            "ps_gpio_base": bool(re.search(
+                r"#define\s+XPAR_PS7_GPIO_0_BASEADDR\s+0xE000A000", xparam_text)),
+        })
     errors.extend(f"xparameters check failed: {key}" for key, ok in xparam_checks.items() if not ok)
+    mss_text = system_mss.read_text(encoding="utf-8", errors="replace") \
+        if system_mss.is_file() else ""
+    mss_checks = {}
+    if CAMPAIGN == "p10_3":
+        mss_checks = {
+            "gpiops_driver": bool(re.search(
+                r"DRIVER_NAME\s*=\s*gpiops[\s\S]*?HW_INSTANCE\s*=\s*ps7_gpio_0",
+                mss_text,
+            )),
+        }
+        errors.extend(f"system.mss check failed: {key}"
+                      for key, ok in mss_checks.items() if not ok)
     parameters_text = ps7_parameters.read_text(encoding="utf-8", errors="replace") \
         if ps7_parameters.is_file() else ""
     ps_checks = {
@@ -332,7 +381,8 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "status": "PASS" if not errors else "FAIL",
         "source_bundle_sha256": bundle, "source_sha256": input_hashes,
         "xsa": {"path": rel(xsa), "sha256": sha256(xsa)} if xsa.is_file() else None,
-        "xparameters_checks": xparam_checks, "ps7_parameter_checks": ps_checks,
+        "xparameters_checks": xparam_checks, "system_mss_checks": mss_checks,
+        "ps7_parameter_checks": ps_checks,
         "inspection": inspection, "artifacts": frozen,
         "build_log": rel(log), "build_log_sha256": sha256(log), "errors": errors,
     }
@@ -342,7 +392,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -378,6 +428,11 @@ def main() -> int:
     ):
         print("P10_RUNTIME_BUILD_REFUSED: P10.2 goal hash mismatch", file=sys.stderr)
         return 2
+    if CAMPAIGN == "p10_3" and (
+        not P10_3_GOAL.is_file() or sha256(P10_3_GOAL) != P10_3_GOAL_SHA256
+    ):
+        print("P10_RUNTIME_BUILD_REFUSED: P10.3 goal hash mismatch", file=sys.stderr)
+        return 2
     source_worktree_dirty = tracked_source_dirty([
         *SOURCES,
         *(
@@ -385,6 +440,14 @@ def main() -> int:
             else [*P10_1R_PROVENANCE, P10_1R_GOAL]
             if CAMPAIGN == "p10_1r"
             else [P10_2_GOAL] if CAMPAIGN == "p10_2"
+            else [
+                P10_3_GOAL,
+                ROOT / "config/hardware/p10_3_actual_wiring.yaml",
+                ROOT / "config/hardware/tfdu_module_inventory.yaml",
+                ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+                ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
+                ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+            ] if CAMPAIGN == "p10_3"
             else []
         ),
         *(cfg["header"] for cfg in ROLES.values()),

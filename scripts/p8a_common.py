@@ -141,6 +141,20 @@ P10_1R_REQUIREMENT_IDS = {
     "P10_1R-PERF-001", "P10_1R-PERF-002",
     "P10_1R-STREAM-001", "P10_1R-STREAM-002", "P10_1R-SOAK-001",
 }
+P10_3_REQUIREMENT_IDS = {
+    "P10_3-WIRE-001", "P10_3-INV-001", "P10_3-INV-002",
+    "P10_3-HW-001", "P10_3-HW-002",
+    "P10_3-LED-001", "P10_3-LED-002",
+    "P10_3-SAFE-001", "P10_3-SAFE-002",
+    "P10_3-MOD-001", "P10_3-MOD-002", "P10_3-MOD-003", "P10_3-MOD-004",
+    "P10_3-XTALK-001",
+    "P10_3-PHY-001", "P10_3-PHY-002", "P10_3-PHY-003",
+    "P10_3-PHY-004", "P10_3-PHY-005",
+    "P10_3-MASK-001", "P10_3-DEG-001", "P10_3-ARQ-001",
+    "P10_3-STREAM-001", "P10_3-STREAM-002",
+    "P10_3-PERF-001", "P10_3-PERF-002",
+    "P10_3-SOAK-001", "P10_3-EVID-001",
+}
 P11_READINESS_REQUIREMENT_IDS = {
     "P11-READY-001", "P11-READY-002", "P11-READY-003",
 }
@@ -158,6 +172,8 @@ P10_1_OFFLINE_SCOPE = (
     "P10_1_EXTENDED_OFFLINE_PERFORMANCE_STREAMING_OBSERVABILITY_NO_HARDWARE"
 )
 P10_1R_STAGE = "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+P10_2_STAGE = "P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS"
+P10_3_STAGE = "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
 P10_CLOSEOUT_SCOPE = "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE"
 P10_ANALYSIS_SCOPE = "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
 
@@ -273,6 +289,30 @@ def hash_record_errors(record: Any, root: Path, label: str) -> list[str]:
     except (TypeError, ValueError) as exc:
         errors.append(f"{label}: {exc}")
         return errors
+    source_commit = record.get("source_commit")
+    if source_commit is not None:
+        source_commit = str(source_commit).lower()
+        if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+            errors.append(f"{label}: invalid source_commit")
+            return errors
+        try:
+            subprocess.check_call(
+                ["git", "merge-base", "--is-ancestor", source_commit, "HEAD"],
+                cwd=root,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            historical = subprocess.check_output(
+                ["git", "show", f"{source_commit}:{path_value}"], cwd=root
+            )
+        except subprocess.SubprocessError:
+            errors.append(
+                f"{label}: historical artifact is unavailable or source_commit is not an ancestor"
+            )
+        else:
+            if SHA256_RE.fullmatch(digest) and hashlib.sha256(historical).hexdigest() != digest:
+                errors.append(f"{label}: historical SHA256 mismatch for {path_value}")
+        return errors
     if not path.is_file():
         errors.append(f"{label}: missing artifact {path_value}")
     elif SHA256_RE.fullmatch(digest) and sha256_artifact(path, root) != digest:
@@ -350,6 +390,8 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION"
     ) if isinstance(stage_status, dict) else None
     p10_stage = stage_status.get(P10_STAGE) if isinstance(stage_status, dict) else None
+    p10_2_stage = stage_status.get(P10_2_STAGE) if isinstance(stage_status, dict) else None
+    p10_3_stage = stage_status.get(P10_3_STAGE) if isinstance(stage_status, dict) else None
     if not isinstance(stage_status, dict):
         errors.append("stage_status must be a mapping")
     else:
@@ -366,6 +408,10 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             ] = p9_stage
         if p10_stage is not None:
             expected_stages[P10_STAGE] = p10_stage
+        if p10_2_stage is not None:
+            expected_stages[P10_2_STAGE] = p10_2_stage
+        if p10_3_stage is not None:
+            expected_stages[P10_3_STAGE] = p10_3_stage
         for key, expected in expected_stages.items():
             if stage_status.get(key) != expected:
                 errors.append(f"stage_status.{key} must be {expected}")
@@ -379,6 +425,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append("P9 hardware-validation stage has invalid status")
         if p10_stage not in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}:
             errors.append("P10 hardware-validation stage has invalid status")
+        if p10_2_stage is not None and p10_2_stage != "PASS":
+            errors.append("P10.2 offline-readiness stage must remain PASS")
+        if p10_3_stage is not None and p10_3_stage not in {
+            "IN_PROGRESS", "OFFLINE_READY_HARDWARE_PENDING", "AUTHORIZED",
+            "PASS", "PARTIAL", "FAIL",
+        }:
+            errors.append("P10.3 hardware-validation stage has invalid status")
     if state.get("p8d_status") != p8d_stage:
         errors.append("p8d_status must match stage_status.P8D_SELECTIVE_REPEAT_DMA")
     if state.get("p8e_status") != p8e_stage:
@@ -387,21 +440,28 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.append("p9_status must match the P9 hardware-validation stage")
     if state.get("p10_status") != p10_stage:
         errors.append("p10_status must match the P10 hardware-validation stage")
+    if p10_2_stage is not None and state.get("p10_2_status") != p10_2_stage:
+        errors.append("p10_2_status must match the P10.2 offline-readiness stage")
+    if p10_3_stage is not None and state.get("p10_3_status") != p10_3_stage:
+        errors.append("p10_3_status must match the P10.3 hardware-validation stage")
     authorization_consumed = state.get("last_hardware_authorization_consumed") is True
     p10_authorization = state.get("p10_current_run_authorization", {})
     p10_authorization_consumed = (
         isinstance(p10_authorization, dict)
         and p10_authorization.get("consumed") is True
     )
-    expected_authorization = (
-        p10_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
-        and not p10_authorization_consumed
-        if p10_stage is not None
-        else (
-            p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
-            and not authorization_consumed
+    if p10_3_stage is not None:
+        expected_authorization = p10_3_stage == "AUTHORIZED"
+    else:
+        expected_authorization = (
+            p10_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+            and not p10_authorization_consumed
+            if p10_stage is not None
+            else (
+                p9_stage in {"IN_PROGRESS", "PASS", "PARTIAL", "FAIL"}
+                and not authorization_consumed
+            )
         )
-    )
     if state.get("current_run_hardware_authorization") is not expected_authorization:
         errors.append(
             "current_run_hardware_authorization must match the validated P9 run lifecycle"
@@ -525,7 +585,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append("external TFDU duty measurement must remain pending external measurement")
 
     if p8c_pass:
-        if p10_stage == "PASS" and p10_authorization_consumed:
+        if p10_3_stage is not None:
+            expected_program_stage = (
+                "USER_DECISION_AFTER_P10_3"
+                if p10_3_stage == "PASS"
+                else P10_3_STAGE
+            )
+        elif p10_stage == "PASS" and p10_authorization_consumed:
             if state.get("p10_1_offline_status") == "PASS":
                 p10_1_hardware_status = state.get("p10_1_hardware_status")
                 if state.get("p10_1r_status") == "PASS":
@@ -1096,6 +1162,7 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     )
     missing_p11_readiness = sorted(P11_READINESS_REQUIREMENT_IDS - present)
     missing_p10_1r = sorted(P10_1R_REQUIREMENT_IDS - present)
+    missing_p10_3 = sorted(P10_3_REQUIREMENT_IDS - present)
     if missing_initial:
         errors.append(f"missing initial requirement IDs: {', '.join(missing_initial)}")
     if missing_p8a:
@@ -1130,6 +1197,10 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     if missing_p10_1r:
         errors.append(
             "missing P10.1R requirement IDs: " + ", ".join(missing_p10_1r)
+        )
+    if missing_p10_3:
+        errors.append(
+            "missing P10.3 requirement IDs: " + ", ".join(missing_p10_3)
         )
 
     allowed_statuses = {"PASS", "PENDING", "FAIL", "WAIVED"}

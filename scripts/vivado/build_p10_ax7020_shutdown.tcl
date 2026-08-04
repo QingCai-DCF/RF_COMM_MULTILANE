@@ -1,20 +1,35 @@
 # Offline-only P10 AX7020 shutdown implementation.
-# argv: <repository-root> <fixed|rotating> <output-directory>
+# argv: <repository-root> <fixed|rotating> <output-directory> ?<lane-count>?
 set root_dir [file normalize [lindex $argv 0]]
 set endpoint_role [string tolower [lindex $argv 1]]
 set out_dir [file normalize [lindex $argv 2]]
+set lane_count 2
+if {[llength $argv] > 3} { set lane_count [lindex $argv 3] }
 
 if {$endpoint_role ni {fixed rotating}} {
   error "P10 shutdown role must be fixed or rotating"
 }
+if {$lane_count != 2 && $lane_count != 4} {
+  error "P10 shutdown lane_count must be 2 or 4"
+}
 
 if {$endpoint_role eq "fixed"} {
-  set profile_id P10_AX7020_FIXED_2LANE
-  set xdc_path "$root_dir/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+  if {$lane_count == 4} {
+    set profile_id P10_2_AX7020_FIXED_4LANE
+    set xdc_path "$root_dir/board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc"
+  } else {
+    set profile_id P10_AX7020_FIXED_2LANE
+    set xdc_path "$root_dir/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+  }
   set bit_name p10_ax7020_fixed_shutdown.bit
 } else {
-  set profile_id P10_AX7020_ROTATING_2LANE
-  set xdc_path "$root_dir/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+  if {$lane_count == 4} {
+    set profile_id P10_2_AX7020_ROTATING_4LANE
+    set xdc_path "$root_dir/board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
+  } else {
+    set profile_id P10_AX7020_ROTATING_2LANE
+    set xdc_path "$root_dir/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+  }
   set bit_name p10_ax7020_rotating_shutdown.bit
 }
 
@@ -24,7 +39,8 @@ set_property target_language Verilog [current_project]
 read_verilog "$root_dir/rtl/p10_ax7020_shutdown_top.v"
 read_xdc $xdc_path
 
-synth_design -top p10_ax7020_shutdown_top -part xc7z020clg400-2
+synth_design -top p10_ax7020_shutdown_top -part xc7z020clg400-2 \
+  -generic LANE_COUNT=$lane_count
 
 set shutdown_led_ports [get_ports -quiet {pl_activity_led_n_o[*]}]
 if {[llength $shutdown_led_ports] != 4} {
@@ -80,11 +96,12 @@ set marker [open "$out_dir/p10_shutdown_build_markers.txt" w]
 puts $marker "P10_SHUTDOWN_BUILD=PASS"
 puts $marker "P10_ENDPOINT_ROLE=$endpoint_role"
 puts $marker "P10_PROFILE_ID=$profile_id"
+puts $marker "P10_LANE_COUNT=$lane_count"
 puts $marker "P10_PART=[get_property PART [current_project]]"
 puts $marker "P10_TOP=p10_ax7020_shutdown_top"
 puts $marker "P10_XDC=$xdc_path"
-puts $marker "P10_SHUTDOWN_MODE_INTENT=0x3"
-puts $marker "P10_SHUTDOWN_SD_INTENT=0x3"
+puts $marker [format "P10_SHUTDOWN_MODE_INTENT=0x%X" [expr {(1 << $lane_count) - 1}]]
+puts $marker [format "P10_SHUTDOWN_SD_INTENT=0x%X" [expr {(1 << $lane_count) - 1}]]
 puts $marker "P10_SHUTDOWN_TXD_INTENT=0x0"
 puts $marker "P10_SHUTDOWN_LED_N_INTENT=0xF"
 puts $marker "P10_SHUTDOWN_LED_ACTIVE_LOW=true"

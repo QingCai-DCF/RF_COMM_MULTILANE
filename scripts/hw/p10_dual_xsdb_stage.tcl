@@ -158,6 +158,7 @@ proc p10_check_abort {} {
 
 proc p10_verify_pl_safe {role expected_build expected_profile label} {
   global p10_expected_register_map_version p10_expected_register_map_hash_low
+  global p10_expected_capabilities
   set identity [p10_read32 $role 0x43C00700]
   set build [p10_read32 $role 0x43C00704]
   set profile [p10_read32 $role 0x43C00708]
@@ -176,7 +177,7 @@ proc p10_verify_pl_safe {role expected_build expected_profile label} {
       $profile != $expected_profile ||
       $version != $p10_expected_register_map_version ||
       $hash_low != $p10_expected_register_map_hash_low ||
-      $capabilities != 0xF7204221} {
+      $capabilities != $p10_expected_capabilities} {
     error [format "P10 %s identity mismatch id=0x%08X build=0x%08X profile=0x%08X version=0x%08X hash=0x%08X caps=0x%08X" \
         $role $identity $build $profile $version $hash_low $capabilities]
   }
@@ -273,6 +274,7 @@ proc p10_dump_p10_1_result {role label} {
 }
 
 proc p10_read_p10_1r_snapshot {role} {
+  global p10_lane_count p10_max_lane_mask
   set before [p10_read32 $role 0x43C00A04]
   p10_write32 $role 0x43C00A00 1
   after 1
@@ -288,8 +290,9 @@ proc p10_read_p10_1r_snapshot {role} {
     lappend values [p10_read32 $role $address]
   }
   if {[lindex $values 35] != 4096 || [lindex $values 36] != 256 ||
-      [lindex $values 37] != 131072 || [lindex $values 38] != 4 ||
-      [lindex $values 39] != 3} {
+      [lindex $values 37] != 131072 ||
+      [lindex $values 38] != $p10_lane_count ||
+      [lindex $values 39] != $p10_max_lane_mask} {
     error "P10.1R $role admission timing/config readback mismatch"
   }
   return [linsert $values 0 $generation $caps]
@@ -312,6 +315,41 @@ proc p10_write_p10_1r_snapshot {role label values} {
 proc p10_dump_p10_1r_snapshot {role label} {
   set values [p10_read_p10_1r_snapshot $role]
   return [p10_write_p10_1r_snapshot $role $label $values]
+}
+
+proc p10_read_p10_2_snapshot {role} {
+  set before [p10_read32 $role 0x43C00B04]
+  p10_write32 $role 0x43C00B00 1
+  after 1
+  set generation [p10_read32 $role 0x43C00B04]
+  set schema [p10_read32 $role 0x43C00B08]
+  if {$generation <= $before || ($generation & 1) != 0 ||
+      $schema != 0x50310201} {
+    error [format "P10.2 %s atomic snapshot invalid before=0x%08X generation=0x%08X schema=0x%08X" \
+        $role $before $generation $schema]
+  }
+  set values {}
+  for {set address 0x43C00B0C} {$address <= 0x43C00D08} {incr address 4} {
+    lappend values [p10_read32 $role $address]
+  }
+  if {[llength $values] != 128 || [lindex $values 127] != 0x50310201} {
+    error "P10.2 $role four-lane snapshot schema/length mismatch"
+  }
+  return [linsert $values 0 $generation $schema]
+}
+
+proc p10_dump_p10_2_snapshot {role label} {
+  global p10_dump_dir
+  if {$role ni {fixed rotating} ||
+      ![regexp {^[A-Za-z0-9_.-]+$} $label]} {
+    error "unsafe P10.2 snapshot label"
+  }
+  set values [p10_read_p10_2_snapshot $role]
+  set final [file join $p10_dump_dir "${label}.${role}.p10_2.psv"]
+  set out [open $final w]
+  puts $out [join $values "|"]
+  close $out
+  return $final
 }
 
 proc p10_record_p10_1r_telemetry {sequence label} {
@@ -367,6 +405,21 @@ proc p10_record_p10_1r_telemetry {sequence label} {
         [join $perf_values ","]] "|"]
   }
   flush $p10_telemetry_handle
+  p10_record_ps_gpio $sequence $label
+}
+
+proc p10_record_ps_gpio {sequence label} {
+  global p10_campaign_p103 p10_ps_gpio_handle
+  if {!$p10_campaign_p103} { return }
+  set captured [clock milliseconds]
+  foreach role {fixed rotating} {
+    set data_ro [p10_read32 $role 0xE000A060]
+    set dirm [p10_read32 $role 0xE000A204]
+    set oen [p10_read32 $role 0xE000A208]
+    puts $p10_ps_gpio_handle [join [list $captured $sequence $label $role \
+        $data_ro $dirm $oen] "|"]
+  }
+  flush $p10_ps_gpio_handle
 }
 
 proc p10_resume {role} {
@@ -375,6 +428,7 @@ proc p10_resume {role} {
 }
 
 proc p10_case_dict {fields} {
+  global p10_max_lane_mask
   if {[llength $fields] != 29 || [lindex $fields 0] ne "CASE"} {
     error "P10 CASE requires exactly 29 fields"
   }
@@ -391,10 +445,10 @@ proc p10_case_dict {fields} {
     }
   }
   if {![regexp {^[A-Za-z0-9_.-]+$} [dict get $d label]]} { error "invalid P10 CASE label" }
-  if {[dict get $d lane] < 0 || [dict get $d lane] > 3 ||
-      [dict get $d unavailable] < 0 || [dict get $d unavailable] > 3 ||
-      [dict get $d injectmask] < 0 || [dict get $d injectmask] > 3} {
-    error "P10 lane mask outside 0x0..0x3"
+  if {[dict get $d lane] < 0 || [dict get $d lane] > $p10_max_lane_mask ||
+      [dict get $d unavailable] < 0 || [dict get $d unavailable] > $p10_max_lane_mask ||
+      [dict get $d injectmask] < 0 || [dict get $d injectmask] > $p10_max_lane_mask} {
+    error "P10 lane mask outside current-run authorization"
   }
   if {[dict get $d direction] < 0 || [dict get $d direction] > 1 ||
       [dict get $d rate] < 0 || [dict get $d rate] > 2} {
@@ -500,7 +554,7 @@ proc p10_wait_receiver_primed {role d} {
       $last_p10_1_sequence]
 }
 
-proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window} {
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA}} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
       [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
@@ -512,6 +566,8 @@ proc p10_record_observation {d sequence started finished fixed_dump rotating_dum
       [dict get $d injectmask] [dict get $d injectdelay] $window $started $finished $sequence \
       $fixed_status $rotating_status $fixed_state $rotating_state $fixed_dump $rotating_dump \
       $fixed_p10_1_dump $rotating_p10_1_dump $fixed_p10_1r_dump $rotating_p10_1r_dump]
+  lappend values $injection_applied $injection_readback \
+      $injection_timestamp_ms $injection_sender
   puts $p10_observation_handle [join $values "|"]
   flush $p10_observation_handle
 }
@@ -557,6 +613,10 @@ proc p10_execute_case {d {window "NA"}} {
   set p10_active_case_label [dict get $d label]
   set started [clock milliseconds]
   set command [dict get $d command]
+  set injection_applied 0
+  set injection_readback 0
+  set injection_timestamp_ms 0
+  set injection_sender NA
 
   foreach role {fixed rotating} {
     p10_write32 $role 0x43C00718 0x00000020
@@ -570,7 +630,11 @@ proc p10_execute_case {d {window "NA"}} {
     p10_wait_receiver_primed $receiver $d
     p10_publish_case $sender $d $sequence
     p10_say "P10_PAIRED_LAUNCH=[dict get $d label]:receiver=$receiver,sender=$sender"
-    if {$command == 3 && [dict get $d injectmask] != 0} {
+    # Command 13 is the autonomous P10.1 streaming service.  Its immutable
+    # P10.3 degrade/recovery vectors use the same asynchronous PL lane-fault
+    # injection as legacy command 3; do not silently ignore injectmask merely
+    # because the payload is driven by the streaming service.
+    if {$command in {3 13} && [dict get $d injectmask] != 0} {
       set injection_deadline [expr {[clock milliseconds] + 10000}]
       set active_seen 0
       while {[clock milliseconds] < $injection_deadline} {
@@ -594,14 +658,24 @@ proc p10_execute_case {d {window "NA"}} {
       if {$pre_state != 3 || ($pre_status & 0x4) == 0} {
         error "P10 source completed before lane-fault injection write"
       }
-      set injected [expr {([dict get $d dropdata] & 0xFF) |
-          (([dict get $d dropack] & 0xFF) << 8) |
-          (([dict get $d injectmask] & 3) << 16)}]
+      global p10_max_lane_mask
+      # Command 13 reuses the legacy dropdata/dropack mailbox words for ACK
+      # threshold/outstanding.  They must never become physical drop counts.
+      # Preserve any already-configured bounded physical drop bits and update
+      # only the authorized live lane-unavailable mask.
+      set prior_fault [p10_read32 $sender 0x43C0073C]
+      set injected [expr {($prior_fault & 0x0000FFFF) |
+          (([dict get $d injectmask] & $p10_max_lane_mask) << 16)}]
       p10_write32 $sender 0x43C0073C $injected
       set readback [p10_read32 $sender 0x43C0073C]
-      if {($readback & 0x0003FFFF) != $injected} {
+      set injection_readback_mask [expr {0x0000FFFF | ($p10_max_lane_mask << 16)}]
+      if {($readback & $injection_readback_mask) != $injected} {
         error "P10 asynchronous lane-fault injection readback mismatch"
       }
+      set injection_applied 1
+      set injection_readback $readback
+      set injection_timestamp_ms [clock milliseconds]
+      set injection_sender $sender
       p10_say [format "P10_ASYNC_LANE_INJECTION=%s:sender=%s,mask=0x%X,readback=0x%08X" \
           [dict get $d label] $sender [dict get $d injectmask] $readback]
     }
@@ -625,11 +699,16 @@ proc p10_execute_case {d {window "NA"}} {
   }
   set fixed_p10_1r_dump [p10_dump_p10_1r_snapshot fixed [dict get $d label]]
   set rotating_p10_1r_dump [p10_dump_p10_1r_snapshot rotating [dict get $d label]]
+  p10_dump_p10_2_snapshot fixed [dict get $d label]
+  p10_dump_p10_2_snapshot rotating [dict get $d label]
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump $rotating_dump \
       $fixed_p10_1_dump $rotating_p10_1_dump \
       $fixed_p10_1r_dump $rotating_p10_1r_dump \
-      $fixed_status $rotating_status $fixed_state $rotating_state $window
+      $fixed_status $rotating_status $fixed_state $rotating_state $window \
+      $injection_applied $injection_readback $injection_timestamp_ms \
+      $injection_sender
+  p10_record_ps_gpio $sequence "[dict get $d label]_terminal"
 
   set expected [dict get $d expected_status]
   set expected_state [expr {$command == 10 ? 6 : ($expected == 0 ? 4 : 5)}]
@@ -654,20 +733,22 @@ proc p10_execute_case {d {window "NA"}} {
 }
 
 proc p10_p101_case {label object_id size direction lane timeout_ms {flags 0}} {
+  global p10_default_weights
   # Hardware-selected sustained configuration: buffer=4, ring=32, batch=8,
   # object=256 KiB.  Source run and hashes are frozen in the selected tuning
   # configuration evidence; this helper is used by windows and recovery cases.
-  set fields [list CASE $label 13 0 $flags $lane $direction 2 257 $size 32 1 0 0 \
+  set fields [list CASE $label 13 0 $flags $lane $direction 2 $p10_default_weights $size 32 1 0 0 \
       $timeout_ms 0xA1010001 0x101 $object_id 32 32 0 262144 65536 4 8 0 0 0 0]
   return [p10_case_dict $fields]
 }
 
 proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
                           {absolute_deadline 0}} {
+  global p10_max_lane_mask
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       ![string is integer -strict $duration_sec] ||
       $duration_sec < 10 || $duration_sec > 840 ||
-      $direction ni {0 1} || $lane ni {1 2 3} ||
+      $direction ni {0 1} || $lane < 1 || $lane > $p10_max_lane_mask ||
       $maximum_chunk ni {1048576 4194304 16777216 67108864} ||
       ![string is wideinteger -strict $absolute_deadline] ||
       $absolute_deadline < 0} {
@@ -683,7 +764,8 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
   set last_case_size 0
   set last_case_elapsed_ms 0
   set object_id [expr {0x51000000 ^ (($direction & 1) << 27) ^
-      (($lane & 3) << 24) ^ ($duration_sec << 8)}]
+      (($lane & $p10_max_lane_mask) << 24) ^ ($duration_sec << 8)}]
+  set next_object_id $object_id
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
   p10_say "P10_1_WINDOW_START_${marker_label}=$started"
   while {[clock milliseconds] < $deadline} {
@@ -737,13 +819,18 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
     set timeout [expr {min(1800000, max(10000, $remaining - 1000))}]
     set case_label [format "%s_%04d_%d" $label $index $candidate]
     set pattern_flags [expr {($index % 5) << 8}]
-    set d [p10_p101_case $case_label [expr {$object_id + $index}] \
+    set d [p10_p101_case $case_label $next_object_id \
         $candidate $direction $lane $timeout $pattern_flags]
     set case_started [clock milliseconds]
     p10_execute_case $d $label
     set last_case_elapsed_ms [expr {
         max(1, [clock milliseconds] - $case_started)}]
     set last_case_size $candidate
+    set consumed_ids [expr {($candidate + 262143) / 262144}]
+    if {$next_object_id + $consumed_ids > 0x7FFFFFFF} {
+      error "P10.1 window object-ID range overflow"
+    }
+    incr next_object_id $consumed_ids
     if {[clock milliseconds] > $deadline} {
       error "P10.1 window $label exceeded its bounded deadline"
     }
@@ -762,14 +849,15 @@ proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
 
 proc p10_run_p101_formal_window {label duration_sec direction lane \
                                   absolute_deadline} {
-  # The Goal permits at most four blocking host commands per direction and
-  # calls for one CONFIG/START for the formal window.  One 416-MiB command
-  # contains 1,664 256-KiB objects and 6,656 64-KiB DMA segments, so the PS
-  # launches once while the board-autonomous pipeline remains continuously
-  # responsible for object scheduling, transfer, verification, and commit.
-  set stream_bytes 436207616
+  global p10_max_lane_mask
+  # Repeated 64-MiB autonomous commands keep the board-side DMA/DDR/ARQ
+  # pipeline responsible for the fast path throughout the bounded window.
+  # The host only launches the next application object; a measured tail size
+  # is used so the final command cannot overrun the immutable 840-s boundary.
+  set stream_bytes 67108864
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
-      $duration_sec != 840 || $direction ni {0 1} || $lane != 3 ||
+      $duration_sec != 840 || $direction ni {0 1} ||
+      $lane != $p10_max_lane_mask ||
       ![string is wideinteger -strict $absolute_deadline] ||
       $absolute_deadline < 0} {
     error "invalid P10.1 formal autonomous window"
@@ -783,25 +871,68 @@ proc p10_run_p101_formal_window {label duration_sec direction lane \
   if {$remaining <= 16000} {
     error "insufficient P10.1 formal autonomous window budget"
   }
-  set timeout [expr {min(1800000, max(10000, $remaining - 6000))}]
   set object_id [expr {0x5F000000 ^ (($direction & 1) << 27)}]
-  set case_label [format "%s_0000_%d" $label $stream_bytes]
+  set next_object_id $object_id
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
   p10_say "P10_1_WINDOW_START_${marker_label}=$started"
-  set d [p10_p101_case $case_label $object_id $stream_bytes \
-      $direction $lane $timeout]
-  p10_execute_case $d $label
-  set now [clock milliseconds]
-  if {$now > $deadline} {
-    error "P10.1 formal autonomous stream exceeded its bounded deadline"
+  set command_count 0
+  set active_ms 0
+  set last_size 0
+  set last_elapsed 0
+  while {[clock milliseconds] < $deadline} {
+    set remaining [expr {$deadline - [clock milliseconds]}]
+    if {$remaining <= 6000} {
+      after $remaining
+      break
+    }
+    set candidate $stream_bytes
+    set predicted 150000
+    if {$last_size > 0 && $last_elapsed > 0} {
+      set predicted [expr {
+          (($last_elapsed * $candidate * 5) + ($last_size * 4 - 1)) /
+          ($last_size * 4) + 2000}]
+    }
+    if {$predicted + 3000 >= $remaining} {
+      if {$last_size == 0 || $last_elapsed == 0} {
+        error "formal tail has no measured throughput estimate"
+      }
+      set candidate [expr {
+          (($last_size * max(0, $remaining - 6000) * 3) /
+           (max(1, $last_elapsed) * 4 * 1048576)) * 1048576}]
+      if {$candidate > $stream_bytes} { set candidate $stream_bytes }
+      if {$candidate < 1048576} {
+        after $remaining
+        break
+      }
+    }
+    set timeout [expr {min(1800000, max(10000, $remaining - 6000))}]
+    set case_label [format "%s_%04d_%d" $label $command_count $candidate]
+    set d [p10_p101_case $case_label $next_object_id \
+        $candidate $direction $lane $timeout]
+    set case_started [clock milliseconds]
+    p10_execute_case $d $label
+    set last_elapsed [expr {max(1, [clock milliseconds] - $case_started)}]
+    set last_size $candidate
+    incr active_ms $last_elapsed
+    set consumed_ids [expr {($candidate + 262143) / 262144}]
+    if {$next_object_id + $consumed_ids > 0x7FFFFFFF} {
+      error "P10.1 formal object-ID range overflow"
+    }
+    incr next_object_id $consumed_ids
+    incr command_count
+    if {[clock milliseconds] > $deadline} {
+      error "P10.1 formal autonomous stream exceeded its bounded deadline"
+    }
   }
-  after [expr {$deadline - $now}]
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
   if {$finished < $deadline || $finished > $deadline + 500} {
     error "P10.1 formal autonomous window deadline bound failed: elapsed=$elapsed ms"
   }
-  p10_say "P10_1_WINDOW_PASS_${marker_label}=cases:1,elapsed_ms:$elapsed"
+  if {$command_count == 0 || $active_ms < 798000} {
+    error "P10.1 formal board-autonomous active coverage below 95 percent"
+  }
+  p10_say "P10_1_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,active_ms:$active_ms"
 }
 
 proc p10_wait_p101_active {sequence timeout_ms} {
@@ -829,10 +960,11 @@ proc p10_wait_p101_active {sequence timeout_ms} {
 }
 
 proc p10_execute_ps_service_reset {label reset_role direction lane size object_id} {
+  global p10_max_lane_mask
   global p10_command_sequence p10_active_case_label
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $reset_role ni {fixed rotating} || $direction ni {0 1} ||
-      $lane ni {1 2 3} || $size != 67108864} {
+      $lane < 1 || $lane > $p10_max_lane_mask || $size != 67108864} {
     error "invalid P10.1 PS service-reset vector"
   }
   set sender [p10_sender_role $direction]
@@ -867,6 +999,8 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   set rotating_p101 [p10_dump_p10_1_result rotating $label]
   set fixed_p10_1r [p10_dump_p10_1r_snapshot fixed $label]
   set rotating_p10_1r [p10_dump_p10_1r_snapshot rotating $label]
+  p10_dump_p10_2_snapshot fixed $label
+  p10_dump_p10_2_snapshot rotating $label
 
   p10_select_cpu $reset_role
   rst -processor
@@ -878,8 +1012,9 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   set peer [expr {$reset_role eq "fixed" ? "rotating" : "fixed"}]
   p10_reboot_role $peer "${label}_peer_recovery_reboot"
   global p10_expected_build
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 "${label}_RECOVERED"
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 "${label}_RECOVERED"
+  global p10_expected_profile
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) "${label}_RECOVERED"
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) "${label}_RECOVERED"
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump \
       $rotating_dump $fixed_p101 $rotating_p101 $fixed_p10_1r \
@@ -889,18 +1024,19 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
 }
 
 proc p10_run_p101_formal {label duration_sec} {
+  global p10_max_lane_mask
   if {$duration_sec != 1800} {
     error "formal P10.1 run must be exactly 1800 seconds"
   }
   set started [clock milliseconds]
   p10_say "P10_1_FORMAL_START_MS=$started"
-  p10_run_p101_window "${label}_warmup_f2r" 60 0 3 16777216 \
+  p10_run_p101_window "${label}_warmup_f2r" 60 0 $p10_max_lane_mask 16777216 \
       [expr {$started + 60000}]
-  p10_run_p101_window "${label}_warmup_r2f" 60 1 3 16777216 \
+  p10_run_p101_window "${label}_warmup_r2f" 60 1 $p10_max_lane_mask 16777216 \
       [expr {$started + 120000}]
-  p10_run_p101_formal_window "${label}_formal_f2r" 840 0 3 \
+  p10_run_p101_formal_window "${label}_formal_f2r" 840 0 $p10_max_lane_mask \
       [expr {$started + 960000}]
-  p10_run_p101_formal_window "${label}_formal_r2f" 840 1 3 \
+  p10_run_p101_formal_window "${label}_formal_r2f" 840 1 $p10_max_lane_mask \
       [expr {$started + 1800000}]
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
@@ -1144,17 +1280,17 @@ proc p10_reboot_role {role label} {
 }
 
 proc p10_rebootstrap_after_reset_recovery {label} {
-  global p10_expected_build
+  global p10_expected_build p10_expected_profile
   p10_say "P10_1_RESET_RECOVERY_REBOOT_BEGIN=$label"
   p10_reboot_role fixed "${label}_fixed_reset_recovery_reboot"
   p10_reboot_role rotating "${label}_rotating_reset_recovery_reboot"
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 "${label}_RESET_RECOVERED"
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 "${label}_RESET_RECOVERED"
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) "${label}_RESET_RECOVERED"
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) "${label}_RESET_RECOVERED"
   p10_say "P10_1_RESET_RECOVERY_REBOOT_PASS=$label"
 }
 
 proc p10_rebootstrap_after_echo_direction {label} {
-  global p10_expected_build
+  global p10_expected_build p10_expected_profile
   p10_say "P10_1R_ECHO_DIRECTION_ISOLATION_BEGIN=$label"
   # Assert the final PL shutdown/reset controls on both endpoints before any
   # processor is restarted.  This is required after both PASS and FAIL so a
@@ -1165,9 +1301,9 @@ proc p10_rebootstrap_after_echo_direction {label} {
   after 10
   p10_reboot_role fixed "${label}_fixed_echo_isolation_reboot"
   p10_reboot_role rotating "${label}_rotating_echo_isolation_reboot"
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 \
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) \
       "${label}_ECHO_ISOLATED"
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 \
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) \
       "${label}_ECHO_ISOLATED"
   p10_say "P10_1R_ECHO_DIRECTION_ISOLATION_PASS=$label"
 }
@@ -1227,6 +1363,13 @@ set p10_result_file [file normalize [lindex $argv 12]]
 set p10_stage [lindex $argv 13]
 set p10_authorization_file [file normalize [lindex $argv 14]]
 set p10_run_id [lindex $argv 15]
+set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage]}]
+set p10_lane_count [expr {$p10_campaign_p103 ? 4 : 2}]
+set p10_max_lane_mask [expr {$p10_campaign_p103 ? 15 : 3}]
+set p10_default_weights [expr {$p10_campaign_p103 ? 0x01010101 : 0x0101}]
+set p10_expected_capabilities [expr {$p10_campaign_p103 ? 0xF7204441 : 0xF7204221}]
+set p10_expected_profile(fixed) [expr {$p10_campaign_p103 ? 0x702004F0 : 0x702000F0}]
+set p10_expected_profile(rotating) [expr {$p10_campaign_p103 ? 0x702004A0 : 0x702000A0}]
 set p10_expected_build(fixed) 0x50313046
 set p10_expected_build(rotating) 0x50313052
 if {[llength $argv] == 18} {
@@ -1247,20 +1390,30 @@ file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
 set p10_observation_file [file join $p10_dump_dir observations.psv]
 set p10_observation_handle [open $p10_observation_file w]
-puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path"
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path|injection_applied|injection_readback|injection_timestamp_ms|injection_sender"
 flush $p10_observation_handle
 set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
 set p10_telemetry_handle [open $p10_telemetry_file w]
 puts $p10_telemetry_handle "captured_ms|sequence|label|role|admission_snapshot_words_csv|ps_runtime_words_csv|pl_perf_snapshot_words_csv"
 flush $p10_telemetry_handle
+set p10_ps_gpio_file [file join $p10_dump_dir ps_gpio_activity.psv]
+set p10_ps_gpio_handle [open $p10_ps_gpio_file w]
+puts $p10_ps_gpio_handle "captured_ms|sequence|label|role|data_ro|dirm0|oen0"
+flush $p10_ps_gpio_handle
 
 set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ne "P10_FASTTRACK_IMMUTABLE_AUTHORIZED"} {
     error "P10 immutable current-run environment marker required"
   }
-  if {![regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]} { error "unsupported P10.1R XSDB stage" }
-  if {![regexp {^p10_1r_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10.1R run id" }
+  set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
+  set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN)$} $p10_stage]
+  if {!$p10_1r_stage_ok && !$p10_3_stage_ok} { error "unsupported P10 XSDB stage" }
+  if {$p10_campaign_p103} {
+    if {![regexp {^p10_3_[A-Za-z0-9_.-]+$} $p10_run_id]} { error "unsafe P10.3 run id" }
+  } elseif {![regexp {^p10_1r_[A-Za-z0-9_.-]+$} $p10_run_id]} {
+    error "unsafe P10.1R run id"
+  }
   if {$p10_fixed_serial eq $p10_rotating_serial} { error "ambiguous P10 role serials" }
   foreach required [list $p10_bit(fixed) $p10_bit(rotating) $p10_elf(fixed) \
       $p10_elf(rotating) $p10_ps7(fixed) $p10_ps7(rotating) $p10_plan_file \
@@ -1389,8 +1542,8 @@ set rc [catch {
     p10_say "P10_PS7_INITIALIZED_[string toupper $role]=1"
   }
 
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 PREBOOT
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 PREBOOT
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) PREBOOT
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) PREBOOT
 
   foreach role {fixed rotating} {
     p10_select_cpu $role
@@ -1407,9 +1560,10 @@ set rc [catch {
   p10_say "P10_INITIAL_READY_DUMP_ROTATING=$rotating_ready"
   p10_resume fixed
   p10_resume rotating
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0 SAFE_BOOT
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0 SAFE_BOOT
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) SAFE_BOOT
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) SAFE_BOOT
   p10_say "P10_SAFE_BOOT=PASS"
+  p10_record_ps_gpio 0 SAFE_BOOT
 
   set p10_echo_matrix_failures {}
   set p10_echo_matrix_directions 0
@@ -1476,6 +1630,7 @@ if {$rc != 0} {
 }
 catch {close $p10_observation_handle}
 catch {close $p10_telemetry_handle}
+catch {close $p10_ps_gpio_handle}
 catch {close $p10_result_handle}
 if {$p10_connected} { catch {disconnect} }
 if {$rc != 0} {

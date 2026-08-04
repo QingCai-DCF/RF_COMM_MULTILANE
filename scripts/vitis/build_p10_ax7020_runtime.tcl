@@ -5,13 +5,17 @@ set campaign p10
 if {[llength $argv] > 3} { set campaign [string tolower [lindex $argv 3]] }
 
 if {$role eq "fixed"} {
-  if {$campaign eq "p10_2"} {
+  if {$campaign eq "p10_3"} {
+    set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h"
+  } elseif {$campaign eq "p10_2"} {
     set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_runtime_role.h"
   } else {
     set role_header "$root_dir/board_profiles/ax7020_fixed_2lane/p10_runtime_role.h"
   }
 } elseif {$role eq "rotating"} {
-  if {$campaign eq "p10_2"} {
+  if {$campaign eq "p10_3"} {
+    set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h"
+  } elseif {$campaign eq "p10_2"} {
     set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_runtime_role.h"
   } else {
     set role_header "$root_dir/board_profiles/ax7020_rotating_2lane/p10_runtime_role.h"

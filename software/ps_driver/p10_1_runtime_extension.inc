@@ -314,6 +314,7 @@ static int p10_1_submit_chain(uint32_t tx_direction, UINTPTR address,
         return P10_1_RUNTIME_STATUS_DMA_CHAIN;
       g_rx_started = 1U;
     }
+    p10_ps_dma_activity_begin(tx_direction, batch);
     for (uint32_t index = 0U; index < batch; ++index)
       bd = (XAxiDma_Bd *)XAxiDma_BdRingNext(ring, bd);
     submitted_count += batch;
@@ -371,6 +372,7 @@ static int p10_1_collect_chain(uint32_t tx_direction, uint32_t expected,
       }
       if (XAxiDma_BdRingFree(ring, count, set) != XST_SUCCESS)
         return P10_1_RUNTIME_STATUS_DMA_COMPLETION;
+      p10_ps_dma_activity_end(tx_direction, (uint32_t)count);
       completed += (uint32_t)count;
       if (tx_direction != 0U) {
         g_metrics.tx_completed += (uint32_t)count;
@@ -515,7 +517,16 @@ static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
                                    uint32_t inject_fault,
                                    uint32_t local_receiver) {
   uint32_t protocol_fault_flags = mailbox->protocol_fault_flags & 0xfffU;
+  /* Lane health is live during an autonomous stream.  Preserve a bounded
+   * host-injected unavailable mask across later object boundaries; otherwise
+   * the next object configuration silently clears the fault before retry
+   * migration can be observed.  DATA/ACK drop fields stay zero for command
+   * 13 because the legacy mailbox words carrying ACK threshold/outstanding
+   * are not physical-drop controls in this command schema. */
   uint32_t physical_fault_injection =
+      p9_pl_read(IR_REG_P9_FAULT_INJECTION) &
+      ((uint32_t)P10_LANE_MASK << 16);
+  physical_fault_injection |=
       (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16;
   if (inject_fault != 0U) {
     if ((command_flags & P10_1_RUNTIME_FLAG_STALE_SEGMENT) != 0U)
@@ -1194,12 +1205,16 @@ static int p10_1_command_autonomous_stream(
     status = P10_1_RUNTIME_STATUS_PL_OBJECT;
     goto stream_fail_v2;
   }
-
   /*
    * Stream-wide observability starts from one clear.  Object configuration
    * below deliberately never clears these counters.
    */
   p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
+  /* A new command is a new fault-lifecycle boundary.  Clear any unavailable
+   * mask left by the preceding command before object 0; a later live XSDB
+   * injection is then deliberately retained by p10_1_configure_object(). */
+  p9_pl_write(IR_REG_P9_FAULT_INJECTION,
+              (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16);
   p9_pl_write(P10_1_PERF_COMMAND_OFFSET, 8U);
   p9_pl_write(P10_1_PERF_SNAPSHOT_CONTROL_OFFSET, 2U);
   usleep(10U);
