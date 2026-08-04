@@ -101,9 +101,8 @@
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
   "campaign_standing_authorization": "P10.3 allows necessary bounded diagnostics/recovery/retest after exact artifact freeze, with shutdown-before/after and no physical changes.",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T12:15:22+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "diagnostic_runner_parent_commit": "d11331a0dd89d81e5bcce8b3ef225a485a683f79",
   "diagnostic_trigger": "The resumed all-lane intake observed F3 physical TX 64/64 but R3 raw RX 0/64; the standing P10.3 authorization permits the bounded reciprocal diagnostic needed before physical handling.",
   "forbidden": {
@@ -120,7 +119,7 @@
   },
   "generated_at_utc": "2026-08-04T12:12:39+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
-  "hardware_actions_executed": true,
+  "hardware_actions_executed": false,
   "inputs": {
     "AGENTS.md": {
       "bytes": 9946,
@@ -262,7 +261,6 @@
     "sha256": "4f6c68131d6b0a46a18ed25879b60cf8cdf074cc3ad09d5dbe6ab25af833d6d0"
   },
   "realignment": false,
-  "result": "evidence/generated/p10_3_lane3_raw_connectivity_diagnostic.json",
   "retry_override": {
     "campaign_wide_unlimited_override": false,
     "goal_diagnostic_limit_previously_exhausted": true,
@@ -272,7 +270,6 @@
   },
   "rewiring_by_codex": false,
   "rotation": false,
-  "run_evidence": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "run_id": "p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef",
   "runtime_limits": {
     "active_functional_total_seconds": 600,
@@ -292,7 +289,7 @@
     "on_timeout": true,
     "verify_both": true
   },
-  "status": "CONSUMED_AFTER_LANE3_RAW_RETEST_FAIL",
+  "status": "AUTHORIZED",
   "stimulus": {
     "commands": [
       "receive_only_5000ms",
