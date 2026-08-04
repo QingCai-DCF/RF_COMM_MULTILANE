@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-04T10:26:14Z",
+  "test_id": "P10_3-HW-LANE2-DIRECTIONAL-BLOCKER-AUDIT",
+  "stage": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
+  "status": "FAIL",
+  "canonical_program_status": "IN_PROGRESS",
+  "classification": "FAIL_RAW_PHYSICAL_DIRECTION_R2_TO_F2",
+  "evidence_level": "RAW_PHYSICAL_ONLY",
+  "run_id": "p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
+  "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
+  "runner_remediation_commit": "593fddf2bfd958fdfbfb56f781778717eba6a76a",
+  "authorization_commit": "debe873923e110fc1a67ba191058de27d0a4812a",
+  "hardware_evidence_commit": "083087c7b77dc92903efdceda1133056ae213c97",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0001",
+    "F3": "B0004",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0015",
+    "R3": "B0017"
+  },
+  "lane": 2,
+  "lane_pair": "F2-R2",
+  "direction_results": {
+    "F2_to_R2": {
+      "raw_64": "PASS",
+      "raw_1024": "PASS",
+      "verdict_source": "P10_CASE_PASS markers from the immutable module-intake stage"
+    },
+    "R2_to_F2": {
+      "raw_64": "FAIL",
+      "requested_raw_pulses": 64,
+      "fixed_receiver_raw_count_lane2": 5,
+      "fixed_receiver_command_status": 14,
+      "fixed_receiver_service_state": 5,
+      "rotating_sender_command_status": 0,
+      "rotating_sender_service_state": 4,
+      "fixed_phy_safety_fault_mask": 0,
+      "rotating_phy_safety_fault_mask": 0,
+      "fixed_hard_fault_count_lane2": 0,
+      "rotating_hard_fault_count_lane2": 0,
+      "raw_1024": "NOT_RUN_FAIL_FAST"
+    }
+  },
+  "executed_waveform_safety_observations": {
+    "phy_clock_hz": 64000000,
+    "observed_tx_high_max_cycles_in_passing_F2_cases": 8,
+    "observed_tx_high_max_ns_in_passing_F2_cases": 125,
+    "observed_rolling_duty_peak_cycles_in_passing_F2_cases": 504,
+    "rolling_duty_window_cycles": 64000,
+    "observed_rolling_duty_peak_percent_in_passing_F2_cases": 0.7875,
+    "safety_fault_mask_both_endpoints": 0,
+    "boundary": "These observations show no reported pulse-width, rolling-duty, stuck-high, or PHY safety fault in the executed cases. They do not prove that either TFDU module is undamaged."
+  },
+  "module_intake": {
+    "F2": "FAIL_INCOMPLETE_VECTOR",
+    "R2": "FAIL_INCOMPLETE_VECTOR_AND_DIRECTIONAL_RAW_FAILURE",
+    "F3": "FAIL_NOT_REACHED_AFTER_FAIL_FAST",
+    "R3": "FAIL_NOT_REACHED_AFTER_FAIL_FAST"
+  },
+  "downstream_stages": {
+    "eight_by_eight_matrix": "NOT_RUN",
+    "per_lane_4_mbit_s": "NOT_RUN",
+    "four_lane_raw": "NOT_RUN",
+    "mask_degrade": "NOT_RUN",
+    "arq_sack": "NOT_RUN",
+    "dma": "NOT_RUN",
+    "streaming_64_mib": "NOT_RUN",
+    "application_8_mbit_s": "NOT_RUN",
+    "formal_1800_s": "NOT_RUN"
+  },
+  "component_attribution": {
+    "status": "INDETERMINATE",
+    "not_proven": [
+      "R2 transmitter fault",
+      "F2 receiver fault",
+      "optical alignment or path fault",
+      "module power or interconnect fault"
+    ],
+    "reason": "The current immutable run proves a direction-specific end-to-end raw failure but does not isolate transmitter, receiver, optical path, power, or interconnect."
+  },
+  "safety_and_scope": {
+    "hardware_actions_executed": true,
+    "current_run_hardware_authorization": false,
+    "authorization_consumed": true,
+    "maximum_lane_mask_authorized": "0xF",
+    "maximum_lane_mask_used": "0x4",
+    "network_used": false,
+    "movement": false,
+    "rotation": false,
+    "realignment": false,
+    "rewiring": false,
+    "two_hour_test": false,
+    "p11_started": false,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "verified_shutdown_checkpoints": [
+      "initial_shutdown",
+      "preflight_before",
+      "preflight_after",
+      "module_intake_before",
+      "module_intake_after",
+      "finally_emergency"
+    ]
+  },
+  "evidence": {
+    "module_intake_stage_summary": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json",
+      "sha256": "3c3b8db1b03f6282a88b64a3668ecfe226bd60b5082b8d7ab687c45750bcb445"
+    },
+    "orchestrator_result": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
+      "sha256": "77890560e2c9781e3c2a60461c7575b4c9c87b78a4d8a07b3bb7fc70774ecb9e"
+    },
+    "shutdown_summary": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/shutdown/summary.json",
+      "sha256": "90840753a15eeae0de143249ca8c61ebd9162118f8b6114ef538f3e76c06894b"
+    },
+    "run_evidence_manifest": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/final/run_evidence_sha256_manifest.json",
+      "sha256": "191975aab14d10af6dac2880f6169607a0b80f48fac2781e912cfab715b04b0f"
+    }
+  },
+  "manual_physical_action_required": true,
+  "next_required_user_action": "With power removed, inspect or correct the R2-to-F2 optical path and the R2 transmitter/F2 receiver hardware, or authorize a controlled module swap/replacement diagnostic; then provide a new current-run authorization for a fresh immutable intake run.",
+  "intended_investigated_tag": "p10.3-ax7020-stationary-4lane-investigated"
+}
