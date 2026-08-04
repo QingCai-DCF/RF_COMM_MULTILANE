@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-04T10:44:40Z",
+  "test_id": "P10_3-OFFLINE-LANE2-SOFTWARE-PATH-AUDIT",
+  "status": "COMPLETE_WITH_EXTERNAL_PATH_BLOCKER",
+  "p10_3_acceptance_status": "FAIL",
+  "canonical_program_status": "IN_PROGRESS",
+  "classification": "SOFTWARE_DIRECTION_CONTROL_VALIDATED_EXTERNAL_PATH_NOT_ISOLATED",
+  "hardware_actions_executed_this_audit": false,
+  "current_run_hardware_authorization": false,
+  "authorization_consumed": true,
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "audit_base_commit": "68278da61937135424f86b9b28e1d07de2d420e2",
+  "host_evidence_guard_commit": "634ed8b94ca86e8e0c4834dd7c68bf41dd777891",
+  "artifact_source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
+  "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
+  "run_id": "p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "lane_binding": {
+    "lane": 2,
+    "pair": "F2-R2",
+    "fixed_module": "F2=B0001",
+    "rotating_module": "R2=B0015",
+    "fixed_position": "AX7020-F/J11-A",
+    "rotating_position": "AX7020-R/J11-A",
+    "mode": "J11-30/G17",
+    "sd": "J11-32/H16",
+    "rxd": "J11-34/H15",
+    "txd": "J11-36/K14"
+  },
+  "direction_control_audit": {
+    "software_direction_control": "PASS",
+    "runner_plan": {
+      "label": "intake_R2_raw_64",
+      "command": 2,
+      "lane_mask": "0x4",
+      "direction": 1,
+      "requested_raw_pulses": 64,
+      "source": "scripts/run_p10_3_ax7020_4lane_hardware.py:515"
+    },
+    "xsdb_pairing": {
+      "direction_0": "sender=fixed,receiver=rotating",
+      "direction_1": "sender=rotating,receiver=fixed",
+      "latest_marker": "P10_PAIRED_LAUNCH=intake_R2_raw_64:receiver=fixed,sender=rotating",
+      "source": "scripts/hw/p10_dual_xsdb_stage.tcl:484"
+    },
+    "firmware_role_gate": {
+      "fixed_role": 1,
+      "rotating_role": 2,
+      "fixed_sends_direction": 0,
+      "rotating_sends_direction": 1,
+      "start_raw_only_on_local_sender": true,
+      "sender_completion_requires_raw_done_and_exact_sent_count": true,
+      "receiver_completion_requires_selected_local_raw_count_at_target": true,
+      "source": "software/ps_driver/p9_runtime_main.c:227"
+    },
+    "rtl_route": {
+      "direction_0_raw_request": "A path",
+      "direction_1_raw_request": "B path",
+      "lane_mask_bit": 2,
+      "pulse_cycles": 8,
+      "clock_hz": 64000000,
+      "nominal_pulse_ns": 125,
+      "final_safety_path_preserved": true,
+      "source": "rtl/p9_optical_transport_core.sv:1272"
+    },
+    "xdc_cross_check": {
+      "fixed_lane2": "J11-A G17/H16/H15/K14 LVCMOS33",
+      "rotating_lane2": "J11-A G17/H16/H15/K14 LVCMOS33",
+      "status": "MATCH",
+      "boundary": "This is a source/XDC cross-check, not an electrical continuity measurement."
+    }
+  },
+  "direct_raw_observations": {
+    "counter_semantics": {
+      "physical_tx": "A rising-edge counter on the post-safety tfdu_lane_phy Txd signal, upstream of the duplicated top-level endpoint kill; it is digital internal telemetry, not an external pin or optical-power measurement.",
+      "raw_rx": "A synchronized active-low Rxd falling-edge counter while phy_ready; it is raw connectivity evidence, not a valid-frame counter.",
+      "source": "rtl/tfdu_lane_phy.sv:168"
+    },
+    "F2_to_R2_raw_64": {
+      "result": "PASS",
+      "fixed_physical_tx": [0, 0, 64, 0, 0, 0, 0, 0],
+      "rotating_raw_rx": [0, 0, 0, 0, 0, 0, 64, 0],
+      "fixed_command_status": 0,
+      "rotating_command_status": 0
+    },
+    "F2_to_R2_raw_1024": {
+      "result": "PASS",
+      "fixed_physical_tx": [0, 0, 1024, 0, 0, 0, 0, 0],
+      "rotating_raw_rx": [0, 0, 0, 0, 0, 0, 1024, 0],
+      "fixed_command_status": 0,
+      "rotating_command_status": 0
+    },
+    "R2_to_F2_raw_64": {
+      "result": "FAIL",
+      "rotating_physical_tx": [0, 0, 0, 0, 0, 0, 64, 0],
+      "fixed_raw_rx": [0, 0, 5, 0, 0, 0, 0, 0],
+      "rotating_sender_command_status": 0,
+      "rotating_sender_service_state": 4,
+      "fixed_receiver_command_status": 14,
+      "fixed_receiver_service_state": 5,
+      "fixed_phy_safety_fault_mask": 0,
+      "rotating_phy_safety_fault_mask": 0,
+      "fixed_lane2_hard_fault_count": 0,
+      "rotating_lane2_hard_fault_count": 0
+    }
+  },
+  "host_evidence_parser_audit": {
+    "p10_3_raw_verdict_path": "PASS",
+    "p10_3_behavior": "The P10.3 runner uses lane-indexed eight-module P10.2 snapshots and checks exact sender telemetry plus the paired remote raw count.",
+    "latest_verdict_affected_by_generic_gap": false,
+    "generic_shared_raw_evaluator_before_fix": "Hard-coded to the legacy two-lane mailbox layout and F0/F1/R0/R1 ordering.",
+    "generic_shared_raw_evaluator_after_fix": "UNSUPPORTED_FAIL_CLOSED for any non-two-lane role contract; directs callers to profile-specific physical-module snapshots.",
+    "remediation": "COMPLETE",
+    "source": "scripts/p10_hardware_runtime.py:914",
+    "test": "tests/test_p10_hardware_runtime.py:202"
+  },
+  "component_attribution": {
+    "status": "INDETERMINATE_EXTERNAL_PATH",
+    "ruled_out_as_primary_cause": [
+      "P10.3 plan direction field",
+      "XSDB sender/receiver role selection",
+      "role-bound firmware START_RAW ownership",
+      "P10.3 eight-module snapshot indexing",
+      "the latent generic two-lane evaluator gap as the source of the latest 5/64 verdict"
+    ],
+    "not_ruled_out": [
+      "R2 TFDU optical transmitter or its power/interconnect",
+      "R2 Txd external pin/interconnect despite internal digital count",
+      "R2-to-F2 optical path or alignment",
+      "F2 TFDU receiver or its power/interconnect",
+      "F2 Rxd external pin/interconnect"
+    ],
+    "boundary": "No external electrical probe, optical-power measurement, module swap, movement, realignment, or rewiring was performed. The evidence cannot identify a defective component."
+  },
+  "acceptance_matrix": {
+    "F2_module_intake": "FAIL_INCOMPLETE_VECTOR",
+    "R2_module_intake": "FAIL_DIRECTIONAL_RAW_AND_INCOMPLETE_VECTOR",
+    "F3_module_intake": "FAIL_NOT_REACHED",
+    "R3_module_intake": "FAIL_NOT_REACHED",
+    "raw_8x8": "NOT_RUN",
+    "lane0_4mbps": "NOT_RUN",
+    "lane1_4mbps": "NOT_RUN",
+    "lane2_4mbps": "NOT_RUN",
+    "lane3_4mbps": "NOT_RUN",
+    "two_lane_regression": "NOT_RUN",
+    "four_lane_16mbps_raw": "NOT_RUN",
+    "lane_mask_matrix": "NOT_RUN",
+    "degraded_mode_matrix": "NOT_RUN",
+    "four_lane_arq_sack": "NOT_RUN",
+    "dma_ddr_cache": "NOT_RUN",
+    "streaming_64m": "NOT_RUN",
+    "application_8mbps": "NOT_RUN",
+    "stationary_30min": "NOT_RUN"
+  },
+  "authorization_and_retry_boundary": {
+    "authorization_path": "config/p10_3_current_run_hardware_authorization.json",
+    "authorization_sha256": "fca1085c3c0aaef1475e38ded3794891fb6d229aad5a03a3a78d745f1551f590",
+    "authorization_status": "CONSUMED_AFTER_P10_3_FAIL",
+    "current_run_hardware_authorization": false,
+    "retry_limits": {
+      "diagnostic_run_ids_per_stage": 2,
+      "jtag_connect": 3,
+      "program_per_operation": 2
+    },
+    "recorded_p10_3_run_count": 5,
+    "additional_hardware_retry_permitted_now": false,
+    "reason": "The current-run authorization is consumed and false; recorded campaign retries have reached or exceeded the bounded diagnostic/program/connect policy."
+  },
+  "offline_verification": {
+    "focused_tests": {
+      "command": "python -m unittest tests.test_p10_hardware_runtime tests.test_p10_3_hardware_acceptance",
+      "result": "PASS",
+      "tests_run": 21
+    },
+    "python_compile": {
+      "command": "python -m py_compile scripts/p10_hardware_runtime.py tests/test_p10_hardware_runtime.py",
+      "result": "PASS"
+    },
+    "no_hardware_checker": {
+      "command": "python scripts/check_no_hardware_calls.py",
+      "result": "NO_HARDWARE_ACTIONS_EXECUTED=1"
+    },
+    "repository_wide_unittest": {
+      "command": "python -m unittest discover -s tests -p test_*.py",
+      "result": "FAIL",
+      "tests_run": 528,
+      "failures": 18,
+      "errors": 17,
+      "classification": "UNRESOLVED_REPOSITORY_WIDE_FAILURES",
+      "handling": "Retained as a failure; it is not used to promote P10.3 or this artifact bundle."
+    }
+  },
+  "source_hashes": {
+    "scripts/p10_hardware_runtime.py": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09",
+    "tests/test_p10_hardware_runtime.py": "581ff0d1375b22396f165d81cdef2cde3127e54462d673ba06f83de1ffc2d6ab",
+    "scripts/run_p10_3_ax7020_4lane_hardware.py": "99cbef600d1a595d812976bd70c4e14caecc5fcc3902b66e4b0ce63d7403ece1",
+    "scripts/hw/p10_dual_xsdb_stage.tcl": "fdb6512a1fcc2e1e53c44f701bb2cbc9e65dc5e39d10bedd2a474610a83d1988",
+    "software/ps_driver/p9_runtime_main.c": "a946d95e68e96451d0b1c9e71156f9f8267263820c9dd39155ce36a38dd432cc",
+    "rtl/p9_optical_transport_core.sv": "aa4805f1e38af2a89abbc3a299a965fd31221502da99db6b64e7b1fce7a42e81",
+    "rtl/tfdu_lane_phy.sv": "2382f84ac66d358e24a47e5864753637283aa6800b83899d0194d070da230ba7",
+    "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h": "347fe7f3dfc76b9344af03967c7c30130431e71a915d9f34ade56d6599570d3c",
+    "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h": "661603b4c192dcd6b77495765d706aeb52f496639e24a3c1786de6148949bb8f",
+    "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1",
+    "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"
+  },
+  "raw_evidence": {
+    "stage_summary": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json",
+      "sha256": "3c3b8db1b03f6282a88b64a3668ecfe226bd60b5082b8d7ab687c45750bcb445"
+    },
+    "xsdb_result": {
+      "path": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/module_intake/xsdb.result.txt",
+      "sha256": "af6f074525d7b2bf64e698f30e2ab986b8030cc6f7ad544cff6099e3685deb69"
+    },
+    "F2_raw_64_fixed_snapshot": "95f1dd4ef398623588cd11463c1cf8660dadb56ba32727e277bf4b65f3a58bfd",
+    "F2_raw_64_rotating_snapshot": "9f86915b7b0174999a0aa13f35c22e5d9264011b5052adadb4561951b83281ea",
+    "F2_raw_1024_fixed_snapshot": "3d5deb290b6f779f2aa667bc85a61baa8452dc27dd4274681c98cfcd8c48e3d5",
+    "F2_raw_1024_rotating_snapshot": "853f2fb0919bcbb57c118aa3dd9a181f8f8fc6f1d9787506ba89f1a47945d781",
+    "R2_raw_64_fixed_snapshot": "eed024733b737244f28d5606845854cada6eaabc30a0b420f91fb2e99128323f",
+    "R2_raw_64_rotating_snapshot": "aee866c850c285bb4b90fb1a92f2842286f3f63045d66e0693436f80ceb67ba4",
+    "orchestrator_result_sha256": "77890560e2c9781e3c2a60461c7575b4c9c87b78a4d8a07b3bb7fc70774ecb9e",
+    "shutdown_summary_sha256": "90840753a15eeae0de143249ca8c61ebd9162118f8b6114ef538f3e76c06894b",
+    "run_manifest_sha256": "191975aab14d10af6dac2880f6169607a0b80f48fac2781e912cfab715b04b0f"
+  },
+  "runtime_environment_observation": {
+    "preexisting_hw_server_process_observed": true,
+    "observed_process_start_local": "2026-07-28T09:37:20",
+    "started_stopped_or_connected_by_this_audit": false
+  },
+  "next_required_user_action": "With hardware powered off, inspect or correct the R2-to-F2 external path or authorize a controlled module/path isolation procedure; then provide an explicit retry-limit override and a fresh machine-readable current-run authorization."
+}
