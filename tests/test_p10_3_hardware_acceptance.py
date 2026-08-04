@@ -297,6 +297,55 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         above_max = self.runner.snapshot_errors("boundary", "fixed", snapshot)
         self.assertTrue(any("hard duty violation" in item for item in above_max))
 
+    def test_terminal_sequence_register_is_decoded_before_wrap_comparison(self) -> None:
+        state = self.runner.terminal_transport_state({
+            "terminal_tx_sequence_base": 0x005E005E,
+            "terminal_window_status": (32 << 22) | 0xFFFE,
+        })
+        self.assertEqual(state["tx_next_sequence"], 0x005E)
+        self.assertEqual(state["tx_ack_base"], 0x005E)
+        self.assertEqual(state["rx_base_sequence"], 0xFFFE)
+        self.assertEqual(state["tx_outstanding"], 0)
+        self.assertEqual(state["tx_outstanding_high_watermark"], 32)
+
+    def test_ack_loss_can_drain_by_later_cumulative_ack_without_retry(self) -> None:
+        frames = 512
+        detail = {
+            "label": "arq_ack_loss",
+            "direction": 1,
+            "plan_fields": {"size": 247 * frames, "initialseq": 0},
+            "fixed": {
+                "ack_aggregation": frames,
+                "transport": {
+                    "physical_drop_ack": 1,
+                    "rx_delivery": frames,
+                    "rx_base_sequence": frames,
+                },
+            },
+            "rotating": {
+                "terminal_tx_sequence_base": (frames << 16) | frames,
+                "terminal_window_status": 32 << 22,
+                "physical_ack_good": 16,
+                "tx_attempts": frames,
+                "tx_retries": 0,
+                "retry_exhausted": 0,
+                "transport": {},
+            },
+        }
+        errors, recovery = self.runner.ack_loss_recovery_errors(detail)
+        self.assertEqual(errors, [])
+        self.assertEqual(
+            recovery["recovery_mode"],
+            "later_cumulative_ack_without_retransmission",
+        )
+
+        detail["rotating"]["terminal_tx_sequence_base"] = (
+            ((frames - 1) << 16) | frames
+        )
+        errors, _ = self.runner.ack_loss_recovery_errors(detail)
+        self.assertTrue(any("terminal sequence state mismatch" in error
+                            for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()

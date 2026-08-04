@@ -1484,6 +1484,86 @@ def path_roles(detail: dict[str, Any]) -> tuple[str, str]:
         ("rotating", "fixed")
 
 
+def terminal_transport_state(mailbox: dict[str, Any]) -> dict[str, int]:
+    """Decode the command-bound terminal selective-repeat snapshot.
+
+    ``terminal_tx_sequence_base`` is a packed register: the low half is
+    TX_NEXT_SEQUENCE and the high half is TX_ACK_BASE.  Keeping the packed
+    value in evidence is useful, but comparing the whole register with one
+    16-bit sequence value is not.
+    """
+    sequence_base = int(mailbox.get("terminal_tx_sequence_base", 0))
+    window_status = int(mailbox.get("terminal_window_status", 0))
+    return {
+        "tx_next_sequence": sequence_base & 0xFFFF,
+        "tx_ack_base": (sequence_base >> 16) & 0xFFFF,
+        "rx_base_sequence": window_status & 0xFFFF,
+        "tx_outstanding": (window_status >> 16) & 0x3F,
+        "tx_outstanding_high_watermark": (window_status >> 22) & 0x3F,
+    }
+
+
+def ack_loss_recovery_errors(detail: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
+    """Validate one ACK/SACK loss vector without requiring an unnecessary retry.
+
+    A later cumulative ACK can drain a selectively repeated window before the
+    oldest frame reaches its retransmission timeout.  Therefore ACK/SACK loss
+    is proven by the physical drop counter plus exact terminal drain and
+    delivery accounting.  A retransmission, when present, is recorded but is
+    not required; data-loss and retry-migration vectors retain their separate
+    direct retry requirements.
+    """
+    errors: list[str] = []
+    label = detail["label"]
+    sender_role, receiver_role = path_roles(detail)
+    sender = mailbox_for(detail, sender_role)
+    receiver = mailbox_for(detail, receiver_role)
+    sender_state = terminal_transport_state(sender)
+    sender_transport = sender.get("transport", {})
+    receiver_transport = receiver.get("transport", {})
+    plan = detail["plan_fields"]
+    expected_frames = math.ceil(plan["size"] / 247)
+    expected_final = (int(plan["initialseq"]) + expected_frames) & 0xFFFF
+    dropped_ack = int(receiver_transport.get("physical_drop_ack", 0))
+    retries = int(sender.get("tx_retries", 0))
+
+    if dropped_ack <= 0:
+        errors.append(f"{label}:injected ACK/SACK loss was not directly counted")
+    if int(receiver.get("ack_aggregation", 0)) != expected_frames or \
+            int(sender.get("physical_ack_good", 0)) <= 0:
+        errors.append(f"{label}:later cumulative ACK recovery was not directly observed")
+    if int(sender.get("tx_attempts", 0)) != expected_frames + retries:
+        errors.append(f"{label}:DATA attempt/retry accounting mismatch")
+    if int(receiver_transport.get("rx_delivery", 0)) != expected_frames:
+        errors.append(f"{label}:exactly-once delivery count mismatch")
+    if sender_state["tx_outstanding"] != 0:
+        errors.append(f"{label}:terminal selective-repeat window did not drain")
+    if (sender_state["tx_next_sequence"], sender_state["tx_ack_base"],
+            int(receiver_transport.get("rx_base_sequence", -1))) != \
+            (expected_final,) * 3:
+        errors.append(f"{label}:terminal sequence state mismatch")
+    if int(sender.get("retry_exhausted", 0)) != 0:
+        errors.append(f"{label}:ACK/SACK loss exhausted retry budget")
+
+    recovery = {
+        "label": label,
+        "dropped_ack": dropped_ack,
+        "expected_frames": expected_frames,
+        "expected_final_sequence": expected_final,
+        "terminal_state": sender_state,
+        "tx_attempts": int(sender.get("tx_attempts", 0)),
+        "tx_retries": retries,
+        "physical_ack_good": int(sender.get("physical_ack_good", 0)),
+        "ack_aggregation": int(receiver.get("ack_aggregation", 0)),
+        "rx_delivery": int(receiver_transport.get("rx_delivery", 0)),
+        "recovery_mode": (
+            "bounded_retransmission" if retries else
+            "later_cumulative_ack_without_retransmission"
+        ),
+    }
+    return errors, recovery
+
+
 def data_path_errors(detail: dict[str, Any], *, unavailable: int = 0,
                      injected: bool = False,
                      require_all_selected: bool = True) -> list[str]:
@@ -2000,10 +2080,14 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
         for label in ("arq_wrap_f2r", "arq_wrap_r2f"):
             item = by_label.get(label)
             if item:
-                sender_role, _ = path_roles(item)
+                sender_role, receiver_role = path_roles(item)
                 sender = mailbox_for(item, sender_role)
+                receiver = mailbox_for(item, receiver_role)
                 expected_base = (0xFFFE + math.ceil(item["plan_fields"]["size"] / 247)) & 0xFFFF
-                if sender.get("terminal_tx_sequence_base") != expected_base:
+                terminal = terminal_transport_state(sender)
+                if (terminal["tx_next_sequence"], terminal["tx_ack_base"],
+                        receiver.get("transport", {}).get("rx_base_sequence")) != \
+                        (expected_base,) * 3:
                     errors.append(f"{label}:sequence wrap terminal base mismatch")
         ack = by_label.get("arq_ack_aggregation")
         if ack:
@@ -2012,16 +2096,20 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
             if receiver.get("ack_aggregation", 0) == 0 or \
                     receiver.get("ack_frames", 0) >= 512:
                 errors.append("ACK aggregation not directly observed")
-        for label, drop_key in (("arq_data_loss", "physical_drop_data"),
-                                ("arq_ack_loss", "physical_drop_ack"),
-                                ("arq_sack_loss", "physical_drop_ack")):
+        data_loss = by_label.get("arq_data_loss")
+        if data_loss:
+            sender_role, _ = path_roles(data_loss)
+            sender = mailbox_for(data_loss, sender_role)
+            if sender.get("transport", {}).get("physical_drop_data", 0) == 0 or \
+                    sender.get("tx_retries", 0) == 0:
+                errors.append("arq_data_loss:data loss/retry not directly observed")
+        ack_loss_recovery: list[dict[str, Any]] = []
+        for label in ("arq_ack_loss", "arq_sack_loss"):
             item = by_label.get(label)
             if item:
-                sender_role, receiver_role = path_roles(item)
-                drop_role = sender_role if label == "arq_data_loss" else receiver_role
-                if mailbox_for(item, drop_role).get("transport", {}).get(drop_key, 0) == 0 or \
-                        mailbox_for(item, sender_role).get("tx_retries", 0) == 0:
-                    errors.append(f"{label}:loss/retry not directly observed")
+                loss_errors, recovery = ack_loss_recovery_errors(item)
+                errors.extend(loss_errors)
+                ack_loss_recovery.append(recovery)
         duplicate = by_label.get("arq_duplicate_ack")
         if duplicate:
             sender_role, _ = path_roles(duplicate)
@@ -2088,6 +2176,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                           "ack_threshold": 32, "outstanding": 32,
                           "fairness_limit_percent": 10, "fairness": fairness,
                           "sequence_wrap": True, "loss_vectors": 3,
+                          "ack_loss_recovery": ack_loss_recovery,
                           "retry_migration": True})
     elif stage == "dma":
         by_label = {detail["label"]: detail for detail in non_shutdown}

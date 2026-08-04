@@ -219,6 +219,48 @@ old hashes. A new immutable bitstream/XSA/BSP/ELF bundle, complete offline
 gates, current-run authorization, full hardware campaign, and verified
 dual-board shutdown are required.
 
+## Immutable ARQ evaluator failure and host-only correction
+
+The immutable run
+`p10_3f_full_20260804T222611Z_5bf79e39_9ae79d14_e7389fda` remains FAIL
+evidence and is not reclassified. It passed every stage through degradation,
+and its XSDB ARQ/SACK stage returned PASS for every case and every safety gate.
+The new PL-atomic retry-migration vector directly captured one rejected target
+frame with 32 outstanding frames, unchanged ACK base zero, one target attempt,
+target physical-TX count 1038, exactly one atomic trigger, and a nonzero
+terminal retry migration. The host nevertheless rejected the stage with four
+post-processing errors and therefore did not admit any later campaign stage.
+
+Two errors came from comparing the packed terminal register
+`{TX_ACK_BASE, TX_NEXT_SEQUENCE}` directly with one 16-bit expected sequence.
+Both wrap cases ended at packed value `0x005E005E`; decoding the register gives
+ACK base `0x005E` and next sequence `0x005E`, while the receiver independently
+ended at base `0x005E`. This is the required wrap from initial `0xFFFE` after
+96 frames.
+
+The other two errors required a retransmission after dropping one ACK or SACK.
+That requirement is not valid for a 32-frame selective-repeat window with
+cumulative acknowledgements: a later ACK can cover the lost ACK before the
+oldest frame reaches its retransmission timeout. In both cases the physical
+drop counter was one, 512 frames were delivered exactly once, 512 DATA
+attempts completed with no retry exhaustion, later physical good ACKs were
+accepted, and the terminal sender and receiver sequence bases were all 512
+with an empty window. This is direct cumulative-ACK recovery, not missing loss
+injection. The independent data-loss vector still requires and observed
+bounded retransmission; the retry-migration vector still requires and observed
+a migrated retry.
+
+The host-only correction decodes the packed terminal sequence register before
+checking both halves and the receiver base. ACK/SACK-loss acceptance now
+requires a direct physical drop, later cumulative-ACK evidence, exact attempt
+accounting, exactly-once delivery, matching terminal sequence bases, empty
+terminal window, and zero retry exhaustion. A retry is recorded when present
+but is not required for a loss that drains cumulatively. The functional and
+shutdown artifacts and every PL/firmware safety path are unchanged. The failed
+run's `SHUTDOWN_FIXED=PASS` and `SHUTDOWN_ROTATING=PASS` are preserved, but a
+new committed host bundle, current-run authorization, complete campaign, and
+fresh final shutdown remain mandatory.
+
 ## Evidence limits
 
 The PL counters and event recorder can show what the implemented digital logic requested and what its internal safety monitors observed. They are not a substitute for an oscilloscope, rail-current measurement, module temperature measurement, or optical detector. Because the user excluded those manual measurements, this follow-up cannot independently prove actual pin voltage, optical pulse energy, rail droop, current, or temperature.
