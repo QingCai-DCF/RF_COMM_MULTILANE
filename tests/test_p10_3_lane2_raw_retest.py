@@ -62,9 +62,10 @@ class P103Lane2RawRetestTests(unittest.TestCase):
     def test_tcl_accepts_only_the_named_bounded_diagnostic_entry(self) -> None:
         tcl = STAGE_TCL.read_text(encoding="utf-8")
         self.assertIn("LANE2_RAW_RETEST", tcl)
+        self.assertIn("LANE3_RAW_RETEST", tcl)
         source = RUNNER.read_text(encoding="utf-8")
-        self.assertIn('TCL_STAGE = "P10_3-LANE2_RAW_RETEST"', source)
-        self.assertIn('"allowed_lane_masks": [4]', source)
+        self.assertIn('TCL_STAGE = f"P10_3-LANE{lane}_RAW_RETEST"', source)
+        self.assertIn('"allowed_lane_masks": [LANE_MASK]', source)
         self.assertIn('"campaign_wide_unlimited_override": False', source)
         self.assertIn('"framed_or_protocol_test": True', source)
 
@@ -78,7 +79,26 @@ class P103Lane2RawRetestTests(unittest.TestCase):
             '"finally_emergency"',
         ):
             self.assertIn(marker, source)
-        self.assertIn("Deliberately continue to the reciprocal direction", source)
+        self.assertIn("deliberately continue", source)
+
+    def test_lane3_mode_is_exactly_the_missing_reverse_direction(self) -> None:
+        try:
+            self.runner.configure_lane(3)
+            plans = self.runner.build_plans()
+            self.assertEqual(tuple(plans), ("r3_to_f3",))
+            self.assertEqual(self.runner.validate_plans(), [])
+            items = plans["r3_to_f3"]
+            self.assertEqual([item.command for item in items], [11, 2, 2])
+            self.assertEqual([item.rawtarget for item in items[1:]], [64, 1024])
+            self.assertTrue(all(item.lane == 8 for item in items[1:]))
+            self.assertTrue(all(item.direction == 1 for item in items[1:]))
+            self.assertEqual(self.runner.TCL_STAGE, "P10_3-LANE3_RAW_RETEST")
+            self.assertEqual(
+                self.runner.AUTH.name,
+                "p10_3_lane3_raw_diagnostic_current_run_authorization.json",
+            )
+        finally:
+            self.runner.configure_lane(2)
 
     def test_main_campaign_plan_remains_full_and_separate(self) -> None:
         p103_source = P103_RUNNER.read_text(encoding="utf-8")

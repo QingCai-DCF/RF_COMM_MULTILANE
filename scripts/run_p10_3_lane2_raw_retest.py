@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Bounded, fail-closed P10.3 lane2 raw-connectivity retest.
+"""Bounded, fail-closed P10.3 single-lane raw-connectivity diagnostic.
 
-This wrapper exists only for the user-reported R2 replacement B0015 -> B0023.
-It executes two independent raw-only directions under one immutable run ID so
-one failed direction cannot suppress observation of the reciprocal direction.
+The default remains the historical lane2 replacement retest.  ``--lane 3``
+selects the independent lane3 diagnostic needed after the all-lane intake
+observed F3 physical TX but no R3 raw RX.  Lane2 preserves its two independent
+directions; lane3 authorizes only the previously unobserved R3-to-F3 direction.
 
 require-user-hw-authorization
 """
@@ -26,14 +27,9 @@ import run_p10_3_ax7020_4lane_hardware as p103
 
 
 ROOT = p103.ROOT
-AUTH = ROOT / "config/p10_3_lane2_raw_retest_current_run_authorization.json"
 HW_ROOT = ROOT / "evidence/hardware/p10_3_raw_connectivity"
 GENERATED = ROOT / "evidence/generated"
 REPORTS = ROOT / "reports"
-PREVIOUS_BLOCKER = GENERATED / "p10_3_lane2_directional_connectivity_blocker.json"
-SCOPE = f"{p103.SCOPE}/LANE2_RAW_CONNECTIVITY_RETEST"
-TCL_STAGE = "P10_3-LANE2_RAW_RETEST"
-DIRECTIONS = ("f2_to_r2", "r2_to_f2")
 STAGE_TIMEOUT_SECONDS = 600
 MAXIMUM_ACTIVE_RUNTIME_SECONDS = 1200
 MAXIMUM_WRAPPER_RUNTIME_SECONDS = 1800
@@ -41,60 +37,125 @@ RUN_RE = re.compile(
     r"^p10_3_raw_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}_[0-9a-f]{8}_[0-9a-f]{8}$"
 )
 
-AUTH_INPUT_PATHS = (
-    p103.GOAL,
-    p103.FREEZE,
-    p103.WIRING,
-    p103.INVENTORY,
-    PREVIOUS_BLOCKER,
-    ROOT / "PROJECT_CONSTRAINTS.txt",
-    ROOT / "AGENTS.md",
-    ROOT / "config/register_map/ir_axi_regs.yaml",
-    ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
-    ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
-    ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
-    ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
-    ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
-    ROOT / "scripts/hw/p10_program_dual_shutdown.tcl",
-    p103.STAGE_TCL,
-    ROOT / "scripts/p10_hardware_runtime.py",
-    ROOT / "scripts/run_p10_3_ax7020_4lane_hardware.py",
-    Path(__file__).resolve(),
-)
+LANE_CONFIGS: dict[int, dict[str, Any]] = {
+    2: {
+        "fixed_id": "B0001", "rotating_id": "B0023",
+        "authorization": "config/p10_3_lane2_raw_retest_current_run_authorization.json",
+        "blocker": "evidence/generated/p10_3_lane2_directional_connectivity_blocker.json",
+        "output_stem": "p10_3_lane2_raw_connectivity_retest",
+        "scope_suffix": "LANE2_RAW_CONNECTIVITY_RETEST",
+        "title": "lane2 raw-connectivity retest after R2 replacement",
+        "trigger": "User replaced R2 B0015 with B0023 and explicitly requested a new raw-connectivity test.",
+        "user_statement": "我已将R2  B0015换为新的B0023，请重新测试raw连通性",
+        "directions": ("f2_to_r2", "r2_to_f2"),
+    },
+    3: {
+        "fixed_id": "B0004", "rotating_id": "B0017",
+        "authorization": "config/p10_3_lane3_raw_diagnostic_current_run_authorization.json",
+        "blocker": "evidence/generated/p10_3_final_summary.json",
+        "output_stem": "p10_3_lane3_raw_connectivity_diagnostic",
+        "scope_suffix": "LANE3_RAW_CONNECTIVITY_DIAGNOSTIC",
+        "title": "lane3 bidirectional raw-connectivity diagnostic",
+        "trigger": (
+            "The resumed all-lane intake observed F3 physical TX 64/64 but R3 "
+            "raw RX 0/64; the standing P10.3 authorization permits the bounded "
+            "reciprocal diagnostic needed before physical handling."
+        ),
+        "user_statement": "请补测 lane3 的反向物理 RAW 连通性 R3→F3",
+        "directions": ("r3_to_f3",),
+    },
+}
+
+
+def configure_lane(lane: int) -> None:
+    global ACTIVE_LANE, LANE_MASK, FIXED_MODULE, ROTATING_MODULE
+    global FIXED_ID, ROTATING_ID, AUTH, PREVIOUS_BLOCKER, OUTPUT_STEM
+    global SCOPE, TCL_STAGE, DIRECTIONS, TITLE, TRIGGER, USER_STATEMENT
+    if lane not in LANE_CONFIGS:
+        raise ValueError("only bounded lane2 or lane3 raw diagnostics are supported")
+    cfg = LANE_CONFIGS[lane]
+    ACTIVE_LANE = lane
+    LANE_MASK = 1 << lane
+    FIXED_MODULE = f"F{lane}"
+    ROTATING_MODULE = f"R{lane}"
+    FIXED_ID = str(cfg["fixed_id"])
+    ROTATING_ID = str(cfg["rotating_id"])
+    AUTH = ROOT / str(cfg["authorization"])
+    PREVIOUS_BLOCKER = ROOT / str(cfg["blocker"])
+    OUTPUT_STEM = str(cfg["output_stem"])
+    SCOPE = f"{p103.SCOPE}/{cfg['scope_suffix']}"
+    TCL_STAGE = f"P10_3-LANE{lane}_RAW_RETEST"
+    DIRECTIONS = tuple(str(item) for item in cfg["directions"])
+    TITLE = str(cfg["title"])
+    TRIGGER = str(cfg["trigger"])
+    USER_STATEMENT = str(cfg["user_statement"])
+
+
+configure_lane(2)
+
+
+def auth_input_paths() -> tuple[Path, ...]:
+    return (
+        p103.GOAL, p103.FREEZE, p103.WIRING, p103.INVENTORY,
+        PREVIOUS_BLOCKER, ROOT / "PROJECT_CONSTRAINTS.txt", ROOT / "AGENTS.md",
+        ROOT / "config/register_map/ir_axi_regs.yaml",
+        ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
+        ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
+        ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
+        ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+        ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+        ROOT / "scripts/hw/p10_program_dual_shutdown.tcl", p103.STAGE_TCL,
+        ROOT / "scripts/p10_hardware_runtime.py",
+        ROOT / "scripts/run_p10_3_ax7020_4lane_hardware.py",
+        Path(__file__).resolve(),
+    )
 
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def direction_value(name: str) -> int:
+    if name == f"f{ACTIVE_LANE}_to_r{ACTIVE_LANE}":
+        return 0
+    if name == f"r{ACTIVE_LANE}_to_f{ACTIVE_LANE}":
+        return 1
+    raise ValueError(f"direction is outside lane{ACTIVE_LANE}: {name}")
+
+
+def direction_label(name: str) -> str:
+    return (
+        f"{FIXED_MODULE}_TO_{ROTATING_MODULE}" if direction_value(name) == 0
+        else f"{ROTATING_MODULE}_TO_{FIXED_MODULE}"
+    )
+
+
 def build_plans() -> dict[str, list[p103.Case]]:
-    return {
-        "f2_to_r2": [
-            p103.Case("lane2_f2_to_r2_receive_only_5000ms", 11,
+    plans: dict[str, list[p103.Case]] = {}
+    for name in DIRECTIONS:
+        direction = direction_value(name)
+        sender = FIXED_MODULE if direction == 0 else ROTATING_MODULE
+        receiver = ROTATING_MODULE if direction == 0 else FIXED_MODULE
+        plans[name] = [
+            p103.Case(f"lane{ACTIVE_LANE}_{name}_receive_only_5000ms", 11,
                       idle=5000, timeout=15_000),
-            p103.Case("lane2_F2_to_R2_raw_64", 2, lane=4, direction=0,
-                      rate=2, rawtarget=64, spacing=1024, timeout=30_000),
-            p103.Case("lane2_F2_to_R2_raw_1024", 2, lane=4, direction=0,
-                      rate=2, rawtarget=1024, spacing=1024, timeout=30_000),
-        ],
-        "r2_to_f2": [
-            p103.Case("lane2_r2_to_f2_receive_only_5000ms", 11,
-                      idle=5000, timeout=15_000),
-            p103.Case("lane2_R2_to_F2_raw_64", 2, lane=4, direction=1,
-                      rate=2, rawtarget=64, spacing=1024, timeout=30_000),
-            p103.Case("lane2_R2_to_F2_raw_1024", 2, lane=4, direction=1,
-                      rate=2, rawtarget=1024, spacing=1024, timeout=30_000),
-        ],
-    }
+            p103.Case(f"lane{ACTIVE_LANE}_{sender}_to_{receiver}_raw_64",
+                      2, lane=LANE_MASK, direction=direction, rate=2,
+                      rawtarget=64, spacing=1024, timeout=30_000),
+            p103.Case(f"lane{ACTIVE_LANE}_{sender}_to_{receiver}_raw_1024",
+                      2, lane=LANE_MASK, direction=direction, rate=2,
+                      rawtarget=1024, spacing=1024, timeout=30_000),
+        ]
+    return plans
 
 
 def validate_plans() -> list[str]:
     errors: list[str] = []
     plans = build_plans()
     if tuple(plans) != DIRECTIONS:
-        errors.append("lane2 diagnostic direction order mismatch")
+        errors.append(f"lane{ACTIVE_LANE} diagnostic direction order mismatch")
     for name, items in plans.items():
-        expected_direction = 0 if name == "f2_to_r2" else 1
+        expected_direction = direction_value(name)
         if len(items) != 3 or items[0].command != 11:
             errors.append(f"{name}: exact receive-only/raw64/raw1024 set required")
         raw_targets = []
@@ -106,7 +167,7 @@ def validate_plans() -> list[str]:
             errors.extend(p103.case_semantic_errors(item))
             if item.command == 2:
                 raw_targets.append(item.rawtarget)
-                if item.lane != 4 or item.direction != expected_direction or \
+                if item.lane != LANE_MASK or item.direction != expected_direction or \
                         item.rate != 2 or item.spacing != 1024:
                     errors.append(f"{item.label}: raw lane/direction/rate/spacing mismatch")
             elif item.command == 11:
@@ -121,7 +182,7 @@ def validate_plans() -> list[str]:
 
 def expected_inputs() -> dict[str, dict[str, Any]]:
     output: dict[str, dict[str, Any]] = {}
-    for path in AUTH_INPUT_PATHS:
+    for path in auth_input_paths():
         if not path.is_file():
             raise FileNotFoundError(path)
         output[p103.rel(path)] = {
@@ -140,19 +201,23 @@ def validate_static_inputs() -> tuple[dict[str, Any], dict[str, Path], list[str]
     errors.extend(intake_errors)
     errors.extend(validate_plans())
     active = inventory.get("p10_3_current_installation", {}).get("modules", {})
-    if active.get("F2", {}).get("small_board_id") != "B0001":
-        errors.append("F2 active identity must remain B0001")
-    if active.get("R2", {}).get("small_board_id") != "B0023":
-        errors.append("R2 active identity must be replacement B0023")
-    replacement = inventory.get("r2_replacement_2026_08_04", {})
-    if replacement.get("removed_small_board_id") != "B0015" or \
-            replacement.get("installed_small_board_id") != "B0023" or \
-            replacement.get("electronic_status") != "PENDING_BOUNDED_LANE2_RAW_RETEST":
-        errors.append("R2 replacement provenance/status mismatch")
+    if active.get(FIXED_MODULE, {}).get("small_board_id") != FIXED_ID:
+        errors.append(f"{FIXED_MODULE} active identity must be {FIXED_ID}")
+    if active.get(ROTATING_MODULE, {}).get("small_board_id") != ROTATING_ID:
+        errors.append(f"{ROTATING_MODULE} active identity must be {ROTATING_ID}")
+    if ACTIVE_LANE == 2:
+        replacement = inventory.get("r2_replacement_2026_08_04", {})
+        if replacement.get("removed_small_board_id") != "B0015" or \
+                replacement.get("installed_small_board_id") != "B0023" or \
+                replacement.get("electronic_status") != \
+                "BIDIRECTIONAL_RAW_PASS_PENDING_FRAME_INTAKE":
+            errors.append("R2 replacement provenance/status mismatch")
     try:
         tcl = p103.STAGE_TCL.read_text(encoding="utf-8")
-        if "LANE2_RAW_RETEST" not in tcl:
-            errors.append("XSDB executor does not recognize bounded lane2 retest stage")
+        if f"LANE{ACTIVE_LANE}_RAW_RETEST" not in tcl:
+            errors.append(
+                f"XSDB executor does not recognize bounded lane{ACTIVE_LANE} retest stage"
+            )
         expected_inputs()
     except OSError as exc:
         errors.append(f"diagnostic input missing: {exc}")
@@ -184,12 +249,14 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         raise RuntimeError("; ".join(errors))
     actual_run_id = run_id or expected_run_id(freeze)
     if not RUN_RE.fullmatch(actual_run_id):
-        raise RuntimeError("invalid lane2 raw-retest run ID")
+        raise RuntimeError(f"invalid lane{ACTIVE_LANE} raw-retest run ID")
     parent = p103.git("rev-parse", "HEAD")
     plans = build_plans()
     record = {
         "schema_version": 1,
-        "authorization_id": "P10_3-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "authorization_id": (
+            f"P10_3-LANE{ACTIVE_LANE}-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
+        ),
         "status": "AUTHORIZED",
         "scope": SCOPE,
         "branch": p103.BRANCH,
@@ -218,19 +285,11 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
             "rotating": "AX7020-R/JTAG:210512180081",
         },
         "module_binding": p103.EXPECTED_MODULE_BINDING,
-        "replacement": {
-            "logical_module": "R2", "position": "AX7020-R/J11-A",
-            "removed_small_board_id": "B0015",
-            "installed_small_board_id": "B0023",
-            "source": "Direct user statement on 2026-08-04",
-            "identity_independently_verified": False,
-            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
-            "codex_physical_action": False,
-        },
-        "lane": 2,
-        "lane_pair": "F2-R2",
-        "allowed_lane_masks": [4],
-        "maximum_lane_mask": 4,
+        "diagnostic_trigger": TRIGGER,
+        "lane": ACTIVE_LANE,
+        "lane_pair": f"{FIXED_MODULE}-{ROTATING_MODULE}",
+        "allowed_lane_masks": [LANE_MASK],
+        "maximum_lane_mask": LANE_MASK,
         "allowed_hardware_stages": list(DIRECTIONS),
         "tcl_stage": TCL_STAGE,
         "plan_sha256": {
@@ -238,7 +297,7 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         },
         "stimulus": {
             "commands": ["receive_only_5000ms", "raw_64", "raw_1024"],
-            "directions": ["F2_TO_R2", "R2_TO_F2"],
+            "directions": [direction_label(name) for name in DIRECTIONS],
             "rate_select": 2,
             "raw_spacing_cycles": 1024,
             "requested_txd_high_cycles": 8,
@@ -249,7 +308,9 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         },
         "runtime_limits": {
             "per_direction_stage_seconds": STAGE_TIMEOUT_SECONDS,
-            "active_functional_total_seconds": MAXIMUM_ACTIVE_RUNTIME_SECONDS,
+            "active_functional_total_seconds": (
+                STAGE_TIMEOUT_SECONDS * len(DIRECTIONS)
+            ),
             "wrapper_seconds": MAXIMUM_WRAPPER_RUNTIME_SECONDS,
             "formal_run_seconds": 0,
         },
@@ -258,13 +319,18 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
             "new_diagnostic_run_ids_authorized": 1,
             "this_run_consumes_override": True,
             "campaign_wide_unlimited_override": False,
-            "reason": "User replaced R2 B0015 with B0023 and explicitly requested a new raw-connectivity test.",
+            "reason": TRIGGER,
         },
         "user_authorization_received_on": "2026-08-04",
-        "user_authorization_statement": "我已将R2  B0015换为新的B0023，请重新测试raw连通性",
+        "user_authorization_statement": USER_STATEMENT,
+        "campaign_standing_authorization": (
+            "P10.3 allows necessary bounded diagnostics/recovery/retest after exact "
+            "artifact freeze, with shutdown-before/after and no physical changes."
+        ),
         "authorization_interpretation": (
-            "One fresh immutable lane2 raw-only run ID covering F2-to-R2 and R2-to-F2. "
-            "It does not authorize the remaining P10.3 campaign or additional retries."
+            f"One fresh immutable lane{ACTIVE_LANE} raw-only run ID covering "
+            f"{', '.join(direction_label(name) for name in DIRECTIONS)}. It does "
+            "not authorize the remaining P10.3 campaign or additional retries."
         ),
         "current_run_hardware_authorization": True,
         "hardware_actions_executed": False,
@@ -276,7 +342,8 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         "forbidden": {
             "ethernet": True, "movement": True, "rotation": True,
             "realignment": True, "module_swap_during_run": True,
-            "rewiring": True, "lane_mask_outside_0x4": True,
+            "rewiring": True,
+            f"lane_mask_outside_0x{LANE_MASK:X}": True,
             "framed_or_protocol_test": True, "two_hour_test": True,
             "p11": True,
         },
@@ -290,6 +357,15 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         "generated_at_utc": utc_now(),
         "consumed": False,
     }
+    if ACTIVE_LANE == 2:
+        record["replacement"] = {
+            "logical_module": "R2", "position": "AX7020-R/J11-A",
+            "removed_small_board_id": "B0015", "installed_small_board_id": "B0023",
+            "source": "Direct user statement on 2026-08-04",
+            "identity_independently_verified": False,
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
+        }
     p103.write_json(AUTH, record)
     return record
 
@@ -304,7 +380,9 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
     plans = build_plans()
     expected = {
         "schema_version": 1,
-        "authorization_id": "P10_3-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "authorization_id": (
+            f"P10_3-LANE{ACTIVE_LANE}-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
+        ),
         "status": "AUTHORIZED",
         "scope": SCOPE,
         "branch": p103.BRANCH,
@@ -324,10 +402,10 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
             "rotating": "AX7020-R/JTAG:210512180081",
         },
         "module_binding": p103.EXPECTED_MODULE_BINDING,
-        "lane": 2,
-        "lane_pair": "F2-R2",
-        "allowed_lane_masks": [4],
-        "maximum_lane_mask": 4,
+        "lane": ACTIVE_LANE,
+        "lane_pair": f"{FIXED_MODULE}-{ROTATING_MODULE}",
+        "allowed_lane_masks": [LANE_MASK],
+        "maximum_lane_mask": LANE_MASK,
         "allowed_hardware_stages": list(DIRECTIONS),
         "tcl_stage": TCL_STAGE,
         "plan_sha256": {
@@ -335,7 +413,9 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         },
         "runtime_limits": {
             "per_direction_stage_seconds": STAGE_TIMEOUT_SECONDS,
-            "active_functional_total_seconds": MAXIMUM_ACTIVE_RUNTIME_SECONDS,
+            "active_functional_total_seconds": (
+                STAGE_TIMEOUT_SECONDS * len(DIRECTIONS)
+            ),
             "wrapper_seconds": MAXIMUM_WRAPPER_RUNTIME_SECONDS,
             "formal_run_seconds": 0,
         },
@@ -349,7 +429,8 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         "forbidden": {
             "ethernet": True, "movement": True, "rotation": True,
             "realignment": True, "module_swap_during_run": True,
-            "rewiring": True, "lane_mask_outside_0x4": True,
+            "rewiring": True,
+            f"lane_mask_outside_0x{LANE_MASK:X}": True,
             "framed_or_protocol_test": True, "two_hour_test": True,
             "p11": True,
         },
@@ -380,20 +461,25 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
             "sha256": p103.sha256(PREVIOUS_BLOCKER),
             "bytes": PREVIOUS_BLOCKER.stat().st_size}:
         errors.append("authorization previous blocker binding mismatch")
-    replacement = record.get("replacement", {})
-    if replacement.get("removed_small_board_id") != "B0015" or \
-            replacement.get("installed_small_board_id") != "B0023" or \
-            replacement.get("identity_independently_verified") is not False:
-        errors.append("authorization replacement binding mismatch")
+    if record.get("diagnostic_trigger") != TRIGGER:
+        errors.append("authorization diagnostic trigger mismatch")
+    if ACTIVE_LANE == 2:
+        replacement = record.get("replacement", {})
+        if replacement.get("removed_small_board_id") != "B0015" or \
+                replacement.get("installed_small_board_id") != "B0023" or \
+                replacement.get("identity_independently_verified") is not False:
+            errors.append("authorization replacement binding mismatch")
     retry = record.get("retry_override", {})
     if retry.get("new_diagnostic_run_ids_authorized") != 1 or \
             retry.get("this_run_consumes_override") is not True or \
             retry.get("campaign_wide_unlimited_override") is not False:
         errors.append("authorization retry override is not exactly one run ID")
     if not RUN_RE.fullmatch(run_id):
-        errors.append("unsafe lane2 raw-retest run ID")
+        errors.append(f"unsafe lane{ACTIVE_LANE} raw-retest run ID")
     if path.resolve() != AUTH.resolve():
-        errors.append("canonical lane2 raw-retest authorization path required")
+        errors.append(
+            f"canonical lane{ACTIVE_LANE} raw-retest authorization path required"
+        )
     if p103.git("branch", "--show-current") != p103.BRANCH:
         errors.append("branch mismatch")
     if p103.git("status", "--porcelain"):
@@ -500,8 +586,10 @@ def evaluate_direction(name: str, stage_dir: Path,
                 "label": label,
                 "fixed_safety_fault_mask": fixed_snapshot["safety_fault_mask"],
                 "rotating_safety_fault_mask": rotating_snapshot["safety_fault_mask"],
-                "fixed_lane2": fixed_snapshot["modules"][2],
-                "rotating_lane2": rotating_snapshot["modules"][6],
+                f"fixed_lane{ACTIVE_LANE}":
+                    fixed_snapshot["modules"][ACTIVE_LANE],
+                f"rotating_lane{ACTIVE_LANE}":
+                    rotating_snapshot["modules"][4 + ACTIVE_LANE],
             })
             if label in case_results:
                 result = case_results[label]
@@ -520,16 +608,27 @@ def evaluate_direction(name: str, stage_dir: Path,
                     receiver_role = "rotating" if row["direction"] == 0 else "fixed"
                     sender_snapshot = fixed_snapshot if sender_role == "fixed" else rotating_snapshot
                     receiver_snapshot = rotating_snapshot if receiver_role == "rotating" else fixed_snapshot
-                    sender_index = 2 if sender_role == "fixed" else 6
-                    receiver_index = 6 if receiver_role == "rotating" else 2
+                    sender_index = (
+                        ACTIVE_LANE if sender_role == "fixed" else 4 + ACTIVE_LANE
+                    )
+                    receiver_index = (
+                        4 + ACTIVE_LANE if receiver_role == "rotating"
+                        else ACTIVE_LANE
+                    )
                     sender_tx = sender_snapshot["modules"][sender_index]["physical_tx"]
                     receiver_raw = receiver_snapshot["modules"][receiver_index]["raw_rx"]
                     target = row["rawtarget"]
                     result.update({
                         "sender_role": sender_role,
                         "receiver_role": receiver_role,
-                        "sender_module": "F2" if sender_role == "fixed" else "R2",
-                        "receiver_module": "R2" if receiver_role == "rotating" else "F2",
+                        "sender_module": (
+                            FIXED_MODULE if sender_role == "fixed"
+                            else ROTATING_MODULE
+                        ),
+                        "receiver_module": (
+                            ROTATING_MODULE if receiver_role == "rotating"
+                            else FIXED_MODULE
+                        ),
                         "sender_physical_tx_count": sender_tx,
                         "receiver_raw_rx_count": receiver_raw,
                         "receiver_allowed_raw_count_min": target,
@@ -571,13 +670,13 @@ def evaluate_direction(name: str, stage_dir: Path,
     ) else "FAIL"
     summary = {
         "schema_version": 1,
-        "test_id": f"P10_3-HW-LANE2-RAW-{name.upper()}",
+        "test_id": f"P10_3-HW-LANE{ACTIVE_LANE}-RAW-{name.upper()}",
         "status": status,
         "evidence_class": "RAW_PHYSICAL_ONLY",
-        "direction": "F2_TO_R2" if name == "f2_to_r2" else "R2_TO_F2",
-        "lane": 2,
-        "lane_mask": "0x4",
-        "module_binding": {"F2": "B0001", "R2": "B0023"},
+        "direction": direction_label(name),
+        "lane": ACTIVE_LANE,
+        "lane_mask": f"0x{LANE_MASK:X}",
+        "module_binding": {FIXED_MODULE: FIXED_ID, ROTATING_MODULE: ROTATING_ID},
         "process": process,
         "markers": markers,
         "observation_count": len(rows),
@@ -631,7 +730,8 @@ def initialize_run_root(run_root: Path, auth: Path,
         (p103.FREEZE, run_root / "artifacts/artifact_freeze.json"),
         (p103.WIRING, run_root / "wiring/p10_3_actual_wiring.yaml"),
         (p103.INVENTORY, run_root / "wiring/tfdu_module_inventory.yaml"),
-        (PREVIOUS_BLOCKER, run_root / "authorization/previous_lane2_blocker.json"),
+        (PREVIOUS_BLOCKER,
+         run_root / f"authorization/previous_lane{ACTIVE_LANE}_blocker.json"),
     )
     manifest = []
     for source, destination in copies:
@@ -650,11 +750,12 @@ def initialize_run_root(run_root: Path, auth: Path,
     })
     p103.write_text(
         run_root / "authorization/PHYSICAL_AND_SCOPE_ATTESTATION.txt",
-        "PRE_RUN_USER_MODULE_REPLACEMENT=R2:B0015->B0023\n"
-        "REPLACEMENT_POWER_STATE=NOT_STATED_BY_USER;NOT_CLAIMED\n"
+        f"DIAGNOSTIC_LANE={ACTIVE_LANE}\n"
+        f"DIAGNOSTIC_DIRECTIONS={','.join(direction_label(name) for name in DIRECTIONS)}\n"
+        f"MODULE_PAIR={FIXED_MODULE}:{FIXED_ID},{ROTATING_MODULE}:{ROTATING_ID}\n"
         "CODEX_PHYSICAL_ACTION=false\nETHERNET=false\nMOVEMENT=false\n"
         "ROTATION=false\nREALIGNMENT=false\nREWIRING_DURING_RUN=false\n"
-        "LANE_MASK=0x4\nFRAMED_TRAFFIC=false\nP11=false\n",
+        f"LANE_MASK=0x{LANE_MASK:X}\nFRAMED_TRAFFIC=false\nP11=false\n",
     )
     artifacts = {p103.artifact_key(item): (ROOT / item["path"]).resolve()
                  for item in record["artifacts"]}
@@ -678,9 +779,7 @@ def render_report(summary: dict[str, Any]) -> str:
     rows = []
     for direction in DIRECTIONS:
         stage = next((item for item in summary["directions"]
-                      if item["direction"] == (
-                          "F2_TO_R2" if direction == "f2_to_r2" else "R2_TO_F2"
-                      )), None)
+                      if item["direction"] == direction_label(direction)), None)
         if stage is None:
             rows.append(f"| {direction.upper()} | NOT_RUN | - | - | - |")
             continue
@@ -700,14 +799,14 @@ def render_report(summary: dict[str, Any]) -> str:
                 f"- {item['role']} {item['kind']}: `{item['sha256']}` — `{item['path']}`"
             )
     return "\n".join([
-        "# P10.3 lane2 raw-connectivity retest after R2 replacement",
+        f"# P10.3 {TITLE}",
         "",
         f"- Result: `{summary['status']}`",
         "- Evidence class: `RAW_PHYSICAL_ONLY`",
         f"- Run ID: `{summary['run_id']}`",
-        "- Active pair: `F2=B0001` ↔ `R2=B0023`",
-        "- Historical removed R2: `B0015` (historical evidence retained)",
-        "- Lane mask used: `0x4`",
+        f"- Active pair: `{FIXED_MODULE}={FIXED_ID}` ↔ "
+        f"`{ROTATING_MODULE}={ROTATING_ID}`",
+        f"- Lane mask used: `0x{LANE_MASK:X}`",
         "",
         "| Direction / requested pulses | Result | Sender final-path TX count | Remote raw RX count | Max TX-high cycles |",
         "|---|---|---:|---:|---:|",
@@ -721,34 +820,50 @@ def render_report(summary: dict[str, Any]) -> str:
         "",
         "## Scope boundary",
         "",
-        "This result concerns only bidirectional lane2 raw pulse connectivity. It does not constitute framed-data, ARQ/SACK, DMA, streaming, four-lane, external electrical, module-health, P11, rotating, or final-product acceptance. The module identity and replacement are user-provided; Codex did not independently read the small-board marking or perform the replacement.",
+        f"This result concerns only the authorized lane{ACTIVE_LANE} raw pulse "
+        "direction(s). It does not constitute framed-data, ARQ/SACK, DMA, "
+        "streaming, four-lane, external electrical, module-health, P11, rotating, "
+        "or final-product acceptance. Existing opposite-direction failures remain "
+        "immutable and are not overwritten.",
         "",
     ])
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--lane", type=int, choices=tuple(LANE_CONFIGS), default=2)
     parser.add_argument("--prepare-authorization", action="store_true")
     parser.add_argument("--run-id")
-    parser.add_argument("--authorization", type=Path, default=AUTH)
+    parser.add_argument("--authorization", type=Path)
     parser.add_argument("--execute-hardware", action="store_true")
     args = parser.parse_args(argv)
+    configure_lane(args.lane)
     if args.prepare_authorization:
         try:
             record = prepare_authorization(args.run_id)
         except Exception as exc:
-            print(f"P10_3_LANE2_RAW_AUTHORIZATION=FAIL\nERROR={exc}", file=sys.stderr)
+            print(
+                f"P10_3_LANE{ACTIVE_LANE}_RAW_AUTHORIZATION=FAIL\nERROR={exc}",
+                file=sys.stderr,
+            )
             return 2
-        print("P10_3_LANE2_RAW_AUTHORIZATION=PASS")
-        print(f"P10_3_LANE2_RAW_RUN_ID={record['run_id']}")
-        print(f"P10_3_LANE2_RAW_AUTHORIZATION_PATH={p103.rel(AUTH)}")
-        print(f"P10_3_LANE2_RAW_AUTHORIZATION_SHA256={p103.sha256(AUTH)}")
+        print(f"P10_3_LANE{ACTIVE_LANE}_RAW_AUTHORIZATION=PASS")
+        print(f"P10_3_LANE{ACTIVE_LANE}_RAW_RUN_ID={record['run_id']}")
+        print(
+            f"P10_3_LANE{ACTIVE_LANE}_RAW_AUTHORIZATION_PATH={p103.rel(AUTH)}"
+        )
+        print(
+            f"P10_3_LANE{ACTIVE_LANE}_RAW_AUTHORIZATION_SHA256={p103.sha256(AUTH)}"
+        )
         return 0
     if not args.execute_hardware or not args.run_id:
-        print("P10_3_LANE2_RAW_RUNNER_REFUSED=PREPARE_OR_EXPLICIT_HARDWARE_RUN_REQUIRED")
+        print(
+            f"P10_3_LANE{ACTIVE_LANE}_RAW_RUNNER_REFUSED="
+            "PREPARE_OR_EXPLICIT_HARDWARE_RUN_REQUIRED"
+        )
         return 3
 
-    auth = args.authorization.resolve()
+    auth = (args.authorization or AUTH).resolve()
     record, artifacts, errors = validate_authorization(auth, args.run_id)
     if os.environ.get("NO_HARDWARE") != "0" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "true":
@@ -764,7 +879,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         ps7 = initialize_run_root(run_root, auth, record)
     except Exception as exc:
-        print(f"P10_3_LANE2_RAW_INITIALIZATION=FAIL\nERROR={exc}", file=sys.stderr)
+        print(
+            f"P10_3_LANE{ACTIVE_LANE}_RAW_INITIALIZATION=FAIL\nERROR={exc}",
+            file=sys.stderr,
+        )
         return 3
     abort = run_root / "authorization/ABORT_NOW.txt"
     env = {
@@ -813,9 +931,9 @@ def main(argv: list[str] | None = None) -> int:
                 if isinstance(stage_exception, KeyboardInterrupt):
                     raise KeyboardInterrupt from stage_exception
                 raise RuntimeError(f"{name} wrapper exception: {stage_exception}")
-            # Deliberately continue to the reciprocal direction after a
-            # cleanly contained diagnostic FAIL.  Both directions are part of
-            # this one immutable retest and every transition is shutdown-bound.
+            # When multiple directions are authorized, deliberately continue
+            # after a cleanly contained diagnostic FAIL.  Every transition is
+            # independently shutdown-bound.
             assert result is not None
         final = p103.guarded_shutdown(run_root, auth, artifacts,
                                       "final_shutdown", env)
@@ -842,13 +960,15 @@ def main(argv: list[str] | None = None) -> int:
     all_shutdown = bool(shutdowns) and all(
         item.get("status") == "PASS" for item in shutdowns
     )
-    both_directions = len(direction_results) == 2 and all(
+    all_authorized_directions = len(direction_results) == len(DIRECTIONS) and all(
         item.get("status") == "PASS" for item in direction_results
     )
-    status = "PASS" if all_shutdown and both_directions and not campaign_errors else "FAIL"
+    status = "PASS" if (
+        all_shutdown and all_authorized_directions and not campaign_errors
+    ) else "FAIL"
     summary = {
         "schema_version": 1,
-        "test_id": "P10_3-HW-LANE2-RAW-CONNECTIVITY-RETEST",
+        "test_id": f"P10_3-HW-LANE{ACTIVE_LANE}-RAW-CONNECTIVITY-RETEST",
         "status": status,
         "evidence_class": "RAW_PHYSICAL_ONLY",
         "run_id": args.run_id,
@@ -860,11 +980,11 @@ def main(argv: list[str] | None = None) -> int:
         "artifacts": record["artifacts"],
         "board_binding": record["board_binding"],
         "module_binding": record["module_binding"],
-        "replacement": record["replacement"],
-        "lane": 2,
-        "lane_pair": "F2-R2",
-        "maximum_lane_mask_authorized": "0x4",
-        "maximum_lane_mask_used": "0x4" if direction_results else "0x0",
+        "diagnostic_trigger": record["diagnostic_trigger"],
+        "lane": ACTIVE_LANE,
+        "lane_pair": f"{FIXED_MODULE}-{ROTATING_MODULE}",
+        "maximum_lane_mask_authorized": f"0x{LANE_MASK:X}",
+        "maximum_lane_mask_used": f"0x{LANE_MASK:X}" if direction_results else "0x0",
         "directions": direction_results,
         "hardware_actions_executed": hardware_actions,
         "current_run_hardware_authorization": False,
@@ -885,7 +1005,8 @@ def main(argv: list[str] | None = None) -> int:
             item.get("SHUTDOWN_ROTATING") == "PASS" for item in shutdowns
         ) else "FAIL",
         "scope_boundary": (
-            "Raw bidirectional lane2 physical-connectivity evidence only; no framed, "
+            f"Raw lane{ACTIVE_LANE} physical-connectivity evidence for the explicitly "
+            "authorized direction(s) only; no framed, "
             "protocol, DMA, streaming, four-lane, external electrical, module-health, "
             "P11, rotating, or final-product acceptance."
         ),
@@ -893,6 +1014,8 @@ def main(argv: list[str] | None = None) -> int:
         "errors": campaign_errors,
         "generated_at_utc": utc_now(),
     }
+    if "replacement" in record:
+        summary["replacement"] = record["replacement"]
     p103.write_json(run_root / "final/orchestrator_result.json", summary)
     p103.evidence_manifest(run_root, status)
     manifest_errors = p103.verify_evidence_manifest(run_root)
@@ -917,9 +1040,9 @@ def main(argv: list[str] | None = None) -> int:
     })
     GENERATED.mkdir(parents=True, exist_ok=True)
     REPORTS.mkdir(parents=True, exist_ok=True)
-    generated_json = GENERATED / "p10_3_lane2_raw_connectivity_retest.json"
-    generated_md = GENERATED / "p10_3_lane2_raw_connectivity_retest.md"
-    report = REPORTS / f"p10_3_lane2_raw_connectivity_retest_{args.run_id}.md"
+    generated_json = GENERATED / f"{OUTPUT_STEM}.json"
+    generated_md = GENERATED / f"{OUTPUT_STEM}.md"
+    report = REPORTS / f"{OUTPUT_STEM}_{args.run_id}.md"
     p103.write_json(generated_json, generated)
     report_text = render_report(generated)
     p103.write_text(generated_md, report_text)
@@ -927,7 +1050,7 @@ def main(argv: list[str] | None = None) -> int:
 
     consumed = dict(record)
     consumed.update({
-        "status": f"CONSUMED_AFTER_LANE2_RAW_RETEST_{status}",
+        "status": f"CONSUMED_AFTER_LANE{ACTIVE_LANE}_RAW_RETEST_{status}",
         "current_run_hardware_authorization": False,
         "hardware_actions_executed": hardware_actions,
         "consumed": True,
@@ -936,8 +1059,8 @@ def main(argv: list[str] | None = None) -> int:
         "run_evidence": p103.rel(run_root / "final/orchestrator_result.json"),
     })
     p103.write_json(AUTH, consumed)
-    print(f"P10_3_LANE2_RAW_CONNECTIVITY={status}")
-    print(f"P10_3_LANE2_RAW_RUN_ID={args.run_id}")
+    print(f"P10_3_LANE{ACTIVE_LANE}_RAW_CONNECTIVITY={status}")
+    print(f"P10_3_LANE{ACTIVE_LANE}_RAW_RUN_ID={args.run_id}")
     print(f"SHUTDOWN_FIXED={generated['SHUTDOWN_FIXED']}")
     print(f"SHUTDOWN_ROTATING={generated['SHUTDOWN_ROTATING']}")
     return 0 if status == "PASS" else 1
