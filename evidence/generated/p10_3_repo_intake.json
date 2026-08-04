@@ -1,0 +1,152 @@
+{
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "external_goal": {
+    "bytes": 31921,
+    "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
+    "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+  },
+  "git_status_before_generation": [],
+  "goal": {
+    "bytes": 31921,
+    "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
+    "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+  },
+  "hardware_actions_executed": false,
+  "immutable_tags": {
+    "p10_1r_closed": {
+      "expected_object": "c0998935ddd19f44177540ea260a917c9ac54bad",
+      "expected_target": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8",
+      "object": "c0998935ddd19f44177540ea260a917c9ac54bad",
+      "tag": "p10.1r-2lane-speed-stability-closed",
+      "target": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8"
+    },
+    "p10_1r_pass": {
+      "expected_object": "c78066152e2d5ac0c673e21896fb90b9a78f7489",
+      "expected_target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+      "object": "c78066152e2d5ac0c673e21896fb90b9a78f7489",
+      "tag": "p10.1r-2lane-speed-stability-pass",
+      "target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4"
+    },
+    "p10_2": {
+      "expected_object": "bf7c966fcda3e17665c7eae4c0179aec99f020ff",
+      "expected_target": "08771d6bf9e852c9d34bcff61add1598e120b70a",
+      "object": "bf7c966fcda3e17665c7eae4c0179aec99f020ff",
+      "tag": "p10.2-4lane-offline-ready",
+      "target": "08771d6bf9e852c9d34bcff61add1598e120b70a"
+    }
+  },
+  "inputs": [
+    {
+      "bytes": 77090,
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    {
+      "bytes": 9946,
+      "path": "AGENTS.md",
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    {
+      "bytes": 48812,
+      "path": "config/project_state.json",
+      "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
+    },
+    {
+      "bytes": 281788,
+      "path": "config/project_requirements.yaml",
+      "sha256": "51c4c11122384fcfaba76239d6ab7a047566d6c9febf0691bc4d701f1be0ae77"
+    },
+    {
+      "bytes": 60830,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"
+    },
+    {
+      "bytes": 4765,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603"
+    },
+    {
+      "bytes": 7774,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9"
+    },
+    {
+      "bytes": 1769,
+      "path": "board_profiles/ax7020_fixed_4lane/profile.yaml",
+      "sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571"
+    },
+    {
+      "bytes": 1784,
+      "path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
+      "sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8"
+    },
+    {
+      "bytes": 4550,
+      "path": "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+      "sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1"
+    },
+    {
+      "bytes": 4553,
+      "path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+      "sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"
+    }
+  ],
+  "network_used": false,
+  "no_hardware": true,
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
+  "source_commit": "8b9563a37728a81850223f938e0b06e5772ec039",
+  "source_tree_clean_before_generation": true,
+  "started_at_utc": "2026-08-04T08:39:12+00:00",
+  "status": "PASS",
+  "test_id": "P10_3-REPOSITORY-INTAKE",
+  "tools": {
+    "git": {
+      "command": [
+        "git",
+        "--version"
+      ],
+      "first_lines": [
+        "git version 2.54.0.windows.1"
+      ],
+      "returncode": 0
+    },
+    "python": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "--version"
+      ],
+      "first_lines": [
+        "Python 3.14.3"
+      ],
+      "returncode": 0
+    },
+    "vivado": {
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+        "-version"
+      ],
+      "first_lines": [],
+      "returncode": 1
+    },
+    "xsct": {
+      "command": [
+        "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsct.bat",
+        "-eval",
+        "puts [version -short]"
+      ],
+      "first_lines": [
+        "bad option '-short': -help -server",
+        "    while executing",
+        "\"error \"bad option '$arg': [join $optnames]\"\"",
+        "    (procedure \"::xsdb::get_options\" line 45)",
+        "    invoked from within"
+      ],
+      "returncode": 0
+    }
+  },
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3"
+}

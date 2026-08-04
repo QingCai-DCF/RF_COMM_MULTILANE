@@ -1,0 +1,1468 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\vivado.bat -mode batch -nolog -nojournal -source C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3\scripts\vivado\build_p10_ax7020_functional.tcl -tclargs C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3 rotating C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3\evidence\generated\vivado\p10_3_4lane\rotating 4 p10_3
+RETURN_CODE=0
+STDOUT_BEGIN
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3\scripts\vivado\build_p10_ax7020_functional.tcl}
+# set root_dir [file normalize [lindex $argv 0]]
+# set endpoint_role_name [string tolower [lindex $argv 1]]
+# set out_dir [file normalize [lindex $argv 2]]
+# set lane_count 2
+# if {[llength $argv] > 3} { set lane_count [lindex $argv 3] }
+# set campaign p10
+# if {[llength $argv] > 4} { set campaign [string tolower [lindex $argv 4]] }
+# if {$lane_count != 2 && $lane_count != 4} {
+#   error "P10 AX7020 build lane_count must be 2 or 4"
+# }
+# if {$endpoint_role_name eq "fixed"} {
+#   set endpoint_role 1
+#   if {$lane_count == 4} {
+#     set profile_id P10_2_AX7020_FIXED_4LANE
+#     set xdc_file "$root_dir/board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc"
+#   } else {
+#     set profile_id P10_AX7020_FIXED_2LANE
+#     set xdc_file "$root_dir/board_profiles/ax7020_fixed_2lane/ax7020_fixed_2lane.generated.xdc"
+#   }
+# } elseif {$endpoint_role_name eq "rotating"} {
+#   set endpoint_role 2
+#   if {$lane_count == 4} {
+#     set profile_id P10_2_AX7020_ROTATING_4LANE
+#     set xdc_file "$root_dir/board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
+#   } else {
+#     set profile_id P10_AX7020_ROTATING_2LANE
+#     set xdc_file "$root_dir/board_profiles/ax7020_rotating_2lane/ax7020_rotating_2lane.generated.xdc"
+#   }
+# } else {
+#   error "P10 endpoint role must be fixed or rotating"
+# }
+# set build_dir [file normalize "C:/p10_vivado/${endpoint_role_name}_${lane_count}lane"]
+# file mkdir $build_dir
+# file mkdir $out_dir
+# set project_name "p10_ax7020_${endpoint_role_name}_${lane_count}lane_functional"
+# create_project $project_name "$build_dir/project" \
+#   -part xc7z020clg400-2 -force
+create_project: Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1392.098 ; gain = 160.922
+# set rtl_sources [list \
+#   "$root_dir/rtl/generated/tfdu_safety_config.svh" \
+#   "$root_dir/rtl/generated/ir_register_map_defs.svh" \
+#   "$root_dir/rtl/ir_seq_math_pkg.sv" \
+#   "$root_dir/rtl/ir_health_weighted_scheduler.sv" \
+#   "$root_dir/rtl/ir_selective_repeat_tx.sv" \
+#   "$root_dir/rtl/ir_selective_repeat_rx.sv" \
+#   "$root_dir/rtl/ir_ack_aggregator.sv" \
+#   "$root_dir/rtl/ir_data_plane_top.sv" \
+#   "$root_dir/rtl/ir_tfdu_exact_duty_accountant.sv" \
+#   "$root_dir/rtl/ir_tfdu_physical_module_safety.sv" \
+#   "$root_dir/rtl/tfdu_lane_phy.sv" \
+#   "$root_dir/rtl/ir_4ppm_codec.sv" \
+#   "$root_dir/rtl/p9_rate_4ppm_rx.sv" \
+#   "$root_dir/rtl/p9_4ppm_frame_tx.sv" \
+#   "$root_dir/rtl/p9_4ppm_frame_rx.sv" \
+#   "$root_dir/rtl/p10_1r_rx_admission.sv" \
+#   "$root_dir/rtl/p9_optical_transport_core.sv" \
+#   "$root_dir/rtl/p6_axi_lite_bridge.sv" \
+#   "$root_dir/rtl/p10_1_metric_counter.sv" \
+#   "$root_dir/rtl/p10_1_timer_snapshot.sv" \
+#   "$root_dir/rtl/p10_1_event_fifo.sv" \
+#   "$root_dir/rtl/p10_1_perf_monitor.sv" \
+#   "$root_dir/rtl/p9_axi_dma_peripheral.sv" \
+#   "$root_dir/rtl/p10_lane_activity_leds.sv" \
+#   "$root_dir/rtl/p10_2_lane_activity_leds.sv" \
+#   "$root_dir/rtl/p10_axi_dma_endpoint_peripheral_bd.v" \
+# ]
+# add_files -fileset sources_1 $rtl_sources
+# set_property include_dirs [list "$root_dir/rtl"] [get_filesets sources_1]
+# read_xdc $xdc_file
+# create_bd_design p10_ps_system
+Wrote  : <C:\p10_vivado\rotating_4lane\project\p10_ax7020_rotating_4lane_functional.srcs\sources_1\bd\p10_ps_system\p10_ps_system.bd> 
+# set ps [create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0]
+# apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
+#   -config {make_external "FIXED_IO, DDR" apply_board_preset "0" Master "Disable" Slave "Disable"} $ps
+WARNING: [Boardtcl 53-1] No current board_part set.
+# source "$root_dir/board_profiles/ax7020_common/p10_ps7_config.tcl"
+## proc p10_apply_ax7020_ps7_config {ps_cell {enable_ps_activity_leds 0}} {
+##   set_property -dict [list \
+##     CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ {33.333333} \
+##     CONFIG.PCW_APU_PERIPHERAL_FREQMHZ {666.666666} \
+##     CONFIG.PCW_PRESET_BANK0_VOLTAGE {LVCMOS 3.3V} \
+##     CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V} \
+##     CONFIG.PCW_EN_DDR {1} \
+##     CONFIG.PCW_DDR_RAM_BASEADDR {0x00100000} \
+##     CONFIG.PCW_DDR_RAM_HIGHADDR {0x1FFFFFFF} \
+##     CONFIG.PCW_DM_WIDTH {4} \
+##     CONFIG.PCW_DQS_WIDTH {4} \
+##     CONFIG.PCW_DQ_WIDTH {32} \
+##     CONFIG.PCW_UIPARAM_DDR_ENABLE {1} \
+##     CONFIG.PCW_UIPARAM_DDR_MEMORY_TYPE {DDR 3} \
+##     CONFIG.PCW_UIPARAM_DDR_PARTNO {MT41J256M16 RE-125} \
+##     CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH {32 Bit} \
+##     CONFIG.PCW_UIPARAM_DDR_FREQ_MHZ {533.333333} \
+##     CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE {1} \
+##     CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE {1} \
+##     CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL {1} \
+##     CONFIG.PCW_PACKAGE_DDR_BOARD_DELAY0 {0.089} \
+##     CONFIG.PCW_PACKAGE_DDR_BOARD_DELAY1 {0.075} \
+##     CONFIG.PCW_PACKAGE_DDR_BOARD_DELAY2 {0.085} \
+##     CONFIG.PCW_PACKAGE_DDR_BOARD_DELAY3 {0.092} \
+##     CONFIG.PCW_PACKAGE_DDR_DQS_TO_CLK_DELAY_0 {-0.025} \
+##     CONFIG.PCW_PACKAGE_DDR_DQS_TO_CLK_DELAY_1 {0.014} \
+##     CONFIG.PCW_PACKAGE_DDR_DQS_TO_CLK_DELAY_2 {-0.009} \
+##     CONFIG.PCW_PACKAGE_DDR_DQS_TO_CLK_DELAY_3 {-0.033} \
+##     CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY0 {0.25} \
+##     CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY1 {0.25} \
+##     CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY2 {0.25} \
+##     CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY3 {0.25} \
+##     CONFIG.PCW_UIPARAM_DDR_CLOCK_0_PACKAGE_LENGTH {80.4535} \
+##     CONFIG.PCW_UIPARAM_DDR_CLOCK_1_PACKAGE_LENGTH {80.4535} \
+##     CONFIG.PCW_UIPARAM_DDR_CLOCK_2_PACKAGE_LENGTH {80.4535} \
+##     CONFIG.PCW_UIPARAM_DDR_CLOCK_3_PACKAGE_LENGTH {80.4535} \
+##     CONFIG.PCW_UIPARAM_DDR_DQS_0_PACKAGE_LENGTH {105.056} \
+##     CONFIG.PCW_UIPARAM_DDR_DQS_1_PACKAGE_LENGTH {66.904} \
+##     CONFIG.PCW_UIPARAM_DDR_DQS_2_PACKAGE_LENGTH {89.1715} \
+##     CONFIG.PCW_UIPARAM_DDR_DQS_3_PACKAGE_LENGTH {113.63} \
+##     CONFIG.PCW_UIPARAM_DDR_DQ_0_PACKAGE_LENGTH {98.503} \
+##     CONFIG.PCW_UIPARAM_DDR_DQ_1_PACKAGE_LENGTH {68.5855} \
+##     CONFIG.PCW_UIPARAM_DDR_DQ_2_PACKAGE_LENGTH {90.295} \
+##     CONFIG.PCW_UIPARAM_DDR_DQ_3_PACKAGE_LENGTH {103.977} \
+##     CONFIG.PCW_EN_ENET0 {0} \
+##     CONFIG.PCW_EN_ENET1 {0} \
+##     CONFIG.PCW_EN_USB0 {0} \
+##     CONFIG.PCW_EN_USB1 {0} \
+##     CONFIG.PCW_EN_SDIO0 {0} \
+##     CONFIG.PCW_EN_SDIO1 {0} \
+##     CONFIG.PCW_EN_QSPI {0} \
+##     CONFIG.PCW_UART1_PERIPHERAL_ENABLE {1} \
+##     CONFIG.PCW_EN_UART1 {1} \
+##     CONFIG.PCW_UART1_UART1_IO {MIO 48 .. 49} \
+##     CONFIG.PCW_UART1_BAUD_RATE {115200} \
+##     CONFIG.PCW_EN_UART0 {0} \
+##     CONFIG.PCW_USE_M_AXI_GP0 {1} \
+##     CONFIG.PCW_USE_S_AXI_HP0 {1} \
+##     CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {64} \
+##     CONFIG.PCW_USE_FABRIC_INTERRUPT {1} \
+##     CONFIG.PCW_IRQ_F2P_INTR {1} \
+##     CONFIG.PCW_EN_CLK0_PORT {1} \
+##     CONFIG.PCW_EN_CLK1_PORT {1} \
+##     CONFIG.PCW_EN_CLK2_PORT {1} \
+##     CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {64.000000} \
+##     CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {100.000000} \
+##     CONFIG.PCW_FPGA2_PERIPHERAL_FREQMHZ {50.000000} \
+##   ] $ps_cell
+## 
+##   if {$enable_ps_activity_leds} {
+##     # AX7020 PS LED1/2 are active-low MIO0/MIO13 GPIO sinks.  Explicitly
+##     # freeze mux, voltage, pull and slew while leaving runtime direction/OEN
+##     # ownership to XGpioPs.  GPIO_PERIPHERAL_ENABLE is an EMIO-facing option
+##     # and remains disabled for this MIO-only design.
+##     set_property -dict [list \
+##       CONFIG.PCW_EN_GPIO {1} \
+##       CONFIG.PCW_GPIO_PERIPHERAL_ENABLE {0} \
+##       CONFIG.PCW_GPIO_MIO_GPIO_ENABLE {1} \
+##       CONFIG.PCW_GPIO_MIO_GPIO_IO {MIO} \
+##       CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0} \
+##       CONFIG.PCW_MIO_0_PULLUP {enabled} \
+##       CONFIG.PCW_MIO_0_IOTYPE {LVCMOS 3.3V} \
+##       CONFIG.PCW_MIO_0_SLEW {slow} \
+##       CONFIG.PCW_MIO_13_PULLUP {enabled} \
+##       CONFIG.PCW_MIO_13_IOTYPE {LVCMOS 3.3V} \
+##       CONFIG.PCW_MIO_13_SLEW {slow} \
+##     ] $ps_cell
+##   }
+## }
+# p10_apply_ax7020_ps7_config $ps [expr {$campaign eq "p10_3"}]
+# set dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0]
+# set_property -dict [list \
+#   CONFIG.c_include_sg {1} \
+#   CONFIG.c_sg_include_stscntrl_strm {0} \
+#   CONFIG.c_sg_length_width {26} \
+#   CONFIG.c_addr_width {32} \
+#   CONFIG.c_include_mm2s {1} \
+#   CONFIG.c_include_s2mm {1} \
+#   CONFIG.c_include_mm2s_dre {1} \
+#   CONFIG.c_include_s2mm_dre {1} \
+#   CONFIG.c_m_axi_mm2s_data_width {32} \
+#   CONFIG.c_m_axis_mm2s_tdata_width {32} \
+#   CONFIG.c_m_axi_s2mm_data_width {32} \
+#   CONFIG.c_s_axis_s2mm_tdata_width {32} \
+#   CONFIG.c_mm2s_burst_size {16} \
+#   CONFIG.c_s2mm_burst_size {16} \
+# ] $dma
+# update_compile_order -fileset sources_1
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi_aclk' of definition 'xilinx.com:signal:clock:1.0' (from X_INTERFACE_INFO parameter from HDL file).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi_aclk' of definition 'xilinx.com:signal:clock:1.0' (from 'X_INTERFACE_INFO' attribute).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi_aresetn' of definition 'xilinx.com:signal:reset:1.0' (from X_INTERFACE_INFO parameter from HDL file).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi_aresetn' of definition 'xilinx.com:signal:reset:1.0' (from 'X_INTERFACE_INFO' attribute).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axis' of definition 'xilinx.com:interface:axis:1.0' (from X_INTERFACE_INFO parameter from HDL file).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axis' of definition 'xilinx.com:interface:axis:1.0' (from 'X_INTERFACE_INFO' attribute).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axis' of definition 'xilinx.com:interface:axis:1.0' (from X_INTERFACE_INFO parameter from HDL file).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axis' of definition 'xilinx.com:interface:axis:1.0' (from 'X_INTERFACE_INFO' attribute).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 's_axi_aclk': Added interface parameter 'ASSOCIATED_BUSIF' with value 's_axi'.
+INFO: [IP_Flow 19-4728] Bus Interface 's_axi_aclk': Added interface parameter 'ASSOCIATED_RESET' with value 's_axi_aresetn'.
+INFO: [IP_Flow 19-4728] Bus Interface 's_axi_aclk': Added interface parameter 'FREQ_HZ' with value '64000000'.
+INFO: [IP_Flow 19-4728] Bus Interface 's_axi_aresetn': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'.
+INFO: [IP_Flow 19-7067] Note that bus interface 's_axi_aclk' has a fixed FREQ_HZ of '64000000'. This value will be respected whenever this IP is instantiated in IP Integrator.
+# set endpoint [create_bd_cell -type module -reference p10_axi_dma_endpoint_peripheral_bd p10_endpoint_0]
+# set_property CONFIG.ENDPOINT_ROLE $endpoint_role $endpoint
+# set_property CONFIG.LANE_COUNT $lane_count $endpoint
+# if {$campaign eq "p10_3"} {
+#   set p10_3_build_id [expr {$endpoint_role == 1 ? 0x50333446 : 0x50333452}]
+#   set_property CONFIG.BUILD_ID_OVERRIDE $p10_3_build_id $endpoint
+# }
+# set rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_protocol_64]
+# set rst100 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_dma_100]
+# set rst50 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_axil_50]
+# set stream_rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_protocol_64]
+# set stream_rst100 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_dma_100]
+# set stream_rst50 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_stream_dma_50]
+# foreach stream_reset [list $stream_rst64 $stream_rst100 $stream_rst50] {
+#   set_property CONFIG.C_AUX_RESET_HIGH {1} $stream_reset
+# }
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] \
+#   [get_bd_pins rst_protocol_64/slowest_sync_clk] \
+#   [get_bd_pins rst_stream_protocol_64/slowest_sync_clk]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK1] \
+#   [get_bd_pins rst_dma_100/slowest_sync_clk] \
+#   [get_bd_pins rst_stream_dma_100/slowest_sync_clk]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK2] \
+#   [get_bd_pins rst_axil_50/slowest_sync_clk] \
+#   [get_bd_pins rst_stream_dma_50/slowest_sync_clk]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] \
+#   [get_bd_pins rst_protocol_64/ext_reset_in] \
+#   [get_bd_pins rst_dma_100/ext_reset_in] \
+#   [get_bd_pins rst_axil_50/ext_reset_in] \
+#   [get_bd_pins rst_stream_protocol_64/ext_reset_in] \
+#   [get_bd_pins rst_stream_dma_100/ext_reset_in] \
+#   [get_bd_pins rst_stream_dma_50/ext_reset_in]
+# connect_bd_net [get_bd_pins p10_endpoint_0/stream_reset_request_o] \
+#   [get_bd_pins rst_stream_protocol_64/aux_reset_in] \
+#   [get_bd_pins rst_stream_dma_100/aux_reset_in] \
+#   [get_bd_pins rst_stream_dma_50/aux_reset_in]
+# set gp_xbar [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 gp0_interconnect]
+# set_property -dict [list CONFIG.NUM_SI {1} CONFIG.NUM_MI {2}] $gp_xbar
+# set axil_cc [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_clock_converter:2.1 p10_axil_clock_converter]
+# set_property CONFIG.PROTOCOL {AXI4LITE} $axil_cc
+# connect_bd_intf_net [get_bd_intf_pins processing_system7_0/M_AXI_GP0] [get_bd_intf_pins gp0_interconnect/S00_AXI]
+# connect_bd_intf_net [get_bd_intf_pins gp0_interconnect/M00_AXI] [get_bd_intf_pins axi_dma_0/S_AXI_LITE]
+# connect_bd_intf_net [get_bd_intf_pins gp0_interconnect/M01_AXI] [get_bd_intf_pins p10_axil_clock_converter/S_AXI]
+# connect_bd_intf_net [get_bd_intf_pins p10_axil_clock_converter/M_AXI] [get_bd_intf_pins p10_endpoint_0/s_axi]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK2] \
+#   [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] \
+#   [get_bd_pins gp0_interconnect/ACLK] [get_bd_pins gp0_interconnect/S00_ACLK] \
+#   [get_bd_pins gp0_interconnect/M00_ACLK] [get_bd_pins gp0_interconnect/M01_ACLK] \
+#   [get_bd_pins p10_axil_clock_converter/s_axi_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk]
+# connect_bd_net [get_bd_pins rst_axil_50/interconnect_aresetn] \
+#   [get_bd_pins gp0_interconnect/ARESETN] [get_bd_pins gp0_interconnect/S00_ARESETN] \
+#   [get_bd_pins gp0_interconnect/M00_ARESETN] [get_bd_pins gp0_interconnect/M01_ARESETN]
+# connect_bd_net [get_bd_pins rst_axil_50/peripheral_aresetn] [get_bd_pins p10_axil_clock_converter/s_axi_aresetn]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] \
+#   [get_bd_pins p10_axil_clock_converter/m_axi_aclk] [get_bd_pins p10_endpoint_0/s_axi_aclk]
+# connect_bd_net [get_bd_pins rst_protocol_64/peripheral_aresetn] \
+#   [get_bd_pins p10_axil_clock_converter/m_axi_aresetn] [get_bd_pins p10_endpoint_0/s_axi_aresetn]
+# set hp_xbar [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 hp0_interconnect]
+# set_property -dict [list CONFIG.NUM_SI {3} CONFIG.NUM_MI {1}] $hp_xbar
+# connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXI_MM2S] [get_bd_intf_pins hp0_interconnect/S00_AXI]
+# connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXI_S2MM] [get_bd_intf_pins hp0_interconnect/S01_AXI]
+# connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXI_SG] [get_bd_intf_pins hp0_interconnect/S02_AXI]
+# connect_bd_intf_net [get_bd_intf_pins hp0_interconnect/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP0]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK1] \
+#   [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] \
+#   [get_bd_pins hp0_interconnect/ACLK] \
+#   [get_bd_pins hp0_interconnect/S00_ACLK] [get_bd_pins hp0_interconnect/S01_ACLK] \
+#   [get_bd_pins hp0_interconnect/S02_ACLK] [get_bd_pins hp0_interconnect/M00_ACLK] \
+#   [get_bd_pins axi_dma_0/m_axi_sg_aclk] \
+#   [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk]
+# connect_bd_net [get_bd_pins rst_dma_100/interconnect_aresetn] \
+#   [get_bd_pins hp0_interconnect/ARESETN] \
+#   [get_bd_pins hp0_interconnect/S00_ARESETN] [get_bd_pins hp0_interconnect/S01_ARESETN] \
+#   [get_bd_pins hp0_interconnect/S02_ARESETN] [get_bd_pins hp0_interconnect/M00_ARESETN]
+# connect_bd_net [get_bd_pins rst_stream_dma_50/peripheral_aresetn] [get_bd_pins axi_dma_0/axi_resetn]
+# set mm2s_cc [create_bd_cell -type ip -vlnv xilinx.com:ip:axis_clock_converter:1.1 mm2s_axis_clock_converter]
+# set s2mm_cc [create_bd_cell -type ip -vlnv xilinx.com:ip:axis_clock_converter:1.1 s2mm_axis_clock_converter]
+# foreach cc [list $mm2s_cc $s2mm_cc] {
+#   set_property -dict [list CONFIG.TDATA_NUM_BYTES {4} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] $cc
+# }
+# connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins mm2s_axis_clock_converter/S_AXIS]
+# connect_bd_intf_net [get_bd_intf_pins mm2s_axis_clock_converter/M_AXIS] [get_bd_intf_pins p10_endpoint_0/s_axis]
+# connect_bd_intf_net [get_bd_intf_pins p10_endpoint_0/m_axis] [get_bd_intf_pins s2mm_axis_clock_converter/S_AXIS]
+# connect_bd_intf_net [get_bd_intf_pins s2mm_axis_clock_converter/M_AXIS] [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK1] \
+#   [get_bd_pins mm2s_axis_clock_converter/s_axis_aclk] [get_bd_pins s2mm_axis_clock_converter/m_axis_aclk]
+# connect_bd_net [get_bd_pins rst_stream_dma_100/peripheral_aresetn] \
+#   [get_bd_pins mm2s_axis_clock_converter/s_axis_aresetn] [get_bd_pins s2mm_axis_clock_converter/m_axis_aresetn]
+# connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] \
+#   [get_bd_pins mm2s_axis_clock_converter/m_axis_aclk] [get_bd_pins s2mm_axis_clock_converter/s_axis_aclk]
+# connect_bd_net [get_bd_pins rst_stream_protocol_64/peripheral_aresetn] \
+#   [get_bd_pins mm2s_axis_clock_converter/m_axis_aresetn] [get_bd_pins s2mm_axis_clock_converter/s_axis_aresetn]
+# set irq_concat [create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 dma_irq_concat]
+# set_property CONFIG.NUM_PORTS {2} $irq_concat
+# connect_bd_net [get_bd_pins axi_dma_0/mm2s_introut] [get_bd_pins dma_irq_concat/In0]
+# connect_bd_net [get_bd_pins axi_dma_0/s2mm_introut] [get_bd_pins dma_irq_concat/In1]
+# connect_bd_net [get_bd_pins dma_irq_concat/dout] [get_bd_pins processing_system7_0/IRQ_F2P]
+# foreach pin_name [list tfdu_mode_o tfdu_rxd_i tfdu_sd_o tfdu_txd_o pl_activity_led_n_o] {
+#   set pin [get_bd_pins "p10_endpoint_0/$pin_name"]
+#   make_bd_pins_external $pin
+#   set generated [get_bd_ports "${pin_name}_0"]
+#   if {[llength $generated] == 1} { set_property name $pin_name $generated }
+# }
+# assign_bd_address
+Slave segment '/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM' is being assigned into address space '/axi_dma_0/Data_MM2S' at <0x0000_0000 [ 1G ]>.
+Slave segment '/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM' is being assigned into address space '/axi_dma_0/Data_S2MM' at <0x0000_0000 [ 1G ]>.
+Slave segment '/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM' is being assigned into address space '/axi_dma_0/Data_SG' at <0x0000_0000 [ 1G ]>.
+Slave segment '/axi_dma_0/S_AXI_LITE/Reg' is being assigned into address space '/processing_system7_0/Data' at <0x4040_0000 [ 64K ]>.
+Slave segment '/p10_endpoint_0/s_axi/reg0' is being assigned into address space '/processing_system7_0/Data' at <0x4000_0000 [ 4K ]>.
+# assign_bd_address -offset 0x40400000 -range 64K \
+#   -target_address_space [get_bd_addr_spaces processing_system7_0/Data] \
+#   [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] -force
+# assign_bd_address -offset 0x43C00000 -range 4K \
+#   -target_address_space [get_bd_addr_spaces processing_system7_0/Data] \
+#   [get_bd_addr_segs p10_endpoint_0/s_axi/reg0] -force
+Slave segment '/p10_endpoint_0/s_axi/reg0' is being assigned into address space '/processing_system7_0/Data' at <0x43C0_0000 [ 4K ]>.
+# validate_bd_design
+# save_bd_design
+Wrote  : <C:\p10_vivado\rotating_4lane\project\p10_ax7020_rotating_4lane_functional.srcs\sources_1\bd\p10_ps_system\p10_ps_system.bd> 
+# generate_target all [get_files p10_ps_system.bd]
+INFO: [BD 41-1662] The design 'p10_ps_system.bd' is already validated. Therefore parameter propagation will not be re-run.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/hp0_interconnect/m00_couplers/auto_pc/m_axi_rid'(2) to pin: '/hp0_interconnect/m00_couplers/M_AXI_rid'(6) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/hp0_interconnect/m00_couplers/auto_pc/m_axi_bid'(2) to pin: '/hp0_interconnect/m00_couplers/M_AXI_bid'(6) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_WID'(6) to pin: '/hp0_interconnect/M00_AXI_wid'(2) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_ARID'(6) to pin: '/hp0_interconnect/M00_AXI_arid'(2) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_AWID'(6) to pin: '/hp0_interconnect/M00_AXI_awid'(2) - Only lower order bits will be connected.
+Verilog Output written to : C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/synth/p10_ps_system.v
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/hp0_interconnect/m00_couplers/auto_pc/m_axi_rid'(2) to pin: '/hp0_interconnect/m00_couplers/M_AXI_rid'(6) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/hp0_interconnect/m00_couplers/auto_pc/m_axi_bid'(2) to pin: '/hp0_interconnect/m00_couplers/M_AXI_bid'(6) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_WID'(6) to pin: '/hp0_interconnect/M00_AXI_wid'(2) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_ARID'(6) to pin: '/hp0_interconnect/M00_AXI_arid'(2) - Only lower order bits will be connected.
+WARNING: [BD 41-2384] Width mismatch when connecting pin: '/processing_system7_0/S_AXI_HP0_AWID'(6) to pin: '/hp0_interconnect/M00_AXI_awid'(2) - Only lower order bits will be connected.
+Verilog Output written to : C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/sim/p10_ps_system.v
+Verilog Output written to : C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/hdl/p10_ps_system_wrapper.v
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI_GP0'. A default connection has been created.
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'S_AXI_HP0'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block processing_system7_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_dma_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block p10_endpoint_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_protocol_64 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_dma_100 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_axil_50 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_stream_protocol_64 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_stream_dma_100 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_stream_dma_50 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block gp0_interconnect/xbar .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_pc_0/p10_ps_system_auto_pc_0_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block gp0_interconnect/s00_couplers/auto_pc .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_ooc.xdc'
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'S_AXI'. A default connection has been created.
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block p10_axil_clock_converter .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block hp0_interconnect/xbar .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_0/p10_ps_system_auto_us_0_ooc.xdc'
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'S_AXI'. A default connection has been created.
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block hp0_interconnect/s00_couplers/auto_us .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_1/p10_ps_system_auto_us_1_ooc.xdc'
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'S_AXI'. A default connection has been created.
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block hp0_interconnect/s01_couplers/auto_us .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_2/p10_ps_system_auto_us_2_ooc.xdc'
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'S_AXI'. A default connection has been created.
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block hp0_interconnect/s02_couplers/auto_us .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_pc_1/p10_ps_system_auto_pc_1_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block hp0_interconnect/m00_couplers/auto_pc .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_mm2s_axis_clock_converter_0/p10_ps_system_mm2s_axis_clock_converter_0_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block mm2s_axis_clock_converter .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_s2mm_axis_clock_converter_0/p10_ps_system_s2mm_axis_clock_converter_0_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block s2mm_axis_clock_converter .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block dma_irq_concat .
+Exporting to file C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/hw_handoff/p10_ps_system.hwh
+Generated Hardware Definition File C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/synth/p10_ps_system.hwdef
+generate_target: Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 1933.477 ; gain = 322.914
+# make_wrapper -files [get_files p10_ps_system.bd] -top
+# add_files -norecurse "$build_dir/project/${project_name}.gen/sources_1/bd/p10_ps_system/hdl/p10_ps_system_wrapper.v"
+# set_property top p10_ps_system_wrapper [current_fileset]
+# update_compile_order -fileset sources_1
+# set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true [get_runs impl_1]
+# set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE AggressiveExplore [get_runs impl_1]
+# launch_runs impl_1 -to_step write_bitstream -jobs 8
+INFO: [IP_Flow 19-6930] IPCACHE: runCacheChecks() number of threads = 8
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_auto_pc_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_auto_pc_1
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_auto_us_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_auto_us_1
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_auto_us_2
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_axi_dma_0_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_mm2s_axis_clock_converter_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_p10_axil_clock_converter_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_p10_endpoint_0_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_axil_50_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_dma_100_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_protocol_64_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_stream_dma_100_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_stream_dma_50_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_rst_stream_protocol_64_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_s2mm_axis_clock_converter_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_xbar_0
+INFO: [IP_Flow 19-6921] IPCACHE: Adding cache check func to thread queue for IP p10_ps_system_xbar_1
+INFO: [IP_Flow 19-8020] IPCACHE: runCacheChecks() calling threadPool finishWork()
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_auto_pc_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_auto_pc_1
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_protocol_64_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_stream_dma_100_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_s2mm_axis_clock_converter_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_xbar_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_dma_100_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_stream_dma_50_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_stream_protocol_64_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_xbar_1
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_auto_us_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_auto_us_1
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_auto_us_2
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_axi_dma_0_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_mm2s_axis_clock_converter_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_p10_axil_clock_converter_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_p10_endpoint_0_0
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: p10_ps_system_rst_axil_50_0
+
+[Tue Aug  4 16:49:22 2026] Launched p10_ps_system_processing_system7_0_0_synth_1, p10_ps_system_rst_axil_50_0_synth_1, p10_ps_system_rst_protocol_64_0_synth_1, p10_ps_system_rst_stream_dma_100_0_synth_1, p10_ps_system_rst_dma_100_0_synth_1, p10_ps_system_rst_stream_protocol_64_0_synth_1, p10_ps_system_p10_endpoint_0_0_synth_1, p10_ps_system_axi_dma_0_0_synth_1, p10_ps_system_rst_stream_dma_50_0_synth_1, p10_ps_system_auto_pc_0_synth_1, p10_ps_system_auto_us_0_synth_1, p10_ps_system_mm2s_axis_clock_converter_0_synth_1, p10_ps_system_s2mm_axis_clock_converter_0_synth_1, p10_ps_system_auto_us_1_synth_1, p10_ps_system_xbar_0_synth_1, p10_ps_system_xbar_1_synth_1, p10_ps_system_auto_us_2_synth_1, p10_ps_system_p10_axil_clock_converter_0_synth_1, p10_ps_system_auto_pc_1_synth_1, synth_1...
+Run output will be captured here:
+p10_ps_system_processing_system7_0_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_processing_system7_0_0_synth_1/runme.log
+p10_ps_system_rst_axil_50_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_axil_50_0_synth_1/runme.log
+p10_ps_system_rst_protocol_64_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_protocol_64_0_synth_1/runme.log
+p10_ps_system_rst_stream_dma_100_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_stream_dma_100_0_synth_1/runme.log
+p10_ps_system_rst_dma_100_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_dma_100_0_synth_1/runme.log
+p10_ps_system_rst_stream_protocol_64_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_stream_protocol_64_0_synth_1/runme.log
+p10_ps_system_p10_endpoint_0_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_p10_endpoint_0_0_synth_1/runme.log
+p10_ps_system_axi_dma_0_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_axi_dma_0_0_synth_1/runme.log
+p10_ps_system_rst_stream_dma_50_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_rst_stream_dma_50_0_synth_1/runme.log
+p10_ps_system_auto_pc_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_auto_pc_0_synth_1/runme.log
+p10_ps_system_auto_us_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_auto_us_0_synth_1/runme.log
+p10_ps_system_mm2s_axis_clock_converter_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_mm2s_axis_clock_converter_0_synth_1/runme.log
+p10_ps_system_s2mm_axis_clock_converter_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_s2mm_axis_clock_converter_0_synth_1/runme.log
+p10_ps_system_auto_us_1_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_auto_us_1_synth_1/runme.log
+p10_ps_system_xbar_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_xbar_0_synth_1/runme.log
+p10_ps_system_xbar_1_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_xbar_1_synth_1/runme.log
+p10_ps_system_auto_us_2_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_auto_us_2_synth_1/runme.log
+p10_ps_system_p10_axil_clock_converter_0_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_p10_axil_clock_converter_0_synth_1/runme.log
+p10_ps_system_auto_pc_1_synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/p10_ps_system_auto_pc_1_synth_1/runme.log
+synth_1: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/synth_1/runme.log
+[Tue Aug  4 16:49:22 2026] Launched impl_1...
+Run output will be captured here: C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/runme.log
+# wait_on_run impl_1
+[Tue Aug  4 16:49:22 2026] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log p10_ps_system_wrapper.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source p10_ps_system_wrapper.tcl -notrace
+
+
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 10000
+source p10_ps_system_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2023.1/data/ip'.
+Command: link_design -top p10_ps_system_wrapper -part xc7z020clg400-2
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xc7z020clg400-2
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0.dcp' for cell 'p10_ps_system_i/axi_dma_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_mm2s_axis_clock_converter_0/p10_ps_system_mm2s_axis_clock_converter_0.dcp' for cell 'p10_ps_system_i/mm2s_axis_clock_converter'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0.dcp' for cell 'p10_ps_system_i/p10_axil_clock_converter'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_endpoint_0_0/p10_ps_system_p10_endpoint_0_0.dcp' for cell 'p10_ps_system_i/p10_endpoint_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_processing_system7_0_0/p10_ps_system_processing_system7_0_0.dcp' for cell 'p10_ps_system_i/processing_system7_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_axil_50_0/p10_ps_system_rst_axil_50_0.dcp' for cell 'p10_ps_system_i/rst_axil_50'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_dma_100_0/p10_ps_system_rst_dma_100_0.dcp' for cell 'p10_ps_system_i/rst_dma_100'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_protocol_64_0/p10_ps_system_rst_protocol_64_0.dcp' for cell 'p10_ps_system_i/rst_protocol_64'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_100_0/p10_ps_system_rst_stream_dma_100_0.dcp' for cell 'p10_ps_system_i/rst_stream_dma_100'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_50_0/p10_ps_system_rst_stream_dma_50_0.dcp' for cell 'p10_ps_system_i/rst_stream_dma_50'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_protocol_64_0/p10_ps_system_rst_stream_protocol_64_0.dcp' for cell 'p10_ps_system_i/rst_stream_protocol_64'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_s2mm_axis_clock_converter_0/p10_ps_system_s2mm_axis_clock_converter_0.dcp' for cell 'p10_ps_system_i/s2mm_axis_clock_converter'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_xbar_0/p10_ps_system_xbar_0.dcp' for cell 'p10_ps_system_i/gp0_interconnect/xbar'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_pc_0/p10_ps_system_auto_pc_0.dcp' for cell 'p10_ps_system_i/gp0_interconnect/s00_couplers/auto_pc'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_xbar_1/p10_ps_system_xbar_1.dcp' for cell 'p10_ps_system_i/hp0_interconnect/xbar'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_pc_1/p10_ps_system_auto_pc_1.dcp' for cell 'p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_0/p10_ps_system_auto_us_0.dcp' for cell 'p10_ps_system_i/hp0_interconnect/s00_couplers/auto_us'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_1/p10_ps_system_auto_us_1.dcp' for cell 'p10_ps_system_i/hp0_interconnect/s01_couplers/auto_us'
+INFO: [Project 1-454] Reading design checkpoint 'c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_2/p10_ps_system_auto_us_2.dcp' for cell 'p10_ps_system_i/hp0_interconnect/s02_couplers/auto_us'
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.340 . Memory (MB): peak = 2008.445 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 3828 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2023.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_processing_system7_0_0/p10_ps_system_processing_system7_0_0.xdc] for cell 'p10_ps_system_i/processing_system7_0/inst'
+WARNING: [Vivado 12-2489] -input_jitter contains time 0.468750 which will be rounded to 0.469 to ensure it is an integer multiple of 1 picosecond [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_processing_system7_0_0/p10_ps_system_processing_system7_0_0.xdc:21]
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_processing_system7_0_0/p10_ps_system_processing_system7_0_0.xdc] for cell 'p10_ps_system_i/processing_system7_0/inst'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0.xdc] for cell 'p10_ps_system_i/axi_dma_0/U0'
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-1' -from list should not be empty. [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0.xdc:61]
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0.xdc] for cell 'p10_ps_system_i/axi_dma_0/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_protocol_64_0/p10_ps_system_rst_protocol_64_0_board.xdc] for cell 'p10_ps_system_i/rst_protocol_64/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_protocol_64_0/p10_ps_system_rst_protocol_64_0_board.xdc] for cell 'p10_ps_system_i/rst_protocol_64/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_protocol_64_0/p10_ps_system_rst_protocol_64_0.xdc] for cell 'p10_ps_system_i/rst_protocol_64/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_protocol_64_0/p10_ps_system_rst_protocol_64_0.xdc] for cell 'p10_ps_system_i/rst_protocol_64/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_dma_100_0/p10_ps_system_rst_dma_100_0_board.xdc] for cell 'p10_ps_system_i/rst_dma_100/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_dma_100_0/p10_ps_system_rst_dma_100_0_board.xdc] for cell 'p10_ps_system_i/rst_dma_100/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_dma_100_0/p10_ps_system_rst_dma_100_0.xdc] for cell 'p10_ps_system_i/rst_dma_100/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_dma_100_0/p10_ps_system_rst_dma_100_0.xdc] for cell 'p10_ps_system_i/rst_dma_100/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_axil_50_0/p10_ps_system_rst_axil_50_0_board.xdc] for cell 'p10_ps_system_i/rst_axil_50/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_axil_50_0/p10_ps_system_rst_axil_50_0_board.xdc] for cell 'p10_ps_system_i/rst_axil_50/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_axil_50_0/p10_ps_system_rst_axil_50_0.xdc] for cell 'p10_ps_system_i/rst_axil_50/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_axil_50_0/p10_ps_system_rst_axil_50_0.xdc] for cell 'p10_ps_system_i/rst_axil_50/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_protocol_64_0/p10_ps_system_rst_stream_protocol_64_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_protocol_64/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_protocol_64_0/p10_ps_system_rst_stream_protocol_64_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_protocol_64/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_protocol_64_0/p10_ps_system_rst_stream_protocol_64_0.xdc] for cell 'p10_ps_system_i/rst_stream_protocol_64/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_protocol_64_0/p10_ps_system_rst_stream_protocol_64_0.xdc] for cell 'p10_ps_system_i/rst_stream_protocol_64/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_100_0/p10_ps_system_rst_stream_dma_100_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_dma_100/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_100_0/p10_ps_system_rst_stream_dma_100_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_dma_100/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_100_0/p10_ps_system_rst_stream_dma_100_0.xdc] for cell 'p10_ps_system_i/rst_stream_dma_100/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_100_0/p10_ps_system_rst_stream_dma_100_0.xdc] for cell 'p10_ps_system_i/rst_stream_dma_100/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_50_0/p10_ps_system_rst_stream_dma_50_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_dma_50/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_50_0/p10_ps_system_rst_stream_dma_50_0_board.xdc] for cell 'p10_ps_system_i/rst_stream_dma_50/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_50_0/p10_ps_system_rst_stream_dma_50_0.xdc] for cell 'p10_ps_system_i/rst_stream_dma_50/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_rst_stream_dma_50_0/p10_ps_system_rst_stream_dma_50_0.xdc] for cell 'p10_ps_system_i/rst_stream_dma_50/U0'
+Parsing XDC File [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc]
+Finished Parsing XDC File [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc]
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0_clocks.xdc] for cell 'p10_ps_system_i/axi_dma_0/U0'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_axi_dma_0_0/p10_ps_system_axi_dma_0_0_clocks.xdc] for cell 'p10_ps_system_i/axi_dma_0/U0'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc] for cell 'p10_ps_system_i/p10_axil_clock_converter/inst'
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-10' -to list should not be empty. [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc:7]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-11' -to list should not be empty. [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc:10]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-15' -to list should not be empty. [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc:13]
+WARNING: [Vivado_Tcl 4-939] Waiver ID 'LUTAR-1' object list should not be empty (perhaps an invalid wildcard was used or only unsupported objects). [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc:17]
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_p10_axil_clock_converter_0/p10_ps_system_p10_axil_clock_converter_0_clocks.xdc] for cell 'p10_ps_system_i/p10_axil_clock_converter/inst'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_0/p10_ps_system_auto_us_0_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s00_couplers/auto_us/inst'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_0/p10_ps_system_auto_us_0_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s00_couplers/auto_us/inst'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_1/p10_ps_system_auto_us_1_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s01_couplers/auto_us/inst'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_1/p10_ps_system_auto_us_1_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s01_couplers/auto_us/inst'
+Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_2/p10_ps_system_auto_us_2_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s02_couplers/auto_us/inst'
+Finished Parsing XDC File [c:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.gen/sources_1/bd/p10_ps_system/ip/p10_ps_system_auto_us_2/p10_ps_system_auto_us_2_clocks.xdc] for cell 'p10_ps_system_i/hp0_interconnect/s02_couplers/auto_us/inst'
+INFO: [Project 1-1714] 37 XPM XDC files have been applied to the design.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-1687] 2 scoped IP constraints or related sub-commands were skipped due to synthesis logic optimizations usually triggered by constant connectivity or unconnected output pins. To review the skipped constraints and messages, run the command 'set_param netlist.IPMsgFiltering false' before opening the design.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 2800.078 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 115 instances were transformed.
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 51 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 12 instances
+  RAM64M => RAM64M (RAMD64E(x4)): 48 instances
+  RAM64X1D => RAM64X1D (RAMD64E(x2)): 4 instances
+
+31 Infos, 6 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:00:15 ; elapsed = 00:00:19 . Memory (MB): peak = 2800.078 ; gain = 1350.336
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.545 . Memory (MB): peak = 2800.078 ; gain = 0.000
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 59c1a240
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.796 . Memory (MB): peak = 2800.078 ; gain = 0.000
+
+Starting Logic Optimization Task
+
+Phase 1 Retarget
+INFO: [Opt 31-1566] Pulled 35 inverters resulting in an inversion of 342 pins
+INFO: [Opt 31-138] Pushed 5 inverter(s) to 23 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 1 Retarget | Checksum: 70728e26
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-389] Phase Retarget created 27 cells and removed 139 cells
+INFO: [Opt 31-1021] In phase Retarget, 27 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 2 Constant propagation
+INFO: [Opt 31-138] Pushed 6 inverter(s) to 13 load pin(s).
+Phase 2 Constant propagation | Checksum: 7f909767
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-389] Phase Constant propagation created 481 cells and removed 1314 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 29 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 3 Sweep
+Phase 3 Sweep | Checksum: e9c648a6
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 360 cells
+INFO: [Opt 31-1021] In phase Sweep, 99 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 BUFG optimization
+Phase 4 BUFG optimization | Checksum: e9c648a6
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+Phase 5 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 5 Shift Register Optimization | Checksum: e9fecffc
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 6 Post Processing Netlist
+Phase 6 Post Processing Netlist | Checksum: 9161a167
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3175.590 ; gain = 53.215
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 33 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |              27  |             139  |                                             27  |
+|  Constant propagation         |             481  |            1314  |                                             29  |
+|  Sweep                        |               0  |             360  |                                             99  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                             33  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.051 . Memory (MB): peak = 3175.590 ; gain = 0.000
+Ending Logic Optimization Task | Checksum: 144a272ea
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3175.590 ; gain = 53.215
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Pwropt 34-9] Applying IDT optimizations ...
+INFO: [Pwropt 34-10] Applying ODC optimizations ...
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+
+
+Starting PowerOpt Patch Enables Task
+INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 32 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+INFO: [Pwropt 34-201] Structural ODC has moved 0 WE to EN ports
+Number of BRAM Ports augmented: 16 newly gated: 22 Total Ports: 64
+Ending PowerOpt Patch Enables Task | Checksum: 192961f02
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.178 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Ending Power Optimization Task | Checksum: 192961f02
+
+Time (s): cpu = 00:00:10 ; elapsed = 00:00:05 . Memory (MB): peak = 3590.629 ; gain = 415.039
+
+Starting Final Cleanup Task
+
+Starting Logic Optimization Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Logic Optimization Task | Checksum: 81f64bbc
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Ending Final Cleanup Task | Checksum: 81f64bbc
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Ending Netlist Obfuscation Task | Checksum: 81f64bbc
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.011 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [Common 17-83] Releasing license: Implementation
+59 Infos, 6 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:22 ; elapsed = 00:00:15 . Memory (MB): peak = 3590.629 ; gain = 790.551
+INFO: [runtcl-4] Executing : report_drc -file p10_ps_system_wrapper_drc_opted.rpt -pb p10_ps_system_wrapper_drc_opted.pb -rpx p10_ps_system_wrapper_drc_opted.rpx
+Command: report_drc -file p10_ps_system_wrapper_drc_opted.rpt -pb p10_ps_system_wrapper_drc_opted.pb -rpx p10_ps_system_wrapper_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_drc_opted.rpt.
+report_drc completed successfully
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.076 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_opt.dcp' has been generated.
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+Starting Placer Task
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 2 CPUs
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 583ade7a
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.017 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: bc298110
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: fe942a2c
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: fe942a2c
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 1 Placer Initialization | Checksum: fe942a2c
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+Phase 2.1 Floorplanning | Checksum: ac3db0cf
+
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:07 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 152f784cc
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 152f784cc
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 2.4 Global Placement Core
+
+Phase 2.4.1 UpdateTiming Before Physical Synthesis
+Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum: a3909e5a
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:21 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 2.4.2 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 1313 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 549 nets or LUTs. Breaked 0 LUT, combined 549 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |            549  |                   549  |           0  |           1  |  00:00:01  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            0  |            549  |                   549  |           0  |           4  |  00:00:01  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.4.2 Physical Synthesis In Placer | Checksum: 1641c8697
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:24 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 2.4 Global Placement Core | Checksum: 194469c00
+
+Time (s): cpu = 00:00:40 ; elapsed = 00:00:25 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 2 Global Placement | Checksum: 194469c00
+
+Time (s): cpu = 00:00:40 ; elapsed = 00:00:25 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 177792d72
+
+Time (s): cpu = 00:00:42 ; elapsed = 00:00:26 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1f1fd6c69
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:29 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.3 Area Swap Optimization
+Phase 3.3 Area Swap Optimization | Checksum: 119cde208
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:30 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.4 Pipeline Register Optimization
+Phase 3.4 Pipeline Register Optimization | Checksum: 189dbd949
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:30 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.5 Small Shape Detail Placement
+Phase 3.5 Small Shape Detail Placement | Checksum: 113bf5ec7
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:00:38 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.6 Re-assign LUT pins
+Phase 3.6 Re-assign LUT pins | Checksum: 140329770
+
+Time (s): cpu = 00:00:56 ; elapsed = 00:00:39 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 3.7 Pipeline Register Optimization
+Phase 3.7 Pipeline Register Optimization | Checksum: 1b777571d
+
+Time (s): cpu = 00:00:56 ; elapsed = 00:00:39 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 3 Detail Placement | Checksum: 1b777571d
+
+Time (s): cpu = 00:00:57 ; elapsed = 00:00:40 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 14e2db732
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=0.223 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 10e0316ef
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [Place 46-33] Processed net p10_ps_system_i/p10_endpoint_0/inst/impl/u_transport/u_data_plane/u_scheduler/transport_resetn_q_reg, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net p10_ps_system_i/p10_endpoint_0/inst/impl/u_p10_1_perf_monitor/u_timer/s_axi_aresetn_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net p10_ps_system_i/p10_endpoint_0/inst/impl/u_axi_lite/reg_wr_en_reg_18[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net p10_ps_system_i/p10_endpoint_0/inst/impl/u_transport/u_data_plane/u_tx_window/i___24_n_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net p10_ps_system_i/p10_endpoint_0/inst/impl/u_axi_lite/reg_wr_en_reg_17[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-56] BUFG insertion identified 5 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 5, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+Ending Physical Synthesis Task | Checksum: 10e0316ef
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 4.1.1.1 BUFG Insertion | Checksum: 14e2db732
+
+Time (s): cpu = 00:01:08 ; elapsed = 00:00:48 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 4.1.1.2 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=0.636. For the most accurate timing information please run report_timing.
+Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: b1150347
+
+Time (s): cpu = 00:01:09 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Time (s): cpu = 00:01:09 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 4.1 Post Commit Optimization | Checksum: b1150347
+
+Time (s): cpu = 00:01:09 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: b1150347
+
+Time (s): cpu = 00:01:09 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                2x2|
+|___________|___________________|___________________|
+|      South|                1x1|                2x2|
+|___________|___________________|___________________|
+|       East|                2x2|                2x2|
+|___________|___________________|___________________|
+|       West|                1x1|                2x2|
+|___________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: b1150347
+
+Time (s): cpu = 00:01:09 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 4.3 Placer Reporting | Checksum: b1150347
+
+Time (s): cpu = 00:01:10 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.019 . Memory (MB): peak = 3590.629 ; gain = 0.000
+
+Time (s): cpu = 00:01:10 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: f71fba58
+
+Time (s): cpu = 00:01:10 ; elapsed = 00:00:49 . Memory (MB): peak = 3590.629 ; gain = 0.000
+Ending Placer Task | Checksum: ef7f70d8
+
+Time (s): cpu = 00:01:10 ; elapsed = 00:00:50 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [Common 17-83] Releasing license: Implementation
+99 Infos, 6 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:01:12 ; elapsed = 00:00:51 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [runtcl-4] Executing : report_io -file p10_ps_system_wrapper_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.038 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [runtcl-4] Executing : report_utilization -file p10_ps_system_wrapper_utilization_placed.rpt -pb p10_ps_system_wrapper_utilization_placed.pb
+INFO: [runtcl-4] Executing : report_control_sets -verbose -file p10_ps_system_wrapper_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.072 . Memory (MB): peak = 3590.629 ; gain = 0.000
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 3595.812 ; gain = 5.184
+INFO: [Common 17-1381] The checkpoint 'C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_placed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:11 ; elapsed = 00:00:07 . Memory (MB): peak = 3595.812 ; gain = 5.184
+Command: phys_opt_design -directive AggressiveExplore
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Vivado_Tcl 4-137] Directive used for phys_opt_design is: AggressiveExplore
+
+Starting Initial Update Timing Task
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:04 . Memory (MB): peak = 3683.996 ; gain = 88.184
+INFO: [Vivado_Tcl 4-383] Design worst setup slack (WNS) is greater than or equal to 0.000 ns. Skipping all physical synthesis optimizations.
+INFO: [Vivado_Tcl 4-232] No setup violation found. The netlist was not modified.
+INFO: [Common 17-83] Releasing license: Implementation
+109 Infos, 6 Warnings, 0 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 3726.633 ; gain = 42.461
+INFO: [Common 17-1381] The checkpoint 'C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_physopt.dcp' has been generated.
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 2 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: 5d4a0f ConstDB: 0 ShapeSum: ef2226c9 RouteDB: 0
+Post Restoration Checksum: NetGraph: c6b12ca2 | NumContArr: 548f4033 | Constraints: 190a55ad | Timing: 0
+Phase 1 Build RT Design | Checksum: 1344ac282
+
+Time (s): cpu = 00:00:20 ; elapsed = 00:00:15 . Memory (MB): peak = 3860.410 ; gain = 59.953
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 1344ac282
+
+Time (s): cpu = 00:00:20 ; elapsed = 00:00:16 . Memory (MB): peak = 3860.410 ; gain = 59.953
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 1344ac282
+
+Time (s): cpu = 00:00:20 ; elapsed = 00:00:16 . Memory (MB): peak = 3860.410 ; gain = 59.953
+ Number of Nodes with overlaps = 0
+
+Phase 2.3 Update Timing
+Phase 2.3 Update Timing | Checksum: 12b68f434
+
+Time (s): cpu = 00:00:31 ; elapsed = 00:00:23 . Memory (MB): peak = 3860.410 ; gain = 59.953
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.954  | TNS=0.000  | WHS=-0.253 | THS=-1021.786|
+
+
+Phase 2.4 Update Timing for Bus Skew
+
+Phase 2.4.1 Update Timing
+Phase 2.4.1 Update Timing | Checksum: 10d629aef
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:27 . Memory (MB): peak = 3864.477 ; gain = 64.020
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.954  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 2.4 Update Timing for Bus Skew | Checksum: 1a8de3f40
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:27 . Memory (MB): peak = 3872.555 ; gain = 72.098
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 50330
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 50330
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: ffecd02b
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:28 . Memory (MB): peak = 3872.555 ; gain = 72.098
+
+Phase 3 Initial Routing
+
+Phase 3.1 Global Routing
+Phase 3.1 Global Routing | Checksum: ffecd02b
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:28 . Memory (MB): peak = 3872.555 ; gain = 72.098
+Phase 3 Initial Routing | Checksum: 16eeb3265
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:33 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 5819
+ Number of Nodes with overlaps = 752
+ Number of Nodes with overlaps = 215
+ Number of Nodes with overlaps = 73
+ Number of Nodes with overlaps = 26
+ Number of Nodes with overlaps = 26
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=1.062  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: 19d678861
+
+Time (s): cpu = 00:01:08 ; elapsed = 00:00:50 . Memory (MB): peak = 3924.414 ; gain = 123.957
+Phase 4 Rip-up And Reroute | Checksum: 19d678861
+
+Time (s): cpu = 00:01:08 ; elapsed = 00:00:50 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: 1b71502b5
+
+Time (s): cpu = 00:01:11 ; elapsed = 00:00:52 . Memory (MB): peak = 3924.414 ; gain = 123.957
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=1.192  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: 18951f502
+
+Time (s): cpu = 00:01:11 ; elapsed = 00:00:52 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 18951f502
+
+Time (s): cpu = 00:01:11 ; elapsed = 00:00:52 . Memory (MB): peak = 3924.414 ; gain = 123.957
+Phase 5 Delay and Skew Optimization | Checksum: 18951f502
+
+Time (s): cpu = 00:01:11 ; elapsed = 00:00:52 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 183f60d02
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:54 . Memory (MB): peak = 3924.414 ; gain = 123.957
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=1.192  | TNS=0.000  | WHS=0.036  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 1d6a3d2a9
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:54 . Memory (MB): peak = 3924.414 ; gain = 123.957
+Phase 6 Post Hold Fix | Checksum: 1d6a3d2a9
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:54 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 14.3578 %
+  Global Horizontal Routing Utilization  = 16.1947 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 7 Route finalize | Checksum: 17837f61e
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:54 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 17837f61e
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:54 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: c85c32c9
+
+Time (s): cpu = 00:01:17 ; elapsed = 00:00:56 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=1.192  | TNS=0.000  | WHS=0.036  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 10 Post Router Timing | Checksum: c85c32c9
+
+Time (s): cpu = 00:01:19 ; elapsed = 00:00:57 . Memory (MB): peak = 3924.414 ; gain = 123.957
+INFO: [Route 35-16] Router Completed Successfully
+
+Phase 11 Post-Route Event Processing
+Phase 11 Post-Route Event Processing | Checksum: 1d8eda9c2
+
+Time (s): cpu = 00:01:19 ; elapsed = 00:00:58 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Time (s): cpu = 00:01:19 ; elapsed = 00:00:58 . Memory (MB): peak = 3924.414 ; gain = 123.957
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+125 Infos, 6 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:01:22 ; elapsed = 00:00:59 . Memory (MB): peak = 3924.414 ; gain = 197.781
+INFO: [runtcl-4] Executing : report_drc -file p10_ps_system_wrapper_drc_routed.rpt -pb p10_ps_system_wrapper_drc_routed.pb -rpx p10_ps_system_wrapper_drc_routed.rpx
+Command: report_drc -file p10_ps_system_wrapper_drc_routed.rpt -pb p10_ps_system_wrapper_drc_routed.pb -rpx p10_ps_system_wrapper_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file p10_ps_system_wrapper_methodology_drc_routed.rpt -pb p10_ps_system_wrapper_methodology_drc_routed.pb -rpx p10_ps_system_wrapper_methodology_drc_routed.rpx
+Command: report_methodology -file p10_ps_system_wrapper_methodology_drc_routed.rpt -pb p10_ps_system_wrapper_methodology_drc_routed.pb -rpx p10_ps_system_wrapper_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_methodology_drc_routed.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:14 ; elapsed = 00:00:09 . Memory (MB): peak = 4080.551 ; gain = 156.137
+INFO: [runtcl-4] Executing : report_power -file p10_ps_system_wrapper_power_routed.rpt -pb p10_ps_system_wrapper_power_summary_routed.pb -rpx p10_ps_system_wrapper_power_routed.rpx
+Command: report_power -file p10_ps_system_wrapper_power_routed.rpt -pb p10_ps_system_wrapper_power_summary_routed.pb -rpx p10_ps_system_wrapper_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+WARNING: [Power 33-332] Found switching activity that implies high-fanout reset nets being asserted for excessive periods of time which may result in inaccurate power analysis.
+Resolution: To review and fix problems, please run Power Constraints Advisor in the GUI from Tools > Power Constraints Advisor or run report_power with the -advisory option to generate a text report.
+135 Infos, 7 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+report_power: Time (s): cpu = 00:00:11 ; elapsed = 00:00:06 . Memory (MB): peak = 4124.297 ; gain = 43.746
+INFO: [runtcl-4] Executing : report_route_status -file p10_ps_system_wrapper_route_status.rpt -pb p10_ps_system_wrapper_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -report_unconstrained -file p10_ps_system_wrapper_timing_summary_routed.rpt -pb p10_ps_system_wrapper_timing_summary_routed.pb -rpx p10_ps_system_wrapper_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+INFO: [runtcl-4] Executing : report_incremental_reuse -file p10_ps_system_wrapper_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [runtcl-4] Executing : report_clock_utilization -file p10_ps_system_wrapper_clock_utilization_routed.rpt
+INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file p10_ps_system_wrapper_bus_skew_routed.rpt -pb p10_ps_system_wrapper_bus_skew_routed.pb -rpx p10_ps_system_wrapper_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 4187.871 ; gain = 27.000
+INFO: [Common 17-1381] The checkpoint 'C:/p10_vivado/rotating_4lane/project/p10_ax7020_rotating_4lane_functional.runs/impl_1/p10_ps_system_wrapper_routed.dcp' has been generated.
+INFO: [Memdata 28-167] Found XPM memory block p10_ps_system_i/s2mm_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to distributed. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the p10_ps_system_i/s2mm_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+INFO: [Memdata 28-167] Found XPM memory block p10_ps_system_i/mm2s_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to distributed. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the p10_ps_system_i/mm2s_axis_clock_converter/inst/gen_async_conv.axisc_async_clock_converter_0/xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+INFO: [Memdata 28-167] Found XPM memory block p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_S2MM_FULL.I_S2MM_FULL_WRAPPER/GEN_ENABLE_INDET_BTT_SF.I_INDET_BTT/I_XD_FIFO/NON_BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to auto. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_S2MM_FULL.I_S2MM_FULL_WRAPPER/GEN_ENABLE_INDET_BTT_SF.I_INDET_BTT/I_XD_FIFO/NON_BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+INFO: [Memdata 28-208] The XPM instance: <p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_S2MM_FULL.I_S2MM_FULL_WRAPPER/GEN_ENABLE_INDET_BTT_SF.I_INDET_BTT/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst> is part of IP: <p10_ps_system_i/axi_dma_0>. This XPM instance will be excluded from the .mmi because updatemem is prohibited from making changes to an XPM that is part of an IP.
+INFO: [Memdata 28-208] The XPM instance: <p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_MM2S_FULL.I_MM2S_FULL_WRAPPER/GEN_INCLUDE_MM2S_SF.I_RD_SF/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst> is part of IP: <p10_ps_system_i/axi_dma_0>. This XPM instance will be excluded from the .mmi because updatemem is prohibited from making changes to an XPM that is part of an IP.
+Command: write_bitstream -force p10_ps_system_wrapper.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A2' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A1)+((~A1)*(~A6)*A3)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A2' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A1)+((~A1)*(~A4)*A5)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A3' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A6)+((~A6)*(~A4)*A5)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC RTSTAT-10] No routable loads: 33 net(s) have no routable loads. The problem bus(es) and/or net(s) are p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i... and (the first 15 of 21 listed).
+INFO: [DRC REQP-181] writefirst: Synchronous clocking is detected for BRAM (p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_MM2S_FULL.I_MM2S_FULL_WRAPPER/GEN_INCLUDE_MM2S_SF.I_RD_SF/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg) in SDP mode with WRITE_FIRST write-mode. This is the preferred mode for best power characteristics, however it may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+INFO: [DRC REQP-181] writefirst: Synchronous clocking is detected for BRAM (p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_S2MM_FULL.I_S2MM_FULL_WRAPPER/GEN_ENABLE_INDET_BTT_SF.I_INDET_BTT/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg) in SDP mode with WRITE_FIRST write-mode. This is the preferred mode for best power characteristics, however it may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+INFO: [Vivado 12-3199] DRC finished with 0 Errors, 4 Warnings, 2 Advisories
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 2 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./p10_ps_system_wrapper.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT device. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-83] Releasing license: Implementation
+21 Infos, 4 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:22 ; elapsed = 00:00:15 . Memory (MB): peak = 4790.434 ; gain = 602.562
+INFO: [Common 17-206] Exiting Vivado at Tue Aug  4 16:55:41 2026...
+[Tue Aug  4 16:55:42 2026] impl_1 finished
+wait_on_runs: Time (s): cpu = 00:00:01 ; elapsed = 00:06:20 . Memory (MB): peak = 1934.047 ; gain = 0.000
+# if {[get_property PROGRESS [get_runs impl_1]] ne "100%" ||
+#     ![string match "*Complete*" [get_property STATUS [get_runs impl_1]]]} {
+#   error "P10 implementation did not complete: [get_property STATUS [get_runs impl_1]]"
+# }
+# open_run impl_1
+INFO: [Device 21-403] Loading part xc7z020clg400-2
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.326 . Memory (MB): peak = 2183.461 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 3820 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2023.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF Files: Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3070.715 ; gain = 62.727
+Restored from archive | CPU: 4.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3070.715 ; gain = 62.727
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 3070.715 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 121 instances were transformed.
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 51 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 12 instances
+  RAM64M => RAM64M (RAMD64E(x4)): 48 instances
+  RAM64X1D => RAM64X1D (RAMD64E(x2)): 4 instances
+  SRLC32E => SRL16E: 6 instances
+
+open_run: Time (s): cpu = 00:00:13 ; elapsed = 00:00:18 . Memory (MB): peak = 3070.715 ; gain = 1136.668
+# report_drc -file "$out_dir/post_route_drc.rpt"
+Command: report_drc -file C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/post_route_drc.rpt
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/post_route_drc.rpt.
+report_drc completed successfully
+# report_methodology -file "$out_dir/post_route_methodology.rpt"
+Command: report_methodology -file C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/post_route_methodology.rpt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/post_route_methodology.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:13 ; elapsed = 00:00:08 . Memory (MB): peak = 3622.461 ; gain = 286.961
+# report_timing_summary -report_unconstrained -check_timing_verbose \
+#   -file "$out_dir/post_route_timing_summary.rpt"
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+# check_timing -verbose -file "$out_dir/post_route_check_timing.rpt"
+# report_utilization -hierarchical -file "$out_dir/post_route_utilization.rpt"
+# report_cdc -details -file "$out_dir/post_route_cdc.rpt"
+INFO: [Timing 38-91] UpdateTimingParams: No interconnect No Cell Dly, Speed grade: -2, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-314] The report_cdc command only analyzes and reports clock domain crossing paths where clocks have been defined on both source and destination sides. Ports with no input delay constraint are skipped. Please run check_timing to verify there are no missing clock definitions in your design, nor any unconstrained input port.
+# report_clock_interaction -file "$out_dir/post_route_clock_interaction.rpt"
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+# set drc_critical 0
+# set drc_error 0
+# foreach violation [get_drc_violations -quiet] {
+#   set severity [get_property SEVERITY $violation]
+#   if {[string match -nocase "*critical*" $severity]} { incr drc_critical }
+#   if {[string equal -nocase $severity "error"]} { incr drc_error }
+# }
+# set reqp_1839 [llength [get_drc_violations -quiet REQP-1839*]]
+# set methodology_critical 0
+# foreach violation [get_methodology_violations -quiet] {
+#   if {[string match -nocase "*critical*" [get_property SEVERITY $violation]]} {
+#     incr methodology_critical
+#   }
+# }
+# set cdc_critical 0
+# if {![catch {set cdc_violations [get_cdc_violations -quiet]}]} {
+#   foreach violation $cdc_violations {
+#     if {[string match -nocase "*critical*" [get_property SEVERITY $violation]]} {
+#       incr cdc_critical
+#     }
+#   }
+# }
+# set check_handle [open "$out_dir/post_route_check_timing.rpt" r]
+# set check_text [read $check_handle]
+# close $check_handle
+# set unconstrained_internal_endpoints -1
+# set no_clock_count -1
+# regexp {checking unconstrained_internal_endpoints \(([0-9]+)\)} \
+#   $check_text -> unconstrained_internal_endpoints
+# regexp {checking no_clock \(([0-9]+)\)} $check_text -> no_clock_count
+# set setup_path [get_timing_paths -quiet -delay_type max -max_paths 1]
+# set hold_path [get_timing_paths -quiet -delay_type min -max_paths 1]
+# set wns [expr {[llength $setup_path] ? [get_property SLACK $setup_path] : 0.0}]
+# set whs [expr {[llength $hold_path] ? [get_property SLACK $hold_path] : 0.0}]
+# set tns 0.0
+# foreach path [get_timing_paths -quiet -delay_type max -slack_lesser_than 0.0 -max_paths 100000] {
+#   set tns [expr {$tns + [get_property SLACK $path]}]
+# }
+# set lut_count [llength [get_cells -hierarchical -filter {PRIMITIVE_GROUP == LUT}]]
+# set ff_count [llength [get_cells -hierarchical -filter {PRIMITIVE_GROUP == FLOP_LATCH}]]
+# set bram36_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB36*}]]
+# set bram18_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ RAMB18*}]]
+# set dsp_count [llength [get_cells -quiet -hierarchical -filter {REF_NAME =~ DSP48*}]]
+# set bram36_equivalent [expr {$bram36_count + $bram18_count / 2.0}]
+# set lut_percent [expr {100.0 * $lut_count / 53200.0}]
+# set ff_percent [expr {100.0 * $ff_count / 106400.0}]
+# set bram_percent [expr {100.0 * $bram36_equivalent / 140.0}]
+# set dsp_percent [expr {100.0 * $dsp_count / 220.0}]
+# set resource_limits_pass [expr {$lut_percent <= 70.0 && $ff_percent <= 70.0 &&
+#     $bram_percent <= 75.0 && $dsp_percent <= 50.0}]
+# if {$wns < 0.0 || $whs < 0.0 || $tns < 0.0 || $drc_critical != 0 ||
+#     $drc_error != 0 || $reqp_1839 != 0 || $methodology_critical != 0 ||
+#     $cdc_critical != 0 || $unconstrained_internal_endpoints != 0 ||
+#     $no_clock_count != 0 || !$resource_limits_pass} {
+#   error "P10 signoff gate failed: WNS=$wns WHS=$whs TNS=$tns DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical UNCONSTRAINED_INTERNAL=$unconstrained_internal_endpoints NO_CLOCK=$no_clock_count RESOURCE_LIMITS=$resource_limits_pass"
+# }
+# write_checkpoint -force "$out_dir/p10_ax7020_${endpoint_role_name}_post_route.dcp"
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:06 ; elapsed = 00:00:03 . Memory (MB): peak = 3693.949 ; gain = 50.809
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/p10_ax7020_rotating_post_route.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:09 ; elapsed = 00:00:05 . Memory (MB): peak = 3693.949 ; gain = 50.809
+# write_bitstream -force "$out_dir/p10_ax7020_${endpoint_role_name}_functional.bit"
+Command: write_bitstream -force C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/p10_ax7020_rotating_functional.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A2' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A1)+((~A1)*(~A6)*A3)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A2' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A1)+((~A1)*(~A4)*A5)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A3' of cell p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1 (pin p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/gpregsm1.user_valid_i_1/I1) is not included in the LUT equation: 'O6=(A6)+((~A6)*(~A4)*A5)'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC RTSTAT-10] No routable loads: 33 net(s) have no routable loads. The problem bus(es) and/or net(s) are p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2:0], p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_fb, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_BURSTS.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_WRITE.write_addr_inst/USE_B_CHANNEL.cmd_b_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i, p10_ps_system_i/hp0_interconnect/m00_couplers/auto_pc/inst/gen_axi4_axi3.axi3_conv_inst/USE_READ.USE_SPLIT_R.read_addr_inst/USE_R_CHANNEL.cmd_queue/inst/fifo_gen_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwss.wsts/ram_afull_i... and (the first 15 of 21 listed).
+INFO: [DRC REQP-181] writefirst: Synchronous clocking is detected for BRAM (p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_MM2S_FULL.I_MM2S_FULL_WRAPPER/GEN_INCLUDE_MM2S_SF.I_RD_SF/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg) in SDP mode with WRITE_FIRST write-mode. This is the preferred mode for best power characteristics, however it may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+INFO: [DRC REQP-181] writefirst: Synchronous clocking is detected for BRAM (p10_ps_system_i/axi_dma_0/U0/I_PRMRY_DATAMOVER/GEN_S2MM_FULL.I_S2MM_FULL_WRAPPER/GEN_ENABLE_INDET_BTT_SF.I_INDET_BTT/I_DATA_FIFO/BLK_MEM.I_SYNC_FIFOGEN_FIFO/xpm_fifo_instance.xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg) in SDP mode with WRITE_FIRST write-mode. This is the preferred mode for best power characteristics, however it may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+INFO: [Vivado 12-3199] DRC finished with 0 Errors, 4 Warnings, 2 Advisories
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 2 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/p10_ax7020_rotating_functional.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT device. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-83] Releasing license: Implementation
+11 Infos, 4 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:21 ; elapsed = 00:00:14 . Memory (MB): peak = 4296.910 ; gain = 602.961
+# write_hw_platform -fixed -include_bit -force \
+#   -file "$out_dir/p10_ax7020_${endpoint_role_name}_functional.xsa"
+INFO: [Project 1-1918] Creating Hardware Platform: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/p10_ax7020_rotating_functional.xsa ...
+INFO: [Project 1-1943] The Hardware Platform can be used for Hardware
+INFO: [Project 1-1941] Successfully created Hardware Platform: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/generated/vivado/p10_3_4lane/rotating/p10_ax7020_rotating_functional.xsa
+INFO: [Hsi 55-2053] elapsed time for repository (D:/Xilinx/Vivado/2023.1/data/embeddedsw) loading 0 seconds
+# set marker [open "$out_dir/p10_functional_build_markers.txt" w]
+# puts $marker "P10_FUNCTIONAL_BUILD=PASS"
+# puts $marker "P10_ENDPOINT_ROLE=$endpoint_role_name"
+# puts $marker "P10_ENDPOINT_ROLE_VALUE=$endpoint_role"
+# puts $marker "P10_PROFILE_ID=$profile_id"
+# puts $marker "P10_LANE_COUNT=$lane_count"
+# puts $marker "P10_CAMPAIGN=$campaign"
+# puts $marker [format "P10_PL_BUILD_ID=0x%08X" [expr {$campaign eq "p10_3" ? ($endpoint_role == 1 ? 0x50333446 : 0x50333452) : ($lane_count == 4 ? ($endpoint_role == 1 ? 0x50323446 : 0x50323452) : ($endpoint_role == 1 ? 0x50325346 : 0x50325352))}]]
+# puts $marker "P10_PART=[get_property PART [current_project]]"
+# puts $marker "P10_TOP=p10_ps_system_wrapper"
+# puts $marker "P10_AXI_BASE=0x43C00000"
+# puts $marker "P10_DMA_AXI_BASE=0x40400000"
+# puts $marker "P10_DMA_MODE=SCATTER_GATHER"
+# puts $marker "P10_DMA_SG_STSCNTRL_STREAM=DISABLED"
+# puts $marker "P10_DMA_HP_PORT=S_AXI_HP0"
+# puts $marker "P10_PROTOCOL_CLOCK_HZ=64000000"
+# puts $marker "P10_DMA_CLOCK_HZ=100000000"
+# puts $marker "P10_AXIL_CLOCK_HZ=50000000"
+# puts $marker "P10_NETWORK_USED=false"
+# puts $marker "P10_ETHERNET_ENABLED=false"
+# if {$campaign eq "p10_3"} {
+#   puts $marker "P10_PS_GPIO_ENABLED=true"
+#   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=PS_LED1_MIO0_MM2S_INFLIGHT_PS_LED2_MIO13_S2MM_INFLIGHT"
+#   puts $marker "P10_PS_ACTIVITY_LED_ACTIVE_LOW=true"
+#   puts $marker "P10_PS_ACTIVITY_LED_SAFETY_ROLE=MONITOR_ONLY"
+# } else {
+#   puts $marker "P10_PS_GPIO_ENABLED=false"
+#   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=DISABLED"
+# }
+# if {$lane_count == 4} {
+#   puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_ACTIVITY_LED2_LANE1_ACTIVITY_LED3_LANE2_ACTIVITY_LED4_LANE3_ACTIVITY"
+# } else {
+#   puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_TX_LED2_LANE0_RX_LED3_LANE1_TX_LED4_LANE1_RX"
+# }
+# puts $marker "P10_PL_ACTIVITY_LED_ACTIVE_LOW=true"
+# puts $marker "P10_PL_ACTIVITY_LED_HOLD_MS=200"
+# puts $marker "P10_PL_ACTIVITY_LED_SAFETY_ROLE=MONITOR_ONLY"
+# puts $marker "P10_CANONICAL_XDC=[file normalize $xdc_file]"
+# puts $marker "P10_WNS_NS=$wns"
+# puts $marker "P10_WHS_NS=$whs"
+# puts $marker "P10_TNS_NS=$tns"
+# puts $marker "P10_DRC_CRITICAL_COUNT=$drc_critical"
+# puts $marker "P10_DRC_ERROR_COUNT=$drc_error"
+# puts $marker "P10_REQP_1839_COUNT=$reqp_1839"
+# puts $marker "P10_METHODOLOGY_CRITICAL_COUNT=$methodology_critical"
+# puts $marker "P10_CDC_CRITICAL_COUNT=$cdc_critical"
+# puts $marker "P10_UNCONSTRAINED_INTERNAL_ENDPOINTS=$unconstrained_internal_endpoints"
+# puts $marker "P10_NO_CLOCK_COUNT=$no_clock_count"
+# puts $marker "P10_LUT=$lut_count"
+# puts $marker "P10_FF=$ff_count"
+# puts $marker "P10_BRAM36=$bram36_count"
+# puts $marker "P10_BRAM18=$bram18_count"
+# puts $marker "P10_BRAM36_EQUIVALENT=$bram36_equivalent"
+# puts $marker "P10_DSP=$dsp_count"
+# puts $marker "P10_LUT_PERCENT=$lut_percent"
+# puts $marker "P10_FF_PERCENT=$ff_percent"
+# puts $marker "P10_BRAM_PERCENT=$bram_percent"
+# puts $marker "P10_DSP_PERCENT=$dsp_percent"
+# puts $marker "P10_RESOURCE_LIMITS_PASS=$resource_limits_pass"
+# puts $marker "P10_HARDWARE_ADMISSION=false"
+# puts $marker "P10_BLOCKING_CONDITION=P10-SAFETY-POWERUP-001"
+# close $marker
+# puts "P10_AX7020_${endpoint_role_name}_FUNCTIONAL_BUILD=PASS"
+P10_AX7020_rotating_FUNCTIONAL_BUILD=PASS
+INFO: [Common 17-206] Exiting Vivado at Tue Aug  4 16:56:46 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
