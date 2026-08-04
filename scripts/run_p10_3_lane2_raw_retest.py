@@ -54,7 +54,7 @@ LANE_CONFIGS: dict[int, dict[str, Any]] = {
         "fixed_id": "B0020", "rotating_id": "B0025",
         "authorization_id": "P10_3-LANE3-B0020-B0025-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
         "authorization": "config/p10_3_lane3_b0020_b0025_raw_retest_current_run_authorization.json",
-        "blocker": "evidence/generated/p10_3_lane3_b0020_raw_connectivity_retest.json",
+        "blocker": "evidence/generated/p10_3_lane3_b0020_b0025_raw_compact.json",
         "output_stem": "p10_3_lane3_b0020_b0025_raw_connectivity_retest",
         "scope_suffix": "LANE3_B0020_B0025_RAW_CONNECTIVITY_RETEST",
         "title": "lane3 bidirectional raw-connectivity retest after R3 replacement",
