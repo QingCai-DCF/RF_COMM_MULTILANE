@@ -4,7 +4,7 @@
 - Test ID: `P10_3-WIRE-001`
 - Hardware actions executed: `false`
 
-- Source commit: `c7404e015dd910aace9ef99b873bd4843cc7e9c5`
+- Source commit: `06379a7a4456120601be3e26dccf2960a33aa3fb`
 - Canonical SHA256: `551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1`
 
 ```json
@@ -163,7 +163,7 @@
       "Txd": 28
     }
   },
-  "source_commit": "c7404e015dd910aace9ef99b873bd4843cc7e9c5",
+  "source_commit": "06379a7a4456120601be3e26dccf2960a33aa3fb",
   "status": "PASS",
   "test_id": "P10_3-WIRE-001"
 }

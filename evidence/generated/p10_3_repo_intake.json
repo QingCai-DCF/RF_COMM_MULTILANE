@@ -1,22 +1,13 @@
 {
   "branch": "codex/p10.3-fault-forensics",
   "current_run_hardware_authorization": false,
-  "errors": [
-    "offline intake requires a clean worktree before generating evidence"
-  ],
+  "errors": [],
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
     "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
   },
-  "git_status_before_generation": [
-    "M evidence/generated/p10_3_module_inventory.json",
-    " M evidence/generated/p10_3_module_inventory.md",
-    " M evidence/generated/p10_3_repo_intake.json",
-    " M evidence/generated/p10_3_repo_intake.md",
-    " M evidence/generated/p10_3_wiring.json",
-    " M evidence/generated/p10_3_wiring.md"
-  ],
+  "git_status_before_generation": [],
   "goal": {
     "bytes": 31921,
     "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -107,10 +98,10 @@
   "no_hardware": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
-  "source_commit": "c7404e015dd910aace9ef99b873bd4843cc7e9c5",
-  "source_tree_clean_before_generation": false,
-  "started_at_utc": "2026-08-04T18:12:54+00:00",
-  "status": "FAIL",
+  "source_commit": "06379a7a4456120601be3e26dccf2960a33aa3fb",
+  "source_tree_clean_before_generation": true,
+  "started_at_utc": "2026-08-04T18:13:14+00:00",
+  "status": "PASS",
   "test_id": "P10_3-REPOSITORY-INTAKE",
   "tools": {
     "git": {
