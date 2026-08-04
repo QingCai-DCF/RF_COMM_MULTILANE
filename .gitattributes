@@ -103,3 +103,7 @@ evidence/generated/p10_2_raw/**/*.log -text -eol -whitespace
 evidence/generated/p10_2_software/** -text -eol -whitespace
 evidence/generated/vivado/p10_2_4lane/** -text -eol -whitespace
 evidence/generated/vitis/p10_2_4lane_runtime/** -text -eol -whitespace
+
+# Preserve the byte-exact bounded P10.3 raw-connectivity run.  Its immutable
+# evidence manifest covers vendor CRLF output and raw PSV/TCL records.
+evidence/hardware/p10_3_raw_connectivity/** -text -eol -whitespace
